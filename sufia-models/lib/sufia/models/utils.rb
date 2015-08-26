@@ -15,7 +15,7 @@ module Sufia
           result = block.call
           return result unless condition.call
         end
-        raise RuntimeError, "retry_unless could not complete successfully. Try upping the # of tries?"
+        raise "retry_unless could not complete successfully. Try upping the # of tries?"
       end
     end
   end

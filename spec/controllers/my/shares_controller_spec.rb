@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe My::SharesController, :type => :controller do
+describe My::SharesController, type: :controller do
   describe "logged in user" do
     let(:user) { FactoryGirl.find_or_create(:archivist) }
 
-    before (:each) do
+    before do
       sign_in user
     end
 
@@ -15,32 +15,31 @@ describe My::SharesController, :type => :controller do
       let!(:unshared_file) { FactoryGirl.create(:generic_file, depositor: other_user) }
 
       let!(:shared_with_me) { FactoryGirl.create(:generic_file).tap do |r|
-          r.apply_depositor_metadata other_user
-          r.edit_users += [user.user_key]
-          r.save!
-        end
+        r.apply_depositor_metadata other_user
+        r.edit_users += [user.user_key]
+        r.save!
+      end
       }
 
       let!(:shared_with_someone_else) { FactoryGirl.create(:generic_file).tap do |r|
-          r.apply_depositor_metadata user
-          r.edit_users += [other_user.user_key]
-          r.save!
-        end
+        r.apply_depositor_metadata user
+        r.edit_users += [other_user.user_key]
+        r.save!
+      end
       }
 
       let!(:my_collection) { Collection.new(title: "My collection").tap do |c|
-          c.apply_depositor_metadata(user.user_key)
-          c.save!
-        end
+        c.apply_depositor_metadata(user.user_key)
+        c.save!
+      end
       }
 
-
-      it "should respond with success" do
+      it "responds with success" do
         get :index
         expect(response).to be_successful
       end
 
-      it "should paginate" do          
+      it "paginates" do
         FactoryGirl.create(:generic_file).tap do |r|
           r.apply_depositor_metadata other_user
           r.edit_users += [user.user_key]
@@ -71,5 +70,4 @@ describe My::SharesController, :type => :controller do
       end
     end
   end
-
 end

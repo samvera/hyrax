@@ -1,53 +1,50 @@
 require 'spec_helper'
 
-describe 'users/_follower_modal.html.erb', :type => :view do
-  let(:user) { FactoryGirl.create(:user, display_name: "Frank") }
-
-  before do
-    assign :followers, [user]
-  end
-
-  it "should draw user list" do
-    render
-    page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_link "Frank", href: "/users/#{user.to_param}" 
-  end
-
-end
-
-
-describe 'users/_follower_modal.html.erb', :type => :view do
-
+describe 'users/_follower_modal.html.erb', type: :view do
   let(:frank) { FactoryGirl.create(:user, display_name: "Frank") }
+  let(:page) { Capybara::Node::Simple.new(rendered) }
+
   before do
-    assign :user, frank
-    assign :followers, []
+    assign :user, view_user
+    allow(controller).to receive(:current_user) { current_user }
+    assign :followers, followers
+    render
   end
 
-  describe "when current user has no followers" do
+  context 'with followers' do
+    let(:view_user) {}
+    let(:current_user) {}
+    let(:followers) { [frank] }
 
-    before do
-      allow(controller).to receive(:current_user).and_return(frank)
-    end
-
-    it "should indicate the lack of followers for you" do
-      render
-      page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_text "No one is following you." 
-    end
-  end
-
-  describe "when another user has no followers" do 
-
-    before do
-      allow(controller).to receive(:current_user).and_return(stub_model(User))
-    end
-
-    it "should indicate the lack of followers for this user" do
-      render
-      page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_text "No one is following this user." 
+    it "draws user list" do
+      expect(page).to have_link "Frank", href: "/users/#{frank.to_param}"
     end
   end
 
+  context "with no followers" do
+    let(:followers) { [] }
+    let(:view_user) { frank }
+
+    context 'when logged in' do
+      context 'when current user has no followers' do
+        let(:current_user) { frank }
+        it "indicates the lack of followers for you" do
+          expect(page).to have_text "No one is following you."
+        end
+      end
+      context 'when another user has no followers' do
+        let(:current_user) { stub_model(User) }
+        it "indicates the lack of followers for this user" do
+          expect(page).to have_text "No one is following this user."
+        end
+      end
+    end
+    context 'when not logged in' do
+      let(:current_user) {}
+
+      it 'indicates the lack of followers for this user' do
+        expect(page).to have_text 'No one is following this user.'
+      end
+    end
+  end
 end

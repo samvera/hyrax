@@ -19,7 +19,7 @@ describe 'catalog/index.html.erb' do
     params[:view] = 'gallery'
 
     resp = []
-    assign(:response, resp )
+    assign(:response, resp)
     allow(resp).to receive(:total_pages).and_return(1)
     allow(resp).to receive(:current_page).and_return(1)
     allow(resp).to receive(:limit_value).and_return(10)
@@ -32,7 +32,7 @@ describe 'catalog/index.html.erb' do
   end
 
   context "when user does not have permissions" do
-    before  { allow(view).to receive(:can?).and_return(false) }
+    before { allow(view).to receive(:can?).and_return(false) }
     it 'appears on page without error' do
       render
       expect(rendered).to include(collection.title)
@@ -41,7 +41,7 @@ describe 'catalog/index.html.erb' do
     end
   end
   context "when user has all the permissions" do
-    before  { allow(view).to receive(:can?).and_return(true) }
+    before { allow(view).to receive(:can?).and_return(true) }
     it 'appears on page without error' do
       render
       expect(rendered).to include(collection.title)
@@ -49,6 +49,4 @@ describe 'catalog/index.html.erb' do
       expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
     end
   end
-
-
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe FileUsage, :type => :model do
-
+describe FileUsage, type: :model do
   let(:file) do
     GenericFile.new.tap do |file|
       file.apply_depositor_metadata("awead")
@@ -11,12 +10,12 @@ describe FileUsage, :type => :model do
 
   let(:dates) {
     ldates = []
-    4.downto(0) {|idx| ldates << (Date.today-idx.day) }
+    4.downto(0) { |idx| ldates << (Date.today - idx.day) }
     ldates
   }
   let(:date_strs) {
     ldate_strs = []
-    dates.each {|date| ldate_strs << date.strftime("%Y%m%d") }
+    dates.each { |date| ldate_strs << date.strftime("%Y%m%d") }
     ldate_strs
   }
 
@@ -25,7 +24,7 @@ describe FileUsage, :type => :model do
   }
 
   let(:download_output) {
-    [[statistic_date(dates[0]), 1], [statistic_date(dates[1]), 1], [statistic_date(dates[2]), 2], [statistic_date(dates[3]), 3],  [statistic_date(dates[4]), 5]]
+    [[statistic_date(dates[0]), 1], [statistic_date(dates[1]), 1], [statistic_date(dates[2]), 2], [statistic_date(dates[3]), 3], [statistic_date(dates[4]), 5]]
   }
 
   # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
@@ -40,7 +39,7 @@ describe FileUsage, :type => :model do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[4], totalEvents: "5"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[4], totalEvents: "5")
     ]
   }
 
@@ -55,30 +54,27 @@ describe FileUsage, :type => :model do
   }
 
   let(:usage) {
-    allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
+    allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today - 4.day).to_s)
     expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    FileUsage.new(file.id)
+    described_class.new(file.id)
   }
 
   describe "#initialize" do
-
-    it "should set the id" do
+    it "sets the id" do
       expect(usage.id).to eq(file.id)
     end
 
-    it "should set the path" do
+    it "sets the path" do
       expect(usage.path).to eq("/files/#{URI.encode(file.id, '/')}")
     end
 
-    it "should set the created date" do
+    it "sets the created date" do
       expect(usage.created).to eq(file.create_date)
     end
-
   end
 
   describe "statistics" do
-
     before(:all) do
       @system_timezone = ENV['TZ']
       ENV['TZ'] = 'UTC'
@@ -88,15 +84,15 @@ describe FileUsage, :type => :model do
       ENV['TZ'] = @system_timezone
     end
 
-    it "should count the total numver of downloads" do
+    it "counts the total numver of downloads" do
       expect(usage.total_downloads).to eq(12)
     end
 
-    it "should count the total numver of pageviews" do
+    it "counts the total numver of pageviews" do
       expect(usage.total_pageviews).to eq(30)
     end
 
-    it "should return an array of hashes for use with JQuery Flot" do
+    it "returns an array of hashes for use with JQuery Flot" do
       expect(usage.to_flot[0][:label]).to eq("Pageviews")
       expect(usage.to_flot[1][:label]).to eq("Downloads")
       expect(usage.to_flot[0][:data]).to include(*view_output)
@@ -117,23 +113,22 @@ describe FileUsage, :type => :model do
           allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-          FileUsage.new(file.id)
+          described_class.new(file.id)
         }
-        it "should set the created date to the earliest date not the created date" do
+        it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
         end
-
       end
 
       describe "create date after earliest" do
         let(:usage) {
-          allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
+          allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today - 4.day).to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
-          FileUsage.new(file.id)
+          described_class.new(file.id)
         }
-        it "should set the created date to the earliest date not the created date" do
+        it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(file.create_date)
         end
       end
@@ -147,16 +142,15 @@ describe FileUsage, :type => :model do
         allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
         expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
         expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileUsage.new(file.id)
+        described_class.new(file.id)
       }
-      it "should set the created date to the earliest date not the created date" do
+      it "sets the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)
       end
-
     end
   end
 
-  describe "on a migrated file" do 
+  describe "on a migrated file" do
     let(:date_uploaded) { "2014-12-31" }
 
     let(:file_migrated) do
@@ -170,12 +164,11 @@ describe FileUsage, :type => :model do
     let(:usage) {
       expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
       expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-      FileUsage.new(file_migrated.id)
+      described_class.new(file_migrated.id)
     }
 
-    it "should use the date_uploaded for analytics" do
+    it "uses the date_uploaded for analytics" do
       expect(usage.created).to eq(date_uploaded)
     end
   end
-
 end

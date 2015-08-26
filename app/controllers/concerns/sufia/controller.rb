@@ -5,7 +5,7 @@ module Sufia::Controller
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
 
-    before_filter :notifications_number
+    before_action :notifications_number
   end
 
   def current_ability
@@ -31,21 +31,20 @@ module Sufia::Controller
     @notify_number = 0
     @batches = []
     return if action_name == "index" && controller_name == "mailbox"
-    if user_signed_in?
-      @notify_number = current_user.mailbox.inbox(unread: true).count
-      @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/,1] }.select{ |val| !val.blank? }
-    end
+    return unless user_signed_in?
+    @notify_number = current_user.mailbox.inbox(unread: true).count
+    @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/, 1] }.select { |val| !val.blank? }
   end
 
   # Override Devise method to redirect to dashboard after signing in
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     sufia.dashboard_index_path
   end
 
   protected
 
-  ### Hook which is overridden in Sufia::Ldap::Controller
-  def has_access?
-    true
-  end
+    ### Hook which is overridden in Sufia::Ldap::Controller
+    def has_access?
+      true
+    end
 end

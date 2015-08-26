@@ -1,7 +1,6 @@
 ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
-
 require 'factory_girl'
 require 'engine_cart'
 EngineCart.load_application!
@@ -58,9 +57,10 @@ if defined?(ClamAV)
 else
   class ClamAV
     include Singleton
-    def scanfile(f)
+    def scanfile(_f)
       0
     end
+
     def loaddb
       nil
     end
@@ -93,7 +93,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :each do |example|
-    unless (example.metadata[:type] == :view || example.metadata[:no_clean])
+    unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!
     end
   end
@@ -130,7 +130,7 @@ RSpec.configure do |config|
 end
 
 module FactoryGirl
-  def self.find_or_create(handle, by=:email)
+  def self.find_or_create(handle, by = :email)
     tmpl = FactoryGirl.build(handle)
     tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
   end

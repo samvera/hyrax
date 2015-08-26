@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'cancan/matchers'
 
-describe Sufia::Ability, :type => :model do
+describe Sufia::Ability, type: :model do
   describe "a user with no roles" do
     let(:user) { nil }
     subject { Ability.new(user) }
@@ -9,8 +9,8 @@ describe Sufia::Ability, :type => :model do
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
-    it { is_expected.to     be_able_to(:read,  ContentBlock) }
-    it { is_expected.to     be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:read, ContentBlock) }
+    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
   end
 
   describe "a registered user" do
@@ -20,8 +20,8 @@ describe Sufia::Ability, :type => :model do
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
-    it { is_expected.to     be_able_to(:read,  ContentBlock) }
-    it { is_expected.to     be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:read, ContentBlock) }
+    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
   end
 
   describe "a user in the admin group" do
@@ -32,10 +32,9 @@ describe Sufia::Ability, :type => :model do
     it { is_expected.to be_able_to(:create, TinymceAsset) }
     it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
-    it { is_expected.to be_able_to(:read,  ContentBlock) }
-    it { is_expected.to     be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:read, ContentBlock) }
+    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
   end
-
 
   describe "proxies and transfers" do
     let(:sender) { FactoryGirl.find_or_create(:jill) }
@@ -50,7 +49,7 @@ describe Sufia::Ability, :type => :model do
     it { should_not be_able_to(:transfer, work.id) }
 
     describe "depositor_for_document" do
-      it "should return the depositor" do
+      it "returns the depositor" do
         expect(subject.send(:depositor_for_document, work.id)).to eq sender.user_key
       end
     end

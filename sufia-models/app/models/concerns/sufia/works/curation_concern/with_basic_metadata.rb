@@ -34,7 +34,6 @@ module Sufia::Works
       def generic_work?
         true
       end
-
     end
   end
 end

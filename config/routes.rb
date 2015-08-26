@@ -1,5 +1,4 @@
 Sufia::Engine.routes.draw do
-
   # Downloads controller route
   resources :homepage, only: 'index'
 
@@ -55,7 +54,7 @@ Sufia::Engine.routes.draw do
   # User profile & follows
   resources :users, only: [:index, :show, :edit, :update], as: :profiles do
     member do
-      post 'trophy' => 'users#toggle_trophy' #used by trophy.js
+      post 'trophy' => 'users#toggle_trophy' # used by trophy.js
       post 'follow' => 'users#follow'
       post 'unfollow' => 'users#unfollow'
     end
@@ -116,14 +115,14 @@ Sufia::Engine.routes.draw do
 
   # Permissions routes
   namespace :curation_concern, path: :concern do
-    resources( :permissions, only:[]) do
+    resources(:permissions, only: []) do
       member do
         get :confirm
         post :copy
       end
     end
   end
-  
+
   mount Hydra::Collections::Engine => '/'
 
   # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
@@ -144,7 +143,7 @@ Sufia::Engine.routes.draw do
   # Static page routes (workaround)
   get ':action' => 'static#:action', constraints: { action: /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, as: :static
 
-  #Single use link errors
+  # Single use link errors
   get 'single_use_link/not_found' => 'errors#single_use_error'
   get 'single_use_link/expired' => 'errors#single_use_error'
 
@@ -152,5 +151,4 @@ Sufia::Engine.routes.draw do
   unless Rails.env.development? || Rails.env.test?
     match '*error' => 'errors#routing', via: [:get, :post]
   end
-
 end

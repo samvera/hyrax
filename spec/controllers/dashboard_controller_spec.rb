@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DashboardController, :type => :controller do
+describe DashboardController, type: :controller do
   context "with an unauthenticated user" do
     it "redirects to sign-in page" do
       get :index
@@ -36,11 +36,11 @@ describe DashboardController, :type => :controller do
       let(:another_user) { FactoryGirl.find_or_create(:archivist) }
       context 'when incoming' do
         let!(:incoming_work) do
-            GenericWork.new.tap do |w|
-              w.apply_depositor_metadata(another_user.user_key)
-              w.save!
-              w.request_transfer_to(user)
-            end
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(another_user.user_key)
+            w.save!
+            w.request_transfer_to(user)
+          end
         end
 
         it 'assigns an instance variable' do
@@ -53,11 +53,11 @@ describe DashboardController, :type => :controller do
 
       context 'when outgoing' do
         let!(:outgoing_work) do
-            GenericWork.new.tap do |w|
-              w.apply_depositor_metadata(user.user_key)
-              w.save!
-              w.request_transfer_to(another_user)
-            end
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(user.user_key)
+            w.save!
+            w.request_transfer_to(another_user)
+          end
         end
 
         it 'assigns an instance variable' do
@@ -66,7 +66,7 @@ describe DashboardController, :type => :controller do
           expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
           expect(assigns[:outgoing].first.generic_work_id).to eq(outgoing_work.id)
         end
-     end
+      end
     end
 
     context "with activities" do
@@ -74,7 +74,7 @@ describe DashboardController, :type => :controller do
 
       before do
         allow(activity).to receive(:map).and_return(activity)
-        allow_any_instance_of(User).to receive(:get_all_user_activity).and_return(activity)
+        allow_any_instance_of(User).to receive(:all_user_activity).and_return(activity)
       end
 
       it "gathers the user's recent activity within the default amount of time" do

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe User, :type => :model do
+describe User, type: :model do
   let(:user) { FactoryGirl.build(:user) }
   let(:another_user) { FactoryGirl.build(:user) }
 
-  it "should have an email" do
+  it "has an email" do
     expect(user.user_key).to be_kind_of String
   end
-  it "should have activity stream-related methods defined" do
+  it "has activity stream-related methods defined" do
     expect(user).to respond_to(:stream)
     expect(user).to respond_to(:events)
     expect(user).to respond_to(:profile_events)
@@ -15,7 +15,7 @@ describe User, :type => :model do
     expect(user).to respond_to(:log_event)
     expect(user).to respond_to(:log_profile_event)
   end
-  it "should have social attributes" do
+  it "has social attributes" do
     expect(user).to respond_to(:twitter_handle)
     expect(user).to respond_to(:facebook_handle)
     expect(user).to respond_to(:googleplus_handle)
@@ -51,17 +51,17 @@ describe User, :type => :model do
   end
 
   describe "#to_param" do
-    let(:user) { User.new(email: 'jilluser@example.com') }
+    let(:user) { described_class.new(email: 'jilluser@example.com') }
 
-    it "should override to_param to make keys more recognizable in redis (and useable within Rails URLs)" do
+    it "overrides to_param to make keys more recognizable in redis (and useable within Rails URLs)" do
       expect(user.to_param).to eq("jilluser@example-dot-com")
     end
   end
 
-  it "should have a cancan ability defined" do
+  it "has a cancan ability defined" do
     expect(user).to respond_to(:can?)
   end
-  it "should not have any followers" do
+  it "does not have any followers" do
     expect(user.followers_count).to eq(0)
     expect(another_user.follow_count).to eq(0)
   end
@@ -72,13 +72,13 @@ describe User, :type => :model do
       user.follow(another_user)
     end
 
-    it "should be able to follow another user" do
+    it "is able to follow another user" do
       expect(user).to be_following(another_user)
       expect(another_user).to_not be_following(user)
       expect(another_user).to be_followed_by(user)
       expect(user).to_not be_followed_by(another_user)
     end
-    it "should be able to unfollow another user" do
+    it "is able to unfollow another user" do
       user.stop_following(another_user)
       expect(user).to_not be_following(another_user)
       expect(another_user).to_not be_followed_by(user)
@@ -94,17 +94,16 @@ describe User, :type => :model do
     let!(:trophy2) { user.trophies.create!(generic_work_id: work2.id) }
     let!(:trophy3) { user.trophies.create!(generic_work_id: work3.id) }
 
-    it "should return a list of generic works" do
+    it "returns a list of generic works" do
       expect(user.trophy_works).to eq [work1, work2, work3]
     end
-
   end
 
   describe "activity streams" do
     let(:now) { DateTime.now.to_i }
     let(:activities) {
-        [{ action: 'so and so edited their profile', timestamp: now },
-        { action: 'so and so uploaded a file', timestamp: (now - 360 ) }]
+      [{ action: 'so and so edited their profile', timestamp: now },
+       { action: 'so and so uploaded a file', timestamp: (now - 360) }]
     }
     let(:file_activities) {
       [{ action: 'uploaded a file', timestamp: now + 1 }]
@@ -116,11 +115,11 @@ describe User, :type => :model do
     end
 
     it "gathers the user's recent activity within the default amount of time" do
-      expect(user.get_all_user_activity).to eq(file_activities.concat(activities))
+      expect(user.all_user_activity).to eq(file_activities.concat(activities))
     end
 
     it "gathers the user's recent activity within a given timestamp" do
-      expect(user.get_all_user_activity(now-60)).to eq(file_activities.concat([activities.first]))
+      expect(user.all_user_activity(now - 60)).to eq(file_activities.concat([activities.first]))
     end
   end
   describe "proxy_deposit_rights" do

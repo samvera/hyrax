@@ -1,0 +1,156 @@
+require: rubocop-rspec
+
+AllCops:
+  RunRailsCops: true
+  DisplayCopNames: true
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
+    - 'spec/internal/**/*'
+    - 'sufia-models/app/models/concerns/sufia/generic_file/export.rb'
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/sufia/arkivo/metadata_munger.rb'
+    - 'sufia-models/app/services/sufia/generic_file_audit_service.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'sufia-models/app/services/sufia/generic_file_audit_service.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/generators/sufia/templates/catalog_controller.rb'
+    - 'sufia-models/app/models/datastreams/fits_datastream.rb'
+    - 'sufia-models/app/actors/sufia/generic_file/actor.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Style/BlockDelimiters:
+  Exclude:
+    - 'spec/**/*'
+
+Style/BlockEndNewline:
+  Exclude:
+    - 'spec/**/*'
+
+Style/MultilineBlockLayout:
+  Exclude:
+    - 'spec/**/*'
+
+Style/IndentationConsistency:
+  EnforcedStyle: rails
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/WordArray:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashSyntax:
+  Exclude:
+    - 'lib/generators/sufia/templates/catalog_controller.rb'
+
+Style/LineEndConcatenation:
+  Exclude:
+    - 'spec/test_app_templates/lib/generators/**/*'
+    - 'sufia-models/lib/generators/**/*'
+
+Style/PredicateName:
+  Exclude:
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/controllers/concerns/sufia/controller.rb'
+
+Style/GlobalVars:
+  Exclude:
+    - 'spec/**/*'
+    - 'spec/jobs/event_jobs_spec.rb'
+    - 'sufia-models/lib/generators/sufia/models/templates/config/redis_config.rb'
+    - 'sufia-models/lib/sufia/models/active_record/redis.rb'
+    - 'sufia-models/lib/sufia/models/active_fedora/redis.rb'
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/ClassVars:
+  Exclude:
+    - 'sufia-models/lib/sufia/models.rb'
+    - 'sufia-models/lib/sufia/models/engine.rb'
+
+Style/SignalException:
+  Enabled: false
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
+    - 'sufia-models/lib/generators/**/*'
+
+Rails/Date:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+RSpec/ExampleWording:
+  CustomTransform:
+    be: is
+    have: has
+    not: does not
+    NOT: does NOT
+  IgnoredWords:
+    - only
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/tasks/rake_spec.rb'
+    - 'spec/jobs/event_jobs_spec.rb'
+    - 'spec/config/sufia_events_spec.rb'
+    - 'spec/features/**/*'
+    - 'spec/views/**/*'
+    - 'spec/routing/**/*'
+    - 'spec/inputs/**/*'

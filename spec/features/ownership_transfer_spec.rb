@@ -5,7 +5,7 @@ include Selectors::Dashboard
 include Selectors::NewTransfers
 include Selectors::Transfers
 
-describe 'Transferring work ownership:', :type => :feature do
+describe 'Transferring work ownership:', type: :feature do
   let(:original_owner) { FactoryGirl.create(:archivist, display_name: 'Original Owner') }
   let(:new_owner) { FactoryGirl.create(:jill, display_name: 'New Owner') }
   let!(:work) do

@@ -11,9 +11,7 @@ describe 'batch_edits/edit.html.erb' do
     render
   end
 
-  it "should draw tooltip for description" do
+  it "draws tooltip for description" do
     expect(rendered).to have_selector ".generic_file_description a i.help-icon"
   end
 end
-
-

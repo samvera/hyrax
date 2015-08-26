@@ -12,14 +12,13 @@ module Sufia::Works
         self.class.human_readable_type
       end
 
-      # TODO this should be moved into the indexing service (e.g. GenericWorkIndexingService)
-      def to_solr(solr_doc={})
-        super(solr_doc).tap do |solr_doc|
-          solr_doc[Solrizer.solr_name('human_readable_type',:facetable)] = human_readable_type
-          solr_doc[Solrizer.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
+      # TODO: this should be moved into the indexing service (e.g. GenericWorkIndexingService)
+      def to_solr(solr_doc = {})
+        super(solr_doc).tap do |doc|
+          doc[Solrizer.solr_name('human_readable_type', :facetable)] = human_readable_type
+          doc[Solrizer.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
         end
       end
-
     end
   end
 end

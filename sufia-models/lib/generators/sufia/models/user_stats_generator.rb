@@ -2,7 +2,7 @@ require_relative 'abstract_migration_generator'
 
 class Sufia::Models::UserStatsGenerator < Sufia::Models::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
-  argument :model_name, type: :string , default: "user"
+  argument :model_name, type: :string, default: "user"
 
   desc """
 This generator adds usage stats methods to the user model in your application:
@@ -20,7 +20,7 @@ This generator adds usage stats methods to the user model in your application:
   def add_stats_mixin_to_user_model
     file_path = "app/models/#{model_name.underscore}.rb"
 
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       inject_into_file file_path, after: /include Sufia\:\:User.*$/ do
         "\n  include Sufia::UserUsageStats"
       end

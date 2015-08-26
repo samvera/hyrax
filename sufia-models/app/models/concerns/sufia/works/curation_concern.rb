@@ -3,6 +3,5 @@ module Sufia::Works
     extend ActiveSupport::Autoload
 
     autoload :Work
-
   end
 end

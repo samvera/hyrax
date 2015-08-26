@@ -42,7 +42,7 @@ Sufia.config do |config|
     "Research Paper" => "Research Paper",
     "Software or Program Code" => "Software or Program Code",
     "Video" => "Video",
-    "Other" => "Other",
+    "Other" => "Other"
   }
 
   config.resource_types_to_schema = {
@@ -65,11 +65,11 @@ Sufia.config do |config|
     "Research Paper" => "http://schema.org/ScholarlyArticle",
     "Software or Program Code" => "http://schema.org/Code",
     "Video" => "http://schema.org/VideoObject",
-    "Other" => "http://schema.org/CreativeWork",
+    "Other" => "http://schema.org/CreativeWork"
   }
 
   config.permission_levels = {
-    "Choose Access"=>"none",
+    "Choose Access" => "none",
     "View/Download" => "read",
     "Edit" => "edit"
   }
@@ -132,7 +132,6 @@ Sufia.config do |config|
   rescue Errno::ENOENT
     config.browse_everything = nil
   end
-
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"

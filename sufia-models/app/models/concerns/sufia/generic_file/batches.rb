@@ -8,10 +8,8 @@ module Sufia
 
       # Is this file in the middle of being processed by a batch?
       def processing?
-         try(:batch).try(:status) == ['processing'.freeze]
+        try(:batch).try(:status) == ['processing'.freeze]
       end
-
     end
   end
 end
-

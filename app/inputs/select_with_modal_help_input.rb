@@ -1,12 +1,13 @@
 class SelectWithModalHelpInput < MultiValueWithHelpInput
   def link_to_help
     template.link_to "##{attribute_name}Modal", id: "#{input_class}_help_modal", rel: 'button',
-            data: { toggle: 'modal' }, :'aria-label' => aria_label do
+                                                data: { toggle: 'modal' }, 'aria-label': aria_label do
       help_icon
     end
   end
 
   private
+
     def select_options
       @select_options ||= begin
         collection = options.delete(:collection) || self.class.boolean_collection
@@ -14,7 +15,7 @@ class SelectWithModalHelpInput < MultiValueWithHelpInput
       end
     end
 
-    def build_field(value, index)
+    def build_field(value, _index)
       html_options = input_html_options.dup
 
       if @rendered_first_element
@@ -32,5 +33,4 @@ class SelectWithModalHelpInput < MultiValueWithHelpInput
       html_options.merge!(options.slice(:include_blank))
       template.select_tag(attribute_name, template.options_for_select(select_options, value), html_options)
     end
-
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe 'users/show.html.erb', :type => :view do
-
+describe 'users/show.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   before do
     allow(view).to receive(:signed_in?).and_return(true)
@@ -13,7 +12,7 @@ describe 'users/show.html.erb', :type => :view do
     assign(:events, [])
   end
 
-  it "should draw 3 tabs" do
+  it "draws 3 tabs" do
     render
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_selector("ul#myTab.nav.nav-tabs > li > a[href='#contributions']")
@@ -24,13 +23,12 @@ describe 'users/show.html.erb', :type => :view do
     expect(page).to have_selector(".tab-content > div#activity_log.tab-pane")
   end
 
-  it "should have the vitals" do
+  it "has the vitals" do
     render
-    expect(rendered).to match /Joined on #{join_date.strftime("%b %d, %Y")}/
+    expect(rendered).to match(/Joined on #{join_date.strftime("%b %d, %Y")}/)
   end
 
   context "with trophy" do
-
     let(:generic_work) { stub_model(GenericWork, title: ["Fake object"], id: "abc123") }
     before do
       allow(view).to receive(:search_session).and_return({})
@@ -39,12 +37,11 @@ describe 'users/show.html.erb', :type => :view do
       assign(:trophies, [generic_work])
     end
 
-    it "should have trophy" do
+    it "has trophy" do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
       expect(page).to have_selector("#trophyrow_#{generic_work.id}")
-
     end
   end
 end

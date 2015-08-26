@@ -15,5 +15,4 @@ class EventJob
     self.id = id
     self.depositor_id = depositor_id
   end
-
 end

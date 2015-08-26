@@ -3,18 +3,17 @@ require 'spec_helper'
 describe "Browse Dashboard", type: :feature do
   let(:user) { FactoryGirl.create(:user) }
 
-  let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w"lorem ipsum dolor sit amet") }
+  let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet)) }
 
-  let!(:mp3_work) { FactoryGirl.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w"consectetur adipisicing elit") }
+  let!(:mp3_work) { FactoryGirl.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit)) }
 
-  let!(:audio_work) { FactoryGirl.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w"sed do eiusmod tempor incididunt ut labore") }
-
+  let!(:audio_work) { FactoryGirl.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore)) }
 
   before do
     sign_in user
   end
 
-  it "should search your files by default" do
+  it "searches your files by default" do
     visit "/dashboard"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
@@ -26,13 +25,12 @@ describe "Browse Dashboard", type: :feature do
     expect(page).to have_link("Upload")
   end
 
-
   context "within my files page" do
     before do
       visit "/dashboard/files"
     end
 
-    it "should allow you to search your own works and remove constraints" do
+    it "allows you to search your own works and remove constraints" do
       fill_in "q", with: "PDF"
       click_button "search-submit-header"
       expect(page).to have_content("Fake PDF Title")
@@ -44,7 +42,7 @@ describe "Browse Dashboard", type: :feature do
       expect(page).to have_content("Fake Wav File")
     end
 
-    it "should allow you to browse facets" do
+    it "allows you to browse facets" do
       click_link "Subject"
       click_link "more Subjects"
       click_link "consectetur"
@@ -54,8 +52,8 @@ describe "Browse Dashboard", type: :feature do
       end
     end
 
-    it "should refresh the page" do
-      # TODO this would make a good view test.
+    it "refreshes the page" do
+      # TODO: this would make a good view test.
       click_button "Refresh"
       within("#document_#{dissertation.id}") do
         click_button("Select an action")
@@ -63,15 +61,15 @@ describe "Browse Dashboard", type: :feature do
       end
     end
 
-    it "should allow me to delete works in batches",  js: true do
+    it "allows me to delete works in batches", js: true do
       first('input#check_all').click
       expect {
         click_button('Delete Selected')
-      }.to change{ GenericWork.count }.by(-3)
+      }.to change { GenericWork.count }.by(-3)
     end
 
-    it "should link to my other tabs" do
-      # TODO this would make a good view test.
+    it "links to my other tabs" do
+      # TODO: this would make a good view test.
       ["My Collections", "My Highlights", "Files Shared with Me"].each do |tab|
         within("#my_nav") do
           click_link(tab)
@@ -79,7 +77,5 @@ describe "Browse Dashboard", type: :feature do
         expect(page).to have_content(tab)
       end
     end
-
   end
-
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'collection', :type => :feature do
+describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
   let(:work1) do
@@ -20,8 +20,8 @@ describe 'collection', :type => :feature do
       sign_in user
     end
 
-    let(:title) {"Test Collection"}
-    let(:description) {"Description for collection we are testing."}
+    let(:title) { "Test Collection" }
+    let(:description) { "Description for collection we are testing." }
 
     it "makes a new collection", :js do
       visit '/dashboard'
@@ -72,7 +72,7 @@ describe 'collection', :type => :feature do
 
   describe 'delete collection' do
     let!(:collection) do
-      Collection.create( title: "Barrel of monkeys", description: 'apes of the cinema') do |c|
+      Collection.create(title: "Barrel of monkeys", description: 'apes of the cinema') do |c|
         c.apply_depositor_metadata(user.user_key)
       end
     end
@@ -81,9 +81,9 @@ describe 'collection', :type => :feature do
       visit '/dashboard/collections'
     end
 
-    it "should delete a collection" do
+    it "deletes a collection" do
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.id) do
+      within('#document_' + collection.id) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
@@ -93,7 +93,7 @@ describe 'collection', :type => :feature do
 
   describe 'collection show page' do
     let!(:collection) do
-      Collection.create( title: 'collection title', description: 'collection description',
+      Collection.create(title: 'collection title', description: 'collection description',
                         members: [work1, work2]) do |c|
         c.apply_depositor_metadata(user.user_key)
       end
@@ -105,7 +105,7 @@ describe 'collection', :type => :feature do
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.id) do
+      within('#document_' + collection.id) do
         click_link("Display all details of collection title")
       end
       expect(page).to have_content(collection.title)
@@ -125,7 +125,7 @@ describe 'collection', :type => :feature do
       expect(page).to have_content(work2.title.first)
     end
 
-    it "should hide collection descriptive metadata when searching a collection" do
+    it "hides collection descriptive metadata when searching a collection" do
       # URL: /dashboard/collections
       expect(page).to have_content(collection.title)
       within("#document_#{collection.id}") do
@@ -152,7 +152,7 @@ describe 'collection', :type => :feature do
   describe 'edit collection' do
     let!(:collection) do
       Collection.create(title: 'collection title', description: 'collection description',
-                     members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
+                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
     end
 
     before do
@@ -160,7 +160,7 @@ describe 'collection', :type => :feature do
       visit '/dashboard/collections'
     end
 
-    it "should edit and update collection metadata" do
+    it "edits and update collection metadata" do
       # URL: /dashboard/collections
       expect(page).to have_content(collection.title)
       within("#document_#{collection.id}") do
@@ -195,7 +195,7 @@ describe 'collection', :type => :feature do
   describe "Removing a file from a collection" do
     let!(:collection) do
       Collection.create(title: 'collection title', description: 'collection description',
-                     members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
+                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
     end
 
     before do
@@ -218,7 +218,7 @@ describe 'collection', :type => :feature do
   describe "Removing all files from a collection" do
     let!(:collection) do
       Collection.create(title: 'collection title', description: 'collection description',
-                     members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
+                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
     end
 
     before do
@@ -249,13 +249,13 @@ describe 'collection', :type => :feature do
 
     let!(:collection) do
       Collection.create(title: 'collection title', description: 'collection description',
-                     members: works) { |c| c.apply_depositor_metadata(user.user_key) }
+                        members: works) { |c| c.apply_depositor_metadata(user.user_key) }
     end
 
-    it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
+    it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/collections'
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.id) do
+      within('#document_' + collection.id) do
         click_link("Display all details of collection title")
       end
       expect(page).to have_css(".pager")

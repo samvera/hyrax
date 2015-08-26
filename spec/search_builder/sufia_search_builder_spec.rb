@@ -8,7 +8,7 @@ describe Sufia::SearchBuilder do
   end
 
   subject { TestBuilder.new([], self) }
-  let(:solr_params) {{ q: user_query }}
+  let(:solr_params) { { q: user_query } }
 
   context "with a user query" do
     let(:user_query) { "find me" }
@@ -27,5 +27,4 @@ describe Sufia::SearchBuilder do
       expect(solr_params[:q]).to be_nil
     end
   end
-
 end

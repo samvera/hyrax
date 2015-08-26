@@ -4,9 +4,7 @@ class ParentCollectionSearchBuilder < Hydra::SearchBuilder
   # include BlacklightAdvancedSearch::AdvancedSearchBuilder
   # self.from_field = 'child_object_ids_ssim'
 
-  def item
-    scope.item
-  end
+  delegate :item, to: :scope
 
   # include filters into the query to only include the collection memebers
   def include_item_ids(solr_parameters)

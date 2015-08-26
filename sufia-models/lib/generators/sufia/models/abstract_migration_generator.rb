@@ -11,7 +11,8 @@ class Sufia::Models::AbstractMigrationGenerator < Rails::Generators::Base
     if @prev_migration_nr
       @prev_migration_nr += 1
     else
-      if last_migration = Dir[File.join(path, '*.rb')].sort.last
+      last_migration = Dir[File.join(path, '*.rb')].sort.last
+      if last_migration
         @prev_migration_nr = last_migration.sub(File.join(path, '/'), '').to_i + 1
       else
         @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
@@ -22,9 +23,9 @@ class Sufia::Models::AbstractMigrationGenerator < Rails::Generators::Base
 
   protected
 
-  def better_migration_template(file)
-    migration_template "migrations/#{file}", "db/migrate/#{file}"
-  rescue Rails::Generators::Error => e
-    say_status("warning", e.message, :yellow)
-  end
+    def better_migration_template(file)
+      migration_template "migrations/#{file}", "db/migrate/#{file}"
+    rescue Rails::Generators::Error => e
+      say_status("warning", e.message, :yellow)
+    end
 end

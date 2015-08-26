@@ -7,7 +7,7 @@ module Sufia
       @view_context = view_context
     end
 
-    def value(field_name, locals={})
+    def value(field_name, locals = {})
       render_show_field_partial(field_name, locals)
     end
 
@@ -15,7 +15,7 @@ module Sufia
       t(:"#{model_name.param_key}.#{field}", scope: label_scope, default: field.to_s.humanize).presence
     end
 
-    def fields(terms, &block)
+    def fields(terms, &_block)
       @view_context.safe_join(terms.map { |term| yield self, term })
     end
 

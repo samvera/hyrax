@@ -14,7 +14,6 @@ module Sufia
       def private?
         !(public? || registered?)
       end
-
     end
   end
 end

@@ -18,4 +18,3 @@ This generator for upgrading sufia-models to 6.0 makes the following changes to 
     end
   end
 end
-

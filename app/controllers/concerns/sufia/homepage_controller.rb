@@ -23,13 +23,12 @@ module Sufia::HomepageController
 
   protected
 
-  def recent
-    # grab any recent documents
-    (_, @recent_documents) = search_results({q: '', sort:sort_field, rows: 4}, search_params_logic)
-  end
+    def recent
+      # grab any recent documents
+      (_, @recent_documents) = search_results({ q: '', sort: sort_field, rows: 4 }, search_params_logic)
+    end
 
-  def sort_field
-    "#{Solrizer.solr_name('system_create', :stored_sortable, type: :date)} desc"
-  end
-
+    def sort_field
+      "#{Solrizer.solr_name('system_create', :stored_sortable, type: :date)} desc"
+    end
 end

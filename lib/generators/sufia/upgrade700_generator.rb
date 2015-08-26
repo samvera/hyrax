@@ -5,7 +5,7 @@ class Sufia::Upgrade700Generator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
-  argument :model_name, type: :string , default: "user"
+  argument :model_name, type: :string, default: "user"
   desc """
 This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes to your application:
  1. Updates the Catalog Controller
@@ -22,9 +22,7 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
     gsub_file 'app/controllers/catalog_controller.rb', '[:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]', '[:add_advanced_parse_q_to_solr] + search_params_logic + [:add_access_controls_to_solr_params]'
   end
 
-
   def upgrade_sufia_models
     generate "sufia:models:upgrade700"
   end
-
 end

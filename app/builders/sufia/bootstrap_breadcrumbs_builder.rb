@@ -9,13 +9,11 @@
 class Sufia::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Builder
   include ActionView::Helpers::OutputSafetyHelper
   def render
-    if @elements.blank?
-      return ""
-    end
+    return "" if @elements.blank?
 
     @context.content_tag(:ul, class: 'breadcrumb') do
-      safe_join(@elements.uniq.collect {|e| render_element(e)})
-    end 
+      safe_join(@elements.uniq.collect { |e| render_element(e) })
+    end
   end
 
   def render_element(element)

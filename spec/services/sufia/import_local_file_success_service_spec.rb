@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::ImportLocalFileSuccessService do
-  let!(:depositor){ FactoryGirl.find_or_create(:jill) }
+  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
   let!(:filename) { 'world.png' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do

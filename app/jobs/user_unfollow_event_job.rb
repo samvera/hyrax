@@ -5,6 +5,7 @@ class UserUnfollowEventJob < EventJob
     self.unfollower_id = unfollower_id
     self.unfollowee_id = unfollowee_id
   end
+
   def run
     action = "User #{link_to_profile unfollower_id} has unfollowed #{link_to_profile unfollowee_id}"
     timestamp = Time.now.to_i

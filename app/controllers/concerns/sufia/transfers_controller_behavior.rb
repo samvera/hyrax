@@ -5,11 +5,11 @@ module Sufia
     included do
       before_action :load_proxy_deposit_request, only: :create
       load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
-      before_action :get_id_and_authorize_depositor, only: [:new, :create]
+      before_action :authorize_depositor_by_id, only: [:new, :create]
       # Catch permission errors
-      # TODO we should make this a module in Sufia
+      # TODO: we should make this a module in Sufia
       rescue_from CanCan::AccessDenied do |exception|
-        if current_user and current_user.persisted?
+        if current_user && current_user.persisted?
           redirect_to root_url, alert: exception.message
         else
           session["user_return_to"] = request.url
@@ -32,7 +32,7 @@ module Sufia
     end
 
     def index
-      @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject &:deleted_work?
+      @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject(&:deleted_work?)
       @outgoing = ProxyDepositRequest.where(sending_user_id: current_user.id)
     end
 
@@ -56,20 +56,20 @@ module Sufia
 
     private
 
-    def get_id_and_authorize_depositor
-      @id = params[:id]
-      authorize! :transfer, @id
-      @proxy_deposit_request.generic_work_id = @id
-    rescue CanCan::AccessDenied
-      redirect_to root_url, alert: 'You are not authorized to transfer this work.'
-    end
+      def authorize_depositor_by_id
+        @id = params[:id]
+        authorize! :transfer, @id
+        @proxy_deposit_request.generic_work_id = @id
+      rescue CanCan::AccessDenied
+        redirect_to root_url, alert: 'You are not authorized to transfer this work.'
+      end
 
-    def load_proxy_deposit_request
-      @proxy_deposit_request = ProxyDepositRequest.new(proxy_deposit_request_params)
-    end
+      def load_proxy_deposit_request
+        @proxy_deposit_request = ProxyDepositRequest.new(proxy_deposit_request_params)
+      end
 
-    def proxy_deposit_request_params
-      params.require(:proxy_deposit_request).permit(:transfer_to)
-    end
+      def proxy_deposit_request_params
+        params.require(:proxy_deposit_request).permit(:transfer_to)
+      end
   end
 end

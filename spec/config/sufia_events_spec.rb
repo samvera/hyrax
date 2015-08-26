@@ -1,8 +1,8 @@
 require 'spec_helper'
 # Testing that these behaviors are configured (mainly they are triggered by CurationConcerns actors)
 describe "sufia_events initialers sets CurationConcerns.config" do
-  let(:generic_file)  { double("GenericFile", id:"6789") }
-  let(:user)          { double("User", user_key:"an_id")}
+  let(:generic_file)  { double("GenericFile", id: "6789") }
+  let(:user)          { double("User", user_key: "an_id") }
 
   describe "after_create_content" do
     it "to queue a ContentDepositEventJob" do
@@ -45,5 +45,4 @@ describe "sufia_events initialers sets CurationConcerns.config" do
       CurationConcerns.config.after_destroy.call(id, user)
     end
   end
-
 end

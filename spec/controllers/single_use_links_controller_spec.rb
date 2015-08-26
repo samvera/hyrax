@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SingleUseLinksController, :type => :controller do
+describe SingleUseLinksController, type: :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:file) do
@@ -51,7 +51,6 @@ describe SingleUseLinksController, :type => :controller do
         get 'new_download', id: file
         expect(response).not_to be_success
       end
-
     end
 
     describe "GET 'show'" do
@@ -59,7 +58,6 @@ describe SingleUseLinksController, :type => :controller do
         get 'new_show', id: file
         expect(response).not_to be_success
       end
-
     end
   end
 

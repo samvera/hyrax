@@ -4,6 +4,6 @@ module Sufia
 
     metrics :pageviews
     dimensions :date
-    filter :for_path, &lambda { |path| contains(:pagePath, path) }
+    filter :for_path, &->(path) { contains(:pagePath, path) }
   end
 end

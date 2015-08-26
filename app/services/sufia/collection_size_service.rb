@@ -6,7 +6,7 @@ module Sufia
 
     attr_reader :collection
 
-    self.copy_blacklight_config_from(CatalogController)
+    copy_blacklight_config_from(CatalogController)
 
     def self.run(collection)
       new(collection).collection_size
@@ -17,9 +17,11 @@ module Sufia
     end
 
     def collection_size
-      query = collection_search_builder.rows(max_collection_size).merge({ fl:[size_field] })
+      query = collection_search_builder.rows(max_collection_size).merge(fl: [size_field])
       resp = repository.search(query)
-      resp.documents.reduce(0) { |total, doc| total += doc[size_field].blank? ? 0 : doc[size_field][0].to_f }
+      resp.documents.reduce(0) do |total, doc|
+        total + doc[size_field].blank? ? 0 : doc[size_field][0].to_f
+      end
     end
 
     def collection_search_builder

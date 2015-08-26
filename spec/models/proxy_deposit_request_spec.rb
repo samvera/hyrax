@@ -13,8 +13,8 @@ describe ProxyDepositRequest, type: :model do
   end
 
   subject do
-    ProxyDepositRequest.new(generic_work_id: work.id, sending_user: sender,
-      receiving_user: receiver, sender_comment: "please take this")
+    described_class.new(generic_work_id: work.id, sending_user: sender,
+                        receiving_user: receiver, sender_comment: "please take this")
   end
 
   its(:status) { is_expected.to eq 'pending' }
@@ -62,7 +62,7 @@ describe ProxyDepositRequest, type: :model do
 
     its(:status) { is_expected.to eq 'canceled' }
     its(:fulfillment_date) { is_expected.not_to be_nil }
-   end
+  end
 
   describe 'transfer' do
     context 'when the transfer_to user is not found' do
@@ -92,7 +92,7 @@ describe ProxyDepositRequest, type: :model do
     end
 
     context 'when the work is already being transferred' do
-      let(:subject2) {ProxyDepositRequest.new(generic_work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this')}
+      let(:subject2) { described_class.new(generic_work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this') }
 
       it 'raises an error' do
         subject.save!

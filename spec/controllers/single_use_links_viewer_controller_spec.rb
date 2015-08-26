@@ -72,5 +72,4 @@ describe SingleUseLinksViewerController do
       end
     end
   end
-
 end

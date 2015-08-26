@@ -20,7 +20,7 @@ module Sufia
       if @activity.empty?
         t('sufia.dashboard.no_activity')
       else
-        render partial: 'users/activity_log', locals: {events: @activity}
+        render partial: 'users/activity_log', locals: { events: @activity }
       end
     end
 
@@ -40,11 +40,11 @@ module Sufia
       params[:controller].match(/^my\/files/)
     end
 
-    def number_of_files user=current_user
+    def number_of_files(user = current_user)
       ::GenericFile.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
     end
 
-    def number_of_collections user=current_user
+    def number_of_collections(user = current_user)
       ::Collection.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
     end
 
@@ -53,10 +53,8 @@ module Sufia
     end
 
     def link_to_additional_notifications
-      if @notifications.count > Sufia.config.max_notifications_for_dashboard
-        link_to t('sufia.dashboard.additional_notifications'), sufia.notifications_path
-      end
+      return unless @notifications.count > Sufia.config.max_notifications_for_dashboard
+      link_to t('sufia.dashboard.additional_notifications'), sufia.notifications_path
     end
-
   end
 end

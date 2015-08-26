@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::ImportUrlSuccessService do
-  let!(:depositor){ FactoryGirl.find_or_create(:jill) }
+  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:label) { 'foobarbaz' }
   let(:file) do

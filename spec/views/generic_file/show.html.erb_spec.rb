@@ -1,31 +1,31 @@
 require 'spec_helper'
 
-describe 'generic_files/show.html.erb', :type => :view do
-  let(:depositor) {
+describe 'generic_files/show.html.erb', type: :view do
+  let(:depositor) do
     stub_model(User,
-      user_key: 'bob',
-      twitter_handle: 'bot4lib')
-  }
+               user_key: 'bob',
+               twitter_handle: 'bot4lib')
+  end
 
   let(:content) do
-    content = double('content', versions: [], mimeType: 'application/pdf')
+    double('content', versions: [], mimeType: 'application/pdf')
   end
 
   let(:generic_file) do
     stub_model(GenericFile, id: '123',
-      depositor: depositor.user_key,
-      audit_stat: 1,
-      title: ['My Title'],
-      description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
-      tag: ['bacon', 'sausage', 'eggs'],
-      rights: ['http://example.org/rights/1'],
-      based_near: ['Seattle, WA, US'],
-      contributor: ['Tweedledee', 'Tweedledum'],
-      creator: ['Doe, John', 'Doe, Jane'],
-      date_created: ['1984-01-02'],
-      language: ['Quechua'],
-      publisher: ['Random Publishing, Inc.'],
-      subject: ['Biology', 'Physiology', 'Ethnography'])
+                            depositor: depositor.user_key,
+                            audit_stat: 1,
+                            title: ['My Title'],
+                            description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
+                            tag: ['bacon', 'sausage', 'eggs'],
+                            rights: ['http://example.org/rights/1'],
+                            based_near: ['Seattle, WA, US'],
+                            contributor: ['Tweedledee', 'Tweedledum'],
+                            creator: ['Doe, John', 'Doe, Jane'],
+                            date_created: ['1984-01-02'],
+                            language: ['Quechua'],
+                            publisher: ['Random Publishing, Inc.'],
+                            subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
   let(:presenter) do
@@ -202,15 +202,15 @@ describe 'generic_files/show.html.erb', :type => :view do
 
     context "when the file is not featured in any collections" do
       let(:collections) { [] }
-      it "should display the empty message" do
+      it "displays the empty message" do
         expect(rendered).to have_text(t('sufia.file.collections_list.empty'))
       end
     end
 
     context "when the file is featured in collections" do
-      let(:collections) { [stub_model(Collection, title: 'collection1', id: '456') ] }
+      let(:collections) { [stub_model(Collection, title: 'collection1', id: '456')] }
 
-      it "should display the header and titles of collections it belongs to" do
+      it "displays the header and titles of collections it belongs to" do
         expect(rendered).to have_text(t('sufia.file.collections_list.heading'))
         expect(rendered).to have_text('collection1')
       end
@@ -221,9 +221,8 @@ describe 'generic_files/show.html.erb', :type => :view do
     before do
       render
     end
-    it "should display the visibility badge" do
-      expect(rendered).to include('<span class="label label-danger" title="'+t('sufia.visibility.private_title_attr')+'">'+t('sufia.visibility.private')+'</span></a>')
+    it "displays the visibility badge" do
+      expect(rendered).to include('<span class="label label-danger" title="' + t('sufia.visibility.private_title_attr') + '">' + t('sufia.visibility.private') + '</span></a>')
     end
   end
-
 end

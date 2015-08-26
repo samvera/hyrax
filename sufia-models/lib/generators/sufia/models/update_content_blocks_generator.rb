@@ -14,5 +14,4 @@ This generator creates a database migration to add an external_key column to the
   def copy_migrations
     better_migration_template 'add_external_key_to_content_blocks.rb'
   end
-
 end

@@ -1,28 +1,28 @@
+# coding: utf-8
 require 'spec_helper'
 
-describe "Browse catalog:", :type => :feature do
-
-  let!(:jills_work) {
-    GenericWork.new.tap do |work|
+describe "Browse catalog:", type: :feature do
+  let!(:jills_work) do
+    GenericWork.new do |work|
       work.title = ["Jill's Research"]
       (1..25).each do |i|
-        work.tag << ["tag#{sprintf('%02d', i)}"]
+        work.tag << ["tag#{format('%02d', i)}"]
       end
       work.apply_depositor_metadata('jilluser')
       work.read_groups = ['public']
       work.save!
     end
-  }
+  end
 
-  let!(:jacks_work) {
-    GenericWork.new.tap do |work|
-    work.title = ["Jack's Research"]
-    work.tag = ['jacks_tag']
-    work.apply_depositor_metadata('jackuser')
-    work.read_groups = ['public']
-    work.save!
+  let!(:jacks_work) do
+    GenericWork.new do |work|
+      work.title = ["Jack's Research"]
+      work.tag = ['jacks_tag']
+      work.apply_depositor_metadata('jackuser')
+      work.read_groups = ['public']
+      work.save!
     end
-  }
+  end
 
   before do
     visit '/'
@@ -44,20 +44,19 @@ describe "Browse catalog:", :type => :feature do
 
       within(".modal-body") do
         expect(page).not_to have_content 'tag05'
-        expect(page).to     have_content 'tag21'
+        expect(page).to have_content 'tag21'
 
         click_link 'tag21'
       end
 
-      expect(page).to     have_content jills_work.title.first
+      expect(page).to have_content jills_work.title.first
       expect(page).to_not have_content jacks_work.title.first
 
-# TODO:  After the _generic_work.html.erb view is finished
-#
-#      click_link jills_work.title.first
-#      expect(page).to     have_content "Download"
-#      expect(page).not_to have_content "Edit"
+      # TODO:  After the _generic_work.html.erb view is finished
+      #
+      #      click_link jills_work.title.first
+      #      expect(page).to     have_content "Download"
+      #      expect(page).not_to have_content "Edit"
     end
   end
-
 end

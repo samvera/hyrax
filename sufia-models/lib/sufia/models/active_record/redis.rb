@@ -11,7 +11,7 @@ ActiveRecord::Base.class_eval do
     nil
   end
 
-  def events(size=-1)
+  def events(size = -1)
     stream[:event].lrange(0, size).map do |event_id|
       {
         action: $redis.hget("events:#{event_id}", "action"),
@@ -22,7 +22,7 @@ ActiveRecord::Base.class_eval do
     []
   end
 
-  def profile_events(size=-1)
+  def profile_events(size = -1)
     stream[:event][:profile].lrange(0, size).map do |event_id|
       {
         action: $redis.hget("events:#{event_id}", "action"),
@@ -53,4 +53,3 @@ ActiveRecord::Base.class_eval do
     nil
   end
 end
-

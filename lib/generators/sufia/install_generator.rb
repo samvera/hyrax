@@ -7,7 +7,7 @@ module Sufia
 
     source_root File.expand_path('../templates', __FILE__)
 
-    argument :model_name, type: :string , default: "user"
+    argument :model_name, type: :string, default: "user"
     desc """
   This generator makes the following changes to your application:
    1. Runs curation_concerns:install and sufia:models:install
@@ -20,10 +20,10 @@ module Sufia
 
     def run_required_generators
       generate "curation_concerns:install -f"
-      generate "sufia:models:install --skip-curation-concerns"   # skip curation_concerns installer because it was alredy run by
+      generate "sufia:models:install --skip-curation-concerns" # skip curation_concerns installer because it was alredy run by
     end
 
-    # TODO make the curation_concerns installer take a --skip-assets flag
+    # TODO: make the curation_concerns installer take a --skip-assets flag
     def remove_curation_concerns_scss
       remove_file 'app/assets/stylesheets/curation_concerns.css.scss'
     end
@@ -41,9 +41,9 @@ module Sufia
     # Add behaviors to the application controller
     def inject_sufia_controller_behavior
       file_path = "app/controllers/application_controller.rb"
-      if File.exists?(file_path)
+      if File.exist?(file_path)
         insert_into_file file_path, after: 'CurationConcerns::ApplicationControllerBehavior' do
-          "  \n  # Adds Sufia behaviors into the application controller \n" +
+          "  \n  # Adds Sufia behaviors into the application controller \n" \
           "  include Sufia::Controller\n"
         end
       else
@@ -53,9 +53,8 @@ module Sufia
 
     def use_blacklight_layout_theme
       file_path = "app/controllers/application_controller.rb"
-      if File.exists?(file_path)
-        gsub_file file_path, /with_themed_layout '1_column'/, "layout 'sufia-one-column'"
-      end
+      return unless File.exist?(file_path)
+      gsub_file file_path, /with_themed_layout '1_column'/, "layout 'sufia-one-column'"
     end
 
     def catalog_controller
@@ -75,30 +74,29 @@ module Sufia
                 '//= require_tree .', '//= require sufia'
     end
 
-
     def tinymce_config
       copy_file "config/tinymce.yml", "config/tinymce.yml"
     end
 
     # The engine routes have to come after the devise routes so that /users/sign_in will work
     def inject_routes
-      gsub_file 'config/routes.rb',  /root (:to =>|to:) "catalog#index"/, ''
+      gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
 
-      routing_code = "\n  Hydra::BatchEdit.add_routes(self)\n" +
+      routing_code = "\n  Hydra::BatchEdit.add_routes(self)\n" \
         "  # This must be the very last route in the file because it has a catch-all route for 404 errors.
     # This behavior seems to show up only in production mode.
     mount Sufia::Engine => '/'\n  root to: 'homepage#index'\n"
 
       sentinel = /devise_for :users/
-      inject_into_file 'config/routes.rb', routing_code, { after: sentinel, verbose: false }
+      inject_into_file 'config/routes.rb', routing_code, after: sentinel, verbose: false
     end
 
     # Add behaviors to the SolrDocument model
     def inject_sufia_solr_document_behavior
       file_path = "app/models/solr_document.rb"
-      if File.exists?(file_path)
+      if File.exist?(file_path)
         inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
-          "\n  # Adds Sufia behaviors to the SolrDocument.\n" +
+          "\n  # Adds Sufia behaviors to the SolrDocument.\n" \
             "  include Sufia::SolrDocumentBehavior\n"
         end
       else
@@ -117,6 +115,5 @@ module Sufia
     def install_blacklight_gallery
       generate "blacklight_gallery:install"
     end
-
   end
 end

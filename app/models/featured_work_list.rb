@@ -21,11 +21,10 @@ class FeaturedWorkList
     end
   end
 
-  def empty?
-    featured_works.empty?
-  end
+  delegate :empty?, to: :featured_works
 
   private
+
     def add_solr_document_to_works
       solr_docs.each do |doc|
         work_with_id(doc['id']).generic_work_solr_document = SolrDocument.new(doc)
@@ -41,7 +40,6 @@ class FeaturedWorkList
     end
 
     def work_with_id(id)
-      @works.find { |w| w.generic_work_id == id}
+      @works.find { |w| w.generic_work_id == id }
     end
-
 end

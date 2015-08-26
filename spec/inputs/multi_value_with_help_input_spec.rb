@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'MultiValueWithHelpInput', type: :input do
-  subject { input_for file, field, { as: :multi_value_with_help, required: true } }
+  subject { input_for file, field, as: :multi_value_with_help, required: true }
   let(:file) { GenericFile.new }
 
   context "when the field has a translation" do
@@ -21,5 +21,4 @@ describe 'MultiValueWithHelpInput', type: :input do
       expect(subject).to have_selector('i.help-icon')
     end
   end
-
 end

@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 describe ContentDepositorChangeEventJob do
-  let!(:depositor){ FactoryGirl.find_or_create(:jill) }
-  let!(:receiver){ FactoryGirl.find_or_create(:archivist) }
-  let!(:file) do 
+  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
+  let!(:receiver) { FactoryGirl.find_or_create(:archivist) }
+  let!(:file) do
     GenericFile.new.tap do |f|
       f.apply_depositor_metadata(depositor.user_key)
       f.save!
     end
   end
-  let!(:work) do 
+  let!(:work) do
     GenericWork.new.tap do |w|
       w.apply_depositor_metadata(depositor.user_key)
       w.save!
@@ -18,7 +18,7 @@ describe ContentDepositorChangeEventJob do
 
   before do
     work.generic_files += [file]
-    ContentDepositorChangeEventJob.new(work.id, receiver.user_key).run
+    described_class.new(work.id, receiver.user_key).run
   end
 
   it "changes the depositor and records an original depositor" do

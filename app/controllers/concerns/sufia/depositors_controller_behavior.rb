@@ -3,14 +3,13 @@ module Sufia
     extend ActiveSupport::Concern
 
     included do
-      before_filter :authenticate_user!
-      before_filter :validate_users, only: :create
+      before_action :authenticate_user!
+      before_action :validate_users, only: :create
     end
-
 
     # Overriding the default behavior from Hydra::Core::ContorllerBehavior
     def deny_access(exception)
-      if current_user and current_user.persisted?
+      if current_user && current_user.persisted?
         redirect_to root_path, alert: exception.message
       else
         session['user_return_to'.freeze] = request.url
@@ -36,17 +35,15 @@ module Sufia
     end
 
     def validate_users
-      if params[:user_id] == params[:grantee_id]
-        head :ok
-      end
+      head :ok if params[:user_id] == params[:grantee_id]
     end
 
     private
 
-    def authorize_and_return_grantor
-      grantor = ::User.from_url_component(params[:user_id])
-      authorize! :edit, grantor
-      return grantor
-    end
+      def authorize_and_return_grantor
+        grantor = ::User.from_url_component(params[:user_id])
+        authorize! :edit, grantor
+        grantor
+      end
   end
 end

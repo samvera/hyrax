@@ -1,21 +1,20 @@
 require 'spec_helper'
 
 describe GenericWork do
-
   describe ".properties" do
     subject { described_class.properties.keys }
     it { is_expected.to include("has_model", "create_date", "modified_date") }
   end
 
   describe "basic metadata" do
-    it "should have dc properties" do
+    it "has dc properties" do
       subject.title = ['foo', 'bar']
       expect(subject.title).to eq ['foo', 'bar']
     end
   end
 
   describe "created for someone (proxy)" do
-    let(:work) { GenericWork.new.tap {|gw| gw.apply_depositor_metadata("user")} }
+    let(:work) { described_class.new.tap { |gw| gw.apply_depositor_metadata("user") } }
     let(:transfer_to) { FactoryGirl.find_or_create(:jill) }
 
     it "transfers the request" do
@@ -28,12 +27,12 @@ describe GenericWork do
   end
 
   describe "delegations" do
-    let(:work) { GenericWork.new {|gw| gw.apply_depositor_metadata("user")} }
+    let(:work) { described_class.new { |gw| gw.apply_depositor_metadata("user") } }
     let(:proxy_depositor) { FactoryGirl.find_or_create(:jill) }
     before do
       work.proxy_depositor = proxy_depositor.user_key
     end
-    it "should include proxies" do
+    it "includes proxies" do
       expect(work).to respond_to(:relative_path)
       expect(work).to respond_to(:depositor)
       expect(work.proxy_depositor).to eq proxy_depositor.user_key
@@ -43,23 +42,23 @@ describe GenericWork do
   describe "trophies" do
     before do
       u = FactoryGirl.find_or_create(:jill)
-      @w = GenericWork.new.tap do |gw|
+      @w = described_class.new.tap do |gw|
         gw.apply_depositor_metadata(u)
         gw.save!
       end
       @t = Trophy.create(user_id: u.id, generic_work_id: @w.id)
     end
-    it "should have a trophy" do
+    it "has a trophy" do
       expect(Trophy.where(generic_work_id: @w.id).count).to eq 1
     end
-    it "should remove all trophies when work is deleted" do
+    it "removes all trophies when work is deleted" do
       @w.destroy
       expect(Trophy.where(generic_work_id: @w.id).count).to eq 0
     end
   end
 
   describe "metadata" do
-    it "should have descriptive metadata" do
+    it "has descriptive metadata" do
       expect(subject).to respond_to(:relative_path)
       expect(subject).to respond_to(:depositor)
       expect(subject).to respond_to(:related_url)
@@ -81,4 +80,3 @@ describe GenericWork do
     end
   end
 end
-

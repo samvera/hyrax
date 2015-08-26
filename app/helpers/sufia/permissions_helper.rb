@@ -1,6 +1,5 @@
 module Sufia
   module PermissionsHelper
-
     def visibility_help
       help_link('generic_files/visibility', 'Visibility', 'Useage information for visibility')
     end
@@ -12,8 +11,8 @@ module Sufia
     private
 
       def help_link(file, title, aria_label)
-        link_to help_icon, '#', rel: 'popover', :'data-content' => capture_content(file),
-          :'data-original-title' => title, :'aria-label' => aria_label
+        link_to help_icon, '#', rel: 'popover', 'data-content': capture_content(file),
+                                'data-original-title': title, 'aria-label': aria_label
       end
 
       def capture_content(file)
@@ -23,7 +22,7 @@ module Sufia
       end
 
       def help_icon
-        content_tag 'i', '', :'aria-hidden' => true, class: 'help-icon'
+        content_tag 'i', '', 'aria-hidden': true, class: 'help-icon'
       end
   end
 end

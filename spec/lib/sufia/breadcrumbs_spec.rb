@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::Breadcrumbs do  
-
+describe Sufia::Breadcrumbs do
   let(:crumbs) do
     TestClass.new
   end
@@ -18,7 +17,8 @@ describe Sufia::Breadcrumbs do
         @trail = []
         @request = true # avoids the allow_message_expectations_on_nil warning
       end
-      def add_breadcrumb text, link
+
+      def add_breadcrumb(text, link)
         @trail << [text, link]
       end
     end
@@ -85,7 +85,7 @@ describe Sufia::Breadcrumbs do
         allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
         allow(crumbs).to receive(:user_signed_in?) { true }
         allow(crumbs).to receive(:action_name).and_return("edit")
-        allow(crumbs).to receive(:params).and_return({"id" => "abc123"})
+        allow(crumbs).to receive(:params).and_return("id" => "abc123")
         allow(crumbs).to receive(:controller_name).and_return("generic_files")
       end
 
@@ -102,7 +102,7 @@ describe Sufia::Breadcrumbs do
         allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
         allow(crumbs).to receive(:user_signed_in?) { true }
         allow(crumbs).to receive(:action_name).and_return("stats")
-        allow(crumbs).to receive(:params).and_return({"id" => "abc123"})
+        allow(crumbs).to receive(:params).and_return("id" => "abc123")
         allow(crumbs).to receive(:controller_name).and_return("generic_files")
       end
 
@@ -114,5 +114,4 @@ describe Sufia::Breadcrumbs do
       end
     end
   end
-
 end

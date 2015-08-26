@@ -2,7 +2,6 @@ require 'spec_helper'
 require_relative '../../../sufia-models/lib/sufia/models/stats/user_stat_importer'
 
 describe Sufia::UserStatImporter do
-
   before do
     allow(Sufia.config).to receive(:analytic_start_date) { dates[0] }
     stub_out_call_to_google_analytics
@@ -35,13 +34,13 @@ describe Sufia::UserStatImporter do
 
   let(:dates) {
     ldates = []
-    4.downto(0) {|idx| ldates << (Date.today-idx.day) }
+    4.downto(0) { |idx| ldates << (Date.today - idx.day) }
     ldates
   }
 
   let(:date_strs) {
     ldate_strs = []
-    dates.each {|date| ldate_strs << date.strftime("%Y%m%d") }
+    dates.each { |date| ldate_strs << date.strftime("%Y%m%d") }
     ldate_strs
   }
 
@@ -82,7 +81,7 @@ describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[1], totalEvents: "3"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[2], totalEvents: "5"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[3], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7")
     ]
   }
 
@@ -92,7 +91,7 @@ describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[1], totalEvents: "4"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[2], totalEvents: "3"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[3], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3")
     ]
   }
 
@@ -102,14 +101,13 @@ describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[1], totalEvents: "4"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[2], totalEvents: "2"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[3], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6")
     ]
   }
 
-
   describe 'with empty cache' do
     it 'for each user it adds one entry per day to the cache' do
-      Sufia::UserStatImporter.new.import
+      described_class.new.import
 
       bilbos_stats = UserStat.where(user_id: bilbo.id).order(date: :asc)
       expect(bilbos_stats.count).to eq 4
@@ -147,7 +145,7 @@ describe Sufia::UserStatImporter do
       expect(User.count).to eq 3
       expect(UserStat.count).to eq 3
 
-      Sufia::UserStatImporter.new.import
+      described_class.new.import
 
       bilbos_stats = UserStat.where(user_id: bilbo.id).order(date: :asc)
       expect(bilbos_stats.count).to eq 4
@@ -167,17 +165,16 @@ describe Sufia::UserStatImporter do
     end
 
     it "processes the oldest records first" do
-      # Since Gollum has no stats it will be the first one processed. 
+      # Since Gollum has no stats it will be the first one processed.
       # Followed by Frodo and Bilbo.
-      sorted_ids = Sufia::UserStatImporter.new.sorted_users.map { |u| u.id }
+      sorted_ids = described_class.new.sorted_users.map(&:id)
       expect(sorted_ids).to eq([gollum.id, frodo.id, bilbo.id])
     end
   end
 end
 
-
 def stub_out_call_to_google_analytics
-  allow(FileViewStat).to receive(:ga_statistics) do |date, file_id|
+  allow(FileViewStat).to receive(:ga_statistics) do |_date, file_id|
     case file_id
     when bilbo_file_1.id
       bilbo_file_1_pageview_stats
@@ -188,7 +185,7 @@ def stub_out_call_to_google_analytics
     end
   end
 
-  allow(FileDownloadStat).to receive(:ga_statistics) do |date, file_id|
+  allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file_id|
     case file_id
     when bilbo_file_1.id
       bilbo_file_1_download_stats
