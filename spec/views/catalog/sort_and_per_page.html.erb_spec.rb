@@ -24,6 +24,6 @@ describe 'catalog/_sort_and_per_page.html.erb', type: :view do
 
   it 'displays the relevance option for sorting' do
     render
-    expect(rendered).to include("<li><a href=\"/catalog?sort=score+desc%2C+date_uploaded_dtsi+desc\">relevance</a></li>")
+    expect(rendered).to include("<li><a href=\"/catalog?sort=score+desc%2C+system_create_dtsi+desc\">relevance</a></li>")
   end
 end

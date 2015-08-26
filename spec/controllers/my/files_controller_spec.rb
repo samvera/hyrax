@@ -77,4 +77,9 @@ describe My::FilesController, type: :controller do
       expect(assigns[:user_collections].map(&:id)).to eq [my_collection.id]
     end
   end # context 'with different types of records'
+
+  it "sets add_files_to_collection when provided in params" do
+    get :index, add_files_to_collection: '12345'
+    expect(assigns(:add_files_to_collection)).to eql('12345')
+  end
 end

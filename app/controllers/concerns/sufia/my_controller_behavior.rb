@@ -53,6 +53,8 @@ module Sufia
       @batch_size_on_other_page = batch_size - count_on_page
       @batch_part_on_other_page = (@batch_size_on_other_page) > 0
 
+      @add_files_to_collection = params.fetch(:add_files_to_collection, '')
+
       respond_to do |format|
         format.html {}
         format.rss  { render layout: false }

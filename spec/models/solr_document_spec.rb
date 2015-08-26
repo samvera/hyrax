@@ -8,6 +8,34 @@ describe ::SolrDocument, type: :model do
     it "is a date" do
       expect(subject.date_uploaded).to eq '03/14/2013'
     end
+    it "logs parse errors" do
+      expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+      subject['date_uploaded_dtsi'] = 'Test'
+      subject.date_uploaded
+    end
+  end
+
+  describe "create_date" do
+    before do
+      subject['system_create_dtsi'] = '2013-03-14T00:00:00Z'
+    end
+    it "is a date" do
+      expect(subject.create_date).to eq '03/14/2013'
+    end
+    it "logs parse errors" do
+      expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+      subject['system_create_dtsi'] = 'Test'
+      subject.create_date
+    end
+  end
+
+  describe "resource_type" do
+    before do
+      subject['resource_type_tesim'] = ['Image']
+    end
+    it "returns the resource type" do
+      expect(subject.resource_type).to eq ['Image']
+    end
   end
 
   describe '#to_param' do

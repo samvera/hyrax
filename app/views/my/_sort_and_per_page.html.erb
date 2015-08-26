@@ -1,4 +1,4 @@
-<div class="batch-info"> 
+<div class="batch-info">
   <div>
     <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>
   </div>
@@ -13,7 +13,7 @@
 
   <div class="sort-toggle">
     <% unless @response.response['numFound'] < 2 %>
-      <%= form_tag sufia.dashboard_files_path, method: :get, class: 'per_page form-inline' do %>
+      <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
             <fieldset class="col-xs-12">
               <legend class="sr-only"><%= t('sufia.sort_label') %></legend>
               <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
@@ -31,5 +31,5 @@
       <% end %>
     <% end unless sort_fields.empty? %>
   </div>
-  
+
 </div>
