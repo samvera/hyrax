@@ -3,6 +3,7 @@ require 'spec_helper'
 describe CurationConcerns::GenericFileIndexingService do
   let(:generic_file) do
     GenericFile.new(
+      id: 'foo123',
       part_of: ['Arabiana'],
       contributor: ['Mohammad'],
       creator: ['Allah'],
@@ -29,6 +30,7 @@ describe CurationConcerns::GenericFileIndexingService do
     subject { described_class.new(generic_file).generate_solr_document }
 
     it 'has fields' do
+      expect(subject[Solrizer.solr_name('representative')]).to eq 'foo123'
       expect(subject[Solrizer.solr_name('part_of')]).to be_nil
       expect(subject[Solrizer.solr_name('date_uploaded')]).to be_nil
       expect(subject[Solrizer.solr_name('date_modified')]).to be_nil
