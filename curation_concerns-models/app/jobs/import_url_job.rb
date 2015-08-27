@@ -48,8 +48,4 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
     end
     f.rewind
   end
-
-  def job_user
-    User.batchuser
-  end
 end
