@@ -9,6 +9,8 @@ module CurationConcerns
         solr_doc[Solrizer.solr_name(:file_size, :symbol)] = object.file_size[0]
         solr_doc['all_text_timv'] = object.full_text.content
         solr_doc[Solrizer.solr_name('generic_work_ids', :symbol)] = object.generic_work_ids unless object.generic_work_ids.empty?
+        solr_doc['height_is'] = Integer(object.height.first) if object.height.present?
+        solr_doc['width_is'] = Integer(object.width.first) if object.width.present?
       end
     end
   end

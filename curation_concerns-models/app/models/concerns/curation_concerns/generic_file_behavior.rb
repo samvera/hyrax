@@ -27,13 +27,5 @@ module CurationConcerns
     def representative
       to_param
     end
-
-    def to_solr(solr_doc = {})
-      super(solr_doc).tap do |doc|
-        # Enables Riiif to not have to recalculate this each time.
-        doc['height_isi'] = Integer(height.first) if height.present?
-        doc['width_isi'] = Integer(width.first) if width.present?
-      end
-    end
   end
 end
