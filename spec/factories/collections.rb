@@ -11,5 +11,9 @@ FactoryGirl.define do
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
     end
+
+    trait :public do
+      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+    end
   end
 end
