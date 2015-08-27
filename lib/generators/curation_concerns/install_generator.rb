@@ -87,7 +87,7 @@ module CurationConcerns
     end
 
     def assets
-      copy_file 'curation_concerns.css.scss', 'app/assets/stylesheets/curation_concerns.css.scss'
+      copy_file 'curation_concerns.scss', 'app/assets/stylesheets/curation_concerns.scss'
       copy_file 'curation_concerns.js', 'app/assets/javascripts/curation_concerns.js'
     end
 
