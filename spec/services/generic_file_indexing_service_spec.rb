@@ -23,6 +23,8 @@ describe CurationConcerns::GenericFileIndexingService do
       mime_type: 'image/jpeg',
       format_label: ['JPEG Image']) do |gf|
         gf.full_text.content = 'abcxyz'
+        gf.characterization.height = '500'
+        gf.characterization.width = '600'
       end
   end
 
@@ -53,6 +55,8 @@ describe CurationConcerns::GenericFileIndexingService do
       expect(subject[Solrizer.solr_name('based_near')]).to eq ['Medina, Saudi Arabia']
       expect(subject[Solrizer.solr_name('mime_type')]).to eq ['image/jpeg']
       expect(subject['all_text_timv']).to eq('abcxyz')
+      expect(subject['height_is']).to eq 500
+      expect(subject['width_is']).to eq 600
     end
   end
 end

@@ -369,18 +369,15 @@ describe GenericFile do
   end
 
   describe 'to_solr' do
+    let(:indexer) { double }
     before do
-      subject.title = ['One Flew Over the Cuckoo\'s Nest']
-      subject.characterization.height = '500'
-      subject.characterization.width = '600'
+      allow(CurationConcerns::GenericFileIndexingService).to receive(:new)
+        .with(subject).and_return(indexer)
     end
-    let(:solr_doc) { subject.to_solr }
 
-    it 'has a solr_doc' do
-      expect(solr_doc['title_tesim']).to eq ['One Flew Over the Cuckoo\'s Nest']
-      expect(solr_doc['title_sim']).to eq ['One Flew Over the Cuckoo\'s Nest']
-      expect(solr_doc['height_isi']).to eq 500
-      expect(solr_doc['width_isi']).to eq 600
+    it 'calls the indexer' do
+      expect(indexer).to receive(:generate_solr_document)
+      subject.to_solr
     end
   end
 
