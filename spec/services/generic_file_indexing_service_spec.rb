@@ -29,6 +29,9 @@ describe CurationConcerns::GenericFileIndexingService do
   end
 
   describe '#generate_solr_document' do
+    before do
+      allow(generic_file).to receive(:label).and_return('CastoriaAd.tiff')
+    end
     subject { described_class.new(generic_file).generate_solr_document }
 
     it 'has fields' do
@@ -44,6 +47,8 @@ describe CurationConcerns::GenericFileIndexingService do
       expect(subject[Solrizer.solr_name('creator')]).to eq ['Allah']
       expect(subject[Solrizer.solr_name('title')]).to eq ['The Work']
       expect(subject[Solrizer.solr_name('title', :facetable)]).to eq ['The Work']
+      expect(subject[Solrizer.solr_name('label')]).to eq 'CastoriaAd.tiff'
+      expect(subject[Solrizer.solr_name('label', :stored_sortable)]).to eq 'CastoriaAd.tiff'
       expect(subject[Solrizer.solr_name('description')]).to eq ['The work by Allah']
       expect(subject[Solrizer.solr_name('publisher')]).to eq ['Vertigo Comics']
       expect(subject[Solrizer.solr_name('subject')]).to eq ['Theology']
