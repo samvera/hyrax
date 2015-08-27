@@ -41,10 +41,12 @@ describe CurationConcerns::SearchBuilder do
   end
 
   describe '#discovery_permissions' do
-    before { allow(subject).to receive(:blacklight_params).and_return(works: 'mine') }
+    context 'when showing my works' do
+      before { allow(subject).to receive(:blacklight_params).and_return(works: 'mine') }
 
-    it 'limits query to edit permissions' do
-      expect(subject.discovery_permissions).to eq(['edit'])
+      it 'limits query to edit permissions' do
+        expect(subject.discovery_permissions).to eq(['edit'])
+      end
     end
   end
 
@@ -52,7 +54,7 @@ describe CurationConcerns::SearchBuilder do
     before { subject.filter_models(solr_params) }
 
     it 'limits query to collection and generic work' do
-      expect(solr_params[:fq].first).to eq('(_query_:"{!raw f=has_model_ssim}GenericWork" OR _query_:"{!raw f=has_model_ssim}Collection")')
+      expect(solr_params[:fq].first).to match(/{!raw f=has_model_ssim}GenericWork.*OR.*{!raw f=has_model_ssim}Collection/)
     end
   end
 end
