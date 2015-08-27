@@ -106,8 +106,13 @@ div.heading-tile:hover .glyphicon {
   margin-bottom: 0;
 }
 
-.sort-toggle, .batch-toggle {
+.batch-toggle {
   padding: 1.5em 0 1.5em 1em;
+}
+
+.sort-toggle {
+  padding: 1.5em 0 0 1em;
+  overflow: auto;
 }
 
 .transfer_link {
