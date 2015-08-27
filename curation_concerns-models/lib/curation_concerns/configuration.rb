@@ -19,31 +19,10 @@ module CurationConcerns
       end
     end
 
-    # Configure default search options from config/search_config.yml
-    attr_writer :search_config
-    def search_config
-      @search_config ||= 'search_config not set'
-    end
-
-    # Configure the application root url.
-    attr_writer :application_root_url
-    def application_root_url
-      @application_root_url || (fail 'Make sure to set your CurationConcerns.config.application_root_url')
-    end
-
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
       @derivatives_path ||= File.join(Rails.root, 'tmp', 'derivatives')
-    end
-
-    # When was this last built/deployed
-    attr_writer :build_identifier
-    def build_identifier
-      # If you restart the server, this could be out of sync; A better
-      # implementation is to read something from the file system. However
-      # that detail is an exercise for the developer.
-      @build_identifier ||= Time.now.strftime('%Y-%m-%d %H:%M:%S')
     end
 
     attr_writer :enable_ffmpeg
