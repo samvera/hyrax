@@ -1,0 +1,10 @@
+<div >
+  <h1 class="lower"><%= @asset %></h1>
+    <h2 class="non lower">Actions</h2>
+    <p>
+      <%= link_to "Download (can only be used once)", @download_link, target: '_blank', data: { 'no-turbolink' => ''} %>
+    </p>
+  <h2> Descriptions:</h2>
+
+  <%= render 'curation_concerns/base/attributes' %>
+</div>
