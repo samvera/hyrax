@@ -62,11 +62,6 @@ module CurationConcerns
         curation_concern.date_modified = Date.today
       end
 
-      def attach_file(generic_file, file_to_attach)
-        ActiveSupport::Deprecation.warn("removing #{self.class}#attach_file, use CurationConcern.attach_file instead")
-        CurationConcern.attach_file(generic_file, user, file_to_attach)
-      end
-
       # If any attributes are blank remove them
       # e.g.:
       #   self.attributes = { 'title' => ['first', 'second', ''] }
