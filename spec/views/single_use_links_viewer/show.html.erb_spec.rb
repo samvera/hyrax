@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe 'curation_concerns/single_use_links_viewer/show.html.erb' do
-  let(:file) do
-    GenericFile.create do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      f.label = 'world.png'
-      f.apply_depositor_metadata('jill')
+  let(:f) do
+    file = GenericFile.create do |gf|
+      gf.apply_depositor_metadata('jill')
     end
+    Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    file
   end
 
   let(:solr_document) { SolrDocument.new(has_model_ssim: ['GenericFile']) }
@@ -15,7 +15,7 @@ describe 'curation_concerns/single_use_links_viewer/show.html.erb' do
   let(:hash) { "some-dummy-sha2-hash" }
 
   before do
-    assign :asset, file
+    assign :asset, f
     assign :download_link, CurationConcerns::Engine.routes.url_helpers.download_single_use_link_path(hash)
     assign :presenter, CurationConcerns::GenericFilePresenter.new(solr_document, ability)
     render
