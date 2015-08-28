@@ -55,6 +55,7 @@ describe DownloadsController do
             get :show, id: generic_file, file: 'thumbnail'
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
+            expect(response.headers['Accept-Ranges']).to eq "bytes"
           end
         end
 
