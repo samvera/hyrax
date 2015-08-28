@@ -19,6 +19,7 @@ module CurationConcerns
         super
       when String
         # For derivatives stored on the local file system
+        response.headers['Accept-Ranges'] = 'bytes'
         response.headers['Content-Length'] = File.size(file).to_s
         send_file file, type: mime_type_for(file), disposition: 'inline'
       else
