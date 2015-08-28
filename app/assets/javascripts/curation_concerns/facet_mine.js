@@ -1,22 +1,16 @@
 //= require blacklight/core
 (function($) {
   var facet_mine_behavior = function() {
+    // TODO: pull in https://github.com/projecthydra-labs/curate/blob/master/app/views/catalog/_facets.html.erb
     $('#aux-search-submit-header').hide();
 
     $('input[name="works"]').on("change", function(e) {
       $(this).closest('form').submit();
     });
 
-  };  
+  };
 
-
-  // TODO when we upgrade blacklight to 4.4+, we can use Blacklight.onLoad()
-  if (typeof Turbolinks !== "undefined") {
-    $(document).on('page:load', function() {
-      facet_mine_behavior();  
-    });
-  }
-  $(document).ready(function() {
-    facet_mine_behavior();  
+  Blacklight.onLoad(function() {
+    facet_mine_behavior();
   });
 })(jQuery);
