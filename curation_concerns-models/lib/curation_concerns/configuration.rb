@@ -1,4 +1,5 @@
 module CurationConcerns
+  extend Deprecation
   class << self
     attr_accessor :config
   end
@@ -6,6 +7,13 @@ module CurationConcerns
   def self.configure
     self.config ||= Configuration.new
     yield(config)
+  end
+
+  # Keep this deprecated class here so that anyone that references it in their config gets a deprecation rather than uninitialized constant.
+  # Remove when Configuration#queue= is removed
+  module Resque
+    class Queue
+    end
   end
 
   class Configuration
@@ -67,14 +75,12 @@ module CurationConcerns
       @redis_namespace ||= 'curation_concerns'
     end
 
+    attr_writer :queue
+    deprecation_deprecate :queue=
+
     attr_writer :fits_path
     def fits_path
       @fits_path ||= 'fits.sh'
-    end
-
-    attr_writer :queue
-    def queue
-      @queue ||= CurationConcerns::Resque::Queue
     end
 
     # Override characterization runner

@@ -1,9 +1,7 @@
-class ResolrizeJob
-  def queue_name
-    :resolrize
-  end
+class ResolrizeJob < ActiveJob::Base
+  queue_as :resolrize
 
-  def run
+  def perform
     ActiveFedora::Base.reindex_everything
   end
 end

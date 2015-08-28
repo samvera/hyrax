@@ -94,9 +94,7 @@ describe CurationConcerns::GenericWorkActor do
 
         context 'authenticated visibility' do
           it 'stamps each file with the access rights' do
-            s2 = double('characterize job')
-            allow(CharacterizeJob).to receive(:new).and_return(s2)
-            expect(CurationConcerns.queue).to receive(:push).with(s2).once
+            expect(CharacterizeJob).to receive(:perform_later)
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq Date.today
@@ -124,9 +122,7 @@ describe CurationConcerns::GenericWorkActor do
 
         context 'authenticated visibility' do
           it 'stamps each file with the access rights' do
-            s2 = double('characterize job')
-            allow(CharacterizeJob).to receive(:new).and_return(s2)
-            expect(CurationConcerns.queue).to receive(:push).with(s2).twice
+            expect(CharacterizeJob).to receive(:perform_later).twice
 
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted

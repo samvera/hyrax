@@ -21,9 +21,7 @@ describe CurationConcerns::GenericFilesController do
         end
 
         it 'spawns a CharacterizeJob' do
-          s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).and_return(s2)
-          expect(CurationConcerns.queue).to receive(:push).with(s2).once
+          expect(CharacterizeJob).to receive(:perform_later)
           expect do
             xhr :post, :create, files: [file], parent_id: parent,
                                 generic_file: { 'title' => ['test title'],
@@ -51,9 +49,7 @@ describe CurationConcerns::GenericFilesController do
         end
 
         it 'copies visibility from the parent' do
-          s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).and_return(s2)
-          allow(CurationConcerns.queue).to receive(:push).with(s2).once
+          expect(CharacterizeJob).to receive(:perform_later)
           xhr :post, :create, files: [file], parent_id: parent
           expect(assigns[:generic_file]).to be_persisted
           saved_file = assigns[:generic_file].reload
@@ -184,9 +180,7 @@ describe CurationConcerns::GenericFilesController do
 
       context 'updating file content' do
         it 'is successful' do
-          s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
-          expect(CurationConcerns.queue).to receive(:push).with(s2).once
+          expect(CharacterizeJob).to receive(:perform_later).with(generic_file.id)
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           skip 'pending hydra-works#89'
@@ -196,7 +190,8 @@ describe CurationConcerns::GenericFilesController do
 
       context 'restoring an old version' do
         before do
-          allow(CurationConcerns.queue).to receive(:push) # don't run characterization jobs
+          # don't run characterization jobs
+          allow(CharacterizeJob).to receive(:perform_later)
           # Create version 1
           Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('small_file.txt')), :original_file)
           # Create version 2

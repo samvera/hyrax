@@ -1,9 +1,8 @@
 class CreateDerivativesJob < ActiveFedoraIdBasedJob
-  def queue_name
-    :derivatives
-  end
+  queue_as :derivatives
 
-  def run
+  def perform(id)
+    @id = id
     return unless generic_file.original_file.has_content?
     return unless CurationConcerns.config.enable_ffmpeg if generic_file.video?
 

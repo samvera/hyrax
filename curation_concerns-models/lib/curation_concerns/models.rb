@@ -3,9 +3,6 @@ require 'curation_concerns/models/engine'
 
 require 'hydra/head'
 require 'nest'
-# require "active_resource" # used by GenericFile to catch errors & by GeoNamesResource
-require 'resque/server'
-
 module CurationConcerns
   extend ActiveSupport::Autoload
 

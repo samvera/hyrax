@@ -1,11 +1,10 @@
 class CharacterizeJob < ActiveFedoraIdBasedJob
-  def queue_name
-    :characterize
-  end
+  queue_as :characterize
 
-  def run
+  def perform(id)
+    @id = id
     CurationConcerns::CharacterizationService.run(generic_file)
     generic_file.save
-    CurationConcerns.queue.push(CreateDerivativesJob.new(generic_file.id))
+    CreateDerivativesJob.perform_later(generic_file.id)
   end
 end

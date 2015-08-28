@@ -1,18 +1,14 @@
-class IngestLocalFileJob
+class IngestLocalFileJob < ActiveJob::Base
   attr_accessor :directory, :filename, :user_key, :generic_file_id
 
-  def queue_name
-    :ingest
-  end
+  queue_as :ingest
 
-  def initialize(generic_file_id, directory, filename, user_key)
-    self.generic_file_id = generic_file_id
-    self.directory = directory
-    self.filename = filename
-    self.user_key = user_key
-  end
+  def perform(generic_file_id, directory, filename, user_key)
+    @generic_file_id = generic_file_id
+    @directory = directory
+    @filename = filename
+    @user_key = user_key
 
-  def run
     user = User.find_by_user_key(user_key)
     fail "Unable to find user for #{user_key}" unless user
     generic_file = GenericFile.find(generic_file_id)

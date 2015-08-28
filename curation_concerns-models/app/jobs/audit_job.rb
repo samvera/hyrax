@@ -1,7 +1,5 @@
 class AuditJob < ActiveFedoraIdBasedJob
-  def queue_name
-    :audit
-  end
+  queue_as :audit
 
   attr_accessor :uri, :id, :file_id
 
@@ -13,13 +11,10 @@ class AuditJob < ActiveFedoraIdBasedJob
   # @param [String] id of the parent object
   # @param [String] file_id used to find the file within its parent object (usually "original_file")
   # @param [String] uri of the specific file/version to be audited
-  def initialize(id, file_id, uri)
-    super(id)
-    self.file_id = file_id
-    self.uri = uri
-  end
-
-  def run
+  def perform(id, file_id, uri)
+    @id = id
+    @file_id = file_id
+    @uri = uri
     log = run_audit
     fixity_ok = log.pass == 1
     unless fixity_ok

@@ -13,11 +13,9 @@ describe CurationConcerns::CreateDerivativesJob do
     CurationConcerns.config.enable_ffmpeg = @ffmpeg_enabled
   end
 
-  subject { CreateDerivativesJob.new('123') }
-
   it 'calls create_derivatives and save on a generic_file' do
     expect(generic_file).to receive(:create_derivatives)
     expect(generic_file).to receive(:save)
-    subject.run
+    CreateDerivativesJob.perform_now('123')
   end
 end

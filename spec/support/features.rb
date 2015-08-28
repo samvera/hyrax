@@ -8,12 +8,9 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature) do
     Warden.test_mode!
-    @old_resque_inline_value = Resque.inline
-    Resque.inline = true
   end
 
   config.after(:each, type: :feature) do
     Warden.test_reset!
-    Resque.inline = @old_resque_inline_value
   end
 end
