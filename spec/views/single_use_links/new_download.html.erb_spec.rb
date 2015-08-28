@@ -2,18 +2,19 @@ require 'spec_helper'
 
 describe 'curation_concerns/single_use_links/new_download.html.erb' do
   let(:user) { FactoryGirl.find_or_create(:jill) }
-  let(:file) do
-    GenericFile.create do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      f.label = 'world.png'
-      f.apply_depositor_metadata(user)
+
+  let(:f) do
+    file = GenericFile.create do |gf|
+      gf.apply_depositor_metadata(user)
     end
+    Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    file
   end
 
   let(:hash) { "some-dummy-sha2-hash" }
 
   before do
-    assign :asset, file
+    assign :asset, f
     assign :link, CurationConcerns::Engine.routes.url_helpers.download_single_use_link_path(hash)
     render
   end
