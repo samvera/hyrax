@@ -1,16 +1,9 @@
-class VisibilityCopyWorker
-  def queue_name
-    :permissions
-  end
+class VisibilityCopyJob < ActiveFedoraIdBasedJob
+  queue_as :permissions
 
-  attr_accessor :pid
-
-  def initialize(pid)
-    self.pid = pid
-  end
-
-  def run
-    work = ActiveFedora::Base.find(pid)
+  def perform(id)
+    @id = id
+    work = object
     work.generic_files.each do |file|
       file.visibility = work.visibility # visibility must come first, because it can clear an embargo/lease
       if work.lease

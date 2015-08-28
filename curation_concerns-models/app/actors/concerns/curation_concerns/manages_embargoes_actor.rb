@@ -91,7 +91,7 @@ module CurationConcerns
     end
 
     def copy_visibility
-      CurationConcerns.queue.push(VisibilityCopyWorker.new(curation_concern.id)) if @needs_to_copy_visibility
+      VisibilityCopyJob.perform_later(curation_concern.id) if @needs_to_copy_visibility
       true
     end
   end

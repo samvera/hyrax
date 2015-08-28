@@ -128,7 +128,7 @@ module CurationConcerns
     end
 
     def push_characterize_job
-      CurationConcerns.queue.push(CharacterizeJob.new(@generic_file.id))
+      CharacterizeJob.perform_later(@generic_file.id)
     end
 
     protected

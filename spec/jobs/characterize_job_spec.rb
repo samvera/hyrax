@@ -1,22 +1,17 @@
 require 'spec_helper'
 
 describe CharacterizeJob do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:generic_file) { GenericFile.new(id: generic_file_id) }
+  let(:generic_file_id) { 'abc123' }
 
-  let(:generic_file) do
-    GenericFile.create do |file|
-      file.apply_depositor_metadata(user)
-      Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_file_path('charter.docx')), :original_file)
-    end
+  before do
+    allow(ActiveFedora::Base).to receive(:find).with(generic_file_id).and_return(generic_file)
   end
 
-  subject { described_class.new(generic_file.id) }
-
-  # Now that CreateDerivativesJob calls generic_file.create_derivatives directly
-  # this test needs to be travis exempt.
-  it 'runs CurationConcerns::CharacterizationService that spawns a CreateDerivativesJob', unless: $in_travis do
+  it 'runs CurationConcerns::CharacterizationService that spawns a CreateDerivativesJob' do
     expect(CurationConcerns::CharacterizationService).to receive(:run).with(generic_file)
-    expect(CreateDerivativesJob).to receive(:new).with(generic_file.id).once.and_call_original
-    subject.run
+    expect(generic_file).to receive(:save)
+    expect(CreateDerivativesJob).to receive(:perform_later).with(generic_file_id)
+    described_class.perform_now generic_file_id
   end
 end

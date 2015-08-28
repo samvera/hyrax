@@ -3,11 +3,10 @@ require 'uri'
 require 'tempfile'
 
 class ImportUrlJob < ActiveFedoraIdBasedJob
-  def queue_name
-    :import_url
-  end
+  queue_as :import_url
 
-  def run
+  def perform(id)
+    @id = id
     user = User.find_by_user_key(generic_file.depositor)
 
     Tempfile.open(id.tr('/', '_')) do |f|

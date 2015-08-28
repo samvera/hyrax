@@ -1,15 +1,13 @@
 require 'spec_helper'
 
 describe 'Add an attached file' do
-  let(:user) { FactoryGirl.create(:user) }
-  let!(:work) { FactoryGirl.create(:work, user: user) }
+  let(:user) { create(:user) }
+  let!(:work) { create(:work, user: user) }
 
   before do
     sign_in user
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
-    s2 = double('resque message')
-    expect(CharacterizeJob).to receive(:new).and_return(s2)
-    expect(CurationConcerns.queue).to receive(:push).with(s2).once
+    expect(CharacterizeJob).to receive(:perform_later)
   end
 
   it 'updates the file' do

@@ -60,7 +60,7 @@ module CurationConcerns
       def audit_file_version(file_id, version_uri)
         latest_audit = ChecksumAuditLog.logs_for(generic_file.id, file_id).first
         return latest_audit unless needs_audit?(latest_audit)
-        CurationConcerns.queue.push(AuditJob.new(generic_file.id, file_id, version_uri))
+        AuditJob.perform_later(generic_file.id, file_id, version_uri.to_s)
         latest_audit || ChecksumAuditLog.new(pass: NO_RUNS, generic_file_id: generic_file.id, file_id: file_id, version: version_uri)
       end
 

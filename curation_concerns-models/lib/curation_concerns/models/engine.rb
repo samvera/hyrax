@@ -1,8 +1,6 @@
 module CurationConcerns
   module Models
     class Engine < ::Rails::Engine
-      require 'curation_concerns/models/resque'
-
       config.autoload_paths += %W(
         #{config.root}/app/actors/concerns
         #{config.root}/lib/curation_concerns

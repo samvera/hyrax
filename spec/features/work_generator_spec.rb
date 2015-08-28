@@ -15,9 +15,7 @@ describe 'Creating a new Work' do
     sign_in user
 
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
-    s2 = double('resque message')
-    expect(CharacterizeJob).to receive(:new).and_return(s2)
-    expect(CurationConcerns.queue).to receive(:push).with(s2).once
+    expect(CharacterizeJob).to receive(:perform_later)
   end
 
   after do

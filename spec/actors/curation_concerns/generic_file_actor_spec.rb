@@ -28,10 +28,8 @@ describe CurationConcerns::GenericFileActor do
   end
 
   describe '#create_content' do
-    let(:deposit_message) { double('deposit message') }
-    let(:characterize_message) { double('characterize message') }
     before do
-      allow(CurationConcerns.queue).to receive(:push)
+      allow(CharacterizeJob).to receive(:perform_later)
     end
 
     it 'uses the provided mime_type' do
@@ -46,7 +44,6 @@ describe CurationConcerns::GenericFileActor do
       let(:actor)      { described_class.new(generic_file, user) }
       before do
         allow(generic_file).to receive(:label).and_return(short_name)
-        allow(CurationConcerns.queue).to receive(:push)
         actor.create_content(fixture_file_upload(file))
       end
       subject { generic_file.title }
@@ -63,7 +60,6 @@ describe CurationConcerns::GenericFileActor do
       let(:versions) { generic_file.original_file.versions }
 
       before do
-        allow(CurationConcerns.queue).to receive(:push)
         actor1.create_content(fixture_file_upload(file1))
         actor2.create_content(fixture_file_upload(file2))
       end
