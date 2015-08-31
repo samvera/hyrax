@@ -10,6 +10,11 @@ describe CurationConcerns::GenericFile do
     generic_file.save!
   end
 
+  after do
+    dir = File.join(CurationConcerns.config.derivatives_path, generic_file.id)
+    FileUtils.rm_r(dir) if File.directory?(dir)
+  end
+
   describe 'image derivative' do
     let(:mime_type) { 'image/jp2' }
     let(:file_name) { 'image.jp2' }
@@ -43,16 +48,14 @@ describe CurationConcerns::GenericFile do
       let(:file_name) { 'countdown.avi' }
 
       it 'transcodes to webm and mp4' do
-        generic_file.create_derivatives
-        derivative = generic_file.webm
-        expect(derivative).not_to be_nil
-        expect(derivative.content).not_to be_nil
-        expect(derivative.mime_type).to eq('video/webm')
-
-        derivative2 = generic_file.mp4
-        expect(derivative2).not_to be_nil
-        expect(derivative2.content).not_to be_nil
-        expect(derivative2.mime_type).to eq('video/mp4')
+        new_webm = "#{Rails.root}/tmp/derivatives/#{generic_file.id}/webm.webm"
+        new_mp4 = "#{Rails.root}/tmp/derivatives/#{generic_file.id}/mp4.mp4"
+        expect {
+          generic_file.create_derivatives
+        }.to change { File.exist?(new_webm) }
+          .from(false).to(true)
+          .and change { File.exist?(new_mp4) }
+          .from(false).to(true)
       end
     end
 
@@ -61,16 +64,14 @@ describe CurationConcerns::GenericFile do
       let(:file_name) { 'piano_note.wav' }
 
       it 'transcodes to mp3 and ogg' do
-        generic_file.create_derivatives
-        derivative = generic_file.mp3
-        expect(derivative).not_to be_nil
-        expect(derivative.content).not_to be_nil
-        expect(derivative.mime_type).to eq('audio/mpeg')
-
-        derivative2 = generic_file.ogg
-        expect(derivative2).not_to be_nil
-        expect(derivative2.content).not_to be_nil
-        expect(derivative2.mime_type).to eq('audio/ogg')
+        new_mp3 = "#{Rails.root}/tmp/derivatives/#{generic_file.id}/mp3.mp3"
+        new_ogg = "#{Rails.root}/tmp/derivatives/#{generic_file.id}/ogg.ogg"
+        expect {
+          generic_file.create_derivatives
+        }.to change { File.exist?(new_mp3) }
+          .from(false).to(true)
+          .and change { File.exist?(new_ogg) }
+          .from(false).to(true)
       end
     end
 
