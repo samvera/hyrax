@@ -66,7 +66,7 @@ module CurationConcerns
             end
           elsif hash[Hydra.config.permissions.read.group].include?('registered')
             dom_label_class = 'label-info'
-            link_title = t('curation_concerns.institution_name')
+            link_title = I18n.translate('curation_concerns.institution_name')
           end
         end
         [dom_label_class, link_title]
