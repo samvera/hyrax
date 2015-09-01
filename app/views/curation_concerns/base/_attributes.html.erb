@@ -4,22 +4,20 @@
     <tr><th>Attribute Name</th><th>Values</th></tr>
   </thead>
   <tbody>
-  <%= @presenter.attribute_to_html(:description, 'Abstract') %>
-  <%= @presenter.attribute_to_html(:creator, 'Creator', { catalog_search_link: true }) %>
-  <%= @presenter.attribute_to_html(:contributor, 'Contributors', { catalog_search_link: true }) %>
-  <%= @presenter.attribute_to_html(:subject, "Subject", { catalog_search_link: true }) %>
-  <%= @presenter.attribute_to_html(:publisher, "Publisher") %>
-  <%#= @presenter.attribute_to_html(:bibliographic_citation, "Bibliographic Citation") %>
-  <%#= @presenter.attribute_to_html(:source, "Source") %>
-  <%= @presenter.attribute_to_html(:language, "Language") %>
+  <%= @presenter.attribute_to_html(:description, label: 'Abstract') %>
+  <%= @presenter.attribute_to_html(:creator, catalog_search_link: true ) %>
+  <%= @presenter.attribute_to_html(:contributor, label: 'Contributors', catalog_search_link: true) %>
+  <%= @presenter.attribute_to_html(:subject, catalog_search_link: true) %>
+  <%= @presenter.attribute_to_html(:publisher) %>
+  <%= @presenter.attribute_to_html(:language) %>
   <tr>
     <th>Access Rights</th>
     <td>
       <%= @presenter.permission_badge %>
     </td>
   </tr>
-  <%= @presenter.attribute_to_html(:embargo_release_date, "Embargo Release Date") %>
-  <%= @presenter.attribute_to_html(:lease_expiration_date, "Lease Expiration Date") %>
-  <%= @presenter.attribute_to_html(:rights, "Content License") %>
+  <%= @presenter.attribute_to_html(:embargo_release_date) %>
+  <%= @presenter.attribute_to_html(:lease_expiration_date) %>
+  <%= @presenter.attribute_to_html(:rights, label: "Content License") %>
   </tbody>
 </table>
