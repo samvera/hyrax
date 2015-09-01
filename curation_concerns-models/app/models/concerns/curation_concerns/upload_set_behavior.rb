@@ -1,5 +1,5 @@
 module CurationConcerns
-  module BatchBehavior
+  module UploadSetBehavior
     extend ActiveSupport::Concern
     include Hydra::AccessControls::Permissions
     include CurationConcerns::Noid
@@ -14,7 +14,7 @@ module CurationConcerns
 
     module ClassMethods
       def find_or_create(id)
-        Batch.find(id)
+        UploadSet.find(id)
       rescue ActiveFedora::ObjectNotFoundError
         safe_create(id)
       end
@@ -22,16 +22,16 @@ module CurationConcerns
       private
 
         # This method handles most race conditions gracefully.
-        # If a batch with the same ID is created by another thread
-        # we fetch the batch that was created (rather than throwing
+        # If an upload_set with the same ID is created by another thread
+        # we fetch the upload_set that was created (rather than throwing
         # an error) and continute.
         def safe_create(id)
-          Batch.create(id: id)
+          UploadSet.create(id: id)
         rescue ActiveFedora::IllegalOperation
           # This is the exception thrown by LDP when we attempt to
           # create a duplicate object. If we can find the object
           # then we are good to go.
-          Batch.find(id)
+          UploadSet.find(id)
         end
     end
   end

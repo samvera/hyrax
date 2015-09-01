@@ -1,7 +1,7 @@
     <!-- The file upload form used as target for the file upload widget -->
       <%= hidden_field_tag(:total_upload_size, 0) %>
       <%= hidden_field_tag(:relative_path) %>
-      <%= hidden_field_tag(:batch_id, batch_id) %>
+      <%= hidden_field_tag(:upload_set_id, upload_set_id) %>
       <%= hidden_field_tag "file_coming_from", "local" %>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">

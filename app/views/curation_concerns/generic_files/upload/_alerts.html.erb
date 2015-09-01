@@ -2,7 +2,7 @@
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
   <p>
-  <%= link_to 'Add Descriptions', edit_polymorphic_path([main_app, :curation_concerns, @presenter]), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', edit_polymorphic_path([main_app, :curation_concerns, @presenter]), class: 'btn' %>
   </p>
 </div>
 
@@ -12,7 +12,7 @@
 
 <div class="alert hide" id="partial_fail">
   One or more files did not upload successfully. To continue using the files uploaded use one of the links below.<br />
-  <%= link_to 'Add Descriptions', edit_polymorphic_path([main_app, :curation_concerns, @presenter]), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', edit_polymorphic_path([main_app, :curation_concerns, @presenter]), class: 'btn' %>
 </div>
 
 <div class="alert hide" id="errmsg"> </div>

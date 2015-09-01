@@ -130,7 +130,7 @@ module CurationConcerns
 
       def process_file(file)
         update_metadata_from_upload_screen
-        actor.create_metadata(params[:batch_id], parent_id, params[:generic_file])
+        actor.create_metadata(params[:upload_set_id], parent_id, params[:generic_file])
         if actor.create_content(file)
           respond_to do |format|
             format.html do

@@ -1,44 +1,44 @@
-class BatchUpdateJob < ActiveJob::Base
+class UploadSetUpdateJob < ActiveJob::Base
   include Hydra::PermissionsQuery
   include CurationConcerns::Messages
 
-  queue_as :batch_update
+  queue_as :upload_set_update
 
-  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied, :work_attributes
+  attr_accessor :login, :title, :file_attributes, :upload_set_id, :visibility, :saved, :denied, :work_attributes
 
-  def perform(login, batch_id, title, file_attributes, visibility)
+  def perform(login, upload_set_id, title, file_attributes, visibility)
     @login = login
     @title = title || {}
     @file_attributes = file_attributes
     @visibility = visibility
     @work_attributes = file_attributes.merge(visibility: visibility)
-    @batch_id = batch_id
+    @upload_set_id = upload_set_id
     @saved = []
     @denied = []
 
-    batch = Batch.find_or_create(self.batch_id)
+    upload_set = UploadSet.find_or_create(self.upload_set_id)
     user = User.find_by_user_key(self.login)
 
-    batch.generic_files.each do |gf|
+    upload_set.generic_files.each do |gf|
       update_file(gf, user)
     end
 
-    batch.update(status: ["Complete"])
+    upload_set.update(status: ["Complete"])
 
     if denied.empty?
       unless saved.empty?
-        if CurationConcerns.config.respond_to?(:after_batch_update_success)
-          login = batch.depositor
+        if CurationConcerns.config.respond_to?(:after_upload_set_update_success)
+          login = upload_set.depositor
           user = User.find_by_user_key(login)
-          CurationConcerns.config.after_batch_update_failure.call(user, batch, log.created_at)
+          CurationConcerns.config.after_upload_set_update_failure.call(user, upload_set, log.created_at)
         end
         return true
       end
     else
-      if CurationConcerns.config.respond_to?(:after_batch_update_failure)
-        login = batch.depositor
+      if CurationConcerns.config.respond_to?(:after_upload_set_update_failure)
+        login = upload_set.depositor
         user = User.find_by_user_key(login)
-        CurationConcerns.config.after_batch_update_failure.call(user, batch, log.created_at)
+        CurationConcerns.config.after_upload_set_update_failure.call(user, upload_set, log.created_at)
       end
       return false
     end

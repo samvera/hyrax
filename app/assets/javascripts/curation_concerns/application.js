@@ -1,4 +1,3 @@
-//= require jquery-ui-1.9.2/jquery.ui.core
 //= require jquery-ui-1.9.2/jquery.ui.widget
 
 //= require blacklight/blacklight

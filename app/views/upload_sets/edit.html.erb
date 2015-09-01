@@ -5,16 +5,16 @@
 <h1>Apply Metadata</h1>
 <p>
   The information you provide for Title will be applied to the corresponding file only; however all other
-  information you provide will be applied <em>to the entire batch of files</em> you have just
+  information you provide will be applied <em>to the entire set of files that were uploaded together</em> you have just
   deposited into <%= t('curation_concerns.product_name') %>. You may edit individual files from
   <%= link_to "<i class='glyphicon glyphicon-dashboard'></i> #{t('curation_concerns.bread_crumb.works_list')}".html_safe, main_app.curation_concerns_generic_works_path %>
   once this step is finished. <span class="required"><abbr title="required">*</abbr></span> indicates required fields.
 </p>
-<%= simple_form_for [main_app, @batch, @form], html: { multipart: true }, builder: Sufia::FormBuilder do |f| %>
+<%= simple_form_for [main_app, @upload_set, @form], html: { multipart: true }, builder: Sufia::FormBuilder do |f| %>
 
   <%= render 'metadata', f: f %>
 
-  <%= render 'generic_files/permission_form', f: f, batch: @batch %>
+  <%#= render 'generic_files/permission_form', f: f, upload_set: @upload_set %>
 
   <div id="permissions_submit">
     <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg',
