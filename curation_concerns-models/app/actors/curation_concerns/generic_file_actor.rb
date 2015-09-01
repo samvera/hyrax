@@ -31,7 +31,7 @@ module CurationConcerns
       generic_file.creator = [user.user_key]
 
       if batch_id && generic_file.respond_to?(:batch_id=)
-        Batch.create(id: batch_id) unless Batch.exists?(batch_id)
+        Batch.create(id:batch_id) unless Batch.exists?(batch_id)
         generic_file.batch_id = batch_id
       else
         ActiveFedora::Base.logger.warn 'unable to find batch to attach to'

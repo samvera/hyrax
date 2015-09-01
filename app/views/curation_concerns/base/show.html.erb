@@ -3,12 +3,15 @@
   <h1><%= @presenter %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
 <% end %>
 
+<% collector = can?(:collect, @presenter.id) %>
+<% editor    = can?(:edit,    @presenter.id) %>
+
 <%= render 'representative_media', work: @presenter %>
 <%= render 'attributes', curation_concern: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
-
-<% collector = can?(:collect, @presenter.id) %>
-<% editor    = can?(:edit,    @presenter.id) %>
+<% if editor %>
+    <%= render partial: 'curation_concerns/generic_files/multiple_upload', presenter: @presenter %>
+<% end %>
 
 <% if collector || editor %>
   <div class="form-actions">
