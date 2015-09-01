@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'Routes', type: :routing do
   describe 'Homepage' do
-    it 'routes the root url to the catalog controller' do
-      expect(get: '/').to route_to(controller: 'catalog', action: 'index')
+    it 'routes the root url to the welcome controller' do
+      expect(get: '/').to route_to(controller: 'welcome', action: 'index')
     end
   end
 
