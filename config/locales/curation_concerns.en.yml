@@ -22,6 +22,8 @@ en:
       editor:
         legend: "Content Editors"
         caption: "Who should be able to make changes to this work?"
+    bread_crumb:
+      works_list: "the works browser"
     messages:
       success:
         single: "has been saved."

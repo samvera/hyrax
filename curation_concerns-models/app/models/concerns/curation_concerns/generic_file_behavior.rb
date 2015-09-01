@@ -14,6 +14,7 @@ module CurationConcerns
     include CurationConcerns::GenericFile::FullTextIndexing
     include CurationConcerns::GenericFile::Indexing
     include CurationConcerns::GenericFile::BelongsToWorks
+    include CurationConcerns::GenericFile::BelongsToBatches
     include Hydra::AccessControls::Embargoable
 
     included do

@@ -17,6 +17,20 @@ describe CurationConcerns::GenericFileActor do
       actor.create_metadata(batch_id, work_id)
       actor.create_content(uploaded_file)
     end
+    context 'when a batch_id and work_id are not provided' do
+      let(:batch_id) { nil }
+      let(:work_id) { nil }
+      it "leaves the associations blank" do
+        expect(subject.batch).to be_nil
+        expect(subject.generic_works).to be_empty
+      end
+    end
+    context 'when a batch_id is provided' do
+      let(:batch_id) { ActiveFedora::Noid::Service.new.mint }
+      it "leaves the association blank" do
+        expect(subject.batch).to be_instance_of Batch
+      end
+    end
     context 'when a work_id is provided' do
       let(:work) { FactoryGirl.create(:generic_work) }
       let(:work_id) { work.id }
