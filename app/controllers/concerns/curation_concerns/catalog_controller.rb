@@ -51,13 +51,4 @@ module CurationConcerns::CatalogController
         title: title
       }
     end
-
-    def depositor
-      # Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
-      Solrizer.solr_name('depositor', :stored_searchable, type: :string)
-    end
-
-    def sort_field
-      "#{Solrizer.solr_name('system_create', :sortable)} desc"
-    end
 end
