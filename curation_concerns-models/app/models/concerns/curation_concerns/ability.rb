@@ -8,9 +8,10 @@ module CurationConcerns
     def curation_concerns_permissions
       unless current_user.new_record?
         can :create, CurationConcerns::ClassifyConcern
-        # TODO: Shouldn't this be in `everyone_can_create_curation_concerns` ?
-        can :create, ::GenericFile
       end
+
+      # user can version if they can edit
+      alias_action :versions, to: :update
 
       if user_groups.include? 'admin'
         can [:create, :discover, :show, :read, :edit, :update, :destroy], :all
@@ -23,6 +24,7 @@ module CurationConcerns
     # to submit content
     def everyone_can_create_curation_concerns
       return if current_user.new_record?
+      can :create, ::GenericFile
       can :create, [CurationConcerns.config.curation_concerns]
       can :create, ::Collection
     end
