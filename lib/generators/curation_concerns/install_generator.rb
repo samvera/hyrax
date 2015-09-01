@@ -9,9 +9,9 @@ module CurationConcerns
   This generator makes the following changes to your application:
    1. Runs installers for blacklight & hydra-head (which also install & configure devise)
    2. Runs curation_concerns:models:install
-   3. Injects CurationConcerns routes
-   4. Adds CurationConcerns abilities into the Ability class
-   5. Adds controller behavior to the application controller
+   3. Adds controller behavior to the application controller
+   4. Injects CurationConcerns routes
+   5. Adds CurationConcerns abilities into the Ability class
    6. Copies the catalog controller into the local app
    7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
          "''
@@ -23,11 +23,6 @@ module CurationConcerns
       generate 'hydra:head -f'
       say_status('warning', '[CurationConcerns] GENERATING CURATION_CONCERNS MODELS', :yellow)
       generate "curation_concerns:models:install#{options[:force] ? ' -f' : ''}"
-    end
-
-    def remove_catalog_controller
-      say_status('warning', "Removing Blacklight's generated CatalogController...", :yellow)
-      remove_file('app/controllers/catalog_controller.rb')
     end
 
     def inject_application_controller_behavior
@@ -71,6 +66,10 @@ module CurationConcerns
         "  include CurationConcerns::Ability\n"\
         "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
       end
+    end
+
+    def catalog_controller
+      copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
     end
 
     # Add behaviors to the SolrDocument model
