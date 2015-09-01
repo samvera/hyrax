@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CurationConcerns::CharacterizationService do
-  let(:generic_file) { FactoryGirl.create(:generic_file) }
+  let(:generic_file) { create(:generic_file) }
 
   describe '#run' do
     let(:service_instance) { double }
@@ -12,14 +12,34 @@ describe CurationConcerns::CharacterizationService do
     end
   end
 
-  # TODO: Enable in travis see https://github.com/projecthydra-labs/curation_concerns/issues/40
-  describe 'characterize', unless: $in_travis do
+  describe 'characterize' do
+    let(:fits_xml) {
+      '<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" version="0.6.2">
+  <identification status="CONFLICT">
+    <identity format="OpenDocument Text" mimetype="application/vnd.oasis.opendocument.text" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" />
+    </identity>
+    <identity format="DOCX" mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="Exiftool" toolversion="9.06" />
+    </identity>
+  </identification>
+  <fileinfo />
+  <filestatus />
+  <metadata>
+    <document />
+  </metadata>
+</fits>'
+    }
     subject { described_class.new(generic_file) }
     before do
       Hydra::Works::UploadFileToGenericFile.call(generic_file, File.open(fixture_file_path('charter.docx')))
     end
+
     it 'characterizes, extracts fulltext and stores the results' do
-      expect(subject).to receive(:extract_fulltext).and_return('The fulltext')
+      expect(CurationConcerns::FullTextExtractionService).to receive(:run).with(generic_file).and_return('The fulltext')
+      expect(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_xml)
+
       subject.characterize
       expect(generic_file.mime_type).to eq 'application/vnd.oasis.opendocument.text'
       expect(generic_file.filename).to eq 'charter.docx'
