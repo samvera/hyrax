@@ -91,6 +91,10 @@ module CurationConcerns
       render action: 'edit'
     end
 
+    def versions
+      @version_list = version_list
+    end
+
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
       # attrs_without_visibility_info = actor.interpret_visibility(attributes)
@@ -99,6 +103,10 @@ module CurationConcerns
     end
 
     protected
+
+      def version_list
+        CurationConcerns::VersionListPresenter.new(@generic_file.original_file.versions.all)
+      end
 
       def wants_to_revert?
         params.key?(:revision) && params[:revision] != @generic_file.latest_content_version.label

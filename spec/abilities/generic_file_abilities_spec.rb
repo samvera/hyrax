@@ -17,10 +17,11 @@ describe 'User' do
         let(:creating_user) { user }
         let(:current_user) { user }
         it do
-          should be_able_to(:create, GenericFile.new)
-          should be_able_to(:read, generic_file)
-          should be_able_to(:update, generic_file)
-          should_not be_able_to(:delete, generic_file)
+          is_expected.to be_able_to(:create, GenericFile.new)
+          is_expected.to be_able_to(:versions, generic_file)
+          is_expected.to be_able_to(:read, generic_file)
+          is_expected.to be_able_to(:update, generic_file)
+          is_expected.to_not be_able_to(:delete, generic_file)
         end
       end
 
@@ -29,21 +30,24 @@ describe 'User' do
         let(:creating_user) { user }
         let(:current_user) { manager_user }
         it do
-          should be_able_to(:create, ::GenericFile.new)
-          should be_able_to(:read, generic_file)
-          should be_able_to(:update, generic_file)
-          should be_able_to(:destroy, generic_file)
+          is_expected.to be_able_to(:create, GenericFile.new)
+          is_expected.to be_able_to(:versions, generic_file)
+          is_expected.to be_able_to(:read, generic_file)
+          is_expected.to be_able_to(:update, generic_file)
+          is_expected.to be_able_to(:destroy, generic_file)
         end
       end
 
       describe 'another authenticated user' do
         let(:creating_user) { FactoryGirl.create(:user) }
         let(:current_user) { user }
+
         it do
-          should be_able_to(:create, ::GenericFile.new)
-          should_not be_able_to(:read, generic_file)
-          should_not be_able_to(:update, generic_file)
-          should_not be_able_to(:delete, generic_file)
+          is_expected.to be_able_to(:create, GenericFile.new)
+          is_expected.to_not be_able_to(:versions, generic_file)
+          is_expected.to_not be_able_to(:read, generic_file)
+          is_expected.to_not be_able_to(:update, generic_file)
+          is_expected.to_not be_able_to(:delete, generic_file)
         end
       end
 
@@ -51,10 +55,11 @@ describe 'User' do
         let(:creating_user) { FactoryGirl.create(:user) }
         let(:current_user) { nil }
         it do
-          should_not be_able_to(:create, GenericFile.new)
-          should_not be_able_to(:read, generic_file)
-          should_not be_able_to(:update, generic_file)
-          should_not be_able_to(:delete, generic_file)
+          is_expected.to_not be_able_to(:create, GenericFile.new)
+          is_expected.to_not be_able_to(:versions, generic_file)
+          is_expected.to_not be_able_to(:read, generic_file)
+          is_expected.to_not be_able_to(:update, generic_file)
+          is_expected.to_not be_able_to(:delete, generic_file)
         end
       end
     end
