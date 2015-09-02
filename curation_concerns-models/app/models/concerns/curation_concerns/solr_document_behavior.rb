@@ -4,12 +4,6 @@ module CurationConcerns
       title || label
     end
 
-    ##
-    # Give our SolrDocument an ActiveModel::Naming appropriate route_key
-    def route_key
-      get(Solrizer.solr_name('has_model', :symbol)).downcase
-    end
-
     def to_param
       id
     end
@@ -114,32 +108,8 @@ module CurationConcerns
       self[Solrizer.solr_name('rights')]
     end
 
-    def resource_type
-      Array(self[Solrizer.solr_name('resource_type')])
-    end
-
     def mime_type
       Array(self[Solrizer.solr_name('mime_type')]).first
-    end
-
-    def read_groups
-      Array(self[::Ability.read_group_field])
-    end
-
-    def edit_groups
-      Array(self[::Ability.edit_group_field])
-    end
-
-    def edit_people
-      Array(self[::Ability.edit_user_field])
-    end
-
-    def public?
-      read_groups.include?('public')
-    end
-
-    def registered?
-      read_groups.include?('registered')
     end
 
     def pdf?
