@@ -56,6 +56,7 @@ describe CurationConcerns::GenericWorkActor do
                 rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
             end
             it "applies it to attached files" do
+              allow(CharacterizeJob).to receive(:perform_later).and_return(true)
               subject.create
               file = curation_concern.generic_files.first
               expect(file).to be_persisted
