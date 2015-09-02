@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::GenericFileHelper do
   describe '#media_display' do
-    let(:generic_file) { GenericFile.new(mime_type: mime_type) }
+    let(:generic_file) { SolrDocument.new(mime_type_tesim: mime_type) }
     let(:mime_type) { 'image/tiff' }
 
     it "renders a partial" do
@@ -17,7 +17,7 @@ describe CurationConcerns::GenericFileHelper do
   describe '#media_display_partial' do
     subject { helper.media_display_partial(generic_file) }
 
-    let(:generic_file) { GenericFile.new(mime_type: mime_type) }
+    let(:generic_file) { SolrDocument.new(mime_type_tesim: mime_type) }
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
@@ -37,6 +37,11 @@ describe CurationConcerns::GenericFileHelper do
     context "with a pdf" do
       let(:mime_type) { 'application/pdf' }
       it { is_expected.to eq 'curation_concerns/generic_files/media_display/pdf' }
+    end
+
+    context "with a word document" do
+      let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+      it { is_expected.to eq 'curation_concerns/generic_files/media_display/office_document' }
     end
 
     context "with anything else" do

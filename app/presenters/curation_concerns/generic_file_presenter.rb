@@ -13,7 +13,7 @@ module CurationConcerns
 
     # CurationConcern methods
     delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
-             :audio?, :pdf?, :representative, :to_s, to: :solr_document
+             :audio?, :pdf?, :office_document?, :representative, :to_s, to: :solr_document
 
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,

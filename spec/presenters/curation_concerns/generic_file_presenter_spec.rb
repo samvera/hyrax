@@ -3,6 +3,7 @@ require 'spec_helper'
 describe CurationConcerns::GenericFilePresenter do
   let(:solr_document) { SolrDocument.new("title_tesim" => ["foo bar"],
                                          "human_readable_type_tesim" => ["Generic File"],
+                                         "mime_type_tesim" => ['image/jpeg'],
                                          "has_model_ssim" => ["GenericFile"]) }
   let(:ability) { nil }
   let(:presenter) { described_class.new(solr_document, ability) }
@@ -25,5 +26,10 @@ describe CurationConcerns::GenericFilePresenter do
   describe "#to_partial_path" do
     subject { presenter.to_partial_path }
     it { is_expected.to eq 'generic_files/generic_file' }
+  end
+
+  describe "office_document?" do
+    subject { presenter.office_document? }
+    it { is_expected.to be false }
   end
 end
