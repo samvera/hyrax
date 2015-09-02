@@ -17,8 +17,9 @@ module CurationConcerns::CollectionsHelper
 
   # override hydra-collections
   def link_to_remove_from_collection(document, label = 'Remove From Collection')
-    link_to collections.collection_path(@collection.id, collection: { members: 'remove' },
-                                                        batch_document_ids: [document.id]), method: :put do
+    collection_id = @collection ? @collection.id : @presenter.id
+    link_to collections.collection_path(collection_id, collection: { members: 'remove' },
+                                                       batch_document_ids: [document.id]), method: :put do
       icon('minus-sign') + ' ' + label
     end
   end

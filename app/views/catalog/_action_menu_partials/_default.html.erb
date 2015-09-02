@@ -7,7 +7,7 @@
         <% end %>
       </li>
       <li>
-        <% if @collection # We're on the view page for @collection. -%>
+        <% if @collection || (@presenter and @presenter.collection?) # We're on the view page for @collection. -%>
           <%= link_to_remove_from_collection(document) %>
         <% else %>
           <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
