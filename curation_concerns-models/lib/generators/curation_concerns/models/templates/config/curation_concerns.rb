@@ -106,6 +106,9 @@ CurationConcerns.configure do |config|
   # Specify a different template for your repository's NOID IDs
   # config.noid_template = ".reeddeeddk"
 
+  # Store identifier minter's state in a file for later replayability
+  # config.minter_statefile = '/tmp/minter-state'
+
   # Specify the prefix for Redis keys:
   # config.redis_namespace = "curation_concerns"
 
