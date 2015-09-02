@@ -1,9 +1,11 @@
 module CurationConcerns::WorkActorBehavior
   include CurationConcerns::ManagesEmbargoesActor
+  attr_accessor :raw_attributes
 
   def create
     # set the @files ivar then remove the files attribute so it isn't set by default.
     files && attributes.delete(:files)
+    self.raw_attributes = attributes.dup
     # Files must be attached before saving in order to persist their relationship to the work
     assign_pid && interpret_visibility && attach_files && super && assign_representative && copy_visibility
   end
@@ -68,12 +70,17 @@ module CurationConcerns::WorkActorBehavior
       generic_file = ::GenericFile.new
       generic_file_actor = CurationConcerns::GenericFileActor.new(generic_file, user)
       # TODO: we're passing an ID rather than an object. This means the actor does an unnecessary lookup
-      generic_file_actor.create_metadata(curation_concern.id, curation_concern.id)
-      generic_file.visibility = visibility
+      generic_file_actor.create_metadata(curation_concern.id, curation_concern.id, visibility_attributes)
       generic_file_actor.create_content(file)
       @generic_files ||= []
       @generic_files << generic_file # This is so that other methods like assign_representative can access the generic_files wihtout reloading them from fedora
       curation_concern.generic_files << generic_file
+    end
+
+    # The attributes used for visibility - used to send as initial params to
+    # created GenericFiles.
+    def visibility_attributes
+      raw_attributes.slice(:visibility, :visibility_during_lease, :visibility_after_lease, :lease_expiration_date, :embargo_release_date, :visibility_during_embargo, :visibility_after_embargo)
     end
 
     def valid_file?(file_path)
