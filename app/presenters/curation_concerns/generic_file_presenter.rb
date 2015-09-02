@@ -15,6 +15,9 @@ module CurationConcerns
     delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
              :audio?, :pdf?, :office_document?, :representative, :to_s, to: :solr_document
 
+    # Methods used by blacklight helpers
+    delegate :has?, :first, to: :solr_document
+
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,
              :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document

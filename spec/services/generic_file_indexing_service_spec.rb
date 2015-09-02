@@ -31,6 +31,7 @@ describe CurationConcerns::GenericFileIndexingService do
   describe '#generate_solr_document' do
     before do
       allow(generic_file).to receive(:label).and_return('CastoriaAd.tiff')
+      allow(generic_file).to receive(:thumbnail).and_return(double)
     end
     subject { described_class.new(generic_file).generate_solr_document }
 
@@ -59,6 +60,7 @@ describe CurationConcerns::GenericFileIndexingService do
       expect(subject[Solrizer.solr_name('identifier')]).to eq ['urn:isbn:1234567890']
       expect(subject[Solrizer.solr_name('based_near')]).to eq ['Medina, Saudi Arabia']
       expect(subject[Solrizer.solr_name('mime_type')]).to eq ['image/jpeg']
+      expect(subject.fetch('thumbnail_path_ss')).to eq '/downloads/foo123?file=thumbnail'
       expect(subject['all_text_timv']).to eq('abcxyz')
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600

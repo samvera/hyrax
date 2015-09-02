@@ -32,4 +32,14 @@ describe CurationConcerns::GenericFilePresenter do
     subject { presenter.office_document? }
     it { is_expected.to be false }
   end
+
+  describe "has?" do
+    subject { presenter.has?('thumbnail_path_ss') }
+    it { is_expected.to be false }
+  end
+
+  describe "first" do
+    subject { presenter.first('mime_type_tesim') }
+    it { is_expected.to eq 'image/jpeg' }
+  end
 end

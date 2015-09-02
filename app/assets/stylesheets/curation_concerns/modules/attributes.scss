@@ -17,6 +17,16 @@
   }
 }
 
+.attributes {
+  .thumbnail {
+    width: 150px;
+    display: block; // Don't let the image control the size of the cell
+    img {
+      width: 100%;
+    }
+  }
+}
+
 .attribute a .secondary {
   font-size: .8em;
   display: block;
