@@ -24,7 +24,13 @@ module CurationConcerns::GenericWorkBehavior
   end
 
   def to_s
-    title.join(', ')
+    if title.present?
+      Array(title).join(' | ')
+    elsif label.present?
+      Array(label).join(' | ')
+    else
+      'No Title'
+    end
   end
 
   # Returns a string identifying the path associated with the object. ActionPack uses this to find a suitable partial to represent the object.

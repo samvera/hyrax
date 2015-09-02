@@ -5,7 +5,7 @@ module CurationConcerns::TitleHelper
 
   def curation_concern_page_title(curation_concern)
     if curation_concern.persisted?
-      construct_page_title(curation_concern.title, "#{curation_concern.human_readable_type} [#{curation_concern.to_param}]")
+      construct_page_title(curation_concern.to_s, "#{curation_concern.human_readable_type} [#{curation_concern.to_param}]")
     else
       construct_page_title("New #{curation_concern.human_readable_type}")
     end

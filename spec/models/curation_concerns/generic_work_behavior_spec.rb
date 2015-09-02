@@ -4,6 +4,7 @@ describe CurationConcerns::GenericWorkBehavior do
   before do
     class EssentialWork < ActiveFedora::Base
       include CurationConcerns::GenericWorkBehavior
+      include CurationConcerns::BasicMetadata
     end
   end
   after do
@@ -17,7 +18,24 @@ describe CurationConcerns::GenericWorkBehavior do
       expect(subject.class.ancestors).to include(mixin)
     end
   end
+  describe '#to_s' do
+    it 'uses the provided titles' do
+      subject.title = %w(Hello World)
+      expect(subject.to_s).to eq('Hello | World')
+    end
 
+    it 'falls back on label if no titles are given' do
+      subject.title = []
+      subject.label = 'Spam'
+      expect(subject.to_s).to eq('Spam')
+    end
+
+    it 'with no label or titles it is "No Title"' do
+      subject.title = []
+      subject.label = nil
+      expect(subject.to_s).to eq('No Title')
+    end
+  end
   describe 'human_readable_type' do
     it 'has a default' do
       expect(subject.human_readable_type).to eq 'Essential Work'
