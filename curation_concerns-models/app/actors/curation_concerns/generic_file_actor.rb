@@ -37,12 +37,13 @@ module CurationConcerns
         ActiveFedora::Base.logger.warn 'unable to find UploadSet to attach to'
       end
 
+      if assign_visibility?(generic_file_params)
+        interpret_visibility generic_file_params
+      end
       unless work_id.blank?
         work = ActiveFedora::Base.find(work_id)
 
-        if !((generic_file_params || {}).keys & %w(visibility embargo_release_date lease_expiration_date)).empty?
-          interpret_visibility generic_file_params
-        else
+        unless assign_visibility?(generic_file_params)
           copy_visibility(work, generic_file)
         end
         work.generic_files << generic_file
@@ -50,6 +51,10 @@ module CurationConcerns
         work.save
       end
       yield(generic_file) if block_given?
+    end
+
+    def assign_visibility?(generic_file_params = {})
+      !((generic_file_params || {}).keys & %w(visibility embargo_release_date lease_expiration_date)).empty?
     end
 
     def create_content(file)

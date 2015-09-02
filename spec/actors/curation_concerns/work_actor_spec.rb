@@ -44,6 +44,27 @@ describe CurationConcerns::GenericWorkActor do
             expect(curation_concern.visibility_after_embargo).to eq 'open'
             expect(curation_concern.visibility).to eq 'authenticated'
           end
+          context "with attached files" do
+            let(:attributes) do
+              { title: ['New embargo'], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+                visibility_during_embargo: 'authenticated', embargo_release_date: date.to_s,
+                visibility_after_embargo: 'open', visibility_during_lease: 'open',
+                lease_expiration_date: '2014-06-12', visibility_after_lease: 'restricted',
+                files: [
+                  file
+                ],
+                rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
+            end
+            it "applies it to attached files" do
+              allow(CharacterizeJob).to receive(:perform_later).and_return(true)
+              subject.create
+              file = curation_concern.generic_files.first
+              expect(file).to be_persisted
+              expect(file.visibility_during_embargo).to eq 'authenticated'
+              expect(file.visibility_after_embargo).to eq 'open'
+              expect(file.visibility).to eq 'authenticated'
+            end
+          end
         end
 
         context 'when embargo_release_date is in the past' do
