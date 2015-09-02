@@ -1,5 +1,8 @@
 module CurationConcerns
   module SolrDocumentBehavior
+    extend ActiveSupport::Concern
+    include Hydra::Works::GenericFile::MimeTypes
+
     def title_or_label
       title || label
     end
@@ -110,24 +113,6 @@ module CurationConcerns
 
     def mime_type
       Array(self[Solrizer.solr_name('mime_type')]).first
-    end
-
-    def pdf?
-      ['application/pdf'].include? mime_type
-    end
-
-    def image?
-      ['image/png', 'image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif', 'image/tiff'].include? mime_type
-    end
-
-    def video?
-      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? mime_type
-    end
-
-    def audio?
-      # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
-      # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
-      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? mime_type
     end
   end
 end

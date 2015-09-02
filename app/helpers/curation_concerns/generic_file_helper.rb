@@ -21,6 +21,8 @@ module CurationConcerns::GenericFileHelper
         'audio'
       elsif generic_file.pdf?
         'pdf'
+      elsif generic_file.office_document?
+        'office_document'
       else
         'default'
       end
