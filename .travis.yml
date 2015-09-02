@@ -6,13 +6,3 @@ rvm:
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-notifications:
-  email:
-    recipients:
-      - "eliotj@princeton.edu"
-      - "kr2@princeton.edu"
-      - "jstroop@princeton.edu"
-    on_success: "change"
-    on_failure: "always"
-    template:
-      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
