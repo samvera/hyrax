@@ -2,6 +2,10 @@ module ActionDispatch::Routing
   class Mapper
     def curation_concerns_basic_routes
       resources :downloads, only: :show
+      # Batch edit routes
+      get 'upload_sets/:id/edit' => 'upload_sets#edit', as: :edit_upload_set
+      post 'upload_sets/:id' => 'upload_sets#update', as: :upload_set_generic_files
+
       namespace :curation_concerns, path: :concern do
         CurationConcerns.config.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
           namespaced_resources curation_concern_name, except: [:index]

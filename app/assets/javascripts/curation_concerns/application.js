@@ -1,3 +1,5 @@
+//= require jquery-ui-1.9.2/jquery.ui.widget
+
 //= require blacklight/blacklight
 //
 //= require bootstrap/dropdown

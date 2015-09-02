@@ -1,0 +1,6 @@
+<%= form_for(GenericFile.new, :url => main_app.curation_concerns_generic_files_path(parent_id:@presenter.id), :html => { multipart: true, id: 'fileupload' }) do |f| %>
+  <div class="well">
+    <%= render partial: 'curation_concerns/generic_files/upload/form_fields', presenter: @presenter, locals: { upload_set_id: ActiveFedora::Noid::Service.new.mint } %>
+  </div>
+<% end %>
+

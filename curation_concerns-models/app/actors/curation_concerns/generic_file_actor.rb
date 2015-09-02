@@ -19,21 +19,22 @@ module CurationConcerns
     # create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
     # we have to save both the parent work and the generic_file in order to record the "metadata" relationship
     # between them.
-    # @param [String] batch_id id of the batch that the file was uploaded within
+    # @param [String] upload_set_id id of the batch of files that the file was uploaded with
     # @param [String] work_id id of the parent work that will contain the generic_file.
     # @param [Hash] generic_file_params specifying the visibility, lease and/or embargo of the generic file.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-    def create_metadata(batch_id, work_id, generic_file_params = {})
+    def create_metadata(upload_set_id, work_id, generic_file_params = {})
       generic_file.apply_depositor_metadata(user)
       time_in_utc = DateTime.now.new_offset(0)
       generic_file.date_uploaded = time_in_utc
       generic_file.date_modified = time_in_utc
       generic_file.creator = [user.user_key]
-      # TODO: Remove this? see https://github.com/projecthydra-labs/curation_concerns/issues/27
-      if batch_id && generic_file.respond_to?(:batch_id=)
-        generic_file.batch_id = batch_id
+
+      if upload_set_id && generic_file.respond_to?(:upload_set_id=)
+        UploadSet.create(id: upload_set_id) unless UploadSet.exists?(upload_set_id)
+        generic_file.upload_set_id = upload_set_id
       else
-        ActiveFedora::Base.logger.warn 'unable to find batch to attach to'
+        ActiveFedora::Base.logger.warn 'unable to find UploadSet to attach to'
       end
 
       unless work_id.blank?

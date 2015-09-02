@@ -1,0 +1,50 @@
+<h2>Individual Titles  </h2>
+<div id="" class="well">
+  <div class="row">
+    <div class="col-sm-8">
+      <h3>Applies to individual files uploaded</h3>
+      <%= content_tag :p, t('sufia.upload_set.help.title'), class: "help-block" %>
+      <% @upload_set.generic_files.sort { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
+        <div class="form-group">
+          <%= f.input_label :title, as: :multi_value_with_help, label: "Title #{index + 1}" %>
+          <div id="additional_title_clone">
+            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, class: 'form-control', required: true %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-sm-4">
+      <!-- put metadata about file being edited here -->
+    </div>
+  </div>
+</div>
+
+<%= hidden_field_tag(:extra_description_count, "1") %>
+<div id="descriptions_display">
+  <h2>Bulk Descriptions</h2>
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-6">
+      <h3>Applies to all files just uploaded</h3>
+      <%= f.input :resource_type, as: :select_with_help, collection: Sufia.config.resource_types,
+          input_html: { class: 'form-control', multiple: true } %>
+
+      <%= f.input :tag, as: :multi_value_with_help %>
+
+      <%= f.input :creator, as: :multi_value_with_help %>
+
+      <%= f.input :rights, as: :select_with_modal_help, collection: Sufia.config.cc_licenses,
+          input_html: { class: 'form-control', multiple: true } %>
+
+      <%= render "generic_files/rights_modal" %>
+
+      <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
+      <!-- hidden on initial load -->
+
+      <%= render 'more_metadata', f: f %>
+
+      </div> <!-- /col-sm-8 -->
+    </div> <!-- /row -->
+  </div><!-- /well -->
+</div> <!-- /row -->

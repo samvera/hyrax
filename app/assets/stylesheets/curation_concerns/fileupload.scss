@@ -1,0 +1,49 @@
+@import 'fileupload/jquery.fileupload-ui';
+@import 'fileupload/style';
+@import 'fileupload/thumbnail-scaling';
+
+#upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
+
+button.close {
+  display: block;
+}
+
+.related-files {
+  height: 100px;
+  overflow-x: auto;
+}
+
+label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+
+/* These were from batch_edit/edit.html.erb */
+#upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
+
+.fileHeight {
+  max-height: 50px
+}
+
+.scrollx {
+  overflow-x: auto;
+}
+
+.scrolly {
+  overflow-y: auto;
+}
+
+h2 small {
+  color: red;
+}
+
+.status {
+  color: green;
+  padding:5px 5px 5px;
+}
+
+.loading {
+  background: white image-url('loading.gif') center bottom no-repeat;
+}
+
+h1.visibility span.label {
+  font-size: 30%;
+  vertical-align: middle;
+}
