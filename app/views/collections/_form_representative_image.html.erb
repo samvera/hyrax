@@ -1,4 +1,4 @@
-<% if curation_concern.persisted? && curation_concern.members.present? %>
+<% if curation_concern.persisted? && curation_concern.member_ids.present? %>
   <div class="row">
     <div class="col-md-12">
       <fieldset id="representative-image">
@@ -6,7 +6,7 @@
           Assign a Thumbnail
         </legend>
         <p>Select the file whose thumbnail should represent this <%= curation_concern.human_readable_type %>.</p>
-        <%= f.select( :representative, Hash[ curation_concern.members.map { |m| m.generic_files}.flatten.map {|file| [file.title.first, file.id] } ],{}, { class: 'form-control' } ) %>
+        <%= f.select(:representative, @form.select_files,{}, { class: 'form-control' } ) %>
       </fieldset>
     </div>
   </div>

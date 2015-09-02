@@ -59,6 +59,7 @@ module CurationConcerns::CurationConcernController
   end
 
   def edit
+    @form = CurationConcerns::FormPresenter.new(curation_concern, current_ability)
   end
 
   def update

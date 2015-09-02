@@ -19,4 +19,24 @@ describe CurationConcerns::Forms::CollectionEditForm do
       it { is_expected.to be true }
     end
   end
+
+  describe '#select_files' do
+    context 'without any works/files attached' do
+      subject { form.select_files }
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a work/file attached' do
+      let(:work) { create(:work_with_one_file) }
+      let(:title) { work.generic_files.first.title.first }
+      let(:file_id) { work.generic_files.first.id }
+      it 'returns a hash of with file title as key and file id as value' do
+        collection_with_file = collection
+        collection_with_file.members = [work]
+        collection_with_file.save
+        form_with_files = described_class.new(collection_with_file)
+        expect(form_with_files.select_files).to eq(title => file_id)
+      end
+    end
+  end
 end
