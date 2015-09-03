@@ -7,16 +7,19 @@ module CurationConcerns
     included do
       helper CurationConcerns::MainAppHelpers
 
-      rescue_from CanCan::AccessDenied do |exception|
-        if [:show, :edit, :update, :destroy].include? exception.action
-          render 'unauthorized', status: :unauthorized
-        else
-          redirect_to main_app.root_url, alert: exception.message
-        end
-      end
-
       rescue_from ActiveFedora::ObjectNotFoundError do |_exception|
         render file: "#{Rails.root}/public/404", format: :html, status: :not_found, layout: false
+      end
+    end
+
+    def deny_access(exception)
+      if [:show, :edit, :update, :destroy].include? exception.action
+        render 'unauthorized', status: :unauthorized
+      elsif current_user && current_user.persisted?
+        redirect_to main_app.root_url, alert: exception.message
+      else
+        session['user_return_to'.freeze] = request.url
+        redirect_to main_app.new_user_session_path, alert: exception.message
       end
     end
   end

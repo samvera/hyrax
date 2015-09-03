@@ -18,9 +18,10 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses private work' do
       let(:a_work) { create(private_work_factory_name) }
-      it 'redirects and show unauthorized message' do
+      it 'shows unauthorized message' do
         get :show, id: a_work
-        expect(response).to fail_redirect_and_flash(main_app.root_path, 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
 
@@ -72,17 +73,19 @@ describe CurationConcerns::GenericWorksController do
     context 'someone elses private work' do
       routes { Rails.application.class.routes }
       let(:a_work) { create(private_work_factory_name) }
-      it 'redirects and show unauthorized message' do
+      it 'shows the unauthorized message' do
         get :edit, id: a_work
-        expect(response).to fail_redirect_and_flash(main_app.curation_concerns_generic_work_path(assigns[:curation_concern]), 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
 
     context 'someone elses public work' do
       let(:a_work) { create(public_work_factory_name) }
-      it 'shows me the page' do
+      it 'shows the unauthorized message' do
         get :edit, id: a_work
-        expect(response).to fail_redirect_and_flash(main_app.curation_concerns_generic_work_path(assigns[:curation_concern]), 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
 
@@ -122,9 +125,10 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses public work' do
       let(:a_work) { create(public_work_factory_name) }
-      it 'redirects and show unauthorized message' do
+      it 'shows the unauthorized message' do
         get :update, id: a_work
-        expect(response).to fail_redirect_and_flash(main_app.root_path, 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
 
@@ -149,9 +153,10 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses public work' do
       let(:work_to_be_deleted) { create(private_work_factory_name) }
-      it 'redirects and show unauthorized message' do
+      it 'shows unauthorized message' do
         delete :destroy, id: work_to_be_deleted
-        expect(response).to fail_redirect_and_flash(main_app.root_path, 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
 

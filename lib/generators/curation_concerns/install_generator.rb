@@ -26,7 +26,7 @@ module CurationConcerns
     end
 
     def inject_application_controller_behavior
-      inject_into_file 'app/controllers/application_controller.rb', after: /Blacklight::Controller\s*\n/ do
+      inject_into_file 'app/controllers/application_controller.rb', after: /Hydra::Controller::ControllerBehavior\s*\n/ do
         "\n  # Adds CurationConcerns behaviors to the application controller.\n" \
         "  include CurationConcerns::ApplicationControllerBehavior\n"
       end
