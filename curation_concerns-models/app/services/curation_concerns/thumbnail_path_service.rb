@@ -10,7 +10,7 @@ module CurationConcerns
         return unless representative
         if representative.audio?
           audio_image
-        elsif representative.thumbnail
+        elsif thumbnail?(representative)
           Rails.application.routes.url_helpers.download_path(object.representative, file: 'thumbnail')
         else
           default_image
@@ -31,6 +31,14 @@ module CurationConcerns
 
       def audio_image
         ActionController::Base.helpers.image_path 'audio.png'
+      end
+
+      def thumbnail?(representative)
+        File.exist?(thumbnail_filepath(representative))
+      end
+
+      def thumbnail_filepath(representative)
+        CurationConcerns::DerivativePath.derivative_path_for_reference(representative, 'thumbnail')
       end
     end
   end

@@ -8,7 +8,7 @@ describe CurationConcerns::ThumbnailPathService do
     let(:mime_type) { 'image/jpeg' }
     context "that has a thumbnail" do
       before do
-        allow(object).to receive(:thumbnail).and_return(Hydra::PCDM::File.new)
+        allow(File).to receive(:exist?).and_return(true)
       end
       it { is_expected.to eq '/downloads/999?file=thumbnail' }
     end
@@ -26,9 +26,9 @@ describe CurationConcerns::ThumbnailPathService do
   context "with a Work" do
     context "that has a representative" do
       let(:object) { GenericWork.new(representative: '999') }
-      let(:representative) { GenericFile.new }
+      let(:representative) { GenericFile.new(id: '777') }
       before do
-        allow(representative).to receive(:thumbnail).and_return(Hydra::PCDM::File.new)
+        allow(File).to receive(:exist?).and_return(true)
         allow(GenericFile).to receive(:load_instance_from_solr).with('999').and_return(representative)
       end
 
