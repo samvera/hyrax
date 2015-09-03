@@ -8,7 +8,7 @@ describe GenericFile do
 
   describe 'rdf type' do
     subject { described_class.new.type }
-    it { is_expected.to include(RDFVocabularies::PCDMTerms.Object, WorksVocabularies::WorksTerms.GenericFile) }
+    it { is_expected.to include(Hydra::PCDM::Vocab::PCDMTerms.Object, Hydra::Works::Vocab::WorksTerms.GenericFile) }
   end
 
   it 'is a Hydra::Works GenericFile' do

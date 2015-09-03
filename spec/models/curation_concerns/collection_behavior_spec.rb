@@ -72,11 +72,11 @@ describe CurationConcerns::CollectionBehavior do
 
     it 'is a pcdm:Collection' do
       expect(subject.pcdm_collection?).to be true
-      expect(subject.type).to include RDFVocabularies::PCDMTerms.Collection
+      expect(subject.type).to include Hydra::PCDM::Vocab::PCDMTerms.Collection
     end
     it 'does not be a pcdm:Object' do
       expect(subject.pcdm_object?).to be false
-      expect(subject.type).to_not include RDFVocabularies::PCDMTerms.Object
+      expect(subject.type).to_not include Hydra::PCDM::Vocab::PCDMTerms.Object
     end
     it 'has child objects' do
       expect(subject.child_generic_works).to eq []
