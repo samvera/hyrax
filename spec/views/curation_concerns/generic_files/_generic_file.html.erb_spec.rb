@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'curation_concerns/generic_files/_generic_file.html.erb' do
   let(:solr_document) { SolrDocument.new(id: '999',
                                          has_model_ssim: ['GenericFile'],
+                                         thumbnail_path_ss: '/downloads/999?file=thumbnail',
                                          representative_tesim: ["999"],
                                          title_tesim: ["My File"]) }
 
@@ -24,7 +25,7 @@ describe 'curation_concerns/generic_files/_generic_file.html.erb' do
 
   it 'renders the view' do
     # A thumbnail
-    expect(rendered).to have_selector "img[class='canonical-image'][src='#{download_path(presenter, file: 'thumbnail')}']"
+    expect(rendered).to have_selector ".thumbnail img[src='#{download_path(presenter, file: 'thumbnail')}']"
 
     # Action buttons
     expect(rendered).to have_selector "a[title=\"Edit My File\"][href='#{edit_polymorphic_path([:curation_concerns, presenter])}']", text: 'Edit'
