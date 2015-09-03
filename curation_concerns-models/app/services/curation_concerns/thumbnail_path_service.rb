@@ -26,7 +26,7 @@ module CurationConcerns
       end
 
       def default_image
-        ActionController::Base.helpers.image_path 'nope.png'
+        ActionController::Base.helpers.image_path 'default.png'
       end
 
       def audio_image
