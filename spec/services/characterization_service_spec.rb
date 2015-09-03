@@ -37,7 +37,7 @@ describe CurationConcerns::CharacterizationService do
     end
 
     it 'characterizes, extracts fulltext and stores the results' do
-      expect(CurationConcerns::FullTextExtractionService).to receive(:run).with(generic_file).and_return('The fulltext')
+      expect(Hydra::Works::FullTextExtractionService).to receive(:run).with(generic_file).and_return('The fulltext')
       expect(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_xml)
 
       subject.characterize

@@ -28,7 +28,7 @@ module CurationConcerns
       end
 
       def extract_fulltext
-        FullTextExtractionService.run(generic_file)
+        Hydra::Works::FullTextExtractionService.run(generic_file)
       end
 
       def store_metadata(metadata)

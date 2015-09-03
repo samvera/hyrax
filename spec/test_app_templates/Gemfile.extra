@@ -1,2 +1,4 @@
 # placeholder to use for pinning against specific gem commit references
-gem 'hydra-collections', github: 'projecthydra/hydra-collections', branch: 'document_counter'
+gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: 'd7864f33'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '4f67b56403'
+gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: '274f5e0'
