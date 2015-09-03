@@ -13,20 +13,25 @@ module CurationConcerns
       # user can version if they can edit
       alias_action :versions, to: :update
 
-      if user_groups.include? 'admin'
-        can [:create, :discover, :show, :read, :edit, :update, :destroy], :all
-      end
+      admin_permissions if admin?
 
       can :collect, :all
+    end
+
+    def admin_permissions
+      can [:create, :discover, :show, :read, :edit, :update, :destroy], :all
+    end
+
+    def admin?
+      user_groups.include? 'admin'
     end
 
     # Add this to your ability_logic if you want all logged in users to be able
     # to submit content
     def everyone_can_create_curation_concerns
       return if current_user.new_record?
-      can :create, ::GenericFile
+      can :create, [::GenericFile, ::Collection]
       can :create, [CurationConcerns.config.curation_concerns]
-      can :create, ::Collection
     end
   end
 end
