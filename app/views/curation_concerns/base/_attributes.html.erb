@@ -4,7 +4,7 @@
     <tr><th>Attribute Name</th><th>Values</th></tr>
   </thead>
   <tbody>
-  <%= @presenter.attribute_to_html(:description, label: 'Abstract') %>
+  <%= @presenter.attribute_to_html(:description) %>
   <%= @presenter.attribute_to_html(:creator, catalog_search_link: true ) %>
   <%= @presenter.attribute_to_html(:contributor, label: 'Contributors', catalog_search_link: true) %>
   <%= @presenter.attribute_to_html(:subject, catalog_search_link: true) %>
