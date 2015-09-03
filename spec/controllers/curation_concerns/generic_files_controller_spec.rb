@@ -214,32 +214,33 @@ describe CurationConcerns::GenericFilesController do
 
   context 'someone elses files' do
     let(:generic_file) do
-      generic_file = GenericFile.new.tap do |gf|
+      generic_file = GenericFile.create(read_groups: ['public']) do |gf|
         gf.apply_depositor_metadata('archivist1@example.com')
-        gf.read_groups = ['public']
-        gf.save!
       end
       parent.generic_files << generic_file
       generic_file
     end
-    after do
-      # GenericFile.find('curation_concerns:5').destroy
-    end
+
     describe 'edit' do
-      it 'gives me a flash error' do
+      it 'gives me the unauthorized page' do
         get :edit, id: generic_file
-        expect(response).to fail_redirect_and_flash(main_app.curation_concerns_generic_file_path(generic_file), 'You are not authorized to access this page.')
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
       end
     end
+
     describe 'view' do
       it 'shows me the file' do
         get :show, id: generic_file
         expect(response).to be_success
       end
     end
-    it 'does not let the user submit if they logout' do
-      get :new, parent_id: parent
-      expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
+
+    describe 'new' do
+      it 'does not let the user submit if they logout' do
+        get :new, parent_id: parent
+        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
+      end
     end
   end
 end
