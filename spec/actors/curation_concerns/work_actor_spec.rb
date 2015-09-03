@@ -12,6 +12,7 @@ describe CurationConcerns::GenericWorkActor do
 
   describe '#create' do
     let(:curation_concern) { GenericWork.new }
+    let(:xmas) { DateTime.parse('2014-12-25 11:30') }
 
     context 'failure' do
       let(:attributes) { {} }
@@ -114,12 +115,16 @@ describe CurationConcerns::GenericWorkActor do
         end
 
         context 'authenticated visibility' do
+          before do
+            allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+          end
+
           it 'stamps each file with the access rights' do
             expect(CharacterizeJob).to receive(:perform_later)
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted
-            expect(curation_concern.date_uploaded).to eq Date.today
-            expect(curation_concern.date_modified).to eq Date.today
+            expect(curation_concern.date_uploaded).to eq xmas
+            expect(curation_concern.date_modified).to eq xmas
             expect(curation_concern.depositor).to eq user.user_key
             expect(curation_concern.representative).to_not be_nil
             expect(curation_concern.generic_files.size).to eq 1
@@ -142,13 +147,17 @@ describe CurationConcerns::GenericWorkActor do
         end
 
         context 'authenticated visibility' do
+          before do
+            allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+          end
+
           it 'stamps each file with the access rights' do
             expect(CharacterizeJob).to receive(:perform_later).twice
 
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted
-            expect(curation_concern.date_uploaded).to eq Date.today
-            expect(curation_concern.date_modified).to eq Date.today
+            expect(curation_concern.date_uploaded).to eq xmas
+            expect(curation_concern.date_modified).to eq xmas
             expect(curation_concern.depositor).to eq user.user_key
 
             expect(curation_concern.generic_files.size).to eq 2

@@ -48,7 +48,7 @@ module CurationConcerns
       end
 
       def apply_deposit_date
-        curation_concern.date_uploaded = Date.today
+        curation_concern.date_uploaded = CurationConcerns::TimeService.time_in_utc
       end
 
       def save
@@ -59,7 +59,7 @@ module CurationConcerns
         attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
         remove_blank_attributes!
         curation_concern.attributes = attributes.symbolize_keys
-        curation_concern.date_modified = Date.today
+        curation_concern.date_modified = CurationConcerns::TimeService.time_in_utc
       end
 
       # If any attributes are blank remove them

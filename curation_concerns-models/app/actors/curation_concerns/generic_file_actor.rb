@@ -25,9 +25,9 @@ module CurationConcerns
 
     def create_metadata(upload_set_id, work_id, generic_file_params = {})
       generic_file.apply_depositor_metadata(user)
-      time_in_utc = DateTime.now.new_offset(0)
-      generic_file.date_uploaded = time_in_utc
-      generic_file.date_modified = time_in_utc
+      now = CurationConcerns::TimeService.time_in_utc
+      generic_file.date_uploaded = now
+      generic_file.date_modified = now
       generic_file.creator = [user.user_key]
 
       if upload_set_id && generic_file.respond_to?(:upload_set_id=)
@@ -92,7 +92,7 @@ module CurationConcerns
       update_visibility(all_attributes)
       model_attributes.delete(:visibility) # Applying this attribute is handled by update_visibility
       generic_file.attributes = model_attributes
-      generic_file.date_modified = DateTime.now
+      generic_file.date_modified = CurationConcerns::TimeService.time_in_utc
       save do
         if CurationConcerns.config.respond_to?(:after_update_metadata)
           CurationConcerns.config.after_update_metadata.call(generic_file, user)
