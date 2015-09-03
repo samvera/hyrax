@@ -26,18 +26,8 @@ module CurationConcerns
     def file_presenters
       @generic_files ||= begin
         ids = solr_document.fetch('generic_file_ids_ssim', [])
-        load_generic_file_presenters(ids)
+        PresenterFactory.build_presenters(ids, GenericFilePresenter, current_ability)
       end
     end
-
-    private
-
-      # @param [Array] ids the list of ids to load
-      # @return [Array<GenericFilePresenter>] presenters for the generic files in order of the ids
-      def load_generic_file_presenters(ids)
-        return [] if ids.blank?
-        docs = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}").map { |res| SolrDocument.new(res) }
-        ids.map { |id| GenericFilePresenter.new(docs.find { |doc| doc.id == id }, current_ability) }
-      end
   end
 end
