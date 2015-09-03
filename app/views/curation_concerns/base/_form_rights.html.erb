@@ -7,10 +7,7 @@
     <a href="http://creativecommons.org/licenses/" target="_blank">Here's some help</a> if you don't know which license to choose.
   </p>
 
-  <%= f.input :rights,
-    as: :select,
+  <%= f.input :rights, as: :select,
     collection: CurationConcerns.config.cc_licenses,
-    input_html: { class: 'form-control' },
-    label: 'Content License'
-  %>
+    input_html: { class: 'form-control' } %>
 </fieldset>
