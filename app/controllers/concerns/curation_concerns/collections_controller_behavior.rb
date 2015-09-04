@@ -33,6 +33,11 @@ module CurationConcerns
 
     protected
 
+      def filter_docs_with_read_access!
+        super
+        flash.delete(:notice) if flash.notice == 'Select something first'
+      end
+
       def presenter
         @presenter ||= begin
           _, document_list = search_results(params, self.class.search_params_logic + [:find_one])
@@ -60,7 +65,6 @@ module CurationConcerns
       end
 
       def query_collection_members
-        flash[:notice] = nil if flash[:notice] == 'Select something first'
         params[:q] = params[:cq]
         super
       end
