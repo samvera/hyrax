@@ -46,6 +46,6 @@ If you are modifying the curation_concerns gem and want to run the test suite, f
 
     $ rake engine_cart:generate
     $ rake jetty:clean
-    $ rake curation_concerns:jetty:config
+    $ rake jetty:config
     $ rake jetty:start
     $ rake spec
