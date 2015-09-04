@@ -57,11 +57,6 @@ This generator makes the following changes to your application:
     copy_file 'app/models/generic_file.rb', 'app/models/generic_file.rb'
   end
 
-  # Sets up full-text indexing (Solr config + jars)
-  def full_text_indexing
-    generate 'curation_concerns:models:fulltext'
-  end
-
   # Adds clamav initializtion
   def clamav
     generate 'curation_concerns:models:clamav'

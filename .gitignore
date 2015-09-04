@@ -7,5 +7,6 @@ jetty
 /.rvmrc
 /.ruby-version
 /.ruby-gemset
+solr_conf/
 spec/internal
 spec/mock_upload_directory
