@@ -162,13 +162,29 @@ describe 'collection' do
       expect(page).to have_content(creators.first)
     end
 
-    it 'removes a work from a collection' do
+    it 'removes a work from a collection from edit page' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
       expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_content(gw1.title.first)
+      expect(page).to have_content(gw2.title.first)
+      within("#document_#{gw1.id}") do
+        click_link('Remove From Collection')
+      end
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).to_not have_content(gw1.title.first)
+      expect(page).to have_content(gw2.title.first)
+    end
+
+    it 'removes a work from a collection from show page' do
+      expect(page).to have_content(@collection.title)
+      within('#document_' + @collection.id) do
+        click_link(@collection.title)
+      end
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
       within("#document_#{gw1.id}") do
