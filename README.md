@@ -13,6 +13,8 @@ A Hydra-based Rails Engine that extends an application, adding the ability to Cr
 
 ## Installation
 
+Checkout the dependencies for [curation_concerns-models](https://github.com/projecthydra-labs/curation_concerns/tree/master/curation_concerns-models#dependencies), which is installed as part of curation_concerns.
+
 Add this line to your application's Gemfile:
 
     gem 'curation_concerns'

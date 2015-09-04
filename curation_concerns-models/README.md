@@ -4,6 +4,8 @@ Models extracted from worthwhile-models and sufia-models.
 
 ## Dependencies
 
+Checkout the readme for [hydra-derivatives](https://github.com/projecthydra/hydra-derivatives#dependencies) for additional dependencies for generating derivatives.
+
 ### FITS 0.6.2
 
 To install FITS:
