@@ -19,7 +19,7 @@ describe CurationConcerns::ThumbnailPathService do
     end
 
     context "that has no thumbnail" do
-      it { is_expected.to eq '/assets/nope.png' }
+      it { is_expected.to eq '/assets/default.png' }
     end
   end
 
@@ -37,7 +37,7 @@ describe CurationConcerns::ThumbnailPathService do
 
     context "that doesn't have a representative" do
       let(:object) { GenericWork.new }
-      it { is_expected.to eq '/assets/nope.png' }
+      it { is_expected.to eq '/assets/default.png' }
     end
   end
 end
