@@ -1,0 +1,36 @@
+module CurationConcerns
+  class PresenterFactory
+    class << self
+      # @param [Array] ids the list of ids to load
+      # @param [Class] klass the class of presenter to make
+      # @return [Array] presenters for the generic files in order of the ids
+      def build_presenters(ids, klass, ability)
+        new(ids, klass, ability).build
+      end
+    end
+
+    attr_reader :ids, :klass, :ability
+
+    def initialize(ids, klass, ability)
+      @ids = ids
+      @klass = klass
+      @ability = ability
+    end
+
+    def build
+      return [] if ids.blank?
+      docs = load_docs
+      ids.map do |id|
+        solr_doc = docs.find { |doc| doc.id == id }
+        klass.new(solr_doc, ability)
+      end
+    end
+
+    private
+
+      # @return [Array<SolrDocument>] a list of solr documents in no particular order
+      def load_docs
+        ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: 1000).map { |res| SolrDocument.new(res) }
+      end
+  end
+end
