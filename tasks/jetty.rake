@@ -1,7 +1,7 @@
 namespace :jetty do
   desc "Copies the default Solr & Fedora configs into the bundled Hydra Testing Server"
   task :config do
-    Rake::Task['curation_concerns:jetty:download_jars'].invoke
+    Rake::Task['hydra_works:jetty:config'].invoke
     Rake::Task["jetty:config_solr"].invoke
   end
 

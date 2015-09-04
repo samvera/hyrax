@@ -23,7 +23,7 @@ task spec: :rubocop do
   RSpec::Core::RakeTask.new(:spec)
 end
 
-task ci: ['engine_cart:generate', 'jetty:clean'] do
+task ci: ['engine_cart:generate', 'jetty:clean', 'jetty:config'] do
   puts 'running continuous integration'
   jetty_params = Jettywrapper.load_config
   jetty_params[:startup_wait] = 90
