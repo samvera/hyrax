@@ -8,7 +8,7 @@ describe CurationConcerns::GenericWorkIndexingService do
   let(:file) { generic_work.generic_files.first }
 
   before do
-    allow_any_instance_of(GenericFile).to receive(:thumbnail).and_return(double)
+    allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return("/downloads/#{file.id}?file=thumbnail")
     generic_work.representative = file.id
   end
 

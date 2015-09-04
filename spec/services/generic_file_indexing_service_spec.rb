@@ -31,7 +31,7 @@ describe CurationConcerns::GenericFileIndexingService do
   describe '#generate_solr_document' do
     before do
       allow(generic_file).to receive(:label).and_return('CastoriaAd.tiff')
-      allow(generic_file).to receive(:thumbnail).and_return(double)
+      allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
     end
     subject { described_class.new(generic_file).generate_solr_document }
 
