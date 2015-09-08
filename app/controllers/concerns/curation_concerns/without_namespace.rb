@@ -4,7 +4,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-      prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
+      prepend_before_action :normalize_identifier, except: [:index, :create, :new]
     end
 
     protected
