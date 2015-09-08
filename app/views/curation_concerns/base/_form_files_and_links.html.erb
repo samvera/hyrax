@@ -1,4 +1,4 @@
-<% unless curation_concern.persisted? %>
+<% unless f.object.persisted? %>
   <fieldset id="work-contents">
     <div class="row with-headroom">
       <div class="span12">
@@ -7,7 +7,7 @@
         </legend>
 
         <p class="help-block">
-          The subject of your <%= curation_concern.human_readable_type.downcase %> can either be a file <em>or</em> a URL.
+          The subject of your <%= f.object.human_readable_type.downcase %> can either be a file <em>or</em> a URL.
         </p>
       </div>
     </div>

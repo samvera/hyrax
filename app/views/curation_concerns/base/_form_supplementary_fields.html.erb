@@ -1,15 +1,10 @@
-<%= render "form_files_and_links", curation_concern: curation_concern, f: f %>
-
-<%= render "form_representative_image", curation_concern: curation_concern, f: f %>
-
-<div class="row with-headroom">
-  <div class="col-md-12">
-    <%= render "form_permission", curation_concern: curation_concern, f: f %>
-  </div>
-</div>
+<%= render "form_files_and_links", f: f %>
+<%= render "form_representative_image", f: f %>
 
 <div class="row with-headroom">
   <div class="col-md-12">
-    <%= render "form_rights", curation_concern: curation_concern, f: f %>
+    <%= render "form_permission", f: f %>
   </div>
 </div>
+
+<%= render "form_rights", f: f %>

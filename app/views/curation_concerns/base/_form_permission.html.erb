@@ -1,7 +1,8 @@
-<% if curation_concern.embargo_release_date %>
-  <%= render 'form_permission_under_embargo', curation_concern: curation_concern, f: f %>
-<% elsif curation_concern.lease_expiration_date %>
-  <%= render 'form_permission_under_lease', curation_concern: curation_concern, f: f %>
+<% # This is used by works and by GenericFile and the layout (col-6 vs col-12) is different for both %>
+<% if f.object.embargo_release_date %>
+  <%= render 'form_permission_under_embargo', f: f %>
+<% elsif f.object.lease_expiration_date %>
+  <%= render 'form_permission_under_lease', f: f %>
 <% else %>
   <fieldset id="set-access-controls">
     <legend>
@@ -27,23 +28,23 @@
 
     <div class="form-group">
       <label class="radio">
-        <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if curation_concern.open_access? %> checked="true"<% end %>/>
+        <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if f.object.open_access? %> checked="true"<% end %>/>
         <span class="label label-success">Open Access</span> Visible to the world.
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if curation_concern.authenticated_only_access? %> checked="true"<% end %> />
+        <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if f.object.authenticated_only_access? %> checked="true"<% end %> />
         <span class="label label-info"><%=t('curation_concerns.institution.name') %></span> Visible to all <%=t('curation_concerns.institution.name') %> users.
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_embargo" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" <% if curation_concern.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-        <%= render "form_permission_embargo", curation_concern: curation_concern, f: f  %>
+        <input type="radio" id="visibility_embargo" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
+        <%= render "form_permission_embargo", f: f  %>
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_lease" name="<%= f.object_name %>[visibility]" value="lease" <% if curation_concern.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-        <%= render "form_permission_lease", curation_concern: curation_concern, f: f  %>
+        <input type="radio" id="visibility_lease" name="<%= f.object_name %>[visibility]" value="lease" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
+        <%= render "form_permission_lease", f: f  %>
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if curation_concern.private_access? %> checked="true"<% end %>/>
+        <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if f.object.private_access? %> checked="true"<% end %>/>
         <span class="label label-danger">Private</span> Only visible to you and your delegates.
       </label>
     </div>
