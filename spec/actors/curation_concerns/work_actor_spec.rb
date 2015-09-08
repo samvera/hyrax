@@ -229,5 +229,20 @@ describe CurationConcerns::GenericWorkActor do
         expect(curation_concern.parent_collections).to eq [collection2]
       end
     end
+
+    context 'with multiple files file' do
+      let(:file1) { FactoryGirl.create(:generic_file) }
+      let(:file2) { FactoryGirl.create(:generic_file) }
+      let(:curation_concern) { FactoryGirl.create(:generic_work, user: user, generic_files: [file1, file2]) }
+      let(:attributes) do
+        FactoryGirl.attributes_for(:generic_work, generic_files: [file2, file1])
+      end
+      it 'updates the order of files' do
+        expect(curation_concern.generic_files).to eq [file1, file2]
+        expect(subject.update).to be true
+        curation_concern.reload
+        expect(curation_concern.generic_files).to eq [file2, file1]
+      end
+    end
   end
 end
