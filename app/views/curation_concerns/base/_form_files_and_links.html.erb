@@ -13,11 +13,9 @@
     </div>
 
     <div class="row">
-
       <fieldset class="col-md-5">
-        <%= f.input :files, as: :file, label: 'Upload a file', hint: 'A PDF is preferred.'%>
+        <%= f.input :files, as: :multifile %>
       </fieldset>
-
     </div>
   </fieldset>
 <% end %>

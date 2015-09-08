@@ -23,8 +23,9 @@ describe CurationConcerns::GenericFilesController do
         it 'spawns a CharacterizeJob' do
           expect(CharacterizeJob).to receive(:perform_later)
           expect do
-            xhr :post, :create, files: [file], parent_id: parent,
-                                generic_file: { 'title' => ['test title'],
+            xhr :post, :create, parent_id: parent,
+                                generic_file: { files: [file],
+                                                title: ['test title'],
                                                 visibility: 'restricted' }
             expect(response).to be_success
           end.to change { GenericFile.count }.by(1)
@@ -50,7 +51,7 @@ describe CurationConcerns::GenericFilesController do
 
         it 'copies visibility from the parent' do
           expect(CharacterizeJob).to receive(:perform_later)
-          xhr :post, :create, files: [file], parent_id: parent
+          xhr :post, :create, parent_id: parent, generic_file: { files: [file] }
           expect(assigns[:generic_file]).to be_persisted
           saved_file = assigns[:generic_file].reload
           expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -59,7 +60,7 @@ describe CurationConcerns::GenericFilesController do
 
       context "on something that isn't a file" do
         it 'renders error' do
-          xhr :post, :create, files: ['hello'], parent_id: parent,
+          xhr :post, :create, parent_id: parent, generic_file: { files: ['hello'] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(response.status).to eq 422
           err = JSON.parse(response.body).first['error']
@@ -71,7 +72,7 @@ describe CurationConcerns::GenericFilesController do
         it 'displays a flash error' do
           skip 'pending hydra-works#89'
           expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
-          xhr :post, :create, files: [file], parent_id: parent,
+          xhr :post, :create, parent_id: parent, generic_file: { files: [file] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(flash[:error]).to include('A virus was found')
         end
@@ -81,7 +82,7 @@ describe CurationConcerns::GenericFilesController do
         it 'errors out of create and save after on continuos rsolr error' do
           allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
 
-          xhr :post, :create, files: [file], parent_id: parent,
+          xhr :post, :create, parent_id: parent, generic_file: { files: [file] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(response.body).to include('Error occurred while creating generic file.')
         end
@@ -181,7 +182,7 @@ describe CurationConcerns::GenericFilesController do
       context 'updating file content' do
         it 'is successful' do
           expect(CharacterizeJob).to receive(:perform_later).with(generic_file.id)
-          post :update, id: generic_file, files: [file]
+          post :update, id: generic_file, generic_file: { files: [file] }
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           skip 'pending hydra-works#89'
           expect(generic_file.reload.label).to eq 'image.png'

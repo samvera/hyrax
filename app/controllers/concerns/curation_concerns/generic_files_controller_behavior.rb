@@ -33,9 +33,9 @@ module CurationConcerns
 
     def create_from_upload(params)
       # check error condition No files
-      return json_error('Error! No file to save') unless params.key?(:files)
+      return json_error('Error! No file to save') unless params.key?(:generic_file) && params.fetch(:generic_file).key?(:files)
 
-      file = params[:files].detect { |f| f.respond_to?(:original_filename) }
+      file = params[:generic_file][:files].detect { |f| f.respond_to?(:original_filename) }
       if !file
         json_error 'Error! No file for upload', 'unknown file', status: :unprocessable_entity
       elsif empty_file?(file)
@@ -74,10 +74,12 @@ module CurationConcerns
     def update
       success = if wants_to_revert?
                   actor.revert_content(params[:revision])
-                elsif params.key?(:files)
-                  actor.update_content(params[:files].first)
                 elsif params.key?(:generic_file)
-                  update_metadata
+                  if params[:generic_file].key?(:files)
+                    actor.update_content(params[:generic_file][:files].first)
+                  else
+                    update_metadata
+                  end
                 end
       if success
         redirect_to [main_app, :curation_concerns, @generic_file], notice:
@@ -118,7 +120,7 @@ module CurationConcerns
 
       def attributes
         # params.fetch(:generic_file, {}).dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
-        params.fetch(:generic_file, {}).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+        params.fetch(:generic_file, {}).except(:files).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
       end
 
       def json_error(error, name = nil, additional_arguments = {})
