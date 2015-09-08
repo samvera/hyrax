@@ -5,6 +5,7 @@ module Features
       user.reload # because the user isn't re-queried via Warden
       super(user, scope: :user, run_callbacks: false)
     end
+
     # Regular logout
     def logout(user = :user)
       super(user)
