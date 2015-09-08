@@ -1,4 +1,4 @@
-json.array! [@generic_file] do |generic_file|
+json.files [@generic_file] do |generic_file|
   json.name generic_file.title.first
   json.size generic_file.file_size.first
   json.url  "/files/#{generic_file.id}"
