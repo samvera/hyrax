@@ -66,7 +66,7 @@ module CurationConcerns
     end
 
     def destroy
-      @generic_file.destroy
+      actor.destroy
       redirect_to [main_app, :curation_concerns, @generic_file.generic_works.first], notice: 'The file has been deleted.'
     end
 

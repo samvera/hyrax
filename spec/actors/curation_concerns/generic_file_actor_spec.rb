@@ -122,4 +122,27 @@ describe CurationConcerns::GenericFileActor do
       expect(generic_file_with_label.label).to eql(label)
     end
   end
+
+  describe "#destroy" do
+    it "destroys the object" do
+      actor.destroy
+      expect { generic_file.reload }.to raise_error ActiveFedora::ObjectNotFoundError
+    end
+    context "representative of a work" do
+      let!(:work) do
+        work = FactoryGirl.create(:generic_work)
+        # this is not part of a block on the create, since the work must be saved be fore the representative can be assigned
+        work.generic_files << generic_file
+        work.representative = generic_file.id
+        work.save
+        work
+      end
+
+      it "removes representative" do
+        expect(work.reload.representative).to eq(generic_file.id)
+        actor.destroy
+        expect(work.reload.representative).to be_nil
+      end
+    end
+  end
 end
