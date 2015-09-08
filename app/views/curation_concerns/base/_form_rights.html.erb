@@ -1,13 +1,17 @@
-<fieldset id="set-license">
-  <legend>Choose a License for your Content</legend>
-  <p>
-    What do you want others to be able to do with your work?
-  </p>
-  <p>
-    <a href="http://creativecommons.org/licenses/" target="_blank">Here's some help</a> if you don't know which license to choose.
-  </p>
+<div class="row with-headroom">
+  <div class="col-md-12">
+    <fieldset id="set-license">
+      <legend>Choose a License for your Content</legend>
+      <p>
+        What do you want others to be able to do with your work?
+      </p>
+      <p>
+        <a href="http://creativecommons.org/licenses/" target="_blank">Here's some help</a> if you don't know which license to choose.
+      </p>
 
-  <%= f.input :rights, as: :select,
-    collection: CurationConcerns.config.cc_licenses,
-    input_html: { class: 'form-control' } %>
-</fieldset>
+      <%= f.input :rights, as: :select,
+        collection: CurationConcerns.config.cc_licenses,
+        input_html: { class: 'form-control' } %>
+    </fieldset>
+  </div>
+</div>
