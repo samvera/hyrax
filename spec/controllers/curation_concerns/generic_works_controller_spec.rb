@@ -1,15 +1,14 @@
 require 'spec_helper'
 
+# This tests the CurationConcerns::CurationConcernController module
+# which is included into spec/internal/app/controllers/generic_works_controller.rb
 describe CurationConcerns::GenericWorksController do
-  let(:public_work_factory_name) { :public_generic_work }
-  let(:private_work_factory_name) { :work }
-
   let(:user) { create(:user) }
   before { sign_in user }
 
   describe '#show' do
     context 'my own private work' do
-      let(:a_work) { create(private_work_factory_name, user: user) }
+      let(:a_work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
         get :show, id: a_work
         expect(response).to be_success
@@ -17,7 +16,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses private work' do
-      let(:a_work) { create(private_work_factory_name) }
+      let(:a_work) { create(:private_generic_work) }
       it 'shows unauthorized message' do
         get :show, id: a_work
         expect(response.code).to eq '401'
@@ -26,7 +25,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(public_work_factory_name) }
+      let(:a_work) { create(:public_generic_work) }
       it 'shows me the page' do
         get :show, id: a_work
         expect(response).to be_success
@@ -35,7 +34,7 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(private_work_factory_name) }
+      let(:a_work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
         get :show, id: a_work
         expect(response).to be_success
@@ -63,7 +62,7 @@ describe CurationConcerns::GenericWorksController do
 
   describe '#edit' do
     context 'my own private work' do
-      let(:a_work) { create(private_work_factory_name, user: user) }
+      let(:a_work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
         get :edit, id: a_work
         expect(response).to be_success
@@ -72,7 +71,7 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses private work' do
       routes { Rails.application.class.routes }
-      let(:a_work) { create(private_work_factory_name) }
+      let(:a_work) { create(:private_generic_work) }
       it 'shows the unauthorized message' do
         get :edit, id: a_work
         expect(response.code).to eq '401'
@@ -81,7 +80,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(public_work_factory_name) }
+      let(:a_work) { create(:public_generic_work) }
       it 'shows the unauthorized message' do
         get :edit, id: a_work
         expect(response.code).to eq '401'
@@ -91,7 +90,7 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(private_work_factory_name) }
+      let(:a_work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
         get :edit, id: a_work
         expect(response).to be_success
@@ -100,7 +99,7 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#update' do
-    let(:a_work) { FactoryGirl.create(private_work_factory_name, user: user) }
+    let(:a_work) { FactoryGirl.create(:private_generic_work, user: user) }
 
     it 'updates the work' do
       patch :update, id: a_work, generic_work: {}
@@ -124,7 +123,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(public_work_factory_name) }
+      let(:a_work) { create(:public_generic_work) }
       it 'shows the unauthorized message' do
         get :update, id: a_work
         expect(response.code).to eq '401'
@@ -134,7 +133,7 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(private_work_factory_name) }
+      let(:a_work) { create(:private_generic_work) }
       it 'someone elses private work should update the work' do
         patch :update, id: a_work, generic_work: {}
         expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
@@ -143,7 +142,7 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#destroy' do
-    let(:work_to_be_deleted) { create(private_work_factory_name, user: user) }
+    let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
 
     it 'deletes the work' do
       delete :destroy, id: work_to_be_deleted
@@ -152,7 +151,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:work_to_be_deleted) { create(private_work_factory_name) }
+      let(:work_to_be_deleted) { create(:private_generic_work) }
       it 'shows unauthorized message' do
         delete :destroy, id: work_to_be_deleted
         expect(response.code).to eq '401'
@@ -161,7 +160,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      let(:work_to_be_deleted) { create(private_work_factory_name) }
+      let(:work_to_be_deleted) { create(:private_generic_work) }
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
       it 'someone elses private work should delete the work' do
         delete :destroy, id: work_to_be_deleted

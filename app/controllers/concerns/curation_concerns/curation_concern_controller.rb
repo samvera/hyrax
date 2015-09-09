@@ -12,8 +12,6 @@ module CurationConcerns::CurationConcernController
     class_attribute :curation_concern_type
     attr_accessor :curation_concern
     helper_method :curation_concern
-
-    respond_to :html
   end
 
   module ClassMethods
@@ -36,8 +34,9 @@ module CurationConcerns::CurationConcernController
       after_create_response
     else
       setup_form
-      respond_with(:curation_concerns, curation_concern) do |wants|
+      respond_to do |wants|
         wants.html { render 'new', status: :unprocessable_entity }
+        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
       end
     end
   end
@@ -46,10 +45,22 @@ module CurationConcerns::CurationConcernController
   # @raises CanCan::AccessDenied if the document is not found
   #   or the user doesn't have access to it.
   def show
-    _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
-    curation_concern = document_list.first
-    raise CanCan::AccessDenied.new(nil, :show) unless curation_concern
-    @presenter = show_presenter.new(curation_concern, current_ability)
+    respond_to do |wants|
+      wants.html do
+        _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
+        curation_concern = document_list.first
+        raise CanCan::AccessDenied.new(nil, :show) unless curation_concern
+        @presenter = show_presenter.new(curation_concern, current_ability)
+      end
+      wants.json do
+        # load and authorize @curation_concern manually because it's skipped for html
+        # This has to use #find instead of #load_instance_from_solr because
+        # we want to return values like generic_file_ids in the json
+        @curation_concern = curation_concern_type.find(params[:id]) unless curation_concern
+        authorize! :show, @curation_concern
+        render :show, status: :ok
+      end
+    end
   end
 
   # Gives the class of the show presenter. Override this if you want
@@ -67,8 +78,9 @@ module CurationConcerns::CurationConcernController
       after_update_response
     else
       setup_form
-      respond_with(:curation_concerns, curation_concern) do |wants|
+      respond_to do |wants|
         wants.html { render 'edit', status: :unprocessable_entity }
+        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
       end
     end
   end
@@ -93,26 +105,15 @@ module CurationConcerns::CurationConcernController
       curation_concern.contributor << current_user.user_key
     end
 
-    # def verify_acceptance_of_user_agreement!
-    #   return true if contributor_agreement.is_being_accepted?
-    #   # Calling the new action to make sure we are doing our best to preserve
-    #   # the input values; Its a stretch but hopefully it'll work
-    #   self.new
-    #   respond_with(:curation_concern, curation_concern) do |wants|
-    #     wants.html {
-    #       flash.now[:error] = "You must accept the contributor agreement"
-    #       render 'new', status: :conflict
-    #     }
-    #   end
-    #   false
-    # end
-
     def _prefixes
       @_prefixes ||= super + ['curation_concerns/base']
     end
 
     def after_create_response
-      respond_with(main_app, :curation_concerns, curation_concern)
+      respond_to do |wants|
+        wants.html { redirect_to [main_app, :curation_concerns, curation_concern] }
+        wants.json { render :show, status: :created, location: polymorphic_path([main_app, :curation_concerns, curation_concern]) }
+      end
     end
 
     def after_update_response
@@ -120,14 +121,18 @@ module CurationConcerns::CurationConcernController
       if actor.visibility_changed?
         redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
       else
-        respond_with(main_app, :curation_concerns, curation_concern)
+        respond_to do |wants|
+          wants.html { redirect_to [main_app, :curation_concerns, curation_concern] }
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, :curation_concerns, curation_concern]) }
+        end
       end
     end
 
     def after_destroy_response(title)
       flash[:notice] = "Deleted #{title}"
-      respond_with do |wants|
+      respond_to do |wants|
         wants.html { redirect_to main_app.catalog_index_path }
+        wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
       end
     end
 
