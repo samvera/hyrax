@@ -10,14 +10,14 @@
                 <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Select files...</span>
-                    <input type="file" name="files[]" multiple />
+                    <input type="file" name="generic_file[files][]" multiple />
                 </span>
                 <% ua = request.env['HTTP_USER_AGENT'] %>
                 <% if !!(ua =~ /Chrome/) %>
                 <span class="btn btn-success fileinput-button">
                     <i class="glphicon glyphicon-plus"></i>
                     <span>Select folder...</span>
-                    <input type="file" name="files[]" directory webkitdirectory mozdirectory />
+                    <input type="file" name="generic_file[files][]" directory webkitdirectory mozdirectory />
                 </span>
                 <% end %>
                 <button type="submit" class="activate-submit btn btn-primary start" id="main_upload_start">

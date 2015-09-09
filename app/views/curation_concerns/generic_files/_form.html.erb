@@ -1,4 +1,6 @@
-<%= simple_form_for [main_app, :curation_concerns, curation_concern], html: { multipart: true } do |f| %>
+<%= simple_form_for [main_app, :curation_concerns, curation_concern],
+                    html: { multipart: true },
+                    wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
   <div class="row">
     <div class="col-md-6">
       <fieldset class="required">
@@ -11,10 +13,8 @@
       <fieldset class="required">
         <legend>
           Attach Your File
-          <small>A PDF copy is preferred.</small>
         </legend>
-          <%= label_tag 'files[]', 'Upload a file' %>
-          <%= file_field_tag "files[]" %>
+        <%= f.input :files, as: :multifile %>
       </fieldset>
     </div>
 

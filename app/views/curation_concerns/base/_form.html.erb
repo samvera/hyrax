@@ -1,5 +1,5 @@
-<%= simple_form_for [main_app, :curation_concerns, curation_concern] do |f| %>
-
+<%= simple_form_for [main_app, :curation_concerns, curation_concern],
+                    wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
   <% if f.error_notification -%>
     <div class="alert alert-danger fade in">
       <strong>Wait don't go!</strong> There was a problem with your submission. Please review the errors below:

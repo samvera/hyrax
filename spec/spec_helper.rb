@@ -73,6 +73,8 @@ RSpec.configure do |config|
   config.include Controllers::EngineHelpers, type: :controller
   config.include Rails.application.routes.url_helpers, type: :routing
   config.include Capybara::DSL
+  config.include InputSupport, type: :input
+  config.include Capybara::RSpecMatchers, type: :input
   config.infer_spec_type_from_file_location!
   config.deprecation_stream
 end
