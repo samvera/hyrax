@@ -19,15 +19,12 @@ module CurationConcerns
     delegate :has?, :first, to: :solr_document
 
     # Metadata Methods
-    delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,
-             :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document
+    delegate :title, :description, :creator, :contributor, :subject, :publisher,
+             :language, :date_uploaded, :rights,
+             :embargo_release_date, :lease_expiration_date, to: :solr_document
 
     def page_title
       Array(solr_document['label_tesim']).first
-    end
-
-    def date_uploaded
-      solr_document['date_uploaded_ssim']
     end
 
     def link_name
