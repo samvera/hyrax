@@ -22,10 +22,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active_attr'
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'hydra-collections', '~> 6.0.0.alpha'
-  spec.add_dependency 'hydra-head', '~> 9.2.2'
+  spec.add_dependency 'hydra-head', '~> 9.2'
   spec.add_dependency 'hydra-works', '~> 0.1'
-  spec.add_dependency 'active-fedora', '~> 9.3.0'
-  spec.add_dependency 'active_fedora-noid', '~> 1.0.2'
+  spec.add_dependency 'active-fedora', '~> 9.3'
+  spec.add_dependency 'active_fedora-noid', '~> 1.0'
   spec.add_dependency 'resque', '~> 1.23'
   spec.add_dependency 'resque-pool', '~> 0.3'
 
