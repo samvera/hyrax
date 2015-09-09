@@ -10,7 +10,7 @@
       </p>
 
       <%= f.input :rights, as: :select,
-        collection: CurationConcerns.config.cc_licenses,
+        collection: RightsService.select_options,
         input_html: { class: 'form-control' } %>
     </fieldset>
   </div>

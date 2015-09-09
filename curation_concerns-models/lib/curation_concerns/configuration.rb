@@ -50,8 +50,8 @@ module CurationConcerns
     end
 
     attr_accessor :temp_file_base, :enable_local_ingest, :analytic_start_date,
-                  :fits_to_desc_mapping, :max_days_between_audits, :cc_licenses,
-                  :cc_licenses_reverse, :resource_types, :resource_types_to_schema,
+                  :fits_to_desc_mapping, :max_days_between_audits,
+                  :resource_types, :resource_types_to_schema,
                   :permission_levels, :owner_permission_levels, :analytics
 
     attr_writer :enable_noids

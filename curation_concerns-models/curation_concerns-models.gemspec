@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
   spec.add_dependency 'resque', '~> 1.23'
   spec.add_dependency 'resque-pool', '~> 0.3'
+  spec.add_dependency 'qa', '~> 0.5'
 
   spec.add_development_dependency 'bundler', '~> 1.6'
   spec.add_development_dependency 'rake'
