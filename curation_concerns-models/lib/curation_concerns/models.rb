@@ -2,7 +2,6 @@ require 'curation_concerns/models/version'
 require 'curation_concerns/models/engine'
 
 require 'hydra/head'
-require 'nest'
 module CurationConcerns
   extend ActiveSupport::Autoload
 
