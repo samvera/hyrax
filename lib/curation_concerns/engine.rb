@@ -4,6 +4,7 @@ require 'curation_concerns/models'
 require 'hydra-collections'
 require 'hydra-editor'
 require 'jquery-ui-rails'
+require 'qa'
 
 module CurationConcerns
   class Engine < ::Rails::Engine

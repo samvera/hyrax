@@ -67,7 +67,7 @@ class AttributeRenderer
       if parsed_uri.nil?
         ERB::Util.h(value)
       else
-        %(<a href=#{ERB::Util.h(value)} target="_blank">#{ERB::Util.h(CurationConcerns.config.cc_licenses_reverse[value])}</a>)
+        %(<a href=#{ERB::Util.h(value)} target="_blank">#{RightsService.label(value)}</a>)
       end
     end
 end
