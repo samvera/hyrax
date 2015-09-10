@@ -42,4 +42,11 @@ describe CurationConcerns::GenericFilePresenter do
     subject { presenter.first('mime_type_tesim') }
     it { is_expected.to eq 'image/jpeg' }
   end
+
+  describe "date_uploaded" do
+    it "delegates to the solr_document" do
+      expect(solr_document).to receive(:date_uploaded)
+      presenter.date_uploaded
+    end
+  end
 end
