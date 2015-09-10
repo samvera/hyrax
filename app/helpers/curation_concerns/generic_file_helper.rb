@@ -7,8 +7,9 @@ module CurationConcerns::GenericFileHelper
     end
   end
 
-  def media_display(generic_file)
-    render media_display_partial(generic_file), generic_file: generic_file
+  def media_display(generic_file, locals = {})
+    render media_display_partial(generic_file),
+           locals.merge(generic_file: generic_file)
   end
 
   def media_display_partial(generic_file)
