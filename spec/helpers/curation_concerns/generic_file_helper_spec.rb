@@ -5,12 +5,21 @@ describe CurationConcerns::GenericFileHelper do
     let(:generic_file) { SolrDocument.new(mime_type_tesim: mime_type) }
     let(:mime_type) { 'image/tiff' }
 
-    it "renders a partial" do
+    before do
       allow(helper).to receive(:media_display_partial).with(generic_file)
         .and_return('curation_concerns/generic_files/media_display/image')
+    end
+
+    it "renders a partial" do
       expect(helper).to receive(:render)
         .with('curation_concerns/generic_files/media_display/image', generic_file: generic_file)
       helper.media_display(generic_file)
+    end
+
+    it "takes options" do
+      expect(helper).to receive(:render)
+        .with('curation_concerns/generic_files/media_display/image', generic_file: generic_file, transcript_id: '123')
+      helper.media_display(generic_file, transcript_id: '123')
     end
   end
 
