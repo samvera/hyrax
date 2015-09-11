@@ -22,8 +22,8 @@ module CurationConcerns
       docs = load_docs
       ids.map do |id|
         solr_doc = docs.find { |doc| doc.id == id }
-        klass.new(solr_doc, ability)
-      end
+        klass.new(solr_doc, ability) if solr_doc
+      end.compact
     end
 
     private
