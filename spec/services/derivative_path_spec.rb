@@ -11,6 +11,6 @@ describe CurationConcerns::DerivativePath do
     let(:object) { double(id: '123') }
     let(:destination_name) { 'thumbnail' }
 
-    it { is_expected.to eq 'tmp/123/thumbnail.jpeg' }
+    it { is_expected.to eq 'tmp/12/3-thumbnail.jpeg' }
   end
 end

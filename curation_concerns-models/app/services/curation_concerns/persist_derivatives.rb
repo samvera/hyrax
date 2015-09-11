@@ -21,10 +21,14 @@ module CurationConcerns
     # file.  It will make the directories in the path if
     # necessary.
     def self.output_file(object, destination_name, &blk)
-      name = DerivativePath.derivative_path_for_reference(object, destination_name)
+      name = derivative_path_factory.derivative_path_for_reference(object, destination_name)
       output_file_dir = File.dirname(name)
       FileUtils.mkdir_p(output_file_dir) unless File.directory?(output_file_dir)
       File.open(name, 'wb', &blk)
+    end
+
+    def self.derivative_path_factory
+      DerivativePath
     end
   end
 end
