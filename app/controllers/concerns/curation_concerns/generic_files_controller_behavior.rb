@@ -106,6 +106,11 @@ module CurationConcerns
 
     protected
 
+      def generic_file_params
+        params.require(:generic_file).permit(
+          :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo, :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :visibility, title: [])
+      end
+
       def version_list
         CurationConcerns::VersionListPresenter.new(@generic_file.original_file.versions.all)
       end
