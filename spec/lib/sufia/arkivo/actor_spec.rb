@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Sufia::Arkivo::Actor do
   before do
-    # Don't test characterization on these items; it breaks TravisCI
-    allow_any_instance_of(GenericFile).to receive(:characterize)
+    # Don't test characterization on these items; it breaks TravisCI and it's slow
+    allow(CharacterizeJob).to receive(:perform_later)
   end
 
   subject { described_class.new(user, item) }
@@ -28,8 +28,9 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'instantiates an actor' do
-      expect(Sufia::GenericFile::Actor).to receive(:new).once.and_call_original
-      subject.create_file_from_item
+      allow(UploadSetUpdateJob).to receive(:perform_later).once
+      expect(CurationConcerns::GenericWorkActor).to receive(:new).once.and_call_original
+      subject.create_work_from_item
     end
 
     it 'creates initial metadata' do
@@ -48,8 +49,8 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'extracts a file from the item' do
-      gf = subject.create_file_from_item
-      expect(gf.content.content).to eq "arkivo\n"
+      work = subject.create_work_from_item
+      expect(work.reload.file_sets.first.original_file.content).to eq "arkivo\n"
     end
 
     it 'batch applies metadata' do
@@ -69,11 +70,17 @@ describe Sufia::Arkivo::Actor do
     let(:title) { ['ZZZZZ'] }
     let(:description) { ['This is rather lengthy.'] }
     let(:checksum) { 'abc123' }
-    let(:gf) do
-      GenericFile.create(title: title, description: description) do |f|
+    let(:work) do
+      GenericWork.new(title: title, description: description) do |f|
         f.apply_depositor_metadata(user.user_key)
         f.arkivo_checksum = checksum
       end
+    end
+    let(:file_set) { create(:file_set, user: user) }
+
+    before do
+      work.ordered_members << file_set
+      work.save!
     end
 
     it { is_expected.to respond_to(:update_file_from_item) }
@@ -93,9 +100,9 @@ describe Sufia::Arkivo::Actor do
 
       it 'wipes out the description' do
         # For some reason, "expect to change from to" wasn't working here
-        expect(gf.description).to eq description
-        subject.update_file_from_item(gf)
-        expect(gf.description).to eq []
+        expect(work.description).to eq description
+        subject.update_work_from_item(work.reload)
+        expect(work.description).to eq []
       end
     end
 
@@ -110,10 +117,10 @@ describe Sufia::Arkivo::Actor do
       subject.update_file_from_item(gf)
     end
 
+    # TODO: this is testing FileSetActor, so it is not needed here.
     it 'extracts a file from the item' do
-      expect {
-        subject.update_file_from_item(gf)
-      }.to change { gf.content.content }.to("# HEADER\n\nThis is a paragraph!\n")
+      subject.update_work_from_item(work)
+      expect(file_set.reload.original_file.content).to eq "# HEADER\n\nThis is a paragraph!\n"
     end
 
     it 'returns a GF instance' do
@@ -121,19 +128,15 @@ describe Sufia::Arkivo::Actor do
     end
   end
 
-  describe '#destroy_file' do
-    let(:gf) do
-      GenericFile.create do |f|
-        f.apply_depositor_metadata(user.user_key)
-      end
-    end
+  describe '#destroy_work' do
+    let(:work) { create(:generic_work, user: user) }
 
-    it { is_expected.to respond_to(:destroy_file) }
+    it { is_expected.to respond_to(:destroy_work) }
 
     it 'deletes the file' do
       expect {
-        subject.destroy_file(gf)
-      }.to change { gf.destroyed? }.from(nil).to(true)
+        subject.destroy_work(work)
+      }.to change { work.destroyed? }.from(nil).to(true)
     end
   end
 end

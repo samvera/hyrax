@@ -20,7 +20,7 @@ module API
     end
 
     def destroy
-      actor.destroy_file(@file)
+      actor.destroy_work(@work)
       head :no_content
     end
 
@@ -57,12 +57,16 @@ module API
       end
 
       def validate_item
-        return render plain: 'no item parameter', status: :bad_request if params[:item].blank?
-        Sufia::Arkivo::SchemaValidator.new(params[:item]).call
+        return render plain: 'no item parameter', status: :bad_request if post_data.blank?
+        Sufia::Arkivo::SchemaValidator.new(post_data).call
       rescue Sufia::Arkivo::InvalidItem => exception
         return render plain: "invalid item parameter: #{exception.message}", status: :bad_request
       else
-        @item = JSON.parse(params[:item])
+        @item = JSON.parse(post_data)
+      end
+
+      def post_data
+        request.raw_post
       end
 
       def authorize_token

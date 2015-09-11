@@ -17,7 +17,7 @@ describe API::ZoteroController, type: :controller do
 
     context 'with an unregistered user' do
       before do
-        allow_any_instance_of(Ability).to receive(:user_groups) { ['public'] }
+        allow_any_instance_of(Ability).to receive(:can?).with(:create, GenericWork).and_return(false)
         sign_in user
         get :initiate
       end
@@ -93,9 +93,9 @@ describe API::ZoteroController, type: :controller do
       end
     end
 
-    context 'with an unregistered user' do
+    context 'with a user who is not permitted to make works' do
       before do
-        allow_any_instance_of(Ability).to receive(:user_groups) { ['public'] }
+        allow_any_instance_of(Ability).to receive(:can?).with(:create, GenericWork).and_return(false)
         sign_in user
         get :callback
       end
@@ -163,7 +163,7 @@ describe API::ZoteroController, type: :controller do
 
       it { is_expected.to have_http_status(302) }
       it 'pushes an arkivo subscription job' do
-        expect(Sufia.queue).to have_received(:push).once
+        expect(Sufia::Arkivo::CreateSubscriptionJob).to have_received(:perform_later)
       end
       it { is_expected.to redirect_to(routes.url_helpers.profile_path(user)) }
       it 'populates the flash with a notice' do

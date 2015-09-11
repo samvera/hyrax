@@ -3,25 +3,25 @@ require 'spec_helper'
 describe Sufia::Arkivo::CreateSubscriptionJob do
   let(:user) { FactoryGirl.find_or_create(:archivist) }
 
-  subject { described_class.new(user.user_key) }
+  subject { described_class.perform_now(user.user_key) }
 
   context 'with a bogus user' do
     before { allow(User).to receive(:find_by_user_key) { nil } }
     it 'raises because user not found' do
-      expect { subject.run }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User not found')
+      expect { subject }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User not found')
     end
   end
 
   context 'without an arkivo token' do
     before { allow_any_instance_of(User).to receive(:arkivo_token) { nil } }
     it 'raises because user lacks arkivo token' do
-      expect { subject.run }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User does not have an Arkivo token')
+      expect { subject }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User does not have an Arkivo token')
     end
   end
 
   context 'without a zotero userid' do
     it 'raises because user did not oauth' do
-      expect { subject.run }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User has not yet connected with Zotero')
+      expect { subject }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User has not yet connected with Zotero')
     end
   end
 
@@ -32,7 +32,7 @@ describe Sufia::Arkivo::CreateSubscriptionJob do
     end
 
     it 'raises because user already has subscription' do
-      expect { subject.run }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User already has a subscription')
+      expect { subject }.to raise_error(Sufia::Arkivo::SubscriptionError, 'User already has a subscription')
     end
   end
 

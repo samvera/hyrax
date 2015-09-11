@@ -42,8 +42,8 @@ module Sufia
         work
       end
 
-      def destroy_file(gf)
-        gf.destroy
+      def destroy_work(work)
+        work.destroy
       end
 
       private
