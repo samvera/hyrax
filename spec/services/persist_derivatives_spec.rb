@@ -8,14 +8,14 @@ describe CurationConcerns::PersistDerivatives do
   describe '.output_file' do
     subject { described_class.output_file(object, destination_name, &block) }
 
-    let(:object) { double(id: '123') }
+    let(:object) { double(id: '1234567') }
     let(:destination_name) { 'thumbnail' }
 
     let(:block) { lambda { true } }
 
     it 'yields to the file' do
-      expect(FileUtils).to receive(:mkdir_p).with('tmp/123')
-      expect(File).to receive(:open).with('tmp/123/thumbnail.jpeg', 'wb') do |*_, &blk|
+      expect(FileUtils).to receive(:mkdir_p).with('tmp/12/34/56')
+      expect(File).to receive(:open).with('tmp/12/34/56/7-thumbnail.jpeg', 'wb') do |*_, &blk|
         expect(blk).to be(block)
       end
       subject

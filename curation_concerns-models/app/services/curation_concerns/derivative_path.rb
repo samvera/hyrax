@@ -11,7 +11,12 @@ module CurationConcerns
 
         def derivative_path(object, extension, destination_name)
           file_name = destination_name + extension
-          File.join(CurationConcerns.config.derivatives_path, object.id, file_name)
+          File.join(CurationConcerns.config.derivatives_path, pair_path(object.id, file_name))
+        end
+
+        def pair_path(id, file_name)
+          pair = id.split('').each_slice(2).map(&:join).join('/')
+          "#{pair}-#{file_name}"
         end
 
         def extension_for(destination_name)
