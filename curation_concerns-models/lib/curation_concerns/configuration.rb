@@ -86,6 +86,28 @@ module CurationConcerns
     # Override characterization runner
     attr_accessor :characterization_runner
 
+    # Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
+    # @!attribute [w] lock_retry_count
+    #   How many times to retry to acquire the lock before raising UnableToAcquireLockError
+    attr_writer :lock_retry_count
+    def lock_retry_count
+      @lock_retry_count ||= 600 # Up to 2 minutes of trying at intervals up to 200ms
+    end
+
+    # @!attribute [w] lock_time_to_live
+    #   How long to hold the lock in milliseconds
+    attr_writer :lock_time_to_live
+    def lock_time_to_live
+      @lock_time_to_live ||= 60_000 # milliseconds
+    end
+
+    # @!attribute [w] lock_retry_delay
+    #   Maximum wait time in milliseconds before retrying. Wait time is a random value between 0 and retry_delay.
+    attr_writer :lock_retry_delay
+    def lock_retry_delay
+      @lock_retry_delay ||= 200 # milliseconds
+    end
+
     def register_curation_concern(*curation_concern_types)
       Array(curation_concern_types).flatten.compact.each do |cc_type|
         class_name = normalize_concern_name(cc_type)
