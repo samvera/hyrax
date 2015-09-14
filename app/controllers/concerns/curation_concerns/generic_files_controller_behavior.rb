@@ -66,6 +66,7 @@ module CurationConcerns
           authorize! :show, @generic_file
           render :show, status: :ok
         end
+        additional_response_formats(wants)
       end
     end
 
@@ -123,6 +124,12 @@ module CurationConcerns
     end
 
     protected
+
+      # Override this method to add additional response
+      # formats to your local app
+      def additional_response_formats(_)
+        # nop
+      end
 
       def generic_file_params
         params.require(:generic_file).permit(
