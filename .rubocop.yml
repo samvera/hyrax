@@ -51,6 +51,7 @@ Metrics/ClassLength:
 
 Metrics/ModuleLength:
   Exclude:
+    - 'app/controllers/concerns/curation_concerns/curation_concern_controller.rb'
     - 'app/controllers/concerns/curation_concerns/users_controller_behavior.rb'
     - 'app/controllers/concerns/curation_concerns/catalog_controller.rb'
     - 'app/controllers/concerns/curation_concerns/generic_files_controller_behavior.rb'

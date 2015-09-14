@@ -33,19 +33,19 @@ module CurationConcerns
 
     def create_from_upload(params)
       # check error condition No files
-      return json_error('Error! No file to save') unless params.key?(:generic_file) && params.fetch(:generic_file).key?(:files)
+      return render_json_response(response_type: :bad_request, options: { message: 'Error! No file to save' }) unless params.key?(:generic_file) && params.fetch(:generic_file).key?(:files)
 
       file = params[:generic_file][:files].detect { |f| f.respond_to?(:original_filename) }
       if !file
-        json_error 'Error! No file for upload', 'unknown file', status: :unprocessable_entity
+        render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
       elsif empty_file?(file)
-        json_error 'Error! Zero Length File!', file.original_filename
+        render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('curation_concerns.api.unprocessable_entity.empty_file') })
       else
         process_file(file)
       end
     rescue RSolr::Error::Http => error
       logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
-      json_error 'Error occurred while creating generic file.'
+      render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating generic file.' })
     ensure
       # remove the tempfile (only if it is a temp file)
       file.tempfile.delete if file.respond_to?(:tempfile)
@@ -53,10 +53,20 @@ module CurationConcerns
 
     # routed to /files/:id
     def show
-      _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_generic_files])
-      curation_concern = document_list.first
-      raise CanCan::AccessDenied unless curation_concern
-      @presenter = show_presenter.new(curation_concern, current_ability)
+      respond_to do |wants|
+        wants.html do
+          _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_generic_files])
+          curation_concern = document_list.first
+          raise CanCan::AccessDenied unless curation_concern
+          @presenter = show_presenter.new(curation_concern, current_ability)
+        end
+        wants.json do
+          # load and authorize @curation_concern manually because it's skipped for html
+          @generic_file = curation_concern_type.load_instance_from_solr(params[:id]) unless curation_concern
+          authorize! :show, @generic_file
+          render :show, status: :ok
+        end
+      end
     end
 
     # Gives the class of the show presenter. Override this if you want
@@ -82,10 +92,18 @@ module CurationConcerns
                   end
                 end
       if success
-        redirect_to [main_app, :curation_concerns, @generic_file], notice:
-          "The file #{view_context.link_to(@generic_file, [main_app, :curation_concerns, @generic_file])} has been updated."
+        respond_to do |wants|
+          wants.html do
+            redirect_to [main_app, :curation_concerns, @generic_file], notice:
+                                                                         "The file #{view_context.link_to(@generic_file, [main_app, :curation_concerns, @generic_file])} has been updated."
+          end
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, :curation_concerns, @generic_file]) }
+        end
       else
-        render action: 'edit'
+        respond_to do |wants|
+          wants.html { render 'edit', status: :unprocessable_entity }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: @generic_file.errors }) }
+        end
       end
     rescue RSolr::Error::Http => error
       flash[:error] = error.message
@@ -128,12 +146,6 @@ module CurationConcerns
         params.fetch(:generic_file, {}).except(:files).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
       end
 
-      def json_error(error, name = nil, additional_arguments = {})
-        args = { error: error }
-        args[:name] = name if name
-        render additional_arguments.merge(json: [args])
-      end
-
       def _prefixes
         # This allows us to use the unauthorized and form_permission template in curation_concerns/base
         @_prefixes ||= super + ['curation_concerns/base']
@@ -156,7 +168,7 @@ module CurationConcerns
               end
             end
             format.json do
-              render 'jq_upload'
+              render 'jq_upload', status: :created, location: polymorphic_path([main_app, :curation_concerns, curation_concern])
             end
           end
         else
@@ -170,6 +182,10 @@ module CurationConcerns
       def update_metadata_from_upload_screen
         # Relative path is set by the jquery uploader when uploading a directory
         @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+      end
+
+      def curation_concern_type
+        ::GenericFile
       end
   end
 end

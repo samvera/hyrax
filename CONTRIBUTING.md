@@ -60,7 +60,9 @@ You should also add yourself to the `CONTRIBUTORS.md` file in the root of the pr
 
         class PostsController
           def index
-            respond_with Post.limit(10)
+            respond_to do |wants|
+                wants.html { render 'index' }
+            end
           end
         end
 

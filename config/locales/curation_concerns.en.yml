@@ -39,6 +39,26 @@ en:
           tag: "could not be updated. You do not have sufficient privileges to edit them."
         title:  "Files failed"
         subject: "Batch upload permission denied"
+    api:
+      accepted:
+        default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
+      unauthorized:
+        default: "You must be logged in to do that!"
+      forbidden:
+        default: "You are not authorized to access this content."
+      success:
+        default: "Your request was processed successfully."
+      deleted:
+        default: "Deleted the Resource"
+      not_found:
+        default: "Could not find a resource that matches your request."
+      unprocessable_entity:
+        default: "The resource you attempted to modify cannot be modified according to your request."
+        empty_file: "The file you uploaded has no content."
+      bad_request:
+        default: "Unable to process your request.  See errors for more info."
+      internal_error:
+        default: "The server encountered an error."
   blacklight:
     search:
       fields:

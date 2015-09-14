@@ -120,7 +120,21 @@ var filestoupload =0;
        if (error_string.length > 0) {
           error_string += '<br/>';
        }
-       error_string += data.errorThrown + ": " + data.textStatus;
+          var responseJSON = data.jqXHR.responseJSON;
+          if (data.jqXHR.status == 422) {
+              var error_message = responseJSON.message + ": " + responseJSON.errors.files;
+              data.errorThrown = error_message;
+              error_string += error_message;
+          } else {
+              if (responseJSON.message) {
+                  data.errorThrown = responseJSON.message;
+                  error_string += responseJSON.message;
+              } else {
+                  error_string += data.errorThrown + ": " + data.textStatus;
+              }
+
+          }
+
       }
     }
 

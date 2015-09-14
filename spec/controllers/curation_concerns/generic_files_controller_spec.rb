@@ -59,12 +59,13 @@ describe CurationConcerns::GenericFilesController do
       end
 
       context "on something that isn't a file" do
+        # Note: This is a duplicate of coverage in generic_files_controller_json_spec.rb
         it 'renders error' do
           xhr :post, :create, parent_id: parent, generic_file: { files: ['hello'] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          expect(response.status).to eq 422
-          err = JSON.parse(response.body).first['error']
-          expect(err).to match(/no file for upload/i)
+          expect(response.status).to eq 400
+          msg = JSON.parse(response.body)['message']
+          expect(msg).to match(/no file for upload/i)
         end
       end
 
@@ -134,7 +135,7 @@ describe CurationConcerns::GenericFilesController do
           allow_any_instance_of(GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file:
             { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
-          expect(response).to be_successful
+          expect(response.status).to eq 422
           expect(response).to render_template('edit')
           expect(assigns[:generic_file]).to eq generic_file
         end
@@ -213,32 +214,51 @@ describe CurationConcerns::GenericFilesController do
     end
   end
 
-  context 'someone elses files' do
-    let(:generic_file) do
-      generic_file = GenericFile.create(read_groups: ['public']) do |gf|
-        gf.apply_depositor_metadata('archivist1@example.com')
-      end
-      parent.generic_files << generic_file
-      generic_file
-    end
+  context 'someone elses (public) files' do
+    let(:creator) { create(:user, email: 'archivist1@example.com') }
+    let(:public_generic_file) { create(:generic_file, user: creator, read_groups: ['public']) }
+    before { sign_in user }
 
-    describe 'edit' do
+    describe '#edit' do
       it 'gives me the unauthorized page' do
-        get :edit, id: generic_file
+        get :edit, id: public_generic_file
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
     end
 
-    describe 'view' do
-      it 'shows me the file' do
-        get :show, id: generic_file
+    describe '#view' do
+      it 'allows access to the file' do
+        get :show, id: public_generic_file
+        expect(response).to be_success
+      end
+    end
+  end
+
+  context 'when not signed in' do
+    let(:private_generic_file) { create(:generic_file) }
+    let(:public_generic_file) { create(:generic_file, read_groups: ['public']) }
+
+    describe '#edit' do
+      it 'requires login' do
+        get :edit, id: public_generic_file
+        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
+      end
+    end
+
+    describe '#view' do
+      it 'denies access to private files' do
+        get :show, id: private_generic_file
+        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
+      end
+      it 'allows access to public files' do
+        get :show, id: public_generic_file
         expect(response).to be_success
       end
     end
 
-    describe 'new' do
-      it 'does not let the user submit if they logout' do
+    describe '#new' do
+      it 'does not let the user submit' do
         get :new, parent_id: parent
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
       end
