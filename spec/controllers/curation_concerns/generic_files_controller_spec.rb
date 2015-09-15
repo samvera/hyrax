@@ -227,7 +227,7 @@ describe CurationConcerns::GenericFilesController do
       end
     end
 
-    describe '#view' do
+    describe '#show' do
       it 'allows access to the file' do
         get :show, id: public_generic_file
         expect(response).to be_success
@@ -246,12 +246,14 @@ describe CurationConcerns::GenericFilesController do
       end
     end
 
-    describe '#view' do
+    describe '#show' do
       it 'denies access to private files' do
         get :show, id: private_generic_file
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
       end
+
       it 'allows access to public files' do
+        expect(controller).to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
         get :show, id: public_generic_file
         expect(response).to be_success
       end
