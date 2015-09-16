@@ -20,41 +20,15 @@ describe CurationConcerns::GenericFilesController do
           allow(DateTime).to receive(:now).and_return(date_today)
         end
 
-        it 'spawns a CharacterizeJob' do
-          expect(CharacterizeJob).to receive(:perform_later)
-          expect do
-            xhr :post, :create, parent_id: parent,
-                                generic_file: { files: [file],
-                                                title: ['test title'],
-                                                visibility: 'restricted' }
-            expect(response).to be_success
-          end.to change { GenericFile.count }.by(1)
+        it 'calls the actor to create metadata and content' do
+          expect(controller.send(:actor)).to receive(:create_metadata).with(nil, parent.id, files: [file], title: ['test title'], visibility: 'restricted')
+          expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
+          xhr :post, :create, parent_id: parent,
+                              generic_file: { files: [file],
+                                              title: ['test title'],
+                                              visibility: 'restricted' }
+          expect(response).to be_success
           expect(flash[:error]).to be_nil
-          saved_file = assigns[:generic_file].reload
-
-          expect(saved_file.title).to eq ['test title']
-          expect(saved_file.label).to eq 'image.png'
-          expect(parent.reload.generic_files).to include saved_file
-          # Confirming that date_uploaded and date_modified were set
-          expect(saved_file.date_uploaded).to eq date_today.utc
-          expect(saved_file.date_modified).to eq date_today.utc
-          expect(saved_file.depositor).to eq user.email
-
-          expect(saved_file.original_file.versions.count).to eq(3)
-          expect(saved_file.original_file.versions.last).to be_instance_of(ActiveFedora::VersionsGraph::ResourceVersion)
-
-          # Confirm that embargo/lease are not set.
-          expect(saved_file).to_not be_under_embargo
-          expect(saved_file).to_not be_active_lease
-          expect(saved_file.visibility).to eq 'restricted'
-        end
-
-        it 'copies visibility from the parent' do
-          expect(CharacterizeJob).to receive(:perform_later)
-          xhr :post, :create, parent_id: parent, generic_file: { files: [file] }
-          expect(assigns[:generic_file]).to be_persisted
-          saved_file = assigns[:generic_file].reload
-          expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         end
       end
 
@@ -80,9 +54,12 @@ describe CurationConcerns::GenericFilesController do
       end
 
       context 'when solr is down' do
-        it 'errors out of create and save after on continuos rsolr error' do
-          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
+        before do
+          allow(controller.send(:actor)).to receive(:create_metadata)
+          allow(controller.send(:actor)).to receive(:create_content).with(file).and_raise(RSolr::Error::Http.new({}, {}))
+        end
 
+        it 'errors out of create after on continuous rsolr error' do
           xhr :post, :create, parent_id: parent, generic_file: { files: [file] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(response.body).to include('Error occurred while creating generic file.')
@@ -92,9 +69,8 @@ describe CurationConcerns::GenericFilesController do
 
     describe 'destroy' do
       let(:generic_file) do
-        generic_file = GenericFile.new.tap do |gf|
+        generic_file = GenericFile.create! do |gf|
           gf.apply_depositor_metadata(user)
-          gf.save!
         end
         parent.generic_files << generic_file
         generic_file

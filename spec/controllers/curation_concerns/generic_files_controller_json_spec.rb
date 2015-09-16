@@ -35,12 +35,17 @@ describe CurationConcerns::GenericFilesController do
       before { get :show, id: "non-existent-pid", format: :json }
       it { is_expected.to respond_not_found(description: 'Object non-existent-pid not found in solr') }
     end
+
     describe 'created' do
-      before do
-        allow(CharacterizeJob).to receive(:perform_later)
-        post :create, generic_file: { title: ['a title'], files: [file] }, parent_id: parent.id, format: :json
-      end
       it "returns 201, renders jq_upload json template and sets location header" do
+        expect(controller.send(:actor)).to receive(:create_metadata).with(nil, parent.id, hash_including(:files, title: ['a title']))
+        expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
+
+        allow_any_instance_of(GenericFile).to receive(:persisted?).and_return(true)
+        allow_any_instance_of(GenericFile).to receive(:to_param).and_return('999')
+
+        post :create, generic_file: { title: ['a title'], files: [file] }, parent_id: parent.id, format: :json
+
         expect(assigns[:generic_file]).to be_instance_of ::GenericFile # this object is used by the jbuilder template
         expect(controller).to render_template('curation_concerns/generic_files/jq_upload')
         expect(response.status).to eq 201

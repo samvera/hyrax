@@ -40,7 +40,16 @@ module CurationConcerns
       if assign_visibility?(generic_file_params)
         interpret_visibility generic_file_params
       end
-      unless work_id.blank?
+      # TODO: Why do we need to check if work_id is blank? Shoudn't that raise an error?
+      attach_file_to_work(work_id, generic_file, generic_file_params) unless work_id.blank?
+      yield(generic_file) if block_given?
+    end
+
+    # Adds a GenericFile to the work using ore:Aggregations.
+    # Locks to ensure that only one process is operating on
+    # the list at a time.
+    def attach_file_to_work(work_id, generic_file, generic_file_params)
+      acquire_lock_for(work_id) do
         work = ActiveFedora::Base.find(work_id)
 
         unless assign_visibility?(generic_file_params)
@@ -50,7 +59,17 @@ module CurationConcerns
         # Save the work so the association between the work and the generic_file is persisted (head_id)
         work.save
       end
-      yield(generic_file) if block_given?
+    end
+
+    def acquire_lock_for(lock_key, &block)
+      lock_manager.lock(lock_key, &block)
+    end
+
+    def lock_manager
+      @lock_manager ||= CurationConcerns::LockManager.new(
+        CurationConcerns.config.lock_time_to_live,
+        CurationConcerns.config.lock_retry_count,
+        CurationConcerns.config.lock_retry_delay)
     end
 
     def assign_visibility?(generic_file_params = {})
@@ -102,6 +121,7 @@ module CurationConcerns
 
     def destroy
       generic_file.destroy
+      # TODO: need to mend the linked list of proxies (possibly wrap with a lock)
       CurationConcerns.config.after_destroy.call(generic_file.id, user) if CurationConcerns.config.respond_to?(:after_destroy)
     end
 
