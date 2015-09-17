@@ -66,5 +66,10 @@ module CurationConcerns
         logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
         render template: '/error/single_use_error', layout: "error", formats: [:html], status: 404
       end
+
+      def _prefixes
+        # This allows us to use the attributes templates in curation_concerns/base
+        @_prefixes ||= super + ['curation_concerns/base']
+      end
   end
 end
