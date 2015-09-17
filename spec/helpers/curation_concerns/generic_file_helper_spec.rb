@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::GenericFileHelper do
   describe '#media_display' do
-    let(:generic_file) { SolrDocument.new(mime_type_tesim: mime_type) }
+    let(:generic_file) { SolrDocument.new(mime_type_ssi: mime_type) }
     let(:mime_type) { 'image/tiff' }
 
     before do
@@ -26,7 +26,7 @@ describe CurationConcerns::GenericFileHelper do
   describe '#media_display_partial' do
     subject { helper.media_display_partial(generic_file) }
 
-    let(:generic_file) { SolrDocument.new(mime_type_tesim: mime_type) }
+    let(:generic_file) { SolrDocument.new(mime_type_ssi: mime_type) }
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }

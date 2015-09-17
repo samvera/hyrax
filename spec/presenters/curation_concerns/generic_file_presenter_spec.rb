@@ -3,7 +3,7 @@ require 'spec_helper'
 describe CurationConcerns::GenericFilePresenter do
   let(:solr_document) { SolrDocument.new("title_tesim" => ["foo bar"],
                                          "human_readable_type_tesim" => ["Generic File"],
-                                         "mime_type_tesim" => ['image/jpeg'],
+                                         "mime_type_ssi" => 'image/jpeg',
                                          "has_model_ssim" => ["GenericFile"]) }
   let(:ability) { nil }
   let(:presenter) { described_class.new(solr_document, ability) }
@@ -39,8 +39,8 @@ describe CurationConcerns::GenericFilePresenter do
   end
 
   describe "first" do
-    subject { presenter.first('mime_type_tesim') }
-    it { is_expected.to eq 'image/jpeg' }
+    subject { presenter.first('human_readable_type_tesim') }
+    it { is_expected.to eq 'Generic File' }
   end
 
   describe "date_uploaded" do

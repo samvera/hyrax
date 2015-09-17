@@ -59,7 +59,7 @@ describe CurationConcerns::GenericFileIndexingService do
       expect(subject[Solrizer.solr_name('file_format')]).to eq 'jpeg (JPEG Image)'
       expect(subject[Solrizer.solr_name('identifier')]).to eq ['urn:isbn:1234567890']
       expect(subject[Solrizer.solr_name('based_near')]).to eq ['Medina, Saudi Arabia']
-      expect(subject[Solrizer.solr_name('mime_type')]).to eq ['image/jpeg']
+      expect(subject.fetch('mime_type_ssi')).to eq 'image/jpeg'
       expect(subject.fetch('thumbnail_path_ss')).to eq '/downloads/foo123?file=thumbnail'
       expect(subject['all_text_timv']).to eq('abcxyz')
       expect(subject['height_is']).to eq 500

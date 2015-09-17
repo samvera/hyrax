@@ -112,7 +112,7 @@ module CurationConcerns
     end
 
     def mime_type
-      Array(self[Solrizer.solr_name('mime_type')]).first
+      self[Solrizer.solr_name('mime_type', :stored_sortable)]
     end
   end
 end
