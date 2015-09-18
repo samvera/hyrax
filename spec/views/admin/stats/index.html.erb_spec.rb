@@ -23,7 +23,7 @@ describe "admin/stats/index.html.erb" do
     end
     it "shows top 5 depositors and option to view more" do
       expect(rendered).to have_content("(top 5)")
-      expect(rendered).to have_content("View top 20")
+      expect(rendered).to have_link("View top 20", href: "/admin/stats?limit=20")
     end
   end
 
@@ -35,7 +35,7 @@ describe "admin/stats/index.html.erb" do
     end
     before do
       allow(presenter).to receive(:active_users).and_return(top_20_active_users)
-      params[:dep_count] = 20
+      allow(presenter).to receive(:limit).and_return(20)
       render
     end
     it "shows top 20 depositors, without an option to view more" do

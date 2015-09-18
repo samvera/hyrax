@@ -1,0 +1,24 @@
+<h2>Top File Formats and Users</h2>
+<h3>Statistics in this section shows the top <%= @presenter.limit %> items for each category</h3>
+<% if @presenter.limit == 5 %>
+  <p><%= link_to "View top 20", Sufia::Engine.routes.url_for(controller: "admin/stats", action:"index", limit: "20", only_path: true) %> </p>
+<% else %>
+  <p><%= link_to "View top 5", Sufia::Engine.routes.url_for(controller: "admin/stats", action:"index", only_path: true) %> </p>
+<% end %>
+
+<h3>Top File Formats (top <%= @presenter.top_formats.count %>)</h3>
+<ul>
+  <% @presenter.top_formats.each do |k, v| %>
+    <li><%= k %> <span class="count">(<%= v %>)</span></li>
+  <% end %>
+</ul>
+
+<br/>
+<h3>Most Active Users (top <%= @presenter.active_users.count %>)</h3>
+<ul>
+  <% @presenter.active_users.each do |k, v| %>
+    <li>
+      <%= link_to_profile(k) %> <span class="count">(<%= v %>)</span>
+    </li>
+  <% end %>
+</ul>
