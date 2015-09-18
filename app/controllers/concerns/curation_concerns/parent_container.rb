@@ -17,8 +17,8 @@ module CurationConcerns::ParentContainer
 
   def lookup_parent_from_child
     if curation_concern
-      # parent_objects method is inherited from Hydra::PCDM::ObjectBehavior
-      curation_concern.parent_objects.first
+      # in_objects method is inherited from Hydra::PCDM::ObjectBehavior
+      curation_concern.in_objects.first
     elsif @presenter
 
       CurationConcerns::ParentService.parent_for(@presenter.id)
@@ -28,7 +28,7 @@ module CurationConcerns::ParentContainer
   end
 
   def parent_id
-    @parent_id ||= new_or_create? ? params[:parent_id] : curation_concern.generic_works.parent_objects.first.id
+    @parent_id ||= new_or_create? ? params[:parent_id] : curation_concern.generic_works.in_objects.first.id
   end
 
   protected

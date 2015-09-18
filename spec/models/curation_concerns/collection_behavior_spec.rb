@@ -98,10 +98,10 @@ describe CurationConcerns::CollectionBehavior do
       expect(subject.related_objects).to eq [work1]
     end
     it 'has parent collections' do
-      expect(subject.parent_collections).to eq []
+      expect(subject.in_collections).to eq []
       expect(collection1.child_collections << subject).to eq [subject]
       collection1.save
-      expect(subject.parent_collections).to eq [collection1]
+      expect(subject.in_collections).to eq [collection1]
     end
   end
 end
