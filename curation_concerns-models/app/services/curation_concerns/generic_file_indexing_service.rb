@@ -15,6 +15,7 @@ module CurationConcerns
         solr_doc[Solrizer.solr_name('generic_work_ids', :symbol)] = object.generic_work_ids unless object.generic_work_ids.empty?
         solr_doc['height_is'] = Integer(object.height.first) if object.height.present?
         solr_doc['width_is'] = Integer(object.width.first) if object.width.present?
+        solr_doc[Solrizer.solr_name('mime_type', :stored_sortable)] = object.mime_type
         solr_doc['thumbnail_path_ss'] = thumbnail_path
       end
     end

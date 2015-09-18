@@ -4,9 +4,7 @@ module CurationConcerns
       extend ActiveSupport::Concern
       included do
         contains 'characterization', class_name: 'FitsDatastream'
-        property :mime_type,         delegate_to: 'characterization', multiple: false do |index|
-          index.as :stored_searchable
-        end
+        property :mime_type,         delegate_to: 'characterization', multiple: false
         property :format_label,      delegate_to: 'characterization'
         property :file_size,         delegate_to: 'characterization'
         property :last_modified,     delegate_to: 'characterization'
