@@ -50,19 +50,18 @@ describe EmbargoesController do
     context 'when I have permission to edit the object' do
       before do
         expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
-        a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.embargo_release_date = release_date.to_s
-        a_work.save(validate: false)
-        get :destroy, id: a_work
+        allow(CurationConcerns::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
       end
+
+      let(:actor) { double }
 
       context 'with an active embargo' do
         let(:release_date) { Date.today + 2 }
 
         it 'deactivates embargo without updating visibility and redirect' do
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(actor).to receive(:destroy)
+          get :destroy, id: a_work
           expect(response).to redirect_to edit_embargo_path(a_work)
         end
       end
@@ -71,7 +70,8 @@ describe EmbargoesController do
         let(:release_date) { Date.today - 2 }
 
         it 'deactivates embargo, update the visibility and redirect' do
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(actor).to receive(:destroy)
+          get :destroy, id: a_work
           expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
         end
       end
