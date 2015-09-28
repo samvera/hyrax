@@ -217,7 +217,7 @@ describe CurationConcerns::GenericWorkActor do
 
       it 'remove from the old collection and adds to the new collection' do
         curation_concern.reload
-        expect(curation_concern.parent_collections).to eq [collection1]
+        expect(curation_concern.in_collections).to eq [collection1]
         # before running actor.update, the work is in collection1
 
         expect(subject.update).to be true
@@ -226,7 +226,7 @@ describe CurationConcerns::GenericWorkActor do
         expect(curation_concern.identifier).to be_blank
         expect(curation_concern).to be_persisted
         # after running actor.update, the work is in collection2 and no longer in collection1
-        expect(curation_concern.parent_collections).to eq [collection2]
+        expect(curation_concern.in_collections).to eq [collection2]
       end
     end
 

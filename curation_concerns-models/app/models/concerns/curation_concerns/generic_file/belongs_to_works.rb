@@ -8,9 +8,10 @@ module CurationConcerns
       end
 
       def generic_works
-        parent_objects # parent_objects is provided by Hydra::PCDM::ObjectBehavior
+        in_objects # in_objects is provided by Hydra::PCDM::ObjectBehavior
       end
 
+      # OPTIMIZE: We can load this from Solr much faster than loading the objects
       def generic_work_ids
         generic_works.map(&:id)
       end
@@ -18,7 +19,7 @@ module CurationConcerns
       # Returns the first parent object
       # This is a hack to handle things like GenericFiles inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
       def parent
-        parent_objects.first
+        in_objects.first
       end
 
       # Returns the id of first parent object

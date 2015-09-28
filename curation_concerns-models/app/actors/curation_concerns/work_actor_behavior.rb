@@ -42,8 +42,8 @@ module CurationConcerns::WorkActorBehavior
     def add_to_collections(new_collection_ids)
       return true unless new_collection_ids
       # remove from old collections
-      # TODO: Implement parent_collection_ids https://github.com/projecthydra-labs/hydra-pcdm/issues/157
-      (curation_concern.parent_collections.map(&:id) - new_collection_ids).each do |old_id|
+      # TODO: Implement in_collection_ids https://github.com/projecthydra-labs/hydra-pcdm/issues/157
+      (curation_concern.in_collections.map(&:id) - new_collection_ids).each do |old_id|
         Collection.find(old_id).members.delete(curation_concern)
       end
 
