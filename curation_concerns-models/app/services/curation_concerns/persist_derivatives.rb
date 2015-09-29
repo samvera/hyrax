@@ -5,26 +5,25 @@ module CurationConcerns
     # This service is an alternative to the default Hydra::Derivatives::PersistOutputFileService.
     # This service will always update existing and does not do versioning of persisted files.
     #
-    # @param [Hydra::Works::GenericFile::Base] object the file will be added to
-    # @param [Hydra::Derivatives::IoDecorator] file the derivative filestream
-    # @param [String] extract file type (e.g. 'thumbnail') from Hydra::Derivatives created destination_name
-    #
-    def self.call(object, file, destination_name)
-      output_file(object, destination_name) do |output|
-        while buffer = file.read(4096)
-          output.write buffer
-        end
+    # @param [#read] stream the derivative filestream
+    # @param [Hash] directives
+    # @option directives [String] :url a url to the file destination
+    def self.call(stream, directives)
+      output_file(directives) do |output|
+        IO.copy_stream(stream, output)
       end
     end
 
     # Open the output file to write and yield the block to the
-    # file.  It will make the directories in the path if
-    # necessary.
-    def self.output_file(object, destination_name, &blk)
-      name = derivative_path_factory.derivative_path_for_reference(object, destination_name)
-      output_file_dir = File.dirname(name)
+    # file. It makes the directories in the path if necessary.
+    def self.output_file(directives, &blk)
+      # name = derivative_path_factory.derivative_path_for_reference(object, destination_name)
+      raise ArgumentError, "No :url was provided in the transcoding directives" unless directives.key?(:url)
+      uri = URI(directives.fetch(:url))
+      raise ArgumentError, "Must provide a file uri" unless uri.scheme == 'file'
+      output_file_dir = File.dirname(uri.path)
       FileUtils.mkdir_p(output_file_dir) unless File.directory?(output_file_dir)
-      File.open(name, 'wb', &blk)
+      File.open(uri.path, 'wb', &blk)
     end
 
     def self.derivative_path_factory

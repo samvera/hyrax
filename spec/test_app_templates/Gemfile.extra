@@ -1,1 +1,3 @@
 # placeholder to use for pinning against specific gem commit references
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '5e640f7'
+gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', branch: 'transcode_local_file'

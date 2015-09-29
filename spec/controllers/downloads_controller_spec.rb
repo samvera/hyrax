@@ -45,10 +45,10 @@ describe DownloadsController do
         context "that is persisted" do
           let(:file) { File.open(fixture_file_path('world.png'), 'rb') }
 
-          let(:content) { file.rewind; file.read }
+          let(:content) { file.read }
 
           before do
-            CurationConcerns::PersistDerivatives.call(generic_file, file, 'thumbnail')
+            allow(CurationConcerns::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_file_path('world.png'))
           end
 
           it 'sends requested file content' do
