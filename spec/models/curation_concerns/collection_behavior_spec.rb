@@ -78,19 +78,20 @@ describe CurationConcerns::CollectionBehavior do
       expect(subject.pcdm_object?).to be false
       expect(subject.type).to_not include Hydra::PCDM::Vocab::PCDMTerms.Object
     end
-    it 'has child objects' do
-      expect(subject.child_generic_works).to eq []
-      expect(subject.child_generic_work_ids).to eq []
-      expect(subject.child_generic_works << work1).to eq [work1]
-      expect(subject.child_generic_works).to eq [work1]
-      expect(subject.child_generic_work_ids).to eq [work1.id]
+    it 'contains objects' do
+      expect(subject.generic_works).to eq []
+      expect(subject.generic_work_ids).to eq []
+      expect(subject.generic_works << work1).to eq [work1]
+      expect(subject.generic_works).to eq [work1]
+      expect(subject.generic_work_ids).to eq [work1.id]
     end
-    it 'has child collections' do
-      expect(subject.child_collections).to eq []
-      expect(subject.child_collection_ids).to eq []
-      expect(subject.child_collections << collection1).to eq [collection1]
-      expect(subject.child_collections).to eq [collection1]
-      expect(subject.child_collection_ids).to eq [collection1.id]
+
+    it 'contains collections' do
+      expect(subject.collections).to eq []
+      expect(subject.collection_ids).to eq []
+      expect(subject.collections << collection1).to eq [collection1]
+      expect(subject.collections).to eq [collection1]
+      expect(subject.collection_ids).to eq [collection1.id]
     end
     it 'has related objects' do
       expect(subject.related_objects).to eq []
@@ -99,7 +100,7 @@ describe CurationConcerns::CollectionBehavior do
     end
     it 'has parent collections' do
       expect(subject.in_collections).to eq []
-      expect(collection1.child_collections << subject).to eq [subject]
+      expect(collection1.collections << subject).to eq [subject]
       collection1.save
       expect(subject.in_collections).to eq [collection1]
     end
