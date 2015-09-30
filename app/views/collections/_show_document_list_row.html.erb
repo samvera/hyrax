@@ -27,15 +27,7 @@
   </td>
   <td class="text-center"><%= document.date_uploaded %> </td>
   <td class="text-center">
-    <a href="<%= curation_concerns_generic_work_path(document) %>/edit/?tab=permissions" id="permission_<%= id %>" class="visibility-link">
-      <% if document.registered? %>
-        <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
-      <% elsif document.public? %>
-        <span class="label label-success" title="<%= t('sufia.visibility.open_title_attr') %>"><%= t('sufia.visibility.open') %></span>
-      <% else %>
-        <span class="label label-danger" title="<%= t('sufia.visibility.private_title_attr') %>"><%= t('sufia.visibility.private') %></span>
-      <% end %>
-    </a>
+    <%= render_visibility_link(document) %>
   </td>
   <td class="text-center">
     <%= render partial: 'show_document_list_menu', locals: { id: id, gw: gw } %>

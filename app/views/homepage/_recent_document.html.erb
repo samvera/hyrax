@@ -11,13 +11,7 @@
         <h3>
           <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), curation_concerns_file_set_path(recent_document)  %>
           <% if display_access %>
-              <% if recent_document.registered? %>
-                 <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span>
-              <% elsif recent_document.public? %>
-                <span class="label label-success">Open Access</span>
-              <% else %>
-                <span class="label label-danger">Private</span>
-              <% end %>
+            <%= render_visibility_label(recent_document) %>
           <% end %>
         </h3>
         <p>
