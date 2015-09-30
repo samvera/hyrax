@@ -3,5 +3,5 @@
 class <%= class_name %> < ActiveFedora::Base
   include ::CurationConcerns::GenericWorkBehavior
   include ::CurationConcerns::BasicMetadata
-  validates_presence_of :title,  message: 'Your work must have a title.'
+  validates :title, presence: { message: 'Your work must have a title.' }
 end
