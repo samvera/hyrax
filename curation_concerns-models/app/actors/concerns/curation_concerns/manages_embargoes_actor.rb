@@ -9,11 +9,11 @@ module CurationConcerns
   #     include Worthwile::ManagesEmbargoesActor
   #
   #     def create
-  #       interpret_visibility && super && copy_visibility
+  #       interpret_visibility && super
   #     end
   #
   #     def update
-  #       interpret_visibility && super && copy_visibility
+  #       interpret_visibility && super
   #     end
   #  end
   #
@@ -44,7 +44,6 @@ module CurationConcerns
           if curation_concern.embargo
             curation_concern.embargo.save # See https://github.com/projecthydra/hydra-head/issues/226
           end
-          @needs_to_copy_visibility = true
           should_continue = true
         end
       else
@@ -73,7 +72,6 @@ module CurationConcerns
           if curation_concern.lease
             curation_concern.lease.save # See https://github.com/projecthydra/hydra-head/issues/226
           end
-          @needs_to_copy_visibility = true
           attributes.delete(:visibility)
           should_continue = true
         end
@@ -88,11 +86,6 @@ module CurationConcerns
       attributes.delete(:visibility_after_lease)
 
       should_continue
-    end
-
-    def copy_visibility
-      VisibilityCopyJob.perform_later(curation_concern.id) if @needs_to_copy_visibility
-      true
     end
   end
 end
