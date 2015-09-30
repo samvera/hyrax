@@ -88,7 +88,7 @@ describe Hydra::AccessControls::Embargoable do
     end
   end
 
-  context 'apply_embargo' do
+  describe '#apply_embargo' do
     it "applies appropriate embargo_visibility settings" do
       expect {
         subject.apply_embargo(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
@@ -98,12 +98,31 @@ describe Hydra::AccessControls::Embargoable do
       expect(subject.embargo_release_date).to eq future_date
       expect(subject.visibility_after_embargo).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
-    it "relies on default before/after visibility if none provided" do
-      subject.apply_embargo(future_date.to_s)
-      expect(subject).to be_under_embargo
-      expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-      expect(subject.embargo_release_date).to eq future_date
-      expect(subject.visibility_after_embargo).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+
+    context "when no before/after visibility is provided" do
+      it "relies on defaults" do
+        subject.apply_embargo(future_date.to_s)
+        expect(subject).to be_under_embargo
+        expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        expect(subject.embargo_release_date).to eq future_date
+        expect(subject.visibility_after_embargo).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      end
+    end
+
+    context "when the same embargo is applied" do
+      before do
+        subject.apply_embargo(future_date.to_s)
+        if ActiveModel.version < Gem::Version.new('4.2.0')
+          subject.embargo.send(:reset_changes)
+        else
+          subject.embargo.send(:clear_changes_information)
+        end
+      end
+
+      it "doesn't call visibility_will_change!" do
+        expect(subject).not_to receive(:visibility_will_change!)
+        subject.apply_embargo(future_date.to_s)
+      end
     end
   end
 
@@ -163,11 +182,30 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.lease_expiration_date).to eq future_date
         expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       end
-      it "relies on default before/after visibility if none provided" do
-        subject.apply_lease(future_date.to_s)
-        expect(subject.visibility_during_lease).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        expect(subject.lease_expiration_date).to eq future_date
-        expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+
+      context "when before/after visibility is not provided" do
+        it "sets default values" do
+          subject.apply_lease(future_date.to_s)
+          expect(subject.visibility_during_lease).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(subject.lease_expiration_date).to eq future_date
+          expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        end
+      end
+
+      context "when the same lease is applied" do
+        before do
+          subject.apply_lease(future_date.to_s)
+          if ActiveModel.version < Gem::Version.new('4.2.0')
+            subject.lease.send(:reset_changes)
+          else
+            subject.lease.send(:clear_changes_information)
+          end
+        end
+
+        it "doesn't call visibility_will_change!" do
+          expect(subject).not_to receive(:visibility_will_change!)
+          subject.apply_lease(future_date.to_s)
+        end
       end
     end
 

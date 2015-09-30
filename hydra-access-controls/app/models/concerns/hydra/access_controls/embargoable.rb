@@ -71,7 +71,7 @@ module Hydra
         self.visibility_during_embargo = visibility_during unless visibility_during.nil?
         self.visibility_after_embargo = visibility_after unless visibility_after.nil?
         embargo_visibility!
-        visibility_will_change!
+        visibility_will_change! if embargo.changed?
       end
 
       def deactivate_embargo!
@@ -142,7 +142,7 @@ module Hydra
         self.visibility_during_lease = visibility_during unless visibility_during.nil?
         self.visibility_after_lease = visibility_after unless visibility_after.nil?
         lease_visibility!
-        visibility_will_change!
+        visibility_will_change! if lease.changed?
       end
 
       def deactivate_lease!
