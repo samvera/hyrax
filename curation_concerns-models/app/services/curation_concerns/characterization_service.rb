@@ -20,21 +20,10 @@ module CurationConcerns
     ## Extract the metadata from the content datastream and record it in the characterization datastream
     def characterize
       store_metadata(extract_metadata)
-      store_fulltext(extract_fulltext)
       generic_file.filename = File.basename(file_path)
     end
 
     protected
-
-      def store_fulltext(extracted_text)
-        return unless extracted_text.present?
-        extracted_text_file = generic_file.build_extracted_text
-        extracted_text_file.content = extracted_text
-      end
-
-      def extract_fulltext
-        Hydra::Works::FullTextExtractionService.run(generic_file, file_path)
-      end
 
       def store_metadata(metadata)
         generic_file.characterization.ng_xml = metadata if metadata.present?

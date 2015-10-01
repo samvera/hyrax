@@ -12,6 +12,7 @@ describe CharacterizeJob do
   it 'runs CurationConcerns::CharacterizationService and creates a CreateDerivativesJob' do
     expect(CurationConcerns::CharacterizationService).to receive(:run).with(generic_file, filename)
     expect(generic_file).to receive(:save)
+    expect(FulltextExtractionJob).to receive(:perform_later).with(generic_file_id, filename)
     expect(CreateDerivativesJob).to receive(:perform_later).with(generic_file_id, filename)
     described_class.perform_now generic_file_id, filename
   end

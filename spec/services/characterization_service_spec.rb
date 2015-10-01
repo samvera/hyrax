@@ -36,14 +36,12 @@ describe CurationConcerns::CharacterizationService do
     let(:file_name) { fixture_file_path('charter.docx') }
     subject { described_class.new(generic_file, file_name) }
 
-    it 'characterizes, extracts fulltext and stores the results' do
-      expect(Hydra::Works::FullTextExtractionService).to receive(:run).with(generic_file, file_name).and_return('The fulltext')
+    it 'characterizes and stores the results' do
       expect(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_xml)
 
       subject.characterize
       expect(generic_file.mime_type).to eq 'application/vnd.oasis.opendocument.text'
       expect(generic_file.filename).to eq 'charter.docx'
-      expect(generic_file.extracted_text.content).to eq 'The fulltext'
     end
   end
 end
