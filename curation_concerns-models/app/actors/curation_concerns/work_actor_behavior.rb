@@ -7,12 +7,12 @@ module CurationConcerns::WorkActorBehavior
     files && attributes.delete(:files)
     self.raw_attributes = attributes.dup
     # Files must be attached before saving in order to persist their relationship to the work
-    assign_pid && interpret_visibility && attach_files && super && assign_representative && copy_visibility
+    assign_pid && interpret_visibility && attach_files && super && assign_representative
   end
 
   def update
     add_to_collections(attributes.delete(:collection_ids)) &&
-      interpret_visibility && super && attach_files && copy_visibility
+      interpret_visibility && super && attach_files
   end
 
   delegate :visibility_changed?, to: :curation_concern
