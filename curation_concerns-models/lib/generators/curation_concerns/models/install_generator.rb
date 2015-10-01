@@ -45,7 +45,6 @@ This generator makes the following changes to your application:
     copy_file 'config/redis.yml', 'config/redis.yml'
     copy_file 'config/resque-pool.yml', 'config/resque-pool.yml'
     copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
-    copy_file 'config/resque_admin.rb', 'config/initializers/resque_admin.rb'
     copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
   end
 
