@@ -3,9 +3,10 @@ require 'spec_helper'
 describe FitsDatastream, type: :model, unless: $in_travis do
   describe 'image' do
     before(:all) do
+      @file_path = fixture_file_path('world.png')
       @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@file, File.open(fixture_file_path('world.png')), :original_file)
-      CurationConcerns::CharacterizationService.run(@file)
+      Hydra::Works::AddFileToGenericFile.call(@file, File.open(@file_path), :original_file)
+      CurationConcerns::CharacterizationService.run(@file, @file_path)
     end
     it 'has a format label' do
       expect(@file.format_label).to eq ['Portable Network Graphics']
@@ -43,9 +44,10 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
   describe 'video' do
     before(:all) do
+      @file_path = fixture_file_path('sample_mpeg4.mp4')
       @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@file, File.open(fixture_file_path('sample_mpeg4.mp4')), :original_file)
-      CurationConcerns::CharacterizationService.run(@file)
+      Hydra::Works::AddFileToGenericFile.call(@file, File.open(@file_path), :original_file)
+      CurationConcerns::CharacterizationService.run(@file, @file_path)
     end
     it 'has a format label' do
       expect(@file.format_label).to eq ['ISO Media, MPEG v4 system, version 2']
@@ -84,11 +86,12 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   end
 
   describe 'pdf' do
+    let(:file_path) { fixture_file_path('test4.pdf') }
     before do
       @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(fixture_file_path('test4.pdf')), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(file_path), :original_file)
       # characterize method saves
-      CurationConcerns::CharacterizationService.run(@myfile)
+      CurationConcerns::CharacterizationService.run(@myfile, file_path)
     end
 
     it 'returns expected results after a save' do
@@ -111,11 +114,12 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   end
 
   describe 'm4a' do
+    let(:file_path) { fixture_file_path('spoken-text.m4a') }
     before do
       @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(fixture_file_path('spoken-text.m4a')), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(file_path), :original_file)
       # characterize method saves
-      CurationConcerns::CharacterizationService.run(@myfile)
+      CurationConcerns::CharacterizationService.run(@myfile, file_path)
     end
 
     it 'returns expected content for full text' do

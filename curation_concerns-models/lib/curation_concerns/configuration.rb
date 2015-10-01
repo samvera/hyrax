@@ -33,6 +33,12 @@ module CurationConcerns
       @derivatives_path ||= File.join(Rails.root, 'tmp', 'derivatives')
     end
 
+    # Path on the local file system where originals will be staged before being ingested into Fedora.
+    attr_writer :working_path
+    def working_path
+      @working_path ||= File.join(Rails.root, 'tmp', 'uploads')
+    end
+
     attr_writer :enable_ffmpeg
     def enable_ffmpeg
       return @enable_ffmpeg unless @enable_ffmpeg.nil?

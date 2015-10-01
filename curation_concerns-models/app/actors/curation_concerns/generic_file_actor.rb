@@ -45,35 +45,46 @@ module CurationConcerns
       yield(generic_file) if block_given?
     end
 
+    # Puts the uploaded content into a staging directory. Then kicks off a
+    # job to characterize and create derivatives with this on disk variant.
+    # Simultaneously moving a preservation copy to the repostiory.
+    # TODO create a job to monitor this directory and prune old files that
+    # have made it to the repo
+    # @param [ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
     def create_content(file)
-      # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, file, versioning: false)
       generic_file.label ||= file.original_filename
       generic_file.title = [generic_file.label] if generic_file.title.blank?
-      save_characterize_and_record_committer do
-        if CurationConcerns.config.respond_to?(:after_create_content)
-          CurationConcerns.config.after_create_content.call(generic_file, user)
-        end
-      end
+      return false unless generic_file.save
+
+      working_file = copy_file_to_working_directory(file, generic_file.id)
+      IngestFileJob.perform_later(generic_file.id, working_file, file.content_type, user.user_key)
+      make_derivative(generic_file.id, working_file)
+      true
     end
 
     def revert_content(revision_id)
       generic_file.original_file.restore_version(revision_id)
-      save_characterize_and_record_committer do
-        if CurationConcerns.config.respond_to?(:after_revert_content)
-          CurationConcerns.config.after_revert_content.call(generic_file, user, revision_id)
-        end
-      end
+
+      return false unless generic_file.save
+
+      CurationConcerns::VersioningService.create(generic_file.original_file, user)
+
+      # Retrieve a copy of the orginal file from the repository
+      working_file = copy_repository_resource_to_working_directory(generic_file)
+      make_derivative(generic_file.id, working_file)
+
+      return true unless CurationConcerns.config.respond_to?(:after_revert_content)
+      CurationConcerns.config.after_revert_content.call(generic_file, user, revision_id)
+      true
     end
 
     def update_content(file)
-      # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, file, versioning: false)
-      save_characterize_and_record_committer do
-        if CurationConcerns.config.respond_to?(:after_update_content)
-          CurationConcerns.config.after_update_content.call(generic_file, user)
-        end
-      end
+      working_file = copy_file_to_working_directory(file, generic_file.id)
+      IngestFileJob.perform_later(generic_file.id, working_file, file.content_type, user.user_key)
+      make_derivative(generic_file.id, working_file)
+      return true unless CurationConcerns.config.respond_to?(:after_update_content)
+      CurationConcerns.config.after_update_content.call(generic_file, user)
+      true
     end
 
     def update_metadata(model_attributes, all_attributes)
@@ -96,14 +107,38 @@ module CurationConcerns
 
     private
 
-      # Saves the generic file, queues a job to characterize it, and records the committer.
-      # Takes a block which is run if the save was successful.
-      def save_characterize_and_record_committer
-        save do
-          push_characterize_job
-          CurationConcerns::VersioningService.create(generic_file.original_file, user)
-          yield if block_given?
-        end
+      def make_derivative(generic_file_id, working_file)
+        CharacterizeJob.perform_later(generic_file_id, working_file)
+      end
+
+      # @param [ActionDispatch::Http::UploadedFile] file
+      # @param [String] id the identifer
+      # @return [String] path of the working file
+      def copy_file_to_working_directory(file, id)
+        copy_stream_to_working_directory(id, file.original_filename, file)
+      end
+
+      # @param [GenericFile] generic_file the resource
+      # @return [String] path of the working file
+      def copy_repository_resource_to_working_directory(generic_file)
+        file = generic_file.original_file
+        copy_stream_to_working_directory(generic_file.id, file.original_name, StringIO.new(file.content))
+      end
+
+      # @param [String] id the identifer
+      # @param [String] name the file name
+      # @param [#read] stream the stream to copy to the working directory
+      # @return [String] path of the working file
+      def copy_stream_to_working_directory(id, name, stream)
+        working_path = full_filename(id, name)
+        FileUtils.mkdir_p(File.dirname(working_path))
+        IO.copy_stream(stream, working_path)
+        working_path
+      end
+
+      def full_filename(id, original_name)
+        pair = id.scan(/..?/).first(4)
+        File.join(CurationConcerns.config.working_path, *pair, original_name)
       end
 
       # Takes an optional block and executes the block if the save was successful.
@@ -122,10 +157,6 @@ module CurationConcerns
         end
         yield if block_given?
         true
-      end
-
-      def push_characterize_job
-        CharacterizeJob.perform_later(@generic_file.id)
       end
 
       # Adds a GenericFile to the work using ore:Aggregations.

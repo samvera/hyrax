@@ -1,7 +1,7 @@
 class IngestLocalFileJob < ActiveJob::Base
   attr_accessor :directory, :filename, :user_key, :generic_file_id
 
-  queue_as :ingest
+  queue_as :ingest_local
 
   def perform(generic_file_id, directory, filename, user_key)
     @generic_file_id = generic_file_id

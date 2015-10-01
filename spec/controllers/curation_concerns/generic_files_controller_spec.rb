@@ -158,7 +158,7 @@ describe CurationConcerns::GenericFilesController do
 
       context 'updating file content' do
         it 'is successful' do
-          expect(CharacterizeJob).to receive(:perform_later).with(generic_file.id)
+          expect(CharacterizeJob).to receive(:perform_later).with(generic_file.id, kind_of(String))
           post :update, id: generic_file, generic_file: { files: [file] }
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           skip 'pending hydra-works#89'
@@ -176,6 +176,7 @@ describe CurationConcerns::GenericFilesController do
           Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('curation_concerns_generic_stub.txt')), :original_file)
         end
 
+        # TODO: This test should move into the GenericFileActor spec and just ensure the actor is called.
         it 'is successful' do
           expect(generic_file.latest_content_version.label).to eq('version2')
           expect(generic_file.original_file.content).to eq("This is a test fixture for curation_concerns: <%= @id %>.\n")

@@ -5,10 +5,11 @@ describe CurationConcerns::CharacterizationService do
 
   describe '#run' do
     let(:service_instance) { double }
+    let(:file_name) { double }
     it 'creates an instance of the service and calls .characterize on it' do
-      expect(described_class).to receive(:new).with(generic_file).and_return(service_instance)
+      expect(described_class).to receive(:new).with(generic_file, file_name).and_return(service_instance)
       expect(service_instance).to receive(:characterize)
-      described_class.run(generic_file)
+      described_class.run(generic_file, file_name)
     end
   end
 
@@ -31,13 +32,12 @@ describe CurationConcerns::CharacterizationService do
   </metadata>
 </fits>'
     }
-    subject { described_class.new(generic_file) }
-    before do
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, File.open(fixture_file_path('charter.docx')))
-    end
+
+    let(:file_name) { fixture_file_path('charter.docx') }
+    subject { described_class.new(generic_file, file_name) }
 
     it 'characterizes, extracts fulltext and stores the results' do
-      expect(Hydra::Works::FullTextExtractionService).to receive(:run).with(generic_file).and_return('The fulltext')
+      expect(Hydra::Works::FullTextExtractionService).to receive(:run).with(generic_file, file_name).and_return('The fulltext')
       expect(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_xml)
 
       subject.characterize
