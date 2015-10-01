@@ -33,8 +33,9 @@ describe CollectionsController do
 
     it 'creates a Collection' do
       expect do
-        post :create, collection: collection_attrs
+        post :create, collection: collection_attrs.merge(visibility: 'open')
       end.to change { Collection.count }.by(1)
+      expect(assigns[:collection].visibility).to eq 'open'
     end
 
     it 'removes blank strings from params before creating Collection' do
@@ -112,9 +113,10 @@ describe CollectionsController do
 
     context 'updating a collections metadata' do
       it 'saves the metadata' do
-        put :update, id: collection, collection: { creator: ['Emily'] }
+        put :update, id: collection, collection: { creator: ['Emily'], visibility: 'open' }
         collection.reload
         expect(collection.creator).to eq ['Emily']
+        expect(collection.visibility).to eq 'open'
       end
 
       it 'removes blank strings from params before updating Collection metadata' do

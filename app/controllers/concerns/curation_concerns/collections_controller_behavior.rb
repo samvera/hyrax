@@ -56,12 +56,7 @@ module CurationConcerns
       end
 
       def collection_params
-        form_class.model_attributes(
-          params.require(:collection).permit(:title, :description, :members, part_of: [],
-                                                                             contributor: [], creator: [], publisher: [], date_created: [], subject: [],
-                                                                             language: [], rights: [], resource_type: [], identifier: [], based_near: [],
-                                                                             tag: [], related_url: [])
-        )
+        form_class.model_attributes(params[:collection])
       end
 
       def query_collection_members
