@@ -60,54 +60,53 @@ describe CollectionsController do
       post :create, batch_document_ids: [asset1.id], collection: collection_attrs
       expect(assigns[:collection].members).to eq [asset1]
 
-      asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+      asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset1.id}\""], fl: ['id'] }
       expect(asset_results['response']['numFound']).to eq 1
 
       doc = asset_results['response']['docs'].first
       expect(doc['id']).to eq asset1.id
-
-      afterupdate = GenericWork.find(asset1.id)
-      expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
   end
 
   describe '#update' do
     before { sign_in user }
 
-    context 'a collections members' do
+    context 'collection members' do
       before do
         [asset1, asset2].map(&:save) # bogus_depositor_asset is already saved
-        bogus_depositor_asset.apply_depositor_metadata(user.user_key)
-        bogus_depositor_asset.save
+        collection.members = [asset1, asset2]
+        collection.save!
       end
 
-      it 'sets collection on members' do
-        put :update, id: collection,
-                     collection: { members: 'add' },
-                     batch_document_ids: [bogus_depositor_asset.id, asset1.id, asset2.id]
+      it 'appends members to the collection in order, allowing duplicates' do
+        # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
+        expect {
+          put :update, id: collection,
+                       collection: { members: 'add' },
+                       batch_document_ids: [asset2.id, asset1.id]
+        }.to change { collection.reload.ordered_members.size }.by(2)
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
-        expect(assigns[:collection].members).to match_array [asset2, bogus_depositor_asset, asset1]
+        expect(assigns[:collection].members).to eq [asset1, asset2, asset2, asset1]
 
-        asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+        asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id'] }
         expect(asset_results['response']['numFound']).to eq 1
 
         doc = asset_results['response']['docs'].first
         expect(doc['id']).to eq asset2.id
+      end
 
-        afterupdate = GenericWork.find(asset2.id)
-        expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
-
-        put :update, id: collection,
-                     collection: { members: 'remove' },
-                     batch_document_ids: [asset2]
-        asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+      it "removes members from the collection" do
+        # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
+        expect {
+          put :update, id: collection,
+                       collection: { members: 'remove' },
+                       batch_document_ids: [asset2]
+        }.to change { collection.reload.members.size }.by(-1)
+        asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id'] }
         expect(asset_results['response']['numFound']).to eq 1
 
         doc = asset_results['response']['docs'].first
         expect(doc['id']).to eq asset2.id
-
-        GenericWork.find(asset2.id)
-        expect(doc[Solrizer.solr_name(:collection)]).to be_nil
       end
     end
 
