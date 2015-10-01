@@ -13,6 +13,25 @@ describe CurationConcerns::Forms::CollectionEditForm do
     end
   end
 
+  describe ".build_permitted_params" do
+    subject { described_class.build_permitted_params }
+    it { is_expected.to eq [{ resource_type: [] },
+                            :title,
+                            { creator: [] },
+                            { contributor: [] },
+                            :description,
+                            { tag: [] },
+                            { rights: [] },
+                            { publisher: [] },
+                            { date_created: [] },
+                            { subject: [] },
+                            { language: [] },
+                            { identifier: [] },
+                            { based_near: [] },
+                            { related_url: [] },
+                            :visibility] }
+  end
+
   describe 'unique?' do
     context 'with :title' do
       subject { described_class.unique?(:title) }

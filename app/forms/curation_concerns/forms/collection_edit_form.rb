@@ -18,6 +18,15 @@ module CurationConcerns
         Hash[all_files]
       end
 
+      class << self
+        # Presntly we can't put visibility in the terms, because the superclass will try to do
+        # Collection.multiple?(:visibility) which raises an UnknownAttributeError error.
+        # https://github.com/projecthydra/hydra-editor/issues/99
+        def build_permitted_params
+          super + [:visibility]
+        end
+      end
+
       private
 
         def all_files
