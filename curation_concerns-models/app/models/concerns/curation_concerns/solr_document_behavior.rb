@@ -114,5 +114,19 @@ module CurationConcerns
     def mime_type
       self[Solrizer.solr_name('mime_type', :stored_sortable)]
     end
+
+    def read_groups
+      fetch('read_access_group_ssim', [])
+    end
+
+    def visibility
+      if read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      elsif read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      else
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      end
+    end
   end
 end

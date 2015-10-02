@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe CurationConcerns::EmbargoService do
+  subject { described_class }
   let(:future_date) { 2.days.from_now }
   let(:past_date) { 2.days.ago }
 

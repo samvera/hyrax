@@ -9,4 +9,23 @@ describe SolrDocument do
 
     it { is_expected.to eq '08/31/2015' }
   end
+
+  describe "visibility" do
+    subject { document.visibility }
+
+    context "when open" do
+      let(:attributes) { { 'read_access_group_ssim' => ['public'] } }
+      it { is_expected.to eq 'open' }
+    end
+
+    context "when authenticated" do
+      let(:attributes) { { 'read_access_group_ssim' => ['registered'] } }
+      it { is_expected.to eq 'authenticated' }
+    end
+
+    context "when restricted" do
+      let(:attributes) { {} }
+      it { is_expected.to eq 'restricted' }
+    end
+  end
 end

@@ -15,6 +15,7 @@ module CurationConcerns
     include CurationConcerns::GenericFile::Indexing
     include CurationConcerns::GenericFile::BelongsToWorks
     include CurationConcerns::GenericFile::BelongsToUploadSets
+    include CurationConcerns::HumanReadableType
     include Hydra::AccessControls::Embargoable
 
     included do
