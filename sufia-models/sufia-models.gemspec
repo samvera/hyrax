@@ -45,4 +45,5 @@ Gem::Specification.new do |spec|
   else
     spec.add_dependency 'mini_magick'
   end
+  spec.add_dependency 'posix-spawn'
 end

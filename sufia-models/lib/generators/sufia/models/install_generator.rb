@@ -51,8 +51,9 @@ This generator makes the following changes to your application:
     end
   end
 
-  def create_config_file
+  def create_configuration_files
     copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
+    copy_file 'config/mini_magick.rb', 'config/initializers/mini_magick.rb'
   end
 
   # Add behaviors to the user model
