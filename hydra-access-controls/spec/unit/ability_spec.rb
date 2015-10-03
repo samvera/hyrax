@@ -8,6 +8,8 @@ describe Ability do
     its(:read_user_field) { should == 'read_access_person_ssim'}
     its(:edit_group_field) { should == 'edit_access_group_ssim'}
     its(:edit_user_field) { should == 'edit_access_person_ssim'}
+    its(:discover_group_field) { should == 'discover_access_group_ssim'}
+    its(:discover_user_field) { should == 'discover_access_person_ssim'}
   end
 
   context "for a not-signed in user" do
@@ -37,6 +39,35 @@ describe Ability do
 #   See spec/requests/... for test coverage describing WHAT should appear on a page based on access permissions
 #   Test coverage for discover permission is in spec/requests/gated_discovery_spec.rb
 
+  describe "Given an asset that has been made publicly discoverable" do
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name: "public", access: "discover", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
+      asset.save
+    end
+
+    context "Then a not-signed-in user" do
+      subject { Ability.new(nil) }
+      it { should     be_able_to(:discover, asset) }
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
+    end
+
+    context "Then a registered user" do
+      before do
+        @user = FactoryGirl.build(:registered_user)
+      end
+      subject { Ability.new(@user) }
+      it { should     be_able_to(:discover, asset) }
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
+    end
+  end
+
   describe "Given an asset that has been made publicly available (ie. open access)" do
     #let(:asset) { FactoryGirl.create(:open_access_asset) }
     let(:asset) { FactoryGirl.create(:asset) }
@@ -47,6 +78,7 @@ describe Ability do
 
     context "Then a not-signed-in user" do
       subject { Ability.new(nil) }
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -58,6 +90,7 @@ describe Ability do
         @user = FactoryGirl.build(:registered_user)
       end
       subject { Ability.new(@user) }
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -76,6 +109,7 @@ describe Ability do
     context "Then a not-signed-in user" do
       let(:user) { User.new.tap {|u| u.new_record = true } }
       subject { Ability.new(user) }
+      it { should_not be_able_to(:discover, asset) }
       it { should_not be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -83,6 +117,7 @@ describe Ability do
     end
     context "Then a registered user" do
       subject { Ability.new(FactoryGirl.build(:registered_user)) }
+      it { should_not be_able_to(:discover, asset) }
       it { should_not be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -90,6 +125,7 @@ describe Ability do
     end
     context "Then the Creator" do
       subject { Ability.new(FactoryGirl.build(:joe_creator)) }
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should     be_able_to(:edit, asset) }
       it { should     be_able_to(:edit, solr_doc) }
@@ -114,6 +150,7 @@ describe Ability do
       end
       subject { Ability.new(@user) }
 
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -136,6 +173,7 @@ describe Ability do
       end
       subject { Ability.new(@user) }
 
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should     be_able_to(:edit, asset) }
       it { should     be_able_to(:update, asset) }
@@ -167,6 +205,7 @@ describe Ability do
       end
       subject { Ability.new(@user) }
 
+      it { should_not be_able_to(:discover, asset) }
       it { should_not be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
@@ -181,6 +220,7 @@ describe Ability do
       end
       subject { Ability.new(@user) }
 
+      it { should     be_able_to(:discover, asset) }
       it { should     be_able_to(:read, asset) }
       it { should_not be_able_to(:edit, asset) }
       it { should_not be_able_to(:update, asset) }
