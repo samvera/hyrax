@@ -13,12 +13,13 @@ module CurationConcerns
     end
 
     def destroy
-      curation_concern.lease_visibility! # If the lease has lapsed, update the current visibility.
-      curation_concern.deactivate_lease!
-      saved = curation_concern.save
-      VisibilityCopyJob.perform_later(curation_concern.id) if saved
+      LeaseActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.lease_history.last
-      redirect_to edit_lease_path(curation_concern)
+      if curation_concern.works_generic_work? && curation_concern.generic_files.present?
+        redirect_to confirm_curation_concerns_permission_path(curation_concern)
+      else
+        redirect_to edit_lease_path(curation_concern)
+      end
     end
 
     def update

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe EmbargoesController do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:a_work) { FactoryGirl.create(:generic_work, user: user) }
-  let(:not_my_work) { FactoryGirl.create(:generic_work) }
+  let(:user) { create(:user) }
+  let(:a_work) { create(:generic_work, user: user) }
+  let(:not_my_work) { create(:generic_work) }
 
   before { sign_in user }
 
@@ -49,27 +49,26 @@ describe EmbargoesController do
 
     context 'when I have permission to edit the object' do
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
-        a_work.embargo_release_date = release_date.to_s
-        allow(CurationConcerns::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
+        expect(CurationConcerns::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
       end
 
       let(:actor) { double }
 
-      context 'with an active embargo' do
-        let(:release_date) { Date.today + 2 }
-
-        it 'deactivates embargo without updating visibility and redirect' do
+      context 'that has no files' do
+        it 'deactivates embargo and redirects' do
           expect(actor).to receive(:destroy)
           get :destroy, id: a_work
           expect(response).to redirect_to edit_embargo_path(a_work)
         end
       end
 
-      context 'with an expired embargo' do
-        let(:release_date) { Date.today - 2 }
+      context 'that has files' do
+        before do
+          a_work.generic_files << create(:generic_file)
+          a_work.save!
+        end
 
-        it 'deactivates embargo, update the visibility and redirect' do
+        it 'deactivates embargo and checks to see if we want to copy the visibility to files' do
           expect(actor).to receive(:destroy)
           get :destroy, id: a_work
           expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
@@ -90,12 +89,6 @@ describe EmbargoesController do
         a_work.embargo_release_date = release_date.to_s
         a_work.embargo.save(validate: false)
         a_work.save(validate: false)
-      end
-
-      it 'copies visibility from curation_concern to all of the identified files' do
-        pending 'Is this ever used?  If so, write this test!'
-        fail
-        # patch :update, batch_document_ids: [a_work.id], embargoes: { '0' => { copy_visibility: a_work.id } }
       end
 
       context 'with an expired embargo' do

@@ -14,10 +14,9 @@ module CurationConcerns
 
     # Removes a single embargo
     def destroy
-      update_files = !curation_concern.under_embargo? # embargo expired
       EmbargoActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.embargo_history.last
-      if update_files
+      if curation_concern.works_generic_work? && curation_concern.generic_files.present?
         redirect_to confirm_curation_concerns_permission_path(curation_concern)
       else
         redirect_to edit_embargo_path(curation_concern)
