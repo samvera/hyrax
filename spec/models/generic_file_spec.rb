@@ -369,7 +369,7 @@ describe GenericFile do
   end
 
   describe 'to_solr' do
-    let(:indexer) { double }
+    let(:indexer) { double(generate_solr_document: {}) }
     before do
       allow(CurationConcerns::GenericFileIndexingService).to receive(:new)
         .with(subject).and_return(indexer)
@@ -378,6 +378,10 @@ describe GenericFile do
     it 'calls the indexer' do
       expect(indexer).to receive(:generate_solr_document)
       subject.to_solr
+    end
+
+    it 'has human readable type' do
+      expect(subject.to_solr.fetch('human_readable_type_tesim')).to eq 'Generic File'
     end
   end
 

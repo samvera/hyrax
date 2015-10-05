@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe CurationConcerns::LeaseService do
+  subject { described_class }
   before { GenericWork.destroy_all }
 
   let(:future_date) { 2.days.from_now }
