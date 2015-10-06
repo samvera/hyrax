@@ -24,7 +24,7 @@ describe 'Creating a new Work' do
 
   it 'catapults should behave like generic works' do
     visit '/concern/catapults/new'
-    # within("form.new_generic_file") do
+    # within("form.new_file_set") do
     #   attach_file("Upload a file", fixture_file_path('files/image.png'))
     #   click_button "Attach to Generic Work"
     # end

@@ -1,7 +1,7 @@
 module CurationConcerns
   class ThumbnailPathService
     class << self
-      # @param [GenericWork, GenericFile] the object to get the thumbnail for
+      # @param [Work, FileSet] the object to get the thumbnail for
       # @return [String] a path to the thumbnail
       def call(object)
         return default_image unless object.representative
@@ -19,7 +19,7 @@ module CurationConcerns
 
       def fetch_representative(object)
         return object if object.representative == object.id
-        ::GenericFile.load_instance_from_solr(object.representative)
+        ::FileSet.load_instance_from_solr(object.representative)
       rescue ActiveFedora::ObjectNotFoundError
         Rails.logger.error("Couldn't find representative #{object.representative} for #{object.id}")
         nil

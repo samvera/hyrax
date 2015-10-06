@@ -19,7 +19,7 @@ class UploadSetUpdateJob < ActiveJob::Base
     upload_set = UploadSet.find_or_create(self.upload_set_id)
     user = User.find_by_user_key(self.login)
 
-    upload_set.generic_files.each do |gf|
+    upload_set.file_sets.each do |gf|
       update_file(gf, user)
     end
 
@@ -52,12 +52,12 @@ class UploadSetUpdateJob < ActiveJob::Base
     end
     # update the file using the actor after setting the title
     gf.title = title[gf.id] if title[gf.id]
-    CurationConcerns::GenericFileActor.new(gf, user).update_metadata(file_attributes, visibility: visibility)
+    CurationConcerns::FileSetActor.new(gf, user).update_metadata(file_attributes, visibility: visibility)
 
     # update the work to the same metadata as the file.
     # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
-    # NOTE2: TODO: stop assuming that files only belong to one generic_work
-    work = gf.generic_works.first
+    # NOTE2: TODO: stop assuming that files only belong to one work
+    work = gf.in_works.first
     unless work.nil?
       work.title = title[gf.id] if title[gf.id]
       CurationConcerns::GenericWorkActor.new(work, user, work_attributes).update

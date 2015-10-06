@@ -63,7 +63,7 @@ describe LeasesController do
 
       context 'with files' do
         before do
-          a_work.generic_files << create(:generic_file)
+          a_work.file_sets << create(:file_set)
           a_work.save!
         end
 

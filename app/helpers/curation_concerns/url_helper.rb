@@ -14,7 +14,7 @@ module CurationConcerns
       main_app.track_solr_document_path(*args)
     end
 
-    def track_generic_file_path(*args)
+    def track_file_set_path(*args)
       main_app.track_solr_document_path(*args)
     end
 

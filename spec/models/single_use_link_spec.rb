@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SingleUseLink do
-  let(:file) { GenericFile.new(id: 'abc123') }
+  let(:file) { FileSet.new(id: 'abc123') }
   let(:now) { DateTime.now }
   let(:hash) { "sha2hash#{now.to_f}" }
 
@@ -17,12 +17,12 @@ describe SingleUseLink do
     end
 
     describe "show" do
-      let(:path) { Rails.application.routes.url_helpers.curation_concerns_generic_file_path(file.id) }
+      let(:path) { Rails.application.routes.url_helpers.curation_concerns_file_set_path(file.id) }
 
       it "creates link" do
         expect(subject.downloadKey).to eq(hash)
         expect(subject.itemId).to eq(file.id)
-        expect(subject.path).to eq(Rails.application.routes.url_helpers.curation_concerns_generic_file_path(file.id))
+        expect(subject.path).to eq(Rails.application.routes.url_helpers.curation_concerns_file_set_path(file.id))
       end
     end
     describe "download" do

@@ -2,8 +2,8 @@ class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include Hydra::Collections::SearchBehaviors
 
-  def only_generic_files(solr_parameters)
-    solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: GenericFile.to_class_uri)
+  def only_file_sets(solr_parameters)
+    solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: FileSet.to_class_uri)
   end
 
   def find_one(solr_parameters)

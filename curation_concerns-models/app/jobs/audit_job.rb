@@ -19,9 +19,9 @@ class AuditJob < ActiveFedoraIdBasedJob
     fixity_ok = log.pass == 1
     unless fixity_ok
       if CurationConcerns.config.respond_to?(:after_audit_failure)
-        login = generic_file.depositor
+        login = file_set.depositor
         user = User.find_by_user_key(login)
-        CurationConcerns.config.after_audit_failure.call(generic_file, user, log.created_at)
+        CurationConcerns.config.after_audit_failure.call(file_set, user, log.created_at)
       end
     end
     fixity_ok
@@ -43,7 +43,7 @@ class AuditJob < ActiveFedoraIdBasedJob
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, generic_file_id: id, version: uri, file_id: file_id)
+      ChecksumAuditLog.create!(pass: passing, file_set_id: id, version: uri, file_id: file_id)
     end
 
     def logger

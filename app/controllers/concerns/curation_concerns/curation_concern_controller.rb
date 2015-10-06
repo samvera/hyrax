@@ -55,7 +55,7 @@ module CurationConcerns::CurationConcernController
       wants.json do
         # load and authorize @curation_concern manually because it's skipped for html
         # This has to use #find instead of #load_instance_from_solr because
-        # we want to return values like generic_file_ids in the json
+        # we want to return values like file_set_ids in the json
         @curation_concern = curation_concern_type.find(params[:id]) unless curation_concern
         authorize! :show, @curation_concern
         render :show, status: :ok

@@ -13,7 +13,7 @@ module CurationConcerns
       rescue_from CanCan::AccessDenied, with: :render_single_use_error
       rescue_from ActiveRecord::RecordNotFound, with: :render_single_use_error
       class_attribute :presenter_class
-      self.presenter_class = CurationConcerns::GenericFilePresenter
+      self.presenter_class = CurationConcerns::FileSetPresenter
       copy_blacklight_config_from(::CatalogController)
     end
 

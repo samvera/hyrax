@@ -10,7 +10,7 @@ describe CatalogController do
     let!(:work1)  { FactoryGirl.create(:work_with_one_file, user: user) }
     let!(:work2)  { FactoryGirl.create(:public_generic_work) }
     let!(:collection) { FactoryGirl.create(:collection, user: user) }
-    let!(:file) { work1.generic_files.first }
+    let!(:file) { work1.file_sets.first }
     before do
       sign_in user
     end

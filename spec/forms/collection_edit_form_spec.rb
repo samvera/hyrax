@@ -47,8 +47,8 @@ describe CurationConcerns::Forms::CollectionEditForm do
 
     context 'with a work/file attached' do
       let(:work) { create(:work_with_one_file) }
-      let(:title) { work.generic_files.first.title.first }
-      let(:file_id) { work.generic_files.first.id }
+      let(:title) { work.file_sets.first.title.first }
+      let(:file_id) { work.file_sets.first.id }
       let(:collection_with_file) do
         Collection.create!(title: 'foo', members: [work]) do |c|
           c.apply_depositor_metadata('jcoyne')

@@ -49,31 +49,31 @@ describe 'Routes', type: :routing do
 
   describe 'GenericFile' do
     it 'routes to create' do
-      expect(post: 'concern/container/1/generic_files').to route_to(controller: 'curation_concerns/generic_files', action: 'create', parent_id: '1')
+      expect(post: 'concern/container/1/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create', parent_id: '1')
     end
 
     it 'routes to new' do
-      expect(get: 'concern/container/2/generic_files/new').to route_to(controller: 'curation_concerns/generic_files', action: 'new', parent_id: '2')
+      expect(get: 'concern/container/2/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new', parent_id: '2')
     end
 
     it 'routes to edit' do
-      expect(get: 'concern/generic_files/3/edit').to route_to(controller: 'curation_concerns/generic_files', action: 'edit', id: '3')
+      expect(get: 'concern/file_sets/3/edit').to route_to(controller: 'curation_concerns/file_sets', action: 'edit', id: '3')
     end
 
     it 'routes to show' do
-      expect(get: 'concern/generic_files/4').to route_to(controller: 'curation_concerns/generic_files', action: 'show', id: '4')
+      expect(get: 'concern/file_sets/4').to route_to(controller: 'curation_concerns/file_sets', action: 'show', id: '4')
     end
 
     it 'routes to update' do
-      expect(put: 'concern/generic_files/5').to route_to(controller: 'curation_concerns/generic_files', action: 'update', id: '5')
+      expect(put: 'concern/file_sets/5').to route_to(controller: 'curation_concerns/file_sets', action: 'update', id: '5')
     end
 
     it 'routes to destroy' do
-      expect(delete: 'concern/generic_files/6').to route_to(controller: 'curation_concerns/generic_files', action: 'destroy', id: '6')
+      expect(delete: 'concern/file_sets/6').to route_to(controller: 'curation_concerns/file_sets', action: 'destroy', id: '6')
     end
 
     it '*not*s route to index' do
-      expect(get: 'concern/generic_files').not_to route_to(controller: 'curation_concerns/generic_files', action: 'index')
+      expect(get: 'concern/file_sets').not_to route_to(controller: 'curation_concerns/file_sets', action: 'index')
     end
   end
 

@@ -1,0 +1,12 @@
+<tr class="<%= dom_class(file_set) %> attributes">
+  <td class="thumbnail">
+    <%= render_thumbnail_tag file_set %>
+  </td>
+  <td class="attribute filename"><%= link_to(file_set.link_name, main_app.curation_concerns_file_set_path(file_set)) %></td>
+  <td class="attribute date_uploaded"><%= file_set.date_uploaded %></td>
+  <td class="attribute permission"><%= file_set.permission_badge %></td>
+  <td>
+    <%= render 'curation_concerns/file_sets/actions', file_set: file_set %>
+  </td>
+</tr>
+

@@ -6,10 +6,10 @@ describe 'User' do
     subject { ability }
     let(:ability) { Ability.new(current_user) }
     let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
-    let(:creating_user) { FactoryGirl.create(:user) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:creating_user) { create(:user) }
+    let(:user) { create(:user) }
     let(:current_user) { user }
-    let(:collection) { FactoryGirl.create(:collection, visibility: visibility, user: creating_user) }
+    let(:collection) { create(:collection, visibility: visibility, user: creating_user) }
     before do
       collection.visibility = visibility
       collection.save
@@ -38,7 +38,7 @@ describe 'User' do
     describe 'a nil user' do
       let(:current_user) { nil }
       it do
-        should_not be_able_to(:create, GenericFile.new)
+        should_not be_able_to(:create, ::Collection.new)
         should_not be_able_to(:read, collection)
         should_not be_able_to(:update, collection)
         should_not be_able_to(:destroy, collection)

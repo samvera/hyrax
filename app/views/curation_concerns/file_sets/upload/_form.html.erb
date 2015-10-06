@@ -1,0 +1,6 @@
+<%= form_for(FileSet.new, url: main_app.curation_concerns_file_sets_path(parent_id: @presenter.id), html: { multipart: true, id: 'fileupload' }) do |f| %>
+  <div class="well">
+    <%= render partial: 'curation_concerns/file_sets/upload/form_fields', presenter: @presenter, locals: { upload_set_id: ActiveFedora::Noid::Service.new.mint } %>
+  </div>
+<% end %>
+

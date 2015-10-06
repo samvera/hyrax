@@ -4,10 +4,10 @@ describe 'curation_concerns/single_use_links/new_download.html.erb' do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:f) do
-    file = GenericFile.create do |gf|
+    file = FileSet.create do |gf|
       gf.apply_depositor_metadata(user)
     end
-    Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
     file
   end
 

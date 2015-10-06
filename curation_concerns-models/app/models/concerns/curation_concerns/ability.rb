@@ -30,7 +30,7 @@ module CurationConcerns
     # to submit content
     def everyone_can_create_curation_concerns
       return if current_user.new_record?
-      can :create, [::GenericFile, ::Collection]
+      can :create, [::FileSet, ::Collection]
       can :create, [CurationConcerns.config.curation_concerns]
     end
   end

@@ -12,22 +12,24 @@ describe GenericWork do
   context 'with attached files' do
     subject { FactoryGirl.create(:work_with_files) }
 
-    it 'has two files' do
-      expect(subject.generic_files.size).to eq 2
-      expect(subject.generic_files.first).to be_kind_of GenericFile
+    it 'has two file_sets' do
+      expect(subject.file_sets.size).to eq 2
+      expect(subject.file_sets.first).to be_kind_of FileSet
     end
   end
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::GenericWorkIndexingService }
+    it { is_expected.to eq CurationConcerns::WorkIndexingService }
   end
 
   describe 'to_solr' do
-    subject { FactoryGirl.build(:work, date_uploaded: Date.today).to_solr }
+    subject { build(:work, date_uploaded: Date.today).to_solr }
+
     it 'indexes some fields' do
       expect(subject.keys).to include 'date_uploaded_dtsi'
     end
+
     it 'inherits (and extends) to_solr behaviors from superclass' do
       expect(subject.keys).to include(:id)
       expect(subject.keys).to include('has_model_ssim')

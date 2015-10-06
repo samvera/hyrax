@@ -1,6 +1,6 @@
 module CurationConcerns::MainAppHelpers
   include CurationConcerns::TitleHelper
-  include CurationConcerns::GenericFileHelper
+  include CurationConcerns::FileSetHelper
   include CurationConcerns::SearchPathsHelper
   include CurationConcerns::RenderConstraintsHelper
   include CurationConcerns::AbilityHelper

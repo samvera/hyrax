@@ -57,9 +57,9 @@ module CurationConcerns::WorkActorBehavior
     end
 
     def assign_representative
-      @generic_files ||= []
+      @file_sets ||= []
       unless curation_concern.representative
-        curation_concern.representative = @generic_files.first.id unless @generic_files.empty?
+        curation_concern.representative = @file_sets.first.id unless @file_sets.empty?
       end
       curation_concern.save
     end
@@ -67,18 +67,18 @@ module CurationConcerns::WorkActorBehavior
   private
 
     def attach_file(file)
-      generic_file = ::GenericFile.new
-      generic_file_actor = CurationConcerns::GenericFileActor.new(generic_file, user)
+      file_set = ::FileSet.new
+      file_set_actor = CurationConcerns::FileSetActor.new(file_set, user)
       # TODO: we're passing an ID rather than an object. This means the actor does an unnecessary lookup
-      generic_file_actor.create_metadata(curation_concern.id, curation_concern.id, visibility_attributes)
-      generic_file_actor.create_content(file)
-      @generic_files ||= []
-      @generic_files << generic_file # This is so that other methods like assign_representative can access the generic_files wihtout reloading them from fedora
-      curation_concern.generic_files << generic_file
+      file_set_actor.create_metadata(curation_concern.id, curation_concern.id, visibility_attributes)
+      file_set_actor.create_content(file)
+      @file_sets ||= []
+      @file_sets << file_set # This is so that other methods like assign_representative can access the file_sets without reloading them from fedora
+      curation_concern.file_sets << file_set
     end
 
     # The attributes used for visibility - used to send as initial params to
-    # created GenericFiles.
+    # created FileSets.
     def visibility_attributes
       raw_attributes.slice(:visibility, :visibility_during_lease, :visibility_after_lease, :lease_expiration_date, :embargo_release_date, :visibility_during_embargo, :visibility_after_embargo)
     end

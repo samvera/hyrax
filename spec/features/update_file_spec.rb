@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Editing attached files' do
   let(:user) { create(:user) }
   let!(:parent) { create(:work_with_one_file, user: user) }
-  let!(:generic_file) { parent.generic_files.first }
+  let!(:file_set) { parent.file_sets.first }
 
   before do
     sign_in user
@@ -23,8 +23,8 @@ describe 'Editing attached files' do
     expect(page).to have_content 'The file A Contained Generic File has been updated.'
 
     # TODO: this stuff belongs in an Actor or Controller test:
-    generic_file.reload
-    expect(generic_file.original_file.original_name).to eq 'image.png'
-    expect(generic_file.original_file.mime_type).to eq 'image/png'
+    file_set.reload
+    expect(file_set.original_file.original_name).to eq 'image.png'
+    expect(file_set.original_file.mime_type).to eq 'image/png'
   end
 end

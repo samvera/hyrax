@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe CurationConcerns::FormPresenter do
   let(:curation_concern) { create(:work_with_one_file) }
-  let(:title) { curation_concern.generic_files.first.title.first }
-  let(:file_id) { curation_concern.generic_files.first.id }
+  let(:title) { curation_concern.file_sets.first.title.first }
+  let(:file_id) { curation_concern.file_sets.first.id }
   let(:ability) { nil }
   let(:presenter) { described_class.new(curation_concern, ability) }
 

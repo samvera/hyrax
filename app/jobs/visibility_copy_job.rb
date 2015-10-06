@@ -4,7 +4,7 @@ class VisibilityCopyJob < ActiveFedoraIdBasedJob
   def perform(id)
     @id = id
     work = object
-    work.generic_files.each do |file|
+    work.file_sets.each do |file|
       file.visibility = work.visibility # visibility must come first, because it can clear an embargo/lease
       if work.lease
         file.build_lease unless file.lease

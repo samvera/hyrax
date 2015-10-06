@@ -59,7 +59,7 @@ describe CurationConcerns::GenericWorkActor do
             it "applies it to attached files" do
               allow(CharacterizeJob).to receive(:perform_later).and_return(true)
               subject.create
-              file = curation_concern.generic_files.first
+              file = curation_concern.file_sets.first
               expect(file).to be_persisted
               expect(file.visibility_during_embargo).to eq 'authenticated'
               expect(file.visibility_after_embargo).to eq 'open'
@@ -127,14 +127,14 @@ describe CurationConcerns::GenericWorkActor do
             expect(curation_concern.date_modified).to eq xmas
             expect(curation_concern.depositor).to eq user.user_key
             expect(curation_concern.representative).to_not be_nil
-            expect(curation_concern.generic_files.size).to eq 1
+            expect(curation_concern.file_sets.size).to eq 1
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
-            generic_file = curation_concern.generic_files.first
+            file_set = curation_concern.file_sets.first
             file.rewind
-            expect(generic_file.reload.original_file.content).to eq file.read
+            expect(file_set.reload.original_file.content).to eq file.read
 
             expect(curation_concern).to be_authenticated_only_access
-            expect(generic_file).to be_authenticated_only_access
+            expect(file_set).to be_authenticated_only_access
           end
         end
       end
@@ -160,7 +160,7 @@ describe CurationConcerns::GenericWorkActor do
             expect(curation_concern.date_modified).to eq xmas
             expect(curation_concern.depositor).to eq user.user_key
 
-            expect(curation_concern.generic_files.size).to eq 2
+            expect(curation_concern.file_sets.size).to eq 2
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
 
             expect(curation_concern).to be_authenticated_only_access
@@ -230,18 +230,18 @@ describe CurationConcerns::GenericWorkActor do
       end
     end
 
-    context 'with multiple files file' do
-      let(:file1) { FactoryGirl.create(:generic_file) }
-      let(:file2) { FactoryGirl.create(:generic_file) }
-      let(:curation_concern) { FactoryGirl.create(:generic_work, user: user, generic_files: [file1, file2]) }
+    context 'with multiple file sets' do
+      let(:file_set1) { create(:file_set) }
+      let(:file_set2) { create(:file_set) }
+      let(:curation_concern) { FactoryGirl.create(:generic_work, user: user, file_sets: [file_set1, file_set2]) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work, generic_files: [file2, file1])
+        FactoryGirl.attributes_for(:generic_work, file_sets: [file_set2, file_set1])
       end
-      it 'updates the order of files' do
-        expect(curation_concern.generic_files).to eq [file1, file2]
+      it 'updates the order of file sets' do
+        expect(curation_concern.file_sets).to eq [file_set1, file_set2]
         expect(subject.update).to be true
         curation_concern.reload
-        expect(curation_concern.generic_files).to eq [file2, file1]
+        expect(curation_concern.file_sets).to eq [file_set2, file_set1]
       end
     end
   end

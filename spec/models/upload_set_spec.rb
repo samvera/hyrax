@@ -10,8 +10,8 @@ describe UploadSet do
     expect(subject.title).to eq ["test collection"]
   end
 
-  it "responds to .generic_files" do
-    expect(subject).to respond_to(:generic_files)
+  it "responds to .file_sets" do
+    expect(subject).to respond_to(:file_sets)
   end
 
   it "supports to_solr" do

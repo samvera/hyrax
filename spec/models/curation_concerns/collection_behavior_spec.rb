@@ -22,7 +22,7 @@ describe CurationConcerns::CollectionBehavior do
 
     context 'with two 50 byte files' do
       let(:bitstream) { double('content', size: '50') }
-      let(:file) { mock_model ::GenericFile, content: bitstream }
+      let(:file) { mock_model ::FileSet, content: bitstream }
       before { allow(collection).to receive(:members).and_return([file, file]) }
       it { is_expected.to eq 100 }
     end
@@ -78,12 +78,13 @@ describe CurationConcerns::CollectionBehavior do
       expect(subject.pcdm_object?).to be false
       expect(subject.type).to_not include Hydra::PCDM::Vocab::PCDMTerms.Object
     end
+
     it 'contains objects' do
-      expect(subject.generic_works).to eq []
-      expect(subject.generic_work_ids).to eq []
-      expect(subject.generic_works << work1).to eq [work1]
-      expect(subject.generic_works).to eq [work1]
-      expect(subject.generic_work_ids).to eq [work1.id]
+      expect(subject.works).to eq []
+      expect(subject.work_ids).to eq []
+      expect(subject.works << work1).to eq [work1]
+      expect(subject.works).to eq [work1]
+      expect(subject.work_ids).to eq [work1.id]
     end
 
     it 'contains collections' do

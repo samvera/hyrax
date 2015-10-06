@@ -5,7 +5,7 @@ module CurationConcerns
     include CurationConcerns::Noid
 
     included do
-      has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: "GenericFile"
+      has_many :file_sets, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
       property :creator, predicate: ::RDF::DC.creator
       property :title, predicate: ::RDF::DC.title

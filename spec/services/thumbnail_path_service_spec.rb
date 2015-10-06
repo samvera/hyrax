@@ -3,8 +3,8 @@ require 'spec_helper'
 describe CurationConcerns::ThumbnailPathService do
   subject { described_class.call(object) }
 
-  context "with a GenericFile" do
-    let(:object) { GenericFile.new(id: '999', mime_type: mime_type) }
+  context "with a FileSet" do
+    let(:object) { FileSet.new(id: '999', mime_type: mime_type) }
     let(:mime_type) { 'image/jpeg' }
     context "that has a thumbnail" do
       before do
@@ -26,17 +26,17 @@ describe CurationConcerns::ThumbnailPathService do
   context "with a Work" do
     context "that has a representative" do
       let(:object) { GenericWork.new(representative: '999') }
-      let(:representative) { GenericFile.new(id: '777') }
+      let(:representative) { FileSet.new(id: '777') }
       before do
         allow(File).to receive(:exist?).and_return(true)
-        allow(GenericFile).to receive(:load_instance_from_solr).with('999').and_return(representative)
+        allow(FileSet).to receive(:load_instance_from_solr).with('999').and_return(representative)
       end
 
       it { is_expected.to eq '/downloads/999?file=thumbnail' }
     end
 
     context "that doesn't have a representative" do
-      let(:object) { GenericWork.new }
+      let(:object) { FileSet.new }
       it { is_expected.to eq '/assets/default.png' }
     end
   end
