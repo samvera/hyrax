@@ -3,12 +3,12 @@ module CurationConcerns
     extend ActiveSupport::Concern
     include Hydra::Works::FileSetBehavior
     include Hydra::Works::VirusCheck
+    include Hydra::Works::Characterization
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
     include CurationConcerns::FileSet::Derivatives
     include CurationConcerns::Permissions
-    include CurationConcerns::FileSet::Characterization
     include CurationConcerns::BasicMetadata
     include CurationConcerns::FileSet::FullTextIndexing
     include CurationConcerns::FileSet::Indexing
