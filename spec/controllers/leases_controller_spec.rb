@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe LeasesController do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:a_work) { FactoryGirl.create(:generic_work, user: user) }
-  let(:not_my_work) { FactoryGirl.create(:generic_work) }
+  let(:user) { create(:user) }
+  let(:a_work) { create(:generic_work, user: user) }
+  let(:not_my_work) { create(:generic_work) }
 
   before { sign_in user }
 
@@ -48,29 +48,29 @@ describe LeasesController do
     end
 
     context 'when I have permission to edit the object' do
+      let(:actor) { double('lease actor') }
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
-        a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-        a_work.lease_expiration_date = release_date.to_s
-        expect(VisibilityCopyJob).to receive(:perform_later)
-        get :destroy, id: a_work
+        allow(CurationConcerns::LeaseActor).to receive(:new).with(a_work).and_return(actor)
       end
 
-      context 'with an active lease' do
-        let(:release_date) { Date.today + 2 }
-        it 'deactivates the lease without updating visibility and redirect' do
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      context 'that has no files' do
+        it 'deactivates the lease and redirects' do
+          expect(actor).to receive(:destroy)
+          get :destroy, id: a_work
           expect(response).to redirect_to edit_lease_path(a_work)
         end
       end
 
-      context 'with an expired lease' do
-        let(:release_date) { Date.today - 2 }
+      context 'with files' do
+        before do
+          a_work.generic_files << create(:generic_file)
+          a_work.save!
+        end
 
-        it 'deactivates the lease, update the visibility and redirect' do
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-          expect(response).to redirect_to edit_lease_path(a_work)
+        it 'deactivates the lease and redirects' do
+          expect(actor).to receive(:destroy)
+          get :destroy, id: a_work
+          expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
         end
       end
     end
