@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::GenericWorkShowPresenter do
+describe CurationConcerns::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do
     { "title_tesim" => ["foo bar"],

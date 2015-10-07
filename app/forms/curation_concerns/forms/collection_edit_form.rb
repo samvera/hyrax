@@ -34,7 +34,7 @@ module CurationConcerns
         end
 
         def member_presenters
-          PresenterFactory.build_presenters(model.member_ids, GenericWorkShowPresenter, nil)
+          PresenterFactory.build_presenters(model.member_ids, WorkShowPresenter, nil)
         end
     end
   end

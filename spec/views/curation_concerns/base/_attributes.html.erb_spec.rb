@@ -10,7 +10,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
                                          creator_tesim: creator) }
   let(:ability) { nil }
   let(:presenter) do
-    CurationConcerns::GenericWorkShowPresenter.new(solr_document, ability)
+    CurationConcerns::WorkShowPresenter.new(solr_document, ability)
   end
 
   before do

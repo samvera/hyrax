@@ -1,5 +1,5 @@
 module CurationConcerns
-  class GenericWorkShowPresenter
+  class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
     attr_accessor :solr_document, :current_ability
