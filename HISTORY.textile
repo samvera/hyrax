@@ -1,5 +1,16 @@
-h3. Unreleased
+h3. 9.3.0 (2015-10-07)
 * 2015-10-03: Provide CanCan abilities for :discover permissions. [Randy Coulman]
+
+* 2015-09-30: Don't mark the visibility as changed unless it actually changed
+[Justin Coyne]
+
+* 2015-08-18: Role mapper should fetch keys [Justin Coyne]
+
+* 2015-08-11: Extract lease and embargo indexers for easier overriding [Justin
+Coyne]
+
+* 2015-08-05: Adding in the Content-Length header [Carolyn Cole]
+>>>>>>> Stashed changes
 
 h3. 9.2.2 (2015-08-03)
 * 2015-07-30: Moved condition logic to its own method to give app developer a chance to configure it to not perform future date validation [val99erie]
