@@ -13,7 +13,7 @@ module Hydra
       include Hydra::PermissionsQuery
       include Blacklight::SearchHelper
       class_attribute :ability_logic
-      self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :download_permissions, :custom_permissions]
+      self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :discover_permissions, :download_permissions, :custom_permissions]
     end
 
     def self.user_class
@@ -87,6 +87,21 @@ module Hydra
       end
     end
 
+    def discover_permissions
+      can :discover, String do |id|
+        test_discover(id)
+      end
+
+      can :discover, ActiveFedora::Base do |obj|
+        test_discover(obj.id)
+      end
+
+      can :discover, SolrDocument do |obj|
+        cache.put(obj.id, obj)
+        test_discover(obj.id)
+      end
+    end
+
     # Download permissions are exercised in Hydra::Controller::DownloadBehavior
     def download_permissions
       can :download, ActiveFedora::File do |file|
@@ -117,6 +132,13 @@ module Hydra
       result
     end
 
+    def test_discover(id)
+      Rails.logger.debug("[CANCAN] Checking discover permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
+      group_intersection = user_groups & discover_groups(id)
+      result = !group_intersection.empty? || discover_users(id).include?(current_user.user_key)
+      result
+    end
+
     def edit_groups(id)
       doc = permissions_doc(id)
       return [] if doc.nil?
@@ -132,6 +154,15 @@ module Hydra
       rg = edit_groups(id) | (doc[self.class.read_group_field] || [])
       Rails.logger.debug("[CANCAN] read_groups: #{rg.inspect}")
       return rg
+    end
+
+    # read implies discover, so discover_groups is the union of read and discover groups
+    def discover_groups(id)
+      doc = permissions_doc(id)
+      return [] if doc.nil?
+      dg = read_groups(id) | (doc[self.class.discover_group_field] || [])
+      Rails.logger.debug("[CANCAN] discover_groups: #{dg.inspect}")
+      dg
     end
 
     def edit_users(id)
@@ -151,6 +182,15 @@ module Hydra
       return rp
     end
 
+    # read implies discover, so discover_users is the union of read and discover users
+    def discover_users(id)
+      doc = permissions_doc(id)
+      return [] if doc.nil?
+      dp = read_users(id) | (doc[self.class.discover_user_field] || [])
+      Rails.logger.debug("[CANCAN] discover_users: #{dp.inspect}")
+      dp
+    end
+
     module ClassMethods
       def read_group_field
         Hydra.config.permissions.read.group
@@ -166,6 +206,14 @@ module Hydra
 
       def edit_group_field
         Hydra.config.permissions.edit.group
+      end
+
+      def discover_group_field
+        Hydra.config.permissions.discover.group
+      end
+
+      def discover_user_field
+        Hydra.config.permissions.discover.individual
       end
     end
   end
