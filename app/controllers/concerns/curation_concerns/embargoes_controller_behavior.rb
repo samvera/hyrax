@@ -16,7 +16,7 @@ module CurationConcerns
     def destroy
       EmbargoActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.embargo_history.last
-      if curation_concern.works_generic_work? && curation_concern.generic_files.present?
+      if curation_concern.work? && curation_concern.file_sets.present?
         redirect_to confirm_curation_concerns_permission_path(curation_concern)
       else
         redirect_to edit_embargo_path(curation_concern)

@@ -5,7 +5,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(user)
     end
   end

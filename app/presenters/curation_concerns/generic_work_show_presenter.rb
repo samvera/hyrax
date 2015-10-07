@@ -24,9 +24,9 @@ module CurationConcerns
              :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document
 
     def file_presenters
-      @generic_files ||= begin
-        ids = solr_document.fetch('generic_file_ids_ssim', [])
-        PresenterFactory.build_presenters(ids, GenericFilePresenter, current_ability)
+      @file_sets ||= begin
+        ids = solr_document.fetch('file_set_ids_ssim', [])
+        PresenterFactory.build_presenters(ids, FileSetPresenter, current_ability)
       end
     end
   end

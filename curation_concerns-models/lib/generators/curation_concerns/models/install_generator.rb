@@ -7,7 +7,7 @@ class CurationConcerns::Models::InstallGenerator < CurationConcerns::Models::Abs
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Creates the curation_concerns.rb configuration file and several others
- 3. Creates the generic_file.rb, generic_work.rb and collection.rb models
+ 3. Creates the file_set.rb, generic_work.rb and collection.rb models
  4. Runs full-text generator
        "''
   def banner
@@ -52,8 +52,8 @@ This generator makes the following changes to your application:
     copy_file 'app/models/collection.rb', 'app/models/collection.rb'
   end
 
-  def create_generic_file
-    copy_file 'app/models/generic_file.rb', 'app/models/generic_file.rb'
+  def create_file_set
+    copy_file 'app/models/file_set.rb', 'app/models/file_set.rb'
   end
 
   # Adds clamav initializtion

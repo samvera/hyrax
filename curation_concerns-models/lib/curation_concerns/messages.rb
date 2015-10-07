@@ -46,7 +46,7 @@ module CurationConcerns
     end
 
     def link_to_file(file)
-      link_to(file.to_s, Rails.application.class.routes.url_helpers.curation_concerns_generic_file_path(file))
+      link_to(file.to_s, Rails.application.class.routes.url_helpers.curation_concerns_file_set_path(file))
     end
 
     private

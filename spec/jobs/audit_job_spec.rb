@@ -4,9 +4,9 @@ describe AuditJob do
   let(:user) { create(:user) }
 
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(user)
-      Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
+      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
     end
   end
   let(:file_id) { file.original_file.id }
@@ -36,8 +36,8 @@ describe AuditJob do
 
   describe 'run_audit' do
     let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.original_file).uri }
-    let!(:old) { ChecksumAuditLog.create(generic_file_id: file.id, file_id: file_id, version: uri, pass: 1, created_at: 2.minutes.ago) }
-    let!(:new) { ChecksumAuditLog.create(generic_file_id: file.id, file_id: file_id, version: uri, pass: 0) }
+    let!(:old) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 1, created_at: 2.minutes.ago) }
+    let!(:new) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 0) }
     let(:mock_service) { double('mock fixity check service') }
 
     before do

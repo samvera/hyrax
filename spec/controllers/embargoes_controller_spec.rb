@@ -64,7 +64,7 @@ describe EmbargoesController do
 
       context 'that has files' do
         before do
-          a_work.generic_files << create(:generic_file)
+          a_work.file_sets << create(:file_set)
           a_work.save!
         end
 
@@ -79,10 +79,10 @@ describe EmbargoesController do
 
   describe '#update' do
     context 'when I have permission to edit the object' do
-      let(:a_file) { FactoryGirl.create(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
+      let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       let(:release_date) { Date.today + 2 }
       before do
-        a_work.generic_files << a_file
+        a_work.file_sets << file_set
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -96,7 +96,7 @@ describe EmbargoesController do
         it 'deactivates embargo, update the visibility and redirect' do
           patch :update, batch_document_ids: [a_work.id], embargoes: { '0' => { copy_visibility: a_work.id } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          expect(a_file.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(response).to redirect_to embargoes_path
         end
       end

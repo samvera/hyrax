@@ -3,17 +3,17 @@ require 'spec_helper'
 describe CurationConcerns::SingleUseLinksViewerController do
   routes { CurationConcerns::Engine.routes }
   let(:file) do
-    file = GenericFile.create do |lfile|
+    file = FileSet.create do |lfile|
       lfile.label = 'world.png'
       lfile.apply_depositor_metadata('mjg')
     end
-    Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
     file
   end
 
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.curation_concerns_generic_file_path(id: file)
+      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.curation_concerns_file_set_path(id: file)
     end
 
     let :download_link do

@@ -10,7 +10,7 @@
 <%= render 'attributes', curation_concern: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
 <% if editor %>
-    <%= render partial: 'curation_concerns/generic_files/multiple_upload', presenter: @presenter %>
+    <%= render partial: 'curation_concerns/file_sets/multiple_upload', presenter: @presenter %>
 <% end %>
 
 <% if collector || editor %>
@@ -18,7 +18,7 @@
     <% if editor %>
       <%= link_to "Edit This #{@presenter.human_readable_type}", edit_polymorphic_path([main_app, :curation_concerns, @presenter]), class: 'btn btn-primary' %>
       <%= link_to "Delete This #{@presenter.human_readable_type}", [main_app, :curation_concerns, @presenter], class: 'btn btn-primary', data: { confirm: "Delete this #{@presenter.human_readable_type}?" }, method: :delete %>
-      <%= link_to "Attach a File", main_app.new_curation_concerns_generic_file_path(@presenter), class: 'btn btn-primary' %>
+      <%= link_to "Attach a File", main_app.new_curation_concerns_file_set_path(@presenter), class: 'btn btn-primary' %>
     <% end %>
   </div>
 <% end %>

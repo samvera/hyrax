@@ -9,11 +9,11 @@ describe CurationConcerns::SearchBuilder do
 
   subject { described_class.new(processor_chain, context) }
 
-  describe '#only_generic_files' do
-    before { subject.only_generic_files(solr_params) }
+  describe '#only_file_sets' do
+    before { subject.only_file_sets(solr_params) }
 
-    it 'adds GenericFile to query' do
-      expect(solr_params[:fq].first).to include('{!raw f=has_model_ssim}GenericFile')
+    it 'adds FileSet to query' do
+      expect(solr_params[:fq].first).to include('{!raw f=has_model_ssim}FileSet')
     end
   end
 

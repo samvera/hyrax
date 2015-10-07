@@ -7,22 +7,22 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
 
   def perform(id)
     @id = id
-    user = User.find_by_user_key(generic_file.depositor)
+    user = User.find_by_user_key(file_set.depositor)
 
     Tempfile.open(id.tr('/', '_')) do |f|
-      copy_remote_file(generic_file.import_url, f)
+      copy_remote_file(file_set.import_url, f)
       # attach downloaded file to generic file stubbed out
-      if CurationConcerns::GenericFileActor.new(generic_file, user).create_content(f)
+      if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
 
         # send message to user on download success
         if CurationConcerns.config.respond_to?(:after_import_url_success)
-          CurationConcerns.config.after_import_url_success.call(generic_file, user)
+          CurationConcerns.config.after_import_url_success.call(file_set, user)
         end
       else
 
         # send message to user on download failure
         if CurationConcerns.config.respond_to?(:after_import_url_failure)
-          CurationConcerns.config.after_import_url_failure.call(generic_file, user)
+          CurationConcerns.config.after_import_url_failure.call(file_set, user)
         end
       end
     end
@@ -31,7 +31,7 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
   def copy_remote_file(_import_url, f)
     f.binmode
     # download file from url
-    uri = URI(generic_file.import_url)
+    uri = URI(file_set.import_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https' # enable SSL/TLS
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE

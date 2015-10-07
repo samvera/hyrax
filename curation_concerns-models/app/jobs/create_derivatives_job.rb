@@ -3,8 +3,8 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
 
   def perform(id, file_name)
     @id = id
-    return if generic_file.video? && !CurationConcerns.config.enable_ffmpeg
+    return if file_set.video? && !CurationConcerns.config.enable_ffmpeg
 
-    generic_file.create_derivatives(file_name)
+    file_set.create_derivatives(file_name)
   end
 end

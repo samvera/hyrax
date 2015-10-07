@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::PresenterFactory do
   describe "#build_presenters" do
-    let(:presenter_class) { CurationConcerns::GenericFilePresenter }
+    let(:presenter_class) { CurationConcerns::FileSetPresenter }
 
     before do
       allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}12,13", rows: 1000).and_return(results)

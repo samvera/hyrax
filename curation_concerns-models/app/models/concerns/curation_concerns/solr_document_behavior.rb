@@ -1,7 +1,7 @@
 module CurationConcerns
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
-    include Hydra::Works::GenericFile::MimeTypes
+    include Hydra::Works::MimeTypes
 
     def title_or_label
       title || label

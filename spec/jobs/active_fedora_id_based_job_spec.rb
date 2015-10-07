@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe ActiveFedoraIdBasedJob do
-  let(:generic_file) { GenericFile.new }
-  let(:generic_file_id) { 'abc123' }
+  let(:file_set) { FileSet.new }
+  let(:file_set_id) { 'abc123' }
 
   before do
-    allow(ActiveFedora::Base).to receive(:find).with(generic_file_id).and_return(generic_file)
+    allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
   end
 
   it 'finds object' do
     job = described_class.new
-    job.id = generic_file_id
-    expect(job.generic_file).to eq generic_file
+    job.id = file_set_id
+    expect(job.file_set).to eq file_set
   end
 end

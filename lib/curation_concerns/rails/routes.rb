@@ -4,7 +4,7 @@ module ActionDispatch::Routing
       resources :downloads, only: :show
       # Batch edit routes
       get 'upload_sets/:id/edit' => 'upload_sets#edit', as: :edit_upload_set
-      post 'upload_sets/:id' => 'upload_sets#update', as: :upload_set_generic_files
+      post 'upload_sets/:id' => 'upload_sets#update', as: :upload_set_file_sets
 
       namespace :curation_concerns, path: :concern do
         CurationConcerns.config.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
@@ -16,8 +16,8 @@ module ActionDispatch::Routing
             post :copy
           end
         end
-        resources :generic_files, only: [:new, :create], path: 'container/:parent_id/generic_files'
-        resources :generic_files, only: [:show, :edit, :update, :destroy] do
+        resources :file_sets, only: [:new, :create], path: 'container/:parent_id/file_sets'
+        resources :file_sets, only: [:show, :edit, :update, :destroy] do
           member do
             get :versions
             put :rollback

@@ -8,7 +8,7 @@ module CurationConcerns
       with_themed_layout '1_column'
 
       class_attribute :edit_form_class
-      self.edit_form_class = CurationConcerns::Forms::GenericFileEditForm
+      self.edit_form_class = CurationConcerns::Forms::FileSetEditForm
     end
 
     def edit
@@ -21,7 +21,7 @@ module CurationConcerns
       @upload_set = UploadSet.find_or_create(params[:id])
       @upload_set.status = ["processing"]
       @upload_set.save
-      file_attributes = edit_form_class.model_attributes(params[:generic_file])
+      file_attributes = edit_form_class.model_attributes(params[:file_set])
       UploadSetUpdateJob.perform_later(current_user.user_key, params[:id], params[:title], file_attributes, params[:visibility])
       flash[:notice] = 'Your files are being processed by ' + t('curation_concerns.product_name') + ' in the background. The metadata and access controls you specified are being applied. Files will be marked <span class="label label-danger" title="Private">Private</span> until this process is complete (shouldn\'t take too long, hang in there!). You may need to refresh your dashboard to see these updates.'
 
@@ -31,8 +31,8 @@ module CurationConcerns
     protected
 
       def edit_form
-        generic_file = ::GenericFile.new(creator: [current_user.user_key], title: @upload_set.generic_files.map(&:label))
-        edit_form_class.new(generic_file)
+        file_set = ::FileSet.new(creator: [current_user.user_key], title: @upload_set.file_sets.map(&:label))
+        edit_form_class.new(file_set)
       end
   end
 end

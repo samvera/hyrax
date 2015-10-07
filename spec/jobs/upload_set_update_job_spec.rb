@@ -4,8 +4,8 @@ describe UploadSetUpdateJob do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:upload_set) { UploadSet.create }
 
-  let!(:file)   { FactoryGirl.create(:generic_file, user: user, upload_set: upload_set) }
-  let!(:file2)  { FactoryGirl.create(:generic_file, user: user, upload_set: upload_set) }
+  let!(:file)  { create(:file_set, user: user, upload_set: upload_set) }
+  let!(:file2) { create(:file_set, user: user, upload_set: upload_set) }
 
   describe "#perform" do
     let(:title) { { file.id => ['File One'], file2.id => ['File Two'] } }
