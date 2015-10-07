@@ -9,7 +9,7 @@ module CurationConcerns
     end
 
     def index
-      authorize! :discover, Hydra::AccessControls::Embargo
+      authorize! :index, Hydra::AccessControls::Embargo
     end
 
     # Removes a single embargo
