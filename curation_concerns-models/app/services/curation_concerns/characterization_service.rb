@@ -1,3 +1,5 @@
+require 'hydra-file_characterization'
+
 module CurationConcerns
   # Run FITS to gather technical metadata about the content and the full text.
   # Store this extracted metadata in the characterization datastream.

@@ -6,6 +6,7 @@ module CurationConcerns
       included do
         Hydra::Derivatives.source_file_service = CurationConcerns::LocalFileService
         Hydra::Derivatives.output_file_service = CurationConcerns::PersistDerivatives
+        Hydra::Derivatives::FullTextExtract.output_file_service = CurationConcerns::PersistDirectlyContainedOutputFileService
       end
 
       # This completely overrides the version in Hydra::Works so that we
@@ -16,11 +17,15 @@ module CurationConcerns
         when *self.class.pdf_mime_types
           Hydra::Derivatives::PdfDerivatives.create(filename,
                                                     outputs: [{ label: :thumbnail, format: 'jpg', size: '338x493', url: derivative_url('thumbnail') }])
+          Hydra::Derivatives::FullTextExtract.create(filename,
+                                                     outputs: [{ url: uri, container: "extracted_text" }])
         when *self.class.office_document_mime_types
           Hydra::Derivatives::DocumentDerivatives.create(filename,
                                                          outputs: [{ label: :thumbnail, format: 'jpg',
                                                                      size: '200x150>',
                                                                      url: derivative_url('thumbnail') }])
+          Hydra::Derivatives::FullTextExtract.create(filename,
+                                                     outputs: [{ url: uri, container: "extracted_text" }])
         when *self.class.audio_mime_types
           Hydra::Derivatives::AudioDerivatives.create(filename,
                                                       outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3') },

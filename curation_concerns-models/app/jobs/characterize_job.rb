@@ -7,7 +7,6 @@ class CharacterizeJob < ActiveFedoraIdBasedJob
     @id = id
     CurationConcerns::CharacterizationService.run(file_set, filename)
     file_set.save
-    FulltextExtractionJob.perform_later(file_set.id, filename)
     CreateDerivativesJob.perform_later(file_set.id, filename)
   end
 end

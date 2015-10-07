@@ -16,7 +16,7 @@ describe CurationConcerns::FileSet do
     let(:mime_type) { 'image/jp2' }
     let(:file_name) { File.join(fixture_path, 'image.jp2') }
     it 'only makes one thumbnail' do
-      expect_any_instance_of(Hydra::Derivatives::Image).to receive(:process).once
+      expect_any_instance_of(Hydra::Derivatives::Processors::Image).to receive(:process).once
       file_set.create_derivatives(file_name)
     end
   end
@@ -24,8 +24,9 @@ describe CurationConcerns::FileSet do
   describe 'pdf derivative' do
     let(:mime_type) { 'application/pdf' }
     let(:file_name) { File.join(fixture_path, 'test.pdf') }
-    it 'only makes one thumbnail' do
-      expect_any_instance_of(Hydra::Derivatives::Image).to receive(:process).once
+    it 'makes one thumbnail and extracts full text' do
+      expect_any_instance_of(Hydra::Derivatives::Processors::Image).to receive(:process).once
+      expect_any_instance_of(Hydra::Derivatives::Processors::FullText).to receive(:process).once
       file_set.create_derivatives(file_name)
     end
   end
@@ -33,8 +34,9 @@ describe CurationConcerns::FileSet do
   describe 'office derivative' do
     let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
     let(:file_name) { File.join(fixture_path, 'charter.docx') }
-    it 'only makes one thumbnail' do
-      expect_any_instance_of(Hydra::Derivatives::Document).to receive(:process).once
+    it 'makes one thumbnail and extracts full text' do
+      expect_any_instance_of(Hydra::Derivatives::Processors::Document).to receive(:process).once
+      expect_any_instance_of(Hydra::Derivatives::Processors::FullText).to receive(:process).once
       file_set.create_derivatives(file_name)
     end
   end
