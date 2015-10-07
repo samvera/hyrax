@@ -18,6 +18,7 @@ describe CurationConcerns::CreateDerivativesJob do
   context "with a file name" do
     it 'calls create_derivatives and save on a file set' do
       expect(Hydra::Derivatives::AudioDerivatives).to receive(:create)
+      expect(file_set).to receive(:update_index)
       CreateDerivativesJob.perform_now('123', 'spec/fixtures/piano_note.wav')
     end
   end

@@ -6,5 +6,7 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
     return if file_set.video? && !CurationConcerns.config.enable_ffmpeg
 
     file_set.create_derivatives(file_name)
+    # The thumbnail is indexed in the solr document, so reindex
+    file_set.update_index
   end
 end
