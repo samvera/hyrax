@@ -9,7 +9,7 @@ module CurationConcerns
     end
 
     def index
-      authorize! :discover, Hydra::AccessControls::Lease
+      authorize! :index, Hydra::AccessControls::Lease
     end
 
     def destroy

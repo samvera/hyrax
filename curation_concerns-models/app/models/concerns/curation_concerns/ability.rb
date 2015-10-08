@@ -13,7 +13,12 @@ module CurationConcerns
       # user can version if they can edit
       alias_action :versions, to: :update
 
-      admin_permissions if admin?
+      if admin?
+        admin_permissions
+      else
+        cannot :index, Hydra::AccessControls::Embargo
+        cannot :index, Hydra::AccessControls::Lease
+      end
 
       can :collect, :all
     end
