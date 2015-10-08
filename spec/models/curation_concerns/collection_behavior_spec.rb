@@ -12,6 +12,11 @@ describe CurationConcerns::CollectionBehavior do
     expect { subject.save! }.to raise_error(ActiveFedora::RecordInvalid)
   end
 
+  describe "indexer" do
+    subject { Collection.indexer }
+    it { is_expected.to eq CurationConcerns::CollectionIndexer }
+  end
+
   describe '::bytes' do
     subject { collection.bytes }
 

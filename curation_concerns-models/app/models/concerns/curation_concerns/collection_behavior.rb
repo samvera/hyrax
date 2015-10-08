@@ -27,14 +27,14 @@ module CurationConcerns
       members.reduce(0) { |sum, gf| sum + gf.content.size.to_i }
     end
 
-    def to_solr(solr_doc = {})
-      super(solr_doc).tap do |doc|
-        Solrizer.set_field(doc, 'generic_type', human_readable_type, :facetable)
-      end
-    end
-
     def can_be_member_of_collection?(collection)
       collection != self
+    end
+
+    module ClassMethods
+      def indexer
+        CurationConcerns::CollectionIndexer
+      end
     end
 
     private
