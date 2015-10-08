@@ -20,7 +20,7 @@ module CurationConcerns
         respond_to do |wants|
           wants.html do
             if [:show, :edit, :update, :destroy].include? exception.action
-              render 'unauthorized', status: :unauthorized
+              render 'curation_concerns/base/unauthorized', status: :unauthorized
             else
               redirect_to main_app.root_url, alert: exception.message
             end
