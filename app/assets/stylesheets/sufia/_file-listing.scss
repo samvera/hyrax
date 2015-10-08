@@ -5,7 +5,10 @@ h4 .small {
   color: $navbar-default-toggle-icon-bar-bg;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 961px) {
+  #documents.table-responsive {
+    overflow-x: auto;
+  }
   .table-responsive .open > .dropdown-menu  {
     position: relative;
     left: -8em;
@@ -23,7 +26,7 @@ h4 .small {
 }
 
 .table-responsive {
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .table thead th {
@@ -112,6 +115,11 @@ h4 .small {
 .sorts-dash, .sorts, .expandable_new {
   cursor: pointer;
 }
+
+.batch-info .sort-toggle {
+  height: 5.1em;
+}
+
 .caret.up {
   border-top: 0;
   border-bottom: 4px solid;
@@ -170,6 +178,10 @@ input#check_all {
   margin-bottom: 10px;
 }
 
+#appliedParams.constraints-container {
+  margin-bottom: 0;
+}
+
 #collection-list-container {
   .collection-list {
     li {
@@ -186,6 +198,13 @@ input#check_all {
 #documents {
   td {
     vertical-align: middle;
+  }
+  .table-responsive {
+  display: inline-block;
+  width: 100%;
+  }
+  .table {
+  margin-bottom: 0;
   }
 }
 
