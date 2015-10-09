@@ -9,6 +9,7 @@ describe 'Creating a new Work' do
     load 'spec/internal/app/models/catapult.rb'
     load 'spec/internal/app/controllers/curation_concerns/catapults_controller.rb'
     load 'spec/internal/app/actors/curation_concerns/catapult_actor.rb'
+    load 'spec/internal/app/forms/curation_concerns/catapult_form.rb'
     load 'spec/internal/config/initializers/curation_concerns.rb'
     load 'spec/internal/config/routes.rb'
     load 'app/helpers/curation_concerns/url_helper.rb'
