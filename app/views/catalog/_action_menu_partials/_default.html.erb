@@ -10,8 +10,10 @@
         <% if @collection || (@presenter and @presenter.collection?) # We're on the view page for @collection. -%>
           <%= link_to_remove_from_collection(document) %>
         <% else %>
-          <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
-                          confirm: "Deleting a collection from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this collection from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
+          <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash',
+                      title: "Delete #{document.human_readable_type}", method: :delete,
+                      data: {
+                        confirm: "Deleting a #{document.human_readable_type} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this #{document.human_readable_type} from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
                           <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
           <% end %>
         <% end %>
