@@ -18,10 +18,6 @@ en:
         q:
           label: "Search Repository"
           placeholder: "Type keywords in here"
-    work:
-      editor:
-        legend: "Content Editors"
-        caption: "Who should be able to make changes to this work?"
     bread_crumb:
       works_list: "the works browser"
     messages:
