@@ -49,4 +49,11 @@ describe CurationConcerns::FileSetPresenter do
       presenter.date_uploaded
     end
   end
+
+  describe "fetch" do
+    it "delegates to the solr_document" do
+      expect(solr_document).to receive(:fetch).and_call_original
+      expect(presenter.fetch("has_model_ssim")).to eq ["FileSet"]
+    end
+  end
 end
