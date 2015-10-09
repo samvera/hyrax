@@ -32,10 +32,10 @@ describe CurationConcerns::Forms::CollectionEditForm do
                             :visibility] }
   end
 
-  describe 'unique?' do
+  describe 'multiple?' do
     context 'with :title' do
-      subject { described_class.unique?(:title) }
-      it { is_expected.to be true }
+      subject { described_class.multiple?(:title) }
+      it { is_expected.to be false }
     end
   end
 

@@ -1,1 +1,2 @@
 --colour
+--exclude-pattern spec/internal/**/*

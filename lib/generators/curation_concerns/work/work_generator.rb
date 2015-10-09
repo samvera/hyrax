@@ -40,12 +40,21 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
     template('actor_spec.rb.erb', "spec/actors/curation_concerns/#{file_name}_actor_spec.rb")
   end
 
+  def create_form_spec
+    return unless rspec_installed?
+    template('form_spec.rb.erb', "spec/forms/curation_concerns/#{file_name}_form_spec.rb")
+  end
+
   def create_controller
     template('controller.rb.erb', "app/controllers/curation_concerns/#{plural_file_name}_controller.rb")
   end
 
   def create_actor
     template('actor.rb.erb', "app/actors/curation_concerns/#{file_name}_actor.rb")
+  end
+
+  def create_form
+    template('form.rb.erb', "app/forms/curation_concerns/#{file_name}_form.rb")
   end
 
   def register_work

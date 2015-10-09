@@ -69,8 +69,14 @@ module CurationConcerns::CurationConcernController
     CurationConcerns::WorkShowPresenter
   end
 
+  # Gives the class of the form. Override this if you want
+  # to use a different form.
+  def form_class
+    CurationConcerns.const_get("#{self.class.curation_concern_type}Form")
+  end
+
   def edit
-    @form = CurationConcerns::FormPresenter.new(curation_concern, current_ability)
+    @form = form_class.new(curation_concern, current_ability)
   end
 
   def update
@@ -137,7 +143,7 @@ module CurationConcerns::CurationConcernController
     end
 
     def attributes_for_actor
-      params.fetch(hash_key_for_curation_concern, {}).permit!
+      form_class.model_attributes(params[hash_key_for_curation_concern])
     end
 
     def hash_key_for_curation_concern
