@@ -23,8 +23,8 @@ describe CurationConcerns::FileSetIndexingService do
       mime_type: 'image/jpeg',
       format_label: ['JPEG Image']) do |gf|
         gf.full_text.content = 'abcxyz'
-        gf.characterization.height = '500'
-        gf.characterization.width = '600'
+        gf.height = ['500']
+        gf.width = ['600']
       end
   end
 
