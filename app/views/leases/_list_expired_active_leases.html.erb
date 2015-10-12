@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-      <% assets_with_expired_leases.each do |curation_concern| %>
+      <% assets_with_expired_leases.each_with_index do |curation_concern, i| %>
         <tr>
           <td><%= button_for_add_to_batch curation_concern%></td>
           <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
@@ -30,6 +30,11 @@
           <td class="lease-release-date"><%= curation_concern.lease_expiration_date %></td>
           <td class="visibility-after-lease"><%= visibility_badge(curation_concern.visibility_after_lease) %></td>
           <td class="actions"><%= link_to 'Deactivate Lease', embargo_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
+        </tr>
+        <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-lease-info">
+          <td></td>
+          <td colspan=5>
+            <%= check_box_tag "leases[#{i}][copy_visibility]", curation_concern.id, true %> Change all files within <%= curation_concern %> to <%= visibility_badge(curation_concern.visibility_after_lease) %>?</td>
         </tr>
       <% end %>
       </tbody>

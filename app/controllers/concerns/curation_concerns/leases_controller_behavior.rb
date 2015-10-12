@@ -12,6 +12,7 @@ module CurationConcerns
       authorize! :index, Hydra::AccessControls::Lease
     end
 
+    # Removes a single lease
     def destroy
       LeaseActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.lease_history.last
@@ -24,11 +25,10 @@ module CurationConcerns
 
     def update
       filter_docs_with_edit_access!
-      batch.each do |id|
-        ActiveFedora::Base.find(id).tap do |curation_concern|
-          curation_concern.deactivate_lease!
-          curation_concern.save
-        end
+      copy_visibility = params[:leases].values.map { |h| h[:copy_visibility] }
+      ActiveFedora::Base.find(batch).each do |curation_concern|
+        LeaseActor.new(curation_concern).destroy
+        curation_concern.copy_visibility_to_files if copy_visibility.include?(curation_concern.id)
       end
       redirect_to leases_path
     end
