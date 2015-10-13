@@ -9,7 +9,7 @@ describe CurationConcerns::Forms::CollectionEditForm do
     it do
       is_expected.to eq [:resource_type, :title, :creator, :contributor, :description,
                          :tag, :rights, :publisher, :date_created, :subject, :language,
-                         :identifier, :based_near, :related_url]
+                         :identifier, :based_near, :related_url, :visibility]
     end
   end
 
