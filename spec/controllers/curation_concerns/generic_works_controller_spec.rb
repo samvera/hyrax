@@ -101,6 +101,10 @@ describe CurationConcerns::GenericWorksController do
 
   describe '#update' do
     let(:a_work) { FactoryGirl.create(:private_generic_work, user: user) }
+    before do
+      allow(controller).to receive(:actor).and_return(actor)
+    end
+    let(:actor) { double(update: true, visibility_changed?: false) }
 
     it 'updates the work' do
       patch :update, id: a_work, generic_work: {}
@@ -108,16 +112,18 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'changing rights' do
+      let(:actor) { double(update: true, visibility_changed?: true) }
+
       it 'prompts to change the files access' do
-        allow(controller).to receive(:actor).and_return(double(update: true, visibility_changed?: true))
         patch :update, id: a_work
         expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
       end
     end
 
     describe 'failure' do
+      let(:actor) { double(update: false, visibility_changed?: false) }
+
       it 'renders the form' do
-        allow(controller).to receive(:actor).and_return(double(update: false, visibility_changed?: false))
         patch :update, id: a_work
         expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to render_template('edit')

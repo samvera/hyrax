@@ -29,13 +29,20 @@ describe CurationConcerns::Forms::WorkForm do
   end
 
   describe '.model_attributes' do
-    let(:params) { ActionController::Parameters.new(title: ['foo'], description: [''], 'visibility' => 'open', admin_set_id: '123') }
+    let(:params) { ActionController::Parameters.new(
+      title: ['foo'],
+      description: [''],
+      visibility: 'open',
+      admin_set_id: '123',
+      rights: 'http://creativecommons.org/licenses/by/3.0/us/')
+    }
     subject { PirateShipForm.model_attributes(params) }
 
     it 'permits parameters' do
       expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
       expect(subject['visibility']).to eq 'open'
+      expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
     end
 
     it 'excludes non-permitted params' do
