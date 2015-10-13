@@ -4,7 +4,8 @@ module CurationConcerns
       include HydraEditor::Form
       self.model_class = ::Collection
       self.terms = [:resource_type, :title, :creator, :contributor, :description, :tag, :rights,
-                    :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url]
+                    :publisher, :date_created, :subject, :language, :identifier, :based_near,
+                    :related_url, :visibility]
 
       # Test to see if the given field is required
       # @param [Symbol] key a field
@@ -16,15 +17,6 @@ module CurationConcerns
       # @return [Hash] All generic files in the collection, file.to_s is the key, file.id is the value
       def select_files
         Hash[all_files]
-      end
-
-      class << self
-        # Presently we can't put visibility in the terms, because the superclass will try to do
-        # Collection.multiple?(:visibility) which raises an UnknownAttributeError error.
-        # https://github.com/projecthydra/hydra-editor/issues/99
-        def build_permitted_params
-          super + [:visibility]
-        end
       end
 
       private
