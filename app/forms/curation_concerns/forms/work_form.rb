@@ -24,6 +24,27 @@ module CurationConcerns
         Hash[file_presenters.map { |file| [file.to_s, file.id] }]
       end
 
+      class << self
+        # This determines whether the allowed parameters are single or multiple.
+        # By default it delegates to the model, but we need to override for
+        # 'rights' which only has a single value on the form.
+        def multiple?(term)
+          case term.to_s
+          when 'rights'
+            false
+          else
+            super
+          end
+        end
+
+        # Overriden to cast 'rights' to an array
+        def sanitize_params(form_params)
+          super.tap do |params|
+            params['rights'] = Array(params['rights']) if params.key?('rights')
+          end
+        end
+      end
+
       private
 
         # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
