@@ -2,12 +2,8 @@ module CurationConcerns::HasRepresentative
   extend ActiveSupport::Concern
 
   included do
-    property :representative, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/representative'), multiple: false
-  end
-
-  def to_solr(solr_doc = {})
-    super.tap do |doc|
-      doc[Solrizer.solr_name('representative', :stored_searchable)] = representative
-    end
+    belongs_to :representative,
+               predicate: ::RDF::URI('http://opaquenamespace.org/ns/hydra/representative'),
+               class_name: 'ActiveFedora::Base'
   end
 end

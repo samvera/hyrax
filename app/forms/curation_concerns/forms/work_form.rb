@@ -6,7 +6,7 @@ module CurationConcerns
 
       self.terms = [:title, :creator, :contributor, :description,
                     :subject, :publisher, :source, :language,
-                    :representative, :rights, :files,
+                    :representative_id, :rights, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                     :visibility]
@@ -18,7 +18,7 @@ module CurationConcerns
         @current_ability = current_ability
       end
 
-      # Used to populate the representative dropdown
+      # The possible values for the representative_id dropdown
       # @return [Hash] All file sets in the collection, file.to_s is the key, file.id is the value
       def files_hash
         Hash[file_presenters.map { |file| [file.to_s, file.id] }]

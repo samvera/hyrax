@@ -39,10 +39,7 @@ module CurationConcerns
         generic_works = self.generic_works
         return if generic_works.empty?
         generic_works.each do |work|
-          if work.representative == id
-            work.representative = nil
-            work.save
-          end
+          work.update(representative_id: nil) if work.representative_id == id
         end
       end
     end

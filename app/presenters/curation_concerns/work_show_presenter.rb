@@ -16,7 +16,7 @@ module CurationConcerns
     end
 
     # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :representative, :to_s,
+    delegate :stringify_keys, :human_readable_type, :collection?, :representative_id, :to_s,
              to: :solr_document
 
     # Metadata Methods

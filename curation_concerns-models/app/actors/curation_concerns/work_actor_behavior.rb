@@ -58,8 +58,8 @@ module CurationConcerns::WorkActorBehavior
 
     def assign_representative
       @file_sets ||= []
-      unless curation_concern.representative
-        curation_concern.representative = @file_sets.first.id unless @file_sets.empty?
+      unless curation_concern.representative_id
+        curation_concern.representative = @file_sets.first unless @file_sets.empty?
       end
       curation_concern.save
     end

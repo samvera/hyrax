@@ -6,7 +6,7 @@
           Assign a Thumbnail
         </legend>
         <p>Select the file whose thumbnail should represent this <%= f.object.human_readable_type %>.</p>
-        <%= f.select :representative, @form.select_files, {}, { class: 'form-control' } %>
+        <%= f.select :representative_id, @form.select_files, {}, { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>

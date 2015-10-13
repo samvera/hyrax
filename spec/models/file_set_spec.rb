@@ -497,36 +497,30 @@ describe FileSet do
     end
 
     describe '#remove_representative_relationship' do
-      let(:some_other_id) { 'something456' }
       subject { parent.file_sets.first.reload }
-      context "the parent object doesn't exist" do
-        before do
-          parent.representative = subject.id
-          parent.save!
-          @parent_id = parent.id
-          parent.destroy
-        end
-      end
 
       context 'it is not the representative' do
+        let(:some_other_id) { create(:file_set).id }
         before do
-          parent.representative = some_other_id
+          parent.representative_id = some_other_id
           parent.save!
         end
+
         it "doesn't update parent work when file is deleted" do
           subject.destroy
-          expect(parent.representative).to eq some_other_id
+          expect(parent.representative_id).to eq some_other_id
         end
       end
 
       context 'it is the representative' do
         before do
-          parent.representative = subject.id
+          parent.representative_id = subject.id
           parent.save!
         end
+
         it 'updates the parent work when the file is deleted' do
           subject.destroy
-          expect(parent.reload.representative).to be_nil
+          expect(parent.reload.representative_id).to be_nil
         end
       end
     end
