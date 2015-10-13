@@ -9,7 +9,7 @@ describe CurationConcerns::WorkIndexingService do
 
   before do
     allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return("/downloads/#{file.id}?file=thumbnail")
-    generic_work.representative = file.id
+    generic_work.representative_id = file.id
   end
 
   subject { service.generate_solr_document }

@@ -131,15 +131,15 @@ describe CurationConcerns::FileSetActor do
         work = create(:generic_work)
         # this is not part of a block on the create, since the work must be saved be fore the representative can be assigned
         work.file_sets << file_set
-        work.representative = file_set.id
+        work.representative = file_set
         work.save
         work
       end
 
       it "removes representative" do
-        expect(work.reload.representative).to eq(file_set.id)
+        expect(work.reload.representative_id).to eq(file_set.id)
         actor.destroy
-        expect(work.reload.representative).to be_nil
+        expect(work.reload.representative_id).to be_nil
       end
     end
   end

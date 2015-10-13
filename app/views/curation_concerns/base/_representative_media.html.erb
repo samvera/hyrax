@@ -1,4 +1,4 @@
-<% if work.representative.present? && (fs = ::FileSet.load_instance_from_solr(work.representative)) %>
+<% if work.representative_id.present? && (fs = ::FileSet.load_instance_from_solr(work.representative_id)) %>
   <%= media_display fs %>
 <% else %>
   <%= image_tag 'nope.png', class: "canonical-image" %>

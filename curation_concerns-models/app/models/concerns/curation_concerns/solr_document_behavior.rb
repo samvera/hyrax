@@ -40,8 +40,8 @@ module CurationConcerns
       Array(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
     end
 
-    def representative
-      Array(self[Solrizer.solr_name('representative', :stored_searchable)]).first
+    def representative_id
+      Array(self[Solrizer.solr_name('representative', :symbol)]).first
     end
 
     def date_uploaded

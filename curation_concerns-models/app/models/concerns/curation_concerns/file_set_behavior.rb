@@ -25,7 +25,7 @@ module CurationConcerns
       self.class.to_s.demodulize.titleize
     end
 
-    def representative
+    def representative_id
       to_param
     end
   end
