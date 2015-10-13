@@ -65,6 +65,7 @@ describe CurationConcerns::GenericWorksController do
       let(:a_work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
         get :edit, id: a_work
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to be_success
       end
     end
@@ -118,6 +119,7 @@ describe CurationConcerns::GenericWorksController do
       it 'renders the form' do
         allow(controller).to receive(:actor).and_return(double(update: false, visibility_changed?: false))
         patch :update, id: a_work
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to render_template('edit')
       end
     end
