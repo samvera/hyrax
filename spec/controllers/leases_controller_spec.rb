@@ -78,14 +78,27 @@ describe LeasesController do
 
   describe '#update' do
     context 'when I have permission to edit the object' do
+      let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+      let(:expiration_date) { Date.today + 2 }
+
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
+        a_work.file_sets << file_set
+        a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        a_work.lease_expiration_date = expiration_date.to_s
+        a_work.lease.save(validate: false)
+        a_work.save(validate: false)
       end
-      it 'deactivates lease and redirect' do
-        expect(a_work).to receive(:deactivate_lease!)
-        expect(a_work).to receive(:save)
-        patch :update, batch_document_ids: [a_work.id]
-        expect(response).to redirect_to leases_path
+
+      context 'with an expired lease' do
+        let(:expiration_date) { Date.today - 2 }
+        it 'deactivates lease, update the visibility and redirect' do
+          patch :update, batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } }
+          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(response).to redirect_to leases_path
+        end
       end
     end
   end
