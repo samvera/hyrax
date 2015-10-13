@@ -72,7 +72,7 @@ describe CurationConcerns::FileSetsController do
         file_set = FileSet.create! do |gf|
           gf.apply_depositor_metadata(user)
         end
-        parent.file_sets << file_set
+        parent.members << file_set
         file_set
       end
 
@@ -91,7 +91,7 @@ describe CurationConcerns::FileSetsController do
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           gf.save!
         end
-        parent.file_sets << file_set
+        parent.members << file_set
         file_set
       end
 

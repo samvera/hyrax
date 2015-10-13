@@ -169,7 +169,7 @@ module CurationConcerns
           unless assign_visibility?(file_set_params)
             copy_visibility(work, file_set)
           end
-          work.file_sets << file_set
+          work.members << file_set
           # Save the work so the association between the work and the file_set is persisted (head_id)
           work.save
         end

@@ -38,6 +38,10 @@ describe CurationConcerns::CollectionBehavior do
     let(:proposed_collectible) { double(collections: []) }
     before(:each) do
       allow(proposed_collectible).to receive(:can_be_member_of_collection?).with(subject).and_return(collectible?)
+      # Added for solrizing interface.
+      allow(proposed_collectible).to receive(:pcdm_object?).and_return(true)
+      allow(proposed_collectible).to receive(:collection?).and_return(false)
+      allow(proposed_collectible).to receive(:id).and_return("1")
       allow(proposed_collectible).to receive(:save).and_return(true)
     end
 
@@ -87,7 +91,7 @@ describe CurationConcerns::CollectionBehavior do
     it 'contains objects' do
       expect(subject.works).to eq []
       expect(subject.work_ids).to eq []
-      expect(subject.works << work1).to eq [work1]
+      expect(subject.members << work1).to eq [work1]
       expect(subject.works).to eq [work1]
       expect(subject.work_ids).to eq [work1.id]
     end
@@ -95,7 +99,7 @@ describe CurationConcerns::CollectionBehavior do
     it 'contains collections' do
       expect(subject.collections).to eq []
       expect(subject.collection_ids).to eq []
-      expect(subject.collections << collection1).to eq [collection1]
+      expect(subject.members << collection1).to eq [collection1]
       expect(subject.collections).to eq [collection1]
       expect(subject.collection_ids).to eq [collection1.id]
     end
@@ -106,7 +110,7 @@ describe CurationConcerns::CollectionBehavior do
     end
     it 'has parent collections' do
       expect(subject.in_collections).to eq []
-      expect(collection1.collections << subject).to eq [subject]
+      expect(collection1.members << subject).to eq [subject]
       collection1.save
       expect(subject.in_collections).to eq [collection1]
     end

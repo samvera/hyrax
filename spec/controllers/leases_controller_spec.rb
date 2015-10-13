@@ -63,7 +63,7 @@ describe LeasesController do
 
       context 'with files' do
         before do
-          a_work.file_sets << create(:file_set)
+          a_work.members << create(:file_set)
           a_work.save!
         end
 
@@ -82,7 +82,7 @@ describe LeasesController do
       let(:expiration_date) { Date.today + 2 }
 
       before do
-        a_work.file_sets << file_set
+        a_work.members << file_set
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
