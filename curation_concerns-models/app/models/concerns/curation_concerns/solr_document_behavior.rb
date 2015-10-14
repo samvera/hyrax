@@ -76,27 +76,27 @@ module CurationConcerns
     end
 
     def creator
-      Array(self[Solrizer.solr_name('creator')]).first
+      fetch(Solrizer.solr_name('creator'), [])
     end
 
     def contributor
-      Array(self[Solrizer.solr_name('contributor')]).first
+      fetch(Solrizer.solr_name('contributor'), [])
     end
 
     def subject
-      Array(self[Solrizer.solr_name('subject')]).first
+      fetch(Solrizer.solr_name('subject'), [])
     end
 
     def publisher
-      Array(self[Solrizer.solr_name('publisher')]).first
+      fetch(Solrizer.solr_name('publisher'), [])
     end
 
     def language
-      Array(self[Solrizer.solr_name('language')]).first
+      fetch(Solrizer.solr_name('language'), [])
     end
 
     def tags
-      Array(self[Solrizer.solr_name('tag')])
+      fetch(Solrizer.solr_name('tag'), [])
     end
 
     def embargo_release_date

@@ -10,6 +10,36 @@ describe SolrDocument do
     it { is_expected.to eq '08/31/2015' }
   end
 
+  describe "creator" do
+    let(:attributes) { { Solrizer.solr_name('creator') => ['one', 'two'] } }
+    subject { document.creator }
+    it { is_expected.to eq ['one', 'two'] }
+  end
+
+  describe "contributor" do
+    let(:attributes) { { Solrizer.solr_name('contributor') => ['one', 'two'] } }
+    subject { document.contributor }
+    it { is_expected.to eq ['one', 'two'] }
+  end
+
+  describe "subject" do
+    let(:attributes) { { Solrizer.solr_name('subject') => ['one', 'two'] } }
+    subject { document.subject }
+    it { is_expected.to eq ['one', 'two'] }
+  end
+
+  describe "publisher" do
+    let(:attributes) { { Solrizer.solr_name('publisher') => ['one', 'two'] } }
+    subject { document.publisher }
+    it { is_expected.to eq ['one', 'two'] }
+  end
+
+  describe "language" do
+    let(:attributes) { { Solrizer.solr_name('language') => ['one', 'two'] } }
+    subject { document.language }
+    it { is_expected.to eq ['one', 'two'] }
+  end
+
   describe "visibility" do
     subject { document.visibility }
 
