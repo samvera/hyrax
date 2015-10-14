@@ -21,7 +21,7 @@ FactoryGirl.define do
         if evaluator.content
           Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
         end
-        FactoryGirl.create(:generic_work, user: evaluator.user).file_sets << file
+        FactoryGirl.create(:generic_work, user: evaluator.user).members << file
       end
     end
     after(:build) do |file, evaluator|

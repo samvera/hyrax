@@ -74,7 +74,7 @@ module CurationConcerns::WorkActorBehavior
       file_set_actor.create_content(file)
       @file_sets ||= []
       @file_sets << file_set # This is so that other methods like assign_representative can access the file_sets without reloading them from fedora
-      curation_concern.file_sets << file_set
+      curation_concern.members << file_set
     end
 
     # The attributes used for visibility - used to send as initial params to

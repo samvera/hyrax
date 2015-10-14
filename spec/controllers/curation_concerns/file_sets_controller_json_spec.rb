@@ -5,7 +5,7 @@ describe CurationConcerns::FileSetsController do
   let(:parent) { create(:generic_work, edit_users: [user.user_key], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
   let(:file_set) do
     create(:file_set, user: user).tap do |file_set|
-      parent.file_sets << file_set
+      parent.members << file_set
     end
   end
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
