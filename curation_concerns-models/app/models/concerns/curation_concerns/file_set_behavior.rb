@@ -28,5 +28,9 @@ module CurationConcerns
     def representative_id
       to_param
     end
+
+    def thumbnail_id
+      to_param
+    end
   end
 end

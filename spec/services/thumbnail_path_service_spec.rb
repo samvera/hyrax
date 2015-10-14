@@ -24,8 +24,8 @@ describe CurationConcerns::ThumbnailPathService do
   end
 
   context "with a Work" do
-    context "that has a representative" do
-      let(:object) { GenericWork.new(representative_id: '999') }
+    context "that has a thumbnail" do
+      let(:object) { GenericWork.new(thumbnail_id: '999') }
       let(:representative) { FileSet.new(id: '777') }
       before do
         allow(File).to receive(:exist?).and_return(true)

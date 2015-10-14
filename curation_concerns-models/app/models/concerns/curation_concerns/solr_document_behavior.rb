@@ -41,7 +41,7 @@ module CurationConcerns
     end
 
     def representative_id
-      Array(self[Solrizer.solr_name('representative', :symbol)]).first
+      fetch(Solrizer.solr_name('hasRelatedMediaFragment', :symbol), []).first
     end
 
     def date_uploaded
