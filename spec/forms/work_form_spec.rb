@@ -23,8 +23,8 @@ describe CurationConcerns::Forms::WorkForm do
   let(:ability) { nil }
   let(:form) { PirateShipForm.new(curation_concern, ability) }
 
-  describe "#files_hash" do
-    subject { form.files_hash }
+  describe "#select_files" do
+    subject { form.select_files }
     it { is_expected.to eq(title => file_id) }
   end
 
@@ -34,6 +34,8 @@ describe CurationConcerns::Forms::WorkForm do
       description: [''],
       visibility: 'open',
       admin_set_id: '123',
+      representative_id: '456',
+      thumbnail_id: '789',
       rights: 'http://creativecommons.org/licenses/by/3.0/us/')
     }
     subject { PirateShipForm.model_attributes(params) }

@@ -10,6 +10,12 @@ describe SolrDocument do
     it { is_expected.to eq '08/31/2015' }
   end
 
+  describe "representative_id" do
+    let(:attributes) { { Solrizer.solr_name('hasRelatedMediaFragment', :symbol) => ['one'] } }
+    subject { document.representative_id }
+    it { is_expected.to eq 'one' }
+  end
+
   describe "creator" do
     let(:attributes) { { Solrizer.solr_name('creator') => ['one', 'two'] } }
     subject { document.creator }
