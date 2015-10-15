@@ -135,7 +135,7 @@ module Hydra
       def prepare_file_headers
         send_file_headers! content_options
         response.headers['Content-Type'] = file.mime_type
-        response.headers['Content-Length'] ||= file.size
+        response.headers['Content-Length'] ||= file.size.to_s
         # Prevent Rack::ETag from calculating a digest over body
         response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
         self.content_type = file.mime_type
