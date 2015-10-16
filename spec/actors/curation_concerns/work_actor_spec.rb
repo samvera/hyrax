@@ -1,10 +1,18 @@
 require 'spec_helper'
+require 'redlock'
 
 describe CurationConcerns::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { FactoryGirl.create(:user) }
   let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
+
+  let(:redlock_client_stub) { # stub out redis connection
+    client = double('redlock client')
+    allow(client).to receive(:lock).and_yield(true)
+    allow(Redlock::Client).to receive(:new).and_return(client)
+    client
+  }
 
   subject do
     CurationConcerns::CurationConcern.actor(curation_concern, user, attributes)
@@ -56,6 +64,9 @@ describe CurationConcerns::GenericWorkActor do
                 ],
                 rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
             end
+
+            before { redlock_client_stub }
+
             it "applies it to attached files" do
               allow(CharacterizeJob).to receive(:perform_later).and_return(true)
               subject.create
@@ -117,6 +128,7 @@ describe CurationConcerns::GenericWorkActor do
         context 'authenticated visibility' do
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+            redlock_client_stub
           end
 
           it 'stamps each file with the access rights' do
@@ -149,6 +161,7 @@ describe CurationConcerns::GenericWorkActor do
         context 'authenticated visibility' do
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+            redlock_client_stub
           end
 
           it 'stamps each file with the access rights' do

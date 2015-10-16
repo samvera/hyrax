@@ -20,10 +20,10 @@ module CurationConcerns
     # we have to save both the parent work and the file_set in order to record the "metadata" relationship
     # between them.
     # @param [String] upload_set_id id of the batch of files that the file was uploaded with
-    # @param [String] work_id id of the parent work that will contain the file_set.
+    # @param [ActiveFedora::Base] work the parent work that will contain the file_set.
     # @param [Hash] file_set specifying the visibility, lease and/or embargo of the file set.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-    def create_metadata(upload_set_id, work_id, file_set_params = {})
+    def create_metadata(upload_set_id, work, file_set_params = {})
       file_set.apply_depositor_metadata(user)
       now = CurationConcerns::TimeService.time_in_utc
       file_set.date_uploaded = now
@@ -40,15 +40,15 @@ module CurationConcerns
       if assign_visibility?(file_set_params)
         interpret_visibility file_set_params
       end
-      # TODO: Why do we need to check if work_id is blank? Shoudn't that raise an error?
-      attach_file_to_work(work_id, file_set, file_set_params) unless work_id.blank?
+      # TODO: Why do we need to check if work is nil? Shoudn't that raise an error?
+      attach_file_to_work(work, file_set, file_set_params) if work
       yield(file_set) if block_given?
     end
 
     # Puts the uploaded content into a staging directory. Then kicks off a
     # job to characterize and create derivatives with this on disk variant.
     # Simultaneously moving a preservation copy to the repostiory.
-    # TODO create a job to monitor this directory and prune old files that
+    # TODO: create a job to monitor this directory and prune old files that
     # have made it to the repo
     # @param [ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
     def create_content(file)
@@ -162,10 +162,8 @@ module CurationConcerns
       # Adds a FileSet to the work using ore:Aggregations.
       # Locks to ensure that only one process is operating on
       # the list at a time.
-      def attach_file_to_work(work_id, file_set, file_set_params)
-        acquire_lock_for(work_id) do
-          work = ActiveFedora::Base.find(work_id)
-
+      def attach_file_to_work(work, file_set, file_set_params)
+        acquire_lock_for(work.id) do
           unless assign_visibility?(file_set_params)
             copy_visibility(work, file_set)
           end

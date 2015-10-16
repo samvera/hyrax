@@ -69,12 +69,10 @@ module CurationConcerns::WorkActorBehavior
     def attach_file(file)
       file_set = ::FileSet.new
       file_set_actor = CurationConcerns::FileSetActor.new(file_set, user)
-      # TODO: we're passing an ID rather than an object. This means the actor does an unnecessary lookup
-      file_set_actor.create_metadata(curation_concern.id, curation_concern.id, visibility_attributes)
+      file_set_actor.create_metadata(curation_concern.id, curation_concern, visibility_attributes)
       file_set_actor.create_content(file)
       @file_sets ||= []
       @file_sets << file_set # This is so that other methods like assign_representative can access the file_sets without reloading them from fedora
-      curation_concern.members << file_set
     end
 
     # The attributes used for visibility - used to send as initial params to

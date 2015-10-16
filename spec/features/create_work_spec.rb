@@ -1,13 +1,22 @@
 require 'spec_helper'
+require 'redlock'
 
 describe 'Creating a new Work' do
   let(:user) { FactoryGirl.create(:user) }
+
+  let(:redlock_client_stub) { # stub out redis connection
+    client = double('redlock client')
+    allow(client).to receive(:lock).and_yield(true)
+    allow(Redlock::Client).to receive(:new).and_return(client)
+    client
+  }
 
   before do
     sign_in user
 
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     expect(CharacterizeJob).to receive(:perform_later)
+    redlock_client_stub
   end
 
   it 'creates the work and allow you to attach a file' do

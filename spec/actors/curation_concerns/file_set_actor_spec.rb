@@ -10,7 +10,7 @@ describe CurationConcerns::FileSetActor do
 
   describe 'creating metadata and content' do
     let(:upload_set_id) { nil }
-    let(:work_id) { nil }
+    let(:work) { nil }
     subject { file_set.reload }
     let(:date_today) { DateTime.now }
 
@@ -22,11 +22,11 @@ describe CurationConcerns::FileSetActor do
       expect(CharacterizeJob).to receive(:perform_later)
       expect(IngestFileJob).to receive(:perform_later).with(file_set.id, /world\.png$/, 'image/png', user.user_key)
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(upload_set_id, work_id)
+      actor.create_metadata(upload_set_id, work)
       actor.create_content(uploaded_file)
     end
 
-    context 'when an upload_set_id and work_id are not provided' do
+    context 'when an upload_set_id and work are not provided' do
       let(:upload_set_id) { nil }
       it "leaves the associations blank" do
         expect(subject.upload_set).to be_nil
@@ -41,9 +41,8 @@ describe CurationConcerns::FileSetActor do
       end
     end
 
-    context 'when a work_id is provided' do
+    context 'when a work is provided' do
       let(:work) { FactoryGirl.create(:generic_work) }
-      let(:work_id) { work.id }
 
       it 'adds the generic file to the parent work' do
         expect(subject.generic_works).to eq [work]
@@ -64,11 +63,10 @@ describe CurationConcerns::FileSetActor do
 
   describe "#create_metadata" do
     let(:work) { create(:public_generic_work) }
-    let(:work_id) { work.id }
 
     it 'copies visibility from the parent' do
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(nil, work_id)
+      actor.create_metadata(nil, work)
       saved_file = file_set.reload
       expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
