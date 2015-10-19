@@ -38,7 +38,7 @@ describe CurationConcerns::FileSetsController do
 
     describe 'created' do
       it "returns 201, renders jq_upload json template and sets location header" do
-        expect(controller.send(:actor)).to receive(:create_metadata).with(nil, parent.id, hash_including(:files, title: ['a title']))
+        expect(controller.send(:actor)).to receive(:create_metadata).with(nil, parent, hash_including(:files, title: ['a title']))
         expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
 
         allow_any_instance_of(FileSet).to receive(:persisted?).and_return(true)
