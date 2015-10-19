@@ -13,17 +13,10 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
       copy_remote_file(file_set.import_url, f)
       # attach downloaded file to generic file stubbed out
       if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
-
         # send message to user on download success
-        if CurationConcerns.config.respond_to?(:after_import_url_success)
-          CurationConcerns.config.after_import_url_success.call(file_set, user)
-        end
+        CurationConcerns.config.callback.run(:after_import_url_success, file_set, user)
       else
-
-        # send message to user on download failure
-        if CurationConcerns.config.respond_to?(:after_import_url_failure)
-          CurationConcerns.config.after_import_url_failure.call(file_set, user)
-        end
+        CurationConcerns.config.callback.run(:after_import_url_failure, file_set, user)
       end
     end
   end

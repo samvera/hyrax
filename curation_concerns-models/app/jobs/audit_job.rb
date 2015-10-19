@@ -18,10 +18,10 @@ class AuditJob < ActiveFedoraIdBasedJob
     log = run_audit
     fixity_ok = log.pass == 1
     unless fixity_ok
-      if CurationConcerns.config.respond_to?(:after_audit_failure)
+      if CurationConcerns.config.callback.set?(:after_audit_failure)
         login = file_set.depositor
         user = User.find_by_user_key(login)
-        CurationConcerns.config.after_audit_failure.call(file_set, user, log.created_at)
+        CurationConcerns.config.callback.run(:after_audit_failure, file_set, user, log.created_at)
       end
     end
     fixity_ok

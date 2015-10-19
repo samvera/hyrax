@@ -19,17 +19,9 @@ class IngestLocalFileJob < ActiveJob::Base
 
     if actor.create_content(File.open(path))
       FileUtils.rm(path)
-
-      # send message to user on import success
-      if CurationConcerns.config.respond_to?(:after_import_local_file_success)
-        CurationConcerns.config.after_import_local_file_success.call(file_set, user, filename)
-      end
+      CurationConcerns.config.callback.run(:after_import_local_file_success, file_set, user, filename)
     else
-
-      # send message to user on import failure
-      if CurationConcerns.config.respond_to?(:after_import_local_file_failure)
-        CurationConcerns.config.after_import_local_file_failure.call(file_set, user, filename)
-      end
+      CurationConcerns.config.callback.run(:after_import_local_file_failure, file_set, user, filename)
     end
   end
 end
