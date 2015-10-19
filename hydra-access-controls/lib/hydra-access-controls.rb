@@ -19,6 +19,7 @@ module Hydra
   autoload :PermissionsQuery
   autoload :PermissionsCache
   autoload :PermissionsSolrDocument
+  autoload :IpBasedGroups
 
   class << self
     def configure(_ = nil)

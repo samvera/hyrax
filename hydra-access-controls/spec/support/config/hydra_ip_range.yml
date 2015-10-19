@@ -1,0 +1,9 @@
+development: &development
+  groups:
+    - name: 'on-campus'
+      subnets:
+        - 192.168.0.0/24
+        - 10.0.0.0/22
+test: *development
+production: *development
+

@@ -20,12 +20,12 @@ module Hydra
       Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
     end
 
-    attr_reader :current_user, :session, :cache
+    attr_reader :current_user, :options, :cache
 
-    def initialize(user, session=nil)
+    def initialize(user, options = {})
       @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
       @user = @current_user # just in case someone was using this in an override. Just don't.
-      @session = session
+      @options = options
       @cache = Hydra::PermissionsCache.new
       hydra_default_permissions()
     end
