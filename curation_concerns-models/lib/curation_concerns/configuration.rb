@@ -1,3 +1,5 @@
+require 'curation_concerns/callbacks'
+
 module CurationConcerns
   extend Deprecation
   class << self
@@ -17,6 +19,8 @@ module CurationConcerns
   end
 
   class Configuration
+    include Callbacks
+
     # An anonymous function that receives a path to a file
     # and returns AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE if no
     # virus is found; Any other returned value means a virus was found
@@ -113,6 +117,12 @@ module CurationConcerns
     def lock_retry_delay
       @lock_retry_delay ||= 200 # milliseconds
     end
+
+    callback.enable :after_create_content, :after_update_content,
+                    :after_revert_content, :after_update_metadata,
+                    :after_import_local_file_success,
+                    :after_import_local_file_failure, :after_audit_failure,
+                    :after_destroy, :after_import_url_success, :after_import_url_failure
 
     def register_curation_concern(*curation_concern_types)
       Array(curation_concern_types).flatten.compact.each do |cc_type|

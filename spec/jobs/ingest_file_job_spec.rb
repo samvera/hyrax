@@ -37,4 +37,9 @@ describe IngestFileJob do
       expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq ['bess']
     end
   end
+
+  it 'runs the after_create_content callback with file_set and user arguments' do
+    expect(CurationConcerns.config.callback).to receive(:run).with(:after_create_content, file_set, 'bob').exactly(1).times
+    described_class.perform_now(file_set.id, filename, 'image/png', 'bob')
+  end
 end

@@ -11,8 +11,6 @@ class IngestFileJob < ActiveJob::Base
     Hydra::Works::UploadFileToFileSet.call(file_set, file, versioning: false)
     file_set.save!
     CurationConcerns::VersioningService.create(file_set.original_file, user_key)
-
-    return unless CurationConcerns.config.respond_to?(:after_create_content)
-    CurationConcerns.config.after_create_content.call(file_set, user_key)
+    CurationConcerns.config.callback.run(:after_create_content, file_set, user_key)
   end
 end

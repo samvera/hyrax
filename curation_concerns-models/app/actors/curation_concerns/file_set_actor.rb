@@ -73,8 +73,7 @@ module CurationConcerns
       working_file = copy_repository_resource_to_working_directory(file_set)
       make_derivative(file_set.id, working_file)
 
-      return true unless CurationConcerns.config.respond_to?(:after_revert_content)
-      CurationConcerns.config.after_revert_content.call(file_set, user, revision_id)
+      CurationConcerns.config.callback.run(:after_revert_content, file_set, user, revision_id)
       true
     end
 
@@ -82,8 +81,7 @@ module CurationConcerns
       working_file = copy_file_to_working_directory(file, file_set.id)
       IngestFileJob.perform_later(file_set.id, working_file, file.content_type, user.user_key)
       make_derivative(file_set.id, working_file)
-      return true unless CurationConcerns.config.respond_to?(:after_update_content)
-      CurationConcerns.config.after_update_content.call(file_set, user)
+      CurationConcerns.config.callback.run(:after_update_content, file_set, user)
       true
     end
 
@@ -93,16 +91,14 @@ module CurationConcerns
       file_set.attributes = model_attributes
       file_set.date_modified = CurationConcerns::TimeService.time_in_utc
       save do
-        if CurationConcerns.config.respond_to?(:after_update_metadata)
-          CurationConcerns.config.after_update_metadata.call(file_set, user)
-        end
+        CurationConcerns.config.callback.run(:after_update_metadata, file_set, user)
       end
     end
 
     def destroy
       file_set.destroy
       # TODO: need to mend the linked list of proxies (possibly wrap with a lock)
-      CurationConcerns.config.after_destroy.call(file_set.id, user) if CurationConcerns.config.respond_to?(:after_destroy)
+      CurationConcerns.config.callback.run(:after_destroy, file_set.id, user)
     end
 
     private
