@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AttributeRenderer do
+describe CurationConcerns::AttributeRenderer do
   let(:renderer) { described_class.new(:name, ['Bob', 'Jessica']) }
 
   describe "#attribute_to_html" do
