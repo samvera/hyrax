@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'redlock'
 
 describe CurationConcerns::FileSetActor do
   include ActionDispatch::TestProcess
@@ -127,7 +128,8 @@ describe CurationConcerns::FileSetActor do
     context "representative of a work" do
       let!(:work) do
         work = create(:generic_work)
-        # this is not part of a block on the create, since the work must be saved be fore the representative can be assigned
+        # this is not part of a block on the create, since the work must be saved
+        # before the representative can be assigned
         work.members << file_set
         work.representative = file_set
         work.save
@@ -139,6 +141,40 @@ describe CurationConcerns::FileSetActor do
         actor.destroy
         expect(work.reload.representative_id).to be_nil
       end
+    end
+  end
+
+  describe "#attach_file_to_work" do
+    before do
+      # stub out redis connection
+      client = double('redlock client')
+      allow(client).to receive(:lock).and_yield(true)
+      allow(Redlock::Client).to receive(:new).and_return(client)
+    end
+
+    let(:file_set2) { create(:file_set) }
+    let(:file_set3) { create(:file_set) }
+
+    # The first version of the work has a single member.
+    let!(:work_v1) do
+      work = create(:generic_work)
+      work.members << file_set
+      work.save
+      work
+    end
+
+    # Create another version of the same work with a second member.
+    let!(:work_v2) do
+      work = ActiveFedora::Base.find(work_v1.id)
+      work.members << file_set2
+      work.save
+      work
+    end
+
+    it "writes to the most up to date version" do
+      # using send(), because attach_file_to_work is private
+      actor.send(:attach_file_to_work, work_v1, file_set3, {})
+      expect(work_v1.members.size).to eq 3
     end
   end
 end
