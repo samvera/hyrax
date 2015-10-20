@@ -5,7 +5,9 @@ describe CurationConcerns::PresenterFactory do
     let(:presenter_class) { CurationConcerns::FileSetPresenter }
 
     before do
-      allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}12,13", rows: 1000).and_return(results)
+      allow(ActiveFedora::SolrService.instance.conn).to receive(:post)
+        .with('select', params: { q: "{!terms f=id}12,13", rows: 1000, qt: 'standard' })
+        .and_return('response' => { 'docs' => results })
     end
 
     subject { described_class.build_presenters(['12', '13'], presenter_class, nil) }
