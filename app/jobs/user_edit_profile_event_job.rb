@@ -1,15 +1,8 @@
+# A specific job to log a user profile edit to a user's activity stream
 class UserEditProfileEventJob < EventJob
-  def perform(editor_id)
-    action = "User #{link_to_profile editor_id} has edited his or her profile"
-    timestamp = Time.now.to_i
-    editor = User.find_by_user_key(editor_id)
-    # Create the event
-    event = editor.create_event(action, timestamp)
-    # Log the event to the editor's stream
-    editor.log_event(event)
-    # Fan out the event to all followers
-    editor.followers.each do |user|
-      user.log_event(event)
-    end
+  alias_attribute :editor_id, :depositor_id
+
+  def action
+    "User #{link_to_profile editor_id} has edited his or her profile"
   end
 end
