@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe UploadSetUpdateJob do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   let(:upload_set) { UploadSet.create }
 
   let!(:file)  { create(:file_set, user: user, upload_set: upload_set) }
@@ -9,17 +9,13 @@ describe UploadSetUpdateJob do
 
   describe "#perform" do
     let(:title) { { file.id => ['File One'], file2.id => ['File Two'] } }
-    let(:metadata) do
-      { read_groups_string: '', read_users_string: 'archivist1, archivist2',
-        tag: [''] }.with_indifferent_access
-    end
-
+    let(:metadata) { { tag: [''] } }
     let(:visibility) { nil }
 
-    let(:job) { described_class.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
+    subject { described_class.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
 
     it "updates file metadata" do
-      expect(job).to eq true
+      expect(subject).to be true
       expect(file.reload.title).to eq ['File One']
     end
 
@@ -28,9 +24,7 @@ describe UploadSetUpdateJob do
         expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(true)
         expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(false)
       end
-      it "does not run" do
-        expect(job).to eq false
-      end
+      it { is_expected.to be false }
     end
   end
 end

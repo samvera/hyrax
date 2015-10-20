@@ -24,13 +24,6 @@ describe UploadSetsController do
       # TODO: all these tests could move to upload_set_update_job_spec.rb
       let!(:file) { FileSet.create(upload_set: upload_set) { |f| f.apply_depositor_metadata(user) } }
 
-      it "they can set permissions groups" do
-        post :update, id: upload_set, "file_set" => { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
-        file.reload
-        expect(file.read_groups).to include "public"
-        expect(response).to redirect_to routes.url_helpers.curation_concerns_generic_works_path
-      end
-
       it "they can set public read access" do
         post :update, id: upload_set, visibility: "open", file_set: { tag: [""] }
         expect(file.reload.read_groups).to eq ['public']
@@ -60,10 +53,10 @@ describe UploadSetsController do
       end
 
       it "they cannot modify the object" do
-        post :update, id: upload_set, "file_set" => { "read_groups_string" => "group1, group2", "read_users_string" => "", "tag" => [""] }, "title" => { file.id => "Title Wont Change" }
+        post :update, id: upload_set, "file_set" => { "tag" => [""] },
+                      "title" => { file.id => "Title Wont Change" }
         file.reload
         expect(file.title).to eq ["Original Title"]
-        expect(file.read_groups).to eq []
       end
     end
   end

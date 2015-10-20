@@ -80,13 +80,4 @@ module CurationConcerns::WorkActorBehavior
     def visibility_attributes
       raw_attributes.slice(:visibility, :visibility_during_lease, :visibility_after_lease, :lease_expiration_date, :embargo_release_date, :visibility_during_embargo, :visibility_after_embargo)
     end
-
-    def valid_file?(file_path)
-      file_path.present? && File.exist?(file_path) && !File.zero?(file_path)
-    end
-
-    # The path of the fedora node where we store the file data
-    def file_path
-      'content'
-    end
 end

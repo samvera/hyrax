@@ -249,10 +249,6 @@ describe FileSet do
       expect(subject.read_groups).to eq ['group-6', 'group-7']
     end
 
-    it 'has read groups string accessor' do
-      expect(subject.read_groups_string).to eq 'group-6, group-7'
-    end
-
     it 'has read groups writer' do
       subject.read_groups = ['group-2', 'group-3']
       expect(subject.read_groups).to eq ['group-2', 'group-3']

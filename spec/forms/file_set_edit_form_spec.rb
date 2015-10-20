@@ -5,8 +5,13 @@ describe CurationConcerns::Forms::FileSetEditForm do
 
   describe '#terms' do
     it 'returns a list' do
-      expect(subject.terms).to eq([:resource_type, :title, :creator, :contributor, :description, :tag,
-                                   :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url])
+      expect(subject.terms).to eq(
+        [:resource_type, :title, :creator, :contributor, :description, :tag,
+         :rights, :publisher, :date_created, :subject, :language, :identifier,
+         :based_near, :related_url,
+         :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,
+         :visibility_during_lease, :visibility_after_lease, :lease_expiration_date,
+         :visibility])
     end
 
     it "doesn't contain fields that users shouldn't be allowed to edit" do
@@ -20,13 +25,29 @@ describe CurationConcerns::Forms::FileSetEditForm do
   end
 
   describe '.model_attributes' do
-    let(:params) { ActionController::Parameters.new(title: ['foo'], description: [''], 'permissions_attributes' => { '2' => { 'access' => 'edit', '_destroy' => 'true', 'id' => 'a987551e-b87f-427a-8721-3e5942273125' } }) }
+    let(:params) do
+      ActionController::Parameters.new(
+        title: ['foo'],
+        "visibility" => "on-campus",
+        "visibility_during_embargo" => "restricted",
+        "embargo_release_date" => "2015-10-21",
+        "visibility_after_embargo" => "open",
+        "visibility_during_lease" => "open",
+        "lease_expiration_date" => "2015-10-21",
+        "visibility_after_lease" => "restricted"
+      )
+    end
     subject { described_class.model_attributes(params) }
 
     it 'changes only the title' do
       expect(subject['title']).to eq ['foo']
-      expect(subject['description']).to be_empty
-      expect(subject['permissions_attributes']).to eq('2' => { 'access' => 'edit', 'id' => 'a987551e-b87f-427a-8721-3e5942273125', '_destroy' => 'true' })
+      expect(subject['visibility']).to eq('on-campus')
+      expect(subject['visibility_during_embargo']).to eq('restricted')
+      expect(subject['visibility_after_embargo']).to eq('open')
+      expect(subject['embargo_release_date']).to eq('2015-10-21')
+      expect(subject['visibility_during_lease']).to eq('open')
+      expect(subject['visibility_after_lease']).to eq('restricted')
+      expect(subject['lease_expiration_date']).to eq('2015-10-21')
     end
   end
 end

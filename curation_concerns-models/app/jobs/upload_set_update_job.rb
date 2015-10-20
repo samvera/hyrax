@@ -52,7 +52,7 @@ class UploadSetUpdateJob < ActiveJob::Base
     end
     # update the file using the actor after setting the title
     file.title = title[file.id] if title[file.id]
-    CurationConcerns::FileSetActor.new(file, user).update_metadata(file_attributes, visibility: visibility)
+    CurationConcerns::FileSetActor.new(file, user).update_metadata(file_attributes.merge(visibility: visibility))
 
     # update the work to the same metadata as the file.
     # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
