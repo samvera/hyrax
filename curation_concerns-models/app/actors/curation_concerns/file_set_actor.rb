@@ -160,6 +160,9 @@ module CurationConcerns
       # the list at a time.
       def attach_file_to_work(work, file_set, file_set_params)
         acquire_lock_for(work.id) do
+          # Ensure we have an up-to-date copy of the members association, so
+          # that we append to the end of the list.
+          work.reload unless work.new_record?
           unless assign_visibility?(file_set_params)
             copy_visibility(work, file_set)
           end
