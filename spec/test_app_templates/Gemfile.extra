@@ -1,8 +1,4 @@
 # placeholder to use for pinning against specific gem commit references
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: 'e28c49c'
-gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: '463d73a'
-gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '24a2d14'
-
-# gem 'hydra-works', github: 'projecthydra-labs/hydra-works', branch: 'master'
-# gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', branch: 'master'
-# gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', branch: 'master'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', branch: 'master'
+gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', branch: 'master'
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', branch: 'master'

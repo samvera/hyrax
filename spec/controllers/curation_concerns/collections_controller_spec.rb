@@ -79,15 +79,32 @@ describe CollectionsController do
         collection.save!
       end
 
-      it 'appends members to the collection in order, allowing duplicates' do
+      # Collections are unordered by default, which disallows duplicates.
+      xit 'appends members to the collection in order, allowing duplicates' do
         # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
         expect {
           put :update, id: collection,
                        collection: { members: 'add' },
                        batch_document_ids: [asset2.id, asset1.id]
-        }.to change { collection.reload.ordered_members.size }.by(2)
+        }.to change { collection.reload.members.size }.by(2)
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
         expect(assigns[:collection].members).to eq [asset1, asset2, asset2, asset1]
+
+        asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id'] }
+        expect(asset_results['response']['numFound']).to eq 1
+
+        doc = asset_results['response']['docs'].first
+        expect(doc['id']).to eq asset2.id
+      end
+
+      it "adds members to the collection" do
+        expect {
+          put :update, id: collection,
+                       collection: { members: 'add' },
+                       batch_document_ids: [asset4.id]
+        }.to change { collection.reload.members.size }.by(1)
+        expect(response).to redirect_to routes.url_helpers.collection_path(collection)
+        expect(assigns[:collection].members).to eq [asset1, asset2, asset4]
 
         asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id'] }
         expect(asset_results['response']['numFound']).to eq 1

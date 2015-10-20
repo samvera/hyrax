@@ -111,6 +111,8 @@ describe CurationConcerns::CollectionBehavior do
     it 'has parent collections' do
       expect(subject.in_collections).to eq []
       expect(collection1.members << subject).to eq [subject]
+      # Function of auto-save/indexing issues.
+      subject.save
       collection1.save
       expect(subject.in_collections).to eq [collection1]
     end

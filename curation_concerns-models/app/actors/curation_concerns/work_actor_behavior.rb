@@ -44,7 +44,9 @@ module CurationConcerns::WorkActorBehavior
       # remove from old collections
       # TODO: Implement in_collection_ids https://github.com/projecthydra-labs/hydra-pcdm/issues/157
       (curation_concern.in_collections.map(&:id) - new_collection_ids).each do |old_id|
-        Collection.find(old_id).members.delete(curation_concern)
+        collection = Collection.find(old_id)
+        collection.members.delete(curation_concern)
+        collection.save
       end
 
       # add to new
