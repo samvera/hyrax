@@ -158,7 +158,7 @@ describe CurationConcerns::FileSetActor do
     # The first version of the work has a single member.
     let!(:work_v1) do
       work = create(:generic_work)
-      work.members << file_set
+      work.ordered_members << file_set
       work.save
       work
     end
@@ -166,7 +166,7 @@ describe CurationConcerns::FileSetActor do
     # Create another version of the same work with a second member.
     let!(:work_v2) do
       work = ActiveFedora::Base.find(work_v1.id)
-      work.members << file_set2
+      work.ordered_members << file_set2
       work.save
       work
     end
