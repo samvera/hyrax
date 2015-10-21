@@ -85,10 +85,10 @@ module CurationConcerns
       true
     end
 
-    def update_metadata(model_attributes, all_attributes)
-      update_visibility(all_attributes)
-      model_attributes.delete(:visibility) # Applying this attribute is handled by update_visibility
-      file_set.attributes = model_attributes
+    def update_metadata(attributes)
+      update_visibility(attributes)
+      # attributes.delete(:visibility) # Applying this attribute is handled by update_visibility
+      file_set.attributes = attributes
       file_set.date_modified = CurationConcerns::TimeService.time_in_utc
       save do
         CurationConcerns.config.callback.run(:after_update_metadata, file_set, user)

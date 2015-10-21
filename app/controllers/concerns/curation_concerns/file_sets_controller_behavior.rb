@@ -118,9 +118,8 @@ module CurationConcerns
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      # attrs_without_visibility_info = actor.interpret_visibility(attributes)
       file_attributes = CurationConcerns::Forms::FileSetEditForm.model_attributes(attributes)
-      actor.update_metadata(file_attributes, attributes)
+      actor.update_metadata(file_attributes)
     end
 
     protected

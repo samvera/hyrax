@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe CurationConcerns::FileSetsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
   let(:file) { fixture_file_upload('files/image.png', 'image/png') }
-  let(:parent) { FactoryGirl.create(:generic_work, edit_users: [user.user_key], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+  let(:parent) { create(:generic_work, edit_users: [user.user_key], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
 
   context 'when signed in' do
     before { sign_in user }
@@ -116,22 +116,6 @@ describe CurationConcerns::FileSetsController do
           expect(response.status).to eq 422
           expect(response).to render_template('edit')
           expect(assigns[:file_set]).to eq file_set
-        end
-
-        it 'adds a new groups and users' do
-          post :update, id: file_set, file_set:
-            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group1', access: 'read' }, { type: 'person', name: 'user1', access: 'edit' }] }
-
-          expect(assigns[:file_set].read_groups).to eq ['group1']
-          expect(assigns[:file_set].edit_users).to include('user1')
-        end
-
-        it 'updates existing groups and users' do
-          file_set.read_groups = ['group3']
-          file_set.save! # TODO: slow , more than one save.
-          post :update, id: file_set, file_set:
-            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group3', access: 'edit' }] }
-          expect(assigns[:file_set].edit_groups).to eq ['group3']
         end
 
         context 'updating visibility' do
