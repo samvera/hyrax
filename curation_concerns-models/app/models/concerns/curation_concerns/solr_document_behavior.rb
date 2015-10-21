@@ -100,11 +100,11 @@ module CurationConcerns
     end
 
     def embargo_release_date
-      self['embargo_release_date_dtsi']
+      self[Hydra.config.permissions.embargo.release_date]
     end
 
     def lease_expiration_date
-      self['lease_expiration_date_dtsi']
+      self[Hydra.config.permissions.lease.expiration_date]
     end
 
     def rights
@@ -116,17 +116,17 @@ module CurationConcerns
     end
 
     def read_groups
-      fetch('read_access_group_ssim', [])
+      fetch(Hydra.config.permissions.read.group, [])
     end
 
     def visibility
-      if read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
-        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      elsif read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
-        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      else
-        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-      end
+      @visibility ||= if read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
+                        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+                      elsif read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
+                        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+                      else
+                        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+                      end
     end
   end
 end

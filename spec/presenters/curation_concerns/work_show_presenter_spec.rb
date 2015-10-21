@@ -27,21 +27,9 @@ describe CurationConcerns::WorkShowPresenter do
   end
 
   describe "#permission_badge" do
-    subject { presenter.permission_badge }
-
-    context "for a private work" do
-      it { is_expected.to eq '<span class="label label-danger" title="Private">Private</span>' }
-    end
-
-    context "for a work that is restricted to registered users" do
-      let(:attributes) do
-        { "title_tesim" => ["foo bar"],
-          "human_readable_type_tesim" => ["Generic Work"],
-          Hydra.config.permissions.read.group => ['registered'],
-          "has_model_ssim" => ["GenericWork"] }
-      end
-
-      it { is_expected.to eq '<span class="label label-info" title="Institution Name">Institution Name</span>' }
+    it "calls the PermissionBadge object" do
+      expect_any_instance_of(CurationConcerns::PermissionBadge).to receive(:render)
+      presenter.permission_badge
     end
   end
 end
