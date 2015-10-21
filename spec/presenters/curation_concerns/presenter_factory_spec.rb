@@ -6,7 +6,7 @@ describe CurationConcerns::PresenterFactory do
 
     before do
       allow(ActiveFedora::SolrService.instance.conn).to receive(:post)
-        .with('select', params: { q: "{!terms f=id}12,13", rows: 1000, qt: 'standard' })
+        .with('select', data: { q: "{!terms f=id}12,13", rows: 1000, qt: 'standard' })
         .and_return('response' => { 'docs' => results })
     end
 
