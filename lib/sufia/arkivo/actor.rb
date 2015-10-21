@@ -16,23 +16,30 @@ module Sufia
         @item = item
       end
 
-      def create_file_from_item
-        batch = Batch.create
-        file_actor = Sufia::GenericFile::Actor.new(::GenericFile.new, user)
-        file_actor.create_metadata(batch.id)
-        store_checksum(file_actor.generic_file)
-        file_actor.create_content(file, item['file']['filename'], file_path, item['file']['contentType'])
-        BatchUpdateJob.new(user.user_key, batch.id, item['metadata']['title'], attributes, default_visibility).run
-        file_actor.generic_file
+      def create_work_from_item
+        upload_set = UploadSet.create
+        work = ::GenericWork.new
+        work_actor = CurationConcerns::GenericWorkActor.new(work, user, attributes.merge(arkivo_checksum: item['file']['md5']))
+        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create
+
+        file_set = ::FileSet.new
+
+        file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
+        file_actor.create_metadata(upload_set.id, work)
+        file_set.label = item['file']['filename']
+        file_actor.create_content(file) # item['file']['contentType']
+        UploadSetUpdateJob.perform_later(user.user_key, upload_set.id, item['metadata']['title'], attributes, default_visibility)
+        work
       end
 
-      def update_file_from_item(gf)
-        file_actor = Sufia::GenericFile::Actor.new(gf, user)
-        reset_metadata(file_actor)
-        file_actor.update_metadata(attributes, default_visibility)
-        store_checksum(file_actor.generic_file)
-        file_actor.update_content(file, file_path)
-        file_actor.generic_file
+      def update_work_from_item(work)
+        reset_metadata(work)
+        work_actor = CurationConcerns::GenericWorkActor.new(work, user, attributes.merge(arkivo_checksum: item['file']['md5']))
+        work_actor.update
+        file_set = work.file_sets.first
+        file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
+        file_actor.update_content(file)
+        work
       end
 
       def destroy_file(gf)
@@ -59,20 +66,12 @@ module Sufia
           end
         end
 
-        def store_checksum(gf)
-          gf.arkivo_checksum = item['file']['md5']
-        end
-
         def default_visibility
           'open'
         end
 
         def attributes
           Sufia::Arkivo::MetadataMunger.new(item['metadata']).call
-        end
-
-        def file_path
-          'content'
         end
 
         def file
