@@ -25,7 +25,9 @@ module CurationConcerns
 
     def file_presenters
       @file_sets ||= begin
-        ids = solr_document.fetch('file_set_ids_ssim', [])
+        # TODO: Extract this to ActiveFedora::Aggregations::ListSource
+        ids = ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
+              .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
         PresenterFactory.build_presenters(ids, FileSetPresenter, current_ability)
       end
     end

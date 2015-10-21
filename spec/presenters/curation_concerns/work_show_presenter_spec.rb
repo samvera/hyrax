@@ -32,4 +32,23 @@ describe CurationConcerns::WorkShowPresenter do
       presenter.permission_badge
     end
   end
+
+  describe "#file_presenters" do
+    before do
+      class TestConcern < ActiveFedora::Base
+        include ::CurationConcerns::WorkBehavior
+        include ::CurationConcerns::BasicMetadata
+      end
+    end
+    after do
+      Object.send(:remove_const, :TestConcern)
+    end
+    let(:obj) { FactoryGirl.create(:work_with_ordered_files) }
+    let(:presenter) { described_class.new(SolrDocument.new(obj.to_solr), ability) }
+
+    it "displays them in order" do
+      expect(obj.ordered_member_ids).not_to eq obj.member_ids
+      expect(presenter.file_presenters.map(&:id)).to eq obj.ordered_member_ids
+    end
+  end
 end
