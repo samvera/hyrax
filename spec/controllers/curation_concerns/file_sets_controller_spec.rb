@@ -43,13 +43,19 @@ describe CurationConcerns::FileSetsController do
         end
       end
 
+      subject { create(:file_set) }
+      let(:file_path) { fixture_path + '/small_file.txt' }
+
       context 'when the file has a virus' do
-        it 'displays a flash error' do
-          skip 'pending hydra-works#89'
-          expect(CurationConcerns::FileSetActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
-          xhr :post, :create, parent_id: parent, file_set: { files: [file] },
-                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          expect(flash[:error]).to include('A virus was found')
+        before do
+          allow(subject).to receive(:warn) # suppress virus warnings
+          allow(ClamAV.instance).to receive(:scanfile).and_return('EL CRAPO VIRUS')
+          of = subject.build_original_file
+          of.content = File.open(file_path)
+        end
+        it 'populates the errors hash during validation' do
+          expect(subject).to_not be_valid
+          expect(subject.errors.messages[:base].first).to match(/A virus was found in .*: EL CRAPO VIRUS/)
         end
       end
 
@@ -148,8 +154,6 @@ describe CurationConcerns::FileSetsController do
           expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, kind_of(String))
           post :update, id: file_set, file_set: { files: [file] }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
-          skip 'pending hydra-works#89'
-          expect(file_set.reload.label).to eq 'image.png'
         end
       end
 
