@@ -344,7 +344,7 @@ describe FileSet do
     context 'when file contains a virus' do
       before do
         allow(subject).to receive(:warn) # suppress virus warnings
-        expect(ClamAV.instance).to receive(:scanfile).and_return('EL CRAPO VIRUS')
+        allow(ClamAV.instance).to receive(:scanfile).and_return('EL CRAPO VIRUS')
         # TODO: Test that this works with Hydra::Works::UploadFileToFileSet. see https://github.com/projecthydra-labs/hydra-works/pull/139
         # Hydra::Works::UploadFileToFileSet.call(subject, file_path, original_name: 'small_file.txt')
         of = subject.build_original_file
