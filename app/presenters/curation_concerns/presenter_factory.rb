@@ -38,7 +38,7 @@ module CurationConcerns
       def query(query, args = {})
         args.merge!(q: query, qt: 'standard')
         conn = ActiveFedora::SolrService.instance.conn
-        result = conn.post('select', params: args)
+        result = conn.post('select', data: args)
         result.fetch('response').fetch('docs')
       end
   end
