@@ -34,21 +34,27 @@ describe CurationConcerns::WorkShowPresenter do
   end
 
   describe "#file_presenters" do
-    before do
-      class TestConcern < ActiveFedora::Base
-        include ::CurationConcerns::WorkBehavior
-        include ::CurationConcerns::BasicMetadata
-      end
-    end
-    after do
-      Object.send(:remove_const, :TestConcern)
-    end
-    let(:obj) { FactoryGirl.create(:work_with_ordered_files) }
-    let(:presenter) { described_class.new(SolrDocument.new(obj.to_solr), ability) }
+    let(:obj) { create(:work_with_ordered_files) }
+    let(:attributes) { obj.to_solr }
 
     it "displays them in order" do
       expect(obj.ordered_member_ids).not_to eq obj.member_ids
       expect(presenter.file_presenters.map(&:id)).to eq obj.ordered_member_ids
+    end
+
+    describe "getting presenters from factory" do
+      let(:attributes) { {} }
+      let(:presenter_class) { double }
+      before do
+        allow(presenter).to receive(:file_presenter_class).and_return(presenter_class)
+        allow(presenter).to receive(:ordered_ids).and_return(['12', '33'])
+      end
+
+      it "uses the set class" do
+        expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
+          .with(['12', '33'], presenter_class, ability)
+        presenter.file_presenters
+      end
     end
   end
 end
