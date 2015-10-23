@@ -199,10 +199,14 @@ QUEUE=* rake environment resque:work
 Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra-labs/sufia-core/blob/master/sufia-models/lib/generators/sufia/models/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
 
 ```
-resque-pool --daemon --environment development start
+RUN_AT_EXIT_HOOKS=true bundle exec resque-pool --daemon --environment development start --term-graceful-wait
 ```
 
 See https://github.com/defunkt/resque for more options. If you do wind up using resque-pool, you might also be interested in a shell script to help manage it. [Here is an example](https://github.com/psu-stewardship/scholarsphere/blob/develop/script/restart_resque.sh) which you can adapt for your needs.
+
+Due to a bug in the way that Resque terminates its job, it sometimes will not give ImageMagick or other libraries a chance to clean up temporary files. RUN_AT_EXIT_HOOKS=true allows them to do so. As an alternative you can run your ownjobs to clean out temporary working directories.
+
+--term-graceful-wait allows workers to terminate cleanly. For more information in TERM and other signals that resque responds to, see the [Resque documentation](https://github.com/nevans/resque-pool#signals).
 
 ## View resque jobs
 
