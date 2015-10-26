@@ -1,8 +1,5 @@
 # Include this module into any of your Controller classes to add Hydra functionality
 #
-# The primary function of this module is to mix in a number of other Hydra Modules, including
-#   Hydra::AccessControlsEnforcement
-#
 # @example
 #  class CustomHydraController < ApplicationController
 #    include Hydra::Controller::ControllerBehavior
