@@ -8,14 +8,15 @@ class Sufia::Models::InstallGenerator < Sufia::Models::AbstractMigrationGenerato
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Adds user behavior to the user model
- 3. Creates the sufia.rb configuration file
- 4. Generates mailboxer
- 5. Generates usage stats config
- 6. Runs full-text generator
- 7. Runs proxies generator
- 8. Runs cached stats generator
- 9. Runs ORCID field generator
-10. Runs user stats generator
+ 3. Generates GenericWork model.
+ 4. Creates the sufia.rb configuration file
+ 5. Generates mailboxer
+ 6. Generates usage stats config
+ 7. Runs full-text generator
+ 8. Runs proxies generator
+ 9. Runs cached stats generator
+10. Runs ORCID field generator
+11. Runs user stats generator
        """
 
   def banner
@@ -24,6 +25,10 @@ This generator makes the following changes to your application:
 
   def run_curation_concerns_models_installer
     generate 'curation_concerns:models:install' unless options[:skip_curation_concerns]
+  end
+
+  def run_curation_concerns_work_generator
+    generate 'curation_concerns:work GenericWork'
   end
 
   # Setup the database migrations
@@ -77,7 +82,7 @@ This generator makes the following changes to your application:
   end
 
   def inject_sufia_generic_file_behavior
-    insert_into_file 'app/models/generic_file.rb', after: 'include ::CurationConcerns::GenericFileBehavior' do
+    insert_into_file 'app/models/file_set.rb', after: 'include ::CurationConcerns::FileSetBehavior' do
       "\n  include ::Sufia::GenericFileBehavior"
     end
   end
