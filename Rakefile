@@ -15,6 +15,8 @@ import 'sufia-models/lib/tasks/sufia-models_tasks.rake'
 require 'curation_concerns'
 spec = Gem::Specification.find_by_name 'curation_concerns'
 load "#{spec.gem_dir}/tasks/jetty.rake"
-load "#{spec.gem_dir}/curation_concerns-models/lib/tasks/curation_concerns-models_tasks.rake"
+
+spec = Gem::Specification.find_by_name 'curation_concerns-models'
+load "#{spec.gem_dir}/lib/tasks/curation_concerns-models_tasks.rake"
 
 task default: :ci
