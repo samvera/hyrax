@@ -157,6 +157,12 @@ module CurationConcerns
         @_prefixes ||= super + ['curation_concerns/base']
       end
 
+      def json_error(error, name = nil, additional_arguments = {})
+        args = { error: error }
+        args[:name] = name if name
+        render additional_arguments.merge(json: [args])
+      end
+
       def empty_file?(file)
         (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
       end
