@@ -26,7 +26,7 @@
     * [Database tables and indexes](#database-tables-and-indexes)
     * [Solr and Fedora](#solr-and-fedora)
     * [Start background workers](#start-background-workers)
-    * [View resque jobs](#view-resque-jobs)
+    * [Monitor background workers](#monitor-background-workers)
     * [Audiovisual transcoding](#audiovisual-transcoding)
     * [User interface](#user-interface)
     * [Integration with Dropbox, Box, etc.](#integration-with-dropbox-box-etc)
@@ -36,7 +36,6 @@
     * [Zotero integration](#zotero-integration)
     * [Tag Cloud](#tag-cloud)
     * [Customizing metadata](#customizing-metadata)
-    * [Proxies and Transfers (Sufia 4.x only)](#proxies-and-transfers-sufia-4x-only)
     * [Admin Users](#admin-users)
       * [One time setup for first admin](#one-time-setup-for-first-admin)
       * [Adding an admin user](#adding-an-admin-user)
@@ -348,10 +347,6 @@ The contents of the cloud are retrieved as JSON from Blacklight's CatalogControl
 ## Customizing metadata
 
 Chances are you will want to customize the default metadata provided by Sufia.  Here's [a guide](https://github.com/projecthydra-labs/sufia-core/wiki/Customizing-Metadata) to help you with that
-
-## Proxies and Transfers (Sufia 4.x only)
-
-To add proxies and transfers to your **Sufia 4**-based app, run the 'sufia:models:proxies' generator and then run 'rake db:migrate'.  If you're already running Sufia 5 or 6, this is already added and you may skip this step.
 
 ## Admin Users
 
