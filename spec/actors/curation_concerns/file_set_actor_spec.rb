@@ -177,4 +177,54 @@ describe CurationConcerns::FileSetActor do
       expect(work_v1.members.size).to eq 3
     end
   end
+
+  describe "#set_representative" do
+    let!(:work) { build(:generic_work, representative: rep) }
+    let!(:file_set) { build(:file_set) }
+
+    before do
+      actor.send(:set_representative, work, file_set)
+    end
+
+    context "when the representative isn't set" do
+      let(:rep) { nil }
+
+      it 'sets the representative' do
+        expect(work.representative).to eq file_set
+      end
+    end
+
+    context 'when the representative is already set' do
+      let(:rep) { build(:file_set, id: '123') }
+
+      it 'keeps the existing representative' do
+        expect(work.representative).to eq rep
+      end
+    end
+  end
+
+  describe "#set_thumbnail" do
+    let!(:work) { build(:generic_work, thumbnail: thumb) }
+    let!(:file_set) { build(:file_set) }
+
+    before do
+      actor.send(:set_thumbnail, work, file_set)
+    end
+
+    context "when the thumbnail isn't set" do
+      let(:thumb) { nil }
+
+      it 'sets the thumbnail' do
+        expect(work.thumbnail).to eq file_set
+      end
+    end
+
+    context 'when the thumbnail is already set' do
+      let(:thumb) { build(:file_set, id: '123') }
+
+      it 'keeps the existing thumbnail' do
+        expect(work.thumbnail).to eq thumb
+      end
+    end
+  end
 end
