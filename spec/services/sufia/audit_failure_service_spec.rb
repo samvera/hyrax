@@ -5,7 +5,7 @@ describe Sufia::AuditFailureService do
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(depositor)
     end
   end

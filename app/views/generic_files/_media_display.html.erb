@@ -1,28 +1,28 @@
-<% if @generic_file.image? %>
+<% if @file_set.image? %>
 
   <%= render_download_icon "Download the full-sized image" %>
 
-<% elsif @generic_file.video? %>
+<% elsif @file_set.video? %>
 
   <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
-    <source src="<%= sufia.download_path(@generic_file, file: 'webm') %>" type="video/webm" />
-    <source src="<%= sufia.download_path(@generic_file, file: 'mp4') %>" type="video/mp4" />
+    <source src="<%= sufia.download_path(@file_set, file: 'webm') %>" type="video/webm" />
+    <source src="<%= sufia.download_path(@file_set, file: 'mp4') %>" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
-<% elsif @generic_file.audio? %>
+<% elsif @file_set.audio? %>
 
   <audio controls="controls" class="audiojs" preload="auto">
-    <source src="<%= sufia.download_path(@generic_file, file: 'ogg') %>" type="audio/ogg" />
-    <source src="<%= sufia.download_path(@generic_file, file: 'mp3') %>" type="audio/mpeg" />
+    <source src="<%= sufia.download_path(@file_set, file: 'ogg') %>" type="audio/ogg" />
+    <source src="<%= sufia.download_path(@file_set, file: 'mp3') %>" type="audio/mpeg" />
     Your browser does not support the audio tag.
   </audio>
 
-<% elsif @generic_file.pdf? %>
+<% elsif @file_set.pdf? %>
 
   <%= render_download_icon "Download the full-sized PDF" %>
 
-<% elsif @generic_file.office_document? %>
+<% elsif @file_set.office_document? %>
 
     <%= render_download_icon "Download the full-sized Document" %>
 

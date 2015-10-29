@@ -3,28 +3,28 @@
       <%= render_download_link %>
       <% if Sufia.config.analytics %>
         &nbsp;|&nbsp;
-        <%= link_to "Analytics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
+        <%= link_to "Analytics", sufia.stats_file_set_path(@file_set), id: 'stats' %>
       <% end %>
-      <% if can? :edit, @generic_file %>
+      <% if can? :edit, @file_set %>
           &nbsp;|&nbsp;
-          <% if @generic_file.processing? %>
+          <% if @file_set.processing? %>
             <%= t('sufia.upload.processing') %>
           <% else %>
-            <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) %>
+            <%= link_to "Edit", sufia.edit_file_set_path(@file_set) %>
           <% end %>
       <% end %>
-      <!--<%# if can?(:create, FeaturedWork) && @generic_file.public? %>
-        <%# if FeaturedWork.can_create_another? && !@generic_file.featured?%>
+      <!--<%# if can?(:create, FeaturedWork) && @file_set.public? %>
+        <%# if FeaturedWork.can_create_another? && !@file_set.featured?%>
           &nbsp;|&nbsp;
-          <%#= link_to "Feature", sufia.featured_work_path(@generic_file, format: :json), data: {behavior: 'feature'} %>
-        <%# elsif @generic_file.featured? %>
+          <%#= link_to "Feature", sufia.featured_work_path(@file_set, format: :json), data: {behavior: 'feature'} %>
+        <%# elsif @file_set.featured? %>
           &nbsp;|&nbsp;
           Featured
         <%# end %>
       <%# end %>-->
     </p>
     <p>Export to:
-      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file, format: 'endnote') %>
+      <%= link_to 'EndNote', sufia.file_set_path(@file_set, format: 'endnote') %>
       &nbsp;|&nbsp;
       <%= link_to 'Zotero', sufia.static_path('zotero'), {id: 'zoteroLink', name: 'zotero', class: 'lightboxLink'} %>
       &nbsp;|&nbsp;
@@ -42,4 +42,4 @@
     <!-- AddThis Button END -->
 
     <!-- COinS hook for Zotero -->
-    <span class="Z3988" title="<%= @generic_file.export_as_openurl_ctx_kev %>"></span>
+    <span class="Z3988" title="<%= @file_set.export_as_openurl_ctx_kev %>"></span>

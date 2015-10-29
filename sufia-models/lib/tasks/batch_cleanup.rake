@@ -4,7 +4,7 @@ namespace :sufia do
   task :empty_batches, [:remove] => :environment do |t, args|
     option = args.to_hash.fetch(:remove, "keep")
     Batch.all.each do |batch|
-      if batch.generic_files.empty?
+      if batch.file_sets.empty?
         print "#{batch.id} contains no files - "
         if option == "remove"
           batch.destroy

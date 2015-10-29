@@ -5,13 +5,13 @@ describe Sufia::ImportLocalFileFailureService do
   let!(:filename) { 'world.png' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(depositor)
     end
   end
 
   before do
-    allow(GenericFile).to receive(:find).and_return(file)
+    allow(FileSet).to receive(:find).and_return(file)
     described_class.new(file.id, depositor.user_key, filename).call
   end
   describe "#call" do

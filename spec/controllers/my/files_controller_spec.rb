@@ -52,7 +52,7 @@ describe My::FilesController, type: :controller do
     let!(:my_work) { FactoryGirl.create(:work, user: user) }
     let!(:shared_work) { FactoryGirl.create(:work, edit_users: [user.user_key], user: someone_else) }
     let!(:unrelated_work) { FactoryGirl.create(:public_work, user: someone_else) }
-    let!(:my_file) { FactoryGirl.create(:generic_file, depositor: user) }
+    let!(:my_file) { FactoryGirl.create(:file_set, depositor: user) }
     let!(:wrong_type) { Batch.create }
 
     it 'shows only the correct records' do

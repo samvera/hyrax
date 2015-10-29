@@ -21,14 +21,14 @@ module Sufia::FilesController
         redirect_to self.class.upload_complete_path(params[:batch_id])
       end
 
-      # Generic utility for creating GenericFile from a URL
+      # Generic utility for creating FileSet from a URL
       # Used in to import files using URLs from a file picker like browse_everything
       def create_file_from_url(url, file_name)
-        ::GenericFile.new(import_url: url, label: file_name).tap do |gf|
-          actor = CurationConcerns::GenericFileActor.new(gf, current_user)
+        ::FileSet.new(import_url: url, label: file_name).tap do |fs|
+          actor = CurationConcerns::FileSetActor.new(fs, current_user)
           actor.create_metadata(params[:batch_id], params[:parent_id])
-          gf.save!
-          CurationConcerns.queue.push(ImportUrlJob.new(gf.id))
+          fs.save!
+          CurationConcerns.queue.push(ImportUrlJob.new(fs.id))
         end
       end
   end

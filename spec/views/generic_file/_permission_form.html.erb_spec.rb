@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe 'generic_files/_permission_form.html.erb', type: :view do
-  let(:generic_file) {
-    stub_model(GenericFile, id: '123',
-                            depositor: 'bob',
-                            resource_type: ['Dataset'])
+describe 'file_sets/_permission_form.html.erb', type: :view do
+  let(:file_set) {
+    stub_model(FileSet, id: '123',
+                        depositor: 'bob',
+                        resource_type: ['Dataset'])
   }
 
   let(:form) do
-    form_for(generic_file, url: '/update') do |gf_form|
-      return gf_form
+    form_for(file_set, url: '/update') do |fs_form|
+      return fs_form
     end
   end
 
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(generic_file).to receive(:permissions).and_return(permissions)
+    allow(file_set).to receive(:permissions).and_return(permissions)
     allow(view).to receive(:f).and_return(form)
     render
   end

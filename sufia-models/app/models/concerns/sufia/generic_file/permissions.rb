@@ -1,5 +1,5 @@
 module Sufia
-  module GenericFile
+  module FileSet
     module Permissions
       extend ActiveSupport::Concern
 

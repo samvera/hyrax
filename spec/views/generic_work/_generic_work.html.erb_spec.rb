@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'generic_works/_generic_work.html.erb', type: :view do
-  context 'displaying a generic_file' do
+  context 'displaying a file_set' do
     let(:generic_work) do
       mock_model(SolrDocument,
                  title: "work title", id: "123", depositor: "user1", creator: "igor",

@@ -1,16 +1,16 @@
-<% if can?(:edit, generic_file) %>
-  <%= link_to( 'Edit', edit_polymorphic_path([:curation_concern, generic_file]),
-    { class: 'btn btn-default', title: "Edit #{generic_file}" }) %>
-  <%= link_to( 'Rollback', versions_curation_concern_generic_file_path(generic_file),
+<% if can?(:edit, file_set) %>
+  <%= link_to( 'Edit', edit_polymorphic_path([:curation_concern, file_set]),
+    { class: 'btn btn-default', title: "Edit #{file_set}" }) %>
+  <%= link_to( 'Rollback', versions_curation_concern_file_set_path(file_set),
     { class: 'btn btn-default', title: "Rollback to previous version" }) %>
 <% end %>
-<% if can?(:destroy, generic_file) %>
-  <%= link_to( 'Delete', polymorphic_path([:curation_concern, generic_file]),
-    class: 'btn btn-default', method: :delete, title: "Delete #{generic_file}",
-    data: {confirm: "Deleting #{generic_file} from #{t('sufia.product_name')} is permanent. Click OK to delete this from #{t('sufia.product_name')}, or Cancel to cancel this operation"}
+<% if can?(:destroy, file_set) %>
+  <%= link_to( 'Delete', polymorphic_path([:curation_concern, file_set]),
+    class: 'btn btn-default', method: :delete, title: "Delete #{file_set}",
+    data: {confirm: "Deleting #{file_set} from #{t('sufia.product_name')} is permanent. Click OK to delete this from #{t('sufia.product_name')}, or Cancel to cancel this operation"}
   )%>
 <% end %>
-<% if can?(:read, generic_file) %>
-  <%= link_to 'Download', download_path(generic_file),
-    class: 'btn btn-default', title: "Download #{generic_file.to_s.inspect}", target: "_blank" %>
+<% if can?(:read, file_set) %>
+  <%= link_to 'Download', download_path(file_set),
+    class: 'btn btn-default', title: "Download #{file_set.to_s.inspect}", target: "_blank" %>
 <% end %>

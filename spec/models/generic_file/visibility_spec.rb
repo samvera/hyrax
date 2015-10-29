@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Sufia::GenericFile, type: :model do
+describe Sufia::FileSet, type: :model do
   module VisibilityOverride
     extend ActiveSupport::Concern
-    include Sufia::GenericFile::Permissions
+    include Sufia::FileSet::Permissions
     def visibility
       super
     end

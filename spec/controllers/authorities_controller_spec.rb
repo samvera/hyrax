@@ -10,7 +10,7 @@ describe AuthoritiesController, type: :controller do
                    { label: "Eddie", uri: "http://example.org/edd" },
                    { label: "Economics", uri: "http://example.org/eco" }]
       expect(LocalAuthority).to receive(:entries_by_term).and_return(mock_hits)
-      xhr :get, :query, model: "generic_files", term: "subject", q: "E"
+      xhr :get, :query, model: "file_sets", term: "subject", q: "E"
       expect(response).to be_success
       expect(JSON.parse(response.body).count).to eq(6)
       expect(JSON.parse(response.body)[0]["label"]).to eq("English")

@@ -1,5 +1,5 @@
 module Sufia
-  class GenericFilePresenter < ::CurationConcerns::GenericFilePresenter
+  class FileSetPresenter < ::CurationConcerns::FileSetPresenter
     def tweeter
       user = ::User.find_by_user_key(model.depositor)
       if user.try(:twitter_handle).present?

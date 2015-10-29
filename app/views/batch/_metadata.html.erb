@@ -4,7 +4,7 @@
     <div class="col-sm-8">
       <h3>Applies to individual files uploaded</h3>
       <%= content_tag :p, t('sufia.batch.help.title'), class: "help-block" %>
-      <% @batch.generic_files.sort { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
+      <% @batch.file_sets.sort { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
         <div class="form-group">
           <%= f.input_label :title, as: :multi_value_with_help, label: "Title #{index + 1}" %>
           <div id="additional_title_clone">
@@ -37,7 +37,7 @@
       <%= f.input :rights, as: :select_with_modal_help, collection: Sufia.config.cc_licenses,
           input_html: { class: 'form-control', multiple: true } %>
 
-      <%= render "generic_files/rights_modal" %>
+      <%= render "file_sets/rights_modal" %>
 
       <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
       <!-- hidden on initial load -->

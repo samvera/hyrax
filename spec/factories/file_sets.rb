@@ -1,10 +1,10 @@
 FactoryGirl.define do
-  factory :generic_file do
+  factory :file_set do
     transient do
       depositor "archivist1@example.com"
     end
-    before(:create) do |gf, evaluator|
-      gf.apply_depositor_metadata evaluator.depositor
+    before(:create) do |fs, evaluator|
+      fs.apply_depositor_metadata evaluator.depositor
     end
 
     factory :public_file do
@@ -21,8 +21,8 @@ FactoryGirl.define do
         resource_type ["Dissertation"]
         subject %w(lorem ipsum dolor sit amet)
         title ["fake_document.pdf"]
-        before(:create) do |gf|
-          gf.title = ["Fake PDF Title"]
+        before(:create) do |fs|
+          fs.title = ["Fake PDF Title"]
         end
       end
       factory :public_mp3 do

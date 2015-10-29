@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'generic_files/show.html.erb', type: :view do
+describe 'file_sets/show.html.erb', type: :view do
   let(:depositor) do
     stub_model(User,
                user_key: 'bob',
@@ -11,8 +11,8 @@ describe 'generic_files/show.html.erb', type: :view do
     double('content', versions: [], mimeType: 'application/pdf')
   end
 
-  let(:generic_file) do
-    stub_model(GenericFile, id: '123',
+  let(:file_set) do
+    stub_model(FileSet, id: '123',
                             depositor: depositor.user_key,
                             audit_stat: 1,
                             title: ['My Title'],
@@ -29,17 +29,17 @@ describe 'generic_files/show.html.erb', type: :view do
   end
 
   let(:presenter) do
-    Sufia::GenericFilePresenter.new(generic_file)
+    Sufia::FileSetPresenter.new(file_set)
   end
 
   before do
-    allow(generic_file).to receive(:content).and_return(content)
+    allow(file_set).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(depositor)
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
-    allow(User).to receive(:find_by_user_key).with(generic_file.depositor).and_return(depositor)
+    allow(User).to receive(:find_by_user_key).with(file_set.depositor).and_return(depositor)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
     allow(view).to receive(:on_the_dashboard?).and_return(false)
-    assign(:generic_file, generic_file)
+    assign(:file_set, file_set)
     assign(:presenter, presenter)
     assign(:events, [])
     assign(:notify_number, 0)
@@ -47,7 +47,7 @@ describe 'generic_files/show.html.erb', type: :view do
 
   describe 'title heading' do
     before do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -57,12 +57,12 @@ describe 'generic_files/show.html.erb', type: :view do
     end
 
     it 'shows the description' do
-      d1 = doc.xpath("//p[@class='genericfile_description']").text
+      d1 = doc.xpath("//p[@class='fileset_description']").text
       expect(d1).not_to start_with 'Lorem ipsum'
     end
 
     it 'shows links in the description' do
-      a1 = doc.xpath("//p[@class='genericfile_description']/a").text
+      a1 = doc.xpath("//p[@class='fileset_description']/a").text
       expect(a1).not_to start_with 'http://my.link.com'
     end
   end
@@ -71,7 +71,7 @@ describe 'generic_files/show.html.erb', type: :view do
     let(:item) { Mida::Document.new(rendered).items.first }
     describe 'descriptive metadata' do
       before do
-        render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+        render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
       end
 
       it 'draws schema.org fields' do
@@ -97,7 +97,7 @@ describe 'generic_files/show.html.erb', type: :view do
 
   describe 'google scholar' do
     before do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -122,7 +122,7 @@ describe 'generic_files/show.html.erb', type: :view do
 
   describe 'twitter cards' do
     before do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -196,7 +196,7 @@ describe 'generic_files/show.html.erb', type: :view do
 
   describe 'collections list' do
     before do
-      allow(generic_file).to receive(:parent_collections).and_return(collections)
+      allow(file_set).to receive(:parent_collections).and_return(collections)
       render
     end
 

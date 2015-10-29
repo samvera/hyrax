@@ -7,7 +7,7 @@
   <meta property="og:title" content="<%= @presenter.title.first %>"/>
   <meta property="og:description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>"/>
   <meta property="og:image" content="<%= sufia.download_url(@presenter, file: 'thumbnail') %>"/>
-  <meta property="og:url" content="<%= sufia.generic_file_url(@presenter) %>"/>
+  <meta property="og:url" content="<%= sufia.file_set_url(@presenter) %>"/>
   <meta name="twitter:data1" content="<%= @presenter.tag.join(', ') %>"/>
   <meta name="twitter:label1" content="Keywords"/>
   <meta name="twitter:data2" content="<%= @presenter.rights.first %>"/>
@@ -42,7 +42,7 @@
 <div class="container-fluid">
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= render 'generic_files/media_display' %>
+    <%= render 'file_sets/media_display' %>
     <%= render 'show_actions' %>
     <%= render 'show_collections' %>
   </div>

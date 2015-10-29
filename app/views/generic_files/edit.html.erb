@@ -3,7 +3,7 @@
 <% end %>
 
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
-<h1 class="lower">Edit <%= @generic_file %></h1>
+<h1 class="lower">Edit <%= @file_set %></h1>
 
 <div class="row">
   <div class="col-xs-12 col-sm-4">
@@ -23,8 +23,8 @@
     </ul>
     <div class="tab-content">
       <%= render "descriptions", form: @form %>
-      <%= render "permission", generic_file: @generic_file %>
-      <%= render "versioning", generic_file: @generic_file  %>
+      <%= render "permission", file_set: @file_set %>
+      <%= render "versioning", file_set: @file_set  %>
     </div>
   </div> <!-- /.col-sm-8 -->
 </div><!-- /.row -->

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe 'generic_files/stats.html.erb', type: :view do
+describe 'file_sets/stats.html.erb', type: :view do
   describe 'usage statistics' do
-    let(:generic_file) {
-      stub_model(GenericFile, id: '123',
+    let(:file_set) {
+      stub_model(FileSet, id: '123',
                               title: ['file1.txt'])
     }
 
@@ -29,7 +29,7 @@ describe 'generic_files/stats.html.erb', type: :view do
     }
 
     before do
-      assign(:generic_file, generic_file)
+      assign(:file_set, file_set)
       assign(:stats, no_stats)
     end
 

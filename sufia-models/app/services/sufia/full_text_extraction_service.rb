@@ -1,14 +1,14 @@
 module Sufia
   # Extract the full text from the content using Solr's extract handler
   class FullTextExtractionService
-    def self.run(generic_file)
-      new(generic_file).extract
+    def self.run(file_set)
+      new(file_set).extract
     end
 
-    delegate :content, :logger, :mime_type, :id, to: :@generic_file
+    delegate :content, :logger, :mime_type, :id, to: :@file_set
 
-    def initialize(generic_file)
-      @generic_file = generic_file
+    def initialize(file_set)
+      @file_set = file_set
     end
 
     def extract

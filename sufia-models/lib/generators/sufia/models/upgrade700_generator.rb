@@ -11,8 +11,8 @@ This generator for upgrading sufia-models to 7.0 makes the following changes to 
   # Setup the database migrations
   def copy_migrations
     [
-      'change_trophy_generic_file_id_to_generic_work_id.rb',
-      'change_proxy_deposit_generic_file_id_to_generic_work_id.rb'
+      'change_audit_log_generic_file_id_to_file_set_id.rb'
+      'change_proxy_deposit_request_generic_file_id_to_file_set_id.rb'
     ].each do |file|
       better_migration_template file
     end

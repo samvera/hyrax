@@ -20,7 +20,7 @@ class ContentDepositorChangeEventJob < EventJob
     work.proxy_depositor = work.depositor
     work.clear_permissions! if reset
     work.apply_depositor_metadata(login)
-    work.generic_files.each do |f|
+    work.file_sets.each do |f|
       f.apply_depositor_metadata(login)
       f.save!
     end
@@ -32,7 +32,7 @@ class ContentDepositorChangeEventJob < EventJob
     proxy_depositor = ::User.find_by_user_key(work.proxy_depositor)
     # Create the event
     event = proxy_depositor.create_event(action, timestamp)
-    # Log the event to the GF's stream
+    # Log the event to the FS's stream
     work.log_event(event)
     # log the event to the proxy depositor's profile
     proxy_depositor.log_profile_event(event)

@@ -53,7 +53,7 @@ describe DashboardHelper, type: :helper do
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
     before do
-      create_models("GenericFile", user1, user2)
+      create_models("FileSet", user1, user2)
     end
 
     it "finds only 3 files" do

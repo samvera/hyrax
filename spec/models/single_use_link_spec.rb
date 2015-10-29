@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SingleUseLink do
   before do
-    @file = GenericFile.new
+    @file = FileSet.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
   end
@@ -17,10 +17,10 @@ describe SingleUseLink do
       expect(Digest::SHA2).to receive(:new).and_return(@hash)
     end
     it "creates show link" do
-      su = described_class.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.generic_file_path(file.id)
+      su = described_class.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.file_set_path(file.id)
       expect(su.downloadKey).to eq(@hash)
       expect(su.itemId).to eq(file.id)
-      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.generic_file_path(file.id))
+      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.file_set_path(file.id))
       su.delete
     end
     it "creates show download link" do

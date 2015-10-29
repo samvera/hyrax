@@ -17,7 +17,7 @@ describe BatchController do
       end
       it "is successful" do
         expect(CurationConcerns.queue).to receive(:push).with(batch_update_message).once
-        post :update, id: batch.id, title: { '1' => 'foo' }, visibility: 'open', generic_file: { tag: [""] }
+        post :update, id: batch.id, title: { '1' => 'foo' }, visibility: 'open', file_set: { tag: [""] }
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -31,43 +31,43 @@ describe BatchController do
       end
 
       let(:somebody_else_file) do
-        GenericFile.new(title: ['Original Title']) do |f|
+        FileSet.new(title: ['Original Title']) do |f|
           f.apply_depositor_metadata(user)
         end
       end
       let(:batch) do
-        Batch.create { |b| b.generic_files.push(somebody_else_file) }
+        Batch.create { |b| b.file_sets.push(somebody_else_file) }
       end
 
       before do
-        Hydra::Works::AddGenericFileToGenericWork.call(somebody_else_work, somebody_else_file)
+        Hydra::Works::AddFileSetToGenericWork.call(somebody_else_work, somebody_else_file)
         somebody_else_work.save
       end
 
       it "redirects to my shares page" do
-        post :update, id: batch, generic_file: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
+        post :update, id: batch, file_set: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
         expect(response).to redirect_to routes.url_helpers.dashboard_shares_path
       end
     end
 
     describe "when user has edit permissions on a file" do
       # TODO: all these tests could move to batch_update_job_spec.rb
-      let!(:file) { GenericFile.create(batch: batch) { |f| f.apply_depositor_metadata(user) } }
+      let!(:file) { FileSet.create(batch: batch) { |f| f.apply_depositor_metadata(user) } }
 
       it "sets the groups" do
-        post :update, id: batch, "generic_file" => { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
+        post :update, id: batch, "file_set" => { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
         file.reload
         expect(file.read_groups).to include "public"
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
       end
 
       it "sets public read access" do
-        post :update, id: batch, visibility: "open", generic_file: { tag: [""] }
+        post :update, id: batch, visibility: "open", file_set: { tag: [""] }
         expect(file.reload.read_groups).to eq ['public']
       end
 
       it "sets metadata like title" do
-        post :update, id: batch, generic_file: { tag: ["footag", "bartag"] }, title: { file.id => ["New Title"] }
+        post :update, id: batch, file_set: { tag: ["footag", "bartag"] }, title: { file.id => ["New Title"] }
         file.reload
         expect(file.title).to eq ["New Title"]
         # TODO: is order important?
@@ -75,7 +75,7 @@ describe BatchController do
       end
 
       it "does not set any tags" do
-        post :update, id: batch, generic_file: { tag: [""] }
+        post :update, id: batch, file_set: { tag: [""] }
         expect(file.reload.tag).to be_empty
       end
     end
@@ -83,14 +83,14 @@ describe BatchController do
     describe "when user does not have edit permissions on a file" do
       # TODO: all these tests could move to batch_update_job_spec.rb
       let(:file) do
-        GenericFile.new(batch: batch, title: ['Original Title']).tap do |f|
+        FileSet.new(batch: batch, title: ['Original Title']).tap do |f|
           f.apply_depositor_metadata('someone_else')
           f.save!
         end
       end
 
       it "does not modify the object" do
-        post :update, id: batch, "generic_file" => { "read_groups_string" => "group1, group2", "read_users_string" => "", "tag" => [""] }, "title" => { file.id => "Title Wont Change" }
+        post :update, id: batch, "file_set" => { "read_groups_string" => "group1, group2", "read_users_string" => "", "tag" => [""] }, "title" => { file.id => "Title Wont Change" }
         file.reload
         expect(file.title).to eq ["Original Title"]
         expect(file.read_groups).to eq []
@@ -103,8 +103,8 @@ describe BatchController do
       allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
     end
     let(:b1) { Batch.create }
-    let!(:file) { GenericFile.create(batch: b1, label: 'f1') { |f| f.apply_depositor_metadata(user) } }
-    let!(:file2) { GenericFile.create(batch: b1, label: 'f2') { |f| f.apply_depositor_metadata(user) } }
+    let!(:file) { FileSet.create(batch: b1, label: 'f1') { |f| f.apply_depositor_metadata(user) } }
+    let!(:file2) { FileSet.create(batch: b1, label: 'f2') { |f| f.apply_depositor_metadata(user) } }
 
     it "defaults creator" do
       get :edit, id: b1

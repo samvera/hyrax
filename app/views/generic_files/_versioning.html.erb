@@ -2,7 +2,7 @@
   <h2>Versions</h2>
   <div class="well">
 
-    <%= form_for [sufia, @generic_file], html: { multipart: true } do |f| %>
+    <%= form_for [sufia, @file_set], html: { multipart: true } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3>Upload New Version</h3>
         <div class="form-group">
@@ -16,7 +16,7 @@
         </div>
     <% end %>
 
-    <%= form_for [sufia, @generic_file], html: { multipart: true } do |f| %>
+    <%= form_for [sufia, @file_set], html: { multipart: true } do |f| %>
     <h3>Restore Previous Version</h3>
     <% @version_list.each do |version| %>
       <div class="form-group">

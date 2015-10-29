@@ -23,8 +23,8 @@ class BatchUpdateJob
     batch = Batch.find_or_create(batch_id)
     user = User.find_by_user_key(login)
 
-    batch.generic_files.each do |gf|
-      update_file(gf, user)
+    batch.file_sets.each do |fs|
+      update_file(fs, user)
     end
 
     batch.update(status: ["Complete"])
@@ -36,26 +36,26 @@ class BatchUpdateJob
     end
   end
 
-  def update_file(gf, user)
-    unless user.can? :edit, gf
-      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.id}!"
-      denied << gf
+  def update_file(fs, user)
+    unless user.can? :edit, fs
+      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{fs.id}!"
+      denied << fs
       return
     end
     # update the file using the actor after setting the title
-    gf.title = title[gf.id] if title[gf.id]
-    CurationConcerns::GenericFileActor.new(gf, user).update_metadata(file_attributes, visibility: visibility)
+    fs.title = title[fs.id] if title[fs.id]
+    CurationConcerns::FileSetActor.new(fs, user).update_metadata(file_attributes, visibility: visibility)
 
     # update the work to the same metadata as the file.
     # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
     # NOTE2: TODO: stop assuming that files only belong to one generic_work
-    work = gf.generic_works.first
+    work = fs.generic_works.first
     unless work.nil?
-      work.title = title[gf.id] if title[gf.id]
+      work.title = title[fs.id] if title[fs.id]
       CurationConcerns::GenericWorkActor.new(work, user, work_attributes).update
     end
 
-    saved << gf
+    saved << fs
   end
 
   def send_user_success_message(user, batch)

@@ -4,9 +4,9 @@
       <fieldset class="required">
         <legend>Your File&#8217;s Title</legend>
         <span class="control-label">
-          <%= label_tag 'generic_file[title][]', 'Title',  class: "string optional" %>
+          <%= label_tag 'file_set[title][]', 'Title',  class: "string optional" %>
         </span>
-        <%= text_field_tag 'generic_file[title][]', curation_concern.title.first, class: 'form-control' %>
+        <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control' %>
       </fieldset>
       <fieldset class="required">
         <legend>

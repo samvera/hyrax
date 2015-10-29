@@ -8,8 +8,8 @@ describe SufiaUrlHelper do
     it { is_expected.to eq '/catalog/foo123/track' }
   end
 
-  describe "#track_generic_file_path" do
-    subject { helper.track_generic_file_path(document) }
+  describe "#track_file_set_path" do
+    subject { helper.track_file_set_path(document) }
     it { is_expected.to eq '/catalog/foo123/track' }
   end
 

@@ -2,7 +2,7 @@
 <% provide :page_header do %>
   <h1>File Details</h1>
 <% end %>
-<%= render 'media_display', generic_file: curation_concern, dom_class_name: 'representative_image' %>
+<%= render 'media_display', file_set: curation_concern, dom_class_name: 'representative_image' %>
 <%= render "attributes", curation_concern: curation_concern %>
 
   <div class="form-actions">

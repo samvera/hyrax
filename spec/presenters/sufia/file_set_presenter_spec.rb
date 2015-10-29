@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::GenericFilePresenter do
+describe Sufia::FileSetPresenter do
   describe ".terms" do
     it "returns a list" do
       expect(described_class.terms).to eq([:resource_type, :title,
@@ -13,7 +13,7 @@ describe Sufia::GenericFilePresenter do
   let(:presenter) { described_class.new(file) }
 
   describe '#tweeter' do
-    let(:file) { build(:generic_file).tap { |f| f.apply_depositor_metadata(user) } }
+    let(:file) { build(:file_set).tap { |f| f.apply_depositor_metadata(user) } }
     subject { presenter.tweeter }
 
     context "with a user that can be found" do
@@ -33,7 +33,7 @@ describe Sufia::GenericFilePresenter do
   end
 
   describe '#itemtype' do
-    let(:file) { build(:generic_file, resource_type: type) }
+    let(:file) { build(:file_set, resource_type: type) }
 
     subject { presenter.itemtype }
 

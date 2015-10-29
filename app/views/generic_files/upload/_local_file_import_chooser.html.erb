@@ -1,7 +1,7 @@
 <% if current_user.directory.present? %>
   <div class="well">
-    <%= render partial: 'generic_files/upload/tos_checkbox' %>
-    <%= form_for @generic_file, url: sufia.generic_files_path, html: { class: 'form-horizontal well'} do |f| %>
+    <%= render partial: 'file_sets/upload/tos_checkbox' %>
+    <%= form_for @file_set, url: sufia.file_sets_path, html: { class: 'form-horizontal well'} do |f| %>
       <table class="table table-striped">
         <caption>Select files to deposit from your user directory on the server.</caption>
         <thead>

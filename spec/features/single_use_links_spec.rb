@@ -7,14 +7,14 @@ describe "Create and use single-use links", type: :feature do
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:file) do
-    GenericFile.create do |gf|
-      gf.label = 'world.png'
-      gf.apply_depositor_metadata(user)
+    FileSet.create do |fs|
+      fs.label = 'world.png'
+      fs.apply_depositor_metadata(user)
     end
   end
 
   before do
-    Hydra::Works::AddFileToGenericFile.call(file, fixture_path + '/world.png', :original_file, versioning: false)
+    Hydra::Works::AddFileToFileSet.call(file, fixture_path + '/world.png', :original_file, versioning: false)
   end
 
   before do

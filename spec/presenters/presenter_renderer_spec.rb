@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Sufia::PresenterRenderer, type: :view do
-  let(:generic_file) { GenericFile.new }
-  let(:presenter) { Sufia::GenericFilePresenter.new(generic_file) }
+  let(:file_set) { FileSet.new }
+  let(:presenter) { Sufia::FileSetPresenter.new(file_set) }
   let(:renderer) { described_class.new(presenter, view) }
 
   describe "#label" do

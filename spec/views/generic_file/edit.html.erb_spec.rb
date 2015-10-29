@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'generic_files/edit.html.erb', :no_clean do
+describe 'file_sets/edit.html.erb', :no_clean do
   describe 'when the file has two or more resource types' do
     let(:resource_version) do
       ActiveFedora::VersionsGraph::ResourceVersion.new.tap do |v|
@@ -13,20 +13,20 @@ describe 'generic_files/edit.html.erb', :no_clean do
     let(:versions_graph) { double(all: [version1]) }
     let(:content) { double('content', mimeType: 'application/pdf') }
 
-    let(:generic_file) do
-      stub_model(GenericFile, id: '123',
+    let(:file_set) do
+      stub_model(FileSet, id: '123',
                               depositor: 'bob',
                               resource_type: ['Book', 'Dataset'])
     end
 
     let(:form) do
-      CurationConcerns::Forms::GenericFileEditForm.new(generic_file)
+      CurationConcerns::Forms::FileSetEditForm.new(file_set)
     end
 
     before do
-      allow(generic_file).to receive(:content).and_return(content)
+      allow(file_set).to receive(:content).and_return(content)
       allow(controller).to receive(:current_user).and_return(stub_model(User))
-      assign(:generic_file, generic_file)
+      assign(:file_set, file_set)
       assign(:form, form)
       assign(:version_list, version_list)
     end
@@ -37,7 +37,7 @@ describe 'generic_files/edit.html.erb', :no_clean do
     end
 
     it "only draws one resource_type multiselect" do
-      expect(page).to have_selector("select#generic_file_resource_type", count: 1)
+      expect(page).to have_selector("select#file_set_resource_type", count: 1)
     end
   end
 end

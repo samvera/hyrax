@@ -5,7 +5,7 @@ describe Sufia::ImportUrlSuccessService do
   let(:inbox) { depositor.mailbox.inbox }
   let(:label) { 'foobarbaz' }
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(depositor)
       file.label = label
     end

@@ -24,7 +24,7 @@ describe SolrDocument, type: :model do
 
   describe "document types" do
     class Mimes
-      include Hydra::Works::GenericFile::MimeTypes
+      include Hydra::Works::FileSet::MimeTypes
     end
 
     context "when mime-type is 'office'" do

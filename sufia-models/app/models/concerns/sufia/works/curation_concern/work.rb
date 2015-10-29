@@ -2,13 +2,13 @@ module Sufia::Works
   module CurationConcern
     module Work
       extend ActiveSupport::Concern
-      include WithGenericFiles
+      include WithFileSets
       include HumanReadableType
       include Sufia::Noid
       include Sufia::ModelMethods
       include Hydra::Collections::Collectible
       include Solrizer::Common
-      include Sufia::GenericFile::Permissions
+      include Sufia::FileSet::Permissions
       include Indexing
     end
   end

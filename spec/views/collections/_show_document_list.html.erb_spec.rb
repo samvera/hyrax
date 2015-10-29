@@ -5,10 +5,10 @@ describe 'collections/_show_document_list.html.erb', type: :view do
   let(:collection) { mock_model(Collection) }
 
   let(:file) do
-    gf = GenericFile.new(creator: ["ggm"], title: ['One Hundred Years of Solitude'])
-    gf.apply_depositor_metadata(user)
-    gf.save
-    gf
+    fs = FileSet.new(creator: ["ggm"], title: ['One Hundred Years of Solitude'])
+    fs.apply_depositor_metadata(user)
+    fs.save
+    fs
   end
 
   let(:documents) { [file] }

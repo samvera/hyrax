@@ -5,10 +5,10 @@ describe 'event jobs' do
     @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
     @third_user = FactoryGirl.find_or_create(:curator)
-    @gf = GenericFile.new(id: 'test-123')
-    @gf.apply_depositor_metadata(@user)
-    @gf.title = ['Hamlet']
-    @gf.save
+    @fs = FileSet.new(id: 'test-123')
+    @fs.apply_depositor_metadata(@user)
+    @fs.title = ['Hamlet']
+    @fs.save
     @gw = GenericWork.new(id: 'test-456')
     @gw.apply_depositor_metadata(@user)
     @gw.title = ['BethsMac']
@@ -17,7 +17,7 @@ describe 'event jobs' do
   after do
     $redis.keys('events:*').each { |key| $redis.del key }
     $redis.keys('User:*').each { |key| $redis.del key }
-    $redis.keys('GenericFile:*').each { |key| $redis.del key }
+    $redis.keys('FileSet:*').each { |key| $redis.del key }
     $redis.keys('GenericWork:*').each { |key| $redis.del key }
   end
   it "logs user edit profile events" do
@@ -67,14 +67,14 @@ describe 'event jobs' do
     expect(@third_user.events.first).to eq(event)
   end
   it "logs content deposit events" do
-    # ContentDeposit should log the event to the depositor's profile, followers' dashboards, and the GF
+    # ContentDeposit should log the event to the depositor's profile, followers' dashboards, and the FS
     @another_user.follow(@user)
     @third_user.follow(@user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     expect(@user.profile_events.length).to eq(0)
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
-    expect(@gf.events.length).to eq(0)
+    expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentDepositEventJob.new('test-123', @user.user_key).run
@@ -84,11 +84,11 @@ describe 'event jobs' do
     expect(@another_user.events.first).to eq(event)
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@fs.events.length).to eq(1)
+    expect(@fs.events.first).to eq(event)
   end
   it "logs content depositor change events" do
-    # ContentDepositorChange should log the event to the proxy depositor's profile, the depositor's dashboard, followers' dashboards, and the GF
+    # ContentDepositorChange should log the event to the proxy depositor's profile, the depositor's dashboard, followers' dashboards, and the FS
     @third_user.follow(@another_user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(1)
@@ -104,14 +104,14 @@ describe 'event jobs' do
     expect(@gw.events.first).to eq(event)
   end
   it "logs content update events" do
-    # ContentUpdate should log the event to the depositor's profile, followers' dashboards, and the GF
+    # ContentUpdate should log the event to the depositor's profile, followers' dashboards, and the FS
     @another_user.follow(@user)
     @third_user.follow(@user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     expect(@user.profile_events.length).to eq(0)
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
-    expect(@gf.events.length).to eq(0)
+    expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentUpdateEventJob.new('test-123', @user.user_key).run
@@ -121,18 +121,18 @@ describe 'event jobs' do
     expect(@another_user.events.first).to eq(event)
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@fs.events.length).to eq(1)
+    expect(@fs.events.first).to eq(event)
   end
   it "logs content new version events" do
-    # ContentNewVersion should log the event to the depositor's profile, followers' dashboards, and the GF
+    # ContentNewVersion should log the event to the depositor's profile, followers' dashboards, and the FS
     @another_user.follow(@user)
     @third_user.follow(@user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     expect(@user.profile_events.length).to eq(0)
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
-    expect(@gf.events.length).to eq(0)
+    expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentNewVersionEventJob.new('test-123', @user.user_key).run
@@ -142,18 +142,18 @@ describe 'event jobs' do
     expect(@another_user.events.first).to eq(event)
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@fs.events.length).to eq(1)
+    expect(@fs.events.first).to eq(event)
   end
   it "logs content restored version events" do
-    # ContentRestoredVersion should log the event to the depositor's profile, followers' dashboards, and the GF
+    # ContentRestoredVersion should log the event to the depositor's profile, followers' dashboards, and the FS
     @another_user.follow(@user)
     @third_user.follow(@user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     expect(@user.profile_events.length).to eq(0)
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
-    expect(@gf.events.length).to eq(0)
+    expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentRestoredVersionEventJob.new('test-123', @user.user_key, 'content.0').run
@@ -163,8 +163,8 @@ describe 'event jobs' do
     expect(@another_user.events.first).to eq(event)
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@fs.events.length).to eq(1)
+    expect(@fs.events.first).to eq(event)
   end
   it "logs content delete events" do
     # ContentDelete should log the event to the depositor's profile and followers' dashboards
@@ -184,13 +184,13 @@ describe 'event jobs' do
     expect(@third_user.events.first).to eq(event)
   end
   it "does not log content-related jobs to followers who lack access" do
-    # No Content-related eventjobs should log an event to a follower who does not have access to the GF
+    # No Content-related eventjobs should log an event to a follower who does not have access to the FS
     @another_user.follow(@user)
     @third_user.follow(@user)
     expect(@user.profile_events.length).to eq(0)
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
-    expect(@gf.events.length).to eq(0)
+    expect(@fs.events.length).to eq(0)
     @now = Time.now
     expect(Time).to receive(:now).at_least(:once).and_return(@now)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
@@ -201,7 +201,7 @@ describe 'event jobs' do
     expect(@another_user.events.first).to be_nil
     expect(@third_user.events.length).to eq(0)
     expect(@third_user.events.first).to be_nil
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@fs.events.length).to eq(1)
+    expect(@fs.events.first).to eq(event)
   end
 end

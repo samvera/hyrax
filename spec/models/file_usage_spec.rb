@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe FileUsage, type: :model do
   let(:file) do
-    GenericFile.new.tap do |file|
+    FileSet.new.tap do |file|
       file.apply_depositor_metadata("awead")
       file.save
     end
@@ -54,7 +54,7 @@ describe FileUsage, type: :model do
   }
 
   let(:usage) {
-    allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today - 4.day).to_s)
+    allow_any_instance_of(FileSet).to receive(:create_date).and_return((Date.today - 4.day).to_s)
     expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
     described_class.new(file.id)
@@ -110,7 +110,7 @@ describe FileUsage, type: :model do
 
       describe "create date before earliest date set" do
         let(:usage) {
-          allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
+          allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           described_class.new(file.id)
@@ -122,7 +122,7 @@ describe FileUsage, type: :model do
 
       describe "create date after earliest" do
         let(:usage) {
-          allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today - 4.day).to_s)
+          allow_any_instance_of(FileSet).to receive(:create_date).and_return((Date.today - 4.day).to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
@@ -139,7 +139,7 @@ describe FileUsage, type: :model do
       end
 
       let(:usage) {
-        allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
+        allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
         expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
         expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
         described_class.new(file.id)
@@ -154,7 +154,7 @@ describe FileUsage, type: :model do
     let(:date_uploaded) { "2014-12-31" }
 
     let(:file_migrated) do
-      GenericFile.new.tap do |file|
+      FileSet.new.tap do |file|
         file.apply_depositor_metadata("awead")
         file.date_uploaded = date_uploaded
         file.save

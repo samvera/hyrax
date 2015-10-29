@@ -28,9 +28,9 @@
     <% end %>
   </div>
 
-  <% if can?(:create, GenericFile) %>
+  <% if can?(:create, FileSet) %>
     <div class="col-xs-6 col-sm-2 heading-tile">
-      <%= link_to sufia.new_generic_file_path do %>
+      <%= link_to sufia.new_file_set_path do %>
           <span class="glyphicon glyphicon-upload"></span>
           <%= t("sufia.dashboard.upload") %>
       <% end %>

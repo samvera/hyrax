@@ -1,6 +1,6 @@
 <h3>
   <span class="sr-only">Title</span>
-  <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(featured)  %>
+  <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '), sufia.file_set_path(featured)  %>
 </h3>
 <div> 
   <span class="sr-only">Depositor</span>
@@ -8,7 +8,7 @@
 </div>
 <div> 
   <span class="sr-only">Filename</span>
-  <%= link_to truncate(featured.label, length: 25), sufia.generic_file_path(featured), title: featured.label %>
+  <%= link_to truncate(featured.label, length: 25), sufia.file_set_path(featured), title: featured.label %>
 </div>
 <div> 
   <span class="sr-only">File type</span>

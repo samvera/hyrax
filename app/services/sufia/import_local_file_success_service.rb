@@ -2,13 +2,13 @@ module Sufia
   class ImportLocalFileSuccessService < MessageUserService
     attr_reader :filename
 
-    def initialize(generic_file, user, filename)
+    def initialize(file_set, user, filename)
       @filename = filename
-      super(generic_file, user)
+      super(file_set, user)
     end
 
     def call
-      CurationConcerns.queue.push(ContentDepositEventJob.new(generic_file.id, user.user_key))
+      CurationConcerns.queue.push(ContentDepositEventJob.new(file_set.id, user.user_key))
       super
     end
 

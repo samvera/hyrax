@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe SingleUseLinksViewerController do
   let(:file) do
-    GenericFile.create do |gf|
-      gf.label = 'world.png'
-      gf.apply_depositor_metadata('mjg')
+    FileSet.create do |fs|
+      fs.label = 'world.png'
+      fs.apply_depositor_metadata('mjg')
     end
   end
 
   before do
-    Hydra::Works::AddFileToGenericFile.call(file, fixture_path + '/world.png', :original_file, versioning: false)
+    Hydra::Works::AddFileToFileSet.call(file, fixture_path + '/world.png', :original_file, versioning: false)
   end
 
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: file.id, path: routes.url_helpers.generic_file_path(id: file)
+      SingleUseLink.create itemId: file.id, path: routes.url_helpers.file_set_path(id: file)
     end
 
     let :download_link do

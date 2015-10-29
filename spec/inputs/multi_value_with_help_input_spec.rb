@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'MultiValueWithHelpInput', type: :input do
   subject { input_for file, field, as: :multi_value_with_help, required: true }
-  let(:file) { GenericFile.new }
+  let(:file) { FileSet.new }
 
   context "when the field has a translation" do
     let(:field) { :language }

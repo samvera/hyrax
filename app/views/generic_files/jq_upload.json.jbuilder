@@ -1,8 +1,8 @@
-json.array! [@generic_file] do |generic_file|
-  json.name generic_file.title.first
-  json.size generic_file.file_size.first
-  json.url  "/files/#{generic_file.id}"
-  json.thumbnail_url generic_file.id
+json.array! [@file_set] do |file_set|
+  json.name file_set.title.first
+  json.size file_set.file_size.first
+  json.url  "/files/#{file_set.id}"
+  json.thumbnail_url file_set.id
   json.delete_url "deleteme"
   json.delete_type "DELETE"
 end

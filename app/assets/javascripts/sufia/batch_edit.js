@@ -89,7 +89,7 @@ function batch_edit_init () {
 
                     for (key in  Object.keys(adata)) {
                         curKey = Object.keys(adata)[key];
-                        if (curKey.slice(0, 12) == "generic_file") {
+                        if (curKey.slice(0, 12) == "file_set") {
                             data[curKey] = adata[curKey];
                             form.push(req.form);
                         }
