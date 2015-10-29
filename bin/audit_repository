@@ -3,4 +3,4 @@
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../config/environment.rb'))
 
-Sufia::RepositoryAuditService.audit_everything
+CurationConcerns::RepositoryAuditService.audit_everything
