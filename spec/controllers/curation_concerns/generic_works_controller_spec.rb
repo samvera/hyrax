@@ -100,7 +100,7 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#update' do
-    let(:a_work) { FactoryGirl.create(:private_generic_work, user: user) }
+    let(:a_work) { create(:private_generic_work, user: user) }
     before do
       allow(controller).to receive(:actor).and_return(actor)
     end
@@ -114,9 +114,20 @@ describe CurationConcerns::GenericWorksController do
     describe 'changing rights' do
       let(:actor) { double(update: true, visibility_changed?: true) }
 
-      it 'prompts to change the files access' do
-        patch :update, id: a_work
-        expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
+      context 'when there are children' do
+        let(:a_work) { create(:work_with_one_file, user: user) }
+
+        it 'prompts to change the files access' do
+          patch :update, id: a_work
+          expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
+        end
+      end
+
+      context 'without children' do
+        it 'prompts to change the files access' do
+          patch :update, id: a_work
+          expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
+        end
       end
     end
 

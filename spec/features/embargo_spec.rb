@@ -34,7 +34,7 @@ describe 'embargo' do
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Embargo'
-      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:long_ordinal))
+      expect(page).to have_content(later_future_date.iso8601)
     end
   end
 
