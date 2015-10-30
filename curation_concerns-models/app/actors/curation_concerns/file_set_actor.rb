@@ -167,6 +167,9 @@ module CurationConcerns
             copy_visibility(work, file_set)
           end
           work.ordered_members << file_set
+          set_representative(work, file_set)
+          set_thumbnail(work, file_set)
+
           # Save the work so the association between the work and the file_set is persisted (head_id)
           work.save
         end
@@ -195,6 +198,16 @@ module CurationConcerns
       # copy visibility from source_concern to destination_concern
       def copy_visibility(source_concern, destination_concern)
         destination_concern.visibility =  source_concern.visibility
+      end
+
+      def set_representative(work, file_set)
+        return unless work.representative_id.blank?
+        work.representative = file_set
+      end
+
+      def set_thumbnail(work, file_set)
+        return unless work.thumbnail_id.blank?
+        work.thumbnail = file_set
       end
   end
 end
