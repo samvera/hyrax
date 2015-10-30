@@ -31,7 +31,7 @@ describe 'leases' do
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Lease'
-      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:long_ordinal)) # new lease date is displayed in message
+      expect(page).to have_content(later_future_date.iso8601) # new lease date is displayed in message
     end
   end
 
