@@ -40,6 +40,7 @@ describe 'User' do
           should_not be_able_to(:read, generic_work)
           should_not be_able_to(:update, generic_work)
           should_not be_able_to(:destroy, generic_work)
+          should be_able_to(:collect, generic_work)
         end
       end
 
@@ -51,6 +52,7 @@ describe 'User' do
           should_not be_able_to(:read, generic_work)
           should_not be_able_to(:update, generic_work)
           should_not be_able_to(:destroy, generic_work)
+          should_not be_able_to(:collect, generic_work)
         end
       end
     end
