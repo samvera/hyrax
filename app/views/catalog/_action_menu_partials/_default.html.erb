@@ -1,29 +1,31 @@
-<div class="btn-group">
-  <button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown" href="#">Select an action <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <% if can? :edit, document %>
-      <li>
-        <%= link_to [:edit, :curation_concerns, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
-        <% end %>
-      </li>
-      <li>
-        <% if @collection || (@presenter and @presenter.collection?) # We're on the view page for @collection. -%>
-          <%= link_to_remove_from_collection(document) %>
-        <% else %>
-          <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash',
-                      title: "Delete #{document.human_readable_type}", method: :delete,
-                      data: {
-                        confirm: "Deleting a #{document.human_readable_type} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this #{document.human_readable_type} from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
-                          <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
+<% if can?(:edit, document) || can?(:collect, document) %>
+  <div class="btn-group">
+    <button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown" href="#">Select an action <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <% if can? :edit, document %>
+        <li>
+          <%= link_to [:edit, :curation_concerns, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
           <% end %>
-        <% end %>
-      </li>
-    <% end %>
-    <% if can? :collect, document %>
-      <li>
-        <%= link_to_select_collection document %>
-      </li>
-    <% end %>
-  </ul>
-  <%= render 'collections/add_to_collection_modal', collectible: document if can? :collect, document %>
-</div>
+        </li>
+        <li>
+          <% if @collection || (@presenter and @presenter.collection?) # We're on the view page for @collection. -%>
+            <%= link_to_remove_from_collection(document) %>
+          <% else %>
+            <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash',
+                        title: "Delete #{document.human_readable_type}", method: :delete,
+                        data: {
+                          confirm: "Deleting a #{document.human_readable_type} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this #{document.human_readable_type} from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
+                            <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+      <% if can? :collect, document %>
+        <li>
+          <%= link_to_select_collection document %>
+        </li>
+      <% end %>
+    </ul>
+    <%= render 'collections/add_to_collection_modal', collectible: document if can? :collect, document %>
+  </div>
+<% end %>
