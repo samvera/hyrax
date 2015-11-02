@@ -9,4 +9,5 @@ jetty
 /.ruby-gemset
 solr_conf/
 spec/internal
+.internal_test_app
 spec/mock_upload_directory

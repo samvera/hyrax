@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  # The ::GenericWork model is defined in spec/internal/app/models by the
-  # curation_concerns:install generator.
+  # The ::GenericWork model is defined in .internal_test_app/app/models by the
+  # curation_concerns:test_app generator.
   factory :generic_work, aliases: [:work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }

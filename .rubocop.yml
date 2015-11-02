@@ -10,7 +10,7 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
-    - 'spec/internal/**/*'
+    - '.internal_test_app/**/*'
     - 'curation_concerns-models/app/models/concerns/curation_concerns/file_set/export.rb'
 
 Lint/AssignmentInCondition:
