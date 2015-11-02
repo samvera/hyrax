@@ -1,2 +1,2 @@
 --colour
---exclude-pattern spec/internal/**/*
+--exclude-pattern .internal_test_app/**/*

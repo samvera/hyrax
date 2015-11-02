@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  # The ::FileSet model is defined in spec/internal/app/models by the
+  # The ::FileSet model is defined in .internal_test_app/app/models by the
   # curation_concerns:install generator.
   factory :file_set, class: FileSet do
     transient do

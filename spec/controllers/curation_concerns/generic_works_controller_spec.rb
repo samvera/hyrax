@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # This tests the CurationConcerns::CurationConcernController module
-# which is included into spec/internal/app/controllers/generic_works_controller.rb
+# which is included into .internal_test_app/app/controllers/generic_works_controller.rb
 describe CurationConcerns::GenericWorksController do
   let(:user) { create(:user) }
   before { sign_in user }

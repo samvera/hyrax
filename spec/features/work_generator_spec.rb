@@ -14,13 +14,13 @@ describe 'Creating a new Work' do
 
   before do
     Rails::Generators.invoke('curation_concerns:work', ['Catapult'], destination_root: Rails.root)
-    load 'spec/internal/app/models/catapult.rb'
-    load 'spec/internal/app/controllers/curation_concerns/catapults_controller.rb'
-    load 'spec/internal/app/actors/curation_concerns/catapult_actor.rb'
-    load 'spec/internal/app/forms/curation_concerns/catapult_form.rb'
-    load 'spec/internal/config/initializers/curation_concerns.rb'
-    load 'spec/internal/config/routes.rb'
-    load 'app/helpers/curation_concerns/url_helper.rb'
+    load "#{EngineCart.destination}/app/models/catapult.rb"
+    load "#{EngineCart.destination}/app/controllers/curation_concerns/catapults_controller.rb"
+    load "#{EngineCart.destination}/app/actors/curation_concerns/catapult_actor.rb"
+    load "#{EngineCart.destination}/app/forms/curation_concerns/catapult_form.rb"
+    load "#{EngineCart.destination}/config/initializers/curation_concerns.rb"
+    load "#{EngineCart.destination}/config/routes.rb"
+    load "app/helpers/curation_concerns/url_helper.rb"
     sign_in user
 
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
