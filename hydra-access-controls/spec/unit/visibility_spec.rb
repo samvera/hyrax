@@ -1,16 +1,6 @@
 require 'spec_helper'
 
 describe Hydra::AccessControls::Visibility do
-  module VisibilityOverride
-    extend ActiveSupport::Concern
-    include Hydra::AccessControls::Permissions
-    def visibility; super; end
-    def visibility=(value); super(value); end
-  end
-  class MockParent < ActiveFedora::Base
-    include VisibilityOverride
-  end
-
   describe "setting visibility" do
     before do
       class Foo < ActiveFedora::Base
@@ -67,14 +57,47 @@ describe Hydra::AccessControls::Visibility do
           end
         end
       end
-
     end
-
   end
 
-  it 'allows for overrides of visibility' do
-    expect{
-      MockParent.new(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
-    }.to_not raise_error
+  describe "overiding visibility" do
+    module VisibilityOverride
+      extend ActiveSupport::Concern
+      include Hydra::AccessControls::Permissions
+      def visibility; super; end
+      def visibility=(value); super(value); end
+    end
+    class MockParent < ActiveFedora::Base
+      include VisibilityOverride
+    end
+
+    it 'allows for overrides of visibility' do
+      expect {
+        MockParent.new(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+      }.to_not raise_error
+    end
+  end
+
+  context "when represented_visibility is overridden" do
+    let(:model) { MockObject.new }
+    before do
+      class MockObject < ActiveFedora::Base
+        include Hydra::AccessControls::Permissions
+        def represented_visibility
+          ['one']
+        end
+      end
+
+      model.read_groups = ['one', 'another']
+    end
+
+    after do
+      Object.send(:remove_const, :MockObject)
+    end
+
+    it "replaces the represented visibility" do
+      model.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      expect(model.read_groups).to contain_exactly 'public', 'another'
+    end
   end
 end
