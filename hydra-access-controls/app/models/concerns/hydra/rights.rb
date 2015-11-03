@@ -3,7 +3,7 @@ module Hydra
     extend ActiveSupport::Concern
     included do
       # Rights
-      property :rights, predicate: ::RDF::DC.rights do |index|
+      property :rights, predicate: ::RDF::Vocab::DC.rights do |index|
         index.as :facetable
       end
       property :rightsHolder, predicate: ::RDF::URI('http://opaquenamespace.org/rights/rightsHolder') do |index|
