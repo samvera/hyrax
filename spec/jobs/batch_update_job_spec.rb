@@ -5,14 +5,14 @@ describe BatchUpdateJob do
   let(:batch) { Batch.create }
 
   let!(:file) do
-    GenericFile.new(batch: batch) do |file|
+    FileSet.new(batch: batch) do |file|
       file.apply_depositor_metadata(user)
       file.save!
     end
   end
 
   let!(:file2) do
-    GenericFile.new(batch: batch) do |file|
+    FileSet.new(batch: batch) do |file|
       file.apply_depositor_metadata(user)
       file.save!
     end

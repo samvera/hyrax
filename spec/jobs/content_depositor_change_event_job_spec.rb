@@ -4,7 +4,7 @@ describe ContentDepositorChangeEventJob do
   let!(:depositor) { FactoryGirl.find_or_create(:jill) }
   let!(:receiver) { FactoryGirl.find_or_create(:archivist) }
   let!(:file) do
-    GenericFile.new.tap do |f|
+    FileSet.new.tap do |f|
       f.apply_depositor_metadata(depositor.user_key)
       f.save!
     end
@@ -17,7 +17,7 @@ describe ContentDepositorChangeEventJob do
   end
 
   before do
-    work.generic_files += [file]
+    work.file_sets += [file]
     described_class.new(work.id, receiver.user_key).run
   end
 
@@ -28,7 +28,7 @@ describe ContentDepositorChangeEventJob do
     expect(work.edit_users).to include(receiver.user_key, depositor.user_key)
   end
 
-  it "changes the depositor of the child generic files" do
+  it "changes the depositor of the child file sets" do
     file.reload
     expect(file.depositor).to eq receiver.user_key
     expect(file.edit_users).to include(receiver.user_key, depositor.user_key)

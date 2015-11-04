@@ -35,8 +35,8 @@ module Sufia
     end
 
     def add_breadcrumb_for_action
-      return unless /edit|stats/ =~ action_name && controller_name == "generic_files"
-      add_breadcrumb I18n.t("sufia.generic_file.browse_view"), sufia.generic_file_path(params["id"])
+      return unless /edit|stats/ =~ action_name && controller_name == "file_sets"
+      add_breadcrumb I18n.t("sufia.file_set.browse_view"), sufia.file_set_path(params["id"])
     end
   end
 end

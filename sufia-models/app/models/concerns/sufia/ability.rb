@@ -7,7 +7,7 @@ module Sufia
     end
 
     def sufia_abilities
-      generic_file_abilities
+      file_set_abilities
       user_abilities
       featured_work_abilities
       editor_abilities
@@ -34,9 +34,9 @@ module Sufia
       can [:create, :destroy, :update], FeaturedWork if user_groups.include? 'admin'
     end
 
-    def generic_file_abilities
-      can :view_share_work, [::GenericFile]
-      can :create, [::GenericFile, ::Collection, ::GenericWork] if user_groups.include? 'registered'
+    def file_set_abilities
+      can :view_share_work, [::FileSet]
+      can :create, [::FileSet, ::Collection, ::GenericWork] if user_groups.include? 'registered'
     end
 
     def editor_abilities

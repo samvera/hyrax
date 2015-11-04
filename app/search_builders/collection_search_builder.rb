@@ -7,6 +7,6 @@ class CollectionSearchBuilder < Hydra::SearchBuilder
   # This is like include_collection_ids, but it also joins the files.
   def include_contained_files(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "{!join from=generic_file_ids_ssim to=id}{!join from=child_object_ids_ssim to=id}id:#{collection.id}"
+    solr_parameters[:fq] << "{!join from=file_set_ids_ssim to=id}{!join from=child_object_ids_ssim to=id}id:#{collection.id}"
   end
 end

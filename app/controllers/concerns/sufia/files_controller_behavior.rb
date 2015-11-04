@@ -42,8 +42,8 @@ module Sufia
       load_and_authorize_resource except: [:index, :audit]
 
       class_attribute :edit_form_class, :presenter_class
-      self.edit_form_class = CurationConcerns::Forms::GenericFileEditForm
-      self.presenter_class = Sufia::GenericFilePresenter
+      self.edit_form_class = CurationConcerns::Forms::FileSetEditForm
+      self.presenter_class = Sufia::FileSetPresenter
     end
 
     # routed to /files/new
@@ -66,7 +66,7 @@ module Sufia
     def destroy
       actor.destroy
       redirect_to self.class.destroy_complete_path(params), notice:
-        render_to_string(partial: 'generic_files/asset_deleted_flash', locals: { generic_file: @generic_file })
+        render_to_string(partial: 'file_sets/asset_deleted_flash', locals: { file_set: @file_set })
     end
 
     # routed to /files/:id/citation
@@ -77,11 +77,11 @@ module Sufia
     def show
       respond_to do |format|
         format.html do
-          @events = @generic_file.events(100)
+          @events = @file_set.events(100)
           @presenter = presenter
           @audit_status = audit_service.human_readable_audit_status
         end
-        format.endnote { render text: @generic_file.export_as_endnote }
+        format.endnote { render text: @file_set.export_as_endnote }
       end
     end
 
@@ -97,15 +97,15 @@ module Sufia
           update_version
         elsif wants_to_upload_new_version?
           update_file
-        elsif params.key? :generic_file
+        elsif params.key? :file_set
           update_metadata
         elsif params.key? :visibility
           update_visibility
         end
 
       if success
-        redirect_to sufia.edit_generic_file_path(tab: params[:redirect_tab]), notice:
-          render_to_string(partial: 'generic_files/asset_updated_flash', locals: { generic_file: @generic_file })
+        redirect_to sufia.edit_file_set_path(tab: params[:redirect_tab]), notice:
+          render_to_string(partial: 'file_sets/asset_updated_flash', locals: { file_set: @file_set })
       else
         flash[:error] ||= 'Update was unsuccessful.'
         set_variables_for_edit_form
@@ -122,24 +122,24 @@ module Sufia
       end
 
       def presenter
-        presenter_class.new(@generic_file)
+        presenter_class.new(@file_set)
       end
 
       def version_list
-        all_versions = @generic_file.original_file.nil? ? [] : @generic_file.original_file.versions.all
+        all_versions = @file_set.original_file.nil? ? [] : @file_set.original_file.versions.all
         Sufia::VersionListPresenter.new(all_versions)
       end
 
       def edit_form
-        edit_form_class.new(@generic_file)
+        edit_form_class.new(@file_set)
       end
 
       def audit_service
-        CurationConcerns::GenericFileAuditService.new(@generic_file)
+        CurationConcerns::FileSetAuditService.new(@file_set)
       end
 
       def wants_to_revert?
-        params.key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@generic_file.original_file).label
+        params.key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@file_set.original_file).label
       end
 
       def wants_to_upload_new_version?
@@ -150,7 +150,7 @@ module Sufia
       end
 
       def actor
-        @actor ||= CurationConcerns::GenericFileActor.new(@generic_file, current_user)
+        @actor ||= CurationConcerns::FileSetActor.new(@file_set, current_user)
       end
 
       def update_version
@@ -198,20 +198,20 @@ module Sufia
       # this is provided so that implementing application can override this behavior and map params to different attributes
       # called when creating or updating metadata
       def update_metadata_from_upload_screen
-        @generic_file.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
+        @file_set.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
         super
       end
 
-      # The attributes appropriate for updating generic_file objects
+      # The attributes appropriate for updating file_set objects
       def file_attributes
-        edit_form_class.model_attributes(params[:generic_file])
+        edit_form_class.model_attributes(params[:file_set])
       end
 
-      # Returns a duplicate of the :generic_file params
-      # *Danger*: permits all attributes in params[:generic_file], so could present security vulnerabilities if you do something like generic_file.attributes=unfiltered_attributes
+      # Returns a duplicate of the :file_set params
+      # *Danger*: permits all attributes in params[:file_set], so could present security vulnerabilities if you do something like file_set.attributes=unfiltered_attributes
       # Does not filter out attributes like :visibility, which is not returned by file_attributes, so that the actor can use that info
       def unfiltered_attributes
-        params.fetch(:generic_file, {}).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+        params.fetch(:file_set, {}).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
       end
   end
 end

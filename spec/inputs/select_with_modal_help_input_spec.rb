@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'SelectWithModalHelpInput', type: :input do
   subject { input_for file, :rights, options }
-  let(:file) { GenericFile.new }
+  let(:file) { FileSet.new }
   let(:base_options) { { as: :select_with_modal_help, required: true, collection: Sufia.config.cc_licenses } }
   let(:options) { base_options }
 

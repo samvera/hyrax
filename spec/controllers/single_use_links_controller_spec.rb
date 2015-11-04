@@ -4,7 +4,7 @@ describe SingleUseLinksController, type: :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       file.apply_depositor_metadata(user)
     end

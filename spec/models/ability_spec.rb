@@ -5,35 +5,35 @@ describe Sufia::Ability, type: :model do
   describe "a user with no roles" do
     let(:user) { nil }
     subject { Ability.new(user) }
-    it { is_expected.not_to be_able_to(:create, GenericFile) }
+    it { is_expected.not_to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:view_share_work, FileSet) }
   end
 
   describe "a registered user" do
     let(:user) { FactoryGirl.find_or_create(:archivist) }
     subject { Ability.new(user) }
-    it { is_expected.to be_able_to(:create, GenericFile) }
+    it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:view_share_work, FileSet) }
   end
 
   describe "a user in the admin group" do
     let(:user) { FactoryGirl.find_or_create(:archivist) }
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
     subject { Ability.new(user) }
-    it { is_expected.to be_able_to(:create, GenericFile) }
+    it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.to be_able_to(:create, TinymceAsset) }
     it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    it { is_expected.to be_able_to(:view_share_work, GenericFile) }
+    it { is_expected.to be_able_to(:view_share_work, FileSet) }
   end
 
   describe "proxies and transfers" do

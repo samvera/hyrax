@@ -5,7 +5,7 @@ Blacklight.onLoad(function () {
   });
   $('#homeTabs a:first, #myTab a:first').tab('show'); // Select first tab
 
-  // Show the tabs in GenericFile#edit given an anchor
+  // Show the tabs in FileSet#edit given an anchor
   switch (window.location.hash.substring(1)) {
     case 'versioning_display':
       $('#edit_versioning_link a').tab('show');

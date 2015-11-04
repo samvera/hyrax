@@ -173,14 +173,14 @@ en:
       subject:  'Subject'
       message:  'Message'
       delete:   'Delete Message'
-    generic_file:
+    file_set:
       browse_view: "Browse View"
     footer:
       copyright_html: "<strong>Copyright &copy; 2015 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
 
   simple_form:
     labels:
-      generic_file:
+      file_set:
         based_near:       "Location"
         description:      "Abstract or Summary"
         tag:              "Keyword"
@@ -196,7 +196,7 @@ en:
         size:             "Size"
 
     metadata_help:
-      generic_file:
+      file_set:
         resource_type_html: "Pre-defined categories to describe the type of file content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
         title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged. &lt;em&gt;This is a required field&lt;/em&gt;."
         tag: "Words or phrases you select to describe what the file is about. These are used to search for content. &lt;em&gt;This is a required field&lt;/em&gt;."
@@ -215,7 +215,7 @@ en:
         creator_html: 'The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. "Smith, John." <em>This is a required field</em>.'
 
     aria_label:
-      generic_file:
+      file_set:
         default: "Usage information for %{title}"
         based_near: "Usage information for location"
         description: "Usage information for abstract or summary"

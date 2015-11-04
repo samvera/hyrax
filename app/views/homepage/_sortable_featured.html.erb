@@ -1,4 +1,4 @@
-<% featured = f.object.generic_file_solr_document %>
+<% featured = f.object.file_set_solr_document %>
 <li class="dd-item dd3-item featured-item" data-id="<%= featured.id %>">
   <div class="dd-handle dd3-handle"><%= t :drag %></div>
   <div class="dd3-content panel panel-default">
@@ -6,7 +6,7 @@
     <%= f.hidden_field :order, data: {property: "order"} %>
     <div class="main row">
       <div class="col-sm-3">
-        <%= link_to sufia.generic_file_path(featured) do %>
+        <%= link_to sufia.file_set_path(featured) do %>
           <%= render_thumbnail_tag featured, {width: 90} %>
         <% end %>
       </div>

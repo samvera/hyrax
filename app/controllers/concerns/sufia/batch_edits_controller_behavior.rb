@@ -10,8 +10,8 @@ module Sufia
 
     def edit
       super
-      @generic_file = ::GenericFile.new
-      @generic_file.depositor = current_user.user_key
+      @file_set = ::FileSet.new
+      @file_set.depositor = current_user.user_key
       @terms = terms - [:title, :format, :resource_type]
 
       h = {}
@@ -20,18 +20,18 @@ module Sufia
 
       # For each of the files in the batch, set the attributes to be the concatination of all the attributes
       batch.each do |doc_id|
-        gf = ::GenericFile.load_instance_from_solr(doc_id)
+        fs = ::FileSet.load_instance_from_solr(doc_id)
         terms.each do |key|
           h[key] ||= []
-          h[key] = (h[key] + gf.send(key)).uniq
+          h[key] = (h[key] + fs.send(key)).uniq
         end
-        @names << gf.to_s
-        permissions = (permissions + gf.permissions).uniq
+        @names << fs.to_s
+        permissions = (permissions + fs.permissions).uniq
       end
 
-      initialize_fields(h, @generic_file)
+      initialize_fields(h, @file_set)
 
-      @generic_file.permissions_attributes = [{ type: 'group', name: 'public', access: 'read' }]
+      @file_set.permissions_attributes = [{ type: 'group', name: 'public', access: 'read' }]
     end
 
     def after_update
@@ -46,7 +46,7 @@ module Sufia
     end
 
     def update_document(obj)
-      obj.attributes = generic_file_params
+      obj.attributes = file_set_params
       obj.date_modified = Time.now.ctime
       obj.visibility = params[:visibility]
     end
@@ -79,8 +79,8 @@ module Sufia
         Forms::BatchEditForm.terms
       end
 
-      def generic_file_params
-        file_params = params[:generic_file] || ActionController::Parameters.new
+      def file_set_params
+        file_params = params[:file_set] || ActionController::Parameters.new
         Forms::BatchEditForm.model_attributes(file_params)
       end
 

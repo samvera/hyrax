@@ -86,14 +86,14 @@ describe Sufia::Breadcrumbs do
         allow(crumbs).to receive(:user_signed_in?) { true }
         allow(crumbs).to receive(:action_name).and_return("edit")
         allow(crumbs).to receive(:params).and_return("id" => "abc123")
-        allow(crumbs).to receive(:controller_name).and_return("generic_files")
+        allow(crumbs).to receive(:controller_name).and_return("file_sets")
       end
 
       specify "the trail goes back to the user's files and the browse view" do
         crumbs.trail_from_referer
         expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
         expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
-        expect(crumbs.trail.last).to eql([I18n.t('sufia.generic_file.browse_view'), sufia.generic_file_path("abc123")])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), sufia.file_set_path("abc123")])
       end
     end
 
@@ -103,14 +103,14 @@ describe Sufia::Breadcrumbs do
         allow(crumbs).to receive(:user_signed_in?) { true }
         allow(crumbs).to receive(:action_name).and_return("stats")
         allow(crumbs).to receive(:params).and_return("id" => "abc123")
-        allow(crumbs).to receive(:controller_name).and_return("generic_files")
+        allow(crumbs).to receive(:controller_name).and_return("file_sets")
       end
 
       specify "the trail goes back to the user's files and the browse view" do
         crumbs.trail_from_referer
         expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
         expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
-        expect(crumbs.trail.last).to eql([I18n.t('sufia.generic_file.browse_view'), sufia.generic_file_path("abc123")])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), sufia.file_set_path("abc123")])
       end
     end
   end

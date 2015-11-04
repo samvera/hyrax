@@ -1,0 +1,6 @@
+The file(s)
+<% file_sets.first(20).each do |fs|%>
+<%= link_to(fs, file_set_url(fs)) %><%= ',' unless fs == file_sets.last %>
+<% end %>
+<%= '...' if file_sets.length > 20 %>
+have been saved.

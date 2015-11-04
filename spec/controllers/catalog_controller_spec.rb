@@ -25,7 +25,7 @@ describe CatalogController, type: :controller do
     end
 
     context 'with a non-work file' do
-      let(:file) { GenericFile.new(id: 'file123') }
+      let(:file) { FileSet.new(id: 'file123') }
       let(:objects) { [file, rocks, clouds] }
 
       it 'finds works, not files' do
@@ -108,13 +108,13 @@ describe CatalogController, type: :controller do
       end
 
       let(:file1) do
-        { has_model_ssim: ["GenericFile"], id: "ff365c78h", title_tesim: ["find me"],
+        { has_model_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
           edit_access_person_ssim: ["jilluser@example.com"] }
       end
 
       let(:file2) do
-        { has_model_ssim: ["GenericFile"], id: "ff365c79s", title_tesim: ["other file"],
+        { has_model_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
           edit_access_person_ssim: ["jilluser@example.com"] }
       end

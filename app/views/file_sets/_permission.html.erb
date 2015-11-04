@@ -1,0 +1,12 @@
+  <div id="permissions_display" class="tab-pane">
+    <%= form_for file_set, url: sufia.file_set_path(file_set), html: {multipart: true, class: 'form-horizontal', id: 'permission'} do |f| %>
+      <%= hidden_field_tag('redirect_tab', 'permissions') %>
+      <%= render "file_sets/permission_form", f: f %>
+      <div id="permissions_submit">
+        <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_permission" do %>
+          <i class="glyphicon glyphicon-floppy-disk"></i> Save
+        <% end %>
+      </div>
+  <% end %>
+</div><!-- /#permissions_display -->
+

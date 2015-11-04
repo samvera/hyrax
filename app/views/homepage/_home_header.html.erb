@@ -1,7 +1,7 @@
 <div class="home_call_action col-xs-12 col-sm-4 pull-right">
-  <% if can?(:view_share_work, GenericFile) %>
+  <% if can?(:view_share_work, FileSet) %>
     <div class="home_share_work">
-      <%= link_to "<i class=\"glyphicon glyphicon-upload\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, class: "btn btn-primary btn-lg btn-block", id: "contribute_link" %>
+      <%= link_to "<i class=\"glyphicon glyphicon-upload\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_file_set_path, class: "btn btn-primary btn-lg btn-block", id: "contribute_link" %>
       <p class="text-center"><a href="/terms/">Terms of Use</a></p>
     </div><!-- /.home_share_work -->
   <% end %>

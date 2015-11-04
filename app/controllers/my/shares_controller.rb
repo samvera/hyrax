@@ -2,7 +2,7 @@ module My
   class SharesController < MyController
     self.search_params_logic += [
       :show_only_shared_files,
-      :show_only_generic_files
+      :show_only_file_sets
     ]
 
     def index

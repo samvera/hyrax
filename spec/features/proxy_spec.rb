@@ -37,9 +37,9 @@ describe 'proxy', type: :feature do
       attach_file("fileselect", test_file_path)
       click_button('Start upload')
       expect(page).to have_content('Apply Metadata')
-      fill_in('generic_file_title', with: 'MY Title for the World')
-      fill_in('generic_file_tag', with: 'test')
-      fill_in('generic_file_creator', with: 'me')
+      fill_in('file_set_title', with: 'MY Title for the World')
+      fill_in('file_set_tag', with: 'test')
+      fill_in('file_set_creator', with: 'me')
       click_button('upload_submit')
       click_link('Files Shared with Me')
       expect(page).to have_content "MY Title for the World"

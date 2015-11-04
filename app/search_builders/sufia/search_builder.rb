@@ -18,10 +18,10 @@ module Sufia::SearchBuilder
     ]
   end
 
-  def show_only_generic_files(solr_parameters)
+  def show_only_file_sets(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [
-      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::GenericFile.to_class_uri)
+      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::FileSet.to_class_uri)
     ]
   end
 

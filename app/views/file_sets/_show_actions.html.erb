@@ -1,0 +1,45 @@
+    <h2 class="non lower">Actions</h2>
+    <p>
+      <%= render_download_link %>
+      <% if Sufia.config.analytics %>
+        &nbsp;|&nbsp;
+        <%= link_to "Analytics", sufia.stats_file_set_path(@file_set), id: 'stats' %>
+      <% end %>
+      <% if can? :edit, @file_set %>
+          &nbsp;|&nbsp;
+          <% if @file_set.processing? %>
+            <%= t('sufia.upload.processing') %>
+          <% else %>
+            <%= link_to "Edit", sufia.edit_file_set_path(@file_set) %>
+          <% end %>
+      <% end %>
+      <!--<%# if can?(:create, FeaturedWork) && @file_set.public? %>
+        <%# if FeaturedWork.can_create_another? && !@file_set.featured?%>
+          &nbsp;|&nbsp;
+          <%#= link_to "Feature", sufia.featured_work_path(@file_set, format: :json), data: {behavior: 'feature'} %>
+        <%# elsif @file_set.featured? %>
+          &nbsp;|&nbsp;
+          Featured
+        <%# end %>
+      <%# end %>-->
+    </p>
+    <p>Export to:
+      <%= link_to 'EndNote', sufia.file_set_path(@file_set, format: 'endnote') %>
+      &nbsp;|&nbsp;
+      <%= link_to 'Zotero', sufia.static_path('zotero'), {id: 'zoteroLink', name: 'zotero', class: 'lightboxLink'} %>
+      &nbsp;|&nbsp;
+      <%= link_to 'Mendeley', sufia.static_path('mendeley'), {id: 'mendeleyLink', name: 'mendeley', class: 'lightboxLink'} %>
+    </p>
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+      <a class="addthis_button_preferred_1"></a>
+      <a class="addthis_button_preferred_2"></a>
+      <a class="addthis_button_preferred_3"></a>
+      <a class="addthis_button_preferred_4"></a>
+      <a class="addthis_button_compact"></a>
+      <a class="addthis_counter addthis_bubble_style"></a>
+    </div>
+    <!-- AddThis Button END -->
+
+    <!-- COinS hook for Zotero -->
+    <span class="Z3988" title="<%= @file_set.export_as_openurl_ctx_kev %>"></span>

@@ -2,14 +2,14 @@
       <% if display_thumbs %>
         <td class="col-sm-2">
           <%= link_to_profile recent_document.depositor("no depositor value") %>
-          <%= link_to sufia.generic_file_path(recent_document) do %>
+          <%= link_to sufia.file_set_path(recent_document) do %>
             <%= render_thumbnail_tag recent_document, { width: 45 } %>
           <% end %>
         </td>
       <% end %>
       <td>
         <h3>
-          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document)  %>
+          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.file_set_path(recent_document)  %>
           <% if display_access %>
               <% if recent_document.registered? %>
                  <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span>
@@ -22,7 +22,7 @@
         </h3>
         <p>
           <span class="sr-only">Filename</span><%= link_to truncate(recent_document.label, length: 25),
-              sufia.generic_file_path(recent_document), title: recent_document.label %><br />
+              sufia.file_set_path(recent_document), title: recent_document.label %><br />
           <span class="sr-only">Keywords</span><%= link_to_facet_list(recent_document.tags, 'tag', 'no keywords specified').html_safe %>
         </p>
       </td>

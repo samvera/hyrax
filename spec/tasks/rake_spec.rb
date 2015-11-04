@@ -44,12 +44,12 @@ describe "Rake tasks" do
       it { is_expected.to eql corrected_id }
     end
 
-    describe "deleting the namespace from ChecksumAuditLog#generic_file_id" do
+    describe "deleting the namespace from ChecksumAuditLog#file_set_id" do
       before do
-        ChecksumAuditLog.create(generic_file_id: namespaced_id)
+        ChecksumAuditLog.create(file_set_id: namespaced_id)
         Rake::Task["sufia:migrate:audit_logs"].invoke
       end
-      subject { ChecksumAuditLog.first.generic_file_id }
+      subject { ChecksumAuditLog.first.file_set_id }
       it { is_expected.to eql corrected_id }
     end
   end

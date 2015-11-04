@@ -15,8 +15,8 @@ Sufia::Engine.routes.draw do
   # Notifications route for catalog index view
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
 
-  # Generic file routes
-  resources :generic_files, path: :files, except: :index do
+  # File Set routes
+  resources :file_sets, path: :files, except: :index do
     member do
       resource :featured_work, only: [:create, :destroy]
       get 'citation'
@@ -107,7 +107,7 @@ Sufia::Engine.routes.draw do
 
   # Batch edit routes
   get 'batches/:id/edit' => 'batch#edit', as: :batch_edit
-  post 'batches/:id' => 'batch#update', as: :batch_generic_files
+  post 'batches/:id' => 'batch#update', as: :batch_file_sets
 
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index

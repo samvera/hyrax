@@ -10,7 +10,7 @@
       class: "copypaste itemicon itemcode", title: "Single-Use Link to File", id: "copy_link_#{id}" %>
     </li>
     <li role="menuitem" tabindex="-1">
-    <%= link_to raw('<i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit File'), sufia.edit_generic_file_path(id),
+    <%= link_to raw('<i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit File'), sufia.edit_file_set_path(id),
       class: 'itemicon itemedit', title: 'Edit File' %>
     </li>
     <li role="menuitem" tabindex="-1">
@@ -18,7 +18,7 @@
       class: 'itemicon itemdownload', title: 'Download File', target: '_new' %>
     </li>
     <li role="menuitem" tabindex="-1">
-    <%= link_to raw('<i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Delete File'), sufia.generic_file_path(id),
+    <%= link_to raw('<i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Delete File'), sufia.edit_file_set_path(id),
       class: 'itemicon itemtrash', title: 'Delete File', method: :delete, data: {
       confirm: "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation" } %>
     </li>
@@ -28,7 +28,7 @@
       <% end %>
     </li>
     <li>
-      <%= link_to raw('<i class="glyphicon glyphicon-transfer" aria-hidden="true"></i> Transfer Ownership of File'), sufia.new_generic_file_transfer_path(id), class: 'itemicon itemtransfer', title: 'Transfer Ownership of File' if gf.depositor == @user.user_key %>
+      <%= link_to raw('<i class="glyphicon glyphicon-transfer" aria-hidden="true"></i> Transfer Ownership of File'), sufia.new_file_set_transfer_path(id), class: 'itemicon itemtransfer', title: 'Transfer Ownership of File' if gf.depositor == @user.user_key %>
     </li>
   </ul>
 </div>

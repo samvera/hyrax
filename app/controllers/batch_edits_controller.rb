@@ -1,5 +1,5 @@
 class BatchEditsController < ApplicationController
   include Hydra::BatchEditBehavior
-  include GenericFileHelper
+  include FileSetHelper
   include Sufia::BatchEditsControllerBehavior
 end

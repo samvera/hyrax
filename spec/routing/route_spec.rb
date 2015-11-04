@@ -15,45 +15,45 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'GenericFile' do
+  describe 'FileSet' do
     it 'routes to citation' do
-      expect(get: '/files/1/citation').to route_to(controller: 'generic_files', action: 'citation', id: '1')
+      expect(get: '/files/1/citation').to route_to(controller: 'file_sets', action: 'citation', id: '1')
     end
 
     it 'routes to stats' do
-      expect(get: '/files/1/stats').to route_to(controller: 'generic_files', action: 'stats', id: '1')
+      expect(get: '/files/1/stats').to route_to(controller: 'file_sets', action: 'stats', id: '1')
     end
 
     it 'routes to audit' do
-      expect(post: '/files/7/audit').to route_to(controller: 'generic_files', action: 'audit', id: '7')
+      expect(post: '/files/7/audit').to route_to(controller: 'file_sets', action: 'audit', id: '7')
     end
 
     it 'routes to create' do
-      expect(post: '/files').to route_to(controller: 'generic_files', action: 'create')
+      expect(post: '/files').to route_to(controller: 'file_sets', action: 'create')
     end
 
     it 'routes to new' do
-      expect(get: '/files/new').to route_to(controller: 'generic_files', action: 'new')
+      expect(get: '/files/new').to route_to(controller: 'file_sets', action: 'new')
     end
 
     it 'routes to edit' do
-      expect(get: '/files/3/edit').to route_to(controller: 'generic_files', action: 'edit', id: '3')
+      expect(get: '/files/3/edit').to route_to(controller: 'file_sets', action: 'edit', id: '3')
     end
 
     it "routes to show" do
-      expect(get: '/files/4').to route_to(controller: 'generic_files', action: 'show', id: '4')
+      expect(get: '/files/4').to route_to(controller: 'file_sets', action: 'show', id: '4')
     end
 
     it "routes to update" do
-      expect(put: '/files/5').to route_to(controller: 'generic_files', action: 'update', id: '5')
+      expect(put: '/files/5').to route_to(controller: 'file_sets', action: 'update', id: '5')
     end
 
     it "routes to destroy" do
-      expect(delete: '/files/6').to route_to(controller: 'generic_files', action: 'destroy', id: '6')
+      expect(delete: '/files/6').to route_to(controller: 'file_sets', action: 'destroy', id: '6')
     end
 
     it "*not*s route to index" do
-      expect(get: '/files').not_to route_to(controller: 'generic_files', action: 'index')
+      expect(get: '/files').not_to route_to(controller: 'file_sets', action: 'index')
     end
   end
 

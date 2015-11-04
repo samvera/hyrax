@@ -4,7 +4,7 @@ module Sufia
     include Hydra::Collection
     include Sufia::ModelMethods
     include Sufia::Noid
-    include Sufia::GenericFile::Permissions
+    include Sufia::FileSet::Permissions
 
     included do
       before_save :update_permissions
@@ -18,7 +18,7 @@ module Sufia
     # Compute the sum of each file in the collection
     # Return an integer of the result
     def bytes
-      members.reduce(0) { |sum, gf| sum + gf.content.size.to_i }
+      members.reduce(0) { |sum, fs| sum + fs.content.size.to_i }
     end
   end
 end

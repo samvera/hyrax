@@ -63,7 +63,7 @@ class LocalAuthority < ActiveRecord::Base
     hits = []
     # move lc_subject into it's own table since being part of the usual structure caused it to be too slow.
     # When/if we move to having multiple dictionaries for subject we will need to also do a check for the appropriate dictionary.
-    if term == 'subject' && model == 'generic_files' # and local_authoritiy = lc_subject
+    if term == 'subject' && model == 'file_sets' # and local_authoritiy = lc_subject
       sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{low_query}%").select("label, uri").limit(25).to_sql
       SubjectLocalAuthorityEntry.find_by_sql(sql).each do |hit|
         hits << { uri: hit.uri, label: hit.label }

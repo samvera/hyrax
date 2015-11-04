@@ -28,7 +28,7 @@ describe Collection do
 
     context "with two 50 byte files" do
       let(:bitstream) { double("content", size: "50") }
-      let(:file) { mock_model GenericFile, content: bitstream }
+      let(:file) { mock_model FileSet, content: bitstream }
 
       before { allow(collection).to receive(:members).and_return([file, file]) }
 

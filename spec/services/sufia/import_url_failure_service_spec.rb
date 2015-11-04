@@ -4,7 +4,7 @@ describe Sufia::ImportUrlFailureService do
   let!(:depositor) { FactoryGirl.find_or_create(:jill) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
-    GenericFile.create do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata(depositor)
     end
   end

@@ -11,7 +11,7 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - 'spec/internal/**/*'
-    - 'sufia-models/app/models/concerns/sufia/generic_file/export.rb'
+    - 'sufia-models/app/models/concerns/sufia/file_set/export.rb'
 
 Metrics/LineLength:
   Enabled: false
@@ -22,13 +22,13 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/sufia/arkivo/metadata_munger.rb'
-    - 'sufia-models/app/services/sufia/generic_file_audit_service.rb'
+    - 'sufia-models/app/services/sufia/file_set_audit_service.rb'
     - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
-    - 'sufia-models/app/services/sufia/generic_file_audit_service.rb'
+    - 'sufia-models/app/services/sufia/file_set_audit_service.rb'
     - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
@@ -39,7 +39,7 @@ Metrics/ClassLength:
   Exclude:
     - 'lib/generators/sufia/templates/catalog_controller.rb'
     - 'sufia-models/app/models/datastreams/fits_datastream.rb'
-    - 'sufia-models/app/actors/sufia/generic_file/actor.rb'
+    - 'sufia-models/app/actors/sufia/file_set/actor.rb'
 
 Metrics/ModuleLength:
   Exclude:

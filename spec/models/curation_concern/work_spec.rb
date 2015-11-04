@@ -14,7 +14,7 @@ describe Sufia::Works::CurationConcern::Work do
   subject { EssentialWork.new }
 
   it "mixes together all the goodness" do
-    expect(subject.class.ancestors).to include(Sufia::Works::CurationConcern::WithGenericFiles, Sufia::Works::CurationConcern::HumanReadableType, Sufia::Noid, Sufia::ModelMethods, Hydra::Collections::Collectible, Solrizer::Common)
+    expect(subject.class.ancestors).to include(Sufia::Works::CurationConcern::WithFileSets, Sufia::Works::CurationConcern::HumanReadableType, Sufia::Noid, Sufia::ModelMethods, Hydra::Collections::Collectible, Solrizer::Common)
   end
 
   describe "human_readable_type" do

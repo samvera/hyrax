@@ -9,9 +9,9 @@ describe My::CollectionsController, type: :controller do
 
     describe "#index" do
       before do
-        GenericFile.destroy_all
+        FileSet.destroy_all
         Collection.destroy_all
-        @my_file = FactoryGirl.create(:generic_file, depositor: @user)
+        @my_file = FactoryGirl.create(:file_set, depositor: @user)
         @my_collection = Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(@user.user_key)
         end

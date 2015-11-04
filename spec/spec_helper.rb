@@ -43,10 +43,10 @@ if $in_travis
   # Monkey-patches the FITS runner to return the PDF FITS fixture
   module CurationConcerns
     class CharacterizationService
-      def self.run(generic_file)
-        return unless generic_file.original_file.has_content?
+      def self.run(file_set)
+        return unless file_set.original_file.has_content?
         filename = ::File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
-        generic_file.characterization.ng_xml = ::File.read(filename)
+        file_set.characterization.ng_xml = ::File.read(filename)
       end
     end
   end

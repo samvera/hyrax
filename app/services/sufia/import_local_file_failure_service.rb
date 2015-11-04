@@ -2,9 +2,9 @@ module Sufia
   class ImportLocalFileFailureService < MessageUserService
     attr_reader :filename
 
-    def initialize(generic_file, user, filename)
+    def initialize(file_set, user, filename)
       @filename = filename
-      super(generic_file, user)
+      super(file_set, user)
     end
 
     def message

@@ -1,9 +1,9 @@
 module Sufia
   class MessageUserService
-    attr_reader :generic_file, :user
+    attr_reader :file_set, :user
 
-    def initialize(generic_file, user)
-      @generic_file = generic_file
+    def initialize(file_set, user)
+      @file_set = file_set
       @user = user
     end
 

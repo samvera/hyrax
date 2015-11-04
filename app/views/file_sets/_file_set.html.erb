@@ -1,0 +1,15 @@
+<li>
+  <h2>
+    <%= link_to file_set.title_or_label, sufia.file_set_path(file_set) %>
+    <small>[<%= link_to 'Download', sufia.download_path(file_set), target: '_new' %>]</small>
+  </h2>
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render_thumbnail_tag file_set %>
+    </div>
+    <div class="col-sm-9">
+      <%= render 'shared/attributes', work: file_set %>
+    </table>
+  </div>
+</li>
+

@@ -10,8 +10,8 @@ describe Batch do
   it "is titled 'test collection'" do
     expect(batch.title).to eq ["test collection"]
   end
-  it "has generic_files defined" do
-    expect(batch).to respond_to(:generic_files)
+  it "has file_sets defined" do
+    expect(batch).to respond_to(:file_sets)
   end
 
   it "supports to_solr" do

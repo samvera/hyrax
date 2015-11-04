@@ -40,13 +40,13 @@ describe CollectionsController do
     end
 
     it "creates a Collection with files I can access" do
-      @asset1 = GenericFile.new(title: ["First of the Assets"])
+      @asset1 = FileSet.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
-      @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor: user.user_key)
+      @asset2 = FileSet.new(title: ["Second of the Assets"], depositor: user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save
-      @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor: 'abc')
+      @asset3 = FileSet.new(title: ["Third of the Assets"], depositor: 'abc')
       @asset3.apply_depositor_metadata('abc')
       @asset3.save
       expect {
@@ -58,7 +58,7 @@ describe CollectionsController do
     end
 
     it "adds docs to the collection if a batch id is provided and add the collection id to the documents in the collection" do
-      @asset1 = GenericFile.new(title: ["First of the Assets"])
+      @asset1 = FileSet.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
       post :create, batch_document_ids: [@asset1.id],
@@ -68,7 +68,7 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq @asset1.id
-      afterupdate = GenericFile.find(@asset1.id)
+      afterupdate = FileSet.find(@asset1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
   end
@@ -84,13 +84,13 @@ describe CollectionsController do
 
     context "a collections members" do
       before do
-        @asset1 = GenericFile.new(title: ["First of the Assets"])
+        @asset1 = FileSet.new(title: ["First of the Assets"])
         @asset1.apply_depositor_metadata(user.user_key)
         @asset1.save
-        @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor: user.user_key)
+        @asset2 = FileSet.new(title: ["Second of the Assets"], depositor: user.user_key)
         @asset2.apply_depositor_metadata(user.user_key)
         @asset2.save
-        @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor: 'abc')
+        @asset3 = FileSet.new(title: ["Third of the Assets"], depositor: 'abc')
         @asset3.apply_depositor_metadata(user.user_key)
         @asset3.save
       end
@@ -103,7 +103,7 @@ describe CollectionsController do
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq @asset2.id
-        afterupdate = GenericFile.find(@asset2.id)
+        afterupdate = FileSet.find(@asset2.id)
         expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
 
         put :update, id: collection, collection: { members: "remove" }, batch_document_ids: [@asset2]

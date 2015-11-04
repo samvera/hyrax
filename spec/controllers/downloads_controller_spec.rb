@@ -4,11 +4,11 @@ describe DownloadsController, type: :controller do
   describe "with a file" do
     let(:depositor) { FactoryGirl.find_or_create(:archivist) }
     let(:file) do
-      GenericFile.new do |f|
+      FileSet.new do |f|
         f.apply_depositor_metadata(depositor.user_key)
         f.label = 'world.png'
         f.save!
-        Hydra::Works::UploadFileToGenericFile.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
+        Hydra::Works::UploadFileToFileSet.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
       end
     end
 

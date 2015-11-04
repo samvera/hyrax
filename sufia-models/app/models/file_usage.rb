@@ -2,12 +2,12 @@ class FileUsage
   attr_accessor :id, :created, :path, :downloads, :pageviews
 
   def initialize(id)
-    file = ::GenericFile.find(id)
+    file = ::FileSet.find(id)
     user = User.where(email: file.depositor).first
     user_id = user ? user.id : nil
 
     self.id = id
-    self.path = Sufia::Engine.routes.url_helpers.generic_file_path(id)
+    self.path = Sufia::Engine.routes.url_helpers.file_set_path(id)
     self.created = date_for_analytics(file)
     self.downloads = FileDownloadStat.to_flots FileDownloadStat.statistics(id, created, user_id)
     self.pageviews = FileViewStat.to_flots FileViewStat.statistics(id, created, user_id)

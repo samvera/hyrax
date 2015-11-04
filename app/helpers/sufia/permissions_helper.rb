@@ -1,11 +1,11 @@
 module Sufia
   module PermissionsHelper
     def visibility_help
-      help_link('generic_files/visibility', 'Visibility', 'Useage information for visibility')
+      help_link('file_sets/visibility', 'Visibility', 'Useage information for visibility')
     end
 
     def share_with_help
-      help_link('generic_files/share_with', 'Share With', 'Useage information for sharing')
+      help_link('file_sets/share_with', 'Share With', 'Useage information for sharing')
     end
 
     private
