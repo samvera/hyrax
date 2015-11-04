@@ -15,23 +15,23 @@ describe Sufia::Messages do
     Object.send(:remove_const, :TestClass)
   end
 
-  let(:batch_id) { "1" }
+  let(:upload_set_id) { "1" }
   let(:single) { double(to_param: "1", to_s: "File 1") }
   let(:multiple) { [double(to_param: "1", to_s: "File 1"), double(to_param: "2", to_s: "File 2"), double(to_param: "3", to_s: "File 3")] }
   let(:file_list) { "<a href='/files/1'>File 1</a>, <a href='/files/2'>File 2</a>, <a href='/files/3'>File 3</a>" }
 
   describe "message subjects" do
     it "provides a subject for a success message" do
-      expect(message.success_subject).to eq("Batch upload complete")
+      expect(message.success_subject).to eq("UploadSet.upload complete")
     end
     it "provides a subject for a failure message" do
-      expect(message.failure_subject).to eq("Batch upload permission denied")
+      expect(message.failure_subject).to eq("UploadSet.upload permission denied")
     end
   end
 
   describe "#single_success" do
     it "renders a success message for a single file" do
-      node = Capybara::Node::Simple.new(message.single_success(batch_id, single))
+      node = Capybara::Node::Simple.new(message.single_success(upload_set_id, single))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: "File 1 has been saved.")
       expect(node).to have_selector("a[href=\"/files/1\"]")
     end
@@ -39,7 +39,7 @@ describe Sufia::Messages do
 
   describe "#multiple_success" do
     it "renders a success message for multiple files" do
-      node = Capybara::Node::Simple.new(message.multiple_success(batch_id, multiple))
+      node = Capybara::Node::Simple.new(message.multiple_success(upload_set_id, multiple))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: "These files have been saved.")
       expect(node).to have_selector("a[data-content=\"#{file_list}\"][rel=\"popover\"][data-title=\"Files uploaded successfully\"]")
     end
@@ -47,7 +47,7 @@ describe Sufia::Messages do
 
   describe "#single_failure" do
     it "renders a failure message for a single file" do
-      node = Capybara::Node::Simple.new(message.single_failure(batch_id, single))
+      node = Capybara::Node::Simple.new(message.single_failure(upload_set_id, single))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: "File 1 could not be updated. You do not have sufficient privileges to edit it.")
       expect(node).to have_selector("a[href=\"/files/1\"]")
     end
@@ -55,7 +55,7 @@ describe Sufia::Messages do
 
   describe "#multiple_failure" do
     it "renders a failure message for multiple files" do
-      node = Capybara::Node::Simple.new(message.multiple_failure(batch_id, multiple))
+      node = Capybara::Node::Simple.new(message.multiple_failure(upload_set_id, multiple))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: "These files could not be updated. You do not have sufficient privileges to edit them.")
       expect(node).to have_selector("a[data-content=\"#{file_list}\"][rel=\"popover\"][data-title=\"Files failed\"]")
     end

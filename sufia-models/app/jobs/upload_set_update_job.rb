@@ -1,4 +1,4 @@
-class BatchUpdateJob
+class UploadSetUpdateJob
   include Hydra::PermissionsQuery
   include CurationConcerns::Messages
 
@@ -6,21 +6,21 @@ class BatchUpdateJob
     :batch_update
   end
 
-  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied, :work_attributes
+  attr_accessor :login, :title, :file_attributes, :upload_set_id, :visibility, :saved, :denied, :work_attributes
 
-  def initialize(login, batch_id, title, file_attributes, visibility)
+  def initialize(login, upload_set_id, title, file_attributes, visibility)
     self.login = login
     self.title = title || {}
     self.file_attributes = file_attributes
     self.visibility = visibility
     self.work_attributes = file_attributes.merge(visibility: visibility)
-    self.batch_id = batch_id
+    self.upload_set_id = upload_set_id
     self.saved = []
     self.denied = []
   end
 
   def run
-    batch = Batch.find_or_create(batch_id)
+    batch = UploadSet.find_or_create(upload_set_id)
     user = User.find_by_user_key(login)
 
     batch.file_sets.each do |fs|

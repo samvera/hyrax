@@ -48,7 +48,7 @@ module Sufia
 
     # routed to /files/new
     def new
-      @batch_id = ActiveFedora::Noid::Service.new.mint
+      @upload_set_id = ActiveFedora::Noid::Service.new.mint
       @work_id = params[:parent_id]
     end
 
@@ -186,7 +186,7 @@ module Sufia
       end
 
       def process_file(file)
-        Batch.find_or_create(params[:batch_id])
+        UploadSet.find_or_create(params[:upload_set_id])
         super(file)
       end
 

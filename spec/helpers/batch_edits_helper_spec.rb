@@ -4,8 +4,8 @@ describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
     before do
       @document_list = ["doc1", "doc2"]
-      @batch_size_on_other_page = 1
-      @max_batch_size = 10
+      @upload_set_size_on_other_page = 1
+      @max_upload_set_size = 10
     end
 
     context "with my files" do

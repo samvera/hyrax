@@ -19,23 +19,23 @@ describe My::FilesController, type: :controller do
     expect(assigns[:document_list].length).to be >= 1
   end
 
-  describe "batch processing" do
+  describe "upload_set processing" do
     include Sufia::Messages
-    let(:batch_id) { "batch_id" }
-    let(:batch_id2) { "batch_id2" }
-    let(:batch) { double }
+    let(:upload_set_id) { "upload_set_id" }
+    let(:upload_set_id2) { "upload_set_id2" }
+    let(:upload_set) { double }
 
     before do
-      allow(batch).to receive(:id).and_return(batch_id)
-      User.batchuser.send_message(user, single_success(batch_id, batch), success_subject, false)
-      User.batchuser.send_message(user, multiple_success(batch_id2, [batch]), success_subject, false)
+      allow(upload_set).to receive(:id).and_return(upload_set_id)
+      User.upload_setuser.send_message(user, single_success(upload_set_id, batch), success_subject, false)
+      User.upload_setuser.send_message(user, multiple_success(upload_set_id2, [batch]), success_subject, false)
       get :index
     end
 
-    it "gets batches that are complete" do
-      expect(assigns(:batches).count).to eq(2)
-      expect(assigns(:batches)).to include("ss-" + batch_id)
-      expect(assigns(:batches)).to include("ss-" + batch_id2)
+    it "gets upload_sets that are complete" do
+      expect(assigns(:upload_sets).count).to eq(2)
+      expect(assigns(:upload_sets)).to include("ss-" + upload_set_id)
+      expect(assigns(:upload_sets)).to include("ss-" + upload_set_id2)
     end
   end
 
@@ -53,7 +53,7 @@ describe My::FilesController, type: :controller do
     let!(:shared_work) { FactoryGirl.create(:work, edit_users: [user.user_key], user: someone_else) }
     let!(:unrelated_work) { FactoryGirl.create(:public_work, user: someone_else) }
     let!(:my_file) { FactoryGirl.create(:file_set, depositor: user) }
-    let!(:wrong_type) { Batch.create }
+    let!(:wrong_type) { UploadSet.create }
 
     it 'shows only the correct records' do
       get :index

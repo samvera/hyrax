@@ -16,8 +16,8 @@ describe FileSetsController do
     context "when uploading a file" do
       let(:file_set) { FactoryGirl.build(:file_set) }
       let(:reloaded_file_set) { file_set.reload }
-      let(:batch)       { Batch.create }
-      let(:batch_id)    { batch.id }
+      let(:batch)       { UploadSet.create }
+      let(:upload_set_id)    { batch.id }
       let(:file)        { fixture_file_upload('/world.png', 'image/png') }
 
       before do
@@ -28,7 +28,7 @@ describe FileSetsController do
         let(:file) { 'hello' }
 
         it "renders 422 error" do
-          xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
+          xhr :post, :create, files: [file], Filename: "The World", upload_set_id: 'sample_upload_set_id', permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           expect(response.status).to eq 422
           expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
         end
@@ -38,7 +38,7 @@ describe FileSetsController do
         render_views
         it "spawns a content deposit event job" do
           expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
-          xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: { group: { public: 'read' } }, terms_of_service: '1'
+          xhr :post, :create, files: [file], 'Filename' => 'The world', upload_set_id: upload_set_id, permission: { group: { public: 'read' } }, terms_of_service: '1'
           expect(response.body).to eq %([{"name":null,"size":null,"url":"/files/#{file_set.id}","thumbnail_url":"#{file_set.id}","delete_url":"deleteme","delete_type":"DELETE"}])
           expect(flash[:error]).to be_nil
         end
@@ -47,7 +47,7 @@ describe FileSetsController do
           date_today = DateTime.now
           allow(DateTime).to receive(:now).and_return(date_today)
           expect {
-            xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,
+            xhr :post, :create, files: [file], Filename: "The world", upload_set_id: upload_set_id,
                                 permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           }.to change { FileSet.count }.by(1)
           expect(response).to be_success
@@ -62,7 +62,7 @@ describe FileSetsController do
         end
 
         it "sets the depositor id" do
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
+          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: upload_set_id, permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
           expect(response).to be_success
 
           # This is confirming that apply_depositor_metadata recorded the depositor
@@ -74,7 +74,7 @@ describe FileSetsController do
       context "when the file has a virus" do
         it "displays a flash error" do
           expect(CurationConcerns::VirusDetectionService).to receive(:run).at_least(1).times.and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
+          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: "sample_upload_set_id", permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
         end
@@ -85,7 +85,7 @@ describe FileSetsController do
           allow_any_instance_of(FileSet).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
 
           file = fixture_file_upload('/world.png', 'image/png')
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
+          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: "sample_upload_set_id", permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
           expect(response.body).to include("Error occurred while creating file set.")
         end
       end
@@ -98,14 +98,14 @@ describe FileSetsController do
           end
         end
         it "records the work" do
-          xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, parent_id: work.id, terms_of_service: '1'
+          xhr :post, :create, files: [file], Filename: 'The world', upload_set_id: upload_set_id, parent_id: work.id, terms_of_service: '1'
           expect(response).to be_success
           expect(reloaded_file_set.generic_works.first).to eq work
         end
       end
       context "when a work id is not passed" do
         it "creates the work" do
-          xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, terms_of_service: '1'
+          xhr :post, :create, files: [file], Filename: 'The world', upload_set_id: upload_set_id, terms_of_service: '1'
           expect(response).to be_success
           expect(reloaded_file_set.generic_works).not_to be_empty
         end
@@ -113,8 +113,8 @@ describe FileSetsController do
     end
 
     context "with browse-everything" do
-      let(:batch) { Batch.create }
-      let(:batch_id) { batch.id }
+      let(:batch) { UploadSet.create }
+      let(:upload_set_id) { batch.id }
 
       before do
         @json_from_browse_everything = { "0" => { "url" => "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires" => "2014-03-31T20:37:36.214Z", "file_name" => "filepicker-demo.txt.txt" }, "1" => { "url" => "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires" => "2014-03-31T20:37:36.731Z", "file_name" => "Getting+Started.pdf" } }
@@ -122,7 +122,7 @@ describe FileSetsController do
       it "ingests files from provide URLs" do
         expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
         expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
-        expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(FileSet, :count).by(2)
+        expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
         created_files = FileSet.all
         ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
           expect(created_files.map(&:import_url)).to include(url)
@@ -142,7 +142,7 @@ describe FileSetsController do
         it "records the work" do
           expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
           expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
-          expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, parent_id: work.id }.to change(FileSet, :count).by(2)
+          expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id, parent_id: work.id }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           created_files.each { |f| expect(f.generic_works).to include work }
         end
@@ -152,7 +152,7 @@ describe FileSetsController do
         it "creates the work" do
           expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
           expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
-          expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(FileSet, :count).by(2)
+          expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
         end
@@ -162,8 +162,8 @@ describe FileSetsController do
     context "with local_file" do
       let(:file_set_url) { "http://example.com" }
       let(:file_set_upload_directory) { 'spec/mock_upload_directory' }
-      let(:batch) { Batch.create }
-      let(:batch_id) { batch.id }
+      let(:batch) { UploadSet.create }
+      let(:upload_set_id) { batch.id }
 
       before do
         Sufia.config.enable_local_ingest = true
@@ -186,14 +186,14 @@ describe FileSetsController do
 
         it "ingests files from the filesystem" do
           expect {
-            post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+            post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
           }.to change(FileSet, :count).by(2)
-          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
+          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
           # These files should have been moved out of the upload directory
           expect(File).not_to exist("#{file_set_upload_directory}/image.jpg")
           expect(File).not_to exist("#{file_set_upload_directory}/world.png")
           # And into the storage directory
-          files = Batch.find(batch_id).file_sets
+          files = UploadSet.find(upload_set_id).file_sets
           expect(files.first.label).to eq('world.png')
           expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
         end
@@ -201,27 +201,27 @@ describe FileSetsController do
         it "ingests redirect to another location" do
           expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
           expect {
-            post :create, local_file: ["world.png"], batch_id: batch_id
+            post :create, local_file: ["world.png"], upload_set_id: upload_set_id
           }.to change(FileSet, :count).by(1)
           expect(response).to redirect_to file_set_url
           # These files should have been moved out of the upload directory
           expect(File).not_to exist("#{file_set_upload_directory}/world.png")
           # And into the storage directory
-          files = Batch.find(batch_id).file_sets
+          files = UploadSet.find(upload_set_id).file_sets
           expect(files.first.label).to eq 'world.png'
         end
 
         it "ingests directories from the filesystem" do
           expect {
-            post :create, local_file: ["world.png", "import"], batch_id: batch_id
+            post :create, local_file: ["world.png", "import"], upload_set_id: upload_set_id
           }.to change(FileSet, :count).by(4)
-          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
+          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
           # These files should have been moved out of the upload directory
           expect(File).not_to exist("#{file_set_upload_directory}/import/files/icons.zip")
           expect(File).not_to exist("#{file_set_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
           expect(File).not_to exist("#{file_set_upload_directory}/world.png")
           # And into the storage directory
-          files = Batch.find(batch_id).file_sets
+          files = UploadSet.find(upload_set_id).file_sets
           file_labels = files.map(&:label)
           expect(file_labels).to include 'world.png'
           # TODO: use files.select once projecthydra/active_fedora#609 is fixed
@@ -240,7 +240,7 @@ describe FileSetsController do
           end
           it "records the work" do
             expect {
-              post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id, parent_id: work.id
+              post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id, parent_id: work.id
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             created_files.each { |f| expect(f.generic_works).to include work }
@@ -250,7 +250,7 @@ describe FileSetsController do
         context "when a work id is not passed" do
           it "creates the work" do
             expect {
-              post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+              post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -261,7 +261,7 @@ describe FileSetsController do
       context "when User model does not define directory path" do
         it "returns an error message and redirects to file upload page" do
           expect {
-            post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+            post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
           }.not_to change(FileSet, :count)
           expect(response).to render_template :new
           expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
@@ -616,21 +616,21 @@ describe FileSetsController do
 
   describe "batch creation" do
     context "when uploading a file" do
-      let(:batch_id) { ActiveFedora::Noid::Service.new.mint }
+      let(:upload_set_id) { ActiveFedora::Noid::Service.new.mint }
       let(:file1) { fixture_file_upload('/world.png', 'image/png') }
       let(:file2) { fixture_file_upload('/image.jpg', 'image/png') }
 
       it "does not create the batch on HTTP GET" do
-        expect(Batch).not_to receive(:create)
+        expect(UploadSet..not_to receive(:create)
         xhr :get, :new
         expect(response).to be_success
       end
 
       it "creates the batch on HTTP POST with multiple files" do
-        expect(Batch).to receive(:find_or_create).twice
-        xhr :post, :create, files: [file1], Filename: 'The world 1', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        expect(UploadSet..to receive(:find_or_create).twice
+        xhr :post, :create, files: [file1], Filename: 'The world 1', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success
-        xhr :post, :create, files: [file2], Filename: 'An image', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        xhr :post, :create, files: [file2], Filename: 'An image', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success
       end
     end

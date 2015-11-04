@@ -8,9 +8,9 @@
     </div><!-- /well -->
   </div>
   <%= hidden_field_tag :type, params[:type] %>
-  <% if params[:batch_document_ids].present? %>
-    <% params[:batch_document_ids].each do |batch_item| %>
-      <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
+  <% if params[:upload_set_document_ids].present? %>
+    <% params[:upload_set_document_ids].each do |batch_item| %>
+      <input type="hidden" name="upload_set_document_ids[]" value="<%= batch_item %>"/>
     <% end %>
   <% end %>
 

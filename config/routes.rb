@@ -105,9 +105,9 @@ Sufia::Engine.routes.draw do
   get 'directory/user/:uid/:attribute' => 'directory#user_attribute'
   get 'directory/group/:cn' => 'directory#group', constraints: { cn: /.*/ }
 
-  # Batch edit routes
-  get 'batches/:id/edit' => 'batch#edit', as: :batch_edit
-  post 'batches/:id' => 'batch#update', as: :batch_file_sets
+  # UploadSet edit routes
+  get 'upload_sets/:id/edit' => 'upload_set#edit', as: :upload_set_edit
+  post 'upload_sets/:id' => 'upload_set#update', as: :upload_set_file_sets
 
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index

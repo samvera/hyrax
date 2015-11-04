@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe 'batch/edit.html.erb' do
-  let(:batch) { Batch.create }
+  let(:batch) { UploadSet.create }
   let(:file_set) do
     FileSet.new(title: ['some title']).tap do |f|
       f.apply_depositor_metadata("bob")
     end
   end
-  let(:form) { Sufia::Forms::BatchEditForm.new(file_set) }
+  let(:form) { Sufia::Forms::UploadSetEditForm.new(file_set) }
 
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))

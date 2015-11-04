@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Batch do
+describe UploadSet do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:batch) { described_class.create(title: ["test collection"], creator: [user.user_key]) }
 

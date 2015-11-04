@@ -14,8 +14,8 @@ FactoryGirl.define do
     factory :user_with_mail do
       after(:create) do |user|
         # TODO: what is this class for?
-        # <span class="batchid ui-helper-hidden">fake_batch_id</span>
-        message = BatchMessage.new
+        # <span class="batchid ui-helper-hidden">fake_upload_set_id</span>
+        message = UploadSetMessage.new
 
         # Create examples of single file successes and failures
         (1..10).each do |number|
@@ -48,6 +48,6 @@ class MockFile
   end
 end
 
-class BatchMessage
+class UploadSetMessage
   include Sufia::Messages
 end

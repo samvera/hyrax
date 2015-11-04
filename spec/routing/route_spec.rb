@@ -57,13 +57,13 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'Batch' do
+  describe 'UploadSet do
     it "routes to edit" do
-      expect(get: '/batches/1/edit').to route_to(controller: 'batch', action: 'edit', id: '1')
+      expect(get: '/upload_sets/1/edit').to route_to(controller: 'upload_set', action: 'edit', id: '1')
     end
 
     it "routes to update" do
-      expect(post: '/batches/2').to route_to(controller: 'batch', action: 'update', id: '2')
+      expect(post: '/upload_sets/2').to route_to(controller: 'upload_set', action: 'update', id: '2')
     end
   end
 

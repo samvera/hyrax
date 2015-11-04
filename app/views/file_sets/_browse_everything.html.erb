@@ -5,7 +5,7 @@
 <div class="well">
   <%= form_tag(sufia.file_sets_path, id: 'browse_everything_form', method: 'post') do %>
       <%= render partial: 'file_sets/upload/tos_checkbox' %>
-      <%= hidden_field_tag(:batch_id, @batch_id) %>
+      <%= hidden_field_tag(:upload_set_id, @upload_set_id) %>
       <%= button_tag(t('sufia.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-lg btn-success', id: "browse-btn",
         'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
         'data-target' => '#browse_everything_form' ) %>

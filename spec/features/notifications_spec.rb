@@ -15,7 +15,7 @@ describe "Notifications page", type: :feature do
     expect(page).to have_content "These files have been saved"
     expect(page).to have_content "File 1 could not be updated. You do not have sufficient privileges to edit it."
     expect(page).to have_content "File 1 has been saved"
-    expect(page).to have_content "Batch upload permission denied  "
-    expect(page).to have_content "Batch upload complete"
+    expect(page).to have_content "UploadSet upload permission denied  "
+    expect(page).to have_content "UploadSet upload complete"
   end
 end

@@ -58,7 +58,7 @@ module Sufia
 
       def file_ids_for_user(user)
         ids = []
-        ::FileSet.find_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+        ::FileSet.find_in_upload_sets("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids
