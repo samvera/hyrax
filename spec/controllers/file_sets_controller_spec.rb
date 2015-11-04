@@ -389,7 +389,7 @@ describe FileSetsController do
       expect(response).to be_success
       expect(assigns[:file_set]).to eq file_set
       expect(assigns[:form]).to be_kind_of CurationConcerns::Forms::FileSetEditForm
-      expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
+      expect(assigns[:version_list]).to be_kind_of CurationConcerns::VersionListPresenter
       expect(response).to render_template(:edit)
     end
   end
