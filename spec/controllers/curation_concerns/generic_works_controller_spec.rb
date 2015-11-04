@@ -124,7 +124,7 @@ describe CurationConcerns::GenericWorksController do
       end
 
       context 'without children' do
-        it 'prompts to change the files access' do
+        it "doesn't prompt to change the files access" do
           patch :update, id: a_work
           expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
         end
