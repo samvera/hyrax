@@ -32,18 +32,18 @@ describe UploadSetUpdateJob do
 
     it "updates file metadata" do
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user, upload_set)
-      expect(subject).to be true
+      subject
       expect(file.reload.title).to eq ['File One']
       expect(file2.reload.title).to eq ['File Two']
     end
 
     context "when user does not have permission to edit all of the files" do
-      before do
+      it "sends the failure message" do
         expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(true)
         expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(false)
         expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_failure, user, upload_set)
+        subject
       end
-      it { is_expected.to be false }
     end
   end
 end
