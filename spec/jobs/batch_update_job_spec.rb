@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe BatchUpdateJob do
+describe UploadSetUpdateJob do
   let(:user) { FactoryGirl.find_or_create(:jill) }
-  let(:batch) { Batch.create }
+  let(:batch) { UploadSet.create }
 
   let!(:file) do
     FileSet.new(batch: batch) do |file|
@@ -34,7 +34,7 @@ describe BatchUpdateJob do
         expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(false)
         expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(false)
         job.run
-        expect(user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload permission denied")
+        expect(user.mailbox.inbox[0].messages[0].subject).to eq("UploadSet.upload permission denied")
         expect(user.mailbox.inbox[0].messages[0].body).to include("data-content")
         expect(user.mailbox.inbox[0].messages[0].body).to include("These files")
       end
@@ -53,7 +53,7 @@ describe BatchUpdateJob do
         expect(ContentUpdateEventJob).to receive(:new).with(file2.id, user.user_key).and_return(s2)
         expect(CurationConcerns.queue).to receive(:push).with(s2).once
         job.run
-        expect(user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload complete")
+        expect(user.mailbox.inbox[0].messages[0].subject).to eq("UploadSet.upload complete")
         expect(user.mailbox.inbox[0].messages[0].body).to include("data-content")
         expect(user.mailbox.inbox[0].messages[0].body).to include("These files")
       end

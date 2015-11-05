@@ -4,7 +4,7 @@
     <p>The more descriptive information you provide the better we can serve your needs.</p>
     <p>Please consider releasing your work as an <span class="label label-success">Open Access</span> work.</p>
     <p><small class="pull-left"><span class="error">*</span> required</small></p>
-    <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', sufia.new_file_set_path, class: 'a' %></small></p>
+    <p><small class="pull-right"><%= link_to 'Switch to Upload Set', sufia.new_file_set_path, class: 'a' %></small></p>
     <div class="well">
       <% f.object.terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>

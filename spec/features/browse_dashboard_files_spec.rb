@@ -61,7 +61,7 @@ describe "Browse Dashboard", type: :feature do
       end
     end
 
-    it "allows me to delete works in batches", js: true do
+    it "allows me to delete works in upload_sets", js: true do
       first('input#check_all').click
       expect {
         click_button('Delete Selected')

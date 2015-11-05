@@ -1,6 +1,6 @@
 module Sufia
   module FileSetBehavior
     extend ActiveSupport::Concern
-    include Sufia::FileSet::Batches
+    include Sufia::FileSet::UploadSets
   end
 end

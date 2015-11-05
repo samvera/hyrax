@@ -2,25 +2,25 @@ require 'spec_helper'
 require 'rake'
 
 describe "Rake tasks" do
-  describe "sufia:empty_batches" do
+  describe "sufia:empty_upload_sets" do
     before do
-      load File.expand_path("../../../sufia-models/lib/tasks/batch_cleanup.rake", __FILE__)
+      load File.expand_path("../../../sufia-models/lib/tasks/upload_set_cleanup.rake", __FILE__)
       Rake::Task.define_task(:environment)
     end
-    after { Rake::Task["sufia:empty_batches"].reenable }
-    subject { capture_stdout { Rake::Task["sufia:empty_batches"].invoke } }
+    after { Rake::Task["sufia:empty_upload_sets"].reenable }
+    subject { capture_stdout { Rake::Task["sufia:empty_upload_sets"].invoke } }
 
-    context "without an empty batch" do
+    context "without an empty upload_set" do
       it { is_expected.to be_empty }
     end
 
-    context "with an empty batch" do
-      before { Batch.create("empty-batch") }
-      it { is_expected.to start_with("empty-batch contains no files - to delete, rerun with the remove option") }
+    context "with an empty upload_set" do
+      before { UploadSet.create("empty-upload_set") }
+      it { is_expected.to start_with("empty-upload_set contains no files - to delete, rerun with the remove option") }
 
-      describe "removing the empty batch" do
-        subject { capture_stdout { Rake::Task["sufia:empty_batches"].invoke("remove") } }
-        it { is_expected.to start_with("empty-batch contains no files - deleted") }
+      describe "removing the empty upload_set" do
+        subject { capture_stdout { Rake::Task["sufia:empty_upload_sets"].invoke("remove") } }
+        it { is_expected.to start_with("empty-upload_set contains no files - deleted") }
       end
     end
   end

@@ -51,7 +51,7 @@ describe CollectionsController do
       @asset3.save
       expect {
         post :create, collection: { title: "My own Collection", description: "The Description\r\n\r\nand more" },
-                      batch_document_ids: [@asset1.id, @asset2.id, @asset3.id]
+                      upload_set_document_ids: [@asset1.id, @asset2.id, @asset3.id]
       }.to change { Collection.count }.by(1)
       collection = assigns(:collection)
       expect(collection.members).to match_array [@asset1, @asset2]
@@ -61,7 +61,7 @@ describe CollectionsController do
       @asset1 = FileSet.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
-      post :create, batch_document_ids: [@asset1.id],
+      post :create, upload_set_document_ids: [@asset1.id],
                     collection: { title: "My Second Collection ", description: "The Description\r\n\r\nand more" }
       expect(assigns[:collection].members).to eq [@asset1]
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
@@ -96,7 +96,7 @@ describe CollectionsController do
       end
 
       it "sets collection on members" do
-        put :update, id: collection, collection: { members: "add" }, batch_document_ids: [@asset3.id, @asset1.id, @asset2.id]
+        put :update, id: collection, collection: { members: "add" }, upload_set_document_ids: [@asset3.id, @asset1.id, @asset2.id]
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
         expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]
         asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
@@ -106,7 +106,7 @@ describe CollectionsController do
         afterupdate = FileSet.find(@asset2.id)
         expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
 
-        put :update, id: collection, collection: { members: "remove" }, batch_document_ids: [@asset2]
+        put :update, id: collection, collection: { members: "remove" }, upload_set_document_ids: [@asset2]
         asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first

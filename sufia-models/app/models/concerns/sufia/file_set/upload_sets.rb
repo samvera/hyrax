@@ -1,6 +1,6 @@
 module Sufia
   module FileSet
-    module Batches
+    module UploadSets
       extend ActiveSupport::Concern
       included do
         belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf

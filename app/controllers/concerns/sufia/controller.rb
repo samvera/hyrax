@@ -29,11 +29,11 @@ module Sufia::Controller
 
   def notifications_number
     @notify_number = 0
-    @batches = []
+    @upload_sets = []
     return if action_name == "index" && controller_name == "mailbox"
     return unless user_signed_in?
     @notify_number = current_user.mailbox.inbox(unread: true).count
-    @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/, 1] }.select { |val| !val.blank? }
+    @upload_sets = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/, 1] }.select { |val| !val.blank? }
   end
 
   # Override Devise method to redirect to dashboard after signing in

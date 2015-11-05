@@ -15,7 +15,7 @@ module Sufia
       def perform_local_ingest
         if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
           if ingest_local_file
-            redirect_to FileSetsController.upload_complete_path(params[:batch_id])
+            redirect_to FileSetsController.upload_complete_path(params[:upload_set_id])
           else
             flash[:alert] = "Error importing files from user directory."
             render :new
@@ -43,7 +43,7 @@ module Sufia
             files << filename
           end
         end
-        Batch.find_or_create(params[:batch_id]) unless files.empty?
+        UploadSet.find_or_create(params[:upload_set_id]) unless files.empty?
         files.each do |filename|
           ingest_one(filename, has_directories)
         end
@@ -56,7 +56,7 @@ module Sufia
         ::FileSet.new(label: basename).tap do |fs|
           fs.relative_path = filename if filename != basename
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
-          actor.create_metadata(params[:batch_id], params[:parent_id])
+          actor.create_metadata(params[:upload_set_id], params[:parent_id])
           fs.save!
           CurationConcerns.queue.push(IngestLocalFileJob.new(fs.id, current_user.directory, filename, current_user.user_key))
         end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BatchController do
+describe UploadSetsController do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:other_user) { FactoryGirl.find_or_create(:curator) }
   before do
@@ -9,10 +9,10 @@ describe BatchController do
   end
   describe "#update" do
     let(:batch_update_message) { double('batch update message') }
-    let(:batch) { Batch.create }
+    let(:batch) { UploadSet.create }
     context "enquing a batch job" do
       before do
-        allow(BatchUpdateJob).to receive(:new).with(user.user_key, batch.id, { '1' => 'foo' },
+        allow(UploadSetUpdateJob).to receive(:new).with(user.user_key, batch.id, { '1' => 'foo' },
                                                     { tag: [] }, 'open').and_return(batch_update_message)
       end
       it "is successful" do
@@ -36,7 +36,7 @@ describe BatchController do
         end
       end
       let(:batch) do
-        Batch.create { |b| b.file_sets.push(somebody_else_file) }
+        UploadSet.create { |b| b.file_sets.push(somebody_else_file) }
       end
 
       before do
@@ -102,7 +102,7 @@ describe BatchController do
     before do
       allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
     end
-    let(:b1) { Batch.create }
+    let(:b1) { UploadSet.create }
     let!(:file) { FileSet.create(batch: b1, label: 'f1') { |f| f.apply_depositor_metadata(user) } }
     let!(:file2) { FileSet.create(batch: b1, label: 'f2') { |f| f.apply_depositor_metadata(user) } }
 
