@@ -9,7 +9,7 @@
     <div class="form-group collection_id">
       <div class="controls">
         <%= select_tag :id, collection_options_for_select(collectible), prompt: 'Make a Selection',
-          class: 'form-control', :'aria-labelledby' => select_label_id %>
+          class: 'form-control', :'aria-labelledby' => select_label_id, required: 'required' %>
       </div>
     </div>
 
