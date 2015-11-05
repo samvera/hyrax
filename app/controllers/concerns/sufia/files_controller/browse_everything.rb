@@ -28,7 +28,7 @@ module Sufia::FilesController
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
           actor.create_metadata(params[:upload_set_id], params[:parent_id])
           fs.save!
-          CurationConcerns.queue.push(ImportUrlJob.new(fs.id))
+          ImportUrlJob.perform_later(fs.id)
         end
       end
   end

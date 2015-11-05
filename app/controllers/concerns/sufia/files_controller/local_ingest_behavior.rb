@@ -58,7 +58,7 @@ module Sufia
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
           actor.create_metadata(params[:upload_set_id], params[:parent_id])
           fs.save!
-          CurationConcerns.queue.push(IngestLocalFileJob.new(fs.id, current_user.directory, filename, current_user.user_key))
+          IngestLocalFileJob.perform_later(fs.id, current_user.directory, filename, current_user.user_key)
         end
       end
   end # /FilesController::LocalIngestBehavior

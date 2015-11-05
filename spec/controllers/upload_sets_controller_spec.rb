@@ -11,12 +11,8 @@ describe UploadSetsController do
     let(:batch_update_message) { double('batch update message') }
     let(:batch) { UploadSet.create }
     context "enquing a batch job" do
-      before do
-        allow(UploadSetUpdateJob).to receive(:new).with(user.user_key, batch.id, { '1' => 'foo' },
-                                                        { tag: [] }, 'open').and_return(batch_update_message)
-      end
       it "is successful" do
-        expect(CurationConcerns.queue).to receive(:push).with(batch_update_message).once
+        expect(UploadSetUpdateJob).to receive(:new).with(user.user_key, batch.id, { '1' => 'foo' }, { tag: [] }, 'open').once
         post :update, id: batch.id, title: { '1' => 'foo' }, visibility: 'open', file_set: { tag: [""] }
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")

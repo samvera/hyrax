@@ -19,9 +19,7 @@ describe GenericWork do
 
     it "transfers the request" do
       work.on_behalf_of = transfer_to.user_key
-      stub_job = double('change depositor job')
-      allow(ContentDepositorChangeEventJob).to receive(:new).and_return(stub_job)
-      expect(CurationConcerns.queue).to receive(:push).with(stub_job).once.and_return(true)
+      expect(ContentDepositorChangeEventJob).to receive(:perform_later).once
       work.save!
     end
   end

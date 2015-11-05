@@ -8,7 +8,7 @@ module Sufia
     end
 
     def call
-      CurationConcerns.queue.push(ContentDepositEventJob.new(file_set.id, user.user_key))
+      ContentDepositEventJob.perform_later(file_set.id, user.user_key)
       super
     end
 
