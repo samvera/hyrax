@@ -14,7 +14,7 @@ describe GenericWork do
   end
 
   describe "created for someone (proxy)" do
-    let(:work) { described_class.new.tap { |gw| gw.apply_depositor_metadata("user") } }
+    let(:work) { described_class.new(title: ['demoname']) { |gw| gw.apply_depositor_metadata("user") } }
     let(:transfer_to) { FactoryGirl.find_or_create(:jill) }
 
     it "transfers the request" do
@@ -42,7 +42,7 @@ describe GenericWork do
   describe "trophies" do
     before do
       u = FactoryGirl.find_or_create(:jill)
-      @w = described_class.new.tap do |gw|
+      @w = described_class.new(title: ['demoname']) do |gw|
         gw.apply_depositor_metadata(u)
         gw.save!
       end
