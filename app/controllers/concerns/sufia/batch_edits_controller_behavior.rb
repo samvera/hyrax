@@ -76,12 +76,12 @@ module Sufia
       end
 
       def terms
-        Forms::UploadSetEditForm.terms
+        Forms::BatchEditForm.terms
       end
 
       def file_set_params
         file_params = params[:file_set] || ActionController::Parameters.new
-        Forms::UploadSetEditForm.model_attributes(file_params)
+        Forms::BatchEditForm.model_attributes(file_params)
       end
 
       def redirect_to_return_controller

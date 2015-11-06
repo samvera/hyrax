@@ -7,7 +7,7 @@ describe 'batch/edit.html.erb' do
       f.apply_depositor_metadata("bob")
     end
   end
-  let(:form) { Sufia::Forms::UploadSetEditForm.new(file_set) }
+  let(:form) { CurationConcerns::Forms::FileSetEditForm.new(file_set) }
 
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))

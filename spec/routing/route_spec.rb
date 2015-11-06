@@ -57,7 +57,7 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'UploadSet do
+  describe 'UploadSet' do
     it "routes to edit" do
       expect(get: '/upload_sets/1/edit').to route_to(controller: 'upload_set', action: 'edit', id: '1')
     end
