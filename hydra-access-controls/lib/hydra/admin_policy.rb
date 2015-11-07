@@ -22,17 +22,5 @@ module Hydra
       title_without_first.first
     end
     alias_method_chain :title, :first
-
-    def license_title=(_)
-      Deprecation.warn AdminPolicy, "license_title= has been removed from AdminPolicy. Look at Hydra::Rights instead"
-    end
-
-    def license_description=(_)
-      Deprecation.warn AdminPolicy, "license_description= has been removed from AdminPolicy. Look at Hydra::Rights instead"
-    end
-
-    def license_url=(_)
-      Deprecation.warn AdminPolicy, "license_url= has been removed from AdminPolicy. Look at Hydra::Rights instead"
-    end
   end
 end

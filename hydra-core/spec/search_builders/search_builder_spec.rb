@@ -8,35 +8,18 @@ describe SearchBuilder do
   let(:search_builder) { described_class }
 
   subject do
-    Deprecation.silence(Hydra::SearchBuilder) do
-      search_builder.new(processor_chain, context)
-    end
+    search_builder.new(processor_chain, context)
   end
   before { subject.current_ability = current_ability }
 
   it "extends classes with the necessary Hydra modules" do
-    expect(Hydra::SearchBuilder.included_modules).to include(Hydra::AccessControlsEnforcement)
+    expect(described_class.included_modules).to include(Hydra::AccessControlsEnforcement)
   end
 
   context "when a query is generated" do
     it "triggers add_access_controls_to_solr_params" do
       expect(subject).to receive(:add_access_controls_to_solr_params)
       subject.query
-    end
-  end
-
-  context "the deprecated Hydra::SearchBuilder" do
-    let(:search_builder) { Hydra::SearchBuilder }
-
-    it "extends classes with the necessary Hydra modules" do
-      expect(Hydra::SearchBuilder.included_modules).to include(Hydra::AccessControlsEnforcement)
-    end
-
-    context "when a query is generated" do
-      it "triggers add_access_controls_to_solr_params" do
-        expect(subject).to receive(:add_access_controls_to_solr_params)
-        subject.query
-      end
     end
   end
 end

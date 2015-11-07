@@ -19,9 +19,6 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   SimpleCov.start
 end
 
-
-# require 'support/rails'
-
 # Since we're not doing a Rails Engine test, we have to load these classes manually:
 require 'active_support'
 require 'active_support/dependencies'

@@ -18,7 +18,6 @@ module Hydra
   autoload :AdminPolicyBehavior
   autoload :RoleMapperBehavior
   autoload :PermissionsQuery
-  autoload :PermissionsCache
   autoload :IpBasedGroups
 
   class << self
