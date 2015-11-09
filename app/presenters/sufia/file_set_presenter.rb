@@ -1,7 +1,9 @@
 module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
+    delegate :depositor, :tag, :date_created, to: :solr_document
+
     def tweeter
-      user = ::User.find_by_user_key(model.depositor)
+      user = ::User.find_by_user_key(depositor)
       if user.try(:twitter_handle).present?
         "@#{user.twitter_handle}"
       else

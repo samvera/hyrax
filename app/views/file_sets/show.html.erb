@@ -47,7 +47,7 @@
     <%= render 'show_collections' %>
   </div>
   <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
-    <h1 class="visibility"><%= display_multiple @presenter.title %> <%= render_visibility_badge %></h1>
+    <h1 class="visibility"><%= @presenter.title %> <%= render_visibility_badge %></h1>
     <%= render 'show_details' %>
     <%= render 'users/activity_log', events: @events %>
   </div><!-- /columns second -->
