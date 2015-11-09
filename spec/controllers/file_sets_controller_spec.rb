@@ -73,7 +73,7 @@ describe FileSetsController do
 
       context "when the file has a virus" do
         it "displays a flash error" do
-          expect(CurationConcerns::VirusDetectionService).to receive(:run).at_least(1).times.and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
+          expect(ClamAV.instance).to receive(:scanfile).and_return("EL CRAPO VIRUS")
           xhr :post, :create, files: [file], Filename: "The world", upload_set_id: "sample_upload_set_id", permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
@@ -524,7 +524,7 @@ describe FileSetsController do
       allow(CharacterizeJob).to receive(:new).with(file_set.id).and_return(s2)
       allow(CreateDerivativesJob).to receive(:new).with(file_set.id).and_return(s2)
       file = fixture_file_upload('/world.png', 'image/png')
-      expect(CurationConcerns::VirusDetectionService).to receive(:run).at_least(1).times.and_return(nil)
+      expect(ClamAV.instance).to receive(:scanfile).and_return(0)
       expect(CurationConcerns.queue).to receive(:push).with(s2).once
       post :update, id: file_set.id, filedata: file, 'Filename' => 'The world',
                     file_set: { tag: [''],
