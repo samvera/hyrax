@@ -4,7 +4,7 @@ module Sufia::HomepageController
   included do
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
-    include Blacklight::Catalog::SearchContext
+    include Blacklight::SearchContext
     include Sufia::Controller
     include Blacklight::SearchHelper
     include Hydra::Controller::SearchBuilder
