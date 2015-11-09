@@ -10,7 +10,6 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
-    - 'spec/internal/**/*'
     - 'sufia-models/app/models/concerns/sufia/file_set/export.rb'
 
 Metrics/LineLength:
