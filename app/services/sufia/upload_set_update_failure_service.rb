@@ -1,10 +1,10 @@
 module Sufia
   class UploadSetUpdateFailureService < MessageUserService
-    attr_reader :upload_set_id 
+    attr_reader :upload_set_id
 
     def initialize(file_set, user, upload_set_id)
       @upload_set_id = upload_set_id
-      super(file_set, user) 
+      super(file_set, user)
     end
 
     def message
