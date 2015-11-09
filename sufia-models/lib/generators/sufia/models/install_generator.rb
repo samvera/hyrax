@@ -81,12 +81,6 @@ This generator makes the following changes to your application:
     end
   end
 
-  def inject_sufia_file_set_behavior
-    insert_into_file 'app/models/file_set.rb', after: 'include ::CurationConcerns::FileSetBehavior' do
-      "\n  include ::Sufia::FileSetBehavior"
-    end
-  end
-
   def install_mailboxer
     generate "mailboxer:install"
   end
