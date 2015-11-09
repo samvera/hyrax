@@ -3,7 +3,7 @@ class CreateProxyDepositRights < ActiveRecord::Migration
     create_table :proxy_deposit_rights do |t|
       t.references :grantor
       t.references :grantee
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :proxy_deposit_rights, :grantor_id
     add_index :proxy_deposit_rights, :grantee_id

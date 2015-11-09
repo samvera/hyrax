@@ -6,7 +6,7 @@ class CreateUserStats < ActiveRecord::Migration
       t.integer :file_views
       t.integer :file_downloads
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_column :file_view_stats, :user_id, :integer

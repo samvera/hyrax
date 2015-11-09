@@ -5,7 +5,7 @@ class CreateFileViewStats < ActiveRecord::Migration
       t.integer :views
       t.string :file_id
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :file_view_stats, :file_id
   end

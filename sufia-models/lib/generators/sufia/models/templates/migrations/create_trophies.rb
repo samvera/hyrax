@@ -4,7 +4,7 @@ class CreateTrophies < ActiveRecord::Migration
       t.integer :user_id
       t.string :generic_file_id
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

@@ -5,7 +5,7 @@ class CreateFileDownloadStats < ActiveRecord::Migration
       t.integer :downloads
       t.string :file_id
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :file_download_stats, :file_id
   end

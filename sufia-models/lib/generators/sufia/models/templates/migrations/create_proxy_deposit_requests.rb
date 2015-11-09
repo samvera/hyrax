@@ -8,7 +8,7 @@ class CreateProxyDepositRequests < ActiveRecord::Migration
       t.string :status, null: false, default: 'pending'
       t.text :sender_comment
       t.text :receiver_comment
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :proxy_deposit_requests, :receiving_user_id
     add_index :proxy_deposit_requests, :sending_user_id
