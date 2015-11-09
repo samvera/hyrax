@@ -2,7 +2,7 @@
 module Sufia
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
-    include Hydra::Works::FileSet::MimeTypes
+    include Hydra::Works::MimeTypes
     include Sufia::Permissions::Readable
 
     # Add a schema.org itemtype

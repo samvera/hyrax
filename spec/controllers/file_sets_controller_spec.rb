@@ -621,13 +621,13 @@ describe FileSetsController do
       let(:file2) { fixture_file_upload('/image.jpg', 'image/png') }
 
       it "does not create the batch on HTTP GET" do
-        expect(UploadSet..not_to receive(:create)
+        expect(UploadSet).not_to receive(:create)
         xhr :get, :new
         expect(response).to be_success
       end
 
       it "creates the batch on HTTP POST with multiple files" do
-        expect(UploadSet..to receive(:find_or_create).twice
+        expect(UploadSet).to receive(:find_or_create).twice
         xhr :post, :create, files: [file1], Filename: 'The world 1', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success
         xhr :post, :create, files: [file2], Filename: 'An image', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
