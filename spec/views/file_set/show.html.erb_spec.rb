@@ -13,19 +13,19 @@ describe 'file_sets/show.html.erb', type: :view do
 
   let(:file_set) do
     stub_model(FileSet, id: '123',
-                            depositor: depositor.user_key,
-                            audit_stat: 1,
-                            title: ['My Title'],
-                            description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
-                            tag: ['bacon', 'sausage', 'eggs'],
-                            rights: ['http://example.org/rights/1'],
-                            based_near: ['Seattle, WA, US'],
-                            contributor: ['Tweedledee', 'Tweedledum'],
-                            creator: ['Doe, John', 'Doe, Jane'],
-                            date_created: ['1984-01-02'],
-                            language: ['Quechua'],
-                            publisher: ['Random Publishing, Inc.'],
-                            subject: ['Biology', 'Physiology', 'Ethnography'])
+                        depositor: depositor.user_key,
+                        audit_stat: 1,
+                        title: ['My Title'],
+                        description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
+                        tag: ['bacon', 'sausage', 'eggs'],
+                        rights: ['http://example.org/rights/1'],
+                        based_near: ['Seattle, WA, US'],
+                        contributor: ['Tweedledee', 'Tweedledum'],
+                        creator: ['Doe, John', 'Doe, Jane'],
+                        date_created: ['1984-01-02'],
+                        language: ['Quechua'],
+                        publisher: ['Random Publishing, Inc.'],
+                        subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
   let(:presenter) do

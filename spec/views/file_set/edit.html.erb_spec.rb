@@ -15,8 +15,8 @@ describe 'file_sets/edit.html.erb', :no_clean do
 
     let(:file_set) do
       stub_model(FileSet, id: '123',
-                              depositor: 'bob',
-                              resource_type: ['Book', 'Dataset'])
+                          depositor: 'bob',
+                          resource_type: ['Book', 'Dataset'])
     end
 
     let(:form) do

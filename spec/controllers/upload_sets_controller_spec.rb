@@ -13,7 +13,7 @@ describe UploadSetsController do
     context "enquing a batch job" do
       before do
         allow(UploadSetUpdateJob).to receive(:new).with(user.user_key, batch.id, { '1' => 'foo' },
-                                                    { tag: [] }, 'open').and_return(batch_update_message)
+                                                        { tag: [] }, 'open').and_return(batch_update_message)
       end
       it "is successful" do
         expect(CurationConcerns.queue).to receive(:push).with(batch_update_message).once
