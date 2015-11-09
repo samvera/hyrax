@@ -50,13 +50,17 @@ module Sufia
       end
     end
 
+    def date_created
+      self[Solrizer.solr_name("date_created")]
+    end
+
     def depositor(default = '')
       val = Array(self[Solrizer.solr_name("depositor")]).first
       val.present? ? val : default
     end
 
     def title
-      Array(self[Solrizer.solr_name('title')]).first
+      self[Solrizer.solr_name('title')]
     end
 
     def description
@@ -78,6 +82,8 @@ module Sufia
     def tags
       Array(self[Solrizer.solr_name("tag")])
     end
+
+    alias_method :tag, :tags
 
     def resource_type
       Array(self[Solrizer.solr_name("resource_type")])

@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Sufia::PresenterRenderer, type: :view do
   let(:file_set) { FileSet.new }
-  let(:presenter) { Sufia::FileSetPresenter.new(file_set) }
+  let(:ability) { double }
+  let(:presenter) { Sufia::FileSetPresenter.new(file_set.to_solr, ability) }
   let(:renderer) { described_class.new(presenter, view) }
 
   describe "#label" do

@@ -28,9 +28,9 @@ describe 'file_sets/show.html.erb', type: :view do
                         subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
-  let(:presenter) do
-    Sufia::FileSetPresenter.new(file_set)
-  end
+  let(:ability) { double }
+  let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
+  let(:presenter) { Sufia::FileSetPresenter.new(solr_doc, ability) }
 
   before do
     allow(file_set).to receive(:content).and_return(content)

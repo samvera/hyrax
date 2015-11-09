@@ -47,7 +47,7 @@ module Sufia
       end
 
       def model_name
-        @presenter.model_class.model_name
+        @presenter.model_name
       end
   end
 end
