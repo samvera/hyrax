@@ -99,3 +99,4 @@ public/system/
 public/sitemap.xml
 
 .internal_test_app
+.byebug_history
