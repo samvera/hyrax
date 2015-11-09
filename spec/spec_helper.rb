@@ -30,7 +30,7 @@ end
 
 Capybara.default_driver = :rack_test      # This is a faster driver
 Capybara.javascript_driver = :poltergeist # This is slower
-Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
+Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)
