@@ -71,7 +71,6 @@ Resque.inline = Rails.env.test?
 
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryGirl.find_definitions
-Deprecation.default_deprecation_behavior = :raise
 
 module EngineRoutes
   def self.included(base)
