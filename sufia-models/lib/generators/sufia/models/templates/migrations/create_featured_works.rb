@@ -4,7 +4,7 @@ class CreateFeaturedWorks < ActiveRecord::Migration
       t.integer :order, default: 5
       t.string :generic_work_id
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :featured_works, :generic_work_id
     add_index :featured_works, :order
