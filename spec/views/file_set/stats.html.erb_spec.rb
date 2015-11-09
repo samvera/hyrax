@@ -4,7 +4,7 @@ describe 'file_sets/stats.html.erb', type: :view do
   describe 'usage statistics' do
     let(:file_set) {
       stub_model(FileSet, id: '123',
-                              title: ['file1.txt'])
+                          title: ['file1.txt'])
     }
 
     let(:no_stats) {

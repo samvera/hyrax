@@ -16,9 +16,9 @@ describe FileSetsController do
     context "when uploading a file" do
       let(:file_set) { FactoryGirl.build(:file_set) }
       let(:reloaded_file_set) { file_set.reload }
-      let(:batch)       { UploadSet.create }
-      let(:upload_set_id)    { batch.id }
-      let(:file)        { fixture_file_upload('/world.png', 'image/png') }
+      let(:batch) { UploadSet.create }
+      let(:upload_set_id) { batch.id }
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
       before do
         allow(FileSet).to receive(:new).and_return(file_set)
@@ -275,7 +275,7 @@ describe FileSetsController do
 
     before do
       Hydra::Works::UploadFileToFileSet.call(file_set, fixture_path + '/world.png',
-                                                 original_name: 'world.png', mime_type: 'image/png')
+                                             original_name: 'world.png', mime_type: 'image/png')
     end
 
     it "returns json with the result" do
@@ -410,7 +410,7 @@ describe FileSetsController do
       it "spawns a content update event job" do
         expect(CurationConcerns.queue).to receive(:push).with(update_message)
         post :update, id: file_set, file_set: { title: ['new_title'], tag: [''],
-                                                        permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+                                                permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
 
       it "spawns a content new version event job" do
@@ -438,7 +438,7 @@ describe FileSetsController do
 
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''],
-                                                                        permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+                                                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
       end
     end
 
@@ -492,10 +492,10 @@ describe FileSetsController do
     it "adds new groups and users" do
       post :update, id: file_set,
                     file_set: { tag: [''],
-                                    permissions_attributes: [
-                                      { type: 'person', name: 'user1', access: 'edit' },
-                                      { type: 'group', name: 'group1', access: 'read' }
-                                    ]
+                                permissions_attributes: [
+                                  { type: 'person', name: 'user1', access: 'edit' },
+                                  { type: 'group', name: 'group1', access: 'read' }
+                                ]
                       }
 
       expect(assigns[:file_set].read_groups).to eq ["group1"]
@@ -507,9 +507,9 @@ describe FileSetsController do
       file_set.save
       post :update, id: file_set,
                     file_set: { tag: [''],
-                                    permissions_attributes: [
-                                      { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
-                                    ]
+                                permissions_attributes: [
+                                  { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
+                                ]
                       }
 
       expect(assigns[:file_set].read_groups).to eq(["group3"])
@@ -528,7 +528,7 @@ describe FileSetsController do
       expect(CurationConcerns.queue).to receive(:push).with(s2).once
       post :update, id: file_set.id, filedata: file, 'Filename' => 'The world',
                     file_set: { tag: [''],
-                                    permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
     end
 
     context "when there's an error saving" do

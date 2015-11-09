@@ -1,3 +1,3 @@
-class UploadSet< ActiveFedora::Base
+class UploadSet < ActiveFedora::Base
   include Sufia::UploadSetBehavior
 end

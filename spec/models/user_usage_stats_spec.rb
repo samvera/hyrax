@@ -4,7 +4,7 @@ describe Sufia::UserUsageStats do
   subject { FactoryGirl.create(:user) }
 
   describe 'with cached stats' do
-    let!(:stat_1_day_ago) { UserStat.create!(user_id: subject.id, date: 1.days.ago, file_views: 3, file_downloads: 2) }
+    let!(:stat_1_day_ago) { UserStat.create!(user_id: subject.id, date: 1.day.ago, file_views: 3, file_downloads: 2) }
     let!(:stat_2_days_ago) { UserStat.create!(user_id: subject.id, date: 2.days.ago, file_views: 2, file_downloads: 1) }
 
     let!(:someone_elses_user_id) { subject.id + 1 }

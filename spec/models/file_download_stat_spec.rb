@@ -46,7 +46,7 @@ describe FileDownloadStat, type: :model do
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_download_statistics)
-        described_class.statistics(file_id, Date.today - 4.day)
+        described_class.statistics(file_id, Date.today - 4.days)
       end
 
       it "includes cached ga data" do
@@ -59,17 +59,17 @@ describe FileDownloadStat, type: :model do
         # at this point all data should be cached
         allow(described_class).to receive(:ga_statistics).with(Date.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
 
-        stats2 = described_class.statistics(file_id, Date.today - 4.day)
+        stats2 = described_class.statistics(file_id, Date.today - 4.days)
         expect(described_class.to_flots stats2).to include(*download_output)
       end
     end
 
     describe "cache loaded" do
-      let!(:file_download_stat) { described_class.create(date: (Date.today - 5.day).to_datetime, file_id: file_id, downloads: "25") }
+      let!(:file_download_stat) { described_class.create(date: (Date.today - 5.days).to_datetime, file_id: file_id, downloads: "25") }
 
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_download_statistics)
-        described_class.statistics(file_id, Date.today - 5.day)
+        described_class.statistics(file_id, Date.today - 5.days)
       end
 
       it "includes cached data" do
