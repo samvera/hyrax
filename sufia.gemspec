@@ -43,7 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'select2-rails', '~> 3.5.9'
   gem.add_dependency "devise", "~> 3.0"
 
-  gem.add_development_dependency 'engine_cart', '~> 0.7'
+  gem.add_development_dependency 'engine_cart', '~> 0.8'
   gem.add_development_dependency 'mida', '~> 0.3'
   gem.add_development_dependency 'database_cleaner', '~> 1.3'
   gem.add_development_dependency 'rspec-rails', '~> 3.1'
