@@ -36,7 +36,6 @@ This generator makes the following changes to your application:
     [
       "acts_as_follower_migration.rb",
       "add_social_to_users.rb",
-      "create_single_use_links.rb",
       "add_ldap_attrs_to_user.rb",
       "add_avatars_to_users.rb",
       "add_groups_to_users.rb",
