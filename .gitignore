@@ -98,4 +98,4 @@ public/system/
 ## Sitemap
 public/sitemap.xml
 
-./spec/internal
+.internal_test_app
