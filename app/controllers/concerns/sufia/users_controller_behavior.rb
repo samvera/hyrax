@@ -2,7 +2,7 @@ module Sufia::UsersControllerBehavior
   extend ActiveSupport::Concern
 
   included do
-    include Blacklight::Catalog::SearchContext
+    include Blacklight::SearchContext
     layout "sufia-one-column"
     prepend_before_action :find_user, except: [:index, :search, :notifications_number]
     before_action :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
