@@ -29,13 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rails', '~> 4.0'
   spec.add_dependency 'activeresource', "~> 4.0" # No longer a dependency of rails 4.0
 
-  #spec.add_dependency "curation_concerns", "~> 0.2"
-  spec.add_dependency "curation_concerns-models", "~> 0.2"
-  # spec.add_dependency "hydra-head", "~> 9.2"# provided by curation_concerns 0.2
-  # spec.add_dependency "active-fedora", "~> 9.2"# provided by curation_concerns 0.2
-  # spec.add_dependency "hydra-collections", [">= 5.0.2", "< 6.0"]# provided by curation_concerns 0.2
-  # spec.add_dependency 'hydra-derivatives', '~> 1.0' # provided by curation_concerns 0.2
-  # spec.add_dependency 'active_fedora-noid', '~> 0.3'# provided by curation_concerns 0.2
+  spec.add_dependency "curation_concerns-models", "~> 0.3"
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'resque', '~> 1.23'
   spec.add_dependency 'resque-pool', '~> 0.3'

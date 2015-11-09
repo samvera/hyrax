@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "bootstrap-sass", "3.3.4.1" # Pin to specific bootstrap-sass version. see https://github.com/dpla/KriKri/commit/a55e0bb5aad862203291cd79627eb2cefffffa82
   gem.add_dependency 'sass-rails'
 
-  gem.add_dependency 'curation_concerns', '~>0.2'
+  gem.add_dependency 'curation_concerns', '~> 0.3'
   gem.add_dependency 'hydra-batch-edit', '~> 1.1'
   gem.add_dependency 'browse-everything', '~> 0.4'
   gem.add_dependency 'daemons', '~> 1.1'
