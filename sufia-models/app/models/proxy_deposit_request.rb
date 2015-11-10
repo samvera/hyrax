@@ -56,7 +56,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   # @param [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
   def transfer!(reset = false)
-    CurationConcerns.queue.push(ContentDepositorChangeEventJob.new(generic_work_id, receiving_user.user_key, reset))
+    ContentDepositorChangeEventJob.perform_later(generic_work_id, receiving_user.user_key, reset)
     self.status = 'accepted'
     self.fulfillment_date = Time.now
     save!

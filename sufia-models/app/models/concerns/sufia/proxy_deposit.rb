@@ -16,7 +16,7 @@ module Sufia
     end
 
     def create_transfer_request
-      CurationConcerns.queue.push(ContentDepositorChangeEventJob.new(id, on_behalf_of)) if on_behalf_of.present?
+      ContentDepositorChangeEventJob.perform_later(id, on_behalf_of) if on_behalf_of.present?
     end
 
     def request_transfer_to(target)

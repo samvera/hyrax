@@ -9,7 +9,8 @@ describe FileSetsController do
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
 
     # prevents characterization and derivative creation
-    allow_any_instance_of(CharacterizeJob).to receive(:run)
+    allow_any_instance_of(CharacterizeJob).to receive(:perform_later)
+    allow_any_instance_of(CreateDerivativesJob).to receive(:perform_later)
   end
 
   describe "#create" do
@@ -119,8 +120,7 @@ describe FileSetsController do
         @json_from_browse_everything = { "0" => { "url" => "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires" => "2014-03-31T20:37:36.214Z", "file_name" => "filepicker-demo.txt.txt" }, "1" => { "url" => "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires" => "2014-03-31T20:37:36.731Z", "file_name" => "Getting+Started.pdf" } }
       end
       it "ingests files from provide URLs" do
-        expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
-        expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
+        expect(ImportUrlJob).to receive(:perform_later).twice
         expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
         created_files = FileSet.all
         ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
@@ -139,8 +139,7 @@ describe FileSetsController do
           end
         end
         it "records the work" do
-          expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
-          expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
+          expect(ImportUrlJob).to receive(:new).twice
           expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id, parent_id: work.id }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           created_files.each { |f| expect(f.generic_works).to include work }
@@ -149,8 +148,7 @@ describe FileSetsController do
 
       context "when a work id is not passed" do
         it "creates the work" do
-          expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
-          expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
+          expect(ImportUrlJob).to receive(:new).twice
           expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -293,12 +291,9 @@ describe FileSetsController do
       end
     end
 
-    before do
-      allow(ContentDeleteEventJob).to receive(:new).with(file_set.id, user.user_key).and_return(delete_message)
-    end
     let(:delete_message) { double('delete message') }
     it "deletes the file" do
-      expect(CurationConcerns.queue).to receive(:push).with(delete_message)
+      expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
       expect {
         delete :destroy, id: file_set
       }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
@@ -402,42 +397,28 @@ describe FileSetsController do
 
     context "when updating metadata" do
       let(:update_message) { double('content update message') }
-      before do
-        allow(ContentUpdateEventJob).to receive(:new).with(file_set.id, 'jilluser@example.com').and_return(update_message)
-      end
-
       it "spawns a content update event job" do
-        expect(CurationConcerns.queue).to receive(:push).with(update_message)
+        expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com')
         post :update, id: file_set, file_set: { title: ['new_title'], tag: [''],
                                                 permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
 
       it "spawns a content new version event job" do
-        s1 = double('one')
-        allow(ContentNewVersionEventJob).to receive(:new).with(file_set.id, 'jilluser@example.com').and_return(s1)
-        expect(CurationConcerns.queue).to receive(:push).with(s1).once
-
-        s2 = double('one')
-        allow(CharacterizeJob).to receive(:new).with(file_set.id).and_return(s2)
-        expect(CurationConcerns.queue).to receive(:push).with(s2).once
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
+
+        expect(ContentUpdateEventJob).to have_received(:perform_later).with(file_set.id, 'jilluser@example.com').once
+        expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
       end
     end
 
     context "when updating the attached file" do
       it "spawns a content new version event job" do
-        s1 = double('one')
-        allow(ContentNewVersionEventJob).to receive(:new).with(file_set.id, 'jilluser@example.com').and_return(s1)
-        expect(CurationConcerns.queue).to receive(:push).with(s1).once
-
-        s2 = double('one')
-        allow(CharacterizeJob).to receive(:new).with(file_set.id).and_return(s2)
-        expect(CurationConcerns.queue).to receive(:push).with(s2).once
+        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com').once
 
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, filedata: file, file_set: { tag: [''],
-                                                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+        post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+        expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
       end
     end
 
@@ -515,19 +496,15 @@ describe FileSetsController do
     end
 
     it "spawns a virus check" do
-      s1 = double('one')
-      allow(ContentNewVersionEventJob).to receive(:new).with(file_set.id, 'jilluser@example.com').and_return(s1)
-      expect(CurationConcerns.queue).to receive(:push).with(s1).once
-
-      s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(file_set.id).and_return(s2)
-      allow(CreateDerivativesJob).to receive(:new).with(file_set.id).and_return(s2)
       file = fixture_file_upload('/world.png', 'image/png')
+
+      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com').once
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
-      expect(CurationConcerns.queue).to receive(:push).with(s2).once
       post :update, id: file_set.id, filedata: file, 'Filename' => 'The world',
                     file_set: { tag: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+      expect(CreateDerivativesJob).to have_receive(:perform_later).with(file_set.id).once
+      expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
     end
 
     context "when there's an error saving" do

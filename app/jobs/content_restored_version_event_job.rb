@@ -1,13 +1,5 @@
 class ContentRestoredVersionEventJob < EventJob
-  attr_accessor :revision_id
-
-  def initialize(file_set_id, depositor_id, revision_id)
-    self.id = file_set_id
-    self.depositor_id = depositor_id
-    self.revision_id = revision_id
-  end
-
-  def run
+  def perform(id, depositor_id, revision_id)
     fs = FileSet.find(id)
     action = "User #{link_to_profile depositor_id} has restored a version '#{revision_id}' of #{link_to fs.title.first, Sufia::Engine.routes.url_helpers.file_set_path(fs)}"
     timestamp = Time.now.to_i

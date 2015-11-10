@@ -1,5 +1,5 @@
 class ContentUpdateEventJob < EventJob
-  def run
+  def perform(id, depositor_id)
     fs = FileSet.find(id)
     action = "User #{link_to_profile depositor_id} has updated #{link_to fs.title.first, Sufia::Engine.routes.url_helpers.file_set_path(fs)}"
     timestamp = Time.now.to_i

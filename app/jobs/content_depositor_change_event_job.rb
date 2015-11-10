@@ -1,20 +1,10 @@
 class ContentDepositorChangeEventJob < EventJob
-  def queue_name
-    :proxy_deposit
-  end
-
-  attr_accessor :id, :login, :reset
+  queue_as :proxy_deposit
 
   # @param [String] id identifier of the generic work to be transfered
   # @param [String] login the user key of the user the generic work is being transfered to.
   # @param [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
-  def initialize(id, login, reset = false)
-    self.id = id
-    self.login = login
-    self.reset = reset
-  end
-
-  def run
+  def perform(id, login, reset = false)
     # TODO: This should be in its own job, not this event job
     work = ::GenericWork.find(id)
     work.proxy_depositor = work.depositor
