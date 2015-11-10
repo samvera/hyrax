@@ -37,7 +37,6 @@
 //= require sufia/featured_researcher
 //= require sufia/batch_select_all
 //= require sufia/edit_metadata
-//= require curation_concerns/single_use_link
 //= require sufia/audio
 //= require sufia/search
 //= require sufia/editor
