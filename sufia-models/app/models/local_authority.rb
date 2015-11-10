@@ -7,7 +7,7 @@ class LocalAuthority < ActiveRecord::Base
     return unless where(name: name).empty?
     authority = create(name: name)
     format = opts.fetch(:format, :ntriples)
-    predicate = opts.fetch(:predicate, ::RDF::SKOS.prefLabel)
+    predicate = opts.fetch(:predicate, ::RDF::Vocab::SKOS.prefLabel)
     entries = []
     sources.each do |uri|
       ::RDF::Reader.open(uri, format: format) do |reader|

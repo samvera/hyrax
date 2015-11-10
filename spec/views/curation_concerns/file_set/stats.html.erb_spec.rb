@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'file_sets/stats.html.erb', type: :view do
+describe 'curation_concerns/file_sets/stats.html.erb', type: :view do
   describe 'usage statistics' do
     let(:file_set) {
       stub_model(FileSet, id: '123',

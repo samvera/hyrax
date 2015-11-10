@@ -41,32 +41,13 @@ module Sufia
       load_resource only: [:audit]
       load_and_authorize_resource except: [:index, :audit]
 
-      class_attribute :edit_form_class, :presenter_class
-      self.edit_form_class = CurationConcerns::Forms::FileSetEditForm
-      self.presenter_class = Sufia::FileSetPresenter
-    end
-
-    # routed to /files/new
-    def new
-      @upload_set_id = ActiveFedora::Noid::Service.new.mint
-      @work_id = params[:parent_id]
-    end
-
-    # routed to /files/:id/edit
-    def edit
-      set_variables_for_edit_form
+      class_attribute :show_presenter
+      self.show_presenter = Sufia::FileSetPresenter
     end
 
     # routed to /files/:id/stats
     def stats
       @stats = FileUsage.new(params[:id])
-    end
-
-    # routed to /files/:id (DELETE)
-    def destroy
-      actor.destroy
-      redirect_to self.class.destroy_complete_path(params), notice:
-        render_to_string(partial: 'file_sets/asset_deleted_flash', locals: { file_set: @file_set })
     end
 
     # routed to /files/:id/citation
@@ -75,14 +56,14 @@ module Sufia
 
     # routed to /files/:id
     def show
-      respond_to do |format|
-        format.html do
-          @events = @file_set.events(100)
-          @presenter = presenter
-          @audit_status = audit_service.human_readable_audit_status
-        end
-        format.endnote { render text: @file_set.export_as_endnote }
-      end
+      @events = @file_set.events(100)
+      @audit_status = audit_service.human_readable_audit_status
+      super
+    end
+
+    # Called by CurationConcerns::FileSetsControllerBehavior#show
+    def additional_response_formats(format)
+      format.endnote { render text: @file_set.export_as_endnote }
     end
 
     # routed to /files/:id/audit (POST)
@@ -90,104 +71,23 @@ module Sufia
       render json: audit_service.audit
     end
 
-    # routed to /files/:id (PUT)
-    def update
-      success =
-        if wants_to_revert?
-          update_version
-        elsif wants_to_upload_new_version?
-          update_file
-        elsif params.key? :file_set
-          update_metadata
-        elsif params.key? :visibility
-          update_visibility
-        end
-
-      if success
-        redirect_to sufia.edit_file_set_path(tab: params[:redirect_tab]), notice:
-          render_to_string(partial: 'file_sets/asset_updated_flash', locals: { file_set: @file_set })
-      else
-        flash[:error] ||= 'Update was unsuccessful.'
-        set_variables_for_edit_form
-        render action: 'edit'
-      end
-    end
-
     protected
 
-      def set_variables_for_edit_form
-        @form = edit_form
-        @groups = current_user.groups
-        @version_list = version_list
-      end
-
-      def presenter
-        presenter_class.new(@file_set)
-      end
-
-      def version_list
-        all_versions = @file_set.original_file.nil? ? [] : @file_set.original_file.versions.all
-        Sufia::VersionListPresenter.new(all_versions)
-      end
-
-      def edit_form
-        edit_form_class.new(@file_set)
+      def _prefixes
+        # This allows us to use the templates in curation_concerns/file_sets
+        @_prefixes ||= super + ['curation_concerns/file_sets']
       end
 
       def audit_service
         CurationConcerns::FileSetAuditService.new(@file_set)
       end
 
-      def wants_to_revert?
-        params.key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@file_set.original_file).label
-      end
-
-      def wants_to_upload_new_version?
-        has_file_data = params.key?(:filedata)
-        on_version_tab = params[:redirect_tab] == 'versions'
-
-        has_file_data || (on_version_tab && !wants_to_revert?)
-      end
-
-      def actor
-        @actor ||= CurationConcerns::FileSetActor.new(@file_set, current_user)
-      end
-
-      def update_version
-        actor.revert_content(params[:revision])
-      end
-
-      def update_file
-        if params[:filedata]
-          actor.update_content(params[:filedata])
-        else
-          flash[:error] = 'Please select a file.'
-          false
-        end
-      end
-
-      # this is provided so that implementing application can override this behavior and map params to different attributes
-      def update_metadata
-        actor.update_metadata(file_attributes, unfiltered_attributes)
-      end
-
-      def update_visibility
-        actor.update_metadata({}, params[:visibility])
-      end
-
-      def json_error(error, name = nil, additional_arguments = {})
-        args = { error: error }
-        args[:name] = name if name
-        render additional_arguments.merge(json: [args])
-      end
-
-      def empty_file?(file)
-        (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
-      end
-
       def process_file(file)
-        UploadSet.find_or_create(params[:upload_set_id])
-        super(file)
+        if terms_accepted?
+          super(file)
+        else
+          json_error "You must accept the terms of service!", file.original_filename
+        end
       end
 
       # override this method if you want to change how the terms are accepted on upload.
@@ -195,23 +95,10 @@ module Sufia
         params[:terms_of_service] == '1'
       end
 
-      # this is provided so that implementing application can override this behavior and map params to different attributes
-      # called when creating or updating metadata
+      # called by CurationConcerns::FileSetsControllerBehavior#process_file
       def update_metadata_from_upload_screen
         @file_set.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
         super
-      end
-
-      # The attributes appropriate for updating file_set objects
-      def file_attributes
-        edit_form_class.model_attributes(params[:file_set])
-      end
-
-      # Returns a duplicate of the :file_set params
-      # *Danger*: permits all attributes in params[:file_set], so could present security vulnerabilities if you do something like file_set.attributes=unfiltered_attributes
-      # Does not filter out attributes like :visibility, which is not returned by file_attributes, so that the actor can use that info
-      def unfiltered_attributes
-        params.fetch(:file_set, {}).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
       end
   end
 end
