@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'SelectWithModalHelpInput', type: :input do
   subject { input_for file, :rights, options }
   let(:file) { FileSet.new }
-  let(:base_options) { { as: :select_with_modal_help, required: true, collection: Sufia.config.cc_licenses } }
+  let(:base_options) { { as: :select_with_modal_help, required: true, collection: RightsService.select_options } }
   let(:options) { base_options }
 
   context "when a blank is requested" do

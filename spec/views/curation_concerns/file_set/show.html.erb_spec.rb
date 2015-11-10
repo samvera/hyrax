@@ -18,7 +18,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
                         title: ['My Title'],
                         description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
                         tag: ['bacon', 'sausage', 'eggs'],
-                        rights: ['http://example.org/rights/1'],
+                        rights: ['http://creativecommons.org/publicdomain/mark/1.0/'],
                         based_near: ['Seattle, WA, US'],
                         contributor: ['Tweedledee', 'Tweedledum'],
                         creator: ['Doe, John', 'Doe, Jane'],
