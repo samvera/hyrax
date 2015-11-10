@@ -2,13 +2,17 @@ require 'spec_helper'
 
 describe DownloadsController, type: :controller do
   describe "with a file" do
-    let(:depositor) { FactoryGirl.find_or_create(:archivist) }
+    let(:depositor) { create(:user) }
+    let(:io) do
+      Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
+                                          'image/png', 'world.png')
+    end
     let(:file) do
-      FileSet.new do |f|
-        f.apply_depositor_metadata(depositor.user_key)
-        f.label = 'world.png'
-        f.save!
-        Hydra::Works::UploadFileToFileSet.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
+      FileSet.new do |fs|
+        fs.apply_depositor_metadata(depositor.user_key)
+        fs.label = 'world.png'
+        fs.save!
+        Hydra::Works::UploadFileToFileSet.call(fs, io)
       end
     end
 
@@ -32,20 +36,6 @@ describe DownloadsController, type: :controller do
           get "show", id: file
           expect(response).to be_success
           expect(response.body).to eq expected_content
-        end
-
-        context "when grabbing the characterization datastream" do
-          let(:expected_content) { "<?xml version=\"1.0\"?>\n<fits stuff=\"yep\"/>" }
-          before do
-            file.characterization.content = expected_content
-            file.save!
-          end
-
-          it "returns requested datastreams" do
-            get "show", id: file, file: "characterization"
-            expect(response).to be_success
-            expect(response.body).to eq expected_content
-          end
         end
 
         it "supports setting disposition to inline" do
