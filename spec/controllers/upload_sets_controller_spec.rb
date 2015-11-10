@@ -17,8 +17,8 @@ describe UploadSetsController do
                                                          { tag: [] },
                                                          'open')
         post :update, id: upload_set, title: { '1' => 'foo' },
-                                      visibility: 'open',
-                                      file_set: { tag: [""] }
+                      visibility: 'open',
+                      file_set: { tag: [""] }
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
