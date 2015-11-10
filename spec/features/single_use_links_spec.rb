@@ -13,8 +13,10 @@ describe "Create and use single-use links", type: :feature do
     end
   end
 
+  let(:binary) { File.open(fixture_path + '/world.png') }
+
   before do
-    Hydra::Works::AddFileToFileSet.call(file, fixture_path + '/world.png', :original_file, versioning: false)
+    Hydra::Works::AddFileToFileSet.call(file, binary, :original_file, versioning: false)
   end
 
   before do
@@ -22,7 +24,7 @@ describe "Create and use single-use links", type: :feature do
   end
 
   it "generates a single-use link to show the record" do
-    visit generate_show_single_use_link_path(id: file)
+    visit curation_concerns.generate_show_single_use_link_path(id: file)
     expect(page).to have_css '.single-use-link a'
     find('.single-use-link a').click
     expect(page).to have_content 'world.png'
@@ -31,7 +33,7 @@ describe "Create and use single-use links", type: :feature do
 
   describe "download link" do
     it "downloads the file contents" do
-      visit generate_download_single_use_link_path(id: file)
+      visit curation_concerns.generate_download_single_use_link_path(id: file)
       expect(page).to have_css '.download-link'
       find('.download-link').click
       expected_content = ActiveFedora::Base.find(file.id).original_file.content

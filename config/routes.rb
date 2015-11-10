@@ -5,11 +5,6 @@ Sufia::Engine.routes.draw do
   # Route the home page as the root
   root to: 'homepage#index'
 
-  get 'single_use_link/generate_download/:id' => 'single_use_links#new_download', as: :generate_download_single_use_link
-  get 'single_use_link/generate_show/:id' => 'single_use_links#new_show', as: :generate_show_single_use_link
-  get 'single_use_link/show/:id' => 'single_use_links_viewer#show', as: :show_single_use_link
-  get 'single_use_link/download/:id' => 'single_use_links_viewer#download', as: :download_single_use_link
-
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 
   # Notifications route for catalog index view

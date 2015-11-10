@@ -15,7 +15,7 @@
         <li><%= link_to raw('<span class="glyphicon glyphicon-user"></span> my profile'), sufia.profile_path(current_user), id: 'profile_nav_link' %></li>
         <%= render partial: 'users/user_util_links_extra' %>
         <li class="divider"></li>
-        <li><%= link_to raw('<span class="glyphicon glyphicon-log-out"></span> log out'), destroy_user_session_path, id: 'logout_nav_link' %></li>
+        <li><%= link_to raw('<span class="glyphicon glyphicon-log-out"></span> log out'), main_app.destroy_user_session_path, id: 'logout_nav_link' %></li>
       </ul>
     </div><!-- /.btn-group -->
 <% else %>
