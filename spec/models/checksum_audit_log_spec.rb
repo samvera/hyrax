@@ -18,8 +18,8 @@ describe ChecksumAuditLog do
     f.content.versions.first.uri
   end
   let(:version_path) { 'content' }
-  let(:old) { described_class.create(file_set_id: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
-  let(:new) { described_class.create(file_set_id: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
+  let(:old) { described_class.create(file_set_id: f.id, file_id: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
+  let(:new) { described_class.create(file_set_id: f.id, file_id: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
 
   context "a file with multiple checksums audits" do
     specify "should return a list of logs for this datastream sorted by date descending" do
@@ -30,11 +30,11 @@ describe ChecksumAuditLog do
 
   context "after multiple checksum audits where the checksum does not change" do
     specify "only one of them should be kept" do
-      success1 = described_class.create(file_set_id: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success1 = described_class.create(file_set_id: f.id, file_id: version_path, version: version_uri, pass: 1)
       described_class.prune_history(f.id, version_path)
-      success2 = described_class.create(file_set_id: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success2 = described_class.create(file_set_id: f.id, file_id: version_path, version: version_uri, pass: 1)
       described_class.prune_history(f.id, version_path)
-      success3 = described_class.create(file_set_id: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success3 = described_class.create(file_set_id: f.id, file_id: version_path, version: version_uri, pass: 1)
       described_class.prune_history(f.id, version_path)
 
       expect { described_class.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
@@ -47,8 +47,8 @@ describe ChecksumAuditLog do
 
   context "should have an audit log history" do
     before do
-      described_class.create(file_set_id: f.id, dsid: 'content', version: 'v2', pass: 1)
-      described_class.create(file_set_id: f.id, dsid: 'thumbnail', version: 'v1', pass: 1)
+      described_class.create(file_set_id: f.id, file_id: 'content', version: 'v2', pass: 1)
+      described_class.create(file_set_id: f.id, file_id: 'thumbnail', version: 'v1', pass: 1)
     end
 
     it "has an audit log history" do
