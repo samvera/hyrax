@@ -1,17 +1,18 @@
 require 'spec_helper'
 
 describe Sufia::UploadSetUpdateSuccessService do
-  let(:depositor) { FactoryGirl.find_or_create(:jill) }
-  let(:batch) { UploadSet.create }
+  let(:depositor) { create(:user) }
+  let(:upload_set) { UploadSet.create }
+  let(:inbox) { depositor.mailbox.inbox }
 
   let!(:file) do
-    FileSet.new(batch: batch) do |file|
+    FileSet.new(upload_set: upload_set) do |file|
       file.apply_depositor_metadata(depositor)
     end
   end
 
   describe "#call" do
-    subject { described_class.new(file, depositor) }
+    subject { described_class.new(file, depositor, upload_set.id) }
 
     it "sends passing mail" do
       subject.call
