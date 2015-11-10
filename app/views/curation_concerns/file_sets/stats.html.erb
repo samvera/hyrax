@@ -3,7 +3,7 @@
 <!-- Adapted from jquery-flot examples https://github.com/flot/flot/blob/master/examples/visitors/index.html -->
 <!--[if lte IE 8]><%= javascript_include_tag 'excanvas' %><![endif]-->
 <%= javascript_tag do %>
-  <%= render partial: 'file_sets/flot_stats', formats: [:js] %>
+  <%= render partial: 'flot_stats', formats: [:js] %>
 <% end %>
 
 <%= content_tag :h1, @file_set, class: "lower" %>

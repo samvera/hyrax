@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'file_sets/_permission_form.html.erb', type: :view do
+describe 'curation_concerns/file_sets/_permission_form.html.erb', type: :view do
   let(:file_set) {
     stub_model(FileSet, id: '123',
                         depositor: 'bob',

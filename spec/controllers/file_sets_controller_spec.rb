@@ -1,21 +1,26 @@
 require 'spec_helper'
 
 describe FileSetsController do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   before do
     allow(controller).to receive(:has_access?).and_return(true)
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
-    allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
-
     # prevents characterization and derivative creation
     allow_any_instance_of(CharacterizeJob).to receive(:perform_later)
     allow_any_instance_of(CreateDerivativesJob).to receive(:perform_later)
   end
 
   describe "#create" do
+    let(:file) { fixture_file_upload('files/image.png', 'image/png') }
+    let(:parent) do
+      create(:generic_work,
+             edit_users: [user.user_key],
+             visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+    end
+
     context "when uploading a file" do
-      let(:file_set) { FactoryGirl.build(:file_set) }
+      let(:file_set) { build(:file_set) }
       let(:reloaded_file_set) { file_set.reload }
       let(:batch) { UploadSet.create }
       let(:upload_set_id) { batch.id }
@@ -26,67 +31,65 @@ describe FileSetsController do
       end
 
       context "when the file submitted isn't a file" do
-        let(:file) { 'hello' }
-
-        it "renders 422 error" do
-          xhr :post, :create, files: [file], Filename: "The World", upload_set_id: 'sample_upload_set_id', permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
-          expect(response.status).to eq 422
-          expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
+        it 'renders error' do
+          xhr :post, :create, parent_id: parent,
+                              file_set: { files: ['hello'],
+                                          permission: { group: { 'public' => 'read' } } },
+                              terms_of_service: '1'
+          expect(response.status).to eq 400
+          msg = JSON.parse(response.body)['message']
+          expect(msg).to match(/no file for upload/i)
         end
       end
 
       context "when everything is perfect" do
-        render_views
-        it "spawns a content deposit event job" do
-          expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
-          xhr :post, :create, files: [file], 'Filename' => 'The world', upload_set_id: upload_set_id, permission: { group: { public: 'read' } }, terms_of_service: '1'
-          expect(response.body).to eq %([{"name":null,"size":null,"url":"/files/#{file_set.id}","thumbnail_url":"#{file_set.id}","delete_url":"deleteme","delete_type":"DELETE"}])
-          expect(flash[:error]).to be_nil
-        end
+        let(:date_today) { DateTime.now }
 
-        it "creates and saves a file asset from the given params" do
-          date_today = DateTime.now
+        before do
           allow(DateTime).to receive(:now).and_return(date_today)
-          expect {
-            xhr :post, :create, files: [file], Filename: "The world", upload_set_id: upload_set_id,
-                                permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
-          }.to change { FileSet.count }.by(1)
-          expect(response).to be_success
-
-          # This is confirming that the correct file was attached
-          expect(reloaded_file_set.label).to eq 'world.png'
-          file.rewind
-          expect(reloaded_file_set.original_file.content).to eq(file.read)
-          # Confirming that date_uploaded and date_modified were set
-          expect(reloaded_file_set.date_uploaded).to eq date_today.new_offset(0)
-          expect(reloaded_file_set.date_modified).to eq date_today.new_offset(0)
         end
 
-        it "sets the depositor id" do
-          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: upload_set_id, permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
+        it 'calls the actor to create metadata and content' do
+          expect(controller.send(:actor)).to receive(:create_metadata)
+            .with(nil, parent, files: [file],
+                               title: ['test title'],
+                               visibility: 'restricted')
+          expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
+          xhr :post, :create, parent_id: parent,
+                              terms_of_service: '1',
+                              file_set: { files: [file],
+                                          title: ['test title'],
+                                          visibility: 'restricted' }
           expect(response).to be_success
-
-          # This is confirming that apply_depositor_metadata recorded the depositor
-          expect(reloaded_file_set.depositor).to eq 'jilluser@example.com'
-          expect(reloaded_file_set.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
+          expect(flash[:error]).to be_nil
         end
       end
 
       context "when the file has a virus" do
         it "displays a flash error" do
+          pending "There's no way to do this because the scan happens in a background job"
           expect(ClamAV.instance).to receive(:scanfile).and_return("EL CRAPO VIRUS")
-          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: "sample_upload_set_id", permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
+          xhr :post, :create, parent_id: parent,
+                              file_set: { files: [file], Filename: "The world",
+                                          upload_set_id: "sample_upload_set_id",
+                                          permission: { "group" => { "public" => "read" } } },
+                              terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
         end
       end
 
       context "when solr continuously has errors" do
-        it "errors out of create and save" do
-          allow_any_instance_of(FileSet).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
+        before do
+          allow(controller.send(:actor)).to receive(:create_metadata)
+          allow(controller.send(:actor)).to receive(:create_content).with(file).and_raise(RSolr::Error::Http.new({}, {}))
+        end
 
-          file = fixture_file_upload('/world.png', 'image/png')
-          xhr :post, :create, files: [file], Filename: "The world", upload_set_id: "sample_upload_set_id", permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
+        it "errors out of create and save" do
+          xhr :post, :create, file_set: { files: [file], Filename: "The world",
+                                          upload_set_id: "sample_upload_set_id",
+                                          permission: { "group" => { "public" => "read" } } },
+                              terms_of_service: "1"
           expect(response.body).to include("Error occurred while creating file set.")
         end
       end
@@ -98,14 +101,20 @@ describe FileSetsController do
           end
         end
         it "records the work" do
-          xhr :post, :create, files: [file], Filename: 'The world', upload_set_id: upload_set_id, parent_id: work.id, terms_of_service: '1'
+          xhr :post, :create, parent_id: work.id,
+                              file_set: { files: [file], Filename: 'The world',
+                                          upload_set_id: upload_set_id },
+                              terms_of_service: '1'
           expect(response).to be_success
           expect(reloaded_file_set.generic_works.first).to eq work
         end
       end
+
       context "when a work id is not passed" do
         it "creates the work" do
-          xhr :post, :create, files: [file], Filename: 'The world', upload_set_id: upload_set_id, terms_of_service: '1'
+          xhr :post, :create, file_set: { files: [file], Filename: 'The world',
+                                          upload_set_id: upload_set_id },
+                              terms_of_service: '1'
           expect(response).to be_success
           expect(reloaded_file_set.generic_works).not_to be_empty
         end
@@ -183,7 +192,8 @@ describe FileSetsController do
 
         it "ingests files from the filesystem" do
           expect {
-            post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
+            post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                      upload_set_id: upload_set_id }
           }.to change(FileSet, :count).by(2)
           expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
           # These files should have been moved out of the upload directory
@@ -198,7 +208,8 @@ describe FileSetsController do
         it "ingests redirect to another location" do
           expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
           expect {
-            post :create, local_file: ["world.png"], upload_set_id: upload_set_id
+            post :create, file_set: { local_file: ["world.png"],
+                                      upload_set_id: upload_set_id }
           }.to change(FileSet, :count).by(1)
           expect(response).to redirect_to file_set_url
           # These files should have been moved out of the upload directory
@@ -210,7 +221,8 @@ describe FileSetsController do
 
         it "ingests directories from the filesystem" do
           expect {
-            post :create, local_file: ["world.png", "import"], upload_set_id: upload_set_id
+            post :create, file_set: { local_file: ["world.png", "import"],
+                                      upload_set_id: upload_set_id }
           }.to change(FileSet, :count).by(4)
           expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
           # These files should have been moved out of the upload directory
@@ -230,14 +242,16 @@ describe FileSetsController do
 
         context "when a work id is passed" do
           let(:work) do
-            GenericWork.new do |w|
+            GenericWork.create!(title: ['test title']) do |w|
               w.apply_depositor_metadata(user)
-              w.save!
             end
           end
+
           it "records the work" do
             expect {
-              post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id, parent_id: work.id
+              post :create, parent_id: work.id,
+                            file_set: { local_file: ["world.png", "image.jpg"],
+                                        upload_set_id: upload_set_id }
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             created_files.each { |f| expect(f.generic_works).to include work }
@@ -247,7 +261,8 @@ describe FileSetsController do
         context "when a work id is not passed" do
           it "creates the work" do
             expect {
-              post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
+              post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                        upload_set_id: upload_set_id }
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -258,7 +273,8 @@ describe FileSetsController do
       context "when User model does not define directory path" do
         it "returns an error message and redirects to file upload page" do
           expect {
-            post :create, local_file: ["world.png", "image.jpg"], upload_set_id: upload_set_id
+            post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                      upload_set_id: upload_set_id }
           }.not_to change(FileSet, :count)
           expect(response).to render_template :new
           expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
@@ -270,9 +286,13 @@ describe FileSetsController do
   describe "audit" do
     let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }
 
+    let(:file) do
+      Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
+                                          'image/png', 'world.png')
+    end
+
     before do
-      Hydra::Works::UploadFileToFileSet.call(file_set, fixture_path + '/world.png',
-                                             original_name: 'world.png', mime_type: 'image/png')
+      Hydra::Works::UploadFileToFileSet.call(file_set, file)
     end
 
     it "returns json with the result" do
@@ -405,8 +425,7 @@ describe FileSetsController do
 
       it "spawns a content new version event job" do
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
-
+        post :update, id: file_set, file_set: { files: [file], tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
         expect(ContentUpdateEventJob).to have_received(:perform_later).with(file_set.id, 'jilluser@example.com').once
         expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
       end
@@ -418,6 +437,8 @@ describe FileSetsController do
 
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+        post :update, id: file_set, file_set: { files: [file], tag: [''],
+                                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
         expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
       end
     end
@@ -500,8 +521,8 @@ describe FileSetsController do
 
       expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com').once
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
-      post :update, id: file_set.id, filedata: file, 'Filename' => 'The world',
-                    file_set: { tag: [''],
+      post :update, id: file_set.id, 'Filename' => 'The world',
+                    file_set: { files: [file], tag: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
       expect(CreateDerivativesJob).to have_receive(:perform_later).with(file_set.id).once
       expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
@@ -531,8 +552,13 @@ describe FileSetsController do
       end
     end
 
+    let(:file) do
+      Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
+                                          'image/png', 'world.png')
+    end
+
     before do
-      Hydra::Works::UploadFileToFileSet.call(file_set, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
+      Hydra::Works::UploadFileToFileSet.call(file_set, file)
     end
 
     describe "edit" do

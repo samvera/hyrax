@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'file_sets/edit.html.erb', :no_clean do
+describe 'curation_concerns/file_sets/edit.html.erb', :no_clean do
   describe 'when the file has two or more resource types' do
     let(:resource_version) do
       ActiveFedora::VersionsGraph::ResourceVersion.new.tap do |v|

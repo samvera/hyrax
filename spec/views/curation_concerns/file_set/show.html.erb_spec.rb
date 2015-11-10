@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'file_sets/show.html.erb', type: :view do
+describe 'curation_concerns/file_sets/show.html.erb', type: :view do
   let(:depositor) do
     stub_model(User,
                user_key: 'bob',
@@ -33,6 +33,7 @@ describe 'file_sets/show.html.erb', type: :view do
   let(:presenter) { Sufia::FileSetPresenter.new(solr_doc, ability) }
 
   before do
+    view.lookup_context.view_paths.push CurationConcerns::Engine.root + 'app/views/curation_concerns/base'
     allow(file_set).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(depositor)
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
@@ -47,7 +48,7 @@ describe 'file_sets/show.html.erb', type: :view do
 
   describe 'title heading' do
     before do
-      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -71,7 +72,7 @@ describe 'file_sets/show.html.erb', type: :view do
     let(:item) { Mida::Document.new(rendered).items.first }
     describe 'descriptive metadata' do
       before do
-        render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
+        render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
       end
 
       it 'draws schema.org fields' do
@@ -97,7 +98,7 @@ describe 'file_sets/show.html.erb', type: :view do
 
   describe 'google scholar' do
     before do
-      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -122,7 +123,7 @@ describe 'file_sets/show.html.erb', type: :view do
 
   describe 'twitter cards' do
     before do
-      render template: 'file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
+      render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/sufia-one-column'
     end
     let(:doc) { Nokogiri::HTML(rendered) }
 

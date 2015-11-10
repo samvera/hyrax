@@ -37,7 +37,7 @@
       <%= f.input :rights, as: :select_with_modal_help, collection: Sufia.config.cc_licenses,
           input_html: { class: 'form-control', multiple: true } %>
 
-      <%= render "file_sets/rights_modal" %>
+      <%= render "curation_concerns/file_sets/rights_modal" %>
 
       <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
       <!-- hidden on initial load -->

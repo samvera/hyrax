@@ -1,10 +1,10 @@
-<%= render partial: 'file_sets/upload/agreement' %>
+<%= render 'curation_concerns/file_sets/upload/agreement' %>
 <div class="alert alert-success">
   <%=  t("sufia.upload.cloud_timeout_message", contact_href: link_to(t("sufia.upload.alert.contact_href_text"), sufia.contact_form_index_path)) %>
 </div>
 <div class="well">
   <%= form_tag(sufia.file_sets_path, id: 'browse_everything_form', method: 'post') do %>
-      <%= render partial: 'file_sets/upload/tos_checkbox' %>
+      <%= render 'curation_concerns/file_sets/upload/tos_checkbox' %>
       <%= hidden_field_tag(:upload_set_id, @upload_set_id) %>
       <%= button_tag(t('sufia.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-lg btn-success', id: "browse-btn",
         'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,

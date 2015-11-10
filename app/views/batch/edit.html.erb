@@ -14,7 +14,7 @@
 
   <%= render 'metadata', f: f %>
 
-  <%= render 'file_sets/permission_form', f: f, batch: @batch %>
+  <%= render 'curation_concerns/file_sets/permission_form', f: f, batch: @batch %>
 
   <div id="permissions_submit">
     <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg',

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'file_sets/_browse_everything.html.erb', type: :view do
+describe 'curation_concerns/file_sets/_browse_everything.html.erb', type: :view do
   it 'shows user timing warning' do
     render
     page = Capybara::Node::Simple.new(rendered)
