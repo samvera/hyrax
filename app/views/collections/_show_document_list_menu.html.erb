@@ -3,6 +3,10 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
     <li>
+      <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to Work'), '#',
+                    class: "copypaste itemicon itemcode", title: "Single-Use Link to Work", id: "copy_link_#{id}" %>
+		    </li>    
+    <li>
       <%= link_to raw("<i class='glyphicon glyphicon-pencil'></i> #{t('sufia.collection.generic_work.edit')}"), sufia.edit_generic_work_path(id),
                   class: "itemicon itemedit", title: "#{t('sufia.collection.generic_work.edit')}", id: "edit_work_link_#{id}" %>
     </li>
