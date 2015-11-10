@@ -39,9 +39,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'font-awesome-rails', '~> 4.2'
   gem.add_dependency 'hydra-editor', '~> 1.0'
   gem.add_dependency 'blacklight-gallery', '~> 0.1'
-  gem.add_dependency 'breadcrumbs_on_rails', '~> 2.3.0'
   gem.add_dependency 'select2-rails', '~> 3.5.9'
-  gem.add_dependency "devise", "~> 3.0"
 
   gem.add_development_dependency 'engine_cart', '~> 0.8'
   gem.add_development_dependency 'mida', '~> 0.3'
