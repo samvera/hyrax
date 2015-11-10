@@ -10,7 +10,7 @@ describe DashboardController, type: :controller do
   end
 
   context "with an authenticated user" do
-    let(:user) { FactoryGirl.find_or_create(:user_with_mail) }
+    let(:user) { create(:user_with_mail) }
 
     before do
       sign_in user
@@ -33,10 +33,10 @@ describe DashboardController, type: :controller do
     end
 
     context 'with transfers' do
-      let(:another_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:another_user) { create(:user) }
       context 'when incoming' do
         let!(:incoming_work) do
-          GenericWork.new.tap do |w|
+          GenericWork.new(title: ['incoming']) do |w|
             w.apply_depositor_metadata(another_user.user_key)
             w.save!
             w.request_transfer_to(user)
@@ -53,7 +53,7 @@ describe DashboardController, type: :controller do
 
       context 'when outgoing' do
         let!(:outgoing_work) do
-          GenericWork.new.tap do |w|
+          GenericWork.new(title: ['outgoing']) do |w|
             w.apply_depositor_metadata(user.user_key)
             w.save!
             w.request_transfer_to(another_user)
