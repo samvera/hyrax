@@ -87,9 +87,9 @@ describe User, type: :model do
 
   describe "trophy_works" do
     let(:user) { FactoryGirl.create(:user) }
-    let(:work1) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-    let(:work2) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-    let(:work3) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+    let(:work1) { GenericWork.create(title: ["work A"]) { |w| w.apply_depositor_metadata(user) } }
+    let(:work2) { GenericWork.create(title: ["work B"]) { |w| w.apply_depositor_metadata(user) } }
+    let(:work3) { GenericWork.create(title: ["work C"]) { |w| w.apply_depositor_metadata(user) } }
     let!(:trophy1) { user.trophies.create!(generic_work_id: work1.id) }
     let!(:trophy2) { user.trophies.create!(generic_work_id: work2.id) }
     let!(:trophy3) { user.trophies.create!(generic_work_id: work3.id) }
