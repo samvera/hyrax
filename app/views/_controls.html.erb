@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-sm-5 col-md-6">
       <nav class="navbar navbar-default" role="navigation">
         <ul class="nav navbar-nav">
-            <li <%= 'class=active' if current_page?(root_path) %>><a href="/" >Home</a></li>
+            <li <%= 'class=active' if current_page?(main_app.root_path) %>><a href="/" >Home</a></li>
                 <li <%= 'class=active' if current_page?(sufia.about_path) %>><a href="/about/" >About</a></li>
                 <li <%= 'class=active' if action_name == "help" %>><a href="/help/" >Help</a></li>
             <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_form_index_path %>" >Contact</a></li>

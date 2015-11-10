@@ -98,7 +98,7 @@ module Sufia
 
     def link_to_field(fieldname, fieldvalue, displayvalue = nil)
       p = { search_field: 'advanced', fieldname => '"' + fieldvalue + '"' }
-      link_url = catalog_index_path(p)
+      link_url = main_app.catalog_index_path(p)
       display = displayvalue.blank? ? fieldvalue : displayvalue
       link_to(display, link_url)
     end
@@ -152,7 +152,7 @@ module Sufia
       if on_the_dashboard?
         search_action_for_dashboard
       else
-        catalog_index_path
+        main_app.catalog_index_path
       end
     end
 
