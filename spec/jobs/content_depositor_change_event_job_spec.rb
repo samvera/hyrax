@@ -16,7 +16,7 @@ describe ContentDepositorChangeEventJob do
 
   before do
     work.members << file
-    described_class.new(work.id, receiver.user_key).run
+    described_class.perform_now(work.id, receiver.user_key)
   end
 
   it "changes the depositor and records an original depositor" do
