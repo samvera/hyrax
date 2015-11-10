@@ -10,7 +10,9 @@ describe Sufia::FileSetPresenter do
     end
   end
 
-  let(:presenter) { described_class.new(file) }
+  let(:solr_document) { SolrDocument.new(file.to_solr) }
+  let(:ability) { double "Ability" }
+  let(:presenter) { described_class.new(solr_document, ability) }
 
   describe '#tweeter' do
     let(:file) { build(:file_set).tap { |f| f.apply_depositor_metadata(user) } }
