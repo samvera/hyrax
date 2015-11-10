@@ -27,7 +27,7 @@ describe 'users/_following_modal.html.erb', type: :view do
       let(:current_user) { frank }
 
       before do
-        assign :user, frankq
+        assign :user, frank
       end
 
       context 'when current user is not following anyone' do
