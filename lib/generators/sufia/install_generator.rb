@@ -96,7 +96,7 @@ module Sufia
     def inject_sufia_solr_document_behavior
       file_path = "app/models/solr_document.rb"
       if File.exist?(file_path)
-        inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+        inject_into_file file_path, after: /include CurationConcerns::SolrDocumentBehavior/ do
           "\n  # Adds Sufia behaviors to the SolrDocument.\n" \
             "  include Sufia::SolrDocumentBehavior\n"
         end
