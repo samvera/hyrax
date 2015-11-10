@@ -23,7 +23,7 @@ module Sufia
         fs = ::FileSet.load_instance_from_solr(doc_id)
         terms.each do |key|
           h[key] ||= []
-          h[key] = (h[key] + fs.send(key)).uniq
+          h[key] = (h[key] + fs[key]).uniq
         end
         @names << fs.to_s
         permissions = (permissions + fs.permissions).uniq
