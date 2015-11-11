@@ -1,3 +1,9 @@
+h3. 9.5.0 (2015-11-11)
+* 2015-11-09: Upgrade to Blacklight 5.16 and remove deprecation warnings [Justin
+Coyne]
+
+* 2015-11-09: Updated to make it work with blacklight 5.16 [val99erie]
+
 h3. 9.3.0 (2015-10-07)
 * 2015-10-03: Provide CanCan abilities for :discover permissions. [Randy Coulman]
 
@@ -10,7 +16,6 @@ h3. 9.3.0 (2015-10-07)
 Coyne]
 
 * 2015-08-05: Adding in the Content-Length header [Carolyn Cole]
->>>>>>> Stashed changes
 
 h3. 9.2.2 (2015-08-03)
 * 2015-07-30: Moved condition logic to its own method to give app developer a chance to configure it to not perform future date validation [val99erie]
