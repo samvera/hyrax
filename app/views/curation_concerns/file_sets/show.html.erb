@@ -1,6 +1,6 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1>File Details</h1>
+  <h1>File Details <small><%= @presenter.title %></small></h1>
 <% end %>
 <%= media_display @presenter %>
 <%= render "attributes", curation_concern: @presenter %>
