@@ -15,7 +15,6 @@ module Sufia
       include Blacklight::Configurable
       include Sufia::FilesController::BrowseEverything
       include Sufia::FilesController::LocalIngestBehavior
-      extend Sufia::FilesController::UploadCompleteBehavior
 
       layout "sufia-one-column"
 

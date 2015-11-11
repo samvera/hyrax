@@ -100,10 +100,6 @@ Sufia::Engine.routes.draw do
   get 'directory/user/:uid/:attribute' => 'directory#user_attribute'
   get 'directory/group/:cn' => 'directory#group', constraints: { cn: /.*/ }
 
-  # UploadSet edit routes
-  get 'upload_sets/:id/edit' => 'upload_set#edit', as: :upload_set_edit
-  post 'upload_sets/:id' => 'upload_set#update', as: :upload_set_file_sets
-
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
