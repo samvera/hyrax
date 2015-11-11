@@ -39,17 +39,17 @@ module Sufia
                               end
       @filters = params[:f] || []
 
-      # set up some parameters for allowing the batch controls to show appropiately
-      @max_upload_set_size = 80
+      # set up some parameters for allowing the batch controls to show appropriately
+      @max_batch_size = 80
       count_on_page = @document_list.count { |doc| batch.index(doc.id) }
-      @disable_select_all = @document_list.count > @max_upload_set_size
-      upload_set_size = batch.uniq.size
+      @disable_select_all = @document_list.count > @max_batch_size
+      batch_size = batch.uniq.size
       @result_set_size = @response.response["numFound"]
       @empty_batch = batch.empty?
       @all_checked = (count_on_page == @document_list.count)
-      @entire_result_set_selected = @response.response["numFound"] == upload_set_size
-      @upload_set_size_on_other_page = upload_set_size - count_on_page
-      @batch_part_on_other_page = (@upload_set_size_on_other_page) > 0
+      @entire_result_set_selected = @response.response["numFound"] == batch_size
+      @batch_size_on_other_page = batch_size - count_on_page
+      @batch_part_on_other_page = (@batch_size_on_other_page) > 0
 
       respond_to do |format|
         format.html {}

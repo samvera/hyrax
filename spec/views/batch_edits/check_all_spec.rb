@@ -3,8 +3,8 @@ require 'spec_helper'
 describe 'Check All', type: :view do
   before(:all) do
     @document_list = ['a', 'b', 'c']
-    @upload_set_size_on_other_page = 0
-    @max_upload_set_size = 100
+    @batch_size_on_other_page = 0
+    @max_batch_size = 100
   end
 
   it 'renders batch edits actions' do
