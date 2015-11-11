@@ -12,21 +12,21 @@ describe Sufia::UserStatImporter do
   let!(:gollum) { FactoryGirl.create(:user, email: 'gollum@example.com') }
 
   let!(:bilbo_file_1) do
-    FileSet.new(id: 'bilbo1').tap do |f|
+    FileSet.new(id: 'xyzbilbo1', title: ['bilbo 1']).tap do |f|
       f.apply_depositor_metadata(bilbo.email)
       f.save
     end
   end
 
   let!(:bilbo_file_2) do
-    FileSet.new(id: 'bilbo2').tap do |f|
+    FileSet.new(id: 'xyzbilbo2', title: ['bilbo 2']).tap do |f|
       f.apply_depositor_metadata(bilbo.email)
       f.save
     end
   end
 
   let!(:frodo_file_1) do
-    FileSet.new(id: 'frodo1').tap do |f|
+    FileSet.new(id: 'xyzfrodo1', title: ['frodo 1']).tap do |f|
       f.apply_depositor_metadata(frodo.email)
       f.save
     end
