@@ -10,7 +10,7 @@ describe GenericWorksController do
       get :new
       expect(response).to be_successful
       expect(response).to render_template("layouts/sufia-one-column")
-      expect(assigns[:form]).to be_kind_of CurationConcerns::Forms::GenericWorkEditForm
+      expect(assigns[:curation_concern]).to be_kind_of GenericWork
     end
   end
 end
