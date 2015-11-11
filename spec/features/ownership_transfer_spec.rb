@@ -6,8 +6,8 @@ include Selectors::NewTransfers
 include Selectors::Transfers
 
 describe 'Transferring work ownership:', type: :feature do
-  let(:original_owner) { FactoryGirl.create(:archivist, display_name: 'Original Owner') }
-  let(:new_owner) { FactoryGirl.create(:jill, display_name: 'New Owner') }
+  let(:original_owner) { create(:user) }
+  let(:new_owner) { create(:user) }
   let!(:work) do
     GenericWork.new.tap do |f|
       f.title = ['little_generic_work']

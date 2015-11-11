@@ -21,9 +21,9 @@ module Sufia
 
     def show_transfer_request_title(req)
       if req.deleted_work?
-        req.title
+        req.to_s
       else
-        link_to(req.title, sufia.generic_work_path(req.generic_work_id))
+        link_to(req.to_s, sufia.generic_work_path(req.generic_work_id))
       end
     end
 

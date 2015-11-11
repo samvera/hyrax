@@ -10,53 +10,14 @@ module Sufia
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
     end
 
-    def to_param
-      self[:id]
-    end
-
-    def title_or_label
-      title || label
-    end
-
     ##
     # Give our SolrDocument an ActiveModel::Naming appropriate route_key
     def route_key
       get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
     end
 
-    ##
-    # Offer the source (ActiveFedora-based) model to Rails for some of the
-    # Rails methods (e.g. link_to).
-    # @example
-    #   link_to '...', SolrDocument(id: 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
-    def to_model
-      @m ||= ActiveFedora::Base.load_instance_from_solr(id)
-      return self if @m.class == ActiveFedora::Base
-      @m
-    end
-
-    # Method to return the ActiveFedora model
-    def hydra_model
-      self[Solrizer.solr_name('active_fedora_model', Solrizer::Descriptor.new(:string, :stored, :indexed))]
-    end
-
-    def date_uploaded
-      field = self[Solrizer.solr_name("date_uploaded", :stored_sortable, type: :date)]
-      return unless field.present?
-      begin
-        Date.parse(field).to_formatted_s(:standard)
-      rescue
-        ActiveFedora::Base.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
-      end
-    end
-
     def date_created
       self[Solrizer.solr_name("date_created")]
-    end
-
-    def depositor(default = '')
-      val = Array(self[Solrizer.solr_name("depositor")]).first
-      val.present? ? val : default
     end
 
     # TODO: Move to curation_concerns?
@@ -74,31 +35,15 @@ module Sufia
       self[Solrizer.solr_name('related_url')]
     end
 
-    def title
-      self[Solrizer.solr_name('title')]
-    end
-
-    def description
-      Array(self[Solrizer.solr_name('description')]).first
-    end
-
-    def label
-      Array(self[Solrizer.solr_name('label')]).first
-    end
-
-    def file_format
-      Array(self[Solrizer.solr_name('file_format')]).first
-    end
-
+    # TODO: reconcile this with CurationConcerns (single vs multiple)
     def creator
       Array(self[Solrizer.solr_name("creator")]).first
     end
 
-    def tags
-      Array(self[Solrizer.solr_name("tag")])
+    # TODO: stop using this method and remove. Use `tags' instead.
+    def tag
+      tags
     end
-
-    alias_method :tag, :tags
 
     def resource_type
       Array(self[Solrizer.solr_name("resource_type")])
@@ -128,10 +73,6 @@ module Sufia
       @collections = result['response']['docs'].map do |hash|
         SolrDocument.new(hash)
       end
-    end
-
-    def collection?
-      hydra_model == 'Collection'
     end
 
     def generic_work?

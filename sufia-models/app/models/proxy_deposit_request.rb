@@ -79,10 +79,21 @@ class ProxyDepositRequest < ActiveRecord::Base
     !GenericWork.exists?(generic_work_id)
   end
 
-  def title
-    return 'work not found' if deleted_work?
-    query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids([generic_work_id])
-    solr_response = ActiveFedora::SolrService.query(query, raw: true)
-    SolrDocument.new(solr_response['response']['docs'].first, solr_response).title
-  end
+  # Delegate to the SolrDocument of the work
+  delegate :to_s, to: :work
+
+  private
+
+    def work
+      return 'work not found' if deleted_work?
+      @work ||= SolrDocument.new(solr_response['response']['docs'].first, solr_response)
+    end
+
+    def solr_response
+      @solr_response ||= ActiveFedora::SolrService.query(query, raw: true)
+    end
+
+    def query
+      ActiveFedora::SolrQueryBuilder.construct_query_for_ids([generic_work_id])
+    end
 end
