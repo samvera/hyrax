@@ -1,20 +1,16 @@
 module Sufia
-  class CollectionPresenter
-    include Hydra::Presenter
+  class CollectionPresenter < CurationConcerns::CollectionPresenter
     include ActionView::Helpers::NumberHelper
 
-    self.model_class = ::Collection
-    # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
-    self.terms = [:title, :total_items, :size, :resource_type, :description, :creator, :contributor,
-                  :tag, :rights, :publisher, :date_created, :subject, :language, :identifier,
-                  :based_near, :related_url]
-
-    # Depositor and permissions are not displayed in app/views/collections/_show_descriptions.html.erb
-    # so don't include them in `terms'.
-    # delegate :depositor, :permissions, to: :model
+    # # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
+    def self.terms
+      [:title, :total_items, :size, :resource_type, :description, :creator,
+       :contributor, :tag, :rights, :publisher, :date_created, :subject,
+       :language, :identifier, :based_near, :related_url]
+    end
 
     def terms_with_values
-      terms.select { |t| self[t].present? }
+      self.class.terms.select { |t| self[t].present? }
     end
 
     def [](key)
@@ -24,16 +20,17 @@ module Sufia
       when :total_items
         total_items
       else
-        super
+        solr_document.send key
       end
     end
 
     def size
-      number_to_human_size(Sufia::CollectionSizeService.run(model))
+      number_to_human_size(Sufia::CollectionSizeService.run(solr_document))
     end
 
     def total_items
-      model.members.count
+      ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
+        .flat_map { |x| x.fetch("ordered_targets_ssim", []) }.size
     end
   end
 end

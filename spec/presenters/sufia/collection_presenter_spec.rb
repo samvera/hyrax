@@ -9,11 +9,12 @@ describe Sufia::CollectionPresenter do
   end
 
   let(:collection) { Collection.new(id: '111', description: 'a nice collection', title: 'A clever title') }
-  let(:presenter) { described_class.new(collection) }
+  let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+  let(:ability) { double }
+  let(:presenter) { described_class.new(solr_doc, ability) }
 
   describe "#terms_with_values" do
     subject { presenter.terms_with_values }
-
     it { is_expected.to eq [:title, :total_items, :size, :description] }
   end
 

@@ -59,6 +59,21 @@ module Sufia
       val.present? ? val : default
     end
 
+    # TODO: Move to curation_concerns?
+    def identifier
+      self[Solrizer.solr_name('identifier')]
+    end
+
+    # TODO: Move to curation_concerns?
+    def based_near
+      self[Solrizer.solr_name('based_near')]
+    end
+
+    # TODO: Move to curation_concerns?
+    def related_url
+      self[Solrizer.solr_name('related_url')]
+    end
+
     def title
       self[Solrizer.solr_name('title')]
     end
