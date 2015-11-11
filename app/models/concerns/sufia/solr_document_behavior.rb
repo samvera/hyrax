@@ -89,10 +89,6 @@ module Sufia
       Array(self[Solrizer.solr_name("resource_type")])
     end
 
-    def mime_type
-      Array(self[Solrizer.solr_name("mime_type")]).first
-    end
-
     def read_groups
       Array(self[::Ability.read_group_field])
     end
