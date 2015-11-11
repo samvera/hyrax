@@ -30,7 +30,7 @@ describe SolrDocument, type: :model do
     context "when mime-type is 'office'" do
       it "is office document" do
         Mimes.office_document_mime_types.each do |type|
-          subject['mime_type_tesim'] = [type]
+          subject['mime_type_ssi'] = type
           expect(subject).to be_office_document
         end
       end
@@ -39,7 +39,7 @@ describe SolrDocument, type: :model do
     describe "when mime-type is 'video'" do
       it "is office" do
         Mimes.video_mime_types.each do |type|
-          subject['mime_type_tesim'] = [type]
+          subject['mime_type_ssi'] = type
           expect(subject).to be_video
         end
       end
