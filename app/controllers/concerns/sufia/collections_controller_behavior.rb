@@ -6,58 +6,22 @@ module Sufia
     included do
       include Sufia::Breadcrumbs
 
-      before_action :filter_docs_with_read_access!, except: :show
       before_action :has_access?, except: :show
       before_action :build_breadcrumbs, only: [:edit, :show]
-
-      self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
-
       layout "sufia-one-column"
       # include the link_to_remove_from_collection view helper methods
       helper CurationConcerns::CollectionsHelper
     end
 
-    def new
-      super
-      form
-    end
-
-    def edit
-      super
-      form
-    end
-
-    def show
-      super
-      presenter
-    end
-
     protected
-
-      def presenter
-        @presenter ||= presenter_class.new(@collection)
-      end
 
       def presenter_class
         Sufia::CollectionPresenter
       end
 
-      def collection_member_search_builder_class
-        ::CollectionSearchBuilder
-      end
-
-      def collection_params
-        form_class.model_attributes(
-          params.require(:collection).permit(:title, :description, :members, part_of: [],
-                                                                             contributor: [], creator: [], publisher: [], date_created: [], subject: [],
-                                                                             language: [], rights: [], resource_type: [], identifier: [], based_near: [],
-                                                                             tag: [], related_url: [])
-        )
-      end
-
       def query_collection_members
+        # TODO: Should this be moved to curation_concerns
         flash[:notice] = nil if flash[:notice] == "Select something first"
-        params[:q] = params[:cq]
         super
       end
 
@@ -66,18 +30,6 @@ module Sufia
           format.html { redirect_to sufia.dashboard_collections_path, notice: 'Collection was successfully deleted.' }
           format.json { render json: { id: id }, status: :destroyed, location: @collection }
         end
-      end
-
-      def form
-        @form ||= form_class.new(@collection)
-      end
-
-      def form_class
-        Sufia::Forms::CollectionEditForm
-      end
-
-      def _prefixes
-        @_prefixes ||= super + ['catalog']
       end
   end
 end

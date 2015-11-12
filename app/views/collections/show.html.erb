@@ -1,4 +1,4 @@
-<% @page_title = "#{@collection.title} - #{application_name}" %>
+<% @page_title = "#{@presenter.title} - #{application_name}" %>
 
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
 
@@ -13,7 +13,7 @@
       <% end %>
     </div>
     <div class="col-sm-2">
-      <%= render partial: 'collections/media_display', locals: { file_set: @collection } %>
+      <%= render 'collections/media_display' %>
       <% unless has_collection_search_parameters? %>
       <%= render partial: 'collections/show_actions' %>
       <% end %>

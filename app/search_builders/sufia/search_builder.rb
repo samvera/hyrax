@@ -1,9 +1,4 @@
-module Sufia::SearchBuilder
-  extend ActiveSupport::Concern
-
-  include BlacklightAdvancedSearch::AdvancedSearchBuilder
-  include Hydra::Collections::SearchBehaviors
-
+class Sufia::SearchBuilder < CurationConcerns::SearchBuilder
   def show_only_collections(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [

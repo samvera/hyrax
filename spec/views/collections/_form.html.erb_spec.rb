@@ -4,7 +4,7 @@ describe 'collections/_form.html.erb' do
   let(:collection) { Collection.new(title: 'the title', description: 'the description',
                                     creator: ['the creator'])}
 
-  let(:collection_form) { Sufia::Forms::CollectionEditForm.new(collection) }
+  let(:collection_form) { CurationConcerns::Forms::CollectionEditForm.new(collection) }
 
   before do
     controller.request.path_parameters[:id] = 'j12345'
