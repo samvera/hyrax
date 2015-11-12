@@ -7,7 +7,6 @@ module Sufia
   end
   module FilesControllerBehavior
     extend ActiveSupport::Concern
-    extend Sufia::FilesController::UploadCompleteBehavior
     include Sufia::Breadcrumbs
 
     included do
@@ -15,6 +14,7 @@ module Sufia
       include Blacklight::Configurable
       include Sufia::FilesController::BrowseEverything
       include Sufia::FilesController::LocalIngestBehavior
+      extend Sufia::FilesController::UploadCompleteBehavior
 
       layout "sufia-one-column"
 
@@ -42,6 +42,10 @@ module Sufia
 
       class_attribute :show_presenter
       self.show_presenter = Sufia::FileSetPresenter
+    end
+
+    def new
+      @upload_set_id = ActiveFedora::Noid::Service.new.mint
     end
 
     # routed to /files/:id/stats
@@ -74,7 +78,7 @@ module Sufia
 
       def _prefixes
         # This allows us to use the templates in curation_concerns/file_sets
-        @_prefixes ||= super + ['curation_concerns/file_sets']
+        @_prefixes ||= ['curation_concerns/file_sets'] + super
       end
 
       def audit_service

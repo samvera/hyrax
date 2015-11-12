@@ -4,7 +4,7 @@
       <%= hidden_field_tag(:upload_set_id, @upload_set_id) %>
       <%= hidden_field_tag(:parent_id, @work_id) %>
       <%= hidden_field_tag "file_coming_from", "local" %>
-      <%= render partial: 'file_sets/upload/tos_checkbox' %>
+      <%= render 'curation_concerns/file_sets/upload/tos_checkbox' %>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="col-md-7">

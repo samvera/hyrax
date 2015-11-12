@@ -616,6 +616,14 @@ describe FileSetsController do
     end
   end
 
+  describe "GET /new" do
+    it "sets the form" do
+      get :new
+      expect(assigns[:upload_set_id]).to be_present
+      expect(response).to render_template('curation_concerns/file_sets/new')
+    end
+  end
+
   describe "batch creation" do
     context "when uploading a file" do
       let(:upload_set_id) { ActiveFedora::Noid::Service.new.mint }
