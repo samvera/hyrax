@@ -19,11 +19,6 @@ module Sufia
         Sufia::CollectionPresenter
       end
 
-      def collection_member_search_builder_class
-        # TODO: Use the one in curation_concerns?
-        ::CollectionSearchBuilder
-      end
-
       def query_collection_members
         # TODO: Should this be moved to curation_concerns
         flash[:notice] = nil if flash[:notice] == "Select something first"
