@@ -1,19 +1,13 @@
 require 'spec_helper'
 
 describe Sufia::SearchBuilder do
-  before do
-    class TestBuilder < Blacklight::SearchBuilder
-      include Sufia::SearchBuilder
-    end
-  end
-
-  subject { TestBuilder.new([], self) }
+  let(:builder) { described_class.new([], self) }
   let(:solr_params) { { q: user_query } }
 
   context "with a user query" do
     let(:user_query) { "find me" }
     it "creates a valid solr join for works and files" do
-      subject.show_works_or_works_that_contain_files(solr_params)
+      builder.show_works_or_works_that_contain_files(solr_params)
       expect(solr_params[:user_query]).to eq user_query
       expect(solr_params[:q]).to eq "{!lucene}_query_:\"{!dismax v=$user_query}\" _query_:\"{!join from=generic_work_ids_ssim to=id}{!dismax v=$user_query}\""
     end
@@ -22,7 +16,7 @@ describe Sufia::SearchBuilder do
   context "with out a user query" do
     let(:user_query) { nil }
     it "does not modify the query" do
-      subject.show_works_or_works_that_contain_files(solr_params)
+      builder.show_works_or_works_that_contain_files(solr_params)
       expect(solr_params[:user_query]).to be_nil
       expect(solr_params[:q]).to be_nil
     end
