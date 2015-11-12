@@ -23,7 +23,7 @@ describe ProxyDepositRequest, type: :model do
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
   it "has a title for the file" do
-    expect(subject.title).to eq('Test work')
+    expect(subject.to_s).to eq('Test work')
   end
 
   context "After approval" do
@@ -40,7 +40,7 @@ describe ProxyDepositRequest, type: :model do
         work.destroy
       end
 
-      its(:title) { is_expected.to eq 'work not found' }
+      its(:to_s) { is_expected.to eq 'work not found' }
       its(:deleted_work?) { is_expected.to be true }
     end
   end
