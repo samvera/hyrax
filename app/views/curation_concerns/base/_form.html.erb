@@ -11,7 +11,7 @@
       <% end %>
     </div>
 
-    <%= render partial: 'curation_concern/base/permission_form', locals: { f: f } %>
+    <%= render 'curation_concerns/base/permission_form', f: f %>
 
     <div class="primary-actions">
       <%= f.submit 'Save and Add Files', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
