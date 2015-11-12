@@ -22,10 +22,10 @@ describe Sufia::Messages do
 
   describe "message subjects" do
     it "provides a subject for a success message" do
-      expect(message.success_subject).to eq("UploadSet.upload complete")
+      expect(message.success_subject).to eq("Batch upload complete")
     end
     it "provides a subject for a failure message" do
-      expect(message.failure_subject).to eq("UploadSet.upload permission denied")
+      expect(message.failure_subject).to eq("Batch upload permission denied")
     end
   end
 
