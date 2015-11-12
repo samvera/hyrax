@@ -39,36 +39,46 @@ describe CollectionsController do
       expect(assigns[:collection].creator).to eq([])
     end
 
-    it "creates a Collection with files I can access" do
-      @asset1 = FileSet.new(title: ["First of the Assets"])
-      @asset1.apply_depositor_metadata(user.user_key)
-      @asset1.save
-      @asset2 = FileSet.new(title: ["Second of the Assets"], depositor: user.user_key)
-      @asset2.apply_depositor_metadata(user.user_key)
-      @asset2.save
-      @asset3 = FileSet.new(title: ["Third of the Assets"], depositor: 'abc')
-      @asset3.apply_depositor_metadata('abc')
-      @asset3.save
-      expect {
-        post :create, collection: { title: "My own Collection", description: "The Description\r\n\r\nand more" },
-                      upload_set_document_ids: [@asset1.id, @asset2.id, @asset3.id]
-      }.to change { Collection.count }.by(1)
-      collection = assigns(:collection)
-      expect(collection.members).to match_array [@asset1, @asset2]
+    context "with files I can access" do
+      let(:asset1) do
+        FileSet.create!(title: ["First of the Assets"]) do |fs|
+          fs.apply_depositor_metadata(user.user_key)
+        end
+      end
+      let(:asset2) do
+        FileSet.create!(title: ["Second of the Assets"], depositor: user.user_key) do |fs|
+          fs.apply_depositor_metadata(user.user_key)
+        end
+      end
+      let(:asset3) do
+        FileSet.create!(title: ["Third of the Assets"], depositor: 'abc') do |fs|
+          fs.apply_depositor_metadata('abc')
+        end
+      end
+
+      it "creates a collection" do
+        expect {
+          post :create, collection: { title: "My own Collection", description: "The Description\r\n\r\nand more" },
+                        batch_document_ids: [asset1.id, asset2.id, asset3.id]
+        }.to change { Collection.count }.by(1)
+        collection = assigns(:collection)
+        expect(collection.members).to match_array [asset1, asset2]
+      end
     end
 
     it "adds docs to the collection if a batch id is provided and add the collection id to the documents in the collection" do
-      @asset1 = FileSet.new(title: ["First of the Assets"])
-      @asset1.apply_depositor_metadata(user.user_key)
-      @asset1.save
-      post :create, upload_set_document_ids: [@asset1.id],
-                    collection: { title: "My Second Collection ", description: "The Description\r\n\r\nand more" }
-      expect(assigns[:collection].members).to eq [@asset1]
-      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+      asset1 = FileSet.create!(title: ["First of the Assets"]) do |fs|
+        fs.apply_depositor_metadata(user.user_key)
+      end
+      post :create, batch_document_ids: [asset1.id],
+                    collection: { title: "My Second Collection ",
+                                  description: "The Description\r\n\r\nand more" }
+      expect(assigns[:collection].members).to eq [asset1]
+      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
-      expect(doc["id"]).to eq @asset1.id
-      afterupdate = FileSet.find(@asset1.id)
+      expect(doc["id"]).to eq asset1.id
+      afterupdate = FileSet.find(asset1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
   end
@@ -83,34 +93,42 @@ describe CollectionsController do
     end
 
     context "a collections members" do
-      before do
-        @asset1 = FileSet.new(title: ["First of the Assets"])
-        @asset1.apply_depositor_metadata(user.user_key)
-        @asset1.save
-        @asset2 = FileSet.new(title: ["Second of the Assets"], depositor: user.user_key)
-        @asset2.apply_depositor_metadata(user.user_key)
-        @asset2.save
-        @asset3 = FileSet.new(title: ["Third of the Assets"], depositor: 'abc')
-        @asset3.apply_depositor_metadata(user.user_key)
-        @asset3.save
+      let(:asset1) do
+        FileSet.create!(title: ["First of the Assets"]) do |fs|
+          fs.apply_depositor_metadata(user.user_key)
+        end
+      end
+      let(:asset2) do
+        FileSet.create!(title: ["Second of the Assets"], depositor: user.user_key) do |fs|
+          fs.apply_depositor_metadata(user.user_key)
+        end
+      end
+      let(:asset3) do
+        FileSet.create!(title: ["Third of the Assets"], depositor: 'abc') do |fs|
+          fs.apply_depositor_metadata(user.user_key)
+        end
       end
 
       it "sets collection on members" do
-        put :update, id: collection, collection: { members: "add" }, upload_set_document_ids: [@asset3.id, @asset1.id, @asset2.id]
+        put :update, id: collection,
+                     collection: { members: "add" },
+                     batch_document_ids: [asset3.id, asset1.id, asset2.id]
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
-        expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]
-        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+        expect(assigns[:collection].members).to match_array [asset2, asset3, asset1]
+        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
-        expect(doc["id"]).to eq @asset2.id
-        afterupdate = FileSet.find(@asset2.id)
+        expect(doc["id"]).to eq asset2.id
+        afterupdate = FileSet.find(asset2.id)
         expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
 
-        put :update, id: collection, collection: { members: "remove" }, upload_set_document_ids: [@asset2]
-        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{@asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
+        put :update, id: collection,
+                     collection: { members: "remove" },
+                     batch_document_ids: [asset2]
+        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
-        expect(doc["id"]).to eq @asset2.id
+        expect(doc["id"]).to eq asset2.id
         expect(doc[Solrizer.solr_name(:collection)]).to be_nil
       end
     end
