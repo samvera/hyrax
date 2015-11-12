@@ -12,6 +12,12 @@ module Sufia
       layout "sufia-one-column"
     end
 
+    def new
+      # TODO: move this to curation_concerns
+      @form = form_class.new(curation_concern, current_ability)
+      super
+    end
+
     protected
 
       def show_presenter
