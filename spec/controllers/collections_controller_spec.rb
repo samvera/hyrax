@@ -6,7 +6,7 @@ describe CollectionsController do
     allow_any_instance_of(User).to receive(:groups).and_return([])
   end
 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
 
   describe '#new' do
     before do
@@ -162,7 +162,7 @@ describe CollectionsController do
         get :show, id: collection
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
-        expect(assigns[:collection].title).to eq collection.title
+        expect(assigns[:presenter].title).to eq collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
     end
