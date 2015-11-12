@@ -151,19 +151,19 @@ describe CollectionsController do
 
   describe "#show" do
     let(:asset1) do
-      GenericWork.new(title: ["First of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+      GenericWork.create!(title: ["First of the Assets"]) { |a| a.apply_depositor_metadata(user) }
     end
 
     let(:asset2) do
-      GenericWork.new(title: ["Second of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+      GenericWork.create!(title: ["Second of the Assets"]) { |a| a.apply_depositor_metadata(user) }
     end
 
     let(:asset3) do
-      GenericWork.new(title: ["Third of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+      GenericWork.create!(title: ["Third of the Assets"]) { |a| a.apply_depositor_metadata(user) }
     end
 
     let!(:asset4) do
-      GenericWork.create(title: ["Fourth of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+      GenericWork.create!(title: ["Fourth of the Assets"]) { |a| a.apply_depositor_metadata(user) }
     end
 
     let(:collection) do
