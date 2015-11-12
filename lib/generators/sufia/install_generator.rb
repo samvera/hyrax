@@ -101,7 +101,16 @@ module Sufia
             "  include Sufia::SolrDocumentBehavior\n"
         end
       else
-        puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+        puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
+      end
+    end
+
+    def inject_sufia_form
+      file_path = "app/forms/curation_concerns/generic_work_form.rb"
+      if File.exist?(file_path)
+        gsub_file file_path, /CurationConcerns::Forms::WorkForm/, "Sufia::Forms::WorkForm"
+      else
+        puts "     \e[31mFailure\e[0m  Sufia requires a GenericWorkForm object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
       end
     end
 
