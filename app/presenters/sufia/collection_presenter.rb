@@ -2,7 +2,10 @@ module Sufia
   class CollectionPresenter < CurationConcerns::CollectionPresenter
     include ActionView::Helpers::NumberHelper
 
-    # # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
+    # TODO: Move date_created to CurationConcerns
+    delegate :date_created, to: :solr_document
+
+    # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
     def self.terms
       [:title, :total_items, :size, :resource_type, :description, :creator,
        :contributor, :tag, :rights, :publisher, :date_created, :subject,
