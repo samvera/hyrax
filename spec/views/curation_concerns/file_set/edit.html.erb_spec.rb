@@ -18,12 +18,18 @@ describe 'curation_concerns/file_sets/edit.html.erb', :no_clean do
                           depositor: 'bob',
                           resource_type: ['Book', 'Dataset'])
     end
+    let(:work) do
+      stub_model(GenericWork, id: '456')
+    end
 
     let(:form) do
       CurationConcerns::Forms::FileSetEditForm.new(file_set)
     end
 
     before do
+      view.lookup_context.view_paths.push 'app/views/curation_concerns'
+      allow(view).to receive(:curation_concern).and_return(file_set)
+      allow(view).to receive(:parent).and_return(work)
       allow(file_set).to receive(:content).and_return(content)
       allow(controller).to receive(:current_user).and_return(stub_model(User))
       assign(:file_set, file_set)
