@@ -418,7 +418,7 @@ describe FileSetsController do
     context "when updating metadata" do
       let(:update_message) { double('content update message') }
       it "spawns a content update event job" do
-        expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com')
+        expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
         post :update, id: file_set, file_set: { title: ['new_title'], tag: [''],
                                                 permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
@@ -426,14 +426,14 @@ describe FileSetsController do
       it "spawns a content new version event job" do
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, file_set: { files: [file], tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
-        expect(ContentUpdateEventJob).to have_received(:perform_later).with(file_set.id, 'jilluser@example.com').once
+        expect(ContentUpdateEventJob).to have_received(:perform_later).with(file_set.id, user.user_key)
         expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
       end
     end
 
     context "when updating the attached file" do
       it "spawns a content new version event job" do
-        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com').once
+        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
 
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
@@ -519,13 +519,13 @@ describe FileSetsController do
     it "spawns a virus check" do
       file = fixture_file_upload('/world.png', 'image/png')
 
-      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, 'jilluser@example.com').once
+      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
       post :update, id: file_set.id, 'Filename' => 'The world',
                     file_set: { files: [file], tag: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
-      expect(CreateDerivativesJob).to have_receive(:perform_later).with(file_set.id).once
-      expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
+      expect(CreateDerivativesJob).to have_receive(:perform_later).with(file_set.id)
+      expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
     end
 
     context "when there's an error saving" do
