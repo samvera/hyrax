@@ -14,8 +14,8 @@ module CurationConcerns
       # @param [ActiveFedora::Base,#member_ids] model
       # @param [Ability] current_ability
       def initialize(model, current_ability)
-        @model = model
         @current_ability = current_ability
+        super(model)
       end
 
       # The possible values for the representative_id dropdown
