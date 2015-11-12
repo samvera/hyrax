@@ -2,4 +2,27 @@
 <% provide :page_header do %>
   <h1>Updating Attached File to <span class="parent_container">"<%= parent %>"<span></h1>
 <% end %>
-<%= render 'form' %>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-4">
+    <%= render 'media_display' %>
+  </div>
+  <div class="col-xs-12 col-sm-8">
+    <ul class="nav nav-tabs">
+      <li id="edit_descriptions_link" class="active">
+        <a href="#descriptions_display" data-toggle="tab"><i class="glyphicon glyphicon-tags"></i> Descriptions</a>
+      </li>
+      <li id="edit_versioning_link">
+        <a href="#versioning_display" data-toggle="tab"><i class="glyphicon glyphicon-sitemap"></i> Versions</a>
+      </li>
+      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab">
+        <i class="glyphicon glyphicon-key"></i> Permissions</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <%= render "form" %>
+      <%= render "permission", file_set: curation_concern %>
+      <%= render "versioning", file_set: curation_concern  %>
+    </div>
+  </div> <!-- /.col-sm-8 -->
+</div><!-- /.row -->
