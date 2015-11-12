@@ -4,20 +4,17 @@ describe 'collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do
     let(:collection_size) { 123_456_678 }
     let(:collection) do
-      mock_model(Collection,
-                 resource_type: [], creator: [], contributor: [], tag: [],
-                 description: '', title: 'hmm',
-                 rights: [], publisher: [], date_created: ['2000-01-01'], subject: [],
-                 language: [], identifier: [], based_near: [], related_url: [],
-                 members: ['foo', 'bar']
-                )
+      Collection.new(title: 'hmm', date_created: ['2000-01-01'])
     end
     before do
+      allow(presenter).to receive(:total_items).and_return(2)
       assign(:presenter, presenter)
       allow(Sufia::CollectionSizeService).to receive(:run).and_return(collection_size)
     end
 
-    let(:presenter) { Sufia::CollectionPresenter.new(collection) }
+    let(:ability) { double }
+    let(:solr_document) { SolrDocument.new(collection.to_solr) }
+    let(:presenter) { Sufia::CollectionPresenter.new(solr_document, ability) }
 
     it "draws the metadata fields for collection" do
       render
