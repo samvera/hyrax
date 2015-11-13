@@ -13,20 +13,22 @@ module Sufia::FilesController
     protected
 
       def create_from_browse_everything(params)
-        UploadSet.find_or_create(params[:upload_set_id])
+        upload_set_id = params.fetch(:file_set).fetch(:upload_set_id)
+        parent = ActiveFedora::Base.find(params.fetch(:file_set).fetch(:parent_id))
+        UploadSet.find_or_create(upload_set_id)
         params[:selected_files].each_pair do |_index, file_info|
           next if file_info.blank? || file_info["url"].blank?
-          create_file_from_url(file_info["url"], file_info["file_name"])
+          create_file_from_url(file_info["url"], file_info["file_name"], upload_set_id, parent)
         end
-        redirect_to self.class.upload_complete_path(params[:upload_set_id])
+        redirect_to self.class.upload_complete_path(upload_set_id)
       end
 
       # Generic utility for creating FileSet from a URL
       # Used in to import files using URLs from a file picker like browse_everything
-      def create_file_from_url(url, file_name)
-        ::FileSet.new(import_url: url, label: file_name).tap do |fs|
+      def create_file_from_url(url, file_name, upload_set_id, parent)
+        ::FileSet.new(import_url: url, label: file_name) do |fs|
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
-          actor.create_metadata(params[:upload_set_id], params[:parent_id])
+          actor.create_metadata(upload_set_id, parent)
           fs.save!
           ImportUrlJob.perform_later(fs.id)
         end
