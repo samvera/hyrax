@@ -121,6 +121,7 @@ describe CurationConcerns::FileSetsController do
             { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           expect(response.status).to eq 422
           expect(response).to render_template('edit')
+          expect(assigns[:groups]).to be_kind_of Array
           expect(assigns[:file_set]).to eq file_set
         end
 
