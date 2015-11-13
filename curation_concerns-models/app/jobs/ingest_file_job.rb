@@ -10,7 +10,8 @@ class IngestFileJob < ActiveJob::Base
     # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
     Hydra::Works::UploadFileToFileSet.call(file_set, file, versioning: false)
     file_set.save!
-    CurationConcerns::VersioningService.create(file_set.original_file, user_key)
-    CurationConcerns.config.callback.run(:after_create_content, file_set, user_key)
+    user = User.find_by_user_key(user_key)
+    CurationConcerns::VersioningService.create(file_set.original_file, user)
+    CurationConcerns.config.callback.run(:after_create_content, file_set, user)
   end
 end
