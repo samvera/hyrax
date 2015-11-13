@@ -27,8 +27,8 @@ describe My::FilesController, type: :controller do
 
     before do
       allow(upload_set).to receive(:id).and_return(upload_set_id)
-      User.upload_setuser.send_message(user, single_success(upload_set_id, batch), success_subject, false)
-      User.upload_setuser.send_message(user, multiple_success(upload_set_id2, [batch]), success_subject, false)
+      User.batchuser.send_message(user, single_success(upload_set_id, upload_set), success_subject, false)
+      User.batchuser.send_message(user, multiple_success(upload_set_id2, [upload_set]), success_subject, false)
       get :index
     end
 
