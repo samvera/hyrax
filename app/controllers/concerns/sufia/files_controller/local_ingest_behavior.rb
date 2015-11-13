@@ -3,8 +3,9 @@ module Sufia
     include ActiveSupport::Concern
 
     def create
-      if params[:local_file].present?
-        perform_local_ingest
+      file_set_attributes = params.fetch(:file_set)
+      if file_set_attributes[:local_file].present?
+        perform_local_ingest(file_set_attributes, params.fetch(:parent_id))
       else
         super
       end
@@ -12,10 +13,12 @@ module Sufia
 
     private
 
-      def perform_local_ingest
+      def perform_local_ingest(file_set_attributes, parent_id)
         if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
-          if ingest_local_file
-            redirect_to FileSetsController.upload_complete_path(params[:upload_set_id])
+          upload_set_id = file_set_attributes.fetch(:upload_set_id)
+          local_files = file_set_attributes.fetch(:local_file)
+          if ingest_local_file(local_files, parent_id, upload_set_id)
+            redirect_to FileSetsController.upload_complete_path(upload_set_id)
           else
             flash[:alert] = "Error importing files from user directory."
             render :new
@@ -26,11 +29,12 @@ module Sufia
         end
       end
 
-      def ingest_local_file
+      # TODO: this method should be extracted to a service class
+      def ingest_local_file(local_files, parent_id, upload_set_id)
         # Ingest files already on disk
         has_directories = false
         files = []
-        params[:local_file].each do |filename|
+        local_files.each do |filename|
           if File.directory?(File.join(current_user.directory, filename))
             has_directories = true
             Dir[File.join(current_user.directory, filename, '**', '*')].each do |single|
@@ -43,20 +47,21 @@ module Sufia
             files << filename
           end
         end
-        UploadSet.find_or_create(params[:upload_set_id]) unless files.empty?
+        UploadSet.find_or_create(upload_set_id) unless files.empty?
+        parent = ActiveFedora::Base.find(parent_id)
         files.each do |filename|
-          ingest_one(filename, has_directories)
+          ingest_one(filename, upload_set_id, parent, has_directories)
         end
         true
       end
 
-      def ingest_one(filename, _unarranged)
+      def ingest_one(filename, upload_set_id, parent, _unarranged)
         basename = File.basename(filename)
         # do not remove ::
         ::FileSet.new(label: basename).tap do |fs|
           fs.relative_path = filename if filename != basename
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
-          actor.create_metadata(params[:upload_set_id], params[:parent_id])
+          actor.create_metadata(upload_set_id, parent)
           fs.save!
           IngestLocalFileJob.perform_later(fs.id, current_user.directory, filename, current_user.user_key)
         end
