@@ -32,8 +32,8 @@ describe FileSetsController do
 
       context "when the file submitted isn't a file" do
         it 'renders error' do
-          xhr :post, :create, parent_id: parent,
-                              file_set: { files: ['hello'],
+          xhr :post, :create, file_set: { files: ['hello'],
+                                          parent_id: parent,
                                           permission: { group: { 'public' => 'read' } } },
                               terms_of_service: '1'
           expect(response.status).to eq 400
@@ -55,9 +55,9 @@ describe FileSetsController do
                                title: ['test title'],
                                visibility: 'restricted')
           expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
-          xhr :post, :create, parent_id: parent,
-                              terms_of_service: '1',
+          xhr :post, :create, terms_of_service: '1',
                               file_set: { files: [file],
+                                          parent_id: parent,
                                           title: ['test title'],
                                           visibility: 'restricted' }
           expect(response).to be_success
@@ -69,8 +69,8 @@ describe FileSetsController do
         it "displays a flash error" do
           pending "There's no way to do this because the scan happens in a background job"
           expect(ClamAV.instance).to receive(:scanfile).and_return("EL CRAPO VIRUS")
-          xhr :post, :create, parent_id: parent,
-                              file_set: { files: [file], Filename: "The world",
+          xhr :post, :create, file_set: { files: [file], Filename: "The world",
+                                          parent_id: parent,
                                           upload_set_id: "sample_upload_set_id",
                                           permission: { "group" => { "public" => "read" } } },
                               terms_of_service: '1'
@@ -95,18 +95,13 @@ describe FileSetsController do
       end
 
       context "when a work id is passed" do
-        let(:work) do
-          GenericWork.create!(title: ['test title']) do |w|
-            w.apply_depositor_metadata(user)
-          end
-        end
         it "records the work" do
-          xhr :post, :create, parent_id: work.id,
-                              file_set: { files: [file], Filename: 'The world',
+          xhr :post, :create, file_set: { files: [file], Filename: 'The world',
+                                          parent_id: parent,
                                           upload_set_id: upload_set_id },
                               terms_of_service: '1'
           expect(response).to be_success
-          expect(reloaded_file_set.generic_works.first).to eq work
+          expect(reloaded_file_set.generic_works.first).to eq parent
         end
       end
 
@@ -143,19 +138,15 @@ describe FileSetsController do
       end
 
       context "when a work id is passed" do
-        let(:work) do
-          GenericWork.create!(title: ['test title']) do |w|
-            w.apply_depositor_metadata(user)
-          end
-        end
         it "records the work" do
           expect(ImportUrlJob).to receive(:perform_later).twice
           expect {
             post :create, selected_files: @json_from_browse_everything,
-                          file_set: { upload_set_id: upload_set_id, parent_id: work.id }
+                          file_set: { upload_set_id: upload_set_id,
+                                      parent_id: parent }
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
-          created_files.each { |f| expect(f.generic_works).to include work }
+          created_files.each { |f| expect(f.generic_works).to include parent }
         end
       end
 
@@ -200,6 +191,7 @@ describe FileSetsController do
         it "ingests files from the filesystem" do
           expect {
             post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                      parent_id: parent,
                                       upload_set_id: upload_set_id }
           }.to change(FileSet, :count).by(2)
           expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
@@ -248,20 +240,14 @@ describe FileSetsController do
         end
 
         context "when a work id is passed" do
-          let(:work) do
-            GenericWork.create!(title: ['test title']) do |w|
-              w.apply_depositor_metadata(user)
-            end
-          end
-
           it "records the work" do
             expect {
-              post :create, parent_id: work.id,
-                            file_set: { local_file: ["world.png", "image.jpg"],
+              post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                        parent_id: parent,
                                         upload_set_id: upload_set_id }
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
-            created_files.each { |f| expect(f.generic_works).to include work }
+            created_files.each { |f| expect(f.generic_works).to include parent }
           end
         end
 
