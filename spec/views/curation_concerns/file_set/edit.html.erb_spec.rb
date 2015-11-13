@@ -9,7 +9,7 @@ describe 'curation_concerns/file_sets/edit.html.erb', :no_clean do
         v.created = '2014-12-09T02:03:18.296Z'
       end
     end
-    let(:version_list) { Sufia::VersionListPresenter.new([resource_version]) }
+    let(:version_list) { CurationConcerns::VersionListPresenter.new([resource_version]) }
     let(:versions_graph) { double(all: [version1]) }
     let(:content) { double('content', mimeType: 'application/pdf') }
 
