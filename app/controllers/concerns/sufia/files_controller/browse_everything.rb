@@ -14,7 +14,7 @@ module Sufia::FilesController
 
       def create_from_browse_everything(params)
         upload_set_id = params.fetch(:file_set).fetch(:upload_set_id)
-        parent = ActiveFedora::Base.find(params.fetch(:file_set).fetch(:parent_id))
+        parent = ActiveFedora::Base.find(params.fetch(:parent_id))
         UploadSet.find_or_create(upload_set_id)
         params[:selected_files].each_pair do |_index, file_info|
           next if file_info.blank? || file_info["url"].blank?
