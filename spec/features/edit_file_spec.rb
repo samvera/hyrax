@@ -3,12 +3,11 @@ require 'spec_helper'
 describe "Editing a file:", type: :feature do
   let(:user) { FactoryGirl.create(:user) }
   let(:file_title) { 'Some kind of title' }
-  let(:file) { FileSet.new.tap do |f|
-                 f.title = [file_title]
-                 f.apply_depositor_metadata(user.user_key)
-                 f.save!
-               end
-  }
+  let(:file) do
+    FileSet.create!(title: [file_title]) do |f|
+      f.apply_depositor_metadata(user.user_key)
+    end
+  end
 
   before { sign_in user }
 
