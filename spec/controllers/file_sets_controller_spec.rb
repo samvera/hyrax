@@ -393,6 +393,11 @@ describe FileSetsController do
       end
     end
 
+    before do
+      binary = StringIO.new("hey")
+      Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+    end
+
     it "sets the breadcrumbs and versions presenter" do
       allow(controller.request).to receive(:referer).and_return('foo')
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
@@ -402,7 +407,6 @@ describe FileSetsController do
 
       expect(response).to be_success
       expect(assigns[:file_set]).to eq file_set
-      expect(assigns[:form]).to be_kind_of CurationConcerns::Forms::FileSetEditForm
       expect(assigns[:version_list]).to be_kind_of CurationConcerns::VersionListPresenter
       expect(response).to render_template(:edit)
     end

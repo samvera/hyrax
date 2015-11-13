@@ -85,6 +85,17 @@ module Sufia
         CurationConcerns::FileSetAuditService.new(@file_set)
       end
 
+      def initialize_edit_form
+        @version_list = version_list
+        super
+      end
+
+      def version_list
+        original = @file_set.original_file
+        versions = original ? original.versions.all : []
+        CurationConcerns::VersionListPresenter.new(versions)
+      end
+
       def process_file(file)
         if terms_accepted?
           super(file)
