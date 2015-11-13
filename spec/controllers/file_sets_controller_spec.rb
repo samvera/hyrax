@@ -149,7 +149,7 @@ describe FileSetsController do
           end
         end
         it "records the work" do
-          expect(ImportUrlJob).to receive(:new).twice
+          expect(ImportUrlJob).to receive(:perform_later).twice
           expect {
             post :create, selected_files: @json_from_browse_everything,
                           file_set: { upload_set_id: upload_set_id, parent_id: work.id }
