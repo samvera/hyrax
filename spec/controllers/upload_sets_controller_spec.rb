@@ -12,15 +12,15 @@ describe UploadSetsController do
     let(:upload_set) { UploadSet.create }
     context "enquing a update job" do
       it "is successful" do
-        expect(UploadSetUpdateJob).to receive(:new).with(user.user_key,
-                                                         upload_set.id,
-                                                         { '1' => 'foo' },
-                                                         { tag: [] },
-                                                         'open')
+        expect(UploadSetUpdateJob).to receive(:perform_later).with(user.user_key,
+                                                                   upload_set.id,
+                                                                   { '1' => 'foo' },
+                                                                   { tag: [] },
+                                                                   'open')
         post :update, id: upload_set, title: { '1' => 'foo' },
                       visibility: 'open',
                       file_set: { tag: [""] }
-        expect(response).to redirect_to routes.url_helpers.dashboard_files_path
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
     end
