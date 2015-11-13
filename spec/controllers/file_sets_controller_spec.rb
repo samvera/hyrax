@@ -130,7 +130,9 @@ describe FileSetsController do
       end
       it "ingests files from provide URLs" do
         expect(ImportUrlJob).to receive(:perform_later).twice
-        expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
+        expect { post :create, selected_files: @json_from_browse_everything,
+                               file_set: { upload_set_id: upload_set_id }
+        }.to change(FileSet, :count).by(2)
         created_files = FileSet.all
         ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
           expect(created_files.map(&:import_url)).to include(url)
@@ -149,7 +151,10 @@ describe FileSetsController do
         end
         it "records the work" do
           expect(ImportUrlJob).to receive(:new).twice
-          expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id, parent_id: work.id }.to change(FileSet, :count).by(2)
+          expect {
+            post :create, selected_files: @json_from_browse_everything,
+                          file_set: { upload_set_id: upload_set_id, parent_id: work.id }
+          }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           created_files.each { |f| expect(f.generic_works).to include work }
         end
@@ -158,7 +163,10 @@ describe FileSetsController do
       context "when a work id is not passed" do
         it "creates the work" do
           expect(ImportUrlJob).to receive(:new).twice
-          expect { post :create, selected_files: @json_from_browse_everything, upload_set_id: upload_set_id }.to change(FileSet, :count).by(2)
+          expect {
+            post :create, selected_files: @json_from_browse_everything,
+                          file_set: { upload_set_id: upload_set_id }
+          }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
         end
@@ -642,9 +650,17 @@ describe FileSetsController do
 
       it "creates the batch on HTTP POST with multiple files" do
         expect(UploadSet).to receive(:find_or_create).twice
-        xhr :post, :create, files: [file1], Filename: 'The world 1', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        xhr :post, :create, file_set: { files: [file1],
+                                        Filename: 'The world 1',
+                                        upload_set_id: upload_set_id,
+                                        on_behalf_of: 'carolyn',
+                                        terms_of_service: '1' }
         expect(response).to be_success
-        xhr :post, :create, files: [file2], Filename: 'An image', upload_set_id: upload_set_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        xhr :post, :create, file_set: { files: [file2],
+                                        Filename: 'An image',
+                                        upload_set_id: upload_set_id,
+                                        on_behalf_of: 'carolyn',
+                                        terms_of_service: '1' }
         expect(response).to be_success
       end
     end
