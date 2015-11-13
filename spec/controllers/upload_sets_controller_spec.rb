@@ -42,7 +42,7 @@ describe UploadSetsController do
       end
 
       before do
-        Hydra::Works::AddFileSetToGenericWork.call(somebody_else_work, somebody_else_file)
+        somebody_else_work.members << somebody_else_file
         somebody_else_work.save
       end
 
