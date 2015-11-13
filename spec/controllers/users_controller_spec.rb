@@ -22,9 +22,9 @@ describe UsersController, type: :controller do
     end
 
     describe "when the user has trophies" do
-      let(:work1) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-      let(:work2) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-      let(:work3) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+      let(:work1) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work2) { GenericWork.create(title: ["w2"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work3) { GenericWork.create(title: ["w3"]) { |w| w.apply_depositor_metadata(user) } }
       let!(:trophy1) { user.trophies.create!(generic_work_id: work1.id) }
       let!(:trophy2) { user.trophies.create!(generic_work_id: work2.id) }
       let!(:trophy3) { user.trophies.create!(generic_work_id: work3.id) }
@@ -124,9 +124,9 @@ describe UsersController, type: :controller do
     end
 
     describe "when the user has trophies" do
-      let(:work1) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-      let(:work2) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-      let(:work3) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+      let(:work1) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work2) { GenericWork.create(title: ["w2"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work3) { GenericWork.create(title: ["w3"]) { |w| w.apply_depositor_metadata(user) } }
       let!(:trophy1) { user.trophies.create!(generic_work_id: work1.id) }
       let!(:trophy2) { user.trophies.create!(generic_work_id: work2.id) }
       let!(:trophy3) { user.trophies.create!(generic_work_id: work3.id) }
@@ -221,7 +221,7 @@ describe UsersController, type: :controller do
     end
 
     context "when removing a trophy" do
-      let(:work) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+      let(:work) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
       before do
         user.trophies.create!(generic_work_id: work.id)
       end
@@ -284,7 +284,7 @@ describe UsersController, type: :controller do
   end
 
   describe "#toggle_trophy" do
-    let(:work) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+    let(:work) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
     let(:parent_id) { work.id }
     let(:another_user) { FactoryGirl.create(:user) }
 
