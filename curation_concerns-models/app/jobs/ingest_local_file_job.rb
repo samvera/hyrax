@@ -1,14 +1,7 @@
 class IngestLocalFileJob < ActiveJob::Base
-  attr_accessor :directory, :filename, :user_key, :file_set_id
-
   queue_as :ingest_local
 
   def perform(file_set_id, directory, filename, user_key)
-    @file_set_id = file_set_id
-    @directory = directory
-    @filename = filename
-    @user_key = user_key
-
     user = User.find_by_user_key(user_key)
     fail "Unable to find user for #{user_key}" unless user
     file_set = FileSet.find(file_set_id)
