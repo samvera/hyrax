@@ -28,6 +28,12 @@ describe CurationConcerns::Forms::WorkForm do
     it { is_expected.to eq(title => file_id) }
   end
 
+  describe "#[]" do
+    it 'has one element' do
+      expect(form['description']).to eq ['']
+    end
+  end
+
   describe '.model_attributes' do
     let(:params) { ActionController::Parameters.new(
       title: ['foo'],
