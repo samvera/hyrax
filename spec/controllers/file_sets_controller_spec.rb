@@ -144,9 +144,8 @@ describe FileSetsController do
 
       context "when a work id is passed" do
         let(:work) do
-          GenericWork.new do |w|
+          GenericWork.create!(title: ['test title']) do |w|
             w.apply_depositor_metadata(user)
-            w.save!
           end
         end
         it "records the work" do
