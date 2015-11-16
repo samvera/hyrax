@@ -43,7 +43,7 @@ if $in_travis
   # Monkey-patches the FITS runner to return the PDF FITS fixture
   module Hydra::Works
     class CharacterizationService
-      def self.run(_)
+      def self.run(_, _)
         raise "FITS!!!"
         # return unless file_set.original_file.has_content?
         # filename = ::File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
