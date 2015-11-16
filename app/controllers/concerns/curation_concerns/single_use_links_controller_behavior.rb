@@ -26,7 +26,7 @@ module CurationConcerns
     end
 
     def new_show
-      @su = SingleUseLink.create itemId: params[:id], path: polymorphic_path([main_app, :curation_concerns, asset])
+      @su = SingleUseLink.create itemId: params[:id], path: polymorphic_path([main_app, asset])
       @link = curation_concerns.show_single_use_link_path(@su.downloadKey)
 
       respond_to do |format|

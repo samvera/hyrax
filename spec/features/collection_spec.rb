@@ -21,10 +21,8 @@ describe 'collection' do
   let(:user_key) { user.user_key }
   let(:generic_works) do
     (0..12).map do |x|
-      GenericWork.new.tap do |f|
-        f.title = ["title #{x}"]
+      GenericWork.create!(title: ["title #{x}"]) do |f|
         f.apply_depositor_metadata('user1@example.com')
-        f.save!
       end
     end
   end

@@ -29,7 +29,7 @@ module CurationConcerns
       # Authorize using SingleUseLinksViewerController::Ability
       authorize! :read, curation_concern
 
-      raise not_found_exception unless single_use_link.path == polymorphic_path([main_app, :curation_concerns, curation_concern])
+      raise not_found_exception unless single_use_link.path == polymorphic_path([main_app, curation_concern])
 
       # show the file
       @presenter = presenter_class.new(curation_concern, current_ability)

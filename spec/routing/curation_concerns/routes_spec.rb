@@ -50,12 +50,12 @@ module CurationConcerns
       it 'routes to #show' do
         expect(curation_concerns_generic_work_path(generic_work)).to eq "/concern/generic_works/#{generic_work.id}"
         expect(get("/concern/generic_works/#{generic_work.id}")).to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: generic_work.id)
-        expect(url_for([:curation_concerns, generic_work, only_path: true])).to eq "/concern/generic_works/#{generic_work.id}"
+        expect(url_for([generic_work, only_path: true])).to eq "/concern/generic_works/#{generic_work.id}"
       end
       it 'routes to #edit' do
         expect(edit_curation_concerns_generic_work_path(generic_work)).to eq "/concern/generic_works/#{generic_work.id}/edit"
         expect(get("/concern/generic_works/#{generic_work.id}/edit")).to route_to(controller: 'curation_concerns/generic_works', action: 'edit', id: generic_work.id)
-        expect(url_for([:edit, :curation_concerns, generic_work, only_path: true])).to eq "/concern/generic_works/#{generic_work.id}/edit"
+        expect(url_for([:edit, generic_work, only_path: true])).to eq "/concern/generic_works/#{generic_work.id}/edit"
       end
     end
   end

@@ -3,7 +3,7 @@
 <% end %>
 
 <h2>Current Embargo</h2>
-<%= simple_form_for [:curation_concerns, curation_concern] do |f| %>
+<%= simple_form_for [main_app, curation_concern] do |f| %>
   <fieldset id="set-access-controls">
     <section class="help-block">
       <p>
@@ -25,12 +25,12 @@
     <div class="col-md-12 form-actions">
       <% if curation_concern.embargo_release_date %>
         <%= f.submit "Update Embargo", class: 'btn btn-primary' %>
-        <%= link_to "Deactivate Embargo", embargo_path(curation_concern), :method => :delete, class: 'btn btn-danger' %>
+        <%= link_to "Deactivate Embargo", embargo_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
       <% else %>
         <%= f.submit "Apply Embargo", class: 'btn btn-primary' %>
       <% end %>
       <%= link_to 'Cancel and manage all embargoes', embargoes_path, class: 'btn btn-default' %>
-      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concerns, curation_concern]), class: 'btn btn-default' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", [:edit, curation_concern], class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>
@@ -39,5 +39,5 @@
 <% if curation_concern.embargo_history.empty? %>
   This <%= curation_concern.human_readable_type %> has never had embargoes applied to it.
 <% else %>
-  <%= render partial:"embargo_history" %>
+  <%= render partial: "embargo_history" %>
 <% end %>

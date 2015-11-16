@@ -31,7 +31,7 @@ describe 'curation_concerns/base/show.html.erb' do
 
     it 'draws the page' do
       expect(rendered).to have_link 'Attribution 3.0 United States', href: 'http://creativecommons.org/licenses/by/3.0/us/'
-      expect(rendered).to have_link 'Edit This Generic Work', href: edit_polymorphic_path([:curation_concerns, presenter])
+      expect(rendered).to have_link 'Edit This Generic Work', href: edit_polymorphic_path(presenter)
     end
   end
 

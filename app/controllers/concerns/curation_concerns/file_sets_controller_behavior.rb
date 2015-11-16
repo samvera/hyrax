@@ -78,7 +78,7 @@ module CurationConcerns
 
     def destroy
       actor.destroy
-      redirect_to [main_app, :curation_concerns, @file_set.in_works.first], notice: 'The file has been deleted.'
+      redirect_to [main_app, @file_set.in_works.first], notice: 'The file has been deleted.'
     end
 
     # routed to /files/:id (PUT)
@@ -95,10 +95,9 @@ module CurationConcerns
       if success
         respond_to do |wants|
           wants.html do
-            redirect_to [main_app, :curation_concerns, @file_set], notice:
-                                                                         "The file #{view_context.link_to(@file_set, [main_app, :curation_concerns, @file_set])} has been updated."
+            redirect_to [main_app, @file_set], notice: "The file #{view_context.link_to(@file_set, [main_app, @file_set])} has been updated."
           end
-          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, :curation_concerns, @file_set]) }
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, @file_set]) }
         end
       else
         respond_to do |wants|
@@ -183,11 +182,11 @@ module CurationConcerns
               if request.xhr?
                 render 'jq_upload', formats: 'json', content_type: 'text/html'
               else
-                redirect_to [main_app, :curation_concerns, @file_set.in_works.first]
+                redirect_to [main_app, @file_set.in_works.first]
               end
             end
             format.json do
-              render 'jq_upload', status: :created, location: polymorphic_path([main_app, :curation_concerns, curation_concern])
+              render 'jq_upload', status: :created, location: polymorphic_path([main_app, curation_concern])
             end
           end
         else

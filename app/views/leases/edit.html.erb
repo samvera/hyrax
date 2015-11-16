@@ -3,7 +3,7 @@
 <% end %>
 
 <h2>Current Lease</h2>
-<%= simple_form_for [:curation_concerns, curation_concern] do |f| %>
+<%= simple_form_for curation_concern do |f| %>
   <fieldset id="set-access-controls">
     <section class="help-block">
       <p>
@@ -25,12 +25,12 @@
     <div class="col-md-12 form-actions">
       <% if curation_concern.lease_expiration_date %>
         <%= f.submit "Update Lease", class: 'btn btn-primary' %>
-        <%= link_to "Deactivate Lease", lease_path(curation_concern), :method => :delete, class: 'btn btn-danger' %>
+        <%= link_to "Deactivate Lease", lease_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
       <% else %>
         <%= f.submit "Apply Lease", class: 'btn btn-primary' %>
       <% end %>
       <%= link_to 'Cancel and manage all leases', leases_path, class: 'btn btn-default' %>
-      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concerns, curation_concern]), class: 'btn btn-default' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", [:edit, curation_concern], class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>

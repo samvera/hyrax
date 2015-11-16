@@ -1,6 +1,6 @@
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
   <%-# Script redirects here once the uploads are complete %>
-  <%= polymorphic_path([main_app, :curation_concerns, @presenter]) %>
+  <%= polymorphic_path([main_app, @presenter]) %>
 </div>
 
 <!-- The template to display files available for upload -->

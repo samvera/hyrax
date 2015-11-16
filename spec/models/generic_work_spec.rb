@@ -9,6 +9,11 @@ describe GenericWork do
     expect(subject.title).to eq ['foo']
   end
 
+  describe '.model_name' do
+    subject { described_class.model_name.singular_route_key }
+    it { is_expected.to eq 'curation_concerns_generic_work' }
+  end
+
   context 'with attached files' do
     subject { FactoryGirl.create(:work_with_files) }
 
@@ -39,6 +44,6 @@ describe GenericWork do
   describe '#to_partial_path' do
     let(:work) { described_class.new }
     subject { work.to_partial_path }
-    it { is_expected.to eq 'curation_concerns/generic_works/generic_work' }
+    it { is_expected.to eq 'generic_works/generic_work' }
   end
 end

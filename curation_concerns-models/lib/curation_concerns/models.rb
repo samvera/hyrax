@@ -13,6 +13,7 @@ module CurationConcerns
   autoload :Messages
   eager_autoload do
     autoload :Configuration
+    autoload :Name
   end
 
   attr_writer :queue

@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe CurationConcerns::UrlHelper do
-  before do
-    GenericWork.destroy_all
-  end
   let(:profile) { ["{\"datastreams\":{}}"] }
   let(:work) { create(:generic_work) }
   let(:document) { SolrDocument.new(work.to_solr) }
