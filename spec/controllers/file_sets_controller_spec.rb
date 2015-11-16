@@ -422,24 +422,17 @@ describe FileSetsController do
 
   describe "update" do
     let(:file_set) do
-      FileSet.create do |fs|
-        fs.apply_depositor_metadata(user)
-      end
+      FileSet.create! { |fs| fs.apply_depositor_metadata(user) }
     end
 
     context "when updating metadata" do
-      let(:update_message) { double('content update message') }
       it "spawns a content update event job" do
         expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
-        post :update, id: file_set, file_set: { title: ['new_title'], tag: [''],
-                                                permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
-      end
-
-      it "spawns a content new version event job" do
-        file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, file_set: { files: [file], tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
-        expect(ContentUpdateEventJob).to have_received(:perform_later).with(file_set.id, user.user_key)
-        expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
+        post :update, id: file_set,
+                      file_set: { title: ['new_title'], tag: [''],
+                                  permissions_attributes: [{ type: 'person',
+                                                             name: 'archivist1',
+                                                             access: 'edit' }] }
       end
     end
 
@@ -447,11 +440,11 @@ describe FileSetsController do
       it "spawns a content new version event job" do
         expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
 
+        expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, String)
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
         post :update, id: file_set, file_set: { files: [file], tag: [''],
                                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
-        expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id).once
       end
     end
 
@@ -531,11 +524,10 @@ describe FileSetsController do
 
       expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, String)
       post :update, id: file_set.id, 'Filename' => 'The world',
                     file_set: { files: [file], tag: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
-      expect(CreateDerivativesJob).to have_receive(:perform_later).with(file_set.id)
-      expect(CharacterizeJob).to have_received(:perform_later).with(file_set.id)
     end
 
     context "when there's an error saving" do
