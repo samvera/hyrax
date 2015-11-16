@@ -56,9 +56,10 @@ describe ContentBlocksController, type: :controller do
       end
 
       context "as a user without permission" do
-        it "UPDATE should redirect to root path" do
+        it "UPDATE is unauthorized" do
           patch :update, id: content_block, content_block: { value: 'foo' }
-          expect(response).to redirect_to root_path
+          expect(response.code).to eq '401'
+          expect(response).to render_template(:unauthorized)
         end
 
         it "CREATE should redirect to root path" do
