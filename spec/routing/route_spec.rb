@@ -9,12 +9,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'GenericWork' do
-    it "routes to show" do
-      expect(get: '/works/4').to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: '4')
-    end
-  end
-
   describe 'FileSet' do
     it 'routes to citation' do
       expect(get: '/files/1/citation').to route_to(controller: 'file_sets', action: 'citation', id: '1')
@@ -54,16 +48,6 @@ describe 'Routes', type: :routing do
 
     it "*not*s route to index" do
       expect(get: '/files').not_to route_to(controller: 'file_sets', action: 'index')
-    end
-  end
-
-  describe 'UploadSet' do
-    it "routes to edit" do
-      expect(get: '/upload_sets/1/edit').to route_to(controller: 'upload_set', action: 'edit', id: '1')
-    end
-
-    it "routes to update" do
-      expect(post: '/upload_sets/2').to route_to(controller: 'upload_set', action: 'update', id: '2')
     end
   end
 
@@ -211,6 +195,26 @@ describe 'Routes', type: :routing do
     it "routes non-existent routes to errors" do
       pending "The default route is turned off in testing, so that errors are raised"
       expect(get: '/awesome').to route_to(controller: 'errors', action: 'routing', error: 'awesome')
+    end
+  end
+
+  describe 'main app routes' do
+    routes { Rails.application.routes }
+
+    describe 'GenericWork' do
+      it "routes to show" do
+        expect(get: '/concern/generic_works/4').to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: '4')
+      end
+    end
+
+    describe 'UploadSet' do
+      it "routes to edit" do
+        expect(get: '/upload_sets/1/edit').to route_to(controller: 'upload_sets', action: 'edit', id: '1')
+      end
+
+      it "routes to update" do
+        expect(post: '/upload_sets/2').to route_to(controller: 'upload_sets', action: 'update', id: '2')
+      end
     end
   end
 end
