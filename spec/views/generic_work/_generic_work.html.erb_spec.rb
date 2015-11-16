@@ -23,7 +23,7 @@ describe 'generic_works/_generic_work.html.erb', type: :view do
       expect(view).to receive(:render_thumbnail_tag)
       render
       expect(rendered).to have_content 'work title'
-      expect(rendered).to have_link("work title", sufia.generic_work_path(generic_work))
+      expect(rendered).to have_link("work title", curation_concerns_generic_work_path(generic_work))
       expect(rendered).to have_content 'igor'
     end
   end

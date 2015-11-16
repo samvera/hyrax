@@ -48,7 +48,8 @@ describe "Browse Dashboard", type: :feature do
       click_link "consectetur"
 
       within("#document_#{mp3_work.id}") do
-        expect(page).to have_link("Display all details of Test Document MP3", href: sufia.generic_work_path(mp3_work))
+        expect(page).to have_link("Display all details of Test Document MP3",
+                                  href: curation_concerns_generic_work_path(mp3_work))
       end
     end
 
