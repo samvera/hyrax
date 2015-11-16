@@ -33,22 +33,4 @@ describe Sufia::FileSetPresenter do
       it { is_expected.to eq '@HydraSphere' }
     end
   end
-
-  describe '#itemtype' do
-    let(:file) { build(:file_set, resource_type: type) }
-
-    subject { presenter.itemtype }
-
-    context 'when resource_type is Audio' do
-      let(:type) { ['Audio'] }
-
-      it { is_expected.to eq 'http://schema.org/AudioObject' }
-    end
-
-    context 'when resource_type is Conference Proceeding' do
-      let(:type) { ['Conference Proceeding'] }
-
-      it { is_expected.to eq 'http://schema.org/ScholarlyArticle' }
-    end
-  end
 end
