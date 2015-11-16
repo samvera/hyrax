@@ -58,6 +58,16 @@ describe CurationConcerns::GenericWorksController do
       end.to change { GenericWork.count }.by(1)
       expect(response).to redirect_to main_app.curation_concerns_generic_work_path(assigns[:curation_concern])
     end
+
+    context 'when not authorized' do
+      before { allow(controller.current_ability).to receive(:can?).and_return(false) }
+
+      it 'shows the unauthorized message' do
+        post :create, generic_work: { title: ['a title'] }
+        expect(response.code).to eq '401'
+        expect(response).to render_template(:unauthorized)
+      end
+    end
   end
 
   describe '#edit' do
