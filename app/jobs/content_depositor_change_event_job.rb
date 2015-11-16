@@ -16,7 +16,7 @@ class ContentDepositorChangeEventJob < EventJob
     end
     work.save!
 
-    action = "User #{link_to_profile work.proxy_depositor} has transferred #{link_to work.title.first, Sufia::Engine.routes.url_helpers.generic_work_path(work)} to user #{link_to_profile login}"
+    action = "User #{link_to_profile work.proxy_depositor} has transferred #{link_to work.title.first, Rails.application.routes.url_helpers.curation_concerns_generic_work_path(work)} to user #{link_to_profile login}"
     timestamp = Time.now.to_i
     depositor = ::User.find_by_user_key(work.depositor)
     proxy_depositor = ::User.find_by_user_key(work.proxy_depositor)
