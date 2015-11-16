@@ -27,15 +27,15 @@ module Sufia
 
     def add_breadcrumb_for_controller
       case controller_name
-      when /file_sets|batch/
+      when 'file_sets'.freeze, 'my/files'.freeze, 'batch_edit'.freeze
         add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
-      when /collections/
+      when 'my/collections'.freeze
         add_breadcrumb I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path
       end
     end
 
     def add_breadcrumb_for_action
-      return unless /edit|stats/ =~ action_name && controller_name == "file_sets"
+      return unless controller_name == 'file_sets'.freeze && ['edit', 'stats'].include?(action_name)
       add_breadcrumb I18n.t("sufia.file_set.browse_view"), sufia.file_set_path(params["id"])
     end
   end
