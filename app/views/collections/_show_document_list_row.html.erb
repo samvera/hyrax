@@ -18,7 +18,7 @@
       <% end %>
       <div class="media-body">
         <h4 class="media-heading">
-          <%= link_to document.title_or_label, generic_work_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+          <%= link_to document.title_or_label, curation_concerns_generic_work_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
           <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
         </h4>
         <%= render_collection_links(gw) %>

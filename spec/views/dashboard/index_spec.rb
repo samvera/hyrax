@@ -36,7 +36,7 @@ describe "dashboard/index.html.erb", type: :view do
     end
 
     it "displays welcome message and links" do
-      expect(@heading).to have_link("Create Work", sufia.new_generic_work_path)
+      expect(@heading).to have_link("Create Work", new_curation_concerns_generic_work_path)
       expect(@heading).to have_link("Create Collection", collections.new_collection_path)
       expect(@heading).to have_link("View Works", sufia.dashboard_files_path)
       expect(@heading).to have_link("Upload", sufia.new_file_set_path)
@@ -47,7 +47,7 @@ describe "dashboard/index.html.erb", type: :view do
     context "when the user can't create works" do
       let(:can_create_work) { false }
       it "does not display the create work button" do
-        expect(@heading).not_to have_link("Create Work", sufia.new_generic_work_path)
+        expect(@heading).not_to have_link("Create Work", new_curation_concerns_generic_work_path)
       end
     end
     context "when the user can't create collections" do
