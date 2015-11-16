@@ -27,7 +27,7 @@ module Sufia
 
     def add_breadcrumb_for_controller
       case controller_name
-      when /files|batch/
+      when /file_sets|batch/
         add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
       when /collections/
         add_breadcrumb I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path
