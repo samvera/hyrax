@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-version = File.read(File.expand_path("../SUFIA_VERSION",__FILE__)).strip
+version = File.read(File.expand_path("../SUFIA_VERSION", __FILE__)).strip
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt"]
   gem.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu']
-  gem.description   = %q{sufia-core is a Rails engine for creating a self-deposit institutional repository}
-  gem.summary       = %q{sufia-core was originally extracted from ScholarSphere developed by Penn State University.  It's now used and maintained by an active community of adopters.}
+  gem.description   = 'sufia-core is a Rails engine for creating a self-deposit institutional repository'
+  gem.summary       = "sufia-core was originally extracted from ScholarSphere developed by Penn State University.  It's now used and maintained by an active community of adopters."
   gem.homepage      = "http://github.com/projecthydra-labs/sufia-core"
 
-  gem.files         = `git ls-files | grep -v ^sufia-models`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.files         = `git ls-files | grep -v ^sufia-models`.split($OUTPUT_RECORD_SEPARATOR)
+  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sufia"
   gem.require_paths = ["lib"]
@@ -51,4 +51,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "poltergeist", "~> 1.5"
   gem.add_development_dependency "factory_girl_rails", '~> 4.4'
   gem.add_development_dependency "equivalent-xml", '~> 0.5'
+  gem.add_development_dependency "jasmine", '~> 2.3'
 end

@@ -19,6 +19,7 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'support/features'
+require 'support/rake'
 require 'support/input_support'
 require 'byebug' unless ENV['TRAVIS']
 
