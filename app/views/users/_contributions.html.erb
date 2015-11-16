@@ -5,7 +5,7 @@
         <tr id="trophyrow_<%= t.id %>">
           <td>
             <%= link_to curation_concerns_generic_work_path(t) do %>
-              <%= render_thumbnail_tag t, { width: 90 } %>
+              <%= render_thumbnail_tag t, { width: 90 }, false %>
             <% end %>
           </td>
           <td>
