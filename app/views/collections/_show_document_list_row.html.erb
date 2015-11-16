@@ -13,12 +13,12 @@
   </td>
   <td>
     <div class="media">
-      <%= link_to sufia.generic_work_path(document), class: "media-left" do %>
+      <%= link_to curation_concerns_generic_work_path(document), class: "media-left" do %>
         <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
       <% end %>
       <div class="media-body">
         <h4 class="media-heading">
-          <%= link_to document.title_or_label, sufia.generic_work_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+          <%= link_to document.title_or_label, generic_work_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
           <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
         </h4>
         <%= render_collection_links(gw) %>
@@ -27,7 +27,7 @@
   </td>
   <td class="text-center"><%= document.date_uploaded %> </td>
   <td class="text-center">
-    <a href="<%= sufia.generic_work_path(document) %>/edit/?tab=permissions" id="permission_<%= id %>" class="visibility-link">
+    <a href="<%= curation_concerns_generic_work_path(document) %>/edit/?tab=permissions" id="permission_<%= id %>" class="visibility-link">
       <% if document.registered? %>
         <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
       <% elsif document.public? %>
@@ -45,7 +45,7 @@
   <td colspan="6">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2">File Name:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= link_to document.label, sufia.generic_work_path(document) %></dd>
+      <dd class="col-xs-9 col-lg-4"><%= link_to document.label, curation_concerns_generic_work_path(document) %></dd>
       <dt class="col-xs-3 col-lg-2">Creator:</dt>
       <dd class="col-xs-9 col-lg-4"><%= document.creator %></dd>
       <dt class="col-xs-3 col-lg-2">Depositor:</dt>
