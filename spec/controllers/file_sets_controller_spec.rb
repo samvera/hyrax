@@ -94,22 +94,6 @@ describe FileSetsController do
         end
       end
 
-      context "when a work id is passed" do
-        let(:work) do
-          GenericWork.create!(title: ['test title']) do |w|
-            w.apply_depositor_metadata(user)
-          end
-        end
-        it "records the work" do
-          xhr :post, :create, parent_id: work.id,
-                              file_set: { files: [file], Filename: 'The world',
-                                          upload_set_id: upload_set_id },
-                              terms_of_service: '1'
-          expect(response).to be_success
-          expect(reloaded_file_set.generic_works.first).to eq work
-        end
-      end
-
       context "when a work id is not passed" do
         it "creates the work" do
           xhr :post, :create, file_set: { files: [file], Filename: 'The world',
