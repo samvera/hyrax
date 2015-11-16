@@ -21,14 +21,11 @@ Sufia::Engine.routes.draw do
   end
 
   # Generic work routes
-  resources :generic_works, path: :works, except: :index do
+  resources :works, only: [] do
     member do
       resources :transfers, as: :generic_work_transfers, only: [:new, :create]
     end
   end
-
-  # GenericWorks
-  get '/works/:id', controller: 'curation_concerns/generic_works', action: :show, as: 'sufia_works_generic_work'
 
   # Depositors routes for proxy deposit
   post 'users/:user_id/depositors' => 'depositors#create', as: 'user_depositors'
