@@ -520,13 +520,12 @@ describe FileSetsController do
           fs.apply_depositor_metadata(user)
         end
       end
-      it "redirects to edit" do
+      it "draws the edit page" do
         expect_any_instance_of(FileSet).to receive(:valid?).and_return(false)
         post :update, id: file_set, file_set: { tag: [''] }
-        expect(response).to be_success
+        expect(response.code).to eq '422'
         expect(response).to render_template('edit')
         expect(assigns[:file_set]).to eq file_set
-        expect(flash[:error]).to include 'Update was unsuccessful.'
       end
     end
   end
