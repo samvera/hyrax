@@ -49,19 +49,32 @@ describe FileSetsController do
           allow(DateTime).to receive(:now).and_return(date_today)
         end
 
-        it 'calls the actor to create metadata and content' do
-          expect(controller.send(:actor)).to receive(:create_metadata)
-            .with(nil, parent, files: [file],
-                               title: ['test title'],
-                               visibility: 'restricted')
-          expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
-          xhr :post, :create, parent_id: parent,
-                              terms_of_service: '1',
-                              file_set: { files: [file],
-                                          title: ['test title'],
-                                          visibility: 'restricted' }
-          expect(response).to be_success
-          expect(flash[:error]).to be_nil
+        context "when a work id is passed in" do
+          it 'calls the actor to create metadata and content' do
+            expect(controller.send(:actor)).to receive(:create_metadata)
+              .with(nil, parent, files: [file],
+                                 title: ['test title'],
+                                 visibility: 'restricted')
+            expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
+            xhr :post, :create, parent_id: parent,
+                                terms_of_service: '1',
+                                file_set: { files: [file],
+                                            title: ['test title'],
+                                            visibility: 'restricted' }
+            expect(response).to be_success
+            expect(flash[:error]).to be_nil
+          end
+        end
+
+        context "when a work id is not passed" do
+          it "creates the FileSet" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            xhr :post, :create, file_set: { files: [file], Filename: 'The world',
+                                            upload_set_id: upload_set_id },
+                                terms_of_service: '1'
+            expect(response).to be_success
+            expect(reloaded_file_set.generic_works).not_to be_empty
+          end
         end
       end
 
@@ -86,21 +99,12 @@ describe FileSetsController do
         end
 
         it "errors out of create and save" do
-          xhr :post, :create, file_set: { files: [file], Filename: "The world",
+          xhr :post, :create, parent_id: parent,
+                              file_set: { files: [file], Filename: "The world",
                                           upload_set_id: "sample_upload_set_id",
                                           permission: { "group" => { "public" => "read" } } },
                               terms_of_service: "1"
           expect(response.body).to include("Error occurred while creating file set.")
-        end
-      end
-
-      context "when a work id is not passed" do
-        it "creates the work" do
-          xhr :post, :create, file_set: { files: [file], Filename: 'The world',
-                                          upload_set_id: upload_set_id },
-                              terms_of_service: '1'
-          expect(response).to be_success
-          expect(reloaded_file_set.generic_works).not_to be_empty
         end
       end
     end
@@ -112,17 +116,20 @@ describe FileSetsController do
       before do
         @json_from_browse_everything = { "0" => { "url" => "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires" => "2014-03-31T20:37:36.214Z", "file_name" => "filepicker-demo.txt.txt" }, "1" => { "url" => "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires" => "2014-03-31T20:37:36.731Z", "file_name" => "Getting+Started.pdf" } }
       end
-      it "ingests files from provide URLs" do
-        expect(ImportUrlJob).to receive(:perform_later).twice
-        expect { post :create, selected_files: @json_from_browse_everything,
-                               file_set: { upload_set_id: upload_set_id }
-        }.to change(FileSet, :count).by(2)
-        created_files = FileSet.all
-        ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
-          expect(created_files.map(&:import_url)).to include(url)
-        end
-        ["filepicker-demo.txt.txt", "Getting+Started.pdf"].each do |filename|
-          expect(created_files.map(&:label)).to include(filename)
+      context "when no work_id is passed" do
+        it "ingests files from provide URLs" do
+          skip "Creating a FileSet without a parent work is not yet supported"
+          expect(ImportUrlJob).to receive(:perform_later).twice
+          expect { post :create, selected_files: @json_from_browse_everything,
+                                 file_set: { upload_set_id: upload_set_id }
+          }.to change(FileSet, :count).by(2)
+          created_files = FileSet.all
+          ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
+            expect(created_files.map(&:import_url)).to include(url)
+          end
+          ["filepicker-demo.txt.txt", "Getting+Started.pdf"].each do |filename|
+            expect(created_files.map(&:label)).to include(filename)
+          end
         end
       end
 
@@ -146,6 +153,7 @@ describe FileSetsController do
 
       context "when a work id is not passed" do
         it "creates the work" do
+          skip "Creating a FileSet without a parent work is not yet supported"
           expect(ImportUrlJob).to receive(:new).twice
           expect {
             post :create, selected_files: @json_from_browse_everything,
@@ -182,54 +190,69 @@ describe FileSetsController do
           allow_any_instance_of(User).to receive(:directory).and_return(file_set_upload_directory)
         end
 
-        it "ingests files from the filesystem" do
-          expect {
-            post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                      upload_set_id: upload_set_id }
-          }.to change(FileSet, :count).by(2)
-          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
-          # These files should have been moved out of the upload directory
-          expect(File).not_to exist("#{file_set_upload_directory}/image.jpg")
-          expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-          # And into the storage directory
-          files = UploadSet.find(upload_set_id).file_sets
-          expect(files.first.label).to eq('world.png')
-          expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
-        end
-
-        it "ingests redirect to another location" do
-          expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
-          expect {
-            post :create, file_set: { local_file: ["world.png"],
-                                      upload_set_id: upload_set_id }
-          }.to change(FileSet, :count).by(1)
-          expect(response).to redirect_to file_set_url
-          # These files should have been moved out of the upload directory
-          expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-          # And into the storage directory
-          files = UploadSet.find(upload_set_id).file_sets
-          expect(files.first.label).to eq 'world.png'
-        end
-
-        it "ingests directories from the filesystem" do
-          expect {
-            post :create, file_set: { local_file: ["world.png", "import"],
-                                      upload_set_id: upload_set_id }
-          }.to change(FileSet, :count).by(4)
-          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
-          # These files should have been moved out of the upload directory
-          expect(File).not_to exist("#{file_set_upload_directory}/import/files/icons.zip")
-          expect(File).not_to exist("#{file_set_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
-          expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-          # And into the storage directory
-          files = UploadSet.find(upload_set_id).file_sets
-          file_labels = files.map(&:label)
-          expect(file_labels).to include 'world.png'
-          # TODO: use files.select once projecthydra/active_fedora#609 is fixed
-          ['icons.zip', 'Example.ogg'].each do |filename|
-            expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
+        context "without a parent work id" do
+          it "ingests files from the filesystem" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect {
+              post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                        upload_set_id: upload_set_id }
+            }.to change(FileSet, :count).by(2)
+            expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
+            # These files should have been moved out of the upload directory
+            expect(File).not_to exist("#{file_set_upload_directory}/image.jpg")
+            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
+            # And into the storage directory
+            files = UploadSet.find(upload_set_id).file_sets
+            expect(files.first.label).to eq('world.png')
+            expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
           end
-          expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+
+          it "ingests redirect to another location" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
+            expect {
+              post :create, file_set: { local_file: ["world.png"],
+                                        upload_set_id: upload_set_id }
+            }.to change(FileSet, :count).by(1)
+            expect(response).to redirect_to file_set_url
+            # These files should have been moved out of the upload directory
+            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
+            # And into the storage directory
+            files = UploadSet.find(upload_set_id).file_sets
+            expect(files.first.label).to eq 'world.png'
+          end
+
+          it "ingests directories from the filesystem" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect {
+              post :create, file_set: { local_file: ["world.png", "import"],
+                                        upload_set_id: upload_set_id }
+            }.to change(FileSet, :count).by(4)
+            expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
+            # These files should have been moved out of the upload directory
+            expect(File).not_to exist("#{file_set_upload_directory}/import/files/icons.zip")
+            expect(File).not_to exist("#{file_set_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
+            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
+            # And into the storage directory
+            files = UploadSet.find(upload_set_id).file_sets
+            file_labels = files.map(&:label)
+            expect(file_labels).to include 'world.png'
+            # TODO: use files.select once projecthydra/active_fedora#609 is fixed
+            ['icons.zip', 'Example.ogg'].each do |filename|
+              expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
+            end
+            expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+          end
+
+          it "creates the FileSet" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect {
+              post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                        upload_set_id: upload_set_id }
+            }.to change(FileSet, :count).by(2)
+            created_files = FileSet.all
+            expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
+          end
         end
 
         context "when a work id is passed" do
@@ -249,27 +272,19 @@ describe FileSetsController do
             created_files.each { |f| expect(f.generic_works).to include work }
           end
         end
-
-        context "when a work id is not passed" do
-          it "creates the work" do
-            expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                        upload_set_id: upload_set_id }
-            }.to change(FileSet, :count).by(2)
-            created_files = FileSet.all
-            expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
-          end
-        end
       end
 
       context "when User model does not define directory path" do
-        it "returns an error message and redirects to file upload page" do
-          expect {
-            post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                      upload_set_id: upload_set_id }
-          }.not_to change(FileSet, :count)
-          expect(response).to render_template :new
-          expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
+        context "without a parent work id" do
+          it "returns an error message and redirects to file upload page" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect {
+              post :create, file_set: { local_file: ["world.png", "image.jpg"],
+                                        upload_set_id: upload_set_id }
+            }.not_to change(FileSet, :count)
+            expect(response).to render_template :new
+            expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
+          end
         end
       end
     end
@@ -297,18 +312,30 @@ describe FileSetsController do
   end
 
   describe "destroy" do
-    let(:file_set) do
-      FileSet.create do |fs|
-        fs.apply_depositor_metadata(user)
+    context "file_set with a parent" do
+      let(:file_set) do
+        FileSet.create do |fs|
+          fs.apply_depositor_metadata(user)
+        end
       end
-    end
+      let(:work) do
+        GenericWork.create!(title: ['test title']) do |w|
+          w.apply_depositor_metadata(user)
+        end
+      end
 
-    let(:delete_message) { double('delete message') }
-    it "deletes the file" do
-      expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
-      expect {
-        delete :destroy, id: file_set
-      }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
+      let(:delete_message) { double('delete message') }
+      before do
+        work.ordered_members << file_set
+        work.save!
+      end
+
+      it "deletes the file" do
+        expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
+        expect {
+          delete :destroy, id: file_set
+        }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
+      end
     end
   end
 
