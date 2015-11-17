@@ -4,7 +4,7 @@ describe 'searching' do
   let(:user) { create :jill }
   let(:subject_value) { 'fffzzz' }
   let!(:work) {
-    GenericWork.new.tap do |work|
+    GenericWork.new do |work|
       work.title = ["Toothbrush"]
       work.tag = [subject_value]
       work.apply_depositor_metadata(user.user_key)
@@ -14,7 +14,7 @@ describe 'searching' do
   }
 
   let!(:collection) {
-    Collection.new.tap do |f|
+    Collection.new do |f|
       f.title = 'collection title abc'
       f.apply_depositor_metadata(user.user_key)
       f.description = subject_value
