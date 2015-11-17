@@ -10,7 +10,7 @@
   <%= link_to "<i class='glyphicon glyphicon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %>
   once this step is finished. <span class="required"><abbr title="required">*</abbr></span> indicates required fields.
 </p>
-<%= simple_form_for [main_app, @batch, @form], html: { multipart: true }, builder: Sufia::FormBuilder do |f| %>
+<%= simple_form_for @form, url: [main_app, @batch], html: { multipart: true }, builder: Sufia::FormBuilder do |f| %>
 
   <%= render 'metadata', f: f %>
 

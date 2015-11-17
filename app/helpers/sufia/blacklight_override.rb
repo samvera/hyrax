@@ -8,7 +8,7 @@ module Sufia
       if doc.is_a?(SolrDocument) && doc.hydra_model == 'Collection'
         [collections, doc]
       else
-        [sufia, doc]
+        super
       end
     end
 
