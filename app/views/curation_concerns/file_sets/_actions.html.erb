@@ -1,11 +1,11 @@
 <% if can?(:edit, file_set.id) %>
-  <%= link_to( 'Edit', edit_polymorphic_path([main_app, :curation_concerns, file_set]),
+  <%= link_to( 'Edit', edit_polymorphic_path([main_app, file_set]),
     { class: 'btn btn-default', title: "Edit #{file_set}" }) %>
   <%= link_to( 'Rollback', main_app.versions_curation_concerns_file_set_path(file_set),
     { class: 'btn btn-default', title: "Rollback to previous version" }) %>
 <% end %>
 <% if can?(:destroy, file_set.id) %>
-  <%= link_to( 'Delete', polymorphic_path([main_app, :curation_concerns, file_set]),
+  <%= link_to( 'Delete', polymorphic_path([main_app, file_set]),
     class: 'btn btn-default', method: :delete, title: "Delete #{file_set}",
     data: {confirm: "Deleting #{file_set} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation"}
   )%>

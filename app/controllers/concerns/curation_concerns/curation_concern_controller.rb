@@ -72,7 +72,7 @@ module CurationConcerns::CurationConcernController
   # Gives the class of the form. Override this if you want
   # to use a different form.
   def form_class
-    CurationConcerns.const_get("#{self.class.curation_concern_type}Form")
+    CurationConcerns.const_get("#{self.class.curation_concern_type.to_s.demodulize}Form")
   end
 
   def edit
@@ -120,8 +120,8 @@ module CurationConcerns::CurationConcernController
 
     def after_create_response
       respond_to do |wants|
-        wants.html { redirect_to [main_app, :curation_concerns, curation_concern] }
-        wants.json { render :show, status: :created, location: polymorphic_path([main_app, :curation_concerns, curation_concern]) }
+        wants.html { redirect_to [main_app, curation_concern] }
+        wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }
       end
     end
 
@@ -131,8 +131,8 @@ module CurationConcerns::CurationConcernController
         redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
       else
         respond_to do |wants|
-          wants.html { redirect_to [main_app, :curation_concerns, curation_concern] }
-          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, :curation_concerns, curation_concern]) }
+          wants.html { redirect_to [main_app, curation_concern] }
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
       end
     end
@@ -150,6 +150,6 @@ module CurationConcerns::CurationConcernController
     end
 
     def hash_key_for_curation_concern
-      self.class.curation_concern_type.name.underscore.to_sym
+      self.class.curation_concern_type.model_name.param_key
     end
 end

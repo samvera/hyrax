@@ -2,14 +2,15 @@ module CurationConcerns::WorkBehavior
   extend ActiveSupport::Concern
 
   include Hydra::Works::WorkBehavior
-  include ::CurationConcerns::HumanReadableType
+  include CurationConcerns::HumanReadableType
   include CurationConcerns::Noid
   include CurationConcerns::Permissions
   include CurationConcerns::Serializers
   include Hydra::WithDepositor
   include Solrizer::Common
-  include ::CurationConcerns::HasRepresentative
-  include ::CurationConcerns::WithFileSets
+  include CurationConcerns::HasRepresentative
+  include CurationConcerns::WithFileSets
+  include CurationConcerns::Naming
   include Hydra::AccessControls::Embargoable
 
   included do
@@ -31,11 +32,6 @@ module CurationConcerns::WorkBehavior
     else
       'No Title'
     end
-  end
-
-  # Returns a string identifying the path associated with the object. ActionPack uses this to find a suitable partial to represent the object.
-  def to_partial_path
-    "curation_concerns/#{super}"
   end
 
   def can_be_member_of_collection?(_collection)

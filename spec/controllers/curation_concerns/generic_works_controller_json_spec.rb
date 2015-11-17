@@ -36,7 +36,7 @@ describe CurationConcerns::GenericWorksController do
       before { post :create, generic_work: { title: ['a title'] }, format: :json }
       it "returns 201, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
-        expect(assigns[:curation_concern]).to be_instance_of ::GenericWork
+        expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "201"
         created_resource = assigns[:curation_concern]
@@ -56,7 +56,7 @@ describe CurationConcerns::GenericWorksController do
       before { resource_request }
       it "returns json of the work" do
         # Ensure that @curation_concern is set for jbuilder template to use
-        expect(assigns[:curation_concern]).to be_instance_of ::GenericWork
+        expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "200"
       end
@@ -66,7 +66,7 @@ describe CurationConcerns::GenericWorksController do
       before { put :update, id: resource, generic_work: { title: ['updated title'] }, format: :json }
       it "returns 200, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
-        expect(assigns[:curation_concern]).to be_instance_of ::GenericWork
+        expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "200"
         created_resource = assigns[:curation_concern]

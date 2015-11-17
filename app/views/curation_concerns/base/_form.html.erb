@@ -1,4 +1,4 @@
-<%= simple_form_for [main_app, :curation_concerns, curation_concern],
+<%= simple_form_for [main_app, curation_concern],
                     wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
   <% if f.error_notification -%>
     <div class="alert alert-danger fade in">
@@ -16,7 +16,7 @@
       <%- if curation_concern.new_record? -%>
         <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
       <%- else -%>
-        <%= link_to 'Cancel', polymorphic_path([main_app, :curation_concerns, curation_concern]), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', polymorphic_path([main_app, curation_concern]), class: 'btn btn-link' %>
       <%- end -%>
     </div>
   </div>

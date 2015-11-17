@@ -4,14 +4,14 @@
     <ul class="dropdown-menu">
       <% if can? :edit, document %>
         <li>
-          <%= link_to [:edit, :curation_concerns, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
+          <%= link_to [:edit, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
           <% end %>
         </li>
         <li>
           <% if @collection || (@presenter and @presenter.collection?) # We're on the view page for @collection. -%>
             <%= link_to_remove_from_collection(document) %>
           <% else %>
-            <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash',
+            <%= link_to document, class: 'itemicon itemtrash',
                         title: "Delete #{document.human_readable_type}", method: :delete,
                         data: {
                           confirm: "Deleting a #{document.human_readable_type} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this #{document.human_readable_type} from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
