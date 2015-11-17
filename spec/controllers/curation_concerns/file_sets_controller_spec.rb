@@ -68,7 +68,7 @@ describe CurationConcerns::FileSetsController do
         it 'errors out of create after on continuous rsolr error' do
           xhr :post, :create, parent_id: parent, file_set: { files: [file] },
                               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          expect(response.body).to include('Error occurred while creating generic file.')
+          expect(response.body).to include('Error occurred while creating a FileSet.')
         end
       end
     end

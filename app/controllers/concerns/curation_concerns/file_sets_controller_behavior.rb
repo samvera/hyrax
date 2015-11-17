@@ -45,7 +45,7 @@ module CurationConcerns
       end
     rescue RSolr::Error::Http => error
       logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
-      render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating generic file.' })
+      render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
     ensure
       # remove the tempfile (only if it is a temp file)
       file.tempfile.delete if file.respond_to?(:tempfile)
