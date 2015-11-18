@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe My::FilesController, type: :controller do
-  let(:user) { FactoryGirl.find_or_create(:archivist) }
+  let(:user) { create(:user) }
 
   before { sign_in user }
 
@@ -43,16 +43,15 @@ describe My::FilesController, type: :controller do
     let(:someone_else) { FactoryGirl.find_or_create(:user) }
 
     let!(:my_collection) do
-      Collection.new(title: 'test collection').tap do |c|
+      Collection.create!(title: 'test collection') do |c|
         c.apply_depositor_metadata(user.user_key)
-        c.save!
       end
     end
 
-    let!(:my_work) { FactoryGirl.create(:work, user: user) }
-    let!(:shared_work) { FactoryGirl.create(:work, edit_users: [user.user_key], user: someone_else) }
-    let!(:unrelated_work) { FactoryGirl.create(:public_work, user: someone_else) }
-    let!(:my_file) { FactoryGirl.create(:file_set, depositor: user) }
+    let!(:my_work) { create(:work, user: user) }
+    let!(:shared_work) { create(:work, edit_users: [user.user_key], user: someone_else) }
+    let!(:unrelated_work) { create(:public_work, user: someone_else) }
+    let!(:my_file) { create(:file_set, user: user) }
     let!(:wrong_type) { UploadSet.create }
 
     it 'shows only the correct records' do

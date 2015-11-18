@@ -9,19 +9,19 @@ describe My::SharesController, type: :controller do
     end
 
     describe "#index" do
-      let(:other_user) { FactoryGirl.create(:user) }
+      let(:other_user) { create(:user) }
 
-      let!(:my_file) { FactoryGirl.create(:file_set, depositor: user) }
-      let!(:unshared_file) { FactoryGirl.create(:file_set, depositor: other_user) }
+      let!(:my_file) { create(:file_set, user: user) }
+      let!(:unshared_file) { create(:file_set, user: other_user) }
 
-      let!(:shared_with_me) { FactoryGirl.create(:file_set).tap do |r|
+      let!(:shared_with_me) { create(:file_set).tap do |r|
         r.apply_depositor_metadata other_user
         r.edit_users += [user.user_key]
         r.save!
       end
       }
 
-      let!(:shared_with_someone_else) { FactoryGirl.create(:file_set).tap do |r|
+      let!(:shared_with_someone_else) { create(:file_set).tap do |r|
         r.apply_depositor_metadata user
         r.edit_users += [other_user.user_key]
         r.save!
@@ -40,12 +40,12 @@ describe My::SharesController, type: :controller do
       end
 
       it "paginates" do
-        FactoryGirl.create(:file_set).tap do |r|
+        create(:file_set).tap do |r|
           r.apply_depositor_metadata other_user
           r.edit_users += [user.user_key]
           r.save!
         end
-        FactoryGirl.create(:file_set).tap do |r|
+        create(:file_set).tap do |r|
           r.apply_depositor_metadata other_user
           r.edit_users += [user.user_key]
           r.save!

@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :file_set do
     transient do
-      depositor "archivist1@example.com"
+      user { FactoryGirl.create(:user) }
     end
-    before(:create) do |fs, evaluator|
-      fs.apply_depositor_metadata evaluator.depositor
+    after(:build) do |fs, evaluator|
+      fs.apply_depositor_metadata evaluator.user.user_key
     end
 
     factory :public_file do

@@ -205,7 +205,7 @@ module Sufia
 
       def file_thumbnail(document, options)
         path = if document.image? || document.pdf? || document.video? || document.office_document?
-                 sufia.download_path document, file: 'thumbnail'
+                 download_path document, file: 'thumbnail'
                elsif document.audio?
                  "audio.png"
                else
