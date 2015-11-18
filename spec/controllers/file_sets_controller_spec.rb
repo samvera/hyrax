@@ -7,8 +7,8 @@ describe FileSetsController do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     # prevents characterization and derivative creation
-    allow_any_instance_of(CharacterizeJob).to receive(:perform_later)
-    allow_any_instance_of(CreateDerivativesJob).to receive(:perform_later)
+    allow(CharacterizeJob).to receive(:perform_later)
+    allow(CreateDerivativesJob).to receive(:perform_later)
   end
 
   describe "#create" do
