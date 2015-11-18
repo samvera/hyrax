@@ -64,7 +64,8 @@ describe ContentBlocksController, type: :controller do
 
         it "CREATE should redirect to root path" do
           post :create, content_block: { name: 'NNN', value: 'VVV' }
-          expect(response).to redirect_to root_path
+          expect(response.code).to eq '401'
+          expect(response).to render_template(:unauthorized)
         end
       end
     end
