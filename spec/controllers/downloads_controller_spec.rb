@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe DownloadsController, type: :controller do
+  routes { Rails.application.routes }
   describe "with a file" do
     let(:depositor) { create(:user) }
     let(:io) do

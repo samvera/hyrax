@@ -33,9 +33,6 @@ Sufia::Engine.routes.draw do
 
   resources :featured_work_lists, path: 'featured_works', only: :create
 
-  # Downloads controller route
-  resources :downloads, only: 'show'
-
   # Messages
   resources :notifications, only: [:destroy, :index], controller: :mailbox do
     collection do
