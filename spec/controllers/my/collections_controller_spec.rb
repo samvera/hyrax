@@ -2,18 +2,16 @@ require 'spec_helper'
 
 describe My::CollectionsController, type: :controller do
   describe "logged in user" do
-    before do
-      @user = FactoryGirl.find_or_create(:archivist)
-      sign_in @user
-    end
+    let(:user) { create(:user) }
+    before { sign_in user }
 
     describe "#index" do
       before do
         FileSet.destroy_all
         Collection.destroy_all
-        @my_file = FactoryGirl.create(:file_set, depositor: @user)
+        @my_file = FactoryGirl.create(:file_set, user: user)
         @my_collection = Collection.create(title: "test collection") do |c|
-          c.apply_depositor_metadata(@user.user_key)
+          c.apply_depositor_metadata(user.user_key)
         end
         @unrelated_collection = Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(FactoryGirl.create(:user).user_key)
@@ -27,10 +25,10 @@ describe My::CollectionsController, type: :controller do
 
       it "paginates" do
         Collection.create(title: "test collection") do |c|
-          c.apply_depositor_metadata(@user.user_key)
+          c.apply_depositor_metadata(user.user_key)
         end
         Collection.create(title: "test collection") do |c|
-          c.apply_depositor_metadata(@user.user_key)
+          c.apply_depositor_metadata(user.user_key)
         end
         get :index, per_page: 2
         expect(assigns[:document_list].length).to eq 2
