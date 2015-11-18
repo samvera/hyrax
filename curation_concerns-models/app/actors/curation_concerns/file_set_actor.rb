@@ -31,16 +31,12 @@ module CurationConcerns
       file_set.creator = [user.user_key]
 
       if upload_set_id && file_set.respond_to?(:upload_set_id=)
-        UploadSet.create(id: upload_set_id) unless UploadSet.exists?(upload_set_id)
-        file_set.upload_set_id = upload_set_id
+        file_set.upload_set = UploadSet.find_or_create(upload_set_id)
       else
         ActiveFedora::Base.logger.warn 'unable to find UploadSet to attach to'
       end
 
-      if assign_visibility?(file_set_params)
-        interpret_visibility file_set_params
-      end
-      # TODO: Why do we need to check if work is nil? Shoudn't that raise an error?
+      interpret_visibility file_set_params if assign_visibility?(file_set_params)
       attach_file_to_work(work, file_set, file_set_params) if work
       yield(file_set) if block_given?
     end
