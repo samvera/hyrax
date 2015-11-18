@@ -5,7 +5,8 @@ module Sufia
     def create
       file_set_attributes = params.fetch(:file_set)
       if file_set_attributes[:local_file].present?
-        perform_local_ingest(file_set_attributes, params.fetch(:parent_id))
+        upload_set_id = params.fetch(:upload_set_id)
+        perform_local_ingest(file_set_attributes, params.fetch(:parent_id), upload_set_id)
       else
         super
       end
@@ -13,12 +14,11 @@ module Sufia
 
     private
 
-      def perform_local_ingest(file_set_attributes, parent_id)
+      def perform_local_ingest(file_set_attributes, parent_id, upload_set_id)
         if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
-          upload_set_id = file_set_attributes.fetch(:upload_set_id)
           local_files = file_set_attributes.fetch(:local_file)
           if ingest_local_file(local_files, parent_id, upload_set_id)
-            redirect_to FileSetsController.upload_complete_path(upload_set_id)
+            redirect_to CurationConcerns::FileSetsController.upload_complete_path(upload_set_id)
           else
             flash[:alert] = "Error importing files from user directory."
             render :new

@@ -39,7 +39,7 @@ describe "dashboard/index.html.erb", type: :view do
       expect(@heading).to have_link("Create Work", new_curation_concerns_generic_work_path)
       expect(@heading).to have_link("Create Collection", collections.new_collection_path)
       expect(@heading).to have_link("View Works", sufia.dashboard_files_path)
-      expect(@heading).to have_link("Upload", sufia.new_file_set_path)
+      expect(@heading).to have_link("Upload", sufia.new_curation_concerns_file_set_path)
       expect(@heading).to include "My Dashboard"
       expect(@heading).to include "Hello, Charles Francis Xavier"
     end
@@ -59,7 +59,7 @@ describe "dashboard/index.html.erb", type: :view do
     context "when the user can't create files" do
       let(:can_create_file) { false }
       it "does not display the upload button" do
-        expect(@heading).not_to have_link("Upload", sufia.new_file_set_path)
+        expect(@heading).not_to have_link("Upload", sufia.new_curation_concerns_file_set_path)
       end
     end
   end

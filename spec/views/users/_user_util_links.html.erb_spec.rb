@@ -29,7 +29,7 @@ describe '/_user_util_links.html.erb', type: :view do
     end
     context "when the user can create file sets" do
       it "has a link to upload" do
-        expect(rendered).to have_link('upload', href: '/files/new')
+        expect(rendered).to have_link('upload', href: '/concern/file_sets/new')
       end
     end
     context "when the user can't create file sets" do

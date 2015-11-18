@@ -7,7 +7,7 @@ class FileUsage
     user_id = user ? user.id : nil
 
     self.id = id
-    self.path = Sufia::Engine.routes.url_helpers.file_set_path(id)
+    self.path = Rails.application.routes.url_helpers.curation_concerns_file_set_path(id)
     self.created = date_for_analytics(file)
     self.downloads = FileDownloadStat.to_flots FileDownloadStat.statistics(id, created, user_id)
     self.pageviews = FileViewStat.to_flots FileViewStat.statistics(id, created, user_id)

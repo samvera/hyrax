@@ -36,7 +36,7 @@ module Sufia
 
     def add_breadcrumb_for_action
       return unless controller_name == 'file_sets'.freeze && ['edit', 'stats'].include?(action_name)
-      add_breadcrumb I18n.t("sufia.file_set.browse_view"), sufia.file_set_path(params["id"])
+      add_breadcrumb I18n.t("sufia.file_set.browse_view"), Rails.application.routes.url_helpers.curation_concerns_file_set_path(params["id"])
     end
   end
 end

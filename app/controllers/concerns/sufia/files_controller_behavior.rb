@@ -21,27 +21,27 @@ module Sufia
       copy_blacklight_config_from(CatalogController)
 
       # Catch permission errors
-      rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-        if exception.action == :edit
-          redirect_to(sufia.url_for(action: 'show'), alert: "You do not have sufficient privileges to edit this document")
-        elsif current_user && current_user.persisted?
-          redirect_to root_url, alert: exception.message
-        else
-          session["user_return_to"] = request.url
-          redirect_to new_user_session_url, alert: exception.message
-        end
-      end
+      # rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
+      #   if exception.action == :edit
+      #     redirect_to(sufia.url_for(action: 'show'), alert: "You do not have sufficient privileges to edit this document")
+      #   elsif current_user && current_user.persisted?
+      #     redirect_to root_url, alert: exception.message
+      #   else
+      #     session["user_return_to"] = request.url
+      #     redirect_to new_user_session_url, alert: exception.message
+      #   end
+      # end
 
       # actions: audit, index, create, new, edit, show, update,
       #          destroy, permissions, citation, stats
-      before_action :authenticate_user!, except: [:show, :citation, :stats]
-      before_action :has_access?, except: [:show]
+      # before_action :authenticate_user!, except: [:show, :citation, :stats]
+      # before_action :has_access?, except: [:show]
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
-      load_resource only: [:audit]
-      load_and_authorize_resource except: [:index, :audit]
+      # load_resource only: [:audit]
+      # load_and_authorize_resource except: [:index, :audit]
 
-      class_attribute :show_presenter
-      self.show_presenter = Sufia::FileSetPresenter
+      # class_attribute :show_presenter
+      # self.show_presenter = Sufia::FileSetPresenter
     end
 
     def new
@@ -59,8 +59,9 @@ module Sufia
 
     # routed to /files/:id
     def show
-      @events = @file_set.events(100)
-      @audit_status = audit_service.human_readable_audit_status
+      # TODO: move events and audit_status to the show presenter
+      # @events = @file_set.events(100)
+      # @audit_status = audit_service.human_readable_audit_status
       super
     end
 

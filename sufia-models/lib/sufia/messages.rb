@@ -46,7 +46,7 @@ module Sufia
     end
 
     def link_to_file(file)
-      link_to(file.to_s, Sufia::Engine.routes.url_helpers.file_set_path(file))
+      link_to(file.to_s, Rails.application.routes.url_helpers.curation_concerns_file_set_path(file))
     end
 
     private

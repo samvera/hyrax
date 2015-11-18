@@ -66,7 +66,7 @@ describe FileUsage, type: :model do
     end
 
     it "sets the path" do
-      expect(usage.path).to eq("/files/#{URI.encode(file.id, '/')}")
+      expect(usage.path).to eq("/concern/file_sets/#{URI.encode(file.id, '/')}")
     end
 
     it "sets the created date" do

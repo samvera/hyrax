@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe "Editing a file:", type: :feature do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
   let(:file_title) { 'Some kind of title' }
-  let(:work) { create(:work_with_one_file) }
+  let(:work) { create(:work_with_one_file, user: user) }
   let(:file) { work.members.first }
 
   before { sign_in user }

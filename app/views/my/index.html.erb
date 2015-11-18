@@ -33,7 +33,7 @@
 <%= render partial: 'document_list' %>
 
 <% content_for :sidebar do %>
-  <%= link_to t('sufia.dashboard.upload_html'), sufia.new_file_set_path, class: "btn btn-primary" %>
+  <%= link_to t('sufia.dashboard.upload_html'), new_curation_concerns_generic_work_path, class: "btn btn-primary" %>
   <%= link_to t('sufia.dashboard.create_collection_html'), collections.new_collection_path, id: "hydra-collection-add", class: "btn btn-primary" %>
   <%= render partial: 'facets', locals: {current_tab: current_tab} %>
 <% end %>

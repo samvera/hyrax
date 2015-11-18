@@ -93,7 +93,7 @@ describe Sufia::Breadcrumbs do
         crumbs.trail_from_referer
         expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
         expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
-        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), sufia.file_set_path("abc123")])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path("abc123")])
       end
     end
 
@@ -110,7 +110,7 @@ describe Sufia::Breadcrumbs do
         crumbs.trail_from_referer
         expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
         expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
-        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), sufia.file_set_path("abc123")])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path("abc123")])
       end
     end
   end
