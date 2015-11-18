@@ -65,13 +65,16 @@ describe CurationConcerns::FileSetsController do
       before { post :create, file_set: { files: [empty_file] }, parent_id: parent.id, format: :json }
       it { is_expected.to respond_unprocessable_entity(errors: { files: "#{empty_file.original_filename} has no content! (Zero length file)" }, description: I18n.t('curation_concerns.api.unprocessable_entity.empty_file')) }
     end
+
     describe 'failed create: solr error' do
       before do
         allow(controller).to receive(:process_file).and_raise(RSolr::Error::Http.new(controller.request, response))
         post :create, file_set: { files: [file] }, parent_id: parent.id, format: :json
       end
-      it { is_expected.to respond_internal_error(message: 'Error occurred while creating generic file.') }
+
+      it { is_expected.to respond_internal_error(message: 'Error occurred while creating a FileSet.') }
     end
+
     describe 'found' do
       before { resource_request }
       it "returns json of the work" do
