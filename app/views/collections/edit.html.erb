@@ -18,6 +18,6 @@
 <%= render 'search_collection_dashboard_form'%>
 <%= render 'my/did_you_mean' %>
 <%= render 'my/facet_selected' %>
-<%= render 'collections/sort_and_per_page' %>
+<%= render 'collections/sort_and_per_page', collection: @collection %>
 <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
 <%= render 'paginate' %>
