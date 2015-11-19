@@ -73,7 +73,7 @@ describe Sufia::Breadcrumbs do
         expect(crumbs.trail.last).to eql([I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path])
       end
       specify "the trail goes back to the user's files when on the batch edit page" do
-        allow(crumbs).to receive(:controller_name).and_return("batch_edit")
+        allow(crumbs).to receive(:controller_name).and_return("batch_edits")
         crumbs.trail_from_referer
         expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
         expect(crumbs.trail.last).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
