@@ -19,6 +19,10 @@ module Sufia
         Sufia::CollectionPresenter
       end
 
+      def form_class
+        Sufia::Forms::CollectionForm
+      end
+
       def query_collection_members
         # TODO: Should this be moved to curation_concerns
         flash[:notice] = nil if flash[:notice] == "Select something first"

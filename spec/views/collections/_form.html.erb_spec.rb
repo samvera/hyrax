@@ -4,7 +4,7 @@ describe 'collections/_form.html.erb' do
   let(:collection) { Collection.new(title: 'the title', description: 'the description',
                                     creator: ['the creator'])}
 
-  let(:collection_form) { CurationConcerns::Forms::CollectionEditForm.new(collection) }
+  let(:collection_form) { Sufia::Forms::CollectionForm.new(collection) }
 
   before do
     controller.request.path_parameters[:id] = 'j12345'
@@ -28,5 +28,6 @@ describe 'collections/_form.html.erb' do
     expect(rendered).to have_selector("input#collection_related_url")
     expect(rendered).to have_selector("select#collection_rights")
     expect(rendered).to have_selector("select#collection_resource_type")
+    expect(rendered).not_to have_selector("input#collection_visibility")
   end
 end
