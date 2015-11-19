@@ -22,9 +22,10 @@ describe TinymceAssetsController, type: :controller do
     end
 
     context "as a user who can't upload" do
-      it "redirects to root path" do
+      it "is unauthorized" do
         post :create, file: file
-        expect(response).to redirect_to root_path
+        expect(response.code).to eq '401'
+        expect(response).to render_template 'unauthorized'
       end
     end
   end
