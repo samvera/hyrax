@@ -120,7 +120,7 @@ describe CurationConcerns::FileSetsController do
                               file_set: { files: [file], Filename: "The world",
                                           permission: { "group" => { "public" => "read" } } },
                               terms_of_service: "1"
-          expect(response.body).to include("Error occurred while creating file set.")
+          expect(response.body).to include("Error occurred while creating a FileSet.")
         end
       end
     end
