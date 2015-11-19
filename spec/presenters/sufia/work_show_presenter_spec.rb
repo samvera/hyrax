@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Sufia::WorkShowPresenter do
-
   let(:solr_document) { SolrDocument.new(work.to_solr) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
