@@ -109,6 +109,9 @@ module Sufia
       file_path = "app/forms/curation_concerns/generic_work_form.rb"
       if File.exist?(file_path)
         gsub_file file_path, /CurationConcerns::Forms::WorkForm/, "Sufia::Forms::WorkForm"
+        inject_into_file file_path, after: /model_class = ::GenericWork/ do
+            "\n    include HydraEditor::Form::Permissions\n"
+        end
       else
         puts "     \e[31mFailure\e[0m  Sufia requires a GenericWorkForm object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
       end
