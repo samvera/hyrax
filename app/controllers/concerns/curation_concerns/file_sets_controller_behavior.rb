@@ -76,6 +76,12 @@ module CurationConcerns
       CurationConcerns::FileSetPresenter
     end
 
+    # Gives the class of the form. Override this if you want
+    # to use a different form.
+    def form_class
+      CurationConcerns::Forms::FileSetEditForm
+    end
+
     def destroy
       actor.destroy
       redirect_to [main_app, @file_set.in_works.first], notice: 'The file has been deleted.'
@@ -120,7 +126,7 @@ module CurationConcerns
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      file_attributes = CurationConcerns::Forms::FileSetEditForm.model_attributes(attributes)
+      file_attributes = form_class.model_attributes(attributes)
       actor.update_metadata(file_attributes)
     end
 
