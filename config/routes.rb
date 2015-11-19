@@ -13,10 +13,10 @@ Sufia::Engine.routes.draw do
   # File Set routes
   namespace :curation_concerns, path: :concern do
     resources :file_sets, only: [:new, :create] do
+      resource :audit, only: [:create]
       member do
         get 'citation'
         get 'stats'
-        post 'audit'
       end
     end
   end

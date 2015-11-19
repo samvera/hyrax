@@ -32,13 +32,12 @@ module Sufia
       #   end
       # end
 
-      # actions: audit, index, create, new, edit, show, update,
+      # actions: index, create, new, edit, show, update,
       #          destroy, permissions, citation, stats
       # before_action :authenticate_user!, except: [:show, :citation, :stats]
       # before_action :has_access?, except: [:show]
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
-      # load_resource only: [:audit]
-      # load_and_authorize_resource except: [:index, :audit]
+      # load_and_authorize_resource except: [:index]
 
       # class_attribute :show_presenter
       # self.show_presenter = Sufia::FileSetPresenter
@@ -70,11 +69,6 @@ module Sufia
       format.endnote { render text: @file_set.export_as_endnote }
     end
 
-    # routed to /files/:id/audit (POST)
-    def audit
-      render json: audit_service.audit
-    end
-
     protected
 
       def _prefixes
@@ -82,9 +76,9 @@ module Sufia
         @_prefixes ||= ['curation_concerns/file_sets'] + super
       end
 
-      def audit_service
-        CurationConcerns::FileSetAuditService.new(@file_set)
-      end
+      # def audit_service
+      #   CurationConcerns::FileSetAuditService.new(@file_set)
+      # end
 
       def initialize_edit_form
         @version_list = version_list
