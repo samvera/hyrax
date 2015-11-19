@@ -233,7 +233,7 @@ describe 'Routes', type: :routing do
       end
 
       it "routes to update" do
-        expect(post: '/upload_sets/2').to route_to(controller: 'upload_sets', action: 'update', id: '2')
+        expect(put: '/upload_sets/2').to route_to(controller: 'upload_sets', action: 'update', id: '2')
       end
     end
   end
