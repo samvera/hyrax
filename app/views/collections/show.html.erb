@@ -12,7 +12,7 @@
 <% end %>
 
 <%= render 'search_form' %>
-<%= render 'sort_and_per_page' %>
+<%= render 'sort_and_per_page', collection: @presenter %>
 
 <% if has_collection_search_parameters? %>
   <h2>Search Results within this Collection</h2>
