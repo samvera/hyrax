@@ -1,7 +1,7 @@
 class ContentUpdateEventJob < EventJob
   def perform(id, depositor_id)
     fs = FileSet.find(id)
-    action = "User #{link_to_profile depositor_id} has updated #{link_to fs.title.first, Sufia::Engine.routes.url_helpers.file_set_path(fs)}"
+    action = "User #{link_to_profile depositor_id} has updated #{link_to fs.title.first, Rails.application.routes.url_helpers.curation_concerns_file_set_path(fs)}"
     timestamp = Time.now.to_i
     depositor = User.find_by_user_key(depositor_id)
     # Create the event

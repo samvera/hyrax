@@ -11,43 +11,60 @@ describe 'Routes', type: :routing do
 
   describe 'FileSet' do
     it 'routes to citation' do
-      expect(get: '/files/1/citation').to route_to(controller: 'file_sets', action: 'citation', id: '1')
+      expect(get: '/concern/file_sets/1/citation').to route_to(controller: 'curation_concerns/file_sets', action: 'citation', id: '1')
     end
 
     it 'routes to stats' do
-      expect(get: '/files/1/stats').to route_to(controller: 'file_sets', action: 'stats', id: '1')
+      expect(get: '/concern/file_sets/1/stats').to route_to(controller: 'curation_concerns/file_sets', action: 'stats', id: '1')
     end
 
     it 'routes to audit' do
-      expect(post: '/files/7/audit').to route_to(controller: 'file_sets', action: 'audit', id: '7')
+      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'curation_concerns/file_sets', action: 'audit', id: '7')
     end
 
-    it 'routes to create' do
-      expect(post: '/files').to route_to(controller: 'file_sets', action: 'create')
-    end
+    context "main app routes" do
+      routes { Rails.application.routes }
 
-    it 'routes to new' do
-      expect(get: '/files/new').to route_to(controller: 'file_sets', action: 'new')
-    end
+      context "with a file_set" do
+        it 'routes to create' do
+          expect(post: '/concern/container/12/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create', parent_id: '12')
+        end
 
-    it 'routes to edit' do
-      expect(get: '/files/3/edit').to route_to(controller: 'file_sets', action: 'edit', id: '3')
-    end
+        it 'routes to new' do
+          expect(get: '/concern/container/12/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new', parent_id: '12')
+        end
+      end
 
-    it "routes to show" do
-      expect(get: '/files/4').to route_to(controller: 'file_sets', action: 'show', id: '4')
-    end
+      context "without a file_set" do
+        routes { Sufia::Engine.routes }
+        it 'routes to create' do
+          expect(post: '/concern/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create')
+        end
 
-    it "routes to update" do
-      expect(put: '/files/5').to route_to(controller: 'file_sets', action: 'update', id: '5')
-    end
+        it "routes to new" do
+          expect(get: '/concern/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new')
+        end
+      end
 
-    it "routes to destroy" do
-      expect(delete: '/files/6').to route_to(controller: 'file_sets', action: 'destroy', id: '6')
-    end
+      it 'routes to edit' do
+        expect(get: '/concern/file_sets/3/edit').to route_to(controller: 'curation_concerns/file_sets', action: 'edit', id: '3')
+      end
 
-    it "*not*s route to index" do
-      expect(get: '/files').not_to route_to(controller: 'file_sets', action: 'index')
+      it "routes to show" do
+        expect(get: '/concern/file_sets/4').to route_to(controller: 'curation_concerns/file_sets', action: 'show', id: '4')
+      end
+
+      it "routes to update" do
+        expect(put: '/concern/file_sets/5').to route_to(controller: 'curation_concerns/file_sets', action: 'update', id: '5')
+      end
+
+      it "routes to destroy" do
+        expect(delete: '/concern/file_sets/6').to route_to(controller: 'curation_concerns/file_sets', action: 'destroy', id: '6')
+      end
+
+      it "doesn't route to index" do
+        expect(get: '/concern/file_sets').not_to route_to(controller: 'curation_concerns/file_sets', action: 'index')
+      end
     end
   end
 

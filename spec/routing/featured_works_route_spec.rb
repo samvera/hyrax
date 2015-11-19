@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe "file routes", type: :routing do
   routes { Sufia::Engine.routes }
+
   it 'creates a featured_work' do
-    expect(post: '/files/1/featured_work').to route_to(controller: 'featured_works', action: 'create', id: '1')
+    expect(post: '/works/7/featured_work').to route_to(controller: 'featured_works', action: 'create', id: '7')
   end
   it 'removes a featured_work' do
-    expect(delete: '/files/1/featured_work').to route_to(controller: 'featured_works', action: 'destroy', id: '1')
+    expect(delete: '/works/7/featured_work').to route_to(controller: 'featured_works', action: 'destroy', id: '7')
   end
 
   it 'updates a collection of featured works' do

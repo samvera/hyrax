@@ -76,7 +76,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
     ContentDepositEventJob.perform_now('test-123', @user.user_key)
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -113,7 +113,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
     ContentUpdateEventJob.perform_now('test-123', @user.user_key)
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -134,7 +134,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
     ContentNewVersionEventJob.perform_now('test-123', @user.user_key)
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -155,7 +155,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@fs.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
     ContentRestoredVersionEventJob.perform_now('test-123', @user.user_key, 'content.0')
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -193,7 +193,7 @@ describe 'event jobs' do
     expect(@fs.events.length).to eq(0)
     @now = Time.now
     expect(Time).to receive(:now).at_least(:once).and_return(@now)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
     ContentUpdateEventJob.perform_now('test-123', @user.user_key)
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)

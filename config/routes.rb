@@ -11,12 +11,13 @@ Sufia::Engine.routes.draw do
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
 
   # File Set routes
-  resources :file_sets, path: :files, except: :index do
-    member do
-      resource :featured_work, only: [:create, :destroy]
-      get 'citation'
-      get 'stats'
-      post 'audit'
+  namespace :curation_concerns, path: :concern do
+    resources :file_sets, only: [:new, :create] do
+      member do
+        get 'citation'
+        get 'stats'
+        post 'audit'
+      end
     end
   end
 
@@ -24,6 +25,7 @@ Sufia::Engine.routes.draw do
   resources :works, only: [] do
     member do
       resources :transfers, as: :generic_work_transfers, only: [:new, :create]
+      resource :featured_work, only: [:create, :destroy]
     end
   end
 

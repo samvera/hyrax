@@ -1,5 +1,5 @@
   <div id="permissions_display" class="tab-pane">
-    <%= form_for file_set, url: sufia.file_set_path(file_set), html: {multipart: true, class: 'form-horizontal', id: 'permission'} do |f| %>
+    <%= form_for [main_app, file_set], html: { multipart: true, class: 'form-horizontal', id: 'permission' } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render "curation_concerns/file_sets/permission_form", f: f %>
       <div id="permissions_submit">

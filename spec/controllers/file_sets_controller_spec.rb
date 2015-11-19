@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe FileSetsController do
+describe CurationConcerns::FileSetsController do
+  routes { Rails.application.routes }
   let(:user) { create(:user) }
   before do
     allow(controller).to receive(:has_access?).and_return(true)
@@ -22,8 +23,8 @@ describe FileSetsController do
     context "when uploading a file" do
       let(:file_set) { build(:file_set) }
       let(:reloaded_file_set) { file_set.reload }
-      let(:batch) { UploadSet.create }
-      let(:upload_set_id) { batch.id }
+      let(:upload_set) { UploadSet.create! }
+      let(:upload_set_id) { upload_set.id }
       let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
       before do
@@ -64,13 +65,28 @@ describe FileSetsController do
             expect(response).to be_success
             expect(flash[:error]).to be_nil
           end
+
+          context "and an UploadSet is passed in" do
+            it "calls the actor with the upload_set" do
+              expect(controller.send(:actor)).to receive(:create_metadata).with(upload_set_id, parent, Hash)
+              expect(controller.send(:actor)).to receive(:create_content)
+              xhr :post, :create, parent_id: parent,
+                                  terms_of_service: '1',
+                                  upload_set_id: upload_set_id,
+                                  file_set: { files: [file],
+                                              Filename: 'The world 1',
+                                              on_behalf_of: 'carolyn',
+                                              terms_of_service: '1' }
+              expect(response).to be_success
+            end
+          end
         end
 
         context "when a work id is not passed" do
           it "creates the FileSet" do
             skip "Creating a FileSet without a parent work is not yet supported"
-            xhr :post, :create, file_set: { files: [file], Filename: 'The world',
-                                            upload_set_id: upload_set_id },
+            xhr :post, :create, file_set: { files: [file], Filename: 'The world' },
+                                upload_set_id: upload_set_id,
                                 terms_of_service: '1'
             expect(response).to be_success
             expect(reloaded_file_set.generic_works).not_to be_empty
@@ -83,8 +99,8 @@ describe FileSetsController do
           pending "There's no way to do this because the scan happens in a background job"
           expect(ClamAV.instance).to receive(:scanfile).and_return("EL CRAPO VIRUS")
           xhr :post, :create, parent_id: parent,
+                              upload_set_id: "sample_upload_set_id",
                               file_set: { files: [file], Filename: "The world",
-                                          upload_set_id: "sample_upload_set_id",
                                           permission: { "group" => { "public" => "read" } } },
                               terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
@@ -100,8 +116,8 @@ describe FileSetsController do
 
         it "errors out of create and save" do
           xhr :post, :create, parent_id: parent,
+                              upload_set_id: "sample_upload_set_id",
                               file_set: { files: [file], Filename: "The world",
-                                          upload_set_id: "sample_upload_set_id",
                                           permission: { "group" => { "public" => "read" } } },
                               terms_of_service: "1"
           expect(response.body).to include("Error occurred while creating file set.")
@@ -121,7 +137,8 @@ describe FileSetsController do
           skip "Creating a FileSet without a parent work is not yet supported"
           expect(ImportUrlJob).to receive(:perform_later).twice
           expect { post :create, selected_files: @json_from_browse_everything,
-                                 file_set: { upload_set_id: upload_set_id }
+                                 upload_set_id: upload_set_id,
+                                 file_set: {}
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
@@ -144,7 +161,8 @@ describe FileSetsController do
           expect {
             post :create, selected_files: @json_from_browse_everything,
                           parent_id: work.id,
-                          file_set: { upload_set_id: upload_set_id }
+                          file_set: {},
+                          upload_set_id: upload_set_id
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           created_files.each { |f| expect(f.generic_works).to include work }
@@ -157,7 +175,8 @@ describe FileSetsController do
           expect(ImportUrlJob).to receive(:new).twice
           expect {
             post :create, selected_files: @json_from_browse_everything,
-                          file_set: { upload_set_id: upload_set_id }
+                          file_set: {},
+                          upload_set_id: upload_set_id
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -194,8 +213,8 @@ describe FileSetsController do
           it "ingests files from the filesystem" do
             skip "Creating a FileSet without a parent work is not yet supported"
             expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                        upload_set_id: upload_set_id }
+              post :create, file_set: { local_file: ["world.png", "image.jpg"] },
+                            upload_set_id: upload_set_id
             }.to change(FileSet, :count).by(2)
             expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
             # These files should have been moved out of the upload directory
@@ -211,8 +230,8 @@ describe FileSetsController do
             skip "Creating a FileSet without a parent work is not yet supported"
             expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
             expect {
-              post :create, file_set: { local_file: ["world.png"],
-                                        upload_set_id: upload_set_id }
+              post :create, file_set: { local_file: ["world.png"] },
+                            upload_set_id: upload_set_id
             }.to change(FileSet, :count).by(1)
             expect(response).to redirect_to file_set_url
             # These files should have been moved out of the upload directory
@@ -225,8 +244,8 @@ describe FileSetsController do
           it "ingests directories from the filesystem" do
             skip "Creating a FileSet without a parent work is not yet supported"
             expect {
-              post :create, file_set: { local_file: ["world.png", "import"],
-                                        upload_set_id: upload_set_id }
+              post :create, file_set: { local_file: ["world.png", "import"] },
+                            upload_set_id: upload_set_id
             }.to change(FileSet, :count).by(4)
             expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
             # These files should have been moved out of the upload directory
@@ -247,8 +266,8 @@ describe FileSetsController do
           it "creates the FileSet" do
             skip "Creating a FileSet without a parent work is not yet supported"
             expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                        upload_set_id: upload_set_id }
+              post :create, file_set: { local_file: ["world.png", "image.jpg"] },
+                            upload_set_id: upload_set_id
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -265,8 +284,8 @@ describe FileSetsController do
           it "records the work" do
             expect {
               post :create, parent_id: work.id,
-                            file_set: { local_file: ["world.png", "image.jpg"],
-                                        upload_set_id: upload_set_id }
+                            upload_set_id: upload_set_id,
+                            file_set: { local_file: ["world.png", "image.jpg"] }
             }.to change(FileSet, :count).by(2)
             created_files = FileSet.all
             created_files.each { |f| expect(f.generic_works).to include work }
@@ -279,8 +298,8 @@ describe FileSetsController do
           it "returns an error message and redirects to file upload page" do
             skip "Creating a FileSet without a parent work is not yet supported"
             expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"],
-                                        upload_set_id: upload_set_id }
+              post :create, file_set: { local_file: ["world.png", "image.jpg"] },
+                            upload_set_id: upload_set_id
             }.not_to change(FileSet, :count)
             expect(response).to render_template :new
             expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
@@ -291,6 +310,8 @@ describe FileSetsController do
   end
 
   describe "audit" do
+    routes { Sufia::Engine.routes }
+
     let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }
 
     let(:file) do
@@ -340,6 +361,8 @@ describe FileSetsController do
   end
 
   describe 'stats' do
+    routes { Sufia::Engine.routes }
+
     let(:file_set) do
       FileSet.create do |fs|
         fs.apply_depositor_metadata(user)
@@ -373,7 +396,7 @@ describe FileSetsController do
         allow(controller.request).to receive(:referer).and_return('foo')
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Sufia::Engine.routes.url_helpers.file_set_path(file_set))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
         get :stats, id: file_set
         expect(response).to be_success
         expect(response).to render_template(:stats)
@@ -421,7 +444,7 @@ describe FileSetsController do
       allow(controller.request).to receive(:referer).and_return('foo')
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Sufia::Engine.routes.url_helpers.file_set_path(file_set))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
       get :edit, id: file_set
 
       expect(response).to be_success
@@ -576,10 +599,8 @@ describe FileSetsController do
     describe "edit" do
       it "sets flash error" do
         get :edit, id: file_set
-        expect(response).to redirect_to @routes.url_helpers.file_set_path(file_set)
-        expect(flash[:alert]).not_to be_nil
-        expect(flash[:alert]).not_to be_empty
-        expect(flash[:alert]).to include("You do not have sufficient privileges to edit this document")
+        expect(response.code).to eq '401'
+        expect(response).to render_template('unauthorized')
       end
     end
 
@@ -604,14 +625,14 @@ describe FileSetsController do
   describe "flash" do
     it "doesn't let the user submit if they logout" do
       sign_out user
-      get :new
+      get :new, parent_id: 'foo'
       expect(response).not_to be_success
       expect(flash[:alert]).to include("You need to sign in or sign up before continuing")
     end
 
     it "filters flash if they signin" do
       sign_in user
-      get :new
+      get :new, parent_id: 'foo'
       expect(flash[:alert]).to be_nil
     end
   end
@@ -622,7 +643,7 @@ describe FileSetsController do
     end
 
     it "displays notifications" do
-      get :new
+      get :new, parent_id: '123'
       expect(assigns[:notify_number]).to eq 1
       expect(user.mailbox.inbox[0].messages[0].subject).to eq "Test subject"
     end
@@ -630,39 +651,9 @@ describe FileSetsController do
 
   describe "GET /new" do
     it "sets the form" do
-      get :new
+      get :new, parent_id: '123'
       expect(assigns[:upload_set_id]).to be_present
       expect(response).to render_template('curation_concerns/file_sets/new')
-    end
-  end
-
-  describe "batch creation" do
-    context "when uploading a file" do
-      let(:upload_set_id) { ActiveFedora::Noid::Service.new.mint }
-      let(:file1) { fixture_file_upload('/world.png', 'image/png') }
-      let(:file2) { fixture_file_upload('/image.jpg', 'image/png') }
-
-      it "does not create the batch on HTTP GET" do
-        expect(UploadSet).not_to receive(:create)
-        xhr :get, :new
-        expect(response).to be_success
-      end
-
-      it "creates the batch on HTTP POST with multiple files" do
-        expect(UploadSet).to receive(:find_or_create).twice
-        xhr :post, :create, file_set: { files: [file1],
-                                        Filename: 'The world 1',
-                                        upload_set_id: upload_set_id,
-                                        on_behalf_of: 'carolyn',
-                                        terms_of_service: '1' }
-        expect(response).to be_success
-        xhr :post, :create, file_set: { files: [file2],
-                                        Filename: 'An image',
-                                        upload_set_id: upload_set_id,
-                                        on_behalf_of: 'carolyn',
-                                        terms_of_service: '1' }
-        expect(response).to be_success
-      end
     end
   end
 end
