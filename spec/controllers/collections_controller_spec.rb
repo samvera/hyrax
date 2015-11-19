@@ -203,8 +203,10 @@ describe CollectionsController do
 
     before { sign_in user }
 
-    it "does not show flash" do
+    it "is successful" do
       get :edit, id: collection
+      expect(response).to be_success
+      expect(assigns[:form]).to be_instance_of Sufia::Forms::CollectionForm
       expect(flash[:notice]).to be_nil
     end
   end
