@@ -21,7 +21,7 @@ module Sufia
     protected
 
       def show_presenter
-        Sufia::GenericWorkPresenter
+        Sufia::WorkShowPresenter
       end
   end
 end

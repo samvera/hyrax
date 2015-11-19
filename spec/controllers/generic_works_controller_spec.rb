@@ -12,6 +12,7 @@ describe CurationConcerns::GenericWorksController do
       expect(response).to be_successful
       expect(response).to render_template("layouts/sufia-one-column")
       expect(assigns[:curation_concern]).to be_kind_of GenericWork
+      expect(subject.send(:show_presenter)).to be Sufia::WorkShowPresenter
     end
   end
 
