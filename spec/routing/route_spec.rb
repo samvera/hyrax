@@ -9,6 +9,12 @@ describe 'Routes', type: :routing do
     end
   end
 
+  describe "Audit" do
+    it 'routes to audit' do
+      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'curation_concerns/audits', action: 'create', file_set_id: '7')
+    end
+  end
+
   describe 'FileSet' do
     it 'routes to citation' do
       expect(get: '/concern/file_sets/1/citation').to route_to(controller: 'curation_concerns/file_sets', action: 'citation', id: '1')
@@ -16,10 +22,6 @@ describe 'Routes', type: :routing do
 
     it 'routes to stats' do
       expect(get: '/concern/file_sets/1/stats').to route_to(controller: 'curation_concerns/file_sets', action: 'stats', id: '1')
-    end
-
-    it 'routes to audit' do
-      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'curation_concerns/file_sets', action: 'audit', id: '7')
     end
 
     context "main app routes" do

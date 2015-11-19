@@ -309,29 +309,6 @@ describe CurationConcerns::FileSetsController do
     end
   end
 
-  describe "audit" do
-    routes { Sufia::Engine.routes }
-
-    let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }
-
-    let(:file) do
-      Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
-                                          'image/png', 'world.png')
-    end
-
-    before do
-      Hydra::Works::UploadFileToFileSet.call(file_set, file)
-    end
-
-    it "returns json with the result" do
-      xhr :post, :audit, id: file_set
-      expect(response).to be_success
-      json = JSON.parse(response.body)
-      audit_results = json.collect { |result| result["pass"] }
-      expect(audit_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
-    end
-  end
-
   describe "destroy" do
     context "file_set with a parent" do
       let(:file_set) do
