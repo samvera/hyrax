@@ -485,7 +485,7 @@ describe CurationConcerns::FileSetsController do
     context "with two existing versions from different users" do
       let(:file1)       { "world.png" }
       let(:file2)       { "image.jpg" }
-      let(:second_user) { FactoryGirl.create(:user) }
+      let(:second_user) { create(:user) }
       let(:version1)    { "version1" }
       let(:actor1)      { CurationConcerns::FileSetActor.new(file_set, user) }
       let(:actor2)      { CurationConcerns::FileSetActor.new(file_set, second_user) }
@@ -515,13 +515,15 @@ describe CurationConcerns::FileSetsController do
           end
         end
 
-        context "as the second user" do
+        context "as a user without edit access" do
           before do
             sign_in second_user
           end
-          it "doesn't create a new version" do
+
+          it "is unauthorized" do
             post :update, id: file_set, revision: version1
-            expect(response).to be_redirect
+            expect(response.code).to eq '401'
+            expect(response).to render_template 'unauthorized'
           end
         end
       end
