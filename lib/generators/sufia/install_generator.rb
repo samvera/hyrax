@@ -39,7 +39,7 @@ module Sufia
     end
 
     # Add behaviors to the application controller
-    def inject_sufia_controller_behavior
+    def inject_sufia_application_controller_behavior
       file_path = "app/controllers/application_controller.rb"
       if File.exist?(file_path)
         insert_into_file file_path, after: 'CurationConcerns::ApplicationControllerBehavior' do

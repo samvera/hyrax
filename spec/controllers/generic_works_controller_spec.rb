@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe GenericWorksController do
+describe CurationConcerns::GenericWorksController do
   let(:user) { create(:user) }
 
   before { sign_in user }
+  routes { Rails.application.routes }
 
   describe "#new" do
     it "is successful" do
