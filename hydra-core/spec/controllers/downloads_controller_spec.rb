@@ -39,6 +39,7 @@ describe DownloadsController do
     end
 
     context "when not logged in" do
+
       context "when a specific datastream is requested" do
         it "should redirect to the root path and display an error" do
           get :show, id: obj, file: "descMetadata"
@@ -47,6 +48,7 @@ describe DownloadsController do
         end
       end
     end
+
     context "when logged in, but without read access" do
       let(:user) { User.create(email: 'email2@example.com', password: 'password') }
       before do

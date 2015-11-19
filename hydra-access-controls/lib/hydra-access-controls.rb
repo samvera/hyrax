@@ -3,6 +3,7 @@ require 'active-fedora'
 require 'blacklight'
 require 'cancan'
 require "deprecation"
+require 'blacklight-access_controls'
 
 module Hydra
   extend ActiveSupport::Autoload

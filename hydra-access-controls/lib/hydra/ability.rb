@@ -1,18 +1,19 @@
 # Code for [CANCAN] access to Hydra models
-require 'cancan'
+
 module Hydra
   module Ability
     extend ActiveSupport::Concern
+
+    include Blacklight::AccessControls::Ability
 
     # once you include Hydra::Ability you can add custom permission methods by appending to ability_logic like so:
     #
     # self.ability_logic +=[:setup_my_permissions]
 
     included do
-      include CanCan::Ability
       include Hydra::PermissionsQuery
       include Blacklight::SearchHelper
-      class_attribute :ability_logic
+
       self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :discover_permissions, :download_permissions, :custom_permissions]
     end
 
@@ -20,37 +21,16 @@ module Hydra
       Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
     end
 
-    attr_reader :current_user, :options, :cache
-
     def initialize(user, options = {})
       @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
       @user = @current_user # just in case someone was using this in an override. Just don't.
       @options = options
-      @cache = Hydra::PermissionsCache.new
+      @cache = Blacklight::AccessControls::PermissionsCache.new
       hydra_default_permissions()
     end
 
-    ## You can override this method if you are using a different AuthZ (such as LDAP)
-    def user_groups
-      return @user_groups if @user_groups
-
-      @user_groups = default_user_groups
-      @user_groups |= current_user.groups if current_user and current_user.respond_to? :groups
-      @user_groups |= ['registered'] unless current_user.new_record?
-      @user_groups
-    end
-
-    def default_user_groups
-      # # everyone is automatically a member of the group 'public'
-      ['public']
-    end
-
-
     def hydra_default_permissions
-      Rails.logger.debug("Usergroups are " + user_groups.inspect)
-      self.ability_logic.each do |method|
-        send(method)
-      end
+      grant_permissions
     end
 
     def create_permissions
@@ -73,31 +53,17 @@ module Hydra
     end
 
     def read_permissions
-      can :read, String do |id|
-        test_read(id)
-      end
+      super
 
       can :read, ActiveFedora::Base do |obj|
-        test_read(obj.id)
-      end
-
-      can :read, SolrDocument do |obj|
-        cache.put(obj.id, obj)
         test_read(obj.id)
       end
     end
 
     def discover_permissions
-      can :discover, String do |id|
-        test_discover(id)
-      end
+      super
 
       can :discover, ActiveFedora::Base do |obj|
-        test_discover(obj.id)
-      end
-
-      can :discover, SolrDocument do |obj|
-        cache.put(obj.id, obj)
         test_discover(obj.id)
       end
     end
@@ -125,20 +91,6 @@ module Hydra
       result
     end
 
-    def test_read(id)
-      Rails.logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-      group_intersection = user_groups & read_groups(id)
-      result = !group_intersection.empty? || read_users(id).include?(current_user.user_key)
-      result
-    end
-
-    def test_discover(id)
-      Rails.logger.debug("[CANCAN] Checking discover permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-      group_intersection = user_groups & discover_groups(id)
-      result = !group_intersection.empty? || discover_users(id).include?(current_user.user_key)
-      result
-    end
-
     def edit_groups(id)
       doc = permissions_doc(id)
       return [] if doc.nil?
@@ -149,20 +101,10 @@ module Hydra
 
     # edit implies read, so read_groups is the union of edit and read groups
     def read_groups(id)
-      doc = permissions_doc(id)
-      return [] if doc.nil?
-      rg = edit_groups(id) | (doc[self.class.read_group_field] || [])
+      rg = super
+      rg |= edit_groups(id)
       Rails.logger.debug("[CANCAN] read_groups: #{rg.inspect}")
-      return rg
-    end
-
-    # read implies discover, so discover_groups is the union of read and discover groups
-    def discover_groups(id)
-      doc = permissions_doc(id)
-      return [] if doc.nil?
-      dg = read_groups(id) | (doc[self.class.discover_group_field] || [])
-      Rails.logger.debug("[CANCAN] discover_groups: #{dg.inspect}")
-      dg
+      rg
     end
 
     def edit_users(id)
@@ -175,21 +117,12 @@ module Hydra
 
     # edit implies read, so read_users is the union of edit and read users
     def read_users(id)
-      doc = permissions_doc(id)
-      return [] if doc.nil?
-      rp = edit_users(id) | (doc[self.class.read_user_field] || [])
+      rp = super
+      rp |= edit_users(id)
       Rails.logger.debug("[CANCAN] read_users: #{rp.inspect}")
-      return rp
+      rp
     end
 
-    # read implies discover, so discover_users is the union of read and discover users
-    def discover_users(id)
-      doc = permissions_doc(id)
-      return [] if doc.nil?
-      dp = read_users(id) | (doc[self.class.discover_user_field] || [])
-      Rails.logger.debug("[CANCAN] discover_users: #{dp.inspect}")
-      dp
-    end
 
     module ClassMethods
       def read_group_field

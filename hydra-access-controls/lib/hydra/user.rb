@@ -2,16 +2,11 @@
 # By default, this module assumes you are using the User model created by Blacklight, which uses Devise.
 # To integrate your own User implementation into Hydra, override this Module or define your own User model in app/models/user.rb within your Hydra head.
 module Hydra::User
+  include Blacklight::AccessControls::User
   
   def self.included(klass)
     # Other modules to auto-include
     klass.extend(ClassMethods)
-  end
-
-  # This method should display the unique identifier for this user as defined by devise.
-  # The unique identifier is what access controls will be enforced against. 
-  def user_key
-    send(Devise.authentication_keys.first)
   end
 
   def groups

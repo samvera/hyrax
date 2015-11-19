@@ -130,4 +130,46 @@ describe CatalogController do
     end
   end
 
+  describe "enforce_show_permissions" do
+    let(:email_edit_access) { "edit_access@example.com" }
+    let(:email_read_access) { "read_access@example.com" }
+    let(:future_date) { 2.days.from_now.strftime("%Y-%m-%dT%H:%M:%SZ") }
+
+    let(:embargoed_object) {
+      doc = SolrDocument.new(id: '123',
+              "edit_access_person_ssim" => [email_edit_access],
+              "read_access_person_ssim" => [email_read_access],
+              "embargo_release_date_dtsi" => future_date)
+      solr = Blacklight.default_index.connection
+      solr.add(doc)
+      solr.commit
+      doc
+    }
+
+    before do
+      controller.params = { id: embargoed_object.id }
+      allow(controller).to receive(:current_user).and_return(user)
+    end
+
+    context 'a user with edit permissions' do
+      let(:user) { User.new email: email_edit_access }
+
+      it 'allows the user to view an embargoed object' do
+        expect {
+          controller.send(:enforce_show_permissions, {})
+        }.not_to raise_error
+      end
+    end
+
+    context 'a user without edit permissions' do
+      let(:user) { User.new email: email_read_access }
+
+      it 'denies access to the embargoed object' do
+        expect {
+          controller.send(:enforce_show_permissions, {})
+        }.to raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
+      end
+    end
+  end
+
 end
