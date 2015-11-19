@@ -36,6 +36,8 @@ module Sufia
       @outgoing = ProxyDepositRequest.where(sending_user_id: current_user.id)
     end
 
+    # Kicks of a job that completes the transfer. If params[:reset] is set, it will revoke
+    # any existing edit permissions on the work.
     def accept
       @proxy_deposit_request.transfer!(params[:reset])
       if params[:sticky]

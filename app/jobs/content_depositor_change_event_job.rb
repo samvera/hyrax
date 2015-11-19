@@ -3,12 +3,12 @@ class ContentDepositorChangeEventJob < EventJob
 
   # @param [String] id identifier of the generic work to be transfered
   # @param [String] login the user key of the user the generic work is being transfered to.
-  # @param [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
+  # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
   def perform(id, login, reset = false)
     # TODO: This should be in its own job, not this event job
     work = ::GenericWork.find(id)
     work.proxy_depositor = work.depositor
-    work.clear_permissions! if reset
+    work.permissions = [] if reset
     work.apply_depositor_metadata(login)
     work.file_sets.each do |f|
       f.apply_depositor_metadata(login)

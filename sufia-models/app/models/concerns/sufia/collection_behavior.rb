@@ -4,7 +4,6 @@ module Sufia
     include Hydra::Collection
     include Sufia::ModelMethods
     include Sufia::Noid
-    include Sufia::FileSet::Permissions
 
     included do
       before_save :update_permissions
