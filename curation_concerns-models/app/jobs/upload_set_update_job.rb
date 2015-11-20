@@ -28,16 +28,14 @@ class UploadSetUpdateJob < ActiveJob::Base
     if denied.empty?
       unless saved.empty?
         if CurationConcerns.config.callback.set?(:after_upload_set_update_success)
-          login = upload_set.depositor
-          user = User.find_by_user_key(login)
+          user = User.find_by_user_key(@login)
           CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set, log.created_at)
         end
         return true
       end
     else
       if CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
-        login = upload_set.depositor
-        user = User.find_by_user_key(login)
+        user = User.find_by_user_key(@login)
         CurationConcerns.config.callback.run(:after_upload_set_update_failure. user, upload_set, log.created_at)
       end
       return false

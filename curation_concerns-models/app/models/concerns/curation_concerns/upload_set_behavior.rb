@@ -7,7 +7,6 @@ module CurationConcerns
     included do
       has_many :file_sets, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
-      property :creator, predicate: ::RDF::DC.creator
       property :title, predicate: ::RDF::DC.title
       property :status, predicate: ::RDF::DC.type
     end
