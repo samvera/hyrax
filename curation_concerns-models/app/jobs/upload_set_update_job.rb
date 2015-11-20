@@ -16,13 +16,7 @@ class UploadSetUpdateJob < ActiveJob::Base
 
     upload_set = UploadSet.find_or_create(upload_set_id)
 
-    upload_set.file_sets.each do |file|
-      title = titles[file.id] if titles[file.id]
-      update_file(file, title, attributes)
-      update_work(file, title, attributes)
-    end
-
-    upload_set.update(status: ["Complete"])
+    update(upload_set, titles, attributes)
 
     if denied.empty?
       unless saved.empty?
@@ -40,6 +34,19 @@ class UploadSetUpdateJob < ActiveJob::Base
   end
 
   private
+
+    def update(upload_set, titles, attributes)
+      upload_set.file_sets.each do |file|
+        title = titles[file.id] if titles[file.id]
+        next unless update_file(file, title, attributes)
+        # TODO: stop assuming that files only belong to one work
+        work = file.in_works.first
+        update_work(work, title, attributes) if work
+        saved << file
+      end
+
+      upload_set.update(status: ["Complete"])
+    end
 
     def user
       @user ||= User.find_by_user_key(@login)
@@ -60,20 +67,14 @@ class UploadSetUpdateJob < ActiveJob::Base
       CurationConcerns::FileSetActor.new(file, user)
     end
 
-    def update_work(file, title, attributes)
-      # update the work to the same metadata as the file.
-      # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
-      # NOTE2: TODO: stop assuming that files only belong to one work
-      work = file.in_works.first
-      unless work.nil?
-        work.title = title if title
-        work_actor(work, attributes).update
-      end
-
-      saved << file
+    # update the work to the same metadata as the file.
+    # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
+    def update_work(work, title, attributes)
+      work.title = title if title
+      work_actor(work, attributes).update
     end
 
-    def work_actor(_work, attributes)
-      CurationConcerns::GenericWorkActor.new(file, user, attributes)
+    def work_actor(work, attributes)
+      CurationConcerns::GenericWorkActor.new(work, user, attributes)
     end
 end
