@@ -35,11 +35,6 @@ module Sufia
       self[Solrizer.solr_name('related_url')]
     end
 
-    # TODO: reconcile this with CurationConcerns (single vs multiple)
-    def creator
-      Array(self[Solrizer.solr_name("creator")]).first
-    end
-
     # TODO: stop using this method and remove. Use `tags' instead.
     def tag
       tags
