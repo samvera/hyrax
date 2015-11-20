@@ -93,5 +93,10 @@ module Sufia
         @file_set.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
         super
       end
+
+      # overrides the same method provided by CurationConcerns::FileSetsControllerBehavior in order to inject Sufia's FileSetEditForm
+      def form_class
+        Sufia::Forms::FileSetEditForm
+      end
   end
 end
