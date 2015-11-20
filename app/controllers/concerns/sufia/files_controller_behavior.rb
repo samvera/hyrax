@@ -10,7 +10,6 @@ module Sufia
     include Sufia::Breadcrumbs
 
     included do
-      include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable
       include Sufia::FilesController::BrowseEverything
       include Sufia::FilesController::LocalIngestBehavior
@@ -20,27 +19,12 @@ module Sufia
 
       copy_blacklight_config_from(CatalogController)
 
-      # Catch permission errors
-      # rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-      #   if exception.action == :edit
-      #     redirect_to(sufia.url_for(action: 'show'), alert: "You do not have sufficient privileges to edit this document")
-      #   elsif current_user && current_user.persisted?
-      #     redirect_to root_url, alert: exception.message
-      #   else
-      #     session["user_return_to"] = request.url
-      #     redirect_to new_user_session_url, alert: exception.message
-      #   end
-      # end
-
       # actions: index, create, new, edit, show, update,
       #          destroy, permissions, citation, stats
-      # before_action :authenticate_user!, except: [:show, :citation, :stats]
-      # before_action :has_access?, except: [:show]
-      before_action :build_breadcrumbs, only: [:show, :edit, :stats]
-      # load_and_authorize_resource except: [:index]
 
-      # class_attribute :show_presenter
-      # self.show_presenter = Sufia::FileSetPresenter
+      # prepend this hook so that it comes before load_and_authorize
+      prepend_before_action :authenticate_user!, except: [:show, :citation, :stats]
+      before_action :build_breadcrumbs, only: [:show, :edit, :stats]
     end
 
     def new
