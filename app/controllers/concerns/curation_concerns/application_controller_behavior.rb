@@ -15,6 +15,7 @@ module CurationConcerns
       end
     end
 
+    # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught
     def deny_access(exception)
       if current_user && current_user.persisted?
         respond_to do |wants|
