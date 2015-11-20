@@ -4,23 +4,22 @@ class UploadSetUpdateJob < ActiveJob::Base
 
   queue_as :upload_set_update
 
-  attr_accessor :login, :title, :file_attributes, :upload_set_id, :visibility, :saved, :denied, :work_attributes
+  attr_accessor :saved, :denied
 
-  def perform(login, upload_set_id, title, file_attributes, visibility)
+  def perform(login, upload_set_id, titles, attributes, visibility)
     @login = login
-    @title = title || {}
-    @file_attributes = file_attributes
-    @visibility = visibility
-    @work_attributes = file_attributes.merge(visibility: visibility)
-    @upload_set_id = upload_set_id
     @saved = []
     @denied = []
 
-    upload_set = UploadSet.find_or_create(self.upload_set_id)
-    user = User.find_by_user_key(self.login)
+    titles ||= {}
+    attributes = attributes.merge(visibility: visibility)
+
+    upload_set = UploadSet.find_or_create(upload_set_id)
 
     upload_set.file_sets.each do |file|
-      update_file(file, user)
+      title = titles[file.id] if titles[file.id]
+      update_file(file, title, attributes)
+      update_work(file, title, attributes)
     end
 
     upload_set.update(status: ["Complete"])
@@ -28,39 +27,53 @@ class UploadSetUpdateJob < ActiveJob::Base
     if denied.empty?
       unless saved.empty?
         if CurationConcerns.config.callback.set?(:after_upload_set_update_success)
-          user = User.find_by_user_key(@login)
-          CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set, log.created_at)
+          CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set)
         end
         return true
       end
     else
       if CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
-        user = User.find_by_user_key(@login)
-        CurationConcerns.config.callback.run(:after_upload_set_update_failure. user, upload_set, log.created_at)
+        CurationConcerns.config.callback.run(:after_upload_set_update_failure, user, upload_set)
       end
       return false
     end
   end
 
-  def update_file(file, user)
-    unless user.can? :edit, file
-      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{file.id}!"
-      denied << file
-      return
-    end
-    # update the file using the actor after setting the title
-    file.title = title[file.id] if title[file.id]
-    CurationConcerns::FileSetActor.new(file, user).update_metadata(file_attributes.merge(visibility: visibility))
+  private
 
-    # update the work to the same metadata as the file.
-    # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
-    # NOTE2: TODO: stop assuming that files only belong to one work
-    work = file.in_works.first
-    unless work.nil?
-      work.title = title[file.id] if title[file.id]
-      CurationConcerns::GenericWorkActor.new(work, user, work_attributes).update
+    def user
+      @user ||= User.find_by_user_key(@login)
     end
 
-    saved << file
-  end
+    def update_file(file, title, attributes)
+      unless user.can? :edit, file
+        ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{file.id}!"
+        denied << file
+        return
+      end
+      # update the file using the actor after setting the title
+      file.title = title if title
+      file_actor(file).update_metadata(attributes)
+    end
+
+    def file_actor(file)
+      CurationConcerns::FileSetActor.new(file, user)
+    end
+
+    def update_work(file, title, attributes)
+      # update the work to the same metadata as the file.
+      # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
+      # NOTE2: TODO: stop assuming that files only belong to one work
+      work = file.in_works.first
+      unless work.nil?
+        work.title = title if title
+        work_actor(work, attributes).update
+      end
+
+      saved << file
+    end
+
+    def work_actor(_work, attributes)
+      CurationConcerns::GenericWorkActor.new(file, user, attributes)
+    end
 end
