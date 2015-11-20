@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'curation_concerns/base/_form.html.erb', :no_clean do
-  describe 'when the file has two or more resource types' do
+  describe 'when the work has two or more resource types' do
     let(:work) do
       stub_model(GenericWork, id: '456')
     end
@@ -24,7 +24,7 @@ describe 'curation_concerns/base/_form.html.erb', :no_clean do
     end
 
     it "only draws one resource_type multiselect" do
-      expect(page).to have_selector("select#file_set_resource_type", count: 1)
+      expect(page).to have_selector("select#generic_work_resource_type", count: 1)
     end
   end
 end
