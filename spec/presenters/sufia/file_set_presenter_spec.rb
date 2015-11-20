@@ -1,15 +1,6 @@
 require 'spec_helper'
 
 describe Sufia::FileSetPresenter do
-  describe ".terms" do
-    it "returns a list" do
-      expect(described_class.terms).to eq([:resource_type, :title,
-                                           :creator, :contributor, :description, :tag, :rights, :publisher,
-                                           :date_created, :subject, :language, :identifier, :based_near,
-                                           :related_url])
-    end
-  end
-
   let(:solr_document) { SolrDocument.new(file.to_solr) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
