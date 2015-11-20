@@ -4,8 +4,14 @@ describe UploadSetUpdateJob do
   let(:user) { create(:user) }
   let(:upload_set) { UploadSet.create }
 
-  let!(:file)  { create(:file_set, user: user, upload_set: upload_set) }
-  let!(:file2) { create(:file_set, user: user, upload_set: upload_set) }
+  let(:file)  { create(:file_set, user: user, upload_set: upload_set) }
+  let(:file2) { create(:file_set, user: user, upload_set: upload_set) }
+  let!(:work) do
+    create(:work, user: user).tap do |work|
+      work.ordered_members << file << file2
+      work.save!
+    end
+  end
 
   before do
     allow(CurationConcerns.config.callback).to receive(:run)
@@ -28,6 +34,7 @@ describe UploadSetUpdateJob do
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user, upload_set)
       expect(subject).to be true
       expect(file.reload.title).to eq ['File One']
+      expect(file2.reload.title).to eq ['File Two']
     end
 
     context "when user does not have permission to edit all of the files" do
