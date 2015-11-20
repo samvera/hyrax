@@ -12,7 +12,7 @@ describe Sufia::UploadSetUpdateFailureService do
   end
 
   describe "#call" do
-    subject { described_class.new(file, depositor, upload_set.id) }
+    subject { described_class.new(depositor, upload_set) }
 
     it "sends failing mail" do
       subject.call

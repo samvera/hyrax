@@ -12,7 +12,7 @@ describe Sufia::UploadSetUpdateSuccessService do
   end
 
   describe "#call" do
-    subject { described_class.new(file, depositor, upload_set.id) }
+    subject { described_class.new(depositor, upload_set) }
 
     it "sends passing mail" do
       subject.call
