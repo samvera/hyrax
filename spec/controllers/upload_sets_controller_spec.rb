@@ -42,13 +42,13 @@ describe UploadSetsController do
       end
 
       before do
-        somebody_else_work.members << somebody_else_file
-        somebody_else_work.save
+        somebody_else_work.ordered_members << somebody_else_file
+        somebody_else_work.save!
       end
 
       it "redirects to my shares page" do
         post :update, id: upload_set, file_set: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
-        expect(response).to redirect_to routes.url_helpers.dashboard_shares_path
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_shares_path
       end
     end
 
