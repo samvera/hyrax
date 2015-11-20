@@ -2,43 +2,30 @@ require 'spec_helper'
 
 describe My::HighlightsController, type: :controller do
   describe "logged in user" do
-    before do
-      @user = FactoryGirl.find_or_create(:archivist)
-      sign_in @user
-    end
+    let(:user) { create(:user) }
+    before { sign_in user }
 
     describe "#index" do
       before do
         GenericWork.destroy_all
         Collection.destroy_all
-        @highlighted_work = FactoryGirl.create(:generic_work).tap do |r|
-          r.apply_depositor_metadata @user
-          r.save!
-        end
-        @user.trophies.create(generic_work_id: @highlighted_work.id)
-        @normal_work = FactoryGirl.create(:generic_work).tap do |r|
-          r.apply_depositor_metadata @user
-          r.save!
-        end
-        other_user = FactoryGirl.create(:user)
-        @unrelated_highlighted_work = FactoryGirl.create(:generic_work).tap do |r|
-          r.apply_depositor_metadata other_user
-          r.edit_users += [@user.user_key]
+        @highlighted_work = create(:generic_work, user: user)
+        user.trophies.create(generic_work_id: @highlighted_work.id)
+
+        @normal_work = create(:generic_work, user: user)
+        other_user = create(:user)
+        @unrelated_highlighted_work = create(:generic_work, user: other_user).tap do |r|
+          r.edit_users += [user.user_key]
           r.save!
         end
         other_user.trophies.create(generic_work_id: @unrelated_highlighted_work.id)
       end
 
-      it "responds with success" do
-        get :index
-        expect(response).to be_successful
-      end
-
       it "paginates" do
-        @work1 = GenericWork.create { |w| w.apply_depositor_metadata(@user) }
-        @user.trophies.create(generic_work_id: @work1.id)
-        @work2 = GenericWork.create { |w| w.apply_depositor_metadata(@user) }
-        @user.trophies.create(generic_work_id: @work2.id)
+        work1 = create(:work, user: user)
+        work2 = create(:work, user: user)
+        user.trophies.create!(generic_work_id: work1.id)
+        user.trophies.create!(generic_work_id: work2.id)
         get :index, per_page: 2
         expect(assigns[:document_list].length).to eq 2
         get :index, per_page: 2, page: 2
@@ -47,6 +34,7 @@ describe My::HighlightsController, type: :controller do
 
       it "shows the correct files" do
         get :index
+        expect(response).to be_successful
         # shows documents I've highlighted
         expect(assigns[:document_list].map(&:id)).to include(@highlighted_work.id)
         # doesn't show non-highlighted files
