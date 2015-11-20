@@ -7,6 +7,16 @@ describe UploadSetUpdateJob do
   let!(:file)  { create(:file_set, user: user, upload_set: upload_set) }
   let!(:file2) { create(:file_set, user: user, upload_set: upload_set) }
 
+  before do
+    allow(CurationConcerns.config.callback).to receive(:run)
+    allow(CurationConcerns.config.callback).to receive(:set?)
+      .with(:after_upload_set_update_success)
+      .and_return(true)
+    allow(CurationConcerns.config.callback).to receive(:set?)
+      .with(:after_upload_set_update_failure)
+      .and_return(true)
+  end
+
   describe "#perform" do
     let(:title) { { file.id => ['File One'], file2.id => ['File Two'] } }
     let(:metadata) { { tag: [''] } }
@@ -15,6 +25,7 @@ describe UploadSetUpdateJob do
     subject { described_class.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
 
     it "updates file metadata" do
+      expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user, upload_set)
       expect(subject).to be true
       expect(file.reload.title).to eq ['File One']
     end
@@ -23,6 +34,7 @@ describe UploadSetUpdateJob do
       before do
         expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(true)
         expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(false)
+        expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_failure, user, upload_set)
       end
       it { is_expected.to be false }
     end
