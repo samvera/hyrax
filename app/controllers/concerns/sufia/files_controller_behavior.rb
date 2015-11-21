@@ -50,7 +50,7 @@ module Sufia
 
     # Called by CurationConcerns::FileSetsControllerBehavior#show
     def additional_response_formats(format)
-      format.endnote { render text: @file_set.export_as_endnote }
+      format.endnote { render text: presenter.solr_document.export_as_endnote }
     end
 
     protected
