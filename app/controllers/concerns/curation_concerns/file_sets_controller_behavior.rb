@@ -54,12 +54,7 @@ module CurationConcerns
     # routed to /files/:id
     def show
       respond_to do |wants|
-        wants.html do
-          _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_file_sets])
-          curation_concern = document_list.first
-          raise CanCan::AccessDenied unless curation_concern
-          @presenter = show_presenter.new(curation_concern, current_ability)
-        end
+        wants.html { presenter }
         wants.json do
           # load and authorize @curation_concern manually because it's skipped for html
           @file_set = curation_concern_type.load_instance_from_solr(params[:id]) unless curation_concern
@@ -131,6 +126,15 @@ module CurationConcerns
     end
 
     protected
+
+      def presenter
+        @presenter ||= begin
+          _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_file_sets])
+          curation_concern = document_list.first
+          raise CanCan::AccessDenied unless curation_concern
+          show_presenter.new(curation_concern, current_ability)
+        end
+      end
 
       def initialize_edit_form
         @groups = current_user.groups
