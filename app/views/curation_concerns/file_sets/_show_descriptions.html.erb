@@ -1,7 +1,0 @@
-<h2>Descriptions</h2>
-<dl class="dl-horizontal file-show-term file-show-descriptions">
-  <% present_terms(@presenter,@presenter.terms - [:title, :description]) do |r, term| %>
-  <dt><%= r.label(term) %></dt>
-      <dd><%= r.value(term) %></dd>
-  <% end %>
-</dl>
