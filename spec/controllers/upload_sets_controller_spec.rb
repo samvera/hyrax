@@ -58,9 +58,9 @@ describe UploadSetsController do
 
       it "sets the groups" do
         post :update, id: upload_set, "file_set" => { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
         file.reload
         expect(file.read_groups).to include "public"
-        expect(response).to redirect_to routes.url_helpers.dashboard_files_path
       end
 
       it "sets public read access" do
