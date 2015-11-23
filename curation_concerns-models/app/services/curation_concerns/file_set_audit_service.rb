@@ -8,15 +8,9 @@ module CurationConcerns
     NO_RUNS = 999
 
     # provides a human readable version of the audit status
-    def human_readable_audit_status(stat)
-      case stat
-      when 0
-        'failing'
-      when 1
-        'passing'
-      else
-        stat
-      end
+    # @param [Hydra::PCDM::File] file the file to get the audit status for, defaults to the original_file.
+    def human_readable_audit_status(file = file_set.original_file)
+      audit_stat(file)
     end
 
     # Audits each version of each file if it hasn't been audited recently
@@ -28,6 +22,17 @@ module CurationConcerns
     end
 
     private
+
+      def stat_to_string(stat)
+        case stat
+        when 0
+          'failing'
+        when 1
+          'passing'
+        else
+          fail ArgumentError, "Unknown status `#{stat}'"
+        end
+      end
 
       # Retrieve or generate the audit check for a file (all versions are checked for versioned files)
       # @param [ActiveFedora::File] file to audit
@@ -45,10 +50,11 @@ module CurationConcerns
         # check how many non runs we had
         non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum + 1 : sum }
         if non_runs == 0
-          audit_results.reduce(true) { |sum, value| sum && value }
+          result = audit_results.reduce(true) { |sum, value| sum && value }
+          stat_to_string(result)
         elsif non_runs < audit_results.length
           result = audit_results.reduce(true) { |sum, value| value == NO_RUNS ? sum : sum && value }
-          "Some audits have not been run, but the ones run were #{human_readable_audit_status(result)}."
+          "Some audits have not been run, but the ones run were #{stat_to_string(result)}."
         else
           'Audits have not yet been run on this file.'
         end

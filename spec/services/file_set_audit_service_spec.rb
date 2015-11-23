@@ -53,19 +53,31 @@ describe CurationConcerns::FileSetAuditService do
   end
 
   describe '#human_readable_audit_status' do
+    before do
+      CurationConcerns::VersioningService.create(f.original_file)
+      ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
+    end
+    subject { service.human_readable_audit_status }
+    it { is_expected.to eq 'Some audits have not been run, but the ones run were passing.' }
+  end
+
+  describe '#stat_to_string' do
+    subject { service.send(:stat_to_string, val) }
     context 'when audit_stat is 0' do
-      subject { service.human_readable_audit_status 0 }
+      let(:val) { 0 }
       it { is_expected.to eq 'failing' }
     end
 
     context 'when audit_stat is 1' do
-      subject { service.human_readable_audit_status 1 }
+      let(:val) { 1 }
       it { is_expected.to eq 'passing' }
     end
 
     context 'when audit_stat is something else' do
-      subject { service.human_readable_audit_status 'something else' }
-      it { is_expected.to eq 'something else' }
+      let(:val) { 'something else' }
+      it "fails" do
+        expect { subject }.to raise_error ArgumentError, "Unknown status `something else'"
+      end
     end
   end
 end
