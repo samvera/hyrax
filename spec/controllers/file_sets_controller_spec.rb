@@ -589,9 +589,10 @@ describe CurationConcerns::FileSetsController do
         get :show, id: file_set
         expect(response).to be_successful
         expect(flash).to be_empty
-        expect(assigns[:events]).to be_kind_of Array
-        expect(assigns[:file_set]).to eq file_set
-        expect(assigns[:audit_status]).to eq 'Audits have not yet been run on this file.'
+        expect(assigns[:presenter]).to be_kind_of Sufia::FileSetPresenter
+        expect(assigns[:presenter].id).to eq file_set.id
+        expect(assigns[:presenter].events).to be_kind_of Array
+        expect(assigns[:presenter].audit_status).to eq 'Audits have not yet been run on this file.'
       end
 
       it 'renders an endnote file' do

@@ -18,5 +18,17 @@ module Sufia
     rescue
       'http://schema.org/CreativeWork'
     end
+
+    def events
+      @events ||= solr_document.to_model.events(100)
+    end
+
+    def audit_status
+      audit_service.human_readable_audit_status
+    end
+
+    def audit_service
+      @audit_service ||= CurationConcerns::FileSetAuditService.new(solr_document.to_model)
+    end
   end
 end
