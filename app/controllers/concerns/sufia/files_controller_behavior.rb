@@ -40,14 +40,6 @@ module Sufia
     def citation
     end
 
-    # routed to /files/:id
-    def show
-      # TODO: move events and audit_status to the show presenter
-      # @events = @file_set.events(100)
-      # @audit_status = audit_service.human_readable_audit_status
-      super
-    end
-
     # Called by CurationConcerns::FileSetsControllerBehavior#show
     def additional_response_formats(format)
       format.endnote { render text: presenter.solr_document.export_as_endnote }
@@ -59,10 +51,6 @@ module Sufia
         # This allows us to use the templates in curation_concerns/file_sets
         @_prefixes ||= ['curation_concerns/file_sets'] + super
       end
-
-      # def audit_service
-      #   CurationConcerns::FileSetAuditService.new(@file_set)
-      # end
 
       def initialize_edit_form
         @version_list = version_list
@@ -92,6 +80,10 @@ module Sufia
       def update_metadata_from_upload_screen
         @file_set.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
         super
+      end
+
+      def show_presenter
+        Sufia::FileSetPresenter
       end
 
       # overrides the same method provided by CurationConcerns::FileSetsControllerBehavior in order to inject Sufia's FileSetEditForm

@@ -7,7 +7,7 @@
   <dt>Date Modified</dt>
   <dd itemprop="dateModified"><%= @file_set.date_modified %></dd>
   <dt>Audit Status</dt>
-  <dd><%= @audit_status %></dd>
+  <dd><%= @presenter.audit_status %></dd>
   <% unless @file_set.related_files.empty? %>
   <dt>Related Files</dt>
       <% @file_set.related_files.each do |f| %>
