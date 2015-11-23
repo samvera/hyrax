@@ -12,6 +12,13 @@
       <%= render partial: '/controls' %>
       <%= render partial: '/flash_msg' %>
       <div id="content-wrapper" class="container-fluid">
+        <% if content_for?(:page_header) %>
+          <div class="row">
+            <div class="col-xs-12 main-header">
+              <%= yield(:page_header) %>
+            </div>
+          </div>
+        <% end %>
         <div id="content" class="row">
           <div class="col-xs-12">
             <%= yield %>
