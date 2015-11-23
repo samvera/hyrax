@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SolrDocument, type: :model do
+describe ::SolrDocument, type: :model do
   describe "date_uploaded" do
     before do
       subject['date_uploaded_dtsi'] = '2013-03-14T00:00:00Z'

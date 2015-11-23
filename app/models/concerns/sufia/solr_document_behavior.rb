@@ -4,6 +4,7 @@ module Sufia
     extend ActiveSupport::Concern
     include Hydra::Works::MimeTypes
     include CurationConcerns::Permissions::Readable
+    include Sufia::SolrDocument::Export
 
     # Add a schema.org itemtype
     def itemtype
@@ -66,7 +67,7 @@ module Sufia
       query = 'id:' + collection_ids.map { |id| '"' + id + '"' }.join(' OR ')
       result = Blacklight.default_index.connection.select(params: { q: query })
       @collections = result['response']['docs'].map do |hash|
-        SolrDocument.new(hash)
+        ::SolrDocument.new(hash)
       end
     end
 
