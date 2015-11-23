@@ -7,7 +7,7 @@ FactoryGirl.define do
     title ["Test title"]
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
-    before(:create) do |work, evaluator|
+    after(:build) do |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
 
