@@ -8,7 +8,7 @@ module Sufia
 
       before_action :has_access?
       class_attribute :edit_form_class
-      self.edit_form_class = CurationConcerns::Forms::FileSetEditForm
+      self.edit_form_class = Sufia::Forms::FileSetEditForm
     end
 
     def edit
