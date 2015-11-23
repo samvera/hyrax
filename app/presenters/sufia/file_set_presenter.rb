@@ -28,7 +28,9 @@ module Sufia
     end
 
     def audit_service
-      @audit_service ||= CurationConcerns::FileSetAuditService.new(solr_document.to_model)
+      # model = solr_document.to_model # See https://github.com/projecthydra-labs/hydra-pcdm/issues/197
+      model = FileSet.find(id)
+      @audit_service ||= CurationConcerns::FileSetAuditService.new(model)
     end
   end
 end
