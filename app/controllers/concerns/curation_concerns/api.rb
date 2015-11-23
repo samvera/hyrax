@@ -4,22 +4,11 @@ module CurationConcerns
 
     def self.generate_response_body(response_type: :success, message: nil, options: {})
       json_body = default_responses[response_type].merge(options)
-      json_body[:description] = message if message && !messages_to_override.include?(message)
+      json_body[:description] = message if message
       json_body
     end
 
-    # Messages that should be overridden by defaults from locale file
-    # ie. exception messages from CanCan::AccessDenied
-
-    def self.messages_to_override
-      [
-        'You are not authorized to access this page.',
-        'ActiveFedora::ObjectNotFoundError'
-      ]
-    end
-
     # Default (json) responses for various response types
-
     def self.default_responses
       {
         success: {

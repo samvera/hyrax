@@ -24,6 +24,7 @@ describe CurationConcerns::FileSetsController do
       end
       it { is_expected.to respond_unauthorized }
     end
+
     describe "forbidden" do
       before do
         sign_in create(:user)
@@ -31,9 +32,10 @@ describe CurationConcerns::FileSetsController do
       end
       it { is_expected.to respond_forbidden }
     end
+
     describe 'not found' do
       before { get :show, id: "non-existent-pid", format: :json }
-      it { is_expected.to respond_not_found(description: 'Object non-existent-pid not found in solr') }
+      it { is_expected.to respond_not_found(description: 'Could not find a resource that matches your request.') }
     end
 
     describe 'created' do
@@ -53,14 +55,17 @@ describe CurationConcerns::FileSetsController do
         expect(response.location).to eq main_app.curation_concerns_file_set_path(created_resource)
       end
     end
+
     describe 'failed create: no file' do
       before { post :create, file_set: { title: ["foo"] }, parent_id: parent.id, format: :json }
       it { is_expected.to respond_bad_request(message: 'Error! No file to save') }
     end
+
     describe 'failed create: bad file' do
       before { post :create, file_set: { files: ['not a file'] }, parent_id: parent.id, format: :json }
       it { is_expected.to respond_bad_request(message: 'Error! No file for upload', description: 'unknown file') }
     end
+
     describe 'failed create: empty file' do
       before { post :create, file_set: { files: [empty_file] }, parent_id: parent.id, format: :json }
       it { is_expected.to respond_unprocessable_entity(errors: { files: "#{empty_file.original_filename} has no content! (Zero length file)" }, description: I18n.t('curation_concerns.api.unprocessable_entity.empty_file')) }
@@ -83,6 +88,7 @@ describe CurationConcerns::FileSetsController do
         expect(response.code).to eq "200"
       end
     end
+
     describe 'updated' do
       before { put :update, id: resource, file_set: { title: ['updated title'] }, format: :json }
       it "returns json of updated work and sets location header" do
@@ -93,6 +99,7 @@ describe CurationConcerns::FileSetsController do
         expect(response.location).to eq main_app.curation_concerns_file_set_path(created_resource)
       end
     end
+
     describe 'failed update' do
       before {
         expect(controller).to receive(:update_metadata) do
