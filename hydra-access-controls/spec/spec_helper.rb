@@ -20,11 +20,18 @@ end
 require 'support/rails'
 
 # Since we're not doing a Rails Engine test, we have to load these classes manually:
-require_relative '../app/models/role_mapper'
-require_relative '../app/models/ability'
-require_relative '../app/services/hydra/lease_service'
-require_relative '../app/services/hydra/embargo_service'
-require_relative '../app/validators/hydra/future_date_validator'
+require 'active_support'
+require 'active_support/dependencies'
+relative_load_paths = ["#{Blacklight.root}/app/controllers/concerns",
+                       "#{Blacklight.root}/app/models",
+                       "app/models",
+                       "app/models/concerns",
+                       "app/indexers",
+                       "app/services",
+                       "app/validators",
+                       "app/vocabularies"]
+ActiveSupport::Dependencies.autoload_paths += relative_load_paths
+
 require 'support/mods_asset'
 require 'support/solr_document'
 require "support/user"
