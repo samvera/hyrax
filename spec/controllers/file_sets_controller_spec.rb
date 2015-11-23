@@ -453,9 +453,9 @@ describe CurationConcerns::FileSetsController do
 
         expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, String)
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+        post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
         post :update, id: file_set, file_set: { files: [file], tag: [''],
-                                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+                                                permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
     end
 
