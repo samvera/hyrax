@@ -15,9 +15,16 @@ Sufia::Engine.routes.draw do
     resources :file_sets, only: [:new, :create] do
       resource :audit, only: [:create]
       member do
-        get 'citation'
         get 'stats'
       end
+    end
+    resources :generic_works
+  end
+
+  resources :files, only: [] do
+    member do
+      get :citation, controller: :citations, action: :file, as: :citations
+      get :stats, controller: :stats, action: :file, as: :stats
     end
   end
 
@@ -26,6 +33,8 @@ Sufia::Engine.routes.draw do
     member do
       resources :transfers, as: :generic_work_transfers, only: [:new, :create]
       resource :featured_work, only: [:create, :destroy]
+      get :citation, controller: :citations, action: :work, as: :citations
+      get :stats, controller: :stats, action: :work, as: :stats
     end
   end
 

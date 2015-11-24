@@ -16,14 +16,6 @@ describe 'Routes', type: :routing do
   end
 
   describe 'FileSet' do
-    it 'routes to citation' do
-      expect(get: '/concern/file_sets/1/citation').to route_to(controller: 'curation_concerns/file_sets', action: 'citation', id: '1')
-    end
-
-    it 'routes to stats' do
-      expect(get: '/concern/file_sets/1/stats').to route_to(controller: 'curation_concerns/file_sets', action: 'stats', id: '1')
-    end
-
     context "main app routes" do
       routes { Rails.application.routes }
 

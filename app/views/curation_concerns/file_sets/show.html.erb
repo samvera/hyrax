@@ -1,35 +1,4 @@
-<% content_for(:twitter_meta) do %>
-  <meta name="twitter:card" content="product">
-  <meta name="twitter:site" content="<%= t('sufia.product_twitter_handle') %>"/>
-  <meta name="twitter:creator" content="<%= @presenter.tweeter %>"/>
-  <meta property="og:site_name" content="<%= t('sufia.product_name') %>"/>
-  <meta property="og:type" content="object"/>
-  <meta property="og:title" content="<%= @presenter.title.first %>"/>
-  <meta property="og:description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>"/>
-  <meta property="og:image" content="<%= sufia.download_url(@presenter, file: 'thumbnail') %>"/>
-  <meta property="og:url" content="<%= sufia.generic_file_url(@presenter) %>"/>
-  <meta name="twitter:data1" content="<%= @presenter.tag.join(', ') %>"/>
-  <meta name="twitter:label1" content="Keywords"/>
-  <meta name="twitter:data2" content="<%= @presenter.rights.first %>"/>
-  <meta name="twitter:label2" content="Rights"/>
-<% end %>
-
-<% content_for(:gscholar_meta) do %>
-  <meta name="citation_title" content="<%= @presenter.title.first %>"/>
-  <% @presenter.creator.each do |creator| %>
-  <meta name="citation_author" content="<%= creator %>"/>
-  <% end %>
-  <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>"/>
-  <meta name="citation_pdf_url" content="<%= sufia.download_url(@presenter) %>"/>
-  <!-- Sufia does not yet support these metadata -->
-  <!--
-    <meta name="citation_journal_title" content=""/>
-    <meta name="citation_volume" content=""/>
-    <meta name="citation_issue" content=""/>
-    <meta name="citation_firstpage" content=""/>
-    <meta name="citation_lastpage" content=""/>
-  -->
-<% end %>
+<%= render 'shared/citations' %>
 
 <%= javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
 

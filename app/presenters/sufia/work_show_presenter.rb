@@ -1,7 +1,10 @@
 module Sufia
   class WorkShowPresenter < ::CurationConcerns::WorkShowPresenter
+    # delegate fields from Sufia::Works::Metadata to solr_document
+    delegate :based_near, :depositor, :identifier, :resource_type, :tag, to: :solr_document
+
     def tweeter
-      user = ::User.find_by_user_key(model.depositor)
+      user = ::User.find_by_user_key(depositor)
       if user.try(:twitter_handle).present?
         "@#{user.twitter_handle}"
       else

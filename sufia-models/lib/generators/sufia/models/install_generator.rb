@@ -114,12 +114,9 @@ This generator makes the following changes to your application:
   def citation_config
     generate 'sufia:models:citation_config'
   end
-<<<<<<< 5ba61be3723d287cdfaf370a3b5eacbdf76f2ff0
 
   # Add mini-magick configuration
   def minimagic_config
     generate 'sufia:models:minimagick_config'
   end
-=======
->>>>>>> Added citation configuration to sufia. Allows for rendering citation link on show page
 end

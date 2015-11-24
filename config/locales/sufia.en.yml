@@ -180,6 +180,8 @@ en:
       delete:   'Delete Message'
     file_set:
       browse_view: "Browse View"
+    work:
+      browse_view: "Browse View"
     footer:
       copyright_html: "<strong>Copyright &copy; 2015 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
     admin:
