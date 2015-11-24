@@ -82,7 +82,7 @@ describe API::ItemsController, type: :controller do
       end
     end
 
-   context 'with a resource not found in the repository' do
+    context 'with a resource not found in the repository' do
       before do
         allow(GenericWork).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
         get :show, format: :json, id: default_work.id, token: token
@@ -171,7 +171,7 @@ describe API::ItemsController, type: :controller do
       end
 
       it 'writes metadata to allow flagging Arkivo-deposited items' do
-        expect(deposited_file.arkivo_checksum).to eq item_hash['file']['md5']
+        expect(deposited_work.arkivo_checksum).to eq item_hash['file']['md5']
       end
 
       it 'writes content' do
@@ -249,7 +249,7 @@ describe API::ItemsController, type: :controller do
       end
 
       it 'updates metadata to allow flagging Arkivo-deposited items' do
-        expect(put_deposited_file.arkivo_checksum).to eq put_item_hash['file']['md5']
+        expect(put_deposited_work.arkivo_checksum).to eq put_item_hash['file']['md5']
       end
 
       it 'changes the file content' do
@@ -257,19 +257,19 @@ describe API::ItemsController, type: :controller do
       end
 
       it 'changes the metadata' do
-        expect(put_deposited_file.resource_type).to eq [put_item_hash['metadata']['resourceType']]
-        expect(put_deposited_file.title).to eq [put_item_hash['metadata']['title']]
-        expect(put_deposited_file.rights).to eq [put_item_hash['metadata']['rights']]
-        expect(put_deposited_file.tag).to eq put_item_hash['metadata']['tags']
-        expect(put_deposited_file.creator).to eq ['Doe, John', 'Babs McGee']
-        expect(put_deposited_file.description).to eq []
-        expect(put_deposited_file.publisher).to eq []
-        expect(put_deposited_file.date_created).to eq []
-        expect(put_deposited_file.based_near).to eq []
-        expect(put_deposited_file.identifier).to eq []
-        expect(put_deposited_file.related_url).to eq []
-        expect(put_deposited_file.language).to eq []
-        expect(put_deposited_file.contributor).to eq []
+        expect(put_deposited_work.resource_type).to eq [put_item_hash['metadata']['resourceType']]
+        expect(put_deposited_work.title).to eq [put_item_hash['metadata']['title']]
+        expect(put_deposited_work.rights).to eq [put_item_hash['metadata']['rights']]
+        expect(put_deposited_work.tag).to eq put_item_hash['metadata']['tags']
+        expect(put_deposited_work.creator).to eq ['Doe, John', 'Babs McGee']
+        expect(put_deposited_work.description).to eq []
+        expect(put_deposited_work.publisher).to eq []
+        expect(put_deposited_work.date_created).to eq []
+        expect(put_deposited_work.based_near).to eq []
+        expect(put_deposited_work.identifier).to eq []
+        expect(put_deposited_work.related_url).to eq []
+        expect(put_deposited_work.language).to eq []
+        expect(put_deposited_work.contributor).to eq []
       end
     end
 
@@ -296,7 +296,7 @@ describe API::ItemsController, type: :controller do
 
     context 'with a valid item, matching token, missing resource' do
       before do
-        allow(GenericFile).to receive(:find).with(post_deposited_file.id) do
+        allow(GenericWork).to receive(:find).with(post_deposited_work.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
         put :update, item, id: post_deposited_work.id, format: :json
@@ -308,9 +308,9 @@ describe API::ItemsController, type: :controller do
       it { is_expected.to have_http_status(404) }
 
       it 'provides a reason for refusing to act' do
-        expect(subject.body).to include("id '#{post_deposited_file.id}' not found")
+        expect(subject.body).to include("id '#{post_deposited_work.id}' not found")
       end
-   end
+    end
 
     context 'with a valid item, matching token, and unauthorized resource' do
       before do
@@ -324,8 +324,8 @@ describe API::ItemsController, type: :controller do
 
       it { is_expected.not_to be_success }
 
-      it 'loads the file' do
-        expect(assigns[:file]).to eq post_deposited_file
+      it 'loads the work' do
+        expect(assigns[:work]).to eq post_deposited_work
       end
 
       it 'responds with HTTP 401' do
@@ -333,7 +333,7 @@ describe API::ItemsController, type: :controller do
       end
 
       it 'provides a reason for refusing to act' do
-        expect(subject.body).to include("#{user} lacks access to #{post_deposited_file}")
+        expect(subject.body).to include("#{user} lacks access to #{post_deposited_work}")
       end
     end
 
@@ -448,7 +448,7 @@ describe API::ItemsController, type: :controller do
       end
     end
 
-   context 'with a resource not found in the repository' do
+    context 'with a resource not found in the repository' do
       before do
         allow(GenericWork).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
         delete :destroy, format: :json, id: default_work.id, token: token

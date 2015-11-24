@@ -25,7 +25,7 @@ describe User, type: :model do
 
   describe 'Arkivo and Zotero integration' do
     it 'sets an Arkivo token after_initialize if API is enabled' do
-      expect(User.new).to respond_to(:arkivo_token)
+      expect(described_class.new).to respond_to(:arkivo_token)
     end
 
     describe 'Arkivo token generation' do
@@ -37,9 +37,9 @@ describe User, type: :model do
       let(:token2) { 'token2' }
 
       it 'generates a new token if a user is found with the existing token' do
-        user1 = User.create(email: 'foo@example.org', password: 'foobarbaz')
+        user1 = described_class.create(email: 'foo@example.org', password: 'foobarbaz')
         expect(user1.arkivo_token).to eq token1
-        user2 = User.create(email: 'bar@example.org', password: 'bazquuxquuux')
+        user2 = described_class.create(email: 'bar@example.org', password: 'bazquuxquuux')
         expect(user2.arkivo_token).to eq token2
       end
     end
@@ -49,7 +49,7 @@ describe User, type: :model do
 
       it 'has a custom getter/setter for Zotero request tokens' do
         user.zotero_token = token
-        expect(user.read_attribute(:zotero_token)).to eq Marshal::dump(token)
+        expect(user.read_attribute(:zotero_token)).to eq Marshal.dump(token)
         expect(user.zotero_token).to eq token
       end
     end

@@ -43,7 +43,7 @@ module Sufia::User
   end
 
   def zotero_token
-    self[:zotero_token].blank? ? nil : Marshal::load(self[:zotero_token])
+    self[:zotero_token].blank? ? nil : Marshal.load(self[:zotero_token])
   end
 
   def zotero_token=(value)
@@ -51,7 +51,7 @@ module Sufia::User
       # Resetting the token
       self[:zotero_token] = value
     else
-      self[:zotero_token] = Marshal::dump(value)
+      self[:zotero_token] = Marshal.dump(value)
     end
   end
 

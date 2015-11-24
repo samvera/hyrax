@@ -20,11 +20,11 @@ describe Sufia::Arkivo::Actor do
     it { is_expected.to respond_to(:content_type=) }
   end
 
-  describe '#create_file_from_item' do
-    it { is_expected.to respond_to(:create_file_from_item) }
+  describe '#create_work_from_item' do
+    it { is_expected.to respond_to(:create_work_from_item) }
 
     it 'creates a batch for loading metadata' do
-      expect { subject.create_file_from_item }.to change { Batch.count }.by(1)
+      expect { subject.create_work_from_item }.to change { UploadSet.count }.by(1)
     end
 
     it 'instantiates an actor' do
@@ -34,18 +34,18 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'creates initial metadata' do
-      expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_metadata).once
-      subject.create_file_from_item
+      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_metadata).once
+      subject.create_work_from_item
     end
 
     it 'stores a checksum' do
-      gf = subject.create_file_from_item
-      expect(gf.arkivo_checksum).to eq item['file']['md5']
+      work = subject.create_work_from_item
+      expect(work.arkivo_checksum).to eq item['file']['md5']
     end
 
     it 'calls create_content' do
-      expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).once
-      subject.create_file_from_item
+      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_content).once
+      subject.create_work_from_item
     end
 
     it 'extracts a file from the item' do
@@ -54,18 +54,18 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'batch applies metadata' do
-      gf = subject.create_file_from_item
+      work = subject.create_work_from_item
       # TODO: Figure out why this is needed if the Resque job is running synchronously
-      reloaded = gf.reload
+      reloaded = work.reload
       expect(reloaded.title).to eq Array(item['metadata']['title'])
     end
 
     it 'returns a GF instance' do
-      expect(subject.create_file_from_item).to be_instance_of(GenericFile)
+      expect(subject.create_work_from_item).to be_instance_of(GenericWork)
     end
   end
 
-  describe '#update_file_from_item' do
+  describe '#update_work_from_item' do
     let(:item) { JSON.parse(FactoryGirl.json(:put_item)) }
     let(:title) { ['ZZZZZ'] }
     let(:description) { ['This is rather lengthy.'] }
@@ -83,19 +83,19 @@ describe Sufia::Arkivo::Actor do
       work.save!
     end
 
-    it { is_expected.to respond_to(:update_file_from_item) }
+    it { is_expected.to respond_to(:update_work_from_item) }
 
     it 'instantiates an actor' do
-      expect(Sufia::GenericFile::Actor).to receive(:new).once.and_call_original
-      subject.update_file_from_item(gf)
+      expect(CurationConcerns::FileSetActor).to receive(:new).once.and_call_original
+      subject.update_work_from_item(work)
     end
 
     describe '#reset_metadata' do
       it 'changes the title' do
         # For some reason, "expect to change from to" wasn't working here
-        expect(gf.title).to eq title
-        subject.update_file_from_item(gf)
-        expect(gf.title).to eq Array(item['metadata']['title'])
+        expect(work.title).to eq title
+        subject.update_work_from_item(work)
+        expect(work.title).to eq Array(item['metadata']['title'])
       end
 
       it 'wipes out the description' do
@@ -108,13 +108,13 @@ describe Sufia::Arkivo::Actor do
 
     it 'changes the arkivo checksum' do
       expect {
-        subject.update_file_from_item(gf)
-      }.to change { gf.arkivo_checksum }.from(checksum).to(item['file']['md5'])
+        subject.update_work_from_item(work)
+      }.to change { work.arkivo_checksum }.from(checksum).to(item['file']['md5'])
     end
 
     it 'calls update_content' do
-      expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:update_content).once
-      subject.update_file_from_item(gf)
+      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:update_content).once
+      subject.update_work_from_item(work)
     end
 
     # TODO: this is testing FileSetActor, so it is not needed here.
@@ -124,7 +124,7 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'returns a GF instance' do
-      expect(subject.update_file_from_item(gf)).to be_instance_of(GenericFile)
+      expect(subject.update_work_from_item(work)).to be_instance_of(GenericWork)
     end
   end
 

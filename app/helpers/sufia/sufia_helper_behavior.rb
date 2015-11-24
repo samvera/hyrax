@@ -4,9 +4,9 @@ module Sufia
       "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end
 
-    def zotero_label(opts={})
+    def zotero_label(opts = {})
       html_class = opts[:html_class] || ''
-      "#{image_tag 'zotero.png', { alt: t('sufia.user_profile.zotero.alt'), class: html_class }} #{t('sufia.user_profile.zotero.label')}".html_safe
+      "#{image_tag 'zotero.png', alt: t('sufia.user_profile.zotero.alt'), class: html_class} #{t('sufia.user_profile.zotero.label')}".html_safe
     end
 
     def zotero_profile_url(zotero_user_id)

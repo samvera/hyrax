@@ -1,15 +1,15 @@
 module Sufia
   module Arkivo
     CREATOR_TYPES = ['author', 'interviewer', 'director', 'scriptwriter',
-      'inventor', 'composer', 'cartographer', 'programmer', 'artist',
-      'bookAuthor'
-    ]
+                     'inventor', 'composer', 'cartographer', 'programmer', 'artist',
+                     'bookAuthor'
+                    ]
 
     CONTRIBUTOR_TYPES = ['contributor', 'editor', 'translator', 'seriesEditor',
-      'interviewee', 'producer', 'castMember', 'sponsor', 'counsel',
-      'attorneyAgent', 'recipient', 'performer', 'wordsBy', 'commenter',
-      'presenter', 'guest', 'podcaster', 'reviewedAuthor', 'cosponsor'
-    ]
+                         'interviewee', 'producer', 'castMember', 'sponsor', 'counsel',
+                         'attorneyAgent', 'recipient', 'performer', 'wordsBy', 'commenter',
+                         'presenter', 'guest', 'podcaster', 'reviewedAuthor', 'cosponsor'
+                        ]
 
     class MetadataMunger
       def initialize(metadata)

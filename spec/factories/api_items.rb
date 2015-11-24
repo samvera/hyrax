@@ -26,7 +26,7 @@ FactoryGirl.define do
           {
             creatorType: 'contributor',
             name: 'Jane Doeski'
-          },
+          }
         ],
         description: 'This was funded by the NSF in 2013',
         publisher: 'National Science Foundation',
@@ -70,7 +70,7 @@ FactoryGirl.define do
           {
             creatorType: 'inventor',
             name: 'Babs McGee'
-          },
+          }
         ],
         rights: 'http://creativecommons.org/licenses/by-sa/3.0/us/',
         tags: [

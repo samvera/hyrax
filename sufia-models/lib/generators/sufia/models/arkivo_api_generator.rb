@@ -18,7 +18,7 @@ This generator sets up Zotero/Arkivo API integration for your application:
         "  # of Zotero-managed research items.\n" +
         "  # Defaults to false.  See README for more info\n" +
         "  config.arkivo_api = true\n"
-      end
+    end
   end
 
   # Copy the routing constraint over

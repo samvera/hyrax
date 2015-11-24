@@ -48,22 +48,20 @@ module Sufia
 
       private
 
-        def reset_metadata(actor)
-          actor.generic_file.tap do |gf|
-            gf.resource_type = []
-            gf.title = []
-            gf.rights = []
-            gf.tag = []
-            gf.creator = []
-            gf.description = []
-            gf.publisher = []
-            gf.date_created = []
-            gf.based_near = []
-            gf.identifier = []
-            gf.related_url = []
-            gf.language = []
-            gf.contributor = []
-          end
+        def reset_metadata(work)
+          work.resource_type = []
+          work.title = []
+          work.rights = []
+          work.tag = []
+          work.creator = []
+          work.description = []
+          work.publisher = []
+          work.date_created = []
+          work.based_near = []
+          work.identifier = []
+          work.related_url = []
+          work.language = []
+          work.contributor = []
         end
 
         def default_visibility
@@ -81,7 +79,7 @@ module Sufia
         def extract_file_from_item
           encoded = item['file']['base64']
           content = Base64.decode64(encoded)
-          tmp = Tempfile.new(item['file']['md5'], { encoding: Encoding::UTF_8 })
+          tmp = Tempfile.new(item['file']['md5'], encoding: Encoding::UTF_8)
           tmp.binmode
           tmp.original_filename = item['file']['filename']
           tmp.content_type = item['file']['contentType']

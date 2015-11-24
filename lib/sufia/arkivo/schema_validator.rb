@@ -48,7 +48,7 @@ module Sufia
       def call
         JSON::Validator.validate!(Sufia::Arkivo::ITEM_SCHEMA, item, version: :draft3)
       rescue JSON::Schema::ValidationError => exception
-        raise Sufia::Arkivo::InvalidItem.new(exception.message)
+        raise Sufia::Arkivo::InvalidItem, exception.message
       end
     end
   end

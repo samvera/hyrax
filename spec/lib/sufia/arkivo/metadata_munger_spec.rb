@@ -28,7 +28,7 @@ describe Sufia::Arkivo::MetadataMunger do
 
   it 'replaces firstName and lastName with name' do
     expect(name_parts(metadata['creators']).count).to eq 4
-    munged = subject.call
+    subject.call
     expect(name_parts(metadata['creators']).count).to eq 0
     expect(metadata['creators'].map { |c| c['name'] }.compact.count).to eq 4
   end
