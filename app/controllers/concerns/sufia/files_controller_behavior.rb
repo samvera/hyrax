@@ -90,5 +90,11 @@ module Sufia
       def form_class
         Sufia::Forms::FileSetEditForm
       end
+
+      # overrides Curation Concerns method
+      def file_set_params
+        return {} if params[:file_set].blank?
+        super
+      end
   end
 end
