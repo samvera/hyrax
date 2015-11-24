@@ -8,6 +8,7 @@ describe CurationConcerns::FileSetActor do
   let(:file_set) { create(:file_set) }
   let(:actor) { described_class.new(file_set, user) }
   let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
+  let(:local_file) { File.open(File.join(fixture_path, 'world.png')) }
 
   describe 'creating metadata and content' do
     let(:upload_set_id) { nil }
@@ -78,6 +79,23 @@ describe CurationConcerns::FileSetActor do
       expect(CharacterizeJob).to receive(:perform_later)
       expect(IngestFileJob).to receive(:perform_later).with(file_set.id, /world\.png$/, 'image/png', user.user_key)
       actor.create_content(uploaded_file)
+    end
+
+    context 'using ::File' do
+      before do
+        allow(CharacterizeJob).to receive(:perform_later)
+        allow(IngestFileJob).to receive(:perform_later)
+        actor.create_content(local_file)
+      end
+
+      it 'sets the label and title' do
+        expect(file_set.label).to eq(File.basename(local_file))
+        expect(file_set.title).to eq([File.basename(local_file)])
+      end
+
+      it 'does not set the mime_type' do
+        expect(file_set.mime_type).to be_nil
+      end
     end
 
     context 'when file_set.title is empty and file_set.label is not' do

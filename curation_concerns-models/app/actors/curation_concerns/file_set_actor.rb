@@ -46,14 +46,18 @@ module CurationConcerns
     # Simultaneously moving a preservation copy to the repostiory.
     # TODO: create a job to monitor this directory and prune old files that
     # have made it to the repo
-    # @param [ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
+    # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
     def create_content(file)
-      file_set.label ||= file.original_filename
+      # Assign label and title of File Set is necessary.
+      file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
       file_set.title = [file_set.label] if file_set.title.blank?
+
+      # Need to save the file_set in order to get an id
       return false unless file_set.save
 
       working_file = copy_file_to_working_directory(file, file_set.id)
-      IngestFileJob.perform_later(file_set.id, working_file, file.content_type, user.user_key)
+      mime_type = file.respond_to?(:content_type) ? file.content_type : nil
+      IngestFileJob.perform_later(file_set.id, working_file, mime_type, user.user_key)
       make_derivative(file_set.id, working_file)
       true
     end
@@ -103,11 +107,13 @@ module CurationConcerns
         CharacterizeJob.perform_later(file_set_id, working_file)
       end
 
-      # @param [ActionDispatch::Http::UploadedFile] file
+      # @param [File, ActionDispatch::Http::UploadedFile] file
       # @param [String] id the identifer
       # @return [String] path of the working file
       def copy_file_to_working_directory(file, id)
-        copy_stream_to_working_directory(id, file.original_filename, file)
+        # file_set.label not gaurunteed to be set at this point (e.g. if called from update_content)
+        file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
+        copy_stream_to_working_directory(id, file_set.label, file)
       end
 
       # @param [FileSet] file_set the resource

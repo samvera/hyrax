@@ -5,9 +5,21 @@ describe IngestFileJob do
   let(:filename) { fixture_file_path('/world.png') }
   let(:user)     { create(:user) }
 
-  it 'uses the provided mime_type' do
-    described_class.perform_now(file_set.id, filename, 'image/png', 'bob')
-    expect(file_set.reload.original_file.mime_type).to eq 'image/png'
+  context 'when givin a mime_type' do
+    it 'uses a provided mime_type' do
+      described_class.perform_now(file_set.id, filename, 'image/png', 'bob')
+      expect(file_set.reload.original_file.mime_type).to eq 'image/png'
+    end
+  end
+
+  context 'when not given a mime_type' do
+    it 'does not decorate File when not given mime_type' do
+      # Mocking CC Versioning here as it will be the versioning machinery called by the job.
+      # The parameter versioning: false instructs the machinery in Hydra::Works NOT to do versioning. So it can be handled later on.
+      allow(CurationConcerns::VersioningService).to receive(:create)
+      expect(Hydra::Works::AddFileToFileSet).to receive(:call).with(file_set, instance_of(::File), :original_file, versioning: false)
+      described_class.perform_now(file_set.id, filename, nil, 'bob')
+    end
   end
 
   context 'with two existing versions from different users' do

@@ -109,7 +109,7 @@ describe CurationConcerns::FileSetsController do
         post :update, id: resource, file_set: { title: nil, depositor: nil }, format: :json
       }
       it "returns 422 and the errors" do
-        expect(response).to respond_unprocessable_entity(errors: { "some_field": ["This is not valid. Fix it."] })
+        expect(response).to respond_unprocessable_entity(errors: { some_field: ["This is not valid. Fix it."] })
       end
     end
   end
