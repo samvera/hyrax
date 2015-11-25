@@ -20,8 +20,9 @@ module CurationConcerns
              to: :solr_document
 
     # Metadata Methods
-    delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,
-             :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document
+    delegate :title, :date_created, :date_modified, :date_uploaded, :description,
+             :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
+             :lease_expiration_date, :rights, to: :solr_document
 
     def file_presenters
       @file_sets ||= PresenterFactory.build_presenters(ordered_ids,
