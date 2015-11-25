@@ -16,7 +16,7 @@ $brown-light: #D2B48C;
 $classic-white: #FFF;
 $cream-light: #FCFBF7;
 $gray-dark: #333;
-$gray-med-dark: #888;
+$gray-med-dark: #666;
 $gray-medium: #CECDCD;
 $gray-light: #DDD;
 $gray-lighter: #E1E1E1;
@@ -29,8 +29,9 @@ $red-orange: #D6562B;
 
 // Dashboard
 $badge-background-color: $highlight-yellow;
-$badge-optional-background-color: $gray-medium;
-$badge-font-color: $classic-white;
+$badge-optional-background-color: $gray-med-dark;
+$badge-font-color: $basic-black;
+$badge-optional-font-color: $classic-white;
 
 $content-wrapper-background-color: $cream-light;
 
