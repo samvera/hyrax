@@ -14,7 +14,6 @@ module Sufia
   module Models
   end
 
-  autoload :Utils, 'sufia/models/utils'
   autoload :Permissions
   autoload :Messages
 
