@@ -26,6 +26,6 @@ class Sufia::Models::AbstractMigrationGenerator < Rails::Generators::Base
     def better_migration_template(file)
       migration_template "migrations/#{file}", "db/migrate/#{file}"
     rescue Rails::Generators::Error => e
-      say_status("warning", e.message, :yellow)
+      say_status("error", e.message, :red)
     end
 end

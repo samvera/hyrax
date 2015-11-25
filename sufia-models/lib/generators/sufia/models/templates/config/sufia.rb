@@ -103,6 +103,10 @@ Sufia.config do |config|
   # Specify how many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
   # config.activity_to_show_default_seconds_since_now = 24*60*60
 
+  # Sufia can integrate with Zotero's Arkivo service for automatic deposit
+  # of Zotero-managed research items.
+  # config.arkivo_api = false
+
   # Specify a date you wish to start collecting Google Analytic statistics for.
   # Leaving it blank will set the start date to when ever the file was uploaded by
   # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out

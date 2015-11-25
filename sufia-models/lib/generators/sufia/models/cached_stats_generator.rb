@@ -9,7 +9,7 @@ This generator adds the ability to cache usage stats to your application:
        """
 
   def banner
-    say_status("warning", "ADDING STATS CACHING-RELATED SUFIA MODELS", :yellow)
+    say_status("info", "ADDING STATS CACHING-RELATED SUFIA MODELS", :blue)
   end
 
   # Setup the database migrations

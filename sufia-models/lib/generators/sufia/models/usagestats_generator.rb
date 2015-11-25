@@ -10,7 +10,7 @@ This generator makes the following changes to your application:
        """
 
   def banner
-    say_status("warning", "GENERATING SUFIA USAGE STATS", :yellow)
+    say_status("info", "GENERATING SUFIA USAGE STATS", :blue)
   end
 
   def create_configuration_file

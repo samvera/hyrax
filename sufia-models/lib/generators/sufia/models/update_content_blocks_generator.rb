@@ -8,7 +8,7 @@ This generator creates a database migration to add an external_key column to the
        """
 
   def banner
-    say_status("warning", "CREATING MIGRATION FILE", :yellow)
+    say_status("info", "CREATING MIGRATION FILE", :blue)
   end
 
   def copy_migrations
