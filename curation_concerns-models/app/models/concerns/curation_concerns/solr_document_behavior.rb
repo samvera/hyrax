@@ -44,14 +44,16 @@ module CurationConcerns
       fetch(Solrizer.solr_name('hasRelatedMediaFragment', :symbol), []).first
     end
 
+    def date_created
+      date_field('date_created')
+    end
+
+    def date_modified
+      date_field('date_modified')
+    end
+
     def date_uploaded
-      field = self[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]
-      return unless field.present?
-      begin
-        Date.parse(field).to_formatted_s(:standard)
-      rescue
-        Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
-      end
+      date_field('date_uploaded')
     end
 
     def depositor(default = '')
@@ -128,5 +130,17 @@ module CurationConcerns
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
                       end
     end
+
+    private
+
+      def date_field(field_name)
+        field = self[Solrizer.solr_name(field_name, :stored_sortable, type: :date)]
+        return unless field.present?
+        begin
+          Date.parse(field).to_formatted_s(:standard)
+        rescue
+          Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
+        end
+      end
   end
 end

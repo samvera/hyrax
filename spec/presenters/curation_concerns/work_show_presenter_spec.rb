@@ -2,10 +2,15 @@ require 'spec_helper'
 
 describe CurationConcerns::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
+  let(:date_value) { Date.today }
+  let(:date_index) { date_value.to_s }
   let(:attributes) do
     { "title_tesim" => ["foo bar"],
       "human_readable_type_tesim" => ["Generic Work"],
-      "has_model_ssim" => ["GenericWork"] }
+      "has_model_ssim" => ["GenericWork"],
+      "date_created_dtsi" => date_index,
+      "date_modified_dtsi" => date_index,
+      "date_uploaded_dtsi" => date_index }
   end
 
   let(:ability) { nil }
@@ -24,6 +29,13 @@ describe CurationConcerns::WorkShowPresenter do
   describe "#model_name" do
     subject { presenter.model_name }
     it { is_expected.to be_kind_of ActiveModel::Name }
+  end
+
+  [:date_created, :date_modified, :date_uploaded].each do |date_field|
+    describe "##{date_field}" do
+      subject { presenter.send date_field }
+      it { is_expected.to eq date_value.to_formatted_s(:standard) }
+    end
   end
 
   describe "#permission_badge" do
