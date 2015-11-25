@@ -61,6 +61,36 @@ describe CurationConcerns::FileSetAuditService do
     it { is_expected.to eq 'Some audits have not been run, but the ones run were passing.' }
   end
 
+  describe '#logged_audit_status' do
+    subject { service.logged_audit_status }
+
+    it "doesn't trigger audits" do
+      expect(service).not_to receive(:audit_file)
+      expect(subject).to eq "Audits have not yet been run on this file."
+    end
+
+    context "when no audit is passing" do
+      before do
+        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+      end
+
+      it "reports the audit result" do
+        expect(subject).to eq 'passing'
+      end
+    end
+
+    context "when one audit is passing" do
+      before do
+        ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+      end
+
+      it "reports the audit result" do
+        expect(subject).to eq 'failing'
+      end
+    end
+  end
+
   describe '#stat_to_string' do
     subject { service.send(:stat_to_string, val) }
     context 'when audit_stat is 0' do

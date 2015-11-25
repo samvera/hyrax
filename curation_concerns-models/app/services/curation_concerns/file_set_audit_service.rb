@@ -1,16 +1,31 @@
 module CurationConcerns
   class FileSetAuditService
     attr_reader :file_set
-    def initialize(file)
-      @file_set = file
+    def initialize(file_set)
+      @file_set = file_set
     end
 
     NO_RUNS = 999
 
     # provides a human readable version of the audit status
+    # This may trigger audits to be run if required
     # @param [Hydra::PCDM::File] file the file to get the audit status for, defaults to the original_file.
     def human_readable_audit_status(file = file_set.original_file)
       audit_stat(file)
+    end
+
+    # Check the file by only what is in the audit log.
+    # Do not try to access the versions if we do not have access to them.
+    # Use this when a file_set is loaded from solr instead of fedora
+    def logged_audit_status
+      audit_results = ChecksumAuditLog.logs_for(file_set.id, "original_file")
+                      .collect { |result| result["pass"] }
+
+      if audit_results.length > 0
+        stat_to_string(audit_results.reduce(true) { |sum, value| sum && value })
+      else
+        'Audits have not yet been run on this file.'
+      end
     end
 
     # Audits each version of each file if it hasn't been audited recently
