@@ -37,14 +37,14 @@ describe DepositorsController do
       sign_in FactoryGirl.create(:curator)
     end
     describe "create" do
-      it "does not be successful" do
+      it "is not successful" do
         post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json'
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
     describe "destroy" do
-      it "does not be successful" do
+      it "is not successful" do
         delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json'
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
