@@ -8,7 +8,6 @@ This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Creates the curation_concerns.rb configuration file and several others
  3. Creates the file_set.rb and collection.rb models
- 4. Runs full-text generator
        "''
   def banner
     say_status('warning', 'GENERATING CURATION_CONCERNS MODELS', :yellow)
