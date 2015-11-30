@@ -225,7 +225,6 @@ describe Sufia::UserStatImporter do
       it "skips if we already have uptodate information" do
         expect(importer).to receive(:file_ids_for_user).with(gollum).and_call_original
         expect(importer).to receive(:file_ids_for_user).with(frodo).and_call_original
-        # expect(importer).to receive(:file_ids_for_user).with(frodo.id).and_call_original
         expect(importer).not_to receive(:file_ids_for_user).with(bilbo)
         importer.import
       end
