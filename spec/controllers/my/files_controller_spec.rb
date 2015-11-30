@@ -48,6 +48,8 @@ describe My::FilesController, type: :controller do
       end
     end
 
+    let!(:other_collection) { create(:collection) }
+
     let!(:my_work) { create(:work, user: user) }
     let!(:shared_work) { create(:work, edit_users: [user.user_key], user: someone_else) }
     let!(:unrelated_work) { create(:public_work, user: someone_else) }
@@ -70,6 +72,9 @@ describe My::FilesController, type: :controller do
       # doesn't show non-works
       expect(doc_ids).to_not include(wrong_type.id)
       expect(doc_ids).to_not include(my_file.id)
+
+      # Only has collections that I own.
+      expect(assigns[:user_collections].map(&:id)).to eq [my_collection.id]
     end
   end # context 'with different types of records'
 end
