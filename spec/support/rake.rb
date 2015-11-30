@@ -8,9 +8,9 @@ module RakeHelper
     files.each { |file| load file }
   end
 
-  def run_task(task)
+  def run_task(task, arg = nil)
     capture_stdout_stderr do
-      @rake[task].invoke
+      @rake[task].invoke(arg)
     end
   end
 
