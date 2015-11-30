@@ -11,6 +11,7 @@ module CurationConcerns
   autoload :Utils, 'curation_concerns/models/utils'
   autoload :Permissions
   autoload :Messages
+  autoload :NullLogger
   eager_autoload do
     autoload :Configuration
     autoload :Name

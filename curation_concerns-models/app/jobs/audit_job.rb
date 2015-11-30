@@ -46,7 +46,9 @@ class AuditJob < ActiveFedoraIdBasedJob
       ChecksumAuditLog.create!(pass: passing, file_set_id: id, version: uri, file_id: file_id)
     end
 
+  private
+
     def logger
-      ActiveFedora::Base.logger
+      ActiveFedora::Base.logger || CurationConcerns::NullLogger.new
     end
 end
