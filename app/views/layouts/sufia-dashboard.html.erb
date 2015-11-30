@@ -5,19 +5,20 @@
 <div id="wrapper">
   <div class="container-fluid">
     <div id="page-positioner">
-
+      <a href="#skip_to_content" class="sr-only">Skip to Content</a>
       <%= render partial: '/masthead' %>
       <%= render partial: '/controls' %>
       <%= render partial: '/flash_msg' %>
 
-      <div id="content-wrapper" class="dashboard">
+      <div id="content-wrapper" class="dashboard" role="main">
+        <a name="skip_to_content"></a>
         <div class="container-fluid">
           <div id="content-header" class="row"><%= yield :heading %></div>
         </div>
         <div class="container-fluid">
           <div id="content" class="row">
-            <div id="sidebar" class="col-xs-12 col-sm-3"><%= yield :sidebar %></div>
-            <div class="col-xs-12 col-sm-9"><%= yield %></div>
+            <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
+            <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
           </div>
         </div>
       </div>

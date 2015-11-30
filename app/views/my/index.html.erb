@@ -10,8 +10,8 @@
 
 <% @page_title = "#{current_tab.capitalize} listing" %>
 
-<ul class="nav nav-tabs" id="my_nav">
-  <h1 class="sr-only">Listing Navigation Bar</h1>
+<h1 class="sr-only">My Files, Collections, Highlights, and Files Shared with Me</h1>
+<ul class="nav nav-tabs" id="my_nav" role="navigation">
   <span class="sr-only">You are currently listing your <%= current_tab.pluralize %> .  You have <%= @response.docs.count %> <%= current_tab.pluralize(@response.docs.count)%> </span>
   <li class="<%= "active" if @selected_tab == :files %>">
     <%= link_to t('sufia.dashboard.my.files'), sufia.dashboard_files_path %>
@@ -29,10 +29,11 @@
 
 <%= render 'search_header' %>
 
-<h1 class="sr-only"><%=@page_title %></h1>
+<h2 class="sr-only"><%=@page_title %></h2>
 <%= render partial: 'document_list' %>
 
 <% content_for :sidebar do %>
+  <span class="sr-only">Upload Files or Create Collection</span>
   <%= link_to t('sufia.dashboard.upload_html'), new_curation_concerns_generic_work_path, class: "btn btn-primary" %>
   <%= link_to t('sufia.dashboard.create_collection_html'), collections.new_collection_path, id: "hydra-collection-add", class: "btn btn-primary" %>
   <%= render partial: 'facets', locals: {current_tab: current_tab} %>
