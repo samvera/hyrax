@@ -4,6 +4,8 @@ require 'jettywrapper'
 require 'engine_cart/rake_task'
 require 'rubocop/rake_task'
 
+Jettywrapper.hydra_jetty_version = "v8.6.0"
+
 desc 'Run style checker'
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.requires << 'rubocop-rspec'
