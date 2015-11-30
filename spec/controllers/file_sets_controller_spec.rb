@@ -281,14 +281,14 @@ describe CurationConcerns::FileSetsController do
             end
           end
 
+          before do
+            expect_any_instance_of(Sufia::IngestLocalFileService)
+              .to receive(:ingest_local_file)
+              .with(["world.png", "image.jpg"], work.id, upload_set_id)
+          end
+
           it "records the work" do
-            expect {
-              post :create, parent_id: work.id,
-                            upload_set_id: upload_set_id,
-                            file_set: { local_file: ["world.png", "image.jpg"] }
-            }.to change(FileSet, :count).by(2)
-            created_files = FileSet.all
-            created_files.each { |f| expect(f.generic_works).to include work }
+            post :create, parent_id: work.id, upload_set_id: upload_set_id, file_set: { local_file: ["world.png", "image.jpg"] }
           end
         end
       end
