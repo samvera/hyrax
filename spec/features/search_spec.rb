@@ -58,7 +58,7 @@ describe 'searching' do
       expect(page).to have_content('Search Results')
       expect(page).to have_content "Toothbrush"
       expect(page).to have_content('collection title abc')
-      expect(page).to have_css("img.collection-icon")
+      expect(page).to have_css("img.collection-icon-search")
     end
 
     it "does not display search options for dashboard files" do
