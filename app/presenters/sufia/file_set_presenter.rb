@@ -24,7 +24,7 @@ module Sufia
     end
 
     def audit_status
-      audit_service.human_readable_audit_status
+      audit_service.logged_audit_status
     end
 
     def audit_service
