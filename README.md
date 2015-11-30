@@ -346,7 +346,7 @@ To add proxies and transfers to your **Sufia 4**-based app, run the 'sufia:model
 
 ### One time setup for first admin
 
-Follow the directions for installing hydra-role-management.
+Follow the directions for [installing hydra-role-management](https://github.com/projecthydra/hydra-role-management#installing).
 
 Add the following gem to Sufia installed app's Gemfile
 ```ruby
