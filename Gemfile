@@ -11,6 +11,7 @@ group :development, :test do
   gem 'byebug' unless ENV['CI']
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
+  gem 'coveralls', require: false
 end
 
 # BEGIN ENGINE_CART BLOCK

@@ -6,7 +6,7 @@
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
 [![Build Status](https://travis-ci.org/projecthydra-labs/sufia-core.png?branch=master)](https://travis-ci.org/projecthydra-labs/sufia-core)
 [![Dependency Status](https://gemnasium.com/projecthydra-labs/sufia-core.png)](https://gemnasium.com/projecthydra-labs/sufia-core)
-[![Coverage Status](https://img.shields.io/coveralls/projecthydra-labs/sufia-core.svg)](https://coveralls.io/r/projecthydra-labs/sufia-core?branch=master)
+[![Coverage Status](https://coveralls.io/repos/projecthydra-labs/sufia-core/badge.svg)](https://coveralls.io/r/projecthydra-labs/sufia-core)
 [![Stories in Ready](https://badge.waffle.io/projecthydra-labs/sufia-core.png?label=ready&title=Ready)](https://waffle.io/projecthydra-labs/sufia-core)
 
 # Table of Contents
