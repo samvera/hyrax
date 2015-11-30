@@ -3,9 +3,9 @@ module Sufia
     attr_reader :current_user, :logger
     attr_accessor :files
 
-    def initialize(current_user, logger = nil)
+    def initialize(current_user, logger = Rails.logger)
       @current_user = current_user
-      @logger = logger
+      @logger = logger || CurationConcerns::NullLogger.new
     end
 
     def ingest_local_file(local_files, parent_id, upload_set_id)
@@ -31,9 +31,9 @@ module Sufia
       def add_files_in_directory(filename)
         Dir[File.join(current_user.directory, filename, '**', '*')].each do |single|
           next if File.directory? single
-          logger.info("Ingesting file: #{single}") if logger
+          logger.info("Ingesting file: #{single}")
           files << single.sub(current_user.directory + '/', '')
-          logger.info("after removing the user directory #{current_user.directory} we have: #{files.last}") if logger
+          logger.info("after removing the user directory #{current_user.directory} we have: #{files.last}")
         end
       end
 
