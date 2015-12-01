@@ -1,20 +1,20 @@
 <h3>Newest Users</h3>
 <%= form_for "users_stats", url: sufia.admin_stats_path, method: "GET" do |f| %>
   <%= f.label "Display users registered: Start" %>
-  <input type="date" name="users_stats[start_date]" value="<%= @users_stats[:start_date] %>"></input>
+  <input type="date" name="users_stats[start_date]" value="<%= @presenter.users_stats[:start_date] %>"></input>
   <%= f.label "end [defaults to now]" %>
-  <input type="date" name="users_stats[end_date]" value="<%= @users_stats[:end_date] %>"></input>
+  <input type="date" name="users_stats[end_date]" value="<%= @presenter.users_stats[:end_date] %>"></input>
   <%= f.submit "Load Stats" %>
 <%- end %>
 
-<%- if @users_stats[:start_date] %>
-  <div>Total: <%= @recent_users.count %></div>
+<%- if @presenter.users_stats[:start_date] %>
+  <div>Total: <%= @presenter.recent_users.count %></div>
 <%- else %>
   Five most recent users:
 <%- end %>
 
 <ul>
-  <% @recent_users.each do |usr| %>
+  <% @presenter.recent_users.each do |usr| %>
     <li>
       <a href="<%= sufia.profile_path(usr.user_key) %>" title="View user's profile"><%= usr.name %></a>
       <%- if usr.department %>
