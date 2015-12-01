@@ -6,7 +6,7 @@
     <p><small class="pull-left"><span class="error">*</span> required</small></p>
     <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', sufia.new_curation_concerns_file_set_path %></small></p>
     <div class="well">
-      <% f.object.terms.each do |term| %>
+      <% f.object.rendered_terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>
       <% end %>
     </div>
