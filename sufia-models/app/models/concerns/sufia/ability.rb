@@ -12,6 +12,7 @@ module Sufia
       featured_work_abilities
       editor_abilities
       stats_abilities
+      citation_abilities
       proxy_deposit_abilities
     end
 
@@ -49,6 +50,10 @@ module Sufia
 
     def stats_abilities
       alias_action :stats, to: :read
+    end
+
+    def citation_abilities
+      alias_action :citation, to: :read
     end
 
     private
