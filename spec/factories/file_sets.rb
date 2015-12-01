@@ -24,6 +24,7 @@ FactoryGirl.define do
         FactoryGirl.create(:generic_work, user: evaluator.user).members << file
       end
     end
+
     after(:build) do |file, evaluator|
       file.apply_depositor_metadata(evaluator.user.user_key)
     end

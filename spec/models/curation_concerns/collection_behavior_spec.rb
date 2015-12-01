@@ -17,19 +17,49 @@ describe CurationConcerns::CollectionBehavior do
     it { is_expected.to eq CurationConcerns::CollectionIndexer }
   end
 
-  describe '::bytes' do
+  describe '.bytes' do
     subject { collection.bytes }
 
     context 'with no items' do
       before { collection.save }
-      it { is_expected.to eq 0 }
+      it "gets zero without querying solr" do
+        expect(ActiveFedora::SolrService).not_to receive(:query)
+        is_expected.to eq 0
+      end
     end
 
-    context 'with two 50 byte files' do
-      let(:bitstream) { double('content', size: '50') }
-      let(:file) { mock_model ::FileSet, content: bitstream }
-      before { allow(collection).to receive(:members).and_return([file, file]) }
-      it { is_expected.to eq 100 }
+    # Calculating the size of the Collection should only hit Solr.
+    # This base case querries solr in an integration test
+    context 'with indexed Works and FileSets', :integration do
+      let(:file1) { FactoryGirl.build(:file_set, file_size: ['100']) }
+      let(:file2) { FactoryGirl.build(:file_set, file_size: ['100']) }
+      let(:file3) { FactoryGirl.build(:file_set, file_size: ['9000'], id: 'fumid') }
+      let(:work1) { FactoryGirl.build(:generic_work) }
+      let(:work2) { FactoryGirl.build(:generic_work) }
+      let(:work3) { FactoryGirl.build(:generic_work, id: 'dumid') }
+      before do
+        # Save collection to get ids
+        collection.save
+        # Create relationships so member_ids are created
+        collection.members = [work1, work2]
+        work1.members = [file1]
+        work2.members = [file2]
+        # Create a relatinship not in the collection.
+        work3.members = [file3]
+
+        # Manually Call Indexing to put the data in Solr
+        ActiveFedora::SolrService.add(collection.to_solr)
+        ActiveFedora::SolrService.add(work1.to_solr, softCommit: true)
+        ActiveFedora::SolrService.add(work2.to_solr, softCommit: true)
+        ActiveFedora::SolrService.add(work3.to_solr, softCommit: true)
+        ActiveFedora::SolrService.add(file1.to_solr, softCommit: true)
+        ActiveFedora::SolrService.add(file2.to_solr, softCommit: true)
+        ActiveFedora::SolrService.add(file3.to_solr, softCommit: true)
+      end
+
+      it "is the correct aggregate size" do
+        is_expected.to eq 200
+      end
     end
   end
 
@@ -46,7 +76,7 @@ describe CurationConcerns::CollectionBehavior do
     end
 
     context 'with itself' do
-      it 'does not add it to the collection\'s members' do
+      it 'does not add it to the collection members' do
         expect do
           subject.add_member(subject)
         end.to_not change { subject.members.size }
@@ -75,7 +105,7 @@ describe CurationConcerns::CollectionBehavior do
     end
   end
 
-  context 'is a pcdm:Collection instance' do
+  describe 'intrinsic properties' do
     let(:collection1) { FactoryGirl.build(:collection) }
     let(:work1) { FactoryGirl.build(:work) }
 
@@ -83,7 +113,8 @@ describe CurationConcerns::CollectionBehavior do
       expect(subject.pcdm_collection?).to be true
       expect(subject.type).to include Hydra::PCDM::Vocab::PCDMTerms.Collection
     end
-    it 'does not be a pcdm:Object' do
+
+    it 'is not a pcdm:Object' do
       expect(subject.pcdm_object?).to be false
       expect(subject.type).to_not include Hydra::PCDM::Vocab::PCDMTerms.Object
     end

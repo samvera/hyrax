@@ -1,6 +1,7 @@
 module CurationConcerns
   class FileSetIndexingService < ActiveFedora::IndexingService
     include IndexesThumbnails
+    STORED_INTEGER = Solrizer::Descriptor.new(:integer, :stored)
 
     def generate_solr_document
       super.tap do |solr_doc|
@@ -11,7 +12,7 @@ module CurationConcerns
         solr_doc[Solrizer.solr_name('label', :stored_sortable)] = object.label
         solr_doc[Solrizer.solr_name('file_format')] = object.file_format
         solr_doc[Solrizer.solr_name('file_format', :facetable)] = object.file_format
-        solr_doc[Solrizer.solr_name(:file_size, :symbol)] = object.file_size[0]
+        solr_doc[Solrizer.solr_name(:file_size, STORED_INTEGER)] = object.file_size[0]
         solr_doc['all_text_timv'] = object.full_text.content
         solr_doc[Solrizer.solr_name('generic_work_ids', :symbol)] = object.generic_work_ids unless object.generic_work_ids.empty?
         solr_doc['height_is'] = Integer(object.height.first) if object.height.present?
