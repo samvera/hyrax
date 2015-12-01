@@ -5,7 +5,7 @@
   <tr>
     <th><label for="check_all" class="sr-only"><%= t("sufia.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
     <th>Title</th>
-    <th class="sorts-dash"><i id="date_uploaded_dtsi" class="<%=params[:sort]== "date_uploaded_dtsi desc" ? 'caret' : params[:sort]== "date_uploaded_dtsi asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
+    <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%=params[:sort]== "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort]== "#{CatalogController.uploaded_field} asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
     <th>Visibility</th>
     <th>Action</th>
   </tr>

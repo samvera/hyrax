@@ -13,9 +13,10 @@
               <fieldset>
                 <legend><%= t("sufia.collection.select_form.select_heading") %></legend>
               <ul>
-                <% user_collections.sort { |c1,c2| c1['date_modified_dtsi'] <=> c2['date_modified_dtsi'] }.each do |collection|  %>
+                <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index|  %>
                   <li>
-                    <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %>
+                    <% selected = (collection.id == @add_files_to_collection) || (@add_files_to_collection.blank? && index == 0) %>
+                    <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
                     <%= label_tag(:collection, collection.title, for: "id_#{collection.id}") %>
                   </li>
                 <% end %>
@@ -28,10 +29,10 @@
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("sufia.collection.select_form.close")%></button>
           <% if user_collections.blank? %>
             <%= button_for_create_collection t("sufia.collection.select_form.create") %>
-          <% else %> 
+          <% else %>
             <%= button_for_update_collection t("sufia.collection.select_form.update") %>
             <%= button_for_create_collection t("sufia.collection.select_form.create_new") %>
-          <% end %> 
+          <% end %>
         </div>
       </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
