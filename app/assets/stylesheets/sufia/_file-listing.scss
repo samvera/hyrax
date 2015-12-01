@@ -5,6 +5,13 @@ h4 .small {
   color: $navbar-default-toggle-icon-bar-bg;
 }
 
+@media screen and (max-width: 767px) {
+  .table-responsive .open > .dropdown-menu  {
+    position: relative;
+    left: -8em;
+  }
+}
+
 .table-responsive {
   overflow-x: visible;
 }
