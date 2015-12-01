@@ -5,6 +5,10 @@
         &nbsp;|&nbsp;
         <%= link_to "Analytics", sufia.stats_file_set_path(@file_set), id: 'stats' %>
       <% end %>
+      <% if Sufia.config.citations %>
+        &nbsp;|&nbsp;
+        <%= link_to "Citations", sufia.citation_file_set_path(@file_set), id: 'citations' %>
+      <% end %>
       <% if can? :edit, @file_set %>
           &nbsp;|&nbsp;
           <% if @file_set.processing? %>

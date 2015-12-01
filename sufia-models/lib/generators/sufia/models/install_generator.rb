@@ -16,6 +16,7 @@ This generator makes the following changes to your application:
  8. Runs cached stats generator
  9. Runs ORCID field generator
 10. Runs user stats generator
+11. Runs citation config generator
        """
 
   def banner
@@ -105,5 +106,10 @@ This generator makes the following changes to your application:
   # Adds user stats-related migration & methods
   def user_stats
     generate 'sufia:models:user_stats'
+  end
+
+  # Adds citations initialization
+  def citation_config
+    generate 'sufia:models:citation_config'
   end
 end
