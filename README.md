@@ -26,6 +26,7 @@
     * [Database tables and indexes](#database-tables-and-indexes)
     * [Solr and Fedora](#solr-and-fedora)
     * [Start background workers](#start-background-workers)
+    * [View resque jobs](#view-resque-jobs)
     * [Audiovisual transcoding](#audiovisual-transcoding)
     * [User interface](#user-interface)
     * [Integration with Dropbox, Box, etc.](#integration-with-dropbox-box-etc)
@@ -202,6 +203,12 @@ resque-pool --daemon --environment development start
 ```
 
 See https://github.com/defunkt/resque for more options. If you do wind up using resque-pool, you might also be interested in a shell script to help manage it. [Here is an example](https://github.com/psu-stewardship/scholarsphere/blob/develop/script/restart_resque.sh) which you can adapt for your needs.
+
+## View resque jobs
+
+Edit config/initializers/resque_admin.rb so that ResqueAdmin#matches? returns a true value for the user/s who should be able to access this page. One fast way to do this is to return current_user.admin? and add an admin? method to your user model which checks for specific emails.
+
+Then you can view jobs at the admin/queues route.
 
 ## Audiovisual transcoding
 
