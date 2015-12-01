@@ -55,3 +55,13 @@
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
+
+div#announcement {
+  text-align: center;
+  color: white;
+  font-size: 1.5em;
+  background-color: $vermilion;
+  border: 10px solid white;
+  padding-top: 10px;
+  border-radius: 15px;
+}

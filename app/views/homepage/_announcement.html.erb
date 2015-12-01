@@ -1,0 +1,5 @@
+<% if  can?(:update, ContentBlock) || !@announcement_text.value.blank? %>
+  <div id="announcement" class="row">
+    <%= editable_content_block @announcement_text %>
+  </div>
+<% end %>
