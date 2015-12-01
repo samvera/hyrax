@@ -10,6 +10,16 @@ h4 .small {
     position: relative;
     left: -8em;
   }
+  .file-listing-title {
+    display: inline-block;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .file-listing-title {
+    display: inline-block;
+    padding-top: .65em;
+  }
 }
 
 .table-responsive {
@@ -56,6 +66,16 @@ h4 .small {
 
 .file_listing_thumbnail {
   width: 64px;
+}
+
+.file-listing-links a:link, .file-listing-links a:visited,
+.part_of_collection a:link, .part_of_collection a:visited {
+  color: $blue-default;
+}
+
+.file-listing-links a:hover, .part_of_collection a:hover {
+  color: $gray-dark;
+  text-decoration: underline;
 }
 
 .nav > li > a.accordion-toggle {
@@ -162,9 +182,6 @@ input#check_all {
 }
 
 #documents {
-  .media-body {
-    padding-top: 12px;
-  }
   td {
     vertical-align: middle;
   }

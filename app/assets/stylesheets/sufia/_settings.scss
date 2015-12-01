@@ -5,6 +5,7 @@
 
 $basic-black: #000;
 $blue-dark: #036;
+$blue-default: #337AB7;
 $blue-medium: #1C5798;
 $blue-medium-bright: #2674CA;
 $teal: #2CAEB7;
@@ -79,3 +80,5 @@ $view-select-text-hover: $blue-medium-bright;
 // File Show Page
 $file-show-term-color: $gray-dark;
 $heading-border-color: $gray-light;
+$link-color: $blue-default;
+$link-color-hover: $gray-dark;
