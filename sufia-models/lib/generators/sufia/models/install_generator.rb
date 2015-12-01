@@ -12,11 +12,10 @@ This generator makes the following changes to your application:
  4. Creates the sufia.rb configuration file
  5. Generates mailboxer
  6. Generates usage stats config
- 7. Runs full-text generator
- 8. Runs proxies generator
- 9. Runs cached stats generator
-10. Runs ORCID field generator
-11. Runs user stats generator
+ 7. Runs proxies generator
+ 8. Runs cached stats generator
+ 9. Runs ORCID field generator
+10. Runs user stats generator
        """
 
   def banner

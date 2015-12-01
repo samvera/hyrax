@@ -15,6 +15,10 @@ FactoryGirl.define do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
+    factory :registered_generic_work do
+      read_groups ["registered"]
+    end
+
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
         work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained Generic File'], filename: 'filename.pdf')

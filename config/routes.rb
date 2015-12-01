@@ -137,6 +137,14 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  if defined?(Sufia::StatsAdmin)
+    namespace :admin do
+      constraints Sufia::StatsAdmin do
+        get 'stats' => 'stats#index', as: :stats
+      end
+    end
+  end
+
   resources :content_blocks, only: ['create', 'update']
   get 'featured_researchers' => 'content_blocks#index', as: :featured_researchers
   post '/tinymce_assets' => 'tinymce_assets#create'

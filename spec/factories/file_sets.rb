@@ -7,10 +7,6 @@ FactoryGirl.define do
       fs.apply_depositor_metadata evaluator.user.user_key
     end
 
-    factory :public_file do
-      read_groups ["public"]
-    end
-
     factory :fixture do
       factory :public_pdf do
         transient do
