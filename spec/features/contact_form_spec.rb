@@ -17,6 +17,7 @@ describe "Sending an email via the contact form", type: :feature do
     select "Depositing content", from: "contact_form_category"
     click_button "Send"
     expect(page).to have_content "Thank you"
+    expect(page).not_to have_content "I am contacting you regarding ScholarSphere."
     # this step allows the delivery to go back to normal
     allow_any_instance_of(ContactForm).to receive(:deliver).and_call_original
   end
