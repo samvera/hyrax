@@ -3,14 +3,14 @@ require 'spec_helper'
 describe API::ZoteroController, type: :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
+  subject { response }
+
   context 'with an HTTP GET to /api/zotero' do
     context 'with an unauthenticated client' do
       before { get :initiate }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it 'describes the redirect' do
+      specify do
+        expect(subject).to have_http_status(302)
         expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
       end
     end
@@ -22,11 +22,9 @@ describe API::ZoteroController, type: :controller do
         get :initiate
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it { is_expected.to redirect_to(root_path) }
-      it 'populates the flash with an alert' do
+      specify do
+        expect(subject).to have_http_status(302)
+        expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'You are not authorized to perform this operation'
       end
     end
@@ -40,11 +38,9 @@ describe API::ZoteroController, type: :controller do
 
       let(:broken_config) { Hash.new(client_key: 'foo', client_secret: 'bar') }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it { is_expected.to redirect_to(root_path) }
-      it 'populates the flash with an alert' do
+      specify do
+        expect(subject).to have_http_status(302)
+        expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'Invalid Zotero client key pair'
       end
     end
@@ -70,13 +66,9 @@ describe API::ZoteroController, type: :controller do
                             authorize_path: '/oauth/authorize')
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it 'has no flash alerts' do
+      specify do
+        expect(subject).to have_http_status(302)
         expect(flash[:alert]).to be_nil
-      end
-      it 'has the expected callback URL' do
         expect(subject.headers['Location']).to include('oauth_callback=http%3A%2F%2Ftest.host%2Fapi%2Fzotero%2Fcallback')
       end
     end
@@ -86,10 +78,8 @@ describe API::ZoteroController, type: :controller do
     context 'with an unauthenticated user' do
       before { get :callback }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it 'describes the redirect' do
+      specify do
+        expect(subject).to have_http_status(302)
         expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
       end
     end
@@ -101,11 +91,9 @@ describe API::ZoteroController, type: :controller do
         get :callback
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it { is_expected.to redirect_to(root_path) }
-      it 'populates the flash with an alert' do
+      specify do
+        expect(subject).to have_http_status(302)
+        expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'You are not authorized to perform this operation'
       end
     end
@@ -116,11 +104,9 @@ describe API::ZoteroController, type: :controller do
         get :callback
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it { is_expected.to redirect_to(routes.url_helpers.edit_profile_path(user)) }
-      it 'populates the flash with an alert' do
+      specify do
+        expect(subject).to have_http_status(302)
+        expect(subject).to redirect_to(routes.url_helpers.edit_profile_path(user))
         expect(flash[:alert]).to eq 'Malformed request from Zotero'
       end
     end
@@ -131,11 +117,9 @@ describe API::ZoteroController, type: :controller do
         get :callback, oauth_token: 'woohoo', oauth_verifier: '12345'
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it { is_expected.to redirect_to(routes.url_helpers.edit_profile_path(user)) }
-      it 'populates the flash with an alert' do
+      specify do
+        expect(subject).to have_http_status(302)
+        expect(subject).to redirect_to(routes.url_helpers.edit_profile_path(user))
         expect(flash[:alert]).to eq 'You have not yet connected to Zotero'
       end
     end
@@ -160,18 +144,12 @@ describe API::ZoteroController, type: :controller do
         double('access', params: { userID: zuserid })
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(302) }
-      it 'pushes an arkivo subscription job' do
+      specify do
+        expect(subject).to have_http_status(302)
         expect(Sufia::Arkivo::CreateSubscriptionJob).to have_received(:perform_later)
-      end
-      it { is_expected.to redirect_to(routes.url_helpers.profile_path(user)) }
-      it 'populates the flash with a notice' do
+        expect(subject).to redirect_to(routes.url_helpers.profile_path(user))
         expect(flash[:alert]).to be_nil
         expect(flash[:notice]).to eq 'Successfully connected to Zotero!'
-      end
-      it 'stores the userID in the user instance' do
         expect(user.reload.zotero_userid).to eq zuserid
       end
     end

@@ -13,37 +13,29 @@ describe API::ItemsController, type: :controller do
       gf.arkivo_checksum = '6872d21557992f6ad1d07375f19fbfaf'
     end
   end
+
+  subject { response }
+
   context 'with an HTTP GET or HEAD' do
     let(:token) { user.arkivo_token }
     let(:item) { FactoryGirl.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
 
     context 'with a missing token' do
-      before do
-        get :show, format: :json, id: default_work.id
-      end
+      before { get :show, format: :json, id: default_work.id }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(subject.body).to include('invalid user token:')
       end
     end
 
     context 'with an unfamiliar token' do
-      before do
-        get :show, format: :json, id: default_work.id, token: get_token
-      end
-
+      before { get :show, format: :json, id: default_work.id, token: get_token }
       let(:get_token) { 'foobar' }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(subject.body).to include("invalid user token: #{get_token}")
       end
     end
@@ -54,15 +46,9 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'loads the file' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(assigns[:work]).to eq default_work
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("#{user} lacks access to #{default_work}")
       end
     end
@@ -73,11 +59,8 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(403) }
-
-      it 'provides a reason for refusing to act' do
+      specify do
+        expect(subject).to have_http_status(403)
         expect(subject.body).to include("Forbidden: #{default_work} not deposited via Arkivo")
       end
     end
@@ -88,25 +71,17 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(404) }
-
-      it 'provides a reason for refusing to act' do
+      specify do
+        expect(subject).to have_http_status(404)
         expect(subject.body).to include("id '#{default_work.id}' not found")
       end
     end
 
     context 'with an authorized Arkivo-deposited resource' do
-      before do
-        get :show, format: :json, id: default_work.id, token: token
-      end
+      before { get :show, format: :json, id: default_work.id, token: token }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(204) }
-
-      it 'responds with no body' do
+      specify do
+        expect(subject).to have_http_status(204)
         expect(subject.body).to be_blank
       end
     end
@@ -114,39 +89,26 @@ describe API::ItemsController, type: :controller do
 
   context 'with an HTTP POST' do
     context 'without an item' do
-      before do
-        post :create, format: :json
-      end
+      before { post :create, format: :json }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(400) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(400)
         expect(subject.body).to include('no item parameter')
       end
     end
 
     context 'with an invalid item' do
-      before do
-        post :create, item, format: :json
-      end
-
+      before { post :create, item, format: :json }
       let(:item) { { foo: 'bar' }.to_json }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(400) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(400)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
     end
 
     context 'with a valid item and matching token' do
-      before do
-        expect { post :create, item, format: :json }.to change { GenericWork.count }.by(1)
-      end
+      before { expect { post :create, item, format: :json }.to change { GenericWork.count }.by(1) }
 
       let(:deposited_file) { FileSet.where(label: item_hash['file']['filename']).take }
       let!(:deposited_work) { deposited_file.in_works.first }
@@ -154,31 +116,13 @@ describe API::ItemsController, type: :controller do
       let(:item) { FactoryGirl.json(:post_item, token: token) }
       let(:item_hash) { JSON.parse(item) }
 
-      subject { response }
-
-      it { is_expected.to be_success }
-
-      it 'responds with HTTP 201' do
+      specify do
+        expect(response).to be_success
         expect(response.status).to eq 201
-      end
-
-      it 'provides a URI in the Location header' do
         expect(response.headers['Location']).to match %r{/api/items/.{9}}
-      end
-
-      it 'creates a new item via POST' do
         expect(deposited_file).not_to be_nil
-      end
-
-      it 'writes metadata to allow flagging Arkivo-deposited items' do
         expect(deposited_work.arkivo_checksum).to eq item_hash['file']['md5']
-      end
-
-      it 'writes content' do
         expect(deposited_file.original_file.content).to eq "arkivo\n"
-      end
-
-      it 'batch applies specified metadata' do
         expect(deposited_file.resource_type).to eq [item_hash['metadata']['resourceType']]
         expect(deposited_file.title).to eq [item_hash['metadata']['title']]
         expect(deposited_file.description).to eq [item_hash['metadata']['description']]
@@ -196,22 +140,14 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a valid item and unfamiliar token' do
-      before do
-        post :create, item, format: :json
-      end
+      before { post :create, item, format: :json }
 
       let(:token) { 'unfamiliar_token' }
       let(:item) { FactoryGirl.json(:post_item, token: token) }
 
-      subject { response }
-
-      it { is_expected.not_to be_success }
-
-      it 'responds with HTTP 401' do
+      specify do
+        expect(response).not_to be_success
         expect(subject.status).to eq 401
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("invalid user token: #{token}")
       end
     end
@@ -229,9 +165,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a valid item, matching token, and authorized resource' do
-      before do
-        put :update, put_item, id: post_deposited_work.id, format: :json
-      end
+      before { put :update, put_item, id: post_deposited_work.id, format: :json }
 
       let(:put_deposited_file) { post_deposited_file.reload }
       let(:put_deposited_work) { post_deposited_work.reload }
@@ -239,24 +173,12 @@ describe API::ItemsController, type: :controller do
       let(:put_item) { FactoryGirl.json(:put_item, token: put_token) }
       let(:put_item_hash) { JSON.parse(put_item) }
 
-      subject { response }
-
-      it { is_expected.to be_success }
-
-      it 'responds with HTTP 204 and no body' do
+      specify do
+        expect(subject).to be_success
         expect(subject.status).to eq 204
         expect(subject.body).to be_blank
-      end
-
-      it 'updates metadata to allow flagging Arkivo-deposited items' do
         expect(put_deposited_work.arkivo_checksum).to eq put_item_hash['file']['md5']
-      end
-
-      it 'changes the file content' do
         expect(put_deposited_file.original_file.content).to eq "# HEADER\n\nThis is a paragraph!\n"
-      end
-
-      it 'changes the metadata' do
         expect(put_deposited_work.resource_type).to eq [put_item_hash['metadata']['resourceType']]
         expect(put_deposited_work.title).to eq [put_item_hash['metadata']['title']]
         expect(put_deposited_work.rights).to eq [put_item_hash['metadata']['rights']]
@@ -281,15 +203,9 @@ describe API::ItemsController, type: :controller do
 
       let(:item) { FactoryGirl.json(:put_item, token: post_token) }
 
-      subject { response }
-
-      it { is_expected.not_to be_success }
-
-      it 'responds with HTTP 403' do
+      specify do
+        expect(subject).not_to be_success
         expect(subject.status).to eq 403
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("Forbidden: #{post_deposited_file} not deposited via Arkivo")
       end
     end
@@ -302,12 +218,10 @@ describe API::ItemsController, type: :controller do
         put :update, item, id: post_deposited_work.id, format: :json
       end
 
-      subject { response }
       let(:item) { FactoryGirl.json(:put_item, token: post_token) }
 
-      it { is_expected.to have_http_status(404) }
-
-      it 'provides a reason for refusing to act' do
+      specify do
+        expect(subject).to have_http_status(404)
         expect(subject.body).to include("id '#{post_deposited_work.id}' not found")
       end
     end
@@ -320,96 +234,60 @@ describe API::ItemsController, type: :controller do
 
       let(:item) { FactoryGirl.json(:put_item, token: post_token) }
 
-      subject { response }
-
-      it { is_expected.not_to be_success }
-
-      it 'loads the work' do
+      specify do
+        expect(subject).not_to be_success
         expect(assigns[:work]).to eq post_deposited_work
-      end
-
-      it 'responds with HTTP 401' do
         expect(subject.status).to eq 401
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("#{user} lacks access to #{post_deposited_work}")
       end
     end
 
     context 'with a valid item and unfamiliar token' do
-      before do
-        put :update, item, id: post_deposited_work.id, format: :json
-      end
+      before { put :update, item, id: post_deposited_work.id, format: :json }
 
       let(:token) { 'unfamiliar_token' }
       let(:item) { FactoryGirl.json(:put_item, token: token) }
 
-      subject { response }
-
-      it { is_expected.not_to be_success }
-
-      it 'responds with HTTP 401' do
+      specify do
+        expect(subject).not_to be_success
         expect(subject.status).to eq 401
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("invalid user token: #{token}")
       end
     end
 
     context 'with an invalid item' do
-      before do
-        put :update, item, id: post_deposited_work.id, format: :json
-      end
-
+      before { put :update, item, id: post_deposited_work.id, format: :json }
       let(:item) { { foo: 'bar' }.to_json }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(400) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(400)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
     end
   end
 
   context 'with an HTTP DELETE' do
-    before do
-      post :create, item, format: :json
-    end
+    before { post :create, item, format: :json }
 
     let(:token) { user.arkivo_token }
     let(:item) { FactoryGirl.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
 
     context 'with a missing token' do
-      before do
-        delete :destroy, format: :json, id: default_work.id
-      end
+      before { delete :destroy, format: :json, id: default_work.id }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(subject.body).to include('invalid user token:')
       end
     end
 
     context 'with an unfamiliar token' do
-      before do
-        delete :destroy, format: :json, id: default_work.id, token: delete_token
-      end
-
+      before { delete :destroy, format: :json, id: default_work.id, token: delete_token }
       let(:delete_token) { 'foobar' }
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'describes the error' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(subject.body).to include("invalid user token: #{delete_token}")
       end
     end
@@ -420,15 +298,9 @@ describe API::ItemsController, type: :controller do
         delete :destroy, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(401) }
-
-      it 'loads the file' do
+      specify do
+        expect(subject).to have_http_status(401)
         expect(assigns[:work]).to eq default_work
-      end
-
-      it 'provides a reason for refusing to act' do
         expect(subject.body).to include("#{user} lacks access to #{default_work}")
       end
     end
@@ -439,11 +311,8 @@ describe API::ItemsController, type: :controller do
         delete :destroy, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(403) }
-
-      it 'provides a reason for refusing to act' do
+      specify do
+        expect(subject).to have_http_status(403)
         expect(subject.body).to include("Forbidden: #{default_work} not deposited via Arkivo")
       end
     end
@@ -454,11 +323,8 @@ describe API::ItemsController, type: :controller do
         delete :destroy, format: :json, id: default_work.id, token: token
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(404) }
-
-      it 'provides a reason for refusing to act' do
+      specify do
+        expect(subject).to have_http_status(404)
         expect(subject.body).to include("id '#{default_work.id}' not found")
       end
     end
@@ -468,11 +334,8 @@ describe API::ItemsController, type: :controller do
         expect { delete :destroy, format: :json, id: default_work.id, token: token }.to change { GenericWork.count }.by(-1)
       end
 
-      subject { response }
-
-      it { is_expected.to have_http_status(204) }
-
-      it 'responds with no body' do
+      specify do
+        expect(subject).to have_http_status(204)
         expect(subject.body).to be_blank
       end
     end
