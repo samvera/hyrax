@@ -14,9 +14,9 @@
                 <legend><%= t("sufia.collection.select_form.select_heading") %></legend>
               <ul>
                 <% user_collections.sort { |c1,c2| c1['date_modified_dtsi'] <=> c2['date_modified_dtsi'] }.each do |collection|  %>
-                  <li><label for="id_<%= collection.id %>" class="sr-only">Add to <%=collection.title%></label>
+                  <li>
                     <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %>
-                    <%= label_tag(:collection, collection.title, "aria-hidden" =>true) %>
+                    <%= label_tag(:collection, collection.title, for: "id_#{collection.id}") %>
                   </li>
                 <% end %>
               </ul>
