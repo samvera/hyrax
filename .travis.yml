@@ -9,11 +9,6 @@ env:
   matrix:
     - "RAILS_VERSION=4.2.3"
 notifications:
-  email:
-    recipients:
-      - "ul-dlt-hydra@lists.psu.edu"
-    on_success: "change"
-    on_failure: "always"
   irc:
     channels:
       - "irc.freenode.org#scholarsphere"
