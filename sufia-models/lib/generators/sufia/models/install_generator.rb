@@ -17,6 +17,11 @@ This generator makes the following changes to your application:
  9. Runs ORCID field generator
 10. Runs user stats generator
 11. Runs citation config generator
+<<<<<<< HEAD
+=======
+12. Runs upload_to_collection config generator
+13. Generates mini-magick config
+>>>>>>> 7be3c9f... Split out generator for use during upgrade
        """
 
   def banner
@@ -111,5 +116,10 @@ This generator makes the following changes to your application:
   # Adds citations initialization
   def citation_config
     generate 'sufia:models:citation_config'
+  end
+
+  # Add mini-magick configuration
+  def minimagic_config
+    generate 'sufia:models:minimagick_config'
   end
 end
