@@ -51,4 +51,20 @@ describe Sufia::IngestLocalFileService do
       end
     end
   end
+
+  describe "#logger" do
+    context "by default" do
+      subject { described_class.new(user).logger }
+      it { is_expected.to eq(Rails.logger) }
+    end
+    context "when the logger is nil" do
+      subject { described_class.new(user, nil).logger }
+      it { is_expected.to be_kind_of(CurationConcerns::NullLogger) }
+    end
+    context "with my own logger" do
+      let(:logger) { Logger.new(nil) }
+      subject { described_class.new(user, logger).logger }
+      it { is_expected.to be_kind_of(Logger) }
+    end
+  end
 end
