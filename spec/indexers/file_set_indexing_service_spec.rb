@@ -28,10 +28,18 @@ describe CurationConcerns::FileSetIndexingService do
       end
   end
 
+  let(:mock_file) do
+    mock_model("MockFile",
+               content: "asdf",
+               digest: ["urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967"]
+              )
+  end
+
   describe '#generate_solr_document' do
     before do
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
       allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
+      allow(file_set).to receive(:original_file).and_return(mock_file)
     end
     subject { described_class.new(file_set).generate_solr_document }
 
@@ -64,6 +72,7 @@ describe CurationConcerns::FileSetIndexingService do
       expect(subject['all_text_timv']).to eq('abcxyz')
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
+      expect(subject[Solrizer.solr_name('digest', :symbol)]).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
     end
   end
 end
