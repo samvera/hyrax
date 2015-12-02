@@ -14,6 +14,7 @@ module CurationConcerns
     include CurationConcerns::FileSet::Indexing
     include CurationConcerns::FileSet::BelongsToWorks
     include CurationConcerns::FileSet::BelongsToUploadSets
+    include CurationConcerns::FileSet::Querying
     include CurationConcerns::HumanReadableType
     include CurationConcerns::Naming
     include Hydra::AccessControls::Embargoable

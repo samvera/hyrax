@@ -361,6 +361,21 @@ describe FileSet do
     end
   end
 
+  describe '#where_digest_is' do
+    let(:file) { create(:file_set) }
+    let(:file_path) { fixture_path + '/small_file.txt' }
+    let(:digest_string) { '88fb4e88c15682c18e8b19b8a7b6eaf8770d33cf' }
+    before do
+      allow(file).to receive(:warn) # suppress virus warnings
+      of = file.build_original_file
+      of.content = File.open(file_path)
+      file.save
+      file.update_index
+    end
+    subject { described_class.where_digest_is(digest_string).first }
+    it { is_expected.to eq(file) }
+  end
+
   describe 'to_solr' do
     let(:indexer) { double(generate_solr_document: {}) }
     before do
