@@ -1,12 +1,4 @@
-<h3>Deposits By Users</h3>
-<%= form_for "deposit_stats", url: sufia.admin_stats_path, method: "GET" do |f| %>
-  <%= f.label "#{ t("sufia.admin.stats.deposited_form.heading") } #{ t("sufia.admin.stats.deposited_form.start_label") }" %>
-  <input type="date" name="deposit_stats[start_date]" value="<%= @presenter.deposit_stats[:start_date] %>"></input>
-  <%= f.label t("sufia.admin.stats.deposited_form.end_label") %>
-  <input type="date" name="deposit_stats[end_date]" value="<%= @presenter.deposit_stats[:end_date] %>"></input>
-  <%= f.submit "Load Stats" %>
-<%- end %>
-
+<h3>Deposits By Users (<%= @presenter.date_filter_string %>)</h3>
 <ul>
   <% @presenter.depositors.each do |usr| %>
     <li>

@@ -1,36 +1,10 @@
 <div class="stats">
   <h1>Statistics for <%= application_name %>
     <%= Sufia::VERSION %></h1>
-  <br/>
-
-  <%= render "admin/stats/files" %>
-
-  <h3>Top File Formats</h3>
-  <ul>
-    <% @presenter.top_formats.each do |k, v| %>
-      <li><%= k %> <span class="count">(<%= v %>)</span></li>
-    <% end %>
-  </ul>
-
-  <br/>
 
   <h2>Total <%= application_name %> Users:&nbsp; <%= @presenter.users_count %> </h2>
-  <br/>
-
-  <%= render "admin/stats/new_users" %>
-
-  <br/>
-  <h3>Most Active Users (top <%= @presenter.active_users.count %>)</h3>
-  <ul>
-    <% @presenter.active_users.each do |k, v| %>
-      <li>
-        <%= link_to_profile(k) %> <span class="count">(<%= v %>)</span>
-      </li>
-    <% end %>
-    <% if !params[:dep_count] %>
-      <p><%= link_to "View top 20", sufia.admin_stats_path, controller: "stats", dep_count: "20" %> </p>
-    <% end %>
-  </ul>
-
-  <%= render "admin/stats/deposits" %>
+  <hr/>
+  <%= render "admin/stats/stats_by_date" %>
+  <hr/>
+  <%= render "admin/stats/top_data" %>
 </div>

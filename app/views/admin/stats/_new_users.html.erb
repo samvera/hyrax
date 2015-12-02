@@ -1,18 +1,11 @@
-<h3>Newest Users</h3>
-<%= form_for "users_stats", url: sufia.admin_stats_path, method: "GET" do |f| %>
-  <%= f.label "Display users registered: Start" %>
-  <input type="date" name="users_stats[start_date]" value="<%= @presenter.users_stats[:start_date] %>"></input>
-  <%= f.label "end [defaults to now]" %>
-  <input type="date" name="users_stats[end_date]" value="<%= @presenter.users_stats[:end_date] %>"></input>
-  <%= f.submit "Load Stats" %>
-<%- end %>
-
-<%- if @presenter.users_stats[:start_date] %>
-  <div>Total: <%= @presenter.recent_users.count %></div>
+<h3>Newest Users (<%= @presenter.date_filter_string %>)</h3>
+<h4>
+<%- if !@presenter.start_date.blank? %>
+  Total: <%= @presenter.recent_users.count %></div>
 <%- else %>
-  Five most recent users:
+    <%= @presenter.recent_users.count %> most recent users:
 <%- end %>
-
+</h4>
 <ul>
   <% @presenter.recent_users.each do |usr| %>
     <li>
