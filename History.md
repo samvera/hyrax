@@ -1,5 +1,9 @@
 # History of Sufia releases
 
+## HEAD (unreleased)
+
+* Configure minimagick to use posix-spawn instead of popen3 (rake task must be run). [Anna Headley]
+
 ## 6.3.1
 
 * Add configuration allowing select menu on batch upload to upload files to a collection. [E. Lynette Rayle]

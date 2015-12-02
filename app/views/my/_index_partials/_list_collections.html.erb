@@ -23,14 +23,7 @@
   </td>
   <td width="17%" class="text-center"><%= document.create_date %> </td>
   <td width="5%" class="text-center visibility-link">
-      <% if document.registered? %>
-     <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a>
-    <% elsif document.public? %>
-      <span class="label label-success" title="Open Access">Open Access</span></a>
-    <% else %>
-      <span class="label label-danger" title="Private">Private</span></a>
-    <% end %>
-
+    <%= render_visibility_label(document) %>
   </td>
   <td class="text-center">
     <%= render partial:'collection_action_menu', locals: { id: id } %>

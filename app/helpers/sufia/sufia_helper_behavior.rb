@@ -166,7 +166,8 @@ module Sufia
     end
 
     def render_visibility_link(document)
-      link_to render_visibility_label(document), sufia.edit_file_set_path(document, anchor: "permissions_display"),
+      link_to render_visibility_label(document),
+              main_app.edit_curation_concerns_file_set_path(document, anchor: "permissions_display"),
               id: "permission_" + document.id, class: "visibility-link"
     end
 
