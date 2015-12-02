@@ -13,6 +13,6 @@ class GeoNamesResource < ActiveResource::Base
   end
 
   def self.find_location(location)
-    GeoNamesResource.find(:all, params: { q: location, username: "cam156", maxRows: 10 })
+    GeoNamesResource.find(:all, params: { q: location, username: Sufia.config.geonames_username, maxRows: 10 })
   end
 end
