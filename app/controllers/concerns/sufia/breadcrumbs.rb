@@ -29,14 +29,21 @@ module Sufia
       case controller_name
       when 'file_sets'.freeze, 'my/files'.freeze, 'batch_edits'.freeze
         add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
+      when 'stats'.freeze
+        add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
       when 'my/collections'.freeze
         add_breadcrumb I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path
       end
     end
 
     def add_breadcrumb_for_action
-      return unless controller_name == 'file_sets'.freeze && ['edit', 'stats'].include?(action_name)
-      add_breadcrumb I18n.t("sufia.file_set.browse_view"), Rails.application.routes.url_helpers.curation_concerns_file_set_path(params["id"])
+      case controller_name
+      when 'file_sets'.freeze
+        add_breadcrumb I18n.t("sufia.file_set.browse_view"), Rails.application.routes.url_helpers.curation_concerns_file_set_path(params["id"]) if action_name.eql? 'edit'
+      when 'stats'.freeze
+        add_breadcrumb I18n.t("sufia.file_set.browse_view"), Rails.application.routes.url_helpers.curation_concerns_file_set_path(params["id"]) if action_name.eql? 'file'
+        add_breadcrumb I18n.t("sufia.work.browse_view"), Rails.application.routes.url_helpers.curation_concerns_file_set_path(params["id"]) if action_name.eql? 'work'
+      end
     end
   end
 end

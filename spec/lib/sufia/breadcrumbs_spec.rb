@@ -101,9 +101,9 @@ describe Sufia::Breadcrumbs do
       before do
         allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
         allow(crumbs).to receive(:user_signed_in?) { true }
-        allow(crumbs).to receive(:action_name).and_return("stats")
+        allow(crumbs).to receive(:action_name).and_return("file")
         allow(crumbs).to receive(:params).and_return("id" => "abc123")
-        allow(crumbs).to receive(:controller_name).and_return("file_sets")
+        allow(crumbs).to receive(:controller_name).and_return("stats")
       end
 
       specify "the trail goes back to the user's files and the browse view" do
