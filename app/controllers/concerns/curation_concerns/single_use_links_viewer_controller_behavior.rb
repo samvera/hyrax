@@ -41,6 +41,12 @@ module CurationConcerns
 
     protected
 
+      def content_options
+        super.tap do |options|
+          options[:disposition] = 'attachment' if action_name == 'download'
+        end
+      end
+
       # This is called in a before filter. It causes @asset to be set.
       def authorize_download!
         authorize! :read, asset
