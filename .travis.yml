@@ -6,3 +6,11 @@ rvm:
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#projecthydra"
+    template:
+      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
+before_script:
+  - jdk_switcher use oraclejdk8

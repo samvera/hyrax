@@ -10,7 +10,7 @@ Dir.glob('tasks/*.rake').each { |r| import r }
 # This makes it possible to run curation_concerns:jetty:config from here.
 import 'curation_concerns-models/lib/tasks/curation_concerns-models_tasks.rake'
 
-Jettywrapper.hydra_jetty_version = 'v8.3.1'
+Jettywrapper.hydra_jetty_version = 'v8.6.0'
 
 desc 'Run style checker'
 RuboCop::RakeTask.new(:rubocop) do |task|
