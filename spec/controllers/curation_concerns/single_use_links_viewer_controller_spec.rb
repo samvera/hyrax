@@ -32,7 +32,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
       let(:expected_content) { ActiveFedora::Base.find(file.id).original_file.content }
 
       it "and_return http success" do
-        expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'inline', type: 'image/png')
+        expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
         get :download, id: download_link_hash
         expect(response.body).to eq expected_content
         expect(response).to be_success
