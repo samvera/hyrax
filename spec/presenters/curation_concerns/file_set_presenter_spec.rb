@@ -50,6 +50,20 @@ describe CurationConcerns::FileSetPresenter do
     end
   end
 
+  describe "depositor" do
+    it "delegates to the solr_document" do
+      expect(solr_document).to receive(:depositor)
+      presenter.depositor
+    end
+  end
+
+  describe "tags" do
+    it "delegates to the solr_document" do
+      expect(solr_document).to receive(:tags)
+      presenter.tags
+    end
+  end
+
   describe "fetch" do
     it "delegates to the solr_document" do
       expect(solr_document).to receive(:fetch).and_call_original

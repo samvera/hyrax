@@ -21,7 +21,8 @@ module CurationConcerns
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher,
              :language, :date_uploaded, :rights,
-             :embargo_release_date, :lease_expiration_date, to: :solr_document
+             :embargo_release_date, :lease_expiration_date,
+             :depositor, :tags, to: :solr_document
 
     def page_title
       Array(solr_document['label_tesim']).first
