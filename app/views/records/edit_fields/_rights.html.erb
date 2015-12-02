@@ -1,3 +1,4 @@
-<%= f.input :rights, as: :select, collection: RightsService.select_options,
-    input_html: { class: 'form-control', multiple: true }
-  %>
+<%= f.input :rights, as: :select_with_modal_help,
+    collection: RightsService.select_options,
+    input_html: { class: 'form-control', multiple: true } %>
+<%= render "curation_concerns/file_sets/rights_modal" %>
