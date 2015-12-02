@@ -43,24 +43,17 @@ describe CurationConcerns::FileSetPresenter do
     it { is_expected.to eq 'File Set' }
   end
 
-  describe "date_uploaded" do
-    it "delegates to the solr_document" do
-      expect(solr_document).to receive(:date_uploaded)
-      presenter.date_uploaded
+  describe "properties delegated to solr_document" do
+    let(:solr_properties) do
+      ["date_uploaded", "depositor", "tags", "title_or_label",
+       "contributor", "creator", "title", "description", "publisher",
+       "subject", "language", "rights"]
     end
-  end
-
-  describe "depositor" do
     it "delegates to the solr_document" do
-      expect(solr_document).to receive(:depositor)
-      presenter.depositor
-    end
-  end
-
-  describe "tags" do
-    it "delegates to the solr_document" do
-      expect(solr_document).to receive(:tags)
-      presenter.tags
+      solr_properties.each do |property|
+        expect(solr_document).to receive(property.to_sym)
+        presenter.send(property)
+      end
     end
   end
 
