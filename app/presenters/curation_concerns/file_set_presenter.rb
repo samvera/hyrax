@@ -22,7 +22,7 @@ module CurationConcerns
     delegate :title, :description, :creator, :contributor, :subject, :publisher,
              :language, :date_uploaded, :rights,
              :embargo_release_date, :lease_expiration_date,
-             :depositor, :tags, to: :solr_document
+             :depositor, :tags, :title_or_label, to: :solr_document
 
     def page_title
       Array(solr_document['label_tesim']).first
