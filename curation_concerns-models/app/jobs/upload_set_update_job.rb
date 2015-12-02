@@ -10,30 +10,20 @@ class UploadSetUpdateJob < ActiveJob::Base
     @login = login
     @saved = []
     @denied = []
+    @upload_set_id = upload_set_id
 
     titles ||= {}
     attributes = attributes.merge(visibility: visibility)
 
-    upload_set = UploadSet.find_or_create(upload_set_id)
-
     update(upload_set, titles, attributes)
-
-    if denied.empty?
-      unless saved.empty?
-        if CurationConcerns.config.callback.set?(:after_upload_set_update_success)
-          CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set)
-        end
-        return true
-      end
-    else
-      if CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
-        CurationConcerns.config.callback.run(:after_upload_set_update_failure, user, upload_set)
-      end
-      return false
-    end
+    send_user_message
   end
 
   private
+
+    def upload_set
+      @upload_set ||= UploadSet.find_or_create(@upload_set_id)
+    end
 
     def update(upload_set, titles, attributes)
       upload_set.file_sets.each do |file|
@@ -46,6 +36,24 @@ class UploadSetUpdateJob < ActiveJob::Base
       end
 
       upload_set.update(status: ["Complete"])
+    end
+
+    def send_user_success_message
+      return unless CurationConcerns.config.callback.set?(:after_upload_set_update_success)
+      CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set)
+    end
+
+    def send_user_failure_message
+      return unless CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
+      CurationConcerns.config.callback.run(:after_upload_set_update_failure, user, upload_set)
+    end
+
+    def send_user_message
+      if denied.empty?
+        send_user_success_message unless saved.empty?
+      else
+        send_user_failure_message
+      end
     end
 
     def user
