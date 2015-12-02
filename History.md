@@ -1,18 +1,47 @@
 # History of Sufia releases
 
-## HEAD (unreleased)
+## 6.4.0
 
-* Configure minimagick to use posix-spawn instead of popen3 (rake task must be run). [Anna Headley]
-
-## 6.3.1
-
-* Add configuration allowing select menu on batch upload to upload files to a collection. [E. Lynette Rayle]
-* Bump active-fedora version to 9.4 [E. Lynette Rayle]
-* Bump hydra-collections to 5.0.3 [E. Lynette Rayle]
-* Add button 'Upload files' on collection show page which goes to batch upload with collection select menu set to the calling collection [E. Lynette Rayle]
-* Use `sufia.root_path` instead of `root_path` in the navbar and the logo [Randy Coulman]
-* Do not use a hard-coded path to the contact form URL on the terms page. [Randy Coulman]
-* Use `render_visibility_*` helpers everywhere. [Randy Coulman]
+* Remove deprecation warnings [Adam Wead]
+* Update History.md [Michael J. Giarlo]
+* Make geonames username configurable. Closes #1336 [Tonmoy Roy]
+* Install generator should not call generators that duplicate default config values. Fixes #1347 [Michael J. Giarlo]
+* lock collection when uploading files to a collection [E. Lynette Rayle]
+* Pin engine_cart to 0.8 [Justin Coyne]
+* Updates for latest version of rubocop [Justin Coyne]
+* Rubocop fix for Rails/PluralizationGrammar from Hydra Sufia master [mtribone]
+* Fixes the link being wider than the image if the browser window is expanded. In order to just have the link wrap the intrinsic value of the image, switch img-responsive to inline block [mtribone]
+* Linked Project Hydra to projecthydra.org [Dan Kerchner]
+* Refactor BatchUpdateJob and allow overrides [Adam Wead]
+* Updating engine_cart to 0.8.0 [Adam Wead]
+* Refactoring event jobs to remove the continuos copying of code. The base class existed, but had little code.  Instead the code was copied from one job to the new one. In addition there seemed to be two types of events, one with a user, and one with a user and a file, so I created a second base class to allow for the two types. [Carolyn Cole]
+* Update the TOC in the README [Michael J. Giarlo]
+* Update background worker documentation in the README [Michael J. Giarlo]
+* Document how to use resque-pool effectively with Sufia. [Nathan Rogers]
+* Pinning to Fedora 4.4 [Adam Wead]
+* Disentangle shared state and fix issue that was revealed by different AF::Base#where behavior in latest AF. [Adam Wead]
+* Clarify Fedora and Solr versions (broadly) in README [Michael J. Giarlo]
+* Allow override of BatchController with customized BatchUpdateJob [Adam Wead]
+* changed overflow behavior for My Files list to make the dropdown stay visible and play nice with firefox, fixes #1291 [studiozut]
+* Correct my prior update to the changelog [Michael J. Giarlo]
+* Update changelog w/ work going into the next 6.x release [Michael J. Giarlo]
+* Split out generator for use during upgrade [Anna Headley]
+* Configure mini_magick to use posix_spawn instead of open3. [Anna Headley]
+* Use the render_visibility_* helpers where possible [Randy Coulman]
+* Use the Rails path helper for the contact form [Randy Coulman]
+* Use sufia.root_path instead of root_path [Randy Coulman]
+* Reformatting the statistics page to only have one date filter form currently there are 3 forms which are entirely independent and the data on the page is only partially filtered. [Carolyn Cole]
+* Adding csv generation service to create csv formatted GenericFiles [Carolyn Cole]
+* Moving admin statistics logic out of the controller. Specifically leaving the admin stats test alone to prove I did not break the original code [Carolyn Cole]
+* upload files into a collection starting from its show page [E. Lynette Rayle]
+* The Arkivo service sends JSON data in the body of the request, not in the params. [Michael J. Giarlo]
+* Add ability to upload to collection during Batch Upload [E. Lynette Rayle]
+* Allows the developer to configure the frequency of the messages pinging the server to check for user notifications. [Hector Correa]
+* Changed input type to select_with_modal_help to match field on batch edit page - and also render rights_modal [kerchner]
+* Increased font size and removed bold type for better legibility and accessibility [mtribone]
+* Reset contact form on success, fixes #1302 [Adam Wead]
+* Pin to hydra-jetty 8.4.0 until projecthydra/active_fedora#883 is sorted out. [Michael J. Giarlo]
+* Fix styling of the Sort/Per-page Bar in Dashboard Probably broken by f50788613ef2a217457cddb2b6da64db833bd563 [Piotr Hebal]
 
 ## 6.3.0
 
