@@ -36,28 +36,6 @@ module Sufia
       end
     end
 
-    # You can configure blacklight to use this as the thumbnail
-    # example:
-    #   config.index.thumbnail_method = :sufia_thumbnail_tag
-    def sufia_thumbnail_tag(document, options)
-      if document.is_a?(ActiveFedora::Base)
-        case document
-        when Collection
-          collection_thumbnail
-        when GenericWork
-          work_thumbnail
-        else
-          file_thumbnail(document, options)
-        end
-      elsif document.collection?
-        collection_thumbnail
-      elsif document.generic_work?
-        work_thumbnail
-      else
-        file_thumbnail(document, options)
-      end
-    end
-
     # Create a link back to the dashboard screen, keeping the user's facet, query and paging choices intact by using session.
     def link_back_to_dashboard(opts = { label: 'Back to Search' })
       query_params = session[:search] ? session[:search].dup : {}
@@ -190,6 +168,10 @@ module Sufia
       user.respond_to?(:name) ? "#{user.name} (#{user_key})" : user_key
     end
 
+    def collection_thumbnail(_document, _image_options = {}, _url_options = {})
+      content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+    end
+
     private
 
       def search_action_for_dashboard
@@ -205,26 +187,6 @@ module Sufia
         else
           sufia.dashboard_files_path
         end
-      end
-
-      def collection_thumbnail
-        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
-      end
-
-      def work_thumbnail
-        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
-      end
-
-      def file_thumbnail(document, options)
-        path = if document.image? || document.pdf? || document.video? || document.office_document?
-                 download_path document, file: 'thumbnail'
-               elsif document.audio?
-                 "audio.png"
-               else
-                 "default.png"
-               end
-        options[:alt] = ""
-        image_tag path, options
       end
   end
 end
