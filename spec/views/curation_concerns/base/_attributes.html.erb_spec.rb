@@ -4,14 +4,17 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }
   let(:subject)     { 'history' }
+  let(:description) { ['Lorem ipsum lorem ipsum. http://my.link.com'] }
 
   let(:solr_document) { SolrDocument.new(subject_tesim: subject,
                                          contributor_tesim: contributor,
-                                         creator_tesim: creator) }
+                                         creator_tesim: creator,
+                                         description_tesim: description) }
   let(:ability) { nil }
   let(:presenter) do
     CurationConcerns::WorkShowPresenter.new(solr_document, ability)
   end
+  let(:doc) { Nokogiri::HTML(rendered) }
 
   before do
     allow(view).to receive(:dom_class) { '' }
@@ -24,5 +27,9 @@ describe 'curation_concerns/base/_attributes.html.erb' do
     expect(rendered).to have_link(creator, href: catalog_index_path(search_field: 'creator', q: creator))
     expect(rendered).to have_link(contributor, href: catalog_index_path(search_field: 'contributor', q: contributor))
     expect(rendered).to have_link(subject, href: catalog_index_path(search_field: 'subject', q: subject))
+  end
+  it 'shows links in the description' do
+    a1 = doc.xpath("//li[@class='attribute description']/a").text
+    expect(a1).to start_with 'http://my.link.com'
   end
 end

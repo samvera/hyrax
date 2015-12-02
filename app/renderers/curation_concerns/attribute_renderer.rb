@@ -1,7 +1,11 @@
+require "rails_autolink/helpers"
+
 module CurationConcerns
   class AttributeRenderer
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TranslationHelper
+    include ActionView::Helpers::TextHelper
+
     attr_reader :field, :values, :options
 
     # @param [Symbol] field
@@ -47,8 +51,11 @@ module CurationConcerns
       end
 
       def li_value(value)
-        link_to_if(options[:catalog_search_link], ERB::Util.h(value),
-                   search_path(value))
+        if options[:catalog_search_link]
+          link_to(ERB::Util.h(value), search_path(value))
+        else
+          auto_link(value)
+        end
       end
 
       def search_path(value)
