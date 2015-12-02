@@ -1,15 +1,20 @@
+# A specific job to log a file deletion to a user's activity stream
+#
+# @attr_reader deleted_work_id The id of the work that has been deleted by the user
 class ContentDeleteEventJob < EventJob
-  def perform(id, depositor_id)
-    action = "User #{link_to_profile depositor_id} has deleted file '#{id}'"
-    timestamp = Time.now.to_i
-    depositor = User.find_by_user_key(depositor_id)
-    # Create the event
-    event = depositor.create_event(action, timestamp)
-    # Log the event to the depositor's profile stream
+  attr_reader :deleted_work_id
+
+  def perform(deleted_work_id, depositor_id)
+    @deleted_work_id = deleted_work_id
+    super(depositor_id)
+  end
+
+  def action
+    @action ||= "User #{link_to_profile depositor_id} has deleted file '#{deleted_work_id}'"
+  end
+
+  # override to log the event to the users profile stream instead of the user's stream
+  def log_user_event
     depositor.log_profile_event(event)
-    # Fan out the event to all followers
-    depositor.followers.each do |follower|
-      follower.log_event(event)
-    end
   end
 end

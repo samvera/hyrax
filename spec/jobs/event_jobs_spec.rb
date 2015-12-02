@@ -1,19 +1,11 @@
 require 'spec_helper'
 
 describe 'event jobs' do
-  before do
-    @user = FactoryGirl.find_or_create(:jill)
-    @another_user = FactoryGirl.find_or_create(:archivist)
-    @third_user = FactoryGirl.find_or_create(:curator)
-    @fs = FileSet.new(id: 'test-123')
-    @fs.apply_depositor_metadata(@user)
-    @fs.title = ['Hamlet']
-    @fs.save
-    @gw = GenericWork.new(id: 'test-456')
-    @gw.apply_depositor_metadata(@user)
-    @gw.title = ['BethsMac']
-    @gw.save
-  end
+  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:another_user) { FactoryGirl.find_or_create(:archivist) }
+  let(:third_user) { FactoryGirl.find_or_create(:curator) }
+  let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
+  let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
   after do
     $redis.keys('events:*').each { |key| $redis.del key }
     $redis.keys('User:*').each { |key| $redis.del key }
@@ -22,186 +14,186 @@ describe 'event jobs' do
   end
   it "logs user edit profile events" do
     # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
-    @another_user.follow(@user)
-    count_user = @user.events.length
-    count_another = @another_user.events.length
+    another_user.follow(user)
+    count_user = user.events.length
+    count_another = another_user.events.length
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has edited his or her profile', timestamp: '1' }
-    UserEditProfileEventJob.perform_now(@user.user_key)
-    expect(@user.events.length).to eq(count_user + 1)
-    expect(@user.events.first).to eq(event)
-    expect(@another_user.events.length).to eq(count_another + 1)
-    expect(@another_user.events.first).to eq(event)
+    UserEditProfileEventJob.perform_now(user.user_key)
+    expect(user.events.length).to eq(count_user + 1)
+    expect(user.events.first).to eq(event)
+    expect(another_user.events.length).to eq(count_another + 1)
+    expect(another_user.events.first).to eq(event)
   end
   it "logs user follow events" do
     # UserFollow should log the event to the follower's dashboard, the followee's dashboard, and followers' dashboards
-    @third_user.follow(@user)
-    expect(@user.events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
+    third_user.follow(user)
+    expect(user.events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> is now following <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
-    UserFollowEventJob.perform_now(@user.user_key, @another_user.user_key)
-    expect(@user.events.length).to eq(1)
-    expect(@user.events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
+    UserFollowEventJob.perform_now(user.user_key, another_user.user_key)
+    expect(user.events.length).to eq(1)
+    expect(user.events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
   end
   it "logs user unfollow events" do
     # UserUnfollow should log the event to the unfollower's dashboard, the unfollowee's dashboard, and followers' dashboards
-    @third_user.follow(@user)
-    @user.follow(@another_user)
-    expect(@user.events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
+    third_user.follow(user)
+    user.follow(another_user)
+    expect(user.events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
     event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has unfollowed <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
-    UserUnfollowEventJob.perform_now(@user.user_key, @another_user.user_key)
-    expect(@user.events.length).to eq(1)
-    expect(@user.events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
+    UserUnfollowEventJob.perform_now(user.user_key, another_user.user_key)
+    expect(user.events.length).to eq(1)
+    expect(user.events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
   end
   it "logs content deposit events" do
     # ContentDeposit should log the event to the depositor's profile, followers' dashboards, and the FS
-    @another_user.follow(@user)
-    @third_user.follow(@user)
+    another_user.follow(user)
+    third_user.follow(user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
-    expect(@fs.events.length).to eq(0)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
+    expect(file_set.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
-    ContentDepositEventJob.perform_now('test-123', @user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
-    expect(@fs.events.length).to eq(1)
-    expect(@fs.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has deposited <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' }
+    ContentDepositEventJob.perform_now(file_set.id, user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
+    expect(file_set.events.length).to eq(1)
+    expect(file_set.events.first).to eq(event)
   end
   it "logs content depositor change events" do
     # ContentDepositorChange should log the event to the proxy depositor's profile, the depositor's dashboard, followers' dashboards, and the FS
-    @third_user.follow(@another_user)
+    third_user.follow(another_user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has transferred <a href=\"/concern/generic_works/#{generic_work.id}\">BethsMac</a> to user <a href=\"/users/archivist1@example-dot-com\">archivist1@example.com</a>", timestamp: '1' }
     allow(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/concern/generic_works/test-456">BethsMac</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
-    ContentDepositorChangeEventJob.perform_now('test-456', @another_user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
-    expect(@gw.events.length).to eq(1)
-    expect(@gw.events.first).to eq(event)
+    ContentDepositorChangeEventJob.perform_now(generic_work.id, another_user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
+    expect(generic_work.events.length).to eq(1)
+    expect(generic_work.events.first).to eq(event)
   end
   it "logs content update events" do
     # ContentUpdate should log the event to the depositor's profile, followers' dashboards, and the FS
-    @another_user.follow(@user)
-    @third_user.follow(@user)
+    another_user.follow(user)
+    third_user.follow(user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
-    expect(@fs.events.length).to eq(0)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
+    expect(file_set.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
-    ContentUpdateEventJob.perform_now('test-123', @user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
-    expect(@fs.events.length).to eq(1)
-    expect(@fs.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has updated <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' }
+    ContentUpdateEventJob.perform_now(file_set.id, user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
+    expect(file_set.events.length).to eq(1)
+    expect(file_set.events.first).to eq(event)
   end
   it "logs content new version events" do
     # ContentNewVersion should log the event to the depositor's profile, followers' dashboards, and the FS
-    @another_user.follow(@user)
-    @third_user.follow(@user)
+    another_user.follow(user)
+    third_user.follow(user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
-    expect(@fs.events.length).to eq(0)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
+    expect(file_set.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
-    ContentNewVersionEventJob.perform_now('test-123', @user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
-    expect(@fs.events.length).to eq(1)
-    expect(@fs.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has added a new version of <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' }
+    ContentNewVersionEventJob.perform_now(file_set.id, user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
+    expect(file_set.events.length).to eq(1)
+    expect(file_set.events.first).to eq(event)
   end
   it "logs content restored version events" do
     # ContentRestoredVersion should log the event to the depositor's profile, followers' dashboards, and the FS
-    @another_user.follow(@user)
-    @third_user.follow(@user)
+    another_user.follow(user)
+    third_user.follow(user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
-    expect(@fs.events.length).to eq(0)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
+    expect(file_set.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: '1' }
-    ContentRestoredVersionEventJob.perform_now('test-123', @user.user_key, 'content.0')
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
-    expect(@fs.events.length).to eq(1)
-    expect(@fs.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has restored a version 'content.0' of <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' }
+    ContentRestoredVersionEventJob.perform_now(file_set.id, user.user_key, 'content.0')
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
+    expect(file_set.events.length).to eq(1)
+    expect(file_set.events.first).to eq(event)
   end
   it "logs content delete events" do
     # ContentDelete should log the event to the depositor's profile and followers' dashboards
-    @another_user.follow(@user)
-    @third_user.follow(@user)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
+    another_user.follow(user)
+    third_user.follow(user)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'test-123\'', timestamp: '1' }
-    ContentDeleteEventJob.perform_now('test-123', @user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(1)
-    expect(@another_user.events.first).to eq(event)
-    expect(@third_user.events.length).to eq(1)
-    expect(@third_user.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has deleted file '#{file_set.id}'", timestamp: '1' }
+    ContentDeleteEventJob.perform_now(file_set.id, user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(1)
+    expect(another_user.events.first).to eq(event)
+    expect(third_user.events.length).to eq(1)
+    expect(third_user.events.first).to eq(event)
   end
   it "does not log content-related jobs to followers who lack access" do
     # No Content-related eventjobs should log an event to a follower who does not have access to the FS
-    @another_user.follow(@user)
-    @third_user.follow(@user)
-    expect(@user.profile_events.length).to eq(0)
-    expect(@another_user.events.length).to eq(0)
-    expect(@third_user.events.length).to eq(0)
-    expect(@fs.events.length).to eq(0)
+    another_user.follow(user)
+    third_user.follow(user)
+    expect(user.profile_events.length).to eq(0)
+    expect(another_user.events.length).to eq(0)
+    expect(third_user.events.length).to eq(0)
+    expect(file_set.events.length).to eq(0)
     @now = Time.now
     expect(Time).to receive(:now).at_least(:once).and_return(@now)
-    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/concern/file_sets/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
-    ContentUpdateEventJob.perform_now('test-123', @user.user_key)
-    expect(@user.profile_events.length).to eq(1)
-    expect(@user.profile_events.first).to eq(event)
-    expect(@another_user.events.length).to eq(0)
-    expect(@another_user.events.first).to be_nil
-    expect(@third_user.events.length).to eq(0)
-    expect(@third_user.events.first).to be_nil
-    expect(@fs.events.length).to eq(1)
-    expect(@fs.events.first).to eq(event)
+    event = { action: "User <a href=\"/users/jilluser@example-dot-com\">jilluser@example.com</a> has updated <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: @now.to_i.to_s }
+    ContentUpdateEventJob.perform_now(file_set.id, user.user_key)
+    expect(user.profile_events.length).to eq(1)
+    expect(user.profile_events.first).to eq(event)
+    expect(another_user.events.length).to eq(0)
+    expect(another_user.events.first).to be_nil
+    expect(third_user.events.length).to eq(0)
+    expect(third_user.events.first).to be_nil
+    expect(file_set.events.length).to eq(1)
+    expect(file_set.events.first).to eq(event)
   end
 end
