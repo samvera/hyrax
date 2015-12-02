@@ -130,9 +130,6 @@ describe Sufia::Arkivo::Actor do
 
   describe '#destroy_work' do
     let(:work) { create(:generic_work, user: user) }
-
-    it { is_expected.to respond_to(:destroy_work) }
-
     it 'deletes the file' do
       expect {
         subject.destroy_work(work)
