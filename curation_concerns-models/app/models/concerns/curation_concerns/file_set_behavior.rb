@@ -21,10 +21,7 @@ module CurationConcerns
 
     included do
       attr_accessor :file
-    end
-
-    def human_readable_type
-      self.class.to_s.demodulize.titleize
+      self.human_readable_type = 'File'
     end
 
     def representative_id
