@@ -3,7 +3,7 @@ module CurationConcerns::ParentContainer
 
   included do
     helper_method :parent
-    # before_filter :authorize_edit_parent_rights!, except: [:show]  # Not sure we actually want this enforced any more (was originally in worthwhile), especially since GenericFiles and GenericWorks (which are PCDM::Objects)can belong to multiple parents
+    # before_filter :authorize_edit_parent_rights!, except: [:show]  # Not sure we actually want this enforced any more (was originally in worthwhile), especially since FileSets and GenericWorks (which are PCDM::Objects) can belong to multiple parents
   end
 
   # TODO: this is slow, refactor to return a Presenter (fetch from solr)

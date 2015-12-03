@@ -1,6 +1,6 @@
 module CurationConcerns
   class ParentService
-    # @param [String] the id of a child GenericFile
+    # @param [String] the id of a child FileSet
     # @return [ActiveFedora::Base] the parent object
     def self.parent_for(id)
       ids = ordered_by_ids(id)
