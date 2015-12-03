@@ -46,6 +46,7 @@ describe CurationConcerns::GenericWorksController do
     context 'my work' do
       it 'shows me the page' do
         get :new
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to be_success
       end
     end

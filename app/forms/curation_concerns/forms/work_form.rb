@@ -4,6 +4,10 @@ module CurationConcerns
       include HydraEditor::Form
       attr_accessor :current_ability
 
+      delegate :human_readable_type, :open_access?, :authenticated_only_access?,
+               :open_access_with_embargo_release_date?, :private_access?,
+               :embargo_release_date, :lease_expiration_date, :member_ids, to: :model
+
       self.terms = [:title, :creator, :contributor, :description,
                     :subject, :publisher, :source, :language,
                     :representative_id, :thumbnail_id, :rights, :files,
@@ -16,6 +20,12 @@ module CurationConcerns
       def initialize(model, current_ability)
         @current_ability = current_ability
         super(model)
+      end
+
+      # The value for embargo_relase_date and lease_expiration_date should not
+      # be initialized to empty string
+      def initialize_field(key)
+        super unless [:embargo_release_date, :lease_expiration_date].include?(key)
       end
 
       # The possible values for the representative_id dropdown

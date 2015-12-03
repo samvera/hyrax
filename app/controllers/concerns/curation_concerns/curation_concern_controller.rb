@@ -26,6 +26,7 @@ module CurationConcerns::CurationConcernController
   end
 
   def new
+    build_form
   end
 
   def create
@@ -63,20 +64,8 @@ module CurationConcerns::CurationConcernController
     end
   end
 
-  # Gives the class of the show presenter. Override this if you want
-  # to use a different presenter.
-  def show_presenter
-    CurationConcerns::WorkShowPresenter
-  end
-
-  # Gives the class of the form. Override this if you want
-  # to use a different form.
-  def form_class
-    CurationConcerns.const_get("#{self.class.curation_concern_type.to_s.demodulize}Form")
-  end
-
   def edit
-    @form = form_class.new(curation_concern, current_ability)
+    build_form
   end
 
   def update
@@ -103,6 +92,22 @@ module CurationConcerns::CurationConcernController
   attr_writer :actor
 
   protected
+
+    # Gives the class of the show presenter. Override this if you want
+    # to use a different presenter.
+    def show_presenter
+      CurationConcerns::WorkShowPresenter
+    end
+
+    # Gives the class of the form. Override this if you want
+    # to use a different form.
+    def form_class
+      CurationConcerns.const_get("#{self.class.curation_concern_type.to_s.demodulize}Form")
+    end
+
+    def build_form
+      @form = form_class.new(curation_concern, current_ability)
+    end
 
     def actor
       @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user, attributes_for_actor)
