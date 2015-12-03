@@ -17,17 +17,17 @@ module CurationConcerns
       end
 
       # Returns the first parent object
-      # This is a hack to handle things like GenericFiles inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
+      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
       def parent
         in_objects.first
       end
 
       # Returns the id of first parent object
-      # This is a hack to handle things like GenericFiles inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
+      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
       delegate :id, to: :parent, prefix: true
 
       # Files with sibling relationships
-      # Returns all GenericFiles aggregated by any of the GenericWorks that aggregate the current object
+      # Returns all FileSets aggregated by any of the GenericWorks that aggregate the current object
       def related_files
         generic_works = self.generic_works
         return [] if generic_works.empty?

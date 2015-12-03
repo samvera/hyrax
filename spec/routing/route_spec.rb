@@ -47,7 +47,7 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'GenericFile' do
+  describe 'FileSet' do
     it 'routes to create' do
       expect(post: 'concern/container/1/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create', parent_id: '1')
     end
