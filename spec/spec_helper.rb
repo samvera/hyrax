@@ -10,7 +10,10 @@ require 'database_cleaner'
 require 'engine_cart'
 EngineCart.load_application!
 require 'devise'
+require 'mida'
 
+require 'rspec/matchers'
+require 'equivalent-xml/rspec_matchers'
 require 'rspec/its'
 require 'rspec/rails'
 require 'rspec/active_model/mocks'

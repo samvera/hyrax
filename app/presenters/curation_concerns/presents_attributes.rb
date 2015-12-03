@@ -21,5 +21,21 @@ module CurationConcerns
     def permission_badge_class
       PermissionBadge
     end
+
+    def display_microdata?
+      CurationConcerns.config.display_microdata
+    end
+
+    def microdata_type_to_html
+      return "" unless display_microdata?
+      value = I18n.t(microdata_type_key, default: CurationConcerns.config.microdata_default_type)
+      " itemscope itemtype=\"#{value}\"".html_safe
+    end
+
+    private
+
+      def microdata_type_key
+        "curation_concerns.schema_org.resource_type.#{human_readable_type}"
+      end
   end
 end

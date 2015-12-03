@@ -29,7 +29,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
     expect(rendered).to have_link(subject, href: catalog_index_path(search_field: 'subject', q: subject))
   end
   it 'shows links in the description' do
-    a1 = doc.xpath("//li[@class='attribute description']/a").text
+    a1 = doc.xpath("//li[@class='attribute description']/span/a").text
     expect(a1).to start_with 'http://my.link.com'
   end
 end

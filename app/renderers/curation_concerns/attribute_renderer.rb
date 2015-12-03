@@ -5,6 +5,7 @@ module CurationConcerns
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TranslationHelper
     include ActionView::Helpers::TextHelper
+    include ConfiguredMicrodata
 
     attr_reader :field, :values, :options
 
@@ -23,8 +24,9 @@ module CurationConcerns
 
       return markup if !values.present? && !options[:include_empty]
       markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
+      attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
       Array(values).each do |value|
-        markup << %(<li class="attribute #{field}">#{attribute_value_to_html(value)}</li>\n)
+        markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value)}</li>"
       end
       markup << %(</ul></td></tr>)
       markup.html_safe
@@ -42,8 +44,17 @@ module CurationConcerns
         if field == :rights
           rights_attribute_to_html(value)
         else
-          li_value(value)
+          "<span#{html_attributes(microdata_value_attributes(field))}>#{li_value(value)}</span>"
         end
+      end
+
+      def html_attributes(attributes)
+        buffer = ""
+        attributes.each do |k, v|
+          buffer << " #{k}"
+          buffer << %(="#{v}") unless v.blank?
+        end
+        buffer
       end
 
       def search_field

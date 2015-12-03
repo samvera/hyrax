@@ -1,4 +1,4 @@
-<table class="table table-striped <%= dom_class(@presenter) %> attributes">
+<table class="table table-striped <%= dom_class(@presenter) %> attributes" <%= @presenter.microdata_type_to_html %>>
   <caption class="table-heading"><h2>Attributes</h2></caption>
   <thead>
     <tr><th>Attribute Name</th><th>Values</th></tr>
