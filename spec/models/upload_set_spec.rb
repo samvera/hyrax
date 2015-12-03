@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe UploadSet do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   let(:upload_set) { described_class.create(title: ["test collection"]) }
   subject { upload_set }
 

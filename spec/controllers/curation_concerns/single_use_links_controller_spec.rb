@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::SingleUseLinksController, type: :controller do
   routes { CurationConcerns::Engine.routes }
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   let(:file) do
     FileSet.create do |file|
@@ -38,7 +38,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
   describe "logged in user without edit permission" do
     before do
-      @other_user = FactoryGirl.find_or_create(:archivist)
+      @other_user = create(:user)
       file.read_users << @other_user
       file.save
       sign_in @other_user
