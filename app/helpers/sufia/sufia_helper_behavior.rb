@@ -1,5 +1,7 @@
 module Sufia
   module SufiaHelperBehavior
+    include Sufia::CitationsBehavior
+
     def orcid_label(style_class = '')
       "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end
