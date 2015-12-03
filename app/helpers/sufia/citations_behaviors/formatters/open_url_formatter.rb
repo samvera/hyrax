@@ -23,7 +23,7 @@ module Sufia
           field_map.each do |element, kev|
             values = work.send(element)
             next if values.blank? || values.first.nil?
-            values.each do |value|
+            Array(values).each do |value|
               export_text << "rft.#{kev}=#{CGI.escape(value.to_s)}"
             end
           end
