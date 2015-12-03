@@ -5,6 +5,7 @@ module Sufia
     include Hydra::Works::MimeTypes
     include CurationConcerns::Permissions::Readable
     include Sufia::SolrDocument::Export
+    include Sufia::SolrDocument::Characterization
 
     # Add a schema.org itemtype
     def itemtype

@@ -1,5 +1,7 @@
 module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
+    include Sufia::CharacterizationBehavior
+
     delegate :depositor, :tag, :date_created, to: :solr_document
 
     def tweeter
