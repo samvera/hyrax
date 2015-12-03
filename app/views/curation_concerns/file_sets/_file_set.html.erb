@@ -1,7 +1,7 @@
 <li>
   <h2>
-    <%= link_to file_set.title_or_label, sufia.file_set_path(file_set) %>
-    <small>[<%= link_to 'Download', sufia.download_path(file_set), target: '_new' %>]</small>
+    <%= link_to file_set.title_or_label, main_app.curation_concerns_file_set_path(file_set) %>
+    <small>[<%= link_to 'Download', main_app.download_path(file_set), target: '_new' %>]</small>
   </h2>
   <div class="row">
     <div class="col-sm-3">
