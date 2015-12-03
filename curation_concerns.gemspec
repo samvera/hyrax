@@ -20,9 +20,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'hydra-head', '~> 9.0'
-  spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
+  spec.add_dependency "breadcrumbs_on_rails", "~> 2.3"
   spec.add_dependency "jquery-ui-rails"
-  spec.add_dependency "simple_form", '~> 3.1.0'
+  spec.add_dependency "simple_form", '~> 3.1'
   spec.add_dependency 'curation_concerns-models', version
   spec.add_dependency 'hydra-editor', '~> 1.1'
   spec.add_dependency 'blacklight_advanced_search', ['>= 5.1.4', '< 6.0']
