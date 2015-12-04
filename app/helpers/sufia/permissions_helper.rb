@@ -11,8 +11,10 @@ module Sufia
     private
 
       def help_link(file, title, aria_label)
-        link_to help_icon, '#', rel: 'popover', 'data-content': capture_content(file),
-                                'data-original-title': title, 'aria-label': aria_label
+        link_to help_icon, '#', data: { toggle: 'popover',
+                                        content: capture_content(file),
+                                        'original-title': title },
+                                'aria-label': aria_label
       end
 
       def capture_content(file)

@@ -1,4 +1,6 @@
-$("#notify_link").html("<%= escape_javascript(render partial: "notify_number")  %>");
+$("#notify_link").html("<%= escape_javascript(render partial: "notify_number") %>");
+<%# remove the icon that indicates the upload sets is waiting for background
+    processing once the process has completed %>
 <% @upload_sets.each do |upload_set|%>
-  $(".<%=upload_set%>").attr('class', '');;
+  $(".<%= upload_set %>").attr('class', '');
 <% end %>

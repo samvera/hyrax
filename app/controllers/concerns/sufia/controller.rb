@@ -28,7 +28,8 @@ module Sufia::Controller
     return if action_name == "index" && controller_name == "mailbox"
     return unless user_signed_in?
     @notify_number = current_user.mailbox.inbox(unread: true).count
-    @upload_sets = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/, 1] }.select { |val| !val.blank? }
+    # Extract the ids of the upload sets that have completed batch processing
+    @upload_sets = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|data-toggle=)(.*)/, 1] }.select { |val| !val.blank? }
   end
 
   # Override Devise method to redirect to dashboard after signing in

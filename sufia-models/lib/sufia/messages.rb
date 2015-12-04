@@ -40,7 +40,7 @@ module Sufia
     end
 
     # Double-quotes are replaced with single ones so this list can be included in a data block. Ex:
-    #   <a href="#" data-content="<a href='#'>embedded link</a>" rel="popover">Click me</a>
+    #   <a href="#" data-content="<a href='#'>embedded link</a>" data-toggle="popover">Click me</a>
     def file_list(files)
       files.map { |fs| link_to_file(fs) }.join(', ').tr("\"", "'")
     end
@@ -53,14 +53,16 @@ module Sufia
 
       def success_link(files)
         link_to I18n.t("sufia.messages.success.multiple.link"), "#",
-                rel: "popover",
-                data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.success.title") }
+                data: { toggle: "popover",
+                        content: file_list(files).html_safe,
+                        title: I18n.t("sufia.messages.success.title") }
       end
 
       def failure_link(files)
         link_to I18n.t("sufia.messages.failure.multiple.link"), "#",
-                rel: "popover",
-                data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.failure.title") }
+                data: { toggle: "popover",
+                        content: file_list(files).html_safe,
+                        title: I18n.t("sufia.messages.failure.title") }
       end
   end
 end
