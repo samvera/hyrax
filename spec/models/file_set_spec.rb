@@ -389,7 +389,7 @@ describe FileSet do
     end
 
     it 'has human readable type' do
-      expect(subject.to_solr.fetch('human_readable_type_tesim')).to eq 'File Set'
+      expect(subject.to_solr.fetch('human_readable_type_tesim')).to eq 'File'
     end
   end
 
