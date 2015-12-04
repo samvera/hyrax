@@ -11,10 +11,7 @@
         <h2 id="extraFieldsModal_<%=name %>_Label">Additional <%= label %>(s)</h2>
       </div>
       <div class="modal-body">
-          <% values[start..values.length].each do |value| %>
-             <% next if value.empty? %>
-             <%= "#{value.truncate(250)}" %><br />
-          <% end %>
+        <%= values.join("<br />").html_safe %>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">Close</button>
