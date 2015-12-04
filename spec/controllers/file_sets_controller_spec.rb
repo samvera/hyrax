@@ -190,87 +190,57 @@ describe CurationConcerns::FileSetsController do
       let(:batch) { UploadSet.create }
       let(:upload_set_id) { batch.id }
 
-      before do
-        Sufia.config.enable_local_ingest = true
-        FileUtils.mkdir_p([File.join(file_set_upload_directory, "import/files"), File.join(file_set_upload_directory, "import/metadata")])
-        FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), file_set_upload_directory)
-        FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), file_set_upload_directory)
-        FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(file_set_upload_directory, "import/metadata"))
-        FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(file_set_upload_directory, "import/files"))
-        FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(file_set_upload_directory, "import/files"))
-      end
-
-      after do
-        Sufia.config.enable_local_ingest = false
-      end
-
       context "when User model defines a directory path" do
         before do
+          Sufia.config.enable_local_ingest = true
+          FileUtils.mkdir_p([File.join(file_set_upload_directory, "import/files"), File.join(file_set_upload_directory, "import/metadata")])
+          FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), file_set_upload_directory)
+          FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), file_set_upload_directory)
+          FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(file_set_upload_directory, "import/metadata"))
+          FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(file_set_upload_directory, "import/files"))
+          FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(file_set_upload_directory, "import/files"))
+
           allow_any_instance_of(User).to receive(:directory).and_return(file_set_upload_directory)
+        end
+
+        after do
+          Sufia.config.enable_local_ingest = false
+          FileUtils.remove_dir(File.join(file_set_upload_directory, "import/files"), true)
+          FileUtils.remove_dir(File.join(file_set_upload_directory, "import/metadata"), true)
         end
 
         context "without a parent work id" do
           it "ingests files from the filesystem" do
-            skip "Creating a FileSet without a parent work is not yet supported"
-            expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"] },
-                            upload_set_id: upload_set_id
-            }.to change(FileSet, :count).by(2)
+            skip "Creating a FileSet without a parent work is not yet supported (no route)"
+
+            expect_any_instance_of(Sufia::IngestLocalFileService)
+              .to receive(:ingest_local_file)
+              .with(["world.png", "image.jpg"], nil, upload_set_id)
+
+            post :create, file_set: { local_file: ["world.png", "image.jpg"] }, upload_set_id: upload_set_id
             expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
-            # These files should have been moved out of the upload directory
-            expect(File).not_to exist("#{file_set_upload_directory}/image.jpg")
-            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-            # And into the storage directory
-            files = UploadSet.find(upload_set_id).file_sets
-            expect(files.first.label).to eq('world.png')
-            expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
           end
 
           it "ingests redirect to another location" do
-            skip "Creating a FileSet without a parent work is not yet supported"
+            skip "Creating a FileSet without a parent work is not yet supported (no route)"
+
+            expect_any_instance_of(Sufia::IngestLocalFileService)
+              .to receive(:ingest_local_file)
+              .with(["world.png"], nil, upload_set_id)
+
             expect(described_class).to receive(:upload_complete_path).and_return(file_set_url)
-            expect {
-              post :create, file_set: { local_file: ["world.png"] },
-                            upload_set_id: upload_set_id
-            }.to change(FileSet, :count).by(1)
+            post :create, file_set: { local_file: ["world.png"] }, upload_set_id: upload_set_id
             expect(response).to redirect_to file_set_url
-            # These files should have been moved out of the upload directory
-            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-            # And into the storage directory
-            files = UploadSet.find(upload_set_id).file_sets
-            expect(files.first.label).to eq 'world.png'
           end
 
           it "ingests directories from the filesystem" do
-            skip "Creating a FileSet without a parent work is not yet supported"
-            expect {
-              post :create, file_set: { local_file: ["world.png", "import"] },
-                            upload_set_id: upload_set_id
-            }.to change(FileSet, :count).by(4)
-            expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(upload_set_id)
-            # These files should have been moved out of the upload directory
-            expect(File).not_to exist("#{file_set_upload_directory}/import/files/icons.zip")
-            expect(File).not_to exist("#{file_set_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
-            expect(File).not_to exist("#{file_set_upload_directory}/world.png")
-            # And into the storage directory
-            files = UploadSet.find(upload_set_id).file_sets
-            file_labels = files.map(&:label)
-            expect(file_labels).to include 'world.png'
-            # TODO: use files.select once projecthydra/active_fedora#609 is fixed
-            ['icons.zip', 'Example.ogg'].each do |filename|
-              expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
-            end
-            expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
-          end
+            skip "Creating a FileSet without a parent work is not yet supported (no route)"
 
-          it "creates the FileSet" do
-            skip "Creating a FileSet without a parent work is not yet supported"
-            expect {
-              post :create, file_set: { local_file: ["world.png", "image.jpg"] },
-                            upload_set_id: upload_set_id
-            }.to change(FileSet, :count).by(2)
-            created_files = FileSet.all
-            expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
+            expect_any_instance_of(Sufia::IngestLocalFileService)
+              .to receive(:ingest_local_file)
+              .with(["world.png", "import"], nil, upload_set_id)
+
+            post :create, file_set: { local_file: ["world.png", "import"] }, upload_set_id: upload_set_id
           end
         end
 
