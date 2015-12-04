@@ -31,24 +31,51 @@ describe Sufia::IngestLocalFileService do
 
   describe "#ingest_local_file" do
     subject { described_class.new(user) }
+    let(:actor) { CurationConcerns::FileSetActor.new(nil, nil) }
 
     it "creates generic files for each file passed in" do
-      expect {
-        subject.ingest_local_file(files, work.id, upload_set_id)
-      }.to change(FileSet, :count).by(2)
-      created_files = FileSet.all
-      created_files.each { |f| expect(f.generic_works).to include work }
+      # no need to save the files to Fedora we just want to know they were created
+      allow_any_instance_of(FileSet).to receive(:save!).and_return(true)
+
+      # allow random FileSets to be created
+      allow(FileSet).to receive(:new).with({}).and_call_original
+
+      # expect each file to be created
+      expect(FileSet).to receive(:new).with(label: "world.png").and_call_original
+      expect(FileSet).to receive(:new).with(label: "image.jpg").and_call_original
+
+      # expect metadata to be applied to each file
+      allow(CurationConcerns::FileSetActor).to receive(:new).and_return(actor)
+      expect(actor).to receive(:create_metadata).twice
+
+      # expect each file to be ingested
+      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "world.png", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "image.jpg", user.user_key)
+      subject.ingest_local_file(files, work.id, upload_set_id)
     end
 
     it "processes files in subdirectories" do
-      expect {
-        subject.ingest_local_file(files_and_directories, work.id, upload_set_id)
-      }.to change(FileSet, :count).by(3)
-      expected_titles = ['dublin_core_rdf_descMetadata.nt', 'icons.zip', 'Example.ogg']
-      created_files = FileSet.all
-      created_files.each do |f|
-        expect(expected_titles).to include f.title.first
-      end
+      # no need to save the files to Fedora we just want to know they were created
+      allow_any_instance_of(FileSet).to receive(:save!).and_return(true)
+
+      # allow random FileSets to be created
+      allow(FileSet).to receive(:new).with({}).and_call_original
+
+      # expect each file to be created
+      expect(FileSet).to receive(:new).with(label: "icons.zip").and_call_original
+      expect(FileSet).to receive(:new).with(label: "Example.ogg").and_call_original
+      expect(FileSet).to receive(:new).with(label: "dublin_core_rdf_descMetadata.nt").and_call_original
+
+      # expect metadata to be applied to each file
+      allow(CurationConcerns::FileSetActor).to receive(:new).and_return(actor)
+      expect(actor).to receive(:create_metadata).exactly(3).times
+
+      # expect each file to be ingested
+      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/files/icons.zip", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/files/Example.ogg", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user.user_key)
+
+      subject.ingest_local_file(files_and_directories, work.id, upload_set_id)
     end
   end
 
