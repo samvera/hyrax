@@ -23,7 +23,7 @@ And then execute:
 
     $ bundle install
 
-Then:
+Then run the install generator.  You will be prompted if you want to overwrite the default `app/controllers/catalog_controller.rb`, to which you should type `Y` (yes). If you don't want to be prompted on overwrite, you may run the generator with the `-f` (force) option.
 
     $ rails generate curation_concerns:install
     $ rake db:migrate
