@@ -1,8 +1,5 @@
 function batch_edit_init () {
 
-    // initialize popover helpers
-    $("a[rel=popover]").popover({ html: true });
-
     function deserialize(Params) {
         var Data = Params.split("&");
         var i = Data.length;

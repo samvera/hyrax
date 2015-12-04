@@ -108,7 +108,10 @@ Blacklight.onLoad(function() {
     });
   };
 
-  $("a[rel=popover]").click(function() { return false;});
+  // initialize popover helpers
+  $("a[data-toggle=popover]").popover({ html: true })
+                               .click(function() { return false; });
+
 
   /*
    * facets lists

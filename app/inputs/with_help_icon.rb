@@ -6,8 +6,10 @@ module WithHelpIcon
   protected
 
     def link_to_help
-      template.link_to '#', id: "#{input_class}_help", rel: 'popover'.freeze,
-                            'data-content': metadata_help, 'data-original-title': raw_label_text,
+      template.link_to '#', id: "#{input_class}_help",
+                            data: { toggle: 'popover'.freeze,
+                                    content: metadata_help,
+                                    'original-title': raw_label_text },
                             'aria-label': aria_label do
         help_icon
       end
