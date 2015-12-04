@@ -1,0 +1,11 @@
+.large-icon {
+  font-size: 1.5em;
+}
+
+.help-icon {
+  @extend .glyphicon;
+  @extend .glyphicon-question-sign;
+  @extend .large-icon;
+  top: 5px;
+}
+
