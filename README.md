@@ -1,5 +1,7 @@
 # Sufia
 
+## Notice - This document is written for the not yet released alpha version of Sufia 7.  If you are using sufia, you'll want to check out the [6.0-stable](https://github.com/projecthydra/sufia/tree/6.0-stable) branch and it's [README.me](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
+
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
