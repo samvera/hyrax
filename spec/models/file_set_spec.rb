@@ -4,7 +4,7 @@ require 'spec_helper'
 # It includes the CurationConcerns::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
 describe FileSet do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   describe 'rdf type' do
     subject { described_class.new.type }

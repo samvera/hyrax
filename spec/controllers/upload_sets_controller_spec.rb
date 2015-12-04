@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe UploadSetsController do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
-  let(:other_user) { FactoryGirl.find_or_create(:curator) }
+  let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])

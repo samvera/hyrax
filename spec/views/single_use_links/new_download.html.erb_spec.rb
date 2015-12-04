@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'curation_concerns/single_use_links/new_download.html.erb' do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   let(:f) do
     file = FileSet.create do |gf|
