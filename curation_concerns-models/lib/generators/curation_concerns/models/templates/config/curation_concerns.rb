@@ -29,28 +29,12 @@ CurationConcerns.configure do |config|
     'Other' => 'Other'
   }
 
-  config.resource_types_to_schema = {
-    'Article' => 'http://schema.org/Article',
-    'Audio' => 'http://schema.org/AudioObject',
-    'Book' => 'http://schema.org/Book',
-    'Capstone Project' => 'http://schema.org/CreativeWork',
-    'Conference Proceeding' => 'http://schema.org/ScholarlyArticle',
-    'Dataset' => 'http://schema.org/Dataset',
-    'Dissertation' => 'http://schema.org/ScholarlyArticle',
-    'Image' => 'http://schema.org/ImageObject',
-    'Journal' => 'http://schema.org/CreativeWork',
-    'Map or Cartographic Material' => 'http://schema.org/Map',
-    'Masters Thesis' => 'http://schema.org/ScholarlyArticle',
-    'Part of Book' => 'http://schema.org/Book',
-    'Poster' => 'http://schema.org/CreativeWork',
-    'Presentation' => 'http://schema.org/CreativeWork',
-    'Project' => 'http://schema.org/CreativeWork',
-    'Report' => 'http://schema.org/CreativeWork',
-    'Research Paper' => 'http://schema.org/ScholarlyArticle',
-    'Software or Program Code' => 'http://schema.org/Code',
-    'Video' => 'http://schema.org/VideoObject',
-    'Other' => 'http://schema.org/CreativeWork'
-  }
+  config.display_microdata = true
+  config.microdata_default_type = 'http://schema.org/CreativeWork'
+
+  config.resource_types_to_schema = config.resource_types.map do |k, v|
+    [k, I18n.t("curation_concerns.schema_org.resource_type.#{v}", default: config.microdata_default_type)]
+  end.to_h
 
   config.permission_levels = {
     'Choose Access' => 'none',
