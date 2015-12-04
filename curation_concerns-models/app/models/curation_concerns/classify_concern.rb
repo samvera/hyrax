@@ -34,6 +34,8 @@ module CurationConcerns
       end
     end
 
+    # @option [String] type name of the model
+    # @return [Class] the model class
     def self.to_class(type)
       # TODO: we may want to allow a different (or nil) namespace
       type.camelize.constantize
