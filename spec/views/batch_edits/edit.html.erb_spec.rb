@@ -8,6 +8,7 @@ describe 'batch_edits/edit.html.erb' do
     assign :names, ['title 1', 'title 2']
     assign :terms, [:description, :rights]
     assign :file_set, file_set
+    view.lookup_context.view_paths.push "#{CurationConcerns::Engine.root}/app/views/curation_concerns/base"
     render
   end
 

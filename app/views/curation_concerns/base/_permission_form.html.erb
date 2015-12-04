@@ -1,4 +1,4 @@
-<% depositor = @form.depositor %>
+<% depositor = f.object.depositor %>
 <% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
 <% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
@@ -21,7 +21,9 @@
   <!-- Share With -->
   <div class="row">
     <h3 class="col-sm-12">Share With <small>(optional)</small>
-      <span id="share_with_tooltip" class="h5"><%= share_with_help %></span>
+      <span id="share_with_tooltip" class="h5">
+        <%= help_link('curation_concerns/base/share_with', 'Share With', 'Usage information for sharing') %>
+      </span>
     </h3>
   </div>
 

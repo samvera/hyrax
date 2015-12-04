@@ -62,6 +62,11 @@ module Sufia
 
     protected
 
+      def _prefixes
+        # This allows us to use the templates in curation_concerns/base
+        @_prefixes ||= ['curation_concerns/base'] + super
+      end
+
       def destroy_batch
         batch.each { |id| ActiveFedora::Base.find(id).destroy }
         after_update
