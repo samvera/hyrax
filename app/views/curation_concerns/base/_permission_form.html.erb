@@ -16,21 +16,7 @@
 <span id="permissions_error_text"></span></div>
 
 <div class="well">
-
-  <h3>Visibility - <small>who should have the ability to read and download</small>
-    <span id="visibility_tooltip" class="h5"><%= visibility_help %></span>
-  </h3>
-  <div class="radio">
-    <label>
-      <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
-    </label>
-    <label>
-      <input type="radio" id="visibility_psu" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if !registered_perm.blank? %> checked="true"<% end %> /><span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
-    </label>
-    <label>
-      <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
-    </label>
-  </div>
+  <%= render 'curation_concerns/base/form_permission', f: f %>
 
   <!-- Share With -->
   <div class="row">
