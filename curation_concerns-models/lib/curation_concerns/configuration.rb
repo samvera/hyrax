@@ -124,6 +124,8 @@ module CurationConcerns
                     :after_import_local_file_failure, :after_audit_failure,
                     :after_destroy, :after_import_url_success, :after_import_url_failure
 
+    # Registers the given curation concern model in the configuration
+    # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
       Array(curation_concern_types).flatten.compact.each do |cc_type|
         class_name = normalize_concern_name(cc_type)
@@ -145,6 +147,8 @@ module CurationConcerns
 
     private
 
+      # @param [Symbol] the symbol representing the model
+      # @return [String] the class name for the model
       def normalize_concern_name(c)
         c.to_s.camelize
       end
