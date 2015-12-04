@@ -10,5 +10,7 @@ Blacklight.onLoad(function() {
   $('abbr').tooltip();
 
   $("[data-toggle='dropdown']").dropdown();
+  $('a[data-toggle="popover"]').popover({ html: true })
+                                 .click(function() { return false });
 
 });
