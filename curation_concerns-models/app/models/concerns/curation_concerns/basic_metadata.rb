@@ -5,10 +5,6 @@ module CurationConcerns
     included do
       property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
-      property :depositor, predicate: ::RDF::URI.new('http://id.loc.gov/vocabulary/relators/dpt'), multiple: false do |index|
-        index.as :symbol, :stored_searchable
-      end
-
       property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false
 
       property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'), multiple: false do |index|
@@ -17,9 +13,6 @@ module CurationConcerns
 
       property :part_of, predicate: ::RDF::Vocab::DC.isPartOf
       property :resource_type, predicate: ::RDF::Vocab::DC.type do |index|
-        index.as :stored_searchable, :facetable
-      end
-      property :title, predicate: ::RDF::Vocab::DC.title do |index|
         index.as :stored_searchable, :facetable
       end
       property :creator, predicate: ::RDF::Vocab::DC.creator do |index|
