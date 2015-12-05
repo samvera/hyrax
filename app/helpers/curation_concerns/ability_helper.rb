@@ -12,9 +12,9 @@ module CurationConcerns
 
     def visibility_options(variant)
       options = [
-        ['Open Access', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC],
-        [t('curation_concerns.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED],
-        ['Private', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE]
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       ]
       case variant
       when :restrict
@@ -23,24 +23,18 @@ module CurationConcerns
       when :loosen
         options.delete_at(2)
       end
-      options
+      options.map { |value| [visibility_text(value), value] }
     end
 
     def visibility_badge(value)
-      case value
-      when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        content_tag :span, "Open Access", class: "label label-success"
-      when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        content_tag :span, t('curation_concerns.institution_name'), class: "label label-info"
-      when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-        content_tag :span, "Private", class: "label label-danger"
-      when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
-        content_tag :span, "Embargo", class: "label label-warning"
-      when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
-        content_tag :span, "Lease", class: "label label-warning"
-      else
-        content_tag :span, value, class: "label label-info"
-      end
+      klass = t("curation_concerns.visibility.#{value}.class", default: 'label-info')
+      content_tag :span, visibility_text(value), class: "label #{klass}"
     end
+
+    private
+
+      def visibility_text(value)
+        t("curation_concerns.visibility.#{value}.text", default: value)
+      end
   end
 end
