@@ -9,8 +9,17 @@ module CurationConcerns
 
       rescue_from ActiveFedora::ObjectNotFoundError do |_exception|
         respond_to do |wants|
-          wants.html { render file: "#{Rails.root}/public/404", format: :html, status: :not_found, layout: false }
           wants.json { render_json_response(response_type: :not_found) }
+          # default to HTML response, even for other non-HTML formats we don't
+          # neccesarily know about, seems to be consistent with what Rails4 does
+          # by default with uncaught ActiveRecord::RecordNotFound in production
+          wants.any do
+            # use standard, possibly locally overridden, 404.html file. Even for
+            # possibly non-html formats, this is consistent with what Rails does
+            # on raising an ActiveRecord::RecordNotFound. Rails.root IS needed
+            # for it to work under testing, without worrying about CWD.
+            render file: "#{Rails.root}/public/404.html", status: :not_found, layout: false
+          end
         end
       end
     end

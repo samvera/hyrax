@@ -40,6 +40,15 @@ describe CurationConcerns::GenericWorksController do
         expect(response).to be_success
       end
     end
+
+    context 'when a ObjectNotFoundError is raised' do
+      it 'returns 404 page' do
+        allow(controller).to receive(:show).and_raise(ActiveFedora::ObjectNotFoundError)
+        get :show, id: 'abc123'
+        expect(response.status).to eq 404
+        expect(response.body).to match(/The page you were looking for doesn't exist/)
+      end
+    end
   end
 
   describe '#new' do
