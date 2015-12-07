@@ -78,8 +78,9 @@ module CurationConcerns
     end
 
     def destroy
+      parent = @file_set.in_works.first
       actor.destroy
-      redirect_to [main_app, @file_set.in_works.first], notice: 'The file has been deleted.'
+      redirect_to [main_app, parent], notice: 'The file has been deleted.'
     end
 
     # routed to /files/:id (PUT)
