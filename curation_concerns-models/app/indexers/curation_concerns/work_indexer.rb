@@ -1,5 +1,5 @@
 module CurationConcerns
-  class WorkIndexingService < ActiveFedora::IndexingService
+  class WorkIndexer < ActiveFedora::IndexingService
     include IndexesThumbnails
     def generate_solr_document
       super.tap do |solr_doc|

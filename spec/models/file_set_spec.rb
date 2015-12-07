@@ -147,7 +147,7 @@ describe FileSet do
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::FileSetIndexingService }
+    it { is_expected.to eq CurationConcerns::FileSetIndexer }
   end
 
   it 'supports multi-valued fields in solr' do
@@ -379,7 +379,7 @@ describe FileSet do
   describe 'to_solr' do
     let(:indexer) { double(generate_solr_document: {}) }
     before do
-      allow(CurationConcerns::FileSetIndexingService).to receive(:new)
+      allow(CurationConcerns::FileSetIndexer).to receive(:new)
         .with(subject).and_return(indexer)
     end
 

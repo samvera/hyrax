@@ -21,7 +21,7 @@ module CurationConcerns::WorkBehavior
 
   module ClassMethods
     def indexer
-      CurationConcerns::WorkIndexingService
+      CurationConcerns::WorkIndexer
     end
   end
 

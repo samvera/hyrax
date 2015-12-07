@@ -1,5 +1,5 @@
 module CurationConcerns
-  class FileSetIndexingService < ActiveFedora::IndexingService
+  class FileSetIndexer < ActiveFedora::IndexingService
     include IndexesThumbnails
     STORED_INTEGER = Solrizer::Descriptor.new(:integer, :stored)
 
