@@ -96,5 +96,14 @@ module Sufia
         return {} if params[:file_set].blank?
         super
       end
+
+      def find_parent_by_id
+        return if parent_id.empty?
+        super
+      end
+
+      def actor
+        @actor ||= ::Sufia::FileSetActor.new(@file_set, current_user)
+      end
   end
 end
