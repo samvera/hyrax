@@ -11,6 +11,7 @@ module CurationConcerns::WorkBehavior
   include CurationConcerns::HasRepresentative
   include CurationConcerns::WithFileSets
   include CurationConcerns::Naming
+  include CurationConcerns::RequiredMetadata
   include Hydra::AccessControls::Embargoable
 
   included do
@@ -27,8 +28,6 @@ module CurationConcerns::WorkBehavior
   def to_s
     if title.present?
       Array(title).join(' | ')
-    elsif label.present?
-      Array(label).join(' | ')
     else
       'No Title'
     end
