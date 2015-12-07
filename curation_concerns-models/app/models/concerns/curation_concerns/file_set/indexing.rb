@@ -6,7 +6,7 @@ module CurationConcerns
       module ClassMethods
         # override the default indexing service
         def indexer
-          CurationConcerns::FileSetIndexingService
+          CurationConcerns::FileSetIndexer
         end
       end
     end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::FileSetIndexingService do
+describe CurationConcerns::FileSetIndexer do
   let(:file_set) do
     FileSet.new(
       id: 'foo123',

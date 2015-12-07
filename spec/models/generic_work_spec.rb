@@ -25,7 +25,7 @@ describe GenericWork do
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::WorkIndexingService }
+    it { is_expected.to eq CurationConcerns::WorkIndexer }
   end
 
   describe 'to_solr' do

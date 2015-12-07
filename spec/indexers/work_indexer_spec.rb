@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::WorkIndexingService do
+describe CurationConcerns::WorkIndexer do
   # TODO: file_set_ids returns an empty set unless you persist the work
   let(:user) { create(:user) }
   let!(:generic_work) { create(:work_with_one_file, user: user) }
