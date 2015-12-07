@@ -9,8 +9,21 @@ describe CurationConcerns::Forms::CollectionEditForm do
     it do
       is_expected.to eq [:resource_type, :title, :creator, :contributor, :description,
                          :tag, :rights, :publisher, :date_created, :subject, :language,
-                         :identifier, :based_near, :related_url, :visibility]
+                         :representative_id, :thumbnail_id, :identifier, :based_near, :related_url, :visibility]
     end
+  end
+
+  describe "#human_readable_type" do
+    subject { form.human_readable_type }
+    it { is_expected.to eq 'Collection' }
+  end
+
+  describe "#member_ids" do
+    before do
+      allow(collection).to receive(:member_ids).and_return(['9999'])
+    end
+    subject { form.member_ids }
+    it { is_expected.to eq ['9999'] }
   end
 
   describe ".build_permitted_params" do
@@ -26,6 +39,8 @@ describe CurationConcerns::Forms::CollectionEditForm do
                             { date_created: [] },
                             { subject: [] },
                             { language: [] },
+                            :representative_id,
+                            :thumbnail_id,
                             { identifier: [] },
                             { based_near: [] },
                             { related_url: [] },
