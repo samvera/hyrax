@@ -34,6 +34,7 @@ describe CurationConcerns::FileSetIndexer do
                digest: ["urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967"]
               )
   end
+  let(:indexer) { described_class.new(file_set) }
 
   describe '#generate_solr_document' do
     before do
@@ -41,7 +42,7 @@ describe CurationConcerns::FileSetIndexer do
       allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
     end
-    subject { described_class.new(file_set).generate_solr_document }
+    subject { indexer.generate_solr_document }
 
     it 'has fields' do
       expect(subject[Solrizer.solr_name('hasRelatedMediaFragment', :symbol)]).to eq 'foo123'
@@ -73,6 +74,34 @@ describe CurationConcerns::FileSetIndexer do
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
       expect(subject[Solrizer.solr_name('digest', :symbol)]).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
+    end
+  end
+
+  describe '#file_format' do
+    subject { indexer.send(:file_format) }
+
+    context 'when both mime and format_label are present' do
+      before do
+        allow(file_set).to receive(:mime_type).and_return('image/png')
+        allow(file_set).to receive(:format_label).and_return(['Portable Network Graphics'])
+      end
+      it { is_expected.to eq 'png (Portable Network Graphics)' }
+    end
+
+    context 'when just mime type is present' do
+      before do
+        allow(file_set).to receive(:mime_type).and_return('image/png')
+        allow(file_set).to receive(:format_label).and_return([])
+      end
+      it { is_expected.to eq 'png' }
+    end
+
+    context 'when just format_label is present' do
+      before do
+        allow(file_set).to receive(:mime_type).and_return('')
+        allow(file_set).to receive(:format_label).and_return(['Portable Network Graphics'])
+      end
+      it { is_expected.to eq ['Portable Network Graphics'] }
     end
   end
 end
