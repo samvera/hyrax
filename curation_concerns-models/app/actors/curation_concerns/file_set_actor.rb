@@ -97,7 +97,6 @@ module CurationConcerns
 
     def destroy
       file_set.destroy
-      # TODO: need to mend the linked list of proxies (possibly wrap with a lock)
       CurationConcerns.config.callback.run(:after_destroy, file_set.id, user)
     end
 

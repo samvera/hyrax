@@ -143,20 +143,21 @@ describe CurationConcerns::FileSetActor do
       actor.destroy
       expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
     end
+
     context "representative of a work" do
       let!(:work) do
         work = create(:generic_work)
         # this is not part of a block on the create, since the work must be saved
         # before the representative can be assigned
-        work.members << file_set
+        work.ordered_members << file_set
         work.representative = file_set
         work.save
         work
       end
 
-      it "removes representative" do
+      it "removes representative and the proxy association" do
         expect(work.reload.representative_id).to eq(file_set.id)
-        actor.destroy
+        expect { actor.destroy }.to change { ActiveFedora::Aggregation::Proxy.count }.by(-1)
         expect(work.reload.representative_id).to be_nil
       end
     end

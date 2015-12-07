@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', branch: 'delete_ordered'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', branch: 'remove_from_works'
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
