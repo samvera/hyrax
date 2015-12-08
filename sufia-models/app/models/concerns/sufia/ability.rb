@@ -37,7 +37,6 @@ module Sufia
 
     def file_set_abilities
       can :view_share_work, [::FileSet]
-      can :create, [::FileSet, ::Collection, ::GenericWork] if registered_user?
     end
 
     def editor_abilities
@@ -60,10 +59,6 @@ module Sufia
 
       def depositor_for_document(document_id)
         ::GenericWork.load_instance_from_solr(document_id).depositor
-      end
-
-      def registered_user?
-        user_groups.include? 'registered'
       end
 
       def admin_user?
