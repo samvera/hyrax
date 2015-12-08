@@ -31,6 +31,7 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
   SimpleCov.start('rails') do
     add_filter '/spec'
+    add_filter '/lib/generators/sufia/templates'
   end
   SimpleCov.command_name 'spec'
 end
