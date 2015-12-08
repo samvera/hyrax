@@ -12,14 +12,14 @@
                 <span class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <span aria-hidden="true">Select files...</span>
-                    <input type="file" name="files[]" multiple />
+                    <input type="file" name="file_set[files][]" multiple />
                 </span>
                 <% ua = request.env['HTTP_USER_AGENT'] %>
                 <% if !!(ua =~ /Chrome/) %>
                 <span class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
                     <span aria-hidden="true">Select folder...</span>
-                    <input type="file" name="files[]" directory webkitdirectory mozdirectory />
+                    <input type="file" name="file_set[files][]" directory webkitdirectory mozdirectory />
                 </span>
                 <% end %>
                 <div id="main_upload_start_span" class="activate-container visible-all-inline-block" data-toggle="tooltip" data-title="<%= t('sufia.upload_tooltip') %>">
