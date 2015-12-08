@@ -1,5 +1,3 @@
-require 'blacklight/catalog'
-
 module Sufia
   module MyControllerBehavior
     extend ActiveSupport::Concern
