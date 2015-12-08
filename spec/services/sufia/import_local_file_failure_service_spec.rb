@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::ImportLocalFileFailureService do
-  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
+  let!(:depositor) { create(:user) }
   let!(:filename) { 'world.png' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
@@ -12,7 +12,7 @@ describe Sufia::ImportLocalFileFailureService do
 
   before do
     allow(FileSet).to receive(:find).and_return(file)
-    described_class.new(file.id, depositor.user_key, filename).call
+    described_class.new(file.id, depositor, filename).call
   end
   describe "#call" do
     it "sends failing mail" do
