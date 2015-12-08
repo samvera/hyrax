@@ -32,7 +32,7 @@ module Sufia
     end
 
     def featured_work_abilities
-      can [:create, :destroy, :update], FeaturedWork if admin_user?
+      can [:create, :destroy, :update], FeaturedWork if admin?
     end
 
     def file_set_abilities
@@ -40,11 +40,11 @@ module Sufia
     end
 
     def editor_abilities
-      if admin_user?
-        can :create, TinymceAsset
-        can [:create, :update], ContentBlock
-      end
       can :read, ContentBlock
+      return unless admin?
+
+      can :create, TinymceAsset
+      can [:create, :update], ContentBlock
     end
 
     def stats_abilities
@@ -59,10 +59,6 @@ module Sufia
 
       def depositor_for_document(document_id)
         ::GenericWork.load_instance_from_solr(document_id).depositor
-      end
-
-      def admin_user?
-        user_groups.include? 'admin'
       end
   end
 end
