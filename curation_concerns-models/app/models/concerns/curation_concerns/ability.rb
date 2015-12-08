@@ -34,10 +34,14 @@ module CurationConcerns
       can :collect, :all
     end
 
+    def registered_user?
+      user_groups.include? 'registered'
+    end
+
     # Add this to your ability_logic if you want all logged in users to be able
     # to submit content
     def everyone_can_create_curation_concerns
-      return if current_user.new_record?
+      return unless registered_user?
       can :create, [::FileSet, ::Collection]
       can :create, [CurationConcerns.config.curation_concerns]
     end
