@@ -9,8 +9,6 @@ describe Sufia::IngestLocalFileService do
     end
   end
 
-  let(:upload_set) { UploadSet.create! }
-  let(:upload_set_id) { upload_set.id }
   let(:files) { ["world.png", "image.jpg"] }
   let(:files_and_directories) { ["import"] }
   let(:upload_directory) { 'spec/mock_upload_directory' }
@@ -51,7 +49,7 @@ describe Sufia::IngestLocalFileService do
       # expect each file to be ingested
       expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "world.png", user.user_key)
       expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "image.jpg", user.user_key)
-      subject.ingest_local_file(files, work.id, upload_set_id)
+      subject.ingest_local_file(files, work.id)
     end
 
     it "processes files in subdirectories" do
@@ -75,7 +73,7 @@ describe Sufia::IngestLocalFileService do
       expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/files/Example.ogg", user.user_key)
       expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user.user_key)
 
-      subject.ingest_local_file(files_and_directories, work.id, upload_set_id)
+      subject.ingest_local_file(files_and_directories, work.id)
     end
   end
 

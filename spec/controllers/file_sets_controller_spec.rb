@@ -53,9 +53,9 @@ describe CurationConcerns::FileSetsController do
         context "when a work id is passed in" do
           it 'calls the actor to create metadata and content' do
             expect(controller.send(:actor)).to receive(:create_metadata)
-              .with(nil, parent, files: [file],
-                                 title: ['test title'],
-                                 visibility: 'restricted')
+              .with(parent, files: [file],
+                            title: ['test title'],
+                            visibility: 'restricted')
             expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
             xhr :post, :create, parent_id: parent,
                                 terms_of_service: '1',
@@ -68,7 +68,7 @@ describe CurationConcerns::FileSetsController do
 
           context "and an UploadSet is passed in" do
             it "calls the actor with the upload_set" do
-              expect(controller.send(:actor)).to receive(:create_metadata).with(upload_set_id, parent, Hash)
+              expect(controller.send(:actor)).to receive(:create_metadata).with(parent, Hash)
               expect(controller.send(:actor)).to receive(:create_content)
               xhr :post, :create, parent_id: parent,
                                   terms_of_service: '1',
@@ -254,7 +254,7 @@ describe CurationConcerns::FileSetsController do
           before do
             expect_any_instance_of(Sufia::IngestLocalFileService)
               .to receive(:ingest_local_file)
-              .with(["world.png", "image.jpg"], work.id, upload_set_id)
+              .with(["world.png", "image.jpg"], work.id)
           end
 
           it "records the work" do

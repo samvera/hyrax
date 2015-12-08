@@ -8,7 +8,7 @@ module Sufia
       @logger = logger || CurationConcerns::NullLogger.new
     end
 
-    def ingest_local_file(local_files, parent_id, upload_set_id)
+    def ingest_local_file(local_files, parent_id)
       # Ingest files already on disk
       @files = []
       local_files.each do |filename|
@@ -18,10 +18,9 @@ module Sufia
           files << filename
         end
       end
-      UploadSet.find_or_create(upload_set_id) unless files.empty?
       parent = ActiveFedora::Base.find(parent_id)
       files.each do |filename|
-        ingest_one(filename, upload_set_id, parent)
+        ingest_one(filename, parent)
       end
       true
     end
@@ -37,13 +36,13 @@ module Sufia
         end
       end
 
-      def ingest_one(filename, upload_set_id, parent)
+      def ingest_one(filename, parent)
         basename = File.basename(filename)
         # do not remove ::
         ::FileSet.new(label: basename).tap do |fs|
           fs.relative_path = filename if filename != basename
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
-          actor.create_metadata(upload_set_id, parent)
+          actor.create_metadata(parent)
           fs.save!
           IngestLocalFileJob.perform_later(fs.id, current_user.directory, filename, current_user.user_key)
         end

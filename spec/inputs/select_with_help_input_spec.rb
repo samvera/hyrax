@@ -17,7 +17,7 @@ describe 'SelectWithHelpInput', type: :input do
 
   context 'with File Edit' do
     let(:user) { FactoryGirl.find_or_create(:jill) }
-    let(:file) { FileSet.create(upload_set: UploadSet.create, label: 'f1') { |f| f.apply_depositor_metadata(user) } }
+    let(:file) { FileSet.create(label: 'f1') { |f| f.apply_depositor_metadata(user) } }
     let(:form) { CurationConcerns::Forms::FileSetEditForm.new(file) }
     let(:base_options) do
       { as: :select_with_help, collection: Sufia.config.resource_types,

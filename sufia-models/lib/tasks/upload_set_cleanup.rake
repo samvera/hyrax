@@ -4,7 +4,7 @@ namespace :sufia do
   task :empty_upload_sets, [:remove] => :environment do |t, args|
     option = args.to_hash.fetch(:remove, "keep")
     UploadSet.all.each do |upload_set|
-      if upload_set.file_sets.empty?
+      if upload_set.works.empty?
         print "#{upload_set.id} contains no files - "
         if option == "remove"
           upload_set.destroy
