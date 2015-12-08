@@ -36,19 +36,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   alias_method :log_file_set_event, :log_work_event
 
   def work
-    @work ||= begin
-      # TODO: This should be in its own job, not this event job
-      work = ::GenericWork.find(generic_work_id)
-      work.proxy_depositor = work.depositor
-      work.permissions = [] if reset
-      work.apply_depositor_metadata(login)
-      work.file_sets.each do |f|
-        f.apply_depositor_metadata(login)
-        f.save!
-      end
-      work.save!
-      work
-    end
+    @work ||= Sufia::ChangeContentDepositorService.call(generic_work_id, login, reset)
   end
 
   # overriding default to log the event to the depositor instead of their profile
