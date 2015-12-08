@@ -21,7 +21,7 @@ describe CurationConcerns::FileSetsController do
         end
 
         it 'calls the actor to create metadata and content' do
-          expect(controller.send(:actor)).to receive(:create_metadata).with(nil, parent, files: [file], title: ['test title'], visibility: 'restricted')
+          expect(controller.send(:actor)).to receive(:create_metadata).with(parent, files: [file], title: ['test title'], visibility: 'restricted')
           expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
           xhr :post, :create, parent_id: parent,
                               file_set: { files: [file],

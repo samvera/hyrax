@@ -8,7 +8,7 @@ module CurationConcerns
       with_themed_layout '1_column'
 
       class_attribute :edit_form_class
-      self.edit_form_class = CurationConcerns::Forms::FileSetEditForm
+      self.edit_form_class = CurationConcerns::GenericWorkForm
     end
 
     def edit
@@ -30,15 +30,17 @@ module CurationConcerns
     protected
 
       def edit_form
-        file_set = ::FileSet.new(creator: [current_user.user_key], title: @upload_set.file_sets.map(&:label))
-        edit_form_class.new(file_set)
+        # TODO: instead of using GenericWorkForm, this should be an UploadSetForm
+        titles = @upload_set.works.map { |w| w.title.first }
+        work = ::GenericWork.new(creator: [current_user.user_key], title: titles)
+        edit_form_class.new(work, current_ability)
       end
 
       def create_update_job
         UploadSetUpdateJob.perform_later(current_user.user_key,
                                          params[:id],
                                          params[:title],
-                                         edit_form_class.model_attributes(params[:file_set]),
+                                         edit_form_class.model_attributes(params[:work]),
                                          params[:visibility])
       end
   end

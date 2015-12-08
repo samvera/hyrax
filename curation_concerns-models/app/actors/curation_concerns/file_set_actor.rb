@@ -19,22 +19,15 @@ module CurationConcerns
     # create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
     # we have to save both the parent work and the file_set in order to record the "metadata" relationship
     # between them.
-    # @param [String] upload_set_id id of the batch of files that the file was uploaded with
     # @param [ActiveFedora::Base] work the parent work that will contain the file_set.
     # @param [Hash] file_set specifying the visibility, lease and/or embargo of the file set.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-    def create_metadata(upload_set_id, work, file_set_params = {})
+    def create_metadata(work, file_set_params = {})
       file_set.apply_depositor_metadata(user)
       now = CurationConcerns::TimeService.time_in_utc
       file_set.date_uploaded = now
       file_set.date_modified = now
       file_set.creator = [user.user_key]
-
-      if upload_set_id && file_set.respond_to?(:upload_set_id=)
-        file_set.upload_set = UploadSet.find_or_create(upload_set_id)
-      else
-        ActiveFedora::Base.logger.warn 'unable to find UploadSet to attach to'
-      end
 
       interpret_visibility file_set_params if assign_visibility?(file_set_params)
       attach_file_to_work(work, file_set, file_set_params) if work
