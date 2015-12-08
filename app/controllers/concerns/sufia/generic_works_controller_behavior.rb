@@ -15,6 +15,7 @@ module Sufia
     def new
       # TODO: move this to curation_concerns
       @form = form_class.new(curation_concern, current_ability)
+      curation_concern.depositor = (current_user.user_key)
       super
     end
 
