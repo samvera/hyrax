@@ -1,10 +1,9 @@
 <!-- TODO: make the upload_set_id available on the presenter -->
-<% if false && presenter.upload_set_id %>
-    <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
-    <%# Script redirects here once the uploads are complete %>
-    <%= CurationConcerns::FileSetsController.upload_complete_path(presenter.upload_set_id) %>
-    </div>
-<% end %>
+<div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
+  <%# Script redirects here once the uploads are complete %>
+  <%# TODO: change this once multifile upload issues have been resolved %>
+  <%= sufia.dashboard_files_path %>
+</div>
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-jquery-tmpl">
