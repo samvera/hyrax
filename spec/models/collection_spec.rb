@@ -17,22 +17,4 @@ describe Collection do
     collection.title = nil
     expect(collection).not_to be_valid
   end
-
-  describe "::bytes" do
-    subject { collection.bytes }
-
-    context "with no items" do
-      before { collection.save }
-      it { is_expected.to eq 0 }
-    end
-
-    context "with two 50 byte files" do
-      let(:bitstream) { double("content", size: "50") }
-      let(:file) { mock_model FileSet, content: bitstream }
-
-      before { allow(collection).to receive(:members).and_return([file, file]) }
-
-      it { is_expected.to eq 100 }
-    end
-  end
 end

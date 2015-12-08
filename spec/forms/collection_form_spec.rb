@@ -15,6 +15,8 @@ describe Sufia::Forms::CollectionForm do
                             :date_created,
                             :subject,
                             :language,
+                            :representative_id,
+                            :thumbnail_id,
                             :identifier,
                             :based_near,
                             :related_url] }
