@@ -6,6 +6,8 @@ class UploadSetUpdateJob < ActiveJob::Base
 
   attr_accessor :saved, :denied
 
+  # This copies metadata from the passed in attribute to all of the works that
+  # are members of the given upload set
   def perform(login, upload_set_id, titles, attributes, visibility)
     @login = login
     @saved = []
@@ -26,13 +28,11 @@ class UploadSetUpdateJob < ActiveJob::Base
     end
 
     def update(upload_set, titles, attributes)
-      upload_set.file_sets.each do |file|
-        title = titles[file.id] if titles[file.id]
-        next unless update_file(file, title, attributes)
+      upload_set.works.each do |work|
+        title = titles[work.id] if titles[work.id]
+        next unless update_work(work, title, attributes)
         # TODO: stop assuming that files only belong to one work
-        work = file.in_works.first
-        update_work(work, title, attributes) if work
-        saved << file
+        saved << work
       end
 
       upload_set.update(status: ["Complete"])
@@ -60,24 +60,13 @@ class UploadSetUpdateJob < ActiveJob::Base
       @user ||= User.find_by_user_key(@login)
     end
 
-    def update_file(file, title, attributes)
-      unless user.can? :edit, file
-        ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{file.id}!"
-        denied << file
+    def update_work(work, title, attributes)
+      unless user.can? :edit, work
+        ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{work.id}!"
+        denied << work
         return
       end
-      # update the file using the actor after setting the title
-      file.title = title if title
-      file_actor(file).update_metadata(attributes)
-    end
 
-    def file_actor(file)
-      CurationConcerns::FileSetActor.new(file, user)
-    end
-
-    # update the work to the same metadata as the file.
-    # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
-    def update_work(work, title, attributes)
       work.title = title if title
       work_actor(work, attributes).update
     end

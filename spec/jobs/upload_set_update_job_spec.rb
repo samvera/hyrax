@@ -4,14 +4,8 @@ describe UploadSetUpdateJob do
   let(:user) { create(:user) }
   let(:upload_set) { UploadSet.create }
 
-  let(:file)  { create(:file_set, user: user, upload_set: upload_set) }
-  let(:file2) { create(:file_set, user: user, upload_set: upload_set) }
-  let!(:work) do
-    create(:work, user: user).tap do |work|
-      work.ordered_members << file << file2
-      work.save!
-    end
-  end
+  let(:work)  { create(:work, user: user, upload_set: upload_set) }
+  let(:work2) { create(:work, user: user, upload_set: upload_set) }
 
   before do
     allow(CurationConcerns.config.callback).to receive(:run)
@@ -24,23 +18,23 @@ describe UploadSetUpdateJob do
   end
 
   describe "#perform" do
-    let(:title) { { file.id => ['File One'], file2.id => ['File Two'] } }
+    let(:title) { { work.id => ['File One'], work2.id => ['File Two'] } }
     let(:metadata) { { tag: [''] } }
     let(:visibility) { nil }
 
     subject { described_class.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
 
-    it "updates file metadata" do
+    it "updates work metadata" do
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user, upload_set)
       subject
-      expect(file.reload.title).to eq ['File One']
-      expect(file2.reload.title).to eq ['File Two']
+      expect(work.reload.title).to eq ['File One']
+      expect(work2.reload.title).to eq ['File Two']
     end
 
-    context "when user does not have permission to edit all of the files" do
+    context "when user does not have permission to edit all of the works" do
       it "sends the failure message" do
-        expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(true)
-        expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(false)
+        expect_any_instance_of(User).to receive(:can?).with(:edit, work).and_return(true)
+        expect_any_instance_of(User).to receive(:can?).with(:edit, work2).and_return(false)
         expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_failure, user, upload_set)
         subject
       end

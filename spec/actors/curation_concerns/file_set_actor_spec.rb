@@ -24,22 +24,13 @@ describe CurationConcerns::FileSetActor do
       expect(CharacterizeJob).to receive(:perform_later)
       expect(IngestFileJob).to receive(:perform_later).with(file_set.id, /world\.png$/, 'image/png', user.user_key)
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(upload_set_id, work)
+      actor.create_metadata(work)
       actor.create_content(uploaded_file)
     end
 
-    context 'when an upload_set_id and work are not provided' do
-      let(:upload_set_id) { nil }
-      it "leaves the associations blank" do
-        expect(subject.upload_set).to be_nil
-        expect(subject.generic_works).to be_empty
-      end
-    end
-
-    context 'when a upload_set_id is provided' do
-      let(:upload_set_id) { ActiveFedora::Noid::Service.new.mint }
+    context 'when a work is not provided' do
       it "leaves the association blank" do
-        expect(subject.upload_set).to be_instance_of UploadSet
+        expect(subject.generic_works).to be_empty
       end
     end
 
@@ -68,7 +59,7 @@ describe CurationConcerns::FileSetActor do
 
     it 'copies visibility from the parent' do
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(nil, work)
+      actor.create_metadata(work)
       saved_file = file_set.reload
       expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end

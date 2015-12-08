@@ -47,7 +47,6 @@ describe ImportUrlJob do
     let(:file_set_id) { file_set.id }
 
     before do
-      file_set.upload_set = upload_set
       file_set.save!
       allow(ActiveFedora::Base).to receive(:find).and_call_original
       allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
@@ -56,14 +55,14 @@ describe ImportUrlJob do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
     end
 
-    it "does not kill all the metadata set by other jobs" do
+    it "does not kill all the metadata set by other processes" do
       # run the batch job to set the title
-      upload_set_job
+      file_set.update(title: ['File One'])
 
       # run the import job
       described_class.perform_now(file_set_id)
 
-      # import job should not override the title set by the batch job
+      # import job should not override the title set another process
       file = FileSet.find(file_set_id)
       expect(file.title).to eq(['File One'])
     end

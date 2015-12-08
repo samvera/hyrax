@@ -71,7 +71,7 @@ module CurationConcerns::WorkActorBehavior
     def attach_file(file)
       file_set = ::FileSet.new
       file_set_actor = CurationConcerns::FileSetActor.new(file_set, user)
-      file_set_actor.create_metadata(curation_concern.id, curation_concern, visibility_attributes)
+      file_set_actor.create_metadata(curation_concern, visibility_attributes)
       file_set_actor.create_content(file)
       @file_sets ||= []
       @file_sets << file_set # This is so that other methods like assign_representative can access the file_sets without reloading them from fedora

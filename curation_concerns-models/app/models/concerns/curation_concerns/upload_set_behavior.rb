@@ -5,7 +5,7 @@ module CurationConcerns
     include CurationConcerns::Noid
 
     included do
-      has_many :file_sets, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
+      has_many :works, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'
 
       property :title, predicate: ::RDF::DC.title
       property :status, predicate: ::RDF::DC.type
