@@ -19,7 +19,7 @@ describe UploadSetsController do
                                                                    'open')
         post :update, id: upload_set, title: { '1' => 'foo' },
                       visibility: 'open',
-                      work: { tag: [""] }
+                      upload_set: { tag: [""] }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -33,7 +33,7 @@ describe UploadSetsController do
       end
 
       it "redirects to my shares page" do
-        post :update, id: upload_set, work: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
+        post :update, id: upload_set, upload_set: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_shares_path
       end
     end
@@ -43,26 +43,26 @@ describe UploadSetsController do
       let!(:work) { create(:work, upload_set: upload_set, user: user) }
 
       it "sets the groups" do
-        post :update, id: upload_set, "work" => { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
+        post :update, id: upload_set, upload_set: { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
         work.reload
         expect(work.read_groups).to include "public"
       end
 
       it "sets public read access" do
-        post :update, id: upload_set, visibility: "open", work: { tag: [""] }
+        post :update, id: upload_set, visibility: "open", upload_set: { tag: [""] }
         expect(work.reload.read_groups).to eq ['public']
       end
 
       it "sets metadata like title" do
-        post :update, id: upload_set, work: { tag: ["footag", "bartag"] }, title: { work.id => ["New Title"] }
+        post :update, id: upload_set, upload_set: { tag: ["footag", "bartag"] }, title: { work.id => ["New Title"] }
         work.reload
         expect(work.title).to eq ["New Title"]
         expect(work.tag).to include("footag", "bartag")
       end
 
       it "does not set any tags" do
-        post :update, id: upload_set, work: { tag: [""] }
+        post :update, id: upload_set, upload_set: { tag: [""] }
         expect(work.reload.tag).to be_empty
       end
     end
@@ -76,7 +76,7 @@ describe UploadSetsController do
       end
 
       it "does not modify the object" do
-        post :update, id: upload_set, work: { "read_groups_string" => "group1, group2", "read_users_string" => "", "tag" => [""] }, "title" => { work.id => "Title Wont Change" }
+        post :update, id: upload_set, upload_set: { "read_groups_string" => "group1, group2", "read_users_string" => "", "tag" => [""] }, "title" => { work.id => "Title Wont Change" }
         work.reload
         expect(work.title).to eq ["Original Title"]
         expect(work.read_groups).to eq []
