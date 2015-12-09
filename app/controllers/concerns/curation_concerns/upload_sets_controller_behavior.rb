@@ -24,16 +24,27 @@ module CurationConcerns
       create_update_job
       flash[:notice] = 'Your files are being processed by ' + t('curation_concerns.product_name') + ' in the background. The metadata and access controls you specified are being applied. Files will be marked <span class="label label-danger" title="Private">Private</span> until this process is complete (shouldn\'t take too long, hang in there!). You may need to refresh your dashboard to see these updates.'
 
-      redirect_to main_app.curation_concerns_generic_works_path
+      redirect_after_update
     end
 
     protected
 
+      # Override this method if you want to go elsewhere
+      def redirect_after_update
+        redirect_to main_app.curation_concerns_generic_works_path
+      end
+
       def edit_form
         # TODO: instead of using GenericWorkForm, this should be an UploadSetForm
         titles = @upload_set.works.map { |w| w.title.first }
-        work = ::GenericWork.new(creator: [current_user.user_key], title: titles)
+        work = ::GenericWork.new(creator: [creator_display], title: titles)
         edit_form_class.new(work, current_ability)
+      end
+
+      # Override this method if you want the creator to display something other than
+      # the user_key, e.g. "current_user.name"
+      def creator_display
+        current_user.user_key
       end
 
       def create_update_job
