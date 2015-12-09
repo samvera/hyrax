@@ -17,27 +17,15 @@ Gem::Specification.new do |gem|
   gem.license       = 'Apache2'
 
   gem.add_dependency 'sufia-models', version
-  gem.add_dependency 'blacklight_advanced_search', '~> 5.2'
-  gem.add_dependency 'blacklight', '~> 5.16'
   gem.add_dependency 'tinymce-rails', '~> 4.1'
   gem.add_dependency 'tinymce-rails-imageupload', '~> 4.0.16.beta'
-
-  # sass-rails is typically generated into the app's gemfile by `rails new`
-  # In rails 3 it's put into the "assets" group and thus not available to the
-  # app. Blacklight 5.2 requires bootstrap-sass which requires (but does not
-  # declare a dependency on) sass-rails
-  gem.add_dependency "bootstrap-sass", "3.3.4.1" # Pin to specific bootstrap-sass version. see https://github.com/dpla/KriKri/commit/a55e0bb5aad862203291cd79627eb2cefffffa82
-  gem.add_dependency 'sass-rails'
-
   gem.add_dependency 'curation_concerns', '~> 0.3'
   gem.add_dependency 'hydra-batch-edit', '~> 1.1'
   gem.add_dependency 'browse-everything', '~> 0.4'
   gem.add_dependency 'daemons', '~> 1.1'
   gem.add_dependency 'mail_form', '~> 1.5'
-  gem.add_dependency 'rails_autolink', '~> 1.1'
   gem.add_dependency 'yaml_db', '~> 0.2'
   gem.add_dependency 'font-awesome-rails', '~> 4.2'
-  gem.add_dependency 'hydra-editor', '~> 1.0'
   gem.add_dependency 'blacklight-gallery', '~> 0.1'
   gem.add_dependency 'select2-rails', '~> 3.5.9'
   gem.add_dependency 'json-schema'
