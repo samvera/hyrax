@@ -8,17 +8,18 @@ module CurationConcerns
       with_themed_layout '1_column'
 
       class_attribute :edit_form_class
-      self.edit_form_class = CurationConcerns::GenericWorkForm
+      self.edit_form_class = CurationConcerns::UploadSetForm
     end
 
     def edit
+      # TODO: redlock this line so that two processes don't attempt to create at the same time.
       @upload_set = UploadSet.find_or_create(params[:id])
       @form = edit_form
     end
 
     def update
       authenticate_user!
-      @upload_set = UploadSet.find_or_create(params[:id])
+      @upload_set = UploadSet.find(params[:id])
       @upload_set.status = ["processing"]
       @upload_set.save
       create_update_job
@@ -35,16 +36,7 @@ module CurationConcerns
       end
 
       def edit_form
-        # TODO: instead of using GenericWorkForm, this should be an UploadSetForm
-        titles = @upload_set.works.map { |w| w.title.first }
-        work = ::GenericWork.new(creator: [creator_display], title: titles)
-        edit_form_class.new(work, current_ability)
-      end
-
-      # Override this method if you want the creator to display something other than
-      # the user_key, e.g. "current_user.name"
-      def creator_display
-        current_user.user_key
+        edit_form_class.new(@upload_set, current_ability)
       end
 
       def create_update_job
