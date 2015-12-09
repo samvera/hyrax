@@ -8,7 +8,7 @@ describe Sufia::Arkivo::Actor do
 
   subject { described_class.new(user, item) }
 
-  let(:user) { FactoryGirl.find_or_create(:archivist) }
+  let(:user) { create(:user) }
   let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
 
   describe 'Tempfile monkey-patches' do

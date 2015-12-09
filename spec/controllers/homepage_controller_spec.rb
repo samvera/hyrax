@@ -4,11 +4,11 @@ describe HomepageController, type: :controller do
   routes { Rails.application.class.routes }
 
   describe "#index" do
-    let(:user) { FactoryGirl.find_or_create(:jill) }
+    let(:user) { create(:user) }
     before { sign_in user }
 
     before do
-      2.times { FactoryGirl.create(:work, user: user) }
+      2.times { create(:work, user: user) }
     end
 
     context 'with existing featured researcher' do

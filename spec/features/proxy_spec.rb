@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'proxy', type: :feature do
-  let(:user) { FactoryGirl.find_or_create(:archivist) }
-  let(:second_user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
+  let(:second_user) { create(:user) }
 
   describe 'add proxy in profile', :js do
     it "creates a proxy" do

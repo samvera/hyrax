@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe BatchEditsController, type: :controller do
+  let(:user) { create(:user) }
   before do
-    sign_in FactoryGirl.find_or_create(:jill)
+    sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     request.env["HTTP_REFERER"] = 'test.host/original_page'
   end

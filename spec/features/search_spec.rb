@@ -1,26 +1,24 @@
 require 'spec_helper'
 
 describe 'searching' do
-  let(:user) { create :jill }
+  let(:user) { create :user }
   let(:subject_value) { 'fffzzz' }
   let!(:work) {
-    GenericWork.new do |work|
+    GenericWork.create! do |work|
       work.title = ["Toothbrush"]
       work.tag = [subject_value]
       work.apply_depositor_metadata(user.user_key)
       work.read_groups = ['public']
-      work.save!
     end
   }
 
   let!(:collection) {
-    Collection.new do |f|
+    Collection.create do |f|
       f.title = 'collection title abc'
       f.apply_depositor_metadata(user.user_key)
       f.description = subject_value
       f.read_groups = ['public']
       f.members = [work]
-      f.save
     end
   }
 

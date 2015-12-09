@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe UserMailbox do
-  let(:user)         { FactoryGirl.find_or_create(:jill) }
-  let(:another_user) { FactoryGirl.find_or_create(:archivist) }
+  let(:user)         { create(:user) }
+  let(:another_user) { create(:user) }
   before do
     another_user.send_message(user, "Test Message", "Test Subject")
     user.send_message(another_user, "Test Message", "Test Subject")
@@ -48,7 +48,7 @@ describe UserMailbox do
     end
 
     context "deleting a message from a third party" do
-      let(:curator)     { FactoryGirl.find_or_create(:curator) }
+      let(:curator)     { create(:user) }
       let(:message)     { another_user.send_message(curator, 'message 3', 'subject 3') }
       let!(:message_id) { message.conversation.id }
 

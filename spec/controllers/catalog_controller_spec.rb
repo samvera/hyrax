@@ -3,7 +3,7 @@ require 'spec_helper'
 describe CatalogController, type: :controller do
   routes { Rails.application.class.routes }
 
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   before do
     sign_in user
@@ -110,13 +110,13 @@ describe CatalogController, type: :controller do
       let(:file1) do
         { has_model_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
-          edit_access_person_ssim: ["jilluser@example.com"] }
+          edit_access_person_ssim: [user.user_key] }
       end
 
       let(:file2) do
         { has_model_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
-          edit_access_person_ssim: ["jilluser@example.com"] }
+          edit_access_person_ssim: [user.user_key] }
       end
 
       it "finds work and work that contains file with title" do

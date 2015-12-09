@@ -1,14 +1,13 @@
 require 'spec_helper'
 
 describe 'collections/_show_document_list.html.erb', type: :view do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   let(:collection) { mock_model(Collection) }
 
   let(:file) do
-    fs = FileSet.new(creator: ["ggm"], title: ['One Hundred Years of Solitude'])
-    fs.apply_depositor_metadata(user)
-    fs.save
-    fs
+    FileSet.create(creator: ["ggm"], title: ['One Hundred Years of Solitude']) do |fs|
+      fs.apply_depositor_metadata(user)
+    end
   end
 
   let(:documents) { [file] }

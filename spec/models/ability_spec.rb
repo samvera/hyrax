@@ -17,7 +17,7 @@ describe Sufia::Ability, type: :model do
   end
 
   describe "a registered user" do
-    let(:user) { FactoryGirl.find_or_create(:archivist) }
+    let(:user) { create(:user) }
     subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
@@ -28,7 +28,7 @@ describe Sufia::Ability, type: :model do
   end
 
   describe "a user in the admin group" do
-    let(:user) { FactoryGirl.find_or_create(:archivist) }
+    let(:user) { create(:user) }
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
     subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, FileSet) }
@@ -40,12 +40,11 @@ describe Sufia::Ability, type: :model do
   end
 
   describe "proxies and transfers" do
-    let(:sender) { FactoryGirl.find_or_create(:jill) }
-    let(:user) { FactoryGirl.find_or_create(:archivist) }
+    let(:sender) { create(:user) }
+    let(:user) { create(:user) }
     let(:work) do
-      GenericWork.new(title: ["Test work"]) do |work|
+      GenericWork.create!(title: ["Test work"]) do |work|
         work.apply_depositor_metadata(sender.user_key)
-        work.save!
       end
     end
     subject { Ability.new(user) }

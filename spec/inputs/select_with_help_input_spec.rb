@@ -16,7 +16,7 @@ describe 'SelectWithHelpInput', type: :input do
   end
 
   context 'with File Edit' do
-    let(:user) { FactoryGirl.find_or_create(:jill) }
+    let(:user) { create(:user) }
     let(:file) { FileSet.create(label: 'f1') { |f| f.apply_depositor_metadata(user) } }
     let(:form) { CurationConcerns::Forms::FileSetEditForm.new(file) }
     let(:base_options) do

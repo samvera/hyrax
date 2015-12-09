@@ -5,7 +5,7 @@ describe "Create and use single-use links", type: :feature do
   Warden.test_mode!
   include Sufia::Engine.routes.url_helpers
 
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   let(:file) do
     FileSet.create do |fs|
       fs.label = 'world.png'

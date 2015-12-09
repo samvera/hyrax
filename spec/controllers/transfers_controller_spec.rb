@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe TransfersController, type: :controller do
   describe "with a signed in user" do
-    let(:another_user) { FactoryGirl.find_or_create(:jill) }
-    let(:user) { FactoryGirl.find_or_create(:archivist) }
+    let(:another_user) { create(:user) }
+    let(:user) { create(:user) }
 
     before do
       sign_in user
