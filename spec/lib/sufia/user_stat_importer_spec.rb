@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../../sufia-models/lib/sufia/models/stats/user_stat_importer'
+require_relative '../../../lib/sufia/user_stat_importer'
 
 describe Sufia::UserStatImporter do
   before do

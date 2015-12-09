@@ -1,6 +1,7 @@
 # Sufia
 
-## Notice - This document is written for the not yet released alpha version of Sufia 7.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) and its [README.md](https://github.com/projecthydra/sufia/blob/6.x-stable/README.md) in particular.
+## Notice - This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
+>>>>>>> WIP (37 failures): merges sufia-models back into sufia. Fixes #1423
 
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
@@ -109,7 +110,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Creating a Sufia-based app
 
 This document contains instructions specific to setting up an app with __Sufia
-v7.0.0.alpha__. If you are looking for instructions on installing a different
+v7.0.0.beta1__ (not yet released). If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -164,7 +165,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.0.0.alpha'
+gem 'sufia', '7.0.0.beta1' # NOT YET RELEASED
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
@@ -215,7 +216,7 @@ Next you will need to start up the Resque workers provided by Sufia. The followi
 RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 QUEUE=* rake environment resque:work
 ```
 
-Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra/sufia/blob/master/sufia-models/lib/generators/sufia/models/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
+Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra/sufia/blob/master/sufia/lib/generators/sufia/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
 
 ```
 RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
@@ -301,7 +302,7 @@ And create a new OAuth client ID.  When prompted for the type, use the "Service 
 Then run this generator:
 
 ```
-rails g sufia:models:usagestats
+rails g sufia:usagestats
 ```
 
 The generator will create a configuration file at _config/analytics.yml_.  Edit that file to reflect the information that the Google Developer Console gave you earlier, namely you'll need to provide it:
@@ -323,7 +324,7 @@ Integration with Zotero-managed publications is possible using [Arkivo](https://
 To enable Zotero integration, first [register an OAuth client with Zotero](https://www.zotero.org/oauth/apps), then [install and start Arkivo-Sufia](https://github.com/inukshuk/arkivo-sufia) and then generate the Arkivo API in your Sufia-based application:
 
 ```
-rails g sufia:models:arkivo_api
+rails g sufia:arkivo_api
 ```
 
 The generator does the following:

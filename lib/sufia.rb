@@ -1,27 +1,52 @@
-require 'hydra/head'
-require 'hydra-editor'
-require 'blacklight/gallery'
 require 'select2-rails'
-require 'hydra-batch-edit'
-require 'browse-everything'
-require "sufia/version"
-require 'blacklight'
-require 'blacklight_advanced_search'
-require 'sufia/models'
-require 'sufia/inflections'
-require 'sufia/arkivo'
-require 'sufia/zotero'
-
+require 'nest'
+require 'mailboxer'
+require 'acts_as_follower'
+require 'carrierwave'
+require "active_resource" # used by FileSet to catch errors & by GeoNamesResource
+require 'resque/server'
 require 'rails_autolink'
 require 'font-awesome-rails'
 require 'tinymce-rails'
 require 'tinymce-rails-imageupload'
+
+require 'blacklight'
+require 'blacklight_advanced_search'
+require 'blacklight/gallery'
+require 'active_fedora/noid'
+require 'hydra/head'
+require 'hydra-batch-edit'
+require 'hydra-editor'
+require 'browse-everything'
+require 'curation_concerns'
+require "sufia/version"
+require 'sufia/inflections'
+require 'sufia/messages'
 
 module Sufia
   extend ActiveSupport::Autoload
 
   eager_autoload do
     autoload :RedisEventStore
+    autoload :Permissions
+    autoload :Arkivo
+    autoload :Zotero
+    autoload :UserLocalDirectoryBehavior
+    autoload :UserStatImporter
+  end
+
+  attr_writer :queue
+
+  def self.queue
+    @queue ||= config.queue.new('sufia')
+  end
+
+  def self.config(&block)
+    @@config ||= Sufia::Engine::Configuration.new
+
+    yield @@config if block
+
+    @@config
   end
 
   class Engine < ::Rails::Engine
@@ -36,9 +61,65 @@ module Sufia
       #{Hydra::Engine.root}/app/models/concerns
     )
 
+    rake_tasks do
+      load File.expand_path('../../tasks/noid.rake', __FILE__)
+      load File.expand_path('../../tasks/reindex.rake', __FILE__)
+      load File.expand_path('../../tasks/resque.rake', __FILE__)
+      load File.expand_path('../../tasks/stats_tasks.rake', __FILE__)
+      load File.expand_path('../../tasks/sufia_user.rake', __FILE__)
+      load File.expand_path('../../tasks/upload_set_cleanup.rake', __FILE__)
+    end
+
+    initializer 'requires' do
+      require 'activerecord-import'
+      require 'hydra/derivatives'
+    end
+
+    initializer 'configure' do
+      Sufia.config.tap do |c|
+        Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path
+        Hydra::Derivatives.temp_file_base = c.temp_file_base
+        Hydra::Derivatives.fits_path      = c.fits_path
+        Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
+
+        ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
+        ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+        ActiveFedora::Noid.config.template = c.noid_template
+        ActiveFedora::Noid.config.statefile = c.minter_statefile
+      end
+    end
+
     config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
     config.assets.precompile << %r{vjs\.(?:eot|ttf|woff)$}
     config.assets.precompile << %r{fontawesome-webfont\.(?:svg|ttf|woff)$}
     config.assets.precompile += %w( ZeroClipboard.swf )
+
+    # Set some configuration defaults
+    config.persistent_hostpath = "http://localhost/files/"
+    config.enable_ffmpeg = false
+    config.ffmpeg_path = 'ffmpeg'
+    config.fits_message_length = 5
+    config.temp_file_base = nil
+    config.redis_namespace = "sufia"
+    config.fits_path = "fits.sh"
+    config.enable_contact_form_delivery = false
+    config.browse_everything = nil
+    config.enable_local_ingest = nil
+    config.analytics = false
+    config.citations = false
+    config.max_notifications_for_dashboard = 5
+    config.activity_to_show_default_seconds_since_now = 24 * 60 * 60
+    config.arkivo_api = false
+    config.geonames_username = ""
+
+    # Noid identifiers
+    config.enable_noids = true
+    config.noid_template = '.reeddeeddk'
+    config.minter_statefile = '/tmp/minter-state'
+    config.translate_uri_to_id = ActiveFedora::Noid.config.translate_uri_to_id
+    config.translate_id_to_uri = ActiveFedora::Noid.config.translate_id_to_uri
+
+    # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
+    config.analytic_start_date = nil
   end
 end

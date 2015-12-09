@@ -82,7 +82,6 @@ db/schema.rb
 .project
 .buildpath
 
-/.bundle
 /.yardoc
 /doc
 
@@ -100,3 +99,15 @@ public/sitemap.xml
 
 .internal_test_app
 .byebug_history
+
+## Carried over from sufia-models (RIP)
+*.gem
+*.rbc
+.config
+InstalledFiles
+_yardoc
+lib/bundler/man
+spec/reports
+test/tmp
+test/version_tmp
+tmp

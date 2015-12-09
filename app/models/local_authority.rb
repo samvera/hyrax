@@ -69,7 +69,7 @@ class LocalAuthority < ActiveRecord::Base
         hits << { uri: hit.uri, label: hit.label }
       end
     else
-      dterm = DomainTerm.where(model: model, term: term).first
+      dterm = DomainTerm.find_by(model: model, term: term)
       if dterm
         authorities = dterm.local_authorities.collect(&:id).uniq
         sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{low_query}%").select("label, uri").limit(25).to_sql

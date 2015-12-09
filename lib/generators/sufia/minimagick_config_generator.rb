@@ -1,6 +1,6 @@
 require 'rails/generators'
 
-class Sufia::Models::MinimagickConfigGenerator < Rails::Generators::Base
+class Sufia::MinimagickConfigGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
   desc """

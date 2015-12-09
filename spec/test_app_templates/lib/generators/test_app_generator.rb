@@ -17,7 +17,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def banner
-    say_status("info", "TEST ENVIRONMENT OVERRIDES", :blue)
+    say_status("info", "ADDING OVERRIDES FOR TEST ENVIRONMENT", :blue)
   end
 
   def add_analytics_config
@@ -38,7 +38,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def enable_arkivo_api
-    generate 'sufia:models:arkivo_api'
+    generate 'sufia:arkivo_api'
   end
 
   def relax_routing_constraint

@@ -4,7 +4,7 @@ require 'rake'
 describe "Rake tasks" do
   describe "sufia:empty_upload_sets" do
     before do
-      load_rake_environment [File.expand_path("../../../sufia-models/lib/tasks/upload_set_cleanup.rake", __FILE__)]
+      load_rake_environment [File.expand_path("../../../tasks/upload_set_cleanup.rake", __FILE__)]
     end
     subject { run_task "sufia:empty_upload_sets" }
 
@@ -27,7 +27,7 @@ describe "Rake tasks" do
     let(:namespaced_id) { "sufia:123" }
     let(:corrected_id)  { "123" }
     before do
-      load_rake_environment [File.expand_path("../../../sufia-models/lib/tasks/migrate.rake", __FILE__)]
+      load_rake_environment [File.expand_path("../../../tasks/migrate.rake", __FILE__)]
     end
 
     describe "deleting the namespace from ProxyDepositRequest#generic_work_id" do

@@ -1,7 +1,6 @@
-# -*- encoding : utf-8 -*-
 require 'rails/generators'
 
-class Sufia::Models::FulltextGenerator < Rails::Generators::Base
+class Sufia::FulltextGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
   desc """

@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::UpdateContentBlocksGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::UpdateContentBlocksGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
@@ -8,7 +8,7 @@ This generator creates a database migration to add an external_key column to the
        """
 
   def banner
-    say_status("info", "CREATING MIGRATION FILE", :blue)
+    say_status("info", "FIXING CONTENT BLOCKS", :blue)
   end
 
   def copy_migrations

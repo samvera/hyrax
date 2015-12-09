@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::OrcidFieldGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::OrcidFieldGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
