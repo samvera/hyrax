@@ -2,6 +2,27 @@
 
 ## Notice - This document is written for the not yet released alpha version of Sufia 7.  If you are using sufia, you'll want to check out the [6.0-stable](https://github.com/projecthydra/sufia/tree/6.0-stable) branch and it's [README.me](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
 
+Since Sufia 7 is still in Alpha, not all the documentation has been updated to account for the new code structure. However, you should be able to get up and running with the following list of steps:
+
+```
+git clone git@github.com:projecthydra/sufia.git
+cd sufia
+bundle install
+bundle exec rake engine_cart:generate
+bundle exec jetty:clean
+bundle exec curation_concerns:jetty:config
+
+bundle exec rspec
+
+cd .internal_test_app
+bundle exec rails server
+```
+
+After running these steps, browse to http://localhost:3000 and you should see the application running.
+
+
+
+
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
