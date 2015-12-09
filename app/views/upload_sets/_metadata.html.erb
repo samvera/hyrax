@@ -4,11 +4,11 @@
     <div class="col-sm-8">
       <h3>Applies to individual files uploaded</h3>
       <%= content_tag :p, t('curation_concerns.upload_set.help.title'), class: "help-block" %>
-      <% @upload_set.file_sets.sort { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
+      <% f.object.works.each_with_index  do |work, index| %>
         <div class="form-group">
           <%= f.input_label :title, as: :multi_value_with_help, label: "Title #{index + 1}" %>
           <div id="additional_title_clone">
-            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, class: 'form-control', required: true %>
+            <%= f.text_field :title, name: "title[#{work.id}][]", value: work.title, class: 'form-control', required: true %>
           </div>
         </div>
       <% end %>
@@ -27,17 +27,7 @@
     <div class="row">
       <div class="col-sm-6">
       <h3>Applies to all files just uploaded</h3>
-      <%= f.input :resource_type, as: :select_with_help, collection: Sufia.config.resource_types,
-          input_html: { class: 'form-control', multiple: true } %>
-
-      <%= f.input :tag, as: :multi_value_with_help %>
-
-      <%= f.input :creator, as: :multi_value_with_help %>
-
-      <%= f.input :rights, as: :select_with_modal_help, collection: RightsService.select_options,
-          input_html: { class: 'form-control', multiple: true } %>
-
-      <%= render "file_sets/rights_modal" %>
+      <%= render 'base_metadata', f: f %>
 
       <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
       <!-- hidden on initial load -->

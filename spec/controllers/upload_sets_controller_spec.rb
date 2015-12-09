@@ -58,14 +58,12 @@ describe UploadSetsController do
 
   describe "#edit" do
     let(:us1) { UploadSet.create }
-    let!(:work) { create(:generic_work, upload_set: us1, title: ['f1'], user: user) }
-    let!(:work2) { create(:generic_work, upload_set: us1, title: ['f2'], user: user) }
 
     it "sets up attributes for the form" do
       get :edit, id: us1
-      expect(assigns[:form]).not_to be_persisted
-      expect(assigns[:form].creator[0]).to eq user.user_key
-      expect(assigns[:form].title[0]).to eq 'f1'
+      expect(assigns[:form]).to be_kind_of CurationConcerns::UploadSetForm
+      expect(assigns[:form].model).to eq us1
+      expect(response).to be_success
     end
   end
 end
