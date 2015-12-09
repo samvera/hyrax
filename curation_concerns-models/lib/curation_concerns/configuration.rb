@@ -11,13 +11,6 @@ module CurationConcerns
     yield(config)
   end
 
-  # Keep this deprecated class here so that anyone that references it in their config gets a deprecation rather than uninitialized constant.
-  # Remove when Configuration#queue= is removed
-  module Resque
-    class Queue
-    end
-  end
-
   class Configuration
     include Callbacks
 
@@ -85,9 +78,6 @@ module CurationConcerns
     def redis_namespace
       @redis_namespace ||= 'curation_concerns'
     end
-
-    attr_writer :queue
-    deprecation_deprecate :queue=
 
     attr_writer :fits_path
     def fits_path
