@@ -1,27 +1,24 @@
 # Sufia
 
-## Notice - This document is written for the not yet released alpha version of Sufia 7.  If you are using sufia, you'll want to check out the [6.0-stable](https://github.com/projecthydra/sufia/tree/6.0-stable) branch and it's [README.me](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
+## Notice - This document is written for the not yet released alpha version of Sufia 7.  If you are using sufia, you'll want to check out the [6.0-stable](https://github.com/projecthydra/sufia/tree/6.0-stable) branch and it's [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
 
-Since Sufia 7 is still in Alpha, not all the documentation has been updated to account for the new code structure. However, you should be able to get up and running with the following list of steps:
+Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
 ```
 git clone git@github.com:projecthydra/sufia.git
 cd sufia
 bundle install
-bundle exec rake engine_cart:generate
-bundle exec jetty:clean
-bundle exec curation_concerns:jetty:config
-
-bundle exec rspec
-
+rake jetty:clean
+rake curation_concerns:jetty:config
+rake jetty:start
+rake engine_cart:generate
 cd .internal_test_app
-bundle exec rails server
+redis-server
+RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
+rails server
 ```
 
-After running these steps, browse to http://localhost:3000 and you should see the application running.
-
-
-
+After running these steps, browse to http://localhost:3000/ and you should see the application running.
 
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
@@ -221,7 +218,7 @@ RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 QUEUE=* rake environment resque:work
 Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra/sufia/blob/master/sufia-models/lib/generators/sufia/models/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
 
 ```
-RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 bundle exec resque-pool --daemon --environment development start
+RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
 ```
 
 Occasionally, Resque may not give background jobs a chance to clean up temporary files. The `RUN_AT_EXIT_HOOKS` variable allows Resque to do so. The `TERM_CHILD` variable allows workers to terminate gracefully rather than interrupting currently running workers. For more information on the signals that Resque responds to, see the [resque-pool documentation](https://github.com/nevans/resque-pool#signals).
