@@ -100,13 +100,13 @@ describe SufiaHelper, type: :helper do
     end
 
     context "when the user is on the dashboard page" do
-      it "defaults to My Files" do
+      it "defaults to My Works" do
         allow(helper).to receive(:params).and_return(controller: "dashboard")
         expect(helper.search_form_action).to eq(sufia.dashboard_files_path)
       end
     end
 
-    context "when the user is on the my files page" do
+    context "when the user is on the my works page" do
       it "returns the my dashboard files path" do
         allow(helper).to receive(:params).and_return(controller: "my/files")
         expect(helper.search_form_action).to eq(sufia.dashboard_files_path)

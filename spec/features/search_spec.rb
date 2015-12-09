@@ -62,7 +62,7 @@ describe 'searching' do
     it "does not display search options for dashboard files" do
       visit "/"
       within(".input-group-btn") do
-        expect(page).to_not have_content("My Files")
+        expect(page).to_not have_content("My Works")
         expect(page).to_not have_content("My Collections")
         expect(page).to_not have_content("My Shares")
       end

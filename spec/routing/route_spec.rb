@@ -78,7 +78,7 @@ describe 'Routes', type: :routing do
       expect(get: '/dashboard/activity').to route_to(controller: 'dashboard', action: 'activity')
     end
 
-    it "routes to my files tab" do
+    it "routes to my works tab" do
       expect(get: '/dashboard/files').to route_to(controller: 'my/files', action: 'index')
     end
 
