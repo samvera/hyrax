@@ -5,7 +5,7 @@ module Sufia
     autoload :LocalIngestBehavior
     autoload :UploadCompleteBehavior
   end
-  module FilesControllerBehavior
+  module FileSetsControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Breadcrumbs
 
