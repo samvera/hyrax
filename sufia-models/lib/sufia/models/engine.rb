@@ -25,7 +25,6 @@ module Sufia
       config.enable_local_ingest = nil
       config.analytics = false
       config.citations = false
-      config.queue = CurationConcerns::Resque::Queue
       config.max_notifications_for_dashboard = 5
       config.activity_to_show_default_seconds_since_now = 24 * 60 * 60
       config.arkivo_api = false

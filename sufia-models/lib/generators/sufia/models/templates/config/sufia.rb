@@ -64,9 +64,6 @@ Sufia.config do |config|
     "Edit" => "edit"
   }
 
-  # Specify an alternative queue implementation
-  # config.queue = CurationConcerns::Resque::Queue
-
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
   # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
