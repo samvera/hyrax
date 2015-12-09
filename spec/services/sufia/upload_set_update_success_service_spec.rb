@@ -5,12 +5,6 @@ describe Sufia::UploadSetUpdateSuccessService do
   let(:upload_set) { UploadSet.create }
   let(:inbox) { depositor.mailbox.inbox }
 
-  let!(:file) do
-    FileSet.new(upload_set: upload_set) do |file|
-      file.apply_depositor_metadata(depositor)
-    end
-  end
-
   describe "#call" do
     subject { described_class.new(depositor, upload_set) }
 

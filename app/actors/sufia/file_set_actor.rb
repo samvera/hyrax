@@ -2,7 +2,7 @@ module Sufia
   class FileSetActor < CurationConcerns::FileSetActor
     # Overrides the method in CurationConcerns::FileSetActor so that if a nil work
     # is passed, a default work is create instead.
-    def create_metadata(upload_set_id, work, file_set_params = {})
+    def create_metadata(work, file_set_params = {})
       work ||= default_work
       super
     end

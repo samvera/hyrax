@@ -25,7 +25,7 @@ module Sufia
         file_set = ::FileSet.new
 
         file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
-        file_actor.create_metadata(upload_set.id, work)
+        file_actor.create_metadata(work)
         file_set.label = item['file']['filename']
         file_actor.create_content(file) # item['file']['contentType']
         UploadSetUpdateJob.perform_later(user.user_key, upload_set.id, item['metadata']['title'], attributes, default_visibility)

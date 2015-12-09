@@ -18,7 +18,7 @@ module Sufia
         if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
           local_files = file_set_attributes.fetch(:local_file)
           service = IngestLocalFileService.new(current_user, logger)
-          if service.ingest_local_file(local_files, parent_id, upload_set_id)
+          if service.ingest_local_file(local_files, parent_id)
             redirect_to CurationConcerns::FileSetsController.upload_complete_path(upload_set_id)
           else
             flash[:alert] = "Error importing files from user directory."

@@ -123,19 +123,19 @@ describe API::ItemsController, type: :controller do
         expect(deposited_file).not_to be_nil
         expect(deposited_work.arkivo_checksum).to eq item_hash['file']['md5']
         expect(deposited_file.original_file.content).to eq "arkivo\n"
-        expect(deposited_file.resource_type).to eq [item_hash['metadata']['resourceType']]
-        expect(deposited_file.title).to eq [item_hash['metadata']['title']]
-        expect(deposited_file.description).to eq [item_hash['metadata']['description']]
-        expect(deposited_file.publisher).to eq [item_hash['metadata']['publisher']]
-        expect(deposited_file.date_created).to eq [item_hash['metadata']['dateCreated']]
-        expect(deposited_file.based_near).to eq [item_hash['metadata']['basedNear']]
-        expect(deposited_file.identifier).to eq [item_hash['metadata']['identifier']]
-        expect(deposited_file.related_url).to eq [item_hash['metadata']['url']]
-        expect(deposited_file.language).to eq [item_hash['metadata']['language']]
-        expect(deposited_file.rights).to eq [item_hash['metadata']['rights']]
-        expect(deposited_file.tag).to eq item_hash['metadata']['tags']
-        expect(deposited_file.creator).to eq ['Doe, John', 'Babs McGee']
-        expect(deposited_file.contributor).to eq ['Nadal, Rafael', 'Jane Doeski']
+        expect(deposited_work.resource_type).to eq [item_hash['metadata']['resourceType']]
+        expect(deposited_work.title).to eq [item_hash['metadata']['title']]
+        expect(deposited_work.description).to eq [item_hash['metadata']['description']]
+        expect(deposited_work.publisher).to eq [item_hash['metadata']['publisher']]
+        expect(deposited_work.date_created).to eq [item_hash['metadata']['dateCreated']]
+        expect(deposited_work.based_near).to eq [item_hash['metadata']['basedNear']]
+        expect(deposited_work.identifier).to eq [item_hash['metadata']['identifier']]
+        expect(deposited_work.related_url).to eq [item_hash['metadata']['url']]
+        expect(deposited_work.language).to eq [item_hash['metadata']['language']]
+        expect(deposited_work.rights).to eq [item_hash['metadata']['rights']]
+        expect(deposited_work.tag).to match_array item_hash['metadata']['tags']
+        expect(deposited_work.creator).to match_array ['Doe, John', 'Babs McGee']
+        expect(deposited_work.contributor).to match_array ['Nadal, Rafael', 'Jane Doeski']
       end
     end
 
@@ -206,7 +206,7 @@ describe API::ItemsController, type: :controller do
       specify do
         expect(subject).not_to be_success
         expect(subject.status).to eq 403
-        expect(subject.body).to include("Forbidden: #{post_deposited_file} not deposited via Arkivo")
+        expect(subject.body).to include("Forbidden: #{post_deposited_work} not deposited via Arkivo")
       end
     end
 
