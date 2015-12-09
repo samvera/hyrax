@@ -85,18 +85,12 @@ describe UploadSetsController do
   end
 
   describe "#edit" do
-    before do
-      allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
-    end
     let(:upload_set) { UploadSet.create }
-    let!(:work) { create(:work, upload_set: upload_set, title: ['f1'], user: user) }
-    let!(:work2) { create(:work, upload_set: upload_set, title: ['f2'], user: user) }
-
     it "defaults creator" do
       get :edit, id: upload_set
-      expect(assigns[:form]).not_to be_persisted
-      expect(assigns[:form].creator[0]).to eq user.display_name
-      expect(assigns[:form].title[0]).to eq 'f1'
+      expect(assigns[:form]).to be_kind_of Sufia::UploadSetForm
+      expect(assigns[:form].model).to eq upload_set
+      expect(response).to be_success
     end
   end
 end
