@@ -13,12 +13,12 @@ RuboCop::RakeTask.new(:rubocop) do |task|
 end
 
 desc 'Run specs and style checker'
-task spec: [:rubocop] do
+task :spec do
   RSpec::Core::RakeTask.new(:spec)
 end
 
 desc 'Spin up hydra-jetty and run specs'
-task ci: ['engine_cart:generate', 'jetty:clean', 'curation_concerns:jetty:config'] do
+task ci: [:rubocop, 'engine_cart:generate', 'jetty:clean', 'curation_concerns:jetty:config'] do
   puts 'running continuous integration'
   # No need to maintain minter state on Travis
   reset_statefile! if ENV['TRAVIS'] == 'true'
