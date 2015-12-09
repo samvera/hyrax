@@ -6,6 +6,7 @@ module Sufia
       layout "sufia-one-column"
 
       before_action :has_access?
+      self.edit_form_class = Sufia::UploadSetForm
     end
 
     protected
@@ -24,10 +25,6 @@ module Sufia
         work = upload_set.works.first
         return false if work.nil? || work.on_behalf_of.blank?
         current_user.user_key != work.on_behalf_of
-      end
-
-      def creator_display
-        current_user.name
       end
   end
 end
