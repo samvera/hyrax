@@ -29,8 +29,8 @@
     </div>
   </td>
 
-  <td class='text-center'> <%= document.date_uploaded %> </td>
-  <td class='text-center'> TODO: Visibility Link </td>
+  <td class='text-center'><%= document.date_uploaded %></td>
+  <td class='text-center'><%= render_visibility_link document %></td>
 
   <td class='text-center'>
     <%= render 'work_action_menu', document: document %>
