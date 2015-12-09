@@ -31,8 +31,8 @@ describe "Rake tasks" do
     end
 
     describe "deleting the namespace from ProxyDepositRequest#generic_work_id" do
-      let(:sender) { FactoryGirl.find_or_create(:jill) }
-      let(:receiver) { FactoryGirl.find_or_create(:archivist) }
+      let(:sender) { create(:user) }
+      let(:receiver) { create(:user) }
       before do
         ProxyDepositRequest.create(generic_work_id: namespaced_id, sending_user: sender, receiving_user: receiver, sender_comment: "please take this")
         run_task "sufia:migrate:proxy_deposits"

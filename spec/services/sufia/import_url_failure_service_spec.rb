@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::ImportUrlFailureService do
-  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
+  let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
     FileSet.create do |file|

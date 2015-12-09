@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ContentDepositorChangeEventJob do
-  let!(:receiver) { FactoryGirl.find_or_create(:archivist) }
+  let!(:receiver) { create(:user) }
   let!(:work) { mock_model("MockWork", id: "1234", proxy_depositor: receiver, title: ["Title"]) }
 
   before do

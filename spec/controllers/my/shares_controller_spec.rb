@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe My::SharesController, type: :controller do
   describe "logged in user" do
-    let(:user) { FactoryGirl.find_or_create(:archivist) }
+    let(:user) { create(:user) }
 
     before do
       sign_in user

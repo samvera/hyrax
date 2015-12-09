@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe 'collections/_show_document_list_row.html.erb', type: :view do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   let(:work) do
-    gw = GenericWork.new(creator: ["ggm"], title: ['One Hundred Years of Solitude'])
-    gw.apply_depositor_metadata(user)
-    gw.save
-    gw
+    GenericWork.create(creator: ["ggm"], title: ['One Hundred Years of Solitude']) do |gw|
+      gw.apply_depositor_metadata(user)
+    end
   end
 
   let(:collection) { mock_model(Collection, title: 'My awesome collection', members: [work]) }

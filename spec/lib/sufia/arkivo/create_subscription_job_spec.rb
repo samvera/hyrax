@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::Arkivo::CreateSubscriptionJob do
-  let(:user) { FactoryGirl.find_or_create(:archivist) }
+  let(:user) { create(:user) }
 
   context 'with a bogus user' do
     before { allow(User).to receive(:find_by_user_key) { nil } }

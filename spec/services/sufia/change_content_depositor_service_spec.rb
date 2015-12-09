@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Sufia::ChangeContentDepositorService do
-  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
-  let!(:receiver) { FactoryGirl.find_or_create(:archivist) }
+  let!(:depositor) { create(:user) }
+  let!(:receiver) { create(:user) }
   let!(:file) do
     FileSet.create! do |f|
       f.apply_depositor_metadata(depositor.user_key)

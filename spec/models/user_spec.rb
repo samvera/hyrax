@@ -157,7 +157,7 @@ describe User, type: :model do
   end
   describe "proxy_deposit_rights" do
     before do
-      @subject = FactoryGirl.create :curator
+      @subject = create :user
       @subject.can_receive_deposits_from << user
       @subject.can_make_deposits_for << another_user
       @subject.save!

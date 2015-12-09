@@ -133,7 +133,7 @@ describe ::SystemStats, type: :model do
   end
 
   describe "#recent_users" do
-    let!(:user2) { FactoryGirl.find_or_create(:archivist) }
+    let!(:user2) { create(:user) }
 
     let(:one_day_ago_date) { 1.day.ago.to_datetime }
     let(:two_days_ago_date) { 2.days.ago.to_datetime.end_of_day }

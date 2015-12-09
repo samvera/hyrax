@@ -6,7 +6,7 @@ describe API::ItemsController, type: :controller do
     allow(CharacterizeJob).to receive(:perform_later)
   end
 
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
   let!(:default_work) do
     GenericWork.create(title: ['Foo Bar']) do |gf|
       gf.apply_depositor_metadata(user)

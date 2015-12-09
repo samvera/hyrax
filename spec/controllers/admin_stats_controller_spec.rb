@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Admin::StatsController, type: :controller do
-  let(:user1) { FactoryGirl.find_or_create(:user) }
-  let(:user2) { FactoryGirl.find_or_create(:archivist) }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
 
   before do
     allow(user1).to receive(:groups).and_return(['admin'])

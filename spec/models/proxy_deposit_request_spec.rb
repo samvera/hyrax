@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe ProxyDepositRequest, type: :model do
-  let(:sender) { FactoryGirl.find_or_create(:jill) }
-  let(:receiver) { FactoryGirl.find_or_create(:archivist) }
-  let(:receiver2) { FactoryGirl.find_or_create(:curator) }
+  let(:sender) { create(:user) }
+  let(:receiver) { create(:user) }
+  let(:receiver2) { create(:user) }
   let(:work) do
     GenericWork.new.tap do |w|
       w.title = ["Test work"]

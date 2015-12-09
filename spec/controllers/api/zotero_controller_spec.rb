@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe API::ZoteroController, type: :controller do
-  let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:user) { create(:user) }
 
   subject { response }
 

@@ -139,8 +139,8 @@ describe "dashboard/index.html.erb", type: :view do
     end
 
     context 'with transfers' do
-      let(:user) { FactoryGirl.find_or_create(:jill) }
-      let(:another_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:user) { create(:user) }
+      let(:another_user) { create(:user) }
       let(:title1) { 'foobar' }
       let(:title2) { 'bazquux' }
 

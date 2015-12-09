@@ -40,7 +40,7 @@ describe My::FilesController, type: :controller do
   end
 
   context 'with different types of records' do
-    let(:someone_else) { FactoryGirl.find_or_create(:user) }
+    let(:someone_else) { create(:user) }
 
     let!(:my_collection) do
       Collection.create!(title: 'test collection') do |c|

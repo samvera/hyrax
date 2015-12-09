@@ -3,14 +3,6 @@ FactoryGirl.define do
     sequence(:email) { |n| "user#{n}@example.com" }
     password 'password'
 
-    factory :jill do
-      email 'jilluser@example.com'
-    end
-
-    factory :archivist, aliases: [:user_with_fixtures] do
-      email 'archivist1@example.com'
-    end
-
     factory :user_with_mail do
       after(:create) do |user|
         # TODO: what is this class for?
@@ -32,10 +24,6 @@ FactoryGirl.define do
         User.batchuser.send_message(user, message.multiple_success("multiple-batch-success", files), message.success_subject, false)
         User.batchuser.send_message(user, message.multiple_failure("multiple-batch-failure", files), message.failure_subject, false)
       end
-    end
-
-    factory :curator do
-      email 'curator1@example.com'
     end
   end
 end

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe DepositorsController do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:grantee) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
+  let(:grantee) { create(:user) }
 
   describe "as a logged in user" do
     before do
@@ -34,7 +34,7 @@ describe DepositorsController do
 
   describe "as a user without access" do
     before do
-      sign_in FactoryGirl.create(:curator)
+      sign_in create(:user)
     end
     describe "create" do
       it "is not successful" do

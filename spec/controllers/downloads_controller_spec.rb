@@ -57,7 +57,7 @@ describe DownloadsController, type: :controller do
 
     describe "when not logged in as reader" do
       before do
-        sign_in FactoryGirl.find_or_create(:jill)
+        sign_in create(:user)
       end
 
       describe "show" do
