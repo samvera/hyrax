@@ -1,5 +1,5 @@
 module Sufia
-  module GenericWorksControllerBehavior
+  module WorksControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Controller
     include CurationConcerns::CurationConcernController

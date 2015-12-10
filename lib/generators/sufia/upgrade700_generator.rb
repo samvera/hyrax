@@ -31,7 +31,7 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
     if File.exist?(file_path)
       inject_into_file file_path, after: /include CurationConcerns::CurationConcernController/ do
         "\n  # Adds Sufia behaviors to the controller.\n" \
-          "  include Sufia::GenericWorksControllerBehavior\n"
+          "  include Sufia::WorksControllerBehavior\n"
       end
     else
       puts "     \e[31mFailure\e[0m  Sufia requires a CurationConcerns::GenericWorksController object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
