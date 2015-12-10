@@ -7,7 +7,7 @@ describe 'my/_index_partials/_list_works.html.erb' do
   let!(:work) { FactoryGirl.build(:work, id: '3197z511f', title: [work_title]) }
   let(:doc) { SolrDocument.new(work.to_solr) }
 
-  let(:config) { My::FilesController.new.blacklight_config }
+  let(:config) { My::WorksController.new.blacklight_config }
   let(:members) { [SolrDocument.new(collection.to_solr)] }
 
   before do

@@ -5,7 +5,7 @@ module Sufia
     end
 
     def destroy_complete_path(_params)
-      Sufia::Engine.routes.url_helpers.dashboard_files_path
+      Sufia::Engine.routes.url_helpers.dashboard_works_path
     end
   end
 end

@@ -20,7 +20,7 @@ describe "Browse Dashboard", type: :feature do
     click_button "search-submit-header"
     expect(page).to have_content("Fake PDF Title")
 
-    visit "/dashboard/files"
+    visit "/dashboard/works"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
     expect(page).to have_content("Fake PDF Title")
@@ -59,7 +59,7 @@ describe "Browse Dashboard", type: :feature do
   end
 
   it "allows me to delete works in upload_sets", js: true do
-    visit "/dashboard/files"
+    visit "/dashboard/works"
     first('input#check_all').click
     expect {
       click_button('Delete Selected')

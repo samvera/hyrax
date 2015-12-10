@@ -15,7 +15,7 @@ module Sufia
         if uploading_on_behalf_of? @upload_set
           redirect_to sufia.dashboard_shares_path
         else
-          redirect_to sufia.dashboard_files_path
+          redirect_to sufia.dashboard_works_path
         end
       end
 

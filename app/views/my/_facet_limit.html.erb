@@ -4,6 +4,6 @@
 
   <% unless paginator.last_page? || params[:action] == "facet" %>
     <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»',
-       sufia.dashboard_files_facet_path(solr_field), class: "more_facets_link" %></li>
+       sufia.dashboard_works_facet_path(solr_field), class: "more_facets_link" %></li>
   <% end %>
 </ul>

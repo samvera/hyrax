@@ -20,7 +20,7 @@ describe UploadSetsController do
         post :update, id: upload_set, title: { '1' => 'foo' },
                       visibility: 'open',
                       upload_set: { tag: [""] }
-        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
     end
@@ -44,7 +44,7 @@ describe UploadSetsController do
 
       it "sets the groups" do
         post :update, id: upload_set, upload_set: { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
-        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_files_path
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         work.reload
         expect(work.read_groups).to include "public"
       end
