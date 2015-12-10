@@ -43,7 +43,7 @@ module CurationConcerns
         UploadSetUpdateJob.perform_later(current_user.user_key,
                                          params[:id],
                                          params[:title],
-                                         edit_form_class.model_attributes(params[:work]),
+                                         edit_form_class.model_attributes(params[:upload_set]),
                                          params[:visibility])
       end
   end
