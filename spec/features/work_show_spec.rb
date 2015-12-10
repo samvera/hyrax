@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "display a work as its owner" do
-  let(:work) { create(:generic_work, title: ["Magnificent splendor"], user: user) }
+  let(:work) { create(:work_with_one_file, title: ["Magnificent splendor"], user: user) }
   let(:user) { create(:user) }
   let(:work_path) { "/concern/generic_works/#{work.id}" }
   before do
@@ -17,5 +17,10 @@ describe "display a work as its owner" do
 
     # and the form redirects back to this page after uploading
     expect(page).to have_selector '#redirect-loc', text: work_path
+
+    # Displays FileSets already attached to this work
+    within '.related_files' do
+      expect(page).to have_selector '.filename', text: 'filename.pdf'
+    end
   end
 end
