@@ -8,7 +8,7 @@ describe BatchEditsHelper, type: :helper do
       @max_batch_size = 10
     end
 
-    context "with my files" do
+    context "with my works" do
       it "shows the check all dropdown" do
         allow(helper).to receive(:params).and_return(controller: "my/files")
         allow(helper).to receive(:controller_name).and_return("batch_edits")

@@ -7,7 +7,7 @@ module Locations
 
   def go_to_dashboard_files
     visit '/dashboard/files'
-    expect(page).to have_selector('li.active', text: "My Files")
+    expect(page).to have_selector('li.active', text: "My Works")
   end
 
   def go_to_dashboard_collections
