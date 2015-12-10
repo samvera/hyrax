@@ -38,33 +38,8 @@ module Sufia
       end
     end
 
-    # Create a link back to the dashboard screen, keeping the user's facet, query and paging choices intact by using session.
-    def link_back_to_dashboard(opts = { label: 'Back to Search' })
-      query_params = session[:search] ? session[:search].dup : {}
-      query_params.delete :counter
-      query_params.delete :total
-      link_url = dashboard_index_path + "?" + query_params.to_query
-      link_to opts[:label], link_url
-    end
-
-    def link_to_dashboard_query(query)
-      p = params.dup
-      p.delete :page
-      p.delete :action
-      p[:q] = query
-      link_url = dashboard_index_path(p)
-      link_to(query, link_url)
-    end
-
     def has_collection_search_parameters?
       !params[:cq].blank?
-    end
-
-    def display_user_name(recent_document)
-      return "no display name" unless recent_document.depositor
-      ::User.find_by_user_key(recent_document.depositor).name
-    rescue
-      recent_document.depositor
     end
 
     def number_of_deposits(user)
@@ -111,14 +86,6 @@ module Sufia
              end
 
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
-    end
-
-    def linkify_chat_id(chat_id)
-      if chat_id.end_with? '@chat.psu.edu'
-        "<a href=\"xmpp:#{chat_id}\">#{chat_id}</a>"
-      else
-        chat_id
-      end
     end
 
     def link_to_telephone(user = nil)
