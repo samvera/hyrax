@@ -3,7 +3,7 @@ Sufia::Engine.routes.draw do
   resources :homepage, only: 'index'
 
   # Route the home page as the root
-  root to: 'homepage#index'
+  root to: 'sufia/homepage#index'
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 

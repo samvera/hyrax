@@ -47,7 +47,8 @@ module Sufia
     end
 
     def link_to_facet(field, field_string)
-      link_to(field, add_facet_params(field_string, field).merge!(controller: "catalog", action: "index"))
+      facet_params = add_facet_params(field_string, field)
+      link_to(field, catalog_index_path(facet_params))
     end
 
     # @param values [Array] The values to display

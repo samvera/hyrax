@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "homepage/_featured_works.html.erb" do
+describe "sufia/homepage/_featured_works.html.erb" do
   let(:list) { FeaturedWorkList.new }
   subject { rendered }
   before { assign(:featured_work_list, list) }

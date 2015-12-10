@@ -1,0 +1,16 @@
+<div>
+  <% if recent_documents.blank? %>
+    <h3><%= t('.no_public') %></h3>
+  <% else %>
+    <div id="recent_docs">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th scope="col"><%= t('.depositor') %></th>
+          <th scope="col"><%= t('.details') %></th>
+        </tr>
+        <%= render partial: "recent_document", collection: recent_documents %>
+      </table>
+    </div>
+  <% end %>
+
+</div>
