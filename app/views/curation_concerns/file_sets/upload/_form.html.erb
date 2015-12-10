@@ -1,4 +1,8 @@
-<%= form_for(FileSet.new, url: sufia.curation_concerns_file_sets_path, html: { multipart: true, id: 'fileupload' }) do |f| %>
+<%# if the @presenter is present, we're on a work show page. Otherwise
+    we're uploading a bunch of files that don't have works yet %>
+<%= form_for(FileSet.new,
+             url: @presenter ? main_app.curation_concerns_file_sets_path(parent_id: @presenter.id) : sufia.curation_concerns_file_sets_path,
+             html: { multipart: true, id: 'fileupload' }) do |f| %>
   <% unless current_user.can_make_deposits_for.empty? %>
     <div class="controls">
       <%= label_tag :on_behalf_of, 'On Behalf of' %>
