@@ -7,11 +7,16 @@ describe CurationConcerns::GenericWorksController do
   routes { Rails.application.routes }
 
   describe "#new" do
+    before { get :new }
     it "is successful" do
-      get :new
       expect(response).to be_successful
       expect(response).to render_template("layouts/sufia-one-column")
       expect(assigns[:curation_concern]).to be_kind_of GenericWork
+    end
+
+    it "applies depositor metadata" do
+      expect(assigns[:form].depositor).to eq user.user_key
+      expect(assigns[:curation_concern].depositor).to eq user.user_key
     end
   end
 
