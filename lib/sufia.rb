@@ -21,7 +21,7 @@ module Sufia
   extend ActiveSupport::Autoload
 
   eager_autoload do
-    autoload :FormBuilder
+    autoload :RedisEventStore
   end
 
   class Engine < ::Rails::Engine

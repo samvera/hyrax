@@ -11,7 +11,6 @@ describe User, type: :model do
     expect(user).to respond_to(:stream)
     expect(user).to respond_to(:events)
     expect(user).to respond_to(:profile_events)
-    expect(user).to respond_to(:create_event)
     expect(user).to respond_to(:log_event)
     expect(user).to respond_to(:log_profile_event)
   end

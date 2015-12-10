@@ -5,5 +5,6 @@ module Sufia
     include Sufia::Works::Trophies
     include Sufia::Works::Metadata
     include Sufia::Works::Querying
+    include Sufia::WithEvents
   end
 end
