@@ -16,8 +16,6 @@
     <% case document.hydra_model %>
     <% when "GenericWork" %>
       <%= render partial: 'my/_index_partials/list_works', locals: { document: document, counter: counter } %>
-    <% when "FileSet" %>
-      <%= render partial: 'my/_index_partials/list_files', locals: {document: document, counter: counter} %>
     <% when "Collection" %>
       <%= render partial: 'my/_index_partials/list_collections', locals: {document: document, counter: counter} %>
     <% else %>

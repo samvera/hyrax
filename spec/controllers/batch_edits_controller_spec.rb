@@ -35,7 +35,7 @@ describe BatchEditsController, type: :controller do
 
     it "sets the breadcrumb trail" do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       get :edit
     end
   end
@@ -59,7 +59,7 @@ describe BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
     end
 
-    let(:mycontroller) { "my/files" }
+    let(:mycontroller) { "my/works" }
 
     it "is successful" do
       put :update, update_type: "delete_all"

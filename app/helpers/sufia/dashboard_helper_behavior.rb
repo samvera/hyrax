@@ -36,8 +36,8 @@ module Sufia
       params[:controller].match(/^dashboard|my/)
     end
 
-    def on_my_files?
-      params[:controller].match(/^my\/files/)
+    def on_my_works?
+      params[:controller].match(/^my\/works/)
     end
 
     def number_of_files(user = current_user)

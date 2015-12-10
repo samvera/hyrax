@@ -10,7 +10,7 @@ describe BatchEditsHelper, type: :helper do
 
     context "with my works" do
       it "shows the check all dropdown" do
-        allow(helper).to receive(:params).and_return(controller: "my/files")
+        allow(helper).to receive(:params).and_return(controller: "my/works")
         allow(helper).to receive(:controller_name).and_return("batch_edits")
         expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end

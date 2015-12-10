@@ -78,8 +78,8 @@ describe SufiaHelper, type: :helper do
         expect(helper.current_search_parameters).to be_nil
       end
 
-      it "is ignored on dashboard files, collections, highlights and shares" do
-        allow(helper).to receive(:params).and_return(controller: "my/files", q: "foo")
+      it "is ignored on dashboard works, collections, highlights and shares" do
+        allow(helper).to receive(:params).and_return(controller: "my/works", q: "foo")
         expect(helper.current_search_parameters).to be_nil
         allow(helper).to receive(:params).and_return(controller: "my/collections", q: "foo")
         expect(helper.current_search_parameters).to be_nil
@@ -102,14 +102,14 @@ describe SufiaHelper, type: :helper do
     context "when the user is on the dashboard page" do
       it "defaults to My Works" do
         allow(helper).to receive(:params).and_return(controller: "dashboard")
-        expect(helper.search_form_action).to eq(sufia.dashboard_files_path)
+        expect(helper.search_form_action).to eq(sufia.dashboard_works_path)
       end
     end
 
     context "when the user is on the my works page" do
-      it "returns the my dashboard files path" do
-        allow(helper).to receive(:params).and_return(controller: "my/files")
-        expect(helper.search_form_action).to eq(sufia.dashboard_files_path)
+      it "returns the my dashboard works path" do
+        allow(helper).to receive(:params).and_return(controller: "my/works")
+        expect(helper.search_form_action).to eq(sufia.dashboard_works_path)
       end
     end
 

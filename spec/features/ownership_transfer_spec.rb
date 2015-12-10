@@ -21,7 +21,7 @@ describe 'Transferring work ownership:', type: :feature do
 
   before do
     sign_in original_owner
-    go_to_dashboard_files
+    go_to_dashboard_works
   end
 
   describe 'When I request a work transfer:', :js do

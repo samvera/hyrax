@@ -95,7 +95,7 @@ module Sufia
     end
 
     # Only display the current search parameters if the user is not in the dashboard.
-    # If they are in the dashboard, then the search defaults to the user's files and not
+    # If they are in the dashboard, then the search defaults to the user's works and not
     # all of Sufia.
     def current_search_parameters
       if on_the_dashboard?
@@ -146,8 +146,8 @@ module Sufia
 
       def search_action_for_dashboard
         case params[:controller]
-        when "my/files"
-          sufia.dashboard_files_path
+        when "my/works"
+          sufia.dashboard_works_path
         when "my/collections"
           sufia.dashboard_collections_path
         when "my/shares"
@@ -155,7 +155,7 @@ module Sufia
         when "my/highlights"
           sufia.dashboard_highlights_path
         else
-          sufia.dashboard_files_path
+          sufia.dashboard_works_path
         end
       end
   end

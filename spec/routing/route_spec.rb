@@ -79,7 +79,7 @@ describe 'Routes', type: :routing do
     end
 
     it "routes to my works tab" do
-      expect(get: '/dashboard/files').to route_to(controller: 'my/files', action: 'index')
+      expect(get: '/dashboard/works').to route_to(controller: 'my/works', action: 'index')
     end
 
     it "routes to my collections tab" do

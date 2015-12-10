@@ -3,7 +3,7 @@
     <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>
   </div>
 
-  <% if on_my_files? %>
+  <% if on_my_works? %>
     <div class="batch-toggle">
       <%= batch_delete %>
       <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',

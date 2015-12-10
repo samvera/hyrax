@@ -5,8 +5,8 @@ module Locations
     expect(page).to have_content('My Dashboard')
   end
 
-  def go_to_dashboard_files
-    visit '/dashboard/files'
+  def go_to_dashboard_works
+    visit '/dashboard/works'
     expect(page).to have_selector('li.active', text: "My Works")
   end
 

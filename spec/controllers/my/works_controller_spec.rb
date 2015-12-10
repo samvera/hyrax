@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe My::FilesController, type: :controller do
+describe My::WorksController, type: :controller do
   let(:user) { create(:user) }
 
   before { sign_in user }

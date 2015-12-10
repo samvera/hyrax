@@ -2,6 +2,6 @@
 <div class="actions-controls-collections">
   <% if can? :edit, @presenter.solr_document %>
     <span class="label label-default"><%= link_to "Edit", collections.edit_collection_path, title: "Edit this Collection" %></span> &nbsp;&nbsp;
-    <span class="label label-default"><%= link_to "Add files",  sufia.dashboard_files_path(add_files_to_collection: @presenter.id), title: "Add files to this Collection" %></span>
+    <span class="label label-default"><%= link_to "Add files",  sufia.dashboard_works_path(add_files_to_collection: @presenter.id), title: "Add files to this Collection" %></span>
   <%end %>
 </div>

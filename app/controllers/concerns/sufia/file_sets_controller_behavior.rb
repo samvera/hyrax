@@ -1,5 +1,5 @@
 module Sufia
-  module FilesController
+  module FileSetsController
     extend ActiveSupport::Autoload
     autoload :BrowseEverything
     autoload :LocalIngestBehavior
@@ -11,9 +11,9 @@ module Sufia
 
     included do
       include Blacklight::Configurable
-      include Sufia::FilesController::BrowseEverything
-      include Sufia::FilesController::LocalIngestBehavior
-      extend Sufia::FilesController::UploadCompleteBehavior
+      include Sufia::FileSetsController::BrowseEverything
+      include Sufia::FileSetsController::LocalIngestBehavior
+      extend Sufia::FileSetsController::UploadCompleteBehavior
 
       layout "sufia-one-column"
 

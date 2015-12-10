@@ -73,13 +73,13 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # Routes for user's files, collections, highlights and shares
+  # Routes for user's works, collections, highlights and shares
   # Preserves existing behavior by maintaining paths to /dashboard
   # Routes actions to the various My controllers
   scope :dashboard do
-    get '/files',             controller: 'my/files', action: :index, as: 'dashboard_files'
-    get '/files/page/:page',  controller: 'my/files', action: :index
-    get '/files/facet/:id',   controller: 'my/files', action: :facet, as: 'dashboard_files_facet'
+    get '/works',             controller: 'my/works', action: :index, as: 'dashboard_works'
+    get '/works/page/:page',  controller: 'my/works', action: :index
+    get '/works/facet/:id',   controller: 'my/works', action: :facet, as: 'dashboard_works_facet'
 
     get '/collections',             controller: 'my/collections', action: :index, as: 'dashboard_collections'
     get '/collections/page/:page',  controller: 'my/collections', action: :index

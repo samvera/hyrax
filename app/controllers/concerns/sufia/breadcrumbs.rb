@@ -27,10 +27,8 @@ module Sufia
 
     def add_breadcrumb_for_controller
       case controller_name
-      when 'file_sets'.freeze, 'my/files'.freeze, 'batch_edits'.freeze
-        add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
-      when 'stats'.freeze
-        add_breadcrumb I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path
+      when 'file_sets'.freeze, 'my/works'.freeze, 'batch_edits'.freeze, 'stats'.freeze
+        add_breadcrumb I18n.t('sufia.dashboard.my.works'), sufia.dashboard_works_path
       when 'my/collections'.freeze
         add_breadcrumb I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path
       end
