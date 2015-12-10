@@ -1,19 +1,18 @@
-# -*- encoding : utf-8 -*-
-require 'rails/generators'
-class Sufia::Upgrade700Generator < Rails::Generators::Base
-  include Rails::Generators::Migration
+require_relative 'abstract_migration_generator'
 
+class Sufia::Upgrade700Generator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   argument :model_name, type: :string, default: "user"
   desc """
 This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes to your application:
  1. Updates the Catalog Controller
- 8. Runs sufia-models upgrade generator
+ 2. Creates several database migrations if they do not exist in /db/migrate
+
        """
 
   def banner
-    say_status("warning", "UPGRADING SUFIA", :yellow)
+    say_status("info", "APPLYING SUFIA 7.0 CHANGES", :blue)
   end
 
   # The engine routes have to come after the devise routes so that /users/sign_in will work
@@ -22,8 +21,16 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
     gsub_file 'app/controllers/catalog_controller.rb', '[:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]', '[:add_advanced_parse_q_to_solr] + search_params_logic + [:add_access_controls_to_solr_params]'
   end
 
-  def upgrade_sufia_models
-    generate "sufia:models:upgrade700"
+  # Setup the database migrations
+  def copy_migrations
+    [
+      'change_trophy_generic_file_id_to_generic_work_id.rb',
+      'change_proxy_deposit_generic_file_id_to_generic_work_id.rb',
+      'change_audit_log_generic_file_id_to_file_set_id.rb',
+      'change_proxy_deposit_request_generic_file_id_to_generic_work_id.rb'
+    ].each do |file|
+      better_migration_template file
+    end
   end
 
   def inject_sufia_work_controller_behavior

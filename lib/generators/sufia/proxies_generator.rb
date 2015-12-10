@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::ProxiesGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::ProxiesGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
@@ -9,7 +9,7 @@ This generator adds proxies and transfers to your application:
        """
 
   def banner
-    say_status("info", "ADDING PROXY/TRANSFER-RELATED SUFIA MODELS", :blue)
+    say_status("info", "ADDING PROXY/TRANSFER-RELATED DATABASE TABLES", :blue)
   end
 
   # Setup the database migrations

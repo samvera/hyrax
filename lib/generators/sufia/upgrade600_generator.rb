@@ -1,15 +1,21 @@
-# -*- encoding : utf-8 -*-
-require 'rails/generators'
+require_relative 'abstract_migration_generator'
 
-class Sufia::Upgrade600Generator < Rails::Generators::Base
+class Sufia::Upgrade600Generator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
 This generator for upgrading sufia to 6.0 makes the following changes to your application:
- 1. runs the model upgrade
+ 1. Creates several database migrations if they do not exist in /db/migrate
        """
 
-  def migrations
-    generate "sufia:models:upgrade600"
+  # Setup the database migrations
+  def copy_migrations
+    [
+      # Related to issue#97.  Migration is fails for install.
+      'change_audit_log_pid_to_generic_file_id.rb',
+      'change_proxy_deposit_request_pid_to_generic_file_id.rb'
+    ].each do |file|
+      better_migration_template file
+    end
   end
 end

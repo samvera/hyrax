@@ -10,7 +10,7 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
-    - 'sufia-models/app/models/concerns/sufia/file_set/export.rb'
+    - 'app/models/concerns/sufia/file_set/export.rb'
 
 Metrics/LineLength:
   Enabled: false
@@ -21,13 +21,13 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/sufia/arkivo/metadata_munger.rb'
-    - 'sufia-models/app/services/sufia/file_set_audit_service.rb'
+    - 'app/services/sufia/file_set_audit_service.rb'
     - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
-    - 'sufia-models/app/services/sufia/file_set_audit_service.rb'
+    - 'app/services/sufia/file_set_audit_service.rb'
     - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
@@ -38,8 +38,7 @@ Metrics/ClassLength:
   Exclude:
     - 'lib/generators/sufia/templates/catalog_controller.rb'
     - 'lib/generators/sufia/install_generator.rb'
-    - 'sufia-models/app/models/datastreams/fits_datastream.rb'
-    - 'sufia-models/app/actors/sufia/file_set/actor.rb'
+    - 'app/actors/sufia/file_set/actor.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -92,7 +91,7 @@ Style/HashSyntax:
 Style/LineEndConcatenation:
   Exclude:
     - 'spec/test_app_templates/lib/generators/**/*'
-    - 'sufia-models/lib/generators/**/*'
+    - 'lib/generators/**/*'
 
 Style/PredicateName:
   Exclude:
@@ -103,7 +102,7 @@ Style/GlobalVars:
   Exclude:
     - 'spec/**/*'
     - 'spec/jobs/event_jobs_spec.rb'
-    - 'sufia-models/lib/generators/sufia/models/templates/config/redis_config.rb'
+    - 'lib/generators/sufia/templates/config/redis_config.rb'
     - 'lib/sufia/redis_event_store.rb'
 
 Style/SingleLineBlockParams:
@@ -111,8 +110,8 @@ Style/SingleLineBlockParams:
 
 Style/ClassVars:
   Exclude:
-    - 'sufia-models/lib/sufia/models.rb'
-    - 'sufia-models/lib/sufia/models/engine.rb'
+    - 'lib/sufia/models.rb'
+    - 'lib/sufia.rb'
 
 Style/SignalException:
   Enabled: false
@@ -120,13 +119,18 @@ Style/SignalException:
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
-    - 'sufia-models/lib/generators/**/*'
+    - 'lib/sufia/user_stat_importer.rb'
 
 Rails/Date:
   Enabled: false
 
 Rails/TimeZone:
   Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Exclude:
+    - 'app/models/domain_term.rb'
+    - 'app/models/local_authority.rb'
 
 RSpec/ExampleWording:
   CustomTransform:

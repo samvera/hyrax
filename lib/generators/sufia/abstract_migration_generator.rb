@@ -2,7 +2,7 @@
 require 'rails/generators'
 require 'rails/generators/migration'
 
-class Sufia::Models::AbstractMigrationGenerator < Rails::Generators::Base
+class Sufia::AbstractMigrationGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
 
   # Implement the required interface for Rails::Generators::Migration.

@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::ArkivoApiGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::ArkivoApiGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
@@ -14,9 +14,9 @@ This generator sets up Zotero/Arkivo API integration for your application:
   # Turn on the feature set in Sufia's config
   def inject_arkivo_config
     inject_into_file 'config/initializers/sufia.rb', after: /^Sufia\.config do.*$/ do
-      "\n  # Sufia can integrate with Zotero's Arkivo service for automatic deposit\n" +
-        "  # of Zotero-managed research items.\n" +
-        "  # Defaults to false.  See README for more info\n" +
+      "\n  # Sufia can integrate with Zotero's Arkivo service for automatic deposit\n" \
+        "  # of Zotero-managed research items.\n" \
+        "  # Defaults to false.  See README for more info\n" \
         "  config.arkivo_api = true\n"
     end
   end

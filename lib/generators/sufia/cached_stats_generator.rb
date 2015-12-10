@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::CachedStatsGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::CachedStatsGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
@@ -9,7 +9,7 @@ This generator adds the ability to cache usage stats to your application:
        """
 
   def banner
-    say_status("info", "ADDING STATS CACHING-RELATED SUFIA MODELS", :blue)
+    say_status("info", "ADDING STATS CACHING-RELATED TABLES", :blue)
   end
 
   # Setup the database migrations

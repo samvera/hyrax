@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
-gem 'sufia-models', path: './sufia-models'
-
 group :development, :test do
   gem "simplecov", require: false
   gem 'byebug' unless ENV['CI']

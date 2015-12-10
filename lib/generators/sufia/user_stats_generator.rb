@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class Sufia::Models::UserStatsGenerator < Sufia::Models::AbstractMigrationGenerator
+class Sufia::UserStatsGenerator < Sufia::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
   argument :model_name, type: :string, default: "user"
 
@@ -9,7 +9,7 @@ This generator adds usage stats methods to the user model in your application:
        """
 
   def banner
-    say_status("info", "ADDING USER STATS-RELATED ABILITIES TO SUFIA MODELS", :blue)
+    say_status("info", "ADDING USER STATS-RELATED ABILITIES AND TABLES", :blue)
   end
 
   # Setup the database migrations
@@ -25,7 +25,7 @@ This generator adds usage stats methods to the user model in your application:
         "\n  include Sufia::UserUsageStats"
       end
     else
-      puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generator assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails g sufia:models:user_stats client"
+      puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generator assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails g sufia:user_stats client"
     end
   end
 end
