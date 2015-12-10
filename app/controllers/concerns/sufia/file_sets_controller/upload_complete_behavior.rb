@@ -1,5 +1,5 @@
 module Sufia
-  module FilesController::UploadCompleteBehavior
+  module FileSetsController::UploadCompleteBehavior
     def upload_complete_path(upload_set_id)
       Rails.application.routes.url_helpers.edit_upload_set_path(upload_set_id)
     end

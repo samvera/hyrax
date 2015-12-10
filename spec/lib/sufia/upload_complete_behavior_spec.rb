@@ -1,10 +1,10 @@
 require "spec_helper"
 class UploadThing
-  extend Sufia::FilesController::UploadCompleteBehavior
+  extend Sufia::FileSetsController::UploadCompleteBehavior
 end
 
 class UploadThingRedefine
-  extend Sufia::FilesController::UploadCompleteBehavior
+  extend Sufia::FileSetsController::UploadCompleteBehavior
   def self.upload_complete_path(_id)
     "example.com"
   end
@@ -14,7 +14,7 @@ class UploadThingRedefine
   end
 end
 
-describe Sufia::FilesController::UploadCompleteBehavior do
+describe Sufia::FileSetsController::UploadCompleteBehavior do
   let(:test_id) { "123abc" }
   context "Not overridden" do
     it "respond with the batch edit path" do

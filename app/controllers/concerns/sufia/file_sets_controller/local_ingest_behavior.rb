@@ -1,5 +1,5 @@
 module Sufia
-  module FilesController::LocalIngestBehavior
+  module FileSetsController::LocalIngestBehavior
     include ActiveSupport::Concern
 
     def create
@@ -29,5 +29,5 @@ module Sufia
           render :new
         end
       end
-  end # /FilesController::LocalIngestBehavior
+  end # /FileSetsController::LocalIngestBehavior
 end # /Sufia

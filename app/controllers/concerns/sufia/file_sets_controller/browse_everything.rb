@@ -1,4 +1,4 @@
-module Sufia::FilesController
+module Sufia::FileSetsController
   module BrowseEverything
     include ActiveSupport::Concern
 
