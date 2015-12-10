@@ -83,13 +83,15 @@ describe CurationConcerns::FileSetsController do
         end
 
         context "when a work id is not passed" do
+          routes { Sufia::Engine.routes }
           it "creates the FileSet" do
-            skip "Creating a FileSet without a parent work is not yet supported"
             xhr :post, :create, file_set: { files: [file], Filename: 'The world' },
                                 upload_set_id: upload_set_id,
                                 terms_of_service: '1'
             expect(response).to be_success
             expect(reloaded_file_set.generic_works).not_to be_empty
+            expect(reloaded_file_set.generic_works.first.upload_set_id).to eq upload_set_id
+            expect(reloaded_file_set.generic_works.first.title).to eq ['world.png']
           end
         end
       end

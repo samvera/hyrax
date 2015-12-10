@@ -28,7 +28,7 @@ module Sufia
     end
 
     def new
-      @upload_set_id = ActiveFedora::Noid::Service.new.mint
+      @upload_set_id = SecureRandom.uuid
     end
 
     # routed to /files/:id/stats
@@ -98,12 +98,23 @@ module Sufia
       end
 
       def find_parent_by_id
-        return if parent_id.empty?
+        return default_work unless parent_id.present?
         super
       end
 
+      # If the user is creating a bunch of files, and not in a work context,
+      # create a work for each file.
+      def default_work
+        # Ensure the upload set exists, before trying to associate a work with it.
+        upload_set = UploadSet.find_or_create(params[:upload_set_id])
+        GenericWork.create!(title: [params[:file_set][:files].first.original_filename],
+                            upload_set: upload_set) do |w|
+          w.apply_depositor_metadata(current_user)
+        end
+      end
+
       def actor
-        @actor ||= ::Sufia::FileSetActor.new(@file_set, current_user)
+        @actor ||= CurationConcerns::FileSetActor.new(@file_set, current_user)
       end
   end
 end

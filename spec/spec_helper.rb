@@ -115,6 +115,10 @@ RSpec.configure do |config|
 
   config.use_transactional_fixtures = false
 
+  config.before :suite do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
   config.before :each do |example|
     unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!

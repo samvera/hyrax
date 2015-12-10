@@ -233,7 +233,7 @@ en:
         creator_html: 'The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. "Smith, John." <em>This is a required field</em>.'
 
     aria_label:
-      file_set:
+      upload_set:
         default: "Usage information for %{title}"
         based_near: "Usage information for location"
         description: "Usage information for abstract or summary"
