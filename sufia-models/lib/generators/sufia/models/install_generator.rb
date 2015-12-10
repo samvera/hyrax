@@ -78,7 +78,13 @@ This generator makes the following changes to your application:
 
   def inject_sufia_generic_work_behavior
     insert_into_file 'app/models/generic_work.rb', after: 'include ::CurationConcerns::BasicMetadata' do
-      "\n  include ::Sufia::WorkBehavior"
+      "\n  include Sufia::WorkBehavior"
+    end
+  end
+
+  def inject_sufia_file_set_behavior
+    insert_into_file 'app/models/file_set.rb', after: 'include ::CurationConcerns::FileSetBehavior' do
+      "\n  include Sufia::FileSetBehavior"
     end
   end
 

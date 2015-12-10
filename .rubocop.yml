@@ -104,8 +104,7 @@ Style/GlobalVars:
     - 'spec/**/*'
     - 'spec/jobs/event_jobs_spec.rb'
     - 'sufia-models/lib/generators/sufia/models/templates/config/redis_config.rb'
-    - 'sufia-models/lib/sufia/models/active_record/redis.rb'
-    - 'sufia-models/lib/sufia/models/active_fedora/redis.rb'
+    - 'lib/sufia/redis_event_store.rb'
 
 Style/SingleLineBlockParams:
   Enabled: false

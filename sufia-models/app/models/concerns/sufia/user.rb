@@ -9,7 +9,7 @@ module Sufia::User
     # Connects this user object to Blacklight's Bookmarks and Folders.
     include Blacklight::User
     include Hydra::User
-
+    include Sufia::WithEvents
     delegate :can?, :cannot?, to: :ability
 
     # set this up as a messageable object
@@ -40,6 +40,14 @@ module Sufia::User
 
     has_many :trophies
     attr_accessor :update_directory
+  end
+
+  def profile_events(size = -1)
+    event_store.for(stream[:event][:profile]).fetch(size)
+  end
+
+  def log_profile_event(event_id)
+    event_store.for(stream[:event][:profile]).push(event_id)
   end
 
   def zotero_token

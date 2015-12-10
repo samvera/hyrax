@@ -48,11 +48,6 @@ module Sufia
         load File.expand_path('../../../tasks/sufia-models_tasks.rake', __FILE__)
       end
 
-      initializer "patches" do
-        require 'sufia/models/active_fedora/redis'
-        require 'sufia/models/active_record/redis'
-      end
-
       initializer 'requires' do
         require 'activerecord-import'
         require 'hydra/derivatives'

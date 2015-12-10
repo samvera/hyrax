@@ -20,11 +20,6 @@ class ContentDepositorChangeEventJob < ContentEventJob
     super(generic_work_id, login)
   end
 
-  # create an event with an action and a timestamp for the user
-  def event
-    @event ||= proxy_depositor.create_event(action, Time.now.to_i)
-  end
-
   def action
     "User #{link_to_profile work.proxy_depositor} has transferred #{link_to work.title.first, Rails.application.routes.url_helpers.curation_concerns_generic_work_path(work)} to user #{link_to_profile login}"
   end
