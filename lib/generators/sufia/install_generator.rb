@@ -81,12 +81,12 @@ module Sufia
     # The engine routes have to come after the devise routes so that /users/sign_in will work
     def inject_routes
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
-      gsub_file 'config/routes.rb', /('welcome#index')/, '\1, as: :welcome_root' # Name welcome root to from CurationConcerns
+      gsub_file 'config/routes.rb', /'welcome#index'/, "'sufia/homepage#index'" # Replace the root path injected by CurationConcerns
 
       routing_code = "\n  Hydra::BatchEdit.add_routes(self)\n" \
-        "  # This must be the very last route in the file because it has a catch-all route for 404 errors.
-    # This behavior seems to show up only in production mode.
-    mount Sufia::Engine => '/'\n  root to: 'homepage#index'\n"
+        "  # This must be the very last route in the file because it has a catch-all route for 404 errors.\n" \
+        "  # This behavior seems to show up only in production mode.\n" \
+        "  mount Sufia::Engine => '/'\n"
 
       sentinel = /devise_for :users/
       inject_into_file 'config/routes.rb', routing_code, after: sentinel, verbose: false

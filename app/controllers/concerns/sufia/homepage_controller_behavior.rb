@@ -1,4 +1,4 @@
-module Sufia::HomepageController
+module Sufia::HomepageControllerBehavior
   extend ActiveSupport::Concern
 
   included do

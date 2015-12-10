@@ -64,10 +64,13 @@ en:
         tab_label:          'Featured Works'
         title:              'Featured Works'
         no_works:           'No works have been featured'
-      recently_uploaded:    'Recently Uploaded'
+      recently_uploaded:
+        depositor:          'Depositor'
+        details:            'Details'
+        tab_label:          'Recently Uploaded'
+        no_public:          'No public work has been contributed.'
       explore:              'Explore'
       sr_explore:           'Popular Keywords'
-      no_public:            'No public work has been contributed.'
     dashboard:
       title:                    "My Dashboard"
       greeting:                 "Hello, "

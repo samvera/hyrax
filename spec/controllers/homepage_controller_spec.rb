@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe HomepageController, type: :controller do
-  routes { Rails.application.class.routes }
+describe Sufia::HomepageController, type: :controller do
+  routes { Sufia::Engine.routes }
 
   describe "#index" do
     let(:user) { create(:user) }

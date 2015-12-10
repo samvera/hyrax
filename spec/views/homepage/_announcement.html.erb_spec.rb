@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "homepage/_announcement.html.erb" do
+describe "sufia/homepage/_announcement.html.erb" do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }
   let(:announcement) { ContentBlock.new(name: ContentBlock::ANNOUNCEMENT, value: announcement_value) }
