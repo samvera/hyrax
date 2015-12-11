@@ -41,7 +41,7 @@ describe CurationConcerns::Messages do
     it 'renders a success message for multiple files' do
       node = Capybara::Node::Simple.new(message.multiple_success(upload_set_id, multiple))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: 'These files have been saved.')
-      expect(node).to have_selector("a[data-content=\"#{file_list}\"][rel=\"popover\"][data-title=\"Files uploaded successfully\"]")
+      expect(node).to have_selector("a[data-content=\"#{file_list}\"][data-toggle=\"popover\"][data-title=\"Files uploaded successfully\"]")
     end
   end
 
@@ -57,7 +57,7 @@ describe CurationConcerns::Messages do
     it 'renders a failure message for multiple files' do
       node = Capybara::Node::Simple.new(message.multiple_failure(upload_set_id, multiple))
       expect(node).to have_selector("span[id=\"ss-1\"]", text: 'These files could not be updated. You do not have sufficient privileges to edit them.')
-      expect(node).to have_selector("a[data-content=\"#{file_list}\"][rel=\"popover\"][data-title=\"Files failed\"]")
+      expect(node).to have_selector("a[data-content=\"#{file_list}\"][data-toggle=\"popover\"][data-title=\"Files failed\"]")
     end
   end
 
