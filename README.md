@@ -30,6 +30,12 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 [![Coverage Status](https://coveralls.io/repos/projecthydra/sufia/badge.svg)](https://coveralls.io/r/projecthydra/sufia)
 [![Stories in Ready](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
 
+# Migrating data to PCDM / Sufia 7
+
+1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
+2. Create a FileSet for each GenericWork and add it to the ordered_members collection on the GenericWork.
+3. Move the binary from the GenericFile#content to FileSet#original_file
+
 # Table of Contents
 
   * [What is Sufia?](#what-is-sufia)
