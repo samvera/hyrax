@@ -1,7 +1,6 @@
 # Sufia
 
 ## Notice - This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
->>>>>>> WIP (37 failures): merges sufia-models back into sufia. Fixes #1423
 
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
@@ -33,8 +32,8 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 # Migrating data to PCDM / Sufia 7
 
 1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
-2. Create a FileSet for each GenericWork and add it to the ordered_members collection on the GenericWork.
-3. Move the binary from the GenericFile#content to FileSet#original_file
+1. Create a FileSet for each GenericWork and add it to the ordered_members collection on the GenericWork.
+1. Move the binary from the GenericFile#content to FileSet#original_file
 
 # Table of Contents
 
