@@ -60,7 +60,7 @@ module CurationConcerns
         "  mount Hydra::Collections::Engine => '/'\n"\
         "  mount CurationConcerns::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
-        "  root to: 'welcome#index'\n"\
+        "  root 'welcome#index'\n"\
         "  curation_concerns_collections\n"\
         "  curation_concerns_basic_routes\n"\
         "  curation_concerns_embargo_management\n"\
