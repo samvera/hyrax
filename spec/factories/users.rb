@@ -37,5 +37,5 @@ class MockFile
 end
 
 class UploadSetMessage
-  include Sufia::Messages
+  include CurationConcerns::Messages
 end
