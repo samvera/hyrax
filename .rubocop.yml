@@ -156,4 +156,5 @@ RSpec/DescribeClass:
     - 'spec/features/**/*'
     - 'spec/views/**/*'
     - 'spec/routing/**/*'
+    - 'spec/requests/**/*'
     - 'spec/inputs/**/*'

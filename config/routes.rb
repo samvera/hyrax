@@ -5,6 +5,10 @@ Sufia::Engine.routes.draw do
   # Route the home page as the root
   root to: 'sufia/homepage#index'
 
+  # Handle routes that existed in Sufia < 7
+  #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
+  get '/files/:id', to: redirect('/concern/generic_works/%{id}')
+
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 
   # Notifications route for catalog index view
