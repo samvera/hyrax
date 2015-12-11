@@ -14,8 +14,7 @@
     <%= render 'curation_concerns/base/permission_form', f: f %>
 
     <div class="primary-actions">
-      <%= f.submit 'Save and Add Files', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
-      <%= f.submit 'Save without Files', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "without_files_submit", name: "save_without_files" %>
+      <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
       <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
     </div>
 
