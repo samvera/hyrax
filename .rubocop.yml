@@ -119,7 +119,7 @@ Style/SignalException:
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
-    - 'lib/sufia/user_stat_importer.rb'
+    - 'app/services/sufia/user_stat_importer.rb'
 
 Rails/Date:
   Enabled: false

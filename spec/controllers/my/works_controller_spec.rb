@@ -20,7 +20,7 @@ describe My::WorksController, type: :controller do
   end
 
   describe "upload_set processing" do
-    include Sufia::Messages
+    include CurationConcerns::Messages
     let(:upload_set_id) { "upload_set_id" }
     let(:upload_set_id2) { "upload_set_id2" }
     let(:upload_set) { double }
