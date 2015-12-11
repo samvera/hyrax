@@ -76,7 +76,7 @@ module CurationConcerns::CurationConcernController
       setup_form
       respond_to do |wants|
         wants.html do
-          @form = form_class.new(curation_concern, current_ability)
+          build_form
           render 'edit', status: :unprocessable_entity
         end
         wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
