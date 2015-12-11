@@ -47,12 +47,7 @@ module CurationConcerns::CurationConcernController
   #   or the user doesn't have access to it.
   def show
     respond_to do |wants|
-      wants.html do
-        _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
-        curation_concern = document_list.first
-        raise CanCan::AccessDenied.new(nil, :show) unless curation_concern
-        @presenter = show_presenter.new(curation_concern, current_ability)
-      end
+      wants.html { presenter }
       wants.json do
         # load and authorize @curation_concern manually because it's skipped for html
         # This has to use #find instead of #load_instance_from_solr because
@@ -114,6 +109,10 @@ module CurationConcerns::CurationConcernController
       @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user, attributes_for_actor)
     end
 
+    def presenter
+      @presenter ||= show_presenter.new(curation_concern_from_search_results, current_ability)
+    end
+
     # Override setup_form in concrete controllers to get the form ready for display
     def setup_form
       return unless curation_concern.respond_to?(:contributor) && curation_concern.contributor.blank?
@@ -163,5 +162,13 @@ module CurationConcerns::CurationConcernController
     # formats to your local app
     def additional_response_formats(_)
       # nop
+    end
+
+  private
+
+    def curation_concern_from_search_results
+      _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
+      raise CanCan::AccessDenied.new(nil, :show) if document_list.empty?
+      document_list.first
     end
 end
