@@ -27,6 +27,7 @@ describe CurationConcerns::GenericWorksController do
     context 'someone elses public work' do
       let(:a_work) { create(:public_generic_work) }
       it 'shows me the page' do
+        expect(controller). to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
         get :show, id: a_work
         expect(response).to be_success
       end

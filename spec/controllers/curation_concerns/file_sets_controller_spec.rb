@@ -222,7 +222,6 @@ describe CurationConcerns::FileSetsController do
       end
 
       it 'allows access to public files' do
-        expect(controller).to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
         get :show, id: public_file_set
         expect(response).to be_success
       end
