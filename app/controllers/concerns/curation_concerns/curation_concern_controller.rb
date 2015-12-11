@@ -61,6 +61,7 @@ module CurationConcerns::CurationConcernController
         authorize! :show, @curation_concern
         render :show, status: :ok
       end
+      additional_response_formats(wants)
     end
   end
 
@@ -156,5 +157,11 @@ module CurationConcerns::CurationConcernController
 
     def hash_key_for_curation_concern
       self.class.curation_concern_type.model_name.param_key
+    end
+
+    # Override this method to add additional response
+    # formats to your local app
+    def additional_response_formats(_)
+      # nop
     end
 end
