@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-# encoding: utf-8
-
-require File.expand_path(File.join(File.dirname(__FILE__), '../config/environment.rb'))
-
-CurationConcerns::RepositoryAuditService.audit_everything
