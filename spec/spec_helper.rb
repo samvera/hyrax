@@ -31,12 +31,8 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
   SimpleCov.start('rails') do
     add_filter '/.internal_test_app'
-    add_filter '/bin'
-    add_filter '/db'
-    add_filter '/config'
     add_filter '/jetty'
     add_filter '/lib/generators'
-    add_filter '/public'
     add_filter '/solr_conf'
     add_filter '/spec'
     add_filter '/vendor'
