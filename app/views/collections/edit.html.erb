@@ -1,4 +1,5 @@
-<% @page_title = "Edit Collection #{display_title(@collection)} - #{application_name}" %>
+<% provide :page_title, construct_page_title("Edit Collection #{display_title(@collection)}") %>
+
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
 <h1>Edit Collection: <%= display_title(@collection) %></h1>
 

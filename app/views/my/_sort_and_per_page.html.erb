@@ -1,6 +1,6 @@
 <div class="batch-info">
   <div>
-    <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>
+    <%= render 'collections/form_for_select_collection', user_collections: @user_collections %>
   </div>
 
   <% if on_my_works? %>

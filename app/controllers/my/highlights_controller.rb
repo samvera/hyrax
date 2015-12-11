@@ -6,7 +6,7 @@ module My
 
     def index
       super
-      @selected_tab = :highlighted
+      @selected_tab = 'highlighted'
     end
 
     protected

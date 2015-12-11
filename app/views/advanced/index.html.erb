@@ -1,4 +1,5 @@
-<% @page_title = "More Search Options - #{application_name}" %>
+<% provide :page_title, construct_page_title("More Search Options") %>
+
 <div class="col-md-6">
   <h1>More Search Options</h1>
   <%= render 'advanced_search_form' %>

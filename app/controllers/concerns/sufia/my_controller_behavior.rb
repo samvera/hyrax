@@ -22,12 +22,6 @@ module Sufia
       layout 'sufia-dashboard'
     end
 
-    # specify the controller_name here to specify where we should look for
-    # the batch_edit menu options (_batch_edits_actions.html.erb)
-    def controller_name
-      :my
-    end
-
     def index
       (@response, @document_list) = search_results(params, search_params_logic)
       @user = current_user
