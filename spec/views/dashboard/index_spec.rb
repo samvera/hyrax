@@ -30,36 +30,35 @@ describe "dashboard/index.html.erb", type: :view do
   let(:can_create_collection) { true }
 
   describe "heading" do
-    before do
-      render
-      @heading = view.content_for(:heading)
-    end
+    before { render }
+
+    let(:heading) { view.content_for(:page_header) }
 
     it "displays welcome message and links" do
-      expect(@heading).to have_link("Create Work", new_curation_concerns_generic_work_path)
-      expect(@heading).to have_link("Create Collection", collections.new_collection_path)
-      expect(@heading).to have_link("View Works", sufia.dashboard_works_path)
-      expect(@heading).to have_link("Upload", sufia.new_curation_concerns_file_set_path)
-      expect(@heading).to include "My Dashboard"
-      expect(@heading).to include "Hello, Charles Francis Xavier"
+      expect(heading).to have_link("Create Work", new_curation_concerns_generic_work_path)
+      expect(heading).to have_link("Create Collection", collections.new_collection_path)
+      expect(heading).to have_link("View Works", sufia.dashboard_works_path)
+      expect(heading).to have_link("Upload", sufia.new_curation_concerns_file_set_path)
+      expect(heading).to include "My Dashboard"
+      expect(heading).to include "Hello, Charles Francis Xavier"
     end
 
     context "when the user can't create works" do
       let(:can_create_work) { false }
       it "does not display the create work button" do
-        expect(@heading).not_to have_link("Create Work", new_curation_concerns_generic_work_path)
+        expect(heading).not_to have_link("Create Work", new_curation_concerns_generic_work_path)
       end
     end
     context "when the user can't create collections" do
       let(:can_create_collection) { false }
       it "does not display the create collection button" do
-        expect(@heading).not_to have_link("Create Collection", collections.new_collection_path)
+        expect(heading).not_to have_link("Create Collection", collections.new_collection_path)
       end
     end
     context "when the user can't create files" do
       let(:can_create_file) { false }
       it "does not display the upload button" do
-        expect(@heading).not_to have_link("Upload", sufia.new_curation_concerns_file_set_path)
+        expect(heading).not_to have_link("Upload", sufia.new_curation_concerns_file_set_path)
       end
     end
   end

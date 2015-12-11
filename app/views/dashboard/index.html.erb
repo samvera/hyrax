@@ -1,17 +1,11 @@
-<%= content_for :heading do %>
-
-    <%= render partial: "dashboard/_index_partials/heading_greetings" %>
-
-    <%= render partial: "dashboard/_index_partials/heading_actions" %>
-
+<%= provide :page_header do %>
+    <%= render "dashboard/_index_partials/heading_greetings" %>
+    <%= render "dashboard/_index_partials/heading_actions" %>
 <% end %>
 
 <%= content_for :sidebar do %>
-
-    <%= render partial: "dashboard/_index_partials/stats" %>
-
-    <%= render partial: "dashboard/_index_partials/user_info" %>
-
+    <%= render "dashboard/_index_partials/stats" %>
+    <%= render "dashboard/_index_partials/user_info" %>
 <% end %>
 
-<%= render partial: "dashboard/_index_partials/contents" %>
+<%= render "dashboard/_index_partials/contents" %>

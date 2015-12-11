@@ -3,7 +3,7 @@
   <% if !@disable_select_all %>
     <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="sr-only">Select to access selection options</span><span class="glyphicon glyphicon-cog"></span></a>
     <ul class="dropdown-menu">
-      <%= render partial:"#{controller_name}/batch_edits_actions" %>
+      <%= render "batch_edits_actions" %>
     </ul>
   <% end %>
 </div>

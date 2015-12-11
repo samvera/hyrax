@@ -1,4 +1,4 @@
-<% @page_title = "#{@presenter.title} - #{application_name}" %>
+<% provide :page_title, construct_page_title(@presenter.title) %>
 
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
 

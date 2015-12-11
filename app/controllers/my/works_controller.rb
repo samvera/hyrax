@@ -7,7 +7,7 @@ module My
 
     def index
       super
-      @selected_tab = :works
+      @selected_tab = 'works'
     end
 
     protected

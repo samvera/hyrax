@@ -7,7 +7,7 @@ module My
 
     def index
       super
-      @selected_tab = :shared
+      @selected_tab = 'shared'
     end
 
     protected

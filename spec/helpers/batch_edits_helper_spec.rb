@@ -3,28 +3,33 @@ require 'spec_helper'
 describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
     before do
-      @document_list = ["doc1", "doc2"]
-      @batch_size_on_other_page = 1
-      @max_batch_size = 10
+      view.lookup_context.prefixes = ['my']
     end
 
     context "with my works" do
       it "shows the check all dropdown" do
-        allow(helper).to receive(:params).and_return(controller: "my/works")
-        allow(helper).to receive(:controller_name).and_return("batch_edits")
+        allow(controller).to receive(:controller_name).and_return("my/works")
         expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end
+    end
 
-      it "shows my action menu for my controller" do
-        allow(helper).to receive(:params).and_return(controller: "my")
-        allow(helper).to receive(:controller_name).and_return("my")
-        expect(helper.render_check_all).not_to have_content("ABC")
+    context "with my shares" do
+      it "shows the check all dropdown" do
+        allow(controller).to receive(:controller_name).and_return("my/shares")
+        expect(helper.render_check_all).to have_css("span.glyphicon-cog")
+      end
+    end
+
+    context "with my highlights" do
+      it "shows the check all dropdown" do
+        allow(controller).to receive(:controller_name).and_return("my/shares")
+        expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my collections" do
       it "does not show the check all dropdown" do
-        allow(helper).to receive(:params).and_return(controller: "my/collections")
+        allow(controller).to receive(:controller_name).and_return("my/collections")
         expect(helper.render_check_all).to be_nil
       end
     end
