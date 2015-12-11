@@ -498,11 +498,6 @@ describe CurationConcerns::FileSetsController do
         expect(assigns[:presenter].events).to be_kind_of Array
         expect(assigns[:presenter].audit_status).to eq 'Audits have not yet been run on this file.'
       end
-
-      it 'renders an endnote file' do
-        get :show, id: file_set, format: 'endnote'
-        expect(response).to be_successful
-      end
     end
   end
 

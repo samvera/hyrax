@@ -40,11 +40,6 @@ module Sufia
     def citation
     end
 
-    # Called by CurationConcerns::FileSetsControllerBehavior#show
-    def additional_response_formats(format)
-      format.endnote { render text: presenter.solr_document.export_as_endnote }
-    end
-
     protected
 
       def _prefixes

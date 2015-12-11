@@ -39,5 +39,9 @@ describe CurationConcerns::GenericWorksController do
       expect(response).to be_successful
       expect(assigns(:presenter)).to be_kind_of Sufia::WorkShowPresenter
     end
+    it 'renders an endnote file' do
+      get :show, id: work, format: 'endnote'
+      expect(response).to be_successful
+    end
   end
 end
