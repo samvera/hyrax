@@ -7,9 +7,10 @@ describe Sufia::FileSetCSVService do
       f.apply_depositor_metadata('jilluser@example.com')
     end
   end
+  let(:solr_document) { SolrDocument.new(file.to_solr) }
 
   context "when using the defaults" do
-    let(:csv_service) { described_class.new(file) }
+    let(:csv_service) { described_class.new(solr_document) }
 
     describe "csv" do
       subject { csv_service.csv }
@@ -39,7 +40,7 @@ describe Sufia::FileSetCSVService do
   end
 
   context "when specifying separator" do
-    let(:csv_service) { described_class.new(file, nil, '&&') }
+    let(:csv_service) { described_class.new(solr_document, nil, '&&') }
     describe "csv" do
       subject { csv_service.csv }
 

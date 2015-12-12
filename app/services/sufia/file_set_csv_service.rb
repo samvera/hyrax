@@ -8,11 +8,11 @@ module Sufia
   class FileSetCSVService
     attr_reader :file_set, :terms, :multi_value_separator
 
-    # @param [FileSet]     file file that will be examined to generate the CSVs
-    # @param [Array]       terms list of terms that will be output in CSV form
-    #                      defaults if nil to list below
-    # @param [String]      multi_value_separator separator for terms that have more than one value
-    #                      defaults to '|'
+    # @param [SolrDocument] file solr document that will be examined to generate the CSVs
+    # @param [Array]        terms list of terms that will be output in CSV form
+    #                       defaults if nil to list below
+    # @param [String]       multi_value_separator separator for terms that have more than one value
+    #                       defaults to '|'
     def initialize(file, terms = nil, multi_value_separator = '|')
       @file_set = file
       @terms = terms
