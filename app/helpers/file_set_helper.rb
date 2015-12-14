@@ -9,11 +9,6 @@ module FileSetHelper
     Sufia::PresenterRenderer.new(presenter, self).fields(terms, &block)
   end
 
-  def render_collection_list(fs)
-    return if fs.collections.empty?
-    ("Is part of: " + fs.collections.map { |c| link_to(c.title, collections.collection_path(c)) }.join(", ")).html_safe
-  end
-
   def display_multiple(value)
     auto_link(value.join(" | "))
   end
