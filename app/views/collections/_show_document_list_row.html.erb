@@ -1,13 +1,12 @@
 <% id = document.id %>
 <tr id="document_<%= id %>" class="<%= cycle("", "zebra") %>">
-  <% gw = document.to_model%>
   <td>&nbsp;
     <%# TODO is there a processing concept for a work ?? see #1122 & #1123 %>
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <%# if gf.processing? %>
       <!--<i class="glyphicon glyphicon-time <%#= 'ss-'+gf.batch.id %>"/>-->
     <%# elsif current_user and gf.depositor != current_user.user_key %>
-    <% if current_user and gw.depositor != current_user.user_key %>
+    <% if current_user and document.depositor != current_user.user_key %>
       <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>
@@ -21,7 +20,7 @@
           <%= link_to document.title_or_label, curation_concerns_generic_work_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
           <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
         </h4>
-        <%= render_collection_links(gw) %>
+        <%= render_collection_links(document) %>
       </div>
     </div>
   </td>
@@ -30,7 +29,7 @@
     <%= render_visibility_link(document) %>
   </td>
   <td class="text-center">
-    <%= render partial: 'show_document_list_menu', locals: { id: id, gw: gw } %>
+    <%= render partial: 'show_document_list_menu', locals: { id: id } %>
   </td>
 </tr>
 <tr id="detail_<%= id %>"> <!--  document detail"> -->
