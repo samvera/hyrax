@@ -72,4 +72,12 @@ describe StatsController do
       end
     end
   end
+
+  describe 'work' do
+    routes { Sufia::Engine.routes }
+
+    it 'renders the stats view' do
+      get :work, id: '123'
+    end
+  end
 end
