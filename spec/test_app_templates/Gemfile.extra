@@ -2,3 +2,8 @@
 # gem 'hydra-works', github: 'projecthydra-labs/hydra-works', branch: 'master'
 # gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', branch: 'master'
 # gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', branch: 'master'
+
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+end
