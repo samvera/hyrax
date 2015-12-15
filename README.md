@@ -27,7 +27,9 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
 [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 [![Coverage Status](https://coveralls.io/repos/projecthydra/sufia/badge.svg)](https://coveralls.io/r/projecthydra/sufia)
-[![Stories in Ready](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
+[![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg?branch=master)](https://inch-ci.org/github/projecthydra/sufia)
+[![Code Climate](https://codeclimate.com/github/projecthydra/sufia/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/sufia)
+[![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
 
 # Migrating data to PCDM / Sufia 7
 
@@ -434,6 +436,12 @@ Sufia is available under [the Apache 2.0 license](LICENSE.md).
 # Contributing
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](CONTRIBUTING.md).
+
+If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/sufia). There are other ways to help, too.
+
+* [Contribute a user story](https://github.com/projecthydra/sufia/issues/new).
+* Help us improve [Sufia's test coverage](https://coveralls.io/r/projecthydra/sufia) or [documentation coverage](https://inch-ci.org/github/projecthydra/sufia).
+* Refactor away [code smells](https://codeclimate.com/github/projecthydra/sufia).
 
 # Development
 
