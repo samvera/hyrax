@@ -19,6 +19,9 @@ describe UploadSet do
   end
 
   describe "find_or_create" do
+    before do
+      allow(described_class).to receive(:acquire_lock_for).and_yield if $in_travis
+    end
     describe "when the object exists" do
       let!(:upload_set) { described_class.create(title: ["test collection"]) }
       it "finds upload_set instead of creating" do
@@ -27,7 +30,7 @@ describe UploadSet do
       end
     end
     describe "when the object does not exist" do
-      it "creates a new Batch" do
+      it "creates a new UploadSet" do
         expect { described_class.find("upload_set-123") }.to raise_error(ActiveFedora::ObjectNotFoundError)
         expect(described_class).to receive(:create).once.and_return("the upload_set")
         expect(described_class.find_or_create("upload_set-123")).to eq "the upload_set"
