@@ -2,6 +2,7 @@ module CurationConcerns
   # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
   class FileSetActor
     include CurationConcerns::ManagesEmbargoesActor
+    include CurationConcerns::Lockable
 
     attr_reader :file_set, :user, :attributes, :curation_concern
 
@@ -167,17 +168,6 @@ module CurationConcerns
           # Save the work so the association between the work and the file_set is persisted (head_id)
           work.save
         end
-      end
-
-      def acquire_lock_for(lock_key, &block)
-        lock_manager.lock(lock_key, &block)
-      end
-
-      def lock_manager
-        @lock_manager ||= CurationConcerns::LockManager.new(
-          CurationConcerns.config.lock_time_to_live,
-          CurationConcerns.config.lock_retry_count,
-          CurationConcerns.config.lock_retry_delay)
       end
 
       def assign_visibility?(file_set_params = {})

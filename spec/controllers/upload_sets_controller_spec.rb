@@ -6,6 +6,7 @@ describe UploadSetsController do
   before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
+    allow(UploadSet).to receive(:acquire_lock_for).and_yield if $in_travis
   end
   describe "#update" do
     let(:upload_set_update_message) { double('upload_set update message') }

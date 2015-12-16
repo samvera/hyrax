@@ -18,6 +18,10 @@ describe UploadSetUpdateJob do
   end
 
   describe "#perform" do
+    before do
+      allow(UploadSet).to receive(:acquire_lock_for).and_yield if $in_travis
+    end
+
     let(:title) { { work.id => ['File One'], work2.id => ['File Two'] } }
     let(:metadata) { { tag: [''] } }
     let(:visibility) { nil }
