@@ -21,6 +21,7 @@ module Sufia
             rights: 'rights'
           }
           field_map.each do |element, kev|
+            next unless work.respond_to?(element)
             values = work.send(element)
             next if values.blank? || values.first.nil?
             Array(values).each do |value|
