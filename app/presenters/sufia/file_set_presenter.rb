@@ -2,7 +2,7 @@ module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
     include Sufia::CharacterizationBehavior
 
-    delegate :depositor, :tag, :date_created, to: :solr_document
+    delegate :depositor, :tag, :date_created, :date_modified, to: :solr_document
 
     def tweeter
       user = ::User.find_by_user_key(depositor)
@@ -11,6 +11,17 @@ module Sufia
       else
         I18n.translate('sufia.product_twitter_handle')
       end
+    end
+
+    def rights
+      return if solr_document.rights.nil?
+      solr_document.rights.first
+    end
+
+    def related_files
+      # TODO: support related_files. Maybe.
+      # See https://github.com/projecthydra/sufia/issues/1478
+      []
     end
 
     # Add a schema.org itemtype

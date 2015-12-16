@@ -1,3 +1,7 @@
+<%# TODO: set these variables based on the current user
+  # See https://github.com/projecthydra/sufia/issues/1477 %>
+<% collector = true %>
+<% editor = true %>
 <% if collector || editor %>
   <div class="form-actions">
     <% if Sufia.config.analytics %>
@@ -14,6 +18,8 @@
     <%= link_to 'Export to Zotero', sufia.static_path('zotero'), id: 'zoteroLink', name: 'zotero', class: 'btn btn-default' %>
     <%= link_to 'Export to Mendeley', sufia.static_path('mendeley'), id: 'mendeleyLink', name: 'mendeley', class: 'btn btn-default' %>
     <!-- COinS hook for Zotero -->
-      <span class="Z3988" title="<%= export_as_openurl_ctx_kev(@presenter) %>"></span>
+    <!-- TODO: Fix issue with export_as_openurl_ctx_kev
+         See  https://github.com/projecthydra/sufia/issues/1479 -->
+      <span class="Z3988" title="<%= 'TODO: export_as_openurl_ctx_kev(@presenter)' %>"></span>
   </div>
 <% end %>

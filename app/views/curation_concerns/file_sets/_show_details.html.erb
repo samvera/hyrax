@@ -1,16 +1,16 @@
 <h2>File Details</h2>
 <dl class="dl-horizontal file-show-term file-show-details">
   <dt>Depositor</dt>
-  <dd itemprop="accountablePerson" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><%= link_to_profile @file_set.depositor %></span></dd>
+  <dd itemprop="accountablePerson" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><%= link_to_profile @presenter.depositor %></span></dd>
   <dt>Date Uploaded</dt>
-  <dd itemprop="datePublished"><%= @file_set.date_uploaded %></dd>
+  <dd itemprop="datePublished"><%= @presenter.date_uploaded %></dd>
   <dt>Date Modified</dt>
-  <dd itemprop="dateModified"><%= @file_set.date_modified %></dd>
+  <dd itemprop="dateModified"><%= @presenter.date_modified %></dd>
   <dt>Audit Status</dt>
   <dd><%= @presenter.audit_status %></dd>
-  <% unless @file_set.related_files.empty? %>
+  <% unless @presenter.related_files.empty? %>
   <dt>Related Files</dt>
-      <% @file_set.related_files.each do |f| %>
+      <% @presenter.related_files.each do |f| %>
           <dd><%= link_to(f.label, sufia.file_set_url(f)) %></dd>
       <% end %>
   <% end %>
