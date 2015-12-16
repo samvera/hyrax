@@ -10,16 +10,17 @@ module FileSetHelper
   end
 
   def display_multiple(value)
+    return if value.nil?
     auto_link(value.join(" | "))
   end
 
   private
 
-    def render_visibility_badge
-      if can? :edit, @file_set
-        render_visibility_link @file_set
+    def render_visibility_badge(presenter)
+      if can? :edit, presenter.solr_document
+        render_visibility_link presenter.solr_document
       else
-        render_visibility_label @file_set
+        render_visibility_label presenter.solr_document
       end
     end
 end

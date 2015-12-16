@@ -1,5 +1,7 @@
     <h2 class="non lower">Collections</h2>
-    <% if @file_set.parent_collections.blank? %>
+    <!-- TODO: remove hard code "true" and fix collections display
+         See https://github.com/projecthydra/sufia/issues/1480 -->
+    <% if true || @file_set.parent_collections.blank? %>
         <p><%= t('sufia.file.collections_list.empty') %></p>
     <% else %>
         <p><%= t('sufia.file.collections_list.heading') %></p>
