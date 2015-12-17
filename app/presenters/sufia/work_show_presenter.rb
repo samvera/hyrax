@@ -3,6 +3,10 @@ module Sufia
     # delegate fields from Sufia::Works::Metadata to solr_document
     delegate :based_near, :depositor, :identifier, :resource_type, :tag, to: :solr_document
 
+    def editor?
+      current_ability.can?(:edit, solr_document)
+    end
+
     def tweeter
       user = ::User.find_by_user_key(depositor)
       if user.try(:twitter_handle).present?

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
+  let(:user) { create(:user) }
   let(:object_profile) { ["{\"id\":\"999\"}"] }
   let(:contributor) { ['Frodo'] }
   let(:creator)     { ['Bilbo'] }
@@ -15,18 +16,17 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
       rights_tesim: ['http://creativecommons.org/licenses/by/3.0/us/']
     )
   }
-  let(:ability) { nil }
+  let(:ability) { Ability.new(user) }
   let(:presenter) do
     Sufia::WorkShowPresenter.new(solr_document, ability)
   end
-  let(:locals) { { collector: true, editor: false } }
   describe 'citations' do
     let(:page) { Capybara::Node::Simple.new(rendered) }
     before do
       Sufia.config.citations = citations
       allow(controller).to receive(:can?).with(:edit, presenter).and_return(false)
       assign(:presenter, presenter)
-      render partial: 'curation_concerns/base/show_actions.html.erb', locals: locals
+      render partial: 'curation_concerns/base/show_actions.html.erb'
     end
     context 'when enabled' do
       let(:citations) { true }

@@ -4,6 +4,10 @@ module Sufia
 
     delegate :depositor, :tag, :date_created, :date_modified, to: :solr_document
 
+    def editor?
+      current_ability.can?(:edit, solr_document)
+    end
+
     def tweeter
       user = ::User.find_by_user_key(depositor)
       if user.try(:twitter_handle).present?
