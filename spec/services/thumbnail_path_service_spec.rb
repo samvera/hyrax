@@ -15,11 +15,11 @@ describe CurationConcerns::ThumbnailPathService do
 
     context "that is an audio" do
       let(:mime_type) { 'audio/x-wav' }
-      it { is_expected.to eq '/assets/audio.png' }
+      it { is_expected.to match %r{/assets/audio-.+.png} }
     end
 
     context "that has no thumbnail" do
-      it { is_expected.to eq '/assets/default.png' }
+      it { is_expected.to match %r{/assets/default-.+.png} }
     end
   end
 
@@ -37,7 +37,7 @@ describe CurationConcerns::ThumbnailPathService do
 
     context "that doesn't have a representative" do
       let(:object) { FileSet.new }
-      it { is_expected.to eq '/assets/default.png' }
+      it { is_expected.to match %r{/assets/default-.+.png} }
     end
   end
 end
