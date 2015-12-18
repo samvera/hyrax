@@ -39,10 +39,18 @@ module Sufia
       end
     end
 
-    config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
-    config.assets.precompile << %r{vjs\.(?:eot|ttf|woff)$}
-    config.assets.precompile << %r{fontawesome-webfont\.(?:svg|ttf|woff)$}
-    config.assets.precompile += %w( ZeroClipboard.swf )
+    initializer 'sufia.assets.precompile' do |app|
+      app.config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
+      app.config.assets.paths << config.root.join('app', 'assets', 'images')
+      app.config.assets.paths << config.root.join('app', 'assets', 'images', 'blacklight')
+      app.config.assets.paths << config.root.join('app', 'assets', 'images', 'hydra')
+      app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
+
+      app.config.assets.precompile << /vjs\.(?:eot|ttf|woff)$/
+      app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
+      app.config.assets.precompile += %w( ZeroClipboard.swf )
+      app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
+    end
 
     # Set some configuration defaults
     config.persistent_hostpath = "http://localhost/files/"
