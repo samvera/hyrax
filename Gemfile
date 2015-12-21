@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works'
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
