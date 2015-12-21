@@ -61,6 +61,7 @@ module CurationConcerns
           authorize! :show, @file_set
           render :show, status: :ok
         end
+        additional_response_formats(wants)
       end
     end
 
@@ -138,6 +139,12 @@ module CurationConcerns
 
       def initialize_edit_form
         @groups = current_user.groups
+      end
+
+      # Override this method to add additional response
+      # formats to your local app
+      def additional_response_formats(_)
+        # nop
       end
 
       def file_set_params
