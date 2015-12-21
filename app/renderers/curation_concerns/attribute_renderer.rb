@@ -43,8 +43,10 @@ module CurationConcerns
       def attribute_value_to_html(value)
         if field == :rights
           rights_attribute_to_html(value)
-        else
+        elsif microdata_value_attributes(field).present?
           "<span#{html_attributes(microdata_value_attributes(field))}>#{li_value(value)}</span>"
+        else
+          li_value(value)
         end
       end
 
