@@ -15,19 +15,21 @@ describe CurationConcerns::AttributeRenderer do
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
     let(:expected) { Nokogiri::HTML(tr_content) }
+
     context 'without microdata enabled' do
       before do
         CurationConcerns.config.display_microdata = false
       end
       let(:tr_content) {
         "<tr><th>Name</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute name\"><span>Bob</span></li>\n" \
-         "<li class=\"attribute name\"><span>Jessica</span></li>\n" \
+         "<td><ul class='tabular'><li class=\"attribute name\">Bob</li>\n" \
+         "<li class=\"attribute name\">Jessica</li>\n" \
          "</ul></td></tr>"
       }
       it { expect(renderer).not_to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end
+
     context 'with microdata enabled' do
       before do
         CurationConcerns.config.display_microdata = true
