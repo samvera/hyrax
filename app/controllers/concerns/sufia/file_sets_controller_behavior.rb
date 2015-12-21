@@ -93,19 +93,15 @@ module Sufia
       end
 
       def find_parent_by_id
-        return default_work unless parent_id.present?
+        return default_work_from_params unless parent_id.present?
         super
       end
 
       # If the user is creating a bunch of files, and not in a work context,
       # create a work for each file.
-      def default_work
-        # Ensure the upload set exists, before trying to associate a work with it.
-        upload_set = UploadSet.find_or_create(params[:upload_set_id])
-        GenericWork.create!(title: [params[:file_set][:files].first.original_filename],
-                            upload_set: upload_set) do |w|
-          w.apply_depositor_metadata(current_user)
-        end
+      def default_work_from_params
+        title = params[:file_set][:files].first.original_filename
+        DefaultWorkService.create(params[:upload_set_id], title, current_user)
       end
 
       def actor
