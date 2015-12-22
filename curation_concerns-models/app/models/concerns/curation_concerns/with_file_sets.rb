@@ -5,7 +5,7 @@ module CurationConcerns
 
     included do
       # The file_sets association and its accessor methods comes from Hydra::Works::AggregatesFileSets
-      before_destroy :before_destroy_cleanup_file_sets
+      before_destroy :cleanup_file_sets
     end
 
     # Stopgap unil ActiveFedora ContainerAssociation includes an *_ids accessor.
@@ -14,7 +14,11 @@ module CurationConcerns
       file_sets.map(&:id)
     end
 
-    def before_destroy_cleanup_file_sets
+    def cleanup_file_sets
+      # Destroy the list source first.  This prevents each file_set from attemping to
+      # remove itself individually from the work. If hundreds of files are attached,
+      # this would take too long.
+      list_source.destroy
       file_sets.each(&:destroy)
     end
 

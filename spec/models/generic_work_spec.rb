@@ -46,4 +46,14 @@ describe GenericWork do
     subject { work.to_partial_path }
     it { is_expected.to eq 'generic_works/generic_work' }
   end
+
+  describe "#destroy" do
+    let!(:work) { create(:work_with_files) }
+    it "doesn't save the work after removing each individual file" do
+      expect_any_instance_of(described_class).not_to receive(:save!)
+      expect {
+        work.destroy
+      }.to change { FileSet.count }.by(-2)
+    end
+  end
 end
