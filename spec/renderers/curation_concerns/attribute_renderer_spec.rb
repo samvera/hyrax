@@ -12,6 +12,7 @@ describe CurationConcerns::AttributeRenderer do
     I18n.load_path -= Dir[File.join(yml_path)]
     I18n.reload!
   end
+
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
     let(:expected) { Nokogiri::HTML(tr_content) }
@@ -27,6 +28,18 @@ describe CurationConcerns::AttributeRenderer do
          "</ul></td></tr>"
       }
       it { expect(renderer).not_to be_microdata(field) }
+      it { expect(subject).to be_equivalent_to(expected) }
+    end
+
+    context 'with an integer attribute' do
+      let(:field) { :height }
+      let(:renderer) { described_class.new(field, [567]) }
+      let(:tr_content) do
+        "<tr><th>Height</th>\n" \
+         "<td><ul class='tabular'><li class=\"attribute height\">567</li>\n" \
+         "</ul></td></tr>"
+      end
+
       it { expect(subject).to be_equivalent_to(expected) }
     end
 
