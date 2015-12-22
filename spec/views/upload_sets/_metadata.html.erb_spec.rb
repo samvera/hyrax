@@ -4,7 +4,7 @@ describe 'upload_sets/_metadata.html.erb' do
   let(:user) { build(:user) }
   let(:ability) { Ability.new(user) }
   let(:upload_set) { UploadSet.create }
-  let(:form) { CurationConcerns::UploadSetForm.new(upload_set, ability) }
+  let(:form) { Sufia::UploadSetForm.new(upload_set, ability) }
   let(:work1) { build(:work, id: 'work1', title: ['First work']) }
   let(:work2) { build(:work, id: 'work2', title: ['Second work']) }
 
