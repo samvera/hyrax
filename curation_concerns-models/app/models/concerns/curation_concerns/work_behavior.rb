@@ -12,7 +12,6 @@ module CurationConcerns::WorkBehavior
   include CurationConcerns::WithFileSets
   include CurationConcerns::Naming
   include CurationConcerns::RequiredMetadata
-  include CurationConcerns::BelongsToUploadSets
   include Hydra::AccessControls::Embargoable
 
   included do
