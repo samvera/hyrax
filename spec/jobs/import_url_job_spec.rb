@@ -41,9 +41,6 @@ describe ImportUrlJob do
     let(:title) { { file_set.id => ['File One'] } }
     let(:metadata) { {} }
     let(:visibility) { nil }
-
-    let(:upload_set) { UploadSet.create }
-    let(:upload_set_job) { UploadSetUpdateJob.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
     let(:file_set_id) { file_set.id }
 
     before do
