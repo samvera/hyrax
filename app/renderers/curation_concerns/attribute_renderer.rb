@@ -26,7 +26,7 @@ module CurationConcerns
       markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
       attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
       Array(values).each do |value|
-        markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value)}</li>"
+        markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
       end
       markup << %(</ul></td></tr>)
       markup.html_safe
