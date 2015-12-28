@@ -1,7 +1,7 @@
 module API
   # Adds an endpoint that consumes and RESTfully emits JSON from Arkivo
   # representing new and updated Zotero-managed publications. An item in the
-  # Zotero parlance is mapped to a GenericFile in Sufia.
+  # Zotero parlance is mapped to a GenericWork in Sufia.
   class ItemsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :validate_item, only: [:create, :update]

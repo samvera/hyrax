@@ -1,12 +1,16 @@
 require 'spec_helper'
 
 describe API::ItemsController, type: :controller do
+  let(:arkivo_actor) { double Sufia::Arkivo::Actor }
+
   before do
+    # Mock Arkivo Actor
+    allow(controller).to receive(:actor).and_return(arkivo_actor)
     # Don't test characterization on these items; it breaks TravisCI and it's slow
     allow(CharacterizeJob).to receive(:perform_later)
   end
 
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
   let!(:default_work) do
     GenericWork.create(title: ['Foo Bar']) do |gf|
       gf.apply_depositor_metadata(user)
@@ -24,7 +28,7 @@ describe API::ItemsController, type: :controller do
     context 'with a missing token' do
       before { get :show, format: :json, id: default_work.id }
 
-      specify do
+      it "is unauthorized" do
         expect(subject).to have_http_status(401)
         expect(subject.body).to include('invalid user token:')
       end
@@ -34,7 +38,7 @@ describe API::ItemsController, type: :controller do
       before { get :show, format: :json, id: default_work.id, token: get_token }
       let(:get_token) { 'foobar' }
 
-      specify do
+      it "is unauthorized" do
         expect(subject).to have_http_status(401)
         expect(subject.body).to include("invalid user token: #{get_token}")
       end
@@ -46,7 +50,7 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      specify do
+      it 'is unauthorized' do
         expect(subject).to have_http_status(401)
         expect(assigns[:work]).to eq default_work
         expect(subject.body).to include("#{user} lacks access to #{default_work}")
@@ -59,7 +63,7 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      specify do
+      it "is forbidden" do
         expect(subject).to have_http_status(403)
         expect(subject.body).to include("Forbidden: #{default_work} not deposited via Arkivo")
       end
@@ -71,7 +75,7 @@ describe API::ItemsController, type: :controller do
         get :show, format: :json, id: default_work.id, token: token
       end
 
-      specify do
+      it "is not found" do
         expect(subject).to have_http_status(404)
         expect(subject.body).to include("id '#{default_work.id}' not found")
       end
@@ -91,7 +95,7 @@ describe API::ItemsController, type: :controller do
     context 'without an item' do
       before { post :create, format: :json }
 
-      specify do
+      it "is an bad request" do
         expect(subject).to have_http_status(400)
         expect(subject.body).to include('no item parameter')
       end
@@ -101,22 +105,32 @@ describe API::ItemsController, type: :controller do
       before { post :create, item, format: :json }
       let(:item) { { foo: 'bar' }.to_json }
 
-      specify do
+      it "is a bad request" do
         expect(subject).to have_http_status(400)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
     end
 
-    context 'with a valid item and matching token' do
-      before { expect { post :create, item, format: :json }.to change { GenericWork.count }.by(1) }
-
+    context 'post with a valid item and matching token' do
       let(:deposited_file) { FileSet.where(label: item_hash['file']['filename']).take }
-      let!(:deposited_work) { deposited_file.in_works.first }
-      let(:token) { user.arkivo_token }
+      let(:a_work) { build(GenericWork, id: '123') }
+      let!(:token) { user.arkivo_token }
       let(:item) { FactoryGirl.json(:post_item, token: token) }
       let(:item_hash) { JSON.parse(item) }
 
+      before do
+        # Mock arkivo actor functions
+        allow(arkivo_actor).to receive(:create_work_from_item).and_return(a_work)
+      end
+
+      it "delegates creating the work to the actor" do
+        expect(arkivo_actor).to receive(:create_work_from_item)
+        post :create, item, format: :json
+      end
+
+      # TODO: This test belongs in the Actor test as an integration test.
       specify do
+        pending 'move test to arkivo actor spec as integration test.'
         expect(response).to be_success
         expect(response.status).to eq 201
         expect(response.headers['Location']).to match %r{/api/items/.{9}}
@@ -145,7 +159,7 @@ describe API::ItemsController, type: :controller do
       let(:token) { 'unfamiliar_token' }
       let(:item) { FactoryGirl.json(:post_item, token: token) }
 
-      specify do
+      it "is unathorized" do
         expect(response).not_to be_success
         expect(subject.status).to eq 401
         expect(subject.body).to include("invalid user token: #{token}")
@@ -154,112 +168,104 @@ describe API::ItemsController, type: :controller do
   end
 
   context 'with an HTTP PUT' do
-    let(:post_deposited_file) { FileSet.where(label: post_item_hash['file']['filename']).take }
-    let(:post_deposited_work) { post_deposited_file.in_works.first }
-    let(:post_token) { user.arkivo_token }
-    let(:post_item) { FactoryGirl.json(:post_item, token: post_token) }
-    let(:post_item_hash) { JSON.parse(post_item) }
+    let(:put_item) { FactoryGirl.json(:put_item, token: token) }
+    let(:token) { user.arkivo_token }
+    let(:gw) { build GenericWork, id: '123' }
 
     before do
-      expect { post :create, post_item, format: :json }.to change { GenericWork.count }.by(1)
+      # Mock ActiveFedora
+      allow(GenericWork).to receive(:find).with(gw.id).and_return(gw)
+      # Mock Arkivo Actor
+      allow(arkivo_actor).to receive(:update_work_from_item)
     end
 
-    context 'with a valid item, matching token, and authorized resource' do
-      before { put :update, put_item, id: post_deposited_work.id, format: :json }
-
-      let(:put_deposited_file) { post_deposited_file.reload }
-      let(:put_deposited_work) { post_deposited_work.reload }
-      let(:put_token) { user.arkivo_token }
-      let(:put_item) { FactoryGirl.json(:put_item, token: put_token) }
+    context 'put update with a valid item, matching token, and authorized resource' do
       let(:put_item_hash) { JSON.parse(put_item) }
 
-      specify do
-        expect(subject).to be_success
-        expect(subject.status).to eq 204
-        expect(subject.body).to be_blank
-        expect(put_deposited_work.arkivo_checksum).to eq put_item_hash['file']['md5']
-        expect(put_deposited_file.original_file.content).to eq "# HEADER\n\nThis is a paragraph!\n"
-        expect(put_deposited_work.resource_type).to eq [put_item_hash['metadata']['resourceType']]
-        expect(put_deposited_work.title).to eq [put_item_hash['metadata']['title']]
-        expect(put_deposited_work.rights).to eq [put_item_hash['metadata']['rights']]
-        expect(put_deposited_work.tag).to eq put_item_hash['metadata']['tags']
-        expect(put_deposited_work.creator).to eq ['Doe, John', 'Babs McGee']
-        expect(put_deposited_work.description).to eq []
-        expect(put_deposited_work.publisher).to eq []
-        expect(put_deposited_work.date_created).to eq []
-        expect(put_deposited_work.based_near).to eq []
-        expect(put_deposited_work.identifier).to eq []
-        expect(put_deposited_work.related_url).to eq []
-        expect(put_deposited_work.language).to eq []
-        expect(put_deposited_work.contributor).to eq []
+      let(:validator) { double Sufia::Arkivo::SchemaValidator }
+
+      before do
+        # Mock Arkivo Validator and Actor
+        allow(Sufia::Arkivo::SchemaValidator).to receive(:new).and_return(validator)
+        allow(validator).to receive(:call).and_return(true)
+        # Mock loading and authorizing
+        allow(controller).to receive(:my_load_and_authorize_resource).and_return(gw)
+      end
+
+      it 'calls the arkivo actor to update the work' do
+        expect(arkivo_actor).to receive(:update_work_from_item)
+        put :update, put_item, id: gw.id, format: :json
       end
     end
 
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
+      let(:non_arkivo_gw) { create GenericWork, id: '777', arkivo_checksum: nil }
       before do
-        allow_any_instance_of(GenericWork).to receive(:arkivo_checksum) { nil }
-        put :update, item, id: post_deposited_work.id, format: :json
+        # Mock user authorization
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).and_return(true)
+        # Mock ActiveFedora for non_arkivo_work
+        allow(GenericWork).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        # Post an update to a work with a nil arkivo_checksum
+        put :update, put_item, id: non_arkivo_gw.id, format: :json
       end
 
-      let(:item) { FactoryGirl.json(:put_item, token: post_token) }
-
-      specify do
+      it "is forbidden" do
         expect(subject).not_to be_success
         expect(subject.status).to eq 403
-        expect(subject.body).to include("Forbidden: #{post_deposited_work} not deposited via Arkivo")
+        expect(subject.body).to include("Forbidden: #{non_arkivo_gw} not deposited via Arkivo")
       end
     end
 
     context 'with a valid item, matching token, missing resource' do
       before do
-        allow(GenericWork).to receive(:find).with(post_deposited_work.id) do
+        allow(GenericWork).to receive(:find).with(gw.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
-        put :update, item, id: post_deposited_work.id, format: :json
+        put :update, put_item, id: gw.id, format: :json
       end
 
-      let(:item) { FactoryGirl.json(:put_item, token: post_token) }
-
-      specify do
+      it "is not found" do
         expect(subject).to have_http_status(404)
-        expect(subject.body).to include("id '#{post_deposited_work.id}' not found")
+        expect(subject.body).to include("id '#{gw.id}' not found")
       end
     end
 
     context 'with a valid item, matching token, and unauthorized resource' do
       before do
-        allow_any_instance_of(User).to receive(:can?).with(:edit, post_deposited_work) { false }
-        put :update, item, id: post_deposited_work.id, format: :json
+        # Mock user authorization
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).and_return(false)
+        # Post an update with an resource unauthorized for the user
+        put :update, put_item, id: gw.id, format: :json
       end
 
-      let(:item) { FactoryGirl.json(:put_item, token: post_token) }
-
-      specify do
+      it "is unauthorized" do
         expect(subject).not_to be_success
-        expect(assigns[:work]).to eq post_deposited_work
+        expect(assigns[:work]).to eq gw
         expect(subject.status).to eq 401
-        expect(subject.body).to include("#{user} lacks access to #{post_deposited_work}")
+        expect(subject.body).to include("#{user} lacks access to #{gw}")
       end
     end
 
     context 'with a valid item and unfamiliar token' do
-      before { put :update, item, id: post_deposited_work.id, format: :json }
+      let(:bad_token) { 'unfamiliar_token' }
+      let(:bad_token_item) { FactoryGirl.json(:put_item, token: bad_token) }
 
-      let(:token) { 'unfamiliar_token' }
-      let(:item) { FactoryGirl.json(:put_item, token: token) }
+      before { put :update, bad_token_item, id: gw.id, format: :json }
 
-      specify do
+      it "is unauthorized" do
         expect(subject).not_to be_success
         expect(subject.status).to eq 401
-        expect(subject.body).to include("invalid user token: #{token}")
+        expect(subject.body).to include("invalid user token: #{bad_token}")
       end
     end
 
     context 'with an invalid item' do
-      before { put :update, item, id: post_deposited_work.id, format: :json }
-      let(:item) { { foo: 'bar' }.to_json }
+      let(:invalid_item) { { foo: 'bar' }.to_json }
+      before { put :update, invalid_item, id: gw.id, format: :json }
 
-      specify do
+      it "is a bad request" do
         expect(subject).to have_http_status(400)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
@@ -267,74 +273,101 @@ describe API::ItemsController, type: :controller do
   end
 
   context 'with an HTTP DELETE' do
-    before { post :create, item, format: :json }
-
     let(:token) { user.arkivo_token }
     let(:item) { FactoryGirl.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
+    let(:gw) { build GenericWork, id: '123' }
+
+    before do
+      # Mock ActiveFedora
+      allow(GenericWork).to receive(:find).with(gw.id).and_return(gw)
+      # Mock ArkivoActor destroy work
+      allow(arkivo_actor).to receive(:destroy_work)
+    end
 
     context 'with a missing token' do
-      before { delete :destroy, format: :json, id: default_work.id }
+      before { delete :destroy, format: :json, id: gw.id }
 
-      specify do
+      it "is unauthorized." do
         expect(subject).to have_http_status(401)
         expect(subject.body).to include('invalid user token:')
       end
     end
 
     context 'with an unfamiliar token' do
-      before { delete :destroy, format: :json, id: default_work.id, token: delete_token }
-      let(:delete_token) { 'foobar' }
+      let(:bad_token) { 'foobar' }
+
+      before do
+        # Mock not being able to find the user due to bad token
+        allow(controller).to receive(:user).and_return(nil)
+        delete :destroy, format: :json, id: gw.id, token: bad_token
+      end
 
       specify do
         expect(subject).to have_http_status(401)
-        expect(subject.body).to include("invalid user token: #{delete_token}")
+        expect(subject.body).to include("invalid user token: #{bad_token}")
       end
     end
 
     context 'with an unauthorized resource' do
       before do
-        allow_any_instance_of(User).to receive(:can?).with(:edit, default_work) { false }
-        delete :destroy, format: :json, id: default_work.id, token: token
+        # Mock user being unauthorized
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).with(:edit, gw) { false }
+        delete :destroy, format: :json, id: gw.id, token: token
       end
 
-      specify do
+      it 'is unauthorized' do
         expect(subject).to have_http_status(401)
-        expect(assigns[:work]).to eq default_work
-        expect(subject.body).to include("#{user} lacks access to #{default_work}")
+        expect(assigns[:work]).to eq gw
+        expect(subject.body).to include("#{user} lacks access to #{gw}")
       end
     end
 
     context 'with a resource not deposited via Arkivo' do
+      let(:non_arkivo_gw) { create GenericWork, id: '777', arkivo_checksum: nil }
       before do
-        allow_any_instance_of(GenericWork).to receive(:arkivo_checksum) { nil }
-        delete :destroy, format: :json, id: default_work.id, token: token
+        # Mock user authorization
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).and_return(true)
+        # Mock ActiveFedora for non_arkivo_work
+        allow(GenericWork).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        # Make call to destroy
+        delete :destroy, format: :json, id: non_arkivo_gw.id, token: token
       end
 
-      specify do
+      it "is forbidden" do
         expect(subject).to have_http_status(403)
-        expect(subject.body).to include("Forbidden: #{default_work} not deposited via Arkivo")
+        expect(subject.body).to include("Forbidden: #{gw} not deposited via Arkivo")
       end
     end
 
     context 'with a resource not found in the repository' do
+      let(:not_found_id) { '409' }
       before do
-        allow(GenericWork).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
-        delete :destroy, format: :json, id: default_work.id, token: token
+        # Mock ActiveFedora
+        allow(GenericWork).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
+        delete :destroy, format: :json, id: not_found_id, token: token
       end
 
-      specify do
+      it "is not found" do
         expect(subject).to have_http_status(404)
-        expect(subject.body).to include("id '#{default_work.id}' not found")
+        expect(subject.body).to include("id '#{not_found_id}' not found")
       end
     end
 
     context 'with an authorized Arkivo-deposited resource' do
       before do
-        expect { delete :destroy, format: :json, id: default_work.id, token: token }.to change { GenericWork.count }.by(-1)
+        # Mock user authorization
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).and_return(true)
+        # Mock loading and authorizing
+        allow(controller).to receive(:my_load_and_authorize_resource).and_return(gw)
       end
 
-      specify do
+      it "calls the actor to destroy the work" do
+        expect(arkivo_actor).to receive(:destroy_work)
+        delete :destroy, format: :json, id: gw.id, token: token
         expect(subject).to have_http_status(204)
         expect(subject.body).to be_blank
       end
