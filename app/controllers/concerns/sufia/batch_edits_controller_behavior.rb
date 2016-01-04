@@ -10,8 +10,8 @@ module Sufia
 
     def edit
       super
-      @file_set = ::FileSet.new
-      @file_set.depositor = current_user.user_key
+      @generic_work = ::GenericWork.new
+      @generic_work.depositor = current_user.user_key
       @terms = terms - [:title, :format, :resource_type]
 
       h = {}
@@ -20,18 +20,18 @@ module Sufia
 
       # For each of the files in the batch, set the attributes to be the concatination of all the attributes
       batch.each do |doc_id|
-        fs = ::FileSet.load_instance_from_solr(doc_id)
+        gw = ::GenericWork.load_instance_from_solr(doc_id)
         terms.each do |key|
           h[key] ||= []
-          h[key] = (h[key] + fs[key]).uniq
+          h[key] = (h[key] + gw[key]).uniq
         end
-        @names << fs.to_s
-        permissions = (permissions + fs.permissions).uniq
+        @names << gw.to_s
+        permissions = (permissions + gw.permissions).uniq
       end
 
-      initialize_fields(h, @file_set)
+      initialize_fields(h, @generic_work)
 
-      @file_set.permissions_attributes = [{ type: 'group', name: 'public', access: 'read' }]
+      @generic_work.permissions_attributes = [{ type: 'group', name: 'public', access: 'read' }]
     end
 
     def after_update
@@ -46,7 +46,7 @@ module Sufia
     end
 
     def update_document(obj)
-      obj.attributes = file_set_params
+      obj.attributes = generic_work_params
       obj.date_modified = Time.now.ctime
       obj.visibility = params[:visibility]
     end
@@ -64,7 +64,7 @@ module Sufia
 
       def _prefixes
         # This allows us to use the templates in curation_concerns/base
-        @_prefixes ||= ['curation_concerns/base'] + super
+        @_prefixes ||= super + ['curation_concerns/base']
       end
 
       def destroy_batch
@@ -84,9 +84,9 @@ module Sufia
         Forms::BatchEditForm.terms
       end
 
-      def file_set_params
-        file_params = params[:file_set] || ActionController::Parameters.new
-        Forms::BatchEditForm.model_attributes(file_params)
+      def generic_work_params
+        generic_work_params = params[:generic_work] || ActionController::Parameters.new
+        Forms::BatchEditForm.model_attributes(generic_work_params)
       end
 
       def redirect_to_return_controller
