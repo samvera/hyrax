@@ -1,6 +1,5 @@
-# Sufia
-
-## Notice - This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
+# Su
+# Note: This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
 
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
@@ -30,12 +29,6 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 [![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg?branch=master)](https://inch-ci.org/github/projecthydra/sufia)
 [![Code Climate](https://codeclimate.com/github/projecthydra/sufia/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/sufia)
 [![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
-
-# Migrating data to PCDM / Sufia 7
-
-1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
-1. Create a FileSet for each GenericWork and add it to the ordered_members collection on the GenericWork.
-1. Move the binary from the GenericFile#content to FileSet#original_file
 
 # Table of Contents
 
@@ -67,6 +60,7 @@ After running these steps, browse to http://localhost:3000/ and you should see t
     * [Admin Users](#admin-users)
       * [One time setup for first admin](#one-time-setup-for-first-admin)
       * [Adding an admin user](#adding-an-admin-user)
+    * [Migrating data to PCDM in Sufia 7](#migrating-data-to-pcdm-in-sufia-7)
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
@@ -77,7 +71,7 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 
 # What is Sufia?
 
-Sufia is a component that adds self-deposit institutional repository features to a Rails app. Sufia builds on the [Hydra framework](http://projecthydra.org/).
+Sufia uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Sufia offers self-deposit and proxy deposit workflows with plans to develop one or more mediated deposit workflows in 2016. Sufia delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
 
 Sufia has the following features:
 
@@ -109,6 +103,8 @@ Sufia has the following features:
 * Dynamically configurable featured works and researchers on homepage
 * Proxy deposit and transfers of ownership
 * Integration with Zotero for automatic population of user content
+
+See [Sufia's documentation site](http://sufia.io/) for more information.
 
 # Help
 
@@ -428,6 +424,14 @@ SUCCESS will look like...
 
 * you don't get an error on the /roles page
 * you see a button labeled "Create a new role"
+
+## Migrating data to PCDM in Sufia 7
+
+**WARNING: THIS IS IN PROGRESS AND UNTESTED**
+
+1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
+1. Create a FileSet for each GenericWork and add it to the `ordered_members` collection on the GenericWork.
+1. Move the binary from `GenericFile#content` to `FileSet#original_file`
 
 # License
 
