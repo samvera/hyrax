@@ -3,7 +3,7 @@ module Sufia
     include ActionView::Helpers::NumberHelper
 
     # TODO: Move date_created to CurationConcerns
-    delegate :date_created, to: :solr_document
+    delegate :date_created, :resource_type, to: :solr_document
 
     # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
     def self.terms
