@@ -24,12 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'deprecation', '~> 0.2'
   gem.add_dependency "blacklight", '~> 5.16'
 
-  # sass-rails is typically generated into the app's gemfile by `rails new`
-  # In rails 3 it's put into the "assets" group and thus not available to the
-  # app. Blacklight 5.3 requires bootstrap-sass which requires (but does not
-  # declare a dependency on) sass-rails
-  gem.add_dependency 'sass-rails'
-
   gem.add_development_dependency "rake", '~> 10.1'
   gem.add_development_dependency 'rspec', '~> 3.1'
 end
