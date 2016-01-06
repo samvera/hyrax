@@ -1,22 +1,31 @@
 require 'spec_helper'
 
 describe Hydra::AccessControlsEnforcement do
-  before(:all) do
-    class MockController
-      include Hydra::AccessControlsEnforcement
-      attr_accessor :params
+  let(:controller) { MockController.new }
+  let(:method_chain) { MockController.search_params_logic }
+  let(:search_builder) { MockSearchBuilder.new(method_chain, controller) }
 
-      def current_ability
-        @current_ability ||= Ability.new(current_user)
-      end
-
-      def session
-      end
-
-      delegate :logger, to: :Rails
+  class MockController
+    def self.search_params_logic
+      [:add_access_controls_to_solr_params]
     end
   end
-  subject { MockController.new }
+
+  class MockSearchBuilder < Blacklight::Solr::SearchBuilder
+    include Hydra::AccessControlsEnforcement
+    attr_accessor :params
+
+    def current_ability
+      @current_ability ||= Ability.new(current_user)
+    end
+
+    def session
+    end
+
+    delegate :logger, to: :Rails
+  end
+
+  subject { search_builder }
 
   describe "When I am searching for content" do
     before do
@@ -85,32 +94,6 @@ describe Hydra::AccessControlsEnforcement do
     end
   end
 
-  describe "enforce_show_permissions" do
-    it "should allow a user w/ edit permissions to view an embargoed object" do
-      user = User.new :uid=>'testuser@example.com'
-      allow(RoleMapper).to receive(:roles).with(user).and_return(["archivist"])
-      allow(subject).to receive(:current_user).and_return(user)
-      allow(subject).to receive(:can?).with(:read, nil).and_return(true)
-      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
-
-      subject.params = {}
-      expect(subject).to receive(:can?).with(:edit, stub_doc).and_return(true)
-      expect(subject).to receive(:can?).with(:read, stub_doc).and_return(true)
-      expect(subject.current_ability).to receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
-      expect { subject.send(:enforce_show_permissions, {}) }.not_to raise_error
-    end
-    it "should prevent a user w/o edit permissions from viewing an embargoed object" do
-      user = User.new :uid=>'testuser@example.com'
-      allow(RoleMapper).to receive(:roles).with(user).and_return([])
-      allow(subject).to receive(:current_user).and_return(user)
-      allow(subject).to receive(:can?).with(:read, nil).and_return(true)
-      subject.params = {}
-      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
-      expect(subject.current_ability).to receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
-      expect(subject).to receive(:can?).with(:edit, stub_doc).and_return(false)
-      expect {subject.send(:enforce_show_permissions, {})}.to raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
-    end
-  end
   describe "apply_gated_discovery" do
     before(:each) do
       @stub_user = User.new :uid=>'archivist1@example.com'

@@ -233,6 +233,7 @@ describe Ability do
   describe "custom method" do
     before do
       class MyAbility
+        include Blacklight::AccessControls::Ability
         include Hydra::Ability
         self.ability_logic +=[:setup_my_permissions]
 

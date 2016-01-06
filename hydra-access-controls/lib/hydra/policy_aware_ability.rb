@@ -1,6 +1,7 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAbility
   extend ActiveSupport::Concern
+  include Blacklight::AccessControls::Ability
   include Hydra::Ability
 
   IS_GOVERNED_BY_SOLR_FIELD = "isGovernedBy_ssim".freeze

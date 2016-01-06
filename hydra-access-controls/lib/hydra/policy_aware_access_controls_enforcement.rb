@@ -6,8 +6,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
   def apply_gated_discovery(solr_parameters)
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << gated_discovery_filters.join(' OR '.freeze)
+    super
     logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
   end
 
@@ -50,6 +49,11 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     end
   end
 
+  # Override method from blacklight-access_controls
+  def discovery_permissions
+    @discovery_permissions ||= ["edit", "discover", "read"]
+  end
+
   # Returns the Model used for AdminPolicy objects.
   # You can set this by overriding this method or setting Hydra.config[:permissions][:policy_class]
   # Defults to Hydra::AdminPolicy
@@ -66,6 +70,14 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       filters << additional_clauses
     end
     filters
+  end
+
+  # Find the name of the solr field for this type of permission.
+  # e.g. "read_access_group_ssim" or "discover_access_person_ssim".
+  # Used by blacklight-access_controls gem.
+  def solr_field_for(permission_type, permission_category)
+    permissions = Hydra.config.permissions[permission_type.to_sym]
+    permission_category == 'group' ? permissions.group : permissions.individual
   end
 
 end

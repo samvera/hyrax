@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
   before do
-    class PolicyMockSearchBuilder
+    class PolicyMockSearchBuilder < Blacklight::Solr::SearchBuilder
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
       attr_accessor :params
@@ -100,12 +100,14 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       before do
         allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
       end
+
       it "should return the policies that provide discover permissions" do
         @policies_with_access.map {|p| p.id }.each do |p|
           expect(subject.policies_with_access).to include(p)
         end
         expect(subject.policies_with_access).to_not include("test-policy_no_access")
       end
+
       it "should allow you to configure which model to use for policies" do
         allow(Hydra.config.permissions).to receive(:policy_class).and_return(ModsAsset)
         expect(ModsAsset).to receive(:find_with_conditions).and_return([])

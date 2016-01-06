@@ -1,9 +1,8 @@
 module Hydra::Controller::SearchBuilder
   extend ActiveSupport::Concern
 
-  # Override blacklight to produce a search_builder that has the current ability in context
-  def search_builder processor_chain = search_params_logic
-    super.tap { |builder| builder.current_ability = current_ability }
+  included do
+    Deprecation.warn Hydra::Controller::SearchBuilder, "Hydra::Controller::SearchBuilder no longer does anything.  It will be removed in Hydra version 10.  The code that used to be in this module was moved to Blacklight::AccessControls::Catalog in the blacklight-access_controls gem."
   end
 
 end

@@ -1,18 +1,6 @@
-class Hydra::PermissionsCache
-  def initialize
-    clear 
-  end
+class Hydra::PermissionsCache < Blacklight::AccessControls::PermissionsCache
+  extend Deprecation
 
-  def get(pid)
-    @cache[pid]
-  end
-
-  def put(pid, doc)
-    @cache[pid] = doc 
-  end
-
-  def clear
-    @cache = {}
-  end
+  Deprecation.warn Hydra::PermissionsCache, "Hydra::PermissionsCache will be removed in Hydra 10.  Use Blacklight::AccessControls::PermissionsCache instead (from blacklight-access_controls gem)."
 
 end
