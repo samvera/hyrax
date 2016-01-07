@@ -114,7 +114,7 @@ Sufia::Engine.routes.draw do
   get 'contact' => 'contact_form#new'
 
   # Permissions routes
-  namespace :curation_concern, path: :concern do
+  namespace :curation_concerns, path: :concern do
     resources(:permissions, only: []) do
       member do
         get :confirm
