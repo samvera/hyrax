@@ -95,12 +95,7 @@ module CurationConcerns
                   end
                 end
       if success
-        respond_to do |wants|
-          wants.html do
-            redirect_to [main_app, @file_set], notice: "The file #{view_context.link_to(@file_set, [main_app, @file_set])} has been updated."
-          end
-          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, @file_set]) }
-        end
+        after_update_response
       else
         respond_to do |wants|
           wants.html do
@@ -114,6 +109,15 @@ module CurationConcerns
       flash[:error] = error.message
       logger.error "FileSetsController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
       render action: 'edit'
+    end
+
+    def after_update_response
+      respond_to do |wants|
+        wants.html do
+          redirect_to [main_app, @file_set], notice: "The file #{view_context.link_to(@file_set, [main_app, @file_set])} has been updated."
+        end
+        wants.json { render :show, status: :ok, location: polymorphic_path([main_app, @file_set]) }
+      end
     end
 
     def versions
