@@ -74,6 +74,8 @@ module Hydra
         visibility_will_change! if embargo.changed?
       end
 
+      # Deactivates the embargo and logs a message to the embargo object.
+      # Marks this record as dirty so that it will get reindexed.
       def deactivate_embargo!
         embargo && embargo.deactivate!
         visibility_will_change!
