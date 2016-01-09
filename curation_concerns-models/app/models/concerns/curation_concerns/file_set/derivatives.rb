@@ -7,6 +7,7 @@ module CurationConcerns
         Hydra::Derivatives.source_file_service = CurationConcerns::LocalFileService
         Hydra::Derivatives.output_file_service = CurationConcerns::PersistDerivatives
         Hydra::Derivatives::FullTextExtract.output_file_service = CurationConcerns::PersistDirectlyContainedOutputFileService
+        after_destroy :cleanup_derivatives
       end
 
       # This completely overrides the version in Hydra::Works so that we
@@ -46,8 +47,18 @@ module CurationConcerns
         # The destination_name parameter has to match up with the file parameter
         # passed to the DownloadsController
         def derivative_url(destination_name)
-          path = DerivativePath.derivative_path_for_reference(self, destination_name)
+          path = derivative_path_factory.derivative_path_for_reference(self, destination_name)
           URI("file://#{path}").to_s
+        end
+
+        def cleanup_derivatives
+          derivative_path_factory.derivatives_for_reference(self).each do |path|
+            FileUtils.rm_f(path)
+          end
+        end
+
+        def derivative_path_factory
+          DerivativePath
         end
     end
   end
