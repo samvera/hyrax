@@ -32,13 +32,16 @@ module CurationConcerns
       markup.html_safe
     end
 
-    private
+    # @return The human-readable label for this field.
+    # @note This is a central location for determining the label of a field
+    #   name. Can be overridden if more complicated logic is needed.
+    def label
+      translate(
+        :"blacklight.search.fields.show.#{field}",
+        default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)])
+    end
 
-      def label
-        translate(
-          :"blacklight.search.fields.show.#{field}",
-          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)])
-      end
+    private
 
       def attribute_value_to_html(value)
         if field == :rights
