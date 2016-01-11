@@ -7,10 +7,6 @@ module CurationConcerns
       self.human_readable_type = name.demodulize.titleize
     end
 
-    def human_readable_type
-      self.class.human_readable_type
-    end
-
     def to_solr(solr_doc = {})
       super(solr_doc).tap do |doc|
         doc[Solrizer.solr_name('human_readable_type', :facetable)] = human_readable_type
