@@ -1,11 +1,11 @@
-<% solr_document = featured.file_set_solr_document %>
+<% solr_document = featured.generic_work_solr_document %>
 <li class="featured-item" data-id="<%= solr_document.id %>">
   <div class="main row">
     <div class="col-sm-3">
       <%= render_thumbnail_tag solr_document, { width: 90 } %>
     </div>
     <div class="col-sm-9">
-      <%= render partial: 'homepage/featured_fields', locals: {featured: solr_document} %>
+      <%= render partial: 'sufia/homepage/featured_fields', locals: {featured: solr_document} %>
     </div>
   </div>
 </li>

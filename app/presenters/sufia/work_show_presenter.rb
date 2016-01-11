@@ -16,6 +16,14 @@ module Sufia
       end
     end
 
+    def display_feature_link?
+      user_can_feature_works? && solr_document.public? && FeaturedWork.can_create_another? && !featured?
+    end
+
+    def display_unfeature_link?
+      user_can_feature_works? && solr_document.public? && featured?
+    end
+
     # Add a schema.org itemtype
     def itemtype
       # Look up the first non-empty resource type value in a hash from the config
@@ -24,5 +32,18 @@ module Sufia
     rescue
       'http://schema.org/CreativeWork'
     end
+
+    private
+
+      def featured?
+        if @featured.nil?
+          @featured = FeaturedWork.where(generic_work_id: solr_document.id).exists?
+        end
+        @featured
+      end
+
+      def user_can_feature_works?
+        current_ability.can?(:create, FeaturedWork)
+      end
   end
 end
