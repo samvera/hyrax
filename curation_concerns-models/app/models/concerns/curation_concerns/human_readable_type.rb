@@ -3,7 +3,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :human_readable_short_description, :human_readable_type
+      class_attribute :human_readable_type
       self.human_readable_type = name.demodulize.titleize
     end
 
