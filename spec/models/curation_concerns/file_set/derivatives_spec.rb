@@ -81,4 +81,18 @@ describe CurationConcerns::FileSet do
       end
     end
   end
+
+  describe "cleanup" do
+    let(:mime_type) { 'image/jpg' }
+    it "cleans up all created derivatives" do
+      allow(CurationConcerns::DerivativePath).to receive(:derivatives_for_reference).with(file_set).and_return([
+        "tmp/1/2.jpg"
+      ])
+      allow(FileUtils).to receive(:rm_f).with("tmp/1/2.jpg")
+
+      file_set.destroy
+
+      expect(FileUtils).to have_received(:rm_f).with("tmp/1/2.jpg")
+    end
+  end
 end
