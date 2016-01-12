@@ -1,6 +1,6 @@
 # Sufia
 
-## NOTE: This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.0-stable/README.md) in particular.
+## NOTE: This document is written for the not-yet-released beta version of Sufia 7.0.0.  If you are using sufia, you'll want to check out the [6.x stable branch](https://github.com/projecthydra/sufia/tree/6.x-stable) branch and its [README.md](https://github.com/projecthydra/sufia/blob/6.x-stable/README.md) in particular.
 
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
