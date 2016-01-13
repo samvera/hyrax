@@ -23,9 +23,8 @@
     </li>
 
     <li role="menuitem" tabindex="-1">
-      <%= link_to('#') do %>
-        <i aria-hidden="true" class='glyphicon glyphicon-star'></i>
-        <span> TODO: Highlight Work on Profile </span>
+      <%= display_trophy_link(@user, document.id) do |text| %>
+        <i class='glyphicon glyphicon-star'></i> <%= text %>
       <% end %>
     </li>
     <li role="menuitem" tabindex="-1">
