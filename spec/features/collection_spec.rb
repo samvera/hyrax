@@ -56,6 +56,11 @@ describe 'collection' do
       expect(page).to have_content title
       expect(page).to have_content description
     end
+    it "fails if there's missing required fields" do
+      click_link 'Add a Collection'
+      click_button 'Create Collection'
+      expect(page).to have_content 'Please review the errors below'
+    end
   end
 
   describe 'delete collection' do
