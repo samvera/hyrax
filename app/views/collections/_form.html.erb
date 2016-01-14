@@ -14,10 +14,10 @@
   <div class="row">
     <div class="col-md-12 form-actions">
       <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
-      <% if %w(new create).include?(action_name) %>
-        <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
-      <% else %>
+      <% if @form.persisted? %>
         <%= link_to 'Cancel', collections.collection_path(@form), class: 'btn btn-link' %>
+      <% else %>
+        <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
       <% end %>
     </div>
   </div>
