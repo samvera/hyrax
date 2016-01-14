@@ -31,6 +31,12 @@ module CurationConcerns
       super
     end
 
+    def after_update_error
+      form
+      query_collection_members
+      super
+    end
+
     # overriding the method in Hydra::Collections so the search builder can find the collection
     def collection
       action_name == 'show' ? @presenter : @collection

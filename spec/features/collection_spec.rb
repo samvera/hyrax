@@ -165,6 +165,17 @@ describe 'collection' do
       expect(page).to have_content(creators.first)
     end
 
+    context "when there are errors" do
+      it "displays them" do
+        within("#document_#{@collection.id}") do
+          click_link('Edit Collection')
+        end
+        fill_in 'Title', with: ''
+        click_button 'Update Collection'
+        expect(page).to have_content 'review the errors'
+      end
+    end
+
     it 'removes a work from a collection from edit page' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
