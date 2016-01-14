@@ -30,7 +30,7 @@ module Sufia
           if mapping.is_a? String
             values = [mapping]
           else
-            values = send(mapping[0]) if self.respond_to? mapping[0]
+            values = send(mapping[0]) if respond_to? mapping[0]
             values = mapping[1].call(values) if mapping.length == 2
             values = Array(values)
           end

@@ -13,7 +13,7 @@ module Sufia
     end
 
     def new
-      curation_concern.depositor = (current_user.user_key)
+      curation_concern.depositor = current_user.user_key
       super
     end
 

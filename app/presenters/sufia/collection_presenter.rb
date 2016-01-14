@@ -33,7 +33,7 @@ module Sufia
 
     def total_items
       ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
-        .flat_map { |x| x.fetch("ordered_targets_ssim", []) }.size
+                               .flat_map { |x| x.fetch("ordered_targets_ssim", []) }.size
     end
   end
 end

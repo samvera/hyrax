@@ -1,7 +1,6 @@
 require: rubocop-rspec
 
 AllCops:
-  RunRailsCops: true
   DisplayCopNames: true
   Include:
     - '**/Rakefile'
@@ -11,6 +10,10 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - 'app/models/concerns/sufia/file_set/export.rb'
+
+Lint/ImplicitStringConcatenation:
+  Exclude:
+    - 'lib/generators/sufia/**/*'
 
 Metrics/LineLength:
   Enabled: false
@@ -115,6 +118,9 @@ Style/ClassVars:
 
 Style/SignalException:
   Enabled: false
+
+Rails:
+  Enabled: true
 
 Rails/Output:
   Exclude:

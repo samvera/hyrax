@@ -125,7 +125,7 @@ class CatalogController < ApplicationController
       title_name = solr_name("title", :stored_searchable)
       field.solr_parameters = {
         qf: "#{all_names} file_format_tesim all_text_timv",
-        pf: "#{title_name}"
+        pf: title_name.to_s
       }
     end
 

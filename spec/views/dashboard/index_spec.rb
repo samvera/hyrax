@@ -102,9 +102,9 @@ describe "dashboard/index.html.erb", type: :view do
       before do
         @now = DateTime.now.to_i
         assign(:activity, [
-          { action: 'so and so edited their profile', timestamp: @now },
-          { action: 'so and so uploaded a file', timestamp: (@now - 360) }
-        ])
+                 { action: 'so and so edited their profile', timestamp: @now },
+                 { action: 'so and so uploaded a file', timestamp: (@now - 360) }
+               ])
       end
 
       it "includes recent activities and notifications" do

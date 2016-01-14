@@ -12,11 +12,11 @@ class Sufia::AbstractMigrationGenerator < Rails::Generators::Base
       @prev_migration_nr += 1
     else
       last_migration = Dir[File.join(path, '*.rb')].sort.last
-      if last_migration
-        @prev_migration_nr = last_migration.sub(File.join(path, '/'), '').to_i + 1
-      else
-        @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-      end
+      @prev_migration_nr = if last_migration
+                             last_migration.sub(File.join(path, '/'), '').to_i + 1
+                           else
+                             Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+                           end
     end
     @prev_migration_nr.to_s
   end

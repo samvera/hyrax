@@ -43,7 +43,7 @@ module Sufia
       @all_checked = (count_on_page == @document_list.count)
       @entire_result_set_selected = @response.response["numFound"] == batch_size
       @batch_size_on_other_page = batch_size - count_on_page
-      @batch_part_on_other_page = (@batch_size_on_other_page) > 0
+      @batch_part_on_other_page = @batch_size_on_other_page > 0
 
       @add_files_to_collection = params.fetch(:add_files_to_collection, '')
 
