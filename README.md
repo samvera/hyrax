@@ -35,12 +35,13 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 
   * [What is Sufia?](#what-is-sufia)
   * [Help](#help)
-  * [Creating a Sufia-based app](#creating-a-sufia-based-app)
+  * [Getting started](#getting-started)
     * [Prerequisites](#prerequisites)
       * [Characterization](#characterization)
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
+  * [Creating a Sufia-based app](#creating-a-sufia-based-app)
     * [Rails](#rails)
     * [Sufia's Ruby-related dependencies](#sufias-ruby-related-dependencies)
       * [Pagination](#pagination)
@@ -48,6 +49,12 @@ After running these steps, browse to http://localhost:3000/ and you should see t
     * [Database tables and indexes](#database-tables-and-indexes)
     * [Solr and Fedora](#solr-and-fedora)
     * [Start background workers](#start-background-workers)
+    * [Spin up the web server](#spin-up-the-web-server)
+  * [Managing a Sufia-based app](#managing-a-sufia-based-app)
+    * [Production concerns](#production-concerns)
+      * [Identifier state](#identifier-state)
+      * [Web server](#web-server)
+      * [Database](#database)
     * [Monitor background workers](#monitor-background-workers)
     * [Audiovisual transcoding](#audiovisual-transcoding)
     * [User interface](#user-interface)
@@ -111,7 +118,7 @@ See [Sufia's documentation site](http://sufia.io/) for more information.
 
 If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by [the Hydra community IRC channel](irc://irc.freenode.net/projecthydra).
 
-# Creating a Sufia-based app
+# Getting started
 
 This document contains instructions specific to setting up an app with __Sufia
 v7.0.0.beta1__ (not yet released). If you are looking for instructions on installing a different
@@ -154,6 +161,8 @@ Note here that the following commands assume you're setting up Sufia in a develo
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
 We recommend either Ruby 2.2 or the latest 2.1 version.
+
+# Creating a Sufia-based app
 
 ## Rails
 
@@ -230,11 +239,43 @@ Occasionally, Resque may not give background jobs a chance to clean up temporary
 
 See https://github.com/defunkt/resque for more options. If you use resque-pool, you may also be interested in a shell script to help manage it. [Here is an example](https://github.com/psu-stewardship/scholarsphere/blob/develop/script/restart_resque.sh) which you can adapt for your own needs.
 
+## Spin up the web server
+
+To test-drive your new Sufia application, spin up the web server that Rails provides:
+
+`rails server`
+
+And now you should be able to browse to http://localhost:3000/ and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
+
+# Managing a Sufia-based app
+
+This section provides tips for how to manage, customize, and enhance your Sufia application.
+
+## Production concerns
+
+In production or production-like (e.g., staging) environments, you may want to make changes to the following areas.
+
+### Identifier state
+
+Sufia uses the ActiveFedora::Noid gem to mint (Noid)[https://confluence.ucop.edu/display/Curation/NOID]-style identifiers -- short, opaque identifiers -- for all user-created content (including `GenericWorks`, `FileSets`, and `Collections`). The identifier minter is stateful, meaning that it keeps track of where it is in the sequence of minting identifiers so that the minter can be "replayed," for example in a disaster recovery scenario. ([Read more about the technical details](https://github.com/microservices/noid/blob/master/lib/noid/minter.rb#L2-L35).) The state also means that the minter, once it has minted an identifier, will never mint it again so there's no risk of identifier collisions.
+
+Identifier state is tracked in a file that by default is located in a well-known directory in UNIX-like environments, `/tmp/`, but this may be insufficient in production-like environments where `/tmp/` may be aggressively cleaned out. To prevent the chance of identifier collisions, it is recommended that you find a more suitable filesystem location for your system environment. If you are deploying via Capistrano, that location should **not** be in your application directory, which will change on each deployment. If you have multiple instances of your Sufia application, for instance in load-balanced scenarios, you will want to choose a filesystem location that all instances can access. You may change this by altering this line in `config/initializers/sufia.rb`:
+
+`# config.minter_statefile = '/tmp'`
+
+### Web server
+
+The web server provided by Rails (whether that's WEBrick, Unicorn, or another) is not built to scale out very far, so you should consider alternatives such as Passenger with Apache httpd or nginx.
+
+### Database
+
+The database provided by default is SQLite, and you may wish to swap in something built more for scale like PostgreSQL or MySQL, both of which have been used in other production Sufia applications.
+
 ## Monitor background workers
 
-Edit config/initializers/resque_admin.rb so that ResqueAdmin#matches? returns a true value for the user/s who should be able to access this page. One fast way to do this is to return current_user.admin? and add an admin? method to your user model which checks for specific emails.
+Edit `config/initializers/resque_admin.rb` so that `ResqueAdmin#matches?` returns a `true` value for the user(s) who should be able to access this page. One fast way to do this is to return `current_user.admin?` and add an `admin?` method to your user model which checks for specific emails.
 
-Then you can view jobs at the admin/queues route.
+Then you can view jobs at the `/admin/queues` route.
 
 ## Audiovisual transcoding
 
