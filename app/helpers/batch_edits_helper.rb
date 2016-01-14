@@ -8,7 +8,7 @@ module BatchEditsHelper
   # Displays a "check all" button with a dropdown that has "Select None"
   # and "Select current page" actions
   def render_check_all
-    return if controller_name =~ "my/collections"
+    return if controller_name == "my/collections"
     render 'batch_edits/check_all'
   end
 end
