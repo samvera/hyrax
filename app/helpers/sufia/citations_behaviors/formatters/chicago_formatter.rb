@@ -30,11 +30,11 @@ module Sufia
             text = ''
             text << surname_first(authors_list.first) if authors_list.first
             authors_list[1..6].each_with_index do |author, index|
-              if index + 2 == authors_list.length # we've skipped the first author
-                text << ", and #{given_name_first(author)}."
-              else
-                text << ", #{given_name_first(author)}"
-              end
+              text << if index + 2 == authors_list.length # we've skipped the first author
+                        ", and #{given_name_first(author)}."
+                      else
+                        ", #{given_name_first(author)}"
+                      end
             end
             text << " et al." if authors_list.length > 7
           end

@@ -3,7 +3,7 @@ module Sufia
     module TitleBehavior
       include Sufia::CitationsBehaviors::CommonBehavior
 
-      TITLE_NOCAPS = ["a", "an", "and", "but", "by", "for", "it", "of", "the", "to", "with"]
+      TITLE_NOCAPS = ["a", "an", "and", "but", "by", "for", "it", "of", "the", "to", "with"].freeze
       EXPANDED_NOCAPS = TITLE_NOCAPS + ["about", "across", "before", "without"]
 
       def chicago_citation_title(title_text)

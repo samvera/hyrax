@@ -98,11 +98,8 @@ module Sufia
     # If they are in the dashboard, then the search defaults to the user's works and not
     # all of Sufia.
     def current_search_parameters
-      if on_the_dashboard?
-        return nil
-      else
-        return params[:q]
-      end
+      return if on_the_dashboard?
+      params[:q]
     end
 
     # Depending on which page we're landed on, we'll need to set the appropriate action url for

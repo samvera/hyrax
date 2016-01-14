@@ -28,11 +28,11 @@ module Sufia::UsersControllerBehavior
 
   # Display user profile
   def show
-    if @user.respond_to? :profile_events
-      @events = @user.profile_events(100)
-    else
-      @events = []
-    end
+    @events = if @user.respond_to? :profile_events
+                @user.profile_events(100)
+              else
+                []
+              end
     @trophies = @user.trophy_works
     @followers = @user.followers
     @following = @user.all_following

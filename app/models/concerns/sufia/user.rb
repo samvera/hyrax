@@ -55,12 +55,12 @@ module Sufia::User
   end
 
   def zotero_token=(value)
-    if value.blank?
-      # Resetting the token
-      self[:zotero_token] = value
-    else
-      self[:zotero_token] = Marshal.dump(value)
-    end
+    self[:zotero_token] = if value.blank?
+                            # Resetting the token
+                            value
+                          else
+                            Marshal.dump(value)
+                          end
   end
 
   def set_arkivo_token

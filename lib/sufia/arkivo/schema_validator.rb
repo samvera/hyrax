@@ -33,7 +33,7 @@ module Sufia
           }
         }
       }
-    }
+    }.freeze
 
     class InvalidItem < RuntimeError
     end

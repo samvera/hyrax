@@ -19,11 +19,11 @@ describe StatsController do
         sign_in user
         file_set_query = double('query')
         allow(file_set_query).to receive(:for_path).and_return([
-          OpenStruct.new(date: '2014-01-01', pageviews: 4),
-          OpenStruct.new(date: '2014-01-02', pageviews: 8),
-          OpenStruct.new(date: '2014-01-03', pageviews: 6),
-          OpenStruct.new(date: '2014-01-04', pageviews: 10),
-          OpenStruct.new(date: '2014-01-05', pageviews: 2)])
+                                                                 OpenStruct.new(date: '2014-01-01', pageviews: 4),
+                                                                 OpenStruct.new(date: '2014-01-02', pageviews: 8),
+                                                                 OpenStruct.new(date: '2014-01-03', pageviews: 6),
+                                                                 OpenStruct.new(date: '2014-01-04', pageviews: 10),
+                                                                 OpenStruct.new(date: '2014-01-05', pageviews: 2)])
         allow(file_set_query).to receive(:map).and_return(file_set_query.for_path.map(&:marshal_dump))
         profile = double('profile')
         allow(profile).to receive(:sufia__pageview).and_return(file_set_query)
@@ -31,8 +31,8 @@ describe StatsController do
 
         download_query = double('query')
         allow(download_query).to receive(:for_file).and_return([
-          OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "123456789", totalEvents: "3")
-        ])
+                                                                 OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "123456789", totalEvents: "3")
+                                                               ])
         allow(download_query).to receive(:map).and_return(download_query.for_file.map(&:marshal_dump))
         allow(profile).to receive(:sufia__download).and_return(download_query)
       end

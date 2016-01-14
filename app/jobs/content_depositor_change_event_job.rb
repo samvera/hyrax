@@ -28,7 +28,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   def log_work_event
     work.log_event(event)
   end
-  alias_method :log_file_set_event, :log_work_event
+  alias log_file_set_event log_work_event
 
   def work
     @work ||= Sufia::ChangeContentDepositorService.call(generic_work_id, login, reset)

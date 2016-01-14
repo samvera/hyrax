@@ -1,7 +1,7 @@
 class ContentBlock < ActiveRecord::Base
-  MARKETING  = 'marketing_text'
-  RESEARCHER = 'featured_researcher'
-  ANNOUNCEMENT = 'announcement_text'
+  MARKETING  = 'marketing_text'.freeze
+  RESEARCHER = 'featured_researcher'.freeze
+  ANNOUNCEMENT = 'announcement_text'.freeze
 
   def self.recent_researchers
     where(name: RESEARCHER).order('created_at DESC')
