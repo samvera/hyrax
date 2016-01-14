@@ -9,12 +9,14 @@ describe 'my/_index_partials/_list_works.html.erb' do
 
   let(:config) { My::WorksController.new.blacklight_config }
   let(:members) { [SolrDocument.new(collection.to_solr)] }
+  let(:user) { FactoryGirl.create(:user) }
 
   before do
     expect(Sufia::CollectionMemberService).to receive(:run).with(doc).and_return(members)
     allow(view).to receive(:blacklight_config) { config }
     view.lookup_context.prefixes = %w(collections)
     assign(:collection, collection)
+    @user = user
     render 'my/_index_partials/list_works', document: doc
   end
 
@@ -25,5 +27,6 @@ describe 'my/_index_partials/_list_works.html.erb' do
     expect(rendered).to have_link 'Delete Work', href: curation_concerns_generic_work_path(work)
     expect(rendered).to have_css 'a.visibility-link', text: 'Private'
     expect(rendered).to have_link coll_title, href: collections.collection_path(collection)
+    expect(rendered).to have_link 'Highlight Work on Profile'
   end
 end
