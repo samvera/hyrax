@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
   spec.add_dependency 'carrierwave', '~> 0.9'
   spec.add_dependency 'oauth2', '~> 0.9'
-  spec.add_dependency 'google-api-client', '~> 0.7'
+  spec.add_dependency 'google-api-client', '~> 0.7', '< 0.9'
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'activerecord-import', '~> 0.5'
   spec.add_dependency 'posix-spawn'
