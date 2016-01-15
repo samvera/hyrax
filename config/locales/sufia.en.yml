@@ -166,6 +166,7 @@ en:
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
         resource_type: "You may select multiple types to apply to all files"
     collection:
+      no_visible_works: "The collection is either empty or does not contain items to which you have access."
       is_part_of: "Is part of"
       select_form:
         title: "Add to collection"
