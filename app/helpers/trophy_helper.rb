@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 module TrophyHelper
   def display_trophy_link(user, id, args = {}, &_block)
+    return unless user
     trophy = user.trophies.where(generic_work_id: id).first
     trophyclass = trophy ? "trophy-on" : "trophy-off"
 
