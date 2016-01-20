@@ -22,8 +22,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "active-fedora", '~> 9.0'
   gem.add_dependency 'cancancan', '~> 1.8'
   gem.add_dependency 'deprecation', '~> 0.2'
-  gem.add_dependency "blacklight", '~> 5.16'
-  gem.add_dependency "blacklight-access_controls", '0.1.0'
+  gem.add_dependency "blacklight", '>= 5.16'
+  gem.add_dependency "blacklight-access_controls", '~> 0.1'
 
   gem.add_development_dependency "rake", '~> 10.1'
   gem.add_development_dependency 'rspec', '~> 3.1'

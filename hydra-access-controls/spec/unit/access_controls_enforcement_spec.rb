@@ -11,7 +11,8 @@ describe Hydra::AccessControlsEnforcement do
     end
   end
 
-  class MockSearchBuilder < Blacklight::Solr::SearchBuilder
+  class MockSearchBuilder < Blacklight::SearchBuilder
+    include Blacklight::Solr::SearchBuilderBehavior
     include Hydra::AccessControlsEnforcement
     attr_accessor :params
 

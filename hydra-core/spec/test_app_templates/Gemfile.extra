@@ -1,3 +1,8 @@
 gem 'rspec-rails', '~> 3.1', group: :test
 gem 'rspec-its'
 gem 'byebug' unless ENV['CI']
+
+gem 'rails', ENV.fetch('RAILS_VERSION', '4.2.5')
+
+gem 'blacklight', github: 'projectblacklight/blacklight'
+gem 'blacklight-access_controls', github: 'projectblacklight/blacklight-access_controls', branch: 'blacklight_6'

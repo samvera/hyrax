@@ -1,4 +1,6 @@
 development:
+  adapter: solr
   url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/development
-test: 
+test:
+  adapter: solr
   url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/test

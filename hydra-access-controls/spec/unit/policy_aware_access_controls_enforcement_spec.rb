@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
   before do
-    class PolicyMockSearchBuilder < Blacklight::Solr::SearchBuilder
+    class PolicyMockSearchBuilder < Blacklight::SearchBuilder
+      include Blacklight::Solr::SearchBuilderBehavior
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
       attr_accessor :params
