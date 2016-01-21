@@ -10,7 +10,7 @@ module CurationConcerns
     def self.ordered_by_ids(id)
       if id.present?
         ActiveFedora::SolrService.query("{!join from=proxy_in_ssi to=id}ordered_targets_ssim:#{id}")
-          .map { |x| x["id"] }
+                                 .map { |x| x["id"] }
       else
         []
       end

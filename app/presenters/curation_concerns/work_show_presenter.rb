@@ -35,7 +35,7 @@ module CurationConcerns
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
         ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
-          .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
+                                 .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
       end
 
       # Override this method if you want to use an alternate presenter class for the files

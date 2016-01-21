@@ -1,7 +1,6 @@
 require: rubocop-rspec
 
 AllCops:
-  RunRailsCops: true
   DisplayCopNames: true
   Include:
     - '**/Rakefile'
@@ -12,6 +11,15 @@ AllCops:
     - 'vendor/**/*'
     - '.internal_test_app/**/*'
     - 'curation_concerns-models/app/models/concerns/curation_concerns/file_set/export.rb'
+
+Rails:
+  Enabled: true
+
+Performance/RedundantBlockCall:
+  # We can remove this exclusion when this commit is released:
+  # https://github.com/bbatsov/rubocop/commit/7df382531db4f66cd9872a4f478bd486d6ce6712
+  Exclude:
+    - 'curation_concerns-models/lib/curation_concerns/null_logger.rb'
 
 Lint/AssignmentInCondition:
   Exclude:

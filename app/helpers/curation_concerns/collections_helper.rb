@@ -4,7 +4,7 @@ module CurationConcerns::CollectionsHelper
   end
 
   def collection_modal_id(collectible)
-    "#{collectible.to_param.gsub(/:/, '-')}-modal"
+    "#{collectible.to_param.tr(':', '-')}-modal"
   end
 
   def link_to_select_collection(collectible, opts = {})

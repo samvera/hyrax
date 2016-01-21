@@ -5,8 +5,7 @@ module CurationConcerns
     source_root File.expand_path('../templates', __FILE__)
 
     argument :model_name, type: :string, default: 'user'
-    desc ''"
-  This generator makes the following changes to your application:
+    desc 'This generator makes the following changes to your application:
    1. Runs installers for blacklight & hydra-head (which also install & configure devise)
    2. Runs curation_concerns:models:install
    3. Adds controller behavior to the application controller
@@ -15,7 +14,7 @@ module CurationConcerns
    6. Copies the catalog controller into the local app
    7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
    8. Adds config/authorities/rights.yml to the application
-         "''
+         '
 
     def run_required_generators
       say_status('warning', '[CurationConcerns] GENERATING BLACKLIGHT', :yellow)

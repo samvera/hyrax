@@ -70,11 +70,7 @@ module CurationConcerns
       # => { 'title' => ['first', 'second'] }
       def remove_blank_attributes!
         multivalued_form_attributes.each_with_object(attributes) do |(k, v), h|
-          if v.instance_of? Array
-            h[k] = v.select(&:present?)
-          else
-            h[k] = v
-          end
+          h[k] = v.instance_of?(Array) ? v.select(&:present?) : v
         end
       end
 

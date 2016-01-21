@@ -60,7 +60,7 @@ module ActionDispatch::Routing
     private
 
       # routing namepace arguments, for using a path other than the default
-      ROUTE_OPTIONS = { 'curation_concerns' => { path: :concern } }
+      ROUTE_OPTIONS = { 'curation_concerns' => { path: :concern } }.freeze
 
       # Namespaces routes appropriately
       # @example route_namespaced_target("curation_concerns/generic_work") is equivalent to

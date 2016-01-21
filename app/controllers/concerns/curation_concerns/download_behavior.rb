@@ -50,11 +50,11 @@ module CurationConcerns
       end
 
       def default_file
-        if asset.class.respond_to?(:default_file_path)
-          default_file_reference = asset.class.default_file_path
-        else
-          default_file_reference = DownloadsController.default_content_path
-        end
+        default_file_reference = if asset.class.respond_to?(:default_file_path)
+                                   asset.class.default_file_path
+                                 else
+                                   DownloadsController.default_content_path
+                                 end
         association = dereference_file(default_file_reference)
         association.reader if association
       end
