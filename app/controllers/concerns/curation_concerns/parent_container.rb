@@ -15,15 +15,10 @@ module CurationConcerns::ParentContainer
   end
 
   def lookup_parent_from_child
-    if curation_concern
-      # in_objects method is inherited from Hydra::PCDM::ObjectBehavior
-      curation_concern.in_objects.first
-    elsif @presenter
-
-      CurationConcerns::ParentService.parent_for(@presenter.id)
-    else
-      raise "no child"
-    end
+    # in_objects method is inherited from Hydra::PCDM::ObjectBehavior
+    return curation_concern.in_objects.first if curation_concern
+    return CurationConcerns::ParentService.parent_for(@presenter.id) if @presenter
+    raise "no child"
   end
 
   def parent_id

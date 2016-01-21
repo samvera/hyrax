@@ -9,7 +9,7 @@ describe CurationConcerns::UrlHelper do
   it { is_expected.to eq "/concern/generic_works/#{work.id}" }
 
   it 'uses the curation_concern namespace' do
-    expect(helper.url_for_document document).to eq "/concern/generic_works/#{work.id}"
+    expect(helper.url_for_document(document)).to eq "/concern/generic_works/#{work.id}"
   end
 
   context 'when document is a FileSet' do

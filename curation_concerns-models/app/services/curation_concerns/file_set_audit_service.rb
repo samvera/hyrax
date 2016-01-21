@@ -19,7 +19,7 @@ module CurationConcerns
     # Use this when a file_set is loaded from solr instead of fedora
     def logged_audit_status
       audit_results = ChecksumAuditLog.logs_for(file_set.id, "original_file")
-                      .collect { |result| result["pass"] }
+                                      .collect { |result| result["pass"] }
 
       if audit_results.length > 0
         stat_to_string(audit_results.reduce(true) { |sum, value| sum && value })

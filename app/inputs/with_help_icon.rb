@@ -9,14 +9,14 @@ module WithHelpIcon
       template.link_to '#', id: "#{input_class}_help",
                             data: { toggle: 'popover'.freeze,
                                     content: metadata_help,
-                                    'original-title': raw_label_text },
-                            'aria-label': aria_label do
+                                    'original-title' => raw_label_text },
+                            'aria-label' => aria_label do
         help_icon
       end
     end
 
     def help_icon
-      template.content_tag 'i', nil, "aria-hidden": true, class: "help-icon"
+      template.content_tag 'i', nil, 'aria-hidden' => true, class: "help-icon"
     end
 
     def metadata_help

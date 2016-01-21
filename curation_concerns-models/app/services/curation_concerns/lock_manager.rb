@@ -17,11 +17,8 @@ module CurationConcerns
     def lock(key)
       returned_from_block = nil
       client.lock(key, @ttl) do |locked|
-        if locked
-          returned_from_block = yield
-        else
-          raise UnableToAcquireLockError
-        end
+        raise UnableToAcquireLockError unless locked
+        returned_from_block = yield
       end
       returned_from_block
     end

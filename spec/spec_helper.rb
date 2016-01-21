@@ -52,11 +52,11 @@ RSpec.configure do |config|
   config.fixture_path = File.expand_path('../fixtures', __FILE__)
 
   config.before :each do
-    if Capybara.current_driver == :rack_test
-      DatabaseCleaner.strategy = :transaction
-    else
-      DatabaseCleaner.strategy = :truncation
-    end
+    DatabaseCleaner.strategy = if Capybara.current_driver == :rack_test
+                                 :transaction
+                               else
+                                 :truncation
+                               end
     DatabaseCleaner.start
   end
 
