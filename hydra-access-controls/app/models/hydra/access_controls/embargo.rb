@@ -17,6 +17,7 @@ module Hydra::AccessControls
       (embargo_release_date.present? && Date.today < embargo_release_date)
     end
 
+    # Deactivates the embargo and logs a message to the embargo_history property
     def deactivate!
       return unless embargo_release_date
       embargo_state = active? ? "active" : "expired"
