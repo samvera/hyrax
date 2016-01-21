@@ -2,7 +2,7 @@ module CurationConcerns
   module CollectionsControllerBehavior
     extend ActiveSupport::Concern
     include Hydra::CollectionsControllerBehavior
-    include Hydra::Controller::SearchBuilder
+    include Blacklight::AccessControls::Catalog
 
     included do
       before_action :filter_docs_with_read_access!, except: :show

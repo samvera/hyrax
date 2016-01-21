@@ -1,9 +1,6 @@
 # coding: utf-8
 version = File.read(File.expand_path("../VERSION",__FILE__)).strip
 
-# lib = File.expand_path('../lib', __FILE__)
-# $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
 Gem::Specification.new do |spec|
   spec.name          = "curation_concerns"
   spec.version       = version
@@ -19,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head', '~> 9.0'
+  spec.add_dependency 'hydra-head', '~> 9.6'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3"
   spec.add_dependency "jquery-ui-rails"
   spec.add_dependency "simple_form", '~> 3.1'

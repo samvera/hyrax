@@ -9,7 +9,7 @@ module CurationConcerns
       helper_method :curation_concern
       include CurationConcerns::ParentContainer
       include Blacklight::Base
-      include Hydra::Controller::SearchBuilder
+      include Blacklight::AccessControls::Catalog
       copy_blacklight_config_from(::CatalogController)
     end
 

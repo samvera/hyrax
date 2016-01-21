@@ -1,7 +1,7 @@
 module CurationConcerns::CurationConcernController
   extend ActiveSupport::Concern
   include Blacklight::Base
-  include Hydra::Controller::SearchBuilder
+  include Blacklight::AccessControls::Catalog
 
   included do
     copy_blacklight_config_from(CatalogController)

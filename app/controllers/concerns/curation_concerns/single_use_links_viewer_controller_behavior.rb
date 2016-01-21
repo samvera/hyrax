@@ -3,7 +3,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
     include CurationConcerns::DownloadBehavior
     include Blacklight::Base
-    include Hydra::Controller::SearchBuilder
+    include Blacklight::AccessControls::Catalog
 
     included do
       include ActionDispatch::Routing::PolymorphicRoutes

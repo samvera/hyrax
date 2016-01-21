@@ -12,8 +12,7 @@ module CurationConcerns::CatalogController
     # These before_filters apply the hydra access controls
     before_action :enforce_show_permissions, only: :show
     # This applies appropriate access controls to all solr queries
-    CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
-    self.search_params_logic += [:filter_models]
+    Hydra::SearchBuilder.default_processor_chain += [:add_access_controls_to_solr_params, :filter_models]
   end
 
   module ClassMethods
