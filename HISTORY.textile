@@ -1,3 +1,21 @@
+h3. 9.6.0 (2016-01-21)
+* 2015-11-05: Use ruby 1.9 style hashes [Justin Coyne]
+
+* 2016-01-21: Test with Blacklight 5 and 6 [Justin Coyne]
+
+* 2016-01-15: Test Blacklight 6 [Justin Coyne]
+
+* 2016-01-07: Document Embargoable#deactivate_embargo! [ci skip] [Justin Coyne]
+
+* 2016-01-07: Document Embargo#deactivate! [ci skip] [Justin Coyne]
+
+* 2016-01-06: Remove hard dependency on sass-rails. [Justin Coyne]
+
+* 2015-11-19: Extracted some of hydra-access-controls code to a new gem,
+blacklight-access_controls. [val99erie]
+
+* 2015-11-23: Remove deprecated user permission type [Justin Coyne]
+
 h3. 9.5.0 (2015-11-11)
 * 2015-11-09: Upgrade to Blacklight 5.16 and remove deprecation warnings [Justin
 Coyne]
