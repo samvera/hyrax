@@ -5,7 +5,7 @@ feature 'Catalog index page' do
   let!(:coll) { create(:collection, :public, title: 'My Collection') }
 
   scenario 'Browse the catalog using filter tabs' do
-    visit catalog_index_path
+    visit search_catalog_path
 
     # Filter on Works
     within '#type-tabs' do

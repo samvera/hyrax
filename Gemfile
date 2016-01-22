@@ -31,6 +31,7 @@ if File.exists?(file)
 else
   Bundler.ui.warn "[EngineCart] Unable to find test application dependencies in #{file}, using placeholder dependencies"
   gem 'rails', ENV['RAILS_VERSION'] if ENV['RAILS_VERSION']
+
   if ENV['RAILS_VERSION'].nil? || ENV['RAILS_VERSION'] =~ /^4.2/
     gem 'responders', "~> 2.0"
     gem 'sass-rails', ">= 5.0"

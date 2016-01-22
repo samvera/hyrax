@@ -2,7 +2,7 @@
 # gem 'hydra-works', github: 'projecthydra-labs/hydra-works', branch: 'master'
 # gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', branch: 'master'
 # gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', branch: 'master'
-gem 'hydra-collections', github: 'projecthydra/hydra-collections', branch: 'master'
+gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
 
 group :development do
   gem 'better_errors'

@@ -11,9 +11,13 @@ describe 'curation_concerns/file_sets/_file_set.html.erb' do
   # Ability is checked in FileSetPresenter#link_name
   let(:ability) { double(can?: true) }
   let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_document, ability) }
+  let(:blacklight_configuration_context) do
+    Blacklight::Configuration::Context.new(controller)
+  end
 
   before do
     assign(:presenter, presenter)
+    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     allow(view).to receive(:current_search_session).and_return nil
     allow(view).to receive(:search_session).and_return({})

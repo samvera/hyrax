@@ -6,7 +6,6 @@ module CurationConcerns
 
     included do
       before_action :filter_docs_with_read_access!, except: :show
-      self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
       layout 'curation_concerns/1_column'
       skip_load_and_authorize_resource only: :show
     end
@@ -51,10 +50,18 @@ module CurationConcerns
 
       def presenter
         @presenter ||= begin
-          _, document_list = search_results(params, self.class.search_params_logic + [:find_one])
-          curation_concern = document_list.first
+          # Query Solr for the collection.
+          # run the solr query to find the collection members
+          response = repository.search(collection_search_builder.query)
+          curation_concern = response.documents.first
           raise CanCan::AccessDenied unless curation_concern
           presenter_class.new(curation_concern, current_ability)
+        end
+      end
+
+      def collection_search_builder
+        collection_search_builder_class.new(self).with(params).tap do |builder|
+          builder.current_ability = current_ability
         end
       end
 
@@ -62,8 +69,12 @@ module CurationConcerns
         CurationConcerns::CollectionPresenter
       end
 
+      def collection_search_builder_class
+        CurationConcerns::WorkSearchBuilder
+      end
+
       def collection_member_search_builder_class
-        CurationConcerns::SearchBuilder
+        CurationConcerns::CollectionMemberSearchBuilder
       end
 
       def collection_params

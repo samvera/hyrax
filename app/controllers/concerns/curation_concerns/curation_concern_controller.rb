@@ -145,7 +145,7 @@ module CurationConcerns::CurationConcernController
     def after_destroy_response(title)
       flash[:notice] = "Deleted #{title}"
       respond_to do |wants|
-        wants.html { redirect_to main_app.catalog_index_path }
+        wants.html { redirect_to main_app.search_catalog_path }
         wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
       end
     end
@@ -164,10 +164,14 @@ module CurationConcerns::CurationConcernController
       # nop
     end
 
+    def search_builder_class
+      CurationConcerns::WorkSearchBuilder
+    end
+
   private
 
     def curation_concern_from_search_results
-      _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
+      _, document_list = search_results(params)
       raise CanCan::AccessDenied.new(nil, :show) if document_list.empty?
       document_list.first
     end

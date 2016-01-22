@@ -13,7 +13,7 @@ describe CurationConcernsHelper do
 
     it 'removes search_field' do
       node = Capybara::Node::Simple.new(subject)
-      expect(node).to have_link 'Remove constraint Foo: Simon', href: catalog_index_path
+      expect(node).to have_link 'Remove constraint Foo: Simon', href: search_catalog_path
     end
   end
 end

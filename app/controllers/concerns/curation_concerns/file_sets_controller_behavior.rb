@@ -1,6 +1,8 @@
 module CurationConcerns
   module FileSetsControllerBehavior
     extend ActiveSupport::Concern
+    include Blacklight::Base
+    include Blacklight::AccessControls::Catalog
 
     included do
       include CurationConcerns::ThemedLayoutController
@@ -8,8 +10,6 @@ module CurationConcerns
       load_and_authorize_resource class: ::FileSet, except: :show
       helper_method :curation_concern
       include CurationConcerns::ParentContainer
-      include Blacklight::Base
-      include Blacklight::AccessControls::Catalog
       copy_blacklight_config_from(::CatalogController)
     end
 
@@ -134,11 +134,15 @@ module CurationConcerns
 
       def presenter
         @presenter ||= begin
-          _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_file_sets])
+          _, document_list = search_results(params)
           curation_concern = document_list.first
           raise CanCan::AccessDenied unless curation_concern
           show_presenter.new(curation_concern, current_ability)
         end
+      end
+
+      def search_builder_class
+        CurationConcerns::FileSetSearchBuilder
       end
 
       def initialize_edit_form

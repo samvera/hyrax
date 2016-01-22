@@ -2,9 +2,6 @@ module CurationConcerns
   # Finds embargoed objects
   class EmbargoSearchBuilder < Blacklight::SearchBuilder
     self.default_processor_chain = [:with_pagination, :with_sorting, :only_active_embargoes]
-    def initialize(scope)
-      super(true, scope)
-    end
 
     # TODO: add more complex pagination
     def with_pagination(solr_params)
