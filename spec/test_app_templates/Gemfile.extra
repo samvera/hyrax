@@ -1,7 +1,5 @@
 # Use this file to reference specific commits of gems.
 
-gem 'curation_concerns', github: 'projecthydra-labs/curation_concerns', branch: 'master'
-
 # Required for doing pagination inside an engine. See https://github.com/amatsuda/kaminari/pull/322
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
 
