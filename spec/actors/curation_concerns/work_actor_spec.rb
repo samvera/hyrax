@@ -225,7 +225,8 @@ describe CurationConcerns::GenericWorkActor do
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
-        collection1.add_member(curation_concern)
+        collection1.members << curation_concern
+        collection1.save!
       end
 
       it 'remove from the old collection and adds to the new collection' do

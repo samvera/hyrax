@@ -13,18 +13,8 @@ module CurationConcerns
       validates :title, presence: true
     end
 
-    def add_member(collectible)
-      return unless can_add_to_members?(collectible)
-      members << collectible
-      save
-    end
-
     def to_s
       title.present? ? title : 'No Title'
-    end
-
-    def can_be_member_of_collection?(collection)
-      collection != self
     end
 
     module ClassMethods
@@ -67,10 +57,6 @@ module CurationConcerns
       # Solr field name collections and works use to index member ids
       def member_ids_field
         Solrizer.solr_name('member_ids', :symbol)
-      end
-
-      def can_add_to_members?(collectible)
-        collectible.try(:can_be_member_of_collection?, self)
       end
   end
 end

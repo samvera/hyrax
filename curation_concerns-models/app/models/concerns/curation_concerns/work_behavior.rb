@@ -32,8 +32,4 @@ module CurationConcerns::WorkBehavior
       'No Title'
     end
   end
-
-  def can_be_member_of_collection?(_collection)
-    true
-  end
 end
