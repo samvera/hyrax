@@ -14,14 +14,18 @@ module CurationConcerns
           # neccesarily know about, seems to be consistent with what Rails4 does
           # by default with uncaught ActiveRecord::RecordNotFound in production
           wants.any do
-            # use standard, possibly locally overridden, 404.html file. Even for
-            # possibly non-html formats, this is consistent with what Rails does
-            # on raising an ActiveRecord::RecordNotFound. Rails.root IS needed
-            # for it to work under testing, without worrying about CWD.
-            render file: "#{Rails.root}/public/404.html", status: :not_found, layout: false
+            render_404
           end
         end
       end
+    end
+
+    def render_404
+      # use standard, possibly locally overridden, 404.html file. Even for
+      # possibly non-html formats, this is consistent with what Rails does
+      # on raising an ActiveRecord::RecordNotFound. Rails.root IS needed
+      # for it to work under testing, without worrying about CWD.
+      render file: "#{Rails.root}/public/404.html", status: :not_found, layout: false
     end
 
     # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught
