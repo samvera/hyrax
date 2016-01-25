@@ -9,25 +9,6 @@ describe CurationConcerns::SearchBuilder do
 
   subject { described_class.new(processor_chain, context) }
 
-  describe '#only_file_sets' do
-    before { subject.only_file_sets(solr_params) }
-
-    it 'adds FileSet to query' do
-      expect(solr_params[:fq].first).to include('{!raw f=has_model_ssim}FileSet')
-    end
-  end
-
-  describe '#find_one' do
-    before do
-      allow(subject).to receive(:blacklight_params).and_return(id: '12345')
-      subject.find_one(solr_params)
-    end
-
-    it 'adds id to query' do
-      expect(solr_params[:fq].first).to include('{!raw f=id}12345')
-    end
-  end
-
   describe '#gated_discovery_filters' do
     before do
       allow(subject).to receive(:current_ability).and_return(ability)

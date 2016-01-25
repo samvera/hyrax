@@ -3,7 +3,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
     include CurationConcerns::DownloadBehavior
     include Blacklight::Base
-    include Hydra::Controller::SearchBuilder
+    include Blacklight::AccessControls::Catalog
 
     included do
       include ActionDispatch::Routing::PolymorphicRoutes
@@ -23,7 +23,7 @@ module CurationConcerns
     end
 
     def show
-      _, document_list = search_results({ id: single_use_link.itemId }, [:find_one])
+      _, document_list = search_results(id: single_use_link.itemId)
       curation_concern = document_list.first
 
       # Authorize using SingleUseLinksViewerController::Ability
@@ -40,6 +40,10 @@ module CurationConcerns
     end
 
     protected
+
+      def search_builder_class
+        CurationConcerns::SingleUseLinkSearchBuilder
+      end
 
       def content_options
         super.tap do |options|

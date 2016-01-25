@@ -5,7 +5,7 @@ module CurationConcerns::CatalogHelper
     else
       # TODO: Unused variable. Not sure why this is here.
       # facet_solr_field = facet_configuration_for_field(type_field)
-      path = search_action_path(add_facet_params_and_redirect(type_field, key))
+      path = search_action_path(search_state.add_facet_params_and_redirect(type_field, key))
       # local_params = params.dup
       # local_facet_params = local_params[:f] || {}.with_indifferent_access
       # local_params[:f] = local_facet_params.select{|k,_| k != type_field }
@@ -17,9 +17,7 @@ module CurationConcerns::CatalogHelper
 
   def all_type_tab(label = t('curation_concerns.catalog.index.type_tabs.all'))
     if params[:f] && params[:f][type_field]
-      # TODO: Unused variable. Not sure why this is here.
-      # facet_solr_field = facet_configuration_for_field(type_field)
-      new_params = remove_facet_params(type_field, params[:f][type_field].first)
+      new_params = search_state.remove_facet_params(type_field, params[:f][type_field].first)
 
       # Delete any request params from facet-specific action, needed
       # to redir to index action properly.

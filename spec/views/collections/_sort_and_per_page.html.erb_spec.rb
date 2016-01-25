@@ -3,8 +3,10 @@ require 'spec_helper'
 describe 'collections/_sort_and_per_page.html.erb' do
   let(:collection) { double }
   let(:response) { double(response: { 'numFound' => 3 }) }
+  let(:search_state) { double('SearchState', params_for_search: {}) }
 
   before do
+    allow(view).to receive(:search_state).and_return(search_state)
     allow(view).to receive(:sort_fields).and_return(['title_sort', 'date_sort'])
     allow(view).to receive(:document_index_views).and_return(list: Blacklight::Configuration::ViewConfig.new)
     assign(:response, response)

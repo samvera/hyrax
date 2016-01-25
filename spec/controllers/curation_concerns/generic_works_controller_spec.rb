@@ -186,7 +186,7 @@ describe CurationConcerns::GenericWorksController do
 
     it 'deletes the work' do
       delete :destroy, id: work_to_be_deleted
-      expect(response).to redirect_to main_app.catalog_index_path
+      expect(response).to redirect_to main_app.search_catalog_path
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
