@@ -63,48 +63,6 @@ describe CurationConcerns::CollectionBehavior do
     end
   end
 
-  context '.add_member' do
-    let(:collectible?) { nil }
-    let(:proposed_collectible) { double(collections: []) }
-    before(:each) do
-      allow(proposed_collectible).to receive(:can_be_member_of_collection?).with(subject).and_return(collectible?)
-      # Added for solrizing interface.
-      allow(proposed_collectible).to receive(:pcdm_object?).and_return(true)
-      allow(proposed_collectible).to receive(:collection?).and_return(false)
-      allow(proposed_collectible).to receive(:id).and_return("1")
-      allow(proposed_collectible).to receive(:save).and_return(true)
-    end
-
-    context 'with itself' do
-      it 'does not add it to the collection members' do
-        expect do
-          subject.add_member(subject)
-        end.to_not change { subject.members.size }
-      end
-    end
-
-    context 'with a non-collectible object' do
-      let(:collectible?) { false }
-      it 'does not add it to the collection\'s members' do
-        expect do
-          subject.add_member(proposed_collectible)
-        end.to_not change { subject.members.size }
-      end
-    end
-
-    context 'with a collectible object' do
-      let(:collectible?) { true }
-      before do
-        allow(collection).to receive(:members).and_return([])
-      end
-      it 'adds it to the collection\'s members' do
-        expect do
-          subject.add_member(proposed_collectible)
-        end.to change { subject.members.size }.by(1)
-      end
-    end
-  end
-
   describe 'intrinsic properties' do
     let(:collection1) { FactoryGirl.build(:collection) }
     let(:work1) { FactoryGirl.build(:work) }
