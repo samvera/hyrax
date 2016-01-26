@@ -39,6 +39,10 @@ module Sufia
       upload_set.status.first == "processing".freeze
     end
 
+    def stats_path
+      Sufia::Engine.routes.url_helpers.stats_file_path(self)
+    end
+
     private
 
       def featured?

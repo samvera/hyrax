@@ -11,6 +11,12 @@ module Sufia
       #{Hydra::Engine.root}/app/models/concerns
     )
 
+    # Force these models to be added to Legato's registry in development mode
+    config.eager_load_paths += %W(
+      #{config.root}/app/models/sufia/download.rb
+      #{config.root}/app/models/sufia/pageview.rb
+    )
+
     rake_tasks do
       load File.expand_path('../../../tasks/noid.rake', __FILE__)
       load File.expand_path('../../../tasks/reindex.rake', __FILE__)
