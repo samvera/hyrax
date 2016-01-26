@@ -29,7 +29,7 @@ directory 'pkg'
         major, minor, tiny, pre = version.split('.')
         pre = pre ? pre.inspect : "nil"
 
-        ruby.gsub!(/^(\s*)VERSION = ".*?"$/, "\\1VERSION = \"#{version}\"")
+        ruby.gsub!(/^(\s*)VERSION = ".*?"\.freeze$/, "\\1VERSION = \"#{version}\".freeze")
         raise "Could not insert VERSION in #{file}" unless $1
         File.open(file, 'w') { |f| f.write ruby }
       end
