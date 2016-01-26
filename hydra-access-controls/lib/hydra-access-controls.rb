@@ -19,7 +19,6 @@ module Hydra
   autoload :RoleMapperBehavior
   autoload :PermissionsQuery
   autoload :PermissionsCache
-  autoload :PermissionsSolrDocument
   autoload :IpBasedGroups
 
   class << self
