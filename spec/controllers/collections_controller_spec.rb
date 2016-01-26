@@ -183,6 +183,15 @@ describe CollectionsController do
         expect(assigns[:presenter].title).to eq collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
+
+      context "and searching" do
+        it "returns some works" do
+          # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
+          get :show, id: collection, cq: "Third"
+
+          expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
+        end
+      end
     end
 
     context "not signed in" do

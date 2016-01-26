@@ -12,9 +12,14 @@ describe 'my/_index_partials/_list_works.html.erb' do
   let(:user) { FactoryGirl.create(:user) }
   let(:presenter) { Sufia::WorkShowPresenter.new(doc, nil) }
 
+  let(:blacklight_configuration_context) do
+    Blacklight::Configuration::Context.new(controller)
+  end
+
   before do
     expect(Sufia::CollectionMemberService).to receive(:run).with(doc).and_return(members)
     allow(view).to receive(:blacklight_config) { config }
+    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     view.lookup_context.prefixes = %w(collections)
     assign(:collection, collection)
     @user = user

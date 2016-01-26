@@ -1,8 +1,8 @@
 module My
   class HighlightsController < MyController
-    self.search_params_logic += [
-      :show_only_highlighted_works
-    ]
+    def search_builder_class
+      Sufia::MyHighlightsSearchBuilder
+    end
 
     def index
       super

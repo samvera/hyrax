@@ -1,9 +1,5 @@
 # Given the id of a GenericWork, finds its parent collections
-class ParentCollectionSearchBuilder < Hydra::SearchBuilder
-  # include Hydra::Collections::SearchBehaviors
-  # include BlacklightAdvancedSearch::AdvancedSearchBuilder
-  # self.from_field = 'child_object_ids_ssim'
-
+class ParentCollectionSearchBuilder < Hydra::Collections::SearchBuilder
   delegate :item, to: :scope
 
   # include filters into the query to only include the collection memebers

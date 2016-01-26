@@ -1,9 +1,8 @@
 module My
   class WorksController < MyController
-    self.search_params_logic += [
-      :show_only_resources_deposited_by_current_user,
-      :show_only_generic_works
-    ]
+    def search_builder_class
+      Sufia::MyWorksSearchBuilder
+    end
 
     def index
       super

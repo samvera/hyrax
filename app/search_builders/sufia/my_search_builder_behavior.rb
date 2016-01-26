@@ -5,6 +5,10 @@
 module Sufia::MySearchBuilderBehavior
   extend ActiveSupport::Concern
 
+  included do
+    self.default_processor_chain += [:add_advanced_parse_q_to_solr]
+  end
+
   # show only files with edit permissions in lib/hydra/access_controls_enforcement.rb apply_gated_discovery
   def discovery_permissions
     ["edit"]

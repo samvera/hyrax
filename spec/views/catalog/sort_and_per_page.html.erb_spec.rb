@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'catalog/_sort_and_per_page.html.erb', type: :view do
+  let(:blacklight_configuration_context) do
+    Blacklight::Configuration::Context.new(controller)
+  end
+  let(:search_state) { double('SearchState', to_h: {}, params_for_search: { sort: "score desc, system_create_dtsi desc" }) }
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
@@ -13,6 +17,8 @@ describe 'catalog/_sort_and_per_page.html.erb', type: :view do
     allow(@resp).to receive(:current_page).and_return(2)
     allow(@resp).to receive(:total_pages).and_return(7)
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
+    allow(view).to receive(:search_state).and_return(search_state)
   end
 
   it 'appears on page without error' do

@@ -1,6 +1,7 @@
+require 'legato' # TODO: we shouldn't need to require this
 module Sufia
   class Download
-    extend Legato::Model
+    extend ::Legato::Model
 
     metrics :totalEvents
     dimensions :eventCategory, :eventAction, :eventLabel, :date

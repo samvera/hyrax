@@ -12,9 +12,14 @@ describe 'generic_works/_generic_work.html.erb', type: :view do
                 )
     end
 
+    let(:blacklight_configuration_context) do
+      Blacklight::Configuration::Context.new(controller)
+    end
+
     before do
       allow(generic_work).to receive(:title_or_label).and_return(generic_work.title)
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+      allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
       allow(view).to receive(:generic_work).and_return(generic_work)
       allow(view).to receive(:generic_work_counter).and_return(0)
       allow(view).to receive(:search_session).and_return({})

@@ -1,22 +1,11 @@
-# -*- coding: utf-8 -*-
-# -*- encoding : utf-8 -*-
-require 'blacklight/catalog'
-require 'blacklight_advanced_search'
-
-# bl_advanced_search 1.2.4 is doing unitialized constant on these because we're calling ParseBasicQ directly
-require 'parslet'
-require 'parsing_nesting/tree'
-
 class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
   include Sufia::Catalog
+  include BlacklightAdvancedSearch::Controller
 
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, only: :show
-  # This applies appropriate access controls to all solr queries
-  CatalogController.search_params_logic = [:add_advanced_parse_q_to_solr] + search_params_logic + [:add_access_controls_to_solr_params]
-
   skip_before_filter :default_html_head
 
   def self.uploaded_field
@@ -28,6 +17,13 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
+    # default advanced config values
+    config.advanced_search ||= Blacklight::OpenStructWithHashAccess.new
+    # config.advanced_search[:qt] ||= 'advanced'
+    config.advanced_search[:url_key] ||= 'advanced'
+    config.advanced_search[:query_parser] ||= 'dismax'
+    config.advanced_search[:form_solr_parameters] ||= {}
+
     config.search_builder_class = Sufia::SearchBuilder
 
     # Show gallery view
@@ -37,7 +33,8 @@ class CatalogController < ApplicationController
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
       qt: "search",
-      rows: 10
+      rows: 10,
+      qf: "title_tesim name_tesim"
     }
 
     # Specify which field to use in the tag cloud on the homepage.

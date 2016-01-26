@@ -1,9 +1,8 @@
 module My
   class CollectionsController < MyController
-    self.search_params_logic += [
-      :show_only_resources_deposited_by_current_user,
-      :show_only_collections
-    ]
+    def search_builder_class
+      Sufia::MyCollectionsSearchBuilder
+    end
 
     def index
       super

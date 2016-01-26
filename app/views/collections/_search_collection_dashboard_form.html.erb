@@ -4,7 +4,7 @@
       <label class="accessible-hidden">Search Collection <%= @collection.title %></label>
       <%= text_field_tag :cq, params[:cq], class: "collection-query", placeholder: "Search Collection", size: '30', type: "search", id: "collection_search" %>
       <%= hidden_field_tag :sort, params[:sort], id: 'collection_sort' %>
-      <%= render_hash_as_hidden_fields(params_for_search.except(:cq, :sort, :qt, :page)) %>
+      <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:cq, :sort, :qt, :page)) %>
       <button type="submit" class="btn btn-primary" id="collection_submit"><i class="glyphicon glyphicon-search"></i> Go</button>
   <% end %>
 </div>

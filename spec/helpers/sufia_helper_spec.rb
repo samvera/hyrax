@@ -2,16 +2,25 @@ require 'spec_helper'
 
 describe SufiaHelper, type: :helper do
   describe "#link_to_facet_list" do
+    def search_state_double(value)
+      double('SearchState', add_facet_params_and_redirect: { f: { vehicle_type_sim: [value] } })
+    end
+    let(:search_state_for_car) { search_state_double("car") }
+    let(:search_state_for_truck) { search_state_double("truck") }
     before do
       allow(helper).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+      allow(helper).to receive(:search_state).exactly(2).times.and_return(search_state_for_car, search_state_for_truck)
+      allow(helper).to receive(:search_action_path) do |*args|
+        search_catalog_path(*args)
+      end
     end
 
     context "with values" do
       subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
 
       it "joins the values" do
-        car_link = catalog_index_path(f: { 'vehicle_type_sim' => ['car'] })
-        truck_link = catalog_index_path(f: { 'vehicle_type_sim' => ['truck'] })
+        car_link = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
+        truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
         expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
         expect(subject).to be_html_safe
       end
@@ -95,7 +104,7 @@ describe SufiaHelper, type: :helper do
     context "when the user is not in the dashboard" do
       it "returns the catalog index path" do
         allow(helper).to receive(:params).and_return(controller: "foo")
-        expect(helper.search_form_action).to eq(catalog_index_path)
+        expect(helper.search_form_action).to eq(search_catalog_path)
       end
     end
 

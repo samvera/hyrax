@@ -47,8 +47,8 @@ module Sufia
     end
 
     def link_to_facet(field, field_string)
-      facet_params = add_facet_params(field_string, field)
-      link_to(field, catalog_index_path(facet_params))
+      path = search_action_path(search_state.add_facet_params_and_redirect(field_string, field))
+      link_to(field, path)
     end
 
     # @param values [Array] The values to display
@@ -63,7 +63,7 @@ module Sufia
 
     def link_to_field(fieldname, fieldvalue, displayvalue = nil)
       p = { search_field: 'advanced', fieldname => '"' + fieldvalue + '"' }
-      link_url = main_app.catalog_index_path(p)
+      link_url = main_app.search_catalog_path(p)
       display = displayvalue.blank? ? fieldvalue : displayvalue
       link_to(display, link_url)
     end
@@ -108,7 +108,7 @@ module Sufia
       if on_the_dashboard?
         search_action_for_dashboard
       else
-        main_app.catalog_index_path
+        main_app.search_catalog_path
       end
     end
 

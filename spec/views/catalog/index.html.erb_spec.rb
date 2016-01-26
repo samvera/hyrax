@@ -3,11 +3,16 @@ require 'spec_helper'
 describe 'catalog/index.html.erb' do
   let(:collection) { stub_model(Collection, title: 'collection1', id: 'abc123') }
   let(:doc) { SolrDocument.new(collection.to_solr) }
+  let(:search_state) { double('SearchState', to_h: {}) }
+  let(:blacklight_configuration_context) do
+    Blacklight::Configuration::Context.new(controller)
+  end
 
   before do
     view.extend CurationConcerns::CollectionsHelper
     allow(view).to receive(:current_users_collections).and_return([])
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     stub_template 'catalog/_search_sidebar.html.erb' => ''
     stub_template 'catalog/_search_header.html.erb' => ''
     allow(view).to receive(:render_opensearch_response_metadata).and_return('')
@@ -15,6 +20,9 @@ describe 'catalog/index.html.erb' do
     allow(view).to receive(:search_session).and_return({})
     allow(view).to receive(:current_search_session).and_return(nil)
     allow(view).to receive(:document_counter_with_offset).and_return(5)
+    allow(view).to receive(:type_tab).and_return("TYPE")
+    allow(view).to receive(:search_state).and_return(search_state)
+    allow(controller).to receive(:render_bookmarks_control?).and_return(false)
 
     params[:view] = 'gallery'
 

@@ -9,15 +9,12 @@ module Sufia
       include Blacklight::Configurable
 
       copy_blacklight_config_from(CatalogController)
-      blacklight_config.search_builder_class = Sufia::MySearchBuilder
 
       before_action :authenticate_user!
       before_action :enforce_show_permissions, only: :show
       before_action :enforce_viewing_context_for_show_requests, only: :show
       before_action :find_collections, only: :index
       before_action :find_collections_with_edit_access, only: :index
-
-      self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
       layout 'sufia-dashboard'
     end
@@ -57,7 +54,7 @@ module Sufia
     private
 
       def query_solr
-        search_results(params, search_params_logic)
+        search_results(params)
       end
   end
 end
