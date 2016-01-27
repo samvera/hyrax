@@ -81,5 +81,9 @@ module Sufia
     def generic_work?
       hydra_model == 'GenericWork'
     end
+
+    def upload_set_id
+      Array(self[Solrizer.solr_name("isPartOf", :symbol)]).first
+    end
   end
 end
