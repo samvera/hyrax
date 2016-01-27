@@ -1,12 +1,17 @@
 module ActionDispatch::Routing
   class Mapper
-    def curation_concerns_basic_routes
+    # @yield If a block is passed it is yielded for each curation_concern
+    # @example
+    #   curation_concerns_basic_routes do
+    #     concerns :exportable
+    #   end
+    def curation_concerns_basic_routes(&block)
       resources :downloads, only: :show
       resources :upload_sets, only: [:edit, :update]
 
       namespace :curation_concerns, path: :concern do
-        CurationConcerns.config.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
-          namespaced_resources curation_concern_name, except: [:index]
+        concerns_to_route.each do |curation_concern_name|
+          namespaced_resources curation_concern_name, except: [:index], &block
         end
 
         resources :permissions, only: [] do
@@ -63,20 +68,27 @@ module ActionDispatch::Routing
       ROUTE_OPTIONS = { 'curation_concerns' => { path: :concern } }.freeze
 
       # Namespaces routes appropriately
-      # @example route_namespaced_target("curation_concerns/generic_work") is equivalent to
+      # @example namespaced_resources("curation_concerns/generic_work") is equivalent to
       #   namespace "curation_concerns", path: :concern do
       #     resources "generic_work", except: [:index]
       #   end
-      def namespaced_resources(target, opts = {})
+      def namespaced_resources(target, opts = {}, &block)
         if target.include?('/')
           the_namespace = target[0..target.index('/') - 1]
           new_target = target[target.index('/') + 1..-1]
           namespace the_namespace, ROUTE_OPTIONS.fetch(the_namespace, nil) do
-            namespaced_resources(new_target, opts)
+            namespaced_resources(new_target, opts, &block)
           end
         else
-          resources target, opts
+          resources target, opts do
+            yield if block_given?
+          end
         end
+      end
+
+      # @return [Array<String>] the list of works to build routes for
+      def concerns_to_route
+        CurationConcerns.config.registered_curation_concern_types.map(&:tableize)
       end
   end
 end
