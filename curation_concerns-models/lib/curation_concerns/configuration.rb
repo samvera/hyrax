@@ -14,6 +14,10 @@ module CurationConcerns
   class Configuration
     include Callbacks
 
+    def initialize
+      @registered_concerns = []
+    end
+
     # An anonymous function that receives a path to a file
     # and returns AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE if no
     # virus is found; Any other returned value means a virus was found
@@ -119,19 +123,20 @@ module CurationConcerns
     # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
       Array(curation_concern_types).flatten.compact.each do |cc_type|
-        class_name = normalize_concern_name(cc_type)
-        unless registered_curation_concern_types.include?(class_name)
-          registered_curation_concern_types << class_name
+        unless @registered_concerns.include?(cc_type)
+          @registered_concerns << cc_type
         end
       end
     end
 
-    # Returns the class names (strings) of the registered curation concerns
+    # The normalization done by this method must occur after the initialization process
+    # so it can take advantage of irregular inflections from config/initializers/inflections.rb
+    # @return [Array<String>] the class names of the registered curation concerns
     def registered_curation_concern_types
-      @registered_curation_concern_types ||= []
+      @registered_concerns.map { |cc_type| normalize_concern_name(cc_type) }
     end
 
-    # Returns the classes of the registered curation concerns
+    # @return [Array<Class>] the registered curation concerns
     def curation_concerns
       registered_curation_concern_types.map(&:constantize)
     end
