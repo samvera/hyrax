@@ -18,6 +18,19 @@ describe 'users/edit.html.erb', type: :view do
     expect(rendered).to match(/ORCID Profile/)
   end
 
+  context "with trophy" do
+    let(:generic_work) { stub_model(GenericWork, title: ["Fake object"], id: "abc123") }
+    before do
+      assign(:trophies, [generic_work])
+    end
+
+    it "has trophy" do
+      render
+      page = Capybara::Node::Simple.new(rendered)
+      expect(page).to have_selector("#remove_trophy_#{generic_work.id}")
+    end
+  end
+
   context 'with Zotero integration enabled' do
     before do
       allow(Sufia.config).to receive(:arkivo_api) { true }
