@@ -10,6 +10,7 @@ describe 'my/_index_partials/_list_works.html.erb' do
   let(:config) { My::WorksController.new.blacklight_config }
   let(:members) { [SolrDocument.new(collection.to_solr)] }
   let(:user) { FactoryGirl.create(:user) }
+  let(:presenter) { Sufia::WorkShowPresenter.new(doc, nil) }
 
   before do
     expect(Sufia::CollectionMemberService).to receive(:run).with(doc).and_return(members)
@@ -17,7 +18,7 @@ describe 'my/_index_partials/_list_works.html.erb' do
     view.lookup_context.prefixes = %w(collections)
     assign(:collection, collection)
     @user = user
-    render 'my/_index_partials/list_works', document: doc
+    render 'my/_index_partials/list_works', document: doc, presenter: presenter
   end
 
   it 'the line item displays the work and its actions' do

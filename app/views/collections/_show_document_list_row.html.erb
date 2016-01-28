@@ -1,12 +1,10 @@
 <% id = document.id %>
+<% presenter = document.is_a?(GenericWork) ? Sufia::WorkShowPresenter.new(document, nil) : nil %>
 <tr id="document_<%= id %>" class="<%= cycle("", "zebra") %>">
   <td>&nbsp;
-    <%# TODO is there a processing concept for a work ?? see #1122 & #1123 %>
-    <%# This block is for adding/removing the magic wand while batch updates are processing %>
-    <%# if gf.processing? %>
-      <!--<i class="glyphicon glyphicon-time <%#= 'ss-'+gf.batch.id %>"/>-->
-    <%# elsif current_user and gf.depositor != current_user.user_key %>
-    <% if current_user and document.depositor != current_user.user_key %>
+    <% if presenter && presenter.processing? %>
+      <i class="glyphicon glyphicon-time <%= 'ss-'+presenter.upload_set_id %>"/>
+    <% elsif current_user and document.depositor != current_user.user_key %>
       <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>

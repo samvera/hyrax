@@ -17,6 +17,12 @@ module Sufia
       super
     end
 
+    def edit
+      work = GenericWork.find(params[:id])
+      throw "Cannot edit a work that still is being processed" if work.processing?
+      super
+    end
+
     protected
 
       def show_presenter
