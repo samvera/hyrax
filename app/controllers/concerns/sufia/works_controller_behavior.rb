@@ -19,7 +19,7 @@ module Sufia
 
     def edit
       work = GenericWork.find(params[:id])
-      throw "Cannot edit a work that still is being processed" if work.processing?
+      raise "Cannot edit a work that still is being processed" if work.processing?
       super
     end
 
