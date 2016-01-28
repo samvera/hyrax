@@ -55,7 +55,13 @@ After running these steps, browse to http://localhost:3000/ and you should see t
       * [Identifier state](#identifier-state)
       * [Web server](#web-server)
       * [Database](#database)
-    * [Monitor background workers](#monitor-background-workers)
+    * [Background workers](#background-workers)
+      * [Terminology](#terminology)
+      * [Configuration](#configuration)
+      * [Starting the pool](#starting-the-pool)
+      * [Restarting the pool](#restarting-the-pool)
+      * [Monitoring](#monitoring)
+      * [Troubleshooting](#troubleshooting)
     * [Audiovisual transcoding](#audiovisual-transcoding)
     * [User interface](#user-interface)
     * [Integration with Dropbox, Box, etc.](#integration-with-dropbox-box-etc)
@@ -219,25 +225,17 @@ rake jetty:start
 
 ## Start background workers
 
-Sufia uses a queuing system named Resque to manage long-running or slow processes. Resque relies on the [Redis](http://redis.io/) key-value store, so [Redis](http://redis.io/) must be installed *and running* on your system in order for background workers to pick up jobs.
+By default, Sufia uses a queuing system named Resque to manage long-running or slow processes. Resque relies on the [Redis](http://redis.io/) key-value store, so [Redis](http://redis.io/) must be installed *and running* on your system in order for background workers to pick up jobs.
 
 Unless Redis has already been started, you will want to start it up. You can do this either by calling the `redis-server` command, or if you're on certain Linuxes, you can do this via `sudo service redis-server start`.
 
-Next you will need to start up the Resque workers provided by Sufia. The following command will run until you stop it, so you may want to do this in a dedicated terminal.
+Next you will need to start up the Resque workers provided by Sufia. The following command will run until you stop it, so you may want to do this in a dedicated terminal. (Depending on how you manage your Rubies, you may or may not need to prepend `bundle exec` to this and other commands.)
 
 ```
-RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 QUEUE=* rake environment resque:work
+rake environment resque:work
 ```
 
-Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra/sufia/blob/master/sufia/lib/generators/sufia/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
-
-```
-RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
-```
-
-Occasionally, Resque may not give background jobs a chance to clean up temporary files. The `RUN_AT_EXIT_HOOKS` variable allows Resque to do so. The `TERM_CHILD` variable allows workers to terminate gracefully rather than interrupting currently running workers. For more information on the signals that Resque responds to, see the [resque-pool documentation](https://github.com/nevans/resque-pool#signals).
-
-See https://github.com/defunkt/resque for more options. If you use resque-pool, you may also be interested in a shell script to help manage it. [Here is an example](https://github.com/psu-stewardship/scholarsphere/blob/develop/script/restart_resque.sh) which you can adapt for your own needs.
+When you're ready for a deeper dive, [read more about background workers](#background-workers).
 
 ## Spin up the web server
 
@@ -271,11 +269,126 @@ The web server provided by Rails (whether that's WEBrick, Unicorn, or another) i
 
 The database provided by default is SQLite, and you may wish to swap in something built more for scale like PostgreSQL or MySQL, both of which have been used in other production Sufia applications.
 
-## Monitor background workers
+## Background workers
 
-Edit `config/initializers/resque_admin.rb` so that `ResqueAdmin#matches?` returns a `true` value for the user(s) who should be able to access this page. One fast way to do this is to return `current_user.admin?` and add an `admin?` method to your user model which checks for specific emails.
+By default, Sufia uses a queuing system named Resque -- [learn more about Resque](https://github.com/resque/resque) -- to manage long-running or slow processes. Resque relies on the [Redis](http://redis.io/) key-value store, so [Redis](http://redis.io/) must be installed *and running* on your system in order for background workers to pick up jobs.
+
+There are two ways you can manage your workers:
+
+1. the `resque:work` rake task, which will run in the foreground in the terminal;
+2. use [resque-pool](https://github.com/nevans/resque-pool) to manage a number of configurable workers in background processes
+
+For the remainder of the background worker documentation, it is assumed that you're using resque-pool which is more robust.
+
+### Terminology
+
+<dl>
+<dt>Resque</dt>
+<dd>Resque is a <a href="https://en.wikipedia.org/wiki/Message_queue">message queue</a> that is used by Sufia to manage long-running or slow processes. (Sufia builds its jobs using Rails's ActiveJob framework, so you are free to use another queuing system, e.g., DelayedJob or Sidekiq.)</dd>
+
+<dt>Resque-Pool/pools</dt>
+<dd>[Resque-Pool](https://github.com/nevans/resque-pool) is a tool for managing (starting, stopping) and configuring Resque worker processes. See [configuration](#configuration) below for more information.</dd>
+
+<dt>workers</dt>
+<dd>Workers run the background jobs. Each worker has a copy of your Sufia app which has the jobs code in `app/jobs/`. The workers listen to queues (by polling Redis) and pull jobs waiting on the queue. Once a worker pulls a job, it will perform the task as expressed by the persisted job. A worker can be dedicated to a single queue or may listen to multiple queues -- this is [configurable](#configuration) in `config/resque-pool.yml`. Multiple workers can also listen to the same queue.</dd>
+
+<dt>queues</dt>
+<dd>Jobs are sent to queues where they wait until a worker is available to pick them up. Sufia defines a number of queues for processing different background jobs (e.g. `batch_update`, `characterize`). Multiple queues are provided to give you the ability to control how many workers work on the different jobs. Why? Some jobs are fast-running, such as all of Sufia's event jobs, and some jobs are slow-running like the characterize job. Using dedicated queues allows you to say, "I only want one worker for characterization but I want five for events," thus making sure characterization jobs serially and event jobs run in parallel.</dd>
+
+<dt>jobs</dt>
+<dd>A job is a task to be performed, and is encoded in JSON and persisted in Redis. The job includes the name of the method the worker should execute along with any parameters that need to be passed to the method.</dd>
+
+<dt>Redis</dt>
+<dd><a href="http://redis.io/">Redis</a> is a key-value store. Resque uses Redis to persist jobs and queues, and Resque-Pool uses Redis to track and manage its worker processes.</dd>
+</dl>
+
+### Configuration
+
+Resque-pool's configuration file lives in your application at `config/resque-pool.yml` and you are free to tweak it to meet your needs. The default configuration is to create one worker for all queues:
+
+```
+ "*": 1
+```
+
+An example of a common configuration for production-like environments can be seen in [ScholarSphere](https://github.com/psu-stewardship/scholarsphere/blob/develop/config/resque-pool.yml):
+
+```
+batch_update: 3
+derivatives: 1
+resolrize: 1
+audit: 2
+event: 5
+import_url: 3
+sufia: 1
+"*": 1
+```
+
+Each line defines a queue name and how many workers should be created to process that queue.
+
+### Starting the pool
+
+**Prerequisite:**  [Redis](http://redis.io/) must be installed *and running* on your system in order for background workers to pick up jobs.  Unless Redis has already been started, you will want to start it up. You can do this either by calling the `redis-server` command, or if you're on certain Linuxes, you can do this via `sudo service redis-server start`.
+
+OPTION 1: Start 1 worker (ignores the resque-pool [configuration file](#configuration)). The following command will run until you stop it, so you may want to do this in a dedicated terminal and would typically be used during development only.
+
+**IMPORTANT:** Change directories to the root of your Sufia app before executing:
+
+```
+RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 QUEUE=* rake environment resque:work
+```
+
+OPTION 2: Start a pool of configurable workers. This is typically used for production-like environments, but may also be used for development.  See [configuration](#configuration) examples above.
+
+**IMPORTANT:** Change directories to the root of your Sufia app before executing:
+
+```
+RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
+```
+
+(Occasionally, Resque may not give background jobs a chance to clean up temporary files. The `RUN_AT_EXIT_HOOKS` variable allows Resque to do so. The `TERM_CHILD` variable allows workers to terminate gracefully rather than interrupting currently running workers.)
+
+For more information on the signals that Resque-Pool responds to, see the [resque-pool documentation on signals](https://github.com/nevans/resque-pool#signals).
+
+### Restarting the pool
+
+**IMPORTANT:** Change directories to the root of your Sufia app before executing.
+
+You may be interested in a script to help you manage starting/stopping Resque-Pool. Here's a [sample from ScholarSphere](https://github.com/psu-stewardship/scholarsphere/blob/develop/script/restart_resque.sh).
+
+You may need to adjust it to meet your needs, e.g.: the default location for the pid file is the application's `tmp/` directory.  You will want to update `RESQUE_POOL_PIDFILE` to point to the location where your pid file is generated if you use a location other than the default.
+
+### Monitoring
+
+Edit `config/initializers/resque_admin.rb` so that `ResqueAdmin#matches?` returns a `true` value for the user(s) who should be able to access this page. One fast way to do this is to return `current_user.admin?` and add an `#admin?` method to your user model which checks for specific emails or the 'admin' role. See [Admin Users](#admin-users) for information on how to add users with the admin role.
 
 Then you can view jobs at the `/admin/queues` route.
+
+### Troubleshooting
+
+The code executed by workers should stay in sync with changes you make to your rails app.  If the code isn't staying in sync, you may have more than one resque-pool process running.  You can also see unusual behaviors if more than one redis-server is running.  The information below describes the processes that will be running when everything is operating correctly.
+
+You should see 1 redis-server process. 
+```
+$ ps -ef | grep redis-server
+user1     7982  7882  0 01:26 pts/3    00:00:00 grep redis-server
+root      8398     1  0 00:08 ?        00:00:04 /usr/local/bin/redis-server 0.0.0.0:6379    
+```
+NOTE: If you see multiple redis-server processes running, kill each and start redis-server again.  You should only have one redis-server process running.
+
+
+You should see 1 resque-pool process.
+```
+$$ ps -ef | grep resque-pool
+user1    8059  7882  0 01:27 pts/3    00:00:00 grep resque-pool
+root     8416     1  0 00:08 ?        00:00:08 resque-pool-master[agriknowledge]: managing [8653]  
+```
+
+You should see at least one worker process waiting.
+```
+$$ ps -ef | grep resque | grep Waiting
+root     8653  8416  0 00:08 ?        00:00:01 resque-1.25.2: Waiting for *  
+```
+NOTE: If you see multiple resque-pool processes running, kill each AND all the resque Waiting processes as well.  Start resque-pool again.  You should only have one resque-pool process running.  But you may have multiple worker processes running.
 
 ## Audiovisual transcoding
 
