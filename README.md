@@ -365,30 +365,34 @@ Then you can view jobs at the `/admin/queues` route.
 
 ### Troubleshooting
 
-The code executed by workers should stay in sync with changes you make to your rails app.  If the code isn't staying in sync, you may have more than one resque-pool process running.  You can also see unusual behaviors if more than one redis-server is running.  The information below describes the processes that will be running when everything is operating correctly.
+The code executed by workers reflects the state of the code when the workers were started. If the workers are behaving in a way you can't explain, you may have more than one resque-pool master process running. You can also see unusual behaviors if more than one redis-server is running. The information below describes the processes that will be running when everything is operating correctly.
 
-You should see 1 redis-server process. 
+You should see one redis-server process:
+
 ```
 $ ps -ef | grep redis-server
 user1     7982  7882  0 01:26 pts/3    00:00:00 grep redis-server
 root      8398     1  0 00:08 ?        00:00:04 /usr/local/bin/redis-server 0.0.0.0:6379    
 ```
-NOTE: If you see multiple redis-server processes running, kill each and start redis-server again.  You should only have one redis-server process running.
 
+If you see multiple redis-server processes running, kill them all (assuming they're not serving other important applications on your system) and start redis-server again. You should only have one redis-server process running.
 
-You should see 1 resque-pool process.
+You should see one resque-pool-master process:
+
 ```
-$$ ps -ef | grep resque-pool
+$ ps -ef | grep resque-pool
 user1    8059  7882  0 01:27 pts/3    00:00:00 grep resque-pool
-root     8416     1  0 00:08 ?        00:00:08 resque-pool-master[agriknowledge]: managing [8653]  
+root     8416     1  0 00:08 ?        00:00:08 resque-pool-master[yourapphere]: managing [8653]  
 ```
 
-You should see at least one worker process waiting.
+You should see one or more worker processes running:
+
 ```
-$$ ps -ef | grep resque | grep Waiting
+$ ps -ef | grep resque | grep -v pool-master
 root     8653  8416  0 00:08 ?        00:00:01 resque-1.25.2: Waiting for *  
 ```
-NOTE: If you see multiple resque-pool processes running, kill each AND all the resque Waiting processes as well.  Start resque-pool again.  You should only have one resque-pool process running.  But you may have multiple worker processes running.
+
+If you see multiple resque-pool-master processes running, kill all of them and all of their child processes as well. Start resque-pool again. You should only have one resque-pool-master process running.  But you may have multiple worker processes running.
 
 ## Audiovisual transcoding
 
