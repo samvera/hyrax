@@ -235,4 +235,27 @@ describe CurationConcerns::FileSetsController do
       end
     end
   end
+
+  context 'finds parents' do
+    let(:file_set) do
+      file_set = FileSet.create! do |gf|
+        gf.apply_depositor_metadata(user)
+      end
+      parent.ordered_members << file_set
+      parent.save
+      file_set
+    end
+
+    before do
+      allow_any_instance_of(described_class).to receive(:curation_concern).and_return(file_set)
+    end
+
+    it 'finds a parent' do
+      expect(controller.parent).to eq(parent)
+    end
+
+    it 'finds a parent id' do
+      expect(controller.parent_id).to eq(parent.id)
+    end
+  end
 end

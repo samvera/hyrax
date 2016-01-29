@@ -22,7 +22,7 @@ module CurationConcerns::ParentContainer
   end
 
   def parent_id
-    @parent_id ||= new_or_create? ? params[:parent_id] : curation_concern.generic_works.in_objects.first.id
+    @parent_id ||= new_or_create? ? params[:parent_id] : lookup_parent_from_child.id
   end
 
   protected
