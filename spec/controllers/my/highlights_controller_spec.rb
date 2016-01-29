@@ -43,5 +43,12 @@ describe My::HighlightsController, type: :controller do
         expect(assigns[:document_list].map(&:id)).to_not include(@unrelated_highlighted_work.id)
       end
     end
+
+    describe "when user has no highlights" do
+      it "skips the call to Solr" do
+        expect(controller).to_not receive(:search_results)
+        get :index
+      end
+    end
   end
 end

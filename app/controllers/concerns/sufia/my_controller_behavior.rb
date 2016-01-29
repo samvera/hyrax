@@ -23,8 +23,8 @@ module Sufia
     end
 
     def index
-      (@response, @document_list) = search_results(params, search_params_logic)
       @user = current_user
+      (@response, @document_list) = query_solr
       @events = @user.events(100)
       @last_event_timestamp = begin
                                 @user.events.first[:timestamp].to_i || 0
@@ -53,5 +53,11 @@ module Sufia
         format.atom { render layout: false }
       end
     end
+
+    private
+
+      def query_solr
+        search_results(params, search_params_logic)
+      end
   end
 end
