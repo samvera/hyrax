@@ -70,7 +70,7 @@ module CurationConcerns
         if options[:catalog_search_link]
           link_to(ERB::Util.h(value), search_path(value))
         else
-          auto_link(value)
+          auto_link(ERB::Util.h(value))
         end
       end
 
