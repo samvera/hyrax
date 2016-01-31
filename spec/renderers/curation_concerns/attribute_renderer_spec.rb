@@ -58,5 +58,17 @@ describe CurationConcerns::AttributeRenderer do
       it { expect(renderer).to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end
+
+    context 'with links and < characters' do
+      let(:field) { :description }
+      let(:renderer) { described_class.new(field, ['Foo < Bar http://www.example.com. & More Text']) }
+      let(:tr_content) do
+        "<tr><th>Description</th>\n" \
+         "<td><ul class='tabular'><li class=\"attribute description\"><span itemprop=\"description\">Foo &lt; Bar <a href=\"http://www.example.com\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
+         "</ul></td></tr>"
+      end
+
+      it { expect(subject).to be_equivalent_to(expected) }
+    end
   end
 end

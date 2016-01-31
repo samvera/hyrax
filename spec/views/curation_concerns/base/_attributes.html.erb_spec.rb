@@ -4,7 +4,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }
   let(:subject)     { 'history' }
-  let(:description) { ['Lorem ipsum lorem ipsum. http://my.link.com'] }
+  let(:description) { ['Lorem ipsum < lorem ipsum. http://my.link.com'] }
 
   let(:solr_document) { SolrDocument.new(subject_tesim: subject,
                                          contributor_tesim: contributor,
