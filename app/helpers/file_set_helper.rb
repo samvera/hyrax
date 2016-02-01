@@ -11,7 +11,7 @@ module FileSetHelper
 
   def display_multiple(value)
     return if value.nil?
-    auto_link(value.join(" | "))
+    auto_link(html_escape(value.join(" | ")))
   end
 
   private
