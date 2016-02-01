@@ -71,7 +71,7 @@ module Sufia
     def iconify_auto_link(text, showLink = true)
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
-      auto_link(text) do |value|
+      auto_link(html_escape(text)) do |value|
         "<i class='glyphicon glyphicon-new-window'></i>#{('&nbsp;' + value) if showLink}<br />"
       end
     end
