@@ -4,7 +4,7 @@ module CurationConcerns::CurationConcernController
   include Blacklight::AccessControls::Catalog
 
   included do
-    copy_blacklight_config_from(CatalogController)
+    copy_blacklight_config_from(::CatalogController)
     include CurationConcerns::ThemedLayoutController
     with_themed_layout '1_column'
     helper CurationConcerns::AbilityHelper
