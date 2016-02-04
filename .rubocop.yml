@@ -49,6 +49,12 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
+Performance/RedundantMerge:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false
+
 Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*'
