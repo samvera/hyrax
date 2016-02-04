@@ -36,6 +36,10 @@ module Sufia
       'http://schema.org/CreativeWork'
     end
 
+    def stats_path
+      Sufia::Engine.routes.url_helpers.stats_work_path(self)
+    end
+
     def events
       @events ||= solr_document.to_model.events(100)
     end
