@@ -8,7 +8,7 @@ module Sufia
 
       def chicago_citation_title(title_text)
         process_title_parts(title_text) do |w, index|
-          if (index == 0 && w != w.upcase) || (w.length > 1 && w != w.upcase && !EXPANDED_NOCAPS.include?(w))
+          if (index == 0 && w.casecmp(w).zero?) || (w.length > 1 && w.casecmp(w).zero? && !EXPANDED_NOCAPS.include?(w))
             # the split("-") will handle the capitalization of hyphenated words
             w.split("-").map!(&:capitalize).join("-")
           else
