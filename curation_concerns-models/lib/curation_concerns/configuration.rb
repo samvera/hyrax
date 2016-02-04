@@ -23,7 +23,7 @@ module CurationConcerns
     # virus is found; Any other returned value means a virus was found
     attr_writer :default_antivirus_instance
     def default_antivirus_instance
-      @default_antivirus_instance ||= lambda do|_file_path|
+      @default_antivirus_instance ||= lambda do |_file_path|
         AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE
       end
     end

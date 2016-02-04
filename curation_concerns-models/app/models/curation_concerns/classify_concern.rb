@@ -25,7 +25,7 @@ module CurationConcerns
     end
 
     def curation_concern_class
-      if possible_curation_concern_types.detect do|_name, class_name|
+      if possible_curation_concern_types.detect do |_name, class_name|
         class_name == curation_concern_type
       end
         self.class.to_class(curation_concern_type)

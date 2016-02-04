@@ -21,6 +21,9 @@ Performance/RedundantBlockCall:
   Exclude:
     - 'curation_concerns-models/lib/curation_concerns/null_logger.rb'
 
+Performance/RedundantMerge:
+  Enabled: false
+
 Lint/AssignmentInCondition:
   Exclude:
     - 'curation_concerns-models/app/services/curation_concerns/persist_derivatives.rb'
@@ -65,6 +68,9 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
     - 'curation_concerns-models/app/models/concerns/curation_concerns/solr_document_behavior.rb'
+
+Style/ZeroLengthPredicate:
+  Enabled: false
 
 Style/BlockDelimiters:
   Exclude:

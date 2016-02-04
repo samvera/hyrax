@@ -153,7 +153,7 @@ describe CurationConcerns::GenericWorkActor do
 
       context 'with multiple files file' do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do|a|
+          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
             a[:files] = [file, file]
           end
         end
