@@ -372,7 +372,7 @@ You should see one redis-server process:
 ```
 $ ps -ef | grep redis-server
 user1     7982  7882  0 01:26 pts/3    00:00:00 grep redis-server
-root      8398     1  0 00:08 ?        00:00:04 /usr/local/bin/redis-server 0.0.0.0:6379    
+root      8398     1  0 00:08 ?        00:00:04 /usr/local/bin/redis-server 0.0.0.0:6379
 ```
 
 If you see multiple redis-server processes running, kill them all (assuming they're not serving other important applications on your system) and start redis-server again. You should only have one redis-server process running.
@@ -382,14 +382,14 @@ You should see one resque-pool-master process:
 ```
 $ ps -ef | grep resque-pool
 user1    8059  7882  0 01:27 pts/3    00:00:00 grep resque-pool
-root     8416     1  0 00:08 ?        00:00:08 resque-pool-master[yourapphere]: managing [8653]  
+root     8416     1  0 00:08 ?        00:00:08 resque-pool-master[yourapphere]: managing [8653]
 ```
 
 You should see one or more worker processes running:
 
 ```
 $ ps -ef | grep resque | grep -v pool-master
-root     8653  8416  0 00:08 ?        00:00:01 resque-1.25.2: Waiting for *  
+root     8653  8416  0 00:08 ?        00:00:01 resque-1.25.2: Waiting for *
 ```
 
 If you see multiple resque-pool-master processes running, kill all of them and all of their child processes as well. Start resque-pool again. You should only have one resque-pool-master process running.  But you may have multiple worker processes running.
@@ -591,6 +591,8 @@ SUCCESS will look like...
 1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
 1. Create a FileSet for each GenericWork and add it to the `ordered_members` collection on the GenericWork.
 1. Move the binary from `GenericFile#content` to `FileSet#original_file`
+
+Here are more details on a proof of concept for his approach [https://github.com/projecthydra/sufia/wiki/Sufia-6-to-Sufia-7-Migration]
 
 # License
 
