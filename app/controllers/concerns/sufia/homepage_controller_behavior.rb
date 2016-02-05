@@ -7,9 +7,12 @@ module Sufia::HomepageControllerBehavior
     include Blacklight::SearchContext
     include Sufia::Controller
     include Blacklight::SearchHelper
-    include Hydra::Controller::SearchBuilder
+    include Blacklight::AccessControls::Catalog
 
-    self.search_params_logic += [:show_only_generic_works, :add_access_controls_to_solr_params]
+    def search_builder_class
+      Sufia::HomepageSearchBuilder
+    end
+
     layout 'homepage'
   end
 
@@ -26,7 +29,7 @@ module Sufia::HomepageControllerBehavior
 
     def recent
       # grab any recent documents
-      (_, @recent_documents) = search_results({ q: '', sort: sort_field, rows: 4 }, search_params_logic)
+      (_, @recent_documents) = search_results(q: '', sort: sort_field, rows: 4)
     end
 
     def sort_field

@@ -7,5 +7,5 @@
       (curation_concern.persisted? ? "Update External Link" : %(Add External Link to #{parent.human_readable_type})),
       class: 'btn btn-primary'
   ) %>
-  <%= link_to 'Cancel', catalog_index_path, class: 'btn btn-link' %>
+  <%= link_to 'Cancel', search_catalog_path, class: 'btn btn-link' %>
 <% end %>

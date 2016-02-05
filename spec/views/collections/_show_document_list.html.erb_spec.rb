@@ -12,9 +12,14 @@ describe 'collections/_show_document_list.html.erb', type: :view do
 
   let(:documents) { [file] }
 
+  let(:blacklight_configuration_context) do
+    Blacklight::Configuration::Context.new(controller)
+  end
+
   context 'when not logged in' do
     before do
       allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
+      allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
       allow(view).to receive(:current_user).and_return(nil)
       allow(file).to receive(:title_or_label).and_return("One Hundred Years of Solitude")
       allow(file).to receive(:edit_people).and_return([])

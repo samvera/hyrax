@@ -21,7 +21,7 @@
                    Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), title: "Number of results to display per page") %>
                    per page
                <% end %>
-               <%= render_hash_as_hidden_fields(params_for_search.except(:per_page, :sort)) %>
+               <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort)) %>
                &nbsp;&nbsp;&nbsp;
                <button class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
              </fieldset>
