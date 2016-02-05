@@ -3,37 +3,22 @@ require 'bundler'
 Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
-require 'jettywrapper'
-
-namespace :jetty do
-  TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
-  SOLR_DIR = "#{TEMPLATE_DIR}/solr_conf/conf"
-
-  desc "Config Jetty"
-  task :config => :clean do
-    Rake::Task["jetty:config_solr"].reenable
-    Rake::Task["jetty:config_solr"].invoke
-  end
-
-  desc "Copies the default SOLR config for the bundled Hydra Testing Server"
-  task :config_solr do
-    FileList["#{SOLR_DIR}/*"].each do |f|
-      cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
-      cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
-    end
-
-  end
-end
+require 'solr_wrapper'
+require 'fcrepo_wrapper'
 
 desc "Run Continuous Integration"
-task :ci => ['jetty:config'] do
-  jetty_params = Jettywrapper.load_config
-  error = nil
-  error = Jettywrapper.wrap(jetty_params) do
-    Rake::Task['spec'].invoke
+task :ci do
+  ENV['environment'] = "test"
+  solr_params = { port: 8985, verbose: true, managed: true }
+  fcrepo_params = { port: 8986, verbose: true, managed: true,
+                    no_jms: true, fcrepo_home_dir: 'fcrepo4-test-data' }
+  SolrWrapper.wrap(solr_params) do |solr|
+    solr.with_collection(name: 'hydra-test', dir: File.join(File.expand_path(File.dirname(__FILE__)), "solr", "config")) do
+      FcrepoWrapper.wrap(fcrepo_params) do
+        Rake::Task['spec'].invoke
+      end
+    end
   end
-  raise "test failures: #{error}" if error
-
   Rake::Task["doc"].invoke
 end
 
