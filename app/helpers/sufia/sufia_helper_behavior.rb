@@ -31,7 +31,7 @@ module Sufia
     end
 
     def show_transfer_request_title(req)
-      if req.deleted_work?
+      if req.deleted_work? || req.canceled?
         req.to_s
       else
         link_to(req.to_s, curation_concerns_generic_work_path(req.generic_work_id))
