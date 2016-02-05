@@ -1,6 +1,0 @@
-default:
-  jetty_port: <%= ENV['TEST_JETTY_PORT'] || 8983 %>
-  startup_wait: 90
-  java_opts:
-    - "-Xmx256m" 
-    - "-XX:MaxPermSize=128m"

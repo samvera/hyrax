@@ -33,7 +33,6 @@ module Hydra
 
       gem_group :development, :test do
         gem "rspec-rails"
-        gem 'jettywrapper'
       end
 
       Bundler.with_clean_env do
