@@ -45,6 +45,8 @@ describe CurationConcerns::CollectionBehavior do
         work1.members = [file1]
         work2.members = [file2]
         # Create a relatinship not in the collection.
+        # mock member_of relationship to avoid load_from_fedora
+        allow(file3).to receive(:generic_work_ids).and_return([work3.id])
         work3.members = [file3]
 
         # Manually Call Indexing to put the data in Solr
