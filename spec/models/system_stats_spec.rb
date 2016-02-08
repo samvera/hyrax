@@ -45,8 +45,9 @@ describe ::SystemStats, type: :model do
     context "when requested count is too small" do
       let(:depositor_count) { 3 }
       let(:actual_count) { 5 }
+
       it "queries for 5 items" do
-        expect(stats).to receive(:open).with("http://127.0.0.1:8983/solr/test/terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
+        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
         stats.top_depositors
       end
     end
@@ -54,8 +55,10 @@ describe ::SystemStats, type: :model do
     context "when requested count is too big" do
       let(:depositor_count) { 99 }
       let(:actual_count) { 20 }
+      :w
+
       it "queries for 20 items" do
-        expect(stats).to receive(:open).with("http://127.0.0.1:8983/solr/test/terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
+        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
         stats.top_depositors
       end
     end
