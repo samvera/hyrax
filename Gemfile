@@ -15,13 +15,12 @@ group :development, :test do
   gem 'pry-byebug' unless ENV['CI']
 end
 
-
 # BEGIN ENGINE_CART BLOCK
 # engine_cart: 0.8.0
 # engine_cart stanza: 0.8.0
 # the below comes from engine_cart, a gem used to test this Rails engine gem in the context of a Rails app.
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path(".internal_test_app", File.dirname(__FILE__)))
-if File.exists?(file)
+if File.exist?(file)
   begin
     eval_gemfile file
   rescue Bundler::GemfileError => e

@@ -225,7 +225,7 @@ describe FileSet do
     end
 
     context 'when a url is provided' do
-      let(:url) { 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094' }
+      let(:url) { "#{ActiveFedora.fedora.host}/test/wd/37/63/09/wd3763094" }
 
       it 'transforms the url into an id' do
         expect(described_class.uri_to_id(url)).to eq 'wd3763094'
