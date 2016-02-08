@@ -1,3 +1,6 @@
+h3. 9.7.1 (2016-02-08)
+* 2016-02-06: Use test variable for test solr port if available [Justin Coyne]
+
 h3. 9.7.0 (2016-02-05)
 * 2016-02-05: Replace Jettywrapper with fcrepo_wrapper [Justin Coyne]
 * 2016-01-26: Allow Hydra::PermissionsSolrDocument to autoload [Justin Coyne]
