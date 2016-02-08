@@ -1,11 +1,3 @@
-# These files should be copied from the $file.yml.sample and tweaked
-# per environment.
-config/database.yml
-config/fedora.yml
-config/solr.yml
-config/hydra-ldap.yml
-config/redis.yml
-
 # bad gem etiquette, man
 .ruby-version
 .ruby-gemset
@@ -14,8 +6,8 @@ ruby-gemset
 .rvmrc
 Gemfile.lock
 
-# don't push around jetty (for dev envs only)
-jetty
+# don't push around data files (for dev envs only)
+fcrepo4-data
 
 ## MAC OS
 .DS_Store
@@ -46,36 +38,19 @@ coverage/*
 
 ## TEST APP
 pkg/
-spec/dummy/db/*.sqlite3
-spec/dummy/log/*.log
-spec/dummy/tmp/
-
 spec/mock_upload_directory
 
 ## PROJECT::GENERAL
 coverage
 rdoc
-pkg
 /.bundle
-db/*.sqlite3
-db/*.sqlite3-journal
-log/*.log
 tmp
 
-*.sqlite3
 *.log
 *~
-*.swp
 
 #redis snapshot db
 dump.rdb
-
-vendor/plugins/haml/init.rb
-vendor/plugins/blacklight/.git
-log/*
-
-public/plugin_assets
-public/plugin_assets/
 
 db/schema.rb
 
@@ -86,16 +61,6 @@ db/schema.rb
 /doc
 
 ## PROJECT::SPECIFIC
-
-## ASSET PIPELINE
-.sass-cache/
-public/assets/
-
-## Paperclip assets
-public/system/
-
-## Sitemap
-public/sitemap.xml
 
 .internal_test_app
 .byebug_history
@@ -108,6 +73,3 @@ InstalledFiles
 _yardoc
 lib/bundler/man
 spec/reports
-test/tmp
-test/version_tmp
-tmp

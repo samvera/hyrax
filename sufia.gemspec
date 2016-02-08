@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'Apache2'
 
   spec.add_dependency 'curation_concerns', '~> 0.6'
+  spec.add_dependency 'hydra-works', '~> 0.6.0' # Because 0.7 breaks the build
   spec.add_dependency 'hydra-batch-edit', '~> 1.1'
   spec.add_dependency 'browse-everything', '~> 0.4'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
@@ -43,6 +44,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'engine_cart', '~> 0.8'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
+  spec.add_development_dependency 'solr_wrapper', '~> 0.5'
+  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
