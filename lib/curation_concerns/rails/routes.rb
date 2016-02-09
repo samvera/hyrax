@@ -12,6 +12,11 @@ module ActionDispatch::Routing
       namespace :curation_concerns, path: :concern do
         concerns_to_route.each do |curation_concern_name|
           namespaced_resources curation_concern_name, except: [:index], &block
+          namespaced_resources curation_concern_name, only: [] do
+            member do
+              get :file_manager
+            end
+          end
         end
 
         resources :permissions, only: [] do

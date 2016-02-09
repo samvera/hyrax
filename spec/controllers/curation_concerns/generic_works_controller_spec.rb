@@ -122,13 +122,20 @@ describe CurationConcerns::GenericWorksController do
   describe '#update' do
     let(:a_work) { create(:private_generic_work, user: user) }
     before do
-      allow(controller).to receive(:actor).and_return(actor)
+      allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
     end
     let(:actor) { double(update: true, visibility_changed?: false) }
 
     it 'updates the work' do
       patch :update, id: a_work, generic_work: {}
       expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
+    end
+
+    it "can update file membership" do
+      file = create(:file_set, user: user)
+
+      patch :update, id: a_work, generic_work: { ordered_member_ids: [file.id] }
+      expect(CurationConcerns::CurationConcern).to have_received(:actor).with(anything, anything, ordered_member_ids: [file.id])
     end
 
     describe 'changing rights' do
@@ -138,14 +145,14 @@ describe CurationConcerns::GenericWorksController do
         let(:a_work) { create(:work_with_one_file, user: user) }
 
         it 'prompts to change the files access' do
-          patch :update, id: a_work
+          patch :update, id: a_work, generic_work: {}
           expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
         end
       end
 
       context 'without children' do
         it "doesn't prompt to change the files access" do
-          patch :update, id: a_work
+          patch :update, id: a_work, generic_work: {}
           expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
         end
       end
@@ -155,7 +162,7 @@ describe CurationConcerns::GenericWorksController do
       let(:actor) { double(update: false, visibility_changed?: false) }
 
       it 'renders the form' do
-        patch :update, id: a_work
+        patch :update, id: a_work, generic_work: {}
         expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to render_template('edit')
       end
@@ -205,6 +212,19 @@ describe CurationConcerns::GenericWorksController do
         delete :destroy, id: work_to_be_deleted
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
       end
+    end
+  end
+
+  describe '#file_manager' do
+    let(:work) { create(:private_generic_work, user: user) }
+    before do
+      sign_in user
+    end
+    it "is successful" do
+      get :file_manager, id: work.id
+
+      expect(response).to be_success
+      expect(assigns(:presenter)).not_to be_blank
     end
   end
 end

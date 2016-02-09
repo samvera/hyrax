@@ -247,15 +247,31 @@ describe CurationConcerns::GenericWorkActor do
     context 'with multiple file sets' do
       let(:file_set1) { create(:file_set) }
       let(:file_set2) { create(:file_set) }
-      let(:curation_concern) { FactoryGirl.create(:generic_work, user: user, members: [file_set1, file_set2]) }
+      let(:curation_concern) { FactoryGirl.create(:generic_work, user: user, ordered_members: [file_set1, file_set2]) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work, members: [file_set2, file_set1])
+        FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
       end
-      xit 'updates the order of file sets' do
-        expect(curation_concern.ordered_members).to eq [file_set1, file_set2]
+      it 'updates the order of file sets' do
+        expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
+
         expect(subject.update).to be true
+
         curation_concern.reload
-        expect(curation_concern.ordered_members).to eq [file_set2, file_set1]
+        expect(curation_concern.ordered_members.to_a).to eq [file_set2, file_set1]
+      end
+      ## Is this something we want to support?
+      context "when told to stop ordering a file set" do
+        let(:attributes) do
+          FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id])
+        end
+        it "works" do
+          expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
+
+          expect(subject.update).to be true
+
+          curation_concern.reload
+          expect(curation_concern.ordered_members.to_a).to eq [file_set2]
+        end
       end
     end
   end

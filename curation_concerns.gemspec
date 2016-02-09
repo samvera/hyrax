@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hydra-editor', '~> 1.1'
   spec.add_dependency 'blacklight_advanced_search', '~> 6.0'
   spec.add_dependency 'rails_autolink'
+  spec.add_dependency 'sprockets-es6'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
@@ -42,4 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "factory_girl"
   spec.add_development_dependency "database_cleaner", "< 1.1.0"
   spec.add_development_dependency 'mida', '~> 0.3.4'
+  spec.add_development_dependency 'jasmine'
 end
