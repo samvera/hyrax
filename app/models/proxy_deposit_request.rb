@@ -75,6 +75,10 @@ class ProxyDepositRequest < ActiveRecord::Base
     save!
   end
 
+  def canceled?
+    self.status == 'canceled'
+  end
+
   def deleted_work?
     !GenericWork.exists?(generic_work_id)
   end
