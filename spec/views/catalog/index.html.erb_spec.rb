@@ -45,7 +45,7 @@ describe 'catalog/index.html.erb' do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_link(collection.title)
-      expect(page).to have_content 'List of files deposited'
+      expect(page).to have_content 'List of items deposited'
     end
   end
 
@@ -56,7 +56,7 @@ describe 'catalog/index.html.erb' do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_link(collection.title)
-      expect(page).to have_content 'List of files deposited'
+      expect(page).to have_content 'List of items deposited'
     end
   end
 end

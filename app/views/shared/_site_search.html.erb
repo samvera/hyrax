@@ -1,12 +1,12 @@
 <%= form_tag main_app.search_catalog_path, method: :get, class: "search-form" do %>
   <fieldset>
-    <legend class="accessible-hidden">Search <%= t('curation_concerns.product_name') %></legend>
-    <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), class: "accessible-hidden" %>
+    <legend class="sr-only">Search <%= t('curation_concerns.product_name') %></legend>
+    <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), class: "sr-only" %>
     <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
     <%= text_field_tag(:q, params[:q], class: "q search-query", id: "catalog_search",
                        placeholder: t('curation_concerns.search.form.q.placeholder'), tabindex: "1", type: "search") %>
                       <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="2">
-      <i class="glyphicon glyphicon-search"></i><span class="accessible-hidden">Search</span>
+      <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>
     </button>
   </fieldset>
 <% end %>
