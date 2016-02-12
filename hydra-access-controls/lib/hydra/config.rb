@@ -41,7 +41,7 @@ module Hydra
     #
     # @return [Lambda] a method to convert ID to a URI
     def id_to_resource_uri
-      @id_to_resource_uri ||= ActiveFedora::Base.translate_id_to_uri
+      @id_to_resource_uri ||= lambda { |id, _graph| ActiveFedora::Base.translate_id_to_uri.call(id) }
     end
 
     def permissions= values

@@ -16,7 +16,7 @@ module Hydra::ContentNegotiation
 
     def replace_uri(uri)
       id = ActiveFedora::Base.uri_to_id(uri)
-      RDF::URI(Hydra.config.id_to_resource_uri.call(id))
+      RDF::URI(Hydra.config.id_to_resource_uri.call(id, graph))
     end
 
     def replaced_objects

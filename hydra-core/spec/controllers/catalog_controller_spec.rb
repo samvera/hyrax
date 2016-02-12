@@ -91,7 +91,7 @@ describe CatalogController do
         end
         context "with a configured subject converter" do
           before do
-            Hydra.config.id_to_resource_uri = lambda { |id| "http://hydra.box/catalog/#{id}" }
+            Hydra.config.id_to_resource_uri = lambda { |id, _| "http://hydra.box/catalog/#{id}" }
             get 'show', :id => asset.id, :format => :nt
           end
           it "should convert it" do
