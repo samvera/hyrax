@@ -8,7 +8,7 @@ module Sufia
     end
 
     def update_permissions
-      self.visibility = "open"
+      self.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
   end
 end
