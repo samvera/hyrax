@@ -6,7 +6,7 @@ module Hydra
 
     source_root File.expand_path('../templates', __FILE__)
 
-    argument :model_name, :type => :string , :default => "user"
+    argument :model_name, type: :string , default: 'User'
     class_option :'skip-rspec', type: :boolean, default: false, desc: "Skip the rspec generator"
 
 
@@ -55,13 +55,8 @@ module Hydra
     def create_configuration_files
 
       # Initializers
-      file_path = "config/initializers/hydra_config.rb"
-      copy_file "config/initializers/hydra_config.rb", file_path
-      unless model_name == 'user'
-        insert_into_file file_path, :after => 'Hydra.configure do |config|' do
-            "\n  config.user_model = '#{model_name.classify}'"
-        end
-      end
+      template "config/initializers/hydra_config.rb",
+               "config/initializers/hydra_config.rb"
 
       # Role Mappings
       copy_file "config/role_map.yml", "config/role_map.yml"
