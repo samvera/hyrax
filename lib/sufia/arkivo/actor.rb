@@ -65,7 +65,7 @@ module Sufia
         end
 
         def default_visibility
-          'open'
+          Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         end
 
         def attributes
