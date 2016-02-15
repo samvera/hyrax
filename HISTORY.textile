@@ -1,3 +1,13 @@
+h3. 9.8.1 (2016-02-15)
+* 2016-02-15: Add hydra:server rake task for starting all services together
+[Justin Coyne]
+
+* 2016-02-12: Use with_test_server from ActiveFedora [Justin Coyne]
+
+* 2016-02-12: Test Rails 4.2.5.1 [Justin Coyne]
+
+* 2016-02-12: Use the template to set the model name [Justin Coyne]
+
 h3. 9.7.1 (2016-02-08)
 * 2016-02-06: Use test variable for test solr port if available [Justin Coyne]
 
