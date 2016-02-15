@@ -6,6 +6,7 @@ Metrics/ClassLength:
   Exclude:
     - 'lib/generators/sufia/templates/catalog_controller.rb'
     - 'lib/generators/sufia/install_generator.rb'
+    - 'app/services/sufia/user_stat_importer.rb'
 
 Metrics/ModuleLength:
   Exclude:

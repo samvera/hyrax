@@ -5,6 +5,7 @@ class StatsController < ApplicationController
   before_action :build_breadcrumbs, only: [:work, :file]
 
   def work
+    @stats = WorkUsage.new(params[:id])
   end
 
   def file
