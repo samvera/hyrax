@@ -21,6 +21,11 @@ module Hydra
     #
     # Config Files & Initializers
     #
+    def inject_fcrepo_wrapper
+      gem_group :development, :test do
+        gem "fcrepo_wrapper"
+      end
+    end
 
     def inject_test_framework
       return if options[:'skip-rspec']

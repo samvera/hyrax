@@ -1,7 +1,7 @@
 development:
   user: fedoraAdmin
   password: fedoraAdmin
-  url: http://localhost:8984/rest
+  url: http://localhost:<%= ENV['FCREPO_DEVELOPMENT_PORT'] || 8984 %>/rest
   base_path: /dev
 test:
   user: fedoraAdmin

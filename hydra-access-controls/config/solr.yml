@@ -1,4 +1,4 @@
 development:
-  url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/development
+  url: http://localhost:<%= ENV['SOLR_DEVELOPMENT_PORT'] || 8983 %>/solr/hydra-development
 test:
   url:  http://localhost:<%= ENV['SOLR_TEST_PORT'] || 8985 %>/solr/hydra-test
