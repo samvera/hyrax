@@ -21,9 +21,15 @@ module Hydra
     #
     # Config Files & Initializers
     #
-    def inject_fcrepo_wrapper
+      #
+    def add_gems
       gem_group :development, :test do
         gem "fcrepo_wrapper"
+        gem "rspec-rails" unless options[:'skip-rspec']
+      end
+
+      Bundler.with_clean_env do
+        run "bundle install"
       end
     end
 
@@ -35,14 +41,6 @@ module Hydra
         "      g.test_framework :rspec, :spec => true\n" <<
         "    end\n\n"
       )
-
-      gem_group :development, :test do
-        gem "rspec-rails"
-      end
-
-      Bundler.with_clean_env do
-        run "bundle install"
-      end
     end
 
     def overwrite_catalog_controller
