@@ -12,3 +12,4 @@ solr_conf/
 .byebug_history
 spec/mock_upload_directory
 fcrepo4-data
+fcrepo4-test-data

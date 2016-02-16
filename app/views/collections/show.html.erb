@@ -1,24 +1,31 @@
-<% @page_title = "#{@presenter.title} - #{application_name}" %>
+<% provide :page_title, "#{@presenter.title} - #{application_name}" %>
 
-<h1 class="lower"><%= @presenter.title %></h1>
-
-<%= render 'curation_concerns/base/representative_media', work: @presenter %>
-
-<h3><%= @presenter.description %> </h3>
-
-<% unless has_collection_search_parameters? %>
-  <%= render partial: 'collections/show_actions' %>
-  <%= render 'attributes', curation_concern: @presenter %>
+<% provide :sidebar do %>
+  <%= render 'search_sidebar' %>
 <% end %>
 
-<%= render 'search_form' %>
-<%= render 'sort_and_per_page', collection: @presenter %>
+<div id="content">
+  <h1 class="lower"><%= @presenter.title %></h1>
 
-<% if has_collection_search_parameters? %>
-  <h2>Search Results within this Collection</h2>
-<% else %>
-  <h2>Items in this Collection</h2>
-<% end %>
-<%= render_document_index @member_docs %>
+  <%= render 'curation_concerns/base/representative_media', work: @presenter %>
 
-<%= render partial: 'paginate' %>
+  <h3><%= @presenter.description %> </h3>
+
+  <% unless has_collection_search_parameters? %>
+    <%= render partial: 'collections/show_actions' %>
+    <%= render 'attributes', curation_concern: @presenter %>
+  <% end %>
+
+  <%= render 'search_form' %>
+  <%= render 'sort_and_per_page', collection: @presenter %>
+
+  <% if has_collection_search_parameters? %>
+    <h2>Search Results within this Collection</h2>
+  <% else %>
+    <h2>Items in this Collection</h2>
+  <% end %>
+  <%= render_document_index @member_docs %>
+
+  <%= render partial: 'paginate' %>
+</div>
+
