@@ -40,7 +40,7 @@ module Sufia
     end
 
     def stats_path
-      Sufia::Engine.routes.url_helpers.stats_file_path(self)
+      Sufia::Engine.routes.url_helpers.stats_work_path(self)
     end
 
     private

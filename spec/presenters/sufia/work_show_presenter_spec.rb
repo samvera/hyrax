@@ -4,6 +4,13 @@ describe Sufia::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(work.to_solr) }
   let(:presenter) { described_class.new(solr_document, ability) }
 
+  describe 'stats_path' do
+    let(:user) { 'sarah' }
+    let(:ability) { double "Ability" }
+    let(:work) { build(:generic_work, id: '123abc') }
+    it { expect(presenter.stats_path).to eq Sufia::Engine.routes.url_helpers.stats_work_path(id: work) }
+  end
+
   describe '#itemtype' do
     let(:work) { build(:generic_work, resource_type: type) }
     let(:ability) { double "Ability" }

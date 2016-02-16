@@ -4,7 +4,12 @@ describe Sufia::FileSetPresenter do
   let(:solr_document) { SolrDocument.new(file.to_solr) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
-  let(:file) { build(:file_set).tap { |f| f.apply_depositor_metadata(user) } }
+  let(:file) { build(:file_set, id: '123abc', user: user) }
+
+  describe 'stats_path' do
+    let(:user) { double(user_key: 'sarah') }
+    it { expect(presenter.stats_path).to eq Sufia::Engine.routes.url_helpers.stats_file_path(id: file) }
+  end
 
   describe '#tweeter' do
     subject { presenter.tweeter }
@@ -20,13 +25,13 @@ describe Sufia::FileSetPresenter do
     end
 
     context "with a user that can't be found" do
-      let(:user) { 'sarah' }
+      let(:user) { double(user_key: 'sarah') }
       it { is_expected.to eq '@HydraSphere' }
     end
   end
 
   describe "characterization" do
-    let(:user) { 'user' }
+    let(:user) { double(user_key: 'user') }
 
     describe "#characterization_metadata" do
       subject { presenter.characterization_metadata }
