@@ -211,17 +211,23 @@ Now that Sufia's required database migrations have been generated into your app,
 rake db:migrate
 ```
 
-## Solr and Fedora
+## Start Solr
+If you already have an instance of Solr that you would like to use, you may skip this step.  Open a new terminal window and type:
+```
+solr_wrapper -d solr/config/ --collection_name hydra-development
+```
 
-If you already have instances of Solr and Fedora that you would like to use, you may skip this step. Otherwise feel free to use [hydra-jetty](https://github.com/projecthydra/hydra-jetty), the bundled copy of Jetty, a Java servlet container that is configured to run versions of Solr and Fedora that are known to work with Sufia. Hydra-jetty (since v8.4.0) requires Java 8.
+You can check to see if Solr is started by going to [[http://localhost:8983/]]
 
-The following rake tasks will install hydra-jetty and start up Jetty with Solr and Fedora.
+
+## Start FCRepo
+If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
 
 ```
-rake jetty:clean
-rake curation_concerns:jetty:config
-rake jetty:start
+fcrepo_wrapper -p 8984
 ```
+
+You can check to see if FCRepo is started by going to [[http://localhost:8984/]]
 
 ## Start background workers
 
