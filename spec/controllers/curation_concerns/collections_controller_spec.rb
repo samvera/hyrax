@@ -163,6 +163,15 @@ describe CollectionsController do
         expect(assigns[:presenter].title).to eq collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
+
+      context 'when the q parameter is passed' do
+        it 'loads the collection (paying no attention to the q param)' do
+          get :show, id: collection, q: 'no matches'
+          expect(response).to be_successful
+          expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
+          expect(assigns[:presenter].title).to eq collection.title
+        end
+      end
     end
 
     context 'not signed in' do
