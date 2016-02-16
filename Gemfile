@@ -7,7 +7,7 @@ gem 'curation_concerns-models', path: './curation_concerns-models'
 
 group :development, :test do
   gem 'rubocop', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec', '~> 1.3.1', require: false
   gem 'simplecov', '~> 0.9', require: false
   gem 'coveralls', require: false
   gem 'poltergeist'
