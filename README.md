@@ -212,7 +212,7 @@ rake db:migrate
 ```
 
 ## Start Solr
-If you already have an instance of Solrthat you would like to use, you may skip this step.  Open a new terminal window and type:
+If you already have an instance of Solr that you would like to use, you may skip this step.  Open a new terminal window and type:
 ```
 solr_wrapper -d solr/config/ --collection_name hydra-development
 ```
@@ -221,7 +221,7 @@ You can check to see if Solr is started by going to [[http://localhost:8983/]]
 
 
 ## Start FCRepo
-Open a new terminal window and type:
+If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
 
 ```
 fcrepo_wrapper -p 8984
