@@ -5,17 +5,14 @@
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
 ```
-git clone git@github.com:projecthydra/sufia.git
-cd sufia
+rails new my_sufia
+cd my_sufia
+echo "gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'" >> Gemfile
+echo "gem 'kaminari', git: 'https://github.com/jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322" >> Gemfile
 bundle install
-rake jetty:clean
-rake curation_concerns:jetty:config
-rake jetty:start
-rake engine_cart:generate
-cd .internal_test_app
-redis-server
-RUN_AT_EXIT_HOOKS=true TERM_CHILD=1 resque-pool --daemon --environment development start
-rails server
+rails generate sufia:install -f
+rake db:migrate
+rake hydra:server
 ```
 
 After running these steps, browse to http://localhost:3000/ and you should see the application running.
