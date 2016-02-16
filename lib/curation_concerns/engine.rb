@@ -5,6 +5,7 @@ require 'hydra-collections'
 require 'hydra-editor'
 require 'jquery-ui-rails'
 require 'qa'
+require 'sprockets/es6'
 
 module CurationConcerns
   # Ensures that routes to curation_concerns are prefixed with `curation_concerns_`

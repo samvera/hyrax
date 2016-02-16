@@ -35,6 +35,10 @@ describe 'Routes', type: :routing do
     it '*not*s route to index' do
       expect(get: 'concern/generic_works').not_to route_to(controller: 'curation_concerns/generic_works', action: 'index')
     end
+
+    it 'routes to file_manager' do
+      expect(get: 'concern/generic_works/6/file_manager').to route_to(controller: 'curation_concerns/generic_works', action: 'file_manager', id: '6')
+    end
   end
 
   describe 'Permissions' do

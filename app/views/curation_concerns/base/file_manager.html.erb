@@ -1,0 +1,34 @@
+<h1><%= t("file_manager.link_text") %></h1>
+<ul class="breadcrumb">
+  <li>
+    Back to <%= link_to @presenter.to_s, [main_app, @presenter] %>
+  </li>
+</ul>
+
+<% if !@presenter.file_presenters.empty? %>
+  <div data-action="file-manager">
+    <div class="col-md-3" id="file-manager-tools">
+      <h2>Toolbar</h2>
+      <%= render "file_manager_actions" %>
+    </div>
+    <div class="col-md-3" id="label-tools-spacer" class="fixed"></div>
+    <div class="col-md-9" id="order-grid">
+      <div class="btn-group" role="group" data-action="list-toggle">
+        <button type="button" class="btn btn-default list" aria-label="List">
+          <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default active grid" aria-label="Grid">
+          <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+        </button>
+      </div>
+      <ul id="sortable" data-id="<%= @presenter.id %>" data-class-name="<%= @presenter.model_name.plural %>" data-singular-class-name="<%= @presenter.model_name.singular %>" class="list-unstyled grid">
+        <% @presenter.file_presenters.each do |member| %>
+          <%= render "file_manager_member", node: member %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+<div id="file-manager-extra-tools">
+  <%= render "file_manager_extra_tools" %>
+</div>

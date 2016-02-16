@@ -14,7 +14,7 @@ module CurationConcerns
                     :representative_id, :thumbnail_id, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
-                    :visibility]
+                    :visibility, :ordered_member_ids]
 
       # @param [ActiveFedora::Base,#member_ids] model
       # @param [Ability] current_ability
@@ -43,6 +43,8 @@ module CurationConcerns
           case term.to_s
           when 'rights'
             false
+          when 'ordered_member_ids'
+            true
           else
             super
           end

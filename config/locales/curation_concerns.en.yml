@@ -147,6 +147,8 @@ en:
           human_readable_type_tesim: "Resource Type"
           format_tesim: "File Format"
           identifier_tesim: "Identifier"
+  file_manager:
+    link_text: 'File Manager'
   simple_form:
     hints:
       defaults:

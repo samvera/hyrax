@@ -16,7 +16,7 @@ module CurationConcerns::CurationConcernController
 
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
-      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: :show
+      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager]
       self.curation_concern_type = curation_concern_type
     end
 
@@ -83,6 +83,10 @@ module CurationConcerns::CurationConcernController
     title = curation_concern.to_s
     curation_concern.destroy
     after_destroy_response(title)
+  end
+
+  def file_manager
+    presenter
   end
 
   attr_writer :actor

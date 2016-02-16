@@ -12,7 +12,7 @@ module CurationConcerns::WorkActorBehavior
 
   def update
     add_to_collections(attributes.delete(:collection_ids)) &&
-      interpret_visibility && super && attach_files
+      interpret_visibility && apply_order(attributes.delete(:ordered_member_ids)) && super && attach_files
   end
 
   delegate :visibility_changed?, to: :curation_concern
@@ -33,6 +33,20 @@ module CurationConcerns::WorkActorBehavior
       files.all? do |file|
         attach_file(file)
       end
+    end
+
+    def apply_order(new_order)
+      return true unless new_order
+      curation_concern.ordered_member_proxies.each_with_index do |proxy, index|
+        unless new_order[index]
+          proxy.prev.next = curation_concern.ordered_member_proxies.last.next
+          break
+        end
+        proxy.proxy_for = ActiveFedora::Base.id_to_uri(new_order[index])
+        proxy.target = nil
+      end
+      curation_concern.list_source.order_will_change!
+      true
     end
 
     # The default behavior of active_fedora's aggregates association,
