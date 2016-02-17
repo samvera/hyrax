@@ -4,7 +4,6 @@ module CurationConcerns
       config.autoload_paths += %W(
         #{config.root}/app/actors/concerns
         #{config.root}/lib/curation_concerns
-        #{config.root}/app/models/datastreams
       )
 
       initializer 'requires' do

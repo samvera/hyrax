@@ -8,6 +8,6 @@ After creating your work you may wish to:
       CurationConcerns::GenericWorksController; This means that it will use the
       views found in CurationConcerns::Engine.root/app/views/curation_concerns/base.
 
-  2. Modify the model and datastreams
+  2. Modify the model, actor, form or presenter.
 
 ===============================================================================
