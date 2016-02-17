@@ -34,9 +34,11 @@ module CurationConcerns::CurationConcernController
     if actor.create
       after_create_response
     else
-      setup_form
       respond_to do |wants|
-        wants.html { render 'new', status: :unprocessable_entity }
+        wants.html do
+          build_form
+          render 'new', status: :unprocessable_entity
+        end
         wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
       end
     end
@@ -68,7 +70,6 @@ module CurationConcerns::CurationConcernController
     if actor.update
       after_update_response
     else
-      setup_form
       respond_to do |wants|
         wants.html do
           build_form
@@ -115,12 +116,6 @@ module CurationConcerns::CurationConcernController
 
     def presenter
       @presenter ||= show_presenter.new(curation_concern_from_search_results, current_ability)
-    end
-
-    # Override setup_form in concrete controllers to get the form ready for display
-    def setup_form
-      return unless curation_concern.respond_to?(:contributor) && curation_concern.contributor.blank?
-      curation_concern.contributor << current_user.user_key
     end
 
     def _prefixes
