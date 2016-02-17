@@ -30,7 +30,7 @@ describe ImportUrlJob do
       allow(CurationConcerns::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
     end
 
-    it 'creates a content datastream' do
+    it 'creates the content' do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       expect(actor).to receive(:create_content).and_return(true)
       described_class.perform_now(file_set_id)

@@ -25,7 +25,7 @@ describe ChecksumAuditLog do
   let(:new) { described_class.create(file_set_id: f.id, file_id: content_id, version: version_uri, pass: 0, created_at: 1.minute.ago) }
 
   context 'a file with multiple checksums audits' do
-    specify 'should return a list of logs for this datastream sorted by date descending' do
+    it 'returns a list of logs for this FileSet sorted by date descending' do
       logs = described_class.logs_for(f.id, content_id)
       expect(logs).to eq([new, old])
     end

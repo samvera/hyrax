@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CurationConcerns::UrlHelper do
-  let(:profile) { ["{\"datastreams\":{}}"] }
+  let(:profile) { ["{}"] }
   let(:work) { create(:generic_work) }
   let(:document) { SolrDocument.new(work.to_solr) }
   subject { helper.url_for_document document }

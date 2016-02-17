@@ -57,7 +57,6 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Exclude:
     - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
-    - 'curation_concerns-models/app/models/datastreams/fits_datastream.rb'
     - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/ModuleLength:
