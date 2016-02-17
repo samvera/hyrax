@@ -62,11 +62,24 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#create' do
-    it 'creates a work' do
-      expect do
+    context 'when create is successful' do
+      let(:work) { stub_model(GenericWork) }
+      it 'creates a work' do
+        allow(controller).to receive(:curation_concern).and_return(work)
+        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:create).and_return(true)
         post :create, generic_work: { title: ['a title'] }
-      end.to change { GenericWork.count }.by(1)
-      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(assigns[:curation_concern])
+        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+      end
+    end
+
+    context 'when create fails' do
+      it 'draws the form again' do
+        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:create).and_return(false)
+        post :create, generic_work: { title: ['a title'] }
+        expect(response.status).to eq 422
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(response).to render_template 'new'
+      end
     end
 
     context 'when not authorized' do
