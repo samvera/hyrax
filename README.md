@@ -19,7 +19,7 @@ After running these steps, browse to http://localhost:3000/ and you should see t
 
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
-[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
+[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
 [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
@@ -215,7 +215,6 @@ solr_wrapper -d solr/config/ --collection_name hydra-development
 ```
 
 You can check to see if Solr is started by going to [[http://localhost:8983/]]
-
 
 ## Start FCRepo
 If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
