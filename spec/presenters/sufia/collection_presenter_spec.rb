@@ -4,7 +4,7 @@ describe Sufia::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
     it { is_expected.to eq [:title, :total_items, :size, :resource_type, :description, :creator,
-                            :contributor, :tag, :rights, :publisher, :date_created, :subject,
+                            :contributor, :tags, :rights, :publisher, :date_created, :subject,
                             :language, :identifier, :based_near, :related_url] }
   end
 
