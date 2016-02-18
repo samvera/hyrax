@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
   spec.version       = version
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 0.6'
-  spec.add_dependency 'hydra-works', '~> 0.6.0' # Because 0.7 breaks the build
+  spec.add_dependency 'curation_concerns', '~> 0.7'
+  spec.add_dependency 'hydra-works', '~> 0.7'
   spec.add_dependency 'hydra-batch-edit', '~> 1.1'
   spec.add_dependency 'browse-everything', '~> 0.4'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'

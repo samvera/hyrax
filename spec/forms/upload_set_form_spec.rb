@@ -44,6 +44,7 @@ describe Sufia::UploadSetForm do
                             :lease_expiration_date,
                             :visibility_after_lease,
                             :visibility,
+                            :ordered_member_ids,
                             :resource_type] }
   end
 
