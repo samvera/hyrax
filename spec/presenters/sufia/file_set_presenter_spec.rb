@@ -6,6 +6,11 @@ describe Sufia::FileSetPresenter do
   let(:presenter) { described_class.new(solr_document, ability) }
   let(:file) { build(:file_set, id: '123abc', user: user) }
 
+  describe 'processing?' do
+    let(:user) { double(user_key: 'sarah') }
+    it { expect(presenter.processing?).to eq nil }
+  end
+
   describe 'stats_path' do
     let(:user) { double(user_key: 'sarah') }
     it { expect(presenter.stats_path).to eq Sufia::Engine.routes.url_helpers.stats_file_path(id: file) }
