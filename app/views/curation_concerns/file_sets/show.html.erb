@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-xs-12 col-sm-4">
       <%= media_display @presenter %>
-      <%= render 'show_actions' %>
+      <%= render 'show_actions', presenter: @presenter, parent: parent %>
       <%= render 'show_collections' %>
     </div>
     <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
