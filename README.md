@@ -44,7 +44,7 @@ After running these steps, browse to http://localhost:3000/ and you should see t
       * [Pagination](#pagination)
     * [Install Sufia](#install-sufia)
     * [Database tables and indexes](#database-tables-and-indexes)
-    * [Solr and Fedora](#solr-and-fedora)
+    * [Start Solr](#start-solr) and [FCRepo](#start-fcrepo)
     * [Start background workers](#start-background-workers)
     * [Spin up the web server](#spin-up-the-web-server)
   * [Managing a Sufia-based app](#managing-a-sufia-based-app)
