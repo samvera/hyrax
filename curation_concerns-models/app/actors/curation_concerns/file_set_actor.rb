@@ -41,7 +41,8 @@ module CurationConcerns
     # TODO: create a job to monitor this directory and prune old files that
     # have made it to the repo
     # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
-    def create_content(file)
+    # @param [String] relation ('original_file')
+    def create_content(file, relation = 'original_file')
       # Assign label and title of File Set is necessary.
       file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
       file_set.title = [file_set.label] if file_set.title.blank?
@@ -51,7 +52,7 @@ module CurationConcerns
 
       working_file = copy_file_to_working_directory(file, file_set.id)
       mime_type = file.respond_to?(:content_type) ? file.content_type : nil
-      IngestFileJob.perform_later(file_set.id, working_file, mime_type, user.user_key)
+      IngestFileJob.perform_later(file_set.id, working_file, mime_type, user.user_key, relation)
       make_derivative(file_set.id, working_file)
       true
     end
