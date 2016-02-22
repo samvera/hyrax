@@ -35,47 +35,36 @@ module CurationConcerns
       yield(file_set) if block_given?
     end
 
-    # Puts the uploaded content into a staging directory. Then kicks off a
-    # job to characterize and create derivatives with this on disk variant.
-    # Simultaneously moving a preservation copy to the repostiory.
-    # TODO: create a job to monitor this directory and prune old files that
-    # have made it to the repo
     # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
     # @param [String] relation ('original_file')
     def create_content(file, relation = 'original_file')
-      # Assign label and title of File Set is necessary.
+      # If the file set doesn't have a title or label assigned, set a default.
       file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
       file_set.title = [file_set.label] if file_set.title.blank?
 
       # Need to save the file_set in order to get an id
       return false unless file_set.save
 
-      working_file = copy_file_to_working_directory(file, file_set.id)
-      mime_type = file.respond_to?(:content_type) ? file.content_type : nil
-      IngestFileJob.perform_later(file_set.id, working_file, mime_type, user.user_key, relation)
-      make_derivative(file_set.id, working_file)
+      FileActor.new(file_set, relation, user).ingest_file(file)
       true
     end
 
-    def revert_content(revision_id)
-      file_set.original_file.restore_version(revision_id)
-
-      return false unless file_set.save
-
-      CurationConcerns::VersioningService.create(file_set.original_file, user)
-
-      # Retrieve a copy of the orginal file from the repository
-      working_file = copy_repository_resource_to_working_directory(file_set)
-      make_derivative(file_set.id, working_file)
-
-      CurationConcerns.config.callback.run(:after_revert_content, file_set, user, revision_id)
-      true
+    # @param [String] revision_id the revision to revert to
+    # @param [String] relation ('original_file')
+    def revert_content(revision_id, relation = 'original_file')
+      file_actor = FileActor.new(file_set, relation, user)
+      if file_actor.revert_to(revision_id)
+        CurationConcerns.config.callback.run(:after_revert_content, file_set, user, revision_id)
+        true
+      else
+        false
+      end
     end
 
-    def update_content(file)
-      working_file = copy_file_to_working_directory(file, file_set.id)
-      IngestFileJob.perform_later(file_set.id, working_file, file.content_type, user.user_key)
-      make_derivative(file_set.id, working_file)
+    # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
+    # @param [String] relation ('original_file')
+    def update_content(file, relation = 'original_file')
+      FileActor.new(file_set, relation, user).ingest_file(file)
       CurationConcerns.config.callback.run(:after_update_content, file_set, user)
       true
     end
@@ -96,42 +85,6 @@ module CurationConcerns
     end
 
     private
-
-      def make_derivative(file_set_id, working_file)
-        CharacterizeJob.perform_later(file_set_id, working_file)
-      end
-
-      # @param [File, ActionDispatch::Http::UploadedFile] file
-      # @param [String] id the identifer
-      # @return [String] path of the working file
-      def copy_file_to_working_directory(file, id)
-        # file_set.label not gaurunteed to be set at this point (e.g. if called from update_content)
-        file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
-        copy_stream_to_working_directory(id, file_set.label, file)
-      end
-
-      # @param [FileSet] file_set the resource
-      # @return [String] path of the working file
-      def copy_repository_resource_to_working_directory(file_set)
-        file = file_set.original_file
-        copy_stream_to_working_directory(file_set.id, file.original_name, StringIO.new(file.content))
-      end
-
-      # @param [String] id the identifer
-      # @param [String] name the file name
-      # @param [#read] stream the stream to copy to the working directory
-      # @return [String] path of the working file
-      def copy_stream_to_working_directory(id, name, stream)
-        working_path = full_filename(id, name)
-        FileUtils.mkdir_p(File.dirname(working_path))
-        IO.copy_stream(stream, working_path)
-        working_path
-      end
-
-      def full_filename(id, original_name)
-        pair = id.scan(/..?/).first(4)
-        File.join(CurationConcerns.config.working_path, *pair, original_name)
-      end
 
       # Takes an optional block and executes the block if the save was successful.
       # returns false if the save was unsuccessful
