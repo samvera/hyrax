@@ -5,8 +5,28 @@ describe IngestFileJob do
   let(:filename) { fixture_file_path('/world.png') }
   let(:user)     { create(:user) }
 
-  context 'when givin a mime_type' do
-    it 'uses a provided mime_type' do
+  context 'when given a relationship' do
+    before do
+      class FileSetWithExtras < FileSet
+        directly_contains_one :remastered, through: :files, type: ::RDF::URI('http://pcdm.org/use#IntermediateFile'), class_name: 'Hydra::PCDM::File'
+      end
+    end
+    let(:file_set) do
+      FileSetWithExtras.create!(attributes_for(:file_set)) do |file|
+        file.apply_depositor_metadata(user.user_key)
+      end
+    end
+    after do
+      Object.send(:remove_const, :FileSetWithExtras)
+    end
+    it 'uses the provided relationship' do
+      described_class.perform_now(file_set.id, filename, 'image/png', 'bob', 'remastered')
+      expect(file_set.reload.remastered.mime_type).to eq 'image/png'
+    end
+  end
+
+  context 'when given a mime_type' do
+    it 'uses the provided mime_type' do
       described_class.perform_now(file_set.id, filename, 'image/png', 'bob')
       expect(file_set.reload.original_file.mime_type).to eq 'image/png'
     end
@@ -48,7 +68,7 @@ describe IngestFileJob do
     end
   end
 
-  describe "the after_create_contentcallback" do
+  describe "the after_create_content callback" do
     subject { CurationConcerns.config.callback }
     it 'runs with file_set and user arguments' do
       expect(subject).to receive(:run).with(:after_create_content, file_set, user)
