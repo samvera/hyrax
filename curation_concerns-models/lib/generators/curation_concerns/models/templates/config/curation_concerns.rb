@@ -2,7 +2,9 @@ CurationConcerns.configure do |config|
   # Should schema.org microdata be displayed?
   # config.display_microdata = true
 
-  config.microdata_default_type = 'http://schema.org/CreativeWork'
+  # What default microdata type should be used if a more appropriate
+  # type can not be found in the locale file?
+  # config.microdata_default_type = 'http://schema.org/CreativeWork'
 
   # How frequently should a file be audited.
   # Note: In CurationConcerns you must trigger the FileSetAuditService manually.
