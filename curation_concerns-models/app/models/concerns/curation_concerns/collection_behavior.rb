@@ -10,7 +10,7 @@ module CurationConcerns
     include CurationConcerns::Permissions
 
     included do
-      validates :title, presence: true
+      validates_with HasOneTitleValidator
     end
 
     def to_s

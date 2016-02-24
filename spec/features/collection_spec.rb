@@ -17,17 +17,10 @@ describe 'collection' do
   let(:title2) { 'Test Collection 2' }
   let(:description2) { 'Description for collection 2 we are testing.' }
 
-  let(:user) { FactoryGirl.create(:user, email: 'user1@example.com') }
+  let(:user) { create(:user, email: 'user1@example.com') }
   let(:user_key) { user.user_key }
-  let(:generic_works) do
-    (0..12).map do |x|
-      GenericWork.create!(title: ["title #{x}"]) do |f|
-        f.apply_depositor_metadata('user1@example.com')
-      end
-    end
-  end
-  let(:gw1) { generic_works[0] }
-  let(:gw2) { generic_works[1] }
+  let(:gw1) { create(:generic_work, user: user, title: ['First test work']) }
+  let(:gw2) { create(:generic_work, user: user, title: ['Second test work']) }
 
   before(:all) do
     @old_resque_inline_value = Resque.inline
@@ -64,91 +57,87 @@ describe 'collection' do
   end
 
   describe 'delete collection' do
+    let!(:collection) do
+      create(:collection, user: user)
+    end
+
     before do
-      @collection = Collection.new title: 'collection title'
-      @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
-      @collection.save
       sign_in user
       visit main_app.search_catalog_path('f[generic_type_sim][]' => 'Collection', works: 'mine')
     end
 
     it 'deletes a collection' do
-      expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.id}") do
+      expect(page).to have_content 'Test collection title'
+      within("#document_#{collection.id}") do
         first('.itemtrash').click
       end
-      expect(page).to_not have_content(@collection.title)
+      expect(page).not_to have_content 'Test collection title'
       expect(page).to have_content('Collection was successfully deleted.')
     end
   end
 
   describe 'show collection' do
+    let!(:collection) do
+      create(:collection, user: user, description: ['collection description'], members: [gw1, gw2])
+    end
+
     before do
-      @collection = FactoryGirl.create(:collection, user: user, title: 'collection title', description: 'collection description')
-      # @collection = Collection.new title: 'collection title'
-      # @collection.description = ['collection description']
-      # @collection.apply_depositor_metadata(user_key)
-      @collection.members = [gw1, gw2]
-      @collection.save
       sign_in user
       visit search_path_for_my_collections
     end
 
     it 'shows a collection with a listing of Descriptive Metadata and catalog-style search results' do
-      expect(page).to have_content(@collection.title)
-      within('#document_' + @collection.id) do
+      expect(page).to have_content 'Test collection title'
+      within('#document_' + collection.id) do
         click_link('collection title')
       end
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
       # Should have search results / contents listing
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
-      expect(page).to_not have_css('.pager')
+      expect(page).not_to have_css('.pager')
     end
 
     it 'hides collection descriptive metadata when searching a collection' do
-      expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.id}") do
+      expect(page).to have_content 'Test collection title'
+      within("#document_#{collection.id}") do
         click_link('collection title')
       end
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
       fill_in('collection_search', with: gw1.title.first)
       click_button('collection_submit')
       # Should not have Collection Descriptive metadata table
-      expect(page).to_not have_content('Descriptions')
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
+      expect(page).not_to have_content('Descriptions')
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
       # Should have search results / contents listing
       expect(page).to have_content(gw1.title.first)
-      expect(page).to_not have_content(gw2.title.first)
+      expect(page).to have_content(gw2.title.first)
       # Should not have Dashboard content in contents listing
-      expect(page).to_not have_content('Visibility')
+      expect(page).not_to have_content('Visibility')
     end
   end
 
   describe 'edit collection' do
+    let!(:collection) do
+      create(:collection, user: user, description: ['collection description'], members: [gw1, gw2])
+    end
     before do
-      @collection = Collection.new(title: 'Awesome Title')
-      @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
-      @collection.members = [gw1, gw2]
-      @collection.save
       sign_in user
       visit search_path_for_my_collections
     end
 
     it 'edits and update collection metadata' do
-      expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.id}") do
+      expect(page).to have_content 'Test collection title'
+      within("#document_#{collection.id}") do
         click_link('Edit Collection')
       end
-      expect(page).to have_field('collection_title', with: @collection.title)
-      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_field('collection_title', with: 'Test collection title')
+      expect(page).to have_field('collection_description', with: 'collection description')
       new_title = 'Altered Title'
       new_description = 'Completely new Description text.'
       creators = ['Dorje Trollo', 'Vajrayogini']
@@ -158,8 +147,8 @@ describe 'collection' do
       # within('.form-actions') do
       click_button('Update Collection')
       # end
-      expect(page).to_not have_content(@collection.title)
-      expect(page).to_not have_content(@collection.description)
+      expect(page).not_to have_content 'Test collection title'
+      expect(page).not_to have_content 'collection description'
       expect(page).to have_content(new_title)
       expect(page).to have_content(new_description)
       expect(page).to have_content(creators.first)
@@ -167,7 +156,7 @@ describe 'collection' do
 
     context "when there are errors" do
       it "displays them" do
-        within("#document_#{@collection.id}") do
+        within("#document_#{collection.id}") do
           click_link('Edit Collection')
         end
         fill_in 'Title', with: ''
@@ -177,72 +166,74 @@ describe 'collection' do
     end
 
     it 'removes a work from a collection from edit page' do
-      expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.id}") do
+      expect(page).to have_content 'Test collection title'
+      within("#document_#{collection.id}") do
         click_link('Edit Collection')
       end
-      expect(page).to have_field('collection_title', with: @collection.title)
-      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_field 'collection_title', with: 'Test collection title'
+      expect(page).to have_field 'collection_description', with: 'collection description'
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
       within("#document_#{gw1.id}") do
         click_link('Remove From Collection')
       end
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
-      expect(page).to_not have_content(gw1.title.first)
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
+      expect(page).not_to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
     end
 
     it 'removes a work from a collection from show page' do
-      expect(page).to have_content(@collection.title)
-      within('#document_' + @collection.id) do
-        click_link(@collection.title)
+      expect(page).to have_content 'Test collection title'
+      within('#document_' + collection.id) do
+        click_link 'Test collection title'
       end
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
       within("#document_#{gw1.id}") do
         click_link('Remove From Collection')
       end
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
-      expect(page).to_not have_content(gw1.title.first)
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
+      expect(page).not_to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
     end
 
     it 'removes all works from a collection' do
       skip 'This is from Sufia, not sure if it should be here.'
-      expect(page).to have_content(@collection.title)
-      within('#document_' + @collection.id) do
+      expect(page).to have_content 'Test collection title'
+      within('#document_' + collection.id) do
         click_link('Edit Collection')
       end
-      expect(page).to have_field('collection_title', with: @collection.title)
-      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_field 'collection_title', with: 'Test collection title'
+      expect(page).to have_field 'collection_description', with: 'collection description'
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
       first('input#check_all').click
       click_link('Remove From Collection')
-      expect(page).to have_content(@collection.title)
-      expect(page).to have_content(@collection.description)
-      expect(page).to_not have_content(gw1.title.first)
-      expect(page).to_not have_content(gw2.title.first)
+      expect(page).to have_content 'Test collection title'
+      expect(page).to have_content 'collection description'
+      expect(page).not_to have_content(gw1.title.first)
+      expect(page).not_to have_content(gw2.title.first)
     end
   end
 
   describe 'show pages of a collection' do
+    let(:generic_works) do
+      (0..12).map { create(:generic_work, user: user) }
+    end
+    let!(:collection) do
+      create(:collection, user: user, description: ['collection description'], members: generic_works)
+    end
+
     before do
-      @collection = Collection.new title: 'collection title'
-      @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
-      @collection.members = generic_works
-      @collection.save!
       sign_in user
       visit search_path_for_my_collections
     end
 
     it 'shows a collection with a listing of Descriptive Metadata and catalog-style search results' do
-      expect(page).to have_content(@collection.title)
-      within('#document_' + @collection.id) do
+      expect(page).to have_content 'Test collection title'
+      within('#document_' + collection.id) do
         click_link('collection title')
       end
       expect(page).to have_css('.pager')

@@ -1,8 +1,4 @@
 module CurationConcerns::CollectionsHelper
-  def has_collection_search_parameters?
-    params[:cq].present?
-  end
-
   def collection_modal_id(collectible)
     "#{collectible.to_param.tr(':', '-')}-modal"
   end

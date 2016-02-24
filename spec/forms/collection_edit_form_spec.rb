@@ -65,9 +65,7 @@ describe CurationConcerns::Forms::CollectionEditForm do
       let(:title) { work.file_sets.first.title.first }
       let(:file_id) { work.file_sets.first.id }
       let(:collection_with_file) do
-        Collection.create!(title: 'foo', members: [work]) do |c|
-          c.apply_depositor_metadata('jcoyne')
-        end
+        create(:collection, members: [work])
       end
 
       it 'returns a hash of with file title as key and file id as value' do

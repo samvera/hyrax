@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'catalog/index.html.erb' do
-  let(:collection) { stub_model(Collection, title: 'collection1', id: 'abc123') }
+  let(:collection) { stub_model(Collection, title: ['collection1'], id: 'abc123') }
   let(:doc) { SolrDocument.new(collection.to_solr) }
   let(:search_state) { double('SearchState', to_h: {}) }
   let(:blacklight_configuration_context) do
@@ -44,7 +44,7 @@ describe 'catalog/index.html.erb' do
     it 'appears on page without error' do
       render
       page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_link(collection.title)
+      expect(page).to have_link 'collection1'
       expect(page).to have_content 'List of items deposited'
     end
   end
@@ -55,7 +55,7 @@ describe 'catalog/index.html.erb' do
     it 'appears on page without error' do
       render
       page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_link(collection.title)
+      expect(page).to have_link 'collection1'
       expect(page).to have_content 'List of items deposited'
     end
   end

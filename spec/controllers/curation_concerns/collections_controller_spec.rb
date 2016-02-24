@@ -6,14 +6,24 @@ describe CollectionsController do
     allow_any_instance_of(User).to receive(:groups).and_return([])
   end
 
-  let(:user) { FactoryGirl.create(:user) }
-  let(:asset1) { FactoryGirl.build(:generic_work, title: ['First of the Assets'], user: user) }
-  let(:asset2) { FactoryGirl.build(:generic_work, title: ['Second of the Assets'], user: user, depositor: user.user_key) }
-  let(:asset3) { FactoryGirl.build(:generic_work, title: ['Third of the Assets']) }
-  let!(:asset4) { FactoryGirl.create(:generic_work, title: ['Fourth of the Assets'], user: user) }
-  let(:bogus_depositor_asset) { FactoryGirl.create(:generic_work, title: ['Bogus Asset'], depositor: 'abc') }
-  let(:collection_attrs) { FactoryGirl.attributes_for(:collection, title: 'My First Collection ', description: "The Description\r\n\r\nand more") }
-  let(:collection) { FactoryGirl.create(:collection, title: 'Collection Title', user: user) }
+  let(:user) { create(:user) }
+  let(:asset1) { build(:generic_work, title: ['First of the Assets'], user: user) }
+  let(:asset2) { build(:generic_work,
+                       title: ['Second of the Assets'],
+                       user: user,
+                       depositor: user.user_key) }
+  let(:asset3) { build(:generic_work, title: ['Third of the Assets']) }
+  let!(:asset4) { create(:generic_work,
+                         title: ['Fourth of the Assets'],
+                         user: user) }
+  let(:bogus_depositor_asset) { create(:generic_work,
+                                       title: ['Bogus Asset'],
+                                       depositor: 'abc') }
+  let(:collection_attrs) do
+    { title: 'My First Collection', description: "The Description\r\n\r\nand more" }
+  end
+
+  let(:collection) { create(:collection, title: ['Collection Title'], user: user) }
 
   describe '#new' do
     before do
@@ -42,7 +52,7 @@ describe CollectionsController do
       expect do
         post :create, collection: collection_attrs.merge(creator: [''])
       end.to change { Collection.count }.by(1)
-      expect(assigns[:collection].title).to eq('My First Collection ')
+      expect(assigns[:collection].title).to eq ['My First Collection']
       expect(assigns[:collection].creator).to eq([])
     end
 
@@ -138,7 +148,7 @@ describe CollectionsController do
 
       it 'removes blank strings from params before updating Collection metadata' do
         put :update, id: collection, collection: collection_attrs.merge(creator: [''])
-        expect(assigns[:collection].title).to eq('My First Collection ')
+        expect(assigns[:collection].title).to eq ['My First Collection']
         expect(assigns[:collection].creator).to eq([])
       end
     end
@@ -160,7 +170,7 @@ describe CollectionsController do
         get :show, id: collection
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-        expect(assigns[:presenter].title).to eq collection.title
+        expect(assigns[:presenter].title).to eq 'Collection Title'
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
 
@@ -169,7 +179,7 @@ describe CollectionsController do
           get :show, id: collection, q: 'no matches'
           expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-          expect(assigns[:presenter].title).to eq collection.title
+          expect(assigns[:presenter].title).to eq 'Collection Title'
         end
       end
     end
