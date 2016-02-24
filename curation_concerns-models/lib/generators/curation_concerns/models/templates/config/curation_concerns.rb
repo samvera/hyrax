@@ -54,9 +54,6 @@ CurationConcerns.configure do |config|
   # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 
-  # Specify the form of hostpath to be used in Endnote exports
-  # config.persistent_hostpath = 'http://localhost/files/'
-
   # Location on local file system where derivatives will be stored.
   # If you use a multi-server architecture, this MUST be a shared volume.
   # config.derivatives_path = File.join(Rails.root, 'tmp', 'derivatives')
