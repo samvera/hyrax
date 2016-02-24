@@ -29,16 +29,6 @@ CurationConcerns.configure do |config|
     [k, I18n.t("curation_concerns.schema_org.resource_type.#{v}", default: config.microdata_default_type)]
   end.to_h
 
-  config.permission_levels = {
-    'Choose Access' => 'none',
-    'View/Download' => 'read',
-    'Edit' => 'edit'
-  }
-
-  config.owner_permission_levels = {
-    'Edit' => 'edit'
-  }
-
   # How frequently should a file be audited.
   # Note: In CurationConcerns you must trigger the FileSetAuditService manually.
   # config.max_days_between_audits = 7

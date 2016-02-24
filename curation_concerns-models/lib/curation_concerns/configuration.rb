@@ -57,9 +57,8 @@ module CurationConcerns
     end
 
     attr_accessor :temp_file_base, :enable_local_ingest,
-                  :analytic_start_date,
+                  :analytics, :analytic_start_date,
                   :resource_types, :resource_types_to_schema,
-                  :permission_levels, :owner_permission_levels, :analytics,
                   :display_microdata, :microdata_default_type
 
     attr_writer :max_days_between_audits
