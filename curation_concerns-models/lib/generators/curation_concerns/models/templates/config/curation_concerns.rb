@@ -1,6 +1,4 @@
 CurationConcerns.configure do |config|
-  config.max_days_between_audits = 7
-
   config.resource_types = {
     'Article' => 'Article',
     'Audio' => 'Audio',
@@ -40,6 +38,10 @@ CurationConcerns.configure do |config|
   config.owner_permission_levels = {
     'Edit' => 'edit'
   }
+
+  # How frequently should a file be audited.
+  # Note: In CurationConcerns you must trigger the FileSetAuditService manually.
+  # config.max_days_between_audits = 7
 
   # Enable displaying usage statistics in the UI
   # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
