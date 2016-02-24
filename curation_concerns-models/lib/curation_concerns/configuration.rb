@@ -57,13 +57,17 @@ module CurationConcerns
     end
 
     attr_accessor :temp_file_base, :enable_local_ingest,
-                  :analytics, :analytic_start_date,
-                  :microdata_default_type
+                  :analytics, :analytic_start_date
 
     attr_writer :display_microdata
     def display_microdata
       return @display_microdata unless @display_microdata.nil?
       @display_microdata = true
+    end
+
+    attr_writer :microdata_default_type
+    def microdata_default_type
+      @microdata_default_type ||= 'http://schema.org/CreativeWork'
     end
 
     attr_writer :max_days_between_audits
