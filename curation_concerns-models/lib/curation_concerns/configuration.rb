@@ -56,11 +56,21 @@ module CurationConcerns
       @fits_message_length ||= 5
     end
 
-    attr_accessor :temp_file_base, :enable_local_ingest, :analytic_start_date,
-                  :fits_to_desc_mapping, :max_days_between_audits,
+    attr_accessor :temp_file_base, :enable_local_ingest,
+                  :analytics, :analytic_start_date,
                   :resource_types, :resource_types_to_schema,
-                  :permission_levels, :owner_permission_levels, :analytics,
-                  :display_microdata, :microdata_default_type
+                  :microdata_default_type
+
+    attr_writer :display_microdata
+    def display_microdata
+      return @display_microdata unless @display_microdata.nil?
+      @display_microdata = true
+    end
+
+    attr_writer :max_days_between_audits
+    def max_days_between_audits
+      @max_days_between_audits ||= 7
+    end
 
     attr_writer :enable_noids
     def enable_noids
