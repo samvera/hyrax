@@ -22,7 +22,9 @@ CurationConcerns.configure do |config|
     'Other' => 'Other'
   }
 
-  config.display_microdata = true
+  # Should schema.org microdata be displayed?
+  # config.display_microdata = true
+
   config.microdata_default_type = 'http://schema.org/CreativeWork'
 
   config.resource_types_to_schema = config.resource_types.map do |k, v|
