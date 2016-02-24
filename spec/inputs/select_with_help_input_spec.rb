@@ -11,7 +11,7 @@ describe 'SelectWithHelpInput', type: :input do
     end
   end
   let(:form) { form_class.new(FileSet.new) }
-  let(:collection) { CurationConcerns.config.resource_types }
+  let(:collection) { ResourceTypesService.select_options }
   let(:base_options) do
     { as: :select_with_help, collection: collection,
       input_html: { class: 'form-control', multiple: true } }
