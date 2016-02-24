@@ -64,7 +64,13 @@ CurationConcerns.configure do |config|
   # config.persistent_hostpath = 'http://localhost/files/'
 
   # Location on local file system where derivatives will be stored.
+  # If you use a multi-server architecture, this MUST be a shared volume.
   # config.derivatives_path = File.join(Rails.root, 'tmp', 'derivatives')
+
+  # Location on local file system where uploaded files will be staged
+  # prior to being ingested into the repository or having derivatives generated.
+  # If you use a multi-server architecture, this MUST be a shared volume.
+  # config.working_path = File.join(Rails.root, 'tmp', 'uploads')
 
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   # config.enable_ffmpeg = true
@@ -77,6 +83,7 @@ CurationConcerns.configure do |config|
   # config.noid_template = ".reeddeeddk"
 
   # Store identifier minter's state in a file for later replayability
+  # If you use a multi-server architecture, this MUST be on a shared volume.
   # config.minter_statefile = '/tmp/minter-state'
 
   # Specify the prefix for Redis keys:
