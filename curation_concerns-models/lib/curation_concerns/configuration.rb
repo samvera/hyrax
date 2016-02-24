@@ -58,7 +58,6 @@ module CurationConcerns
 
     attr_accessor :temp_file_base, :enable_local_ingest,
                   :analytics, :analytic_start_date,
-                  :resource_types, :resource_types_to_schema,
                   :microdata_default_type
 
     attr_writer :display_microdata

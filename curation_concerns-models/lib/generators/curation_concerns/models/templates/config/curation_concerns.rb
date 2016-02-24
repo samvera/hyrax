@@ -1,35 +1,8 @@
 CurationConcerns.configure do |config|
-  config.resource_types = {
-    'Article' => 'Article',
-    'Audio' => 'Audio',
-    'Book' => 'Book',
-    'Capstone Project' => 'Capstone Project',
-    'Conference Proceeding' => 'Conference Proceeding',
-    'Dataset' => 'Dataset',
-    'Dissertation' => 'Dissertation',
-    'Image' => 'Image',
-    'Journal' => 'Journal',
-    'Map or Cartographic Material' => 'Map or Cartographic Material',
-    'Masters Thesis' => 'Masters Thesis',
-    'Part of Book' => 'Part of Book',
-    'Poster' => 'Poster',
-    'Presentation' => 'Presentation',
-    'Project' => 'Project',
-    'Report' => 'Report',
-    'Research Paper' => 'Research Paper',
-    'Software or Program Code' => 'Software or Program Code',
-    'Video' => 'Video',
-    'Other' => 'Other'
-  }
-
   # Should schema.org microdata be displayed?
   # config.display_microdata = true
 
   config.microdata_default_type = 'http://schema.org/CreativeWork'
-
-  config.resource_types_to_schema = config.resource_types.map do |k, v|
-    [k, I18n.t("curation_concerns.schema_org.resource_type.#{v}", default: config.microdata_default_type)]
-  end.to_h
 
   # How frequently should a file be audited.
   # Note: In CurationConcerns you must trigger the FileSetAuditService manually.
