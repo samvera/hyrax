@@ -1,9 +1,4 @@
 CurationConcerns.configure do |config|
-  config.fits_to_desc_mapping = {
-    file_title: :title,
-    file_author: :creator
-  }
-
   config.max_days_between_audits = 7
 
   config.resource_types = {
