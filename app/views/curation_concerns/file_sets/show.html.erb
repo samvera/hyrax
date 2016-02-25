@@ -3,5 +3,5 @@
   <h1>File Details <small><%= @presenter.title %></small></h1>
 <% end %>
 <%= media_display @presenter %>
-<%= render "attributes", curation_concern: @presenter %>
+<%= render "attributes", presenter: @presenter %>
 <%= render "show_actions", presenter: @presenter, parent: parent %>

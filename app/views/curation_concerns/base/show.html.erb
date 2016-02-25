@@ -7,7 +7,7 @@
 <% editor    = can?(:edit,    @presenter.id) %>
 
 <%= render 'representative_media', work: @presenter %>
-<%= render 'attributes', curation_concern: @presenter %>
+<%= render "attributes", presenter: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
 <% if editor %>
   <%= render 'multiple_upload', presenter: @presenter %>

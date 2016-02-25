@@ -19,8 +19,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   before do
     allow(view).to receive(:dom_class) { '' }
 
-    assign(:presenter, presenter)
-    render
+    render 'curation_concerns/base/attributes', presenter: presenter
   end
 
   it 'has links to search for other objects with the same metadata' do

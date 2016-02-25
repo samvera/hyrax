@@ -1,18 +1,18 @@
-<table class="table table-striped <%= dom_class(@presenter) %> attributes" <%= @presenter.microdata_type_to_html %>>
+<table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
   <caption class="table-heading"><h2>Attributes</h2></caption>
   <thead>
     <tr><th>Attribute Name</th><th>Values</th></tr>
   </thead>
   <tbody>
-    <%= render 'attribute_rows' %>
+    <%= render 'attribute_rows', presenter: presenter %>
   <tr>
     <th>Visibility</th>
     <td>
-      <%= @presenter.permission_badge %>
+      <%= presenter.permission_badge %>
     </td>
   </tr>
-  <%= @presenter.attribute_to_html(:embargo_release_date) %>
-  <%= @presenter.attribute_to_html(:lease_expiration_date) %>
-  <%= @presenter.attribute_to_html(:rights) %>
+  <%= presenter.attribute_to_html(:embargo_release_date) %>
+  <%= presenter.attribute_to_html(:lease_expiration_date) %>
+  <%= presenter.attribute_to_html(:rights) %>
   </tbody>
 </table>
