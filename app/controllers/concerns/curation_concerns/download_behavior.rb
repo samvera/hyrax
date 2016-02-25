@@ -21,13 +21,19 @@ module CurationConcerns
         # For derivatives stored on the local file system
         response.headers['Accept-Ranges'] = 'bytes'
         response.headers['Content-Length'] = File.size(file).to_s
-        send_file file, type: mime_type_for(file), disposition: 'inline'
+        send_file file, derivative_download_options
       else
         render_404
       end
     end
 
     protected
+
+      # Override this method if you want to change the options sent when downloading
+      # a derivative file
+      def derivative_download_options
+        { type: mime_type_for(file), disposition: 'inline' }
+      end
 
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
