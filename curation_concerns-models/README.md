@@ -16,6 +16,10 @@ To install FITS:
      * Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), OR
      * Changing config/initializers/sufia.rb to point to your FITS location: config.fits_path = "/<your full path>/fits.sh"
 
+### Redis 2.6
+
+The redlock gem requires Redis >= 2.6.
+
 
 
 ## Installation
