@@ -1,8 +1,13 @@
 require 'spec_helper'
 
 describe CurationConcerns::CollectionPresenter do
-  let(:collection) { Collection.new(id: 'adc12v', description: 'a nice collection', title: 'A clever title') }
-  let(:work) { FactoryGirl.build(:work, title: ['unimaginitive title']) }
+  let(:collection) do
+    build(:collection,
+          id: 'adc12v',
+          description: ['a nice collection'],
+          title: ['A clever title'])
+  end
+  let(:work) { build(:work, title: ['unimaginitive title']) }
   let(:solr_document) { SolrDocument.new(collection.to_solr) }
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_document, ability) }

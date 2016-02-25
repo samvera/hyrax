@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'Catalog index page' do
   let!(:work) { create(:public_generic_work, title: ['My Work']) }
-  let!(:coll) { create(:collection, :public, title: 'My Collection') }
+  let!(:coll) { create(:collection, :public, title: ['My Collection']) }
 
   scenario 'Browse the catalog using filter tabs' do
     visit search_catalog_path

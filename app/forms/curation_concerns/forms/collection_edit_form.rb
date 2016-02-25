@@ -18,6 +18,35 @@ module CurationConcerns
         model_class.validators_on(key).any? { |v| v.is_a? ActiveModel::Validations::PresenceValidator }
       end
 
+      # The form only supports a single value for title, so use the first
+      # @return [String] the first title
+      def title
+        model.title.first
+      end
+
+      # The form only supports a single value for description, so use the first
+      # @return [String] the first description
+      def description
+        model.description.first
+      end
+
+      # @param [Symbol] key the property to test for cardinality
+      # @return [FalseClass,TrueClass] whether the value on the form is singular or multipl
+      def self.multiple?(key)
+        return false if [:title, :description].include? key
+        super
+      end
+
+      # @param [ActiveSupport::Parameters]
+      # @return [Hash] a hash suitable for populating Collection attributes.
+      def self.model_attributes(_)
+        attrs = super
+        # cast title and description back to multivalued
+        attrs[:title] = Array(attrs[:title]) if attrs[:title]
+        attrs[:description] = Array(attrs[:description]) if attrs[:description]
+        attrs
+      end
+
       # @return [Hash] All generic files in the collection, file.to_s is the key, file.id is the value
       def select_files
         Hash[all_files]
