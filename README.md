@@ -46,8 +46,15 @@ To turn on virus detection, install clamav on your system and add the `clamav` g
 
 If you are modifying the curation_concerns gem and want to run the test suite, follow these steps to set up the test environment.
 
+    $ rake ci
+    
+Or you can do all the steps manually:
+
+    $ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test
+    
+    # in another window
+    $ fcrepo_wrapper -p 8986 --no-jms
+    
+    # in another window
     $ rake engine_cart:generate
-    $ rake jetty:clean
-    $ rake jetty:config
-    $ rake jetty:start
-    $ rake spec
+    $ rake curation_concerns:spec
