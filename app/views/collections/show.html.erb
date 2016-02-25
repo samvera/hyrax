@@ -12,8 +12,8 @@
   <h3><%= @presenter.description %> </h3>
 
   <% unless has_collection_search_parameters? %>
-    <%= render partial: 'collections/show_actions' %>
-    <%= render 'attributes', curation_concern: @presenter %>
+    <%= render 'collections/show_actions' %>
+    <%= render 'attributes', presenter: @presenter %>
   <% end %>
 
   <%= render 'search_form' %>
