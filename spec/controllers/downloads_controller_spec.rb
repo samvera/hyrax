@@ -73,4 +73,12 @@ describe DownloadsController do
       end
     end
   end
+
+  describe "derivative_download_options" do
+    before do
+      allow(controller).to receive(:default_file).and_return 'world.png'
+    end
+    subject { controller.send(:derivative_download_options) }
+    it { is_expected.to eq(disposition: 'inline', type: 'image/png') }
+  end
 end
