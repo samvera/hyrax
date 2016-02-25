@@ -31,7 +31,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
   let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_doc, ability) }
 
   before do
-    view.lookup_context.view_paths.push CurationConcerns::Engine.root + 'app/views/curation_concerns/base'
+    view.lookup_context.prefixes.push 'curation_concerns/base'
     allow(view).to receive(:can?).with(:edit, String).and_return(true)
     assign(:presenter, presenter)
   end
