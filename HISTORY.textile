@@ -1,4 +1,14 @@
-h3. 9.8.1 (2016-02-15)
+h3. 9.8.1 (2016-02-24)
+* 2016-02-16: Display the rails log from the hydra:server rake task [Justin Coyne]
+
+* 2016-02-16: Refactor generator to only have one dev/test group in Gemfile
+[Justin Coyne]
+
+*  2016-02-15: Remove colons from labels. [Justin Coyne]
+
+* 2016-02-12: Call id_to_resource_uri with a graph [Justin Coyne]
+
+h3. 9.8.0 (2016-02-15)
 * 2016-02-15: Add hydra:server rake task for starting all services together
 [Justin Coyne]
 
