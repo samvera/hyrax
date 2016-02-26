@@ -69,4 +69,29 @@ describe CurationConcerns::WorkShowPresenter do
       end
     end
   end
+
+  describe "#attribute_to_html" do
+    let(:presenter) { described_class.new(solr_document, ability) }
+    let(:renderer) { double('renderer') }
+
+    context 'with an existing field' do
+      before do
+        allow(CurationConcerns::AttributeRenderer).to receive(:new)
+          .with(:title, "foo bar", {})
+          .and_return(renderer)
+      end
+
+      it "calls the AttributeRenderer" do
+        expect(renderer).to receive(:render)
+        presenter.attribute_to_html(:title)
+      end
+    end
+
+    context "with a field that doesn't exist" do
+      it "logs a warning" do
+        expect(Rails.logger).to receive(:warn).with('CurationConcerns::WorkShowPresenter attempted to render restrictions, but no method exists with that name.')
+        presenter.attribute_to_html(:restrictions)
+      end
+    end
+  end
 end
