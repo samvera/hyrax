@@ -23,6 +23,15 @@ module CurationConcerns::WorkBehavior
     def indexer
       CurationConcerns::WorkIndexer
     end
+
+    # This governs which partial to draw when you render this type of object
+    def _to_partial_path #:nodoc:
+      @_to_partial_path ||= begin
+        element = ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.demodulize(name))
+        collection = ActiveSupport::Inflector.tableize(name)
+        "curation_concerns/#{collection}/#{element}".freeze
+      end
+    end
   end
 
   def to_s
