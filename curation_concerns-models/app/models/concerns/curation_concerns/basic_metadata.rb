@@ -15,33 +15,33 @@ module CurationConcerns
       property :resource_type, predicate: ::RDF::Vocab::DC.type do |index|
         index.as :stored_searchable, :facetable
       end
-      property :creator, predicate: ::RDF::Vocab::DC.creator do |index|
+      property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
         index.as :stored_searchable, :facetable
       end
-      property :contributor, predicate: ::RDF::Vocab::DC.contributor do |index|
+      property :contributor, predicate: ::RDF::Vocab::DC11.contributor do |index|
         index.as :stored_searchable, :facetable
       end
-      property :description, predicate: ::RDF::Vocab::DC.description do |index|
+      property :description, predicate: ::RDF::Vocab::DC11.description do |index|
         index.type :text
         index.as :stored_searchable
       end
-      property :tag, predicate: ::RDF::Vocab::DC.relation do |index|
+      property :tag, predicate: ::RDF::Vocab::DC11.relation do |index|
         index.as :stored_searchable, :facetable
       end
       property :rights, predicate: ::RDF::Vocab::DC.rights do |index|
         index.as :stored_searchable
       end
-      property :publisher, predicate: ::RDF::Vocab::DC.publisher do |index|
+      property :publisher, predicate: ::RDF::Vocab::DC11.publisher do |index|
         index.as :stored_searchable, :facetable
       end
       property :date_created, predicate: ::RDF::Vocab::DC.created do |index|
         index.as :stored_searchable
       end
 
-      property :subject, predicate: ::RDF::Vocab::DC.subject do |index|
+      property :subject, predicate: ::RDF::Vocab::DC11.subject do |index|
         index.as :stored_searchable, :facetable
       end
-      property :language, predicate: ::RDF::Vocab::DC.language do |index|
+      property :language, predicate: ::RDF::Vocab::DC11.language do |index|
         index.as :stored_searchable, :facetable
       end
       property :identifier, predicate: ::RDF::Vocab::DC.identifier do |index|
