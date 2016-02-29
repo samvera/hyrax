@@ -44,7 +44,7 @@ describe GenericWork do
   describe '#to_partial_path' do
     let(:work) { described_class.new }
     subject { work.to_partial_path }
-    it { is_expected.to eq 'generic_works/generic_work' }
+    it { is_expected.to eq 'curation_concerns/generic_works/generic_work' }
   end
 
   describe "#destroy" do
