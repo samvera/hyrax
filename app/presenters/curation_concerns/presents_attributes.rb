@@ -10,7 +10,10 @@ module CurationConcerns
     #   you can explicitly set the URL's search field name
     # @option options [String] :label The default label for the field if no translation is found
     def attribute_to_html(field, options = {})
-      return unless respond_to?(field)
+      unless respond_to?(field)
+        Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
+        return
+      end
       AttributeRenderer.new(field, send(field), options).render
     end
 
