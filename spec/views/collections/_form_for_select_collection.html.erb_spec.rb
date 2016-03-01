@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'collections/_form_for_select_collection.html.erb' do
   let(:collections) {
     [
-      Collection.new(id: '1234', title: 'collection 1', create_date: DateTime.parse('Thu, 13 Aug 2015 14:20:22 +0100')),
-      Collection.new(id: '1235', title: 'collection 2', create_date: DateTime.parse('Thu, 13 Aug 2015 14:18:22 +0100')),
-      Collection.new(id: '1236', title: 'collection 3', create_date: DateTime.parse('Thu, 13 Aug 2015 14:16:22 +0100')),
-      Collection.new(id: '1237', title: 'collection 4', create_date: DateTime.parse('Thu, 13 Aug 2015 14:29:22 +0100'))
+      build(:collection, id: '1234', create_date: DateTime.parse('Thu, 13 Aug 2015 14:20:22 +0100')),
+      build(:collection, id: '1235', create_date: DateTime.parse('Thu, 13 Aug 2015 14:18:22 +0100')),
+      build(:collection, id: '1236', create_date: DateTime.parse('Thu, 13 Aug 2015 14:16:22 +0100')),
+      build(:collection, id: '1237', create_date: DateTime.parse('Thu, 13 Aug 2015 14:29:22 +0100'))
     ]
   }
   let(:solr_collections) {
@@ -17,13 +17,9 @@ describe 'collections/_form_for_select_collection.html.erb' do
     end
   }
 
-  let(:doc) {
-    Nokogiri::HTML(rendered)
-  }
+  let(:doc) { Nokogiri::HTML(rendered) }
 
-  before do
-    allow(view).to receive(:user_collections).and_return(solr_collections)
-  end
+  before { allow(view).to receive(:user_collections).and_return(solr_collections) }
 
   it "sorts the collections" do
     render

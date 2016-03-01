@@ -3,18 +3,8 @@ require 'spec_helper'
 describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
-  let(:work1) do
-    GenericWork.create(title: ["King Louie"]) do |f|
-      f.apply_depositor_metadata(user.user_key)
-    end
-  end
-
-  let(:work2) do
-    GenericWork.create(title: ["King Kong"]) do |f|
-      f.apply_depositor_metadata(user.user_key)
-    end
-  end
-
+  let(:work1) { create(:work, title: ["King Louie"], user: user) }
+  let(:work2) { create(:work, title: ["King Kong"], user: user) }
   let(:collection1) { create(:collection, user: user) }
   let(:collection2) { create(:collection, user: user) }
 
@@ -47,11 +37,7 @@ describe 'collection', type: :feature do
   end
 
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
-    let!(:collection) do
-      Collection.create!(title: "Barrel of monkeys") do |c|
-        c.apply_depositor_metadata(user)
-      end
-    end
+    let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user) }
 
     before do
       work1
@@ -74,32 +60,25 @@ describe 'collection', type: :feature do
   end
 
   describe 'delete collection' do
-    let!(:collection) do
-      Collection.create(title: "Barrel of monkeys", description: 'apes of the cinema') do |c|
-        c.apply_depositor_metadata(user.user_key)
-      end
-    end
+    let!(:collection) { create(:collection, user: user) }
     before do
       sign_in user
       visit '/dashboard/collections'
     end
 
     it "deletes a collection" do
-      expect(page).to have_content(collection.title)
+      expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
-      expect(page).not_to have_content(collection.title)
+      expect(page).not_to have_content(collection.title.first)
     end
   end
 
   describe 'collection show page' do
     let!(:collection) do
-      Collection.create(title: 'collection title', description: 'collection description',
-                        members: [work1, work2]) do |c|
-        c.apply_depositor_metadata(user.user_key)
-      end
+      create(:collection, description: ["Collection description"], members: [work1, work2], user: user)
     end
     before do
       sign_in user
@@ -107,15 +86,15 @@ describe 'collection', type: :feature do
     end
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      expect(page).to have_content(collection.title)
+      expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
-        click_link("Display all details of collection title")
+        click_link("Display all details of #{collection.title.first}")
       end
-      expect(page).to have_content(collection.title)
-      expect(page).to have_content(collection.description)
+      expect(page).to have_content(collection.title.first)
+      expect(page).to have_content(collection.description.first)
       # Should not show title and description a second time
-      expect(page).to_not have_css('.metadata-collections', text: collection.title)
-      expect(page).to_not have_css('.metadata-collections', text: collection.description)
+      expect(page).not_to have_css('.metadata-collections', text: collection.title.first)
+      expect(page).not_to have_css('.metadata-collections', text: collection.description.first)
       # Should not have Collection Descriptive metadata table
       expect(page).to have_content("Descriptions")
       # Should have search results / contents listing
@@ -130,21 +109,21 @@ describe 'collection', type: :feature do
 
     it "hides collection descriptive metadata when searching a collection" do
       # URL: /dashboard/collections
-      expect(page).to have_content(collection.title)
+      expect(page).to have_content(collection.title.first)
       within("#document_#{collection.id}") do
-        click_link("Display all details of collection title")
+        click_link("Display all details of #{collection.title.first}")
       end
       # URL: /collections/collection-id
-      expect(page).to have_content(collection.title)
-      expect(page).to have_content(collection.description)
+      expect(page).to have_content(collection.title.first)
+      expect(page).to have_content(collection.description.first)
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
       fill_in('collection_search', with: work1.title.first)
       click_button('collection_submit')
       # Should not have Collection metadata table (only title and description)
-      expect(page).to_not have_content("Total Items")
-      expect(page).to have_content(collection.title)
-      expect(page).to have_content(collection.description)
+      expect(page).not_to have_content("Total Items")
+      expect(page).to have_content(collection.title.first)
+      expect(page).to have_content(collection.description.first)
       # Should have search results / contents listing
       expect(page).to have_content("Search Results")
       expect(page).to have_content(work1.title.first)
@@ -158,7 +137,7 @@ describe 'collection', type: :feature do
       sleep(1) # make sure the timestamps aren't equal
       collection2
       sleep(1)
-      collection1.title += 'changed'
+      collection1.title = ['changed']
       collection1.save
       # collection 1 is now earlier when sorting by create date but later
       # when sorting by modified date
@@ -213,10 +192,7 @@ describe 'collection', type: :feature do
   end
 
   describe 'edit collection' do
-    let!(:collection) do
-      Collection.create(title: 'collection title', description: 'collection description',
-                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
-    end
+    let!(:collection) { create(:named_collection, members: [work1, work2], user: user) }
 
     before do
       sign_in user
@@ -225,14 +201,14 @@ describe 'collection', type: :feature do
 
     it "edits and update collection metadata" do
       # URL: /dashboard/collections
-      expect(page).to have_content(collection.title)
+      expect(page).to have_content(collection.title.first)
       within("#document_#{collection.id}") do
         find('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
       # URL: /collections/collection-id/edit
-      expect(page).to have_field('collection_title', with: collection.title)
-      expect(page).to have_field('collection_description', with: collection.description)
+      expect(page).to have_field('collection_title', with: collection.title.first)
+      expect(page).to have_field('collection_description', with: collection.description.first)
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
 
@@ -247,77 +223,52 @@ describe 'collection', type: :feature do
       end
       # URL: /collections/collection-id
       header = find('header')
-      expect(header).to_not have_content(collection.title)
-      expect(header).to_not have_content(collection.description)
+      expect(header).not_to have_content(collection.title.first)
+      expect(header).not_to have_content(collection.description.first)
       expect(header).to have_content(new_title)
       expect(header).to have_content(new_description)
       expect(page).to have_content(creators.first)
     end
   end
 
-  describe "Removing a file from a collection" do
-    let!(:collection) do
-      Collection.create(title: 'collection title', description: 'collection description',
-                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
-    end
+  describe "Removing a files from a collection" do
+    let!(:collection) { create(:named_collection, members: [work1, work2], user: user) }
 
     before do
       sign_in user
       visit "/collections/#{collection.id}/edit"
     end
-
-    it "is successful" do
+    
+    it "removes one file out of two" do
       within("#document_#{work1.id}") do
         first('button.dropdown-toggle').click
         click_button('Remove from Collection')
       end
-      expect(page).to have_content(collection.title)
-      expect(page).to have_content(collection.description)
+      expect(page).to have_content(collection.title.first)
+      expect(page).to have_content(collection.description.first)
       expect(page).not_to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
     end
-  end
 
-  describe "Removing all files from a collection" do
-    let!(:collection) do
-      Collection.create(title: 'collection title', description: 'collection description',
-                        members: [work1, work2]) { |c| c.apply_depositor_metadata(user.user_key) }
-    end
-
-    before do
-      sign_in user
-      visit "/collections/#{collection.id}/edit"
-    end
-
-    it "is successful", :js do
+    it "removes all files", :js do
       first('input#check_all').click
       click_button('Remove From Collection')
-      expect(page).to have_content(collection.title)
-      expect(page).to have_content(collection.description)
+      expect(page).to have_content(collection.title.first)
+      expect(page).to have_content(collection.description.first)
       expect(page).not_to have_content(work1.title.first)
       expect(page).not_to have_content(work2.title.first)
     end
   end
 
   describe 'show pages of a collection' do
-    let(:works) do
-      (0..12).map do |x|
-        GenericWork.create(title: ["title #{x}"]) do |f|
-          f.apply_depositor_metadata(user.user_key)
-        end
-      end
-    end
+    let(:works)       { (0..12).map { create(:work, user: user) } }
+    let!(:collection) { create(:named_collection, members: works, user: user) }
 
     before { sign_in user }
 
-    let!(:collection) do
-      Collection.create(title: 'collection title', description: 'collection description',
-                        members: works) { |c| c.apply_depositor_metadata(user.user_key) }
-    end
-
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/collections'
-      expect(page).to have_content(collection.title)
+      expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
         click_link("Display all details of collection title")
       end

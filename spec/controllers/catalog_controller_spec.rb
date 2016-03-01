@@ -41,11 +41,7 @@ describe CatalogController, type: :controller do
     end
 
     context 'with collections' do
-      let(:collection) {
-        Collection.new(id: 'collection1', title: 'my collection', tag: ['rocks'], read_groups: ['public']) do |c|
-          c.apply_depositor_metadata('mjg36')
-        end
-      }
+      let(:collection) { create(:collection, tag: ['rocks']) }
       let(:objects) { [collection, rocks, clouds] }
 
       it 'finds collections' do

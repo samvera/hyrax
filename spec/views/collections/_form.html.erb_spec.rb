@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe 'collections/_form.html.erb' do
-  let(:collection) { Collection.new(title: 'the title', description: 'the description',
-                                    creator: ['the creator'])}
-
+  let(:collection) { build(:collection) }
   let(:collection_form) { Sufia::Forms::CollectionForm.new(collection) }
 
   before do

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'catalog/index.html.erb' do
-  let(:collection) { stub_model(Collection, title: 'collection1', id: 'abc123') }
+  let(:collection) { build(:collection, id: "abc123") }
   let(:doc) { SolrDocument.new(collection.to_solr) }
   let(:search_state) { double('SearchState', to_h: {}) }
   let(:blacklight_configuration_context) do
@@ -43,7 +43,7 @@ describe 'catalog/index.html.erb' do
     before { allow(view).to receive(:can?).and_return(false) }
     it 'appears on page without error' do
       render
-      expect(rendered).to include(collection.title)
+      expect(rendered).to include(collection.title.first)
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
     end
@@ -52,7 +52,7 @@ describe 'catalog/index.html.erb' do
     before { allow(view).to receive(:can?).and_return(true) }
     it 'appears on page without error' do
       render
-      expect(rendered).to include(collection.title)
+      expect(rendered).to include(collection.title.first)
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
     end

@@ -1,20 +1,17 @@
 require 'spec_helper'
 
 describe Collection do
-  let(:user) { create(:user) }
-  let(:collection) do
-    described_class.new(title: "test collection") do |c|
-      c.apply_depositor_metadata(user)
-    end
-  end
+  let(:collection) { create(:collection) }
 
   it "has open visibility" do
-    collection.save
     expect(collection.read_groups).to eq ['public']
   end
 
-  it "validates title" do
-    collection.title = nil
-    expect(collection).not_to be_valid
+  describe "#validates_with" do
+    before { collection.title = nil }
+    it "ensures the collection has a title" do
+      expect(collection).not_to be_valid
+      expect(collection.errors.messages[:title]).to eq(["You must provide a title"])
+    end
   end
 end

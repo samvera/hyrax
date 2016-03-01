@@ -3,24 +3,13 @@ require 'spec_helper'
 describe 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'fffzzz' }
-  let!(:work) {
-    GenericWork.create! do |work|
-      work.title = ["Toothbrush"]
-      work.tag = [subject_value]
-      work.apply_depositor_metadata(user.user_key)
-      work.read_groups = ['public']
-    end
-  }
+  let!(:work) do
+    create(:public_work, title: ["Toothbrush"], tag: [subject_value], user: user)
+  end
 
-  let!(:collection) {
-    Collection.create do |f|
-      f.title = 'collection title abc'
-      f.apply_depositor_metadata(user.user_key)
-      f.description = subject_value
-      f.read_groups = ['public']
-      f.members = [work]
-    end
-  }
+  let!(:collection) do
+    create(:collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+  end
 
   context "as a public user" do
     it "using the gallery view" do
