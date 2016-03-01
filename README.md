@@ -602,7 +602,7 @@ Sufia is available under [the Apache 2.0 license](LICENSE.md).
 
 # Contributing
 
-We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](CONTRIBUTING.md).
+We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](./.github/CONTRIBUTING.md).
 
 If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/sufia). There are other ways to help, too.
 
