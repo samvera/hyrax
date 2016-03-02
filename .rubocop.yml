@@ -9,8 +9,9 @@ AllCops:
   Exclude:
     - 'db/**/*'
     - 'script/**/*'
+    - 'spec/internal/**/*'
+    - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
-    - 'app/models/concerns/sufia/file_set/export.rb'
 
 Lint/ImplicitStringConcatenation:
   Exclude:
@@ -92,6 +93,8 @@ Rails/Date:
 Rails/TimeZone:
   Enabled: false
 
+RSpec/AnyInstance:
+  Enabled: false
 
 RSpec/ExampleWording:
   CustomTransform:
@@ -108,3 +111,5 @@ RSpec/FilePath:
 RSpec/InstanceVariable:
   Enabled: false
 
+RSpec/NotToNot:
+  Enabled: false
