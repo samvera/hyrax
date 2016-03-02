@@ -24,7 +24,7 @@ Metrics/AbcSize:
   Enabled: false
 
 Metrics/MethodLength:
-  Enabled: false
+  Max: 30
 
 Performance/RedundantMerge:
   Enabled: false
