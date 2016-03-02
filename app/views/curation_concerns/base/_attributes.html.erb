@@ -5,14 +5,9 @@
   </thead>
   <tbody>
     <%= render 'attribute_rows', presenter: presenter %>
-  <tr>
-    <th>Visibility</th>
-    <td>
-      <%= presenter.permission_badge %>
-    </td>
-  </tr>
-  <%= presenter.attribute_to_html(:embargo_release_date) %>
-  <%= presenter.attribute_to_html(:lease_expiration_date) %>
-  <%= presenter.attribute_to_html(:rights) %>
+    <%= presenter.attribute_to_html(:permission_badge, label: 'Visibility') %>
+    <%= presenter.attribute_to_html(:embargo_release_date) %>
+    <%= presenter.attribute_to_html(:lease_expiration_date) %>
+    <%= presenter.attribute_to_html(:rights) %>
   </tbody>
 </table>
