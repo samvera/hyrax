@@ -12,7 +12,7 @@ module Sufia
 
       def cached_stats(file_id, start_date, _method)
         stats = where(file_id: file_id).order(date: :asc)
-        ga_start_date = stats.size > 0 ? stats[stats.size - 1].date + 1.day : start_date.to_date
+        ga_start_date = stats.any? ? stats[stats.size - 1].date + 1.day : start_date.to_date
         { ga_start_date: ga_start_date, cached_stats: stats.to_a }
       end
 

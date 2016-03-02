@@ -26,12 +26,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 30
 
-Performance/RedundantMerge:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
-  Enabled: false
-
 Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*'
@@ -76,9 +70,6 @@ Style/LineEndConcatenation:
     - 'lib/generators/**/*'
 
 Style/SingleLineBlockParams:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
   Enabled: false
 
 Rails:
