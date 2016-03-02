@@ -3,10 +3,13 @@
     <h4>Apply changes to contents?<h4>
   </div>
   <div class="panel-body">
-      <%=  I18n.t("sufia.upload.change_permissions_message_html") %>
+      <%= I18n.t("sufia.upload.change_permissions_message_html",
+        curation_concern_human_readable_type: curation_concern.human_readable_type,
+        curation_concern: curation_concern,
+        visibility_badge: visibility_badge(curation_concern.visibility)).html_safe %>
   </div>
   <div class="form-actions panel-footer">
-    <%= button_to "Yes please.", Sufia::Engine.routes.url_helpers.copy_curation_concern_permission_path([sufia,curation_concern]), class: 'btn btn-primary' %>
-    <%= link_to "No. I'll update it manually.", curation_concerns_generic_work_path([sufia, curation_concern]), class: 'btn' %>
+    <%= button_to "Yes please.", main_app.copy_curation_concerns_permission_path(curation_concern), class: 'btn btn-primary' %>
+    <%= link_to "No. I'll update it manually.", main_app.curation_concerns_generic_work_path(curation_concern), class: 'btn' %>
   </div>
 </div>
