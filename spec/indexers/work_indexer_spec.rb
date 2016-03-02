@@ -21,4 +21,13 @@ describe CurationConcerns::WorkIndexer do
     expect(subject['generic_type_sim']).to eq ['Work']
     expect(subject.fetch('thumbnail_path_ss')).to eq "/downloads/#{file.id}?file=thumbnail"
   end
+
+  context "when thumbnail_field is configured" do
+    before do
+      service.thumbnail_field = 'thumbnail_url_ss'
+    end
+    it "uses the configured field" do
+      expect(subject.fetch('thumbnail_url_ss')).to eq "/downloads/#{file.id}?file=thumbnail"
+    end
+  end
 end
