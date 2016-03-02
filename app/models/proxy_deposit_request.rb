@@ -76,7 +76,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def canceled?
-    self.status == 'canceled'
+    status == 'canceled'
   end
 
   def deleted_work?

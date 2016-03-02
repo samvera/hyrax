@@ -2,9 +2,14 @@ require 'spec_helper'
 
 describe 'my/_index_partials/_list_works.html.erb' do
   let(:id) { "3197z511f" }
-  let(:work_data) { { "has_model_ssim"=>["GenericWork"],
-                       id: id,
-                       "title_tesim"=>["Work Title"] } }
+  let(:work_data) do
+    {
+      id: id,
+      "has_model_ssim" => ["GenericWork"],
+      "title_tesim" => ["Work Title"]
+    }
+  end
+
   let(:doc) { SolrDocument.new(work_data) }
   let(:collection) { mock_model(Collection) }
   let(:config) { My::WorksController.blacklight_config }

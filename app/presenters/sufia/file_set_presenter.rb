@@ -39,7 +39,7 @@ module Sufia
     def processing?
       # TODO: Refactor this away per https://github.com/projecthydra/sufia/pull/1592
     end
-    
+
     def stats_path
       Sufia::Engine.routes.url_helpers.stats_file_path(self)
     end
