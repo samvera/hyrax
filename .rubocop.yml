@@ -78,9 +78,6 @@ Style/LineEndConcatenation:
 Style/SingleLineBlockParams:
   Enabled: false
 
-Style/SignalException:
-  Enabled: false
-
 Style/ZeroLengthPredicate:
   Enabled: false
 

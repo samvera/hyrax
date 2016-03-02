@@ -27,7 +27,7 @@ describe 'Transferring work ownership:', type: :feature do
   describe 'When I request a work transfer:', :js do
     context 'For a work I do not own' do
       pending 'The transfer option is not available' do
-        fail
+        raise
       end
     end
 
