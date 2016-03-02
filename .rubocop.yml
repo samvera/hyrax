@@ -18,7 +18,7 @@ Lint/ImplicitStringConcatenation:
     - 'lib/generators/sufia/**/*'
 
 Metrics/LineLength:
-  Enabled: false
+  Max: 400
 
 Metrics/AbcSize:
   Enabled: false
