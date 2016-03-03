@@ -137,10 +137,12 @@ describe ::SystemStats, type: :model do
   describe "#recent_users" do
     let!(:user2) { create(:user) }
 
-    let(:one_day_ago_date) { 1.day.ago.to_datetime }
-    let(:two_days_ago_date) { 2.days.ago.to_datetime.end_of_day }
-    let(:one_day_ago) { one_day_ago_date.strftime("%Y-%m-%d") }
+    let(:two_days_ago_date) { 2.days.ago.beginning_of_day }
     let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
+
+    let(:one_day_ago_date) { 1.day.ago.end_of_day }
+    let(:one_day_ago) { one_day_ago_date.strftime("%Y-%m-%d") }
+
     let(:depositor_count) { nil }
 
     subject { stats.recent_users }
@@ -157,10 +159,10 @@ describe ::SystemStats, type: :model do
     end
 
     context "with start date" do
-      let(:user_stats) { { start_date: one_day_ago } }
+      let(:user_stats) { { start_date: two_days_ago } }
 
       it "allows queries against user_stats without an end date " do
-        expect(User).to receive(:recent_users).with(one_day_ago_date, nil).and_return([user2])
+        expect(User).to receive(:recent_users).with(two_days_ago_date, nil).and_return([user2])
         is_expected.to eq([user2])
       end
     end

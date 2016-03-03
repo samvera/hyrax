@@ -19,7 +19,7 @@ class SystemStats
   #                             blank means today
   def initialize(limit_records = 5, start_date_str = nil, end_date_str = nil)
     @limit = validate_limit(limit_records)
-    @start_date = Time.zone.parse(start_date_str) unless start_date_str.blank?
+    @start_date = Time.zone.parse(start_date_str).beginning_of_day unless start_date_str.blank?
     @end_date = Time.zone.parse(end_date_str).end_of_day unless end_date_str.blank?
   end
 

@@ -75,12 +75,6 @@ Style/SingleLineBlockParams:
 Rails:
   Enabled: true
 
-Rails/Date:
-  Enabled: false
-
-Rails/TimeZone:
-  Enabled: false
-
 RSpec/AnyInstance:
   Enabled: false
 
