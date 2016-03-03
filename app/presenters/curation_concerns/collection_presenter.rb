@@ -25,7 +25,7 @@ module CurationConcerns
     end
 
     def total_items
-      @solr_document['member_ids_ssim'].length
+      @solr_document.fetch('member_ids_ssim', []).length
     end
   end
 end
