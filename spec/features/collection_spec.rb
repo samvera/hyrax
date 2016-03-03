@@ -238,7 +238,7 @@ describe 'collection', type: :feature do
       sign_in user
       visit "/collections/#{collection.id}/edit"
     end
-    
+
     it "removes one file out of two" do
       within("#document_#{work1.id}") do
         first('button.dropdown-toggle').click
