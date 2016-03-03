@@ -39,5 +39,9 @@ describe CurationConcerns::CollectionPresenter do
       before { collection.members << work }
       it { is_expected.to eq 1 }
     end
+    context "null members" do
+      let(:presenter) { described_class.new({}, nil) }
+      it { is_expected.to eq 0 }
+    end
   end
 end
