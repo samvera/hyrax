@@ -43,7 +43,7 @@ describe ProxyDepositRequest, type: :model do
       its(:to_s) { is_expected.to eq 'work not found' }
       its(:deleted_work?) { is_expected.to be true }
     end
-  
+
     describe "and the work transfer is canceled" do
       before do
         subject.cancel!
@@ -53,7 +53,6 @@ describe ProxyDepositRequest, type: :model do
       its(:fulfillment_date) { is_expected.not_to be_nil }
       its(:canceled?) { is_expected.to be true }
     end
-  
   end
 
   context "After rejection" do

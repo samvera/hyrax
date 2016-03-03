@@ -1,4 +1,5 @@
 require: rubocop-rspec
+inherit_from: .rubocop_todo.yml
 
 AllCops:
   DisplayCopNames: true
@@ -8,8 +9,9 @@ AllCops:
   Exclude:
     - 'db/**/*'
     - 'script/**/*'
+    - 'spec/internal/**/*'
+    - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
-    - 'app/models/concerns/sufia/file_set/export.rb'
 
 Lint/ImplicitStringConcatenation:
   Exclude:
@@ -21,33 +23,8 @@ Metrics/LineLength:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'lib/sufia/arkivo/metadata_munger.rb'
-    - 'app/services/sufia/file_set_audit_service.rb'
-    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - 'app/services/sufia/file_set_audit_service.rb'
-    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
-
 Metrics/MethodLength:
   Enabled: false
-
-Metrics/ClassLength:
-  Exclude:
-    - 'lib/generators/sufia/templates/catalog_controller.rb'
-    - 'lib/generators/sufia/install_generator.rb'
-    - 'app/actors/sufia/file_set/actor.rb'
-
-Metrics/ModuleLength:
-  Exclude:
-    - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
-    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
 Performance/RedundantMerge:
   Enabled: false
@@ -93,34 +70,13 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-Style/HashSyntax:
-  Exclude:
-    - 'lib/generators/sufia/templates/catalog_controller.rb'
-
 Style/LineEndConcatenation:
   Exclude:
     - 'spec/test_app_templates/lib/generators/**/*'
     - 'lib/generators/**/*'
 
-Style/PredicateName:
-  Exclude:
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
-    - 'app/controllers/concerns/sufia/controller.rb'
-
-Style/GlobalVars:
-  Exclude:
-    - 'spec/**/*'
-    - 'spec/jobs/event_jobs_spec.rb'
-    - 'lib/generators/sufia/templates/config/redis_config.rb'
-    - 'lib/sufia/redis_event_store.rb'
-
 Style/SingleLineBlockParams:
   Enabled: false
-
-Style/ClassVars:
-  Exclude:
-    - 'lib/sufia/models.rb'
-    - 'lib/sufia.rb'
 
 Style/SignalException:
   Enabled: false
@@ -131,21 +87,14 @@ Style/ZeroLengthPredicate:
 Rails:
   Enabled: true
 
-Rails/Output:
-  Exclude:
-    - 'lib/generators/**/*'
-    - 'app/services/sufia/user_stat_importer.rb'
-
 Rails/Date:
   Enabled: false
 
 Rails/TimeZone:
   Enabled: false
 
-Rails/HasAndBelongsToMany:
-  Exclude:
-    - 'app/models/domain_term.rb'
-    - 'app/models/local_authority.rb'
+RSpec/AnyInstance:
+  Enabled: false
 
 RSpec/ExampleWording:
   CustomTransform:
@@ -162,14 +111,5 @@ RSpec/FilePath:
 RSpec/InstanceVariable:
   Enabled: false
 
-RSpec/DescribeClass:
-  Exclude:
-    - 'spec/javascripts/jasmine_spec.rb'
-    - 'spec/tasks/rake_spec.rb'
-    - 'spec/jobs/event_jobs_spec.rb'
-    - 'spec/config/sufia_events_spec.rb'
-    - 'spec/features/**/*'
-    - 'spec/views/**/*'
-    - 'spec/routing/**/*'
-    - 'spec/requests/**/*'
-    - 'spec/inputs/**/*'
+RSpec/NotToNot:
+  Enabled: false

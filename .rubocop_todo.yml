@@ -1,0 +1,76 @@
+Lint/ImplicitStringConcatenation:
+  Exclude:
+    - 'lib/generators/sufia/**/*'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/sufia/arkivo/metadata_munger.rb'
+    - 'app/services/sufia/file_set_audit_service.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/services/sufia/file_set_audit_service.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/generators/sufia/templates/catalog_controller.rb'
+    - 'lib/generators/sufia/install_generator.rb'
+    - 'app/actors/sufia/file_set/actor.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
+    - 'app/controllers/concerns/sufia/files_controller_behavior.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+
+Style/HashSyntax:
+  Exclude:
+    - 'lib/generators/sufia/templates/catalog_controller.rb'
+
+Style/LineEndConcatenation:
+  Exclude:
+    - 'spec/test_app_templates/lib/generators/**/*'
+    - 'lib/generators/**/*'
+
+Style/PredicateName:
+  Exclude:
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/controllers/concerns/sufia/controller.rb'
+
+Style/GlobalVars:
+  Exclude:
+    - 'spec/**/*'
+    - 'spec/jobs/event_jobs_spec.rb'
+    - 'lib/generators/sufia/templates/config/redis_config.rb'
+    - 'lib/sufia/redis_event_store.rb'
+
+Style/ClassVars:
+  Exclude:
+    - 'lib/sufia/models.rb'
+    - 'lib/sufia.rb'
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
+    - 'app/services/sufia/user_stat_importer.rb'
+
+Rails/HasAndBelongsToMany:
+  Exclude:
+    - 'app/models/domain_term.rb'
+    - 'app/models/local_authority.rb'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/tasks/rake_spec.rb'
+    - 'spec/jobs/event_jobs_spec.rb'
+    - 'spec/config/sufia_events_spec.rb'
+    - 'spec/features/**/*'
+    - 'spec/views/**/*'
+    - 'spec/routing/**/*'
+    - 'spec/requests/**/*'
+    - 'spec/inputs/**/*'
