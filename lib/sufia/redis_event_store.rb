@@ -31,7 +31,7 @@ module Sufia
       event_id = $redis.incr("events:latest_id")
       $redis.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
       event_id
-    rescue e
+    rescue => e
       logger.error("unable to create event: #{e}") if logger
       nil
     end
