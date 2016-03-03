@@ -11,12 +11,14 @@ describe My::WorksController, type: :controller do
     expect(response).to render_template :index
   end
 
-  it "paginates" do
-    3.times { FactoryGirl.create(:work, user: user) }
-    get :index, per_page: 2
-    expect(assigns[:document_list].length).to eq 2
-    get :index, per_page: 2, page: 2
-    expect(assigns[:document_list].length).to be >= 1
+  context "with multiple pages of works" do
+    before { 3.times { create(:work, user: user) } }
+    it "paginates" do
+      get :index, per_page: 2
+      expect(assigns[:document_list].length).to eq 2
+      get :index, per_page: 2, page: 2
+      expect(assigns[:document_list].length).to be >= 1
+    end
   end
 
   describe "upload_set processing" do
@@ -42,41 +44,23 @@ describe My::WorksController, type: :controller do
   context 'with different types of records' do
     let(:someone_else) { create(:user) }
 
-    let!(:my_collection) do
-      Collection.create!(title: 'test collection') do |c|
-        c.apply_depositor_metadata(user.user_key)
-      end
-    end
-
+    let!(:my_collection)    { create(:collection, user: user) }
     let!(:other_collection) { create(:collection) }
+    let!(:my_work)          { create(:work, user: user) }
+    let!(:shared_work)      { create(:work, edit_users: [user.user_key], user: someone_else) }
+    let!(:unrelated_work)   { create(:public_work, user: someone_else) }
+    let!(:my_file)          { create(:file_set, user: user) }
+    let!(:wrong_type)       { UploadSet.create }
 
-    let!(:my_work) { create(:work, user: user) }
-    let!(:shared_work) { create(:work, edit_users: [user.user_key], user: someone_else) }
-    let!(:unrelated_work) { create(:public_work, user: someone_else) }
-    let!(:my_file) { create(:file_set, user: user) }
-    let!(:wrong_type) { UploadSet.create }
+    let(:doc_ids)          { assigns[:document_list].map(&:id) }
+    let(:user_collections) { assigns[:user_collections].map(&:id) }
 
     it 'shows only the correct records' do
       get :index
-      doc_ids = assigns[:document_list].map(&:id)
-      expect(doc_ids.count).to eq 1
-
-      # shows works I deposited
-      expect(doc_ids).to include(my_work.id)
-      # doesn't show collections
-      expect(doc_ids).to_not include(my_collection.id)
-      # doesn't show shared works
-      expect(doc_ids).to_not include(shared_work.id)
-      # doesn't show other users' works
-      expect(doc_ids).to_not include(unrelated_work.id)
-      # doesn't show non-works
-      expect(doc_ids).to_not include(wrong_type.id)
-      expect(doc_ids).to_not include(my_file.id)
-
-      # Only has collections that I own.
-      expect(assigns[:user_collections].map(&:id)).to eq [my_collection.id]
+      expect(doc_ids).to contain_exactly(my_work.id)
+      expect(user_collections).to contain_exactly(my_collection.id)
     end
-  end # context 'with different types of records'
+  end
 
   it "sets add_files_to_collection when provided in params" do
     get :index, add_files_to_collection: '12345'

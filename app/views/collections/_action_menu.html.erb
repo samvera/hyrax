@@ -2,7 +2,7 @@
   <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">Select an action <span class="caret"></span></button>
   <ul class="dropdown-menu dropdown-menu-right">
     <li>
-      <%=  button_for_remove_from_collection(gf, 'Remove from Collection') %>
+      <%=  button_for_remove_from_collection(@collection, gf, 'Remove from Collection') %>
     </li>
     <li>
       <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to File'), '#',

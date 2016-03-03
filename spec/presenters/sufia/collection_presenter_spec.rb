@@ -8,7 +8,7 @@ describe Sufia::CollectionPresenter do
                             :language, :identifier, :based_near, :related_url] }
   end
 
-  let(:collection) { Collection.new(id: '111', description: 'a nice collection', title: 'A clever title', resource_type: ['Collection']) }
+  let(:collection) { build(:collection, id: '111', description: ['a nice collection'], title: ['A clever title'], resource_type: ['Collection']) }
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }

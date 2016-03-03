@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Admin::StatsController, type: :controller do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
+  let(:two_days_ago_date) { DateTime.now - 2 }
+  let(:one_day_ago_date)  { DateTime.now - 1 }
 
   before do
     allow(user1).to receive(:groups).and_return(['admin'])
@@ -27,9 +29,7 @@ describe Admin::StatsController, type: :controller do
     end
 
     describe "querying stats_filters" do
-      let(:one_day_ago_date) { 1.day.ago.to_datetime }
-      let(:two_days_ago_date) { 2.days.ago.to_datetime.end_of_day }
-      let(:one_day_ago) { one_day_ago_date.strftime("%Y-%m-%d") }
+      let(:one_day_ago)  { one_day_ago_date.strftime("%Y-%m-%d") }
       let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
 
       it "defaults to latest 5 users" do
@@ -70,9 +70,7 @@ describe Admin::StatsController, type: :controller do
           build(:generic_work, user: user1, id: "abc1223").update_index
           build(:public_generic_work, user: user1, id: "bbb1223").update_index
           build(:registered_generic_work, user: user1, id: "ccc1223").update_index
-          Collection.create(title: "test") do |c|
-            c.apply_depositor_metadata(user1.user_key)
-          end
+          create(:collection, user: user1)
         end
 
         it "includes files but not collections" do
@@ -104,24 +102,14 @@ describe Admin::StatsController, type: :controller do
     end
 
     describe "depositor counts" do
+      let!(:old_work) { create(:work, user: user1) }
+
       before do
-        GenericWork.new(id: "abc123") do |gf|
-          gf.apply_depositor_metadata(user1)
-          gf.update_index
-        end
-        GenericWork.new(id: "def123") do |gf|
-          gf.apply_depositor_metadata(user2)
-          gf.update_index
-        end
-        GenericWork.new(id: "zzz123") do |gf|
-          gf.create_date = [2.days.ago]
-          gf.apply_depositor_metadata(user1)
-          gf.update_index
-        end
-        Collection.new(id: "ccc123") do |c|
-          c.apply_depositor_metadata(user1)
-          c.update_index
-        end
+        create(:work, user: user1)
+        create(:work, user: user2)
+        create(:collection, user: user1)
+        allow(old_work).to receive(:create_date).and_return(two_days_ago_date)
+        old_work.update_index
       end
 
       it "gathers user deposits" do
@@ -138,13 +126,10 @@ describe Admin::StatsController, type: :controller do
       context "more than 10 users" do
         let(:users) { [] }
         before do
-          (1..12).each do |number|
-            luser = User.create(email: "user#{number}@blah.com", password: "blahbalh")
+          12.times do
+            luser = create(:user)
             users << luser
-            GenericWork.new(id: "more#{number}") do |gf|
-              gf.apply_depositor_metadata(luser)
-              gf.update_index
-            end
+            create(:work, user: luser)
           end
         end
 
@@ -156,23 +141,12 @@ describe Admin::StatsController, type: :controller do
       end
     end
     describe "top formats" do
+      let!(:old_file) { create(:file_set, user: user1, mime_type: 'image/jpeg') }
       before do
-        FileSet.new(id: "abc123") do |gf|
-          gf.apply_depositor_metadata(user1)
-          gf.mime_type = 'image/png'
-          gf.update_index
-        end
-        FileSet.new(id: "def123") do |gf|
-          gf.apply_depositor_metadata(user2)
-          gf.mime_type = 'image/png'
-          gf.update_index
-        end
-        FileSet.new(id: "zzz123") do |gf|
-          gf.create_date = [2.days.ago]
-          gf.apply_depositor_metadata(user1)
-          gf.mime_type = 'image/jpeg'
-          gf.update_index
-        end
+        create(:file_set, user: user1, mime_type: 'image/png')
+        create(:file_set, user: user2, mime_type: 'image/png')
+        allow(old_file).to receive(:create).and_return(two_days_ago_date)
+        old_file.update_index
       end
 
       it "gathers formats" do

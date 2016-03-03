@@ -3,7 +3,7 @@ FactoryGirl.define do
     transient do
       user { FactoryGirl.create(:user) }
     end
-    sequence(:title) { |n| "Title #{n}" }
+    sequence(:title) { |n| ["Title #{n}"] }
     before(:create) { |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
     }
@@ -14,6 +14,11 @@ FactoryGirl.define do
 
     factory :private_collection do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+    end
+
+    factory :named_collection do
+       title ['collection title']
+       description ['collection description']
     end
   end
 end

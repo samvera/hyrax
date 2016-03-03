@@ -1,8 +1,6 @@
 module Sufia
   class CollectionPresenter < CurationConcerns::CollectionPresenter
-    include ActionView::Helpers::NumberHelper
-
-    # TODO: Move date_created to CurationConcerns
+    # TODO: Move date_created to CurationConcerns, see #1620
     delegate :date_created, :resource_type, to: :solr_document
 
     # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
@@ -27,10 +25,12 @@ module Sufia
       end
     end
 
+    # TODO: Remove? this is in CC, see #1620  
     def size
       number_to_human_size(Sufia::CollectionSizeService.run(solr_document))
     end
 
+    # TODO: Remove? this is in CC, see #1620
     def total_items
       ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
                                .flat_map { |x| x.fetch("ordered_targets_ssim", []) }.size

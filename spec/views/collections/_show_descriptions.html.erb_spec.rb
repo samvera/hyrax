@@ -3,9 +3,7 @@ require 'spec_helper'
 describe 'collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do
     let(:collection_size) { 123_456_678 }
-    let(:collection) do
-      Collection.new(title: 'hmm', date_created: ['2000-01-01'])
-    end
+    let(:collection) { build(:collection, date_created: ['2000-01-01']) }
     before do
       allow(presenter).to receive(:total_items).and_return(2)
       assign(:presenter, presenter)

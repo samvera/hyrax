@@ -4,7 +4,6 @@ module Sufia
 
     included do
       before_save :update_permissions
-      validates :title, presence: true
     end
 
     def update_permissions
