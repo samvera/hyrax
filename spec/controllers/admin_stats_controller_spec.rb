@@ -84,7 +84,7 @@ describe Admin::StatsController, type: :controller do
 
       context "when start date set" do
         it "queries by start date" do
-          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.to_datetime, nil).and_call_original
+          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.beginning_of_day, nil).and_call_original
           expect(GenericWork).to receive(:where_public).and_call_original
           expect(GenericWork).to receive(:where_registered).and_call_original
           get :index, stats_filters: { start_date: 1.day.ago.strftime("%Y-%m-%d") }
@@ -93,7 +93,7 @@ describe Admin::StatsController, type: :controller do
 
       context "when date range set" do
         it "queries by start and date" do
-          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.to_datetime, 0.days.ago.to_datetime.end_of_day).and_call_original
+          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.beginning_of_day, 0.days.ago.end_of_day).and_call_original
           expect(GenericWork).to receive(:where_public).and_call_original
           expect(GenericWork).to receive(:where_registered).and_call_original
           get :index, stats_filters: { start_date: 1.day.ago.strftime("%Y-%m-%d"), end_date: 0.days.ago.strftime("%Y-%m-%d") }

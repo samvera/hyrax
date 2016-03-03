@@ -19,7 +19,7 @@ describe CurationConcerns::GenericWorksController, type: :controller do
 
     it "prevents edit on a work that still is being processed" do
       allow_any_instance_of(GenericWork).to receive(:processing?).and_return(true)
-      expect { get :edit, id: work.id }.to raise_error
+      expect { get :edit, id: work.id }.to raise_error(/Cannot edit a work that still is being processed/)
     end
   end
 end
