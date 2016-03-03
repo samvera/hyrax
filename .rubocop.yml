@@ -126,11 +126,6 @@ Style/HashSyntax:
   Exclude:
     - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
 
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/test_app_templates/lib/generators/**/*'
-    - 'curation_concerns-models/lib/generators/**/*'
-
 Style/PredicateName:
   Exclude:
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
