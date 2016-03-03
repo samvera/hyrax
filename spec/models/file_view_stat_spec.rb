@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe FileViewStat, type: :model do
   let(:file_id) { "99" }
   let(:user_id) { 123 }
-  let(:date) { DateTime.new }
+  let(:date) { Time.current }
   let(:file_stat) { described_class.create(views: "25", date: date, file_id: file_id, user_id: user_id) }
 
   it "has attributes" do
@@ -19,7 +19,7 @@ RSpec.describe FileViewStat, type: :model do
   describe "#get_float_statistics" do
     let(:dates) {
       ldates = []
-      4.downto(0) { |idx| ldates << (Date.today - idx.day) }
+      4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
       ldates
     }
     let(:date_strs) {
@@ -47,7 +47,7 @@ RSpec.describe FileViewStat, type: :model do
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        described_class.statistics(file_id, Date.today - 4.days, user_id)
+        described_class.statistics(file_id, Time.zone.today - 4.days, user_id)
       end
 
       it "includes cached ga data" do
@@ -59,19 +59,19 @@ RSpec.describe FileViewStat, type: :model do
         expect(stats.first.user_id).to eq user_id
 
         # at this point all data should be cached
-        allow(described_class).to receive(:ga_statistics).with(Date.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
+        allow(described_class).to receive(:ga_statistics).with(Time.zone.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
 
-        stats2 = described_class.statistics(file_id, Date.today - 5.days)
+        stats2 = described_class.statistics(file_id, Time.zone.today - 5.days)
         expect(described_class.to_flots(stats2)).to include(*view_output)
       end
     end
 
     describe "cache loaded" do
-      let!(:file_view_stat) { described_class.create(date: (Date.today - 5.days).to_datetime, file_id: file_id, views: "25") }
+      let!(:file_view_stat) { described_class.create(date: (Time.zone.today - 5.days).to_datetime, file_id: file_id, views: "25") }
 
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        described_class.statistics(file_id, Date.today - 5.days)
+        described_class.statistics(file_id, Time.zone.today - 5.days)
       end
 
       it "includes cached data" do

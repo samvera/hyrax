@@ -15,7 +15,7 @@ module Sufia
         start_date = date_since_last_cache(user)
 
         # this user has already been processed today continue without delay
-        next if start_date.to_date >= Date.today
+        next if start_date.to_date >= Time.zone.today
 
         stats = {}
         file_ids_for_user(user).each do |file_id|
@@ -92,7 +92,7 @@ module Sufia
       def tally_results(file_stats, stat_name, total_stats)
         file_stats.each do |stats|
           # Exclude the stats from today since it will only be a partial day's worth of data
-          break if stats.date == Date.today
+          break if stats.date == Time.zone.today
 
           date_key = stats.date.to_s
           old_count = total_stats[date_key] ? total_stats[date_key].fetch(stat_name) { 0 } : 0

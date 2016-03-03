@@ -16,8 +16,8 @@ module Sufia::Admin::DepositorStats
   # @option deposit_stats [String] :end_date optional string to specify the end date to gather the stats from
   #
   def depositors(deposit_stats)
-    start_datetime = DateTime.parse(deposit_stats[:start_date]) unless deposit_stats[:start_date].blank?
-    end_datetime = DateTime.parse(deposit_stats[:end_date]).end_of_day unless deposit_stats[:end_date].blank?
+    start_datetime = Time.zone.parse(deposit_stats[:start_date]) unless deposit_stats[:start_date].blank?
+    end_datetime = Time.zone.parse(deposit_stats[:end_date]).end_of_day unless deposit_stats[:end_date].blank?
 
     query = GenericWork.build_date_query(start_datetime, end_datetime) unless start_datetime.blank?
     sb = DepositSearchBuilder.new([:include_depositor_facet], self)

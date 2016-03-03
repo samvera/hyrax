@@ -11,7 +11,7 @@
     <% next if event[:action].blank? or event[:timestamp].blank? %>
     <tr>
       <td><%= event[:action].html_safe %></td>
-      <td><%= time_ago_in_words(Time.at(event[:timestamp].to_i)) %> ago</td>
+      <td><%= time_ago_in_words(Time.zone.at(event[:timestamp].to_i)) %> ago</td>
     </tr>
   <% end %>
   </tbody>

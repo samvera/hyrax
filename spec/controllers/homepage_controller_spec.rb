@@ -13,7 +13,7 @@ describe Sufia::HomepageController, type: :controller do
 
     context 'with existing featured researcher' do
       let!(:bilbo) { ContentBlock.create!(name: ContentBlock::RESEARCHER, value: 'Biblo Baggins', created_at: 2.hours.ago) }
-      let!(:frodo) { ContentBlock.create!(name: ContentBlock::RESEARCHER, value: 'Frodo Baggins', created_at: Time.now) }
+      let!(:frodo) { ContentBlock.create!(name: ContentBlock::RESEARCHER, value: 'Frodo Baggins', created_at: Time.zone.now) }
 
       it 'finds the featured researcher' do
         get :index

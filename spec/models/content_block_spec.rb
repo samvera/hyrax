@@ -4,7 +4,7 @@ describe ContentBlock, type: :model do
   let(:bilbo) { described_class.create!(
     name: ContentBlock::RESEARCHER,
     value: '<h1>Bilbo Baggins</h1>',
-    created_at: Time.now)
+    created_at: Time.zone.now)
   }
 
   let(:frodo) { described_class.create!(

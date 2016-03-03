@@ -100,7 +100,7 @@ describe "dashboard/index.html.erb", type: :view do
   describe "main" do
     context "with activities and notifications" do
       before do
-        @now = DateTime.now.to_i
+        @now = Time.zone.now.to_i
         assign(:activity, [
                  { action: 'so and so edited their profile', timestamp: @now },
                  { action: 'so and so uploaded a file', timestamp: (@now - 360) }

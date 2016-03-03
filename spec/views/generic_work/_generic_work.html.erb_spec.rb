@@ -7,7 +7,7 @@ describe 'generic_works/_generic_work.html.erb', type: :view do
                  title: "work title", id: "123", depositor: "user1", creator: "igor",
                  description: "a monster work", tags: ["moster", "mash"],
                  has_model_ssim: ['GenericWork'], itemtype: ['CreativeWork'],
-                 date_uploaded: DateTime.now, collection?: false, generic_work?: true,
+                 date_uploaded: Time.zone.now, collection?: false, generic_work?: true,
                  hydra_model: "GenericWork", title_or_label: "A monster hit"
                 )
     end

@@ -17,7 +17,7 @@ describe ContentBlocksController, type: :controller do
       end
 
       context "get INDEX" do
-        let!(:current_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: Time.now) }
+        let!(:current_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: Time.zone.now) }
         let!(:old_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: 2.hours.ago) }
         let!(:market_text) { ContentBlock.create(name: ContentBlock::MARKETING) }
 

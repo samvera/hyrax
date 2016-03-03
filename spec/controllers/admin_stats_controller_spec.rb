@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Admin::StatsController, type: :controller do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let(:two_days_ago_date) { DateTime.now - 2 }
-  let(:one_day_ago_date)  { DateTime.now - 1 }
+  let(:two_days_ago_date) { Time.zone.now - 2.days }
+  let(:one_day_ago_date)  { Time.zone.now - 1.day }
 
   before do
     allow(user1).to receive(:groups).and_return(['admin'])
