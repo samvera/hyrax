@@ -44,8 +44,9 @@ module CurationConcerns
       fetch(Solrizer.solr_name('hasRelatedMediaFragment', :symbol), []).first
     end
 
+    # Date created is indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
     def date_created
-      date_field('date_created')
+      fetch(Solrizer.solr_name("date_created"), []).first
     end
 
     def date_modified

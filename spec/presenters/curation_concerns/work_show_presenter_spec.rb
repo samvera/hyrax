@@ -8,7 +8,7 @@ describe CurationConcerns::WorkShowPresenter do
     { "title_tesim" => ["foo bar"],
       "human_readable_type_tesim" => ["Generic Work"],
       "has_model_ssim" => ["GenericWork"],
-      "date_created_dtsi" => date_index,
+      "date_created_tesim" => ['an unformatted date'],
       "date_modified_dtsi" => date_index,
       "date_uploaded_dtsi" => date_index }
   end
@@ -31,7 +31,12 @@ describe CurationConcerns::WorkShowPresenter do
     it { is_expected.to be_kind_of ActiveModel::Name }
   end
 
-  [:date_created, :date_modified, :date_uploaded].each do |date_field|
+  describe "#date_created" do
+    subject { presenter.date_created }
+    it { is_expected.to eq('an unformatted date') }
+  end
+
+  [:date_modified, :date_uploaded].each do |date_field|
     describe "##{date_field}" do
       subject { presenter.send date_field }
       it { is_expected.to eq date_value.to_formatted_s(:standard) }
