@@ -25,7 +25,7 @@ module Sufia
       end
     end
 
-    # TODO: Remove? this is in CC, see #1620  
+    # TODO: Remove? this is in CC, see #1620
     def size
       number_to_human_size(Sufia::CollectionSizeService.run(solr_document))
     end

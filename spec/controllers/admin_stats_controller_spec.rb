@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Admin::StatsController, type: :controller do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let(:two_days_ago_date) { DateTime.now - 2 }
-  let(:one_day_ago_date)  { DateTime.now - 1 }
+  let(:two_days_ago_date) { Time.zone.now - 2.days }
+  let(:one_day_ago_date)  { Time.zone.now - 1.day }
 
   before do
     allow(user1).to receive(:groups).and_return(['admin'])
@@ -39,13 +39,13 @@ describe Admin::StatsController, type: :controller do
 
       it "allows queries against stats_filters without an end date" do
         expect(User).to receive(:where).with('id' => user1.id).once.and_return([user1])
-        expect(User).to receive(:recent_users).with(one_day_ago_date, nil).and_return([user2])
+        expect(User).to receive(:recent_users).with(one_day_ago_date.beginning_of_day, nil).and_return([user2])
         get :index, stats_filters: { start_date: one_day_ago }
         expect(assigns[:presenter].recent_users).to eq([user2])
       end
 
       it "allows queries against stats_filters with an end date" do
-        expect(User).to receive(:recent_users).with(two_days_ago_date, one_day_ago_date).and_return([user2])
+        expect(User).to receive(:recent_users).with(two_days_ago_date.beginning_of_day, one_day_ago_date.end_of_day).and_return([user2])
         get :index, stats_filters: { start_date: two_days_ago, end_date: one_day_ago }
         expect(assigns[:presenter].recent_users).to eq([user2])
       end
@@ -84,7 +84,7 @@ describe Admin::StatsController, type: :controller do
 
       context "when start date set" do
         it "queries by start date" do
-          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.to_datetime, nil).and_call_original
+          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.beginning_of_day, nil).and_call_original
           expect(GenericWork).to receive(:where_public).and_call_original
           expect(GenericWork).to receive(:where_registered).and_call_original
           get :index, stats_filters: { start_date: 1.day.ago.strftime("%Y-%m-%d") }
@@ -93,7 +93,7 @@ describe Admin::StatsController, type: :controller do
 
       context "when date range set" do
         it "queries by start and date" do
-          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.to_datetime, 0.days.ago.to_datetime.end_of_day).and_call_original
+          expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.beginning_of_day, 0.days.ago.end_of_day).and_call_original
           expect(GenericWork).to receive(:where_public).and_call_original
           expect(GenericWork).to receive(:where_registered).and_call_original
           get :index, stats_filters: { start_date: 1.day.ago.strftime("%Y-%m-%d"), end_date: 0.days.ago.strftime("%Y-%m-%d") }
@@ -108,7 +108,7 @@ describe Admin::StatsController, type: :controller do
         create(:work, user: user1)
         create(:work, user: user2)
         create(:collection, user: user1)
-        allow(old_work).to receive(:create_date).and_return(two_days_ago_date)
+        allow(old_work).to receive(:create_date).and_return(two_days_ago_date.to_datetime)
         old_work.update_index
       end
 

@@ -17,8 +17,8 @@ FactoryGirl.define do
     end
 
     factory :named_collection do
-       title ['collection title']
-       description ['collection description']
+      title ['collection title']
+      description ['collection description']
     end
   end
 end

@@ -132,7 +132,7 @@ describe User, type: :model do
   end
 
   describe "activity streams" do
-    let(:now) { DateTime.now.to_i }
+    let(:now) { Time.zone.now.to_i }
     let(:activities) {
       [{ action: 'so and so edited their profile', timestamp: now },
        { action: 'so and so uploaded a file', timestamp: (now - 360) }]
@@ -175,11 +175,11 @@ describe User, type: :model do
       let(:new_users) { described_class.all.order(created_at: :desc) }
 
       before do
-        (1..3).each { |i| described_class.create(email: "abc#{i}@blah.frg", password: "blarg1234", created_at: DateTime.now - i.days) }
+        (1..3).each { |i| described_class.create(email: "abc#{i}@blah.frg", password: "blarg1234", created_at: Time.zone.now - i.days) }
       end
 
       context "when has a start date" do
-        subject { described_class.recent_users(Date.today - 2.days) }
+        subject { described_class.recent_users(Time.zone.today - 2.days) }
         it "returns valid data" do
           expect(subject.count).to eq 2
           is_expected.to include(new_users[0], new_users[1])
@@ -188,7 +188,7 @@ describe User, type: :model do
       end
 
       context "when has start and end date" do
-        subject { described_class.recent_users(Date.today - 2.days, Date.today - 1.day) }
+        subject { described_class.recent_users(Time.zone.today - 2.days, Time.zone.today - 1.day) }
         it "returns valid data" do
           expect(subject.count).to eq 1
           is_expected.to include(new_users[1])

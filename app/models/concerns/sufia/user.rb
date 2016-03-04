@@ -137,7 +137,7 @@ module Sufia::User
     @ability ||= ::Ability.new(self)
   end
 
-  def all_user_activity(since = DateTime.now.to_i - 8640)
+  def all_user_activity(since = DateTime.current.to_i - 1.day)
     events = self.events.reverse.collect { |event| event if event[:timestamp].to_i > since }.compact
     profile_events = self.profile_events.reverse.collect { |event| event if event[:timestamp].to_i > since }.compact
     events.concat(profile_events).sort { |a, b| b[:timestamp].to_i <=> a[:timestamp].to_i }
@@ -177,7 +177,7 @@ module Sufia::User
     end
 
     def recent_users(start_date, end_date = nil)
-      end_date ||= DateTime.now # doing or eq here so that if the user passes nil we still get now
+      end_date ||= DateTime.current # doing or eq here so that if the user passes nil we still get now
       User.where(created_at: start_date..end_date)
     end
   end

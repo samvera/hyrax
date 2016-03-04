@@ -32,7 +32,7 @@ module Sufia
       # in your dashboard view.  You'll need to alter dashboard/index.html.erb accordingly.
       def gather_dashboard_information
         @user = current_user
-        @activity = current_user.all_user_activity(params[:since].blank? ? DateTime.now.to_i - Sufia.config.activity_to_show_default_seconds_since_now : params[:since].to_i)
+        @activity = current_user.all_user_activity(params[:since].blank? ? DateTime.current.to_i - Sufia.config.activity_to_show_default_seconds_since_now : params[:since].to_i)
         @notifications = current_user.mailbox.inbox
         @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject(&:deleted_work?)
         @outgoing = ProxyDepositRequest.where(sending_user_id: current_user.id)
@@ -41,7 +41,7 @@ module Sufia
       # Formats the user's activities into human-readable strings used for rendering JSON
       def human_readable_user_activity
         current_user.all_user_activity.map do |event|
-          [event[:action], "#{time_ago_in_words(Time.at(event[:timestamp].to_i))} ago", event[:timestamp].to_i]
+          [event[:action], "#{time_ago_in_words(Time.zone.at(event[:timestamp].to_i))} ago", event[:timestamp].to_i]
         end
       end
   end

@@ -95,7 +95,7 @@ describe GenericWork do
 
     context "with an end date" do
       let(:start_date) { 1.day.ago }
-      let(:end_date) { DateTime.now }
+      let(:end_date) { Time.zone.now }
       it { is_expected.to eq [work] }
     end
   end

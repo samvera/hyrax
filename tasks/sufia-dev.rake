@@ -17,9 +17,11 @@ task :spec do
 end
 
 desc 'Spin up hydra-jetty and run specs'
-#task ci: [:rubocop, 'engine_cart:generate'] do
 task ci: ['engine_cart:generate'] do
   puts 'running continuous integration'
+
+  Rake::Task['rubocop'].invoke
+
   # No need to maintain minter state on Travis
   reset_statefile! if ENV['TRAVIS'] == 'true'
 

@@ -33,7 +33,7 @@ describe Sufia::UserStatImporter do
 
   let(:dates) {
     ldates = []
-    4.downto(0) { |idx| ldates << (Date.today - idx.day) }
+    4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
     ldates
   }
 

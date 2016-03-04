@@ -10,7 +10,7 @@ describe FileUsage, type: :model do
 
   let(:dates) {
     ldates = []
-    4.downto(0) { |idx| ldates << (Date.today - idx.day) }
+    4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
     ldates
   }
   let(:date_strs) {
@@ -54,7 +54,7 @@ describe FileUsage, type: :model do
   }
 
   let(:usage) {
-    allow_any_instance_of(FileSet).to receive(:create_date).and_return((Date.today - 4.days).to_s)
+    allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
     expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
     described_class.new(file.id)
@@ -122,7 +122,7 @@ describe FileUsage, type: :model do
 
       describe "create date after earliest" do
         let(:usage) {
-          allow_any_instance_of(FileSet).to receive(:create_date).and_return((Date.today - 4.days).to_s)
+          allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest

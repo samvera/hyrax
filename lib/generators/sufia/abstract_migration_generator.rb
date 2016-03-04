@@ -15,7 +15,7 @@ class Sufia::AbstractMigrationGenerator < Rails::Generators::Base
       @prev_migration_nr = if last_migration
                              last_migration.sub(File.join(path, '/'), '').to_i + 1
                            else
-                             Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+                             Time.zone.now.utc.strftime("%Y%m%d%H%M%S").to_i
                            end
     end
     @prev_migration_nr.to_s

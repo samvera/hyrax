@@ -27,7 +27,7 @@ class FileUsage
   end
 
   def string_to_date(date_str)
-    return DateTime.parse(date_str)
+    return Time.zone.parse(date_str)
   rescue ArgumentError, TypeError
     return nil
   end

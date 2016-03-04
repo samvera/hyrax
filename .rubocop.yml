@@ -18,19 +18,13 @@ Lint/ImplicitStringConcatenation:
     - 'lib/generators/sufia/**/*'
 
 Metrics/LineLength:
-  Enabled: false
+  Max: 400
 
 Metrics/AbcSize:
-  Enabled: false
+  Max: 50
 
 Metrics/MethodLength:
-  Enabled: false
-
-Performance/RedundantMerge:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
-  Enabled: false
+  Max: 30
 
 Style/BlockDelimiters:
   Exclude:
@@ -78,20 +72,8 @@ Style/LineEndConcatenation:
 Style/SingleLineBlockParams:
   Enabled: false
 
-Style/SignalException:
-  Enabled: false
-
-Style/ZeroLengthPredicate:
-  Enabled: false
-
 Rails:
   Enabled: true
-
-Rails/Date:
-  Enabled: false
-
-Rails/TimeZone:
-  Enabled: false
 
 RSpec/AnyInstance:
   Enabled: false

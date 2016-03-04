@@ -23,7 +23,13 @@ module Sufia
       @upload_set.status = ["processing"]
       @upload_set.save
       create_update_job
-      flash[:notice] = 'Your files are being processed by ' + t('curation_concerns.product_name') + ' in the background. The metadata and access controls you specified are being applied. Files will be marked <span class="label label-danger" title="Private">Private</span> until this process is complete (shouldn\'t take too long, hang in there!). You may need to refresh your dashboard to see these updates.'
+      flash[:notice] = <<-EOS.strip_heredoc.tr("\n", ' ')
+        Your files are being processed by #{t('curation_concerns.product_name')} in
+        the background. The metadata and access controls you specified are being applied.
+        Files will be marked <span class="label label-danger" title="Private">Private</span>
+        until this process is complete (shouldn't take too long, hang in there!). You may need
+        to refresh your dashboard to see these updates.
+      EOS
 
       redirect_after_update
     end

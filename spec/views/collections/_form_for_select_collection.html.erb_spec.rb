@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'collections/_form_for_select_collection.html.erb' do
   let(:collections) {
     [
-      build(:collection, id: '1234', create_date: DateTime.parse('Thu, 13 Aug 2015 14:20:22 +0100')),
-      build(:collection, id: '1235', create_date: DateTime.parse('Thu, 13 Aug 2015 14:18:22 +0100')),
-      build(:collection, id: '1236', create_date: DateTime.parse('Thu, 13 Aug 2015 14:16:22 +0100')),
-      build(:collection, id: '1237', create_date: DateTime.parse('Thu, 13 Aug 2015 14:29:22 +0100'))
+      build(:collection, id: '1234', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:20:22 +0100')),
+      build(:collection, id: '1235', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:18:22 +0100')),
+      build(:collection, id: '1236', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:16:22 +0100')),
+      build(:collection, id: '1237', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:29:22 +0100'))
     ]
   }
   let(:solr_collections) {

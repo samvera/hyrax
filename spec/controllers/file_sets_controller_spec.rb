@@ -44,12 +44,6 @@ describe CurationConcerns::FileSetsController do
       end
 
       context "when everything is perfect" do
-        let(:date_today) { DateTime.now }
-
-        before do
-          allow(DateTime).to receive(:now).and_return(date_today)
-        end
-
         context "when a work id is passed in" do
           it 'calls the actor to create metadata and content' do
             expect(controller.send(:actor)).to receive(:create_metadata)

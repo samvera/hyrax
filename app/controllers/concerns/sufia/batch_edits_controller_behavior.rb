@@ -47,7 +47,7 @@ module Sufia
 
     def update_document(obj)
       obj.attributes = generic_work_params
-      obj.date_modified = Time.now.ctime
+      obj.date_modified = Time.current.ctime
       obj.visibility = params[:visibility]
     end
 

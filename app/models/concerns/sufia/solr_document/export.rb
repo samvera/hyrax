@@ -3,7 +3,29 @@ module Sufia
     module Export
       # MIME: 'application/x-endnote-refer'
       def export_as_endnote
-        end_note_format = {
+        text = []
+        text << "%0 #{human_readable_type}"
+        end_note_format.each do |endnote_key, mapping|
+          if mapping.is_a? String
+            values = [mapping]
+          else
+            values = send(mapping[0]) if respond_to? mapping[0]
+            values = mapping[1].call(values) if mapping.length == 2
+            values = Array(values)
+          end
+          next if values.blank? || values.first.nil?
+          spaced_values = values.join("; ")
+          text << "#{endnote_key} #{spaced_values}"
+        end
+        text.join("\n")
+      end
+
+      def persistent_url
+        "#{Sufia.config.persistent_hostpath}#{id}"
+      end
+
+      def end_note_format
+        {
           '%T' => [:title],
           # '%Q' => [:title, ->(x) { x.drop(1) }], # subtitles
           '%A' => [:creator],
@@ -24,25 +46,6 @@ module Sufia
           '%~' => I18n.t('sufia.product_name'),
           '%W' => I18n.t('sufia.institution_name')
         }
-        text = []
-        text << "%0 #{human_readable_type}"
-        end_note_format.each do |endnote_key, mapping|
-          if mapping.is_a? String
-            values = [mapping]
-          else
-            values = send(mapping[0]) if respond_to? mapping[0]
-            values = mapping[1].call(values) if mapping.length == 2
-            values = Array(values)
-          end
-          next if values.blank? || values.first.nil?
-          spaced_values = values.join("; ")
-          text << "#{endnote_key} #{spaced_values}"
-        end
-        text.join("\n")
-      end
-
-      def persistent_url
-        "#{Sufia.config.persistent_hostpath}#{id}"
       end
     end
   end

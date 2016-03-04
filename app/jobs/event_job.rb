@@ -34,7 +34,7 @@ class EventJob < ActiveJob::Base
 
   # create an event with an action and a timestamp for the user
   def event
-    @event ||= Sufia::Event.create(action, Time.now.to_i)
+    @event ||= Sufia::Event.create(action, Time.current.to_i)
   end
 
   # the user that will be the subject of the event

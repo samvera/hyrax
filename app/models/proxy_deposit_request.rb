@@ -58,20 +58,20 @@ class ProxyDepositRequest < ActiveRecord::Base
   def transfer!(reset = false)
     ContentDepositorChangeEventJob.perform_later(generic_work_id, receiving_user.user_key, reset)
     self.status = 'accepted'
-    self.fulfillment_date = Time.now
+    self.fulfillment_date = Time.current
     save!
   end
 
   def reject!(comment = nil)
     self.receiver_comment = comment if comment
     self.status = 'rejected'
-    self.fulfillment_date = Time.now
+    self.fulfillment_date = Time.current
     save!
   end
 
   def cancel!
     self.status = 'canceled'
-    self.fulfillment_date = Time.now
+    self.fulfillment_date = Time.current
     save!
   end
 
