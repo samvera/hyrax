@@ -64,10 +64,9 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/test_app_templates/lib/generators/**/*'
-    - 'lib/generators/**/*'
+Style/GlobalVars:
+  AllowedVariables:
+    - $in_travis
 
 Style/SingleLineBlockParams:
   Enabled: false
