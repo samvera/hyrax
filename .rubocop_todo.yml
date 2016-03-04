@@ -45,8 +45,6 @@ Style/GlobalVars:
   Exclude:
     - 'spec/**/*'
     - 'spec/jobs/event_jobs_spec.rb'
-    - 'lib/generators/sufia/templates/config/redis_config.rb'
-    - 'lib/sufia/redis_event_store.rb'
 
 Style/ClassVars:
   Exclude:

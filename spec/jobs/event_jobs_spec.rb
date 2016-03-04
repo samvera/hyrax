@@ -8,10 +8,10 @@ describe 'event jobs' do
   let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
   let(:mock_time) { Time.zone.at(1) }
   after do
-    $redis.keys('events:*').each { |key| $redis.del key }
-    $redis.keys('User:*').each { |key| $redis.del key }
-    $redis.keys('FileSet:*').each { |key| $redis.del key }
-    $redis.keys('GenericWork:*').each { |key| $redis.del key }
+    Redis.current.keys('events:*').each { |key| Redis.current.del key }
+    Redis.current.keys('User:*').each { |key| Redis.current.del key }
+    Redis.current.keys('FileSet:*').each { |key| Redis.current.del key }
+    Redis.current.keys('GenericWork:*').each { |key| Redis.current.del key }
   end
   it "logs user edit profile events" do
     # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
