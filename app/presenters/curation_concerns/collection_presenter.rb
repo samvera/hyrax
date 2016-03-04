@@ -18,7 +18,7 @@ module CurationConcerns
 
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,
-             :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document
+             :embargo_release_date, :lease_expiration_date, :rights, :date_created, to: :solr_document
 
     def size
       number_to_human_size(@solr_document['bytes_is'])

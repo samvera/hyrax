@@ -5,7 +5,8 @@ describe CurationConcerns::CollectionPresenter do
     build(:collection,
           id: 'adc12v',
           description: ['a nice collection'],
-          title: ['A clever title'])
+          title: ['A clever title'],
+          date_created: ['some date'])
   end
   let(:work) { build(:work, title: ['unimaginitive title']) }
   let(:solr_document) { SolrDocument.new(collection.to_solr) }
@@ -43,5 +44,10 @@ describe CurationConcerns::CollectionPresenter do
       let(:presenter) { described_class.new({}, nil) }
       it { is_expected.to eq 0 }
     end
+  end
+
+  describe "#date_created" do
+    subject { presenter.date_created }
+    it { is_expected.to eq 'some date' }
   end
 end
