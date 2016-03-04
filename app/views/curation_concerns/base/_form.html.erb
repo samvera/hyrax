@@ -15,7 +15,7 @@
 
     <div class="primary-actions">
       <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
-      <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
+      <%= link_to t(:'helpers.action.cancel'), :back, class: 'btn btn-link' %>
     </div>
 
   </div>
