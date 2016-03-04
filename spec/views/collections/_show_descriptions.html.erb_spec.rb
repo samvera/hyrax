@@ -6,8 +6,8 @@ describe 'collections/_show_descriptions.html.erb', type: :view do
     let(:collection) { build(:collection, date_created: ['2000-01-01']) }
     before do
       allow(presenter).to receive(:total_items).and_return(2)
+      allow(presenter).to receive(:size).and_return("118 MB")
       assign(:presenter, presenter)
-      allow(Sufia::CollectionSizeService).to receive(:run).and_return(collection_size)
     end
 
     let(:ability) { double }
