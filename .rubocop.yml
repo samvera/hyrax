@@ -68,11 +68,6 @@ Style/GlobalVars:
   AllowedVariables:
     - $in_travis
 
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/test_app_templates/lib/generators/**/*'
-    - 'lib/generators/**/*'
-
 Style/SingleLineBlockParams:
   Enabled: false
 
