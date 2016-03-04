@@ -41,11 +41,6 @@ Style/PredicateName:
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
     - 'app/controllers/concerns/sufia/controller.rb'
 
-Style/GlobalVars:
-  Exclude:
-    - 'spec/**/*'
-    - 'spec/jobs/event_jobs_spec.rb'
-
 Style/ClassVars:
   Exclude:
     - 'lib/sufia/models.rb'
