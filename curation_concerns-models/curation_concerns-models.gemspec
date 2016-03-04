@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'active_attr'
-  spec.add_dependency 'hydra-collections', '~> 8.0'
+  spec.add_dependency 'hydra-collections', '~> 8.1'
   spec.add_dependency 'hydra-head', '~> 9.3'
   spec.add_dependency 'hydra-works', '~> 0.7'
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
