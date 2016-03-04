@@ -41,11 +41,6 @@ Style/PredicateName:
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
     - 'app/controllers/concerns/sufia/controller.rb'
 
-Style/ClassVars:
-  Exclude:
-    - 'lib/sufia/models.rb'
-    - 'lib/sufia.rb'
-
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'

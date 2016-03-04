@@ -38,10 +38,10 @@ module Sufia
   end
 
   def self.config(&block)
-    @@config ||= Sufia::Engine::Configuration.new
+    @config ||= Sufia::Engine::Configuration.new
 
-    yield @@config if block
+    yield @config if block
 
-    @@config
+    @config
   end
 end
