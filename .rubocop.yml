@@ -135,10 +135,6 @@ Style/PredicateName:
 Style/GlobalVars:
   Exclude:
     - 'spec/**/*'
-    - 'spec/jobs/event_jobs_spec.rb'
-    - 'curation_concerns-models/lib/generators/curation_concerns/models/templates/config/redis_config.rb'
-    - 'curation_concerns-models/lib/curation_concerns/models/active_record/redis.rb'
-    - 'curation_concerns-models/lib/curation_concerns/models/active_fedora/redis.rb'
 
 Style/SingleLineBlockParams:
   Enabled: false
