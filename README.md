@@ -52,6 +52,7 @@ After running these steps, browse to http://localhost:3000/ and you should see t
       * [Identifier state](#identifier-state)
       * [Web server](#web-server)
       * [Database](#database)
+      * [Mailers](#mailers)
     * [Background workers](#background-workers)
       * [Terminology](#terminology)
       * [Configuration](#configuration)
@@ -270,6 +271,10 @@ The web server provided by Rails (whether that's WEBrick, Unicorn, or another) i
 ### Database
 
 The database provided by default is SQLite, and you may wish to swap in something built more for scale like PostgreSQL or MySQL, both of which have been used in other production Sufia applications.
+
+### Mailers
+
+Sufia uses ActionMailer to send email to users. Some environments may need special configuration to enable your application to send messages. These changes are best made in one of your application's environment files. The configuration options are documented in the [ActionMailer Rails Guide](http://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration).
 
 ## Background workers
 
