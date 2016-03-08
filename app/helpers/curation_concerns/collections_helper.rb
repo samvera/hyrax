@@ -47,10 +47,27 @@ module CurationConcerns::CollectionsHelper
     # If you have implement User.collections, the results of that will be used.
     def current_users_collections
       if current_user.respond_to?(:collections)
-        current_user.collections.map { |c| [c.title.join(', '), c.id] }
-      else
-        query = ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Collection.to_class_uri)
-        ActiveFedora::SolrService.query(query, fl: 'title_tesim id', rows: 1000).map { |r| [r['title_tesim'].join(', '), r['id']] }.sort { |a, b| a.first <=> b.first }
+        return current_user.collections.map { |c| [c.title.join(', '), c.id] }
       end
+      query = ActiveFedora::SolrQueryBuilder
+              .construct_query_for_rel(
+                has_model: Collection.to_class_uri)
+      convert_solr_docs_to_select_options(
+        ActiveFedora::SolrService.query(query,
+                                        fl: 'title_tesim id',
+                                        rows: 1000)
+      )
+    end
+
+    def convert_solr_docs_to_select_options(results)
+      results
+        .map { |r| [SolrDocument.new(r).title, r['id']] }
+        .sort do |a, b|
+          if a.first && b.first
+            a.first <=> b.first
+          else
+            a.first ? -1 : 1
+          end
+        end
     end
 end
