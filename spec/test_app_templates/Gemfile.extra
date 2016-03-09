@@ -1,5 +1,4 @@
 # placeholder to use for pinning against specific gem commit references
-gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
 
 group :development do
   gem 'better_errors'
