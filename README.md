@@ -8,7 +8,6 @@ Since Sufia 7 is unreleased, not all the documentation has been updated to accou
 rails new my_sufia
 cd my_sufia
 echo "gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'" >> Gemfile
-echo "gem 'kaminari', git: 'https://github.com/jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322" >> Gemfile
 bundle install
 rails generate sufia:install -f
 rake db:migrate
@@ -183,15 +182,9 @@ Add the following lines to your application's Gemfile.
 
 ```
 gem 'sufia', '7.0.0.beta1' # NOT YET RELEASED
-gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
-
-### Pagination
-
-The line with kaminari -- a Ruby library that helps build pagination into applications -- listed as a dependency in the Gemfile is a temporary fix to address a
-[known problem](https://github.com/amatsuda/kaminari/pull/322) in the current release of kaminari.
 
 ## Install Sufia
 
