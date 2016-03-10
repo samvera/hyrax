@@ -1,5 +1,3 @@
-require: rubocop-rspec
-
 AllCops:
   DisplayCopNames: true
   Include:
