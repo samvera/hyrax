@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'blacklight_advanced_search', '~> 6.0'
   spec.add_dependency 'rails_autolink'
   spec.add_dependency 'sprockets-es6'
+  spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
