@@ -9,7 +9,8 @@ module CurationConcerns::CurationConcernController
     with_themed_layout '1_column'
     helper CurationConcerns::AbilityHelper
 
-    class_attribute :curation_concern_type
+    class_attribute :curation_concern_type, :show_presenter
+    self.show_presenter = CurationConcerns::WorkShowPresenter
     attr_accessor :curation_concern
     helper_method :curation_concern
   end
@@ -93,12 +94,6 @@ module CurationConcerns::CurationConcernController
   attr_writer :actor
 
   protected
-
-    # Gives the class of the show presenter. Override this if you want
-    # to use a different presenter.
-    def show_presenter
-      CurationConcerns::WorkShowPresenter
-    end
 
     # Gives the class of the form. Override this if you want
     # to use a different form.

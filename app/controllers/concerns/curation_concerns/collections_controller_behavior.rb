@@ -8,6 +8,10 @@ module CurationConcerns
       before_action :filter_docs_with_read_access!, except: :show
       layout 'curation_concerns/1_column'
       skip_load_and_authorize_resource only: :show
+
+      class_attribute :presenter_class, :form_class
+      self.presenter_class = CurationConcerns::CollectionPresenter
+      self.form_class = CurationConcerns::Forms::CollectionEditForm
     end
 
     def new
@@ -65,10 +69,6 @@ module CurationConcerns
         end
       end
 
-      def presenter_class
-        CurationConcerns::CollectionPresenter
-      end
-
       def collection_search_builder_class
         CurationConcerns::WorkSearchBuilder
       end
@@ -95,10 +95,6 @@ module CurationConcerns
 
       def form
         @form ||= form_class.new(@collection)
-      end
-
-      def form_class
-        CurationConcerns::Forms::CollectionEditForm
       end
 
       # Include 'catalog' and 'curation_concerns/base' in the search path for views
