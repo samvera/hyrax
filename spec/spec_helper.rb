@@ -1,4 +1,4 @@
-if ENV['CI']
+if ENV['CI'] || ENV['COVERAGE']
   require 'coveralls'
   Coveralls.wear!
 end
@@ -29,7 +29,7 @@ if ENV['COVERAGE'] || $in_travis
   require 'simplecov'
 
   SimpleCov.root(File.expand_path('../..', __FILE__))
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  SimpleCov.formatters = $in_travis ? Coveralls::SimpleCov::Formatter : SimpleCov::Formatter::HTMLFormatter
   SimpleCov.start('rails') do
     add_filter '/spec'
     add_filter '/lib/generators/curation_concerns/templates'
