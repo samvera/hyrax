@@ -11,6 +11,10 @@ module CurationConcerns
       helper_method :curation_concern
       include CurationConcerns::ParentContainer
       copy_blacklight_config_from(::CatalogController)
+
+      class_attribute :show_presenter, :form_class
+      self.show_presenter = CurationConcerns::FileSetPresenter
+      self.form_class = CurationConcerns::Forms::FileSetEditForm
     end
 
     def curation_concern
@@ -63,18 +67,6 @@ module CurationConcerns
         end
         additional_response_formats(wants)
       end
-    end
-
-    # Gives the class of the show presenter. Override this if you want
-    # to use a different presenter.
-    def show_presenter
-      CurationConcerns::FileSetPresenter
-    end
-
-    # Gives the class of the form. Override this if you want
-    # to use a different form.
-    def form_class
-      CurationConcerns::Forms::FileSetEditForm
     end
 
     def destroy
