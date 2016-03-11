@@ -32,10 +32,23 @@ describe CurationConcerns::SearchBuilder do
   end
 
   describe '#filter_models' do
-    before { subject.filter_models(solr_params) }
+    context "with default work types" do
+      before { subject.filter_models(solr_params) }
 
-    it 'limits query to collection and generic work' do
-      expect(solr_params[:fq].first).to match(/{!raw f=has_model_ssim}GenericWork.*OR.*{!raw f=has_model_ssim}Collection/)
+      it 'limits query to collection and generic work' do
+        expect(solr_params[:fq].first).to match(/{!raw f=has_model_ssim}GenericWork.*OR.*{!raw f=has_model_ssim}Collection/)
+      end
+    end
+
+    context 'when work_types is overridden' do
+      before do
+        allow(subject).to receive(:work_types).and_return([FileSet])
+        subject.filter_models(solr_params)
+      end
+
+      it "doesn't have GenericWork" do
+        expect(solr_params[:fq].first).not_to match(/{!raw f=has_model_ssim}GenericWork/)
+      end
     end
   end
 end
