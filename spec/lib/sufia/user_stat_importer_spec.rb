@@ -3,7 +3,39 @@ require 'spec_helper'
 describe Sufia::UserStatImporter do
   before do
     allow(Sufia.config).to receive(:analytic_start_date) { dates[0] }
-    stub_out_call_to_google_analytics
+
+    allow(FileViewStat).to receive(:ga_statistics) do |_date, file_id|
+      case file_id
+      when bilbo_file_1.id
+        bilbo_file_1_pageview_stats
+      when bilbo_file_2.id
+        bilbo_file_2_pageview_stats
+      else
+        frodo_file_1_pageview_stats
+      end
+    end
+
+    allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file_id|
+      case file_id
+      when bilbo_file_1.id
+        bilbo_file_1_download_stats
+      when bilbo_file_2.id
+        bilbo_file_2_download_stats
+      else
+        frodo_file_1_download_stats
+      end
+    end
+
+    allow(WorkViewStat).to receive(:ga_statistics) do |_date, work_id|
+      case work_id
+      when bilbo_work_1.id
+        bilbo_work_1_pageview_stats
+      when bilbo_work_2.id
+        bilbo_work_2_pageview_stats
+      else
+        frodo_work_1_pageview_stats
+      end
+    end
   end
 
   let(:bilbo) { FactoryGirl.create(:user, email: 'bilbo@example.com') }
@@ -28,6 +60,25 @@ describe Sufia::UserStatImporter do
     FileSet.new(id: 'xyzfrodo1', title: ['frodo 1']).tap do |f|
       f.apply_depositor_metadata(frodo.email)
       f.save
+    end
+  end
+
+  # work
+  let!(:bilbo_work_1) do
+    GenericWork.create(id: 'xyzbilbowork1', title: ['bilbo work 1']) do |work|
+      work.apply_depositor_metadata(bilbo.email)
+    end
+  end
+
+  let!(:bilbo_work_2) do
+    GenericWork.create(id: 'xyzbilbowork2', title: ['bilbo work 2']) do |work|
+      work.apply_depositor_metadata(bilbo.email)
+    end
+  end
+
+  let!(:frodo_work_1) do
+    GenericWork.create(id: 'xyzfrodowork1', title: ['frodo work 1']) do |work|
+      work.apply_depositor_metadata(frodo.email)
     end
   end
 
@@ -65,6 +116,37 @@ describe Sufia::UserStatImporter do
   }
 
   let(:frodo_file_1_pageview_stats) {
+    [
+      OpenStruct.new(date: date_strs[0], pageviews: 2),
+      OpenStruct.new(date: date_strs[1], pageviews: 4),
+      OpenStruct.new(date: date_strs[2], pageviews: 1),
+      OpenStruct.new(date: date_strs[3], pageviews: 1),
+      OpenStruct.new(date: date_strs[4], pageviews: 9)
+    ]
+  }
+
+  # work
+  let(:bilbo_work_1_pageview_stats) {
+    [
+      OpenStruct.new(date: date_strs[0], pageviews: 1),
+      OpenStruct.new(date: date_strs[1], pageviews: 2),
+      OpenStruct.new(date: date_strs[2], pageviews: 3),
+      OpenStruct.new(date: date_strs[3], pageviews: 4),
+      OpenStruct.new(date: date_strs[4], pageviews: 5)
+    ]
+  }
+
+  let(:bilbo_work_2_pageview_stats) {
+    [
+      OpenStruct.new(date: date_strs[0], pageviews: 11),
+      OpenStruct.new(date: date_strs[1], pageviews: 12),
+      OpenStruct.new(date: date_strs[2], pageviews: 13),
+      OpenStruct.new(date: date_strs[3], pageviews: 14),
+      OpenStruct.new(date: date_strs[4], pageviews: 15)
+    ]
+  }
+
+  let(:frodo_work_1_pageview_stats) {
     [
       OpenStruct.new(date: date_strs[0], pageviews: 2),
       OpenStruct.new(date: date_strs[1], pageviews: 4),
@@ -113,8 +195,9 @@ describe Sufia::UserStatImporter do
 
       bilbos_stats.each_with_index do |actual_values, i|
         expected_file_views = bilbo_file_1_pageview_stats[i].pageviews + bilbo_file_2_pageview_stats[i].pageviews
+        expected_work_views = bilbo_work_1_pageview_stats[i].pageviews + bilbo_work_2_pageview_stats[i].pageviews
         expected_file_downloads = bilbo_file_1_download_stats[i].totalEvents.to_i + bilbo_file_2_download_stats[i].totalEvents.to_i
-        expected_values = { date: dates[i], views: expected_file_views, downloads: expected_file_downloads }
+        expected_values = { date: dates[i], views: expected_file_views, work_views: expected_work_views, downloads: expected_file_downloads }
         assert_stats_match(expected_values, actual_values)
       end
 
@@ -123,8 +206,9 @@ describe Sufia::UserStatImporter do
 
       frodos_stats.each_with_index do |actual_values, i|
         expected_file_views = frodo_file_1_pageview_stats[i].pageviews
+        expected_work_views = frodo_work_1_pageview_stats[i].pageviews
         expected_file_downloads = frodo_file_1_download_stats[i].totalEvents.to_i
-        expected_values = { date: dates[i], views: expected_file_views, downloads: expected_file_downloads }
+        expected_values = { date: dates[i], views: expected_file_views, work_views: expected_work_views, downloads: expected_file_downloads }
         assert_stats_match(expected_values, actual_values)
       end
 
@@ -137,6 +221,7 @@ describe Sufia::UserStatImporter do
       context "both error out completely" do
         before do
           expect(FileDownloadStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
+          expect(WorkViewStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
           expect(FileViewStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
         end
 
@@ -155,6 +240,7 @@ describe Sufia::UserStatImporter do
           expect(UserStat.count).to eq 8 # 2 users for 4 days
           UserStat.all.each do |stat|
             expect(stat.file_views).to eq 0
+            expect(stat.work_views).not_to eq 0
             expect(stat.file_downloads).not_to eq 0
           end
         end
@@ -169,6 +255,7 @@ describe Sufia::UserStatImporter do
           expect(UserStat.count).to eq 8 # 2 users for 4 days
           UserStat.all.each do |stat|
             expect(stat.file_views).not_to eq 0
+            expect(stat.work_views).not_to eq 0
             expect(stat.file_downloads).to eq 0
           end
         end
@@ -179,9 +266,9 @@ describe Sufia::UserStatImporter do
   describe 'with existing data in cache' do
     before do
       [dates[0], dates[1]].each_with_index do |date, i|
-        UserStat.create!(user_id: bilbo.id, date: date, file_views: 100 + i, file_downloads: 200 + i)
+        UserStat.create!(user_id: bilbo.id, date: date, file_views: 100 + i, file_downloads: 200 + i, work_views: 300)
       end
-      UserStat.create!(user_id: frodo.id, date: dates[0], file_views: 300, file_downloads: 400)
+      UserStat.create!(user_id: frodo.id, date: dates[0], file_views: 300, file_downloads: 400, work_views: 500)
     end
 
     it "doesn't duplicate entries for existing dates" do
@@ -231,32 +318,9 @@ describe Sufia::UserStatImporter do
   end
 end
 
-def stub_out_call_to_google_analytics
-  allow(FileViewStat).to receive(:ga_statistics) do |_date, file_id|
-    case file_id
-    when bilbo_file_1.id
-      bilbo_file_1_pageview_stats
-    when bilbo_file_2.id
-      bilbo_file_2_pageview_stats
-    else
-      frodo_file_1_pageview_stats
-    end
-  end
-
-  allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file_id|
-    case file_id
-    when bilbo_file_1.id
-      bilbo_file_1_download_stats
-    when bilbo_file_2.id
-      bilbo_file_2_download_stats
-    else
-      frodo_file_1_download_stats
-    end
-  end
-end
-
 def assert_stats_match(expected_value, actual_value)
   expect(actual_value.date).to eq expected_value[:date]
   expect(actual_value.file_views).to eq expected_value[:views]
+  expect(actual_value.work_views).to eq expected_value[:work_views]
   expect(actual_value.file_downloads).to eq expected_value[:downloads]
 end

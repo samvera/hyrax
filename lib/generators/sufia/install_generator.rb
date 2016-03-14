@@ -130,6 +130,11 @@ module Sufia
       generate 'sufia:user_stats'
     end
 
+    # Sets up cached usage stats
+    def cached_work_stats
+      generate 'sufia:cached_work_stats'
+    end
+
     # Adds citations initialization
     def citation_config
       generate 'sufia:citation_config'

@@ -10,4 +10,8 @@ module Sufia::UserUsageStats
   def total_file_downloads
     stats.reduce(0) { |total, stat| total + stat.file_downloads }
   end
+
+  def total_work_views
+    stats.reduce(0) { |total, stat| total + stat.work_views }
+  end
 end

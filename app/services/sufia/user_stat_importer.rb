@@ -11,20 +11,26 @@ module Sufia
 
     def import
       log_message('Begin import of User stats.')
+
       sorted_users.each do |user|
         start_date = date_since_last_cache(user)
-
         # this user has already been processed today continue without delay
         next if start_date.to_date >= Time.zone.today
 
         stats = {}
+
         file_ids_for_user(user).each do |file_id|
           view_stats = rescue_and_retry("Retried FileViewStat on #{user} for file #{file_id} too many times.") { FileViewStat.statistics(file_id, start_date, user.id) }
           stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
           delay
-
           dl_stats = rescue_and_retry("Retried FileDownloadStat on #{user} for file #{file_id} too many times.") { FileDownloadStat.statistics(file_id, start_date, user.id) }
           stats = tally_results(dl_stats, :downloads, stats) unless dl_stats.blank?
+          delay
+        end
+
+        work_ids_for_user(user).each do |work_id|
+          work_stats = rescue_and_retry("Retried WorkViewStat on #{user} for work #{work_id} too many times.") { WorkViewStat.statistics(work_id, start_date, user.id) }
+          stats = tally_results(work_stats, :work_views, stats) unless work_stats.blank?
           delay
         end
 
@@ -33,8 +39,7 @@ module Sufia
       log_message('User stats import complete.')
     end
 
-    # Returns an array of users sorted by the date of their last
-    # stats update. Users that have not been recently updated
+    # Returns an array of users sorted by the date of their last stats update. Users that have not been recently updated
     # will be at the top of the array.
     def sorted_users
       users = []
@@ -84,13 +89,19 @@ module Sufia
         ids
       end
 
-      # For each date, add the view and download counts for this
-      # file to the view & download sub-totals for that day.
-      # The resulting hash will look something like this:
-      # {"2014-11-30 00:00:00 UTC" => {:views=>2, :downloads=>5},
-      #  "2014-12-01 00:00:00 UTC" => {:views=>4, :downloads=>4}}
-      def tally_results(file_stats, stat_name, total_stats)
-        file_stats.each do |stats|
+      def work_ids_for_user(user)
+        ids = []
+        ::GenericWork.find_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+          ids.concat group.map { |doc| doc["id"] }
+        end
+        ids
+      end
+
+      # For each date, add the view and download counts for this file to the view & download sub-totals for that day.
+      # The resulting hash will look something like this: {"2014-11-30 00:00:00 UTC" => {:views=>2, :downloads=>5},
+      # "2014-12-01 00:00:00 UTC" => {:views=>4, :downloads=>4}}
+      def tally_results(current_stats, stat_name, total_stats)
+        current_stats.each do |stats|
           # Exclude the stats from today since it will only be a partial day's worth of data
           break if stats.date == Time.zone.today
 
@@ -109,11 +120,11 @@ module Sufia
         stats.each do |date_string, data|
           date = Time.zone.parse(date_string)
 
-          user_stat = UserStat.where(user_id: user.id).where(date: date).first
-          user_stat ||= UserStat.new(user_id: user.id, date: date)
+          user_stat = UserStat.where(user_id: user.id, date: date).first_or_initialize(user_id: user.id, date: date)
 
-          user_stat.file_views = data[:views] || 0
-          user_stat.file_downloads = data[:downloads] || 0
+          user_stat.file_views = data.fetch(:views, 0)
+          user_stat.file_downloads = data.fetch(:downloads, 0)
+          user_stat.work_views = data.fetch(:work_views, 0)
           user_stat.save!
         end
       end
