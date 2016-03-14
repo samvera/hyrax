@@ -14,9 +14,16 @@ module CurationConcerns
 
     private
 
+      # Override this method if you want to limit some of the registered
+      # types from appearing in search results
+      # @returns [Array<Class>] the list of work types to include in searches
+      def work_types
+        CurationConcerns.config.curation_concerns
+      end
+
       def work_clauses
         return [] if blacklight_params.key?(:f) && Array(blacklight_params[:f][:generic_type_sim]).include?('Collection')
-        CurationConcerns.config.registered_curation_concern_types.map(&:constantize).map do |klass|
+        work_types.map do |klass|
           ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: klass.to_class_uri)
         end
       end
