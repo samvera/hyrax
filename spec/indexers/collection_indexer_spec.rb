@@ -13,7 +13,7 @@ describe CurationConcerns::CollectionIndexer do
 
     it "has required fields" do
       expect(subject.fetch('generic_type_sim')).to eq ["Collection"]
-      expect(subject.fetch('bytes_is')).to eq(1000)
+      expect(subject.fetch('bytes_lts')).to eq(1000)
       expect(subject.fetch('thumbnail_path_ss')).to eq "/downloads/1234?file=thumbnail"
     end
   end
