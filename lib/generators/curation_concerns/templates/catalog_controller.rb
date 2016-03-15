@@ -4,9 +4,9 @@ class CatalogController < ApplicationController
     config.search_builder_class = CurationConcerns::SearchBuilder
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
-      qf: search_config['qf'],
-      qt: search_config['qt'],
-      rows: search_config['rows']
+      qf: %w(title_tesim name_tesim),
+      qt: 'search',
+      rows: 10
     }
 
     # solr field configuration for search results/index views

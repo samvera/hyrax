@@ -28,6 +28,7 @@ module CurationConcerns::CatalogController
     end
 
     def search_config
+      ActiveSupport::Deprecation.warn("#{self.class}.search_config is deprecated and will be removed in CurationConcerns 1.0")
       { 'qf' => %w(title_tesim name_tesim), 'qt' => 'search', 'rows' => 10 }
     end
   end
