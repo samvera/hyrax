@@ -14,10 +14,6 @@ module CurationConcerns::CatalogController
   end
 
   module ClassMethods
-    def t(*args)
-      I18n.translate(*args)
-    end
-
     def uploaded_field
       #  system_create_dtsi
       solr_name('date_uploaded', :stored_sortable, type: :date)
