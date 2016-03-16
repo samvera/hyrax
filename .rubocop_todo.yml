@@ -41,7 +41,6 @@ RSpec/DescribeClass:
   Exclude:
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/tasks/rake_spec.rb'
-    - 'spec/jobs/event_jobs_spec.rb'
     - 'spec/config/sufia_events_spec.rb'
     - 'spec/features/**/*'
     - 'spec/views/**/*'
