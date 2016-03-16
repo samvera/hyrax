@@ -1,0 +1,12 @@
+<tr class="<%= dom_class(member) %> attributes">
+  <td class="thumbnail">
+    <%= render_thumbnail_tag member %>
+  </td>
+  <td class="attribute filename"><%= link_to(member.link_name, main_app.curation_concerns_file_set_path(member)) %></td>
+  <td class="attribute date_uploaded"><%= member.date_uploaded %></td>
+  <td class="attribute permission"><%= member.permission_badge %></td>
+  <td>
+    <%= render 'curation_concerns/file_sets/actions', file_set: member %>
+  </td>
+</tr>
+
