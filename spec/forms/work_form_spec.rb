@@ -116,4 +116,9 @@ describe CurationConcerns::Forms::WorkForm do
     subject { form.lease_expiration_date }
     it { is_expected.to eq curation_concern.lease_expiration_date }
   end
+
+  describe ".required_fields" do
+    subject { described_class.required_fields }
+    it { is_expected.to eq [:title] }
+  end
 end
