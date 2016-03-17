@@ -3,5 +3,5 @@
 
 class CurationConcerns::<%= class_name.pluralize %>Controller < ApplicationController
   include CurationConcerns::CurationConcernController
-  set_curation_concern_type <%= class_name %>
+  self.curation_concern_type = <%= class_name %>
 end
