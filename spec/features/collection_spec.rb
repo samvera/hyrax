@@ -1,7 +1,7 @@
 require 'spec_helper'
 include CurationConcerns::SearchPathsHelper
 
-describe 'collection' do
+feature 'collection' do
   let(:title1) { 'Test Collection 1' }
   let(:description1) { 'Description for collection 1 we are testing.' }
   let(:title2) { 'Test Collection 2' }

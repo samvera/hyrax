@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'embargo' do
+feature 'embargo' do
   let(:user) { FactoryGirl.create(:user) }
   before do
     sign_in user

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Add an attached file' do
+feature 'Add an attached file' do
   let(:user) { create(:user) }
   let!(:work) { create(:work, user: user) }
 

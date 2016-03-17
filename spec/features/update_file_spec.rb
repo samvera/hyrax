@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Editing attached files' do
+feature 'Editing attached files' do
   let(:user) { create(:user) }
   let!(:parent) { create(:work_with_one_file, user: user) }
   let!(:file_set) { parent.file_sets.first }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'leases' do
+feature 'leases' do
   let(:user) { FactoryGirl.create(:user) }
   before do
     sign_in user
