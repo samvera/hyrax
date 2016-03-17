@@ -1,3 +1,4 @@
+require: rubocop-rspec
 AllCops:
   DisplayCopNames: true
   Include:
@@ -177,7 +178,6 @@ RSpec/DescribeClass:
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/tasks/rake_spec.rb'
     - 'spec/abilities/**/*'
-    - 'spec/features/**/*'
     - 'spec/views/**/*'
     - 'spec/routing/**/*'
     - 'spec/inputs/**/*'

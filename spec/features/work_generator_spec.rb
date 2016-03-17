@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rails/generators'
 require 'redlock'
 
-describe 'Creating a new Work' do
+feature 'Creating a new Work' do
   let(:user) { FactoryGirl.create(:user) }
 
   let(:redlock_client_stub) { # stub out redis connection
