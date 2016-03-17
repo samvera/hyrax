@@ -1,7 +1,6 @@
 module Sufia
   module CollectionsControllerBehavior
     extend ActiveSupport::Concern
-    include Hydra::CollectionsControllerBehavior
 
     included do
       include Sufia::Breadcrumbs
@@ -21,19 +20,6 @@ module Sufia
 
       def form_class
         Sufia::Forms::CollectionForm
-      end
-
-      def query_collection_members
-        # TODO: Should this be moved to curation_concerns
-        flash[:notice] = nil if flash[:notice] == "Select something first"
-        super
-      end
-
-      def after_destroy(id)
-        respond_to do |format|
-          format.html { redirect_to sufia.dashboard_collections_path, notice: 'Collection was successfully deleted.' }
-          format.json { render json: { id: id }, status: :destroyed, location: @collection }
-        end
       end
   end
 end
