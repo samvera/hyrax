@@ -43,6 +43,7 @@ describe "FileManager Save Button", ->
         expect($("button.disabled").length).toEqual(1)
   describe "#persist", ->
     it "is called by clicking the save button", ->
+      Blacklight.activate();
       spyOn(save_manager, "persist").and.callThrough()
       save_manager.push_changed(handler)
 
