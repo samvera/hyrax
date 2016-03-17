@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/file_sets/_file_set.html.erb' do
+describe 'curation_concerns/base/_member.html.erb' do
   let(:solr_document) { SolrDocument.new(id: '999',
                                          has_model_ssim: ['FileSet'],
                                          active_fedora_model_ssi: 'FileSet',
@@ -25,7 +25,7 @@ describe 'curation_concerns/file_sets/_file_set.html.erb' do
     allow(view).to receive(:can?).with(:read, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:edit, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:destroy, String).and_return(true)
-    render 'curation_concerns/file_sets/file_set.html.erb', file_set: presenter
+    render 'curation_concerns/base/member.html.erb', member: presenter
   end
 
   it 'renders the view' do
