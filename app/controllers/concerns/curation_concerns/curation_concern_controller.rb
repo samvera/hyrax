@@ -9,7 +9,7 @@ module CurationConcerns::CurationConcernController
     with_themed_layout '1_column'
     helper CurationConcerns::AbilityHelper
 
-    class_attribute :curation_concern_type, :show_presenter
+    class_attribute :_curation_concern_type, :show_presenter
     self.show_presenter = CurationConcerns::WorkShowPresenter
     attr_accessor :curation_concern
     helper_method :curation_concern
@@ -17,8 +17,17 @@ module CurationConcerns::CurationConcernController
 
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
-      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager]
+      Deprecation.warn("set_curation_concern_type is deprecated and will be removed in curation_concerns 1.0. Use self.curation_concern_type = #{curation_concern_type} instead.")
       self.curation_concern_type = curation_concern_type
+    end
+
+    def curation_concern_type=(curation_concern_type)
+      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager]
+      self._curation_concern_type = curation_concern_type
+    end
+
+    def curation_concern_type
+      _curation_concern_type
     end
 
     def cancan_resource_class
@@ -55,7 +64,7 @@ module CurationConcerns::CurationConcernController
         # load and authorize @curation_concern manually because it's skipped for html
         # This has to use #find instead of #load_instance_from_solr because
         # we want to return values like file_set_ids in the json
-        @curation_concern = curation_concern_type.find(params[:id]) unless curation_concern
+        @curation_concern = _curation_concern_type.find(params[:id]) unless curation_concern
         authorize! :show, @curation_concern
         render :show, status: :ok
       end
@@ -98,7 +107,7 @@ module CurationConcerns::CurationConcernController
     # Gives the class of the form. Override this if you want
     # to use a different form.
     def form_class
-      CurationConcerns.const_get("#{self.class.curation_concern_type.to_s.demodulize}Form")
+      CurationConcerns.const_get("#{_curation_concern_type.to_s.demodulize}Form")
     end
 
     def build_form
@@ -149,7 +158,7 @@ module CurationConcerns::CurationConcernController
     end
 
     def hash_key_for_curation_concern
-      self.class.curation_concern_type.model_name.param_key
+      _curation_concern_type.model_name.param_key
     end
 
     # Override this method to add additional response
