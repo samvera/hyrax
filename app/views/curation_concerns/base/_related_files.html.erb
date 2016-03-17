@@ -1,4 +1,4 @@
-<% if presenter.file_presenters.present? %>
+<% if presenter.file_set_presenters.present? %>
 <div class="panel panel-default related_files">
   <div class="panel-heading">
     <h2>Files</h2>
@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.file_presenters %>
+      <%= render partial: 'member', collection: presenter.file_set_presenters %>
     </tbody>
   </table>
 </div>
