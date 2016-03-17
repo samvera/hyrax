@@ -56,7 +56,30 @@ describe CurationConcerns::WorkShowPresenter do
 
     it "displays them in order" do
       expect(obj.ordered_member_ids).not_to eq obj.member_ids
+      expect(Deprecation).to receive(:warn)
       expect(presenter.file_presenters.map(&:id)).to eq obj.ordered_member_ids
+    end
+  end
+
+  describe "#file_set_presenters" do
+    let(:obj) { create(:work_with_ordered_files) }
+    let(:attributes) { obj.to_solr }
+
+    it "displays them in order" do
+      expect(obj.ordered_member_ids).not_to eq obj.member_ids
+      expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
+    end
+
+    context "when some of the members are not file sets" do
+      let(:another_work) { create(:work) }
+      before do
+        obj.ordered_members << another_work
+        obj.save!
+      end
+
+      it "filters out members that are not file sets" do
+        expect(presenter.file_set_presenters.map(&:id)).not_to include another_work.id
+      end
     end
 
     describe "getting presenters from factory" do
@@ -65,12 +88,13 @@ describe CurationConcerns::WorkShowPresenter do
       before do
         allow(presenter).to receive(:file_presenter_class).and_return(presenter_class)
         allow(presenter).to receive(:ordered_ids).and_return(['12', '33'])
+        allow(presenter).to receive(:file_set_ids).and_return(['33', '12'])
       end
 
       it "uses the set class" do
         expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
           .with(['12', '33'], presenter_class, ability)
-        presenter.file_presenters
+        presenter.file_set_presenters
       end
     end
   end
