@@ -17,7 +17,7 @@ module CurationConcerns::CurationConcernController
 
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
-      Deprecation.warn("set_curation_concern_type is deprecated and will be removed in curation_concerns 1.0. Use self.curation_concern_type = #{curation_concern_type} instead.")
+      Deprecation.warn self, "set_curation_concern_type is deprecated and will be removed in curation_concerns 1.0. Use self.curation_concern_type = #{curation_concern_type} instead."
       self.curation_concern_type = curation_concern_type
     end
 
