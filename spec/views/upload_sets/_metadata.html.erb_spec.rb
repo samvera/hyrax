@@ -10,7 +10,7 @@ describe 'upload_sets/_metadata.html.erb' do
 
   let(:f) do
     allow(upload_set).to receive(:works).and_return([work1, work2])
-    view.simple_form_for(form, url: '/update', builder: CurationConcerns::FormBuilder) do |fs_form|
+    view.simple_form_for(form, url: '/update', builder: Sufia::FormBuilder) do |fs_form|
       return fs_form
     end
   end
