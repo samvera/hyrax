@@ -16,6 +16,8 @@ module CurationConcerns
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                     :visibility, :ordered_member_ids]
 
+      self.required_fields = [:title]
+
       # @param [ActiveFedora::Base,#member_ids] model
       # @param [Ability] current_ability
       def initialize(model, current_ability)
