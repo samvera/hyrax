@@ -2,16 +2,6 @@ require 'spec_helper'
 include CurationConcerns::SearchPathsHelper
 
 describe 'collection' do
-  def create_collection(title, description)
-    click_link 'Add a Collection'
-    fill_in('Title', with: title)
-    fill_in('collection_description', with: description)
-    click_button('Create Collection')
-    expect(page).to have_content 'Items in this Collection'
-    expect(page).to have_content title
-    expect(page).to have_content description
-  end
-
   let(:title1) { 'Test Collection 1' }
   let(:description1) { 'Description for collection 1 we are testing.' }
   let(:title2) { 'Test Collection 2' }
