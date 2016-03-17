@@ -1,0 +1,26 @@
+# Generated via
+#  `rails generate curation_concerns:work <%= class_name %>`
+require 'rails_helper'
+include Warden::Test::Helpers
+
+feature 'Create a <%= class_name %>' do
+  context 'a logged in user' do
+    let(:user_attributes) do
+      { <%= Devise.authentication_keys.first %>: 'test@example.com' }
+    end
+    let(:user) do
+      User.new(user_attributes) { |u| u.save(validate: false) }
+    end
+
+    before do
+      login_as user
+    end
+
+    scenario do
+      visit new_curation_concerns_<%= file_name %>_path
+      fill_in 'Title', with: 'Test <%= class_name %>'
+      click_button 'Create <%= class_name %>'
+      expect(page).to have_content 'Test <%= class_name %>'
+    end
+  end
+end

@@ -45,6 +45,11 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
     template('form_spec.rb.erb', "spec/forms/curation_concerns/#{file_name}_form_spec.rb")
   end
 
+  def create_feature_spec
+    return unless rspec_installed?
+    template('feature_spec.rb.erb', "spec/features/create_#{file_name}_spec.rb")
+  end
+
   def create_controller
     template('controller.rb.erb', "app/controllers/curation_concerns/#{plural_file_name}_controller.rb")
   end
