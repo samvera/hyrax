@@ -5,7 +5,7 @@ class SaveManager {
   }
 
   override_save_button() {
-    jQuery(() => {
+    Blacklight.onLoad(() => {
       this.save_button.click(this.clicked_save)
     })
   }
