@@ -111,7 +111,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
       it "should allow you to configure which model to use for policies" do
         allow(Hydra.config.permissions).to receive(:policy_class).and_return(ModsAsset)
-        expect(ModsAsset).to receive(:find_with_conditions).and_return([])
+        expect(ModsAsset).to receive(:search_with_conditions).and_return([])
         subject.policies_with_access
       end
     end
@@ -127,20 +127,20 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     before do
       allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
     end
-    let(:governed_field) { ActiveFedora::SolrQueryBuilder.solr_name('isGovernedBy', :symbol) }
+    let(:governed_field) { ActiveFedora.index_field_mapper.solr_name('isGovernedBy', :symbol) }
 
-    it "should include policy-aware query" do
+    it "includes policy-aware query" do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
       policy_ids = (1..8).map {|n| "policies/#{n}"}
       expect(subject).to receive(:policies_with_access).and_return(policy_ids)
       subject.apply_gated_discovery(@solr_parameters)
-      expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}policies/1\" OR _query_:\"{!raw f=#{governed_field}}policies/2\" OR _query_:\"{!raw f=#{governed_field}}policies/3\" OR _query_:\"{!raw f=#{governed_field}}policies/4\" OR _query_:\"{!raw f=#{governed_field}}policies/5\" OR _query_:\"{!raw f=#{governed_field}}policies/6\" OR _query_:\"{!raw f=#{governed_field}}policies/7\" OR _query_:\"{!raw f=#{governed_field}}policies/8\")")
+      expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!field f=#{governed_field}}policies/1\" OR _query_:\"{!field f=#{governed_field}}policies/2\" OR _query_:\"{!field f=#{governed_field}}policies/3\" OR _query_:\"{!field f=#{governed_field}}policies/4\" OR _query_:\"{!field f=#{governed_field}}policies/5\" OR _query_:\"{!field f=#{governed_field}}policies/6\" OR _query_:\"{!field f=#{governed_field}}policies/7\" OR _query_:\"{!field f=#{governed_field}}policies/8\")")
     end
 
-    it "should not change anything if there are no clauses to add" do
+    it "doesn't change anything if there are no clauses to add" do
       allow(subject).to receive(:policy_clauses).and_return(nil)
       subject.apply_gated_discovery(@solr_parameters)
-      expect(@solr_parameters[:fq].first).not_to include(" OR (_query_:\"{!raw f=#{governed_field}}policies/1\" OR _query_:\"{!raw f=#{governed_field}}policies/2\" OR _query_:\"{!raw f=#{governed_field}}policies/3\" OR _query_:\"{!raw f=#{governed_field}}policies/4\" OR _query_:\"{!raw f=#{governed_field}}policies/5\" OR _query_:\"{!raw f=#{governed_field}}policies/6\" OR _query_:\"{!raw f=#{governed_field}}policies/7\" OR _query_:\"{!raw f=#{governed_field}}policies/8\")")
+      expect(@solr_parameters[:fq].first).not_to include(" OR (_query_:\"{!field f=#{governed_field}}policies/1\" OR _query_:\"{!field f=#{governed_field}}policies/2\" OR _query_:\"{!field f=#{governed_field}}policies/3\" OR _query_:\"{!field f=#{governed_field}}policies/4\" OR _query_:\"{!field f=#{governed_field}}policies/5\" OR _query_:\"{!field f=#{governed_field}}policies/6\" OR _query_:\"{!field f=#{governed_field}}policies/7\" OR _query_:\"{!field f=#{governed_field}}policies/8\")")
     end
   end
 
