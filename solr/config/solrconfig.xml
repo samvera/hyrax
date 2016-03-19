@@ -57,6 +57,21 @@
     <defaultQuery>*:*</defaultQuery>
   </admin>
 
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.ulog.dir:}</str>
+    </updateLog>
+
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+
+    <autoSoftCommit>
+      <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+    </autoSoftCommit>
+  </updateHandler>
+
   <!-- SearchHandler
 
        http://wiki.apache.org/solr/SearchHandler
@@ -119,9 +134,6 @@
 
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
-       <str name="facet.limit">10</str>
-       <str name="facet.field">active_fedora_model_ssi</str>
-       <str name="facet.field">subject_sim</str>
 
        <str name="spellcheck">true</str>
        <str name="spellcheck.dictionary">default</str>
