@@ -7,7 +7,11 @@ describe SearchBuilder do
   let(:current_ability) { double('ability', user_groups: [], current_user: user) }
   let(:search_builder) { described_class }
 
-  subject { search_builder.new(processor_chain, context) }
+  subject do
+    Deprecation.silence(Hydra::SearchBuilder) do
+      search_builder.new(processor_chain, context)
+    end
+  end
   before { subject.current_ability = current_ability }
 
   it "extends classes with the necessary Hydra modules" do
