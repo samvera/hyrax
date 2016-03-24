@@ -71,12 +71,6 @@ module Sufia
         params[:terms_of_service] == '1'
       end
 
-      # called by CurationConcerns::FileSetsControllerBehavior#process_file
-      def update_metadata_from_upload_screen
-        @file_set.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
-        super
-      end
-
       def show_presenter
         Sufia::FileSetPresenter
       end
