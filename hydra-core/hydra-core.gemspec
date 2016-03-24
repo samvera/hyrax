@@ -20,7 +20,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rails", '~> 4.0'
   gem.add_dependency 'hydra-access-controls', version
-  gem.add_dependency 'active-fedora', '~> 9.8'
 
   gem.add_development_dependency 'sqlite3', '~> 1.3'
   gem.add_development_dependency 'yard', '~> 0.8.7'

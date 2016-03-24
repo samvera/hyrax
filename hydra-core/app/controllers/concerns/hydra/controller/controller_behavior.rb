@@ -34,7 +34,7 @@ module Hydra::Controller::ControllerBehavior
   module ClassMethods
     # get the solr name for a field with this name and using the given solrizer descriptor
     def solr_name(name, *opts)
-      ActiveFedora::SolrQueryBuilder.solr_name(name, *opts)
+      ActiveFedora.index_field_mapper.solr_name(name, *opts)
     end
   end
 end

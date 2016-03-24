@@ -23,7 +23,7 @@ module Hydra::PolicyAwareAbility
   def policy_id_for(object_id)
     policy_id = policy_id_cache[object_id]
     return policy_id if policy_id
-    solr_result = ActiveFedora::Base.find_with_conditions({ id: object_id }, fl: governed_by_solr_field).first
+    solr_result = ActiveFedora::Base.search_with_conditions({ id: object_id }, fl: governed_by_solr_field).first
     return unless solr_result
     policy_id_cache[object_id] = policy_id = Array(solr_result[governed_by_solr_field]).first
   end

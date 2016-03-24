@@ -131,7 +131,7 @@ module Hydra
       end
 
       def solr_name(*args)
-        ActiveFedora::SolrQueryBuilder.solr_name(*args)
+        ActiveFedora.index_field_mapper.solr_name(*args)
       end
 
       class EmbargoConfig
@@ -144,7 +144,7 @@ module Hydra
         end
 
         def solr_name(*args)
-          ActiveFedora::SolrQueryBuilder.solr_name(*args)
+          ActiveFedora.index_field_mapper.solr_name(*args)
         end
       end
 
@@ -158,7 +158,7 @@ module Hydra
         end
 
         def solr_name(*args)
-          ActiveFedora::SolrQueryBuilder.solr_name(*args)
+          ActiveFedora.index_field_mapper.solr_name(*args)
         end
       end
 
