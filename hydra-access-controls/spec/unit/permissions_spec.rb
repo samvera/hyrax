@@ -9,13 +9,13 @@ describe Hydra::AccessControls::Permissions do
 
   subject { Foo.new }
 
-  it "should have many permissions" do
+  it "has many permissions" do
     expect(subject.permissions).to eq []
   end
 
   #TODO is permission same as an acl?
 
-  it "should have a set of permissions" do
+  it "has a set of permissions" do
     subject.read_groups=['group1', 'group2']
     subject.edit_users=['user1']
     subject.read_users=['user2', 'user3']
@@ -29,7 +29,7 @@ describe Hydra::AccessControls::Permissions do
   describe "building a new permission" do
     before { subject.save! }
 
-    it "should set the accessTo association" do
+    it "sets the accessTo association" do
       perm = subject.permissions.build(name: 'user1', type: 'person', access: 'read')
       subject.save
       expect(perm.access_to_id).to eq subject.id
@@ -47,7 +47,7 @@ describe Hydra::AccessControls::Permissions do
           subject.permissions_attributes = {'0' => { type: "group", access:"read", name:"group1" },
                                             '1' => { type: 'person', access: 'edit', name: 'user2' }}
         end
-        it "should handle a hash" do
+        it "handles a hash" do
           expect(subject.permissions.size).to eq 3
           expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
           expect(subject.permissions.map(&:to_hash)).to match_array [
@@ -164,7 +164,7 @@ describe Hydra::AccessControls::Permissions do
           Hydra::AccessControls::Permission.new(type: "person", access: "edit", name: "jcoyne")]
         subject.save!
       end
-      it "should set the permissions" do
+      it "sets the permissions" do
         expect(subject.edit_users).to eq ['jcoyne']
         expect(subject.edit_groups).to eq ['group1']
         subject.permissions = []
@@ -183,22 +183,22 @@ describe Hydra::AccessControls::Permissions do
       subject.permissions.build(type: 'group', access: 'edit', name: 'group-8')
     end
 
-    it "should have read groups accessor" do
+    it "has read groups accessor" do
       expect(subject.read_groups).to eq ['group-6', 'group-7']
     end
 
-    it "should have read groups string accessor" do
+    it "has read groups string accessor" do
       expect(subject.read_groups_string).to eq 'group-6, group-7'
     end
 
-    it "should have read groups string writer" do
+    it "has read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       expect(subject.read_groups).to eq ['umg/up.dlt.staff', 'group-3']
       expect(subject.edit_groups).to eq ['group-8']
       expect(subject.read_users).to eq ['person1']
     end
 
-    it "should only revoke eligible groups" do
+    it "only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       expect(subject.permissions.map(&:to_hash)).to match_array([
@@ -208,6 +208,18 @@ describe Hydra::AccessControls::Permissions do
         { name: 'group-8', type: 'group', access: 'edit' },
         { name: 'person1', type: 'person', access: 'read' },
         { name: 'person2', type: 'person', access: 'discover' }])
+    end
+  end
+
+  context "when the original object is destroyed" do
+    before do
+      subject.save!
+      subject.permissions.build(type: 'person', access: 'read', name: 'person1')
+      subject.save!
+    end
+
+    it "destroys the associated permissions" do
+      expect { subject.destroy }.to change { Hydra::AccessControls::Permission.count }.by(-1)
     end
   end
 end
