@@ -8,7 +8,16 @@ class CatalogController < ApplicationController
   before_filter :enforce_show_permissions, only: :show
 
   configure_blacklight do |config|
-    config.search_builder_class = Hydra::SearchBuilder
+    ## Class for sending and receiving requests from a search index
+    # config.repository_class = Blacklight::Solr::Repository
+    #
+    ## Class for converting Blacklight's url parameters to into request parameters for the search index
+    # config.search_builder_class = ::SearchBuilder
+    #
+    ## Model that maps search index responses to the blacklight response model
+    # config.response_model = Blacklight::Solr::Response
+
+    ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
       qt: 'search',
       rows: 10

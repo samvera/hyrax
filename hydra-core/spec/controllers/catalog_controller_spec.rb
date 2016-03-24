@@ -14,7 +14,7 @@ describe CatalogController do
     let(:config) { CatalogController.blacklight_config }
     describe "search_builder_class" do
       subject {config.search_builder_class }
-      it { is_expected.to eq Hydra::SearchBuilder }
+      it { is_expected.to eq ::SearchBuilder }
     end
   end
 
