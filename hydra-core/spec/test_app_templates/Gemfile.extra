@@ -2,5 +2,5 @@ gem 'rspec-rails', '~> 3.1', group: :test
 gem 'rspec-its'
 gem 'byebug' unless ENV['CI']
 
-gem 'rails', ENV.fetch('RAILS_VERSION', '4.2.5.1')
+gem 'rails', ENV.fetch('RAILS_VERSION', '4.2.6')
 gem 'blacklight', ENV.fetch('BLACKLIGHT_VERSION', '6.0.0')

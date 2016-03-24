@@ -54,6 +54,13 @@ module Hydra
       end
     end
 
+    # Add Hydra to the SearchBuilder
+    def inject_hydra_search_builder_behavior
+      insert_into_file "app/models/search_builder.rb", after: "include Blacklight::Solr::SearchBuilderBehavior\n" do
+        "  include Hydra::AccessControlsEnforcement\n"
+      end
+    end
+
     # Copy all files in templates/config directory to host config
     def create_configuration_files
 
