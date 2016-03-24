@@ -11,6 +11,18 @@
 
 A Hydra-based Rails Engine that extends an application, adding the ability to Create, Read, Update and Destroy (CRUD) objects (based on [Hydra::Works](http://github.com/projecthydra-labs/hydra-works)) and providing a generator for defining object types with custom workflows, views, access controls, etc.
 
+## Prerequisites
+
+Curation Concerns requires the following software to work:
+
+1. Solr
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
+1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
+1. [Redis](http://redis.io/), a key-value store
+1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
+1. [FITS](#characterization) version 0.6.x
+1. [LibreOffice](#derivatives)
+
 ## Installation
 
 Checkout the dependencies for [curation_concerns-models](https://github.com/projecthydra-labs/curation_concerns/tree/master/curation_concerns-models#dependencies), which is installed as part of curation_concerns.
@@ -58,3 +70,7 @@ Or you can do all the steps manually:
     # in another window
     $ rake engine_cart:generate
     $ rake curation_concerns:spec
+
+## Help
+
+If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by [the Hydra community IRC channel](irc://irc.freenode.net/projecthydra).
