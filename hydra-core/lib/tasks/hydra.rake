@@ -17,4 +17,17 @@ namespace :hydra do
       end
     end
   end
+
+  desc "Start solr and fedora instances for tests"
+  task :test_server do
+    with_server('test',
+                fcrepo_port: ENV.fetch('FCREPO_PORT', '8986'),
+                solr_port: ENV.fetch('SOLR_PORT', '8985')) do
+      begin
+        sleep
+      rescue Interrupt
+        puts "Stopping server"
+      end
+    end
+  end
 end
