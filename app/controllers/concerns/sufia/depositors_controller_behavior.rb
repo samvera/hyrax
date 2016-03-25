@@ -24,6 +24,7 @@ module Sufia
         head :ok
       else
         grantor.can_receive_deposits_from << grantee
+        send_proxy_depositor_added_messages(grantor, grantee)
         render json: { name: grantee.name, delete_path: sufia.user_depositor_path(grantor.user_key, grantee.user_key) }
       end
     end
@@ -44,6 +45,13 @@ module Sufia
         grantor = ::User.from_url_component(params[:user_id])
         authorize! :edit, grantor
         grantor
+      end
+
+      def send_proxy_depositor_added_messages(grantor, grantee)
+        message_to_grantee = "#{grantor.name} has assigned you as a proxy depositor"
+        message_to_grantor = "You have assigned #{grantee.name} as a proxy depositor"
+        ::User.batchuser.send_message(grantor, message_to_grantor, "Proxy Depositor Added")
+        ::User.batchuser.send_message(grantee, message_to_grantee, "Proxy Depositor Added")
       end
   end
 end
