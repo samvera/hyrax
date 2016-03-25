@@ -36,7 +36,7 @@ describe CurationConcerns::SearchBuilder do
       before { subject.filter_models(solr_params) }
 
       it 'limits query to collection and generic work' do
-        expect(solr_params[:fq].first).to match(/{!raw f=has_model_ssim}GenericWork.*OR.*{!raw f=has_model_ssim}Collection/)
+        expect(solr_params[:fq].first).to match(/{!field f=has_model_ssim}GenericWork.*OR.*{!field f=has_model_ssim}Collection/)
       end
     end
 
@@ -47,7 +47,7 @@ describe CurationConcerns::SearchBuilder do
       end
 
       it "doesn't have GenericWork" do
-        expect(solr_params[:fq].first).not_to match(/{!raw f=has_model_ssim}GenericWork/)
+        expect(solr_params[:fq].first).not_to match(/{!field f=has_model_ssim}GenericWork/)
       end
     end
   end

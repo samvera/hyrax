@@ -41,7 +41,7 @@ describe CurationConcerns::CollectionsHelper do
     before do
       allow(helper).to receive(:current_user).and_return(user)
       allow(ActiveFedora::SolrService).to receive(:query)
-        .with("_query_:\"{!raw f=has_model_ssim}Collection\"",
+        .with("_query_:\"{!field f=has_model_ssim}Collection\"",
               fl: 'title_tesim id', rows: 1000)
         .and_return([doc1, doc2, doc3])
     end
