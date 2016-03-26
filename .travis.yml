@@ -7,7 +7,7 @@ env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
   matrix:
-    - "RAILS_VERSION=4.2.3"
+    - "RAILS_VERSION=4.2.6"
 notifications:
   irc:
     channels:
