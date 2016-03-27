@@ -94,7 +94,7 @@ class ProxyDepositRequest < ActiveRecord::Base
     end
 
     def solr_response
-      @solr_response ||= ActiveFedora::SolrService.query(query, raw: true)
+      @solr_response ||= ActiveFedora::SolrService.get(query)
     end
 
     def query

@@ -83,7 +83,7 @@ module Sufia
 
       def file_ids_for_user(user)
         ids = []
-        ::FileSet.find_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+        ::FileSet.search_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids
@@ -91,7 +91,7 @@ module Sufia
 
       def work_ids_for_user(user)
         ids = []
-        ::GenericWork.find_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+        ::GenericWork.search_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids
