@@ -13,7 +13,6 @@
     <div class="col-xs-12 col-sm-4">
       <%= media_display @presenter %>
       <%= render 'show_actions', presenter: @presenter, parent: parent %>
-      <%= render 'show_collections' %>
     </div>
     <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
       <h1 class="visibility"><%= @presenter.title %> <%= render_visibility_badge @presenter %></h1>
