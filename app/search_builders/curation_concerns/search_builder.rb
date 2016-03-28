@@ -1,4 +1,6 @@
-class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
+class CurationConcerns::SearchBuilder < Blacklight::SearchBuilder
+  include Blacklight::Solr::SearchBuilderBehavior
+  include Hydra::AccessControlsEnforcement
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include CurationConcerns::FilterByType
 
