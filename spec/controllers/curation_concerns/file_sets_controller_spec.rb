@@ -71,6 +71,19 @@ describe CurationConcerns::FileSetsController do
           expect(response.body).to include('Error occurred while creating a FileSet.')
         end
       end
+
+      context 'when the file is not created' do
+        before do
+          allow(controller.send(:actor)).to receive(:create_metadata)
+          allow(controller.send(:actor)).to receive(:create_content).with(file).and_return(false)
+        end
+
+        it 'errors out of create after on continuous rsolr error' do
+          xhr :post, :create, parent_id: parent, file_set: { files: [file] },
+                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+          expect(response.body).to include('Error creating generic file image.png')
+        end
+      end
     end
 
     describe 'destroy' do

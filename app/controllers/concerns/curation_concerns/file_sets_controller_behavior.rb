@@ -203,7 +203,7 @@ module CurationConcerns
         else
           msg = @file_set.errors.full_messages.join(', ')
           flash[:error] = msg
-          json_error "Error creating generic file: #{msg}"
+          json_error "Error creating generic file #{file.original_filename}: #{msg}"
         end
       end
 
