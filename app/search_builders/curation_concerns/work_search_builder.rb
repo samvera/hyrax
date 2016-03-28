@@ -1,5 +1,5 @@
 module CurationConcerns
-  class WorkSearchBuilder < CurationConcerns::SearchBuilder
+  class WorkSearchBuilder < ::SearchBuilder
     include CurationConcerns::SingleResult
   end
 end
