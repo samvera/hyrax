@@ -1,0 +1,13 @@
+<div class="form-actions">
+  <% if Sufia.config.analytics %>
+    <%= link_to "Analytics", @presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
+  <% end %>
+  <% if Sufia.config.citations %>
+    <%= link_to "Citations", sufia.citations_work_path(@presenter), id: 'citations', class: 'btn btn-default' %>
+  <% end %>
+  <% if @presenter.editor? %>
+      <%= link_to "Edit This #{@presenter.human_readable_type}", edit_polymorphic_path([main_app, @presenter]), class: 'btn btn-default' %>
+      <%= link_to "Delete This #{@presenter.human_readable_type}", [main_app, @presenter], class: 'btn btn-danger pull-right', data: { confirm: "Delete this #{@presenter.human_readable_type}?" }, method: :delete %>
+  <% end %>
+</div>
+

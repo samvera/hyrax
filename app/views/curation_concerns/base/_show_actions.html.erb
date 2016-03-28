@@ -16,15 +16,15 @@
     <%= link_to 'Export to EndNote', polymorphic_path([main_app, @presenter], format: 'endnote'), class: 'btn btn-default' %>
     <%= link_to 'Export to Zotero', sufia.static_path('zotero'), id: 'zoteroLink', name: 'zotero', class: 'btn btn-default' %>
     <%= link_to 'Export to Mendeley', sufia.static_path('mendeley'), id: 'mendeleyLink', name: 'mendeley', class: 'btn btn-default' %>
-    <% if @presenter.respond_to?(:display_feature_link?) && @presenter.display_feature_link? %>
+    <% if @presenter.display_feature_link? %>
         <%= link_to "Feature", sufia.featured_work_path(@presenter, format: :json),
             data: {behavior: 'feature'}, id: 'featureLink', name: 'featureLink', class: 'btn btn-default' %>
     <% end %>
-    <% if @presenter.respond_to?(:display_unfeature_link?) && @presenter.display_unfeature_link? %>
+    <% if @presenter.display_unfeature_link? %>
         <%= link_to "Unfeature", sufia.featured_work_path(@presenter, format: :json),
             data: {behavior: 'unfeature'}, id: 'unfeatureLink', name: 'unfeatureLink', class: 'btn btn-default' %>
     <% end %>
   <!-- COinS hook for Zotero -->
     <span class="Z3988" title="<%= export_as_openurl_ctx_kev(@presenter) %>"></span>
-    <% end %>
+  <% end %>
 </div>
