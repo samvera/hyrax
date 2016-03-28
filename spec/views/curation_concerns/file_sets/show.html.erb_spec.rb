@@ -20,7 +20,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
     allow(view).to receive(:parent).and_return(parent)
     view.lookup_context.prefixes.push 'curation_concerns/base'
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
-    allow(view).to receive(:can?).with(:edit, String).and_return(true)
+    allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(presenter).to receive(:audit_status).and_return(mock_metadata)
     assign(:presenter, presenter)
     assign(:document, solr_doc)
