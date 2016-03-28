@@ -5,6 +5,8 @@ module CurationConcerns
     source_root File.expand_path('../templates', __FILE__)
 
     argument :model_name, type: :string, default: 'user'
+    class_option :'skip-assets', type: :boolean, default: false, desc: "Skip generating javascript and css assets into the application"
+
     desc 'This generator makes the following changes to your application:
    1. Runs installers for blacklight & hydra-head (which also install & configure devise)
    2. Runs curation_concerns:models:install
@@ -46,12 +48,6 @@ module CurationConcerns
     #   end
     # end
 
-    def remove_blacklight_scss
-      remove_file 'app/assets/stylesheets/blacklight.css.scss'
-    end
-
-    # END Blacklight stuff
-
     def inject_routes
       # Remove root route that was added by blacklight generator
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
@@ -92,8 +88,7 @@ module CurationConcerns
     end
 
     def assets
-      copy_file 'curation_concerns.scss', 'app/assets/stylesheets/curation_concerns.scss'
-      copy_file 'curation_concerns.js', 'app/assets/javascripts/curation_concerns.js'
+      generate 'curation_concerns:assets' unless options[:'skip-assets']
     end
 
     def add_helper
