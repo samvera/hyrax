@@ -24,6 +24,10 @@ module Sufia
       fetch(Solrizer.solr_name("date_created"), [])
     end
 
+    def proxy_depositor
+      fetch(Solrizer.solr_name("proxy_depositor", :symbol), nil)
+    end
+
     def create_date
       date_field('system_create')
     end

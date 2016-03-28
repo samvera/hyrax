@@ -8,7 +8,7 @@ describe 'generic_works/_generic_work.html.erb', type: :view do
                  description: "a monster work", tags: ["moster", "mash"],
                  has_model_ssim: ['GenericWork'], itemtype: ['CreativeWork'],
                  date_uploaded: Time.zone.now, collection?: false, generic_work?: true,
-                 hydra_model: "GenericWork", title_or_label: "A monster hit"
+                 hydra_model: "GenericWork", title_or_label: "A monster hit", proxy_depositor: "user2"
                 )
     end
 

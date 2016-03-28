@@ -4,8 +4,18 @@
           <td><%= work.title %></td>
         </tr>
         <tr>
-          <th><span class="attribute-label h4">Depositor:</span></th>
+          <th><span class="attribute-label h4">Owner:</span></th>
           <td><%= link_to_profile work.depositor("no depositor value") %></td>
+        </tr>
+        <tr>
+          <th><span class="attribute-label h4">Depositor:</span></th>
+          <td>
+            <% if work.proxy_depositor  %>
+              <%= link_to_profile work.proxy_depositor %>
+            <% else %>
+              <%= link_to_profile work.depositor("no depositor value") %>
+            <% end %>
+          </td>
         </tr>
         <tr>
           <th><span class="attribute-label h4">Creator:</span></th>
