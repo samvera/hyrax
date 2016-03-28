@@ -457,7 +457,7 @@ describe CurationConcerns::FileSetsController do
     end
   end
 
-  describe "someone else's files" do
+  describe "#edit" do
     let(:file_set) do
       FileSet.create(read_groups: ['public']) do |f|
         f.apply_depositor_metadata('archivist1@example.com')
@@ -473,15 +473,20 @@ describe CurationConcerns::FileSetsController do
       Hydra::Works::UploadFileToFileSet.call(file_set, file)
     end
 
-    describe "edit" do
+    context "someone else's files" do
       it "sets flash error" do
         get :edit, id: file_set
         expect(response.code).to eq '401'
         expect(response).to render_template('unauthorized')
       end
     end
+  end
 
-    describe "#show" do
+  describe "#show" do
+    let(:file_set) do
+      create(:file_set, title: ['test file'], user: user)
+    end
+    context "without a referer" do
       it "shows me the file and set breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         get :show, id: file_set
@@ -491,6 +496,31 @@ describe CurationConcerns::FileSetsController do
         expect(assigns[:presenter].id).to eq file_set.id
         expect(assigns[:presenter].events).to be_kind_of Array
         expect(assigns[:presenter].audit_status).to eq 'Audits have not yet been run on this file.'
+      end
+    end
+
+    context "with a referer" do
+      let(:work) do
+        create(:generic_work,
+               title: ['test title'],
+               user: user,
+               visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      end
+
+      before do
+        allow(controller.request).to receive(:referer).and_return('foo')
+        work.ordered_members << file_set
+        work.save!
+        file_set.save!
+      end
+
+      it "shows me the breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
+        expect(controller).to receive(:add_breadcrumb).with('test title', Sufia::Engine.routes.url_helpers.curation_concerns_generic_work_path(work.id))
+        expect(controller).to receive(:add_breadcrumb).with('test file', main_app.curation_concerns_file_set_path(file_set))
+        get :show, id: file_set
+        expect(response).to be_successful
       end
     end
   end

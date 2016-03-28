@@ -48,6 +48,13 @@ module Sufia
       audit_service.logged_audit_status
     end
 
+    def parent
+      ids = solr_document.fetch('generic_work_ids_ssim')
+      @parent_presenter ||= CurationConcerns::PresenterFactory.build_presenters(ids,
+                                                                                WorkShowPresenter,
+                                                                                current_ability).first
+    end
+
     def audit_service
       # model = solr_document.to_model # See https://github.com/projecthydra-labs/hydra-pcdm/issues/197
       model = FileSet.find(id)
