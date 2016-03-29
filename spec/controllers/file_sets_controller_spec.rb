@@ -69,7 +69,6 @@ describe CurationConcerns::FileSetsController do
                                   upload_set_id: upload_set_id,
                                   file_set: { files: [file],
                                               Filename: 'The world 1',
-                                              on_behalf_of: 'carolyn',
                                               terms_of_service: '1' }
               expect(response).to be_success
             end
