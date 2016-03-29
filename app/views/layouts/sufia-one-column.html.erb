@@ -6,30 +6,28 @@
 
 <body>
 <div  id="wrapper">
-  <div class="container-fluid">
-    <div id="page-positioner">
-      <a href="#skip_to_content" class="sr-only">Skip to Content</a>
-      <%= render partial: '/masthead' %>
-      <%= render partial: '/controls' %>
-      <%= render partial: '/flash_msg' %>
-      <div id="content-wrapper" class="container-fluid">
-        <% if content_for?(:page_header) %>
-          <div class="row">
-            <div class="col-xs-12 main-header">
-              <%= yield(:page_header) %>
-            </div>
+  <div id="page-positioner">
+    <a href="#skip_to_content" class="sr-only">Skip to Content</a>
+    <%= render partial: '/masthead' %>
+    <%= render partial: '/controls' %>
+    <%= render partial: '/flash_msg' %>
+    <div id="content-wrapper" class="container-fluid">
+      <% if content_for?(:page_header) %>
+        <div class="row">
+          <div class="col-xs-12 main-header">
+            <%= yield(:page_header) %>
           </div>
-        <% end %>
-        <a name="skip_to_content"></a>
-        <div id="content" class="row">
-          <div class="col-xs-12">
-            <%= yield %>
-          </div>
-        </div><!-- /#content -->
-      </div><!-- /#content-wrapper -->
-      <%= render partial: '/footer' %>
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
+        </div>
+      <% end %>
+      <a name="skip_to_content"></a>
+      <div id="content" class="row">
+        <div class="col-xs-12">
+          <%= yield %>
+        </div>
+      </div><!-- /#content -->
+    </div><!-- /#content-wrapper -->
+    <%= render partial: '/footer' %>
+  </div><!-- /#page-positioner -->
 </div><!-- /#wrapper -->
 <%= render 'shared/ajax_modal' %>
 </body>
