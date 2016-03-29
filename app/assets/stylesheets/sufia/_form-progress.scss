@@ -1,0 +1,66 @@
+aside.form-progress {
+  border: 2px solid $gray-darker;
+
+  ul.requirements {
+    list-style-type: none;
+    padding-left: 8px;
+  }
+
+  .incomplete::before {
+    content: "\e101";
+    color: $brand-danger;
+    font-family: 'Glyphicons Halflings';
+    padding-right: 5px;
+  }
+
+  .complete::before {
+    content: "\e013";
+    color: $brand-success;
+    font-family: 'Glyphicons Halflings';
+    padding-right: 5px;
+  }
+
+  .primary-actions {
+    text-align: center;
+    background: $gray-light;
+    border-top: 1px solid $gray-darker;
+    padding: 5px;
+  }
+
+  h2 {
+    margin: 0;
+    background: $gray-light;
+    padding: 5px;
+    font-size: 14pt;
+    border-bottom: 1px solid $gray-darker;
+  }
+
+  h3 {
+    margin: 0;
+    padding: 5px;
+    font-size: 12pt;
+  }
+
+  h3:last-of-type {
+    border-top: 1px solid $gray-darker;
+  }
+
+  label { font-weight: normal; }
+  & > .form-group { padding: 0 1.75em; }
+
+  .form-inline {
+    .control-label, label {
+      padding-left: 0;
+      display: inline;
+      &:after {
+        content: ' ';
+      }
+    }
+    .help-block {
+      display: inline;
+      &:before {
+        content: ' ';
+      }
+    }
+  }
+}
