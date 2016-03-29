@@ -112,4 +112,16 @@ describe ::SolrDocument, type: :model do
       it { is_expected.to eq [] }
     end
   end
+
+  describe "#height" do
+    let(:attributes) { { height_is: '444' } }
+    subject { document.height }
+    it { is_expected.to eq '444' }
+  end
+
+  describe "#width" do
+    let(:attributes) { { width_is: '555' } }
+    subject { document.width }
+    it { is_expected.to eq '555' }
+  end
 end
