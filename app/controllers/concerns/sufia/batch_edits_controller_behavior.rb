@@ -62,6 +62,10 @@ module Sufia
 
     protected
 
+      def add_breadcrumb_for_controller
+        add_breadcrumb I18n.t('sufia.dashboard.my.works'), sufia.dashboard_works_path
+      end
+
       def _prefixes
         # This allows us to use the templates in curation_concerns/base
         @_prefixes ||= super + ['curation_concerns/base']

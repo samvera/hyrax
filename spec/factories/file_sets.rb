@@ -7,6 +7,10 @@ FactoryGirl.define do
       fs.apply_depositor_metadata evaluator.user.user_key
     end
 
+    trait :public do
+      read_groups ["public"]
+    end
+
     trait :registered do
       read_groups ["registered"]
     end

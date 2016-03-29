@@ -5,12 +5,6 @@ describe My::WorksController, type: :controller do
 
   before { sign_in user }
 
-  it "responds with success" do
-    get :index
-    expect(response).to be_successful
-    expect(response).to render_template :index
-  end
-
   context "with multiple pages of works" do
     before { 3.times { create(:work, user: user) } }
     it "paginates" do
@@ -54,16 +48,26 @@ describe My::WorksController, type: :controller do
 
     let(:doc_ids)          { assigns[:document_list].map(&:id) }
     let(:user_collections) { assigns[:user_collections].map(&:id) }
+    let(:sufia) do
+      Sufia::Engine.routes.url_helpers
+    end
+    before do
+      allow(controller.request).to receive(:referer).and_return("http://...blargh/")
+    end
 
     it 'shows only the correct records' do
       get :index
+      expect(response).to be_successful
+      expect(response).to render_template :index
       expect(doc_ids).to contain_exactly(my_work.id)
       expect(user_collections).to contain_exactly(my_collection.id)
     end
   end
 
-  it "sets add_files_to_collection when provided in params" do
-    get :index, add_files_to_collection: '12345'
-    expect(assigns(:add_files_to_collection)).to eql('12345')
+  context "when add_files_to_collection is provided" do
+    it "sets add_files_to_collection ivar" do
+      get :index, add_files_to_collection: '12345'
+      expect(assigns(:add_files_to_collection)).to eql('12345')
+    end
   end
 end
