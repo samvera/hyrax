@@ -1,5 +1,6 @@
 module Sufia
   module SolrDocument
+    # TODO: aside from height and width, I don't think any of these other terms are indexed by default. - Justin 3/2016
     module Characterization
       def byte_order
         self[Solrizer.solr_name("byte_order")]
@@ -26,7 +27,7 @@ module Sufia
       end
 
       def height
-        self[Solrizer.solr_name("height")]
+        self['height_is']
       end
 
       def image_producer
@@ -58,7 +59,7 @@ module Sufia
       end
 
       def width
-        self[Solrizer.solr_name("width")]
+        self['width_is']
       end
     end
   end

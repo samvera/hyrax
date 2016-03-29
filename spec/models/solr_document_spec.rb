@@ -1,53 +1,48 @@
 require 'spec_helper'
 
 describe ::SolrDocument, type: :model do
+  let(:document) { described_class.new(attributes) }
+  let(:attributes) { {} }
+
   describe "date_uploaded" do
-    before do
-      subject['date_uploaded_dtsi'] = '2013-03-14T00:00:00Z'
-    end
-    it "is a date" do
-      expect(subject.date_uploaded).to eq '03/14/2013'
-    end
-    it "logs parse errors" do
-      expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
-      subject['date_uploaded_dtsi'] = 'Test'
-      subject.date_uploaded
+    let(:attributes) { { 'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' } }
+    subject { document.date_uploaded }
+    it { is_expected.to eq '03/14/2013' }
+
+    context "when an invalid type is provided" do
+      let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
+      it "logs parse errors" do
+        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        subject
+      end
     end
   end
 
   describe "create_date" do
-    before do
-      subject['system_create_dtsi'] = '2013-03-14T00:00:00Z'
-    end
-    it "is a date" do
-      expect(subject.create_date).to eq '03/14/2013'
-    end
-    it "logs parse errors" do
-      expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
-      subject['system_create_dtsi'] = 'Test'
-      subject.create_date
+    let(:attributes) { { 'system_create_dtsi' => '2013-03-14T00:00:00Z' } }
+    subject { document.create_date }
+    it { is_expected.to eq '03/14/2013' }
+
+    context "when an invalid type is provided" do
+      let(:attributes) { { 'system_create_dtsi' => 'Test' } }
+      it "logs parse errors" do
+        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        subject
+      end
     end
   end
 
   describe "resource_type" do
-    before do
-      subject['resource_type_tesim'] = ['Image']
-    end
-    it "returns the resource type" do
-      expect(subject.resource_type).to eq ['Image']
-    end
+    let(:attributes) { { 'resource_type_tesim' => ['Image'] } }
+    subject { document.resource_type }
+    it { is_expected.to eq ['Image'] }
   end
 
   describe '#to_param' do
     let(:id) { '1v53kn56d' }
-
-    before do
-      subject[:id] = id
-    end
-
-    it 'returns the object identifier' do
-      expect(subject.to_param).to eq id
-    end
+    let(:attributes) { { id: id } }
+    subject { document.to_param }
+    it { is_expected.to eq id }
   end
 
   describe "document types" do
@@ -55,51 +50,49 @@ describe ::SolrDocument, type: :model do
       include Hydra::Works::MimeTypes
     end
 
-    context "when mime-type is 'office'" do
-      it "is office document" do
-        Mimes.office_document_mime_types.each do |type|
-          subject['mime_type_ssi'] = type
-          expect(subject).to be_office_document
-        end
+    Mimes.office_document_mime_types.each do |type|
+      context "when mime-type is #{type}" do
+        let(:attributes) { { 'mime_type_ssi' => type } }
+        subject { document }
+        it { is_expected.to be_office_document }
       end
     end
 
-    describe "when mime-type is 'video'" do
-      it "is office" do
-        Mimes.video_mime_types.each do |type|
-          subject['mime_type_ssi'] = type
-          expect(subject).to be_video
-        end
+    Mimes.video_mime_types.each do |type|
+      context "when mime-type is #{type}" do
+        let(:attributes) { { 'mime_type_ssi' => type } }
+        subject { document }
+        it { is_expected.to be_video }
       end
     end
   end
 
   describe '#collection_ids' do
+    subject { document.collection_ids }
     context 'when the object belongs to collections' do
-      subject { described_class.new(id: '123', title_tesim: ['A generic work'], collection_ids_tesim: ['123', '456', '789']) }
-
-      it 'returns the list of collection IDs' do
-        expect(subject.collection_ids).to eq ['123', '456', '789']
-      end
+      let(:attributes) { { id: '123',
+                           title_tesim: ['A generic work'],
+                           collection_ids_tesim: ['123', '456', '789'] } }
+      it { is_expected.to eq ['123', '456', '789'] }
     end
 
     context 'when the object does not belong to any collections' do
-      subject { described_class.new(id: '123', title_tesim: ['A generic work']) }
+      let(:attributes) { { id: '123',
+                           title_tesim: ['A generic work'] } }
 
-      it 'returns an empty array' do
-        expect(subject.collection_ids).to eq []
-      end
+      it { is_expected.to eq [] }
     end
   end
 
   describe '#collections' do
+    subject { document.collections }
     context 'when the object belongs to a collection' do
       let(:coll_id) { '456' }
-      let(:work_attrs) { { id: '123', title_tesim: ['A generic work'], collection_ids_tesim: [coll_id] } }
+      let(:attributes) { { id: '123',
+                           title_tesim: ['A generic work'],
+                           collection_ids_tesim: [coll_id] } }
 
       let(:coll_attrs) { { id: coll_id, title_tesim: ['A Collection'] } }
-
-      subject { described_class.new(work_attrs) }
 
       before do
         ActiveFedora::SolrService.add(coll_attrs)
@@ -107,8 +100,8 @@ describe ::SolrDocument, type: :model do
       end
 
       it 'returns the solr docs for the collections' do
-        expect(subject.collections.count).to eq 1
-        solr_doc = subject.collections.first
+        expect(subject.count).to eq 1
+        solr_doc = subject.first
         expect(solr_doc).to be_kind_of described_class
         expect(solr_doc['id']).to eq coll_id
         expect(solr_doc['title_tesim']).to eq coll_attrs[:title_tesim]
@@ -116,9 +109,19 @@ describe ::SolrDocument, type: :model do
     end
 
     context 'when the object does not belong to any collections' do
-      it 'returns empty array' do
-        expect(subject.collections).to eq []
-      end
+      it { is_expected.to eq [] }
     end
+  end
+
+  describe "#height" do
+    let(:attributes) { { height_is: '444' } }
+    subject { document.height }
+    it { is_expected.to eq '444' }
+  end
+
+  describe "#width" do
+    let(:attributes) { { width_is: '555' } }
+    subject { document.width }
+    it { is_expected.to eq '555' }
   end
 end

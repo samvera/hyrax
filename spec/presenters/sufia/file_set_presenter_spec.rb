@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe Sufia::FileSetPresenter do
-  let(:solr_document) { SolrDocument.new(file.to_solr) }
+  let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
+  let(:attributes) { file.to_solr }
   let(:file) { build(:file_set, id: '123abc', user: user) }
 
   describe 'stats_path' do
@@ -41,6 +42,11 @@ describe Sufia::FileSetPresenter do
     describe "#characterized?" do
       subject { presenter }
       it { is_expected.not_to be_characterized }
+
+      context "when height is set" do
+        let(:attributes) { { height_is: '444' } }
+        it { is_expected.to be_characterized }
+      end
     end
 
     describe "#label_for_term" do

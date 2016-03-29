@@ -5,7 +5,7 @@ module Sufia
     class_methods do
       def characterization_terms
         [
-          :byte_order, :compression, :height, :width, :width, :height, :color_space,
+          :byte_order, :compression, :height, :width, :height, :color_space,
           :profile_name, :profile_version, :orientation, :color_map, :image_producer,
           :capture_device, :scanning_software, :gps_timestamp, :latitude, :longitude
         ]
