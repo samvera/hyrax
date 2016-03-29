@@ -44,9 +44,9 @@ module Sufia
     # @param [Symbol] term found in the characterization_metadata hash
     # @return [Array] of truncated values
     def primary_characterization_values(term)
-      values = Array(characterization_metadata[term])
+      values = values_for(term)
       values.slice!(Sufia.config.fits_message_length, (values.length - Sufia.config.fits_message_length))
-      values.map { |v| v.truncate(250) }
+      truncate_all(values)
     end
 
     # Returns an array of characterization values truncated to 250 characters that are in
@@ -54,12 +54,21 @@ module Sufia
     # @param [Symbol] term found in the characterization_metadata hash
     # @return [Array] of truncated values
     def secondary_characterization_values(term)
-      values = Array(characterization_metadata[term])
-      additional_values = values.slice!(Sufia.config.fits_message_length, (values.length - Sufia.config.fits_message_length))
-      Array(additional_values).map! { |v| v.truncate(250) }
+      values = values_for(term)
+      additional_values = values.slice(Sufia.config.fits_message_length, values.length - Sufia.config.fits_message_length)
+      return [] unless additional_values
+      truncate_all(additional_values)
     end
 
     private
+
+      def values_for(term)
+        Array(characterization_metadata[term])
+      end
+
+      def truncate_all(values)
+        values.map { |v| v.to_s.truncate(250) }
+      end
 
       def build_characterization_metadata
         self.class.characterization_terms.each do |term|
