@@ -6,17 +6,15 @@
 
 <body> 
 <div  id="wrapper"> 
-  <div id="page-positioner">
-    <%= render partial: '/masthead' %>
-    <%= render partial: '/controls' %>
-    <%= render partial: '/flash_msg' %>
-    <div id="content-wrapper" class="container-fluid"> 
-      <div id="content">
-        <%= yield %>
-      </div><!-- /#content -->
-    </div><!-- /#content-wrapper -->
-    <%= render partial: '/footer' %>
-  </div><!-- /#page-positioner -->
+  <%= render partial: '/masthead' %>
+  <%= render partial: '/controls' %>
+  <%= render partial: '/flash_msg' %>
+  <div id="content-wrapper" class="container-fluid"> 
+    <div id="content">
+      <%= yield %>
+    </div><!-- /#content -->
+  </div><!-- /#content-wrapper -->
+  <%= render partial: '/footer' %>
 </div><!-- /#wrapper -->
 <%= render 'shared/ajax_modal' %>
 </body>

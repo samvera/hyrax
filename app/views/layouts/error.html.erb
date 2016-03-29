@@ -15,17 +15,15 @@
 
 <body>
 <div  id="wrapper">
-  <div id="page-positioner">
-    <%= render partial: '/masthead', formats: [:html] %>
-    <div id="content-wrapper" class="container-fluid">
-      <div id="content" class="row">
-          <div class="col-sm-8 col-md-8 col-lg-8">
-            <%= yield %>
-          </div>
-      </div><!-- /#content -->
-    </div><!-- /#content-wrapper -->
-    <%= render partial: '/footer' %>
-  </div><!-- /#page-positioner -->
+  <%= render partial: '/masthead', formats: [:html] %>
+  <div id="content-wrapper" class="container-fluid">
+    <div id="content" class="row">
+        <div class="col-sm-8 col-md-8 col-lg-8">
+          <%= yield %>
+        </div>
+    </div><!-- /#content -->
+  </div><!-- /#content-wrapper -->
+  <%= render partial: '/footer' %>
 </div><!-- /#wrapper -->
 </body>
 
