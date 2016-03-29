@@ -36,7 +36,7 @@ module Sufia
     end
 
     def file_set_abilities
-      can :view_share_work, [::FileSet]
+      can :view_share_work, GenericWork
     end
 
     def editor_abilities

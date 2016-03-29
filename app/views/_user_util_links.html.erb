@@ -9,8 +9,12 @@
       <% end %>
       <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"><span class="sr-only">select for additional menu options</span><span class="caret" ></span></a>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <% if can? :create, FileSet %>
-          <li><%= link_to raw('<span class="glyphicon glyphicon-upload"></span> upload'), sufia.new_curation_concerns_file_set_path, id: 'upload_nav_link' %></li>
+        <% if can? :create, GenericWork %>
+          <li><%= link_to sufia.new_curation_concerns_generic_work_path,
+                          id: 'upload_nav_link' do %>
+                <span class="glyphicon glyphicon-upload"></span> upload
+              <% end %>
+          </li>
         <% end %>
         <li><%= link_to raw('<span class="glyphicon glyphicon-user"></span> my profile'), sufia.profile_path(current_user), id: 'profile_nav_link' %></li>
         <%= render partial: 'users/user_util_links_extra' %>
