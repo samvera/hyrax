@@ -74,6 +74,7 @@ describe Sufia::FileSetPresenter do
 
     describe "characterization values" do
       before { allow(presenter).to receive(:characterization_metadata).and_return(mock_metadata) }
+
       context "with a limited set of short values" do
         let(:mock_metadata) { { term: ["asdf", "qwer"] } }
         describe "#primary_characterization_values" do
@@ -85,6 +86,7 @@ describe Sufia::FileSetPresenter do
           it { is_expected.to be_empty }
         end
       end
+
       context "with a value set exceeding the configured amount" do
         let(:mock_metadata) { { term: ["1", "2", "3", "4", "5", "6", "7", "8"] } }
         describe "#primary_characterization_values" do
@@ -96,6 +98,7 @@ describe Sufia::FileSetPresenter do
           it { is_expected.to contain_exactly("6", "7", "8") }
         end
       end
+
       context "with values exceeding 250 characters" do
         let(:mock_metadata) { { term: [("a" * 251), "2", "3", "4", "5", "6", ("b" * 251)] } }
         describe "#primary_characterization_values" do
@@ -107,6 +110,7 @@ describe Sufia::FileSetPresenter do
           it { is_expected.to contain_exactly("6", (("b" * 247) + "...")) }
         end
       end
+
       context "with a string as a value" do
         let(:mock_metadata) { { term: "string" } }
         describe "#primary_characterization_values" do
@@ -116,6 +120,14 @@ describe Sufia::FileSetPresenter do
         describe "#secondary_characterization_values" do
           subject { presenter.secondary_characterization_values(:term) }
           it { is_expected.to be_empty }
+        end
+      end
+
+      context "with an integer as a value" do
+        let(:mock_metadata) { { term: 1440 } }
+        describe "#primary_characterization_values" do
+          subject { presenter.primary_characterization_values(:term) }
+          it { is_expected.to contain_exactly("1440") }
         end
       end
     end
