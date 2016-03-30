@@ -3,39 +3,8 @@ body {
   padding: 0 !important;
 }
 
-#wrapper {
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0, #E1E1E1),
-      color-stop(1, #FFFFFF)
-  );
-  background-image: -o-linear-gradient(bottom, #E1E1E1 0%, #FFFFFF 100%);
-  background-image: -moz-linear-gradient(bottom, #E1E1E1 0%, #FFFFFF 100%);
-  background-image: -webkit-linear-gradient(bottom, #E1E1E1 0%, #FFFFFF 100%);
-  background-image: -ms-linear-gradient(bottom, #E1E1E1 0%, #FFFFFF 100%);
-  background-image: linear-gradient(to bottom, #E1E1E1 0%, #FFFFFF 100%);
-}
-
-#page-positioner {
-  h1, h2, h3, h4, h5, h6, .attribute-label {
-    font-family: 'Lato', Verdana, Arail, Helvetica, sans-serif;
-  }
-}
-
-#page-positioner {
-  background-color: #FFF;
-}
-
-#page-positioner h1, #page-positioner h2 {
+h1, h2 {
   font-weight: 300;
-}
-
-#page-positioner {
-  h3, h4, .attribute-label {
-    font-weight: 400;
-  }
 }
 
 .input-group {
