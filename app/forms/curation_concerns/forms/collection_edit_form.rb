@@ -55,7 +55,7 @@ module CurationConcerns
       private
 
         def all_files
-          member_presenters.flat_map(&:file_presenters).map { |x| [x.to_s, x.id] }
+          member_presenters.flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
         end
 
         def member_presenters
