@@ -16,12 +16,6 @@ ul.listing .add, ul.listing .remove {
   text-align: center;
 }
 
-.btn-primary:hover, .btn-primary:focus {
-  background-color: $add-background-hover;
-  border-color: $add-border-color;
-  color: $add-text-hover;
-}
-
 .add {
   @extend .btn-primary;
 }
@@ -33,19 +27,6 @@ ul.listing .add, ul.listing .remove {
   }
 }
 
-.btn-danger:hover, .btn-danger:focus {
-  background-color: $remove-background-hover;
-  border-color: $remove-border-color;
-  color: $remove-text-hover;
-}
-
 span.appliedFilter .remove {
   @extend .btn-danger;
 }
-
-.btn-warning:hover, .btn-warning:focus {
-  background-color: $neutral-background-hover;
-  border-color: $neutral-border-color;
-  color: $neutral-text-hover;
-}
-
