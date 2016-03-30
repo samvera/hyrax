@@ -1,2 +1,14 @@
-$headings-font-family: 'Lato', Verdana, Arial, Helvetica, sans-serif;
-$headings-font-weight: 400;
+$btn-primary-color:              $add-text-color !default;
+$btn-primary-bg:                 $add-background-color !default;
+$btn-primary-border:             $add-border-color !default;
+
+$btn-warning-color:              $neutral-text-color !default;
+$btn-warning-bg:                 $neutral-background-color !default;
+$btn-warning-border:             $neutral-border-color !default;
+
+$btn-danger-color:              $remove-text-color !default;
+$btn-danger-bg:                 $remove-background-color !default;
+$btn-danger-border:             $remove-border-color !default;
+
+$headings-font-family: 'Lato', Verdana, Arial, Helvetica, sans-serif !default;
+$headings-font-weight: 400 !default;

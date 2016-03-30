@@ -8,6 +8,7 @@
  *= require nestable
 */
 
+@import 'sufia/settings';
 @import 'sufia/variables';
 @import "bootstrap-sprockets";
 @import 'bootstrap';
@@ -16,7 +17,7 @@
 
 // Use import here instead of require so we can use the Sass variables defined in Bootstrap and Blacklight
 // TODO: Probably should use import throughout and move all of Sufia's stylesheets into a single named directory.
-@import 'sufia/settings', 'sufia/header', 'sufia/styles', 'sufia/file-listing',
+@import 'sufia/header', 'sufia/styles', 'sufia/file-listing',
         'sufia/collections', 'sufia/batch-edit', 'sufia/dashboard', 'sufia/home-page',
         'sufia/featured', 'sufia/tagcloud', 'sufia/usage-stats', 'sufia/catalog', 'sufia/buttons',
         'sufia/tinymce', 'sufia/proxy-rights', 'sufia/file-show', 'sufia/modal',
