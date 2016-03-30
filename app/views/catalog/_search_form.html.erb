@@ -1,52 +1,46 @@
 <%= form_tag search_form_action, method: :get, id: "search-form-header", role: "search" do %>
   <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
+  <div class="input-group">
 
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="input-group">
+    <label class="sr-only" for="search-field-header"><%= t("sufia.search.form.q.label") %></label>
+    <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("sufia.search.form.q.placeholder") %>
 
-          <label class="sr-only" for="search-field-header"><%= t("sufia.search.form.q.label") %></label>
-          <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("sufia.search.form.q.placeholder") %>
+    <div class="input-group-btn">
+      <button type="submit" class="btn btn-primary" id="search-submit-header">
+        <%= t('sufia.search.button.html') %>
+      </button>
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <span data-search-element="label"><%= t("sufia.search.form.option.all.label_long") %></span>
+        <span class="caret"></span>
+      </button>
 
-          <div class="input-group-btn">
-            <button type="submit" class="btn btn-primary" id="search-submit-header">
-              <%= t('sufia.search.button.html') %>
-            </button>
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-              <span data-search-element="label"><%= t("sufia.search.form.option.all.label_long") %></span>
-              <span class="caret"></span>
-            </button>
+      <ul class="dropdown-menu pull-right">
+        <li>
+          <%= link_to t("sufia.search.form.option.all.label_long"), "#",
+              data: { "search-option" => main_app.search_catalog_path, "search-label" => t("sufia.search.form.option.all.label_short") } %>
+        </li>
 
-            <ul class="dropdown-menu pull-right">
-              <li>
-                <%= link_to t("sufia.search.form.option.all.label_long"), "#",
-                    data: { "search-option" => main_app.search_catalog_path, "search-label" => t("sufia.search.form.option.all.label_short") } %>
-              </li>
+        <% if current_user %>
+          <li>
+            <%= link_to t("sufia.search.form.option.my_works.label_long"), "#",
+                data: { "search-option" => sufia.dashboard_works_path, "search-label" => t("sufia.search.form.option.my_works.label_short") } %>
+          </li>
+          <li>
+            <%= link_to t("sufia.search.form.option.my_collections.label_long"), "#",
+                data: { "search-option" => sufia.dashboard_collections_path, "search-label" => t("sufia.search.form.option.my_collections.label_short") } %>
+          </li>
+          <li>
+            <%= link_to t("sufia.search.form.option.my_highlights.label_long"), "#",
+                data: { "search-option" => sufia.dashboard_highlights_path, "search-label" => t("sufia.search.form.option.my_highlights.label_short") } %>
+          </li>
+          <li>
+            <%= link_to t("sufia.search.form.option.my_shares.label_long"), "#",
+                data: { "search-option" => sufia.dashboard_shares_path, "search-label" => t("sufia.search.form.option.my_shares.label_short") } %>
+          </li>
+        <% end %>
 
-              <% if current_user %>
-                <li>
-                  <%= link_to t("sufia.search.form.option.my_works.label_long"), "#",
-                      data: { "search-option" => sufia.dashboard_works_path, "search-label" => t("sufia.search.form.option.my_works.label_short") } %>
-                </li>
-                <li>
-                  <%= link_to t("sufia.search.form.option.my_collections.label_long"), "#",
-                      data: { "search-option" => sufia.dashboard_collections_path, "search-label" => t("sufia.search.form.option.my_collections.label_short") } %>
-                </li>
-                <li>
-                  <%= link_to t("sufia.search.form.option.my_highlights.label_long"), "#",
-                      data: { "search-option" => sufia.dashboard_highlights_path, "search-label" => t("sufia.search.form.option.my_highlights.label_short") } %>
-                </li>
-                <li>
-                  <%= link_to t("sufia.search.form.option.my_shares.label_long"), "#",
-                      data: { "search-option" => sufia.dashboard_shares_path, "search-label" => t("sufia.search.form.option.my_shares.label_short") } %>
-                </li>
-              <% end %>
+      </ul>
+    </div><!-- /.input-group-btn -->
 
-            </ul>
-          </div><!-- /.input-group-btn -->
-
-        </div><!-- /.input-group -->
-      </div><!-- /text field dropdown -->
-    </div><!-- /.row -->
-
+  </div><!-- /.input-group -->
 <% end %>

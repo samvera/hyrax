@@ -1,17 +1,13 @@
 <div id="masthead_controls" class="container-fluid">
-  <div class="row">
-    <div class="col-xs-12 col-sm-5 col-md-6">
-      <nav class="navbar navbar-default" role="navigation">
-        <ul class="nav navbar-nav">
-          <li <%= 'class=active' if current_page?(sufia.root_path) %>><a href="<%= sufia.root_path %>">Home</a></li>
-          <li <%= 'class=active' if current_page?(sufia.about_path) %>><a href="<%= sufia.about_path %>">About</a></li>
-          <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.static_path('help') %>">Help</a></li>
-          <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
-        </ul><!-- /.nav -->
-      </nav><!-- /.navbar -->
-    </div>
-    <div class="col-xs-12 col-sm-7 col-md-6">
+  <nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav col-sm-5 col-md-6">
+      <li <%= 'class=active' if current_page?(sufia.root_path) %>><a href="<%= sufia.root_path %>">Home</a></li>
+      <li <%= 'class=active' if current_page?(sufia.about_path) %>><a href="<%= sufia.about_path %>">About</a></li>
+      <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.static_path('help') %>">Help</a></li>
+      <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
+    </ul><!-- /.nav -->
+    <div class="navbar-right row col-sm-7 col-md-6">
       <%= render partial: 'catalog/search_form' %>
     </div>
-  </div> <!-- /.row -->
+  </nav><!-- /.navbar -->
 </div><!-- /#masthead_controls -->
