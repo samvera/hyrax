@@ -3,30 +3,28 @@
 <head><%= render partial: 'layouts/head_tag_content' %></head>
 <body>
 <div id="wrapper">
-  <div class="container-fluid">
-    <div id="page-positioner">
-      <a href="#skip_to_content" class="sr-only">Skip to Content</a>
-      <%= render '/masthead' %>
-      <%= render '/controls' %>
-      <%= render '/flash_msg' %>
+  <div id="page-positioner">
+    <a href="#skip_to_content" class="sr-only">Skip to Content</a>
+    <%= render '/masthead' %>
+    <%= render '/controls' %>
+    <%= render '/flash_msg' %>
 
-      <div id="content-wrapper" class="dashboard" role="main">
-        <a name="skip_to_content"></a>
-        <div class="container-fluid">
-          <div id="content-header" class="row"><%= yield :page_header %></div>
-        </div>
-        <div class="container-fluid">
-          <div id="content" class="row">
-            <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
-            <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
-          </div>
+    <div id="content-wrapper" class="dashboard" role="main">
+      <a name="skip_to_content"></a>
+      <div class="container-fluid">
+        <div id="content-header" class="row"><%= yield :page_header %></div>
+      </div>
+      <div class="container-fluid">
+        <div id="content" class="row">
+          <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
+          <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
         </div>
       </div>
+    </div>
 
-      <%= render partial: '/footer' %>
+    <%= render partial: '/footer' %>
 
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
+  </div><!-- /#page-positioner -->
 </div><!-- /#wrapper -->
 <%= render 'shared/ajax_modal' %>
 </body>
