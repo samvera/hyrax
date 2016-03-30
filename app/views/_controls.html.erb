@@ -1,5 +1,5 @@
-<div id="masthead_controls" class="container-fluid">
-  <nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
     <ul class="nav navbar-nav col-sm-5 col-md-6">
       <li <%= 'class=active' if current_page?(sufia.root_path) %>><a href="<%= sufia.root_path %>">Home</a></li>
       <li <%= 'class=active' if current_page?(sufia.about_path) %>><a href="<%= sufia.about_path %>">About</a></li>
@@ -9,5 +9,5 @@
     <div class="navbar-right row col-sm-7 col-md-6">
       <%= render partial: 'catalog/search_form' %>
     </div>
-  </nav><!-- /.navbar -->
-</div><!-- /#masthead_controls -->
+  </div>
+</nav><!-- /.navbar -->

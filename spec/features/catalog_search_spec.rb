@@ -19,7 +19,7 @@ describe 'catalog searching', type: :feature do
     let!(:collection) { create(:public_collection, tag: ['collection_tag', 'shared_tag']) }
 
     it 'performing a search' do
-      within('#masthead_controls') do
+      within('#search-form-header') do
         fill_in('search-field-header', with: 'shared_tag')
         click_button('Go')
       end

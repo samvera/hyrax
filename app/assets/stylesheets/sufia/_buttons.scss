@@ -20,13 +20,6 @@ ul.listing .add, ul.listing .remove {
   @extend .btn-primary;
 }
 
-#search-form-header {
-  .btn-primary:hover, .btn-primary:focus {
-    background-color: $gray-light !important;
-    color: $basic-black;
-  }
-}
-
 span.appliedFilter .remove {
   @extend .btn-danger;
 }
