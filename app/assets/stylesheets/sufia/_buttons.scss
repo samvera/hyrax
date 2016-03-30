@@ -58,16 +58,3 @@ span.appliedFilter .remove:hover, span.appliedFilter .remove:focus,
   color: $neutral-text-hover;
 }
 
-.info {
-  background-color: $view-select-background-color;
-  border-color: $view-select-border-color;
-  color: $view-select-text-color;
-}
-.info:hover, .info:focus {
-  background-color: $view-select-background-hover;
-  border-color: $view-select-border-color;
-  color: $view-select-text-hover;
-}
-
-
-
