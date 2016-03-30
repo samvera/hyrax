@@ -179,8 +179,8 @@ module Sufia
     end
 
     def add_sufia_assets
-      insert_into_file 'app/assets/stylesheets/application.css', after: ' *= require_self' do
-        "\n *= require sufia"
+      insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
+        "\n *= require sufia\n"
       end
 
       gsub_file 'app/assets/javascripts/application.js',
