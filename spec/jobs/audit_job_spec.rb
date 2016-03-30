@@ -11,7 +11,7 @@ describe AuditJob do
   end
   let(:file_id) { file.original_file.id }
 
-  let(:job) { described_class.perform_now(file.id, file_id, uri) }
+  let(:job) { described_class.perform_now(file, file_id, uri) }
 
   describe 'audit on content' do
     let(:uri) { file.original_file.uri }
@@ -46,15 +46,11 @@ describe AuditJob do
     end
 
     let(:job) do
-      described_class.new.tap do |j|
-        j.id = file.id
-        j.file_id = file_id
-        j.uri = uri
-      end
+      described_class.new
     end
 
     it 'does not prune failed audits' do
-      5.times { job.send(:run_audit) }
+      5.times { job.send(:run_audit, file, file_id, uri) }
       expect(ChecksumAuditLog.logs_for(file.id, file_id).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
     end
   end

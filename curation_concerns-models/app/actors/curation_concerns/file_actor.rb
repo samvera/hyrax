@@ -1,5 +1,5 @@
 module CurationConcerns
-  # actions for a file identified by file_set_id and relation (maps to use predicate)
+  # actions for a file identified by file_set and relation (maps to use predicate)
   class FileActor
     attr_reader :file_set, :relation, :user
 
@@ -19,10 +19,10 @@ module CurationConcerns
     # have made it to the repo
     # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file to save in the repository
     def ingest_file(file)
-      working_file = copy_file_to_working_directory(file, file_set_id)
+      working_file = copy_file_to_working_directory(file, file_set.id)
       mime_type = file.respond_to?(:content_type) ? file.content_type : nil
-      IngestFileJob.perform_later(file_set_id, working_file, mime_type, user.user_key, relation)
-      make_derivative(file_set.id, working_file)
+      IngestFileJob.perform_later(file_set, working_file, mime_type, user.user_key, relation)
+      make_derivative(file_set, working_file)
       true
     end
 
@@ -36,18 +36,14 @@ module CurationConcerns
 
       # Retrieve a copy of the orginal file from the repository
       working_file = copy_repository_resource_to_working_directory(repository_file)
-      make_derivative(file_set_id, working_file)
+      make_derivative(file_set, working_file)
       true
     end
 
     private
 
-      def file_set_id
-        file_set.id
-      end
-
-      def make_derivative(file_set_id, working_file)
-        CharacterizeJob.perform_later(file_set_id, working_file)
+      def make_derivative(file_set, working_file)
+        CharacterizeJob.perform_later(file_set, working_file)
       end
 
       # @param [File, ActionDispatch::Http::UploadedFile] file
@@ -61,7 +57,7 @@ module CurationConcerns
       # @param [ActiveFedora::File] file the resource in the repo
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file)
-        copy_stream_to_working_directory(file_set_id, file.original_name, StringIO.new(file.content))
+        copy_stream_to_working_directory(file_set.id, file.original_name, StringIO.new(file.content))
       end
 
       # @param [String] id the identifer

@@ -10,7 +10,7 @@ describe VisibilityCopyJob do
 
       work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
       work.save
-      described_class.perform_now(work.id)
+      described_class.perform_now(work)
       work.reload.file_sets.each do |file|
         expect(file.visibility).to eq 'open'
       end
@@ -27,7 +27,7 @@ describe VisibilityCopyJob do
     end
 
     before do
-      described_class.perform_now(work.id)
+      described_class.perform_now(work)
       work.reload
     end
     let(:file) { work.file_sets.first }
@@ -48,7 +48,7 @@ describe VisibilityCopyJob do
     end
 
     before do
-      described_class.perform_now(work.id)
+      described_class.perform_now(work)
       work.reload
     end
     let(:file) { work.file_sets.first }

@@ -81,7 +81,7 @@ module CurationConcerns
       def audit_file_version(file_id, version_uri)
         latest_audit = ChecksumAuditLog.logs_for(file_set.id, file_id).first
         return latest_audit unless needs_audit?(latest_audit)
-        AuditJob.perform_later(file_set.id, file_id, version_uri.to_s)
+        AuditJob.perform_later(file_set, file_id, version_uri.to_s)
         latest_audit || ChecksumAuditLog.new(pass: NO_RUNS, file_set_id: file_set.id, file_id: file_id, version: version_uri)
       end
 
