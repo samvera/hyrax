@@ -12,6 +12,10 @@ module ContentBlockHelper
     end
   end
 
+  def display_editable_content_block?(content_block)
+    content_block.value.present? || can?(:update, content_block)
+  end
+
   def edit_button(content_block)
     button_tag "Edit", class: 'btn btn-primary', data: { behavior: 'reveal-editor', target: '#' + dom_id(content_block, 'edit') }
   end
