@@ -1,7 +1,7 @@
 require 'spec_helper'
 # require 'redlock'
 
-feature 'Creating a new Work' do
+feature 'Creating a new Work', :js do
   let(:user) { create(:user) }
 
   # let(:redlock_client_stub) { # stub out redis connection
@@ -13,22 +13,30 @@ feature 'Creating a new Work' do
 
   before do
     sign_in user
+    click_link "Create Work"
 
-    # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
-    # expect(CharacterizeJob).to receive(:perform_later)
+    allow(CharacterizeJob).to receive(:perform_later)
     # redlock_client_stub
   end
 
   it 'creates the work' do
-    visit root_path
-    work_title = 'My Test Work'
-    click_link 'Share Your Work'
-    within('form.new_generic_work') do
-      fill_in('Title', with: work_title)
-      choose('visibility_open')
-      # attach_file('Upload a file', fixture_file_path('files/image.png'))
-      click_on('Save')
-    end
+    click_link "Files" # switch tab
+    expect(page).to have_content "Add files"
+    expect(page).to have_content "Start upload"
+    expect(page).to have_content "Cancel upload"
+
+    attach_file("files[]", File.dirname(__FILE__) + "/../../spec/fixtures/image.jp2", visible: false)
+    attach_file("files[]", File.dirname(__FILE__) + "/../../spec/fixtures/jp2_fits.xml", visible: false)
+
+    click_button "Start upload"
+
+    click_link "Metadata" # switch tab
+    fill_in('Title', with: 'My Test Work')
+
+    choose('visibility_open')
+    # attach_file('Upload a file', fixture_file_path('files/image.png'))
+    click_on('Save')
     expect(page).to have_content('My Test Work (Generic Work)')
+    expect(page).to have_content "Your files are being processed by Repository in the background."
   end
 end

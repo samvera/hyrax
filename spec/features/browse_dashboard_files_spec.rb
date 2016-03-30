@@ -12,8 +12,8 @@ describe "Browse Dashboard", type: :feature do
   end
 
   it "lets the user search and display their files" do
-    expect(page).to have_link("Create Collection")
-    expect(page).to have_link("Upload")
+    expect(page).to have_link "Create Collection"
+    expect(page).to have_link "Create Work"
 
     # Search
     fill_in "q", with: "PDF"

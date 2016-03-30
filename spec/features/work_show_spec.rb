@@ -14,12 +14,6 @@ describe "display a work as its owner" do
     it "shows a work" do
       expect(page).to have_selector 'h1', text: 'Magnificent splendor'
 
-      # Has a form for uploading more files
-      expect(page).to have_selector "form#fileupload[action='/concern/container/#{work.id}/file_sets']"
-
-      # and the form redirects back to this page after uploading
-      expect(page).to have_selector '#redirect-loc', text: work_path
-
       # Displays FileSets already attached to this work
       within '.related_files' do
         expect(page).to have_selector '.filename', text: 'filename.pdf'
