@@ -38,4 +38,32 @@ describe ContentBlockHelper, type: :helper do
       expect(subject).to be_html_safe
     end
   end
+
+  describe '#display_editable_content_block?' do
+    context 'anonymous' do
+      before do
+        allow(helper).to receive(:can?).with(:update, content_block).and_return(false)
+      end
+
+      it 'is true if the content block has data' do
+        expect(helper.display_editable_content_block?(content_block)).to eq true
+      end
+
+      it 'is false if the content block is empty data' do
+        content_block.update(value: '')
+        expect(helper.display_editable_content_block?(content_block)).to eq false
+      end
+    end
+
+    context 'for someone with access' do
+      before do
+        allow(helper).to receive(:can?).with(:update, content_block).and_return(true)
+      end
+
+      it 'is true if the user can edit the field' do
+        content_block.update(value: '')
+        expect(helper.display_editable_content_block?(content_block)).to eq true
+      end
+    end
+  end
 end
