@@ -16,16 +16,14 @@ ul.listing .add, ul.listing .remove {
   text-align: center;
 }
 
-.add, .btn-primary {
-  background-color: $add-background-color;
-  border-color: $add-border-color;
-  color: $add-text-color;
-}
-.add:hover, .add:focus,
 .btn-primary:hover, .btn-primary:focus {
   background-color: $add-background-hover;
   border-color: $add-border-color;
   color: $add-text-hover;
+}
+
+.add {
+  @extend .btn-primary;
 }
 
 #search-form-header {
@@ -35,39 +33,19 @@ ul.listing .add, ul.listing .remove {
   }
 }
 
-span.appliedFilter .remove, .btn-danger {
-  background-color: $remove-background-color;
-  border-color: $remove-border-color;
-  color: $remove-text-color;
-}
-span.appliedFilter .remove:hover, span.appliedFilter .remove:focus,
 .btn-danger:hover, .btn-danger:focus {
   background-color: $remove-background-hover;
   border-color: $remove-border-color;
   color: $remove-text-hover;
 }
 
-.btn-warning {
-  background-color: $neutral-background-color;
-  border-color: $neutral-border-color;
-  color: $neutral-text-color;
+span.appliedFilter .remove {
+  @extend .btn-danger;
 }
+
 .btn-warning:hover, .btn-warning:focus {
   background-color: $neutral-background-hover;
   border-color: $neutral-border-color;
   color: $neutral-text-hover;
 }
-
-.info {
-  background-color: $view-select-background-color;
-  border-color: $view-select-border-color;
-  color: $view-select-text-color;
-}
-.info:hover, .info:focus {
-  background-color: $view-select-background-hover;
-  border-color: $view-select-border-color;
-  color: $view-select-text-hover;
-}
-
-
 
