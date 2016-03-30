@@ -1,9 +1,7 @@
-class VisibilityCopyJob < ActiveFedoraIdBasedJob
+class VisibilityCopyJob < ActiveJob::Base
   queue_as :permissions
 
-  def perform(id)
-    @id = id
-    work = object
+  def perform(work)
     work.file_sets.each do |file|
       file.visibility = work.visibility # visibility must come first, because it can clear an embargo/lease
       if work.lease

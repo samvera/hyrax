@@ -1,14 +1,12 @@
 class IngestFileJob < ActiveJob::Base
   queue_as :ingest
 
-  # @param [String] file_set_id
+  # @param [FileSet] file_set
   # @param [String] filename
   # @param [String,NilClass] mime_type
   # @param [String] user_key
   # @param [String] relation ('original_file')
-  def perform(file_set_id, filename, mime_type, user_key, relation = 'original_file')
-    file_set = FileSet.find(file_set_id)
-
+  def perform(file_set, filename, mime_type, user_key, relation = 'original_file')
     file = File.open(filename, "rb")
     # If mime-type is known, wrap in an IO decorator
     # Otherwise allow Hydra::Works service to determine mime_type

@@ -613,4 +613,10 @@ describe FileSet do
       end
     end
   end
+
+  describe "#to_global_id" do
+    let(:file_set) { described_class.new(id: '123') }
+    subject { file_set.to_global_id }
+    it { is_expected.to be_kind_of GlobalID }
+  end
 end

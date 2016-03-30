@@ -20,14 +20,14 @@ describe IngestFileJob do
       Object.send(:remove_const, :FileSetWithExtras)
     end
     it 'uses the provided relationship' do
-      described_class.perform_now(file_set.id, filename, 'image/png', 'bob', 'remastered')
+      described_class.perform_now(file_set, filename, 'image/png', 'bob', 'remastered')
       expect(file_set.reload.remastered.mime_type).to eq 'image/png'
     end
   end
 
   context 'when given a mime_type' do
     it 'uses the provided mime_type' do
-      described_class.perform_now(file_set.id, filename, 'image/png', 'bob')
+      described_class.perform_now(file_set, filename, 'image/png', 'bob')
       expect(file_set.reload.original_file.mime_type).to eq 'image/png'
     end
   end
@@ -38,7 +38,7 @@ describe IngestFileJob do
       # The parameter versioning: false instructs the machinery in Hydra::Works NOT to do versioning. So it can be handled later on.
       allow(CurationConcerns::VersioningService).to receive(:create)
       expect(Hydra::Works::AddFileToFileSet).to receive(:call).with(file_set, instance_of(::File), :original_file, versioning: false)
-      described_class.perform_now(file_set.id, filename, nil, 'bob')
+      described_class.perform_now(file_set, filename, nil, 'bob')
     end
   end
 
@@ -49,8 +49,8 @@ describe IngestFileJob do
     let(:user2) { create(:user) }
 
     before do
-      described_class.perform_now(file_set.id, file1, 'image/png', user.user_key)
-      described_class.perform_now(file_set.id, file2, 'text/plain', user2.user_key)
+      described_class.perform_now(file_set, file1, 'image/png', user.user_key)
+      described_class.perform_now(file_set, file2, 'text/plain', user2.user_key)
     end
 
     it 'has two versions' do
@@ -72,7 +72,7 @@ describe IngestFileJob do
     subject { CurationConcerns.config.callback }
     it 'runs with file_set and user arguments' do
       expect(subject).to receive(:run).with(:after_create_content, file_set, user)
-      described_class.perform_now(file_set.id, filename, 'image/png', user.user_key)
+      described_class.perform_now(file_set, filename, 'image/png', user.user_key)
     end
   end
 end

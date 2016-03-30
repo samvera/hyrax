@@ -2,15 +2,14 @@ require 'net/https'
 require 'uri'
 require 'tempfile'
 
-class ImportUrlJob < ActiveFedoraIdBasedJob
+class ImportUrlJob < ActiveJob::Base
   queue_as :import_url
 
-  def perform(id)
-    @id = id
+  def perform(file_set)
     user = User.find_by_user_key(file_set.depositor)
 
-    Tempfile.open(id.tr('/', '_')) do |f|
-      copy_remote_file(file_set.import_url, f)
+    Tempfile.open(file_set.id.tr('/', '_')) do |f|
+      copy_remote_file(file_set, f)
 
       # reload the generic file once the data is copied since this is a long running task
       file_set.reload
@@ -25,23 +24,25 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
     end
   end
 
-  def copy_remote_file(_import_url, f)
-    f.binmode
-    # download file from url
-    uri = URI(file_set.import_url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = uri.scheme == 'https' # enable SSL/TLS
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    mime_type = nil
+  protected
 
-    http.start do
-      http.request_get(uri.request_uri) do |resp|
-        mime_type = resp.content_type
-        resp.read_body do |segment|
-          f.write(segment)
+    def copy_remote_file(file_set, f)
+      f.binmode
+      # download file from url
+      uri = URI(file_set.import_url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = uri.scheme == 'https' # enable SSL/TLS
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      mime_type = nil
+
+      http.start do
+        http.request_get(uri.request_uri) do |resp|
+          mime_type = resp.content_type
+          resp.read_body do |segment|
+            f.write(segment)
+          end
         end
       end
+      f.rewind
     end
-    f.rewind
-  end
 end
