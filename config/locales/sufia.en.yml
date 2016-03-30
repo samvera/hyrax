@@ -74,8 +74,6 @@ en:
         details:            'Details'
         tab_label:          'Recently Uploaded'
         no_public:          'No public work has been contributed.'
-      explore:              'Explore'
-      sr_explore:           'Popular Keywords'
     dashboard:
       title:                    "My Dashboard"
       greeting:                 "Hello, "
