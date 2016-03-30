@@ -37,10 +37,6 @@ class CatalogController < ApplicationController
       qf: "title_tesim name_tesim"
     }
 
-    # Specify which field to use in the tag cloud on the homepage.
-    # To disable the tag cloud, comment out this line.
-    config.tag_cloud_field_name = Solrizer.solr_name("tag", :facetable)
-
     # solr field configuration for document/show views
     config.index.title_field = solr_name("title", :stored_searchable)
     config.index.display_type_field = solr_name("has_model", :symbol)

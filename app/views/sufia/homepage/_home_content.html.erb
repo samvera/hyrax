@@ -16,13 +16,4 @@
   <div>
     <%= render partial: 'featured_researcher' %>
   </div>
-  <div>
-    <%- if blacklight_config.respond_to?(:tag_cloud_field_name) && blacklight_config.tag_cloud_field_name %>
-        <div class="row">
-          <h2 class="heading1 pull-left"><%= t('sufia.homepage.explore') %></h2>
-          <span class="sr-only"><%= t('sufia.homepage.sr_explore') %></span>
-          <%= render partial: 'tagcloud', locals: { tag_cloud_field_name: blacklight_config.tag_cloud_field_name } %>
-        </div>
-    <%- end %>
-  </div>
 </div>

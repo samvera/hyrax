@@ -59,8 +59,6 @@
 //= require jquery.treetable
 //= require browse_everything/behavior
 //
-//= require jquery.blacklightTagCloud
-//= require sufia/tagcloud
 //= require nestable
 
 // this needs to be after batch_select so that the form ids get setup correctly

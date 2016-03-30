@@ -18,7 +18,7 @@
 // TODO: Probably should use import throughout and move all of Sufia's stylesheets into a single named directory.
 @import 'sufia/settings', 'sufia/header', 'sufia/styles', 'sufia/file-listing',
         'sufia/collections', 'sufia/batch-edit', 'sufia/dashboard', 'sufia/home-page',
-        'sufia/featured', 'sufia/tagcloud', 'sufia/usage-stats', 'sufia/catalog', 'sufia/buttons',
+        'sufia/featured', 'sufia/usage-stats', 'sufia/catalog', 'sufia/buttons',
         'sufia/tinymce', 'sufia/proxy-rights', 'sufia/file-show', 'sufia/modal',
         'sufia/form-progress';
 @import 'hydra-editor/multi_value_fields';
