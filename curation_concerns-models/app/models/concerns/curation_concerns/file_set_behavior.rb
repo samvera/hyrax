@@ -18,6 +18,7 @@ module CurationConcerns
     include CurationConcerns::RequiredMetadata
     include CurationConcerns::Naming
     include Hydra::AccessControls::Embargoable
+    include GlobalID::Identification
 
     included do
       attr_accessor :file

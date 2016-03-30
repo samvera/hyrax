@@ -56,4 +56,10 @@ describe GenericWork do
       }.to change { FileSet.count }.by(-2)
     end
   end
+
+  describe "#to_global_id" do
+    let(:work) { described_class.new(id: '123') }
+    subject { work.to_global_id }
+    it { is_expected.to be_kind_of GlobalID }
+  end
 end
