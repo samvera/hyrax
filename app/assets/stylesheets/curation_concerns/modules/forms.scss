@@ -69,38 +69,6 @@ form label.required { font-weight: bold; }
   }
 }
 
-
-.field-choice {
-  padding-bottom:1em;
-  padding-top:1em;
-  text-align:center;
-  font-size:1.3em;
-  line-height:1;
-  z-index: -1000;  // Prevent padding from obscuring file upload button when window is narrow
-}
-
-.accept-contributor-agreement {
-  padding: 1em 2.5em;
-  input, label {
-    font-size:1.3em;
-    font-weight: normal;
-  }
-}
-
 form.button-to {
   margin:0 .3em;
-}
-
-form.pull-right {
-  margin-right:0;
-}
-
-.inline-checkbox {
-  display: inline-block;
-  padding-right:1em;
-}
-
-.help-inline {
-  color: $gray;
-  padding-left: 1em;
 }
