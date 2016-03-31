@@ -10,10 +10,6 @@ class Sufia::AvatarUploader < CarrierWave::Uploader::Base
     process resize_to_limit: [100, 100]
   end
 
-  def default_url
-    "missing_#{version_name}.png"
-  end
-
   def extension_white_list
     %w(jpg jpeg png gif bmp tif tiff)
   end
