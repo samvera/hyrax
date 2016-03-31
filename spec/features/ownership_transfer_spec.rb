@@ -46,8 +46,7 @@ describe 'Transferring work ownership:', type: :feature do
       context 'If the new owner accepts it' do
         before do
           new_owner.proxy_deposit_requests.last.transfer!
-          user_utility_toggle.click
-          click_link 'transfer requests'
+          nav_toggle 'Dashboard', 'Transfer'
         end
         it 'I should see it was accepted' do
           expect(page.find('#outgoing-transfers')).to have_content 'Accepted'
@@ -55,8 +54,7 @@ describe 'Transferring work ownership:', type: :feature do
       end
       context 'If I cancel it' do
         before do
-          user_utility_toggle.click
-          click_link 'transfer requests'
+          nav_toggle 'Dashboard', 'Transfer'
           first_sent_cancel_button.click
         end
         it 'I should see it was cancelled' do
@@ -73,14 +71,11 @@ describe 'Transferring work ownership:', type: :feature do
       # Become the new_owner so we can manage transfers sent to us
       sign_in new_owner
       visit '/dashboard'
-      user_utility_toggle.click
-      within '#user_utility_links' do
-        click_link 'transfer requests'
-      end
+      nav_toggle 'Dashboard', 'Transfer'
       expect(page).to have_content 'Transfer of Ownership'
     end
     it 'I should receive a notification' do
-      user_notifications_link.click
+      nav_toggle('Dashboard', 'Notifications')
       expect(page).to have_content "#{original_owner.name} wants to transfer a work to you"
     end
     it 'I should be able to accept it' do

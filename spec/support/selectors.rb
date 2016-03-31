@@ -1,9 +1,14 @@
 module Selectors
   module Header
-    def user_notifications_link
-      within '#user_utility_links' do
-        find '#notify_link'
+    def nav_toggle(section, link)
+      within '.navbar-static-top' do
+        click_on section
+        click_on link
       end
+    end
+
+    def user_notifications_link
+      nav_toggle('Dashboard', 'Notifications')
     end
 
     def user_utility_toggle

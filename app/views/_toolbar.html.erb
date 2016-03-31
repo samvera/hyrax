@@ -1,0 +1,65 @@
+<% if user_signed_in? %>
+  <ul class="nav navbar-nav">
+    <% if can? :manage, :all %>
+      <li class="dropdown">
+        <%= link_to sufia.admin_stats_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+          <span class="fa fa-gear"></span> Admin <span class="caret"></span>
+        <% end %>
+        <ul class="dropdown-menu">
+          <% if respond_to? :admin_stats_path %>
+            <li><%= link_to 'Repository Statistics', sufia.admin_stats_path %></li>
+          <% end %>
+
+          <% if respond_to? :admin_queues_path %>
+            <li><%= link_to 'Message Queues', sufia.admin_queues_path %></li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+
+    <li class="dropdown">
+      <%= link_to sufia.dashboard_index_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+        <span class="fa fa-tachometer"></span> Dashboard <span class="caret"></span>
+      <% end %>
+      <ul class="dropdown-menu">
+        <li><%= link_to 'My Dashboard', sufia.dashboard_index_path %></li>
+        <li class="divider"></li>
+        <li>
+          <%= link_to sufia.notifications_path do %>
+            Notifications
+            <span id="notify_number" class="label label-<%= (@notify_number || 0) > 0 ? 'danger' : 'default' %>"> <%= @notify_number %> <span class="sr-only">unread notifications</span></span>
+          <% end %>
+        </li>
+        <li><%= link_to 'Transfers', sufia.transfers_path %></li>
+        <li class="divider"></li>
+        <li><%= link_to 'Highlights', sufia.dashboard_highlights_path %></li>
+        <li><%= link_to 'Shares', sufia.dashboard_shares_path %></li>
+      </ul>
+    </li>
+
+    <% if can? :create, GenericWork %>
+      <li class="dropdown">
+        <%= link_to sufia.dashboard_works_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+          <span class="fa fa-cube"></span> Works <span class="caret"></span>
+        <% end %>
+        <ul class="dropdown-menu">
+          <li><%= link_to 'My Works', sufia.dashboard_works_path %></li>
+          <li><%= link_to 'New Work', sufia.new_curation_concerns_generic_work_path %></li>
+          <li><%= link_to 'Batch Create', sufia.new_curation_concerns_file_set_path %></li>
+        </ul>
+      </li>
+    <% end %>
+    
+    <% if can?(:create, Collection) %>
+      <li class="dropdown">
+        <%= link_to sufia.dashboard_collections_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+          <span class="fa fa-cubes"></span> Collections <span class="caret"></span>
+        <% end %>
+        <ul class="dropdown-menu">
+          <li><%= link_to 'My Collections', sufia.dashboard_collections_path %></li>
+          <li><%= link_to 'New Collection', collections.new_collection_path %></li>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
