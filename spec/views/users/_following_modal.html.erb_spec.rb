@@ -2,10 +2,8 @@ require 'spec_helper'
 
 describe 'users/_following_modal.html.erb', type: :view do
   before do
-    assign :following, following
-    assign :user, view_user
     allow(controller).to receive(:current_user) { current_user }
-    render
+    render partial: 'users/following_modal', locals: { user: view_user, following: following }
   end
 
   let(:frank) { FactoryGirl.create(:user, display_name: "Frank") }

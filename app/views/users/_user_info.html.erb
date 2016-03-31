@@ -1,81 +1,81 @@
-<dl id="user_info" class="row">
+<dl id="user_info">
 
 <% if user.orcid.present? %>
-  <dt class="col-xs-5"><%= orcid_label('profile') %></dt>
-  <dd class="col-xs-7"><%= link_to user.orcid, user.orcid, { target: '_blank' } %></dd>
+  <dt><%= orcid_label('profile') %></dt>
+  <dd><%= link_to user.orcid, user.orcid, { target: '_blank' } %></dd>
 <% end %>
 
 <% if Sufia.config.arkivo_api && user.zotero_userid.present? %>
-  <dt class="col-xs-5"><%= zotero_label(html_class: 'profile') %></dt>
-  <dd class="col-xs-7"><%= link_to zotero_profile_url(user.zotero_userid), zotero_profile_url(user.zotero_userid), { target: '_blank' } %></dd>
+  <dt><%= zotero_label(html_class: 'profile') %></dt>
+  <dd><%= link_to zotero_profile_url(user.zotero_userid), zotero_profile_url(user.zotero_userid), { target: '_blank' } %></dd>
 <% end %>
 
 <% if user.facebook_handle.present? %>
-  <dt class="col-xs-5"><i class="fa fa-facebook"></i> Facebook Handle</dt>
-  <dd class="col-xs-7"><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+  <dt><i class="fa fa-facebook"></i> Facebook Handle</dt>
+  <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.twitter_handle.present? %>
-  <dt class="col-xs-5"><i class="fa fa-twitter"></i> Twitter Handle</dt>
-  <dd class="col-xs-7"><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+  <dt><i class="fa fa-twitter"></i> Twitter Handle</dt>
+  <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.googleplus_handle.present? %>
-  <dt class="col-xs-5"><i class="fa fa-google-plus"></i> Google+ Handle</dt>
-  <dd class="col-xs-7"><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+  <dt><i class="fa fa-google-plus"></i> Google+ Handle</dt>
+  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.linkedin_handle.present? %>
-  <dt class="col-xs-5"><i class="fa fa-linkedin"></i> LinkedIn</dt>
-  <dd class="col-xs-7"><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
+  <dt><i class="fa fa-linkedin"></i> LinkedIn</dt>
+  <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
 <% end %>
 
-  <dt class="col-xs-5"><i class="fa fa-envelope"></i> Email</dt>
-  <dd class="col-xs-7"><%= mail_to user.email %></dd>
+  <dt><i class="fa fa-envelope"></i> Email</dt>
+  <dd><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>
-    <dt class="col-xs-5"><i class="glyphicon glyphicon-bullhorn"></i> Chat ID</dt>
-    <dd class="col-xs-7"><%= user.chat_id %></dd>
+    <dt><i class="glyphicon glyphicon-bullhorn"></i> Chat ID</dt>
+    <dd><%= user.chat_id %></dd>
   <% end %>
 
   <% if user.website %>
-    <dt class="col-xs-5"><i class="glyphicon glyphicon-globe"></i> Website(s)</dt>
-    <dd class="col-xs-7"><%= iconify_auto_link(user.website) %></dd>
+    <dt><i class="glyphicon glyphicon-globe"></i> Website(s)</dt>
+    <dd><%= iconify_auto_link(user.website) %></dd>
   <% end %>
 
   <% if user.title %>
-    <dt class="col-xs-5">Title</dt>
-    <dd class="col-xs-7"><%= user.title.titleize %></dd>
+    <dt>Title</dt>
+    <dd><%= user.title %></dd>
   <% end %>
 
   <% if user.admin_area %>
-    <dt class="col-xs-5">Administrative Area</dt>
-    <dd class="col-xs-7"><%= user.admin_area.titleize %></dd>
+    <dt>Administrative Area</dt>
+    <dd><%= user.admin_area %></dd>
   <% end %>
 
   <% if user.department %>
-    <dt class="col-xs-5">Department</dt>
-    <dd class="col-xs-7"><%= user.department.titleize %></dd>
+    <dt>Department</dt>
+    <dd><%= user.department %></dd>
   <% end %>
 
   <% if user.office %>
-    <dt class="col-xs-5">Office</dt>
-    <dd class="col-xs-7"><%= user.office.titleize %></dd>
+    <dt>Office</dt>
+    <dd><%= user.office %></dd>
   <% end %>
 
   <% if user.address %>
-    <dt class="col-xs-5"><i class="glyphicon glyphicon-map-marker"></i> Address</dt>
-    <dd class="col-xs-7"><%= user.address.titleize %></dd>
+    <dt><i class="glyphicon glyphicon-map-marker"></i> Address</dt>
+    <dd><%= user.address %></dd>
   <% end %>
 
   <% if user.affiliation %>
-    <dt class="col-xs-5">Affiliation</dt>
-    <dd class="col-xs-7"><%= user.affiliation.titleize %></dd>
+    <dt>Affiliation</dt>
+    <dd><%= user.affiliation %></dd>
   <% end %>
 
   <% if user.telephone %>
-    <dt class="col-xs-5"><i class="glyphicon glyphicon-earphone"></i> Telephone</dt>
-    <dd class="col-xs-7"><%= link_to_telephone(user) %></dd>
+    <dt><i class="glyphicon glyphicon-earphone"></i> Telephone</dt>
+    <dd><%= link_to_telephone(user) %></dd>
   <% end %>
 
 </dl>

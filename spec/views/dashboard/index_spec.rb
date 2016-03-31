@@ -3,22 +3,24 @@ require 'spec_helper'
 
 describe "dashboard/index.html.erb", type: :view do
   before do
-    @user = mock_model(User, name: "Charles Francis Xavier", user_key: "charles")
+    @user = FactoryGirl.create(:user, display_name: "Charles Francis Xavier")
     allow(@user).to receive(:title).and_return("Professor, Head")
     allow(@user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
     allow(@user).to receive(:telephone).and_return("814.865.8399")
     allow(@user).to receive(:email).and_return("chuck@xsgy.edu")
     allow(@user).to receive(:login).and_return("chuck")
-    allow(@user).to receive(:all_following).and_return(["magneto"])
-    allow(@user).to receive(:followers).and_return(["wolverine", "storm"])
+    allow(@user).to receive(:all_following).and_return([double(name: "magneto")])
+    allow(@user).to receive(:followers).and_return([double(name: "wolverine"), double(name: "storm")])
     allow(@user).to receive(:can_receive_deposits_from).and_return([])
     allow(@user).to receive(:total_file_views).and_return(1)
     allow(@user).to receive(:total_file_downloads).and_return(3)
+    allow(@user).to receive(:avatar).and_return(nil)
     allow(controller).to receive(:current_user).and_return(@user)
     @ability = instance_double("Ability")
     allow(controller).to receive(:current_ability).and_return(@ability)
     allow(@ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
     allow(@ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
+    allow(@ability).to receive(:can?).with(:edit, @user).and_return(can_edit_user)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
     assign(:activity, [])
@@ -26,6 +28,7 @@ describe "dashboard/index.html.erb", type: :view do
   end
   let(:can_create_work) { true }
   let(:can_create_collection) { true }
+  let(:can_edit_user) { true }
 
   describe "heading" do
     before { render }
@@ -68,22 +71,21 @@ describe "dashboard/index.html.erb", type: :view do
     end
 
     it "has links to view and edit the user's profile" do
-      expect(@sidebar).to include '<a class="btn btn-default" href="' + sufia.profile_path(@user) + '">View Profile</a>'
-      expect(@sidebar).to include '<a class="btn btn-default" href="' + sufia.edit_profile_path(@user) + '">Edit Profile</a>'
+      expect(@sidebar).to have_link 'View Profile', href: sufia.profile_path(@user)
+      expect(@sidebar).to have_link 'Edit Profile', href: sufia.edit_profile_path(@user)
     end
 
     it "displays user statistics" do
-      expect(@sidebar).to include "Your Statistics"
-      expect(@sidebar).to have_selector '.badge', text: '1'
-      expect(@sidebar).to have_selector '.badge', text: '2'
-      expect(@sidebar).to have_selector '.badge', text: '15'
-      expect(@sidebar).to have_selector '.badge', text: '3'
-      expect(@sidebar).to have_selector 'li', text: '1 View'
-      expect(@sidebar).to have_selector 'li', text: '3 Downloads'
+      expect(@sidebar).to have_content "3 Collections created"
+      expect(@sidebar).to have_content "1 View"
+      expect(@sidebar).to have_content "3 Downloads"
+      expect(@sidebar).to have_content "15 Deposited Files"
+      expect(@sidebar).to have_content "Follower(s): 2"
+      expect(@sidebar).to have_content "Following: 1"
     end
 
     it "shows the statistics before the profile" do
-      expect(@sidebar).to match(/Your Statistics.*Charles Francis Xavier/m)
+      expect(@sidebar).to match(/Charles Francis Xavier.*Collections created/m)
     end
   end
 
@@ -134,6 +136,8 @@ describe "dashboard/index.html.erb", type: :view do
       let(:title2) { 'bazquux' }
 
       before do
+        allow(@ability).to receive(:can?).with(:edit, user).and_return(false)
+
         GenericWork.new(title: [title1]).tap do |w|
           w.apply_depositor_metadata(another_user.user_key)
           w.save!

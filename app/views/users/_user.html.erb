@@ -1,0 +1,32 @@
+<div class="panel panel-default panel-user">
+  <div class="panel-heading">
+    <%= image_tag user.avatar.url(:thumb), width: 100 if user.avatar.present? %>
+    <h3>
+      <% if user.name != user.user_key %>
+        <%= user.name %><br />
+      <% end %>
+      <%= user.user_key %>
+    </h3>
+  </div>
+
+  <div class="list-group">
+    <%= render "users/vitals", user: user %>
+    
+    <div class="list-group-item">
+      <%= render 'users/user_info', user: user %>
+    </div>
+  </div>
+  
+
+  <div class="panel-footer clearfix">
+    <% unless current_page? sufia.profile_path(user) %>
+      <%= link_to t("sufia.view_profile"), sufia.profile_path(user), class: "btn btn-default" %>
+    <% end %>
+
+    <% if can? :edit, user %>
+      <%= link_to sufia.edit_profile_path(user), class: "btn btn-default pull-right" do %>
+        <i class="glyphicon glyphicon-edit"></i> <%= t("sufia.edit_profile") %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
