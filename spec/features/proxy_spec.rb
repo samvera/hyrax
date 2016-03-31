@@ -25,8 +25,7 @@ describe 'proxy', type: :feature do
     xit "allows on-behalf-of deposit" do
       sign_in user
       visit '/'
-      first('a.dropdown-toggle').click
-      click_link('upload')
+      nav_toggle 'Works', 'New Work'
       within('#fileupload') do
         expect(page).to have_content('I have read')
         check("terms_of_service")

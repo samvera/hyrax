@@ -5,8 +5,10 @@ module Locations
   end
 
   def go_to_user_profile
-    first(".dropdown-toggle").click
-    click_link "my profile"
+    within '#user_utility_links' do
+      first("a").click
+      click_link "View Profile"
+    end
   end
 end
 

@@ -1,31 +1,25 @@
-<% if user_signed_in? %>
-    <div class="btn-group navbar-btn" id="user_utility_links">
-      <%= render partial: 'users/notify_link' %>
-      <%= link_to sufia.dashboard_index_path, class: "btn btn-default", id: "dashboard_link" do %>
-        <span class="glyphicon glyphicon-dashboard"></span>
-        <span class="sr-only">Select to access</span>
+<ul id="user_utility_links" class="nav navbar-nav navbar-right">
+  <% if user_signed_in? %>
+    <li class="dropdown">
+      <%= link_to sufia.profile_path(current_user), role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false} do %>
+        <span class="sr-only">View</span>
         <span class="hidden-xs">&nbsp;<%= current_user.name %></span>
-        <span class="sr-only"> dashboard</span>
+        <span class="sr-only"> profile</span>
+        <span class="fa fa-user"></span>
+        <span class="caret" ></span>
       <% end %>
-      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"><span class="sr-only">select for additional menu options</span><span class="caret" ></span></a>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <% if can? :create, GenericWork %>
-          <li><%= link_to sufia.new_curation_concerns_generic_work_path,
-                          id: 'upload_nav_link' do %>
-                <span class="glyphicon glyphicon-upload"></span> upload
-              <% end %>
-          </li>
-        <% end %>
-        <li><%= link_to raw('<span class="glyphicon glyphicon-user"></span> my profile'), sufia.profile_path(current_user), id: 'profile_nav_link' %></li>
-        <%= render partial: 'users/user_util_links_extra' %>
+        <li><%= link_to 'View Profile', sufia.profile_path(current_user) %></li>
+        <li><%= link_to 'Edit Profile', sufia.edit_profile_path(current_user) %></li>
         <li class="divider"></li>
-        <li><%= link_to raw('<span class="glyphicon glyphicon-log-out"></span> log out'), main_app.destroy_user_session_path, id: 'logout_nav_link' %></li>
+        <li><%= link_to 'Logout', main_app.destroy_user_session_path %></li>
       </ul>
-    </div><!-- /.btn-group -->
-<% else %>
-    <div class="btn-group navbar-btn login_button">
-    <%= link_to main_app.new_user_session_path, class: "btn btn-default btn-group", title: "Login" do %>
-      <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
-    <% end %>
-    </div>
-<% end %>
+    </li><!-- /.btn-group -->
+  <% else %>
+    <li>
+      <%= link_to main_app.new_user_session_path do %>
+        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
+      <% end %>
+    </li>
+  <% end %>
+</ul>
