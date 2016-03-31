@@ -1,34 +1,27 @@
-
 module CurationConcerns
-  # The CurationConcern base actor should respond to three primary actions:
+  # The CurationConcern base actor responds to two primary actions:
   # * #create
   # * #update
-  # * #delete
-  class BaseActor
-    attr_reader :curation_concern, :user, :attributes, :cloud_resources
-    def initialize(curation_concern, user, input_attributes)
-      @curation_concern = curation_concern
-      @user = user
-      @attributes = input_attributes.dup.with_indifferent_access
-      @visibility = attributes[:visibility]
+  # it must instantiate the next actor in the chain and instantiate it.
+  # it should respond to curation_concern, user and attributes.
+  class BaseActor < AbstractActor
+    attr_reader :cloud_resources
+
+    def initialize(curation_concern, user, attributes, more_actors)
       @cloud_resources = attributes.delete(:cloud_resources.to_s)
+      super
     end
-
-    attr_reader :visibility
-    protected :visibility
-
-    delegate :visibility_changed?, to: :curation_concern
 
     def create
       apply_creation_data_to_curation_concern
       apply_save_data_to_curation_concern
-      save
+      next_actor.create && save
     end
 
     def update
       apply_update_data_to_curation_concern
       apply_save_data_to_curation_concern
-      save
+      next_actor.update && save
     end
 
     protected

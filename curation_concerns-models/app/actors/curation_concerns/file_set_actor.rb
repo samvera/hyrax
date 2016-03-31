@@ -1,15 +1,11 @@
 module CurationConcerns
   # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
   class FileSetActor
-    include CurationConcerns::ManagesEmbargoesActor
     include CurationConcerns::Lockable
 
-    attr_reader :file_set, :user, :attributes, :curation_concern
+    attr_reader :file_set, :user, :attributes
 
     def initialize(file_set, user)
-      # we're setting attributes and curation_concern to bridge the difference
-      # between CurationConcerns::FileSetActor and ManagesEmbargoesActor
-      @curation_concern = file_set
       @file_set = file_set
       @user = user
     end
@@ -30,7 +26,7 @@ module CurationConcerns
       file_set.date_modified = now
       file_set.creator = [user.user_key]
 
-      interpret_visibility file_set_params if assign_visibility?(file_set_params)
+      InterpretVisibilityActor.new(file_set, user, file_set_params, []).create if assign_visibility?(file_set_params)
       attach_file_to_work(work, file_set, file_set_params) if work
       yield(file_set) if block_given?
     end
@@ -70,9 +66,9 @@ module CurationConcerns
     end
 
     def update_metadata(attributes)
-      update_visibility(attributes)
-      # attributes.delete(:visibility) # Applying this attribute is handled by update_visibility
-      file_set.attributes = attributes
+      actor = InterpretVisibilityActor.new(file_set, user, attributes, [])
+      actor.update
+      file_set.attributes = actor.next_actor.attributes
       file_set.date_modified = CurationConcerns::TimeService.time_in_utc
       save do
         CurationConcerns.config.callback.run(:after_update_metadata, file_set, user)
@@ -126,11 +122,6 @@ module CurationConcerns
 
       def assign_visibility?(file_set_params = {})
         !((file_set_params || {}).keys & %w(visibility embargo_release_date lease_expiration_date)).empty?
-      end
-
-      # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
-      def update_visibility(attributes)
-        interpret_visibility(attributes) # relies on CurationConcerns::ManagesEmbargoesActor to interpret and apply visibility
       end
 
       # copy visibility from source_concern to destination_concern

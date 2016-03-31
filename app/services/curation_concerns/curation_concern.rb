@@ -1,9 +1,19 @@
 module CurationConcerns
   module CurationConcern
-    def self.actor(curation_concern, *args)
+    # Returns the top-level actor on the stack
+    def self.actor(curation_concern, current_user, attributes)
+      AddToCollectionActor.new(curation_concern, current_user, attributes,
+                               [AssignRepresentativeActor,
+                                AttachFilesActor,
+                                ApplyOrderActor,
+                                InterpretVisibilityActor,
+                                model_actor(curation_concern),
+                                AssignIdentifierActor])
+    end
+
+    def self.model_actor(curation_concern)
       actor_identifier = curation_concern.class.to_s.split('::').last
-      klass = "CurationConcerns::#{actor_identifier}Actor".constantize
-      klass.new(curation_concern, *args)
+      "CurationConcerns::#{actor_identifier}Actor".constantize
     end
   end
 end
