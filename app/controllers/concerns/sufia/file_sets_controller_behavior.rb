@@ -25,6 +25,9 @@ module Sufia
       # prepend this hook so that it comes before load_and_authorize
       prepend_before_action :authenticate_user!, except: [:show, :citation, :stats]
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
+
+      self.show_presenter = Sufia::FileSetPresenter
+      self.form_class = Sufia::Forms::FileSetEditForm
     end
 
     def new
@@ -83,15 +86,6 @@ module Sufia
       # override this method if you want to change how the terms are accepted on upload.
       def terms_accepted?
         params[:terms_of_service] == '1'
-      end
-
-      def show_presenter
-        Sufia::FileSetPresenter
-      end
-
-      # overrides the same method provided by CurationConcerns::FileSetsControllerBehavior in order to inject Sufia's FileSetEditForm
-      def form_class
-        Sufia::Forms::FileSetEditForm
       end
 
       # overrides Curation Concerns method

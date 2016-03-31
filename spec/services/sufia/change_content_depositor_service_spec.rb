@@ -14,10 +14,14 @@ describe Sufia::ChangeContentDepositorService do
     end
   end
 
-  before { work.members << file }
+  before do
+    work.members << file
+    described_class.call(work, receiver, reset)
+  end
 
   context "by default, when permissions are not reset" do
-    before { described_class.call(work.id, receiver.user_key, false) }
+    let(:reset) { false }
+
     it "changes the depositor and records an original depositor" do
       work.reload
       expect(work.depositor).to eq receiver.user_key
@@ -33,7 +37,8 @@ describe Sufia::ChangeContentDepositorService do
   end
 
   context "when permissions are reset" do
-    before { described_class.call(work.id, receiver.user_key, true) }
+    let(:reset) { true }
+
     it "excludes the depositor from the edit users" do
       work.reload
       expect(work.depositor).to eq receiver.user_key

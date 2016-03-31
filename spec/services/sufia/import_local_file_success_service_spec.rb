@@ -21,7 +21,7 @@ describe Sufia::ImportLocalFileSuccessService do
     end
 
     it 'spawns a deposit event job' do
-      expect(ContentDepositEventJob).to receive(:perform_later).with(file.id, depositor.user_key).once.and_call_original
+      expect(ContentDepositEventJob).to receive(:perform_later).with(file, depositor).once.and_call_original
       subject.call
     end
   end

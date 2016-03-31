@@ -22,7 +22,7 @@ module API
       # parse userID and API key out of token and store in user instance
       current_user.zotero_userid = access_token.params[:userID]
       current_user.save
-      Sufia::Arkivo::CreateSubscriptionJob.perform_later(current_user.user_key)
+      Sufia::Arkivo::CreateSubscriptionJob.perform_later(current_user)
       redirect_to sufia.profile_path(current_user), notice: 'Successfully connected to Zotero!'
     rescue OAuth::Unauthorized
       redirect_to sufia.edit_profile_path(current_user.to_param), alert: 'Please re-authenticate with Zotero'

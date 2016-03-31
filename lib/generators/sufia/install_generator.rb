@@ -34,12 +34,7 @@ module Sufia
     end
 
     def run_required_generators
-      generate "curation_concerns:install -f" unless options[:skip_curation_concerns]
-    end
-
-    # TODO: make the curation_concerns installer take a --skip-assets flag
-    def remove_curation_concerns_scss
-      remove_file 'app/assets/stylesheets/curation_concerns.css.scss'
+      generate "curation_concerns:install --skip-assets -f" unless options[:skip_curation_concerns]
     end
 
     def run_curation_concerns_work_generator

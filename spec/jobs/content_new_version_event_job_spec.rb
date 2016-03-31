@@ -18,7 +18,7 @@ describe ContentNewVersionEventJob do
 
   it "logs the event to the depositor's profile, followers' dashboards, and the FileSet" do
     expect {
-      described_class.perform_now(file_set.id, user.user_key)
+      described_class.perform_now(file_set, user)
     }.to change { user.profile_events.length }.by(1)
       .and change { another_user.events.length }.by(1)
       .and change { third_user.events.length }.by(1)

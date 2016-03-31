@@ -1,4 +1,9 @@
-class Sufia::SearchBuilder < CurationConcerns::SearchBuilder
+# TODO: make this a mixin and generate it into ::SearchBuilder
+class Sufia::SearchBuilder < Blacklight::SearchBuilder
+  include Blacklight::Solr::SearchBuilderBehavior
+  include Hydra::AccessControlsEnforcement
+  include CurationConcerns::SearchFilters
+
   def show_only_collections(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [

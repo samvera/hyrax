@@ -26,7 +26,7 @@ describe UploadSetUpdateJob do
     let(:metadata) { { tag: [''] } }
     let(:visibility) { nil }
 
-    subject { described_class.perform_now(user.user_key, upload_set.id, title, metadata, visibility) }
+    subject { described_class.perform_now(user, upload_set, title, metadata, visibility) }
 
     it "updates work metadata" do
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user, upload_set)

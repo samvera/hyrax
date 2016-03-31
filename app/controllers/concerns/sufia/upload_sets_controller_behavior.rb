@@ -2,6 +2,7 @@ module Sufia
   module UploadSetsControllerBehavior
     extend ActiveSupport::Concern
     include Hydra::Controller::ControllerBehavior
+    include GlobalID::Identification
 
     included do
       layout "sufia-one-column"
@@ -49,8 +50,8 @@ module Sufia
       end
 
       def create_update_job
-        UploadSetUpdateJob.perform_later(current_user.user_key,
-                                         params[:id],
+        UploadSetUpdateJob.perform_later(current_user,
+                                         @upload_set,
                                          params[:title],
                                          edit_form_class.model_attributes(params[:upload_set]),
                                          params[:visibility])

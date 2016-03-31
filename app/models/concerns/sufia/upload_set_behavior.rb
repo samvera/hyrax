@@ -3,6 +3,7 @@ module Sufia
     extend ActiveSupport::Concern
     include Hydra::AccessControls::Permissions
     include CurationConcerns::Noid
+    include GlobalID::Identification
 
     included do
       has_many :works, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'

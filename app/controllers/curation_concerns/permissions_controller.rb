@@ -13,7 +13,7 @@ class CurationConcerns::PermissionsController < ApplicationController
   end
 
   def copy
-    VisibilityCopyJob.perform_later(curation_concern.id)
+    VisibilityCopyJob.perform_later(curation_concern)
     flash_message = 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'
     redirect_to [main_app, curation_concern], notice: flash_message
   end

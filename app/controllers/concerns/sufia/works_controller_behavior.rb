@@ -8,7 +8,8 @@ module Sufia
       include Sufia::Breadcrumbs
       before_action :has_access?, except: :show
       before_action :build_breadcrumbs, only: [:edit, :show]
-      set_curation_concern_type GenericWork
+      self.curation_concern_type = GenericWork
+      self.show_presenter = Sufia::WorkShowPresenter
       layout "sufia-one-column"
     end
 
@@ -18,7 +19,7 @@ module Sufia
     end
 
     def edit
-      work = GenericWork.find(params[:id])
+      work = _curation_concern_type.find(params[:id])
       raise "Cannot edit a work that still is being processed" if work.processing?
       super
     end
@@ -45,10 +46,6 @@ module Sufia
     end
 
     protected
-
-      def show_presenter
-        Sufia::WorkShowPresenter
-      end
 
       # Called by CurationConcerns::FileSetsControllerBehavior#show
       def additional_response_formats(format)

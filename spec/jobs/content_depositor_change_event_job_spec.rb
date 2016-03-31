@@ -15,7 +15,7 @@ describe ContentDepositorChangeEventJob do
 
   it "logs the event to the proxy depositor's profile, the depositor's dashboard, followers' dashboards, and the FileSet" do
     expect {
-      described_class.perform_now(generic_work.id, another_user.user_key)
+      described_class.perform_now(generic_work, another_user)
     }.to change { user.profile_events.length }.by(1)
       .and change { another_user.events.length }.by(1)
       .and change { third_user.events.length }.by(1)
