@@ -27,13 +27,4 @@
         <%= t("sufia.dashboard.view_works") %>
     <% end %>
   </div>
-
-  <% if can?(:create, FileSet) %>
-    <div class="col-xs-6 col-sm-2 heading-tile">
-      <%= link_to sufia.new_curation_concerns_file_set_path do %>
-          <span class="glyphicon glyphicon-upload"></span>
-          <%= t("sufia.dashboard.upload") %>
-      <% end %>
-    </div>
-  <% end %>
 </div>

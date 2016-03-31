@@ -61,7 +61,8 @@ module Sufia
         'create_tinymce_assets.rb',
         'create_content_blocks.rb',
         'create_featured_works.rb',
-        'add_external_key_to_content_blocks.rb'
+        'add_external_key_to_content_blocks.rb',
+        'create_uploaded_files.rb'
       ].each do |file|
         better_migration_template file
       end

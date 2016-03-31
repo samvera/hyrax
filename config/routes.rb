@@ -9,6 +9,13 @@ Sufia::Engine.routes.draw do
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
+  post '/uploads', to: 'sufia/uploads#create'
+  # This is a hack that is required because the rails form the uploader is on
+  # sets the _method parameter to patch when the work already exists.
+  # Eventually it would be good to update the javascript so that it doesn't
+  # submit the form, just the file and always uses POST.
+  patch '/uploads', to: 'sufia/uploads#create'
+
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 
   # Notifications route for catalog index view

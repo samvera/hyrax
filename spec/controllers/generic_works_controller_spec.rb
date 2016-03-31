@@ -44,4 +44,26 @@ describe CurationConcerns::GenericWorksController do
       expect(response).to be_successful
     end
   end
+
+  describe "#create" do
+    let(:actor) { double('An actor') }
+    let(:work) { create(:work) }
+    before do
+      allow(Sufia::CreateWithFilesActor).to receive(:new)
+        .with(CurationConcerns::GenericWorkActor, ['777', '888'])
+        .and_return(actor)
+
+      # Stub out the creation of the work so we can redirect somewhere
+      allow(controller).to receive(:curation_concern).and_return(work)
+    end
+
+    it "attaches files" do
+      expect(actor).to receive(:create).and_return(true)
+      post :create, generic_work: { title: ["First title"],
+                                    visibility: 'open' },
+                    uploaded_files: ['777', '888']
+      expect(flash[:notice]).to eq "Your files are being processed by Repository in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh your dashboard to see these updates."
+      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+    end
+  end
 end

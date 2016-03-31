@@ -1,0 +1,21 @@
+        <p>The more descriptive information you provide the better we can serve your needs.</p>
+        <p><small class="pull-left"><span class="error">*</span> required</small></p>
+        <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', sufia.new_curation_concerns_file_set_path %></small></p>
+        <div class="base-terms">
+          <% [:title, :creator, :tag, :rights].each do |term| %>
+            <%= render_edit_field_partial(term, f: f) %>
+          <% end %>
+        </div>
+        <%= link_to 'Additional fields',
+                    '#extended-terms',
+                    class: 'btn btn-default',
+                    data: { toggle: 'collapse' },
+                    role: "button",
+                    'aria-expanded'=> "false",
+                    'aria-controls'=> "extended-terms" %>
+        <div id="extended-terms" class='collapse'>
+          <% (f.object.rendered_terms - [:title, :creator, :tag, :rights]).each do |term| %>
+            <%= render_edit_field_partial(term, f: f) %>
+          <% end %>
+        </div>
+

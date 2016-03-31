@@ -10,9 +10,5 @@
 <%= render 'attributes', presenter: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
 
-<% if editor %>
-    <%= render partial: 'curation_concerns/file_sets/multiple_upload', presenter: @presenter %>
-<% end %>
-
 <%= render "show_actions", collector: collector, editor: editor%>
 <%= render 'show_collections' %>

@@ -12,91 +12,17 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="metadata">
-        <p>The more descriptive information you provide the better we can serve your needs.</p>
-        <p><small class="pull-left"><span class="error">*</span> required</small></p>
-        <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', sufia.new_curation_concerns_file_set_path %></small></p>
-        <div class="base-terms">
-          <% [:title, :creator, :tag, :rights].each do |term| %>
-            <%= render_edit_field_partial(term, f: f) %>
-          <% end %>
-        </div>
-        <%= link_to 'Additional fields',
-                    '#extended-terms',
-                    class: 'btn btn-default',
-                    data: { toggle: 'collapse' },
-                    role: "button",
-                    'aria-expanded'=> "false",
-                    'aria-controls'=> "extended-terms" %>
-        <div id="extended-terms" class='collapse'>
-          <% (f.object.rendered_terms - [:title, :creator, :tag, :rights]).each do |term| %>
-            <%= render_edit_field_partial(term, f: f) %>
-          <% end %>
-        </div>
+        <%= render 'form_metadata', f: f %>
       </div>
-      <div role="tabpanel" class="tab-pane" id="files">...</div>
+      <div role="tabpanel" class="tab-pane" id="files">
+        <%= render 'form_files', f: f %>
+      </div>
       <div role="tabpanel" class="tab-pane" id="relationships">...</div>
       <div role="tabpanel" class="tab-pane" id="share">...</div>
     </div>
   </div>
 
   <div class="col-xs-12 col-sm-4" role="complementary">
-    <aside class="form-progress">
-      <h2>Save Work</h2>
-      <h3>Requirements</h3>
-      <ul class="requirements">
-        <li class="incomplete">Enter required metadata</li>
-        <li class="incomplete">Add files</li>
-      </ul>
-
-      <h3>Visibility</h3>
-      <% if f.object.embargo_release_date %>
-        <%= render 'form_permission_under_embargo', f: f %>
-      <% elsif f.object.lease_expiration_date %>
-        <%= render 'form_permission_under_lease', f: f %>
-      <% else %>
-        <div class="form-group">
-          <label class="radio">
-            <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if f.object.open_access? %> checked="true"<% end %>/>
-            Open
-          </label>
-          <label class="radio">
-            <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if f.object.authenticated_only_access? %> checked="true"<% end %> />
-            <%=t('curation_concerns.institution.name') %>
-          </label>
-          <label class="radio">
-            <input type="radio" id="visibility_embargo" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-            <div class="form-inline">
-              Embargo
-              <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
-              <%= f.input :embargo_release_date, wrapper: :inline, input_html: { value: f.object.embargo_release_date || Date.tomorrow, class: 'datepicker' } %>
-              <%= f.input :visibility_after_embargo, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
-            </div>
-
-          </label>
-          <label class="radio">
-            <input type="radio" id="visibility_lease" name="<%= f.object_name %>[visibility]" value="lease" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-            <div class="form-inline">
-              Lease
-              <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
-              <%= f.input :lease_expiration_date, wrapper: :inline, input_html: { value: f.object.lease_expiration_date || Date.tomorrow, class: 'datepicker' } %>
-              <%= f.input :visibility_after_lease, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
-            </div>
-
-          </label>
-          <label class="radio">
-            <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if f.object.private_access? %> checked="true"<% end %>/>
-            Private
-          </label>
-        </div>
-      <% end %>
-
-
-      <div class="primary-actions">
-        By saving this work I agree to the<br>
-        Sufia Deposit Agreement<br>
-        <%= link_to t(:'helpers.action.cancel'), :back, class: 'btn btn-default' %>
-        <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
-      </div>
-    </aside>
+    <%= render 'form_progress', f: f %>
   </div>
 <% end %>

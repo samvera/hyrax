@@ -13,11 +13,6 @@ describe "The Dashboard", type: :feature do
       expect(page).to have_content "Your Statistics"
     end
 
-    it "lets the user upload files" do
-      click_link "Upload"
-      expect(page).to have_content "Upload"
-    end
-
     it "lets the user create collections" do
       click_link "Create Collection"
       expect(page).to have_content "Create New Collection"
