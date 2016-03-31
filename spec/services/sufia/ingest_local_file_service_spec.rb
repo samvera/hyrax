@@ -23,55 +23,52 @@ describe Sufia::IngestLocalFileService do
     FileUtils.copy(fixture_path + "/dublin_core_rdf_descMetadata.nt", import_metadata_directory)
     FileUtils.copy(fixture_path + "/icons.zip", import_files_directory)
     FileUtils.copy(fixture_path + "/Example.ogg", import_files_directory)
-    allow_any_instance_of(User).to receive(:directory).and_return(upload_directory)
-    allow(CharacterizeJob).to receive(:perform_later)
   end
 
   describe "#ingest_local_file" do
     subject { described_class.new(user) }
     let(:actor) { CurationConcerns::FileSetActor.new(nil, nil) }
+    let(:fileset) { object_double(FileSet.new, id: 'demoid') }
+
+    before do
+      allow(user).to receive(:directory).and_return(upload_directory)
+      allow(CharacterizeJob).to receive(:perform_later)
+
+      allow(FileSet).to receive(:new).and_return(fileset)
+      allow(fileset).to receive(:save!)
+      allow(fileset).to receive(:relative_path=)
+
+      allow(CurationConcerns::FileSetActor).to receive(:new).and_return(actor)
+    end
 
     it "creates generic files for each file passed in" do
-      # no need to save the files to Fedora we just want to know they were created
-      allow_any_instance_of(FileSet).to receive(:save!).and_return(true)
-
-      # allow random FileSets to be created
-      allow(FileSet).to receive(:new).with({}).and_call_original
-
-      # expect each file to be created
-      expect(FileSet).to receive(:new).with(label: "world.png").and_call_original
-      expect(FileSet).to receive(:new).with(label: "image.jpg").and_call_original
+      # expect a FileSet per file to be created
+      expect(FileSet).to receive(:new).with(label: "world.png")
+      expect(FileSet).to receive(:new).with(label: "image.jpg")
 
       # expect metadata to be applied to each file
-      allow(CurationConcerns::FileSetActor).to receive(:new).and_return(actor)
       expect(actor).to receive(:create_metadata).twice
 
       # expect each file to be ingested
-      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "world.png", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "image.jpg", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "world.png", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "image.jpg", user.user_key)
+
       subject.ingest_local_file(files, work.id)
     end
 
     it "processes files in subdirectories" do
-      # no need to save the files to Fedora we just want to know they were created
-      allow_any_instance_of(FileSet).to receive(:save!).and_return(true)
-
-      # allow random FileSets to be created
-      allow(FileSet).to receive(:new).with({}).and_call_original
-
       # expect each file to be created
-      expect(FileSet).to receive(:new).with(label: "icons.zip").and_call_original
-      expect(FileSet).to receive(:new).with(label: "Example.ogg").and_call_original
-      expect(FileSet).to receive(:new).with(label: "dublin_core_rdf_descMetadata.nt").and_call_original
+      expect(FileSet).to receive(:new).with(label: "icons.zip")
+      expect(FileSet).to receive(:new).with(label: "Example.ogg")
+      expect(FileSet).to receive(:new).with(label: "dublin_core_rdf_descMetadata.nt")
 
       # expect metadata to be applied to each file
-      allow(CurationConcerns::FileSetActor).to receive(:new).and_return(actor)
       expect(actor).to receive(:create_metadata).exactly(3).times
 
       # expect each file to be ingested
-      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/files/icons.zip", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/files/Example.ogg", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(nil, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/files/icons.zip", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/files/Example.ogg", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user.user_key)
 
       subject.ingest_local_file(files_and_directories, work.id)
     end
