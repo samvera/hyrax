@@ -1,20 +1,6 @@
 .dashboard {
-
-  .badge-statistic {
-    background-color: $badge-background-color;
-    color: $badge-font-color;
-  }
-  .badge-optional {
-    background-color: $badge-optional-background-color;
-    color: $badge-optional-font-color;
-  }
-  .views-downloads-dashboard {
-    list-style-type: none;
-    padding-left: 0;
-  }
   .user-info {
     padding-left: 0;
-    word-break: break-word;
   }
   .sort-toggle, #documents, .batch-toggle {
     border-left: 1px solid $dashboard-border-color;
@@ -115,4 +101,19 @@ div.heading-tile:hover .glyphicon {
 #activity .panel-body{
   overflow: scroll;
   max-height: 20em;
+}
+
+.views-downloads-dashboard {
+  padding-left: $padding-large-horizontal;
+}
+
+.panel-user {
+  word-break: break-word;
+}
+
+#user_info {
+  dt {
+    margin-top:$padding-small-vertical;
+  }
+
 }

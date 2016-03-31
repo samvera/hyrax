@@ -4,8 +4,7 @@
 <% end %>
 
 <%= content_for :sidebar do %>
-    <%= render "dashboard/_index_partials/stats" %>
-    <%= render "dashboard/_index_partials/user_info" %>
+  <%= render current_user %>
 <% end %>
 
 <%= render "dashboard/_index_partials/contents" %>

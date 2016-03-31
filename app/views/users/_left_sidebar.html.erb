@@ -1,12 +1,4 @@
-      <%= image_tag @user.avatar.url(:thumb), width: 100 %>
-      <h3><%= @user.name %><br /><%= @user.user_key %> </h3>
-      <hr /> 
-        <%= render "vitals" %>
-      <hr />
+<%= render @user %>
 
-      <%= render "follower_modal" %>
-      <%= render "following_modal" %>
- 
-      <br />
-      <a class="btn btn-primary" href="<%= sufia.profiles_path %>"><i class="glyphicon glyphicon-globe"></i> View Users</a>
-
+<br />
+<a class="btn btn-primary" href="<%= sufia.profiles_path %>"><i class="glyphicon glyphicon-globe"></i> View Users</a>

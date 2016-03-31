@@ -1,4 +1,24 @@
-        <i class="glyphicon glyphicon-time"></i> Joined on <%= @user.created_at.to_date.strftime("%b %d, %Y") %> <br />
-        <i class="glyphicon glyphicon-folder-open"></i> Deposited Files
-        <%= link_to_field('depositor', @user.to_s, number_of_deposits(@user)) %> <br />
+<div class="list-group-item">
+  <i class="glyphicon glyphicon-time"></i> Joined on <%= user.created_at.to_date.strftime("%b %d, %Y") %>
+</div>
 
+<div class="list-group-item">
+  <span class="badge"><%= number_of_collections %></span>
+  <i class="glyphicon glyphicon-folder-open"></i> <%= t("sufia.dashboard.stats.collections") %>
+</div>
+  
+<div class="list-group-item">
+  <span class="badge"><%= number_of_files(user) %></span>
+    <i class="glyphicon glyphicon-upload"></i> <%= link_to_field('depositor', user.to_s, 'Deposited Files') %>
+
+    <ul class="views-downloads-dashboard list-unstyled">
+      <li><span class="badge badge-optional"><%= user.total_file_views %></span> <%= t("sufia.dashboard.stats.file_views").pluralize(user.total_file_views) %></li>
+      <li><span class="badge badge-optional"><%= user.total_file_downloads %></span> <%= t("sufia.dashboard.stats.file_downloads").pluralize(user.total_file_downloads) %></li>
+    </ul>
+</div>
+
+
+<div class="list-group-item">
+  <%= render "users/follower_modal", followers: user.followers, user: user %>
+  <%= render "users/following_modal", following: user.all_following, user: user %>
+</div>

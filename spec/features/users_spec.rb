@@ -31,7 +31,6 @@ describe "User Profile", type: :feature do
       fill_in 'user_twitter_handle', with: 'curatorOfData'
       click_button 'Save Profile'
       expect(page).to have_content 'Your profile has been updated'
-      click_link 'Profile'
       expect(page).to have_link('curatorOfData', href: 'http://twitter.com/curatorOfData')
     end
   end

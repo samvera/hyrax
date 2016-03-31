@@ -1,24 +1,23 @@
 <div class="modal-div">
 
   <!-- Text to trigger modal -->
-  <h4>
-    <i class="glyphicon glyphicon-hand-right"></i><a data-toggle="modal" href="#following">Following:</a>  <%= @following.count %>
-  </h4>
+  <i class="glyphicon glyphicon-hand-right"></i> <a data-toggle="modal" href="#following">Following:</a> <span class="badge"><%= following.count %></span>
+
   <!-- Modal -->
   <!-- Modal -->
   <div class="modal fade" id="following" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-          <% if @following.count > 0 %>
+          <% if following.count > 0 %>
             <h3>Following</h3>
             <ul>
-              <% @following.each do |f| %>
+              <% following.each do |f| %>
                 <li><%= link_to f.name, sufia.profile_path(f), title: "View user's profile" %></li>
               <% end %>
             </ul>
           <% else %>
-            <% if current_user && @user.id == current_user.id %>
+            <% if current_user && user.id == current_user.id %>
                 <h3> <%= t("sufia.user_profile.no_following") %></h3>
             <% else %>
                 <h3> <%= t("sufia.user_profile.no_following_other") %></h3>

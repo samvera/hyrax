@@ -5,10 +5,8 @@ describe 'users/_follower_modal.html.erb', type: :view do
   let(:page) { Capybara::Node::Simple.new(rendered) }
 
   before do
-    assign :user, view_user
     allow(controller).to receive(:current_user) { current_user }
-    assign :followers, followers
-    render
+    render partial: 'users/follower_modal', locals: { user: view_user, followers: followers }
   end
 
   context 'with followers' do
