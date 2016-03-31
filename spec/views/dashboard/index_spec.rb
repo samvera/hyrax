@@ -37,7 +37,6 @@ describe "dashboard/index.html.erb", type: :view do
       expect(heading).to have_link("Create Collection", collections.new_collection_path)
       expect(heading).to have_link("View Works", sufia.dashboard_works_path)
       expect(heading).to include "My Dashboard"
-      expect(heading).to include "Hello, Charles Francis Xavier"
     end
 
     context "when the user can't create works" do
@@ -75,12 +74,12 @@ describe "dashboard/index.html.erb", type: :view do
 
     it "displays user statistics" do
       expect(@sidebar).to include "Your Statistics"
-      expect(@sidebar).to include '<span class="badge">1</span>'
-      expect(@sidebar).to include '<span class="badge">2</span>'
-      expect(@sidebar).to include '<span class="badge">15</span>'
-      expect(@sidebar).to include '<span class="badge">3</span>'
-      expect(@sidebar).to include '<span class="badge-optional">1</span> View'
-      expect(@sidebar).to include '<span class="badge-optional">3</span> Downloads'
+      expect(@sidebar).to have_selector '.badge', text: '1'
+      expect(@sidebar).to have_selector '.badge', text: '2'
+      expect(@sidebar).to have_selector '.badge', text: '15'
+      expect(@sidebar).to have_selector '.badge', text: '3'
+      expect(@sidebar).to have_selector 'li', text: '1 View'
+      expect(@sidebar).to have_selector 'li', text: '3 Downloads'
     end
 
     it "shows the statistics before the profile" do
