@@ -1,5 +1,5 @@
 <% if user_signed_in? %>
-    <div class="btn-group" id="user_utility_links">
+    <div class="btn-group navbar-btn" id="user_utility_links">
       <%= render partial: 'users/notify_link' %>
       <%= link_to sufia.dashboard_index_path, class: "btn btn-default", id: "dashboard_link" do %>
         <span class="glyphicon glyphicon-dashboard"></span>
@@ -23,7 +23,9 @@
       </ul>
     </div><!-- /.btn-group -->
 <% else %>
-    <div class="btn-group login_button pull-right">
-    <%= link_to raw('<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login'), main_app.new_user_session_path, class: "btn btn-default btn-group", title: "Login" %>
+    <div class="btn-group navbar-btn login_button">
+    <%= link_to main_app.new_user_session_path, class: "btn btn-default btn-group", title: "Login" do %>
+      <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
+    <% end %>
     </div>
 <% end %>

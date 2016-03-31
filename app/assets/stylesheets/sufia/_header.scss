@@ -1,49 +1,10 @@
-#masthead {
-  background: $header-bg;
-  min-height: 4em;
-
-  #logo span.glyphicon {
-    color: #FFF;
-    font-size: 4em;
-    margin: .25em 0 0 .25em;
-  }
-
-  .institution_name {
-    font-family: $headings-font-family;
-    font-size: 4em;
-    font-weight: 300;
-    margin: 0 0 0 .25em;
-  }
-
-  .institution_name, .institution_name a:link, .institution_name a:visited {
-    color: #FFF;
-    text-decoration: none;
-  }
-
-  #user_utility_links {
-    margin-top: 1.75em;
-
-    &.open {
-      > a {
-        border-color: #ccc;
-
-        &.dropdown-toggle {
-          background-color: $gray-lighter;
-          border-color: #428bca;
-        }
-      }
-    }
-  }
-
-  #profile_link {
-    margin-left: -1px;
-  }
-}
-
-.login_button {
-  margin: 1.75em 3em 0 0;
-}
-
 #search-form-header {
   margin-top: 6px;
+}
+
+.navbar-static-top {
+  .btn-group {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
