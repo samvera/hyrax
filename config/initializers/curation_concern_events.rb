@@ -1,22 +1,22 @@
 # These events are triggered by actions within CurationConcerns Actors
 CurationConcerns.config.callback.set(:after_create_content) do |file_set, user|
-  ContentDepositEventJob.perform_later(file_set.id, user.user_key)
+  ContentDepositEventJob.perform_later(file_set, user)
 end
 
 CurationConcerns.config.callback.set(:after_revert_content) do |file_set, user, revision|
-  ContentRestoredVersionEventJob.perform_later(file_set.id, user.user_key, revision)
+  ContentRestoredVersionEventJob.perform_later(file_set, user, revision)
 end
 
 CurationConcerns.config.callback.set(:after_update_content) do |file_set, user|
-  ContentNewVersionEventJob.perform_later(file_set.id, user.user_key)
+  ContentNewVersionEventJob.perform_later(file_set, user)
 end
 
 CurationConcerns.config.callback.set(:after_update_metadata) do |file_set, user|
-  ContentUpdateEventJob.perform_later(file_set.id, user.user_key)
+  ContentUpdateEventJob.perform_later(file_set, user)
 end
 
 CurationConcerns.config.callback.set(:after_destroy) do |id, user|
-  ContentDeleteEventJob.perform_later(id, user.user_key)
+  ContentDeleteEventJob.perform_later(id, user)
 end
 
 CurationConcerns.config.callback.set(:after_audit_failure) do |file_set, user, log_date|

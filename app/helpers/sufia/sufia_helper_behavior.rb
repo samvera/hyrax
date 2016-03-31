@@ -76,14 +76,14 @@ module Sufia
       end
     end
 
-    def link_to_profile(login)
-      user = ::User.find_by_user_key(login)
-      return login if user.nil?
+    def link_to_profile(user_or_login)
+      user = user_or_login.is_a?(User) ? user_or_login : ::User.find_by_user_key(user_or_login)
+      return user_or_login if user.nil?
 
       text = if user.respond_to? :name
                user.name
              else
-               login
+               user_or_login
              end
 
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)

@@ -12,7 +12,7 @@ describe UserEditProfileEventJob do
 
   it "logs the event to the editor's dashboard and his/her followers' dashboards" do
     expect {
-      described_class.perform_now(user.user_key)
+      described_class.perform_now(user)
     }.to change { user.events.length }.by(1)
       .and change { another_user.events.length }.by(1)
 

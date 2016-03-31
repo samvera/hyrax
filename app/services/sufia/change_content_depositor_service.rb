@@ -1,12 +1,14 @@
 module Sufia
   class ChangeContentDepositorService
-    def self.call(generic_work_id, login, reset)
-      work = ::GenericWork.find(generic_work_id)
+    # @param [ActiveFedora::Base] work
+    # @param [User] user
+    # @param [TrueClass, FalseClass] reset
+    def self.call(work, user, reset)
       work.proxy_depositor = work.depositor
       work.permissions = [] if reset
-      work.apply_depositor_metadata(login)
+      work.apply_depositor_metadata(user)
       work.file_sets.each do |f|
-        f.apply_depositor_metadata(login)
+        f.apply_depositor_metadata(user)
         f.save!
       end
       work.save!

@@ -59,7 +59,7 @@ module Sufia::UsersControllerBehavior
       smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
       current_user.trophies.where(generic_work_id: smash_trophy).destroy_all
     end
-    UserEditProfileEventJob.perform_later(@user.user_key)
+    UserEditProfileEventJob.perform_later(@user)
     redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
   end
 
@@ -88,7 +88,7 @@ module Sufia::UsersControllerBehavior
   def follow
     unless current_user.following?(@user)
       current_user.follow(@user)
-      UserFollowEventJob.perform_later(current_user.user_key, @user.user_key)
+      UserFollowEventJob.perform_later(current_user, @user)
     end
     redirect_to sufia.profile_path(@user.to_param), notice: "You are following #{@user}"
   end
@@ -97,7 +97,7 @@ module Sufia::UsersControllerBehavior
   def unfollow
     if current_user.following?(@user)
       current_user.stop_following(@user)
-      UserUnfollowEventJob.perform_later(current_user.user_key, @user.user_key)
+      UserUnfollowEventJob.perform_later(current_user, @user)
     end
     redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user}"
   end

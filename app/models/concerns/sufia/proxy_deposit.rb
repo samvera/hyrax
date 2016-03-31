@@ -16,7 +16,8 @@ module Sufia
     end
 
     def create_transfer_request
-      ContentDepositorChangeEventJob.perform_later(id, on_behalf_of) if on_behalf_of.present?
+      ContentDepositorChangeEventJob.perform_later(self,
+                                                   ::User.find_by_user_key(on_behalf_of)) if on_behalf_of.present?
     end
 
     def request_transfer_to(target)

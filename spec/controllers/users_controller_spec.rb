@@ -152,7 +152,7 @@ describe UsersController, type: :controller do
 
     it "sets an avatar and redirect to profile" do
       expect(user.avatar?).to be false
-      expect(UserEditProfileEventJob).to receive(:perform_later).with(user.user_key).once
+      expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       f = fixture_file_upload('/1.5mb-avatar.jpg', 'image/jpg')
       post :update, id: user.user_key, user: { avatar: f }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
@@ -181,7 +181,7 @@ describe UsersController, type: :controller do
       end
 
       it "deletes an avatar" do
-        expect(UserEditProfileEventJob).to receive(:perform_later).with(user.user_key).once
+        expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
         post :update, id: user.user_key, user: { remove_avatar: 'true' }
         expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
@@ -190,7 +190,7 @@ describe UsersController, type: :controller do
     end
 
     it "refreshes directory attributes" do
-      expect(UserEditProfileEventJob).to receive(:perform_later).with(user.user_key).once
+      expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       expect_any_instance_of(User).to receive(:populate_attributes).once
       post :update, id: user.user_key, user: { update_directory: 'true' }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
@@ -240,7 +240,7 @@ describe UsersController, type: :controller do
     let(:another_user) { FactoryGirl.create(:user) }
     it "follows another user if not already following, and log an event" do
       expect(user.following?(another_user)).to be false
-      expect(UserFollowEventJob).to receive(:perform_later).with(user.user_key, another_user.user_key).once
+      expect(UserFollowEventJob).to receive(:perform_later).with(user, another_user)
       post :follow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are following #{another_user.user_key}")
@@ -264,7 +264,7 @@ describe UsersController, type: :controller do
     let(:another_user) { FactoryGirl.create(:user) }
     it "unfollows another user if already following, and log an event" do
       allow_any_instance_of(User).to receive(:following?).with(another_user).and_return(true)
-      expect(UserUnfollowEventJob).to receive(:perform_later).with(user.user_key, another_user.user_key).once
+      expect(UserUnfollowEventJob).to receive(:perform_later).with(user, another_user).once
       post :unfollow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are no longer following #{another_user.user_key}")

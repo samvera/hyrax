@@ -2,8 +2,6 @@
 #
 # This class does not implement a usable action, so it must be implemented in a child class
 #
-# @attr [String] depositor_id  the user the event is specified for
-#
 class EventJob < ActiveJob::Base
   include Rails.application.routes.url_helpers
   include ActionView::Helpers
@@ -12,18 +10,16 @@ class EventJob < ActiveJob::Base
   include SufiaHelper
 
   queue_as :event
+  attr_reader :depositor
 
-  attr_accessor :depositor_id
-
-  # @param depositor_id the id of the user to create the event for
-  def perform(depositor_id)
-    @depositor_id = depositor_id
-
+  # @param [User] depositor the user to create the event for
+  def perform(depositor)
+    @depositor = depositor
     # Log the event to the depositor's profile stream
-    log_user_event
+    log_user_event(depositor)
 
     # Fan out the event to all followers who have access
-    log_to_followers
+    log_to_followers(depositor)
   end
 
   # override to provide your specific action for the event you are logging
@@ -37,18 +33,13 @@ class EventJob < ActiveJob::Base
     @event ||= Sufia::Event.create(action, Time.current.to_i)
   end
 
-  # the user that will be the subject of the event
-  def depositor
-    @depositor ||= User.find_by_user_key(depositor_id)
-  end
-
   # log the event to the users event stream
-  def log_user_event
+  def log_user_event(depositor)
     depositor.log_event(event)
   end
 
   # log the event to the users followers
-  def log_to_followers
+  def log_to_followers(depositor)
     depositor.followers.each do |follower|
       follower.log_event(event)
     end

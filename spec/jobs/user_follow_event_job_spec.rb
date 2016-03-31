@@ -14,7 +14,7 @@ describe UserFollowEventJob do
 
   it "logs the event to the follower's dashboard, the followee's dashboard, and followers' dashboards" do
     expect {
-      described_class.perform_now(user.user_key, another_user.user_key)
+      described_class.perform_now(user, another_user)
     }.to change { user.events.length }.by(1)
       .and change { another_user.events.length }.by(1)
       .and change { third_user.events.length }.by(1)

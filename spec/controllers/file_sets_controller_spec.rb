@@ -294,7 +294,7 @@ describe CurationConcerns::FileSetsController do
       end
 
       it "deletes the file" do
-        expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
+        expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user)
         expect {
           delete :destroy, id: file_set
         }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
@@ -335,7 +335,7 @@ describe CurationConcerns::FileSetsController do
 
     context "when updating metadata" do
       it "spawns a content update event job" do
-        expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
+        expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set, user)
         post :update, id: file_set,
                       file_set: { title: ['new_title'], tag: [''],
                                   permissions_attributes: [{ type: 'person',
@@ -346,9 +346,9 @@ describe CurationConcerns::FileSetsController do
 
     context "when updating the attached file" do
       it "spawns a content new version event job" do
-        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
+        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
 
-        expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, String)
+        expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
         post :update, id: file_set, file_set: { files: [file], tag: [''],
@@ -432,9 +432,9 @@ describe CurationConcerns::FileSetsController do
     it "spawns a virus check" do
       file = fixture_file_upload('/world.png', 'image/png')
 
-      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set.id, user.user_key)
+      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set.id, String)
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
       post :update, id: file_set.id, 'Filename' => 'The world',
                     file_set: { files: [file], tag: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }

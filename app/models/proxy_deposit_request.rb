@@ -56,7 +56,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
-    ContentDepositorChangeEventJob.perform_later(generic_work_id, receiving_user.user_key, reset)
+    ContentDepositorChangeEventJob.perform_later(generic_work, receiving_user, reset)
     self.status = 'accepted'
     self.fulfillment_date = Time.current
     save!
@@ -81,6 +81,10 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   def deleted_work?
     !GenericWork.exists?(generic_work_id)
+  end
+
+  def generic_work
+    @generic_work ||= GenericWork.find(generic_work_id)
   end
 
   # Delegate to the SolrDocument of the work

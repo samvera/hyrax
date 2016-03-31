@@ -23,7 +23,7 @@ describe ContentUpdateEventJob do
 
     it "logs the event to the depositor's profile, followers' dashboards, and the FileSet" do
       expect {
-        described_class.perform_now(file_set.id, user.user_key)
+        described_class.perform_now(file_set, user)
       }.to change { user.profile_events.length }.by(1)
         .and change { another_user.events.length }.by(1)
         .and change { third_user.events.length }.by(1)
@@ -41,7 +41,7 @@ describe ContentUpdateEventJob do
   context "when the followers lack access to the FileSet" do
     it "does not log content-related jobs to followers" do
       expect {
-        described_class.perform_now(file_set.id, user.user_key)
+        described_class.perform_now(file_set, user)
       }.to change { user.profile_events.length }.by(1)
         .and does_not_change { another_user.events.length }
         .and does_not_change { third_user.events.length }

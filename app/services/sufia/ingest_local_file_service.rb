@@ -44,7 +44,7 @@ module Sufia
           actor = CurationConcerns::FileSetActor.new(fs, current_user)
           actor.create_metadata(parent)
           fs.save!
-          IngestLocalFileJob.perform_later(fs.id, current_user.directory, filename, current_user.user_key)
+          IngestLocalFileJob.perform_later(fs, current_user.directory, filename, current_user)
         end
       end
   end

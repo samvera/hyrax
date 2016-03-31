@@ -10,16 +10,8 @@ module Sufia
       layout "sufia-one-column"
       # include the link_to_remove_from_collection view helper methods
       helper CurationConcerns::CollectionsHelper
+      self.presenter_class = Sufia::CollectionPresenter
+      self.form_class = Sufia::Forms::CollectionForm
     end
-
-    protected
-
-      def presenter_class
-        Sufia::CollectionPresenter
-      end
-
-      def form_class
-        Sufia::Forms::CollectionForm
-      end
   end
 end

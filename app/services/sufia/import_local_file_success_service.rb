@@ -8,7 +8,7 @@ module Sufia
     end
 
     def call
-      ContentDepositEventJob.perform_later(file_set.id, user.user_key)
+      ContentDepositEventJob.perform_later(file_set, user)
       super
     end
 

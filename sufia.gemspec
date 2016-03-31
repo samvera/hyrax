@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.version       = version
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 0.10'
+  spec.add_dependency 'curation_concerns', '~> 0.11.0.rc1'
   spec.add_dependency 'active-fedora', '~> 9.10'
   spec.add_dependency 'hydra-works', '~> 0.7'
   spec.add_dependency 'hydra-batch-edit', '~> 1.1'

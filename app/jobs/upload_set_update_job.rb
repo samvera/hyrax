@@ -8,29 +8,23 @@ class UploadSetUpdateJob < ActiveJob::Base
 
   # This copies metadata from the passed in attribute to all of the works that
   # are members of the given upload set
-  def perform(login, upload_set_id, titles, attributes, visibility)
-    @login = login
+  def perform(user, upload_set, titles, attributes, visibility)
     @saved = []
     @denied = []
-    @upload_set_id = upload_set_id
 
     titles ||= {}
     attributes = attributes.merge(visibility: visibility)
 
-    update(upload_set, titles, attributes)
-    send_user_message
+    update(user, upload_set, titles, attributes)
+    send_user_message(user, upload_set)
   end
 
   private
 
-    def upload_set
-      @upload_set ||= UploadSet.find_or_create(@upload_set_id)
-    end
-
-    def update(upload_set, titles, attributes)
+    def update(user, upload_set, titles, attributes)
       upload_set.works.each do |work|
         title = titles[work.id] if titles[work.id]
-        next unless update_work(work, title, attributes)
+        next unless update_work(user, work, title, attributes)
         # TODO: stop assuming that files only belong to one work
         saved << work
       end
@@ -38,29 +32,25 @@ class UploadSetUpdateJob < ActiveJob::Base
       upload_set.update(status: ["Complete"])
     end
 
-    def send_user_success_message
+    def send_user_success_message(user, upload_set)
       return unless CurationConcerns.config.callback.set?(:after_upload_set_update_success)
       CurationConcerns.config.callback.run(:after_upload_set_update_success, user, upload_set)
     end
 
-    def send_user_failure_message
+    def send_user_failure_message(user, upload_set)
       return unless CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
       CurationConcerns.config.callback.run(:after_upload_set_update_failure, user, upload_set)
     end
 
-    def send_user_message
+    def send_user_message(user, upload_set)
       if denied.empty?
-        send_user_success_message unless saved.empty?
+        send_user_success_message(user, upload_set) unless saved.empty?
       else
-        send_user_failure_message
+        send_user_failure_message(user, upload_set)
       end
     end
 
-    def user
-      @user ||= User.find_by_user_key(@login)
-    end
-
-    def update_work(work, title, attributes)
+    def update_work(user, work, title, attributes)
       unless user.can? :edit, work
         ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{work.id}!"
         denied << work
@@ -68,10 +58,10 @@ class UploadSetUpdateJob < ActiveJob::Base
       end
 
       work.title = title if title
-      work_actor(work, attributes).update
+      work_actor(work, user, attributes).update
     end
 
-    def work_actor(work, attributes)
+    def work_actor(work, user, attributes)
       CurationConcerns::GenericWorkActor.new(work, user, attributes)
     end
 end

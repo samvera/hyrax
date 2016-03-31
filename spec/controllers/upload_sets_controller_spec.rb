@@ -12,8 +12,8 @@ describe UploadSetsController do
     let(:upload_set) { UploadSet.create }
     context "enquing a update job" do
       it "is successful" do
-        expect(UploadSetUpdateJob).to receive(:perform_later).with(user.user_key,
-                                                                   upload_set.id,
+        expect(UploadSetUpdateJob).to receive(:perform_later).with(user,
+                                                                   upload_set,
                                                                    { '1' => 'foo' },
                                                                    { tag: [] },
                                                                    'open')

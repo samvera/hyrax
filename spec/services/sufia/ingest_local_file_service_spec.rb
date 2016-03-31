@@ -50,9 +50,8 @@ describe Sufia::IngestLocalFileService do
       expect(actor).to receive(:create_metadata).twice
 
       # expect each file to be ingested
-      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "world.png", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "image.jpg", user.user_key)
-
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset, "spec/mock_upload_directory", "world.png", user)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset, "spec/mock_upload_directory", "image.jpg", user)
       subject.ingest_local_file(files, work.id)
     end
 
@@ -66,9 +65,9 @@ describe Sufia::IngestLocalFileService do
       expect(actor).to receive(:create_metadata).exactly(3).times
 
       # expect each file to be ingested
-      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/files/icons.zip", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/files/Example.ogg", user.user_key)
-      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset.id, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user.user_key)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset, "spec/mock_upload_directory", "import/files/icons.zip", user)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset, "spec/mock_upload_directory", "import/files/Example.ogg", user)
+      expect(IngestLocalFileJob).to receive(:perform_later).with(fileset, "spec/mock_upload_directory", "import/metadata/dublin_core_rdf_descMetadata.nt", user)
 
       subject.ingest_local_file(files_and_directories, work.id)
     end
