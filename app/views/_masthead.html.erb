@@ -1,11 +1,21 @@
-<div id="masthead" class="container-fluid">
-  <div class="row">
-    <div class="col-xs-6 col-sm-7">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
       <%= render partial: '/logo' %>
-    </div><!-- /.col-xs-5 -->
-    <div class="col-xs-6 col-sm-5 text-right">
-        <%= render partial: '/user_util_links' %>
-    </div><!-- /.col-xs-7 -->
-  </div><!-- /.row -->
-</div> <!-- /masthead -->
+    </div>
+
+    <div class="collapse navbar-collapse" id="top-navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><%= render partial: '/user_util_links' %></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
