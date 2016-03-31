@@ -8,8 +8,8 @@ describe CurationConcerns::FileSetSearchBuilder do
   let(:solr_params) { { fq: [] } }
 
   subject { described_class.new(context) }
-  describe '#only_file_sets' do
-    before { subject.only_file_sets(solr_params) }
+  describe '#filter_models' do
+    before { subject.filter_models(solr_params) }
 
     it 'adds FileSet to query' do
       expect(solr_params[:fq].first).to include('{!field f=has_model_ssim}FileSet')
