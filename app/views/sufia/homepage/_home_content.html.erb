@@ -1,10 +1,10 @@
 <div class="col-xs-12 col-sm-6">
   <ul id="homeTabs" class="nav nav-tabs">
-    <li><a href="#featured_container" data-toggle="tab" role="tab" id="featureTab"><%= t('sufia.homepage.featured_works.tab_label') %></a></li>
+    <li class="active"><a href="#featured_container" data-toggle="tab" role="tab" id="featureTab"><%= t('sufia.homepage.featured_works.tab_label') %></a></li>
     <li><a href="#recently_uploaded" data-toggle="tab" role="tab" id="recentTab"><%= t('sufia.homepage.recently_uploaded.tab_label') %></a></li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane fade in" id="featured_container" role="tabpanel" aria-labelledby="featureTab">
+    <div class="tab-pane fade in active" id="featured_container" role="tabpanel" aria-labelledby="featureTab">
       <%= render 'featured_works' %>
     </div>
     <div class="tab-pane fade" id="recently_uploaded" role="tabpanel" aria-labelledby="recentTab">

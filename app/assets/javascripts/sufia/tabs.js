@@ -1,20 +1,12 @@
 Blacklight.onLoad(function () {
-  $('#homeTabs a, #myTab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-  });
-  $('#homeTabs a:first, #myTab a:first').tab('show'); // Select first tab
-
-  // Show the tabs in FileSet#edit given an anchor
-  switch (window.location.hash.substring(1)) {
-    case 'versioning_display':
-      $('#edit_versioning_link a').tab('show');
-      break;
-    case 'descriptions_display':
-      $('#edit_descriptions_link a').tab('show');
-      break;
-    case 'permissions_display':
-      $('#edit_permissions_link a').tab('show');
-      break;
+  // Javascript to enable link to tab
+  var url = document.location.toString();
+  if (url.match('#')) {
+    $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
   }
+
+  // Change hash for page-reload
+  $('.nav-tabs a').on('shown.bs.tab', function (e) {
+    window.location.hash = e.target.hash;
+  });
 });
