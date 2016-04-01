@@ -29,6 +29,7 @@ module Sufia
     initializer 'requires' do
       require 'activerecord-import'
       require 'hydra/derivatives'
+      require 'jquery-ui-rails'
     end
 
     initializer 'configure' do
