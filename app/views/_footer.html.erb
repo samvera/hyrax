@@ -1,14 +1,15 @@
-<div id="footer" class="container-fluid">
-  <div class="row">
-  <div class="col-xs-12 col-sm-5">
-      <p class="pull-left">A service of <a href="http://projecthydra.org/" target="_blank">Project Hydra</a>.</p>
-      <p>v.<%= Sufia::VERSION %></p>
-  </div>
-    <div class="col-xs-12 col-sm-7">
-      <p><%= t('sufia.footer.copyright_html') %></p>
-      <p><%= t('sufia.background_attribution') %></p>
+<footer id="footer" class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-text text-left">
+        <p>A service of <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Project Hydra</a>.</p>
+        <p>Sufia v<%= Sufia::VERSION %></p>
     </div>
-  </div><!-- /footer -->
-  </div><!-- /.row -->
-</div><!-- /footer -->
+    <div class="navbar-right">
+      <div class="navbar-text text-right">
+        <p><%= t('sufia.footer.copyright_html') %></p>
+        <p><%= t('sufia.background_attribution') %></p>
+      </div>
+    </div>
+  </div>
+</footer>
 
