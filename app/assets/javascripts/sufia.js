@@ -1,10 +1,10 @@
-//= require jquery-ui-1.9.2/jquery.ui.core
-//= require jquery-ui-1.9.2/jquery.ui.widget
-//= require jquery-ui-1.9.2/jquery.ui.menu
-//= require jquery-ui-1.9.2/jquery.ui.autocomplete
-//= require jquery-ui-1.9.2/jquery.ui.position
-//= require jquery-ui-1.9.2/jquery.ui.effect
-//= require jquery-ui-1.9.2/jquery.ui.effect-highlight
+//= require jquery-ui/core
+//= require jquery-ui/widget
+//= require jquery-ui/menu
+//= require jquery-ui/autocomplete
+//= require jquery-ui/position
+//= require jquery-ui/effect
+//= require jquery-ui/effect-highlight
 
 //= require bootstrap/dropdown
 //= require bootstrap/button
@@ -14,11 +14,8 @@
 //= require bootstrap/popover
 //= require bootstrap/tab
 
-//= require video
-//= require audio.min
 //= require jquery.validate
-//= require swfobject
-//= require ZeroClipboard.min
+//= require zeroclipboard
 //= require select2
 
 //= require flot/excanvas
@@ -39,7 +36,6 @@
 //= require sufia/batch_select_all
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
-//= require sufia/audio
 //= require sufia/search
 //= require sufia/editor
 //= require sufia/ga_events

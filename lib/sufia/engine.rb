@@ -2,8 +2,10 @@ module Sufia
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 
-    # Breadcrumbs on rails must be required outside of an initializer or it doesn't get loaded.
+    # These gems must be required outside of an initializer or it doesn't get loaded.
     require 'breadcrumbs_on_rails'
+    require 'jquery-ui-rails'
+    require 'zeroclipboard-rails'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
@@ -52,7 +54,6 @@ module Sufia
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'hydra')
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
 
-      app.config.assets.precompile << /vjs\.(?:eot|ttf|woff)$/
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
       app.config.assets.precompile += %w( ZeroClipboard.swf )
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
