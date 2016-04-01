@@ -2,8 +2,10 @@ module Sufia
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 
-    # Breadcrumbs on rails must be required outside of an initializer or it doesn't get loaded.
+    # These gems must be required outside of an initializer or it doesn't get loaded.
     require 'breadcrumbs_on_rails'
+    require 'jquery-ui-rails'
+    require 'zeroclipboard-rails'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
@@ -29,8 +31,6 @@ module Sufia
     initializer 'requires' do
       require 'activerecord-import'
       require 'hydra/derivatives'
-      require 'jquery-ui-rails'
-      require 'zeroclipboard-rails'
     end
 
     initializer 'configure' do
