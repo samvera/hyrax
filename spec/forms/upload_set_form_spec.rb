@@ -45,6 +45,7 @@ describe Sufia::UploadSetForm do
                             :visibility_after_lease,
                             :visibility,
                             :ordered_member_ids,
+                            :collection_ids,
                             :resource_type] }
   end
 

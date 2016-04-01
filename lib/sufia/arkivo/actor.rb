@@ -19,8 +19,9 @@ module Sufia
       def create_work_from_item
         upload_set = UploadSet.create
         work = ::GenericWork.new
-        work_actor = CurationConcerns::GenericWorkActor.new(work, user, attributes.merge(arkivo_checksum: item['file']['md5']))
-        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create
+        work_actor = CurationConcerns::CurationConcern.actor(work, user)
+        create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
+        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(create_attrs)
 
         file_set = ::FileSet.new
 
@@ -34,8 +35,9 @@ module Sufia
 
       def update_work_from_item(work)
         reset_metadata(work)
-        work_actor = CurationConcerns::GenericWorkActor.new(work, user, attributes.merge(arkivo_checksum: item['file']['md5']))
-        work_actor.update
+        work_actor = CurationConcerns::CurationConcern.actor(work, user)
+        work_attributes = attributes.merge(arkivo_checksum: item['file']['md5'])
+        work_actor.update(work_attributes)
         file_set = work.file_sets.first
         file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
         file_actor.update_content(file)

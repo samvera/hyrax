@@ -58,10 +58,10 @@ class UploadSetUpdateJob < ActiveJob::Base
       end
 
       work.title = title if title
-      work_actor(work, user, attributes).update
+      work_actor(work, user).update(attributes)
     end
 
-    def work_actor(work, user, attributes)
-      CurationConcerns::GenericWorkActor.new(work, user, attributes)
+    def work_actor(work, user)
+      CurationConcerns::CurationConcern.actor(work, user)
     end
 end
