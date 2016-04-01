@@ -73,7 +73,7 @@ h4 .small {
 
 .file-listing-links a:link, .file-listing-links a:visited,
 .part_of_collection a:link, .part_of_collection a:visited {
-  color: $blue-default;
+  color: $file-listing-link-color;
 }
 
 .file-listing-links a:hover, .part_of_collection a:hover {
@@ -140,7 +140,7 @@ h4 .small {
 }
 
 .portal {
-  border: 1px solid $gray-lightish;
+  border: 1px solid $gray-lighter;
   margin: 5px;
   padding: 5px;
   h3 {
@@ -149,7 +149,7 @@ h4 .small {
 }
 
 .heading-tile {
-  border-right: 1px solid $gray-lightish;
+  border-right: 1px solid $gray-lighter;
   margin-top: 10px;
   margin-bottom: 10px;
   text-align: center;
@@ -161,7 +161,7 @@ h4 .small {
 }
 
 .heading-row {
-  border-bottom: 1px solid $gray-lightish;
+  border-bottom: 1px solid $gray-lighter;
 }
 
 input.batch_document_selector {

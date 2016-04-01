@@ -8,10 +8,10 @@
  *= require nestable
 */
 
-@import 'sufia/settings';
 @import 'sufia/variables';
 @import "bootstrap-sprockets";
 @import 'bootstrap';
+@import 'sufia/settings';
 @import 'blacklight/blacklight';
 @import "browse_everything";
 
