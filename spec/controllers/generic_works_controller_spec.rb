@@ -49,8 +49,7 @@ describe CurationConcerns::GenericWorksController do
     let(:actor) { double('An actor') }
     let(:work) { create(:work) }
     before do
-      allow(Sufia::CreateWithFilesActor).to receive(:new)
-        .with(CurationConcerns::GenericWorkActor, ['777', '888'])
+      allow(controller).to receive(:actor)
         .and_return(actor)
 
       # Stub out the creation of the work so we can redirect somewhere
@@ -58,7 +57,9 @@ describe CurationConcerns::GenericWorksController do
     end
 
     it "attaches files" do
-      expect(actor).to receive(:create).and_return(true)
+      expect(actor).to receive(:create)
+        .with(hash_including(:uploaded_files))
+        .and_return(true)
       post :create, generic_work: { title: ["First title"],
                                     visibility: 'open' },
                     uploaded_files: ['777', '888']

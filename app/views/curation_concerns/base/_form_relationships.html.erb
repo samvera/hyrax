@@ -1,0 +1,6 @@
+<h3>This Work in Collections</h3>
+<div id="collection-widget">
+  <%= f.input :collection_ids, as: :select,
+      collection: available_collections(nil),
+      input_html: { class: 'form-control', multiple: true } %>
+</div>

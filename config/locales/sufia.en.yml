@@ -218,6 +218,8 @@ en:
         related_url:      "Related URL"
         total_items:      "Total Items"
         size:             "Size"
+      generic_work:
+        collection_ids:   "Add as member of collection"
 
     metadata_help:
       file_set:
