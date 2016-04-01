@@ -1,17 +1,16 @@
 module CurationConcerns
   class RootActor
-    attr_reader :curation_concern, :user, :attributes, :cloud_resources
-    def initialize(curation_concern, user, attributes, _more_actors)
+    attr_reader :curation_concern, :user, :cloud_resources
+    def initialize(curation_concern, user, _more_actors)
       @curation_concern = curation_concern
       @user = user
-      @attributes = attributes
     end
 
-    def create
+    def create(_)
       true
     end
 
-    def update
+    def update(_)
       true
     end
   end

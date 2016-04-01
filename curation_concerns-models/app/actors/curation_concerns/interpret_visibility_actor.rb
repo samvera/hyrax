@@ -1,11 +1,5 @@
 module CurationConcerns
   class InterpretVisibilityActor < AbstractActor
-    def initialize(curation_concern, user, attributes, more_actors)
-      @intention = Intention.new(attributes)
-      attributes = @intention.sanitize_params
-      super # (curation_concern, user, attributes, more_actors)
-    end
-
     class Intention
       def initialize(attributes)
         @attributes = attributes
@@ -72,12 +66,16 @@ module CurationConcerns
         end
     end
 
-    def create
-      validate && apply_visibility && next_actor.create
+    def create(attributes)
+      @intention = Intention.new(attributes)
+      attributes = @intention.sanitize_params
+      validate && apply_visibility(attributes) && next_actor.create(attributes)
     end
 
-    def update
-      validate && apply_visibility && next_actor.update
+    def update(attributes)
+      @intention = Intention.new(attributes)
+      attributes = @intention.sanitize_params
+      validate && apply_visibility(attributes) && next_actor.update(attributes)
     end
 
     private
@@ -86,7 +84,7 @@ module CurationConcerns
         validate_lease && validate_embargo
       end
 
-      def apply_visibility
+      def apply_visibility(attributes)
         result = apply_lease && apply_embargo
         if attributes[:visibility]
           curation_concern.visibility = attributes[:visibility]

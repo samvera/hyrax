@@ -152,10 +152,8 @@ describe CurationConcerns::GenericWorksController do
     end
 
     it "can update file membership" do
-      file = create(:file_set, user: user)
-
-      patch :update, id: a_work, generic_work: { ordered_member_ids: [file.id] }
-      expect(CurationConcerns::CurationConcern).to have_received(:actor).with(anything, anything, ordered_member_ids: [file.id])
+      patch :update, id: a_work, generic_work: { ordered_member_ids: ['foo_123'] }
+      expect(actor).to have_received(:update).with(ordered_member_ids: ['foo_123'])
     end
 
     describe 'changing rights' do

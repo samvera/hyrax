@@ -13,12 +13,10 @@ module CurationConcerns
   # it should respond to curation_concern, user and attributes.
   # it ha to next_actor
   class AbstractActor
-    attr_reader :next_actor, :attributes
+    attr_reader :next_actor
 
-    def initialize(curation_concern, user, attributes, more_actors)
-      @attributes = attributes.with_indifferent_access
-      next_actor_class = more_actors.shift || RootActor
-      @next_actor = next_actor_class.new(curation_concern, user, attributes, more_actors)
+    def initialize(_curation_concern, _user, next_actor)
+      @next_actor = next_actor
     end
 
     delegate :curation_concern, :user, to: :next_actor

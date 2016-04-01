@@ -4,11 +4,19 @@ describe CurationConcerns::InterpretVisibilityActor do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
-    described_class.new(curation_concern, user, attributes, [CurationConcerns::GenericWorkActor])
+    CurationConcerns::CurationConcern::ActorStack.new(curation_concern,
+                                                      user,
+                                                      [described_class,
+                                                       CurationConcerns::GenericWorkActor])
   end
   let(:date) { Date.today + 2 }
 
   describe 'the next actor' do
+    let(:root_actor) { double }
+    before do
+      allow(CurationConcerns::RootActor).to receive(:new).and_return(root_actor)
+    end
+
     context 'when visibility is  set to open' do
       let(:attributes) do
         { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
@@ -18,8 +26,8 @@ describe CurationConcerns::InterpretVisibilityActor do
       end
 
       it 'does not receive the embargo attributes' do
-        expect(CurationConcerns::RootActor).to receive(:new).with(curation_concern, user, { visibility: 'open' }, [])
-        subject
+        expect(root_actor).to receive(:create).with(visibility: 'open')
+        subject.create(attributes)
       end
     end
 
@@ -32,16 +40,15 @@ describe CurationConcerns::InterpretVisibilityActor do
       end
 
       it 'does not receive the visibility attribute' do
-        expect(CurationConcerns::RootActor).to receive(:new)
-          .with(curation_concern, user, hash_excluding(:visibility), [])
-        subject
+        expect(root_actor).to receive(:create).with(hash_excluding(:visibility))
+        subject.create(attributes)
       end
 
       context 'when embargo_release_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
         it 'does not clear the visibility attributes' do
-          expect(CurationConcerns::RootActor).to receive(:new).with(curation_concern, user, { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO }, [])
-          subject
+          expect(subject.create(attributes)).to be false
+          expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO)
         end
       end
     end
@@ -55,16 +62,15 @@ describe CurationConcerns::InterpretVisibilityActor do
       end
 
       it 'removes lease attributes' do
-        expect(CurationConcerns::RootActor).to receive(:new)
-          .with(curation_concern, user, hash_excluding(:visibility), [])
-        subject
+        expect(root_actor).to receive(:create).with(hash_excluding(:visibility))
+        subject.create(attributes)
       end
 
       context 'when lease_expiration_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE } }
         it 'sets error on curation_concern and return false' do
-          expect(CurationConcerns::RootActor).to receive(:new).with(curation_concern, user, { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE }, [])
-          subject
+          expect(subject.create(attributes)).to be false
+          expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
         end
       end
     end
@@ -83,7 +89,7 @@ describe CurationConcerns::InterpretVisibilityActor do
       context 'with a valid embargo date' do
         let(:date) { Date.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create
+          subject.create(attributes)
           expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
           expect(curation_concern.visibility_after_embargo).to eq 'open'
           expect(curation_concern.visibility).to eq 'authenticated'
@@ -93,7 +99,7 @@ describe CurationConcerns::InterpretVisibilityActor do
       context 'when embargo_release_date is in the past' do
         let(:date) { Date.today - 2 }
         it 'sets error on curation_concern and return false' do
-          expect(subject.create).to be false
+          expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date'
         end
       end
@@ -111,7 +117,7 @@ describe CurationConcerns::InterpretVisibilityActor do
       context 'with a valid lease date' do
         let(:date) { Date.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create
+          subject.create(attributes)
           expect(curation_concern.embargo_release_date).to be_nil
           expect(curation_concern.visibility_during_lease).to eq 'open'
           expect(curation_concern.visibility_after_lease).to eq 'restricted'
@@ -122,7 +128,7 @@ describe CurationConcerns::InterpretVisibilityActor do
       context 'when lease_expiration_date is in the past' do
         let(:date) { Date.today - 2 }
         it 'sets error on curation_concern and return false' do
-          expect(subject.create).to be false
+          expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
         end
       end

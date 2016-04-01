@@ -1,15 +1,8 @@
 module CurationConcerns
   class ApplyOrderActor < AbstractActor
-    attr_reader :next_actor
-    def initialize(curation_concern, user, attributes, more_actors)
-      @ordered_member_ids = attributes.delete(:ordered_member_ids)
-      super
-    end
-
-    delegate :create, to: :next_actor
-
-    def update
-      apply_order(@ordered_member_ids) && next_actor.update
+    def update(attributes)
+      ordered_member_ids = attributes.delete(:ordered_member_ids)
+      apply_order(ordered_member_ids) && next_actor.update(attributes)
     end
 
     private

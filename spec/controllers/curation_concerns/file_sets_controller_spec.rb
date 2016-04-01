@@ -106,10 +106,9 @@ describe CurationConcerns::FileSetsController do
 
     describe 'update' do
       let!(:file_set) do
-        file_set = FileSet.new.tap do |gf|
+        file_set = FileSet.create do |gf|
           gf.apply_depositor_metadata(user)
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-          gf.save!
         end
         parent.ordered_members << file_set
         parent.save

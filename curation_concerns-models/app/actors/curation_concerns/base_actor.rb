@@ -7,21 +7,17 @@ module CurationConcerns
   class BaseActor < AbstractActor
     attr_reader :cloud_resources
 
-    def initialize(curation_concern, user, attributes, more_actors)
+    def create(attributes)
       @cloud_resources = attributes.delete(:cloud_resources.to_s)
-      super
-    end
-
-    def create
       apply_creation_data_to_curation_concern
-      apply_save_data_to_curation_concern
-      next_actor.create && save
+      apply_save_data_to_curation_concern(attributes)
+      next_actor.create(attributes) && save
     end
 
-    def update
+    def update(attributes)
       apply_update_data_to_curation_concern
-      apply_save_data_to_curation_concern
-      next_actor.update && save
+      apply_save_data_to_curation_concern(attributes)
+      next_actor.update(attributes) && save
     end
 
     protected
@@ -48,9 +44,9 @@ module CurationConcerns
         curation_concern.save
       end
 
-      def apply_save_data_to_curation_concern
+      def apply_save_data_to_curation_concern(attributes)
         attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
-        remove_blank_attributes!
+        remove_blank_attributes!(attributes)
         curation_concern.attributes = attributes.symbolize_keys
         curation_concern.date_modified = CurationConcerns::TimeService.time_in_utc
       end
@@ -61,14 +57,14 @@ module CurationConcerns
       #   remove_blank_attributes!
       #   self.attributes
       # => { 'title' => ['first', 'second'] }
-      def remove_blank_attributes!
-        multivalued_form_attributes.each_with_object(attributes) do |(k, v), h|
+      def remove_blank_attributes!(attributes)
+        multivalued_form_attributes(attributes).each_with_object(attributes) do |(k, v), h|
           h[k] = v.instance_of?(Array) ? v.select(&:present?) : v
         end
       end
 
       # Return the hash of attributes that are multivalued and not uploaded files
-      def multivalued_form_attributes
+      def multivalued_form_attributes(attributes)
         attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
       end
   end

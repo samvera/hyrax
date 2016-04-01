@@ -1,7 +1,7 @@
 module CurationConcerns
   class AssignRepresentativeActor < AbstractActor
-    def create
-      next_actor.create && assign_representative
+    def create(attributes)
+      next_actor.create(attributes) && assign_representative
     end
 
     private

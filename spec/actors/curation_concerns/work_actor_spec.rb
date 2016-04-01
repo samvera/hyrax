@@ -4,7 +4,7 @@ require 'redlock'
 describe CurationConcerns::GenericWorkActor do
   include ActionDispatch::TestProcess
 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
   let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
 
   let(:redlock_client_stub) { # stub out redis connection
@@ -15,7 +15,7 @@ describe CurationConcerns::GenericWorkActor do
   }
 
   subject do
-    CurationConcerns::CurationConcern.actor(curation_concern, user, attributes)
+    CurationConcerns::CurationConcern.actor(curation_concern, user)
   end
 
   describe '#create' do
@@ -28,7 +28,7 @@ describe CurationConcerns::GenericWorkActor do
       it 'returns false' do
         expect_any_instance_of(described_class).to receive(:save).and_return(false)
         allow(subject).to receive(:attach_files).and_return(true)
-        expect(subject.create).to be false
+        expect(subject.create(attributes)).to be false
       end
     end
 
@@ -53,7 +53,7 @@ describe CurationConcerns::GenericWorkActor do
 
           it "applies embargo to attached files" do
             allow(CharacterizeJob).to receive(:perform_later).and_return(true)
-            subject.create
+            subject.create(attributes)
             file = curation_concern.file_sets.first
             expect(file).to be_persisted
             expect(file.visibility_during_embargo).to eq 'authenticated'
@@ -77,7 +77,7 @@ describe CurationConcerns::GenericWorkActor do
 
           it 'stamps each file with the access rights' do
             expect(CharacterizeJob).to receive(:perform_later)
-            expect(subject.create).to be true
+            expect(subject.create(attributes)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -111,7 +111,7 @@ describe CurationConcerns::GenericWorkActor do
           it 'stamps each file with the access rights' do
             expect(CharacterizeJob).to receive(:perform_later).twice
 
-            expect(subject.create).to be true
+            expect(subject.create(attributes)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -131,7 +131,7 @@ describe CurationConcerns::GenericWorkActor do
         end
 
         it 'stamps each link with the access rights' do
-          expect(subject.create).to be true
+          expect(subject.create(attributes)).to be true
           expect(curation_concern).to be_persisted
           expect(curation_concern.title).to eq ['this is present']
         end
@@ -140,20 +140,20 @@ describe CurationConcerns::GenericWorkActor do
   end
 
   describe '#update' do
-    let(:curation_concern) { FactoryGirl.create(:generic_work, user: user) }
+    let(:curation_concern) { create(:generic_work, user: user) }
 
     context 'failure' do
       let(:attributes) { {} }
 
       it 'returns false' do
         expect_any_instance_of(described_class).to receive(:save).and_return(false)
-        expect(subject.update).to be false
+        expect(subject.update(attributes)).to be false
       end
     end
 
     context 'adding to collections' do
-      let!(:collection1) { FactoryGirl.create(:collection, user: user) }
-      let!(:collection2) { FactoryGirl.create(:collection, user: user) }
+      let!(:collection1) { create(:collection, user: user) }
+      let!(:collection2) { create(:collection, user: user) }
       let(:attributes) do
         FactoryGirl.attributes_for(:generic_work, collection_ids: [collection2.id])
       end
@@ -169,7 +169,7 @@ describe CurationConcerns::GenericWorkActor do
         expect(curation_concern.in_collections).to eq [collection1]
         # before running actor.update, the work is in collection1
 
-        expect(subject.update).to be true
+        expect(subject.update(attributes)).to be true
 
         curation_concern.reload
         expect(curation_concern.identifier).to be_blank
@@ -188,7 +188,7 @@ describe CurationConcerns::GenericWorkActor do
       end
       it 'updates the order of file sets' do
         expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
-        expect(subject.update).to be true
+        expect(subject.update(attributes)).to be true
 
         curation_concern.reload
         expect(curation_concern.ordered_members.to_a).to eq [file_set2, file_set1]
@@ -201,7 +201,7 @@ describe CurationConcerns::GenericWorkActor do
         it "works" do
           expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
 
-          expect(subject.update).to be true
+          expect(subject.update(attributes)).to be true
 
           curation_concern.reload
           expect(curation_concern.ordered_members.to_a).to eq [file_set2]
