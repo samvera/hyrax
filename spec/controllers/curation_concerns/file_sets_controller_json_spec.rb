@@ -90,11 +90,16 @@ describe CurationConcerns::FileSetsController do
     end
 
     describe 'updated' do
-      before { put :update, id: resource, file_set: { title: ['updated title'] }, format: :json }
+      let(:actor) { double }
+      before do
+        allow(controller).to receive(:actor).and_return(actor)
+      end
       it "returns json of updated work and sets location header" do
+        expect(actor).to receive(:update_metadata).with(title: ['updated title']).and_return(true)
+        put :update, id: resource, file_set: { title: ['updated title'] }, format: :json
         expect(assigns[:file_set]).to be_instance_of ::FileSet # this object is used by the jbuilder template
-        expect(controller).to render_template('curation_concerns/file_sets/show')
         expect(response.status).to eq 200
+        expect(controller).to render_template('curation_concerns/file_sets/show')
         created_resource = assigns[:file_set]
         expect(response.location).to eq main_app.curation_concerns_file_set_path(created_resource)
       end

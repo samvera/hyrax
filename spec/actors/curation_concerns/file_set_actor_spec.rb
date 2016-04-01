@@ -138,6 +138,13 @@ describe CurationConcerns::FileSetActor do
     end
   end
 
+  describe "#update_metadata" do
+    it "is successful" do
+      expect(actor.update_metadata("title" => ["updated title"])).to be true
+      expect(file_set.reload.title).to eq ["updated title"]
+    end
+  end
+
   describe "#destroy" do
     it "destroys the object" do
       actor.destroy

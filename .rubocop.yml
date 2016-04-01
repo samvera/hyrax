@@ -26,6 +26,7 @@ Performance/RedundantMerge:
 Lint/AssignmentInCondition:
   Exclude:
     - 'curation_concerns-models/app/services/curation_concerns/persist_derivatives.rb'
+    - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/LineLength:
   Enabled: false

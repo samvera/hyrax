@@ -62,19 +62,24 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#create' do
+    let(:actor) { double(create: create_status) }
+    before do
+      allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+    end
+    let(:create_status) { true }
+
     context 'when create is successful' do
       let(:work) { stub_model(GenericWork) }
       it 'creates a work' do
         allow(controller).to receive(:curation_concern).and_return(work)
-        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:create).and_return(true)
         post :create, generic_work: { title: ['a title'] }
         expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
       end
     end
 
     context 'when create fails' do
+      let(:create_status) { false }
       it 'draws the form again' do
-        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:create).and_return(false)
         post :create, generic_work: { title: ['a title'] }
         expect(response.status).to eq 422
         expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
@@ -136,8 +141,10 @@ describe CurationConcerns::GenericWorksController do
     let(:a_work) { create(:private_generic_work, user: user) }
     before do
       allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+      allow_any_instance_of(GenericWork).to receive(:visibility_changed?).and_return(visibility_changed)
     end
-    let(:actor) { double(update: true, visibility_changed?: false) }
+    let(:visibility_changed) { false }
+    let(:actor) { double(update: true) }
 
     it 'updates the work' do
       patch :update, id: a_work, generic_work: {}
@@ -145,14 +152,13 @@ describe CurationConcerns::GenericWorksController do
     end
 
     it "can update file membership" do
-      file = create(:file_set, user: user)
-
-      patch :update, id: a_work, generic_work: { ordered_member_ids: [file.id] }
-      expect(CurationConcerns::CurationConcern).to have_received(:actor).with(anything, anything, ordered_member_ids: [file.id])
+      patch :update, id: a_work, generic_work: { ordered_member_ids: ['foo_123'] }
+      expect(actor).to have_received(:update).with(ordered_member_ids: ['foo_123'])
     end
 
     describe 'changing rights' do
-      let(:actor) { double(update: true, visibility_changed?: true) }
+      let(:visibility_changed) { true }
+      let(:actor) { double(update: true) }
 
       context 'when there are children' do
         let(:a_work) { create(:work_with_one_file, user: user) }
@@ -172,7 +178,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'failure' do
-      let(:actor) { double(update: false, visibility_changed?: false) }
+      let(:actor) { double(update: false) }
 
       it 'renders the form' do
         patch :update, id: a_work, generic_work: {}

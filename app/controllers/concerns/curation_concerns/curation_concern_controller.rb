@@ -41,7 +41,7 @@ module CurationConcerns::CurationConcernController
 
   def create
     # return unless verify_acceptance_of_user_agreement!
-    if actor.create
+    if actor.create(attributes_for_actor)
       after_create_response
     else
       respond_to do |wants|
@@ -77,7 +77,7 @@ module CurationConcerns::CurationConcernController
   end
 
   def update
-    if actor.update
+    if actor.update(attributes_for_actor)
       after_update_response
     else
       respond_to do |wants|
@@ -115,7 +115,7 @@ module CurationConcerns::CurationConcernController
     end
 
     def actor
-      @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user, attributes_for_actor)
+      @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user)
     end
 
     def presenter
@@ -135,7 +135,7 @@ module CurationConcerns::CurationConcernController
 
     def after_update_response
       # TODO: visibility or lease/embargo status
-      if actor.visibility_changed? && curation_concern.file_sets.present?
+      if curation_concern.visibility_changed? && curation_concern.file_sets.present?
         redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
       else
         respond_to do |wants|
