@@ -77,10 +77,6 @@ Blacklight.do_select_submit = function() {
 };
 Blacklight.do_select_submit.selector = "form.sort select, form.per_page select";
 
-function notify_update_link() {
-   $('#notify_update_link').click();
-}
-
 Blacklight.onLoad(function() {
 
   // set up global batch edit options to override the ones in the gem

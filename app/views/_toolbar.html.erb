@@ -27,7 +27,7 @@
         <li>
           <%= link_to sufia.notifications_path do %>
             Notifications
-            <span id="notify_number" class="label label-<%= (@notify_number || 0) > 0 ? 'danger' : 'default' %>"> <%= @notify_number %> <span class="sr-only">unread notifications</span></span>
+            <%= render partial: 'users/notify_number' %>
           <% end %>
         </li>
         <li><%= link_to 'Transfers', sufia.transfers_path %></li>
