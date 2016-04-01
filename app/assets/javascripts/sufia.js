@@ -18,7 +18,7 @@
 //= require audio.min
 //= require jquery.validate
 //= require swfobject
-//= require ZeroClipboard.min
+//= require zeroclipboard
 //= require select2
 
 //= require flot/excanvas

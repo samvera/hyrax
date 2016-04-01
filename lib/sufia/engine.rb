@@ -30,6 +30,7 @@ module Sufia
       require 'activerecord-import'
       require 'hydra/derivatives'
       require 'jquery-ui-rails'
+      require 'zeroclipboard-rails'
     end
 
     initializer 'configure' do
