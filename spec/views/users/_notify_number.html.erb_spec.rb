@@ -5,6 +5,6 @@ describe 'users/_notify_number.html.erb', type: :view do
     assign :notify_number, 8
     render
     page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_selector("span#notify_number.overlay", text: ' 8')
+    expect(page).to have_selector("#notify_number", text: '8 unread notifications')
   end
 end

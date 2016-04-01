@@ -1,5 +1,3 @@
-<span class="glyphicon glyphicon-bullhorn"></span>
-<% if @notify_number > 0 %>
-  <span id="notify_number" class="overlay"> <%=@notify_number%></span>
-  <span class="sr-only">unread notifications</span>
-<% end %>
+<span id="notify_number" class="label label-<%= (@notify_number || 0) > 0 ? 'danger' : 'default' %>" data-update-poll-url="<%= sufia.user_notify_path %>" data-update-poll-interval="30">
+  <%= @notify_number %> <span class="sr-only">unread notifications</span>
+</span>
