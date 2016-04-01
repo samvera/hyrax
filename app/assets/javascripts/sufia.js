@@ -14,10 +14,7 @@
 //= require bootstrap/popover
 //= require bootstrap/tab
 
-//= require video
-//= require audio.min
 //= require jquery.validate
-//= require swfobject
 //= require zeroclipboard
 //= require select2
 
@@ -39,7 +36,6 @@
 //= require sufia/batch_select_all
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
-//= require sufia/audio
 //= require sufia/search
 //= require sufia/editor
 //= require sufia/ga_events

@@ -54,7 +54,6 @@ module Sufia
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'hydra')
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
 
-      app.config.assets.precompile << /vjs\.(?:eot|ttf|woff)$/
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
       app.config.assets.precompile += %w( ZeroClipboard.swf )
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
