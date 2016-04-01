@@ -50,6 +50,7 @@
 //= require hydra/batch_select
 //= require sufia/dashboard_actions
 //= require sufia/batch
+//= require sufia/save_work
 
 //= require hydra_collections
 //= require hydra-editor/hydra-editor

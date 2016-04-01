@@ -1,4 +1,4 @@
-    <aside class="form-progress panel panel-default">
+    <aside class="form-progress panel panel-default" id="form-progress">
       <div class="panel-heading">
         <h2>Save Work</h2>
       </div>
@@ -6,11 +6,11 @@
         <div class="list-group-item">
           <h3>Requirements</h3>
           <ul class="requirements">
-            <li class="incomplete">Enter required metadata</li>
-            <li class="incomplete">Add files</li>
+            <li class="incomplete" id="required-metadata">Enter required metadata</li>
+            <li class="incomplete" id="required-files">Add files</li>
           </ul>
         </div>
-      
+
         <div class="list-group-item">
           <h3>Visibility</h3>
           <% if f.object.embargo_release_date %>
