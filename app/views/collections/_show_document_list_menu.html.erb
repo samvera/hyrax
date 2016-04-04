@@ -4,7 +4,7 @@
   <ul class="dropdown-menu dropdown-menu-right">
     <li>
       <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to Work'), '#',
-                    class: "copypaste itemicon itemcode", title: "Single-Use Link to Work", id: "copy_link_#{id}" %>
+                    class: "copypaste itemicon itemcode", title: "Single-Use Link to Work", id: "copy_link_#{id}", data: { generate_single_use_link_url: curation_concerns.generate_show_single_use_link_url(id) } %>
 		    </li>
     <li>
       <%= link_to raw("<i class='glyphicon glyphicon-pencil'></i> #{t('sufia.collection.generic_work.edit')}"), edit_curation_concerns_generic_work_path(id),
