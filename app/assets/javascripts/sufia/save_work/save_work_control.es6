@@ -1,6 +1,7 @@
 import { RequiredFields } from './required_fields'
 import { ChecklistItem } from './checklist_item'
 import { UploadedFiles } from './uploaded_files'
+import { DepositAgreement } from './deposit_agreement'
 
 /**
  * Polyfill String.prototype.startsWith()
@@ -25,10 +26,13 @@ export class SaveWorkControl {
     this.form = element.closest('form')
   }
 
-  // Is the form for a new object (vs edit an exisiting object)
+  /**
+   * Is the form for a new object (vs edit an exisiting object)
+   */
   get isNew() {
     return this.form.attr('id').startsWith('new')
   }
+
 
   /*
    * Call this when the form has been rendered
@@ -42,13 +46,15 @@ export class SaveWorkControl {
 
     this.saveButton = this.element.find(':submit')
 
+    this.depositAgreement = new DepositAgreement(this.form, () => this.formChanged())
+
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
     this.formChanged()
   }
 
   formChanged() {
-    let valid = this.validateMetadata() && this.validateFiles()
+    let valid = this.validateMetadata() && this.validateFiles() && this.depositAgreement.isAccepted
     this.saveButton.prop("disabled", !valid);
   }
 

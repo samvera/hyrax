@@ -35,6 +35,7 @@ feature 'Creating a new Work', :js do
 
     choose('visibility_open')
     # attach_file('Upload a file', fixture_file_path('files/image.png'))
+    check('agreement')
     click_on('Save')
     expect(page).to have_content('My Test Work (Generic Work)')
     expect(page).to have_content "Your files are being processed by Repository in the background."

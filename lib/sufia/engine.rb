@@ -81,6 +81,7 @@ module Sufia
     config.activity_to_show_default_seconds_since_now = 24 * 60 * 60
     config.arkivo_api = false
     config.geonames_username = ""
+    config.active_deposit_agreement_acceptance = true
 
     # Noid identifiers
     config.enable_noids = true

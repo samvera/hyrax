@@ -114,11 +114,10 @@ describe("SaveWorkControl", function() {
     it("is complete", function() {
       expect(target.requiredFields).toBeDefined();
       expect(target.uploads).toBeDefined();
+      expect(target.depositAgreement).toBeDefined();
       expect(target.requiredMetadata).toBeDefined();
       expect(target.requiredFiles).toBeDefined();
       expect(target.saveButton).toBeDisabled();
     });
   });
 });
-
-
