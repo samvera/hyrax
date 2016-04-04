@@ -25,14 +25,6 @@
   background-color: initial;
 }
 
-/* use if a label should be hidden from view but available to screen readers */
-/* we could switch to .sr-only instead */
-.accessible-hidden {
-  position: absolute !important;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-}
-
 #content {
   padding-top: 10px;
 }
