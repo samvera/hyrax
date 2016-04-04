@@ -1,7 +1,4 @@
-/*
-*= require_self
-*= require_directory ./fileupload
-*/
+@import 'fileupload/jquery.fileupload-ui.css';
 
 #upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
 
@@ -41,10 +38,14 @@ h2 small {
 }
 
 .loading {
-   background: white url(<%= image_path('loading.gif') %>) center bottom no-repeat;
+   background: white image_url('loading.gif') center bottom no-repeat;
 }
 
 h1.visibility span.label {
   font-size: 30%;
   vertical-align: middle;
+}
+
+table.files td.preview img {
+    height: 50px;
 }
