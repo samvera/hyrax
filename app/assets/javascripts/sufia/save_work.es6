@@ -3,3 +3,4 @@
 //= require sufia/save_work/uploaded_files
 //= require sufia/save_work/checklist_item
 //= require sufia/save_work/deposit_agreement
+//= require sufia/save_work/visibility_component

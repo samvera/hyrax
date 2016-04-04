@@ -1,0 +1,60 @@
+<h3>Visibility</h3>
+<% if f.object.embargo_release_date %>
+  <%= render 'form_permission_under_embargo', f: f %>
+<% elsif f.object.lease_expiration_date %>
+  <%= render 'form_permission_under_lease', f: f %>
+<% else %>
+  <div class="form-group visibility">
+    <label class="radio">
+      <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, data: { 'target': '#collapsePublic' }  %>
+      <%= t('curation_concerns.visibility.open.label_html') %>
+      <section class="collapse" id="collapsePublic">
+        <p>
+          <strong>Please note</strong>, making something visible to the world (i.e.
+          marking this as <%= t('curation_concerns.visibility.open.label_html') %>) may be
+          viewed as publishing which could impact your ability to:
+        </p>
+        <ul>
+          <li>Patent your work</li>
+          <li>Publish your work in a journal</li>
+        </ul>
+        <p>
+          Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for more
+          information about publisher copyright policies.
+        </p>
+      </section>
+    </label>
+    <label class="radio">
+      <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
+      <%= t('curation_concerns.visibility.authenticated.label_html', institution: t('curation_concerns.institution.name')) %>
+    </label>
+    <label class="radio">
+      <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, data: { 'target': '#collapseEmbargo' } %>
+      <%= t('curation_concerns.visibility.embargo.label_html') %>
+      <div class="collapse" id="collapseEmbargo">
+        <div class="form-inline">
+          <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
+          <%= f.date_field :embargo_release_date, wrapper: :inline, value: f.object.embargo_release_date || Date.tomorrow, class: 'datepicker form-control' %>
+          <%= f.input :visibility_after_embargo, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
+        </div>
+      </div>
+    </label>
+    <label class="radio">
+      <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, data: { 'target': '#collapseLease' } %>
+      <%= t('curation_concerns.visibility.lease.label_html') %>
+      <div class="collapse" id="collapseLease">
+        <div class="form-inline">
+          <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
+          <%= f.date_field :lease_expiration_date, wrapper: :inline, value: f.object.lease_expiration_date || Date.tomorrow, class: 'datepicker form-control' %>
+          <%= f.input :visibility_after_lease, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
+        </div>
+      </div>
+
+    </label>
+    <label class="radio">
+      <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
+      <%= t('curation_concerns.visibility.private.label_html') %>
+    </label>
+  </div>
+<% end %>
+

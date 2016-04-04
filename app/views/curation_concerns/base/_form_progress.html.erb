@@ -12,47 +12,7 @@
         </div>
 
         <div class="list-group-item">
-          <h3>Visibility</h3>
-          <% if f.object.embargo_release_date %>
-            <%= render 'form_permission_under_embargo', f: f %>
-          <% elsif f.object.lease_expiration_date %>
-            <%= render 'form_permission_under_lease', f: f %>
-          <% else %>
-            <div class="form-group visibility">
-              <label class="radio">
-                <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if f.object.open_access? %> checked="true"<% end %>/>
-                Open
-              </label>
-              <label class="radio">
-                <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if f.object.authenticated_only_access? %> checked="true"<% end %> />
-                <%=t('curation_concerns.institution.name') %>
-              </label>
-              <label class="radio">
-                <input type="radio" id="visibility_embargo" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-                <div class="form-inline">
-                  Embargo
-                  <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
-                  <%= f.date_field :embargo_release_date, wrapper: :inline, value: f.object.embargo_release_date || Date.tomorrow, class: 'datepicker form-control' %>
-                  <%= f.input :visibility_after_embargo, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
-                </div>
-
-              </label>
-              <label class="radio">
-                <input type="radio" id="visibility_lease" name="<%= f.object_name %>[visibility]" value="lease" <% if f.object.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
-                <div class="form-inline">
-                  Lease
-                  <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
-                  <%= f.date_field :lease_expiration_date, wrapper: :inline, value: f.object.lease_expiration_date || Date.tomorrow, class: 'datepicker form-control' %>
-                  <%= f.input :visibility_after_lease, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
-                </div>
-
-              </label>
-              <label class="radio">
-                <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if f.object.private_access? %> checked="true"<% end %>/>
-                Private
-              </label>
-            </div>
-          <% end %>
+          <%= render 'form_visibility_component', f: f %>
         </div>
 
         <div class="panel-footer text-center">

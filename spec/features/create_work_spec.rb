@@ -33,7 +33,8 @@ feature 'Creating a new Work', :js do
     click_link "Metadata" # switch tab
     fill_in('Title', with: 'My Test Work')
 
-    choose('visibility_open')
+    choose('generic_work_visibility_open')
+    expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
     # attach_file('Upload a file', fixture_file_path('files/image.png'))
     check('agreement')
     click_on('Save')

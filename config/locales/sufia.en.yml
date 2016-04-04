@@ -247,3 +247,16 @@ en:
         description: "Usage information for abstract or summary"
         tag: "Usage information for keyword"
         rights: "Usage information for rights"
+
+  curation_concerns:
+    visibility:
+      open:
+        label_html: Public
+      authenticated:
+        label_html: "%{institution}"
+      embargo:
+        label_html: Embargo
+      lease:
+        label_html: Lease
+      private:
+        label_html: Private
