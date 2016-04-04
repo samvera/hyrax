@@ -39,32 +39,37 @@ export class SaveWorkControl {
     }
     this.requiredFields = new RequiredFields(this.form, () => this.formChanged())
     this.uploads = new UploadedFiles(this.form, () => this.formChanged())
+
+    this.saveButton = this.element.find(':submit')
+
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
     this.formChanged()
   }
 
   formChanged() {
-    this.validateMetadata()
-    this.validateFiles()
+    let valid = this.validateMetadata() && this.validateFiles()
+    this.saveButton.prop("disabled", !valid);
   }
 
   // sets the metadata indicator to complete/incomplete
   validateMetadata() {
     if (this.requiredFields.areComplete) {
       this.requiredMetadata.check()
-    } else {
-      this.requiredMetadata.uncheck()
+      return true
     }
+    this.requiredMetadata.uncheck()
+    return false
   }
 
   // sets the files indicator to complete/incomplete
   validateFiles() {
     if (!this.isNew || this.uploads.hasFiles) {
       this.requiredFiles.check()
-    } else {
-      this.requiredFiles.uncheck()
+      return true
     }
+    this.requiredFiles.uncheck()
+    return false
   }
 }
 

@@ -104,17 +104,19 @@ describe("SaveWorkControl", function() {
   });
 
   describe("activate", function() {
+    var target;
     beforeEach(function() {
-      setFixtures('<form id="new_generic_work"><aside id="form-progress><ul><li id="required-metadata"><li id="required-files"></ul></aside></form>');
-      target = new control.SaveWorkControl($('#form-progress'));
+      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
+      target = new control.SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
 
     it("is complete", function() {
-      expect(target.requiredFields).not.toBe(null);
-      expect(target.uploads).not.toBe(null);
-      expect(target.requiredMetadata).not.toBe(null);
-      expect(target.requiredFiles).not.toBe(null);
+      expect(target.requiredFields).toBeDefined();
+      expect(target.uploads).toBeDefined();
+      expect(target.requiredMetadata).toBeDefined();
+      expect(target.requiredFiles).toBeDefined();
+      expect(target.saveButton).toBeDisabled();
     });
   });
 });
