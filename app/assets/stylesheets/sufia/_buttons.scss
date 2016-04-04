@@ -23,3 +23,7 @@ ul.listing .add, ul.listing .remove {
 span.appliedFilter .remove {
   @extend .btn-danger;
 }
+
+.button_to-inline {
+  display: inline-block;
+}
