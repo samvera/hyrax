@@ -57,6 +57,11 @@ module Sufia
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
       app.config.assets.precompile += %w( ZeroClipboard.swf )
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
+
+      Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
+      # When we upgrade to Sprockets 4, we can ditch sprockets-es6 and config AMD
+      # in this way:
+      # https://github.com/rails/sprockets/issues/73#issuecomment-139113466
     end
 
     # Set some configuration defaults

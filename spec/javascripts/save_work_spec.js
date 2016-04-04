@@ -2,6 +2,7 @@ describe("A suite", function() {
   var callback;
   var requiredBlankElements = [];
   var classes;
+  var control = require('sufia/save_work/save_work_control');
 
   beforeEach(function() {
     requiredMetadataCheckbox = {
@@ -20,7 +21,7 @@ describe("A suite", function() {
   describe("when none of the required fields are blank", function() {
     it("is complete", function() {
       requiredBlankElements = [];
-      target = new SaveWorkControl(element);
+      target = new control.SaveWorkControl(element);
       expect(classes).toEqual('complete');
     });
   });
@@ -28,7 +29,7 @@ describe("A suite", function() {
   describe("when a required fields is blank", function() {
     it("is incomplete", function() {
       requiredBlankElements = [true];
-      target = new SaveWorkControl(element);
+      target = new control.SaveWorkControl(element);
       expect(classes).toEqual('incomplete');
     });
   });
