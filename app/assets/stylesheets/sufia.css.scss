@@ -9,7 +9,6 @@
 @import "bootstrap-sprockets";
 @import 'bootstrap';
 @import 'sufia/settings';
-@import 'blacklight/blacklight';
 @import "browse_everything";
 
 // Use import here instead of require so we can use the Sass variables defined in Bootstrap and Blacklight
