@@ -1,4 +1,4 @@
-<%= form_tag main_app.search_catalog_path, method: :get, class: "search-form" do %>
+<%= form_tag main_app.search_catalog_path, method: :get, class: "search-form navbar-form" do %>
   <fieldset>
     <legend class="sr-only">Search <%= t('curation_concerns.product_name') %></legend>
     <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), class: "sr-only" %>
@@ -8,6 +8,7 @@
     <div class="input-group">
       <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
                          placeholder: t('curation_concerns.search.form.q.placeholder'), tabindex: "1", type: "search") %>
+
       <div class="input-group-btn">
         <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="2">
           <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>

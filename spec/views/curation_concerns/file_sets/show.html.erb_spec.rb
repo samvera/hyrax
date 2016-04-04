@@ -38,6 +38,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
 
   describe 'title heading' do
     before do
+      stub_template 'shared/_brand_bar.html.erb' => 'Brand Bar'
       stub_template 'shared/_title_bar.html.erb' => 'Title Bar'
       render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/curation_concerns'
     end

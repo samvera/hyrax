@@ -1,29 +1,30 @@
-<div class="btn-group my-actions">
-  <a class="btn btn-primary dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
-    <%= current_user.user_key %>
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu">
-    <% include_works_link ||= can_ever_create_works? %>
-    <% include_collections_link ||= can?(:create, Collection) %>
-    <% if include_works_link %>
-      <li><%= link_to 'My Works', search_path_for_my_works, class: 'my-works', role: 'menuitem' %></li>
-    <% end %>
-    <% if include_collections_link %>
-      <li><%= link_to 'My Collections', search_path_for_my_collections, class: 'my-collections', role: 'menuitem' %></li>
-    <% end %>
+<ul class="nav navbar-nav">
+  <li class="dropdown my-actions">
+    <a class="dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
+      <%= current_user.user_key %>
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <% include_works_link ||= can_ever_create_works? %>
+      <% include_collections_link ||= can?(:create, Collection) %>
+      <% if include_works_link %>
+        <li><%= link_to 'My Works', search_path_for_my_works, class: 'my-works', role: 'menuitem' %></li>
+      <% end %>
+      <% if include_collections_link %>
+        <li><%= link_to 'My Collections', search_path_for_my_collections, class: 'my-collections', role: 'menuitem' %></li>
+      <% end %>
 
-    <% if can? :discover, Hydra::AccessControls::Embargo %>
-      <li><%= link_to 'Embargos', main_app.embargoes_path, role: 'menuitem' %></li>
-    <% end %>
-    <% if can? :discover, Hydra::AccessControls::Lease %>
-      <li><%= link_to 'Leases', main_app.leases_path, role: 'menuitem' %></li>
-    <% end %>
+      <% if can? :discover, Hydra::AccessControls::Embargo %>
+        <li><%= link_to 'Embargos', main_app.embargoes_path, role: 'menuitem' %></li>
+      <% end %>
+      <% if can? :discover, Hydra::AccessControls::Lease %>
+        <li><%= link_to 'Leases', main_app.leases_path, role: 'menuitem' %></li>
+      <% end %>
 
-    <% if include_works_link || include_collections_link %>
-      <li class="divider"></li>
-    <% end %>
-    <li><%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %></li>
-  </ul>
-</div>
-
+      <% if include_works_link || include_collections_link %>
+        <li class="divider"></li>
+      <% end %>
+      <li><%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %></li>
+    </ul>
+  </li>
+</ul>

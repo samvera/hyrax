@@ -1,20 +1,22 @@
 <% include_works_link ||= can_ever_create_works? %>
 <% include_collections_link ||= can?(:create, ::Collection) %>
 <% if include_works_link || include_collections_link %>
-  <div class="btn-group add-content">
-    <%= link_to curation_concerns.new_classify_concern_path, id: "add-content", class: "btn btn-primary dropdown-toggle", data: { toggle: "dropdown"} do %>
-      <span class="glyphicon glyphicon-plus"></span><span class="sr-only">Add</span>
-    <% end %>
-    <ul class="dropdown-menu quick-create">
-      <% if include_works_link %>
-        <li>
-          <%= render 'shared/add_works' %>
-        </li>
-        <li class="divider"></li>
+  <ul class="nav navbar-nav">
+    <li class="dropdown">
+      <%= link_to curation_concerns.new_classify_concern_path, id: "add-content", class: "dropdown-toggle", data: { toggle: "dropdown"} do %>
+        <span class="glyphicon glyphicon-plus"></span><span class="sr-only">Add</span>
       <% end %>
-      <% if include_collections_link %>
-        <li><%= link_to 'Add a Collection', collections.new_collection_path, class: 'menu-heading new-collection', role: 'menuitem' %></li>
-      <% end %>
-    </ul>
-  </div>
+      <ul class="dropdown-menu quick-create">
+        <% if include_works_link %>
+          <li>
+            <%= render 'shared/add_works' %>
+          </li>
+          <li class="divider"></li>
+        <% end %>
+        <% if include_collections_link %>
+          <li><%= link_to 'Add a Collection', collections.new_collection_path, class: 'menu-heading new-collection', role: 'menuitem' %></li>
+        <% end %>
+      </ul>
+    </li>
+  </ul>
 <% end %>

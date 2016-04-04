@@ -1,51 +1,10 @@
 @import 'global-variables';
 
-#banner {
-  h1,h2,h3 {
-    font-weight:normal;
-  }
-
-  a {
-    text-decoration:none;
-  }
-}
-
 #brand-bar-wrapper {
-  font-family: $font-family-serif;
-  letter-spacing:.2em;
-  padding:.15em 0;
-  text-transform:uppercase;
-
-  h2, h3 {
-    font-size:.95em;
-    margin:0;
-  }
-
-  .division {
-    text-align:right;
-  }
-
-  i {
-    letter-spacing:0;
-    padding:0 .2em;
-    text-transform:none;
-  }
-}
-
-#site-title h1 {
-  font-family: $font-family-serif;
-  font-size:2.4em;
-  line-height:1.2em;
-  text-align:center;
 }
 
 #main,
 .modal-header {
-  h1,h2,h3,h4,h5,h6 {
-    font-family:$headings-font-family;
-    font-weight:normal;
-    text-rendering: optimizeLegibility;
-  }
   h1 {
     .human_readable_type {
       font-size:.66em;
@@ -60,14 +19,6 @@ legend {
 
   a {
     font-family: $font-family-sans-serif;
-  }
-}
-
-.table-heading {
-  text-align:left;
-
-  h1,h2,h3,h4,h5,h6 {
-    padding-top:1em;
   }
 }
 
