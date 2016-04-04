@@ -1,36 +1,120 @@
-describe("A suite", function() {
-  var callback;
-  var requiredBlankElements = [];
-  var classes;
+describe("SaveWorkControl", function() {
   var control = require('sufia/save_work/save_work_control');
 
-  beforeEach(function() {
-    requiredMetadataCheckbox = {
-      removeClass: function () {},
-      addClass: function(klass) { classes = klass }
+  describe("validateMetadata", function() {
+    var mockCheckbox = {
+      check: function() { },
+      uncheck: function() { },
     };
-    requiredFields = { change: function(cb) { callback = cb; },
-                       filter: function() { return requiredBlankElements; }
-                     };
-    form = { find: function() { return requiredFields; } }
-    element = { closest: function() { return form; },
-                find: function() { return requiredMetadataCheckbox; }
-              };
-  });
+    var element = {
+      size: function() { return 1 },
+      closest: function() { return {} }
+    };
 
-  describe("when none of the required fields are blank", function() {
-    it("is complete", function() {
-      requiredBlankElements = [];
+    beforeEach(function() {
       target = new control.SaveWorkControl(element);
-      expect(classes).toEqual('complete');
+      target.requiredMetadata = mockCheckbox;
+      spyOn(mockCheckbox, 'check').and.stub();
+      spyOn(mockCheckbox, 'uncheck').and.stub();
+    });
+
+    describe("when required metadata is present", function() {
+      beforeEach(function() {
+        target.requiredFields = {
+          areComplete: true
+        };
+      });
+      it("is complete", function() {
+        target.validateMetadata();
+        expect(mockCheckbox.uncheck.calls.count()).toEqual(0);
+        expect(mockCheckbox.check.calls.count()).toEqual(1);
+      });
+    });
+
+    describe("when a required metadata is missing", function() {
+      beforeEach(function() {
+        target.requiredFields = {
+          areComplete: false
+        };
+      });
+      it("is incomplete", function() {
+        target.validateMetadata();
+        expect(mockCheckbox.uncheck.calls.count()).toEqual(1);
+        expect(mockCheckbox.check.calls.count()).toEqual(0);
+      });
     });
   });
 
-  describe("when a required fields is blank", function() {
-    it("is incomplete", function() {
-      requiredBlankElements = [true];
+  describe("validateFiles", function() {
+    var mockCheckbox = {
+      check: function() { },
+      uncheck: function() { },
+    };
+    var form_id = 'new_generic_work';
+    var form = { attr: function() { return form_id } };
+    var element = {
+      size: function() { return 1 },
+      closest: function() { return form }
+    };
+
+    beforeEach(function() {
       target = new control.SaveWorkControl(element);
-      expect(classes).toEqual('incomplete');
+      target.requiredFiles = mockCheckbox;
+      spyOn(mockCheckbox, 'check').and.stub();
+      spyOn(mockCheckbox, 'uncheck').and.stub();
+    });
+
+    describe("when required files are present", function() {
+      beforeEach(function() {
+        target.uploads = {
+          hasFiles: true
+        };
+      });
+      it("is complete", function() {
+        target.validateFiles();
+        expect(mockCheckbox.uncheck.calls.count()).toEqual(0);
+        expect(mockCheckbox.check.calls.count()).toEqual(1);
+      });
+    });
+
+    describe("when a required files are missing", function() {
+      beforeEach(function() {
+        target.uploads = {
+          hasFiles: false
+        };
+      });
+
+      it("is incomplete", function() {
+        target.validateFiles();
+        expect(mockCheckbox.uncheck.calls.count()).toEqual(1);
+        expect(mockCheckbox.check.calls.count()).toEqual(0);
+      });
+    });
+
+    describe("when a required files are missing and it's an edit form", function() {
+      beforeEach(function() {
+        form_id = 'edit_generic_work'
+      });
+      it("is complete", function() {
+        target.validateFiles();
+        expect(mockCheckbox.uncheck.calls.count()).toEqual(0);
+        expect(mockCheckbox.check.calls.count()).toEqual(1);
+      });
+    });
+  });
+
+  describe("activate", function() {
+    beforeEach(function() {
+      setFixtures('<form id="new_generic_work"><aside id="form-progress><ul><li id="required-metadata"><li id="required-files"></ul></aside></form>');
+      target = new control.SaveWorkControl($('#form-progress'));
+      target.activate()
+    });
+
+    it("is complete", function() {
+      expect(target.requiredFields).not.toBe(null);
+      expect(target.uploads).not.toBe(null);
+      expect(target.requiredMetadata).not.toBe(null);
+      expect(target.requiredFiles).not.toBe(null);
     });
   });
 });
