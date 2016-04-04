@@ -56,8 +56,17 @@
         </div>
 
         <div class="panel-footer text-center">
-          By saving this work I agree to the<br>
-          Sufia Deposit Agreement<br>
+          <% if Sufia::Engine.config.active_deposit_agreement_acceptance %>
+            <label>
+              <%= check_box_tag 'agreement' %>
+              I have read and do agree to the<br>
+              Deposit Agreement
+            </label>
+          <% else %>
+            By saving this work I agree to the<br>
+            Deposit Agreement
+          <% end %>
+          <br>
           <%= link_to t(:'helpers.action.cancel'), :back, class: 'btn btn-default' %>
           <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
         </div>

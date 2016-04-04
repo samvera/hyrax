@@ -57,6 +57,11 @@ module Sufia
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
       app.config.assets.precompile += %w( ZeroClipboard.swf )
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
+
+      Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
+      # When we upgrade to Sprockets 4, we can ditch sprockets-es6 and config AMD
+      # in this way:
+      # https://github.com/rails/sprockets/issues/73#issuecomment-139113466
     end
 
     # Set some configuration defaults
@@ -76,6 +81,7 @@ module Sufia
     config.activity_to_show_default_seconds_since_now = 24 * 60 * 60
     config.arkivo_api = false
     config.geonames_username = ""
+    config.active_deposit_agreement_acceptance = true
 
     # Noid identifiers
     config.enable_noids = true

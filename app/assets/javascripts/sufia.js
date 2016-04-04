@@ -46,6 +46,7 @@
 //= require hydra/batch_select
 //= require sufia/dashboard_actions
 //= require sufia/batch
+//= require almond
 //= require sufia/save_work
 
 //= require hydra_collections
@@ -75,6 +76,8 @@ Blacklight.do_select_submit = function() {
 Blacklight.do_select_submit.selector = "form.sort select, form.per_page select";
 
 Blacklight.onLoad(function() {
+  var sw = require('sufia/save_work/save_work_control');
+  new sw.SaveWorkControl($("#form-progress")).activate();
 
   // set up global batch edit options to override the ones in the gem
   window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
