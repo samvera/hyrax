@@ -59,4 +59,8 @@ describe CurationConcerns::GenericWorkForm do
       end
     end
   end
+  describe "#visibility" do
+    subject { form.visibility }
+    it { is_expected.to eq 'restricted' }
+  end
 end

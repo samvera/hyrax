@@ -2,6 +2,7 @@ import { RequiredFields } from './required_fields'
 import { ChecklistItem } from './checklist_item'
 import { UploadedFiles } from './uploaded_files'
 import { DepositAgreement } from './deposit_agreement'
+import { VisibilityComponent } from './visibility_component'
 
 /**
  * Polyfill String.prototype.startsWith()
@@ -50,6 +51,7 @@ export class SaveWorkControl {
 
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
+    new VisibilityComponent(this.element.find('.visibility'))
     this.formChanged()
   }
 

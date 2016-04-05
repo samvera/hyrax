@@ -122,7 +122,7 @@ module Sufia
       if document.registered?
         content_tag :span, t('sufia.institution_name'), class: "label label-info", title: t('sufia.institution_name')
       elsif document.public?
-        content_tag :span, t('sufia.visibility.open'), class: "label label-success", title: t('sufia.visibility.open_title_attr')
+        content_tag :span, t('.visibility.open'), class: "label label-success", title: t('sufia.visibility.open_title_attr')
       else
         content_tag :span, t('sufia.visibility.private'), class: "label label-danger", title: t('sufia.visibility.private_title_attr')
       end
