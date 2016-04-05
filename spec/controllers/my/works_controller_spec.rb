@@ -28,10 +28,10 @@ describe My::WorksController, type: :controller do
       get :index
     end
 
-    it "gets upload_sets that are complete" do
-      expect(assigns(:upload_sets).count).to eq(2)
-      expect(assigns(:upload_sets)).to include("ss-" + upload_set_id)
-      expect(assigns(:upload_sets)).to include("ss-" + upload_set_id2)
+    it "gets processed_works that are complete" do
+      expect(assigns(:processed_works).count).to eq(2)
+      expect(assigns(:processed_works)).to include("ss-" + upload_set_id)
+      expect(assigns(:processed_works)).to include("ss-" + upload_set_id2)
     end
   end
 

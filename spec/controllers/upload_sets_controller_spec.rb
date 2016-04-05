@@ -83,14 +83,4 @@ describe UploadSetsController do
       end
     end
   end
-
-  describe "#edit" do
-    let(:upload_set) { UploadSet.create }
-    it "defaults creator" do
-      get :edit, id: upload_set
-      expect(assigns[:form]).to be_kind_of Sufia::UploadSetForm
-      expect(assigns[:form].model).to eq upload_set
-      expect(response).to be_success
-    end
-  end
 end

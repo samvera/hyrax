@@ -38,11 +38,3 @@ end
 CurationConcerns.config.callback.set(:after_import_url_failure) do |file_set, user|
   Sufia::ImportUrlFailureService.new(file_set, user).call
 end
-
-CurationConcerns.config.callback.set(:after_import_local_file_success) do |file_set, user, filename|
-  Sufia::ImportLocalFileSuccessService.new(file_set, user, filename).call
-end
-
-CurationConcerns.config.callback.set(:after_import_local_file_failure) do |file_set, user, filename|
-  Sufia::ImportLocalFileFailureService.new(file_set, user, filename).call
-end

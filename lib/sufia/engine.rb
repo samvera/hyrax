@@ -74,7 +74,6 @@ module Sufia
     config.fits_path = "fits.sh"
     config.enable_contact_form_delivery = false
     config.browse_everything = nil
-    config.enable_local_ingest = nil
     config.analytics = false
     config.citations = false
     config.max_notifications_for_dashboard = 5

@@ -2,8 +2,8 @@ module Sufia
   module FileSetsController
     extend ActiveSupport::Autoload
     autoload :BrowseEverything
-    autoload :UploadCompleteBehavior
   end
+
   module FileSetsControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Breadcrumbs
@@ -11,7 +11,6 @@ module Sufia
     included do
       include Blacklight::Configurable
       include Sufia::FileSetsController::BrowseEverything
-      extend Sufia::FileSetsController::UploadCompleteBehavior
 
       layout "sufia-one-column"
 
@@ -26,10 +25,6 @@ module Sufia
 
       self.show_presenter = Sufia::FileSetPresenter
       self.form_class = Sufia::Forms::FileSetEditForm
-    end
-
-    def new
-      @upload_set_id = SecureRandom.uuid
     end
 
     # routed to /files/:id/stats
@@ -71,37 +66,6 @@ module Sufia
         original = @file_set.original_file
         versions = original ? original.versions.all : []
         CurationConcerns::VersionListPresenter.new(versions)
-      end
-
-      def process_file(file)
-        if terms_accepted?
-          super(file)
-        else
-          json_error "You must accept the terms of service!", file.original_filename
-        end
-      end
-
-      # override this method if you want to change how the terms are accepted on upload.
-      def terms_accepted?
-        params[:terms_of_service] == '1'
-      end
-
-      # overrides Curation Concerns method
-      def file_set_params
-        return {} if params[:file_set].blank?
-        super
-      end
-
-      def find_parent_by_id
-        return default_work_from_params unless parent_id.present?
-        super
-      end
-
-      # If the user is creating a bunch of files, and not in a work context,
-      # create a work for each file.
-      def default_work_from_params
-        title = params[:file_set][:files].first.original_filename
-        DefaultWorkService.create(params[:upload_set_id], title, current_user)
       end
 
       def actor
