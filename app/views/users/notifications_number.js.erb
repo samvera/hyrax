@@ -1,6 +1,6 @@
 $("#notify_number").replaceWith("<%= escape_javascript(render partial: "notify_number") %>");
 <%# remove the icon that indicates the upload sets is waiting for background
     processing once the process has completed %>
-<% @upload_sets.each do |upload_set|%>
+<% @processed_works.each do |upload_set|%>
   $(".<%= upload_set %>").attr('class', '');
 <% end %>

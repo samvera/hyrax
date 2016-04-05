@@ -12,12 +12,6 @@ module Sufia
       self.edit_form_class = Sufia::UploadSetForm
     end
 
-    def edit
-      # TODO: redlock this line so that two processes don't attempt to create at the same time.
-      @upload_set = UploadSet.find_or_create(params[:id])
-      @form = edit_form
-    end
-
     def update
       authenticate_user!
       @upload_set = UploadSet.find(params[:id])

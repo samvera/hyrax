@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/file_sets/_browse_everything.html.erb', type: :view do
+describe 'curation_concerns/base/_browse_everything.html.erb', type: :view do
   let(:parent) { stub_model(GenericWork) }
   before do
     allow(view).to receive(:parent).and_return(parent)
