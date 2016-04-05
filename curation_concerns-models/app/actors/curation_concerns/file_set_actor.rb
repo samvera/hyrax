@@ -41,14 +41,14 @@ module CurationConcerns
       # Need to save the file_set in order to get an id
       return false unless file_set.save
 
-      FileActor.new(file_set, relation, user).ingest_file(file)
+      file_actor_class.new(file_set, relation, user).ingest_file(file)
       true
     end
 
     # @param [String] revision_id the revision to revert to
     # @param [String] relation ('original_file')
     def revert_content(revision_id, relation = 'original_file')
-      file_actor = FileActor.new(file_set, relation, user)
+      file_actor = file_actor_class.new(file_set, relation, user)
       if file_actor.revert_to(revision_id)
         CurationConcerns.config.callback.run(:after_revert_content, file_set, user, revision_id)
         true
@@ -60,7 +60,7 @@ module CurationConcerns
     # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
     # @param [String] relation ('original_file')
     def update_content(file, relation = 'original_file')
-      FileActor.new(file_set, relation, user).ingest_file(file)
+      file_actor_class.new(file_set, relation, user).ingest_file(file)
       CurationConcerns.config.callback.run(:after_update_content, file_set, user)
       true
     end
@@ -78,6 +78,10 @@ module CurationConcerns
     def destroy
       file_set.destroy
       CurationConcerns.config.callback.run(:after_destroy, file_set.id, user)
+    end
+
+    def file_actor_class
+      CurationConcerns::FileActor
     end
 
     private
