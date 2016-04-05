@@ -1,9 +1,6 @@
-#brand-bar-wrapper, #title-bar-wrapper {
-  margin-left:-1em;
-  margin-right:-1em;
-  h2, h3 {
-    line-height: 40px;
-  }
+#brand-bar {
+  margin-bottom :0;
+  z-index: $zindex-navbar + 1;
 }
 
 .form-actions > form.button_to {
