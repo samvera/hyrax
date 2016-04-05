@@ -27,8 +27,9 @@ button {
   @extend h2
 }
 
-#content {
-  padding-top: 10px;
+#content-wrapper {
+  padding-top: $padding-large-vertical;
+  padding-bottom: $padding-large-vertical;
 }
 
 #footer {
