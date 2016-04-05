@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="<%= t("sufia.document_language") %>">
-<head><%= render partial: 'layouts/head_tag_content' %></head>
+<head><%= render 'layouts/head_tag_content' %></head>
 <body>
 <div id="wrapper">
   <a href="#skip_to_content" class="sr-only">Skip to Content</a>
@@ -8,20 +8,28 @@
   <%= render '/controls' %>
   <%= render '/flash_msg' %>
 
-  <div id="content-wrapper" class="dashboard" role="main">
+  <div id="content-wrapper" class="container-fluid dashboard" role="main">
+    <% if content_for?(:page_header) %>
+      <div class="row">
+        <div class="col-xs-12 main-header">
+          <%= yield(:page_header) %>
+        </div>
+      </div>
+    <% end %>
     <a name="skip_to_content"></a>
-    <div class="container-fluid">
-      <div id="content-header" class="row"><%= yield :page_header %></div>
-    </div>
-    <div class="container-fluid">
-      <div id="content" class="row">
+    <div id="content" class="row">
+    <% if content_for?(:sidebar) %>
         <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
         <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
-      </div>
+      <% else %>
+        <div class="col-xs-12">
+          <%= yield %>
+        </div>
+      <% end %>
     </div>
   </div>
 
-  <%= render partial: '/footer' %>
+  <%= render '/footer' %>
 </div><!-- /#wrapper -->
 <%= render 'shared/ajax_modal' %>
 </body>

@@ -133,8 +133,8 @@ describe "dashboard/index.html.erb", type: :view do
       let(:another_user) { create(:user) }
       let(:title1) { 'foobar' }
       let(:title2) { 'bazquux' }
-      let(:incoming) { stub_model(ProxyDepositRequest, sending_user: user, created_at: Time.now) }
-      let(:outgoing) { stub_model(ProxyDepositRequest, receiving_user: user, created_at: Time.now) }
+      let(:incoming) { stub_model(ProxyDepositRequest, sending_user: user, created_at: Time.current) }
+      let(:outgoing) { stub_model(ProxyDepositRequest, receiving_user: user, created_at: Time.current) }
 
       before do
         allow(view).to receive(:show_transfer_request_title).and_return(title1, title2)
