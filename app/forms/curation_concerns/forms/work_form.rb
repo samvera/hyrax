@@ -6,7 +6,8 @@ module CurationConcerns
 
       delegate :human_readable_type, :open_access?, :authenticated_only_access?,
                :open_access_with_embargo_release_date?, :private_access?,
-               :embargo_release_date, :lease_expiration_date, :member_ids, to: :model
+               :embargo_release_date, :lease_expiration_date, :member_ids,
+               :visibility, to: :model
 
       self.terms = [:title, :creator, :contributor, :description,
                     :tag, :rights, :publisher, :date_created, :subject, :language,

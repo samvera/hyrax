@@ -101,6 +101,17 @@ en:
         property: keywords
       title:
         property: name
+    visibility:
+      open:
+        label_html: <span class="label label-success">Open Access</span> Visible to the world.
+      authenticated:
+        label_html: "<span class=\"label label-info\">%{institution}</span> Visible to all %{institution} users."
+      embargo:
+        label_html: <span class="label label-warning">Embargo</span>
+      lease:
+        label_html: <span class="label label-warning">Lease</span>
+      private:
+        label_html: <span class="label label-danger">Private</span> Only visible to you and your delegates.
   blacklight:
     search:
       fields:

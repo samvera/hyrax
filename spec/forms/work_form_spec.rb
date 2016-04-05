@@ -75,6 +75,11 @@ describe CurationConcerns::Forms::WorkForm do
     end
   end
 
+  describe '#visibility' do
+    subject { form.visibility }
+    it { is_expected.to eq 'restricted' }
+  end
+
   describe '#human_readable_type' do
     subject { form.human_readable_type }
     it { is_expected.to eq 'Generic Work' }

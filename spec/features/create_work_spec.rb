@@ -25,7 +25,7 @@ feature 'Creating a new Work' do
     within('form.new_generic_work') do
       fill_in('Title', with: work_title)
       attach_file('Upload a file', fixture_file_path('files/image.png'))
-      choose('visibility_open')
+      choose('generic_work_visibility_open')
       click_on('Create Generic work')
     end
     within '.related_files' do

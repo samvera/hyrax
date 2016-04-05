@@ -42,7 +42,7 @@ feature 'Creating a new Work' do
     within('form.new_catapult') do
       fill_in('Title', with: catapult_title)
       attach_file('Upload a file', fixture_file_path('files/image.png'))
-      choose('visibility_open')
+      choose('catapult_visibility_open')
       click_on('Create Catapult')
     end
     click_on('Edit This Catapult')
