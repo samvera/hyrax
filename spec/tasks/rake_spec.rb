@@ -6,7 +6,7 @@ describe 'Rake tasks' do
     let(:namespaced_id) { 'curation_concerns:123' }
     let(:corrected_id)  { '123' }
     before do
-      load File.expand_path('../../../curation_concerns-models/lib/tasks/migrate.rake', __FILE__)
+      load File.expand_path('../../../lib/tasks/migrate.rake', __FILE__)
       Rake::Task.define_task(:environment)
     end
 

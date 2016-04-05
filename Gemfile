@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
-gem 'curation_concerns-models', path: './curation_concerns-models'
-
 group :development, :test do
   gem 'rubocop', '~> 0.37.0', require: false
   gem 'rubocop-rspec', '~> 1.3.1', require: false

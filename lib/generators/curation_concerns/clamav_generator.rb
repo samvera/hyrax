@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'rails/generators'
 
-class CurationConcerns::Models::ClamavGenerator < Rails::Generators::Base
+class CurationConcerns::ClamavGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
   desc '

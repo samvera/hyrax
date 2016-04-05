@@ -9,7 +9,7 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - '.internal_test_app/**/*'
-    - 'curation_concerns-models/app/models/concerns/curation_concerns/file_set/export.rb'
+    - 'app/models/concerns/curation_concerns/file_set/export.rb'
 
 Rails:
   Enabled: true
@@ -18,15 +18,15 @@ Performance/RedundantBlockCall:
   # We can remove this exclusion when this commit is released:
   # https://github.com/bbatsov/rubocop/commit/7df382531db4f66cd9872a4f478bd486d6ce6712
   Exclude:
-    - 'curation_concerns-models/lib/curation_concerns/null_logger.rb'
+    - 'lib/curation_concerns/null_logger.rb'
 
 Performance/RedundantMerge:
   Enabled: false
 
 Lint/AssignmentInCondition:
   Exclude:
-    - 'curation_concerns-models/app/services/curation_concerns/persist_derivatives.rb'
-    - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
+    - 'app/services/curation_concerns/persist_derivatives.rb'
+    - 'app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/LineLength:
   Enabled: false
@@ -36,29 +36,29 @@ Metrics/AbcSize:
 
 Metrics/CyclomaticComplexity:
   Exclude:
-    - 'curation_concerns-models/app/services/curation_concerns/file_set_audit_service.rb'
+    - 'app/services/curation_concerns/file_set_audit_service.rb'
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
     - 'app/helpers/curation_concerns/attribute_helper.rb'
-    - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
-    - 'curation_concerns-models/app/actors/curation_concerns/work_actor_behavior.rb'
+    - 'app/actors/curation_concerns/file_set_actor.rb'
+    - 'app/actors/curation_concerns/work_actor_behavior.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
-    - 'curation_concerns-models/app/services/curation_concerns/file_set_audit_service.rb'
+    - 'app/services/curation_concerns/file_set_audit_service.rb'
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
     - 'app/helpers/curation_concerns/attribute_helper.rb'
-    - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
+    - 'app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/MethodLength:
   Enabled: false
 
 Metrics/ClassLength:
   Exclude:
-    - curation_concerns-models/lib/curation_concerns/configuration.rb
+    - lib/curation_concerns/configuration.rb
     - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
-    - 'curation_concerns-models/app/actors/curation_concerns/file_set_actor.rb'
+    - 'app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -67,7 +67,7 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/curation_concerns/catalog_controller.rb'
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
-    - 'curation_concerns-models/app/models/concerns/curation_concerns/solr_document_behavior.rb'
+    - 'app/models/concerns/curation_concerns/solr_document_behavior.rb'
 
 Style/ZeroLengthPredicate:
   Enabled: false
@@ -141,9 +141,9 @@ Style/SingleLineBlockParams:
 
 Style/ClassVars:
   Exclude:
-    - 'curation_concerns-models/lib/curation_concerns/models.rb'
-    - 'curation_concerns-models/lib/curation_concerns/models/engine.rb'
-    - 'curation_concerns-models/app/models/concerns/curation_concerns/file_set/versions.rb'
+    - 'lib/curation_concerns/models.rb'
+    - 'lib/curation_concerns/models/engine.rb'
+    - 'app/models/concerns/curation_concerns/file_set/versions.rb'
 
 Style/SignalException:
   Enabled: false
@@ -151,7 +151,7 @@ Style/SignalException:
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
-    - 'curation_concerns-models/lib/generators/**/*'
+    - 'lib/generators/**/*'
 
 Rails/Date:
   Enabled: false

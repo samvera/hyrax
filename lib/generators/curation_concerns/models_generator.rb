@@ -1,6 +1,6 @@
 require_relative 'abstract_migration_generator'
 
-class CurationConcerns::Models::InstallGenerator < CurationConcerns::Models::AbstractMigrationGenerator
+class CurationConcerns::ModelsGenerator < CurationConcerns::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
   argument :model_name, type: :string, default: 'user'
   desc '
@@ -57,6 +57,6 @@ This generator makes the following changes to your application:
 
   # Adds clamav initializtion
   def clamav
-    generate 'curation_concerns:models:clamav'
+    generate 'curation_concerns:clamav'
   end
 end

@@ -25,7 +25,7 @@ module CurationConcerns
       say_status('warning', '[CurationConcerns] GENERATING HYDRA-HEAD', :yellow)
       generate 'hydra:head -f'
       say_status('warning', '[CurationConcerns] GENERATING CURATION_CONCERNS MODELS', :yellow)
-      generate "curation_concerns:models:install#{options[:force] ? ' -f' : ''}"
+      generate "curation_concerns:models#{options[:force] ? ' -f' : ''}"
     end
 
     def inject_application_controller_behavior

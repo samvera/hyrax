@@ -9,6 +9,8 @@ require 'active_fedora/rake_support'
 
 Dir.glob('tasks/*.rake').each { |r| import r }
 
+Bundler::GemHelper.install_tasks
+
 namespace :curation_concerns do
   desc 'Run style checker'
   RuboCop::RakeTask.new(:rubocop) do |task|

@@ -2,7 +2,7 @@
 require 'rails/generators'
 require 'rails/generators/migration'
 
-class CurationConcerns::Models::AbstractMigrationGenerator < Rails::Generators::Base
+class CurationConcerns::AbstractMigrationGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
 
   # Implement the required interface for Rails::Generators::Migration.

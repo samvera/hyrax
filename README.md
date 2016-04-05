@@ -40,6 +40,20 @@ Then run the install generator.  You will be prompted if you want to overwrite t
     $ rails generate curation_concerns:install
     $ rake db:migrate
 
+### FITS 0.6.2
+
+To install FITS:
+ * Go to http://projects.iq.harvard.edu/fits/downloads, download __fits-0.6.2.zip__, and unpack it somewhere on your machine. You can also install FITS on OSX with homebrew: `brew install fits` (you may also have to create a symlink from fits.sh -> fits in the next step).
+ * Mark fits.sh as executable (chmod a+x fits.sh)
+ * Run "fits.sh -h" from the command line and see a help message to ensure FITS is properly installed
+ * Give your app access to FITS by:
+     * Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), OR
+     * Changing config/initializers/sufia.rb to point to your FITS location: config.fits_path = "/<your full path>/fits.sh"
+
+### Redis 2.6
+
+The redlock gem requires Redis >= 2.6.
+
 ## Usage
 
 ### Generator

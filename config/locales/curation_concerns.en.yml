@@ -1,5 +1,7 @@
 en:
   curation_concerns:
+    product_name: "Repository"
+    institution_name:  &INSTITUTION_NAME "Institution Name"
     catalog:
       index:
         type_tabs:
@@ -12,7 +14,6 @@ en:
     institution:
       name: "Your Institution"
       homepage_url: "#"
-    product_name: "Repository"
     search:
       form:
         q:
@@ -101,17 +102,29 @@ en:
         property: keywords
       title:
         property: name
+
     visibility:
       open:
+        text: "Open Access"
+        class: "label-success"
         label_html: <span class="label label-success">Open Access</span> Visible to the world.
       authenticated:
+        text: *INSTITUTION_NAME
+        class: "label-info"
         label_html: "<span class=\"label label-info\">%{institution}</span> Visible to all %{institution} users."
       embargo:
+        text: "Embargo"
+        class: "label-warning"
         label_html: <span class="label label-warning">Embargo</span>
       lease:
+        text: "Lease"
+        class: "label-warning"
         label_html: <span class="label label-warning">Lease</span>
       private:
         label_html: <span class="label label-danger">Private</span> Only visible to you and your delegates.
+      restricted:
+        text: "Private"
+        class: "label-danger"
   blacklight:
     search:
       fields:
