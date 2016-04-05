@@ -1,19 +1,21 @@
 # -*- encoding: utf-8 -*-
-version = File.read(File.expand_path("../SUFIA_VERSION", __FILE__)).strip
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'sufia/version'
 
 Gem::Specification.new do |spec|
   spec.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt", 'Jeremy Friesen']
-  spec.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu', "jeremy.n.friesen@gmail.com",]
-  spec.description   = 'Sufia is a Rails engine for creating a self-deposit institutional repository'
+  spec.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu', "jeremy.n.friesen@gmail.com"]
+  spec.description   = 'Sufia extends the robust Hydra framework to provide a user interface around common repository features and social features. Sufia offers self-deposit and proxy deposit workflows with plans to develop one or more mediated deposit workflows in 2016. Sufia delivers its rich and growing set of features via a modern, responsive UI'
   spec.summary       = "Sufia was originally extracted from ScholarSphere developed by Penn State University. It's now used and maintained by an active community of adopters."
-  spec.homepage      = "http://github.com/projecthydra/sufia"
+  spec.homepage      = "http://sufia.io/"
 
   spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.name          = "sufia"
   spec.require_paths = ["lib"]
-  spec.version       = version
+  spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
   spec.add_dependency 'curation_concerns', '~> 0.12.0.pre1'
