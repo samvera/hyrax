@@ -1,20 +1,32 @@
 module CurationConcerns
   module RenderConstraintsHelper
-    # Overridden to remove the 'search_field' tag from the localized params when the query is cleared.
-    # This is because unlike Blacklight, there is no way to change the search_field in the curation_concerns UI
-    ##
-    # Render the query constraints
-    #
-    # @param [Hash] query parameters
-    # @return [String]
+    # TODO: we can remove this override when we can depend on https://github.com/projectblacklight/blacklight/pull/1398
     def render_constraints_query(localized_params = params)
       # So simple don't need a view template, we can just do it here.
-      return ''.html_safe if localized_params[:q].blank?
+      return "".html_safe if localized_params[:q].blank?
 
       render_constraint_element(constraint_query_label(localized_params),
                                 localized_params[:q],
-                                classes: ['query'],
-                                remove: url_for(localized_params.except(:search_field).merge(q: nil, action: 'index')))
+                                classes: ["query"],
+                                remove: remove_constraint_url(localized_params))
+    end
+
+    # This overrides Blacklight to remove the 'search_field' tag from the
+    # localized params when the query is cleared. This is because unlike
+    # Blacklight, there is no control to change the search_field in the
+    # curation_concerns UI
+    def remove_constraint_url(localized_params)
+      scope = localized_params.delete(:route_set) || self
+      options = localized_params.merge(q: nil, action: 'index')
+                                .except(*fields_to_exclude_from_constraint_element)
+      options.permit!
+      scope.url_for(options)
+    end
+
+    # @return [Array<Symbol>] a list of fields to remove on the render_constraint_element
+    # You can override this if you have different fields to remove
+    def fields_to_exclude_from_constraint_element
+      [:search_field]
     end
 
     ##
