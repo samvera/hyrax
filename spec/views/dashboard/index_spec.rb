@@ -2,25 +2,25 @@
 require 'spec_helper'
 
 describe "dashboard/index.html.erb", type: :view do
+  let(:user) { create(:user, display_name: "Charles Francis Xavier") }
+  let(:ability) { instance_double("Ability") }
   before do
-    @user = FactoryGirl.create(:user, display_name: "Charles Francis Xavier")
-    allow(@user).to receive(:title).and_return("Professor, Head")
-    allow(@user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
-    allow(@user).to receive(:telephone).and_return("814.865.8399")
-    allow(@user).to receive(:email).and_return("chuck@xsgy.edu")
-    allow(@user).to receive(:login).and_return("chuck")
-    allow(@user).to receive(:all_following).and_return([double(name: "magneto")])
-    allow(@user).to receive(:followers).and_return([double(name: "wolverine"), double(name: "storm")])
-    allow(@user).to receive(:can_receive_deposits_from).and_return([])
-    allow(@user).to receive(:total_file_views).and_return(1)
-    allow(@user).to receive(:total_file_downloads).and_return(3)
-    allow(@user).to receive(:avatar).and_return(nil)
-    allow(controller).to receive(:current_user).and_return(@user)
-    @ability = instance_double("Ability")
-    allow(controller).to receive(:current_ability).and_return(@ability)
-    allow(@ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
-    allow(@ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
-    allow(@ability).to receive(:can?).with(:edit, @user).and_return(can_edit_user)
+    allow(user).to receive(:title).and_return("Professor, Head")
+    allow(user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
+    allow(user).to receive(:telephone).and_return("814.865.8399")
+    allow(user).to receive(:email).and_return("chuck@xsgy.edu")
+    allow(user).to receive(:login).and_return("chuck")
+    allow(user).to receive(:all_following).and_return([double(name: "magneto")])
+    allow(user).to receive(:followers).and_return([double(name: "wolverine"), double(name: "storm")])
+    allow(user).to receive(:can_receive_deposits_from).and_return([])
+    allow(user).to receive(:total_file_views).and_return(1)
+    allow(user).to receive(:total_file_downloads).and_return(3)
+    allow(user).to receive(:avatar).and_return(nil)
+    allow(controller).to receive(:current_user).and_return(user)
+    allow(controller).to receive(:current_ability).and_return(ability)
+    allow(ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
+    allow(ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
+    allow(ability).to receive(:can?).with(:edit, user).and_return(can_edit_user)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
     assign(:activity, [])
@@ -59,43 +59,43 @@ describe "dashboard/index.html.erb", type: :view do
   describe "sidebar" do
     before do
       render
-      @sidebar = view.content_for(:sidebar)
     end
+    let(:sidebar) { view.content_for(:sidebar) }
 
     it "displays information about the user" do
-      expect(@sidebar).to include "Charles Francis Xavier"
-      expect(@sidebar).to include "Professor, Head"
-      expect(@sidebar).to include "Xavier’s School for Gifted Youngsters"
-      expect(@sidebar).to include "814.865.8399"
-      expect(@sidebar).to include "chuck@xsgy.edu"
+      expect(sidebar).to include "Charles Francis Xavier"
+      expect(sidebar).to include "Professor, Head"
+      expect(sidebar).to include "Xavier’s School for Gifted Youngsters"
+      expect(sidebar).to include "814.865.8399"
+      expect(sidebar).to include "chuck@xsgy.edu"
     end
 
     it "has links to view and edit the user's profile" do
-      expect(@sidebar).to have_link 'View Profile', href: sufia.profile_path(@user)
-      expect(@sidebar).to have_link 'Edit Profile', href: sufia.edit_profile_path(@user)
+      expect(sidebar).to have_link 'View Profile', href: sufia.profile_path(user)
+      expect(sidebar).to have_link 'Edit Profile', href: sufia.edit_profile_path(user)
     end
 
     it "displays user statistics" do
-      expect(@sidebar).to have_content "3 Collections created"
-      expect(@sidebar).to have_content "1 View"
-      expect(@sidebar).to have_content "3 Downloads"
-      expect(@sidebar).to have_content "15 Deposited Files"
-      expect(@sidebar).to have_content "Follower(s): 2"
-      expect(@sidebar).to have_content "Following: 1"
+      expect(sidebar).to have_content "3 Collections created"
+      expect(sidebar).to have_content "1 View"
+      expect(sidebar).to have_content "3 Downloads"
+      expect(sidebar).to have_content "15 Deposited Files"
+      expect(sidebar).to have_content "Follower(s): 2"
+      expect(sidebar).to have_content "Following: 1"
     end
 
     it "shows the statistics before the profile" do
-      expect(@sidebar).to match(/Charles Francis Xavier.*Collections created/m)
+      expect(sidebar).to match(/Charles Francis Xavier.*Collections created/m)
     end
   end
 
   describe "main" do
     context "with activities and notifications" do
+      let(:now) { Time.zone.now.to_i }
       before do
-        @now = Time.zone.now.to_i
         assign(:activity, [
-                 { action: 'so and so edited their profile', timestamp: @now },
-                 { action: 'so and so uploaded a file', timestamp: (@now - 360) }
+                 { action: 'so and so edited their profile', timestamp: now },
+                 { action: 'so and so uploaded a file', timestamp: (now - 360) }
                ])
       end
 
@@ -130,27 +130,16 @@ describe "dashboard/index.html.erb", type: :view do
     end
 
     context 'with transfers' do
-      let(:user) { create(:user) }
       let(:another_user) { create(:user) }
       let(:title1) { 'foobar' }
       let(:title2) { 'bazquux' }
+      let(:incoming) { stub_model(ProxyDepositRequest, sending_user: user, created_at: Time.now) }
+      let(:outgoing) { stub_model(ProxyDepositRequest, receiving_user: user, created_at: Time.now) }
 
       before do
-        allow(@ability).to receive(:can?).with(:edit, user).and_return(false)
-
-        GenericWork.new(title: [title1]).tap do |w|
-          w.apply_depositor_metadata(another_user.user_key)
-          w.save!
-          w.request_transfer_to(user)
-        end
-        GenericWork.new(title: [title2]).tap do |w|
-          w.apply_depositor_metadata(user.user_key)
-          w.save!
-          w.request_transfer_to(another_user)
-        end
-        allow(controller).to receive(:current_user).and_return(user)
-        assign(:incoming, ProxyDepositRequest.where(receiving_user_id: user.id))
-        assign(:outgoing, ProxyDepositRequest.where(sending_user_id: user.id))
+        allow(view).to receive(:show_transfer_request_title).and_return(title1, title2)
+        assign(:incoming, [incoming])
+        assign(:outgoing, [outgoing])
       end
 
       it 'renders received and sent transfer requests' do
