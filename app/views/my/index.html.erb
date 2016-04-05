@@ -32,9 +32,6 @@
 <%= render partial: 'document_list' %>
 
 <% content_for :sidebar do %>
-  <span class="sr-only">Upload Files or Create Collection</span>
-  <%= link_to t('sufia.dashboard.upload_html'), new_curation_concerns_generic_work_path, class: "btn btn-primary" %>
-  <%= link_to t('sufia.dashboard.create_collection_html'), collections.new_collection_path, id: "hydra-collection-add", class: "btn btn-primary" %>
   <%= render 'facets', current_tab: @selected_tab %>
 <% end %>
 
