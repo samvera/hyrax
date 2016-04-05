@@ -1,7 +1,7 @@
 module Selectors
   module Header
     def nav_toggle(section, link)
-      within '.navbar-static-top' do
+      within '#masthead' do
         click_on section
         click_on link
       end

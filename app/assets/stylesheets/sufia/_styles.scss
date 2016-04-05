@@ -1,18 +1,5 @@
-body {
-  margin: 0;
-  padding: 0 !important;
-}
-
-h1, h2 {
-  font-weight: 300;
-}
-
 .input-group {
-  margin-bottom: 10px;
-}
-
-button {
-  background-color: $gray-lighter;
+  margin-bottom: $padding-large-vertical;
 }
 
 .breadcrumbs {
@@ -27,8 +14,9 @@ button {
   @extend h2
 }
 
-#content {
-  padding-top: 10px;
+#content-wrapper {
+  padding-top: $padding-large-vertical;
+  padding-bottom: $padding-large-vertical;
 }
 
 #footer {
@@ -48,9 +36,6 @@ label.disabled {
 }
 
 @media only screen and (min-width: 768px) {
-  #masthead {
-    min-height: 8em;
-  }
   #home_header,
   #home_header div.home_call_action,
   #home_header div.home_call_action ~ div {
