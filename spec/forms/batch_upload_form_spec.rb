@@ -1,22 +1,29 @@
 require 'spec_helper'
 
-describe Sufia::UploadSetForm do
+describe Sufia::BatchUploadForm do
+  let(:model) { GenericWork.new }
   let(:form) { described_class.new(model, ability) }
   let(:ability) { Ability.new(user) }
   let(:user) { build(:user, display_name: 'Jill Z. User') }
-  let(:model) { UploadSet.new }
 
-  describe "#creator" do
-    subject { form.creator }
-    it { is_expected.to eq ['Jill Z. User'] }
+  describe ".model_name" do
+    subject { described_class.model_name }
+    it "has a route_key" do
+      expect(subject.route_key).to eq 'batch_uploads'
+    end
+
+    it "has a param_key" do
+      derp = subject
+      derp.param_key
+      expect(subject.param_key).to eq 'generic_work'
+    end
   end
 
-  let!(:work1) { create(:work, upload_set: model) }
-  let!(:work2) { create(:work, upload_set: model) }
-
-  describe "#to_param" do
-    subject { form.to_param }
-    it { is_expected.to eq model.id }
+  describe "#to_model" do
+    subject { form.to_model }
+    it "returns itself" do
+      expect(subject.to_model).to be_kind_of described_class
+    end
   end
 
   describe "#terms" do
@@ -45,14 +52,6 @@ describe Sufia::UploadSetForm do
                             :visibility_after_lease,
                             :visibility,
                             :ordered_member_ids,
-                            :collection_ids,
-                            :resource_type] }
-  end
-
-  describe "works" do
-    let!(:work1) { create(:work_with_one_file, upload_set: model, title: ['B title']) }
-    let!(:work2) { create(:work_with_one_file, upload_set: model, title: ['A title']) }
-    subject { form.works }
-    it { is_expected.to eq [work2, work1] }
+                            :collection_ids] }
   end
 end

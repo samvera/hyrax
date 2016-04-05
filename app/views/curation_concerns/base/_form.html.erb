@@ -1,4 +1,7 @@
-<%= simple_form_for [main_app, @form], html: { multipart: true } do |f| %>
+<% route = (@form.respond_to?(:model_name) &&
+            @form.model_name.route_key == 'batch_uploads') ?
+              [sufia, @form] : [main_app, @form] %>
+<%= simple_form_for route, html: { multipart: true } do |f| %>
   <div class="col-xs-12 col-sm-8" role="main">
 
     <!-- Nav tabs -->

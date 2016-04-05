@@ -15,6 +15,19 @@ describe 'Routes', type: :routing do
     end
   end
 
+  describe "BatchUpload" do
+    context "without a batch" do
+      routes { Sufia::Engine.routes }
+      it 'routes to create' do
+        expect(post: '/batch_uploads').to route_to(controller: 'sufia/batch_uploads', action: 'create')
+      end
+
+      it "routes to new" do
+        expect(get: '/batch_uploads/new').to route_to(controller: 'sufia/batch_uploads', action: 'new')
+      end
+    end
+  end
+
   describe 'FileSet' do
     context "main app routes" do
       routes { Rails.application.routes }
@@ -26,17 +39,6 @@ describe 'Routes', type: :routing do
 
         it 'routes to new' do
           expect(get: '/concern/container/12/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new', parent_id: '12')
-        end
-      end
-
-      context "without a file_set" do
-        routes { Sufia::Engine.routes }
-        it 'routes to create' do
-          expect(post: '/concern/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create')
-        end
-
-        it "routes to new" do
-          expect(get: '/concern/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new')
         end
       end
 
@@ -216,16 +218,6 @@ describe 'Routes', type: :routing do
     describe 'GenericWork' do
       it "routes to show" do
         expect(get: '/concern/generic_works/4').to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: '4')
-      end
-    end
-
-    describe 'UploadSet' do
-      it "routes to edit" do
-        expect(get: '/upload_sets/1/edit').to route_to(controller: 'upload_sets', action: 'edit', id: '1')
-      end
-
-      it "routes to update" do
-        expect(put: '/upload_sets/2').to route_to(controller: 'upload_sets', action: 'update', id: '2')
       end
     end
   end

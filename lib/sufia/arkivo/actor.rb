@@ -17,7 +17,6 @@ module Sufia
       end
 
       def create_work_from_item
-        upload_set = UploadSet.create
         work = ::GenericWork.new
         work_actor = CurationConcerns::CurationConcern.actor(work, user)
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
@@ -29,7 +28,6 @@ module Sufia
         file_actor.create_metadata(work)
         file_set.label = item['file']['filename']
         file_actor.create_content(file) # item['file']['contentType']
-        UploadSetUpdateJob.perform_later(user, upload_set, item['metadata']['title'], attributes, default_visibility)
         work
       end
 

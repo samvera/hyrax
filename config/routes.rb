@@ -20,10 +20,11 @@ Sufia::Engine.routes.draw do
 
   # Notifications route for catalog index view
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
+  resources :batch_uploads, only: [:new, :create], controller: 'sufia/batch_uploads'
 
   # File Set routes
   namespace :curation_concerns, path: :concern do
-    resources :file_sets, only: [:new, :create] do
+    resources :file_sets, only: [] do
       resource :audit, only: [:create]
       member do
         get 'stats'
