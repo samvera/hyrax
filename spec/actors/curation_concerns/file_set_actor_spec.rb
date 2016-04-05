@@ -253,4 +253,35 @@ describe CurationConcerns::FileSetActor do
       end
     end
   end
+
+  describe "#file_actor_class" do
+    context "default" do
+      it "is a FileActor" do
+        expect(actor.file_actor_class).to eq(CurationConcerns::FileActor)
+      end
+    end
+
+    context "overridden" do
+      let(:actor) { CustomFileSetActor.new(file_set, user) }
+
+      before do
+        class CustomFileActor < CurationConcerns::FileActor
+        end
+        class CustomFileSetActor < CurationConcerns::FileSetActor
+          def file_actor_class
+            CustomFileActor
+          end
+        end
+      end
+
+      after do
+        Object.send(:remove_const, :CustomFileActor)
+        Object.send(:remove_const, :CustomFileSetActor)
+      end
+
+      it "is a custom class" do
+        expect(actor.file_actor_class).to eq(CustomFileActor)
+      end
+    end
+  end
 end
