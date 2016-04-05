@@ -3,7 +3,7 @@
     <span class="control-label">
       <%= label_tag 'file_set[title][]', 'Title',  class: "string optional" %>
     </span>
-    <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control' %>
+    <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control', required: true %>
   </fieldset>
 
   <div class="row">
