@@ -8,3 +8,7 @@
     padding-right: 15px;
   }
 }
+
+#masthead {
+  z-index: $zindex-navbar + 1;
+}
