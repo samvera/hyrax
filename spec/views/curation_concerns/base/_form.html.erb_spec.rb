@@ -37,16 +37,6 @@ describe 'curation_concerns/base/_form.html.erb', :no_clean do
         end
       end
     end
-
-    context "with BatchUploadForm" do
-      let(:work) { GenericWork.new }
-      let(:form) do
-        Sufia::BatchUploadForm.new(work, ability)
-      end
-      it "routes to the BatchUploadController" do
-        expect(page).to have_selector("form[action='/batch_uploads']")
-      end
-    end
   end
 
   describe 'when the work has two or more resource types' do
