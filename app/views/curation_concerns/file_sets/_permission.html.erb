@@ -1,5 +1,5 @@
   <div id="permissions_display" class="tab-pane">
-    <%= simple_form_for [main_app, file_set], html: { multipart: true, class: 'form-horizontal', id: 'permission' } do |f| %>
+    <%= simple_form_for [main_app, file_set], html: { multipart: true, id: 'permission' } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render "curation_concerns/base/permission_form", f: f %>
       <div id="permissions_submit">
@@ -9,4 +9,3 @@
       </div>
   <% end %>
 </div><!-- /#permissions_display -->
-
