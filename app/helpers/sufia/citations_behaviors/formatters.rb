@@ -5,6 +5,12 @@ module Sufia
         include Sufia::CitationsBehaviors::CommonBehavior
         include Sufia::CitationsBehaviors::NameBehavior
 
+        attr_reader :view_context
+
+        def initialize(view_context)
+          @view_context = view_context
+        end
+
         def process_title_parts(title_text, &block)
           if block_given?
             title_text.split(" ").collect.with_index(&block).join(" ")

@@ -2,6 +2,14 @@ module Sufia
   module SufiaHelperBehavior
     include Sufia::CitationsBehavior
 
+    def application_name
+      t('sufia.product_name', default: super)
+    end
+
+    def institution_name
+      t('sufia.institution_name')
+    end
+
     def orcid_label(style_class = '')
       "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end

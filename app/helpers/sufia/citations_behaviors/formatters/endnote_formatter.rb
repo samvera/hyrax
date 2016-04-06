@@ -39,8 +39,8 @@ module Sufia
             '%G' => [:language],
             '%[' => [:date_modified],
             '%9' => [:resource_type],
-            '%~' => I18n.t('sufia.product_name'),
-            '%W' => I18n.t('sufia.institution_name')
+            '%~' => view_context.application_name,
+            '%W' => view_context.institution_name
           }
         end
       end
