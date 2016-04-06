@@ -10,6 +10,10 @@ module Sufia
       t('sufia.institution_name')
     end
 
+    def institution_name_full
+      t('sufia.institution_name_full', default: institution_name)
+    end
+
     def orcid_label(style_class = '')
       "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end
@@ -128,7 +132,7 @@ module Sufia
 
     def render_visibility_label(document)
       if document.registered?
-        content_tag :span, t('sufia.institution_name'), class: "label label-info", title: t('sufia.institution_name')
+        content_tag :span, institution_name, class: "label label-info", title: institution_name
       elsif document.public?
         content_tag :span, t('.visibility.open'), class: "label label-success", title: t('sufia.visibility.open_title_attr')
       else

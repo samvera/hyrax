@@ -19,7 +19,7 @@
         <%= f.label :update_directory do %>
           <%= f.check_box :update_directory %>
           Refresh directory info
-          <a href="#" id="refresh_directory_help" data-toggle="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=application_name %>.  If you have updated that information and don't see those changes in your <%=application_name %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign"></i></a>
+          <a href="#" id="refresh_directory_help" data-toggle="popover" data-content="The information displayed in your profile comes from <%=institution_name %>'s central directory (LDAP) and is cached by <%=application_name %>.  If you have updated that information and don't see those changes in your <%=application_name %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign"></i></a>
         <% end %>
       </div>
     </div>
