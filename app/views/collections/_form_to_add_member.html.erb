@@ -1,7 +1,7 @@
 <% fieldset_class  ||= '' %>
 <% select_label_id ||= '' %>
 
-<%= form_tag collections.collections_path, method: :put do %>
+<%= form_tag main_app.collections_path, method: :put do %>
   <fieldset class="required <%= fieldset_class %>">
     <%= hidden_field_tag 'collection[members]', 'add' %>
     <%= hidden_field_tag 'batch_document_ids[]', collectible.id %>

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe CollectionsController do
-  routes { Hydra::Collections::Engine.routes }
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])
   end

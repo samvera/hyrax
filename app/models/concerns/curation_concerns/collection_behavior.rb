@@ -3,7 +3,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     include Hydra::AccessControls::WithAccessRight
-    include Hydra::Collection
+    include CurationConcerns::Collection
     include CurationConcerns::Noid
     include CurationConcerns::HumanReadableType
     include CurationConcerns::HasRepresentative

@@ -1,0 +1,21 @@
+<% if user_collections.nil?%>
+<b>  Make sure you have included CurationConcerns::SelectsCollections in your controller for this page and 
+  added a before filter with one of the find_collections variations depending on your access level: find_collections, find_collections_with_read_access, find_collections_with_edit_access
+</b> 
+<% elsif user_collections.blank? %>
+<b> You do not have access to any existing collections please create a collection. </b>  
+<% else %>
+  Please Select your collection to add you files to:
+  <%= form_tag(collection_path(@collection), :method => "put") do %>
+    <input type="hidden" name="test" value="val" />
+    <%= hash_as_hidden_fields({:collection =>{members:"move"}}) %>
+    <div class="collection-list">
+      <ul>
+      <% user_collections.each do |collection| %>
+        <li> <%= radio_button_tag(:destination_collection_id, collection.id, false, :class => "collection-selector") %><%= label_tag(:collection, collection.title) %> </li>
+      <% end %>
+      </ul>
+    </div>
+    <%= button_to "Move to Selected Collection", collections_path, :method=>:put, :class=>"btn btn-primary collection-update submits-batches", 'data-behavior'=>'hydra-collections', :id=>'hydra-collection-move' %>
+  <% end %>
+<% end %>

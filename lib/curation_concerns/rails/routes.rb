@@ -35,13 +35,11 @@ module ActionDispatch::Routing
       end
     end
 
-    # Used in conjunction with Hydra::Collections::Engine routes.
     # Adds routes for doing paginated searches within a collection's contents
     # @example in routes.rb:
-    #     mount Hydra::Collections::Engine => '/'
     #     curation_concerns_collections
     def curation_concerns_collections
-      resources :collections, only: :show do
+      resources :collections do
         member do
           get 'page/:page', action: :index
           get 'facet/:id', action: :facet, as: :dashboard_facet
