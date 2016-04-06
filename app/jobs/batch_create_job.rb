@@ -33,13 +33,13 @@ class BatchCreateJob < ActiveJob::Base
     end
 
     def send_user_success_message(user)
-      return unless CurationConcerns.config.callback.set?(:after_upload_set_update_success)
-      CurationConcerns.config.callback.run(:after_upload_set_update_success, user)
+      return unless CurationConcerns.config.callback.set?(:after_batch_create_success)
+      CurationConcerns.config.callback.run(:after_batch_create_success, user)
     end
 
     def send_user_failure_message(user)
-      return unless CurationConcerns.config.callback.set?(:after_upload_set_update_failure)
-      CurationConcerns.config.callback.run(:after_upload_set_update_failure, user)
+      return unless CurationConcerns.config.callback.set?(:after_batch_create_failure)
+      CurationConcerns.config.callback.run(:after_batch_create_failure, user)
     end
 
     def send_user_message(user)

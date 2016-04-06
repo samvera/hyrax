@@ -23,12 +23,12 @@ CurationConcerns.config.callback.set(:after_audit_failure) do |file_set, user, l
   Sufia::AuditFailureService.new(file_set, user, log_date).call
 end
 
-CurationConcerns.config.callback.set(:after_upload_set_update_success) do |user|
-  Sufia::UploadSetUpdateSuccessService.new(user).call
+CurationConcerns.config.callback.set(:after_batch_create_success) do |user|
+  Sufia::BatchCreateSuccessService.new(user).call
 end
 
-CurationConcerns.config.callback.set(:after_upload_set_update_failure) do |user|
-  Sufia::UploadSetUpdateFailureService.new(user).call
+CurationConcerns.config.callback.set(:after_batch_create_failure) do |user|
+  Sufia::BatchCreateFailureService.new(user).call
 end
 
 CurationConcerns.config.callback.set(:after_import_url_success) do |file_set, user|

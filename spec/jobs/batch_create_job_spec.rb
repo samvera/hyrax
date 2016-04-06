@@ -7,10 +7,10 @@ describe BatchCreateJob do
     allow(CharacterizeJob).to receive(:perform_later)
     allow(CurationConcerns.config.callback).to receive(:run)
     allow(CurationConcerns.config.callback).to receive(:set?)
-      .with(:after_upload_set_update_success)
+      .with(:after_batch_create_success)
       .and_return(true)
     allow(CurationConcerns.config.callback).to receive(:set?)
-      .with(:after_upload_set_update_failure)
+      .with(:after_batch_create_failure)
       .and_return(true)
   end
 
@@ -32,7 +32,7 @@ describe BatchCreateJob do
       expect(CurationConcerns::CurationConcern::ActorStack).to receive(:new).and_return(actor).twice
       expect(actor).to receive(:create).with(tag: [], title: ['File One'], uploaded_files: [1]).and_return(true)
       expect(actor).to receive(:create).with(tag: [], title: ['File Two'], uploaded_files: [2]).and_return(true)
-      expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_success, user)
+      expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_success, user)
       subject
     end
 
@@ -62,7 +62,7 @@ describe BatchCreateJob do
       it "sends the failure message" do
         expect(CurationConcerns::CurationConcern::ActorStack).to receive(:new).and_return(actor).twice
         expect(actor).to receive(:create).and_return(true, false)
-        expect(CurationConcerns.config.callback).to receive(:run).with(:after_upload_set_update_failure, user)
+        expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_failure, user)
         subject
       end
     end

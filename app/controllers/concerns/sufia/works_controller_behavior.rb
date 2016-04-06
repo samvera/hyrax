@@ -18,12 +18,6 @@ module Sufia
       super
     end
 
-    def edit
-      work = _curation_concern_type.find(params[:id])
-      raise "Cannot edit a work that still is being processed" if work.processing?
-      super
-    end
-
     def actor
       @actor ||= CurationConcerns::CurationConcern::ActorStack.new(
         curation_concern,
