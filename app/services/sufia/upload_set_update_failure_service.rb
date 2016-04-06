@@ -1,14 +1,12 @@
 module Sufia
   class UploadSetUpdateFailureService < MessageUserService
-    attr_reader :upload_set
-
-    def initialize(user, upload_set)
-      @upload_set = upload_set
+    attr_reader :user
+    def initialize(user)
       @user = user
     end
 
     def message
-      "The upload set upload for #{upload_set.id} failed"
+      "The upload set upload for #{user} failed"
     end
 
     def subject

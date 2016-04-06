@@ -23,12 +23,7 @@ describe Sufia::Arkivo::Actor do
   describe '#create_work_from_item' do
     it { is_expected.to respond_to(:create_work_from_item) }
 
-    it 'creates a batch for loading metadata' do
-      expect { subject.create_work_from_item }.to change { UploadSet.count }.by(1)
-    end
-
     it 'instantiates an actor' do
-      allow(UploadSetUpdateJob).to receive(:perform_later).once
       expect(CurationConcerns::GenericWorkActor).to receive(:new).once.and_call_original
       subject.create_work_from_item
     end

@@ -1,14 +1,13 @@
 module Sufia
   class UploadSetUpdateSuccessService < MessageUserService
-    attr_reader :upload_set
+    attr_reader :user
 
-    def initialize(user, upload_set)
-      @upload_set = upload_set
+    def initialize(user)
       @user = user
     end
 
     def message
-      "The upload set update for #{upload_set.id} passed."
+      "The upload set update for #{user} passed."
     end
 
     def subject
