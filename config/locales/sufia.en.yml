@@ -160,6 +160,14 @@ en:
       help:
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
         resource_type: "You may select multiple types to apply to all files"
+    generic_works:
+      new:
+        header: Add New Work
+    batch_uploads:
+      new:
+        header: Batch Create New Works
+      files:
+        instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
     collection:
       no_visible_works: "The collection is either empty or does not contain items to which you have access."
       is_part_of: "Is part of"
