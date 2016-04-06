@@ -38,6 +38,7 @@ module Sufia
         Hydra::Derivatives.temp_file_base = c.temp_file_base
         Hydra::Derivatives.fits_path      = c.fits_path
         Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
+        Hydra::Derivatives.libreoffice_path = c.libreoffice_path
 
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
@@ -73,6 +74,7 @@ module Sufia
     config.temp_file_base = nil
     config.redis_namespace = "sufia"
     config.fits_path = "fits.sh"
+    config.libreoffice_path = "soffice"
     config.enable_contact_form_delivery = false
     config.browse_everything = nil
     config.analytics = false
