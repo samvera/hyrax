@@ -44,7 +44,7 @@ describe My::WorksController, type: :controller do
     let!(:shared_work)      { create(:work, edit_users: [user.user_key], user: someone_else) }
     let!(:unrelated_work)   { create(:public_work, user: someone_else) }
     let!(:my_file)          { create(:file_set, user: user) }
-    let!(:wrong_type)       { UploadSet.create }
+    let!(:wrong_type)       { ActiveFedora::Base.create! }
 
     let(:doc_ids)          { assigns[:document_list].map(&:id) }
     let(:user_collections) { assigns[:user_collections].map(&:id) }

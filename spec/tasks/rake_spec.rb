@@ -2,27 +2,6 @@ require 'spec_helper'
 require 'rake'
 
 describe "Rake tasks" do
-  describe "sufia:empty_upload_sets" do
-    before do
-      load_rake_environment [File.expand_path("../../../tasks/upload_set_cleanup.rake", __FILE__)]
-    end
-    subject { run_task "sufia:empty_upload_sets" }
-
-    context "without an empty upload_set" do
-      it { is_expected.to eq "Output: \n Errors:" }
-    end
-
-    context "with an empty upload_set" do
-      before { UploadSet.create("empty-upload_set") }
-      it { is_expected.to start_with("Output: empty-upload_set contains no files - to delete, rerun with the remove option") }
-
-      describe "removing the empty upload_set" do
-        subject { run_task "sufia:empty_upload_sets", "remove" }
-        it { is_expected.to start_with("Output: empty-upload_set contains no files - deleted") }
-      end
-    end
-  end
-
   describe "sufia:migrate" do
     let(:namespaced_id) { "sufia:123" }
     let(:corrected_id)  { "123" }

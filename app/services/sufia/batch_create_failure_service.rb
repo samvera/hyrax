@@ -1,17 +1,16 @@
 module Sufia
-  class UploadSetUpdateSuccessService < MessageUserService
+  class BatchCreateFailureService < MessageUserService
     attr_reader :user
-
     def initialize(user)
       @user = user
     end
 
     def message
-      "The upload set update for #{user} passed."
+      "The batch create for #{user} failed"
     end
 
     def subject
-      'Passing Upload Set Update'
+      'Failing batch create'
     end
   end
 end

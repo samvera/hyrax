@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe Sufia::UploadSetUpdateFailureService do
+describe Sufia::BatchCreateSuccessService do
   let(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
 
   describe "#call" do
     subject { described_class.new(depositor) }
 
-    it "sends failing mail" do
+    it "sends passing mail" do
       subject.call
       expect(inbox.count).to eq(1)
-      inbox.each { |msg| expect(msg.last_message.subject).to eq('Failing Upload Set Update') }
+      inbox.each { |msg| expect(msg.last_message.subject).to eq('Passing batch create') }
     end
   end
 end

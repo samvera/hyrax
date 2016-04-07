@@ -6,6 +6,5 @@ module Sufia
     include Sufia::Works::Metadata
     include Sufia::Works::Querying
     include Sufia::WithEvents
-    include Sufia::BelongsToUploadSets
   end
 end

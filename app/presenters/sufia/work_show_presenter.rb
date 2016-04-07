@@ -1,7 +1,7 @@
 module Sufia
   class WorkShowPresenter < ::CurationConcerns::WorkShowPresenter
     # delegate fields from Sufia::Works::Metadata to solr_document
-    delegate :based_near, :related_url, :depositor, :identifier, :resource_type, :tag, :upload_set_id, to: :solr_document
+    delegate :based_near, :related_url, :depositor, :identifier, :resource_type, :tag, to: :solr_document
 
     def editor?
       current_ability.can?(:edit, solr_document)
@@ -34,9 +34,8 @@ module Sufia
     end
 
     def processing?
-      return false if upload_set_id.nil?
-      upload_set = UploadSet.find(upload_set_id)
-      upload_set.status.first == "processing".freeze
+      # TODO: Do we need to collect and summarize procesing of attached files?
+      false
     end
 
     def stats_path

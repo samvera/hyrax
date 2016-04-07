@@ -25,7 +25,6 @@ module Sufia
       load File.expand_path('../../../tasks/resque.rake', __FILE__)
       load File.expand_path('../../../tasks/stats_tasks.rake', __FILE__)
       load File.expand_path('../../../tasks/sufia_user.rake', __FILE__)
-      load File.expand_path('../../../tasks/upload_set_cleanup.rake', __FILE__)
     end
 
     initializer 'requires' do
