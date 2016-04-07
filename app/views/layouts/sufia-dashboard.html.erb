@@ -2,35 +2,33 @@
 <html lang="<%= t("sufia.document_language") %>">
 <head><%= render 'layouts/head_tag_content' %></head>
 <body>
-<div id="wrapper">
-  <a href="#skip_to_content" class="sr-only">Skip to Content</a>
-  <%= render '/masthead' %>
-  <%= render '/controls' %>
-  <%= render '/flash_msg' %>
+<a href="#skip_to_content" class="sr-only">Skip to Content</a>
+<%= render '/masthead' %>
+<%= render '/controls' %>
+<%= render '/flash_msg' %>
 
-  <div id="content-wrapper" class="container-fluid dashboard" role="main">
-    <% if content_for?(:page_header) %>
-      <div class="row">
-        <div class="col-xs-12 main-header">
-          <%= yield(:page_header) %>
-        </div>
+<div id="content-wrapper" class="container-fluid dashboard" role="main">
+  <% if content_for?(:page_header) %>
+    <div class="row">
+      <div class="col-xs-12 main-header">
+        <%= yield(:page_header) %>
+      </div>
+    </div>
+  <% end %>
+  <a name="skip_to_content"></a>
+  <div id="content" class="row">
+  <% if content_for?(:sidebar) %>
+      <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
+      <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
+    <% else %>
+      <div class="col-xs-12">
+        <%= yield %>
       </div>
     <% end %>
-    <a name="skip_to_content"></a>
-    <div id="content" class="row">
-    <% if content_for?(:sidebar) %>
-        <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
-        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
-      <% else %>
-        <div class="col-xs-12">
-          <%= yield %>
-        </div>
-      <% end %>
-    </div>
   </div>
+</div>
 
-  <%= render '/footer' %>
-</div><!-- /#wrapper -->
+<%= render '/footer' %>
 <%= render 'shared/ajax_modal' %>
 </body>
 </html>
