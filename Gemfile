@@ -4,8 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development, :test do
-  gem 'rubocop', '~> 0.37.0', require: false
-  gem 'rubocop-rspec', '~> 1.3.1', require: false
   gem 'simplecov', '~> 0.9', require: false
   gem 'coveralls', require: false
   gem 'poltergeist'

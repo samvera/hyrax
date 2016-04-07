@@ -176,6 +176,12 @@ RSpec/FilePath:
 RSpec/InstanceVariable:
   Enabled: false
 
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/NotToNot:
+  Enabled: false
+
 RSpec/DescribeClass:
   Exclude:
     - 'spec/javascripts/jasmine_spec.rb'

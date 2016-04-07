@@ -58,4 +58,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "database_cleaner", "< 1.1.0"
   spec.add_development_dependency 'mida', '~> 0.3.4'
   spec.add_development_dependency 'jasmine'
+  spec.add_development_dependency 'rubocop', '~> 0.39'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.4.1'
+
 end
