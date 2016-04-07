@@ -22,7 +22,7 @@ class BatchCreateJob < ActiveJob::Base
 
     def create(user, titles, uploaded_files, attributes)
       uploaded_files.each do |upload_id|
-        title = titles[upload_id] if titles[upload_id]
+        title = [titles[upload_id]] if titles[upload_id]
         work = create_work(user,
                            attributes.merge(uploaded_files: [upload_id],
                                             title: title))

@@ -19,7 +19,7 @@ describe BatchCreateJob do
     let(:file2) { File.open(fixture_path + '/image.jp2') }
     let(:upload1) {  UploadedFile.create(user: user, file: file1) }
     let(:upload2) {  UploadedFile.create(user: user, file: file2) }
-    let(:title) { { upload1.id => ['File One'], upload2.id => ['File Two'] } }
+    let(:title) { { upload1.id => 'File One', upload2.id => 'File Two' } }
     let(:metadata) { { tag: [] } }
     let(:uploaded_files) { [upload1.id, upload2.id] }
     let(:errors) { double(full_messages: "It's broke!") }
