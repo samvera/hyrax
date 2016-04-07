@@ -20,7 +20,7 @@ describe CollectionsHelper, type: :helper do
       str = String.new(helper.button_for_create_collection)
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq("#{new_collection_path}")
+      expect(form.attr('action')).to eq(new_collection_path.to_s)
       i = form.xpath('.//input').first
       expect(i.attr('type')).to eq('submit')
     end
@@ -29,7 +29,7 @@ describe CollectionsHelper, type: :helper do
       str = String.new(helper.button_for_create_collection("Create My Button"))
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq("#{new_collection_path}")
+      expect(form.attr('action')).to eq(new_collection_path.to_s)
       i = form.xpath('.//input').first
       expect(i.attr('value')).to eq('Create My Button')
     end

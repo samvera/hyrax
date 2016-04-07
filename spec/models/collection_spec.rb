@@ -31,7 +31,6 @@ describe Collection, type: :model do
       before do
         collection.members << gf1
       end
-
     end
   end
 
@@ -40,32 +39,32 @@ describe Collection, type: :model do
       subject.apply_depositor_metadata(user)
     end
 
-    it "should have a depositor" do
+    it "has a depositor" do
       expect(subject.depositor).to eq(user.user_key)
     end
   end
 
   describe "the ability" do
-    let(:collection) { Collection.create(title: ['Some title']) { |c| c.apply_depositor_metadata(user) } }
+    let(:collection) { described_class.create(title: ['Some title']) { |c| c.apply_depositor_metadata(user) } }
 
     let(:ability) { Ability.new(user) }
 
-    it "should allow the depositor to edit and read" do
+    it "allows the depositor to edit and read" do
       expect(ability.can?(:read, collection)).to be true
       expect(ability.can?(:edit, collection)).to be true
     end
   end
 
   describe "#members" do
-    it "should be empty by default" do
+    it "is empty by default" do
       expect(subject.members).to be_empty
     end
 
     context "adding members" do
       context "using assignment" do
-        subject { Collection.create!(title: ['Some title'], members: [gf1, gf2]) { |c| c.apply_depositor_metadata(user) } }
+        subject { described_class.create!(title: ['Some title'], members: [gf1, gf2]) { |c| c.apply_depositor_metadata(user) } }
 
-        it "should have many files" do
+        it "has many files" do
           expect(subject.reload.members).to eq [gf1, gf2]
         end
       end
@@ -75,14 +74,14 @@ describe Collection, type: :model do
           subject.members = [gf1]
           subject.save
         end
-        it "should allow new files to be added" do
+        it "allows new files to be added" do
           subject.reload
           subject.members << gf2
           subject.save
           expect(subject.reload.members).to eq [gf1, gf2]
         end
 
-        it "should allow multiple files to be added" do
+        it "allows multiple files to be added" do
           subject.reload
           subject.add_members [gf2.id, gf3.id]
           subject.save
@@ -90,7 +89,6 @@ describe Collection, type: :model do
         end
       end
     end
-
 
     context "removing members" do
       before do
@@ -130,7 +128,7 @@ describe Collection, type: :model do
       subject.destroy
     end
 
-    it "should not delete member files when deleted" do
+    it "does not delete member files when deleted" do
       expect(GenericWork.exists?(gf1.id)).to be true
       expect(GenericWork.exists?(gf2.id)).to be true
     end

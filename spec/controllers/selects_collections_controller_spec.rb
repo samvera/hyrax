@@ -6,8 +6,7 @@ class SelectsCollectionsController < ApplicationController
   include CurationConcerns::SelectsCollections
 end
 
-describe SelectsCollectionsController, :type => :controller do
-
+describe SelectsCollectionsController, type: :controller do
   describe "#find_collections" do
     it "uses the search builder" do
       expect(subject.collections_search_builder_class.default_processor_chain).to eq [:default_solr_parameters, :add_query_to_solr, :add_access_controls_to_solr_params, :add_collection_filter, :some_rows, :sort_by_title]
@@ -46,7 +45,7 @@ describe SelectsCollectionsController, :type => :controller do
 
       context "when there are more than 10" do
         before do
-          11.times do |i|
+          11.times do
             FactoryGirl.create(:collection, read_groups: ["public"], user: user)
           end
         end
@@ -60,7 +59,7 @@ describe SelectsCollectionsController, :type => :controller do
 
     describe "Read Access" do
       describe "not signed in" do
-        it "should error if the user is not signed in" do
+        it "errors if the user is not signed in" do
           expect { subject.find_collections_with_read_access }.to raise_error
         end
       end
