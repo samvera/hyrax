@@ -19,7 +19,7 @@ describe CollectionsController do
                                        title: ['Bogus Asset'],
                                        depositor: 'abc') }
   let(:collection_attrs) do
-    { title: 'My First Collection', description: "The Description\r\n\r\nand more" }
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
   end
 
   let(:collection) { create(:collection, title: ['Collection Title'], user: user) }

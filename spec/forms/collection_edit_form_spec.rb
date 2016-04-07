@@ -29,10 +29,10 @@ describe CurationConcerns::Forms::CollectionEditForm do
   describe ".build_permitted_params" do
     subject { described_class.build_permitted_params }
     it { is_expected.to eq [{ resource_type: [] },
-                            :title,
+                            { title: [] },
                             { creator: [] },
                             { contributor: [] },
-                            :description,
+                            { description: [] },
                             { tag: [] },
                             { rights: [] },
                             { publisher: [] },
@@ -45,13 +45,6 @@ describe CurationConcerns::Forms::CollectionEditForm do
                             { based_near: [] },
                             { related_url: [] },
                             :visibility] }
-  end
-
-  describe 'multiple?' do
-    context 'with :title' do
-      subject { described_class.multiple?(:title) }
-      it { is_expected.to be false }
-    end
   end
 
   describe '#select_files' do
