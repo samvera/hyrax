@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/sufia/arkivo/metadata_munger.rb'

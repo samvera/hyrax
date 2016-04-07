@@ -6,8 +6,6 @@ gemspec
 group :development, :test do
   gem "simplecov", require: false
   gem 'byebug' unless ENV['CI']
-  gem 'rubocop', '~> 0.38.0', require: false
-  gem 'rubocop-rspec', require: false
   gem 'coveralls', require: false
 end
 
