@@ -24,8 +24,8 @@ describe Admin::StatsController, type: :controller do
     it 'allows an authorized user to view the page' do
       get :index
       expect(response).to be_success
-      expect(response.body).to include('Statistics for Blacklight')
-      expect(response.body).to include('Total Blacklight Users')
+      expect(response.body).to include('Statistics for Sufia')
+      expect(response.body).to include('Total Sufia Users')
     end
 
     describe "querying stats_filters" do

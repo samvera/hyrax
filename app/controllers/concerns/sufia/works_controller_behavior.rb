@@ -40,7 +40,7 @@ module Sufia
     def after_create_response
       respond_to do |wants|
         wants.html do
-          flash[:notice] = "Your files are being processed by #{t('curation_concerns.product_name')} in " \
+          flash[:notice] = "Your files are being processed by #{view_context.application_name} in " \
             "the background. The metadata and access controls you specified are being applied. " \
             "Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> " \
             "until this process is complete (shouldn't take too long, hang in there!). You may need " \
