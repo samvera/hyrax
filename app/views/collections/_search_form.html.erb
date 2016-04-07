@@ -1,5 +1,5 @@
 <div class="col-md-3 pull-right">
-  <%= form_for [collections, @presenter], method: :get, class: "well form-search" do |f| %>
+  <%= form_for @presenter, method: :get, class: "well form-search" do |f| %>
 
       <label class="sr-only">Search Collection <%= @presenter.title %></label>
       <div class="input-group">

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe CollectionsController do
-  routes { Hydra::Collections::Engine.routes }
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])
   end
@@ -20,7 +19,7 @@ describe CollectionsController do
                                        title: ['Bogus Asset'],
                                        depositor: 'abc') }
   let(:collection_attrs) do
-    { title: 'My First Collection', description: "The Description\r\n\r\nand more" }
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
   end
 
   let(:collection) { create(:collection, title: ['Collection Title'], user: user) }

@@ -51,7 +51,6 @@ module CurationConcerns
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
 
       inject_into_file 'config/routes.rb', after: /devise_for :users\s*\n/ do
-        "  mount Hydra::Collections::Engine => '/'\n"\
         "  mount CurationConcerns::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
         "  root 'welcome#index'\n"\

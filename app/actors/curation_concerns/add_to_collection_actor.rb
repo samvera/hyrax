@@ -21,14 +21,14 @@ module CurationConcerns
         # remove from old collections
         # TODO: Implement in_collection_ids https://github.com/projecthydra-labs/hydra-pcdm/issues/157
         (curation_concern.in_collections.map(&:id) - new_collection_ids).each do |old_id|
-          collection = Collection.find(old_id)
+          collection = ::Collection.find(old_id)
           collection.members.delete(curation_concern)
           collection.save
         end
 
         # add to new
         new_collection_ids.each do |coll_id|
-          collection = Collection.find(coll_id)
+          collection = ::Collection.find(coll_id)
           collection.members << curation_concern
           collection.save
         end

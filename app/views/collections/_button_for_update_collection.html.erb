@@ -1,0 +1,4 @@
+<%# button for updating a collections %>
+<%# collection_id -- collection to be updated (use 'collection_replace_id' if you wish the form to be updated by a form value) %>
+<%# label -- button label %>
+<%= button_to label, collection_path(collection_id), :method=>:put, :class=>"btn btn-primary updates-collection submits-batches collection-update", 'data-behavior'=>'hydra-collections', :id=>'hydra-collection-update' %>

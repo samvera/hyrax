@@ -1,5 +1,5 @@
 module CurationConcerns
-  class CollectionMemberSearchBuilder < Hydra::Collections::MemberSearchBuilder
+  class CollectionMemberSearchBuilder < CurationConcerns::MemberSearchBuilder
     include CurationConcerns::FilterByType
   end
 end

@@ -7,6 +7,8 @@
 //= require curation_concerns/file_manager/sorting
 //= require curation_concerns/file_manager/save_manager
 //= require curation_concerns/file_manager/member
+//= require curation_concerns/batch_select
+//= require curation_concerns/collections
 
 
 // Initialize plugins and Bootstrap dropdowns on jQuery's ready event as well as

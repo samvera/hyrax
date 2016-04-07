@@ -29,7 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sprockets-es6'
   spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
   spec.add_dependency 'active_attr'
-  spec.add_dependency 'hydra-collections', '~> 8.1'
   spec.add_dependency 'hydra-works', '~> 0.8', '>= 0.8.1'
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
   spec.add_dependency 'resque', '~> 1.23'
@@ -37,6 +36,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'solrizer', '~> 3.4'
+  spec.add_dependency 'active-fedora', '~> 9.9'
+  spec.add_dependency 'deprecation', '~> 0.1'
+  spec.add_dependency 'rdf', '~> 1.99'
+  spec.add_dependency 'rdf-vocab', '~> 0'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
@@ -55,4 +58,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "database_cleaner", "< 1.1.0"
   spec.add_development_dependency 'mida', '~> 0.3.4'
   spec.add_development_dependency 'jasmine'
+  spec.add_development_dependency 'rubocop', '~> 0.39'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.4.1'
+
 end

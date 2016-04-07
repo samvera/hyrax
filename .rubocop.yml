@@ -68,6 +68,7 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
     - 'app/models/concerns/curation_concerns/solr_document_behavior.rb'
+    - 'app/controllers/concerns/curation_concerns/collections_controller_behavior.rb'
 
 Style/ZeroLengthPredicate:
   Enabled: false
@@ -131,6 +132,7 @@ Style/PredicateName:
     - 'app/helpers/curation_concerns/curation_concerns_helper_behavior.rb'
     - 'app/controllers/concerns/curation_concerns/controller.rb'
     - 'app/helpers/curation_concerns/collections_helper.rb'
+    - 'app/helpers/curation_concerns/collections_helper_behavior.rb'
 
 Style/GlobalVars:
   Exclude:
@@ -172,6 +174,12 @@ RSpec/FilePath:
   Enabled: false
 
 RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/NotToNot:
   Enabled: false
 
 RSpec/DescribeClass:

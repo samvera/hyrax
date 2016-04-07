@@ -2,7 +2,7 @@ module CurationConcerns
   module LeasesControllerBehavior
     extend ActiveSupport::Concern
     include CurationConcerns::ManagesEmbargoes
-    include Hydra::Collections::AcceptsBatches
+    include CurationConcerns::Collections::AcceptsBatches
 
     included do
       skip_before_action :normalize_identifier, only: :update

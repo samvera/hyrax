@@ -26,8 +26,8 @@ describe CurationConcerns::CollectionsHelper do
     it 'has a form that routes to remove the collectible' do
       expect(subject).to have_selector 'a[data-method=put]'
       expect(subject).to have_link 'Remove From Collection',
-                                   href: collections.collection_path('123', collection: { members: 'remove' },
-                                                                            batch_document_ids: ['456'])
+                                   href: collection_path('123', collection: { members: 'remove' },
+                                                                batch_document_ids: ['456'])
     end
   end
 
