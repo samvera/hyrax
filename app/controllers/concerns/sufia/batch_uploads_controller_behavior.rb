@@ -42,15 +42,8 @@ module Sufia
       end
 
       def create_update_job
-        attrs = attributes_for_actor
-        titles = params[:title]
-        # TODO: when the form supports unique titles per file, we can remove this:
-        titles ||= params[:uploaded_files].each_with_object({}) do |key, obj|
-          obj[key] = attrs[:title]
-        end
-
         BatchCreateJob.perform_later(current_user,
-                                     titles,
+                                     params[:title],
                                      params[:uploaded_files],
                                      attributes_for_actor)
       end
