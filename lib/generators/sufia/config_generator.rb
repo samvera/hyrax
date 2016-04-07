@@ -34,4 +34,8 @@ class Sufia::ConfigGenerator < Rails::Generators::Base
   def tinymce_config
     copy_file "config/tinymce.yml", "config/tinymce.yml"
   end
+
+  def inject_i18n
+    copy_file "config/locales/sufia.en.yml", "config/locales/sufia.en.yml"
+  end
 end

@@ -195,7 +195,7 @@ en:
     work:
       browse_view: "Browse View"
     footer:
-      copyright_html: "<strong>Copyright &copy; 2015 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
     admin:
       stats:
         registered: "Registered"
