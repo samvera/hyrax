@@ -56,7 +56,10 @@ export class SaveWorkControl {
   }
 
   formChanged() {
-    let valid = this.validateMetadata() && this.validateFiles() && this.depositAgreement.isAccepted
+    // avoid short circuit evaluation. The checkboxes should be independent.
+    let metadataValid = this.validateMetadata()
+    let filesValid = this.validateFiles()
+    let valid = metadataValid && filesValid && this.depositAgreement.isAccepted
     this.saveButton.prop("disabled", !valid);
   }
 

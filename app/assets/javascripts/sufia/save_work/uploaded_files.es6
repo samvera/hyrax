@@ -5,7 +5,7 @@ export class UploadedFiles {
     $('#fileupload').bind('fileuploadcompleted', callback)
   }
 
-  get hasFiles(){
+  get hasFiles() {
     let fileField = this.form.find('input[name="uploaded_files[]"]')
     return fileField.size() > 0
   }
