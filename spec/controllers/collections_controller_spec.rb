@@ -33,23 +33,25 @@ describe CollectionsController do
 
     it "creates a Collection" do
       expect {
-        post :create, collection: { title: "My First Collection ", description: "The Description\r\n\r\nand more" }
+        post :create, collection: { title: ["My First Collection "],
+                                    description: "The Description\r\n\r\nand more" }
       }.to change { Collection.count }.by(1)
     end
 
     it "removes blank strings from params before creating Collection" do
       expect {
         post :create, collection: {
-          title: "My First Collection ", creator: [""] }
+          title: ["My First Collection "], creator: [""] }
       }.to change { Collection.count }.by(1)
-      expect(assigns[:collection].title).to eq(["My First Collection "])
-      expect(assigns[:collection].creator).to eq([])
+      expect(assigns[:collection].title).to eq ["My First Collection "]
+      expect(assigns[:collection].creator).to eq []
     end
 
     context "with files I can access" do
       it "creates a collection using only the accessible files" do
         expect {
-          post :create, collection: { title: "My own Collection", description: "The Description\r\n\r\nand more" },
+          post :create, collection: { title: ["My own Collection"],
+                                      description: "The Description\r\n\r\nand more" },
                         batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
         }.to change { Collection.count }.by(1)
         collection = assigns(:collection)
@@ -108,9 +110,9 @@ describe CollectionsController do
 
       it "removes blank strings from params before updating Collection metadata" do
         put :update, id: collection, collection: {
-          title: "My Next Collection ", creator: [""] }
-        expect(assigns[:collection].title).to eq(["My Next Collection "])
-        expect(assigns[:collection].creator).to eq([])
+          title: ["My Next Collection "], creator: [""] }
+        expect(assigns[:collection].title).to eq ["My Next Collection "]
+        expect(assigns[:collection].creator).to eq []
       end
     end
   end

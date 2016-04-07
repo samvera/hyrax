@@ -31,7 +31,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
     before do
       stub_template 'shared/_title_bar.html.erb' => 'Title Bar'
       stub_template 'shared/_citations.html.erb' => 'Citation'
-      render template: 'curation_concerns/file_sets/show.html.erb', layout: 'layouts/curation_concerns'
+      render
     end
     it 'shows the title' do
       expect(rendered).to have_selector 'h1', text: 'My Title'
