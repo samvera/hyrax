@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_form.html.erb', :no_clean do
+describe 'curation_concerns/base/_form.html.erb' do
   let(:work) do
     stub_model(GenericWork, id: '456')
   end
@@ -22,30 +22,34 @@ describe 'curation_concerns/base/_form.html.erb', :no_clean do
     Capybara::Node::Simple.new(rendered)
   end
 
-  describe "the form element" do
-    context "with GenericWorkForm" do
-      context "for a new object" do
-        let(:work) { GenericWork.new }
-        it "routes to the GenericWorkController" do
-          expect(page).to have_selector("form[action='/concern/generic_works']")
-        end
-      end
+  context "for a new object" do
+    let(:work) { GenericWork.new }
+    it "routes to the GenericWorkController" do
+      expect(page).to have_selector("form[action='/concern/generic_works']")
+    end
 
-      context "for a persited object" do
-        it "routes to the GenericWorkController" do
-          expect(page).to have_selector("form[action='/concern/generic_works/456']")
-        end
-      end
+    it "has a switch to Batch Upload link" do
+      expect(page).to have_link('Batch upload')
     end
   end
 
-  describe 'when the work has two or more resource types' do
-    it "only draws one resource_type multiselect" do
-      expect(page).to have_selector("select#generic_work_resource_type", count: 1)
+  context "for a persited object" do
+    it "routes to the GenericWorkController" do
+      expect(page).to have_selector("form[action='/concern/generic_works/456']")
     end
-  end
 
-  it "renders the link for the Cancel button" do
-    expect(page).to have_link("Cancel", "/")
+    describe 'when the work has two or more resource types' do
+      it "only draws one resource_type multiselect" do
+        expect(page).to have_selector("select#generic_work_resource_type", count: 1)
+      end
+    end
+
+    it "doesn't have switch to Batch Upload link" do
+      expect(page).not_to have_link('Batch upload')
+    end
+
+    it "renders the link for the Cancel button" do
+      expect(page).to have_link("Cancel", "/")
+    end
   end
 end

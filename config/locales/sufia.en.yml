@@ -163,6 +163,8 @@ en:
     generic_works:
       new:
         header: Add New Work
+      edit:
+        header: Edit Work
     batch_uploads:
       new:
         header: Batch Create New Works
