@@ -14,17 +14,14 @@
   </head>
 
 <body>
-<div  id="wrapper">
-  <%= render partial: '/masthead', formats: [:html] %>
+  <%= render '/masthead', formats: [:html] %>
   <div id="content-wrapper" class="container-fluid">
-    <div id="content" class="row">
+    <div class="row">
         <div class="col-sm-8 col-md-8 col-lg-8">
           <%= yield %>
         </div>
-    </div><!-- /#content -->
+    </div><!-- /.row -->
   </div><!-- /#content-wrapper -->
-  <%= render partial: '/footer' %>
-</div><!-- /#wrapper -->
+  <%= render '/footer' %>
 </body>
-
 </html>
