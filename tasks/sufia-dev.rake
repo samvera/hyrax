@@ -6,7 +6,6 @@ require 'engine_cart/rake_task'
 require 'rubocop/rake_task'
 require 'active_fedora/rake_support'
 
-
 desc 'Run style checker'
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.requires << 'rubocop-rspec'
@@ -19,10 +18,8 @@ task :spec do
 end
 
 desc 'Spin up hydra-jetty and run specs'
-task ci: ['engine_cart:generate'] do
+task ci: ['rubocop', 'engine_cart:generate'] do
   puts 'running continuous integration'
-
-  Rake::Task['rubocop'].invoke
 
   # No need to maintain minter state on Travis
   reset_statefile! if ENV['TRAVIS'] == 'true'
