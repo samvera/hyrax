@@ -1,4 +1,8 @@
 module CurationConcerns::TitleHelper
+  def application_name
+    t('curation_concerns.product_name', default: super)
+  end
+
   def construct_page_title(*elements)
     (elements.flatten.compact + [application_name]).join(' // ')
   end

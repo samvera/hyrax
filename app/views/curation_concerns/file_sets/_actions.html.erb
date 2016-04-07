@@ -7,7 +7,7 @@
 <% if can?(:destroy, file_set.id) %>
   <%= link_to( 'Delete', polymorphic_path([main_app, file_set]),
     class: 'btn btn-default', method: :delete, title: "Delete #{file_set}",
-    data: {confirm: "Deleting #{file_set} from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation"}
+    data: {confirm: "Deleting #{file_set} from #{application_name} is permanent. Click OK to delete this from #{application_name}, or Cancel to cancel this operation"}
   )%>
 <% end %>
 <% if can?(:read, file_set.id) %>

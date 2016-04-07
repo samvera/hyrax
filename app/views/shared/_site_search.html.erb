@@ -1,6 +1,6 @@
 <%= form_tag main_app.search_catalog_path, method: :get, class: "search-form navbar-form" do %>
   <fieldset>
-    <legend class="sr-only">Search <%= t('curation_concerns.product_name') %></legend>
+    <legend class="sr-only">Search <%= application_name %></legend>
     <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), class: "sr-only" %>
     <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
                       
