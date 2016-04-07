@@ -14,14 +14,11 @@ module Sufia
      * Generates GenericWork model.
      * Creates the sufia.rb configuration file
      * Generates mailboxer
-     * Generates usage stats config
      * Runs proxies generator
      * Runs cached stats generator
      * Runs ORCID field generator
      * Runs user stats generator
-     * Runs citation config generator
      * Runs upload_to_collection config generator
-     * Generates mini-magick config
    3. Adds Sufia's abilities into the Ability class
    4. Adds controller behavior to the application controller
    5. Copies the catalog controller into the local app
@@ -63,8 +60,8 @@ module Sufia
       end
     end
 
-    def create_config_file
-      copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
+    def install_config
+      generate "sufia:config"
     end
 
     # Add behaviors to the user model
@@ -131,16 +128,6 @@ module Sufia
       generate 'sufia:cached_work_stats'
     end
 
-    # Adds citations initialization
-    def citation_config
-      generate 'sufia:citation_config'
-    end
-
-    # Add mini-magick configuration
-    def minimagic_config
-      generate 'sufia:minimagick_config'
-    end
-
     def insert_abilities
       insert_into_file 'app/models/ability.rb', after: /CurationConcerns::Ability/ do
         "\n  include Sufia::Ability\n"
@@ -172,10 +159,6 @@ module Sufia
 
     def copy_helper
       copy_file 'sufia_helper.rb', 'app/helpers/sufia_helper.rb'
-    end
-
-    def tinymce_config
-      copy_file "config/tinymce.yml", "config/tinymce.yml"
     end
 
     # The engine routes have to come after the devise routes so that /users/sign_in will work
@@ -228,10 +211,6 @@ module Sufia
 
     def install_blacklight_gallery
       generate "blacklight_gallery:install"
-    end
-
-    def install_admin_stats
-      generate "sufia:admin_stat"
     end
   end
 end
