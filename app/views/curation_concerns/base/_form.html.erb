@@ -12,7 +12,9 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="metadata">
-        <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", sufia.new_batch_upload_path %></p>
+        <% unless f.object.persisted? %>
+          <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", sufia.new_batch_upload_path %></p>
+        <% end %>
         <%= render 'form_metadata', f: f %>
       </div>
       <div role="tabpanel" class="tab-pane" id="files">
