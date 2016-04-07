@@ -13,16 +13,6 @@ h4 .small {
     position: relative;
     left: -8em;
   }
-  .file-listing-title {
-    display: inline-block;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .file-listing-title {
-    display: inline-block;
-    padding-top: .65em;
-  }
 }
 
 .table-responsive {
@@ -71,45 +61,9 @@ h4 .small {
   width: 64px;
 }
 
-.file-listing-links a:link, .file-listing-links a:visited,
-.part_of_collection a:link, .part_of_collection a:visited {
-  color: $file-listing-link-color;
-}
-
-.file-listing-links a:hover, .part_of_collection a:hover {
-  color: $gray-dark;
-  text-decoration: underline;
-}
-
 .nav > li > a.accordion-toggle {
   padding-left: 5px;
   padding-right: 5px;
-}
-
-.slide-list {
-  list-style: none;
-  padding: 0px 0px 0px 15px;
-
-  li {
-    @extend .clearfix;
-    margin-bottom: 0.4em;
-    border-bottom: 1px solid $gray-lighter;
-    padding-bottom: 0.4em;
-
-    &:first-child {
-      border-top: 1px solid $gray-lighter;
-      padding-top: 0.4em;
-    }
-  }
-
-  .facet-count {
-    padding-left: 0.2em;
-    padding-right: 0.2em;
-    background: $gray-lighter;
-    float: right;
-    display: block;
-  }
-
 }
 
 .sorts-dash, .sorts, .expandable_new {
@@ -137,15 +91,6 @@ h4 .small {
 
 .visibility-link:hover {
   text-decoration: none;
-}
-
-.portal {
-  border: 1px solid $gray-lighter;
-  margin: 5px;
-  padding: 5px;
-  h3 {
-    margin-top: 10px;
-  }
 }
 
 .heading-tile {
