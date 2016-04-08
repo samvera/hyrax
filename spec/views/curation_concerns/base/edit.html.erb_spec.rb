@@ -22,6 +22,6 @@ describe 'curation_concerns/base/edit.html.erb' do
     expect(view).to receive(:provide).with(:page_title, 'A nice work // Generic Work [456] // Sufia')
     expect(view).to receive(:provide).with(:page_header).and_yield
     render
-    expect(rendered).to eq "  <h2>Edit Work</h2>\n\na form\n"
+    expect(rendered).to eq "  <h1>Edit Work</h1>\n\na form\n"
   end
 end
