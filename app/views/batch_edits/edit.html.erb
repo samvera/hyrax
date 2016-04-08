@@ -14,7 +14,7 @@
       <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="glyphicon glyphicon-lock"></i> Permissions</a></li>
     </ul>
     <div class="tab-content">
-      <div class="well tab-pane active" id="descriptions_display">
+      <div class="tab-pane active" id="descriptions_display">
         <% @terms.each do |term| %>
           <div class="row">
             <%= simple_form_for @generic_work, url: batch_edits_path, method: :put, remote: true,
@@ -38,7 +38,7 @@
             <% end %>
           </div>
         <% end %>
-      </div><!-- /well -->
+      </div><!-- #descriptions_display -->
 
       <div id="permissions_display" class="tab-pane">
         <%= simple_form_for @generic_work, url: batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>

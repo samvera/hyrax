@@ -2,13 +2,9 @@
   <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
     <h1>Descriptions <span class="pull-right required"><abbr title="required">*</abbr> indicates required fields</span></h1>
-      <div class="well">
-
-        <% f.object.terms.each do |term| %>
-          <%= render_edit_field_partial(term, f: f) %>
-        <% end %>
-
-      </div><!-- /well -->
+      <% f.object.terms.each do |term| %>
+        <%= render_edit_field_partial(term, f: f) %>
+      <% end %>
     <div>
       <%= button_tag class: 'btn btn-primary btn-lg', id: "upload_submit", name: "update_descriptions" do %>
         <i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions
