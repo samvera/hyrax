@@ -6,6 +6,7 @@ describe 'sufia/batch_uploads/_form.html.erb', :no_clean do
   let(:form) { Sufia::BatchUploadForm.new(work, ability) }
 
   before do
+    view.lookup_context.view_paths.push "#{CurationConcerns::Engine.root}/app/views/curation_concerns/base"
     view.lookup_context.view_paths.push 'app/views/sufia/batch_uploads'
     view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
     allow(view).to receive(:curation_concern).and_return(work)
