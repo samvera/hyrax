@@ -12,6 +12,7 @@ describe 'curation_concerns/base/_form.html.erb' do
 
   before do
     view.lookup_context.view_paths.push 'app/views/curation_concerns'
+    allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     assign(:form, form)
@@ -41,6 +42,12 @@ describe 'curation_concerns/base/_form.html.erb' do
     describe 'when the work has two or more resource types' do
       it "only draws one resource_type multiselect" do
         expect(page).to have_selector("select#generic_work_resource_type", count: 1)
+      end
+      it "allows to change the thumbnail" do
+        expect(page).to have_selector("select#generic_work_thumbnail_id", count: 1)
+      end
+      it "allows to change the representative media" do
+        expect(page).to have_selector("select#generic_work_representative_id", count: 1)
       end
     end
 
