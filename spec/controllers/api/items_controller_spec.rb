@@ -113,7 +113,7 @@ describe API::ItemsController, type: :controller do
 
     context 'post with a valid item and matching token' do
       let(:deposited_file) { FileSet.where(label: item_hash['file']['filename']).take }
-      let(:a_work) { build(GenericWork, id: '123') }
+      let(:a_work) { build :generic_work, id: '123' }
       let!(:token) { user.arkivo_token }
       let(:item) { FactoryGirl.json(:post_item, token: token) }
       let(:item_hash) { JSON.parse(item) }
@@ -170,7 +170,7 @@ describe API::ItemsController, type: :controller do
   context 'with an HTTP PUT' do
     let(:put_item) { FactoryGirl.json(:put_item, token: token) }
     let(:token) { user.arkivo_token }
-    let(:gw) { build GenericWork, id: '123' }
+    let(:gw) { build :generic_work, id: '123' }
 
     before do
       # Mock ActiveFedora
@@ -276,7 +276,7 @@ describe API::ItemsController, type: :controller do
     let(:token) { user.arkivo_token }
     let(:item) { FactoryGirl.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
-    let(:gw) { build GenericWork, id: '123' }
+    let(:gw) { build :generic_work, id: '123' }
 
     before do
       # Mock ActiveFedora
@@ -325,7 +325,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a resource not deposited via Arkivo' do
-      let(:non_arkivo_gw) { create GenericWork, id: '777', arkivo_checksum: nil }
+      let(:non_arkivo_gw) { create :generic_work, id: '777', arkivo_checksum: nil }
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)

@@ -6,6 +6,18 @@ describe Sufia::BatchUploadForm do
   let(:ability) { Ability.new(user) }
   let(:user) { build(:user, display_name: 'Jill Z. User') }
 
+  describe "#primary_terms" do
+    subject { form.primary_terms }
+    it { is_expected.to eq [:creator, :tag, :rights] }
+  end
+
+  describe "#secondary_terms" do
+    subject { form.primary_terms }
+    it "doesn't have title" do
+      expect(subject).not_to include(:title)
+    end
+  end
+
   describe ".model_name" do
     subject { described_class.model_name }
     it "has a route_key" do
@@ -28,8 +40,7 @@ describe Sufia::BatchUploadForm do
 
   describe "#terms" do
     subject { form.terms }
-    it { is_expected.to eq [:title,
-                            :creator,
+    it { is_expected.to eq [:creator,
                             :contributor,
                             :description,
                             :tag,

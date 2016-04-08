@@ -52,11 +52,11 @@ describe 'curation_concerns/base/_form.html.erb' do
     end
 
     it "doesn't have switch to Batch Upload link" do
-      expect(page).not_to have_link('Batch upload')
+      expect(page).not_to have_link('Batch upload', href: '/batch_uploads')
     end
 
     it "renders the link for the Cancel button" do
-      expect(page).to have_link("Cancel", "/")
+      expect(page).to have_link("Cancel", href: "/dashboard")
     end
   end
 end
