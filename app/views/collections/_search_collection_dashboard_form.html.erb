@@ -1,5 +1,7 @@
 <div style="float: right;" >
-  <%= form_for([collections, @collection], url: collections.edit_collection_path , method: :get, class: "well form-search") do |f| %>
+  <%= form_for [collections, @collection], url: collections.edit_collection_path,
+                                           method: :get,
+                                           class: "form-search" do |f| %>
       <label class="sr-only" for="collection_search">Search Collection <%= @collection.title %></label>
       <%= text_field_tag :cq, params[:cq], class: "collection-query", placeholder: "Search Collection", size: '30', type: "search", id: "collection_search" %>
       <%= hidden_field_tag :sort, params[:sort], id: 'collection_sort' %>

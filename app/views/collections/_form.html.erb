@@ -1,11 +1,9 @@
 <%= simple_form_for [collections, @form], html: {class: 'form-horizontal editor'} do |f| %>
   <div id="descriptions_display">
     <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
-    <div class="well">
-      <% f.object.terms.each do |term| %>
-        <%= render_edit_field_partial term, f: f %>
-      <% end %>
-    </div><!-- /well -->
+    <% f.object.terms.each do |term| %>
+      <%= render_edit_field_partial term, f: f %>
+    <% end %>
   </div>
   <%= hidden_field_tag :type, params[:type] %>
   <% if params[:batch_document_ids].present? %>

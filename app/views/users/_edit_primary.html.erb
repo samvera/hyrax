@@ -1,4 +1,3 @@
-<div class="well">
 <%= form_for @user, url: sufia.profile_path(@user.to_param), html: {multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="form-group">
     <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> Change picture'.html_safe, class: "col-xs-4 control-label" %>
@@ -63,7 +62,4 @@
 
   <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Profile'.html_safe, type: 'submit', class: "btn btn-primary" %>
 <% end %>
-</div>
-<div class="well">
-  <%= render 'dashboard/_index_partials/proxy_rights' %>
-</div>
+<%= render 'dashboard/_index_partials/proxy_rights' %>
