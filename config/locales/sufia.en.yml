@@ -165,6 +165,8 @@ en:
         header: Add New Work
       edit:
         header: Edit Work
+      progress:
+        header: Save Work
     batch_uploads:
       new:
         header: Batch Create New Works
