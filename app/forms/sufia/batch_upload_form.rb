@@ -3,6 +3,18 @@ module Sufia
     self.model_class = ::GenericWork
     include HydraEditor::Form::Permissions
 
+    self.terms -= [:title]
+
+    # On the batch upload, title is set per-file.
+    def primary_terms
+      super - [:title]
+    end
+
+    # # On the batch upload, title is set per-file.
+    # def secondary_terms
+    #   super - [:title]
+    # end
+
     # Override of ActiveModel::Model name that allows us to use our
     # custom name class
     def self.model_name

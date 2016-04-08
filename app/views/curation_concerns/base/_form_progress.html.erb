@@ -34,7 +34,9 @@
             Deposit Agreement
           <% end %>
           <br>
-          <%= link_to t(:'helpers.action.cancel'), :back, class: 'btn btn-default' %>
+          <%= link_to t(:'helpers.action.cancel'),
+                      sufia.dashboard_index_path,
+                      class: 'btn btn-default' %>
           <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
         </div>
       </div>

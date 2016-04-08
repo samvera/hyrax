@@ -6,7 +6,7 @@
           </div>
         </div>
         <div class="base-terms">
-          <% [:title, :creator, :tag, :rights].each do |term| %>
+          <% f.object.primary_terms.each do |term| %>
             <%= render_edit_field_partial(term, f: f) %>
           <% end %>
         </div>
@@ -19,7 +19,7 @@
                     'aria-controls'=> "extended-terms" %>
         <div id="extended-terms" class='collapse'>
           <%= render 'form_media', f: f %>
-          <% (f.object.rendered_terms - [:title, :creator, :tag, :rights]).each do |term| %>
+          <% f.object.secondary_terms.each do |term| %>
             <%= render_edit_field_partial(term, f: f) %>
           <% end %>
         </div>

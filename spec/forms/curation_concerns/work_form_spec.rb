@@ -3,9 +3,15 @@ require 'spec_helper'
 describe CurationConcerns::GenericWorkForm do
   let(:form) { described_class.new(GenericWork.new, nil) }
 
-  describe "#rendered_terms" do
-    subject { form.rendered_terms }
-    it { is_expected.not_to include(:visibilty, :visibility_during_embargo,
+  describe "#primary_terms" do
+    subject { form.primary_terms }
+    it { is_expected.to eq [:title, :creator, :tag, :rights] }
+  end
+
+  describe "#secondary_terms" do
+    subject { form.secondary_terms }
+    it { is_expected.not_to include(:title, :creator, :tag, :rights,
+                                    :visibilty, :visibility_during_embargo,
                                     :embargo_release_date, :visibility_after_embargo,
                                     :visibility_during_lease, :lease_expiration_date,
                                     :visibility_after_lease, :collection_ids) }
