@@ -1,44 +1,44 @@
-    <aside class="form-progress panel panel-default" id="form-progress">
-      <div class="panel-heading">
-        <h2><%= t("sufia.#{controller_name}.progress.header") %></h2>
-      </div>
-      <div class="list-group">
-        <div class="list-group-item">
-          <h3>Requirements</h3>
-          <ul class="requirements">
-            <li class="incomplete" id="required-metadata">Enter required metadata</li>
-            <li class="incomplete" id="required-files">Add files</li>
-          </ul>
-        </div>
+<aside id="form-progress" class="form-progress panel panel-default">
+  <div class="panel-heading">
+    <h2><%= t("sufia.#{controller_name}.progress.header") %></h2>
+  </div>
+  <div class="list-group">
+    <div class="list-group-item">
+      <h3>Requirements</h3>
+      <ul class="requirements">
+        <li class="incomplete" id="required-metadata">Enter required metadata</li>
+        <li class="incomplete" id="required-files">Add files</li>
+      </ul>
+    </div>
 
+    <div class="list-group-item">
+      <%= render 'form_visibility_component', f: f %>
+    </div>
+    <% unless current_user.can_make_deposits_for.empty? %>
         <div class="list-group-item">
-          <%= render 'form_visibility_component', f: f %>
+          <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for.map(&:user_key), prompt: "Yourself" %>
         </div>
-        <% unless current_user.can_make_deposits_for.empty? %>
-          <div class="list-group-item">
-	    <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for.map(&:user_key), prompt: "Yourself" %>
-          </div>
-        <% end %>
-        <div class="panel-footer text-center">
-          <% if Sufia::Engine.config.active_deposit_agreement_acceptance %>
-            <label>
-              <%= check_box_tag 'agreement', 1, nil, required: true %>
-              <%= t('sufia.active_consent_to_agreement') %><br>
-              <%= link_to t('sufia.deposit_agreement'),
-                          sufia.static_path('agreement'),
-                          target: '_blank' %>
-            </label>
-          <% else %>
-            <%= t('sufia.passive_consent_to_agreement') %><br>
+    <% end %>
+    <div class="panel-footer text-center">
+      <% if Sufia::Engine.config.active_deposit_agreement_acceptance %>
+          <label>
+            <%= check_box_tag 'agreement', 1, nil, required: true %>
+            <%= t('sufia.active_consent_to_agreement') %><br>
             <%= link_to t('sufia.deposit_agreement'),
                         sufia.static_path('agreement'),
                         target: '_blank' %>
-          <% end %>
-          <br>
-          <%= link_to t(:'helpers.action.cancel'),
-                      sufia.dashboard_index_path,
-                      class: 'btn btn-default' %>
-          <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
-        </div>
-      </div>
-    </aside>
+          </label>
+      <% else %>
+          <%= t('sufia.passive_consent_to_agreement') %><br>
+          <%= link_to t('sufia.deposit_agreement'),
+                      sufia.static_path('agreement'),
+                      target: '_blank' %>
+      <% end %>
+      <br>
+      <%= link_to t(:'helpers.action.cancel'),
+                  sufia.dashboard_index_path,
+                  class: 'btn btn-default' %>
+      <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
+    </div>
+  </div>
+</aside>

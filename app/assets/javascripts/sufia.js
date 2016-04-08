@@ -19,6 +19,7 @@
 //= require jquery.validate
 //= require zeroclipboard
 //= require select2
+//= require fixedsticky
 
 //= require flot/excanvas
 //= require flot/jquery.flot
