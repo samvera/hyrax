@@ -1,15 +1,7 @@
 require 'spec_helper'
-# require 'redlock'
 
 feature 'Creating a new Work', :js do
   let(:user) { create(:user) }
-
-  # let(:redlock_client_stub) { # stub out redis connection
-  #   client = double('redlock client')
-  #   allow(client).to receive(:lock).and_yield(true)
-  #   allow(Redlock::Client).to receive(:new).and_return(client)
-  #   client
-  # }
 
   before do
     sign_in user
