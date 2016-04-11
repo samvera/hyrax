@@ -105,7 +105,7 @@ describe FileSet do
       expect(subject).to respond_to(:well_formed)
       expect(subject).to respond_to(:page_count)
       expect(subject).to respond_to(:file_title)
-      expect(subject).to respond_to(:file_author)
+      expect(subject).to respond_to(:creator)
     end
 
     it 'redefines to_param to make redis keys more recognizable' do
