@@ -2,6 +2,7 @@
 //= require fileupload/jquery.iframe-transport
 //= require fileupload/jquery.fileupload.js
 //= require fileupload/jquery.fileupload-process.js
+//= require fileupload/jquery.fileupload-validate.js
 //= require fileupload/jquery.fileupload-ui.js
 //
 /*
@@ -15,38 +16,27 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/* global $, window */
-
-//200 MB  max file size
-var max_file_size = 200000000;
-var max_file_size_str = "200 MB";
-//500 MB max total upload size
-var max_total_file_size = 500000000;
-var max_file_count = 100;
-var max_total_file_size_str = "500 MB";
-var first_file_after_max = '';
-var filestoupload =0;
-
 (function( $ ){
-    'use strict';
+  'use strict';
 
-    $.fn.sufiaUploader = function( options ) {
-        // Initialize the jQuery File Upload widget:
-        $('#fileupload').fileupload({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},
-            url: '/uploads/',
-            type: 'POST'
-        });
-
-        // Enable iframe cross-domain access via redirect option:
-        $('#fileupload').fileupload(
-            'option',
-            'redirect',
-            window.location.href.replace(
-                /\/[^\/]*$/,
-                '/cors/result.html?%s'
-            )
-        );
-    };
+  $.fn.extend({
+    sufiaUploader: function( options ) {
+      // Initialize our jQuery File Upload widget.
+      // TODO: get these values from configuration.
+      this.fileupload({
+        // xhrFields: {withCredentials: true},              // to send cross-domain cookies
+        // acceptFileTypes: /(\.|\/)(png|mov|jpe?g|pdf)$/i, // not a strong check, just a regex on the filename
+        // limitMultiFileUploadSize: 500000000, // bytes
+        limitConcurrentUploads: 6,
+        maxNumberOfFiles: 100,
+        maxFileSize: 500000000, // bytes, i.e. 500 MB
+        autoUpload: true,
+        url: '/uploads/',
+        type: 'POST'
+      })
+      // .bind('fileuploadprocessfail', function (e, data) {
+      //   console.log('Processing ' + data.files[data.index].name + ' failed.');
+      // })
+    }
+  });
 })(jQuery);
