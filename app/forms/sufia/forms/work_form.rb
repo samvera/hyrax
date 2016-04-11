@@ -1,9 +1,6 @@
 module Sufia::Forms
   class WorkForm < CurationConcerns::Forms::WorkForm
-    delegate :depositor, :permissions, to: :model
-    # Since visibility is not an attribute (it's a method), we need to explicitly delegate to it.
-    # TODO: this will be resolved by https://github.com/projecthydra-labs/curation_concerns/pull/708
-    delegate :visibility, to: :model
+    delegate :depositor, :on_behalf_of, :permissions, to: :model
 
     self.terms += [:collection_ids]
 
@@ -32,7 +29,7 @@ module Sufia::Forms
     end
 
     def self.build_permitted_params
-      super + [{ collection_ids: [] }]
+      super + [:on_behalf_of, { collection_ids: [] }]
     end
   end
 end
