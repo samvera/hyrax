@@ -54,7 +54,8 @@ describe CurationConcerns::GenericWorkForm do
         description: [''],
         tag: [''],
         rights: [''],
-        collection_ids: ['']) }
+        collection_ids: [''],
+        on_behalf_of: 'Melissa') }
 
       it 'removes blank parameters' do
         expect(subject['title']).to be_empty
@@ -62,11 +63,18 @@ describe CurationConcerns::GenericWorkForm do
         expect(subject['rights']).to be_empty
         expect(subject['tag']).to be_empty
         expect(subject['collection_ids']).to be_empty
+        expect(subject['on_behalf_of']).to eq 'Melissa'
       end
     end
   end
+
   describe "#visibility" do
     subject { form.visibility }
     it { is_expected.to eq 'restricted' }
+  end
+
+  describe "on_behalf_of" do
+    subject { form.on_behalf_of }
+    it { is_expected.to be nil }
   end
 end
