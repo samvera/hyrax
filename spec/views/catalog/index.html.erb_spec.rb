@@ -45,7 +45,7 @@ describe 'catalog/index.html.erb' do
       render
       expect(rendered).to include(collection.title.first)
       page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
+      expect(page).to have_selector("span.fa.fa-cubes.collection-icon-search")
     end
   end
   context "when user has all the permissions" do
@@ -54,7 +54,7 @@ describe 'catalog/index.html.erb' do
       render
       expect(rendered).to include(collection.title.first)
       page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
+      expect(page).to have_selector("span.fa.fa-cubes.collection-icon-search")
     end
   end
 end
