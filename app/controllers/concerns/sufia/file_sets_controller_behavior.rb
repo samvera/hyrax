@@ -1,16 +1,10 @@
 module Sufia
-  module FileSetsController
-    extend ActiveSupport::Autoload
-    autoload :BrowseEverything
-  end
-
   module FileSetsControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Breadcrumbs
 
     included do
       include Blacklight::Configurable
-      include Sufia::FileSetsController::BrowseEverything
 
       layout "sufia-one-column"
 

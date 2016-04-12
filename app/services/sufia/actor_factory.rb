@@ -1,7 +1,8 @@
 module Sufia
   class ActorFactory < CurationConcerns::ActorFactory
     def self.stack_actors(curation_concern)
-      [CreateWithFilesActor,
+      [CreateWithRemoteFilesActor,
+       CreateWithFilesActor,
        CurationConcerns::AddToCollectionActor,
        CurationConcerns::AssignRepresentativeActor,
        CurationConcerns::AttachFilesActor,
