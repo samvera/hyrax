@@ -8,7 +8,8 @@ describe("SaveWorkControl", function() {
     };
     var element = {
       size: function() { return 1 },
-      closest: function() { return {} }
+      closest: function() { return {} },
+      data: function() { return }
     };
 
     beforeEach(function() {
@@ -54,7 +55,8 @@ describe("SaveWorkControl", function() {
     var form = { attr: function() { return form_id } };
     var element = {
       size: function() { return 1 },
-      closest: function() { return form }
+      closest: function() { return form },
+      data: function() { return }
     };
 
     beforeEach(function() {
