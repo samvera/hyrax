@@ -4,7 +4,7 @@
 
 Since Sufia 7 is unreleased, not all the documentation has been updated to account for the new code structure. However, you should be able to get a development instance up and running with the following list of steps:
 
-```
+```bash
 rails new my_sufia
 cd my_sufia
 echo "gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'" >> Gemfile
@@ -14,7 +14,7 @@ rake db:migrate
 rake hydra:server
 ```
 
-After running these steps, browse to http://localhost:3000/ and you should see the application running.
+After running these steps, browse to [localhost:3000](http://localhost:3000/) and you should see the application running.
 
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
@@ -144,15 +144,15 @@ Sufia requires the following software to work:
 ### Characterization
 
 1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS (see above to pick a known working version) & unpack it somewhere on your machine.
-1. Mark fits.sh as executable (`chmod a+x fits.sh`)
-1. Run "fits.sh -h" from the command line and see a help message to ensure FITS is properly installed
+1. Mark fits.sh as executable: `chmod a+x fits.sh`
+1. Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
 1. Give your Sufia app access to FITS by:
     1. Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), **OR**
     1. Changing `config/initializers/sufia.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
 
 ### Derivatives
 
-Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your .bash_profile, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/<your full path to>/LibreOffice.app/Contents/MacOS/"
+Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/<your full path to>/LibreOffice.app/Contents/MacOS/"
 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
 
@@ -209,7 +209,7 @@ If you already have an instance of Solr that you would like to use, you may skip
 solr_wrapper -d solr/config/ --collection_name hydra-development
 ```
 
-You can check to see if Solr is started by going to [[http://localhost:8983/]]
+You can check to see if Solr is started by going to [localhost:8983](http://localhost:8983/).
 
 ## Start FCRepo
 If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
@@ -218,7 +218,7 @@ If you already have an instance of FCRepo that you would like to use, you may sk
 fcrepo_wrapper -p 8984
 ```
 
-You can check to see if FCRepo is started by going to [[http://localhost:8984/]]
+You can check to see if FCRepo is started by going to [localhost:8984](http://localhost:8984/).
 
 ## Start background workers
 
@@ -238,9 +238,11 @@ When you're ready for a deeper dive, [read more about background workers](#backg
 
 To test-drive your new Sufia application, spin up the web server that Rails provides:
 
-`rails server`
+```
+rails server
+```
 
-And now you should be able to browse to http://localhost:3000/ and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
+And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
 
 # Managing a Sufia-based app
 
@@ -252,11 +254,13 @@ In production or production-like (e.g., staging) environments, you may want to m
 
 ### Identifier state
 
-Sufia uses the ActiveFedora::Noid gem to mint (Noid)[https://confluence.ucop.edu/display/Curation/NOID]-style identifiers -- short, opaque identifiers -- for all user-created content (including `GenericWorks`, `FileSets`, and `Collections`). The identifier minter is stateful, meaning that it keeps track of where it is in the sequence of minting identifiers so that the minter can be "replayed," for example in a disaster recovery scenario. ([Read more about the technical details](https://github.com/microservices/noid/blob/master/lib/noid/minter.rb#L2-L35).) The state also means that the minter, once it has minted an identifier, will never mint it again so there's no risk of identifier collisions.
+Sufia uses the ActiveFedora::Noid gem to mint [Noid](https://confluence.ucop.edu/display/Curation/NOID)-style identifiers -- short, opaque identifiers -- for all user-created content (including `GenericWorks`, `FileSets`, and `Collections`). The identifier minter is stateful, meaning that it keeps track of where it is in the sequence of minting identifiers so that the minter can be "replayed," for example in a disaster recovery scenario. (Read more about the [technical details](https://github.com/microservices/noid/blob/master/lib/noid/minter.rb#L2-L35).) The state also means that the minter, once it has minted an identifier, will never mint it again so there's no risk of identifier collisions.
 
 Identifier state is tracked in a file that by default is located in a well-known directory in UNIX-like environments, `/tmp/`, but this may be insufficient in production-like environments where `/tmp/` may be aggressively cleaned out. To prevent the chance of identifier collisions, it is recommended that you find a more suitable filesystem location for your system environment. If you are deploying via Capistrano, that location should **not** be in your application directory, which will change on each deployment. If you have multiple instances of your Sufia application, for instance in load-balanced scenarios, you will want to choose a filesystem location that all instances can access. You may change this by uncommenting and changing the value in this line from `config/initializers/sufia.rb` to a filesystem location other than `/tmp/`:
 
-`# config.minter_statefile = '/tmp/minter-state'`
+```ruby
+# config.minter_statefile = '/tmp/minter-state'
+```
 
 ### Web server
 
@@ -283,37 +287,41 @@ For the remainder of the background worker documentation, it is assumed that you
 
 ### Terminology
 
-<dl>
-<dt>Resque</dt>
-<dd>Resque is a <a href="https://en.wikipedia.org/wiki/Message_queue">message queue</a> that is used by Sufia to manage long-running or slow processes. (Sufia builds its jobs using Rails's ActiveJob framework, so you are free to use another queuing system, e.g., DelayedJob or Sidekiq.)</dd>
+##### Resque
 
-<dt>Resque-Pool/pools</dt>
-<dd>[Resque-Pool](https://github.com/nevans/resque-pool) is a tool for managing (starting, stopping) and configuring Resque worker processes. See [configuration](#configuration) below for more information.</dd>
+Resque is a [message queue](https://en.wikipedia.org/wiki/Message_queue) that is used by Sufia to manage long-running or slow processes. (Sufia builds its jobs using Rails' ActiveJob framework, so you are free to use another queuing system, e.g., DelayedJob or Sidekiq.)
 
-<dt>workers</dt>
-<dd>Workers run the background jobs. Each worker has a copy of your Sufia app which has the jobs code in `app/jobs/`. The workers listen to queues (by polling Redis) and pull jobs waiting on the queue. Once a worker pulls a job, it will perform the task as expressed by the persisted job. A worker can be dedicated to a single queue or may listen to multiple queues -- this is [configurable](#configuration) in `config/resque-pool.yml`. Multiple workers can also listen to the same queue.</dd>
+##### Resque-Pool/pools
 
-<dt>queues</dt>
-<dd>Jobs are sent to queues where they wait until a worker is available to pick them up. Sufia defines a number of queues for processing different background jobs (e.g. `batch_update`, `characterize`). Multiple queues are provided to give you the ability to control how many workers work on the different jobs. Why? Some jobs are fast-running, such as all of Sufia's event jobs, and some jobs are slow-running like the characterize job. Using dedicated queues allows you to say, "I only want one worker for characterization but I want five for events," thus making sure characterization jobs serially and event jobs run in parallel.</dd>
+[Resque-Pool](https://github.com/nevans/resque-pool) is a tool for managing (starting, stopping) and configuring Resque worker processes. See [configuration](#configuration) below for more information.
 
-<dt>jobs</dt>
-<dd>A job is a task to be performed, and is encoded in JSON and persisted in Redis. The job includes the name of the method the worker should execute along with any parameters that need to be passed to the method.</dd>
+##### workers
 
-<dt>Redis</dt>
-<dd><a href="http://redis.io/">Redis</a> is a key-value store. Resque uses Redis to persist jobs and queues, and Resque-Pool uses Redis to track and manage its worker processes.</dd>
-</dl>
+Workers run the background jobs. Each worker has a copy of your Sufia app which has the jobs code in `app/jobs/`. The workers listen to queues (by polling Redis) and pull jobs waiting on the queue. Once a worker pulls a job, it will perform the task as expressed by the persisted job. A worker can be dedicated to a single queue or may listen to multiple queues -- this is [configurable](#configuration) in `config/resque-pool.yml`. Multiple workers can also listen to the same queue.
+
+##### queues
+
+Jobs are sent to queues where they wait until a worker is available to pick them up. Sufia defines a number of queues for processing different background jobs (e.g. `batch_update`, `characterize`). Multiple queues are provided to give you the ability to control how many workers work on the different jobs. Why? Some jobs are fast-running, such as all of Sufia's event jobs, and some jobs are slow-running like the characterize job. Using dedicated queues allows you to say, "I only want one worker for characterization but I want five for events," thus making sure characterization jobs serially and event jobs run in parallel.
+
+##### jobs
+
+A job is a task to be performed, and is encoded in JSON and persisted in Redis. The job includes the name of the method the worker should execute along with any parameters that need to be passed to the method.
+
+##### Redis
+
+[Redis](http://redis.io/) is a key-value store. Resque uses Redis to persist jobs and queues, and Resque-Pool uses Redis to track and manage its worker processes.
 
 ### Configuration
 
 Resque-pool's configuration file lives in your application at `config/resque-pool.yml` and you are free to tweak it to meet your needs. The default configuration is to create one worker for all queues:
 
-```
- "*": 1
+```yaml
+"*": 1
 ```
 
 An example of a common configuration for production-like environments can be seen in [ScholarSphere](https://github.com/psu-stewardship/scholarsphere/blob/develop/config/resque-pool.yml):
 
-```
+```yaml
 batch_update: 3
 derivatives: 1
 resolrize: 1
@@ -411,7 +419,7 @@ To compile ffmpeg yourself, see https://trac.ffmpeg.org/wiki/CompilationGuide
 
 **Remove** turbolinks support from `app/assets/javascripts/application.js` if present by deleting the following line:
 
-```
+```javascript
 //= require turbolinks
 ```
 
@@ -433,7 +441,7 @@ This will generate a file at _config/browse_everything_providers.yml_. Open that
 
 After running the browse-everything config generator and setting the API keys for the desired providers, an extra tab will appear in your app's Upload page allowing users to pick files from those providers and submit them into your app's repository.
 
-**If your config/initializers/sufia.rb was generated with sufia 3.7.2 or earlier**, then you need to add this line to an initializer (probably _config/initializers/sufia.rb _):
+**If your `config/initializers/sufia.rb` was generated with sufia 3.7.2 or earlier**, then you need to add this line to an initializer (probably _config/initializers/sufia.rb _):
 ```ruby
 config.browse_everything = BrowseEverything.config
 ```
@@ -450,15 +458,15 @@ To enable the Google Analytics javascript snippet, make sure that `config.google
 
 To display data from Google Analytics in the UI, first head to the Google Developers Console and create a new project:
 
-https://console.developers.google.com/project
+    https://console.developers.google.com/project
 
 Let's assume for now Google assigns it a project ID of _foo-bar-123_. It may take a few seconds for this to complete (watch the Activities bar near the bottom of the browser).  Once it's complete, enable the Google+ and Google Analytics APIs here (note: this is an example URL -- you'll have to change the project ID to match yours):
 
-https://console.developers.google.com/project/apps~foo-bar-123/apiui/api
+    https://console.developers.google.com/project/apps~foo-bar-123/apiui/api
 
 Finally, head to this URL (note: this is an example URL -- you'll have to change the project ID to match yours):
 
-https://console.developers.google.com/project/apps~foo-bar-537/apiui/credential
+    https://console.developers.google.com/project/apps~foo-bar-537/apiui/credential
 
 And create a new OAuth client ID.  When prompted for the type, use the "Service Account" type.  This will give you the OAuth client ID, a client email address, a private key file, a private key secret/password, which you will need in the next step.
 
@@ -482,7 +490,7 @@ Click on _User Management_, in the _Account_ column, and add "Read & Analyze" pe
 
 ## Zotero integration
 
-Integration with Zotero-managed publications is possible using [Arkivo](https://github.com/inukshuk/arkivo). Arkivo is a Node-based Zotero subscription service that monitors Zotero for changes and will feed those changes to your Sufia-based app. [Read more about this work.](https://www.zotero.org/blog/feeds-and-institutional-repositories-coming-to-zotero/)
+Integration with Zotero-managed publications is possible using [Arkivo](https://github.com/inukshuk/arkivo). Arkivo is a Node-based Zotero subscription service that monitors Zotero for changes and will feed those changes to your Sufia-based app. [Read more about this work](https://www.zotero.org/blog/feeds-and-institutional-repositories-coming-to-zotero/).
 
 To enable Zotero integration, first [register an OAuth client with Zotero](https://www.zotero.org/oauth/apps), then [install and start Arkivo-Sufia](https://github.com/inukshuk/arkivo-sufia) and then generate the Arkivo API in your Sufia-based application:
 
@@ -512,7 +520,7 @@ Restart your app and it should now be able to pull in Zotero-managed publication
 
 ## Customizing metadata
 
-Chances are you will want to customize the default metadata provided by Sufia.  Here's [a guide](https://github.com/projecthydra/sufia/wiki/Customizing-Metadata) to help you with that
+Chances are you will want to customize the default metadata provided by Sufia.  Here's [a guide](https://github.com/projecthydra/sufia/wiki/Customizing-Metadata) to help you with that.
 
 ## Admin Users
 
@@ -522,11 +530,11 @@ Follow the directions for [installing hydra-role-management](https://github.com/
 
 Add the following gem to Sufia installed app's Gemfile
 ```ruby
-gem "hydra-role-management"
+gem 'hydra-role-management'
 ```
 
 Then install the gem, run the generator, and database migrations:
-```
+```bash
 # each of these commands will produce some output.
 bundle install
 rails generate roles
@@ -536,18 +544,18 @@ rake db:migrate
 ### Adding an admin user
 
 In rails console, run the following commands to create the admin role.
-```
+```ruby
 r = Role.create name: "admin"
 ```
 
 Add a user as the admin.
-```
+```ruby
 r.users << User.find_by_user_key( "your_admin_users_email@fake.email.org" )
 r.save
 ```
 
 Confirm user was made an admin.
-```
+```ruby
 u = User.find_by_user_key( "your_admin_users_email@fake.email.org" )
 u.admin?
   # shows SELECT statment
@@ -573,9 +581,9 @@ SUCCESS will look like...
 
 1. Create a GenericWork for each GenericFile. The new GenericWork should have the same id as the old GenericFile so that URLs that users have saved will route them to the appropriate location.
 1. Create a FileSet for each GenericWork and add it to the `ordered_members` collection on the GenericWork.
-1. Move the binary from `GenericFile#content` to `FileSet#original_file`
+1. Move the binary from `GenericFile#content` to `FileSet#original_file`.
 
-Here are more details on a proof of concept for his approach [https://github.com/projecthydra/sufia/wiki/Sufia-6-to-Sufia-7-Migration]
+Here are more details on a [proof of concept](https://github.com/projecthydra/sufia/wiki/Sufia-6-to-Sufia-7-Migration).
 
 # License
 
@@ -605,7 +613,7 @@ That will print to stdout the new TOC, which you can copy into `README.md`, comm
 
 ## Run the test suite
 
-The test suite also requires [PhantomJS](http://phantomjs.org/), version 1.9.x.
+The test suite also requires [PhantomJS](http://phantomjs.org/).
 
 ```
 rake jetty:start
@@ -617,21 +625,21 @@ rake spec
 
 ## Change validation behavior
 
-To change what happens to files that fail validation add an after_validation hook
-```
-    after_validation :dump_infected_files
+To change what happens to files that fail validation add an after_validation hook:
+```ruby
+after_validation :dump_infected_files
 
-    def dump_infected_files
-      if Array(errors.get(:content)).any? { |msg| msg =~ /A virus was found/ }
-        content.content = errors.get(:content)
-        save
-      end
-    end
+def dump_infected_files
+  if Array(errors.get(:content)).any? { |msg| msg =~ /A virus was found/ }
+    content.content = errors.get(:content)
+    save
+  end
+end
 ```
 
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
-[Project Hydra website](http://projecthydra.org)
+[Project Hydra website](http://projecthydra.org).
 
 ![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
