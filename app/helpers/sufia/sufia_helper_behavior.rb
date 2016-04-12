@@ -148,7 +148,7 @@ module Sufia
     end
 
     def collection_thumbnail(_document, _image_options = {}, _url_options = {})
-      content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+      content_tag(:span, "", class: ["fa", "fa-cubes", "collection-icon-search"])
     end
 
     private

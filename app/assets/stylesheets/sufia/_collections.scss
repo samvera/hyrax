@@ -41,15 +41,11 @@ header {
 }
 
 .collection-icon-search {
+  font-size: $collection-icon-search-lg;
   padding: 0;
 }
 
-.gallery .collection-icon-search {
-  font-size: $collection-icon-search-lg;
-}
-
 .collection-icon-small {
-  padding: 10px 0 0 0;
   width: 1.5em;
 }
 
