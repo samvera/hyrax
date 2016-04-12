@@ -8,8 +8,8 @@
 </h2>
 
 <div class="alert alert-info hidden" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
-<div class="alert alert-warning hidden alert-dismissable" role="alert" id="permissions_error">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+<div class="alert alert-warning hidden" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
 </div>
 
@@ -37,7 +37,7 @@
       <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
-      <button class="btn btn-mini btn-inverse" id="add_new_user_skel">
+      <button class="btn btn-default" id="add_new_user_skel">
         <span class="sr-only">Add this <%= t('sufia.account_label') %></span>
         <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
       </button>
@@ -59,7 +59,7 @@
     </div>
     <div class="col-sm-3">
       <span class="sr-only">Add this group</span>
-      <button class="btn btn-mini btn-inverse" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
+      <button class="btn btn-default" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
       <br /><span id="directory_group_result"></span>
     </div>
   </div>
@@ -96,3 +96,9 @@
     </tr>
   <% end %>
 </table>
+<script type="text/x-tmpl" id="tmpl-file-set-grant">
+<tr>
+  <td><label class="control-label">{%= o.name %}</label></td>
+  <td>{%= o.accessLabel %} <button class="btn close">&times;</button></td>
+</tr>
+</script>

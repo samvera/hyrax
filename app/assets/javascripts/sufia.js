@@ -30,7 +30,6 @@
 //
 //= require sufia/app
 //= require sufia/fileupload
-//= require sufia/permissions
 //= require sufia/trophy
 //= require sufia/facets
 //= require sufia/featured_works
@@ -53,6 +52,7 @@
 // Provide AMD module support
 //= require almond
 //= require sufia/save_work
+//= require sufia/permissions
 
 //= require hydra_collections
 //= require hydra-editor/hydra-editor

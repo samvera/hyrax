@@ -17,7 +17,7 @@ if (!String.prototype.startsWith) {
 export class SaveWorkControl {
   /**
    * Initialize the save controls
-   * @param {jQuery} element the jquery selctor for the save panel
+   * @param {jQuery} element the jquery selector for the save panel
    */
   constructor(element) {
     if (element.size() == 0) {
