@@ -4,6 +4,7 @@ Sufia = {
   initialize: function() {
     this.save_work_control();
     this.popovers();
+    this.permissions();
   },
 
   save_work_control: function() {
@@ -15,6 +16,13 @@ Sufia = {
   popovers: function() {
     $("a[data-toggle=popover]").popover({ html: true })
 				 .click(function() { return false; });
+  },
+
+
+  permissions: function() {
+    var perm = require('sufia/permissions/control');
+    new perm.PermissionsControl($("#share"), 'generic_work', 'tmpl-work-grant');
+    new perm.PermissionsControl($("#permission"), 'file_set', 'tmpl-file-set-grant');
   }
 };
 

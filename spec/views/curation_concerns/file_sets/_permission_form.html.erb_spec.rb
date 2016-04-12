@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_permission_form.html.erb', type: :view do
+describe 'curation_concerns/file_sets/_permission_form.html.erb', type: :view do
   let(:file_set) {
     stub_model(FileSet, id: '123',
                         depositor: 'bob',
@@ -17,6 +17,7 @@ describe 'curation_concerns/base/_permission_form.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(file_set).to receive(:permissions).and_return(permissions)
     allow(view).to receive(:f).and_return(form)
+    view.lookup_context.prefixes.push 'curation_concerns/base'
     render
   end
 

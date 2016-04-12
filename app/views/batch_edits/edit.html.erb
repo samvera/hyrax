@@ -44,7 +44,7 @@
         <%= simple_form_for @generic_work, url: batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>
            <%= hidden_field_tag('update_type', 'update') %>
            <%= hidden_field_tag('key', 'permissions') %>
-           <%= render "curation_concerns/base/permission_form", f: f %>
+           <%= render "curation_concerns/file_sets/permission_form", f: f %>
          <div class="row">
             <%= f.submit "Save changes", class: 'btn btn-primary updates-batches', id: 'permissions_save' %>
             <div id="status_permissions" class="status fleft"></div>
