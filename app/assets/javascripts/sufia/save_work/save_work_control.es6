@@ -25,6 +25,7 @@ export class SaveWorkControl {
     }
     this.element = element
     this.form = element.closest('form')
+    element.data('save_work_control', this)
   }
 
   /**

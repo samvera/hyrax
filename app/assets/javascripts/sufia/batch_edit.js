@@ -163,14 +163,9 @@ function batch_edit_init () {
     $(".field-save").click(runSave);
 }
 
+Blacklight.onLoad(function() {
+  // set up global batch edit options to override the ones in the gem
+  window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
+  batch_edit_init();
 
-
-// turbolinks triggers page:load events on page transition
-// If app isn't using turbolinks, this event will never be triggered, no prob.
-$(document).on('page:load', function() {
-    batch_edit_init();
-});
-
-$(document).ready(function() {
-    batch_edit_init();
-});
+}); //end of Blacklight.onload
