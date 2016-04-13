@@ -655,9 +655,11 @@ solr_wrapper -d solr/config/ --collection_name hydra-development
 fcrepo_wrapper -p 8984
 ```
 * Test that Fedora is running at: [localhost:8984](http://localhost:8984/)
-* The generated test app isn't doing what I expected after making changes to Sufia.  What can I do?  Generally, engine cart will pick up changes to Sufia.  If not, try the following to regenerate the test app.
-```
-rake engine_cart:clean
+* The generated test app isn't doing what I expected after making (and/or pulling) changes to Sufia.  What can I do?  Generally, engine cart will pick up changes to Sufia.  If not, try the following to regenerate the test app:
+
+```bash
+rm -rf .internal_test_app Gemfile.lock
+bundle install
 rake engine_cart:generate
 ```
 
