@@ -22,7 +22,11 @@ module CurationConcerns
     end
 
     def admin_permissions
-      can [:create, :discover, :show, :read, :edit, :update, :destroy], :all
+      alias_action :edit, to: :update
+      alias_action :show, to: :read
+      alias_action :discover, to: :read
+
+      can :manage, curation_concerns_models
     end
 
     def admin?
@@ -42,8 +46,13 @@ module CurationConcerns
     # to submit content
     def everyone_can_create_curation_concerns
       return unless registered_user?
-      can :create, [::FileSet, ::Collection]
-      can :create, [CurationConcerns.config.curation_concerns]
+      can :create, curation_concerns_models
     end
+
+    private
+
+      def curation_concerns_models
+        [::FileSet, ::Collection] + CurationConcerns.config.curation_concerns
+      end
   end
 end
