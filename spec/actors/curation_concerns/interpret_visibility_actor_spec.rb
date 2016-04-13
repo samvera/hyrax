@@ -4,10 +4,10 @@ describe CurationConcerns::InterpretVisibilityActor do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
-    CurationConcerns::CurationConcern::ActorStack.new(curation_concern,
-                                                      user,
-                                                      [described_class,
-                                                       CurationConcerns::GenericWorkActor])
+    CurationConcerns::ActorStack.new(curation_concern,
+                                     user,
+                                     [described_class,
+                                      CurationConcerns::GenericWorkActor])
   end
   let(:date) { Date.today + 2 }
 

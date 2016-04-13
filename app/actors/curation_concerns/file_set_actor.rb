@@ -26,7 +26,7 @@ module CurationConcerns
       file_set.date_modified = now
       file_set.creator = [user.user_key]
 
-      CurationConcern::ActorStack.new(file_set, user, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
+      ActorStack.new(file_set, user, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
       attach_file_to_work(work, file_set, file_set_params) if work
       yield(file_set) if block_given?
     end
@@ -66,9 +66,9 @@ module CurationConcerns
     end
 
     def update_metadata(attributes)
-      stack = CurationConcern::ActorStack.new(file_set,
-                                              user,
-                                              [InterpretVisibilityActor, BaseActor])
+      stack = ActorStack.new(file_set,
+                             user,
+                             [InterpretVisibilityActor, BaseActor])
       if result = stack.update(attributes)
         CurationConcerns.config.callback.run(:after_update_metadata, file_set, user)
       end
