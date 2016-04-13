@@ -44,6 +44,8 @@ module Sufia
         ActiveFedora::Noid.config.template = c.noid_template
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
+
+      CurationConcerns::CurationConcern.actor_factory = Sufia::ActorFactory
     end
 
     initializer 'sufia.assets.precompile' do |app|

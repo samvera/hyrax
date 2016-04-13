@@ -4,10 +4,8 @@ describe Sufia::CreateWithFilesActor do
   let(:create_actor) { double('create actor', create: true,
                                               curation_concern: work,
                                               user: user) }
-  # let(:actor) { described_class.new(create_actor, uploaded_file_ids) }
   let(:actor) do
-    CurationConcerns::CurationConcern::ActorStack.new(
-      work, user, [described_class])
+    CurationConcerns::ActorStack.new(work, user, [described_class])
   end
   let(:user) { create(:user) }
   let(:uploaded_file1) { UploadedFile.create(user: user) }
