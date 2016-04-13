@@ -29,7 +29,7 @@ describe BatchCreateJob do
     subject { described_class.perform_now(user, title, uploaded_files, metadata) }
 
     it "updates work metadata" do
-      expect(CurationConcerns::CurationConcern::ActorStack).to receive(:new).and_return(actor).twice
+      expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
       expect(actor).to receive(:create).with(tag: [], title: ['File One'], uploaded_files: [1]).and_return(true)
       expect(actor).to receive(:create).with(tag: [], title: ['File Two'], uploaded_files: [2]).and_return(true)
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_success, user)
@@ -60,7 +60,7 @@ describe BatchCreateJob do
 
     context "when user does not have permission to edit all of the works" do
       it "sends the failure message" do
-        expect(CurationConcerns::CurationConcern::ActorStack).to receive(:new).and_return(actor).twice
+        expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
         expect(actor).to receive(:create).and_return(true, false)
         expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_failure, user)
         subject

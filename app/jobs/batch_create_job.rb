@@ -58,17 +58,6 @@ class BatchCreateJob < ActiveJob::Base
     end
 
     def work_actor(work, user)
-      # TODO: merge this with the actor method from works_controller.
-      CurationConcerns::CurationConcern::ActorStack.new(
-        work,
-        user,
-        [Sufia::CreateWithFilesActor,
-         CurationConcerns::AddToCollectionActor,
-         CurationConcerns::AssignRepresentativeActor,
-         CurationConcerns::AttachFilesActor,
-         CurationConcerns::ApplyOrderActor,
-         CurationConcerns::InterpretVisibilityActor,
-         CurationConcerns::CurationConcern.model_actor(work),
-         CurationConcerns::AssignIdentifierActor])
+      CurationConcerns::CurationConcern.actor(work, user)
     end
 end

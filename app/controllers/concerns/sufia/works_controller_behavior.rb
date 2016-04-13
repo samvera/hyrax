@@ -18,20 +18,6 @@ module Sufia
       super
     end
 
-    def actor
-      @actor ||= CurationConcerns::CurationConcern::ActorStack.new(
-        curation_concern,
-        current_user,
-        [CreateWithFilesActor,
-         CurationConcerns::AddToCollectionActor,
-         CurationConcerns::AssignRepresentativeActor,
-         CurationConcerns::AttachFilesActor,
-         CurationConcerns::ApplyOrderActor,
-         CurationConcerns::InterpretVisibilityActor,
-         CurationConcerns::CurationConcern.model_actor(curation_concern),
-         CurationConcerns::AssignIdentifierActor])
-    end
-
     # Override the default behavior from curation_concerns in order to add uploaded_files to the parameters received by the actor.
     def attributes_for_actor
       super.merge(params.slice(:uploaded_files))
