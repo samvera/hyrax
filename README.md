@@ -37,16 +37,16 @@ After running these steps, browse to [localhost:3000](http://localhost:3000/) an
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
-  * [Creating a Sufia-based app](#creating-a-sufia-based-app)
+  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Rails](#rails)
-    * [Sufia's Ruby-related dependencies](#sufias-ruby-related-dependencies)
-      * [Pagination](#pagination)
+    * [Sufia's Ruby\-related dependencies](#sufias-ruby-related-dependencies)
     * [Install Sufia](#install-sufia)
     * [Database tables and indexes](#database-tables-and-indexes)
-    * [Start Solr](#start-solr) and [FCRepo](#start-fcrepo)
+    * [Start Solr](#start-solr)
+    * [Start FCRepo](#start-fcrepo)
     * [Start background workers](#start-background-workers)
     * [Spin up the web server](#spin-up-the-web-server)
-  * [Managing a Sufia-based app](#managing-a-sufia-based-app)
+  * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
     * [Production concerns](#production-concerns)
       * [Identifier state](#identifier-state)
       * [Web server](#web-server)
@@ -54,6 +54,12 @@ After running these steps, browse to [localhost:3000](http://localhost:3000/) an
       * [Mailers](#mailers)
     * [Background workers](#background-workers)
       * [Terminology](#terminology)
+        * [Resque](#resque)
+        * [Resque\-Pool/pools](#resque-poolpools)
+        * [workers](#workers)
+        * [queues](#queues)
+        * [jobs](#jobs)
+        * [Redis](#redis)
       * [Configuration](#configuration)
       * [Starting the pool](#starting-the-pool)
       * [Restarting the pool](#restarting-the-pool)
@@ -61,7 +67,7 @@ After running these steps, browse to [localhost:3000](http://localhost:3000/) an
       * [Troubleshooting](#troubleshooting)
     * [Audiovisual transcoding](#audiovisual-transcoding)
     * [User interface](#user-interface)
-    * [Integration with Dropbox, Box, etc.](#integration-with-dropbox-box-etc)
+    * [Integration with Dropbox, Box, etc\.](#integration-with-dropbox-box-etc)
     * [Analytics and usage statistics](#analytics-and-usage-statistics)
       * [Capturing usage](#capturing-usage)
       * [Displaying usage in the UI](#displaying-usage-in-the-ui)
@@ -76,6 +82,10 @@ After running these steps, browse to [localhost:3000](http://localhost:3000/) an
   * [Development](#development)
     * [Regenerating the README TOC](#regenerating-the-readme-toc)
     * [Run the test suite](#run-the-test-suite)
+      * [Prerequisites](#prerequisites-1)
+      * [Test app](#test-app)
+      * [Run tests](#run-tests)
+      * [Testing FAQ](#testing-faq)
     * [Change validation behavior](#change-validation-behavior)
   * [Acknowledgments](#acknowledgments)
 
@@ -287,27 +297,27 @@ For the remainder of the background worker documentation, it is assumed that you
 
 ### Terminology
 
-##### Resque
+#### Resque
 
 Resque is a [message queue](https://en.wikipedia.org/wiki/Message_queue) that is used by Sufia to manage long-running or slow processes. (Sufia builds its jobs using Rails' ActiveJob framework, so you are free to use another queuing system, e.g., DelayedJob or Sidekiq.)
 
-##### Resque-Pool/pools
+#### Resque-Pool/pools
 
 [Resque-Pool](https://github.com/nevans/resque-pool) is a tool for managing (starting, stopping) and configuring Resque worker processes. See [configuration](#configuration) below for more information.
 
-##### workers
+#### workers
 
 Workers run the background jobs. Each worker has a copy of your Sufia app which has the jobs code in `app/jobs/`. The workers listen to queues (by polling Redis) and pull jobs waiting on the queue. Once a worker pulls a job, it will perform the task as expressed by the persisted job. A worker can be dedicated to a single queue or may listen to multiple queues -- this is [configurable](#configuration) in `config/resque-pool.yml`. Multiple workers can also listen to the same queue.
 
-##### queues
+#### queues
 
 Jobs are sent to queues where they wait until a worker is available to pick them up. Sufia defines a number of queues for processing different background jobs (e.g. `batch_update`, `characterize`). Multiple queues are provided to give you the ability to control how many workers work on the different jobs. Why? Some jobs are fast-running, such as all of Sufia's event jobs, and some jobs are slow-running like the characterize job. Using dedicated queues allows you to say, "I only want one worker for characterization but I want five for events," thus making sure characterization jobs serially and event jobs run in parallel.
 
-##### jobs
+#### jobs
 
 A job is a task to be performed, and is encoded in JSON and persisted in Redis. The job includes the name of the method the worker should execute along with any parameters that need to be passed to the method.
 
-##### Redis
+#### Redis
 
 [Redis](http://redis.io/) is a key-value store. Resque uses Redis to persist jobs and queues, and Resque-Pool uses Redis to track and manage its worker processes.
 
@@ -613,14 +623,42 @@ That will print to stdout the new TOC, which you can copy into `README.md`, comm
 
 ## Run the test suite
 
-The test suite also requires [PhantomJS](http://phantomjs.org/).
+### Prerequisites
+* Make sure all [basic prerequisites](#prerequisites) are running.
+* Additional prerequisite for tests: [PhantomJS](http://phantomjs.org/).
 
+### Test app
+Generate the test app.  *NOTE: Run this only once.*
 ```
-rake jetty:start
-redis-server
+rake engine_cart:generate
+```
+
+This generates `sufia/.internal_test_app` directory.  The tests will run against this test app.
+
+### Run tests
+```
+rake spec
+```
+
+### Testing FAQ
+* Where is rake jetty?  It was retired.  Solr and Fedora are started on their own.
+* How can I start a test instance of Solr?  **DO NOT USE FOR PRODUCTION**
+```
+# from sufia root in a separate terminal window
+solr_wrapper -d solr/config/ --collection_name hydra-development
+```
+* Test that Solr is running at: [localhost:8983](http://localhost:8983/)
+* Solr Core name:  hydra-development
+* How can I start a test instance of Fedora?  **DO NOT USE FOR PRODUCTION**
+```
+# from sufia root in a separate terminal window
+fcrepo_wrapper -p 8984
+```
+* Test that Fedora is running at: [localhost:8984](http://localhost:8984/)
+* The generated test app isn't doing what I expected after making changes to Sufia.  What can I do?  Generally, engine cart will pick up changes to Sufia.  If not, try the following to regenerate the test app.
+```
 rake engine_cart:clean
 rake engine_cart:generate
-rake spec
 ```
 
 ## Change validation behavior
