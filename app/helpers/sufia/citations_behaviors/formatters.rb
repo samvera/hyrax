@@ -10,14 +10,6 @@ module Sufia
         def initialize(view_context)
           @view_context = view_context
         end
-
-        def process_title_parts(title_text, &block)
-          if block_given?
-            title_text.split(" ").collect.with_index(&block).join(" ")
-          else
-            title_text
-          end
-        end
       end
 
       autoload :ApaFormatter, 'sufia/citations_behaviors/formatters/apa_formatter'
