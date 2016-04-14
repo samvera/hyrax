@@ -12,8 +12,6 @@ class ContentDepositorChangeEventJob < ContentEventJob
   # @param [User] user the user the generic work is being transfered to.
   # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
   def perform(generic_work, user, reset = false)
-    @generic_work = generic_work
-    @user = user
     @reset = reset
     super(generic_work, user)
   end
@@ -29,7 +27,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   alias log_file_set_event log_work_event
 
   def work
-    @work ||= Sufia::ChangeContentDepositorService.call(@generic_work, @user, reset)
+    @work ||= Sufia::ChangeContentDepositorService.call(repo_object, depositor, reset)
   end
 
   # overriding default to log the event to the depositor instead of their profile
