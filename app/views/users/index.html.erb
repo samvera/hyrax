@@ -15,7 +15,7 @@
         </thead> 
         <tbody> 
             <% @users.each do |user| %> 
-                <tr class="<%= cycle("","zebra") %>"> 
+                <tr> 
                    <td><a href="<%= sufia.profile_path(user) %>"><%= image_tag user.avatar.url(:thumb), width: 30 %></a></td> 
                    <td ><a href="<%= sufia.profile_path(user) %>"><%= user.name %><a></td> 
                    <td><a href="<%= sufia.profile_path(user) %>"><%= user.user_key %><a></td>
