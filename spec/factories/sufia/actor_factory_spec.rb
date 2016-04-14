@@ -6,7 +6,8 @@ describe Sufia::ActorFactory do
 
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
-    it { is_expected.to eq [Sufia::CreateWithFilesActor,
+    it { is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
+                            Sufia::CreateWithFilesActor,
                             CurationConcerns::AddToCollectionActor,
                             CurationConcerns::AssignRepresentativeActor,
                             CurationConcerns::AttachFilesActor,
@@ -20,6 +21,7 @@ describe Sufia::ActorFactory do
     subject { described_class.build(work, user) }
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
+        Sufia::CreateWithFilesActor,
         CurationConcerns::AddToCollectionActor,
         CurationConcerns::AssignRepresentativeActor,
         CurationConcerns::AttachFilesActor,
@@ -27,7 +29,7 @@ describe Sufia::ActorFactory do
         CurationConcerns::InterpretVisibilityActor,
         CurationConcerns::GenericWorkActor,
         CurationConcerns::AssignIdentifierActor]
-      expect(subject.first_actor_class).to eq Sufia::CreateWithFilesActor
+      expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor
     end
   end
 

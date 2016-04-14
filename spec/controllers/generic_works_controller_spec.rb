@@ -67,16 +67,28 @@ describe CurationConcerns::GenericWorksController do
       expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
     end
 
-    # TODO: this needs to be unskiped when #1699 is done.
-    context "from browse everything", skip: true do
-      before do
-        @json_from_browse_everything = { "0" => { "url" => "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires" => "2014-03-31T20:37:36.214Z", "file_name" => "filepicker-demo.txt.txt" }, "1" => { "url" => "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires" => "2014-03-31T20:37:36.731Z", "file_name" => "Getting+Started.pdf" } }
+    context "from browse everything" do
+      let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
+      let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
+      let(:browse_everything_params) do
+        { "0" => { "url" => url1,
+                   "expires" => "2014-03-31T20:37:36.214Z",
+                   "file_name" => "filepicker-demo.txt.txt" },
+          "1" => { "url" => url2,
+                   "expires" => "2014-03-31T20:37:36.731Z",
+                   "file_name" => "Getting+Started.pdf" }
+  }.with_indifferent_access
       end
-      context "when no work_id is passed" do
+      let(:uploaded_files) do
+        browse_everything_params.values.map { |v| v['url'] }
+      end
+
+      context "For a batch upload" do
+        # TODO: move this to batch_uploads controller
         it "ingests files from provide URLs" do
           skip "Creating a FileSet without a parent work is not yet supported"
           expect(ImportUrlJob).to receive(:perform_later).twice
-          expect { post :create, selected_files: @json_from_browse_everything,
+          expect { post :create, selected_files: browse_everything_params,
                                  file_set: {}
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
@@ -96,27 +108,18 @@ describe CurationConcerns::GenericWorksController do
           end
         end
         it "records the work" do
-          expect(ImportUrlJob).to receive(:perform_later).twice
-          expect {
-            post :create, selected_files: @json_from_browse_everything,
-                          parent_id: work.id,
-                          file_set: {}
-          }.to change(FileSet, :count).by(2)
-          created_files = FileSet.all
-          created_files.each { |f| expect(f.generic_works).to include work }
-        end
-      end
-
-      context "when a work id is not passed" do
-        it "creates the work" do
-          skip "Creating a FileSet without a parent work is not yet supported"
-          expect(ImportUrlJob).to receive(:new).twice
-          expect {
-            post :create, selected_files: @json_from_browse_everything,
-                          file_set: {}
-          }.to change(FileSet, :count).by(2)
-          created_files = FileSet.all
-          expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
+          # TODO: ensure the actor stack, called with these params
+          # makes one work, two file sets and calls ImportUrlJob twice.
+          expect(actor).to receive(:create)
+            .with(hash_including(uploaded_files: [],
+                                 remote_files: browse_everything_params.values))
+            .and_return(true)
+          post :create, selected_files: browse_everything_params,
+                        uploaded_files: uploaded_files,
+                        parent_id: work.id,
+                        generic_work: { title: ['First title'] }
+          expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh your dashboard to see these updates."
+          expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
         end
       end
     end

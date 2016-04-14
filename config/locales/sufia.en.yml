@@ -63,7 +63,7 @@ en:
         contact_href_text: "contact form"
         partial_fail_html: "One or more files did not upload successfully. To continue using the files that uploaded %{metadata_href}. <br /> Use the %{contact_href} to report the error if it persists."
         partial_fail_metadata_href_text: "edit their metadata"
-      cloud_timeout_message: "Please note that if you upload a large number of files within a short period of time, the cloud provider may not be able to accommodate your request. If you experience any errors uploading from the cloud, let us know via the %{contact_href}."
+      cloud_timeout_message_html: "Please note that if you upload a large number of files within a short period of time, the cloud provider may not be able to accommodate your request. If you experience any errors uploading from the cloud, let us know via the %{contact_href}."
     homepage:
       featured_works:
         tab_label:          'Featured Works'
