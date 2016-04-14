@@ -3,12 +3,12 @@
   <h1><%= @presenter %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
 <% end %>
 
-<% collector = can?(:collect, @presenter.id) %>
-<% editor    = can?(:edit,    @presenter.id) %>
-
 <%= render 'representative_media', presenter: @presenter %>
 <%= render 'attributes', presenter: @presenter %>
 <%= render 'related_files', presenter: @presenter %>
+
+<% collector = can?(:collect, @presenter.id) %>
+<% editor    = can?(:edit,    @presenter.id) %>
 
 <%= render "show_actions", collector: collector, editor: editor%>
 <%= render 'show_collections' %>

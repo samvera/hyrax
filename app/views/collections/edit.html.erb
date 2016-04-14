@@ -1,6 +1,5 @@
 <% provide :page_title, construct_page_title("Edit Collection #{@form.title.first}") %>
 
-<%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
 <%= provide :page_header do %>
   <h1>Edit Collection: <%= @form.title.first %></h1>
 <% end %>
