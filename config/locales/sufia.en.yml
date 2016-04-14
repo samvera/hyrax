@@ -113,10 +113,6 @@ en:
           detail_label:   "Display summary details of"
           batch_checkbox: "Check to add to a collection or edit list"
           check_all_label: "Select all files to be added to a collection or edited"
-    file:
-      collections_list:
-        heading:   "This file is in the following collections:"
-        empty:     "This file is not currently in any collections."
     messages:
       success:
         single: "has been saved."
@@ -259,6 +255,18 @@ en:
         rights: "Usage information for rights"
 
   curation_concerns:
+    base:
+      relationships:
+        header: Relationships
+        description: "This %{type} is in the following collections:"
+        empty:       "This %{type} is not currently in any collections."
+      metadata:
+        header: Metadata
+      items:
+        header: Items
+        empty:  "This %{type} has no files associated with it. You can add one using the \"Attach a File\" button below."
+      citations:
+        header: 'Citations:'
     visibility:
       open:
         label_html: Public

@@ -15,7 +15,7 @@ describe "display a work as its owner" do
       expect(page).to have_selector 'h1', text: 'Magnificent splendor'
 
       # Displays FileSets already attached to this work
-      within '.related_files' do
+      within '.related-files' do
         expect(page).to have_selector '.filename', text: 'filename.pdf'
       end
     end

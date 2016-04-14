@@ -1,5 +1,25 @@
-.related_files {
+.related-files {
   .thumbnail {
     width: $related-files-thumbnail-width;
   }
+}
+
+header > h1 > .label {
+  font-size: $font-size-base;
+  vertical-align: middle;
+}
+
+.citations {
+  padding: $panel-body-padding;
+  .citations-header {
+    font-weight: bold;
+  }
+  .citations-list {
+    margin-left: 2em;
+  }
+}
+
+.show-actions {
+  padding: $panel-body-padding;
+  // text-align: center;
 }

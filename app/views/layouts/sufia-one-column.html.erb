@@ -10,6 +10,8 @@
 <%= render partial: '/controls' %>
 <%= render partial: '/flash_msg' %>
 <div id="content-wrapper" class="container-fluid">
+  <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
+
   <% if content_for?(:page_header) %>
     <div class="row">
       <div class="col-xs-12 main-header">
