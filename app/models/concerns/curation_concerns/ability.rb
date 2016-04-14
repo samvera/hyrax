@@ -29,6 +29,8 @@ module CurationConcerns
       can :manage, curation_concerns_models
     end
 
+    # Override this method in your ability model if you use a different group
+    # or other logic to designate an administrator.
     def admin?
       user_groups.include? 'admin'
     end

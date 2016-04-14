@@ -12,8 +12,7 @@ describe CurationConcerns::SearchBuilder do
   describe '#gated_discovery_filters' do
     before do
       allow(subject).to receive(:current_ability).and_return(ability)
-      allow(ability).to receive(:current_user).and_return(user)
-      allow(user).to receive(:groups).and_return(['admin'])
+      allow(ability).to receive(:admin?).and_return(true)
     end
 
     it 'does not filter results for admin users' do
