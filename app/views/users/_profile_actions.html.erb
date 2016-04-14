@@ -1,10 +1,16 @@
     <!-- profile and view buttons -->
       <% if signed_in? %>
         <% if current_user == @user %>
-          <%= link_to raw('<i class="glyphicon glyphicon-edit"></i> Edit Your Profile'), sufia.edit_profile_path(@user), class: "btn" %>
+          <%= link_to sufia.edit_profile_path(@user), class: "btn btn-default" do %>
+            <i class="glyphicon glyphicon-edit"></i> Edit Your Profile
+          <% end %>
         <% elsif current_user.following?(@user) %>
-          <%= link_to raw('<i class="glyphicon glyphicon-eye-close"></i> Unfollow'), sufia.unfollow_profile_path(@user), method: :post, class: "btn btn-default" %>
+          <%= link_to sufia.unfollow_profile_path(@user), method: :post, class: "btn btn-default" do %>
+            <i class="glyphicon glyphicon-eye-close"></i> Unfollow
+          <% end %>
         <% else %>
-          <%= link_to raw('<i class="glyphicon glyphicon-eye-open"></i> Follow'), sufia.follow_profile_path(@user), method: :post, class: "btn btn-default" %>
+          <%= link_to sufia.follow_profile_path(@user), method: :post, class: "btn btn-default" do %>
+            <i class="glyphicon glyphicon-eye-open"></i> Follow
+          <% end %>
         <% end %>
       <% end %>
