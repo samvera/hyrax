@@ -1,7 +1,9 @@
-<% provide :page_title, construct_page_title("Edit Collection #{display_title(@collection)}") %>
+<% provide :page_title, construct_page_title("Edit Collection #{@form.title.first}") %>
 
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
-<h1>Edit Collection: <%= display_title(@collection) %></h1>
+<%= provide :page_header do %>
+  <h1>Edit Collection: <%= @form.title.first %></h1>
+<% end %>
 
 <% unless has_collection_search_parameters? %>
   <div class="row">
