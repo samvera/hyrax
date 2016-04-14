@@ -74,7 +74,19 @@
 </script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+{%
+
+    // I am not happy with this global declaration.
+    // Using "var setAllResourceTypes" or "function setAllResourceTypes()" does not work. Not sure why.
+    // Perhaps this kind of declaration is not a problem due to the way the JavaScript is executed???
+    setAllResourceTypes = function() {
+        var firstResourceType = $(".resource_type_dropdown")[0].value;
+        $(".resource_type_dropdown").each(function(index, element) {
+            element.value = firstResourceType;
+        });
+    };
+
+    for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td>
           <div class="row">
@@ -99,6 +111,18 @@
                 <label for="title_{%=file.id%}" class="col-sm-5 control-label">Display label</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
+                </div>
+                <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
+                <div class="col-sm-7">
+                  <select class="form-control resource_type_dropdown" name="resource_type[{%=file.id%}]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
+                    <% Sufia.config.resource_types.each do |type| %>
+                        <option value="<%= type[0] %>"><%= type[1] %></option>
+                    <% end %>
+                  </select>
+                  <!-- TODO: Why is the button drawn for all files? -->
+                  {% if (i == 0) { %}
+                    <button class="btn pull-right resource_type_button" onClick="setAllResourceTypes(); return false;">Set all to this Resource Type</button>
+                  {% } %}
                 </div>
               </div>
             </div>

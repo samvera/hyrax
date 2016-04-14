@@ -8,24 +8,25 @@ class BatchCreateJob < ActiveJob::Base
 
   # This copies metadata from the passed in attribute to all of the works that
   # are members of the given upload set
-  def perform(user, titles, uploaded_files, attributes)
+  def perform(user, titles, resource_types, uploaded_files, attributes)
     @saved = []
     @success = true
 
     titles ||= {}
+    resource_types ||= {}
 
-    create(user, titles, uploaded_files, attributes)
+    create(user, titles, resource_types, uploaded_files, attributes)
     send_user_message(user)
   end
 
   private
 
-    def create(user, titles, uploaded_files, attributes)
+    def create(user, titles, resource_types, uploaded_files, attributes)
       uploaded_files.each do |upload_id|
         title = [titles[upload_id]] if titles[upload_id]
-        work = create_work(user,
-                           attributes.merge(uploaded_files: [upload_id],
-                                            title: title))
+        resource_type = [resource_types[upload_id]] if resource_types[upload_id]
+        attributes = attributes.merge(uploaded_files: [upload_id], title: title, resource_type: resource_type)
+        work = create_work(user, attributes)
         # TODO: stop assuming that files only belong to one work
         next unless work
         saved << work

@@ -20,18 +20,19 @@ describe BatchCreateJob do
     let(:upload1) {  UploadedFile.create(user: user, file: file1) }
     let(:upload2) {  UploadedFile.create(user: user, file: file2) }
     let(:title) { { upload1.id => 'File One', upload2.id => 'File Two' } }
+    let(:resource_types) { { upload1.id => 'Article', upload2.id => 'Image' } }
     let(:metadata) { { tag: [] } }
     let(:uploaded_files) { [upload1.id, upload2.id] }
     let(:errors) { double(full_messages: "It's broke!") }
     let(:work) { double(errors: errors) }
     let(:actor) { double(curation_concern: work) }
 
-    subject { described_class.perform_now(user, title, uploaded_files, metadata) }
+    subject { described_class.perform_now(user, title, resource_types, uploaded_files, metadata) }
 
     it "updates work metadata" do
       expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
-      expect(actor).to receive(:create).with(tag: [], title: ['File One'], uploaded_files: [1]).and_return(true)
-      expect(actor).to receive(:create).with(tag: [], title: ['File Two'], uploaded_files: [2]).and_return(true)
+      expect(actor).to receive(:create).with(tag: [], title: ['File One'], resource_type: ["Article"], uploaded_files: [1]).and_return(true)
+      expect(actor).to receive(:create).with(tag: [], title: ['File Two'], resource_type: ["Image"], uploaded_files: [2]).and_return(true)
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_success, user)
       subject
     end
