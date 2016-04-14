@@ -1,0 +1,19 @@
+    <h2><%= t('.header') %></h2>
+    <!-- TODO: remove hard code "true" and fix collections display
+         See https://github.com/projecthydra/sufia/issues/1480 -->
+    <% if true || presenter.in_collections.blank? %>
+        <p><%= t('.empty', type: presenter.human_readable_type) %></p>
+    <% else %>
+      <p><%= t('.description', type: presenter.human_readable_type) %></p>
+      <table class="table table-striped">
+        <tbody>
+        <% presenter.in_collections.each do |collection| %>
+        <tr class="collection attributes">
+          <td class='attribute title' data-id="<%=collection.id%>">
+            <%= link_to collection.title, collections.collection_path(collection) %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+      </table>
+    <% end %>

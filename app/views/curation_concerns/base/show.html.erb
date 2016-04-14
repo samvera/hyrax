@@ -1,14 +1,25 @@
 <% provide :page_title, @presenter.page_title %>
-<% provide :page_header do %>
-  <h1><%= @presenter %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
-<% end %>
+<div itemscope itemtype="http://schema.org/CreativeWork" class="row">
+  <div class="col-sm-8">
+    <header>
+      <h1><%= @presenter %> <%= @presenter.permission_badge %></h1>
+      <p class="work_description"><%= @presenter.description %></p>
+    </header>
+    <%= render 'relationships', presenter: @presenter %>
+    <%= render 'metadata', presenter: @presenter %>
+  </div>
+  <div class="col-sm-4">
+    <%= render "show_actions", presenter: @presenter %>
+    <%= render 'representative_media', presenter: @presenter %>
+    <%= render 'citations', presenter: @presenter %>
+  </div>
+</div>
 
-<%= render 'representative_media', presenter: @presenter %>
-<%= render 'attributes', presenter: @presenter %>
-<%= render 'related_files', presenter: @presenter %>
-
-<% collector = can?(:collect, @presenter.id) %>
-<% editor    = can?(:edit,    @presenter.id) %>
-
-<%= render "show_actions", collector: collector, editor: editor%>
-<%= render 'show_collections' %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= render 'items', presenter: @presenter %>
+    <%# TODO: we may consider adding these partials in the future %>
+    <%#= render 'sharing_with', presenter: @presenter %>
+    <%#= render 'user_activity', presenter: @presenter %>
+  </div>
+</div>

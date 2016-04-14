@@ -1,0 +1,19 @@
+<h2><%= t('.header') %></h2>
+<% if presenter.file_set_presenters.present? %>
+  <table class="table table-striped related-files">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Filename</th>
+        <th>Date Uploaded</th>
+        <th>Visibility</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'member', collection: presenter.file_set_presenters %>
+    </tbody>
+  </table>
+<% elsif can? :edit, presenter.id %>
+  <p class="text-center"><em><%= t('.empty', type: presenter.human_readable_type) %></em></p>
+<% end %>

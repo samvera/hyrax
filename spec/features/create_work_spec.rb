@@ -36,7 +36,7 @@ feature 'Creating a new Work', :js do
       # attach_file('Upload a file', fixture_file_path('files/image.png'))
       check('agreement')
       click_on('Save')
-      expect(page).to have_content('My Test Work (Generic Work)')
+      expect(page).to have_content('My Test Work')
       expect(page).to have_content "Your files are being processed by Sufia in the background."
     end
   end
@@ -71,7 +71,7 @@ feature 'Creating a new Work', :js do
       check('agreement')
       click_on('Save')
 
-      expect(page).to have_content('My Test Work (Generic Work)')
+      expect(page).to have_content('My Test Work')
       expect(page).to have_content "Your files are being processed by Sufia in the background."
 
       click_link('Dashboard')
