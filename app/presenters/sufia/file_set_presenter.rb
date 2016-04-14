@@ -22,12 +22,6 @@ module Sufia
       solr_document.rights.first
     end
 
-    def related_files
-      # TODO: support related_files. Maybe.
-      # See https://github.com/projecthydra/sufia/issues/1478
-      []
-    end
-
     # Add a schema.org itemtype
     def itemtype
       # Look up the first non-empty resource type value in a hash from the config
