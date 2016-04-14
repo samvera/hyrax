@@ -21,7 +21,7 @@ module CurationConcerns
     def ingest_file(file)
       working_file = copy_file_to_working_directory(file, file_set.id)
       mime_type = file.respond_to?(:content_type) ? file.content_type : nil
-      IngestFileJob.perform_later(file_set, working_file, mime_type, user.user_key, relation)
+      IngestFileJob.perform_later(file_set, working_file, mime_type, user, relation)
       make_derivative(file_set, working_file)
       true
     end
