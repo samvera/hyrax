@@ -20,9 +20,6 @@ feature 'Creating a new Work', :js do
     it 'creates the work' do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
-      expect(page).to have_content "Start upload"
-      expect(page).to have_content "Cancel upload"
-
       # Capybara/poltergeist don't dependably upload files, so we'll stub out the results of the uploader:
       page.execute_script(%{$("#new_generic_work").append('<input name="uploaded_files[]" value="#{uploaded_file1.id}" type="hidden">').append('<input name="uploaded_files[]" value="#{uploaded_file2.id}" type="hidden">');})
       # attach_file("files[]", File.dirname(__FILE__) + "/../../spec/fixtures/image.jp2", visible: false)
@@ -56,8 +53,6 @@ feature 'Creating a new Work', :js do
     it "allows on-behalf-of deposit" do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
-      expect(page).to have_content "Start upload"
-      expect(page).to have_content "Cancel upload"
 
       # Capybara/poltergeist don't dependably upload files, so we'll stub out the results of the uploader:
       page.execute_script(%{$("#new_generic_work").append('<input name="uploaded_files[]" value="#{uploaded_file1.id}" type="hidden">').append('<input name="uploaded_files[]" value="#{uploaded_file2.id}" type="hidden">');})
