@@ -9,7 +9,7 @@
             <% end %>
           </td>
           <td>
-            <%= link_to display_title(t), curation_concerns_generic_work_path(t) %>
+            <%= link_to t.to_s, curation_concerns_generic_work_path(t) %>
             <% if current_user == @user %>
               <%= display_trophy_link current_user, t.id, class: 'glyphicon glyphicon-star', data: {removerow: true} do %>
                 <i class='trophy-on glyphicon glyphicon-remove'></i>

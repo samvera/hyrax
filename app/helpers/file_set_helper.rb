@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 module FileSetHelper
-  def display_title(fs)
-    fs.to_s
-  end
-
   def present_terms(presenter, terms = :all, &block)
     terms = presenter.terms if terms == :all
     Sufia::PresenterRenderer.new(presenter, self).fields(terms, &block)
