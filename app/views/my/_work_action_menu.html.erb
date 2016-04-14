@@ -23,7 +23,7 @@
     </li>
 
     <li role="menuitem" tabindex="-1">
-      <%= display_trophy_link(@user, document.id) do |text| %>
+      <%= display_trophy_link(current_user, document.id) do |text| %>
         <i class='glyphicon glyphicon-star'></i> <%= text %>
       <% end %>
     </li>
