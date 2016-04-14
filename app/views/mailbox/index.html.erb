@@ -5,6 +5,4 @@
             title: 'Delete all user notifications' do %>
   <i class="glyphicon glyphicon-trash"></i> Delete All
 <% end %>
-<div>
-  <%= render partial: "mailbox/notifications", locals: { messages: @messages } %>   
-</div>
+<%= render "mailbox/notifications", messages: @messages %>   
