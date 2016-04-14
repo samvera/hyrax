@@ -51,12 +51,6 @@ h4 .small {
   }
 }
 
-.table-zebra-striped tbody > tr.zebra:nth-child(odd) > td,
-.table-zebra-striped tbody > tr.zebra:nth-child(odd) + tr > td,
-.table-zebra-striped tbody > tr.zebra:nth-child(odd) > th {
-  background-color: #f9f9f9;
-}
-
 .file_listing_thumbnail {
   width: 64px;
 }

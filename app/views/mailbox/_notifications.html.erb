@@ -4,19 +4,24 @@
       <th><%= t('sufia.mailbox.date') %></th>
       <th><%= t('sufia.mailbox.subject') %></th>
       <th><%= t('sufia.mailbox.message') %></th>
-      <th class="sr-only"><%= t('sufia.mailbox.delete') %></th>
+      <th><span class="sr-only"><%= t('sufia.mailbox.delete') %></span></th>
     </tr>
   </thead> 
   <tbody> 
     <% messages.each do |msg| %> 
-      <%= content_tag :tr, class: cycle("","zebra") do %>
+      <tr>
         <td><%= (time_ago_in_words(msg.last_message.created_at) + " ago") %></td>
         <td><%= msg.last_message.subject.html_safe %></td> 
         <td><%= msg.last_message.body.html_safe %></td> 
         <td>
-          <%= link_to raw('<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>'), sufia.notification_path(msg.id), class: "itemicon itemtrash", title: "Delete Message", method: :delete %>
+          <%= link_to sufia.notification_path(msg.id),
+                      class: "itemicon itemtrash",
+                      title: "Delete Message",
+                      method: :delete do %>
+            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+          <% end %>
         </td>
-      <% end %>
+      </tr>
     <% end %> 
   </tbody> 
 </table>
