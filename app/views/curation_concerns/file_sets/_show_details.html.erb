@@ -8,12 +8,6 @@
   <dd itemprop="dateModified"><%= @presenter.date_modified %></dd>
   <dt>Audit Status</dt>
   <dd><%= @presenter.audit_status %></dd>
-  <% unless @presenter.related_files.empty? %>
-  <dt>Related Files</dt>
-      <% @presenter.related_files.each do |f| %>
-          <dd><%= link_to(f.label, sufia.file_set_url(f)) %></dd>
-      <% end %>
-  <% end %>
   <dt>Characterization</dt>
   <dd>
     <% if @presenter.characterized? %>
