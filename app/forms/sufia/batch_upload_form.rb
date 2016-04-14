@@ -3,7 +3,7 @@ module Sufia
     self.model_class = ::GenericWork
     include HydraEditor::Form::Permissions
 
-    self.terms -= [:title]
+    self.terms -= [:title, :resource_type]
 
     # On the batch upload, title is set per-file.
     def primary_terms

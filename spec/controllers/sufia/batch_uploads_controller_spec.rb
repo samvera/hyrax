@@ -19,9 +19,11 @@ describe Sufia::BatchUploadsController do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
                 { '1' => 'foo' },
+                { '1' => 'Article' },
                 ['1'],
                 tag: [], visibility: 'open')
         post :create, title: { '1' => 'foo' },
+                      resource_type: { '1' => 'Article' },
                       uploaded_files: ['1'],
                       generic_work: { tag: [""], visibility: 'open' }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path

@@ -44,6 +44,7 @@ module Sufia
       def create_update_job
         BatchCreateJob.perform_later(current_user,
                                      params[:title],
+                                     params[:resource_type],
                                      params[:uploaded_files],
                                      attributes_for_actor)
       end
