@@ -34,9 +34,9 @@
         url: '/uploads/',
         type: 'POST'
       })
-      // .bind('fileuploadprocessfail', function (e, data) {
-      //   console.log('Processing ' + data.files[data.index].name + ' failed.');
-      // })
+      .bind('fileuploadadded', function (e, data) {
+        $(e.currentTarget).find('button.cancel').removeClass('hidden');
+      });
     }
   });
 })(jQuery);
