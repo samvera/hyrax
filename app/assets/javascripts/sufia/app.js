@@ -2,13 +2,13 @@
 // code should be called from here.
 Sufia = {
   initialize: function() {
-    this.save_work_control();
+    this.saveWorkControl();
     this.popovers();
     this.permissions();
     this.notifications();
   },
 
-  save_work_control: function() {
+  saveWorkControl: function() {
     var sw = require('sufia/save_work/save_work_control');
     new sw.SaveWorkControl($("#form-progress")).activate();
   },
@@ -18,7 +18,6 @@ Sufia = {
     $("a[data-toggle=popover]").popover({ html: true })
 				 .click(function() { return false; });
   },
-
 
   permissions: function() {
     var perm = require('sufia/permissions/control');
