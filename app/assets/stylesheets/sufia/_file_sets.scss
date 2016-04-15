@@ -1,7 +1,5 @@
 @import 'fileupload/jquery.fileupload-ui.css';
 
-#upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
-
 button.close {
     display: block;
 }
@@ -12,9 +10,6 @@ overflow-x: auto;
 }
 
 label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
-
-/* These were from batch_edit/edit.html.erb */
-#upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
 
 .fileHeight {
   max-height: 8em;

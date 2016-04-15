@@ -45,5 +45,23 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
         expect(page).not_to have_selector 'select#generic_work_on_behalf_of'
       end
     end
+
+    context "with active deposit agreement" do
+      it "shows accept text" do
+        expect(page).to have_content 'I have read and agree to the'
+        expect(page).to have_link 'Deposit Agreement', href: '/agreement'
+      end
+    end
+
+    context "with passive deposit agreement" do
+      before do
+        allow(Sufia::Engine.config).to receive(:active_deposit_agreement_acceptance)
+          .and_return(false)
+      end
+      it "shows accept text" do
+        expect(page).to have_content 'By saving this work I agree to the'
+        expect(page).to have_link 'Deposit Agreement', href: '/agreement'
+      end
+    end
   end
 end

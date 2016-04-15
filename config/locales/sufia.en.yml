@@ -10,9 +10,10 @@ en:
     collection:
        add_work:        "Add Work"
        select_works:    "Select Works"
-    deposit_agreement:  "Sufia's Deposit Agreement"
+    passive_consent_to_agreement: "By saving this work I agree to the"
+    active_consent_to_agreement:  "I have read and agree to the"
+    deposit_agreement:  "Deposit Agreement"
     document_language:  "en"
-    upload_tooltip:     "Please accept Deposit Agreement before you can upload."
     share_button:       "Share Your Work"
     view_profile:       "View Profile"
     edit_profile:       "Edit Profile"
