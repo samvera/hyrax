@@ -19,6 +19,16 @@ header > h1 > .label {
   }
 }
 
+.relationships, .attributes {
+  tbody th {
+    width: 20%;
+  }
+}
+
+ul.tabular {
+  list-style: none;
+}
+
 .show-actions {
   padding: $panel-body-padding;
   // text-align: center;
