@@ -1,10 +1,12 @@
 <% provide :page_title, @presenter.page_title %>
 <div itemscope itemtype="http://schema.org/CreativeWork" class="row">
-  <div class="col-sm-8">
+  <div class="col-xs-12">
     <header>
       <h1><%= @presenter %> <%= @presenter.permission_badge %></h1>
-      <p class="work_description"><%= @presenter.description %></p>
     </header>
+  </div>
+  <div class="col-sm-8">
+    <p class="work_description"><%= @presenter.description %></p>
     <%= render 'relationships', presenter: @presenter %>
     <%= render 'metadata', presenter: @presenter %>
   </div>
