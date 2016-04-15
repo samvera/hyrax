@@ -23,12 +23,16 @@
           <% if Sufia::Engine.config.active_deposit_agreement_acceptance %>
             <label>
               <%= check_box_tag 'agreement' %>
-              I have read and do agree to the<br>
-              Deposit Agreement
+              <%= t('sufia.active_consent_to_agreement') %><br>
+              <%= link_to t('sufia.deposit_agreement'),
+                          sufia.static_path('agreement'),
+                          target: '_blank' %>
             </label>
           <% else %>
-            By saving this work I agree to the<br>
-            Deposit Agreement
+            <%= t('sufia.passive_consent_to_agreement') %><br>
+            <%= link_to t('sufia.deposit_agreement'),
+                        sufia.static_path('agreement'),
+                        target: '_blank' %>
           <% end %>
           <br>
           <%= link_to t(:'helpers.action.cancel'),
