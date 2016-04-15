@@ -41,7 +41,6 @@
 //= require sufia/ga_events
 //= require sufia/select_submit
 //= require sufia/tabs
-//= require sufia/transfers
 //= require sufia/user_search
 //= require sufia/proxy_rights
 //= require sufia/sorting

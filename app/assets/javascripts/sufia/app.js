@@ -6,6 +6,7 @@ Sufia = {
     this.popovers();
     this.permissions();
     this.notifications();
+    this.transfers();
   },
 
   saveWorkControl: function() {
@@ -32,6 +33,10 @@ Sufia = {
       var url = $(this).data('update-poll-url');
       new note.Notifications(url, interval);
     });
+  },
+
+  transfers: function() {
+    $("#proxy_deposit_request_transfer_to").userSearch();
   }
 };
 
