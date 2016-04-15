@@ -11,6 +11,8 @@ class AttachFilesToWorkJob < ActiveJob::Base
       actor = CurationConcerns::FileSetActor.new(file_set, user)
       actor.create_metadata(work, visibility: work.visibility)
       actor.create_content(uploaded_file.file.current_path)
+      # Set the uri so that we know this uploaded file has been used.
+      uploaded_file.update(file_set_uri: file_set.uri)
     end
   end
 end
