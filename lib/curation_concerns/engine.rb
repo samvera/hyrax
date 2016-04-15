@@ -1,6 +1,5 @@
 # Load blacklight which will give curation_concerns views a higher preference than those in blacklight
 require 'blacklight'
-require 'curation_concerns/models'
 require 'hydra-editor'
 require 'jquery-ui-rails'
 require 'qa'
