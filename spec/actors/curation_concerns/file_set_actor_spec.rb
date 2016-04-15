@@ -22,7 +22,7 @@ describe CurationConcerns::FileSetActor do
 
     before do
       expect(CharacterizeJob).to receive(:perform_later)
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user.user_key, 'original_file')
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata(work)
       actor.create_content(uploaded_file)
@@ -68,14 +68,14 @@ describe CurationConcerns::FileSetActor do
   describe '#create_content' do
     it 'calls ingest file job' do
       expect(CharacterizeJob).to receive(:perform_later)
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user.user_key, 'original_file')
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       actor.create_content(uploaded_file)
     end
 
     context 'when an alternative relationship is specified' do
       it 'calls ingest file job' do
         expect(CharacterizeJob).to receive(:perform_later)
-        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user.user_key, 'remastered')
+        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'remastered')
         actor.create_content(uploaded_file, 'remastered')
       end
     end

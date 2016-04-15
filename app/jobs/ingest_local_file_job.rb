@@ -1,20 +1,19 @@
 class IngestLocalFileJob < ActiveJob::Base
   queue_as :ingest_local
 
-  def perform(file_set_id, directory, filename, user_key)
-    user = User.find_by_user_key(user_key)
-    fail "Unable to find user for #{user_key}" unless user
-    file_set = FileSet.find(file_set_id)
-    file_set.label ||= filename
-    path = File.join(directory, filename)
+  # @param [FileSet] file_set
+  # @param [String] path
+  # @param [User] user
+  def perform(file_set, path, user)
+    file_set.label ||= File.basename(path)
 
     actor = CurationConcerns::FileSetActor.new(file_set, user)
 
     if actor.create_content(File.open(path))
       FileUtils.rm(path)
-      CurationConcerns.config.callback.run(:after_import_local_file_success, file_set, user, filename)
+      CurationConcerns.config.callback.run(:after_import_local_file_success, file_set, user, path)
     else
-      CurationConcerns.config.callback.run(:after_import_local_file_failure, file_set, user, filename)
+      CurationConcerns.config.callback.run(:after_import_local_file_failure, file_set, user, path)
     end
   end
 end

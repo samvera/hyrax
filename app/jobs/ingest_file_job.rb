@@ -4,9 +4,9 @@ class IngestFileJob < ActiveJob::Base
   # @param [FileSet] file_set
   # @param [String] filename
   # @param [String,NilClass] mime_type
-  # @param [String] user_key
+  # @param [User] user
   # @param [String] relation ('original_file')
-  def perform(file_set, filename, mime_type, user_key, relation = 'original_file')
+  def perform(file_set, filename, mime_type, user, relation = 'original_file')
     file = File.open(filename, "rb")
     # If mime-type is known, wrap in an IO decorator
     # Otherwise allow Hydra::Works service to determine mime_type
@@ -23,7 +23,6 @@ class IngestFileJob < ActiveJob::Base
     file_set.save!
 
     # Do post file ingest actions
-    user = User.find_by_user_key(user_key)
     CurationConcerns::VersioningService.create(file_set.send(relation.to_sym), user)
     CurationConcerns.config.callback.run(:after_create_content, file_set, user)
   end

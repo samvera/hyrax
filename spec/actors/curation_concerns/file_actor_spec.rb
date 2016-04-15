@@ -11,7 +11,7 @@ describe CurationConcerns::FileActor do
   describe '#ingest_file' do
     it 'calls ingest file job' do
       expect(CharacterizeJob).to receive(:perform_later)
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user.user_key, 'remastered')
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'remastered')
       actor.ingest_file(uploaded_file)
     end
   end
