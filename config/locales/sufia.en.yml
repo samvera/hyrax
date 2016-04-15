@@ -163,6 +163,8 @@ en:
         header: Edit Work
       progress:
         header: Save Work
+      show:
+        no_preview: No preview available
     batch_uploads:
       new:
         header: Batch Create New Works
