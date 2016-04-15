@@ -62,9 +62,9 @@ module CurationConcerns
 
       # @return [Array<String>] ids of the collections that this work is a member of
       def in_collection_ids
-        ActiveFedora::SolrService.query("{!field f=ordered_targets_ssim}#{id}",
-                                        fl: 'proxy_in_ssi')
-                                 .map { |x| x.fetch('proxy_in_ssi') }
+        ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
+                                        fl: ActiveFedora.id_field)
+                                 .map { |x| x.fetch(ActiveFedora.id_field) }
       end
 
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
@@ -78,9 +78,9 @@ module CurationConcerns
       # in order.
       def file_set_ids
         ActiveFedora::SolrService.query("{!field f=has_model_ssim}FileSet",
-                                        fl: "id",
+                                        fl: ActiveFedora.id_field,
                                         fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
-                                 .flat_map { |x| x.fetch("id", []) }
+                                 .flat_map { |x| x.fetch(ActiveFedora.id_field, []) }
       end
   end
 end

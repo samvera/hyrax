@@ -105,7 +105,7 @@ describe CurationConcerns::WorkShowPresenter do
     let(:attributes) { obj.to_solr }
 
     before do
-      collection.ordered_members << obj
+      collection.members << obj
       collection.save!
       obj.save!
     end
