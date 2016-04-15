@@ -4,6 +4,14 @@ module CurationConcerns
     include PresentsAttributes
     attr_accessor :solr_document, :current_ability
 
+    class_attribute :collection_presenter_class, :file_presenter_class
+
+    # modify this attribute to use an alternate presenter class for the collections
+    self.collection_presenter_class = CollectionPresenter
+
+    # modify this attribute to use an alternate presenter class for the files
+    self.file_presenter_class = FileSetPresenter
+
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     def initialize(solr_document, current_ability)
@@ -43,7 +51,21 @@ module CurationConcerns
                                         current_ability)
     end
 
+    # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
+    def collection_presenters
+      PresenterFactory.build_presenters(in_collection_ids,
+                                        collection_presenter_class,
+                                        current_ability)
+    end
+
     private
+
+      # @return [Array<String>] ids of the collections that this work is a member of
+      def in_collection_ids
+        ActiveFedora::SolrService.query("{!field f=ordered_targets_ssim}#{id}",
+                                        fl: 'proxy_in_ssi')
+                                 .map { |x| x.fetch('proxy_in_ssi') }
+      end
 
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
@@ -59,11 +81,6 @@ module CurationConcerns
                                         fl: "id",
                                         fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
                                  .flat_map { |x| x.fetch("id", []) }
-      end
-
-      # Override this method if you want to use an alternate presenter class for the files
-      def file_presenter_class
-        FileSetPresenter
       end
   end
 end
