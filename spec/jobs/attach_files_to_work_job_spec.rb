@@ -8,12 +8,13 @@ describe AttachFilesToWorkJob do
     let(:uploaded_file2) { UploadedFile.create(file: file2) }
     let(:generic_work) { create(:public_generic_work) }
 
-    it "attaches files and copies visibility" do
+    it "attaches files, copies visibility and updates the uploaded files" do
       expect(CharacterizeJob).to receive(:perform_later).twice
       described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
       generic_work.reload
       expect(generic_work.file_sets.count).to eq 2
       expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
+      expect(uploaded_file1.reload.file_set_uri).not_to be_nil
     end
   end
 end
