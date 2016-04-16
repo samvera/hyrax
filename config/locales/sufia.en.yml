@@ -261,8 +261,8 @@ en:
     base:
       relationships:
         header: Relationships
-        description: "This %{type} is in the following collections:"
         empty:       "This %{type} is not currently in any collections."
+        collections: "In collections:"
       metadata:
         header: Metadata
       items:

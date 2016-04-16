@@ -26,6 +26,7 @@ describe 'curation_concerns/file_sets/_show_actions.html.erb', type: :view do
       Sufia.config.citations = citations
       allow(controller).to receive(:can?).with(:edit, presenter).and_return(false)
       assign(:presenter, presenter)
+      view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
       render
     end
 

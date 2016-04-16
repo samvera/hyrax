@@ -4,6 +4,10 @@
   }
 }
 
+.no-preview, .social-media {
+  padding: $panel-body-padding;
+}
+
 header > h1 > .label {
   font-size: $font-size-base;
   vertical-align: middle;
@@ -17,6 +21,16 @@ header > h1 > .label {
   .citations-list {
     margin-left: 2em;
   }
+}
+
+.relationships, .attributes {
+  tbody th {
+    width: 20%;
+  }
+}
+
+ul.tabular {
+  list-style: none;
 }
 
 .show-actions {
