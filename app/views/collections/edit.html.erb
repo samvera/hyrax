@@ -17,7 +17,7 @@
 <% end %>
 
 <h2>Manage Items in this Collection</h2>
-<%= render 'search_collection_dashboard_form'%>
+<%= render 'search_form', presenter: @collection %>
 <%= render 'my/did_you_mean' %>
 <%= render 'my/facet_selected' %>
 <%= render 'collections/sort_and_per_page', collection: @collection %>
