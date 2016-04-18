@@ -16,7 +16,7 @@
     <%= render 'attributes', presenter: @presenter %>
   <% end %>
 
-  <%= render 'search_form' %>
+  <%= render 'search_form', presenter: @presenter %>
   <%= render 'sort_and_per_page', collection: @presenter %>
 
   <% if has_collection_search_parameters? %>
@@ -28,4 +28,3 @@
 
   <%= render partial: 'paginate' %>
 </div>
-
