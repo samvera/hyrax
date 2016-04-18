@@ -21,21 +21,6 @@ en:
           placeholder: "Type keywords in here"
     bread_crumb:
       works_list: "the works browser"
-    messages:
-      success:
-        single: "has been saved."
-        multiple:
-          link: "These files"
-          tag: "have been saved."
-        title:  "Files uploaded successfully"
-        subject: "Batch upload complete"
-      failure:
-        single: "could not be updated. You do not have sufficient privileges to edit it."
-        multiple:
-          link: "These files"
-          tag: "could not be updated. You do not have sufficient privileges to edit them."
-        title:  "Files failed"
-        subject: "Batch upload permission denied"
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
