@@ -31,19 +31,9 @@ describe '/_toolbar.html.erb', type: :view do
 
   describe 'Notifications' do
     it 'shows the number of outstanding messages' do
-      assign(:notify_number, 5)
       render
-      expect(rendered).to have_link 'Notifications 5 unread notifications', sufia.notifications_path
-      expect(rendered).to have_selector '.label-danger', text: '5 unread notifications'
-    end
-
-    context 'with no outstanding messages' do
-      it 'shows the number of outstanding messages' do
-        assign(:notify_number, 0)
-        render
-        expect(rendered).to have_link 'Notifications 0 unread notifications', sufia.notifications_path
-        expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
-      end
+      expect(rendered).to have_link 'Notifications 0 unread notifications', sufia.notifications_path
+      expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
     end
   end
 

@@ -4,9 +4,6 @@ module Sufia::Controller
   included do
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
-
-    # TODO: this makes everything slower.  Move this to an Async call.
-    before_action :notifications_number
   end
 
   def current_ability
@@ -16,16 +13,6 @@ module Sufia::Controller
   def render_500(exception)
     logger.error("Rendering 500 page due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
     render template: '/error/500', layout: "error", formats: [:html], status: 500
-  end
-
-  def notifications_number
-    @notify_number = 0
-    @processed_works = []
-    return if action_name == "index" && controller_name == "mailbox"
-    return unless user_signed_in?
-    @notify_number = current_user.mailbox.inbox(unread: true).count
-    # Extract the ids of the upload sets that have completed batch processing
-    @processed_works = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|data-toggle=)(.*)/, 1] }.select { |val| !val.blank? }
   end
 
   # Override Devise method to redirect to dashboard after signing in

@@ -26,7 +26,6 @@
 //= require flot/jquery.flot.selection
 
 //= require batch_edit
-//= require notifications_check
 //
 //= require sufia/app
 //= require sufia/fileupload
@@ -53,6 +52,7 @@
 //= require almond
 //= require sufia/save_work
 //= require sufia/permissions
+//= require sufia/notifications
 
 //= require hydra_collections
 //= require hydra-editor/hydra-editor

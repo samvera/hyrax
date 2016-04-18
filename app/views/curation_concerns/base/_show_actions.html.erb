@@ -2,23 +2,18 @@
   <% if Sufia.config.analytics %>
     <%= link_to "Analytics", presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
   <% end %>
-  <% if presenter.processing? %>
-    <% # Question: Should we disable the buttons instead? %>
-    <p>This work is being processed</p>
-  <% else %>
-    <% if presenter.editor? %>
-        <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
-        <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
-    <% end %>
-    <% if presenter.display_feature_link? %>
-        <%= link_to "Feature", sufia.featured_work_path(presenter, format: :json),
-            data: {behavior: 'feature'}, id: 'featureLink', name: 'featureLink', class: 'btn btn-default' %>
-    <% end %>
-    <% if presenter.display_unfeature_link? %>
-        <%= link_to "Unfeature", sufia.featured_work_path(presenter, format: :json),
-            data: {behavior: 'unfeature'}, id: 'unfeatureLink', name: 'unfeatureLink', class: 'btn btn-default' %>
-    <% end %>
-  <!-- COinS hook for Zotero -->
-    <span class="Z3988" title="<%= export_as_openurl_ctx_kev(presenter) %>"></span>
+  <% if presenter.editor? %>
+      <%= link_to "Edit", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
+      <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
   <% end %>
+  <% if presenter.display_feature_link? %>
+      <%= link_to "Feature", sufia.featured_work_path(presenter, format: :json),
+          data: {behavior: 'feature'}, id: 'featureLink', name: 'featureLink', class: 'btn btn-default' %>
+  <% end %>
+  <% if presenter.display_unfeature_link? %>
+      <%= link_to "Unfeature", sufia.featured_work_path(presenter, format: :json),
+          data: {behavior: 'unfeature'}, id: 'unfeatureLink', name: 'unfeatureLink', class: 'btn btn-default' %>
+  <% end %>
+<!-- COinS hook for Zotero -->
+  <span class="Z3988" title="<%= export_as_openurl_ctx_kev(presenter) %>"></span>
 </div>

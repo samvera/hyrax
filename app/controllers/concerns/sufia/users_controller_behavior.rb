@@ -102,6 +102,13 @@ module Sufia::UsersControllerBehavior
     redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user}"
   end
 
+  def notifications_number
+    @notify_number = 0
+    return if action_name == "index" && controller_name == "mailbox"
+    return unless user_signed_in?
+    @notify_number = current_user.mailbox.inbox(unread: true).count
+  end
+
   protected
 
     def user_params
