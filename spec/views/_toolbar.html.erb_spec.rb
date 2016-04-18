@@ -60,7 +60,7 @@ describe '/_toolbar.html.erb', type: :view do
       it "has a link to upload" do
         allow(view).to receive(:can?).with(:create, Collection).and_return(true)
         render
-        expect(rendered).to have_link('New Collection', href: collections.new_collection_path)
+        expect(rendered).to have_link('New Collection', href: new_collection_path)
       end
     end
 

@@ -3,12 +3,12 @@
   <td width="3%"></td>
   <td width="41%">
     <div class="media">
-      <%= link_to [collections, document], class: "pull-left", "aria-hidden" => true do %>
+      <%= link_to document, class: "pull-left", "aria-hidden" => true do %>
           <span class="fa fa-cubes collection-icon-small"></span>
       <% end %>
       <div class="media-body">
         <div class="media-heading">
-          <%= link_to  collections.collection_path(id), id: "src_copy_link#{id}" do %>
+          <%= link_to collection_path(id), id: "src_copy_link#{id}" do %>
               <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
           <% end %>

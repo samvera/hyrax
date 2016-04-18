@@ -145,9 +145,6 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # Collections routes
-  mount Hydra::Collections::Engine => '/'
-
   # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
   # has been defined in the initalizers.
   if defined?(Sufia::ResqueAdmin)
