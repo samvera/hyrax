@@ -5,6 +5,7 @@ Sufia = {
     this.save_work_control();
     this.popovers();
     this.permissions();
+    this.notifications();
   },
 
   save_work_control: function() {
@@ -23,6 +24,15 @@ Sufia = {
     var perm = require('sufia/permissions/control');
     new perm.PermissionsControl($("#share"), 'generic_work', 'tmpl-work-grant');
     new perm.PermissionsControl($("#permission"), 'file_set', 'tmpl-file-set-grant');
+  },
+
+  notifications: function() {
+    var note = require('sufia/notifications');
+    $('[data-update-poll-url]').each(function() {
+      var interval = $(this).data('update-poll-interval');
+      var url = $(this).data('update-poll-url');
+      new note.Notifications(url, interval);
+    });
   }
 };
 
