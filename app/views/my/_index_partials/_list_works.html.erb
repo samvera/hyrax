@@ -2,11 +2,7 @@
 
   <td>
     <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("sufia.dashboard.my.sr.batch_checkbox")%></label>
-    <% if presenter.processing? %>
-      <i class="glyphicon glyphicon-time <%= 'ss-'+presenter.upload_set_id %>"/>
-    <% else %>
-      <%= batch_edit_select(document) %>&nbsp;
-    <% end %>
+    <%= batch_edit_select(document) %>&nbsp;
   </td>
 
   <td>

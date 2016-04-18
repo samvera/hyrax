@@ -33,11 +33,6 @@ module Sufia
       'http://schema.org/CreativeWork'
     end
 
-    def processing?
-      # TODO: Do we need to collect and summarize procesing of attached files?
-      false
-    end
-
     def stats_path
       Sufia::Engine.routes.url_helpers.stats_work_path(self)
     end

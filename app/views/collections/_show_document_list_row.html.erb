@@ -2,9 +2,7 @@
 <% presenter = document.is_a?(GenericWork) ? Sufia::WorkShowPresenter.new(document, nil) : nil %>
 <tr id="document_<%= id %>">
   <td>&nbsp;
-    <% if presenter && presenter.processing? %>
-      <i class="glyphicon glyphicon-time <%= 'ss-'+presenter.upload_set_id %>"/>
-    <% elsif current_user and document.depositor != current_user.user_key %>
+    <% if current_user and document.depositor != current_user.user_key %>
       <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>

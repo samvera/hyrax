@@ -15,26 +15,6 @@ describe My::WorksController, type: :controller do
     end
   end
 
-  describe "upload_set processing" do
-    include CurationConcerns::Messages
-    let(:upload_set_id) { "upload_set_id" }
-    let(:upload_set_id2) { "upload_set_id2" }
-    let(:upload_set) { double }
-
-    before do
-      allow(upload_set).to receive(:id).and_return(upload_set_id)
-      User.batchuser.send_message(user, single_success(upload_set_id, upload_set), success_subject, false)
-      User.batchuser.send_message(user, multiple_success(upload_set_id2, [upload_set]), success_subject, false)
-      get :index
-    end
-
-    it "gets processed_works that are complete" do
-      expect(assigns(:processed_works).count).to eq(2)
-      expect(assigns(:processed_works)).to include("ss-" + upload_set_id)
-      expect(assigns(:processed_works)).to include("ss-" + upload_set_id2)
-    end
-  end
-
   context 'with different types of records' do
     let(:someone_else) { create(:user) }
 

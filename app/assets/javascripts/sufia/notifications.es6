@@ -6,13 +6,30 @@ export class Notifications {
   constructor(url, default_interval) {
     if (!url)
       return;
-    console.log(url);
+    // First call happens immediately
+    this.fetchUpdates(url)
     let interval = this.getIntervalSeconds(default_interval) * 1000
     this.poller(interval, url)
   }
 
   poller(interval, url) {
-    setInterval(() => { console.log("again"); $.getScript(url) }, interval);
+    setInterval(() => { this.fetchUpdates(url) }, interval);
+  }
+
+  fetchUpdates(url) {
+    $.getJSON( url, (data) => this.updatePage(data))
+  }
+
+  updatePage(data) {
+    let notification = $('#notify_number')
+    notification.find('.count').html(data.notify_number)
+    if (data.notify_number == 0) {
+      notification.addClass('label-default')
+      notification.removeClass('label-danger')
+    } else {
+      notification.addClass('label-danger')
+      notification.removeClass('label-default')
+    }
   }
 
   getIntervalSeconds(default_interval) {
