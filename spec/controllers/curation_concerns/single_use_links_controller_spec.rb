@@ -21,17 +21,17 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
     describe "GET 'download'" do
       it "and_return http success" do
-        get 'new_download', id: file
+        post 'create_download', id: file
         expect(response).to be_success
-        expect(assigns[:link]).to eq routes.url_helpers.download_single_use_link_path(hash)
+        expect(response.body).to eq download_single_use_link_url(hash)
       end
     end
 
     describe "GET 'show'" do
       it "and_return http success" do
-        get 'new_show', id: file
+        post 'create_show', id: file
         expect(response).to be_success
-        expect(assigns[:link]).to eq routes.url_helpers.show_single_use_link_path(hash)
+        expect(response.body).to eq show_single_use_link_url(hash)
       end
     end
   end
@@ -40,22 +40,22 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
     before do
       @other_user = create(:user)
       file.read_users << @other_user
-      file.save
+      file.save!
       sign_in @other_user
       file.read_users << @other_user
-      file.save
+      file.save!
     end
 
     describe "GET 'download'" do
       it "and_return http success" do
-        get 'new_download', id: file
+        post 'create_download', id: file
         expect(response).not_to be_success
       end
     end
 
     describe "GET 'show'" do
       it "and_return http success" do
-        get 'new_show', id: file
+        post 'create_show', id: file
         expect(response).not_to be_success
       end
     end
@@ -64,14 +64,14 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
   describe "unknown user" do
     describe "GET 'download'" do
       it "and_return http failure" do
-        get 'new_download', id: file
+        post 'create_download', id: file
         expect(response).not_to be_success
       end
     end
 
     describe "GET 'show'" do
       it "and_return http failure" do
-        get 'new_show', id: file
+        post 'create_show', id: file
         expect(response).not_to be_success
       end
     end
