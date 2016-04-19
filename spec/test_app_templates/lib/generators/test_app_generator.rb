@@ -12,8 +12,8 @@ class TestAppGenerator < Rails::Generators::Base
               "gem 'web-console'", "# gem 'web-console'"
   end
 
-  def browse_everything_config
-    generate "browse_everything:config"
+  def browse_everything_install
+    generate "browse_everything:install"
   end
 
   def banner
