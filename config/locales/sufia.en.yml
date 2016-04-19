@@ -182,6 +182,7 @@ en:
         create: "Create Collection"
         update: "Update Collection"
         create_new: "Add to new Collection"
+      manage_items: "Manage Items in this Collection"
       metadata:
         add_another_keyword: "add another Keyword"
         add_another_creator: "add another Creator"
