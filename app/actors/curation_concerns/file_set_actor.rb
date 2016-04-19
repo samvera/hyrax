@@ -76,6 +76,7 @@ module CurationConcerns
     end
 
     def destroy
+      unlink_from_work
       file_set.destroy
       CurationConcerns.config.callback.run(:after_destroy, file_set.id, user)
     end
@@ -141,6 +142,18 @@ module CurationConcerns
       def set_thumbnail(work, file_set)
         return unless work.thumbnail_id.blank?
         work.thumbnail = file_set
+      end
+
+      def unlink_from_work
+        work = file_set.in_works.first
+        return unless work && (work.thumbnail_id == file_set.id || work.representative_id == file_set.id)
+        # This is required to clear the thumbnail_id and representative_id fields on the work
+        # and force it to be re-solrized. Although ActiveFedora::Aggregation clears the
+        # children nodes it leaves the GenericWork.thumbnail_id and GenericWork.representative_id
+        # fields in Solr populated.
+        work.thumbnail = nil if work.thumbnail_id == file_set.id
+        work.representative = nil if work.representative_id == file_set.id
+        work.save!
       end
   end
 end
