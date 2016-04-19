@@ -15,24 +15,14 @@ module CurationConcerns
       end
     end
 
-    def new_download
+    def create_download
       @su = SingleUseLink.create itemId: params[:id], path: main_app.download_path(id: asset)
-      @link = curation_concerns.download_single_use_link_path(@su.downloadKey)
-
-      respond_to do |format|
-        format.html
-        format.js { render js: @link }
-      end
+      render text: curation_concerns.download_single_use_link_url(@su.downloadKey)
     end
 
-    def new_show
+    def create_show
       @su = SingleUseLink.create itemId: params[:id], path: polymorphic_path([main_app, asset])
-      @link = curation_concerns.show_single_use_link_path(@su.downloadKey)
-
-      respond_to do |format|
-        format.html
-        format.js { render js: @link }
-      end
+      render text: curation_concerns.show_single_use_link_url(@su.downloadKey)
     end
 
     protected
