@@ -1,6 +1,5 @@
 class BatchCreateJob < ActiveJob::Base
   include Hydra::PermissionsQuery
-  include CurationConcerns::Messages
 
   queue_as :batch_create
 
