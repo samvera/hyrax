@@ -1,10 +1,10 @@
 <li>
   <h2>
-    <%= link_to collection.title_or_label, [collections, collection] %>
+    <%= link_to collection.title_or_label, collection %>
   </h2>
   <div class="row">
     <div class="col-sm-3">
-      <%= link_to [collections, collection] do %>
+      <%= link_to collection do %>
           <span class="fa fa-cubes collection-icon-search"></span>
       <% end %>
     </div>
