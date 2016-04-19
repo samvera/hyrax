@@ -2,13 +2,14 @@
 // code should be called from here.
 Sufia = {
   initialize: function() {
-    this.save_work_control();
+    this.saveWorkControl();
     this.popovers();
     this.permissions();
     this.notifications();
+    this.transfers();
   },
 
-  save_work_control: function() {
+  saveWorkControl: function() {
     var sw = require('sufia/save_work/save_work_control');
     new sw.SaveWorkControl($("#form-progress")).activate();
   },
@@ -18,7 +19,6 @@ Sufia = {
     $("a[data-toggle=popover]").popover({ html: true })
 				 .click(function() { return false; });
   },
-
 
   permissions: function() {
     var perm = require('sufia/permissions/control');
@@ -33,6 +33,10 @@ Sufia = {
       var url = $(this).data('update-poll-url');
       new note.Notifications(url, interval);
     });
+  },
+
+  transfers: function() {
+    $("#proxy_deposit_request_transfer_to").userSearch();
   }
 };
 
