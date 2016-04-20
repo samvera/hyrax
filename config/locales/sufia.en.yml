@@ -17,6 +17,7 @@ en:
     share_button:       "Share Your Work"
     view_profile:       "View Profile"
     edit_profile:       "Edit Profile"
+    single_use_link:    "Single-Use Link to File"
     directory:
       suffix:           "@example.org"
     search:

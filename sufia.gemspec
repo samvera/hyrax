@@ -45,7 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'kaminari_route_prefix'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
-  spec.add_dependency 'zeroclipboard-rails', '~> 0.1'
+  spec.add_dependency 'zeroclipboard-rails', '~> 0.0.13'
 
   spec.add_development_dependency 'engine_cart', '~> 0.8'
   spec.add_development_dependency 'mida', '~> 0.3'
