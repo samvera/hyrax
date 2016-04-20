@@ -48,4 +48,8 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
   def install_assets
     generate "sufia:assets"
   end
+
+  def install_batch_edit
+    generate "hydra_batch_edit:install"
+  end
 end
