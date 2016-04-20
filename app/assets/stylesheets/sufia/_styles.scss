@@ -10,6 +10,21 @@
   margin: 20px;
 }
 
+/* Backport from Bootstrap 4.  Remove when app is Bootstrap 4 native. */
+.m-t-0 {
+  margin-top: 0 !important;
+}
+.m-t-1 {
+  margin-top: $padding-large-vertical !important;
+}
+.m-t-2 {
+  margin-top: ($padding-large-vertical * 1.5) !important;
+}
+.m-t-3 {
+  margin-top: ($padding-large-vertical * 3) !important;
+}
+/* End Backport */
+
 .modal-title {
   @extend h2
 }
