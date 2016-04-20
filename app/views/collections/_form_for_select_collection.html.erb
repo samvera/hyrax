@@ -23,10 +23,10 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <% if user_collections.blank? %>
-            <%= button_for_create_collection %>
+            <%= render '/collections/button_create_collection', label: 'Create Collection' %>
           <% else %> 
-            <%= button_for_update_collection %>
-            <%= button_for_create_collection "Add to new Collection" %>
+            <%= render '/collections/button_for_update_collection', label: 'Update Collection', collection_id: 'collection_replace_id' %>
+            <%= render '/collections/button_create_collection', label: 'Add to new Collection' %>
           <% end %> 
         </div>
       </div><!-- /.modal-content -->
