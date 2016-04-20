@@ -181,6 +181,14 @@ describe CollectionsController do
           expect(assigns[:presenter].title).to eq 'Collection Title'
         end
       end
+      context 'when the page parameter is passed' do
+        it 'loads the collection (paying no attention to the page param)' do
+          get :show, id: collection, page: '2'
+          expect(response).to be_successful
+          expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
+          expect(assigns[:presenter].title).to eq 'Collection Title'
+        end
+      end
     end
 
     context 'not signed in' do
