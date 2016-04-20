@@ -441,10 +441,10 @@ Sufia provides built-in support for the [browse-everything](https://github.com/p
 [Skydrive](https://skydrive.live.com/), [Google Drive](http://drive.google.com),
 [Box](http://www.box.com), and a server-side directory share.
 
-To activate browse-everything in your sufia app, run the browse-everything config generator
+To activate browse-everything in your sufia app, run the browse-everything install generator
 
 ```
-rails g browse_everything:config
+rails g browse_everything:install
 ```
 
 This will generate a file at _config/browse_everything_providers.yml_. Open that file and enter the API keys for the providers that you want to support in your app.  For more info on configuring browse-everything, go to the [project page](https://github.com/projecthydra/browse-everything) on github.
