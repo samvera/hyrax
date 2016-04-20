@@ -267,6 +267,9 @@ en:
         collections: "In collections:"
       metadata:
         header: Metadata
+        no_metadata: "No metadata is defined for this work."
+        attribute_name_label: Attribute Name
+        attribute_values_label: Values
       items:
         header: Items
         empty:  "This %{type} has no files associated with it. You can add one using the \"Attach a File\" button below."
