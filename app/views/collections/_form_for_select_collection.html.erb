@@ -28,10 +28,11 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("sufia.collection.select_form.close")%></button>
           <% if user_collections.blank? %>
-            <%= button_for_create_collection t("sufia.collection.select_form.create") %>
+            <%= render '/collections/button_create_collection', label: t("sufia.collection.select_form.create") %>
+            
           <% else %>
-            <%= button_for_update_collection t("sufia.collection.select_form.update") %>
-            <%= button_for_create_collection t("sufia.collection.select_form.create_new") %>
+            <%= render '/collections/button_for_update_collection', label: t("sufia.collection.select_form.update"), collection_id: 'collection_replace_id' %>
+            <%= render '/collections/button_create_collection', label: t("sufia.collection.select_form.create_new") %>
           <% end %>
         </div>
       </div><!-- /.modal-content -->

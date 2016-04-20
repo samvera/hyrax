@@ -2,7 +2,7 @@
 
   <td>
     <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("sufia.dashboard.my.sr.batch_checkbox")%></label>
-    <%= batch_edit_select(document) %>&nbsp;
+    <%= render '/batch_select/add_button', document: document %>&nbsp;
   </td>
 
   <td>
