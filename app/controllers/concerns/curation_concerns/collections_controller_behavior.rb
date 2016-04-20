@@ -160,7 +160,7 @@ module CurationConcerns
       end
 
       def collection_search_builder
-        collection_search_builder_class.new(self).with(params.except(:q)).tap do |builder|
+        collection_search_builder_class.new(self).with(params.except(:q, :page)).tap do |builder|
           builder.current_ability = current_ability
         end
       end
