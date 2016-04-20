@@ -1,5 +1,5 @@
 # Given the id of a GenericWork, finds its parent collections
-class ParentCollectionSearchBuilder < Hydra::Collections::SearchBuilder
+class ParentCollectionSearchBuilder < CurationConcerns::CollectionSearchBuilder
   delegate :item, to: :scope
 
   # include filters into the query to only include the collection memebers

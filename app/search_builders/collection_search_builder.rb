@@ -1,5 +1,5 @@
 # Finds the child objects contained within a collection
-class CollectionSearchBuilder < Hydra::Collections::MemberSearchBuilder
+class CollectionSearchBuilder < CurationConcerns::MemberSearchBuilder
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
 
   self.from_field = 'child_object_ids_ssim'

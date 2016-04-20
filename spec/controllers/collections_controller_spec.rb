@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CollectionsController do
-  routes { Hydra::Collections::Engine.routes }
+  routes { Rails.application.routes }
   before { allow_any_instance_of(User).to receive(:groups).and_return([]) }
 
   let(:user)  { create(:user) }
