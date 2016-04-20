@@ -32,9 +32,27 @@ describe 'curation_concerns/base/_form.html.erb' do
     it "has a switch to Batch Upload link" do
       expect(page).to have_link('Batch upload')
     end
+
+    context 'with browse-everything disabled (default)' do
+      before do
+        allow(Sufia.config).to receive(:browse_everything) { nil }
+      end
+      it 'does not render the BE upload widget' do
+        expect(page).not_to have_selector('button#browse-btn')
+      end
+    end
+
+    context 'with browse-everything enabled' do
+      before do
+        allow(Sufia.config).to receive(:browse_everything) { 'not nil' }
+      end
+      it 'renders the BE upload widget' do
+        expect(page).to have_selector('button#browse-btn')
+      end
+    end
   end
 
-  context "for a persited object" do
+  context "for a persisted object" do
     it "routes to the GenericWorkController" do
       expect(page).to have_selector("form[action='/concern/generic_works/456']")
     end
