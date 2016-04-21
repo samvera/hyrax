@@ -44,7 +44,7 @@
 //= require sufia/user_search
 //= require sufia/proxy_rights
 //= require sufia/sorting
-//= require hydra/batch_select
+//= require curation_concerns/batch_select
 //= require sufia/dashboard_actions
 //= require sufia/batch
 // Provide AMD module support
@@ -53,7 +53,7 @@
 //= require sufia/permissions
 //= require sufia/notifications
 
-//= require hydra_collections
+//= require curation_concerns/collections
 //= require hydra-editor/hydra-editor
 //= require browse_everything
 //= require nestable

@@ -3,7 +3,7 @@ module Sufia
     extend ActiveSupport::Concern
     include Hydra::Catalog
     include Hydra::BatchEditBehavior
-    include Hydra::Collections::SelectsCollections
+    include CurationConcerns::SelectsCollections
 
     included do
       include Blacklight::Configurable

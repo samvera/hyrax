@@ -18,10 +18,10 @@ Gem::Specification.new do |spec|
   spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 0.12.0.pre8'
+  spec.add_dependency 'curation_concerns', '~> 0.12.0'
   spec.add_dependency 'active-fedora', '~> 9.10'
   spec.add_dependency 'hydra-works', '~> 0.7'
-  spec.add_dependency 'hydra-batch-edit', '~> 1.1'
+  spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
