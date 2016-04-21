@@ -78,6 +78,20 @@ describe CollectionsController do
     end
   end
 
+  describe '#index' do
+    before { sign_in user }
+    let!(:collection1) { create(:collection, title: ['Beta'], user: user) }
+    let!(:collection2) { create(:collection, title: ['Alpha'], user: user) }
+    let!(:generic_work) { create(:generic_work, user: user) }
+
+    it 'shows a list of collections sorted alphabetically' do
+      get :index
+      expect(response).to be_successful
+      expect(assigns[:document_list].map(&:id)).not_to include generic_work.id
+      expect(assigns[:document_list].map(&:id)).to match_array [collection2.id, collection1.id]
+    end
+  end
+
   describe '#update' do
     before { sign_in user }
 
@@ -134,6 +148,28 @@ describe CollectionsController do
 
         doc = asset_results['response']['docs'].first
         expect(doc['id']).to eq asset2.id
+      end
+    end
+
+    context 'when moving members between collections' do
+      let(:asset1) { create(:generic_work, user: user) }
+      let(:asset2) { create(:generic_work, user: user) }
+      let(:asset3) { create(:generic_work, user: user) }
+      before do
+        collection.members = [asset1, asset2, asset3]
+        collection.save!
+      end
+      let(:collection2) do
+        Collection.create(title: ['Some Collection']) do |col|
+          col.apply_depositor_metadata(user.user_key)
+        end
+      end
+
+      it 'moves the members' do
+        put :update, id: collection, collection: { members: 'move' },
+                     destination_collection_id: collection2, batch_document_ids: [asset2, asset3]
+        expect(collection.reload.members).to eq [asset1]
+        expect(collection2.reload.members).to match_array [asset2, asset3]
       end
     end
 
