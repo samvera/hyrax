@@ -31,10 +31,8 @@
 <tr id="detail_<%= id %>"> <!--  document detail"> -->
   <td colspan="6">
     <dl class="expanded-details row">
-      <dt class="col-xs-3 col-lg-2">File Name:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= link_to document.label, curation_concerns_generic_work_path(document) %></dd>
       <dt class="col-xs-3 col-lg-2">Creator:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= document.creator %></dd>
+      <dd class="col-xs-9 col-lg-4"><%= document.creator.to_sentence %></dd>
       <dt class="col-xs-3 col-lg-2">Depositor:</dt>
       <dd class="col-xs-9 col-lg-4"><%= link_to_profile document.depositor %></dd>
       <dt class="col-xs-3 col-lg-2">Edit Access:</dt>
