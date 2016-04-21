@@ -47,6 +47,7 @@ module Sufia
       end
 
       CurationConcerns::CurationConcern.actor_factory = Sufia::ActorFactory
+      CurationConcerns.config.display_media_download_link = false
     end
 
     initializer 'sufia.assets.precompile' do |app|
