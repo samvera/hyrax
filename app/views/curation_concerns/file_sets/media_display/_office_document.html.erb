@@ -1,9 +1,16 @@
-  <%= link_to main_app.download_path(file_set), target: "_new", title: "Download the document" do %>
+<% if CurationConcerns.config.display_media_download_link %>
+    <%= link_to main_app.download_path(file_set), target: "_new", title: "Download the document" do %>
+        <figure>
+            <%= image_tag main_app.download_path(file_set, file: 'thumbnail'),
+                          class: "img-responsive",
+                          alt: "Download the document #{file_set.to_s}" %>
+            <figcaption>Download the document</figcaption>
+        </figure>
+    <% end %>
+<% else %>
     <figure>
-      <%= image_tag(main_app.download_path(file_set, file: 'thumbnail'),
-                    class: "img-responsive",
-                    alt: "Download the document \"#{file_set.to_s}\""
-                   ) %>
-      <figcaption>Download the document</figcaption>
+        <%= image_tag main_app.download_path(file_set, file: 'thumbnail'),
+                      class: "img-responsive",
+                      alt: "Thumbnail of #{file_set.to_s}" %>
     </figure>
-  <% end %>
+<% end %>

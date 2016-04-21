@@ -49,6 +49,9 @@ CurationConcerns.configure do |config|
   # Specify the prefix for Redis keys:
   # config.redis_namespace = "curation_concerns"
 
+  # Specify whether the media display partial should render a download link
+  # config.display_media_download_link = true
+
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
 

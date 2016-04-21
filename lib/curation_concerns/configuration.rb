@@ -96,6 +96,12 @@ module CurationConcerns
       @redis_namespace ||= 'curation_concerns'
     end
 
+    attr_writer :display_media_download_link
+    def display_media_download_link
+      return @display_media_download_link unless @display_media_download_link.nil?
+      @display_media_download_link = true
+    end
+
     attr_writer :fits_path
     def fits_path
       @fits_path ||= 'fits.sh'
