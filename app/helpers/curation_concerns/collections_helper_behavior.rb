@@ -5,21 +5,6 @@ module CurationConcerns
       !params[:cq].blank?
     end
 
-    # Displays the Collections create collection button.  Put this in your search result page template.  We recommend putting it in catalog/_sort_and_per_page.html.erb
-    def button_for_create_collection(label = 'Create Collection')
-      render '/collections/button_create_collection', label: label
-    end
-
-    # Displays the Collections update collection button.  Put this in your search result page template.  We recommend putting it in catalog/_sort_and_per_page.html.erb
-    def button_for_update_collection(label = 'Update Collection', collection_id = 'collection_replace_id')
-      render '/collections/button_for_update_collection', label: label, collection_id: collection_id
-    end
-
-    # Displays the Collections delete collection button.  Put this in your search result page for each collection found.
-    def button_for_delete_collection(collection, label = 'Delete Collection', confirm = 'Are you sure?')
-      render '/collections/button_for_delete_collection', collection: collection, label: label, confirm: confirm
-    end
-
     def button_for_remove_from_collection(collection, document, label = 'Remove From Collection')
       render '/collections/button_remove_from_collection', collection: collection, label: label, document: document
     end

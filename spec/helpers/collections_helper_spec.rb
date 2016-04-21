@@ -15,47 +15,6 @@ describe CollectionsHelper, type: :helper do
     end
   end
 
-  describe "button_for_create_collection" do
-    it "creates a button to the collections new path" do
-      str = String.new(helper.button_for_create_collection)
-      doc = Nokogiri::HTML(str)
-      form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq(new_collection_path.to_s)
-      i = form.xpath('.//input').first
-      expect(i.attr('type')).to eq('submit')
-    end
-
-    it "creates a button with my text" do
-      str = String.new(helper.button_for_create_collection("Create My Button"))
-      doc = Nokogiri::HTML(str)
-      form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq(new_collection_path.to_s)
-      i = form.xpath('.//input').first
-      expect(i.attr('value')).to eq('Create My Button')
-    end
-  end
-
-  describe "button_for_delete_collection" do
-    let(:collection) { FactoryGirl.create(:collection) }
-
-    it "creates a button to the collections delete path" do
-      str = button_for_delete_collection collection
-      doc = Nokogiri::HTML(str)
-      form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq collection_path(collection)
-      i = form.xpath('.//input')[1]
-      expect(i.attr('type')).to eq('submit')
-    end
-    it "creates a button with my text" do
-      str = button_for_delete_collection collection, "Delete My Button"
-      doc = Nokogiri::HTML(str)
-      form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq collection_path(collection)
-      i = form.xpath('.//input')[1]
-      expect(i.attr('value')).to eq("Delete My Button")
-    end
-  end
-
   describe "button_for_remove_from_collection" do
     let(:item) { double(id: 'changeme:123') }
     let(:collection) { FactoryGirl.create(:collection) }
