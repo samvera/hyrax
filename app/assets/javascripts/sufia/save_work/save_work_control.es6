@@ -29,6 +29,19 @@ export class SaveWorkControl {
   }
 
   /**
+   * Keep the form from submitting (if the return key is pressed)
+   * unless the form is valid.
+   *
+   * This seems to occur when focus is on one of the visibility buttons
+   */
+  preventSubmitUnlessValid() {
+    this.form.on('submit', (evt) => {
+      if (!this.isValid())
+        evt.preventDefault();
+    })
+  }
+
+  /**
    * Is the form for a new object (vs edit an exisiting object)
    */
   get isNew() {
@@ -53,15 +66,19 @@ export class SaveWorkControl {
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
     new VisibilityComponent(this.element.find('.visibility'))
+    this.preventSubmitUnlessValid()
     this.formChanged()
   }
 
   formChanged() {
+    this.saveButton.prop("disabled", !this.isValid());
+  }
+
+  isValid() {
     // avoid short circuit evaluation. The checkboxes should be independent.
     let metadataValid = this.validateMetadata()
     let filesValid = this.validateFiles()
-    let valid = metadataValid && filesValid && this.depositAgreement.isAccepted
-    this.saveButton.prop("disabled", !valid);
+    return metadataValid && filesValid && this.depositAgreement.isAccepted
   }
 
   // sets the metadata indicator to complete/incomplete
