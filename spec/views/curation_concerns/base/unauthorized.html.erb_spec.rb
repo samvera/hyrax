@@ -10,6 +10,13 @@ describe 'curation_concerns/base/unauthorized.html.erb' do
     it "shows a message to the user" do
       expect(rendered).to have_content "Unauthorized The book you have tried to access is private ID: 777"
     end
+
+    context "and the concern is nil" do
+      let(:concern) { nil }
+      it "shows a message to the user" do
+        expect(rendered).to have_content "Unauthorized The page you have tried to access is private"
+      end
+    end
   end
 
   context "when it doesn't respond to curation_concern" do
