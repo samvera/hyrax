@@ -1,16 +1,11 @@
 function getSingleUse(item, fn) {
-  console.log(item)
   var url = $(item).data('generate-single-use-link-url');
   if (!url) {
     alert("No url was provided for generating a single use link");
     return;
   }
   
-  $.ajax({
-    type: 'post',
-    url: url,
-    success: fn
-	});
+  $.post(url, null, null, 'text').done(function(data) { fn(data) })
 }
 
 // A Turbolinks-enabled link has been clicked 
