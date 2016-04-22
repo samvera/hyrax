@@ -1,4 +1,4 @@
-class DepositSearchBuilder < CurationConcerns::SearchBuilder
+class DepositSearchBuilder < ::SearchBuilder
   # includes the depositor_facet to get information on deposits.
   #  use caution when combining this with other searches as it sets the rows to zero to just get the facet information
   # @param solr_parameters the current solr parameters
