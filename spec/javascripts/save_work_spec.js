@@ -6,9 +6,12 @@ describe("SaveWorkControl", function() {
       check: function() { },
       uncheck: function() { },
     };
+    var form = {
+      on: function () { }
+    };
     var element = {
       size: function() { return 1 },
-      closest: function() { return {} },
+      closest: function() { return form },
       data: function() { return }
     };
 
@@ -52,7 +55,10 @@ describe("SaveWorkControl", function() {
       uncheck: function() { },
     };
     var form_id = 'new_generic_work';
-    var form = { attr: function() { return form_id } };
+    var form = {
+      attr: function() { return form_id },
+      on: function() { },
+    };
     var element = {
       size: function() { return 1 },
       closest: function() { return form },
@@ -120,6 +126,33 @@ describe("SaveWorkControl", function() {
       expect(target.requiredMetadata).toBeDefined();
       expect(target.requiredFiles).toBeDefined();
       expect(target.saveButton).toBeDisabled();
+    });
+
+  });
+
+  describe("on submit", function() {
+    var target;
+    beforeEach(function() {
+      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
+      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      target.activate()
+    });
+
+    describe("when the form is invalid", function() {
+      it("prevents submission", function() {
+        var spyEvent = spyOnEvent('#new_generic_work', 'submit');
+        $('#new_generic_work').submit();
+        expect(spyEvent).toHaveBeenPrevented();
+      });
+    });
+
+    describe("when the form is valid", function() {
+      it("prevents submission", function() {
+        var spyEvent = spyOnEvent('#new_generic_work', 'submit');
+        spyOn(target, 'isValid').and.returnValue(true);
+        $('#new_generic_work').submit();
+        expect(spyEvent).not.toHaveBeenPrevented();
+      });
     });
   });
 });
