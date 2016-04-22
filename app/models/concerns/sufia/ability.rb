@@ -14,6 +14,13 @@ module Sufia
       stats_abilities
       citation_abilities
       proxy_deposit_abilities
+      uploaded_file_abilities
+    end
+
+    def uploaded_file_abilities
+      return unless registered_user?
+      can :create, UploadedFile
+      can :destroy, UploadedFile, user: current_user
     end
 
     def proxy_deposit_abilities

@@ -4,8 +4,8 @@ describe AttachFilesToWorkJob do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
-    let(:uploaded_file1) { UploadedFile.create(file: file1) }
-    let(:uploaded_file2) { UploadedFile.create(file: file2) }
+    let(:uploaded_file1) { Sufia::UploadedFile.create(file: file1) }
+    let(:uploaded_file2) { Sufia::UploadedFile.create(file: file2) }
     let(:generic_work) { create(:public_generic_work) }
 
     it "attaches files, copies visibility and updates the uploaded files" do
