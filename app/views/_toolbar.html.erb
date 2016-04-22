@@ -24,12 +24,6 @@
       <ul class="dropdown-menu">
         <li><%= link_to 'My Dashboard', sufia.dashboard_index_path %></li>
         <li class="divider"></li>
-        <li>
-          <%= link_to sufia.notifications_path do %>
-            Notifications
-            <%= render partial: 'users/notify_number' %>
-          <% end %>
-        </li>
         <li><%= link_to 'Transfers', sufia.transfers_path %></li>
         <li class="divider"></li>
         <li><%= link_to 'Highlights', sufia.dashboard_highlights_path %></li>
