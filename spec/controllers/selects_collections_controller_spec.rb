@@ -21,21 +21,6 @@ describe SelectsCollectionsController, type: :controller do
     let!(:collection2) { FactoryGirl.create(:collection, read_users: [user.user_key]) }
     let!(:collection3) { FactoryGirl.create(:collection, edit_users: [user.user_key]) }
     let!(:collection4) { FactoryGirl.create(:collection) }
-    # # collection = Collection.new title:"Test Public"
-    # # collection.apply_depositor_metadata(@user.user_key)
-    # # collection.read_groups = ["public"]
-    # # collection.save
-    # collection2 = Collection.new title:"Test Read"
-    # collection2.apply_depositor_metadata('abc123@test.com')
-    # collection2.read_users = [@user.user_key]
-    # collection2.save
-    # collection3 = Collection.new title:"Test Edit"
-    # collection3.apply_depositor_metadata('abc123@test.com')
-    # collection3.edit_users = [@user.user_key]
-    # collection3.save
-    # collection4 = Collection.new title:"Test No Access"
-    # collection4.apply_depositor_metadata('abc123@test.com')
-    # collection4.save
 
     describe "Public Access" do
       it "only returns public collections" do
@@ -59,8 +44,9 @@ describe SelectsCollectionsController, type: :controller do
 
     describe "Read Access" do
       describe "not signed in" do
-        it "errors if the user is not signed in" do
-          expect { subject.find_collections_with_read_access }.to raise_error
+        it "redirects the user to sign in" do
+          expect(subject).to receive(:authenticate_user!)
+          subject.find_collections_with_read_access
         end
       end
       describe "signed in" do
@@ -75,8 +61,9 @@ describe SelectsCollectionsController, type: :controller do
 
     describe "Edit Access" do
       describe "not signed in" do
-        it "errors if the user is not signed in" do
-          expect { subject.find_collections_with_edit_access }.to raise_error
+        it "redirects the user to sign in" do
+          expect(subject).to receive(:authenticate_user!)
+          subject.find_collections_with_edit_access
         end
       end
 
