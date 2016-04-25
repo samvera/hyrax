@@ -1,0 +1,23 @@
+<% provide :page_title, 'Operations' %>
+<% provide :page_header do %>
+  <h1>Operations</h1>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-4">
+    <table class="table">
+      <thead>
+        <th>Operation Type</th>
+        <th>Status</th>
+      </thead>
+      <tbody>
+        <% @operations.each do |op| %>
+          <tr>
+            <td><%= link_to op.operation_type, sufia.user_operation_path(params[:user_id], op) %></td>
+            <td><span class="label <%= op.status == 'failure' ? 'label-danger' : 'label-success' %>"><%= op.status %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

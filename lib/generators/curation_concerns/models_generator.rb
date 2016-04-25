@@ -18,7 +18,8 @@ This generator makes the following changes to your application:
     [
       'create_version_committers.rb',
       'create_checksum_audit_logs.rb',
-      'create_single_use_links.rb' # ,
+      'create_single_use_links.rb',
+      'create_operations.rb'
     ].each do |file|
       better_migration_template file
     end

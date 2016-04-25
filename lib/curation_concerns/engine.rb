@@ -13,6 +13,7 @@ module CurationConcerns
 
   class Engine < ::Rails::Engine
     isolate_namespace CurationConcerns
+    require 'awesome_nested_set'
     require 'breadcrumbs_on_rails'
 
     config.autoload_paths += %W(

@@ -20,6 +20,7 @@ describe ImportUrlJob do
       allow(http_res).to receive(:read_body).and_yield(File.open(File.expand_path(file_path, __FILE__)).read)
     end
   end
+  let(:log) { create(:operation) }
 
   context 'after running the job' do
     let(:actor) { double }
@@ -33,7 +34,8 @@ describe ImportUrlJob do
     it 'creates the content' do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       expect(actor).to receive(:create_content).and_return(true)
-      described_class.perform_now(file_set)
+      described_class.perform_now(file_set, log)
+      expect(log.status).to eq 'success'
     end
   end
 
@@ -57,7 +59,7 @@ describe ImportUrlJob do
       file_set.update(title: ['File One'])
 
       # run the import job
-      described_class.perform_now(file_set)
+      described_class.perform_now(file_set, log)
 
       # import job should not override the title set another process
       file = FileSet.find(file_set_id)

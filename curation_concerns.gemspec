@@ -40,6 +40,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'deprecation', '~> 0.1'
   spec.add_dependency 'rdf', '~> 1.99'
   spec.add_dependency 'rdf-vocab', '~> 0'
+  spec.add_dependency 'awesome_nested_set', '~> 3.0'
+  
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
