@@ -42,11 +42,14 @@ module Sufia
       end
 
       def create_update_job
+        log = BatchCreateOperation.create!(user: current_user,
+                                           operation_type: "Batch Create")
         BatchCreateJob.perform_later(current_user,
                                      params[:title],
                                      params[:resource_type],
                                      params[:uploaded_files],
-                                     attributes_for_actor)
+                                     attributes_for_actor,
+                                     log)
       end
 
       def uploading_on_behalf_of?

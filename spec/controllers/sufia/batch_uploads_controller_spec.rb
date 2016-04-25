@@ -21,7 +21,8 @@ describe Sufia::BatchUploadsController do
                 { '1' => 'foo' },
                 { '1' => 'Article' },
                 ['1'],
-                tag: [], visibility: 'open')
+                { tag: [], visibility: 'open' },
+                CurationConcerns::Operation)
         post :create, title: { '1' => 'foo' },
                       resource_type: { '1' => 'Article' },
                       uploaded_files: ['1'],

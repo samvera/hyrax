@@ -73,6 +73,10 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  resources :users, only: [] do
+    resources :operations, only: [:index, :show], controller: 'sufia/operations'
+  end
+
   # Dashboard page
   resources :dashboard, only: :index do
     collection do
