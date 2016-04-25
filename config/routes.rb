@@ -6,4 +6,8 @@ CurationConcerns::Engine.routes.draw do
 
   # mount BrowseEverything::Engine => '/remote_files/browse'
   resources :classify_concerns, only: [:new, :create]
+
+  resources :users, only: [] do
+    resources :operations, only: [:index, :show]
+  end
 end

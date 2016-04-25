@@ -2,7 +2,9 @@ module CurationConcerns
   module Ability
     extend ActiveSupport::Concern
     included do
-      self.ability_logic += [:curation_concerns_permissions, :add_to_collection]
+      self.ability_logic += [:curation_concerns_permissions,
+                             :operation_abilities,
+                             :add_to_collection]
     end
 
     def curation_concerns_permissions
@@ -19,6 +21,10 @@ module CurationConcerns
         cannot :index, Hydra::AccessControls::Embargo
         cannot :index, Hydra::AccessControls::Lease
       end
+    end
+
+    def operation_abilities
+      can :read, Operation, user_id: current_user.id
     end
 
     def admin_permissions

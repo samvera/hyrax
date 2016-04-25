@@ -5,7 +5,13 @@ require 'tempfile'
 class ImportUrlJob < ActiveJob::Base
   queue_as :import_url
 
-  def perform(file_set)
+  before_enqueue do |job|
+    log = job.arguments.last
+    log.pending_job(job)
+  end
+
+  def perform(file_set, log)
+    log.performing!
     user = User.find_by_user_key(file_set.depositor)
 
     Tempfile.open(file_set.id.tr('/', '_')) do |f|
@@ -18,8 +24,10 @@ class ImportUrlJob < ActiveJob::Base
       if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
         CurationConcerns.config.callback.run(:after_import_url_success, file_set, user)
+        log.success!
       else
         CurationConcerns.config.callback.run(:after_import_url_failure, file_set, user)
+        log.fail!(file_set.errors.full_messages.join(' '))
       end
     end
   end
