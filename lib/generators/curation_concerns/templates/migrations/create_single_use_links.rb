@@ -6,7 +6,7 @@ class CreateSingleUseLinks < ActiveRecord::Migration
       t.string :itemId
       t.datetime :expires
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

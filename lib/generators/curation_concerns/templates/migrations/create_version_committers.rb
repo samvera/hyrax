@@ -5,7 +5,7 @@ class CreateVersionCommitters < ActiveRecord::Migration
       t.string :datastream_id
       t.string :version_id
       t.string :committer_login
-      t.timestamps
+      t.timestamps null: false
     end
   end
 
