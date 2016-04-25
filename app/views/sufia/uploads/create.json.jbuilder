@@ -1,10 +1,10 @@
-json.files [@uploaded_file] do |uploaded_file|
+json.files [@upload] do |uploaded_file|
   json.id uploaded_file.id
   json.name uploaded_file.file.file.filename
   json.size uploaded_file.file.file.size
   # TODO: implement these
   # json.url  "/uploads/#{uploaded_file.id}"
   # json.thumbnail_url uploaded_file.id
-  # json.delete_url 'deleteme'
-  # json.delete_type 'DELETE'
+  json.deleteUrl sufia.polymorphic_path(uploaded_file)
+  json.deleteType 'DELETE'
 end

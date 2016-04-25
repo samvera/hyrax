@@ -17,8 +17,8 @@ describe BatchCreateJob do
   describe "#perform" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
-    let(:upload1) {  UploadedFile.create(user: user, file: file1) }
-    let(:upload2) {  UploadedFile.create(user: user, file: file2) }
+    let(:upload1) { Sufia::UploadedFile.create(user: user, file: file1) }
+    let(:upload2) { Sufia::UploadedFile.create(user: user, file: file2) }
     let(:title) { { upload1.id => 'File One', upload2.id => 'File Two' } }
     let(:resource_types) { { upload1.id => 'Article', upload2.id => 'Image' } }
     let(:metadata) { { tag: [] } }

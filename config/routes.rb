@@ -9,6 +9,7 @@ Sufia::Engine.routes.draw do
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
+  delete '/uploads/:id', to: 'sufia/uploads#destroy', as: :sufia_uploaded_file
   post '/uploads', to: 'sufia/uploads#create'
   # This is a hack that is required because the rails form the uploader is on
   # sets the _method parameter to patch when the work already exists.

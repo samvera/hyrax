@@ -98,9 +98,9 @@
                   <div><span class="label label-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
-              <button class="btn btn-warning cancel pull-right">
-                  <i class="glyphicon glyphicon-ban-circle" aria-hidden="true"></i>
-                  <span>Cancel</span>
+              <button class="btn btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                  <i class="glyphicon glyphicon-trash"></i>
+                  <span>Delete</span>
               </button>
             </div>
           </div>

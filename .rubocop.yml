@@ -34,6 +34,10 @@ Style/BlockEndNewline:
   Exclude:
     - 'spec/**/*'
 
+Style/SymbolProc: # https://github.com/bbatsov/rubocop/issues/3071
+  Exclude:
+    - 'app/models/sufia/uploaded_file.rb'
+
 Style/MultilineBlockLayout:
   Exclude:
     - 'spec/**/*'
