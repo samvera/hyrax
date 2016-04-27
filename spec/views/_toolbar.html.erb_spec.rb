@@ -29,14 +29,6 @@ describe '/_toolbar.html.erb', type: :view do
     expect(rendered).to have_link 'Shares', sufia.dashboard_shares_path
   end
 
-  describe 'Notifications' do
-    it 'shows the number of outstanding messages' do
-      render
-      expect(rendered).to have_link 'Notifications 0 unread notifications', sufia.notifications_path
-      expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
-    end
-  end
-
   describe "New Work button" do
     context "when the user can create file sets" do
       it "has a link to upload" do

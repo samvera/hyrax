@@ -16,4 +16,10 @@ describe '/_user_util_links.html.erb', type: :view do
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_link 'userX', href: '/users/userX'
   end
+
+  it 'shows the number of outstanding messages' do
+    render
+    expect(rendered).to have_link 'Notifications 0 unread notifications', sufia.notifications_path
+    expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
+  end
 end

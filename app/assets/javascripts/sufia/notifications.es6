@@ -21,7 +21,7 @@ export class Notifications {
   }
 
   updatePage(data) {
-    let notification = $('#notify_number')
+    let notification = $('.notify_number')
     notification.find('.count').html(data.notify_number)
     if (data.notify_number == 0) {
       notification.addClass('label-default')
