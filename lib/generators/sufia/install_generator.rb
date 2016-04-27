@@ -172,8 +172,8 @@ module Sufia
         "  # This behavior seems to show up only in production mode.\n" \
         "  mount Sufia::Engine => '/'\n"
 
-      sentinel = /devise_for :users/
-      inject_into_file 'config/routes.rb', routing_code, after: sentinel, verbose: false
+      sentinel = /end\Z/
+      inject_into_file 'config/routes.rb', routing_code, before: sentinel, verbose: false
     end
 
     # Add behaviors to the SolrDocument model
