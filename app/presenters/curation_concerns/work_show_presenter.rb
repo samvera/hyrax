@@ -4,13 +4,16 @@ module CurationConcerns
     include PresentsAttributes
     attr_accessor :solr_document, :current_ability
 
-    class_attribute :collection_presenter_class, :file_presenter_class
+    class_attribute :collection_presenter_class, :file_presenter_class, :work_presenter_class
 
     # modify this attribute to use an alternate presenter class for the collections
     self.collection_presenter_class = CollectionPresenter
 
     # modify this attribute to use an alternate presenter class for the files
     self.file_presenter_class = FileSetPresenter
+
+    # modify this attribute to use an alternate presenter class for the child works
+    self.work_presenter_class = self
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
@@ -37,6 +40,11 @@ module CurationConcerns
       @file_set_presenters ||= member_presenters(ordered_ids & file_set_ids)
     end
 
+    # @return [Array<WorkShowPresenter>] presenters for the ordered_members that are not FileSets
+    def work_presenters
+      @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)
+    end
+
     # @deprecated
     # @return [Array<FileSetPresenter>] presenters for the orderd_members that are FileSets
     def file_presenters
@@ -44,10 +52,12 @@ module CurationConcerns
       member_presenters
     end
 
-    # @return [Array<FileSetPresenter>] presenters for the ordered_members (not filtered by class)
-    def member_presenters(ids = ordered_ids)
+    # @param [Array<String>] ids a list of ids to build presenters for
+    # @param [Class] presenter_class the type of presenter to build
+    # @return [Array<presenter_class>] presenters for the ordered_members (not filtered by class)
+    def member_presenters(ids = ordered_ids, presenter_class = file_presenter_class)
       PresenterFactory.build_presenters(ids,
-                                        file_presenter_class,
+                                        presenter_class,
                                         current_ability)
     end
 
@@ -69,18 +79,22 @@ module CurationConcerns
 
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
-        ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
-                                        fl: "ordered_targets_ssim")
-                                 .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
+        @ordered_ids ||= begin
+                           ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
+                                                           fl: "ordered_targets_ssim")
+                                                    .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
+                         end
       end
 
       # These are the file sets that belong to this work, but not necessarily
       # in order.
       def file_set_ids
-        ActiveFedora::SolrService.query("{!field f=has_model_ssim}FileSet",
-                                        fl: ActiveFedora.id_field,
-                                        fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
-                                 .flat_map { |x| x.fetch(ActiveFedora.id_field, []) }
+        @file_set_ids ||= begin
+                            ActiveFedora::SolrService.query("{!field f=has_model_ssim}FileSet",
+                                                            fl: ActiveFedora.id_field,
+                                                            fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
+                                                     .flat_map { |x| x.fetch(ActiveFedora.id_field, []) }
+                          end
       end
   end
 end
