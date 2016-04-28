@@ -135,6 +135,7 @@ describe CurationConcerns::FileSetsController do
           expect(response).to render_template('edit')
           expect(assigns[:groups]).to be_kind_of Array
           expect(assigns[:file_set]).to eq file_set
+          expect(flash[:error]).to eq "There was a problem processing your request."
         end
 
         context 'updating visibility' do
