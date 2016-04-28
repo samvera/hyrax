@@ -23,6 +23,13 @@ FactoryGirl.define do
       end
     end
 
+    factory :work_with_file_and_work do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user)
+      end
+    end
+
     factory :work_with_files do
       before(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user) } }
     end

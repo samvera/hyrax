@@ -61,6 +61,16 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
+  describe "#work_presenters" do
+    let(:obj) { create(:work_with_file_and_work) }
+    let(:attributes) { obj.to_solr }
+
+    it "filters out members that are file sets" do
+      expect(presenter.work_presenters.size).to eq 1
+      expect(presenter.work_presenters.first).to be_instance_of(described_class)
+    end
+  end
+
   describe "#file_set_presenters" do
     let(:obj) { create(:work_with_ordered_files) }
     let(:attributes) { obj.to_solr }
