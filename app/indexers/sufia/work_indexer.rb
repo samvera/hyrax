@@ -1,5 +1,6 @@
 module Sufia
   class WorkIndexer < CurationConcerns::WorkIndexer
+    self.thumbnail_path_service = Sufia::WorkThumbnailPathService
     def generate_solr_document
       super.tap do |solr_doc|
         # This enables us to return a Work when we have a FileSet that matches
