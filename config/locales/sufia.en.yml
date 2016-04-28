@@ -221,6 +221,7 @@ en:
         tag:              "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
+        files:            "Upload a new version of this file from your computer"
       collection:
         based_near:       "Location"
         description:      "Abstract or Summary"
