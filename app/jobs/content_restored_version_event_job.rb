@@ -1,4 +1,4 @@
-# A specific job to log a file restored version to a user's activity stream
+# Log file restored version to activity streams
 class ContentRestoredVersionEventJob < ContentEventJob
   attr_accessor :revision_id
 

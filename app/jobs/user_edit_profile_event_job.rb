@@ -1,4 +1,4 @@
-# A specific job to log a user profile edit to a user's activity stream
+# Log user profile edits to activity streams
 class UserEditProfileEventJob < EventJob
   def perform(editor)
     @editor = editor
