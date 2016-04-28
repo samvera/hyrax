@@ -92,6 +92,7 @@ module CurationConcerns
         respond_to do |wants|
           wants.html do
             initialize_edit_form
+            flash[:error] = "There was a problem processing your request."
             render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: @file_set.errors }) }
