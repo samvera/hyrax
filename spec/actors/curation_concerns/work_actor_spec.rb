@@ -7,12 +7,13 @@ describe CurationConcerns::GenericWorkActor do
   let(:user) { create(:user) }
   let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
 
-  let(:redlock_client_stub) { # stub out redis connection
+  # stub out redis connection
+  let(:redlock_client_stub) do
     client = double('redlock client')
     allow(client).to receive(:lock).and_yield(true)
     allow(Redlock::Client).to receive(:new).and_return(client)
     client
-  }
+  end
 
   subject do
     CurationConcerns::CurationConcern.actor(curation_concern, user)
@@ -29,6 +30,17 @@ describe CurationConcerns::GenericWorkActor do
         expect_any_instance_of(described_class).to receive(:save).and_return(false)
         allow(subject).to receive(:attach_files).and_return(true)
         expect(subject.create(attributes)).to be false
+      end
+    end
+
+    context 'success' do
+      before { redlock_client_stub }
+
+      it "invokes the after_create_concern callback" do
+        allow(CharacterizeJob).to receive(:perform_later).and_return(true)
+        expect(CurationConcerns.config.callback).to receive(:run)
+          .with(:after_create_concern, curation_concern, user)
+        subject.create(title: ['Foo Bar'])
       end
     end
 
@@ -148,6 +160,14 @@ describe CurationConcerns::GenericWorkActor do
       it 'returns false' do
         expect_any_instance_of(described_class).to receive(:save).and_return(false)
         expect(subject.update(attributes)).to be false
+      end
+    end
+
+    context 'success' do
+      it "invokes the after_update_metadata callback" do
+        expect(CurationConcerns.config.callback).to receive(:run)
+          .with(:after_update_metadata, curation_concern, user)
+        subject.update(title: ['Other Title'])
       end
     end
 

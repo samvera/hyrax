@@ -24,6 +24,6 @@ class IngestFileJob < ActiveJob::Base
 
     # Do post file ingest actions
     CurationConcerns::VersioningService.create(file_set.send(relation.to_sym), user)
-    CurationConcerns.config.callback.run(:after_create_content, file_set, user)
+    CurationConcerns.config.callback.run(:after_create_fileset, file_set, user)
   end
 end
