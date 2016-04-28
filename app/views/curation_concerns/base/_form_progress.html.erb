@@ -22,7 +22,7 @@
     <div class="panel-footer text-center">
       <% if Sufia::Engine.config.active_deposit_agreement_acceptance %>
           <label>
-            <%= check_box_tag 'agreement', 1, nil, required: true %>
+            <%= check_box_tag 'agreement', 1, f.object.agreement_accepted, required: true %>
             <%= t('sufia.active_consent_to_agreement') %><br>
             <%= link_to t('sufia.deposit_agreement'),
                         sufia.static_path('agreement'),

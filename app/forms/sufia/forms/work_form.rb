@@ -2,7 +2,14 @@ module Sufia::Forms
   class WorkForm < CurationConcerns::Forms::WorkForm
     delegate :depositor, :on_behalf_of, :permissions, to: :model
 
+    attr_reader :agreement_accepted
+
     self.terms += [:collection_ids]
+
+    def initialize(model, current_ability)
+      @agreement_accepted = !model.new_record?
+      super
+    end
 
     def [](key)
       return [] if key == :collection_ids

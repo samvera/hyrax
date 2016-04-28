@@ -10,7 +10,6 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
   before do
     view.lookup_context.view_paths.push 'app/views/curation_concerns'
     allow(controller).to receive(:current_user).and_return(user)
-    assign(:form, form)
   end
 
   let(:page) do
@@ -21,6 +20,8 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
   end
 
   context "for a new object" do
+    before { assign(:form, form) }
+
     let(:work) { GenericWork.new }
 
     context "with options for proxy" do
@@ -50,6 +51,7 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
       it "shows accept text" do
         expect(page).to have_content 'I have read and agree to the'
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
+        expect(page).to_not have_selector("#agreement[checked]")
       end
     end
 
@@ -62,6 +64,19 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
         expect(page).to have_content 'By saving this work I agree to the'
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
       end
+    end
+  end
+
+  context "when the work has been saved before" do
+    before do
+      allow(work).to receive(:new_record?).and_return(false)
+      assign(:form, form)
+    end
+
+    let(:work) { stub_model(GenericWork, id: '456') }
+
+    it "renders the deposit agreement already checked" do
+      expect(page).to have_selector("#agreement[checked]")
     end
   end
 end
