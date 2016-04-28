@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+# This test is named zzz_* because it contains hidden side-effects that affect subsequent
+# test execution.  Specifically, the stub_model and render calls together.
+# See: https://github.com/projecthydra/sufia/pull/1932
+
 describe 'stats/file.html.erb', type: :view do
   describe 'usage statistics' do
     before :each do
