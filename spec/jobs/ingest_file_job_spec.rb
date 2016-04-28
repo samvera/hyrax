@@ -68,10 +68,10 @@ describe IngestFileJob do
     end
   end
 
-  describe "the after_create_content callback" do
+  describe "the after_create_fileset callback" do
     subject { CurationConcerns.config.callback }
     it 'runs with file_set and user arguments' do
-      expect(subject).to receive(:run).with(:after_create_content, file_set, user)
+      expect(subject).to receive(:run).with(:after_create_fileset, file_set, user)
       described_class.perform_now(file_set, filename, 'image/png', user)
     end
   end

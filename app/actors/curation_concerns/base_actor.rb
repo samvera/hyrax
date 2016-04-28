@@ -11,16 +11,21 @@ module CurationConcerns
       @cloud_resources = attributes.delete(:cloud_resources.to_s)
       apply_creation_data_to_curation_concern
       apply_save_data_to_curation_concern(attributes)
-      next_actor.create(attributes) && save
+      next_actor.create(attributes) && save && run_callbacks(:after_create_concern)
     end
 
     def update(attributes)
       apply_update_data_to_curation_concern
       apply_save_data_to_curation_concern(attributes)
-      next_actor.update(attributes) && save
+      next_actor.update(attributes) && save && run_callbacks(:after_update_metadata)
     end
 
     protected
+
+      def run_callbacks(hook)
+        CurationConcerns.config.callback.run(hook, curation_concern, user)
+        true
+      end
 
       def apply_creation_data_to_curation_concern
         apply_depositor_metadata

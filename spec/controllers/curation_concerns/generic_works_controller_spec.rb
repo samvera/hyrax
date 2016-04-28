@@ -215,6 +215,12 @@ describe CurationConcerns::GenericWorksController do
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
+    it "invokes the after_destroy callback" do
+      expect(CurationConcerns.config.callback).to receive(:run)
+        .with(:after_destroy, work_to_be_deleted.id, user)
+      delete :destroy, id: work_to_be_deleted
+    end
+
     context 'someone elses public work' do
       let(:work_to_be_deleted) { create(:private_generic_work) }
       it 'shows unauthorized message' do
