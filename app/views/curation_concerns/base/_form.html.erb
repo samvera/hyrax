@@ -1,40 +1,8 @@
-<%= simple_form_for [main_app, @form], html: {multipart: true} do |f| %>
-    <div class="row">
-      <div class="col-xs-12 col-sm-8" role="main">
-
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-            <a href="#metadata" aria-controls="metadata" role="tab" data-toggle="tab">Metadata</a></li>
-          <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
-          <li role="presentation">
-            <a href="#relationships" aria-controls="relationships" role="tab" data-toggle="tab">Relationships</a></li>
-          <li role="presentation"><a href="#share" aria-controls="share" role="tab" data-toggle="tab">Share</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="metadata">
-            <% unless f.object.persisted? %>
-                <p class="switch-upload-type">To create a separate work for each of the files, go
-                  to <%= link_to "Batch upload", sufia.new_batch_upload_path %></p>
-            <% end %>
-            <%= render 'form_metadata', f: f %>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="files">
-            <%= render 'form_files', f: f %>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="relationships">
-            <%= render 'form_relationships', f: f %>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="share">
-            <%= render 'form_share', f: f %>
-          </div>
-        </div>
-      </div>
-
-      <div id="savewidget" class="col-xs-12 col-sm-4 fixedsticky" role="complementary">
-        <%= render 'form_progress', f: f %>
-      </div>
-    </div>
+<%= simple_form_for [main_app, @form], html: { multipart: true } do |f| %>
+  <% unless f.object.persisted? %>
+    <% content_for :metadata_tab do %>
+      <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", sufia.new_batch_upload_path %></p>
+    <% end %>
+  <% end %>
+  <%= render 'curation_concerns/base/guts4form', f: f %>
 <% end %>

@@ -1,15 +1,17 @@
 require 'spec_helper'
 
+# This test is named zzz_* because it contains hidden side-effects that affect subsequent
+# test execution.  Specifically, the stub_model and render calls together.
+# See: https://github.com/projecthydra/sufia/pull/1932
+
 describe 'stats/file.html.erb', type: :view do
   describe 'usage statistics' do
-    let(:file_set) {
-      stub_model(FileSet, id: '123',
-                          title: ['file1.txt'])
-    }
+    before :each do
+      allow_message_expectations_on_nil
+      expect(FileUsage).to receive(:new)
+    end
 
     let(:no_stats) {
-      allow_message_expectations_on_nil
-      allow(FileUsage).to receive(:new)
       stub_model(FileUsage,
                  created: Date.parse('2014-01-01'),
                  total_pageviews: 0,
@@ -19,7 +21,6 @@ describe 'stats/file.html.erb', type: :view do
     }
 
     let(:stats) {
-      allow(FileUsage).to receive(:new)
       stub_model(FileUsage,
                  created: Date.parse('2014-01-01'),
                  total_pageviews: 9,
@@ -28,13 +29,9 @@ describe 'stats/file.html.erb', type: :view do
                 )
     }
 
-    before do
-      assign(:file_set, file_set)
-      assign(:stats, no_stats)
-    end
-
     context 'when no analytics results returned' do
       before do
+        assign(:stats, no_stats)
         assign(:pageviews, 0)
       end
 

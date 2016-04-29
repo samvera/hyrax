@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'sufia/batch_uploads/_form.html.erb', :no_clean do
+describe 'sufia/batch_uploads/_form.html.erb' do
   let(:work) { GenericWork.new }
   let(:ability) { double }
   let(:form) { Sufia::BatchUploadForm.new(work, ability) }

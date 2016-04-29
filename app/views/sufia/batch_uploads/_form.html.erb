@@ -1,31 +1,14 @@
 <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
-  <div class="col-xs-12 col-sm-8" role="main">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
-      <li role="presentation"><a href="#metadata" aria-controls="metadata" role="tab" data-toggle="tab">Metadata</a></li>
-      <li role="presentation"><a href="#relationships" aria-controls="relationships" role="tab" data-toggle="tab">Relationships</a></li>
-      <li role="presentation"><a href="#share" aria-controls="share" role="tab" data-toggle="tab">Share</a></li>
-    </ul>
-
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="files">
-        <p class="instructions"><strong><%= t("sufia.batch_uploads.files.instructions") %></strong></p>
-        <p class="switch-upload-type">To create a single work for all the files, go to <%= link_to "New Work", new_curation_concerns_generic_work_path %></p>
-        <%= render 'form_files', f: f %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="metadata">
-        <%= render 'form_metadata', f: f %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="relationships">
-        <%= render 'form_relationships', f: f %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="share">...</div>
-    </div>
-  </div>
-
-  <div class="col-xs-12 col-sm-4" role="complementary">
-    <%= render 'form_progress', f: f %>
-  </div>
+  <% content_for :files_tab do %>
+    <p class="instructions"><strong><%= t("sufia.batch_uploads.files.instructions") %></strong></p>
+    <p class="switch-upload-type">To create a single work for all the files, go to <%= link_to "New Work", new_curation_concerns_generic_work_path %></p>
+  <% end %>
+  <%= render 'curation_concerns/base/guts4form', f: f, tabs: %w[files metadata relationships share] do %>
+  <% end %>
 <% end %>
+
+<script type="text/javascript">
+  $(window).load(function() {
+    $("#fileupload").fileupload('option', 'downloadTemplateId', 'batch-template-download')
+  });
+</script>

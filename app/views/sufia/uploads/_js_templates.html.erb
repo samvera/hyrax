@@ -1,44 +1,3 @@
-     <div id="fileupload">
-        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
-        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        <div class="row fileupload-buttonbar">
-            <div class="col-xs-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
-            </div>
-            <!-- The global progress state -->
-            <div class="col-xs-5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
-            </div>
-        </div>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-     </div>
-
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -71,21 +30,20 @@
     </tr>
 {% } %}
 </script>
+
+<!-- function used by the following template -->
+<script type="text/javascript">
+  function setAllResourceTypes() {
+    var firstResourceType = $(".resource_type_dropdown")[0].value;
+    $(".resource_type_dropdown").each(function(index, element) {
+      element.value = firstResourceType;
+    });
+  }
+</script>
+
 <!-- The template to display files available for download -->
-<script id="template-download" type="text/x-tmpl">
-{%
-
-    // I am not happy with this global declaration.
-    // Using "var setAllResourceTypes" or "function setAllResourceTypes()" does not work. Not sure why.
-    // Perhaps this kind of declaration is not a problem due to the way the JavaScript is executed???
-    setAllResourceTypes = function() {
-        var firstResourceType = $(".resource_type_dropdown")[0].value;
-        $(".resource_type_dropdown").each(function(index, element) {
-            element.value = firstResourceType;
-        });
-    };
-
-    for (var i=0, file; file=o.files[i]; i++) { %}
+<script id="batch-template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td>
           <div class="row">
@@ -115,7 +73,7 @@
                 <div class="col-sm-7">
                   <select class="form-control resource_type_dropdown" name="resource_type[{%=file.id%}]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <% Sufia.config.resource_types.each do |type| %>
-                        <option value="<%= type[0] %>"><%= type[1] %></option>
+                      <option value="<%= type[0] %>"><%= type[1] %></option>
                     <% end %>
                   </select>
                   <!-- TODO: Why is the button drawn for all files? -->
@@ -126,6 +84,44 @@
               </div>
             </div>
           </div>
+        </td>
+    </tr>
+{% } %}
+</script>
+
+<!-- Simpler display of files available for download. Originally from curation_concerns/base/_form_files -->
+<!-- TODO: further consolidate with template-download above -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+                <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>Delete</span>
+            </button>
         </td>
     </tr>
 {% } %}

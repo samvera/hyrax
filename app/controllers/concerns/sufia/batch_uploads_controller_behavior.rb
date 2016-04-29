@@ -6,7 +6,6 @@ module Sufia
 
     included do
       layout "sufia-one-column"
-
       self.curation_concern_type = GenericWork
       before_action :has_access?
     end
@@ -21,7 +20,6 @@ module Sufia
         until this process is complete (shouldn't take too long, hang in there!). You may need
         to refresh your dashboard to see these updates.
       EOS
-
       redirect_after_update
     end
 

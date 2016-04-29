@@ -1,0 +1,37 @@
+<% # we will yield to content_for for each tab, e.g. :files_tab %>
+<% tabs ||= %w[metadata files relationships share] # default tab order %>
+<div class="row">
+  <div class="col-xs-12 col-sm-8" role="main">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <% tabs.each_with_index do | tab, i | %>
+        <% if i == 0 %>
+          <li role="presentation" class="active">
+        <% else %>
+          <li role="presentation">
+        <% end %>
+            <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab"><%= tab.capitalize %></a>
+          </li>
+      <% end %>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <% tabs.each_with_index do | tab, i | %>
+        <% if i == 0 %>
+          <div role="tabpanel" class="tab-pane active" id="<%= tab %>">
+        <% else %>
+          <div role="tabpanel" class="tab-pane" id="<%= tab %>">
+        <% end %>
+          <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
+        <%= render "form_#{tab}", f: f %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="savewidget" class="col-xs-12 col-sm-4 fixedsticky" role="complementary">
+    <%= render 'form_progress', f: f %>
+  </div>
+</div>
