@@ -29,7 +29,6 @@
     * [Database tables and indexes](#database-tables-and-indexes)
     * [Start Solr](#start-solr)
     * [Start FCRepo](#start-fcrepo)
-    * [Start background workers](#start-background-workers)
     * [Spin up the web server](#spin-up-the-web-server)
   * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
   * [License](#license)
