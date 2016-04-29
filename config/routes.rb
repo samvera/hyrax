@@ -150,16 +150,6 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
-  # has been defined in the initalizers.
-  if defined?(Sufia::ResqueAdmin)
-    namespace :admin do
-      constraints Sufia::ResqueAdmin do
-        mount Resque::Server, at: 'queues'
-      end
-    end
-  end
-
   if defined?(Sufia::StatsAdmin)
     namespace :admin do
       constraints Sufia::StatsAdmin do
