@@ -27,6 +27,7 @@
     * [Sufia's Ruby\-related dependencies](#sufias-ruby-related-dependencies)
     * [Install Sufia](#install-sufia)
     * [Database tables and indexes](#database-tables-and-indexes)
+    * [Start Redis](#start-redis)
     * [Start Solr](#start-solr)
     * [Start FCRepo](#start-fcrepo)
     * [Spin up the web server](#spin-up-the-web-server)
@@ -34,6 +35,7 @@
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
+  * [Release process](#release-process)
   * [Acknowledgments](#acknowledgments)
 
 # What is Sufia?
@@ -162,7 +164,14 @@ Now that Sufia's required database migrations have been generated into your app,
 rake db:migrate
 ```
 
+## Start Redis
+
+[Redis](http://redis.io/) is a key-value store that Sufia uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
+
+Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
+
 ## Start Solr
+
 If you already have an instance of Solr that you would like to use, you may skip this step.  Open a new terminal window and type:
 ```
 solr_wrapper -d solr/config/ --collection_name hydra-development
@@ -171,6 +180,7 @@ solr_wrapper -d solr/config/ --collection_name hydra-development
 You can check to see if Solr is started by going to [localhost:8983](http://localhost:8983/).
 
 ## Start FCRepo
+
 If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
 
 ```
@@ -217,6 +227,10 @@ If you'd like to help the development effort and you're not sure where to get st
 # Development
 
 The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Sufia itself, not an application that uses Sufia.
+
+# Release process
+
+See the [release management process](https://github.com/projecthydra/sufia/wiki/Release-management-process).
 
 # Acknowledgments
 
