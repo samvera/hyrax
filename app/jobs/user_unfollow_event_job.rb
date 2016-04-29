@@ -1,4 +1,4 @@
-# A specific job to log a user unfollowing another user to a user's activity stream
+# Log user unfollowing another user to activity streams
 class UserUnfollowEventJob < EventJob
   attr_accessor :unfollowee, :unfollower
 

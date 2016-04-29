@@ -1,6 +1,4 @@
-# A specific job to log a file deposit change to a user's activity stream
-#
-# This is a bit wierd becuase the job performs the depositor transfer along with logging the job
+# Log work depositor change to activity streams
 #
 # @attr [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
 class ContentDepositorChangeEventJob < ContentEventJob

@@ -1,4 +1,4 @@
-# A specific job to log a file new version to a user's activity stream
+# Log new version of a file to activity streams
 class ContentNewVersionEventJob < ContentEventJob
   def action
     @action ||= "User #{link_to_profile depositor} has added a new version of #{link_to repo_object.title.first, Rails.application.routes.url_helpers.curation_concerns_file_set_path(repo_object)}"

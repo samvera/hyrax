@@ -1,4 +1,4 @@
-# A specific job to log a user following another user to a user's activity stream
+# Log user following another user to activity streams
 class UserFollowEventJob < EventJob
   attr_accessor :followee, :follower
 

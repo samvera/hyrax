@@ -1,4 +1,4 @@
-# A specific job to log a file deletion to a user's activity stream
+# Log object deletion to activity streams
 #
 # @attr_reader deleted_work_id The id of the work that has been deleted by the user
 class ContentDeleteEventJob < EventJob
@@ -10,7 +10,7 @@ class ContentDeleteEventJob < EventJob
   end
 
   def action
-    @action ||= "User #{link_to_profile depositor} has deleted file '#{deleted_work_id}'"
+    @action ||= "User #{link_to_profile depositor} has deleted object '#{deleted_work_id}'"
   end
 
   # override to log the event to the users profile stream instead of the user's stream
