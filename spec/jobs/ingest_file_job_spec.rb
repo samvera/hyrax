@@ -67,12 +67,4 @@ describe IngestFileJob do
       expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user2.user_key]
     end
   end
-
-  describe "the after_create_fileset callback" do
-    subject { CurationConcerns.config.callback }
-    it 'runs with file_set and user arguments' do
-      expect(subject).to receive(:run).with(:after_create_fileset, file_set, user)
-      described_class.perform_now(file_set, filename, 'image/png', user)
-    end
-  end
 end

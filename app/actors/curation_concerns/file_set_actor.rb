@@ -69,10 +69,7 @@ module CurationConcerns
       stack = ActorStack.new(file_set,
                              user,
                              [InterpretVisibilityActor, BaseActor])
-      if result = stack.update(attributes)
-        CurationConcerns.config.callback.run(:after_update_metadata, file_set, user)
-      end
-      result
+      stack.update(attributes)
     end
 
     def destroy
@@ -123,6 +120,7 @@ module CurationConcerns
           # Save the work so the association between the work and the file_set is persisted (head_id)
           work.save
         end
+        CurationConcerns.config.callback.run(:after_create_fileset, file_set, user)
       end
 
       def assign_visibility?(file_set_params = {})

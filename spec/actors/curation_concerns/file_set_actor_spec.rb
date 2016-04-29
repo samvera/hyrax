@@ -35,7 +35,7 @@ describe CurationConcerns::FileSetActor do
     end
 
     context 'when a work is provided' do
-      let(:work) { FactoryGirl.create(:generic_work) }
+      let(:work) { create(:generic_work) }
 
       it 'adds the generic file to the parent work' do
         expect(subject.generic_works).to eq [work]
@@ -203,6 +203,7 @@ describe CurationConcerns::FileSetActor do
     end
 
     it "writes to the most up to date version" do
+      expect(CurationConcerns.config.callback).to receive(:run).with(:after_create_fileset, file_set3, user)
       # using send(), because attach_file_to_work is private
       actor.send(:attach_file_to_work, work_v1, file_set3, {})
       expect(work_v1.members.size).to eq 3
