@@ -43,9 +43,7 @@ This generator makes the following changes to your application:
                 "\nMime::Type.register 'application/x-endnote-refer', :endnote", verbose: false
     copy_file 'config/curation_concerns.rb', 'config/initializers/curation_concerns.rb'
     copy_file 'config/redis.yml', 'config/redis.yml'
-    copy_file 'config/resque-pool.yml', 'config/resque-pool.yml'
     copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
-    copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
   end
 
   def create_collection

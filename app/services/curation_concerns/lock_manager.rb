@@ -33,7 +33,7 @@ module CurationConcerns
       end
 
       def options
-        ::Resque.redis.redis.client.options
+        ::Redis.current.client.options
       end
   end
 end
