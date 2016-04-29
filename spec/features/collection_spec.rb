@@ -12,13 +12,7 @@ feature 'collection' do
   let(:gw1) { create(:generic_work, user: user, title: ['First test work']) }
   let(:gw2) { create(:generic_work, user: user, title: ['Second test work']) }
 
-  before(:all) do
-    @old_resque_inline_value = Resque.inline
-    Resque.inline = true
-  end
-
   after(:all) do
-    Resque.inline = @old_resque_inline_value
     GenericWork.destroy_all
     Collection.destroy_all
   end

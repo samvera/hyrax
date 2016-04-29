@@ -31,8 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active_attr'
   spec.add_dependency 'hydra-works', '~> 0.8', '>= 0.8.1'
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
-  spec.add_dependency 'resque', '~> 1.23'
-  spec.add_dependency 'resque-pool', '~> 0.3'
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'solrizer', '~> 3.4'
