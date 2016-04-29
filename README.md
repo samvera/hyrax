@@ -14,6 +14,7 @@
 # Table of Contents
 
   * [What is Sufia?](#what-is-sufia)
+    * [Feature list](#feature-list)
   * [Help](#help)
   * [Getting started](#getting-started)
     * [Prerequisites](#prerequisites)
