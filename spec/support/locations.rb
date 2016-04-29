@@ -6,7 +6,7 @@ module Locations
 
   def go_to_user_profile
     within '#user_utility_links' do
-      first("a").click
+      first(".dropdown a").click
       click_link "View Profile"
     end
   end
