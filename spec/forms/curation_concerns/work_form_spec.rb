@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe CurationConcerns::GenericWorkForm do
-  let(:form) { described_class.new(GenericWork.new, nil) }
+  let(:work) { GenericWork.new }
+  let(:form) { described_class.new(work, nil) }
 
   describe "#primary_terms" do
     subject { form.primary_terms }
@@ -76,5 +77,17 @@ describe CurationConcerns::GenericWorkForm do
   describe "on_behalf_of" do
     subject { form.on_behalf_of }
     it { is_expected.to be nil }
+  end
+
+  describe "#agreement_accepted" do
+    subject { form.agreement_accepted }
+    it { is_expected.to eq false }
+  end
+
+  context "on a work already saved" do
+    before { allow(work).to receive(:new_record?).and_return(false) }
+    it "defaults deposit agreement to true" do
+      expect(form.agreement_accepted).to eq(true)
+    end
   end
 end
