@@ -23,6 +23,13 @@ describe CurationConcerns::GenericWorkForm do
     context "for collection_ids" do
       let(:term) { :collection_ids }
       it { is_expected.to eq [] }
+      context "when the model has collection ids" do
+        before do
+          allow(work).to receive(:in_collection_ids).and_return(['col1', 'col2'])
+        end
+        # This allows the edit form to show collections the work is already a member of.
+        it { is_expected.to eq ['col1', 'col2'] }
+      end
     end
   end
 

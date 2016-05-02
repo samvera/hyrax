@@ -12,7 +12,7 @@ module Sufia::Forms
     end
 
     def [](key)
-      return [] if key == :collection_ids
+      return model.in_collection_ids if key == :collection_ids
       super
     end
 
