@@ -20,7 +20,7 @@ feature 'Editing attached files' do
     attach_file('Upload a file', fixture_file_path('files/image.png'))
     click_button 'Update Attached File'
 
-    expect(page).to have_content 'The file A Contained Generic File has been updated.'
+    expect(page).to have_content 'The file A Contained FileSet has been updated.'
 
     # TODO: this stuff belongs in an Actor or Controller test:
     file_set.reload

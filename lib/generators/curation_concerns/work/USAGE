@@ -1,6 +1,5 @@
 Description:
-  This generator creates the necessary files for work that extends
-  CurationConcerns's GenericWork.
+  This generator creates the necessary files for new work types.
 
 Example:
   rails generate curation_concerns:work ScholarlyPaper

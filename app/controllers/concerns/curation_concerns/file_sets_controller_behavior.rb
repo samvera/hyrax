@@ -70,7 +70,7 @@ module CurationConcerns
     end
 
     def destroy
-      parent = @file_set.in_works.first
+      parent = @file_set.parent
       actor.destroy
       redirect_to [main_app, parent], notice: 'The file has been deleted.'
     end
@@ -194,7 +194,7 @@ module CurationConcerns
               if request.xhr?
                 render 'jq_upload', formats: 'json', content_type: 'text/html'
               else
-                redirect_to [main_app, @file_set.in_works.first]
+                redirect_to [main_app, @file_set.parent]
               end
             end
             format.json do
@@ -204,7 +204,7 @@ module CurationConcerns
         else
           msg = @file_set.errors.full_messages.join(', ')
           flash[:error] = msg
-          json_error "Error creating generic file #{file.original_filename}: #{msg}"
+          json_error "Error creating file #{file.original_filename}: #{msg}"
         end
       end
 

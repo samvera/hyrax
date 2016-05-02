@@ -71,9 +71,9 @@ module ActionDispatch::Routing
       ROUTE_OPTIONS = { 'curation_concerns' => { path: :concern } }.freeze
 
       # Namespaces routes appropriately
-      # @example namespaced_resources("curation_concerns/generic_work") is equivalent to
+      # @example namespaced_resources("curation_concerns/my_work") is equivalent to
       #   namespace "curation_concerns", path: :concern do
-      #     resources "generic_work", except: [:index]
+      #     resources "my_work", except: [:index]
       #   end
       def namespaced_resources(target, opts = {}, &block)
         if target.include?('/')

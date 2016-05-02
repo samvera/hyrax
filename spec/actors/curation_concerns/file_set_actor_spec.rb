@@ -30,15 +30,15 @@ describe CurationConcerns::FileSetActor do
 
     context 'when a work is not provided' do
       it "leaves the association blank" do
-        expect(subject.generic_works).to be_empty
+        expect(subject.parents).to be_empty
       end
     end
 
     context 'when a work is provided' do
       let(:work) { create(:generic_work) }
 
-      it 'adds the generic file to the parent work' do
-        expect(subject.generic_works).to eq [work]
+      it 'adds the FileSet to the parent work' do
+        expect(subject.parents).to eq [work]
         expect(work.reload.file_sets).to include(subject)
 
         # Confirming that date_uploaded and date_modified were set

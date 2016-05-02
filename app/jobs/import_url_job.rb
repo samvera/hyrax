@@ -17,10 +17,10 @@ class ImportUrlJob < ActiveJob::Base
     Tempfile.open(file_set.id.tr('/', '_')) do |f|
       copy_remote_file(file_set, f)
 
-      # reload the generic file once the data is copied since this is a long running task
+      # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
-      # attach downloaded file to generic file stubbed out
+      # attach downloaded file to FileSet stubbed out
       if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
         CurationConcerns.config.callback.run(:after_import_url_success, file_set, user)

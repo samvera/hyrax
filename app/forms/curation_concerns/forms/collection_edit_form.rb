@@ -18,7 +18,7 @@ module CurationConcerns
         model_class.validators_on(key).any? { |v| v.is_a? ActiveModel::Validations::PresenceValidator }
       end
 
-      # @return [Hash] All generic files in the collection, file.to_s is the key, file.id is the value
+      # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
       def select_files
         Hash[all_files]
       end

@@ -143,12 +143,12 @@ module CurationConcerns
       end
 
       def unlink_from_work
-        work = file_set.in_works.first
+        work = file_set.parent
         return unless work && (work.thumbnail_id == file_set.id || work.representative_id == file_set.id)
-        # This is required to clear the thumbnail_id and representative_id fields on the work
-        # and force it to be re-solrized. Although ActiveFedora::Aggregation clears the
-        # children nodes it leaves the GenericWork.thumbnail_id and GenericWork.representative_id
-        # fields in Solr populated.
+        # This is required to clear the thumbnail_id and representative_id
+        # fields on the work and force it to be re-solrized. Although
+        # ActiveFedora clears the children nodes it leaves the work's
+        # thumbnail_id and representative_id fields in Solr populated.
         work.thumbnail = nil if work.thumbnail_id == file_set.id
         work.representative = nil if work.representative_id == file_set.id
         work.save!

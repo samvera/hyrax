@@ -416,7 +416,7 @@ describe FileSet do
     let(:work) { create(:work_with_one_file) }
     subject { work.file_sets.first.reload }
     it 'belongs to works' do
-      expect(subject.generic_works).to eq [work]
+      expect(subject.parents).to eq [work]
     end
   end
 

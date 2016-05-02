@@ -3,11 +3,11 @@ module CurationConcerns
   # without changing the param key.
   #
   # Example:
-  #   name = CurationConcerns::Name.new(GenericWork)
+  #   name = CurationConcerns::Name.new(MyWork)
   #   name.param_key
-  #   # => 'generic_work'
+  #   # => 'my_work'
   #   name.route_key
-  #   # => 'curation_concerns_generic_works'
+  #   # => 'curation_concerns_my_works'
   #
   class Name < ActiveModel::Name
     def initialize(klass, namespace = nil, name = nil)

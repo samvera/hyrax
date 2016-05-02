@@ -3,7 +3,7 @@ module CurationConcerns
     class << self
       # @param [Array] ids the list of ids to load
       # @param [Class] klass the class of presenter to make
-      # @return [Array] presenters for the generic files in order of the ids
+      # @return [Array] presenters for the documents in order of the ids
       def build_presenters(ids, klass, ability)
         new(ids, klass, ability).build
       end

@@ -19,7 +19,7 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained Generic File'], filename: 'filename.pdf')
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], filename: 'filename.pdf')
       end
     end
 
