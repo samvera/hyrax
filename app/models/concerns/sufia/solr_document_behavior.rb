@@ -12,20 +12,10 @@ module Sufia
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
     end
 
-    ##
-    # Give our SolrDocument an ActiveModel::Naming appropriate route_key
-    def route_key
-      get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
-    end
-
     # Date created indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
     # This overrides the default behavior of CurationConcerns which indexes a date
     def date_created
       fetch(Solrizer.solr_name("date_created"), [])
-    end
-
-    def proxy_depositor
-      fetch(Solrizer.solr_name("proxy_depositor", :symbol), nil)
     end
 
     def create_date
@@ -45,11 +35,6 @@ module Sufia
     # TODO: Move to curation_concerns?
     def related_url
       self[Solrizer.solr_name('related_url')]
-    end
-
-    # TODO: stop using this method and remove. Use `tags' instead.
-    def tag
-      tags
     end
 
     def resource_type
@@ -80,10 +65,6 @@ module Sufia
       @collections = result['response']['docs'].map do |hash|
         ::SolrDocument.new(hash)
       end
-    end
-
-    def generic_work?
-      hydra_model == 'GenericWork'
     end
   end
 end
