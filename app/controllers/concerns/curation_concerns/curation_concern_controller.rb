@@ -40,7 +40,6 @@ module CurationConcerns::CurationConcernController
   end
 
   def create
-    # return unless verify_acceptance_of_user_agreement!
     if actor.create(attributes_for_actor)
       after_create_response
     else
