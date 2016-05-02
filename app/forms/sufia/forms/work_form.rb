@@ -5,6 +5,7 @@ module Sufia::Forms
     attr_reader :agreement_accepted
 
     self.terms += [:collection_ids]
+    self.required_fields = [:title, :creator, :tag, :rights]
 
     def initialize(model, current_ability)
       @agreement_accepted = !model.new_record?
@@ -16,11 +17,12 @@ module Sufia::Forms
       super
     end
 
+    # Fields that are automatically drawn on the page above the fold
     def primary_terms
-      [:title, :creator, :tag, :rights]
+      required_fields
     end
 
-    # Fields that are in rendered terms are automatically drawn on the page.
+    # Fields that are automatically drawn on the page below the fold
     def secondary_terms
       terms - primary_terms -
         [:files, :visibility_during_embargo, :embargo_release_date,

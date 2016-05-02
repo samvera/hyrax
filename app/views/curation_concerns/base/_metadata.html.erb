@@ -1,18 +1,12 @@
 <h2><%= t('.header') %></h2>
-<% attributes ||= [ :embargo_release_date, :lease_expiration_date, :rights] %>
-<% presentations = attributes.map { |attribute| presenter.attribute_to_html(attribute) }.reject { |x| x.empty? } %>
-<% if presentations.empty? %>
-  <p><%= t('.no_metadata') %></p>
-<% else %>
-  <table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-    <thead>
-      <tr><th><%= t('.attribute_name_label') %></th><th><%= t('.attribute_values_label') %></th></tr>
-    </thead>
-    <tbody>
-      <%= render 'attribute_rows', presenter: presenter %>
-      <% presentations.each do | presentation | %>
-        <%= presentation %>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+<table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+  <thead>
+    <tr><th><%= t('.attribute_name_label') %></th><th><%= t('.attribute_values_label') %></th></tr>
+  </thead>
+  <tbody>
+    <%= render 'attribute_rows', presenter: presenter %>
+    <%= presenter.attribute_to_html(:embargo_release_date) %>
+    <%= presenter.attribute_to_html(:lease_expiration_date) %>
+    <%= presenter.attribute_to_html(:rights) %>
+  </tbody>
+</table>

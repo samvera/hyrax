@@ -268,7 +268,6 @@ en:
         collections: "In collections:"
       metadata:
         header: Metadata
-        no_metadata: "No metadata is defined for this work."
         attribute_name_label: Attribute Name
         attribute_values_label: Values
       items:
@@ -287,3 +286,8 @@ en:
         label_html: Lease
       private:
         label_html: Private
+  blacklight:
+    search:
+      fields:
+        show:
+          tag: Keyword
