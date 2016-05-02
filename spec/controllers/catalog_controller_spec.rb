@@ -93,25 +93,25 @@ describe CatalogController, type: :controller do
 
       let(:work1) do
         { has_model_ssim: ["GenericWork"], id: "ff365c76z", title_tesim: ["me too"],
-          objects_ssim: ["ff365c78h", "ff365c79s"],
+          file_set_ids_ssim: ["ff365c78h", "ff365c79s"],
           read_access_group_ssim: ["public"], edit_access_person_ssim: ["user1@example.com"] }
       end
 
       let(:work2) do
         { has_model_ssim: ["GenericWork"], id: "ff365c777", title_tesim: ["find me"],
-          objects_ssim: [],
+          file_set_ids_ssim: [],
           read_access_group_ssim: ["public"], edit_access_person_ssim: ["user2@example.com"] }
       end
 
       let(:file1) do
         { has_model_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
-          objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
+          file_set_ids_ssim: [],
           edit_access_person_ssim: [user.user_key] }
       end
 
       let(:file2) do
         { has_model_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
-          objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
+          file_set_ids_ssim: [],
           edit_access_person_ssim: [user.user_key] }
       end
 
