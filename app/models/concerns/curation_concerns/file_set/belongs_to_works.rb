@@ -25,8 +25,9 @@ module CurationConcerns
       # Returns all FileSets aggregated by any of the parent objects that
       # aggregate the current object
       def related_files
-        return [] if parents.empty?
-        parents.flat_map do |work|
+        parent_objects = parents
+        return [] if parent_objects.empty?
+        parent_objects.flat_map do |work|
           work.file_sets.select do |file_set|
             file_set.id != id
           end
@@ -36,8 +37,9 @@ module CurationConcerns
       # If any parent objects are pointing at this object as their
       # representative, remove that pointer.
       def remove_representative_relationship
-        return if parents.empty?
-        parents.each do |work|
+        parent_objects = parents
+        return if parent_objects.empty?
+        parent_objects.each do |work|
           work.update(representative_id: nil) if work.representative_id == id
         end
       end
