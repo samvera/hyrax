@@ -49,6 +49,31 @@ describe("SaveWorkControl", function() {
     });
   });
 
+  describe("validateAgreement", function() {
+    var target;
+    beforeEach(function() {
+      var fixture = setFixtures('<form id="edit_generic_work">' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
+        '<input type="submit"></aside></form>');
+      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      target.activate()
+    });
+    it("forces user to agree if new files are added", function() {
+      // Agreement starts as accepted...
+      target.uploads = { hasNewFiles: false };
+      expect(target.validateAgreement(true)).toEqual(true);
+
+      // ...and becomes not accepted as soon as the user adds new files...
+      target.uploads = { hasNewFiles: true };
+      expect(target.validateAgreement(true)).toEqual(false);
+
+      // ...but allows the user to manually agree again.
+      target.depositAgreement.setAccepted();
+      expect(target.validateAgreement(true)).toEqual(true);
+    });
+  });
+
   describe("validateFiles", function() {
     var mockCheckbox = {
       check: function() { },

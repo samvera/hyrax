@@ -78,7 +78,8 @@ export class SaveWorkControl {
     // avoid short circuit evaluation. The checkboxes should be independent.
     let metadataValid = this.validateMetadata()
     let filesValid = this.validateFiles()
-    return metadataValid && filesValid && this.depositAgreement.isAccepted
+    let agreementValid = this.validateAgreement(filesValid)
+    return metadataValid && filesValid && agreementValid
   }
 
   // sets the metadata indicator to complete/incomplete
@@ -99,6 +100,15 @@ export class SaveWorkControl {
     }
     this.requiredFiles.uncheck()
     return false
+  }
+
+  validateAgreement(filesValid) {
+    if (filesValid && this.uploads.hasNewFiles && this.depositAgreement.mustAgreeAgain) {
+      // Force the user to agree again
+      this.depositAgreement.setNotAccepted()
+      return false
+    }
+    return this.depositAgreement.isAccepted
   }
 }
 
