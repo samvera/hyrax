@@ -6,3 +6,11 @@
   <% end %>
   <%= render 'curation_concerns/base/guts4form', f: f %>
 <% end %>
+
+<script type="text/javascript">
+  Blacklight.onLoad(function() {
+    <%# This causes the page to switch back to the default template if they've
+        previously visited the batch download page in this Turbolinks session %>
+    $("#fileupload").fileupload('option', 'downloadTemplateId', 'template-download')
+  });
+</script>
