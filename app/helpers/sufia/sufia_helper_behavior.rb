@@ -27,6 +27,12 @@ module Sufia
       "https://www.zotero.org/users/#{zotero_user_id}"
     end
 
+    # @param [Hash] options a list of options that blacklight passes from helper_method
+    #                       invocation.
+    def human_readable_date(options)
+      Date.parse(options[:value]).to_formatted_s(:standard)
+    end
+
     def error_messages_for(object)
       if object.try(:errors) && object.errors.full_messages.any?
         content_tag(:div, class: 'alert alert-block alert-error validation-errors') do
@@ -80,7 +86,10 @@ module Sufia
       link_to(display, link_url)
     end
 
+    # @param [String,Hash] text either the string to escape or a hash containing the
+    #                           string to escape under the :value key.
     def iconify_auto_link(text, showLink = true)
+      text = presenter(text[:document]).render_values(text[:value], text[:config]) if text.is_a? Hash
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|
@@ -88,14 +97,21 @@ module Sufia
       end
     end
 
-    def link_to_profile(user_or_login)
-      user = user_or_login.is_a?(User) ? user_or_login : ::User.find_by_user_key(user_or_login)
-      return user_or_login if user.nil?
+    # @param [String,User,Hash] args if a hash, the user_key must be under :value
+    def link_to_profile(args)
+      user_or_key = args.is_a?(Hash) ? args[:value].first : args
+      user = case user_or_key
+             when User
+               user_or_key
+             when String
+               ::User.find_by_user_key(user_or_key)
+             end
+      return user_or_key if user.nil?
 
       text = if user.respond_to? :name
                user.name
              else
-               user_or_login
+               user_or_key
              end
 
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)

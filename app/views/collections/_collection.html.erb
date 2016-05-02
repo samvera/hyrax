@@ -1,15 +1,2 @@
-<li>
-  <h2>
-    <%= link_to collection.title_or_label, collection %>
-  </h2>
-  <div class="row">
-    <div class="col-sm-3">
-      <%= link_to collection do %>
-          <span class="fa fa-cubes collection-icon-search"></span>
-      <% end %>
-    </div>
-    <div class="col-sm-9">
-      <%= render 'shared/attributes', work: collection %>
-    </div>
-  </div>
-</li>
+<%-# This is a search result view %>
+<%= render partial: 'catalog/document', locals: { document: collection, document_counter: collection_counter } %>
