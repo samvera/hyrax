@@ -195,6 +195,7 @@ en:
       subject:  'Subject'
       message:  'Message'
       delete:   'Delete Message'
+      notifications_deleted: "Notifications have been deleted"
     file_set:
       browse_view: "Browse View"
     work:
