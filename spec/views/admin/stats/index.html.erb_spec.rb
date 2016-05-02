@@ -9,6 +9,7 @@ describe "admin/stats/index.html.erb" do
   end
   before do
     assign(:presenter, presenter)
+    allow(presenter).to receive(:top_formats).and_return([])
   end
 
   context "default depositors" do
