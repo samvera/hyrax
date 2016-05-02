@@ -4,6 +4,11 @@ describe CurationConcerns::GenericWorkForm do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil) }
 
+  describe "#required_fields" do
+    subject { form.required_fields }
+    it { is_expected.to eq [:title, :creator, :tag, :rights] }
+  end
+
   describe "#primary_terms" do
     subject { form.primary_terms }
     it { is_expected.to eq [:title, :creator, :tag, :rights] }
