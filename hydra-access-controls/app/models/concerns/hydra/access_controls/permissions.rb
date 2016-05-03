@@ -5,10 +5,24 @@ module Hydra
       include Hydra::AccessControls::Visibility
 
       included do
-        has_many :permissions, predicate: ::ACL.accessTo, class_name: 'Hydra::AccessControls::Permission', inverse_of: :access_to, dependent: :destroy
-        accepts_nested_attributes_for :permissions, allow_destroy: true
-        alias_method :permissions_attributes_without_uniqueness=, :permissions_attributes=
-        alias_method :permissions_attributes=, :permissions_attributes_with_uniqueness=
+        belongs_to :access_control, predicate: ::ACL.accessControl, class_name: 'Hydra::AccessControl'
+        before_destroy do |obj|
+          access_control.destroy
+        end
+        after_save do
+          # Only force save if autosave woudn't be called normally
+          access_control.save! unless access_control.changed?
+        end
+      end
+
+      delegate :permissions, :permissions=, to: :permission_delegate
+
+      def permissions_attributes_without_uniqueness=(attrs)
+        permission_delegate.permissions_attributes = attrs
+      end
+
+      def permission_delegate
+        (access_control || create_access_control).tap { |d| d.owner = self }
       end
 
       def to_solr(solr_doc = {})
@@ -23,36 +37,36 @@ module Hydra
       end
 
       # When chaging a permission for an object/user, ensure an update is done, not a duplicate
-      def permissions_attributes_with_uniqueness=(attributes_collection)
+      def permissions_attributes=(attributes_collection)
         if attributes_collection.is_a? Hash
           keys = attributes_collection.keys
           attributes_collection = if keys.include?('id') || keys.include?(:id)
-            Array(attributes_collection)
-          else
-            attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
+                                    Array(attributes_collection)
+                                  else
+                                    attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           end
         end
 
+        attributes_collection = attributes_collection.map(&:with_indifferent_access)
         attributes_collection.each do |prop|
           existing = case prop[:type]
-          when 'group'
-            search_by_type(:group)
-          when 'person'
-            search_by_type(:person)
+                     when 'group'
+                       search_by_type(:group)
+                     when 'person'
+                       search_by_type(:person)
           end
 
-          next unless existing
+          next if existing.blank?
           selected = existing.find { |perm| perm.agent_name == prop[:name] }
           prop['id'] = selected.id if selected
         end
 
-        self.permissions_attributes_without_uniqueness=attributes_collection
+        self.permissions_attributes_without_uniqueness = attributes_collection
       end
-
 
       # Return a list of groups that have discover permission
       def discover_groups
-        search_by_type_and_mode(:group, Hydra::ACL.Discover).map { |p| p.agent_name }
+        search_by_type_and_mode(:group, Hydra::ACL.Discover).map(&:agent_name)
       end
 
       # Grant discover permissions to the groups specified. Revokes discover permission for all other groups.
@@ -74,12 +88,12 @@ module Hydra
       #  => ['one', 'two', 'three']
       #
       def discover_groups_string=(groups)
-        self.discover_groups=groups.split(/[\s,]+/)
+        self.discover_groups = groups.split(/[\s,]+/)
       end
 
       # Display the groups a comma delimeted string
       def discover_groups_string
-        self.discover_groups.join(', ')
+        discover_groups.join(', ')
       end
 
       # Grant discover permissions to the groups specified. Revokes discover permission for
@@ -102,7 +116,7 @@ module Hydra
       end
 
       def discover_users
-        search_by_type_and_mode(:person, Hydra::ACL.Discover).map { |p| p.agent_name }
+        search_by_type_and_mode(:person, Hydra::ACL.Discover).map(&:agent_name)
       end
 
       # Grant discover permissions to the users specified. Revokes discover permission for all other users.
@@ -124,12 +138,12 @@ module Hydra
       #  => ['one', 'two', 'three']
       #
       def discover_users_string=(users)
-        self.discover_users=users.split(/[\s,]+/)
+        self.discover_users = users.split(/[\s,]+/)
       end
 
       # Display the users as a comma delimeted string
       def discover_users_string
-        self.discover_users.join(', ')
+        discover_users.join(', ')
       end
 
       # Grant discover permissions to the users specified. Revokes discover permission for
@@ -153,7 +167,7 @@ module Hydra
 
       # Return a list of groups that have discover permission
       def read_groups
-        search_by_type_and_mode(:group, ::ACL.Read).map { |p| p.agent_name }
+        search_by_type_and_mode(:group, ::ACL.Read).map(&:agent_name)
       end
 
       # Grant read permissions to the groups specified. Revokes read permission for all other groups.
@@ -175,12 +189,12 @@ module Hydra
       #  => ['one', 'two', 'three']
       #
       def read_groups_string=(groups)
-        self.read_groups=groups.split(/[\s,]+/)
+        self.read_groups = groups.split(/[\s,]+/)
       end
 
       # Display the groups a comma delimeted string
       def read_groups_string
-        self.read_groups.join(', ')
+        read_groups.join(', ')
       end
 
       # Grant read permissions to the groups specified. Revokes read permission for
@@ -203,7 +217,7 @@ module Hydra
       end
 
       def read_users
-        search_by_type_and_mode(:person, ::ACL.Read).map { |p| p.agent_name }
+        search_by_type_and_mode(:person, ::ACL.Read).map(&:agent_name)
       end
 
       # Grant read permissions to the users specified. Revokes read permission for all other users.
@@ -225,12 +239,12 @@ module Hydra
       #  => ['one', 'two', 'three']
       #
       def read_users_string=(users)
-        self.read_users=users.split(/[\s,]+/)
+        self.read_users = users.split(/[\s,]+/)
       end
 
       # Display the users as a comma delimeted string
       def read_users_string
-        self.read_users.join(', ')
+        read_users.join(', ')
       end
 
       # Grant read permissions to the users specified. Revokes read permission for
@@ -252,10 +266,9 @@ module Hydra
         set_entities(:read, :person, users, eligible_users)
       end
 
-
       # Return a list of groups that have edit permission
       def edit_groups
-        search_by_type_and_mode(:group, ::ACL.Write).map { |p| p.agent_name }
+        search_by_type_and_mode(:group, ::ACL.Write).map(&:agent_name)
       end
 
       # Grant edit permissions to the groups specified. Revokes edit permission for all other groups.
@@ -277,12 +290,12 @@ module Hydra
       #  => ['one', 'two', 'three']
       #
       def edit_groups_string=(groups)
-        self.edit_groups=groups.split(/[\s,]+/)
+        self.edit_groups = groups.split(/[\s,]+/)
       end
 
       # Display the groups a comma delimeted string
       def edit_groups_string
-        self.edit_groups.join(', ')
+        edit_groups.join(', ')
       end
 
       # Grant edit permissions to the groups specified. Revokes edit permission for
@@ -305,7 +318,7 @@ module Hydra
       end
 
       def edit_users
-        search_by_type_and_mode(:person, ::ACL.Write).map { |p| p.agent_name }
+        search_by_type_and_mode(:person, ::ACL.Write).map(&:agent_name)
       end
 
       # Grant edit permissions to the groups specified. Revokes edit permission for all other groups.
@@ -341,7 +354,7 @@ module Hydra
       protected
 
       def has_destroy_flag?(hash)
-        ["1", "true"].include?(hash['_destroy'].to_s)
+        %w(1 true).include?(hash['_destroy'].to_s)
       end
 
       private
@@ -358,7 +371,7 @@ module Hydra
 
         values.each do |agent_name|
           exists = search_by_type_and_mode(type, permission_to_uri(permission)).select { |p| p.agent_name == agent_name }
-          permissions.build(name: agent_name, access: permission.to_s, type: type ) unless exists.present?
+          permissions.build(name: agent_name, access: permission.to_s, type: type) unless exists.present?
         end
       end
 
@@ -401,7 +414,7 @@ module Hydra
       # @param [RDF::URI] mode One of the permissions modes, e.g. ACL.Write, ACL.Read, etc.
       # @yieldparam [Array<ActiveFedora::Base>] agent the agent type assertions
       # @return [Array<Permission>] list of permissions where the mode is as selected, the block evaluates to true and the target is not marked for delete
-      def search_by_mode(mode, &block)
+      def search_by_mode(mode)
         permissions.to_a.select do |p|
           yield(p.agent) && !p.marked_for_destruction? && p.mode.first.rdf_subject == mode
         end
@@ -416,16 +429,14 @@ module Hydra
       end
 
       def group_agent?(agent)
-        raise "no agent" unless agent.present?
+        raise 'no agent' unless agent.present?
         agent.first.rdf_subject.to_s.start_with?(GROUP_AGENT_URL_PREFIX)
-
       end
 
       def person_agent?(agent)
-        raise "no agent" unless agent.present?
+        raise 'no agent' unless agent.present?
         agent.first.rdf_subject.to_s.start_with?(PERSON_AGENT_URL_PREFIX)
       end
-
     end
   end
 end

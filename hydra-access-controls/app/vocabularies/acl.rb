@@ -3,6 +3,7 @@ class ACL < RDF::StrictVocabulary('http://www.w3.org/ns/auth/acl#')
   property :mode
   property :agent
   property :agentClass
+  property :accessControl
 
   property :Agent
   property :Read
