@@ -72,8 +72,8 @@ class Sufia::SearchBuilder < Blacklight::SearchBuilder
       "{!dismax v=$user_query}"
     end
 
-    # join from file id to work relationship solrized generic_work_ids
+    # join from file id to work relationship solrized file_set_ids_ssim
     def join_for_works_from_files
-      "{!join from=#{Solrizer.solr_name('generic_work_ids', :symbol)} to=id}#{dismax_query}"
+      "{!join from=#{ActiveFedora.id_field} to=file_set_ids_ssim}#{dismax_query}"
     end
 end

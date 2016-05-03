@@ -43,7 +43,9 @@ module Sufia
     end
 
     def parent
-      ids = solr_document.fetch('generic_work_ids_ssim')
+      ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
+                                            fl: ActiveFedora.id_field)
+                                     .map { |x| x.fetch(ActiveFedora.id_field) }
       @parent_presenter ||= CurationConcerns::PresenterFactory.build_presenters(ids,
                                                                                 WorkShowPresenter,
                                                                                 current_ability).first

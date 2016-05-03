@@ -79,8 +79,6 @@ else
   end
 end
 
-Resque.inline = Rails.env.test?
-
 class JsonStrategy
   def initialize
     @strategy = FactoryGirl.strategy_by_name(:create).new

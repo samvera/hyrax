@@ -6,5 +6,11 @@ module Sufia
     include Sufia::Works::Metadata
     include Sufia::Works::Querying
     include Sufia::WithEvents
+
+    module ClassMethods
+      def indexer
+        Sufia::WorkIndexer
+      end
+    end
   end
 end
