@@ -23,7 +23,8 @@ module Sufia
    4. Adds controller behavior to the application controller
    5. Copies the catalog controller into the local app
    6. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
-   7. Installs Blacklight gallery
+   7. Updates simple_form to use browser validations
+   8. Installs Blacklight gallery
          """
 
     def banner
@@ -208,6 +209,12 @@ module Sufia
 
     def install_sufia_700
       generate "sufia:upgrade700"
+    end
+
+    def use_browser_validations
+      gsub_file 'config/initializers/simple_form.rb',
+                /browser_validations = false/,
+                'browser_validations = true'
     end
 
     def install_blacklight_gallery
