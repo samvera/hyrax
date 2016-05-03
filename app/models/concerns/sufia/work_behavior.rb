@@ -7,10 +7,8 @@ module Sufia
     include Sufia::Works::Querying
     include Sufia::WithEvents
 
-    module ClassMethods
-      def indexer
-        Sufia::WorkIndexer
-      end
+    included do
+      self.indexer = Sufia::WorkIndexer
     end
   end
 end
