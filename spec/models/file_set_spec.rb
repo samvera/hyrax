@@ -148,6 +148,23 @@ describe FileSet do
   describe '#indexer' do
     subject { described_class.indexer }
     it { is_expected.to eq CurationConcerns::FileSetIndexer }
+
+    describe "setting" do
+      before do
+        class AltFile < ActiveFedora::Base
+          include CurationConcerns::FileSetBehavior
+        end
+      end
+      after do
+        Object.send(:remove_const, :AltFile)
+      end
+      let(:klass) { Class.new }
+      subject { AltFile.new }
+      it 'is settable' do
+        AltFile.indexer = klass
+        expect(subject.indexer).to eq klass
+      end
+    end
   end
 
   it 'supports multi-valued fields in solr' do

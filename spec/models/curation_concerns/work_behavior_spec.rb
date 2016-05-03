@@ -12,7 +12,7 @@ describe CurationConcerns::WorkBehavior do
 
   subject { EssentialWork.new }
 
-  it 'mixs together all the goodness' do
+  it 'mixes together all the goodness' do
     [::CurationConcerns::WithFileSets, ::CurationConcerns::HumanReadableType, CurationConcerns::Noid, CurationConcerns::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common].each do |mixin|
       expect(subject.class.ancestors).to include(mixin)
     end
@@ -37,5 +37,13 @@ describe CurationConcerns::WorkBehavior do
   it 'inherits (and extends) to_solr behaviors from superclass' do
     expect(subject.to_solr.keys).to include(:id)
     expect(subject.to_solr.keys).to include('has_model_ssim')
+  end
+
+  describe 'indexer' do
+    let(:klass) { Class.new }
+    it 'is settable' do
+      EssentialWork.indexer = klass
+      expect(subject.indexer).to eq klass
+    end
   end
 end
