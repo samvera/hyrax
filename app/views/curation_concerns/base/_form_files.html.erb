@@ -6,12 +6,20 @@
             <div class="col-xs-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <span class="glyphicon glyphicon-plus"></span>
                     <span>Add files...</span>
                     <input type="file" name="files[]" multiple>
                 </span>
+                <% if browser_supports_directory_upload? %>
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span>Add folder...</span>
+                    <input type="file" name="files[]" multiple directory webkitdirectory>
+                </span>
+                <% end %>
                 <button type="reset" class="btn btn-warning cancel hidden">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span class="glyphicon glyphicon-ban-circle"></span>
                     <span>Cancel upload</span>
                 </button>
                 <!-- The global file processing state -->

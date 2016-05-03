@@ -50,6 +50,21 @@ describe 'curation_concerns/base/_form.html.erb' do
         expect(page).to have_selector('button#browse-btn')
       end
     end
+
+    describe 'uploading a folder' do
+      context 'with Chrome' do
+        before { allow(view).to receive(:browser_supports_directory_upload?) { true } }
+        it 'renders the add folder button' do
+          expect(page).to have_content('Add folder...')
+        end
+      end
+      context 'with a non-Chrome browser' do
+        before { allow(view).to receive(:browser_supports_directory_upload?) { false } }
+        it 'does not render the add folder button' do
+          expect(page).not_to have_content('Add folder...')
+        end
+      end
+    end
   end
 
   context "for a persisted object" do
