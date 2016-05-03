@@ -3,11 +3,10 @@ module CurationConcerns
     module Indexing
       extend ActiveSupport::Concern
 
-      module ClassMethods
-        # override the default indexing service
-        def indexer
-          CurationConcerns::FileSetIndexer
-        end
+      included do
+        class_attribute :indexer
+        # the default indexing service
+        self.indexer = CurationConcerns::FileSetIndexer
       end
     end
   end

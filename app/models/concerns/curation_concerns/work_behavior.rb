@@ -17,14 +17,11 @@ module CurationConcerns::WorkBehavior
 
   included do
     property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
-    class_attribute :human_readable_short_description
+    class_attribute :human_readable_short_description, :indexer
+    self.indexer = CurationConcerns::WorkIndexer
   end
 
   module ClassMethods
-    def indexer
-      CurationConcerns::WorkIndexer
-    end
-
     # This governs which partial to draw when you render this type of object
     def _to_partial_path #:nodoc:
       @_to_partial_path ||= begin
