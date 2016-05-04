@@ -48,6 +48,19 @@ describe DashboardHelper, type: :helper do
     end
   end
 
+  describe "#number_of_works" do
+    let(:conn) { ActiveFedora::SolrService.instance.conn }
+    let(:user1) { User.new(email: "abc@test") }
+    let(:user2) { User.new(email: "abc@test.123") }
+    before do
+      create_models("GenericWork", user1, user2)
+    end
+
+    it "finds 3 works" do
+      expect(helper.number_of_works(user1)).to eq(3)
+    end
+  end
+
   describe "#number_of_files" do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }

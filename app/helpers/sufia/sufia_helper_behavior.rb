@@ -79,11 +79,11 @@ module Sufia
       safe_join(values.map { |item| link_to_facet(item, facet_field) }, separator)
     end
 
-    def link_to_field(fieldname, fieldvalue, displayvalue = nil)
-      p = { search_field: 'advanced', fieldname => '"' + fieldvalue + '"' }
-      link_url = main_app.search_catalog_path(p)
-      display = displayvalue.blank? ? fieldvalue : displayvalue
-      link_to(display, link_url)
+    def link_to_field(name, value, label = nil, facet_hash = {})
+      label ||= value
+      params = { search_field: 'advanced', name => "\"#{value}\"" }
+      state = search_state_with_facets(params, facet_hash)
+      link_to(label, main_app.search_catalog_path(state))
     end
 
     # @param [String,Hash] text either the string to escape or a hash containing the
@@ -182,6 +182,13 @@ module Sufia
         else
           sufia.dashboard_works_path
         end
+      end
+
+      def search_state_with_facets(params, facet = {})
+        state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
+        return state.params if facet.none?
+        state.add_facet_params(Solrizer.solr_name(facet.keys.first, :facetable),
+                               facet.values.first)
       end
   end
 end
