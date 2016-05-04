@@ -21,10 +21,19 @@ Metrics/LineLength:
   Max: 400
 
 Metrics/AbcSize:
-  Max: 50
+  Max: 30
+  Exclude:
+    - 'app/controllers/concerns/sufia/admin/depositor_stats.rb'
+    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
+    - 'app/services/sufia/user_stat_importer.rb'
+    - 'lib/sufia/arkivo/metadata_munger.rb'
 
 Metrics/MethodLength:
-  Max: 30
+  Max: 20
+  Exclude:
+    - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
+    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
+    - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
 
 Style/BlockDelimiters:
   Exclude:
