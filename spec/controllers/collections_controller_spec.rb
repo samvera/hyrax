@@ -8,9 +8,9 @@ describe CollectionsController do
   let(:other) { create(:user) }
 
   let(:collection) do
-    create(:collection, title: ["My collection"],
-                        description: ["My incredibly detailed description of the collection"],
-                        user: user
+    create(:public_collection, title: ["My collection"],
+                               description: ["My incredibly detailed description of the collection"],
+                               user: user
           )
   end
 
@@ -69,6 +69,23 @@ describe CollectionsController do
         expect(doc["id"]).to eq asset1.id
         afterupdate = GenericWork.find(asset1.id)
         expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
+      end
+    end
+
+    context "when setting visibility" do
+      it 'creates a public Collection' do
+        col1 = create(:public_collection, title: ["Public collection"])
+        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      end
+
+      it 'creates an institutional Collection' do
+        col1 = create(:institution_collection, title: ["Institution collection"])
+        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      end
+
+      it 'creates a private Collection' do
+        col1 = create(:private_collection, title: ["Private collection"])
+        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       end
     end
   end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Collection do
-  let(:collection) { create(:collection) }
+  let(:collection) { create(:public_collection) }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']

@@ -5,8 +5,8 @@ describe 'collection', type: :feature do
 
   let(:work1) { create(:work, title: ["King Louie"], user: user) }
   let(:work2) { create(:work, title: ["King Kong"], user: user) }
-  let(:collection1) { create(:collection, user: user) }
-  let(:collection2) { create(:collection, user: user) }
+  let(:collection1) { create(:public_collection, user: user) }
+  let(:collection2) { create(:public_collection, user: user) }
 
   describe 'create collection' do
     before do
@@ -60,7 +60,7 @@ describe 'collection', type: :feature do
   end
 
   describe 'delete collection' do
-    let!(:collection) { create(:collection, user: user) }
+    let!(:collection) { create(:public_collection, user: user) }
     before do
       sign_in user
       visit '/dashboard/collections'
@@ -78,7 +78,7 @@ describe 'collection', type: :feature do
 
   describe 'collection show page' do
     let!(:collection) do
-      create(:collection, description: ["Collection description"], members: [work1, work2], user: user)
+      create(:public_collection, description: ["Collection description"], members: [work1, work2], user: user)
     end
     before do
       sign_in user

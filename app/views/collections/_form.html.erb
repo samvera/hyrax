@@ -1,7 +1,7 @@
 <%= simple_form_for @form, html: { class: 'editor' } do |f| %>
   <div id="descriptions_display">
     <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
-    <% f.object.terms.each do |term| %>
+    <% f.object.rendered_terms.each do |term| %>
       <%= render_edit_field_partial term, f: f %>
     <% end %>
   </div>
@@ -11,6 +11,10 @@
       <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
     <% end %>
   <% end %>
+
+  <div class="collection_form_visibility">
+    <%= render 'form_permission', f: f %>
+  </div>
 
   <div class="primary-actions">
     <% if params[:action] == "new" %>

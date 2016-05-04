@@ -7,6 +7,7 @@ describe 'collections/_form.html.erb' do
   before do
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
+    assign(:collection, collection)
   end
 
   it "draws the metadata fields for collection" do
