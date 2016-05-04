@@ -125,16 +125,16 @@ Note here that the following commands assume you're setting up Sufia in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-We recommend either Ruby 2.2 or the latest 2.1 version.
+We recommend either Ruby 2.3 or the latest 2.2 version.
 
 # Creating a Sufia-based app
 
 ## Rails
 
-Generate a new Rails application.  Sufia 7 requires Rails 4.2.
+Generate a new Rails application. We recommend the latest Rails 4.2 release (4.2.6 when last updated).
 
 ```
-gem install rails -v 4.2
+gem install rails -v 4.2.6
 rails new my_app
 ```
 
