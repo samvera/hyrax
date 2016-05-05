@@ -142,7 +142,7 @@ module CurationConcerns
     # Registers the given curation concern model in the configuration
     # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
-      Array(curation_concern_types).flatten.compact.each do |cc_type|
+      Array.wrap(curation_concern_types).flatten.compact.each do |cc_type|
         unless @registered_concerns.include?(cc_type)
           @registered_concerns << cc_type
         end
