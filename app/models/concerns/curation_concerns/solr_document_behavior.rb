@@ -37,7 +37,7 @@ module CurationConcerns
     end
 
     def human_readable_type
-      Array(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
+      Array.wrap(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
     end
 
     def representative_id
@@ -58,24 +58,24 @@ module CurationConcerns
     end
 
     def depositor(default = '')
-      val = Array(self[Solrizer.solr_name('depositor')]).first
+      val = Array.wrap(self[Solrizer.solr_name('depositor')]).first
       val.present? ? val : default
     end
 
     def title
-      Array(self[Solrizer.solr_name('title')]).first
+      Array.wrap(self[Solrizer.solr_name('title')]).first
     end
 
     def description
-      Array(self[Solrizer.solr_name('description')]).first
+      Array.wrap(self[Solrizer.solr_name('description')]).first
     end
 
     def label
-      Array(self[Solrizer.solr_name('label')]).first
+      Array.wrap(self[Solrizer.solr_name('label')]).first
     end
 
     def file_format
-      Array(self[Solrizer.solr_name('file_format')]).first
+      Array.wrap(self[Solrizer.solr_name('file_format')]).first
     end
 
     def creator
