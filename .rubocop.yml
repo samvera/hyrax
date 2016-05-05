@@ -29,10 +29,7 @@ Metrics/AbcSize:
     - 'lib/sufia/arkivo/metadata_munger.rb'
 
 Metrics/MethodLength:
-  Max: 20
-  Exclude:
-    - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
-    - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
+  Max: 15
 
 Style/BlockDelimiters:
   Exclude:
