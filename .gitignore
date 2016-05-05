@@ -33,3 +33,5 @@ db/schema.rb
 .ruby-*
 ## PROJECT::SPECIFIC
 /fcrepo4-test-data
+.byebug_history
+.internal_test_app

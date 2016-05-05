@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Hydra::AdminPolicy do
+  before do
+    allow(Devise).to receive(:authentication_keys).and_return(['uid'])
+  end
 
   describe "when setting attributes" do
     before do

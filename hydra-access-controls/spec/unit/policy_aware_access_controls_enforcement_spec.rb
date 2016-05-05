@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
   before do
+    allow(Devise).to receive(:authentication_keys).and_return(['uid'])
+
     class PolicyMockSearchBuilder < Blacklight::SearchBuilder
       include Blacklight::Solr::SearchBuilderBehavior
       include Hydra::AccessControlsEnforcement
