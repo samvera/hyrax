@@ -32,7 +32,6 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
-    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
 
 Style/BlockDelimiters:
