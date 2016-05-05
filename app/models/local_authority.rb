@@ -8,6 +8,11 @@ class LocalAuthority < ActiveRecord::Base
     authority = create(name: name)
     format = opts.fetch(:format, :ntriples)
     predicate = opts.fetch(:predicate, ::RDF::Vocab::SKOS.prefLabel)
+    entries = extract_harvestable_rdf_entries_from(sources, authority, predicate, format)
+    import_or_save!(entries)
+  end
+
+  def self.extract_harvestable_rdf_entries_from(sources, authority, predicate, format)
     entries = []
     sources.each do |uri|
       ::RDF::Reader.open(uri, format: format) do |reader|
@@ -19,8 +24,9 @@ class LocalAuthority < ActiveRecord::Base
         end
       end
     end
-    import_or_save!(entries)
+    entries
   end
+  private_class_method :extract_harvestable_rdf_entries_from
 
   def self.harvest_tsv(name, sources, opts = {})
     return unless where(name: name).empty?
