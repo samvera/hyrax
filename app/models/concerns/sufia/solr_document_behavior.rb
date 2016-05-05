@@ -38,23 +38,23 @@ module Sufia
     end
 
     def resource_type
-      Array(self[Solrizer.solr_name("resource_type")])
+      Array.wrap(self[Solrizer.solr_name("resource_type")])
     end
 
     def read_groups
-      Array(self[::Ability.read_group_field])
+      Array.wrap(self[::Ability.read_group_field])
     end
 
     def edit_groups
-      Array(self[::Ability.edit_group_field])
+      Array.wrap(self[::Ability.edit_group_field])
     end
 
     def edit_people
-      Array(self[::Ability.edit_user_field])
+      Array.wrap(self[::Ability.edit_user_field])
     end
 
     def collection_ids
-      Array(self['collection_ids_tesim'])
+      Array.wrap(self['collection_ids_tesim'])
     end
 
     # Find the solr documents for the collections this object belongs to

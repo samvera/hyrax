@@ -21,7 +21,7 @@ module Sufia
 
         # First, normalize camelCase symbols to underscore strings
         @metadata.each do |key, value|
-          munged[key.to_s.underscore] = Array(value)
+          munged[key.to_s.underscore] = Array.wrap(value)
         end
 
         # Then, rename the url key to related_url
