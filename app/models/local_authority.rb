@@ -19,11 +19,7 @@ class LocalAuthority < ActiveRecord::Base
         end
       end
     end
-    if LocalAuthorityEntry.respond_to?(:import)
-      LocalAuthorityEntry.import(entries)
-    else
-      entries.each(&:save!)
-    end
+    import_or_save!(entries)
   end
 
   def self.harvest_tsv(name, sources, opts = {})
@@ -31,11 +27,7 @@ class LocalAuthority < ActiveRecord::Base
     authority = create(name: name)
     prefix = opts.fetch(:prefix, "")
     entries = extract_harvestable_tsv_entries_from(sources, authority, prefix)
-    if LocalAuthorityEntry.respond_to? :import
-      LocalAuthorityEntry.import entries
-    else
-      entries.each(&:save!)
-    end
+    import_or_save!(entries)
   end
 
   def self.extract_harvestable_tsv_entries_from(sources, authority, prefix)
@@ -54,6 +46,14 @@ class LocalAuthority < ActiveRecord::Base
   end
   private_class_method :extract_harvestable_tsv_entries_from
 
+  def self.import_or_save!(entries)
+    if LocalAuthorityEntry.respond_to?(:import)
+      LocalAuthorityEntry.import(entries)
+    else
+      entries.each(&:save!)
+    end
+  end
+  private_class_method :import_or_save!
 
   def self.register_vocabulary(model, term, name)
     authority = find_by_name(name)
