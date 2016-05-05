@@ -21,7 +21,7 @@ describe "dashboard/index.html.erb", type: :view do
     allow(ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
     allow(ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
     allow(ability).to receive(:can?).with(:edit, user).and_return(can_edit_user)
-    allow(view).to receive(:number_of_files).and_return("15")
+    allow(view).to receive(:number_of_works).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
     assign(:activity, [])
     assign(:notifications, [])
@@ -79,9 +79,9 @@ describe "dashboard/index.html.erb", type: :view do
       expect(sidebar).to have_content "3 Collections created"
       expect(sidebar).to have_content "1 View"
       expect(sidebar).to have_content "3 Downloads"
-      expect(sidebar).to have_content "15 Deposited Files"
-      expect(sidebar).to have_content "Follower(s): 2"
-      expect(sidebar).to have_content "Following: 1"
+      expect(sidebar).to have_content "15 Works created"
+      expect(sidebar).to have_content "2 Follower(s)"
+      expect(sidebar).to have_content "1 Following"
     end
 
     it "shows the statistics before the profile" do

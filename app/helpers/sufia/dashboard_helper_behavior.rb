@@ -40,6 +40,10 @@ module Sufia
       params[:controller].match(/^my\/works/)
     end
 
+    def number_of_works(user = current_user)
+      ::GenericWork.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
+    end
+
     def number_of_files(user = current_user)
       ::FileSet.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
     end
