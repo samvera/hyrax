@@ -26,7 +26,17 @@ module Sufia
         def format_authors(authors_list = [])
           return "" if authors_list.blank?
           authors_list = Array.wrap(authors_list)
-          text = '' << surname_first(authors_list.first)
+          text = concatenate_authors_from(authors_list)
+          unless text.blank?
+            text << "." unless text =~ /\.$/
+            text << " "
+          end
+          text
+        end
+
+        def concatenate_authors_from(authors_list)
+          text = ''
+          text << surname_first(authors_list.first)
           if authors_list.length > 1
             if authors_list.length < 4
               authors_list[1...-1].each do |author|
@@ -37,12 +47,9 @@ module Sufia
               text << ", et al"
             end
           end
-          unless text.blank?
-            text << "." unless text =~ /\.$/
-            text << " "
-          end
           text
         end
+        private :concatenate_authors_from
 
         def format_date(pub_date)
           pub_date

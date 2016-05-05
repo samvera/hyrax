@@ -8,6 +8,11 @@ class LocalAuthority < ActiveRecord::Base
     authority = create(name: name)
     format = opts.fetch(:format, :ntriples)
     predicate = opts.fetch(:predicate, ::RDF::Vocab::SKOS.prefLabel)
+    entries = extract_harvestable_rdf_entries_from(sources, authority, predicate, format)
+    import_or_save!(entries)
+  end
+
+  def self.extract_harvestable_rdf_entries_from(sources, authority, predicate, format)
     entries = []
     sources.each do |uri|
       ::RDF::Reader.open(uri, format: format) do |reader|
@@ -19,17 +24,19 @@ class LocalAuthority < ActiveRecord::Base
         end
       end
     end
-    if LocalAuthorityEntry.respond_to?(:import)
-      LocalAuthorityEntry.import(entries)
-    else
-      entries.each(&:save!)
-    end
+    entries
   end
+  private_class_method :extract_harvestable_rdf_entries_from
 
   def self.harvest_tsv(name, sources, opts = {})
     return unless where(name: name).empty?
     authority = create(name: name)
     prefix = opts.fetch(:prefix, "")
+    entries = extract_harvestable_tsv_entries_from(sources, authority, prefix)
+    import_or_save!(entries)
+  end
+
+  def self.extract_harvestable_tsv_entries_from(sources, authority, prefix)
     entries = []
     sources.each do |uri|
       open(uri) do |f|
@@ -41,12 +48,18 @@ class LocalAuthority < ActiveRecord::Base
         end
       end
     end
-    if LocalAuthorityEntry.respond_to? :import
-      LocalAuthorityEntry.import entries
+    entries
+  end
+  private_class_method :extract_harvestable_tsv_entries_from
+
+  def self.import_or_save!(entries)
+    if LocalAuthorityEntry.respond_to?(:import)
+      LocalAuthorityEntry.import(entries)
     else
       entries.each(&:save!)
     end
   end
+  private_class_method :import_or_save!
 
   def self.register_vocabulary(model, term, name)
     authority = find_by_name(name)

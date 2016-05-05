@@ -21,24 +21,19 @@ module My
       end
 
       def empty_search_result
-        empty_request = {
-          responseHeader: {
-            status: 0,
-            params: {
-              wt: 'ruby',
-              rows: '11',
-              q: '*:*'
-            }
-          },
-          response: {
-            numFound: 0,
-            start: 0,
-            docs: []
-          }
-        }
         solr_response = Blacklight::Solr::Response.new(empty_request, {})
         docs = []
         [solr_response, docs]
+      end
+
+      def empty_request
+        {
+          responseHeader: {
+            status: 0,
+            params: { wt: 'ruby', rows: '11', q: '*:*' }
+          },
+          response: { numFound: 0, start: 0, docs: [] }
+        }
       end
   end
 end
