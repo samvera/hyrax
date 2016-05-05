@@ -19,21 +19,8 @@ module Sufia
 
         stats = {}
 
-        file_ids_for_user(user).each do |file_id|
-          view_stats = rescue_and_retry("Retried FileViewStat on #{user} for file #{file_id} too many times.") { FileViewStat.statistics(file_id, start_date, user.id) }
-          stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
-          delay
-          dl_stats = rescue_and_retry("Retried FileDownloadStat on #{user} for file #{file_id} too many times.") { FileDownloadStat.statistics(file_id, start_date, user.id) }
-          stats = tally_results(dl_stats, :downloads, stats) unless dl_stats.blank?
-          delay
-        end
-
-        work_ids_for_user(user).each do |work_id|
-          work_stats = rescue_and_retry("Retried WorkViewStat on #{user} for work #{work_id} too many times.") { WorkViewStat.statistics(work_id, start_date, user.id) }
-          stats = tally_results(work_stats, :work_views, stats) unless work_stats.blank?
-          delay
-        end
-
+        process_files(stats, user, start_date)
+        process_works(stats, user, start_date)
         create_or_update_user_stats(stats, user)
       end
       log_message('User stats import complete.')
@@ -50,6 +37,25 @@ module Sufia
     end
 
     private
+
+      def process_files(stats, user, start_date)
+        file_ids_for_user(user).each do |file_id|
+          view_stats = rescue_and_retry("Retried FileViewStat on #{user} for file #{file_id} too many times.") { FileViewStat.statistics(file_id, start_date, user.id) }
+          stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
+          delay
+          dl_stats = rescue_and_retry("Retried FileDownloadStat on #{user} for file #{file_id} too many times.") { FileDownloadStat.statistics(file_id, start_date, user.id) }
+          stats = tally_results(dl_stats, :downloads, stats) unless dl_stats.blank?
+          delay
+        end
+      end
+
+      def process_works(stats, user, start_date)
+        work_ids_for_user(user).each do |work_id|
+          work_stats = rescue_and_retry("Retried WorkViewStat on #{user} for work #{work_id} too many times.") { WorkViewStat.statistics(work_id, start_date, user.id) }
+          stats = tally_results(work_stats, :work_views, stats) unless work_stats.blank?
+          delay
+        end
+      end
 
       def delay
         sleep @delay_secs
