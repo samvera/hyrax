@@ -11,7 +11,7 @@ module Sufia
           else
             values = send(mapping[0]) if respond_to? mapping[0]
             values = mapping[1].call(values) if mapping.length == 2
-            values = Array(values)
+            values = Array.wrap(values)
           end
           next if values.blank? || values.first.nil?
           spaced_values = values.join("; ")

@@ -25,7 +25,7 @@ module Sufia
       ::CSV.generate do |csv|
         csv << terms.map do |term|
           values = file_set.send(term)
-          values = Array(values) # make sure we have an array
+          values = Array.wrap(values) # make sure we have an array
           values.join(multi_value_separator)
         end
       end

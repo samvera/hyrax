@@ -52,7 +52,7 @@ describe Sufia::Arkivo::Actor do
       work = subject.create_work_from_item
       # TODO: Figure out why this is needed if the Resque job is running synchronously
       reloaded = work.reload
-      expect(reloaded.title).to eq Array(item['metadata']['title'])
+      expect(reloaded.title).to eq Array.wrap(item['metadata']['title'])
     end
 
     it 'returns a GF instance' do
@@ -90,7 +90,7 @@ describe Sufia::Arkivo::Actor do
         # For some reason, "expect to change from to" wasn't working here
         expect(work.title).to eq title
         subject.update_work_from_item(work)
-        expect(work.title).to eq Array(item['metadata']['title'])
+        expect(work.title).to eq Array.wrap(item['metadata']['title'])
       end
 
       it 'wipes out the description' do

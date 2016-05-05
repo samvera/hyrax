@@ -63,7 +63,7 @@ module Sufia
     private
 
       def values_for(term)
-        Array(characterization_metadata[term])
+        Array.wrap(characterization_metadata[term])
       end
 
       def truncate_all(values)

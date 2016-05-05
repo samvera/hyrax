@@ -25,7 +25,7 @@ module Sufia
 
         def format_authors(authors_list = [])
           return "" if authors_list.blank?
-          authors_list = Array(authors_list)
+          authors_list = Array.wrap(authors_list)
           text = '' << surname_first(authors_list.first)
           if authors_list.length > 1
             if authors_list.length < 4
