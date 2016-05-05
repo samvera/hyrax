@@ -16,7 +16,7 @@
   <% end %>
 
   <div class="sort-toggle">
-    <% unless @response.response['numFound'] < 2 %>
+    <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
       <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
             <fieldset class="col-xs-12">
               <legend class="sr-only"><%= t('sufia.sort_label') %></legend>
@@ -33,7 +33,7 @@
               </button>
             </fieldset>
       <% end %>
-    <% end unless sort_fields.empty? %>
+    <% end %>
   </div>
 
 </div>
