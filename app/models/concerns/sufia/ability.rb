@@ -52,6 +52,7 @@ module Sufia
 
       can :create, TinymceAsset
       can [:create, :update], ContentBlock
+      can :edit, ::SolrDocument
     end
 
     def stats_abilities

@@ -32,28 +32,32 @@ describe Sufia::WorkShowPresenter do
     end
   end
 
-  describe 'Featured Works for admin users' do
-    let(:user) { create(:user) }
-    before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
+  describe 'admin users' do
+    let(:user)    { create(:user) }
     let(:ability) { Ability.new(user) }
-    let!(:work) { build(:public_generic_work) }
+    let!(:work)   { build(:public_generic_work) }
 
-    context 'on a brand new public work' do
-      it 'allows user to feature the work' do
+    before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
+
+    context 'with a new public work' do
+      it 'can feature the work' do
         allow(user).to receive(:can?).with(:create, FeaturedWork).and_return(true)
         expect(presenter.display_feature_link?).to be true
         expect(presenter.display_unfeature_link?).to be false
       end
     end
 
-    context 'on an already featured work' do
-      before do
-        FeaturedWork.create(generic_work_id: work.id)
-      end
-      it 'allows user to unfeature the work' do
+    context 'with a featured work' do
+      before { FeaturedWork.create(generic_work_id: work.id) }
+      it 'can unfeature the work' do
         expect(presenter.display_feature_link?).to be false
         expect(presenter.display_unfeature_link?).to be true
       end
+    end
+
+    describe "#editor?" do
+      subject { presenter.editor? }
+      it { is_expected.to be true }
     end
   end
 end
