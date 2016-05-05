@@ -8,7 +8,7 @@ describe 'searching' do
   end
 
   let!(:collection) do
-    create(:collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
   end
 
   context "as a public user" do

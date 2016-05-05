@@ -19,6 +19,7 @@ describe Sufia::Forms::CollectionForm do
                             :thumbnail_id,
                             :identifier,
                             :based_near,
-                            :related_url] }
+                            :related_url,
+                            :visibility] }
   end
 end

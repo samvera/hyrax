@@ -78,16 +78,10 @@ module Sufia
       end
     end
 
-    def inject_sufia_collection_behavior
-      insert_into_file 'app/models/collection.rb', after: 'include ::CurationConcerns::CollectionBehavior' do
-        "\n  include Sufia::CollectionBehavior"
-      end
-    end
-
     def inject_sufia_generic_work_behavior
       insert_into_file 'app/models/generic_work.rb', after: 'include ::CurationConcerns::BasicMetadata' do
         "\n  include Sufia::WorkBehavior" \
-          "\n  self.human_readable_type = 'Work'"
+        "\n  self.human_readable_type = 'Work'"
       end
     end
 

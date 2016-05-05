@@ -70,7 +70,7 @@ describe Admin::StatsController, type: :controller do
           build(:generic_work, user: user1, id: "abc1223").update_index
           build(:public_generic_work, user: user1, id: "bbb1223").update_index
           build(:registered_generic_work, user: user1, id: "ccc1223").update_index
-          create(:collection, user: user1)
+          create(:public_collection, user: user1)
         end
 
         it "includes files but not collections" do
@@ -107,7 +107,7 @@ describe Admin::StatsController, type: :controller do
       before do
         create(:work, user: user1)
         create(:work, user: user2)
-        create(:collection, user: user1)
+        create(:public_collection, user: user1)
         allow(old_work).to receive(:create_date).and_return(two_days_ago_date.to_datetime)
         old_work.update_index
       end

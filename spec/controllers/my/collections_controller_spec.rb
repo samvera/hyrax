@@ -6,8 +6,8 @@ describe My::CollectionsController, type: :controller do
     let(:other) { create(:user) }
 
     let!(:my_file)              { create(:work, user: user) }
-    let!(:first_collection)     { create(:collection, user: user) }
-    let!(:unrelated_collection) { create(:collection, user: other) }
+    let!(:first_collection)     { create(:public_collection, user: user) }
+    let!(:unrelated_collection) { create(:public_collection, user: other) }
 
     before { sign_in user }
 
@@ -18,7 +18,7 @@ describe My::CollectionsController, type: :controller do
       end
 
       context "with mulitple pages of collections" do
-        before { 2.times { create(:collection, user: user) } }
+        before { 2.times { create(:public_collection, user: user) } }
         it "paginates" do
           get :index, per_page: 2
           expect(assigns[:document_list].length).to eq 2

@@ -18,8 +18,8 @@ describe My::WorksController, type: :controller do
   context 'with different types of records' do
     let(:someone_else) { create(:user) }
 
-    let!(:my_collection)    { create(:collection, user: user) }
-    let!(:other_collection) { create(:collection) }
+    let!(:my_collection)    { create(:public_collection, user: user) }
+    let!(:other_collection) { create(:public_collection) }
     let!(:my_work)          { create(:work, user: user) }
     let!(:shared_work)      { create(:work, edit_users: [user.user_key], user: someone_else) }
     let!(:unrelated_work)   { create(:public_work, user: someone_else) }

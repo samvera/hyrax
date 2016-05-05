@@ -1,6 +1,7 @@
 module Sufia::Forms
   class CollectionForm < CurationConcerns::Forms::CollectionEditForm
-    # Visibility is not settable in Sufia
-    self.terms -= [:visibility]
+    def rendered_terms
+      terms - [:visibility]
+    end
   end
 end

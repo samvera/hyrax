@@ -17,7 +17,7 @@ describe My::SharesController, type: :controller do
       let!(:shared_with_me)           { create(:file_set, user: other_user, edit_users: [user, other_user]) }
       let!(:read_shared_with_me)      { create(:file_set, user: other_user, read_users: [user, other_user]) }
       let!(:shared_with_someone_else) { create(:file_set, user: other_user, edit_users: [someone_else, other_user]) }
-      let!(:my_collection)            { create(:collection, user: user) }
+      let!(:my_collection)            { create(:public_collection, user: user) }
 
       it "responds with success" do
         get :index
