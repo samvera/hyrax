@@ -1,9 +1,9 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-
 ENV["RAILS_ENV"] ||= "test"
 
-require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../internal", __FILE__))
+require 'engine_cart'
+path = File.expand_path(File.join('..', '..', '..', '.internal_test_app'), __FILE__)
+EngineCart.load_application! path
+
 require 'bundler/setup'
 require 'rspec/rails'
 require 'hydra-core'

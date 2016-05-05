@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'cancan/matchers'
 
 describe Ability do
+  before do
+    allow(Devise).to receive(:authentication_keys).and_return(['uid'])
+  end
   describe "class methods" do
     subject { Ability }
     its(:read_group_field) { should == 'read_access_group_ssim'}

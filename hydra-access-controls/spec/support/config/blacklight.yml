@@ -1,6 +1,0 @@
-development:
-  adapter: solr
-  url: http://localhost:<%= ENV['SOLR_DEVELOPMENT_PORT'] || 8983 %>/solr/hydra-development
-test:
-  adapter: solr
-  url: http://localhost:<%= ENV['SOLR_TEST_PORT'] || 8985 %>/solr/hydra-test

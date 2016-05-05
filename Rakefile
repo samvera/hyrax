@@ -6,9 +6,10 @@ APP_ROOT= File.dirname(__FILE__)
 require 'solr_wrapper'
 require 'fcrepo_wrapper'
 require 'active_fedora/rake_support'
+require 'engine_cart/rake_task'
 
 desc "Run Continuous Integration"
-task :ci do
+task :ci => ['engine_cart:generate'] do
   ENV['environment'] = "test"
   with_test_server do
     Rake::Task['spec'].invoke
@@ -109,7 +110,7 @@ end
 
 desc "run all specs"
 task :spec do
-  raise "test failures" unless all_modules('rake spec')
+  raise "test failures" unless all_modules("FCREPO_TEST_PORT=#{ENV['FCREPO_TEST_PORT']} SOLR_TEST_PORT=#{ENV['SOLR_TEST_PORT']}  bundle exec rake spec")
 end
 
 desc "Remove any existing test deploys"

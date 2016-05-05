@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Hydra::AccessControlsEnforcement do
+  before do
+    allow(Devise).to receive(:authentication_keys).and_return(['uid'])
+  end
   let(:controller) { MockController.new }
   let(:method_chain) { MockController.search_params_logic }
   let(:search_builder) { MockSearchBuilder.new(method_chain, controller) }

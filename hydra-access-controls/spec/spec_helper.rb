@@ -1,7 +1,8 @@
-ENV["environment"] ||= "test"
+ENV['RAILS_ENV'] ||= 'test'
+require 'engine_cart'
+path = File.expand_path(File.join('..', '..', '..', '.internal_test_app'), __FILE__)
+EngineCart.load_application! path
 
-require 'rspec/mocks'
-require 'rspec/its'
 require 'hydra-access-controls'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -19,7 +20,7 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
 end
 
 
-require 'support/rails'
+# require 'support/rails'
 
 # Since we're not doing a Rails Engine test, we have to load these classes manually:
 require 'active_support'
@@ -38,6 +39,8 @@ require 'support/mods_asset'
 require 'support/solr_document'
 require "support/user"
 require "factory_girl"
+require 'rspec/mocks'
+require 'rspec/its'
 require "factories"
 
 # HttpLogger.logger = Logger.new(STDOUT)
@@ -53,9 +56,3 @@ RSpec.configure do |config|
   end
 end
 
-# Stubbing Devise
-class Devise
-  def self.authentication_keys
-    ["uid"]
-  end
-end
