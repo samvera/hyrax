@@ -149,6 +149,10 @@ describe "dashboard/index.html.erb", type: :view do
         expect(rendered).to include title1
         expect(rendered).to include title2
       end
+      it 'renders transfer works link correctly' do
+        render
+        expect(rendered).to include "Select works to transfer"
+      end
     end
 
     context "without activities and notifications" do
