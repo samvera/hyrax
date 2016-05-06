@@ -189,7 +189,6 @@ module Sufia
       if File.exist?(file_path)
         gsub_file file_path, /CurationConcerns::Forms::WorkForm/, "Sufia::Forms::WorkForm"
         inject_into_file file_path, after: /model_class = ::GenericWork/ do
-          "\n    include HydraEditor::Form::Permissions" \
           "\n    self.terms += [:resource_type]\n"
         end
       else
