@@ -1,6 +1,7 @@
 module Sufia::Forms
   class WorkForm < CurationConcerns::Forms::WorkForm
     delegate :depositor, :on_behalf_of, :permissions, to: :model
+    include HydraEditor::Form::Permissions
 
     attr_reader :agreement_accepted
 
