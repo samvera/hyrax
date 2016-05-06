@@ -74,12 +74,6 @@ Run the database migrations
 rake db:migrate
 </pre>
 
-If you need a copy of jetty (very likely)
-
-<pre>
-rails g hydra:jetty
-</pre>
-
 h3. You're done.
 
 Congratulations.  You've set up the code for your Hydra Head.
