@@ -14,7 +14,6 @@ task :ci => ['engine_cart:generate'] do
   with_test_server do
     Rake::Task['spec'].invoke
   end
-  Rake::Task["doc"].invoke
 end
 
 task :default => [:ci]
@@ -110,7 +109,7 @@ end
 
 desc "run all specs"
 task :spec do
-  raise "test failures" unless all_modules("FCREPO_TEST_PORT=#{ENV['FCREPO_TEST_PORT']} SOLR_TEST_PORT=#{ENV['SOLR_TEST_PORT']}  bundle exec rake spec")
+  raise "test failures" unless all_modules("FCREPO_TEST_PORT=#{ENV['FCREPO_TEST_PORT']} SOLR_TEST_PORT=#{ENV['SOLR_TEST_PORT']} bundle exec rake spec")
 end
 
 desc "Remove any existing test deploys"
@@ -122,7 +121,6 @@ def all_modules(cmd)
   FRAMEWORKS.each do |dir|
     Dir.chdir(dir) do
       puts "\n\e[1;33m[Hydra CI] #{dir}\e[m\n"
-      #cmd = "bundle exec rake spec" # doesn't work because it doesn't require the gems specified in the Gemfiles of the test rails apps
       return false unless system(cmd)
     end
   end
