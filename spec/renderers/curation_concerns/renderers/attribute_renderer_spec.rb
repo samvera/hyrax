@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe CurationConcerns::AttributeRenderer do
+describe CurationConcerns::Renderers::AttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }
-  let(:yml_path) { File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'locales', '*.{rb,yml}') }
+  let(:yml_path) { File.join(File.dirname(__FILE__), '..', '..', '..', 'fixtures', 'locales', '*.{rb,yml}') }
   before do
     I18n.load_path += Dir[File.join(yml_path)]
     I18n.reload!

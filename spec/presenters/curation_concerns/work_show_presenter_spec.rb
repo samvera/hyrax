@@ -131,7 +131,7 @@ describe CurationConcerns::WorkShowPresenter do
 
     context 'with an existing field' do
       before do
-        allow(CurationConcerns::AttributeRenderer).to receive(:new)
+        allow(CurationConcerns::Renderers::AttributeRenderer).to receive(:new)
           .with(:title, "foo bar", {})
           .and_return(renderer)
       end

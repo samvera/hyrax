@@ -14,7 +14,7 @@ module CurationConcerns
         Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
         return
       end
-      AttributeRenderer.new(field, send(field), options).render
+      CurationConcerns::Renderers::AttributeRenderer.new(field, send(field), options).render
     end
 
     def permission_badge
