@@ -27,6 +27,11 @@ module Sufia
       "https://www.zotero.org/users/#{zotero_user_id}"
     end
 
+    # Only Chrome supports this
+    def browser_supports_directory_upload?
+      user_agent.include? 'Chrome'
+    end
+
     # @param [Hash] options a list of options that blacklight passes from helper_method
     #                       invocation.
     def human_readable_date(options)
@@ -168,6 +173,10 @@ module Sufia
     end
 
     private
+
+      def user_agent
+        request.user_agent || ''
+      end
 
       def search_action_for_dashboard
         case params[:controller]
