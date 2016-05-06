@@ -1,5 +1,10 @@
 require 'rake/testtask'
 require 'bundler'
+require 'rspec/core/rake_task'
 Bundler::GemHelper.install_tasks
 
 Dir.glob('tasks/*.rake').each { |r| import r }
+desc "Run specs"
+RSpec::Core::RakeTask.new 
+
+task :default => :spec
