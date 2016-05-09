@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::LeaseActor do
+describe CurationConcerns::Actors::LeaseActor do
   let(:actor) { described_class.new(work) }
 
   let(:work) do

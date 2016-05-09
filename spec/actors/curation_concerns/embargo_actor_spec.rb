@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::EmbargoActor do
+describe CurationConcerns::Actors::EmbargoActor do
   let(:actor) { described_class.new(work) }
 
   let(:work) do

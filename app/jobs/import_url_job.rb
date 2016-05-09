@@ -21,7 +21,7 @@ class ImportUrlJob < ActiveJob::Base
       file_set.reload
 
       # attach downloaded file to FileSet stubbed out
-      if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
+      if CurationConcerns::Actors::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
         CurationConcerns.config.callback.run(:after_import_url_success, file_set, user)
         log.success!

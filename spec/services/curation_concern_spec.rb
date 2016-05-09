@@ -6,6 +6,6 @@ describe CurationConcerns::CurationConcern do
 
   describe ".actor" do
     subject { described_class.actor(work, user) }
-    it { is_expected.to be_kind_of CurationConcerns::ActorStack }
+    it { is_expected.to be_kind_of CurationConcerns::Actors::ActorStack }
   end
 end

@@ -11,7 +11,7 @@ describe IngestLocalFileJob do
   before do
     Dir.mkdir mock_upload_directory unless File.exist? mock_upload_directory
     FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), mock_upload_directory)
-    allow(CurationConcerns::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
+    allow(CurationConcerns::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
   end
 
   it 'has attached a file' do

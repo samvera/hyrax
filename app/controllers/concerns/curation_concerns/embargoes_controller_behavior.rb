@@ -14,7 +14,7 @@ module CurationConcerns
 
     # Removes a single embargo
     def destroy
-      EmbargoActor.new(curation_concern).destroy
+      CurationConcerns::Actors::EmbargoActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.embargo_history.last
       if curation_concern.work? && curation_concern.file_sets.present?
         redirect_to confirm_curation_concerns_permission_path(curation_concern)
@@ -28,7 +28,7 @@ module CurationConcerns
       filter_docs_with_edit_access!
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] }
       ActiveFedora::Base.find(batch).each do |curation_concern|
-        EmbargoActor.new(curation_concern).destroy
+        CurationConcerns::Actors::EmbargoActor.new(curation_concern).destroy
         curation_concern.copy_visibility_to_files if copy_visibility.include?(curation_concern.id)
       end
       redirect_to embargoes_path

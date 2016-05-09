@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-describe CurationConcerns::FileSetActor do
+describe CurationConcerns::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
   let(:user) { create(:user) }
@@ -263,7 +263,7 @@ describe CurationConcerns::FileSetActor do
   describe "#file_actor_class" do
     context "default" do
       it "is a FileActor" do
-        expect(actor.file_actor_class).to eq(CurationConcerns::FileActor)
+        expect(actor.file_actor_class).to eq(CurationConcerns::Actors::FileActor)
       end
     end
 
@@ -271,9 +271,9 @@ describe CurationConcerns::FileSetActor do
       let(:actor) { CustomFileSetActor.new(file_set, user) }
 
       before do
-        class CustomFileActor < CurationConcerns::FileActor
+        class CustomFileActor < CurationConcerns::Actors::FileActor
         end
-        class CustomFileSetActor < CurationConcerns::FileSetActor
+        class CustomFileSetActor < CurationConcerns::Actors::FileSetActor
           def file_actor_class
             CustomFileActor
           end

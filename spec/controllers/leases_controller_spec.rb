@@ -50,7 +50,7 @@ describe LeasesController do
     context 'when I have permission to edit the object' do
       let(:actor) { double('lease actor') }
       before do
-        allow(CurationConcerns::LeaseActor).to receive(:new).with(a_work).and_return(actor)
+        allow(CurationConcerns::Actors::LeaseActor).to receive(:new).with(a_work).and_return(actor)
       end
 
       context 'that has no files' do
