@@ -88,6 +88,11 @@ v7.0.0.beta1__ (not yet released). If you are looking for instructions on instal
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
+Prerequisites are required for both Creating a Sufia\-based app and Contributing new features to Sufia.
+After installing the Prerequisites: 
+ * If you would like to create a new application using Sufia follow the instructions for [Creating a Sufia\-based app](#creating-a-sufia-based-app).
+ * If you would like to create new features for Sufia follow the instructions for [Contributing](#contributing) and [Development](#development).
+
 ## Prerequisites
 
 Sufia requires the following software to work:
