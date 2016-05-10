@@ -19,7 +19,7 @@ describe DownloadsController do
     before do
       class ContentHolder < ActiveFedora::Base
         include Hydra::AccessControls::Permissions
-        contains 'thumbnail'
+        has_subresource 'thumbnail'
       end
       @user = User.new.tap {|u| u.email = 'email@example.com'; u.password = 'password'; u.save}
     end
