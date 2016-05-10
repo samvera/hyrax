@@ -6,8 +6,7 @@ describe 'catalog/_index_list_default' do
       'depositor_tesim' => ['jcoyne@justincoyne.com'],
       'proxy_depositor_ssim' => ['atz@stanford.edu'],
       'description_tesim' => ['This links to http://example.com/ What about that?'],
-      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z'
-    }
+      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:blacklight_configuration_context) do

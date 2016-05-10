@@ -48,7 +48,8 @@ describe CurationConcerns::GenericWorkForm do
       thumbnail_id: '789',
       tag: ['derp'],
       rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
-      collection_ids: ['123456', 'abcdef']) }
+      collection_ids: ['123456', 'abcdef']
+    ) }
 
     subject { described_class.model_attributes(params) }
 
@@ -68,7 +69,8 @@ describe CurationConcerns::GenericWorkForm do
         tag: [''],
         rights: [''],
         collection_ids: [''],
-        on_behalf_of: 'Melissa') }
+        on_behalf_of: 'Melissa'
+      ) }
 
       it 'removes blank parameters' do
         expect(subject['title']).to be_empty
