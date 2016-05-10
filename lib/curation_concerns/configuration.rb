@@ -91,11 +91,6 @@ module CurationConcerns
       @minter_statefile ||= '/tmp/minter-state'
     end
 
-    attr_writer :redis_namespace
-    def redis_namespace
-      @redis_namespace ||= 'curation_concerns'
-    end
-
     attr_writer :display_media_download_link
     def display_media_download_link
       return @display_media_download_link unless @display_media_download_link.nil?
