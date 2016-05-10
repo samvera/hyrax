@@ -7,13 +7,13 @@ describe Hydra::AccessControls::Permissions do
     end
   end
 
-  subject { Foo.new }
+  let(:model) { Foo.new }
+  subject { model }
 
-  it "has many permissions" do
-    expect(subject.permissions).to eq []
+  describe "#permisisons" do
+    subject { model.permissions }
+    it { is_expected.to be_kind_of Hydra::AccessControl::CollectionRelationship }
   end
-
-  #TODO is permission same as an acl?
 
   it "has a set of permissions" do
     subject.read_groups=['group1', 'group2']

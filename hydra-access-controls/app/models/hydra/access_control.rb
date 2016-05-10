@@ -34,10 +34,6 @@ module Hydra
       end
     end
 
-    # def has_destroy_flag?(hash)
-    #   ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
-    # end
-
     def relationship
       @relationship ||= CollectionRelationship.new(self, :contains)
     end
@@ -49,7 +45,7 @@ module Hydra
       end
 
       delegate :to_a, :to_ary, :map, :delete, :last, :size, :count, :[],
-               :==, :detect, to: :@relationship
+               :==, :detect, :empty?, to: :@relationship
 
       # TODO: if directly_contained relationships supported find, we could just
       # delegate find.
