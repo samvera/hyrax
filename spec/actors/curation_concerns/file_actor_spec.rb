@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::FileActor do
+describe CurationConcerns::Actors::FileActor do
   include ActionDispatch::TestProcess
   let(:user) { create(:user) }
   let(:file_set) { create(:file_set) }

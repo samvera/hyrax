@@ -162,7 +162,7 @@ module CurationConcerns
       end
 
       def actor
-        @actor ||= ::CurationConcerns::FileSetActor.new(@file_set, current_user)
+        @actor ||= ::CurationConcerns::Actors::FileSetActor.new(@file_set, current_user)
       end
 
       def attributes

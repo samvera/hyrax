@@ -49,7 +49,7 @@ describe EmbargoesController do
 
     context 'when I have permission to edit the object' do
       before do
-        expect(CurationConcerns::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
+        expect(CurationConcerns::Actors::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
       end
 
       let(:actor) { double }

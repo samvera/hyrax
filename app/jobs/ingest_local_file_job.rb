@@ -7,7 +7,7 @@ class IngestLocalFileJob < ActiveJob::Base
   def perform(file_set, path, user)
     file_set.label ||= File.basename(path)
 
-    actor = CurationConcerns::FileSetActor.new(file_set, user)
+    actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
 
     if actor.create_content(File.open(path))
       FileUtils.rm(path)

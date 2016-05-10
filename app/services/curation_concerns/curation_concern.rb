@@ -1,7 +1,7 @@
 module CurationConcerns
   class CurationConcern
     class_attribute :actor_factory
-    self.actor_factory = CurationConcerns::ActorFactory
+    self.actor_factory = CurationConcerns::Actors::ActorFactory
 
     # A consumer of this method can inject a different factory
     # into this class in order to change the behavior of this method.
