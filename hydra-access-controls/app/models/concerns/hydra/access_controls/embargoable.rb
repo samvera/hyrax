@@ -82,12 +82,6 @@ module Hydra
       end
 
       # Validate that the current visibility is what is specified in the embargo
-      def validate_embargo
-        Deprecation.warn Embargoable, "validate_embargo is deprecated and will be removed in hydra-access-controls 9.0.0. Use validate_visibility_complies_with_embargo instead."
-        validate_visibility_complies_with_embargo
-      end
-
-      # Validate that the current visibility is what is specified in the embargo
       def validate_visibility_complies_with_embargo
         return true unless embargo_release_date
         if under_embargo?
@@ -115,11 +109,6 @@ module Hydra
         else
           self.visibility = visibility_after_embargo ? visibility_after_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         end
-      end
-
-      def validate_lease
-        Deprecation.warn Embargoable, "validate_lease is deprecated and will be removed in hydra-access-controls 9.0.0. Use validate_visibility_complies_with_lease instead."
-        validate_visibility_complies_with_lease
       end
 
       def validate_visibility_complies_with_lease

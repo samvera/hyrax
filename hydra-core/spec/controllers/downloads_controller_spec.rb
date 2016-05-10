@@ -68,18 +68,9 @@ describe DownloadsController do
         sign_in @user
         allow_any_instance_of(User).to receive(:groups).and_return([])
       end
-      describe "#show" do
-        it "should default to returning default download configured by object" do
-          allow(ContentHolder).to receive(:default_content_ds).and_return('buzz')
-          expect(Deprecation).to receive(:warn)
-          get :show, id: obj
-          expect(response).to be_successful
-          expect(response.headers['Content-Type']).to eq "image/png"
-          expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"buzz.png\""
-          expect(response.body).to eq 'fizz'
-        end
 
-        it "should default to returning default download configured by object" do
+      describe "#show" do
+        it "defaults to returning default download configured by object" do
           allow(ContentHolder).to receive(:default_file_path).and_return('buzz')
           get :show, id: obj
           expect(response).to be_successful
@@ -88,7 +79,7 @@ describe DownloadsController do
           expect(response.body).to eq 'fizz'
         end
 
-        it "should default to returning default download configured by controller" do
+        it "defaults to returning default download configured by controller" do
           expect(DownloadsController.default_file_path).to eq "content"
           get :show, id: obj
           expect(response).to be_successful
