@@ -4,7 +4,7 @@ module CurationConcerns
       extend ActiveSupport::Concern
 
       included do
-        contains 'full_text'
+        has_subresource 'full_text'
       end
     end
   end
