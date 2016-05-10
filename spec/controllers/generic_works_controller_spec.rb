@@ -76,8 +76,7 @@ describe CurationConcerns::GenericWorksController do
                    "file_name" => "filepicker-demo.txt.txt" },
           "1" => { "url" => url2,
                    "expires" => "2014-03-31T20:37:36.731Z",
-                   "file_name" => "Getting+Started.pdf" }
-  }.with_indifferent_access
+                   "file_name" => "Getting+Started.pdf" } }.with_indifferent_access
       end
       let(:uploaded_files) do
         browse_everything_params.values.map { |v| v['url'] }

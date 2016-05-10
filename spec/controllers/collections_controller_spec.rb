@@ -10,8 +10,7 @@ describe CollectionsController do
   let(:collection) do
     create(:public_collection, title: ["My collection"],
                                description: ["My incredibly detailed description of the collection"],
-                               user: user
-          )
+                               user: user)
   end
 
   let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
@@ -41,7 +40,8 @@ describe CollectionsController do
     it "removes blank strings from params before creating Collection" do
       expect {
         post :create, collection: {
-          title: ["My First Collection "], creator: [""] }
+          title: ["My First Collection "], creator: [""]
+        }
       }.to change { Collection.count }.by(1)
       expect(assigns[:collection].title).to eq ["My First Collection "]
       expect(assigns[:collection].creator).to eq []
@@ -127,7 +127,8 @@ describe CollectionsController do
 
       it "removes blank strings from params before updating Collection metadata" do
         put :update, id: collection, collection: {
-          title: ["My Next Collection "], creator: [""] }
+          title: ["My Next Collection "], creator: [""]
+        }
         expect(assigns[:collection].title).to eq ["My Next Collection "]
         expect(assigns[:collection].creator).to eq []
       end

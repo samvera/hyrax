@@ -7,8 +7,8 @@ module Sufia
 
       # @return [Fixnum] the id of the event
       def create(action, timestamp)
-        event_id = Redis.current.incr("events:latest_id")
-        Redis.current.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
+        event_id = instance.incr("events:latest_id")
+        instance.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
         event_id
       rescue Redis::CommandError => e
         logger.error("unable to create event: #{e}")
@@ -18,6 +18,19 @@ module Sufia
       def logger
         Rails.logger || CurationConcerns::NullLogger.new
       end
+
+      def instance
+        if Redis.current.is_a? Redis::Namespace
+          Redis.current.namespace = namespace
+        else
+          Redis.current = Redis::Namespace.new(namespace, redis: Redis.current)
+        end
+        Redis.current
+      end
+
+      def namespace
+        Sufia.config.redis_namespace
+      end
     end
 
     def initialize(key)
@@ -25,20 +38,22 @@ module Sufia
     end
 
     def fetch(size)
-      Redis.current.lrange(@key, 0, size).map do |event_id|
+      RedisEventStore.instance.lrange(@key, 0, size).map do |event_id|
         {
-          action: Redis.current.hget("events:#{event_id}", "action"),
-          timestamp: Redis.current.hget("events:#{event_id}", "timestamp")
+          action: RedisEventStore.instance.hget("events:#{event_id}", "action"),
+          timestamp: RedisEventStore.instance.hget("events:#{event_id}", "timestamp")
         }
       end
     rescue Redis::CommandError
+      RedisEventStore.logger.error("unable to fetch event: #{@key}")
       []
     end
 
     # Adds a value to the end of a list identified by key
     def push(value)
-      Redis.current.lpush(@key, value)
+      RedisEventStore.instance.lpush(@key, value)
     rescue Redis::CommandError
+      RedisEventStore.logger.error("unable to push event: #{@key}")
       nil
     end
   end

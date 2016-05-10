@@ -147,8 +147,7 @@ describe CurationConcerns::FileSetsController do
                                 permissions_attributes: [
                                   { type: 'person', name: 'user1', access: 'edit' },
                                   { type: 'group', name: 'group1', access: 'read' }
-                                ]
-                      }
+                                ] }
 
       expect(assigns[:file_set].read_groups).to eq ["group1"]
       expect(assigns[:file_set].edit_users).to include("user1", user.user_key)
@@ -161,8 +160,7 @@ describe CurationConcerns::FileSetsController do
                     file_set: { tag: [''],
                                 permissions_attributes: [
                                   { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
-                                ]
-                      }
+                                ] }
 
       expect(assigns[:file_set].read_groups).to eq(["group3"])
     end

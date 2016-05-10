@@ -46,6 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'kaminari_route_prefix'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
   spec.add_dependency 'zeroclipboard-rails', '~> 0.0.13'
+  spec.add_dependency 'redis-namespace', '~> 1.5.2'
 
   spec.add_development_dependency 'engine_cart', '~> 0.8'
   spec.add_development_dependency 'mida', '~> 0.3'
@@ -60,6 +61,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
-  spec.add_development_dependency 'rubocop', '~> 0.39'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.4'
+  spec.add_development_dependency 'rubocop', '~> 0.40'
 end

@@ -1,5 +1,3 @@
-require: rubocop-rspec
-
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/sufia/arkivo/metadata_munger.rb'
@@ -52,14 +50,3 @@ Rails/HasAndBelongsToMany:
   Exclude:
     - 'app/models/domain_term.rb'
     - 'app/models/local_authority.rb'
-
-RSpec/DescribeClass:
-  Exclude:
-    - 'spec/javascripts/jasmine_spec.rb'
-    - 'spec/tasks/rake_spec.rb'
-    - 'spec/config/sufia_events_spec.rb'
-    - 'spec/features/**/*'
-    - 'spec/views/**/*'
-    - 'spec/routing/**/*'
-    - 'spec/requests/**/*'
-    - 'spec/inputs/**/*'

@@ -38,7 +38,8 @@ describe Sufia::BatchUploadsController do
         post :create,
              generic_work: {
                permissions_attributes: [
-                 { type: "group", name: "public", access: "read" }],
+                 { type: "group", name: "public", access: "read" }
+               ],
                on_behalf_of: 'elrayle'
              },
              uploaded_files: ['1']

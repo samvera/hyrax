@@ -1,4 +1,3 @@
-require: rubocop-rspec
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -82,24 +81,3 @@ Style/SingleLineBlockParams:
 
 Rails:
   Enabled: true
-
-RSpec/AnyInstance:
-  Enabled: false
-
-RSpec/ExampleWording:
-  CustomTransform:
-    be: is
-    have: has
-    not: does not
-    NOT: does NOT
-  IgnoredWords:
-    - only
-
-RSpec/FilePath:
-  Enabled: false
-
-RSpec/InstanceVariable:
-  Enabled: false
-
-RSpec/NotToNot:
-  Enabled: false
