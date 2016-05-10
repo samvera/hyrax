@@ -1,6 +1,6 @@
 module Hydra::AccessControls
-  AGENT_URL_PREFIX = "http://projecthydra.org/ns/auth/".freeze
-  GROUP_AGENT_URL_PREFIX = "http://projecthydra.org/ns/auth/group".freeze
+  AGENT_URL_PREFIX = 'http://projecthydra.org/ns/auth/'.freeze
+  GROUP_AGENT_URL_PREFIX = 'http://projecthydra.org/ns/auth/group'.freeze
   PERSON_AGENT_URL_PREFIX = 'http://projecthydra.org/ns/auth/person'.freeze
   class Permission < AccessControlList
     has_many :admin_policies, inverse_of: :default_permissions, class_name: 'Hydra::AdminPolicy'
@@ -21,12 +21,12 @@ module Hydra::AccessControls
       "<#{self.class.name} id: #{id} agent: #{agent_value} mode: #{mode_value} access_to: #{access_to_id.inspect}>"
     end
 
-    def == other
-      other.is_a?(Permission) && id == other.id && self.access_to_id == other.access_to_id &&
-        self.agent.first.rdf_subject == other.agent.first.rdf_subject && self.mode.first.rdf_subject == other.mode.first.rdf_subject
+    def ==(other)
+      other.is_a?(Permission) && id == other.id && access_to_id == other.access_to_id &&
+        agent.first.rdf_subject == other.agent.first.rdf_subject && mode.first.rdf_subject == other.mode.first.rdf_subject
     end
 
-    def attributes=(attributes)
+    def assign_attributes(attributes)
       attrs = attributes.dup
       name = attrs.delete(:name)
       type = attrs.delete(:type)
@@ -50,35 +50,34 @@ module Hydra::AccessControls
 
     protected
 
-      def parsed_agent
-        @parsed_agent ||= agent.first.rdf_subject.to_s.sub(AGENT_URL_PREFIX, '').split('#')
-      end
+    def parsed_agent
+      @parsed_agent ||= agent.first.rdf_subject.to_s.sub(AGENT_URL_PREFIX, '').split('#')
+    end
 
-      def build_agent(name, type)
-        raise "Can't build agent #{inspect}" unless name && type
-        self.agent = case type
-                     when "group"
-                       Agent.new(::RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
-                     when "person"
-                       Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
-                     else
-                       raise ArgumentError, "Unknown agent type #{type.inspect}"
-                     end
-      end
+    def build_agent(name, type)
+      raise "Can't build agent #{inspect}" unless name && type
+      self.agent = case type
+                   when 'group'
+                     Agent.new(::RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
+                   when 'person'
+                     Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
+                   else
+                     raise ArgumentError, "Unknown agent type #{type.inspect}"
+                   end
+    end
 
-      def build_access(access)
-        raise "Can't build access #{inspect}" unless access
-        self.mode = case access
-                    when "read"
-                      Mode.new(::ACL.Read)
-                    when "edit"
-                      Mode.new(::ACL.Write)
-                    when "discover"
-                      Mode.new(Hydra::ACL.Discover)
-                    else
-                      raise ArgumentError, "Unknown access #{access.inspect}"
-                    end
-      end
-
+    def build_access(access)
+      raise "Can't build access #{inspect}" unless access
+      self.mode = case access
+                  when 'read'
+                    Mode.new(::ACL.Read)
+                  when 'edit'
+                    Mode.new(::ACL.Write)
+                  when 'discover'
+                    Mode.new(Hydra::ACL.Discover)
+                  else
+                    raise ArgumentError, "Unknown access #{access.inspect}"
+                  end
+    end
   end
 end
