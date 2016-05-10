@@ -1,5 +1,6 @@
 require 'select2-rails'
 require 'nest'
+require 'redis-namespace'
 require 'mailboxer'
 require 'acts_as_follower'
 require 'carrierwave'

@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe Sufia::RedisEventStore do
+  let(:redis_instance) { described_class.instance }
   before do
-    Redis.current.keys('events:*').each { |key| Redis.current.del key }
+    redis_instance.keys('events:*').each { |key| redis_instance.del key }
   end
 
   describe "::create" do
