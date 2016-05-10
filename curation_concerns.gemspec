@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head', '~> 9.9'
+  spec.add_dependency 'hydra-head', '>= 10.0.0.beta1', '< 11'
   spec.add_dependency 'blacklight', '~> 6.1'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3"
   spec.add_dependency "jquery-ui-rails"
@@ -30,16 +30,17 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
   spec.add_dependency 'active_attr'
   spec.add_dependency 'hydra-works', '~> 0.8', '>= 0.8.1'
+  # This allows bundler to resolve a dependency tree.
+  # TODO: I suspect we can remove it when hydra-pcdm 0.8.0 is released.
+  spec.add_dependency 'hydra-pcdm', '>= 0.8.0.beta1', '< 1'
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'solrizer', '~> 3.4'
-  spec.add_dependency 'active-fedora', '~> 9.13'
-  spec.add_dependency 'deprecation', '~> 0.1'
+  spec.add_dependency 'deprecation', '~> 1.0'
   spec.add_dependency 'rdf', '~> 1.99'
   spec.add_dependency 'rdf-vocab', '~> 0'
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
-  
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
