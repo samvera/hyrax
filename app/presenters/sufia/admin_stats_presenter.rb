@@ -46,7 +46,7 @@ module Sufia
     private
 
       def stats
-        @stats ||= ::SystemStats.new(limit, start_date, end_date)
+        @stats ||= SystemStats.new(limit, start_date, end_date)
       end
   end
 end

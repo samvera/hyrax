@@ -6,7 +6,7 @@
 #                             blank means no filter
 # @attr_reader int end_date   Filters the statistics returned by the class to before end date (end of day)
 #                             blank means today
-class SystemStats
+class Sufia::SystemStats
   attr_reader :limit, :start_date, :end_date
 
   # initialize the stats class setting the limitations
