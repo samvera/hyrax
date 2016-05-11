@@ -66,7 +66,7 @@ module Sufia
     end
 
     def number_of_deposits(user)
-      ActiveFedora::Base.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
+      ActiveFedora::Base.where(DepositSearchBuilder.depositor_field => user.user_key).count
     end
 
     def link_to_facet(field, field_string)

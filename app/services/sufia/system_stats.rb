@@ -45,12 +45,10 @@ class Sufia::SystemStats
   # @return [Hash] a hash with the user name as the key and the number of deposits as the value
   #    { 'cam156' => 25, 'hjc14' => 24 ... }
   def top_depositors
-    top_data(depositor_key, limit)
+    top_data(depositor_field, limit)
   end
 
-  def depositor_key
-    Solrizer.solr_name('depositor', :symbol)
-  end
+  delegate :depositor_field, to: DepositSearchBuilder
 
   # returns a list (of size limit) of file formats (mime_types) that have the most files in the system
   # @return [Hash] a hash with the file format as the key and the number of files as the value
