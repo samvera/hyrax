@@ -8,7 +8,7 @@ feature 'Add an attached file' do
     sign_in user
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
-    allow_any_instance_of(CurationConcerns::FileSetActor).to receive(:acquire_lock_for).and_yield
+    allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:acquire_lock_for).and_yield
   end
 
   it 'updates the file' do
