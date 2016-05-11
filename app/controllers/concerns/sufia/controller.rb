@@ -10,11 +10,6 @@ module Sufia::Controller
     user_signed_in? ? current_user.ability : super
   end
 
-  def render_500(exception)
-    logger.error("Rendering 500 page due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
-    render template: '/error/500', layout: "error", formats: [:html], status: 500
-  end
-
   # Override Devise method to redirect to dashboard after signing in
   def after_sign_in_path_for(_resource)
     sufia.dashboard_index_path
