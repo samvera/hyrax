@@ -41,15 +41,15 @@ module Sufia
     end
 
     def number_of_works(user = current_user)
-      ::GenericWork.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
+      ::GenericWork.where(DepositSearchBuilder.depositor_field => user.user_key).count
     end
 
     def number_of_files(user = current_user)
-      ::FileSet.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
+      ::FileSet.where(DepositSearchBuilder.depositor_field => user.user_key).count
     end
 
     def number_of_collections(user = current_user)
-      ::Collection.where(Solrizer.solr_name('depositor', :symbol) => user.user_key).count
+      ::Collection.where(DepositSearchBuilder.depositor_field => user.user_key).count
     end
 
     def notifications_for_dashboard

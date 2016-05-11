@@ -1,4 +1,6 @@
 module Sufia
+  # Cache work view, file view & file download stats for all users
+  # this is called by 'rake sufia:stats:user_stats'
   class UserStatImporter
     UserRecord = Struct.new("UserRecord", :id, :user_key, :last_stats_update)
 
@@ -8,6 +10,8 @@ module Sufia
       @delay_secs = options[:delay_secs].to_f
       @number_of_retries = options[:number_of_retries].to_i
     end
+
+    delegate :depositor_field, to: DepositSearchBuilder
 
     def import
       log_message('Begin import of User stats.')
@@ -89,7 +93,7 @@ module Sufia
 
       def file_ids_for_user(user)
         ids = []
-        ::FileSet.search_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+        ::FileSet.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids
@@ -97,7 +101,7 @@ module Sufia
 
       def work_ids_for_user(user)
         ids = []
-        ::GenericWork.search_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl: "id") do |group|
+        ::GenericWork.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids
