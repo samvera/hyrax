@@ -1,0 +1,13 @@
+terms:
+    - id: demo_id_01
+      term: First Active Term
+      active: true
+    - id: demo_id_02
+      term: Second Active Term
+      active: true
+    - id: demo_id_03
+      term: Third is an Inactive Term
+      active: false
+    - id: demo_id_04
+      term: Fourth is an Inactive Term
+      active: false

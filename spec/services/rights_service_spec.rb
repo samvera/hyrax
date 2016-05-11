@@ -1,17 +1,29 @@
 require 'spec_helper'
 
 describe RightsService do
-  describe "select_options" do
-    subject { described_class.select_options }
+  before do
+    # Configure QA to use fixtures
+    qa_fixtures = { local_path: File.expand_path('../../fixtures/authorities', __FILE__) }
+    stub_const("Qa::Authorities::LocalSubauthority::AUTHORITIES_CONFIG", qa_fixtures)
+  end
 
-    it "has a select list" do
-      expect(subject.first).to eq ["Attribution 3.0 United States", "http://creativecommons.org/licenses/by/3.0/us/"]
+  describe "#select_options" do
+    it "returns active terms" do
+      expect(described_class.select_options).to include(["First Active Term", "demo_id_01"], ["Second Active Term", "demo_id_02"])
+    end
+
+    it "does not return inactive terms" do
+      expect(described_class.select_options).not_to include(["Third is an Inactive Term", "demo_id_03"], ["Fourth is an Inactive Term", "demo_id_04"])
     end
   end
 
-  describe "label" do
-    subject { described_class.label("http://www.europeana.eu/portal/rights/rr-r.html") }
+  describe "#label" do
+    it "resolves for ids of active terms" do
+      expect(described_class.label('demo_id_01')).to eq("First Active Term")
+    end
 
-    it { is_expected.to eq 'All rights reserved' }
+    it "resolves for ids of inactive terms" do
+      expect(described_class.label('demo_id_03')).to eq("Third is an Inactive Term")
+    end
   end
 end
