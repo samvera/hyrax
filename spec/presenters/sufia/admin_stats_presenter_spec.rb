@@ -22,6 +22,8 @@ describe Sufia::AdminStatsPresenter do
     before do
       allow(old_work).to receive(:create_date).and_return(two_days_ago_date.to_datetime)
       old_work.update_index
+      # Force optimize so the terms component is caught up.
+      ActiveFedora::SolrService.instance.conn.optimize
     end
 
     subject { service.active_users }

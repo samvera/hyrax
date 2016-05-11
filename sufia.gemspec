@@ -18,9 +18,7 @@ Gem::Specification.new do |spec|
   spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 0.14.0'
-  spec.add_dependency 'active-fedora', '~> 9.10'
-  spec.add_dependency 'hydra-works', '~> 0.7'
+  spec.add_dependency 'curation_concerns', '>= 1.0.0.beta1', '< 2'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
@@ -43,7 +41,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'activerecord-import', '~> 0.5'
   spec.add_dependency 'posix-spawn'
-  spec.add_dependency 'kaminari_route_prefix'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
   spec.add_dependency 'zeroclipboard-rails', '~> 0.0.13'
   spec.add_dependency 'redis-namespace', '~> 1.5.2'
