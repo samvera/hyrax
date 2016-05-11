@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ::SystemStats, type: :model do
+describe Sufia::SystemStats do
   let(:user1) { create(:user) }
   let(:morning_two_days_ago) { 2.days.ago.to_date.to_datetime.to_s }
   let(:yesterday) { 1.day.ago.to_datetime.to_s }
@@ -38,7 +38,7 @@ describe ::SystemStats, type: :model do
       end
 
       it "queries for the data" do
-        expect(stats.top_depositors).to include(display_name(user1) => 3, display_name(user2) => 1)
+        expect(stats.top_depositors).to eq(user1.user_key => 3, user2.user_key => 1)
       end
     end
 
@@ -47,7 +47,7 @@ describe ::SystemStats, type: :model do
       let(:actual_count) { 5 }
 
       it "queries for 5 items" do
-        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
+        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_ssim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_ssim":["example.com",4,"user2",3,"archivist1",1]}}'))
         stats.top_depositors
       end
     end
@@ -57,14 +57,10 @@ describe ::SystemStats, type: :model do
       let(:actual_count) { 20 }
 
       it "queries for 20 items" do
-        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_tesim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_tesim":["example.com",4,"user2",3,"archivist1",1]}}'))
+        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_ssim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_ssim":["example.com",4,"user2",3,"archivist1",1]}}'))
         stats.top_depositors
       end
     end
-  end
-
-  def display_name(user)
-    user.user_key.split('@')[0]
   end
 
   describe "#document_by_permission" do

@@ -26,7 +26,7 @@ describe Sufia::AdminStatsPresenter do
 
     subject { service.active_users }
     it "returns statistics" do
-      expect(subject).to eq("example.com" => 4, user1.user_key.split('@')[0] => 3, user2.user_key.split('@')[0] => 1)
+      expect(subject).to eq(user1.user_key => 3, user2.user_key => 1)
     end
   end
 
