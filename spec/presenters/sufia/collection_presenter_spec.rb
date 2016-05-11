@@ -12,7 +12,8 @@ describe Sufia::CollectionPresenter do
                            description: ['a nice collection'],
                            based_near: ['Over there'],
                            title: ['A clever title'],
-                           resource_type: ['Collection']) }
+                           resource_type: ['Collection'],
+                           related_url: ['http://example.com/']) }
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
@@ -29,7 +30,8 @@ describe Sufia::CollectionPresenter do
                             :size,
                             :resource_type,
                             :description,
-                            :based_near] }
+                            :based_near,
+                            :related_url] }
   end
 
   describe "#title" do
@@ -40,6 +42,11 @@ describe Sufia::CollectionPresenter do
   describe "#based_near" do
     subject { presenter.based_near }
     it { is_expected.to eq ['Over there'] }
+  end
+
+  describe "#related_url" do
+    subject { presenter.related_url }
+    it { is_expected.to eq ['http://example.com/'] }
   end
 
   describe "#size" do
