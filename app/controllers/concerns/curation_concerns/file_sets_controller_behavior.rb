@@ -15,10 +15,16 @@ module CurationConcerns
       class_attribute :show_presenter, :form_class
       self.show_presenter = CurationConcerns::FileSetPresenter
       self.form_class = CurationConcerns::Forms::FileSetEditForm
-    end
 
-    def curation_concern
-      @file_set
+      # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
+      # method. However the interface for various CurationConcern modules leverages the #curation_concern method
+      # Thus we have file_set and curation_concern that are aliases for each other.
+      attr_accessor :file_set
+      alias_method :curation_concern, :file_set
+      private :file_set=
+      alias_method :curation_concern=, :file_set=
+      private :curation_concern=
+      helper_method :file_set
     end
 
     # routed to /files/new
@@ -61,8 +67,8 @@ module CurationConcerns
         wants.html { presenter }
         wants.json do
           # load and authorize @curation_concern manually because it's skipped for html
-          @file_set = curation_concern_type.load_instance_from_solr(params[:id]) unless curation_concern
-          authorize! :show, @file_set
+          self.curation_concern ||= curation_concern_type.load_instance_from_solr(params[:id])
+          authorize! :show, curation_concern
           render :show, status: :ok
         end
         additional_response_formats(wants)
@@ -70,7 +76,7 @@ module CurationConcerns
     end
 
     def destroy
-      parent = @file_set.parent
+      parent = curation_concern.parent
       actor.destroy
       redirect_to [main_app, parent], notice: 'The file has been deleted.'
     end
@@ -95,7 +101,7 @@ module CurationConcerns
             flash[:error] = "There was a problem processing your request."
             render 'edit', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: @file_set.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
         end
       end
     rescue RSolr::Error::Http => error
@@ -107,9 +113,9 @@ module CurationConcerns
     def after_update_response
       respond_to do |wants|
         wants.html do
-          redirect_to [main_app, @file_set], notice: "The file #{view_context.link_to(@file_set, [main_app, @file_set])} has been updated."
+          redirect_to [main_app, curation_concern], notice: "The file #{view_context.link_to(curation_concern, [main_app, curation_concern])} has been updated."
         end
-        wants.json { render :show, status: :ok, location: polymorphic_path([main_app, @file_set]) }
+        wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
       end
     end
 
@@ -154,15 +160,15 @@ module CurationConcerns
       end
 
       def version_list
-        CurationConcerns::VersionListPresenter.new(@file_set.original_file.versions.all)
+        CurationConcerns::VersionListPresenter.new(curation_concern.original_file.versions.all)
       end
 
       def wants_to_revert?
-        params.key?(:revision) && params[:revision] != @file_set.latest_content_version.label
+        params.key?(:revision) && params[:revision] != curation_concern.latest_content_version.label
       end
 
       def actor
-        @actor ||= ::CurationConcerns::Actors::FileSetActor.new(@file_set, current_user)
+        @actor ||= ::CurationConcerns::Actors::FileSetActor.new(curation_concern, current_user)
       end
 
       def attributes
@@ -194,7 +200,7 @@ module CurationConcerns
               if request.xhr?
                 render 'jq_upload', formats: 'json', content_type: 'text/html'
               else
-                redirect_to [main_app, @file_set.parent]
+                redirect_to [main_app, curation_concern.parent]
               end
             end
             format.json do
@@ -202,7 +208,7 @@ module CurationConcerns
             end
           end
         else
-          msg = @file_set.errors.full_messages.join(', ')
+          msg = curation_concern.errors.full_messages.join(', ')
           flash[:error] = msg
           json_error "Error creating file #{file.original_filename}: #{msg}"
         end
@@ -211,7 +217,7 @@ module CurationConcerns
       # this is provided so that implementing application can override this behavior and map params to different attributes
       def update_metadata_from_upload_screen
         # Relative path is set by the jquery uploader when uploading a directory
-        @file_set.relative_path = params[:relative_path] if params[:relative_path]
+        curation_concer.relative_path = params[:relative_path] if params[:relative_path]
       end
 
       def curation_concern_type
