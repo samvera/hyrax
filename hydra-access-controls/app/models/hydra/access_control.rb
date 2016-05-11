@@ -44,8 +44,9 @@ module Hydra
         @relationship = @owner.send(reflection)
       end
 
-      delegate :to_a, :to_ary, :map, :delete, :last, :size, :count, :[],
-               :==, :detect, :empty?, to: :@relationship
+      delegate :to_a, :to_ary, :map, :delete, :first, :last, :size, :count, :[],
+               :==, :detect, :empty?, :each, :any?, :all?, :include?, :destroy_all,
+               to: :@relationship
 
       # TODO: if directly_contained relationships supported find, we could just
       # delegate find.
