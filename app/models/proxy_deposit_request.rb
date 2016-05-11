@@ -6,7 +6,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   belongs_to :sending_user, class_name: 'User'
 
   # attribute generic_work_id exists as result of renaming in db migrations.
-  # See upgrade600_generator.rb and upgrade700_generator.rb
+  # See upgrade700_generator.rb
 
   validates :sending_user, :generic_work_id, presence: true
   validate :transfer_to_should_be_a_valid_username
