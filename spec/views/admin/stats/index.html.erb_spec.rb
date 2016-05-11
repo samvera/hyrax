@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe "admin/stats/index.html.erb" do
   let(:presenter) do
-    Sufia::AdminStatsPresenter.new({}, 5).tap do |p|
-      p.deposit_stats = {}
-      p.depositors = []
-    end
+    Sufia::AdminStatsPresenter.new({}, 5)
   end
   before do
     assign(:presenter, presenter)
