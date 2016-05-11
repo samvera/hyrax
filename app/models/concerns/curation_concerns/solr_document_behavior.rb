@@ -4,7 +4,8 @@ module CurationConcerns
     include Hydra::Works::MimeTypes
 
     def title_or_label
-      title || label
+      return label if title.blank?
+      title.join(', ')
     end
 
     def to_param
@@ -63,11 +64,11 @@ module CurationConcerns
     end
 
     def title
-      Array.wrap(self[Solrizer.solr_name('title')]).first
+      Array.wrap(self[Solrizer.solr_name('title')])
     end
 
     def description
-      Array.wrap(self[Solrizer.solr_name('description')]).first
+      Array.wrap(self[Solrizer.solr_name('description')])
     end
 
     def label

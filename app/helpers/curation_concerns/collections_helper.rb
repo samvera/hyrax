@@ -60,14 +60,16 @@ module CurationConcerns::CollectionsHelper
     end
 
     def convert_solr_docs_to_select_options(results)
-      results
-        .map { |r| [SolrDocument.new(r).title, r['id']] }
-        .sort do |a, b|
-          if a.first && b.first
-            a.first <=> b.first
-          else
-            a.first ? -1 : 1
-          end
+      option_values = results.map do |r|
+        title = SolrDocument.new(r).title
+        [title.present? ? title.join(', ') : nil, r['id']]
+      end
+      option_values.sort do |a, b|
+        if a.first && b.first
+          a.first <=> b.first
+        else
+          a.first ? -1 : 1
         end
+      end
     end
 end

@@ -205,7 +205,7 @@ describe CollectionsController do
         get :show, id: collection
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-        expect(assigns[:presenter].title).to eq 'Collection Title'
+        expect(assigns[:presenter].to_s).to eq 'Collection Title'
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
 
@@ -214,7 +214,7 @@ describe CollectionsController do
           get :show, id: collection, q: 'no matches'
           expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-          expect(assigns[:presenter].title).to eq 'Collection Title'
+          expect(assigns[:presenter].to_s).to eq 'Collection Title'
         end
       end
       context 'when the page parameter is passed' do
@@ -222,7 +222,7 @@ describe CollectionsController do
           get :show, id: collection, page: '2'
           expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-          expect(assigns[:presenter].title).to eq 'Collection Title'
+          expect(assigns[:presenter].to_s).to eq 'Collection Title'
         end
       end
     end
