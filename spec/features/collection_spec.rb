@@ -29,6 +29,8 @@ describe 'collection', type: :feature do
 
       fill_in('Title', with: title)
       fill_in('Abstract or Summary', with: description)
+      fill_in('Location', with: 'Over there')
+      fill_in('Related URL', with: 'http://example.com/')
       click_button("Create Collection")
       expect(page).to have_content 'Items in this Collection'
       expect(page).to have_content title
