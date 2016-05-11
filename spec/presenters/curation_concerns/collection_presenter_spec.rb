@@ -18,7 +18,7 @@ describe CurationConcerns::CollectionPresenter do
 
   describe '#title' do
     subject { presenter.title }
-    it { is_expected.to eq 'A clever title' }
+    it { is_expected.to eq ['A clever title'] }
   end
 
   describe '#to_key' do

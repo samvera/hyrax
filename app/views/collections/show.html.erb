@@ -1,15 +1,19 @@
-<% provide :page_title, "#{@presenter.title} - #{application_name}" %>
+<% provide :page_title, "#{@presenter.title.join(', ')} - #{application_name}" %>
 
 <% provide :sidebar do %>
   <%= render 'search_sidebar' %>
 <% end %>
 
 <div id="content">
-  <h1 class="lower"><%= @presenter.title %></h1>
+  <% @presenter.title.each do |title| %>
+    <h1 class="lower"><%= title %></h1>
+  <% end %>
 
   <%= render 'curation_concerns/base/representative_media', presenter: @presenter %>
 
-  <h3><%= @presenter.description %> </h3>
+  <%= @presenter.description.each do |description| %>
+    <h3><%= description %></h3>
+  <% end %>
 
   <% unless has_collection_search_parameters? %>
     <%= render 'collections/show_actions' %>
