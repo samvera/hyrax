@@ -196,10 +196,6 @@ module Sufia
       end
     end
 
-    def install_sufia_600
-      generate "sufia:upgrade600"
-    end
-
     def install_sufia_700
       generate "sufia:upgrade700"
     end

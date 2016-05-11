@@ -1,7 +1,7 @@
 class CreateProxyDepositRequests < ActiveRecord::Migration
   def change
     create_table :proxy_deposit_requests do |t|
-      t.string :pid, null: false
+      t.string :generic_file_id, null: false
       t.references :sending_user, null: false
       t.references :receiving_user, null: false
       t.datetime :fulfillment_date
