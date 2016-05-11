@@ -1,6 +1,5 @@
 module Sufia
   class AdminStatsPresenter
-    attr_accessor :depositors, :deposit_stats
     attr_reader :limit, :start_date, :end_date, :stats_filters
 
     def initialize(stats_filters, limit)
@@ -8,6 +7,10 @@ module Sufia
       @start_date = stats_filters[:start_date]
       @end_date = stats_filters[:end_date]
       @limit = limit
+    end
+
+    def depositors
+      @depositors ||= Sufia::Admin::DepositorStats.new(start_date, end_date).depositors
     end
 
     def recent_users
