@@ -45,8 +45,11 @@ class SystemStats
   # @return [Hash] a hash with the user name as the key and the number of deposits as the value
   #    { 'cam156' => 25, 'hjc14' => 24 ... }
   def top_depositors
-    depositor_key = Solrizer.solr_name('depositor', :stored_searchable, type: :string)
     top_data(depositor_key, limit)
+  end
+
+  def depositor_key
+    Solrizer.solr_name('depositor', :symbol)
   end
 
   # returns a list (of size limit) of file formats (mime_types) that have the most files in the system
