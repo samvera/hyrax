@@ -4,6 +4,8 @@ require 'spec_helper'
 # It includes the CurationConcerns::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
 describe FileSet do
+  include CurationConcerns::FactoryHelpers
+
   let(:user) { create(:user) }
 
   describe 'rdf type' do
@@ -105,6 +107,7 @@ describe FileSet do
       expect(subject).to respond_to(:well_formed)
       expect(subject).to respond_to(:page_count)
       expect(subject).to respond_to(:file_title)
+      # :creator is characterization metadata?
       expect(subject).to respond_to(:creator)
     end
 
@@ -357,7 +360,7 @@ describe FileSet do
     context 'when file contains a virus' do
       before do
         allow(subject).to receive(:warn) # suppress virus warnings
-        allow(ClamAV.instance).to receive(:scanfile).and_return('EL CRAPO VIRUS')
+        allow(Hydra::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
         # TODO: Test that this works with Hydra::Works::UploadFileToFileSet. see https://github.com/projecthydra-labs/hydra-works/pull/139
         # Hydra::Works::UploadFileToFileSet.call(subject, file_path, original_name: 'small_file.txt')
         of = subject.build_original_file
@@ -366,7 +369,7 @@ describe FileSet do
 
       it 'populates the errors hash during validation' do
         expect(subject).to_not be_valid
-        expect(subject.errors.messages[:base].first).to match(/A virus was found in .*: EL CRAPO VIRUS/)
+        expect(subject.errors.messages[:base].first).to eq "Failed to verify uploaded file is not a virus"
       end
 
       it 'does not save the file or create a new version' do
@@ -555,77 +558,80 @@ describe FileSet do
   end
 
   describe 'mime type recognition' do
+    let(:mock_file) { mock_file_factory(mime_type: mime_type) }
+    before { allow(subject).to receive(:original_file).and_return(mock_file) }
+
     context '#image?' do
       context 'when image/jp2' do
-        before { subject.mime_type = 'image/jp2' }
+        let(:mime_type) { 'image/jp2' }
         it { should be_image }
       end
       context 'when image/jpg' do
-        before { subject.mime_type = 'image/jpg' }
+        let(:mime_type) { 'image/jpg' }
         it { should be_image }
       end
       context 'when image/png' do
-        before { subject.mime_type = 'image/png' }
+        let(:mime_type) { 'image/png' }
         it { should be_image }
       end
       context 'when image/tiff' do
-        before { subject.mime_type = 'image/tiff' }
+        let(:mime_type) { 'image/tiff' }
         it { should be_image }
       end
     end
 
     describe '#pdf?' do
-      before { subject.mime_type = 'application/pdf' }
+      let(:mime_type) { 'application/pdf' }
       it { should be_pdf }
     end
 
     describe '#audio?' do
       context 'when x-wave' do
-        before { subject.mime_type = 'audio/x-wave' }
+        let(:mime_type) { 'audio/x-wave' }
         it { should be_audio }
       end
       context 'when x-wav' do
-        before { subject.mime_type = 'audio/x-wav' }
+        let(:mime_type) { 'audio/x-wav' }
         it { should be_audio }
       end
       context 'when mpeg' do
-        before { subject.mime_type = 'audio/mpeg' }
+        let(:mime_type) { 'audio/mpeg' }
         it { should be_audio }
       end
       context 'when mp3' do
-        before { subject.mime_type = 'audio/mp3' }
+        let(:mime_type) { 'audio/mp3' }
         it { should be_audio }
       end
       context 'when ogg' do
-        before { subject.mime_type = 'audio/ogg' }
+        let(:mime_type) { 'audio/ogg' }
         it { should be_audio }
       end
     end
 
     describe '#video?' do
       context 'should be true for avi' do
-        before { subject.mime_type = 'video/avi' }
+        let(:mime_type) { 'video/avi' }
         it { should be_video }
       end
 
       context 'should be true for webm' do
-        before { subject.mime_type = 'video/webm' }
+        let(:mime_type) { 'video/webm' }
         it { should be_video }
       end
       context 'should be true for mp4' do
-        before { subject.mime_type = 'video/mp4' }
+        let(:mime_type) { 'video/mp4' }
         it { should be_video }
       end
       context 'should be true for mpeg' do
-        before { subject.mime_type = 'video/mpeg' }
+        let(:mime_type) { 'video/mpeg' }
         it { should be_video }
       end
       context 'should be true for quicktime' do
-        before { subject.mime_type = 'video/quicktime' }
+        let(:mime_type) { 'video/quicktime' }
         it { should be_video }
       end
       context 'should be true for mxf' do
-        before { subject.mime_type = 'application/mxf' }
+        let(:mime_type) { 'application/mxf' }
         it { should be_video }
       end
     end
