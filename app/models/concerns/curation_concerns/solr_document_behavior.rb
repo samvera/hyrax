@@ -99,8 +99,8 @@ module CurationConcerns
       fetch(Solrizer.solr_name('language'), [])
     end
 
-    def tags
-      fetch(Solrizer.solr_name('tag'), [])
+    def keyword
+      fetch(Solrizer.solr_name('keyword'), [])
     end
 
     def embargo_release_date

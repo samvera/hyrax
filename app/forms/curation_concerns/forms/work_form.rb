@@ -10,7 +10,7 @@ module CurationConcerns
                :visibility, to: :model
 
       self.terms = [:title, :creator, :contributor, :description,
-                    :tag, :rights, :publisher, :date_created, :subject, :language,
+                    :keyword, :rights, :publisher, :date_created, :subject, :language,
                     :identifier, :based_near, :related_url,
                     :representative_id, :thumbnail_id, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,

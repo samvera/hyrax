@@ -6,7 +6,7 @@ describe CurationConcerns::Forms::FileSetEditForm do
   describe '#terms' do
     it 'returns a list' do
       expect(subject.terms).to eq(
-        [:resource_type, :title, :creator, :contributor, :description, :tag,
+        [:resource_type, :title, :creator, :contributor, :description, :keyword,
          :rights, :publisher, :date_created, :subject, :language, :identifier,
          :based_near, :related_url,
          :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,

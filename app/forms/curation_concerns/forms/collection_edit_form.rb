@@ -7,7 +7,7 @@ module CurationConcerns
       delegate :human_readable_type, :member_ids, to: :model
 
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
-                    :tag, :rights, :publisher, :date_created, :subject, :language,
+                    :keyword, :rights, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
                     :related_url, :visibility]
 

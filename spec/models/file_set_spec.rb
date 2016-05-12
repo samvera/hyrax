@@ -168,7 +168,7 @@ describe FileSet do
   end
 
   it 'supports multi-valued fields in solr' do
-    subject.tag = %w(tag1 tag2)
+    subject.keyword = %w(keyword1 keyword2)
     expect { subject.save }.not_to raise_error
     subject.delete
   end
