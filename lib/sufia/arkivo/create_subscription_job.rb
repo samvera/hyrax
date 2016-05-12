@@ -6,8 +6,6 @@ module Sufia
     class CreateSubscriptionJob < ActiveJob::Base
       attr_reader :user
 
-      queue_as :arkivo_subscription
-
       def perform(user_key)
         @user = ::User.find_by_user_key(user_key)
         validate_user!

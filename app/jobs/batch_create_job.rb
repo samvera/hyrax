@@ -1,5 +1,5 @@
 class BatchCreateJob < ActiveJob::Base
-  queue_as :batch_create
+  queue_as :ingest
 
   before_enqueue do |job|
     log = job.arguments.last

@@ -2,8 +2,6 @@
 #
 # @attr [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
 class ContentDepositorChangeEventJob < ContentEventJob
-  queue_as :proxy_deposit
-
   attr_accessor :reset
 
   # @param [GenericWork] generic_work the generic work to be transfered
