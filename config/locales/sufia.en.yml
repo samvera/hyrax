@@ -120,14 +120,14 @@ en:
         single: "has been saved."
         multiple:
           link: "These files"
-          tag: "have been saved."
+          keyword: "have been saved."
         title:  "Files uploaded successfully"
         subject: "Batch upload complete"
       failure:
         single: "could not be updated. You do not have sufficient privileges to edit it."
         multiple:
           link: "These files"
-          tag: "could not be updated. You do not have sufficient privileges to edit them."
+          keyword: "could not be updated. You do not have sufficient privileges to edit them."
         title:  "Files failed"
         subject: "Batch upload permission denied"
     background_attribution: "Background image courtesy of Penn State University"
@@ -219,14 +219,14 @@ en:
       file_set:
         based_near:       "Location"
         description:      "Abstract or Summary"
-        tag:              "Keyword"
+        keyword:              "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
         files:            "Upload a new version of this file from your computer"
       collection:
         based_near:       "Location"
         description:      "Abstract or Summary"
-        tag:              "Keyword"
+        keyword:              "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
         total_items:      "Total Items"
@@ -238,7 +238,7 @@ en:
       file_set:
         resource_type_html: "Pre-defined categories to describe the type of file content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
         title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged. &lt;em&gt;This is a required field&lt;/em&gt;."
-        tag: "Words or phrases you select to describe what the file is about. These are used to search for content. &lt;em&gt;This is a required field&lt;/em&gt;."
+        keyword: "Words or phrases you select to describe what the file is about. These are used to search for content. &lt;em&gt;This is a required field&lt;/em&gt;."
         subject: "Headings or index terms describing what the file is about; these &lt;em&gt;do&lt;/em&gt; need to conform to an existing vocabulary. Currently supports Library of Congress Subject Headings."
         creator_html: "The person or group responsible for the file being uploaded. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot; &lt;em&gt;This is a required field&lt;/em&gt;."
         related_url: "A link to a website or other specific content (audio, video, PDF document) related to the file. An example is the URL of a research project from which the file was derived."
@@ -258,7 +258,7 @@ en:
         default: "Usage information for %{title}"
         based_near: "Usage information for location"
         description: "Usage information for abstract or summary"
-        tag: "Usage information for keyword"
+        keyword: "Usage information for keyword"
         rights: "Usage information for rights"
 
   curation_concerns:
@@ -291,4 +291,4 @@ en:
     search:
       fields:
         show:
-          tag: Keyword
+          keyword: Keyword

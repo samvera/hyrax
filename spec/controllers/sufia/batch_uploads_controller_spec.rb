@@ -21,12 +21,12 @@ describe Sufia::BatchUploadsController do
                 { '1' => 'foo' },
                 { '1' => 'Article' },
                 ['1'],
-                { tag: [], visibility: 'open' },
+                { keyword: [], visibility: 'open' },
                 CurationConcerns::Operation)
         post :create, title: { '1' => 'foo' },
                       resource_type: { '1' => 'Article' },
                       uploaded_files: ['1'],
-                      generic_work: { tag: [""], visibility: 'open' }
+                      generic_work: { keyword: [""], visibility: 'open' }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -53,10 +53,10 @@ describe Sufia::BatchUploadsController do
     before do
       controller.params = { title: { '1' => 'foo' },
                             uploaded_files: ['1'],
-                            generic_work: { tag: [""], visibility: 'open' } }
+                            generic_work: { keyword: [""], visibility: 'open' } }
     end
     it "excludes uploaded_files and title" do
-      expect(subject).to eq('tag' => [],
+      expect(subject).to eq('keyword' => [],
                             'visibility' => 'open')
     end
   end

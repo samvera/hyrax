@@ -52,7 +52,7 @@ module Sufia
           work.resource_type = []
           work.title = []
           work.rights = []
-          work.tag = []
+          work.keyword = []
           work.creator = []
           work.description = []
           work.publisher = []

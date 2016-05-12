@@ -5,7 +5,7 @@ module Sufia::Forms
        :creator,
        :contributor,
        :description,
-       :tag,
+       :keyword,
        :rights,
        :publisher,
        :date_created,

@@ -6,7 +6,7 @@ describe "Browse catalog:", type: :feature do
     GenericWork.new do |work|
       work.title = ["Jill's Research"]
       (1..25).each do |i|
-        work.tag << ["tag#{format('%02d', i)}"]
+        work.keyword << ["keyword#{format('%02d', i)}"]
       end
       work.apply_depositor_metadata('jilluser')
       work.read_groups = ['public']
@@ -17,7 +17,7 @@ describe "Browse catalog:", type: :feature do
   let!(:jacks_work) do
     GenericWork.new do |work|
       work.title = ["Jack's Research"]
-      work.tag = ['jacks_tag']
+      work.keyword = ['jacks_keyword']
       work.apply_depositor_metadata('jackuser')
       work.read_groups = ['public']
       work.save!
@@ -29,7 +29,7 @@ describe "Browse catalog:", type: :feature do
   end
 
   describe 'when not logged in' do
-    it 'using facet pagination to browse by tags' do
+    it 'using facet pagination to browse by keywords' do
       click_button "search-submit-header"
 
       expect(page).to have_content 'Search Results'
@@ -43,10 +43,10 @@ describe "Browse catalog:", type: :feature do
       end
 
       within(".modal-body") do
-        expect(page).not_to have_content 'tag05'
-        expect(page).to have_content 'tag21'
+        expect(page).not_to have_content 'keyword05'
+        expect(page).to have_content 'keyword21'
 
-        click_link 'tag21'
+        click_link 'keyword21'
       end
 
       expect(page).to have_content jills_work.title.first

@@ -41,7 +41,7 @@ describe CatalogController, type: :controller do
     end
 
     context 'with collections' do
-      let(:collection) { create(:public_collection, tag: ['rocks']) }
+      let(:collection) { create(:public_collection, keyword: ['rocks']) }
       let(:objects) { [collection, rocks, clouds] }
 
       it 'finds collections' do

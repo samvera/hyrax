@@ -9,18 +9,18 @@ describe 'catalog searching', type: :feature do
 
   context 'with works and collections' do
     let!(:jills_work) do
-      create(:public_work, title: ["Jill's Research"], tag: ['jills_tag', 'shared_tag'])
+      create(:public_work, title: ["Jill's Research"], keyword: ['jills_keyword', 'shared_keyword'])
     end
 
     let!(:jacks_work) do
-      create(:public_work, title: ["Jack's Research"], tag: ['jacks_tag', 'shared_tag'])
+      create(:public_work, title: ["Jack's Research"], keyword: ['jacks_keyword', 'shared_keyword'])
     end
 
-    let!(:collection) { create(:public_collection, tag: ['collection_tag', 'shared_tag']) }
+    let!(:collection) { create(:public_collection, keyword: ['collection_keyword', 'shared_keyword']) }
 
     it 'performing a search' do
       within('#search-form-header') do
-        fill_in('search-field-header', with: 'shared_tag')
+        fill_in('search-field-header', with: 'shared_keyword')
         click_button('Go')
       end
 

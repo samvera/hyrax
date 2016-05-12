@@ -30,7 +30,7 @@ module Sufia
               resource_type: 'format',
               identifier: 'identifier',
               language: 'language',
-              tag: 'relation',
+              keyword: 'relation',
               based_near: 'coverage',
               rights: 'rights'
             }

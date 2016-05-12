@@ -75,7 +75,7 @@ describe CurationConcerns::FileSetsController do
       it "spawns a content update event job" do
         expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set, user)
         post :update, id: file_set,
-                      file_set: { title: ['new_title'], tag: [''],
+                      file_set: { title: ['new_title'], keyword: [''],
                                   permissions_attributes: [{ type: 'person',
                                                              name: 'archivist1',
                                                              access: 'edit' }] }
@@ -88,8 +88,8 @@ describe CurationConcerns::FileSetsController do
 
         expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, filedata: file, file_set: { tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
-        post :update, id: file_set, file_set: { files: [file], tag: [''],
+        post :update, id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+        post :update, id: file_set, file_set: { files: [file], keyword: [''],
                                                 permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
     end
@@ -143,7 +143,7 @@ describe CurationConcerns::FileSetsController do
 
     it "adds new groups and users" do
       post :update, id: file_set,
-                    file_set: { tag: [''],
+                    file_set: { keyword: [''],
                                 permissions_attributes: [
                                   { type: 'person', name: 'user1', access: 'edit' },
                                   { type: 'group', name: 'group1', access: 'read' }
@@ -157,7 +157,7 @@ describe CurationConcerns::FileSetsController do
       file_set.edit_groups = ['group3']
       file_set.save
       post :update, id: file_set,
-                    file_set: { tag: [''],
+                    file_set: { keyword: [''],
                                 permissions_attributes: [
                                   { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
                                 ] }
@@ -172,7 +172,7 @@ describe CurationConcerns::FileSetsController do
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
       post :update, id: file_set.id, 'Filename' => 'The world',
-                    file_set: { files: [file], tag: [''],
+                    file_set: { files: [file], keyword: [''],
                                 permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
     end
 
@@ -184,7 +184,7 @@ describe CurationConcerns::FileSetsController do
       end
       it "draws the edit page" do
         expect_any_instance_of(FileSet).to receive(:valid?).and_return(false)
-        post :update, id: file_set, file_set: { tag: [''] }
+        post :update, id: file_set, file_set: { keyword: [''] }
         expect(response.code).to eq '422'
         expect(response).to render_template('edit')
         expect(assigns[:file_set]).to eq file_set

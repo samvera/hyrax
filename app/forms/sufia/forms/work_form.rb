@@ -6,7 +6,7 @@ module Sufia::Forms
     attr_reader :agreement_accepted
 
     self.terms += [:collection_ids]
-    self.required_fields = [:title, :creator, :tag, :rights]
+    self.required_fields = [:title, :creator, :keyword, :rights]
 
     def initialize(model, current_ability)
       @agreement_accepted = !model.new_record?

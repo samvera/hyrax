@@ -25,8 +25,8 @@ module Sufia
         # Then, rename the url key to related_url
         munged['related_url'] = munged.delete('url') if munged['url']
 
-        # Then, rename the tags key to tag
-        munged['tag'] = munged.delete('tags') if munged['tags']
+        # Then, rename the tags key to keyword
+        munged['keyword'] = munged.delete('tags') if munged['tags']
 
         # Then, normalize creator names
         munged_creators = munged['creators'].each do |entry|
