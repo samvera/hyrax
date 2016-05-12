@@ -3,9 +3,7 @@ require 'active_fedora/rake_support'
 namespace :hydra do
   desc "Start a solr, fedora and rails instance"
   task :server do
-    with_server('development',
-                fcrepo_port: ENV.fetch('FCREPO_PORT', '8984'),
-                solr_port: ENV.fetch('SOLR_PORT', '8983')) do
+    with_server('development') do
       IO.popen('rails server') do |io|
         begin
           io.each do |line|
@@ -20,9 +18,7 @@ namespace :hydra do
 
   desc "Start solr and fedora instances for tests"
   task :test_server do
-    with_server('test',
-                fcrepo_port: ENV.fetch('FCREPO_PORT', '8986'),
-                solr_port: ENV.fetch('SOLR_PORT', '8985')) do
+    with_server('test') do
       begin
         sleep
       rescue Interrupt
