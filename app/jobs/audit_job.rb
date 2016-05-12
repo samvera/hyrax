@@ -1,6 +1,4 @@
 class AuditJob < ActiveJob::Base
-  queue_as :audit
-
   # URI of the resource to audit.
   # This URI could include the actual resource (e.g. content) and the version to audit:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1
