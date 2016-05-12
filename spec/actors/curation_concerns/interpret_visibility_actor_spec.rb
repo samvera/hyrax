@@ -7,7 +7,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
     CurationConcerns::Actors::ActorStack.new(curation_concern,
                                              user,
                                              [described_class,
-                                              CurationConcerns::GenericWorkActor])
+                                              CurationConcerns::Actors::GenericWorkActor])
   end
   let(:date) { Date.today + 2 }
 

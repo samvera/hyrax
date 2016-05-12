@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-describe CurationConcerns::GenericWorkActor do
+describe CurationConcerns::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { create(:user) }
