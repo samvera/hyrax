@@ -99,8 +99,8 @@ describe CurationConcerns::FileSetsController do
       let(:file2)       { "image.jpg" }
       let(:second_user) { create(:user) }
       let(:version1)    { "version1" }
-      let(:actor1)      { CurationConcerns::FileSetActor.new(file_set, user) }
-      let(:actor2)      { CurationConcerns::FileSetActor.new(file_set, second_user) }
+      let(:actor1)      { CurationConcerns::Actors::FileSetActor.new(file_set, user) }
+      let(:actor2)      { CurationConcerns::Actors::FileSetActor.new(file_set, second_user) }
 
       before do
         actor1.create_content(fixture_file_upload(file1))

@@ -1,5 +1,7 @@
 # Use this file to reference specific commits of gems.
 
+gem 'curation_concerns', github: 'projecthydra-labs/curation_concerns'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

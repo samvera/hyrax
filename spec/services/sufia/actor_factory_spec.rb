@@ -8,13 +8,13 @@ describe Sufia::ActorFactory do
     subject { described_class.stack_actors(work) }
     it { is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
                             Sufia::CreateWithFilesActor,
-                            CurationConcerns::AddToCollectionActor,
-                            CurationConcerns::AssignRepresentativeActor,
-                            CurationConcerns::AttachFilesActor,
-                            CurationConcerns::ApplyOrderActor,
-                            CurationConcerns::InterpretVisibilityActor,
+                            CurationConcerns::Actors::AddToCollectionActor,
+                            CurationConcerns::Actors::AssignRepresentativeActor,
+                            CurationConcerns::Actors::AttachFilesActor,
+                            CurationConcerns::Actors::ApplyOrderActor,
+                            CurationConcerns::Actors::InterpretVisibilityActor,
                             CurationConcerns::GenericWorkActor,
-                            CurationConcerns::AssignIdentifierActor] }
+                            CurationConcerns::Actors::AssignIdentifierActor] }
   end
 
   describe '.build' do
@@ -22,13 +22,13 @@ describe Sufia::ActorFactory do
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
         Sufia::CreateWithFilesActor,
-        CurationConcerns::AddToCollectionActor,
-        CurationConcerns::AssignRepresentativeActor,
-        CurationConcerns::AttachFilesActor,
-        CurationConcerns::ApplyOrderActor,
-        CurationConcerns::InterpretVisibilityActor,
+        CurationConcerns::Actors::AddToCollectionActor,
+        CurationConcerns::Actors::AssignRepresentativeActor,
+        CurationConcerns::Actors::AttachFilesActor,
+        CurationConcerns::Actors::ApplyOrderActor,
+        CurationConcerns::Actors::InterpretVisibilityActor,
         CurationConcerns::GenericWorkActor,
-        CurationConcerns::AssignIdentifierActor
+        CurationConcerns::Actors::AssignIdentifierActor
       ]
       expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor
     end

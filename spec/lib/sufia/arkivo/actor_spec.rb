@@ -29,7 +29,7 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'creates initial metadata' do
-      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_metadata).once
+      expect_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:create_metadata).once
       subject.create_work_from_item
     end
 
@@ -39,7 +39,7 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'calls create_content' do
-      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:create_content).once
+      expect_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:create_content).once
       subject.create_work_from_item
     end
 
@@ -81,7 +81,7 @@ describe Sufia::Arkivo::Actor do
     it { is_expected.to respond_to(:update_work_from_item) }
 
     it 'instantiates an actor' do
-      expect(CurationConcerns::FileSetActor).to receive(:new).once.and_call_original
+      expect(CurationConcerns::Actors::FileSetActor).to receive(:new).once.and_call_original
       subject.update_work_from_item(work)
     end
 
@@ -108,7 +108,7 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'calls update_content' do
-      expect_any_instance_of(CurationConcerns::FileSetActor).to receive(:update_content).once
+      expect_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:update_content).once
       subject.update_work_from_item(work)
     end
 

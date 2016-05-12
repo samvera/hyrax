@@ -24,7 +24,7 @@ module Sufia
 
         file_set = ::FileSet.new
 
-        file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
+        file_actor = ::CurationConcerns::Actors::FileSetActor.new(file_set, user)
         file_actor.create_metadata(work)
         file_set.label = item['file']['filename']
         file_actor.create_content(file) # item['file']['contentType']
@@ -37,7 +37,7 @@ module Sufia
         work_attributes = attributes.merge(arkivo_checksum: item['file']['md5'])
         work_actor.update(work_attributes)
         file_set = work.file_sets.first
-        file_actor = ::CurationConcerns::FileSetActor.new(file_set, user)
+        file_actor = ::CurationConcerns::Actors::FileSetActor.new(file_set, user)
         file_actor.update_content(file)
         work
       end

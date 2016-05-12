@@ -8,7 +8,7 @@ class AttachFilesToWorkJob < ActiveJob::Base
     uploaded_files.each do |uploaded_file|
       file_set = FileSet.new
       user = User.find_by_user_key(work.depositor)
-      actor = CurationConcerns::FileSetActor.new(file_set, user)
+      actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
       actor.create_metadata(work, visibility: work.visibility)
       actor.create_content(uploaded_file.file.current_path)
       # Set the uri so that we know this uploaded file has been used.
