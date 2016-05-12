@@ -2,11 +2,11 @@
 <div itemscope itemtype="http://schema.org/CreativeWork" class="row">
   <div class="col-xs-12">
     <header>
-      <h1><%= @presenter %> <%= @presenter.permission_badge %></h1>
+      <%= render 'work_title', presenter: @presenter %>
     </header>
   </div>
   <div class="col-sm-8">
-    <p class="work_description"><%= @presenter.description %></p>
+    <%= render 'work_description', presenter: @presenter %>
     <%= render 'relationships', presenter: @presenter %>
     <%= render 'metadata', presenter: @presenter %>
   </div>
