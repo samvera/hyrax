@@ -25,7 +25,7 @@ module CurationConcerns
         index.type :text
         index.as :stored_searchable
       end
-      property :tag, predicate: ::RDF::Vocab::DC11.relation do |index|
+      property :keyword, predicate: ::RDF::Vocab::DC11.relation do |index|
         index.as :stored_searchable, :facetable
       end
       property :rights, predicate: ::RDF::Vocab::DC.rights do |index|

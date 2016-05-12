@@ -45,7 +45,7 @@ describe CurationConcerns::FileSetPresenter do
 
   describe "properties delegated to solr_document" do
     let(:solr_properties) do
-      ["date_uploaded", "depositor", "tags", "title_or_label",
+      ["date_uploaded", "depositor", "keyword", "title_or_label",
        "contributor", "creator", "title", "description", "publisher",
        "subject", "language", "rights"]
     end

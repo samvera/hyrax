@@ -83,7 +83,7 @@ en:
         type: "http://schema.org/Thing"
         property: about
         value: name
-      tag:
+      keyword:
         property: keywords
       title:
         property: name
@@ -116,7 +116,7 @@ en:
         facet:
           human_readable_type_sim: Type of Work
           creator_sim: Creator
-          tag_sim: Keyword
+          keyword_sim: Keyword
           subject_sim: Subject
           language_sim: Language
           based_near_sim: Location
@@ -125,7 +125,7 @@ en:
           generic_type_sim: Type
         index:
           description_tesim: "Description"
-          tag_tesim: "Keyword"
+          keyword_tesim: "Keyword"
           subject_tesim: "Subject"
           creator_tesim: "Creator"
           contributor_tesim: "Contributor"
@@ -142,7 +142,7 @@ en:
         show:
           title_tesim: "Title"
           description_tesim: "Description"
-          tag_tesim: "Keyword"
+          keyword_tesim: "Keyword"
           subject_tesim: "Subject"
           creator_tesim: "Creator"
           contributor_tesim: "Contributor"

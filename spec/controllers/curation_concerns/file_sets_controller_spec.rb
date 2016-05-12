@@ -122,7 +122,7 @@ describe CurationConcerns::FileSetsController do
       context 'updating metadata' do
         it 'is successful and update attributes' do
           post :update, id: file_set, file_set:
-            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+            { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
           expect(assigns[:file_set].title).to eq(['new_title'])
         end
@@ -130,7 +130,7 @@ describe CurationConcerns::FileSetsController do
         it 'goes back to edit on an error' do
           allow_any_instance_of(FileSet).to receive(:valid?).and_return(false)
           post :update, id: file_set, file_set:
-            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+            { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           expect(response.status).to eq 422
           expect(response).to render_template('edit')
           expect(assigns[:groups]).to be_kind_of Array
