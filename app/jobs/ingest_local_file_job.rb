@@ -1,5 +1,5 @@
 class IngestLocalFileJob < ActiveJob::Base
-  queue_as :ingest_local
+  queue_as :ingest
 
   # @param [FileSet] file_set
   # @param [String] path

@@ -3,7 +3,7 @@ require 'uri'
 require 'tempfile'
 
 class ImportUrlJob < ActiveJob::Base
-  queue_as :import_url
+  queue_as :ingest
 
   before_enqueue do |job|
     log = job.arguments.last

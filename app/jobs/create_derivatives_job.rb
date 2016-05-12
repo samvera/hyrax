@@ -1,5 +1,5 @@
 class CreateDerivativesJob < ActiveJob::Base
-  queue_as :derivatives
+  queue_as :ingest
 
   # @param [FileSet] file_set
   # @param [String] file_name
