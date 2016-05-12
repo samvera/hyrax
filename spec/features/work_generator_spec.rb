@@ -16,7 +16,7 @@ feature 'Creating a new Work' do
     Rails::Generators.invoke('curation_concerns:work', ['Catapult'], destination_root: Rails.root)
     load "#{EngineCart.destination}/app/models/catapult.rb"
     load "#{EngineCart.destination}/app/controllers/curation_concerns/catapults_controller.rb"
-    load "#{EngineCart.destination}/app/actors/curation_concerns/catapult_actor.rb"
+    load "#{EngineCart.destination}/app/actors/curation_concerns/actors/catapult_actor.rb"
     load "#{EngineCart.destination}/app/forms/curation_concerns/catapult_form.rb"
     load "#{EngineCart.destination}/config/initializers/curation_concerns.rb"
     load "#{EngineCart.destination}/config/routes.rb"

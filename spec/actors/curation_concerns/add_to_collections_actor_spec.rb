@@ -7,7 +7,7 @@ describe CurationConcerns::Actors::AddToCollectionActor do
     CurationConcerns::Actors::ActorStack.new(curation_concern,
                                              user,
                                              [described_class,
-                                              CurationConcerns::GenericWorkActor])
+                                              CurationConcerns::Actors::GenericWorkActor])
   end
   describe 'the next actor' do
     let(:root_actor) { double }
