@@ -2,7 +2,6 @@ module CurationConcerns
   module Collection
     extend ActiveSupport::Concern
     extend Deprecation
-    include Hydra::Works::CollectionBehavior
     include Hydra::WithDepositor # for access to apply_depositor_metadata
     include Hydra::AccessControls::Permissions
     include CurationConcerns::RequiredMetadata
