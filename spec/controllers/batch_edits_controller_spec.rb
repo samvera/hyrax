@@ -14,7 +14,7 @@ describe BatchEditsController, type: :controller do
     before do
       @one = GenericWork.new(creator: ["Fred"], title: ["abc"], language: ['en'])
       @one.apply_depositor_metadata('mjg36')
-      @two = GenericWork.new(creator: ["Wilma"], title: ["abc"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar'])
+      @two = GenericWork.new(creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar'])
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
@@ -29,11 +29,7 @@ describe BatchEditsController, type: :controller do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       get :edit
       expect(response).to be_successful
-      expect(assigns[:terms]).to eq [:creator, :contributor, :description, :keyword, :rights, :publisher,
-                                     :date_created, :subject, :language, :identifier, :based_near, :related_url]
-      expect(assigns[:generic_work].creator).to eq ["Fred", "Wilma"]
-      expect(assigns[:generic_work].publisher).to eq ["Rand McNally"]
-      expect(assigns[:generic_work].language).to eq ["en"]
+      expect(assigns[:form].model.creator).to eq ["Fred", "Wilma"]
     end
 
     it "sets the breadcrumb trail" do
