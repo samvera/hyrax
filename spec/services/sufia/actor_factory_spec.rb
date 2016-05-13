@@ -13,7 +13,7 @@ describe Sufia::ActorFactory do
                             CurationConcerns::Actors::AttachFilesActor,
                             CurationConcerns::Actors::ApplyOrderActor,
                             CurationConcerns::Actors::InterpretVisibilityActor,
-                            CurationConcerns::GenericWorkActor,
+                            CurationConcerns::Actors::GenericWorkActor,
                             CurationConcerns::Actors::AssignIdentifierActor] }
   end
 
@@ -27,7 +27,7 @@ describe Sufia::ActorFactory do
         CurationConcerns::Actors::AttachFilesActor,
         CurationConcerns::Actors::ApplyOrderActor,
         CurationConcerns::Actors::InterpretVisibilityActor,
-        CurationConcerns::GenericWorkActor,
+        CurationConcerns::Actors::GenericWorkActor,
         CurationConcerns::Actors::AssignIdentifierActor
       ]
       expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor

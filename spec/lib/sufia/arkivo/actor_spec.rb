@@ -24,7 +24,7 @@ describe Sufia::Arkivo::Actor do
     it { is_expected.to respond_to(:create_work_from_item) }
 
     it 'instantiates an actor' do
-      expect(CurationConcerns::GenericWorkActor).to receive(:new).once.and_call_original
+      expect(CurationConcerns::Actors::GenericWorkActor).to receive(:new).once.and_call_original
       subject.create_work_from_item
     end
 
