@@ -33,12 +33,18 @@ describe Sufia::AdminStatsPresenter do
   end
 
   describe "#top_formats" do
-    let!(:old_file) { create(:file_set, user: user1, mime_type: 'image/jpeg') }
-    let!(:file1) { create(:file_set, user: user1, mime_type: 'image/png') }
-    let!(:file2) { create(:file_set, user: user2, mime_type: 'image/png') }
+    let!(:file_set1) { create(:file_set, user: user1) }
+    let!(:file_set2) { create(:file_set, user: user1) }
+    let!(:file_set3) { create(:file_set, user: user2) }
+
     before do
-      allow(old_file).to receive(:create).and_return(two_days_ago_date)
-      old_file.update_index
+      allow(file_set1).to receive(:create).and_return(two_days_ago_date)
+      allow(file_set1).to receive(:mime_type).and_return('image/png')
+      allow(file_set2).to receive(:mime_type).and_return('image/png')
+      allow(file_set3).to receive(:mime_type).and_return('image/jpeg')
+      file_set1.update_index
+      file_set2.update_index
+      file_set3.update_index
     end
 
     subject { service.top_formats }

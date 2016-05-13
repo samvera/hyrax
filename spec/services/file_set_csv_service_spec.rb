@@ -1,13 +1,26 @@
 require 'spec_helper'
 
 describe Sufia::FileSetCSVService do
+  let(:mock_file) do
+    double('original_file',
+           file_size: '',
+           height: '',
+           width: '',
+           format_label: '',
+           digest: '',
+           mime_type: 'application/pdf')
+  end
   let(:file) do
     FileSet.new(id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
-                resource_type: ['Book', 'Other'], rights: ['Mine'], mime_type: 'application/pdf') do |f|
+                resource_type: ['Book', 'Other'], rights: ['Mine']) do |f|
       f.apply_depositor_metadata('jilluser@example.com')
     end
   end
   let(:solr_document) { SolrDocument.new(file.to_solr) }
+
+  before do
+    allow(file).to receive(:original_file).and_return(mock_file)
+  end
 
   context "when using the defaults" do
     let(:csv_service) { described_class.new(solr_document) }
