@@ -3,7 +3,7 @@ require 'uri'
 require 'tempfile'
 
 class ImportUrlJob < ActiveJob::Base
-  queue_as :ingest
+  queue_as CurationConcerns.config.ingest_queue_name
 
   before_enqueue do |job|
     log = job.arguments.last
