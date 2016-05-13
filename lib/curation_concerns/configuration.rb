@@ -127,6 +127,13 @@ module CurationConcerns
       @lock_retry_delay ||= 200 # milliseconds
     end
 
+    # @!attribute [w] ingest_queue_name
+    #   ActiveJob queue to handle ingest-like jobs.
+    attr_writer :ingest_queue_name
+    def ingest_queue_name
+      @ingest_queue_name ||= :ingest
+    end
+
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,

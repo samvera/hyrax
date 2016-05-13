@@ -1,5 +1,5 @@
 class CreateDerivativesJob < ActiveJob::Base
-  queue_as :ingest
+  queue_as CurationConcerns.config.ingest_queue_name
 
   # @param [FileSet] file_set
   # @param [String] file_name

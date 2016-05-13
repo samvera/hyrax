@@ -1,5 +1,5 @@
 class CharacterizeJob < ActiveJob::Base
-  queue_as :ingest
+  queue_as CurationConcerns.config.ingest_queue_name
 
   # @param [FileSet] file_set
   # @param [String] filename a local path for the file to characterize. By using this, we don't have to pull a copy out of fedora.
