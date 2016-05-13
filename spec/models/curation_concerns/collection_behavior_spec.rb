@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'rspec/active_model/mocks'
 
 describe CurationConcerns::CollectionBehavior do
+  include CurationConcerns::FactoryHelpers
+
   # All behavior for Collection are defined in CC::CollectionBehavior, so we use
   # a Collection instance to test.
   let(:collection) { FactoryGirl.build(:collection) }
@@ -31,13 +33,20 @@ describe CurationConcerns::CollectionBehavior do
     # Calculating the size of the Collection should only hit Solr.
     # This base case querries solr in an integration test
     context 'with indexed Works and FileSets', :integration do
-      let(:file1) { FactoryGirl.build(:file_set, file_size: ['100']) }
-      let(:file2) { FactoryGirl.build(:file_set, file_size: ['100']) }
-      let(:file3) { FactoryGirl.build(:file_set, file_size: ['9000'], id: 'fumid') }
+      let(:file1) { FactoryGirl.build(:file_set) }
+      let(:file2) { FactoryGirl.build(:file_set) }
+      let(:file3) { FactoryGirl.build(:file_set, id: 'fumid') }
       let(:work1) { FactoryGirl.build(:generic_work) }
       let(:work2) { FactoryGirl.build(:generic_work) }
       let(:work3) { FactoryGirl.build(:generic_work, id: 'dumid') }
+      let(:of1)   { mock_file_factory(file_size: ['100']) }
+      let(:of2)   { mock_file_factory(file_size: ['100']) }
+      let(:of3)   { mock_file_factory(file_size: ['9000']) }
+
       before do
+        allow(file1).to receive(:original_file).and_return(of1)
+        allow(file2).to receive(:original_file).and_return(of2)
+        allow(file3).to receive(:original_file).and_return(of3)
         # Save collection to get ids
         collection.save
         # Create relationships so member_ids are created

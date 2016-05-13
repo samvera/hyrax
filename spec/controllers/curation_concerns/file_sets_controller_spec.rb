@@ -49,13 +49,13 @@ describe CurationConcerns::FileSetsController do
       context 'when the file has a virus' do
         before do
           allow(subject).to receive(:warn) # suppress virus warnings
-          allow(ClamAV.instance).to receive(:scanfile).and_return('EL CRAPO VIRUS')
+          allow(Hydra::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
           of = subject.build_original_file
           of.content = File.open(file_path)
         end
         it 'populates the errors hash during validation' do
           expect(subject).to_not be_valid
-          expect(subject.errors.messages[:base].first).to match(/A virus was found in .*: EL CRAPO VIRUS/)
+          expect(subject.errors.messages[:base].first).to eq "Failed to verify uploaded file is not a virus"
         end
       end
 

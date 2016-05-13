@@ -4,11 +4,11 @@ require 'redlock'
 describe CurationConcerns::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
-  let(:user) { create(:user) }
-  let(:file_set) { create(:file_set) }
-  let(:actor) { described_class.new(file_set, user) }
+  let(:user)          { create(:user) }
   let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
-  let(:local_file) { File.open(File.join(fixture_path, 'world.png')) }
+  let(:local_file)    { File.open(File.join(fixture_path, 'world.png')) }
+  let(:file_set)      { create(:file_set, content: local_file) }
+  let(:actor)         { described_class.new(file_set, user) }
 
   describe 'creating metadata and content' do
     let(:upload_set_id) { nil }
@@ -92,8 +92,8 @@ describe CurationConcerns::Actors::FileSetActor do
         expect(file_set.title).to eq([File.basename(local_file)])
       end
 
-      it 'does not set the mime_type' do
-        expect(file_set.mime_type).to be_nil
+      it 'gets the mime_type from original_file' do
+        expect(file_set.mime_type).to eq('image/png')
       end
     end
 
@@ -105,6 +105,7 @@ describe CurationConcerns::Actors::FileSetActor do
 
       before do
         allow(CharacterizeJob).to receive(:perform_later)
+        allow(IngestFileJob).to receive(:perform_later)
         allow(file_set).to receive(:label).and_return(short_name)
         # TODO: we should allow/expect call to IngestJob
         actor.create_content(fixture_file_upload(file))

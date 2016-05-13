@@ -9,7 +9,7 @@ module CurationConcerns
     include CurationConcerns::BasicMetadata
     include Hydra::Works::FileSetBehavior
     include Hydra::Works::VirusCheck
-    include Hydra::Works::Characterization
+    include CurationConcerns::Characterization
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid

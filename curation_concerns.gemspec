@@ -29,10 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sprockets-es6'
   spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
   spec.add_dependency 'active_attr'
-  spec.add_dependency 'hydra-works', '~> 0.8', '>= 0.8.1'
-  # This allows bundler to resolve a dependency tree.
-  # TODO: I suspect we can remove it when hydra-pcdm 0.8.0 is released.
-  spec.add_dependency 'hydra-pcdm', '>= 0.8.0.beta1', '< 1'
+  spec.add_dependency 'hydra-works', '>= 0.10.0'
   spec.add_dependency 'active_fedora-noid', '~> 1.0'
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'

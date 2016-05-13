@@ -19,7 +19,7 @@ module CurationConcerns
 
       def fetch_thumbnail(object)
         return object if object.thumbnail_id == object.id
-        ::FileSet.load_instance_from_solr(object.thumbnail_id)
+        ::FileSet.find(object.thumbnail_id)
       rescue ActiveFedora::ObjectNotFoundError
         Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
         nil
