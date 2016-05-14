@@ -100,12 +100,28 @@ describe Sufia::SystemStats do
   describe "#top_formats" do
     let(:user_stats) { {} }
     let(:depositor_count) { nil }
+    let(:pdf_file_set) do
+      build(:public_pdf, user: user1, id: "pdf1111")
+    end
+    let(:wav_file_set) do
+      build(:public_wav, user: user1, id: "wav1111")
+    end
+    let(:mp3_file_set) do
+      build(:public_mp3, user: user1, id: "mp31111", create_date: [2.days.ago])
+    end
+    let(:doc_file_set) do
+      build(:file_set, :registered, user: user1, id: "word1111")
+    end
 
     before do
-      build(:public_pdf, user: user1, id: "pdf1111").update_index
-      build(:public_wav, user: user1, id: "wav1111").update_index
-      build(:public_mp3, user: user1, id: "mp31111", create_date: [2.days.ago]).update_index
-      build(:file_set, :registered, user: user1, id: "word1111", mime_type: "application/vnd.ms-word.document").update_index
+      allow(pdf_file_set).to receive(:mime_type) { 'application/pdf' }
+      allow(wav_file_set).to receive(:mime_type) { 'audio/wav' }
+      allow(mp3_file_set).to receive(:mime_type) { 'audio/mpeg' }
+      allow(doc_file_set).to receive(:mime_type) { 'application/vnd.ms-word.document' }
+      pdf_file_set.update_index
+      wav_file_set.update_index
+      mp3_file_set.update_index
+      doc_file_set.update_index
     end
 
     subject { stats.top_formats }
@@ -113,14 +129,43 @@ describe Sufia::SystemStats do
     it { is_expected.to include("mpeg" => 1, "pdf" => 1, "wav" => 1, "vnd.ms-word.document" => 1) }
 
     context "when more than 5 formats available" do
+      let(:pdf_file_set2) do
+        build(:public_pdf, user: user1, id: "pdf2222")
+      end
+      let(:wav_file_set2) do
+        build(:public_wav, user: user1, id: "wav2222")
+      end
+      let(:mp3_file_set2) do
+        build(:public_mp3, user: user1, id: "mp32222", create_date: [2.days.ago])
+      end
+      let(:doc_file_set2) do
+        build(:file_set, :registered, user: user1, id: "reg2222")
+      end
+      let(:png_file_set1) do
+        build(:file_set, user: user1, id: "png1111")
+      end
+      let(:png_file_set2) do
+        build(:file_set, user: user1, id: "png2222")
+      end
+      let(:jpg_file_set) do
+        build(:file_set, user: user1, id: "jpeg2222")
+      end
+
       before do
-        build(:public_pdf, user: user1, id: "pdf2222").update_index
-        build(:public_wav, user: user1, id: "wav2222").update_index
-        build(:public_mp3, user: user1, id: "mp32222", create_date: [2.days.ago]).update_index
-        build(:file_set, :registered, user: user1, id: "reg2222", mime_type: "application/vnd.ms-word.document").update_index
-        build(:file_set, user: user1, id: "png1111", mime_type: "image/png").update_index
-        build(:file_set, user: user1, id: "png2222", mime_type: "image/png").update_index
-        build(:file_set, user: user1, id: "jpeg2222", mime_type: "image/jpeg").update_index
+        allow(pdf_file_set2).to receive(:mime_type) { 'application/pdf' }
+        allow(wav_file_set2).to receive(:mime_type) { 'audio/wav' }
+        allow(mp3_file_set2).to receive(:mime_type) { 'audio/mpeg' }
+        allow(doc_file_set2).to receive(:mime_type) { 'application/vnd.ms-word.document' }
+        allow(png_file_set1).to receive(:mime_type) { 'image/png' }
+        allow(png_file_set2).to receive(:mime_type) { 'image/png' }
+        allow(jpg_file_set).to receive(:mime_type) { 'image/jpeg' }
+        pdf_file_set2.update_index
+        wav_file_set2.update_index
+        mp3_file_set2.update_index
+        doc_file_set2.update_index
+        png_file_set1.update_index
+        png_file_set2.update_index
+        jpg_file_set.update_index
       end
 
       it do

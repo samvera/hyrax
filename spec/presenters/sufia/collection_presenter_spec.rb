@@ -4,7 +4,7 @@ describe Sufia::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
     it { is_expected.to eq [:title, :total_items, :size, :resource_type, :description, :creator,
-                            :contributor, :tags, :rights, :publisher, :date_created, :subject,
+                            :contributor, :keyword, :rights, :publisher, :date_created, :subject,
                             :language, :identifier, :based_near, :related_url] }
   end
 
@@ -36,7 +36,7 @@ describe Sufia::CollectionPresenter do
 
   describe "#title" do
     subject { presenter.title }
-    it { is_expected.to eq 'A clever title' }
+    it { is_expected.to eq ['A clever title'] }
   end
 
   describe "#based_near" do

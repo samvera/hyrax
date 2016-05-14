@@ -8,7 +8,7 @@ describe Sufia::BatchUploadForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:creator, :tag, :rights] }
+    it { is_expected.to eq [:creator, :keyword, :rights] }
   end
 
   describe "#secondary_terms" do
@@ -43,7 +43,7 @@ describe Sufia::BatchUploadForm do
     it { is_expected.to eq [:creator,
                             :contributor,
                             :description,
-                            :tag,
+                            :keyword,
                             :rights,
                             :publisher,
                             :date_created,

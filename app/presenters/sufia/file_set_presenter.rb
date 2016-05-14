@@ -2,7 +2,7 @@ module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
     include Sufia::CharacterizationBehavior
 
-    delegate :depositor, :tag, :date_created, :date_modified, to: :solr_document
+    delegate :depositor, :keyword, :date_created, :date_modified, to: :solr_document
 
     def editor?
       current_ability.can?(:edit, solr_document)

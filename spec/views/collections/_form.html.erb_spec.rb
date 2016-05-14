@@ -17,7 +17,7 @@ describe 'collections/_form.html.erb' do
     expect(rendered).to have_selector("input#collection_creator.multi_value")
     expect(rendered).to have_selector("textarea#collection_description")
     expect(rendered).to have_selector("input#collection_contributor")
-    expect(rendered).to have_selector("input#collection_tag")
+    expect(rendered).to have_selector("input#collection_keyword")
     expect(rendered).to have_selector("input#collection_subject")
     expect(rendered).to have_selector("input#collection_publisher")
     expect(rendered).to have_selector("input#collection_date_created")

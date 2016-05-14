@@ -147,7 +147,7 @@ describe API::ItemsController, type: :controller do
         expect(deposited_work.related_url).to eq [item_hash['metadata']['url']]
         expect(deposited_work.language).to eq [item_hash['metadata']['language']]
         expect(deposited_work.rights).to eq [item_hash['metadata']['rights']]
-        expect(deposited_work.tag).to match_array item_hash['metadata']['tags']
+        expect(deposited_work.keyword).to match_array item_hash['metadata']['tags']
         expect(deposited_work.creator).to match_array ['Doe, John', 'Babs McGee']
         expect(deposited_work.contributor).to match_array ['Nadal, Rafael', 'Jane Doeski']
       end

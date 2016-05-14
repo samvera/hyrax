@@ -5,7 +5,7 @@ module Sufia
     # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
     def self.terms
       [:title, :total_items, :size, :resource_type, :description, :creator,
-       :contributor, :tags, :rights, :publisher, :date_created, :subject,
+       :contributor, :keyword, :rights, :publisher, :date_created, :subject,
        :language, :identifier, :based_near, :related_url]
     end
 

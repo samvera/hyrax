@@ -39,8 +39,8 @@ module Sufia
       when 'edit'.freeze
         add_breadcrumb I18n.t("sufia.file_set.browse_view"), main_app.curation_concerns_file_set_path(params["id"])
       when 'show'.freeze
-        add_breadcrumb presenter.parent.title, sufia.polymorphic_path(presenter.parent)
-        add_breadcrumb presenter.title, main_app.polymorphic_path(presenter)
+        add_breadcrumb presenter.parent.to_s, sufia.polymorphic_path(presenter.parent)
+        add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
       end
     end
 
@@ -63,7 +63,7 @@ module Sufia
       end
 
       def actor
-        @actor ||= CurationConcerns::FileSetActor.new(@file_set, current_user)
+        @actor ||= CurationConcerns::Actors::FileSetActor.new(@file_set, current_user)
       end
   end
 end

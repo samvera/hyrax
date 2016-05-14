@@ -5,7 +5,7 @@ describe Sufia::CreateWithFilesActor do
                                               curation_concern: work,
                                               user: user) }
   let(:actor) do
-    CurationConcerns::ActorStack.new(work, user, [described_class])
+    CurationConcerns::Actors::ActorStack.new(work, user, [described_class])
   end
   let(:user) { create(:user) }
   let(:uploaded_file1) { Sufia::UploadedFile.create(user: user) }
@@ -15,7 +15,7 @@ describe Sufia::CreateWithFilesActor do
   let(:attributes) { { uploaded_files: uploaded_file_ids } }
 
   before do
-    allow(CurationConcerns::RootActor).to receive(:new).and_return(create_actor)
+    allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(create_actor)
     allow(create_actor).to receive(:create).and_return(true)
   end
 

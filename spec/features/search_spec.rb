@@ -4,7 +4,7 @@ describe 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'fffzzz' }
   let!(:work) do
-    create(:public_work, title: ["Toothbrush"], tag: [subject_value], user: user)
+    create(:public_work, title: ["Toothbrush"], keyword: [subject_value], user: user)
   end
 
   let!(:collection) do

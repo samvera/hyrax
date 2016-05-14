@@ -8,7 +8,7 @@ describe "Editing a file:", type: :feature do
 
   before do
     sign_in user
-    work.ordered_members << create(:file_set, user: user, title: [file_title], filename: 'filename.pdf')
+    work.ordered_members << create(:file_set, user: user, title: [file_title])
     work.save!
   end
 

@@ -29,7 +29,7 @@ describe BatchEditsController, type: :controller do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       get :edit
       expect(response).to be_successful
-      expect(assigns[:terms]).to eq [:creator, :contributor, :description, :tag, :rights, :publisher,
+      expect(assigns[:terms]).to eq [:creator, :contributor, :description, :keyword, :rights, :publisher,
                                      :date_created, :subject, :language, :identifier, :based_near, :related_url]
       expect(assigns[:generic_work].creator).to eq ["Fred", "Wilma"]
       expect(assigns[:generic_work].publisher).to eq ["Rand McNally"]

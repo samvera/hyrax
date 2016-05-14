@@ -37,7 +37,7 @@ module Sufia
 
       def setup_title_info(work)
         text = ''
-        title = work.title
+        title = work.to_s
         unless title.blank?
           title = CGI.escapeHTML(title)
           title_info = clean_end_punctuation(title.strip)

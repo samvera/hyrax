@@ -19,11 +19,11 @@ describe Sufia::Arkivo::MetadataMunger do
     expect(munged).to include('related_url')
   end
 
-  it 'replaces tags with tag' do
+  it 'replaces tags with keyword05' do
     expect(metadata).to include('tags')
     munged = subject.call
     expect(munged).not_to include('tags')
-    expect(munged).to include('tag')
+    expect(munged).to include('keyword')
   end
 
   it 'replaces firstName and lastName with name' do

@@ -6,17 +6,17 @@ describe CurationConcerns::GenericWorkForm do
 
   describe "#required_fields" do
     subject { form.required_fields }
-    it { is_expected.to eq [:title, :creator, :tag, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights] }
   end
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:title, :creator, :tag, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights] }
   end
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
-    it { is_expected.not_to include(:title, :creator, :tag, :rights,
+    it { is_expected.not_to include(:title, :creator, :keyword, :rights,
                                     :visibilty, :visibility_during_embargo,
                                     :embargo_release_date, :visibility_after_embargo,
                                     :visibility_during_lease, :lease_expiration_date,
@@ -46,7 +46,7 @@ describe CurationConcerns::GenericWorkForm do
       admin_set_id: '123',
       representative_id: '456',
       thumbnail_id: '789',
-      tag: ['derp'],
+      keyword: ['derp'],
       rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
       collection_ids: ['123456', 'abcdef']
     ) }
@@ -58,7 +58,7 @@ describe CurationConcerns::GenericWorkForm do
       expect(subject['description']).to be_empty
       expect(subject['visibility']).to eq 'open'
       expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
-      expect(subject['tag']).to eq ['derp']
+      expect(subject['keyword']).to eq ['derp']
       expect(subject['collection_ids']).to eq ['123456', 'abcdef']
     end
 
@@ -66,7 +66,7 @@ describe CurationConcerns::GenericWorkForm do
       let(:params) { ActionController::Parameters.new(
         title: [''],
         description: [''],
-        tag: [''],
+        keyword: [''],
         rights: [''],
         collection_ids: [''],
         on_behalf_of: 'Melissa'
@@ -76,7 +76,7 @@ describe CurationConcerns::GenericWorkForm do
         expect(subject['title']).to be_empty
         expect(subject['description']).to be_empty
         expect(subject['rights']).to be_empty
-        expect(subject['tag']).to be_empty
+        expect(subject['keyword']).to be_empty
         expect(subject['collection_ids']).to be_empty
         expect(subject['on_behalf_of']).to eq 'Melissa'
       end

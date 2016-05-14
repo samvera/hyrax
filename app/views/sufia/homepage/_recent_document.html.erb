@@ -7,10 +7,10 @@
       </td>
       <td>
         <h3>
-          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title, length: 28, separator: ' '), recent_document  %>
+          <span class="sr-only">Title</span><%= link_to truncate(recent_document.to_s, length: 28, separator: ' '), recent_document  %>
         </h3>
         <p>
-          <span class="sr-only">Keywords</span><%= link_to_facet_list(recent_document.tags, 'tag', 'no keywords specified').html_safe %>
+          <span class="sr-only">Keywords</span><%= link_to_facet_list(recent_document.keyword, 'keyword', 'no keywords specified').html_safe %>
         </p>
       </td>
     </tr>

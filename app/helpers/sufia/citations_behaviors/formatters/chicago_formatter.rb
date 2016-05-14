@@ -19,7 +19,7 @@ module Sufia
           text << " #{pub_date}." unless pub_date.nil?
           text << "." unless text.blank? || text =~ /\.$/
 
-          text << format_title(work.title)
+          text << format_title(work.to_s)
           pub_info = setup_pub_info(work, false)
           text << " #{pub_info}." unless pub_info.blank?
           text.html_safe
