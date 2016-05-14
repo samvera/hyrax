@@ -1,6 +1,6 @@
 # Converts UploadedFiles into FileSets and attaches them to works.
 class AttachFilesToWorkJob < ActiveJob::Base
-  queue_as :attach_files
+  queue_as :ingest
 
   # @param [ActiveFedora::Base] the work class
   # @param [Array<UploadedFile>] an array of files to attach

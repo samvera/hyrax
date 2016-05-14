@@ -1,5 +1,5 @@
 class CreateWorkJob < ActiveJob::Base
-  queue_as :create_work
+  queue_as :ingest
 
   before_enqueue do |job|
     log = job.arguments.last
@@ -10,7 +10,6 @@ class CreateWorkJob < ActiveJob::Base
   # are members of the given upload set
   def perform(user, attributes, log)
     log.performing!
-
     work = GenericWork.new
     actor = work_actor(work, user)
     status = actor.create(attributes)
