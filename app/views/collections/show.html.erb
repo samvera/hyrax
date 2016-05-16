@@ -1,11 +1,11 @@
 <% provide :page_title, construct_page_title(@presenter.title) %>
-
   <div itemscope itemtype="http://schema.org/CollectionPage" class="row">
     <div class="col-sm-10 pull-right">
       <header>
-        <h1><%= @presenter.title %> <%= @presenter.permission_badge %></h1>
-        <p class="collection_description"><%= @presenter.description %></p>
+        <%= render 'collection_title', presenter: @presenter %>
       </header>
+      <%= render 'collection_description', presenter: @presenter %>
+
       <% unless has_collection_search_parameters? %>
       <%= render 'collections/show_descriptions' %>
       <% end %>

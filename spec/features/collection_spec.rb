@@ -228,7 +228,7 @@ describe 'collection', type: :feature do
       expect(header).not_to have_content(collection.title.first)
       expect(header).not_to have_content(collection.description.first)
       expect(header).to have_content(new_title)
-      expect(header).to have_content(new_description)
+      expect(page).to have_content(new_description)
       expect(page).to have_content(creators.first)
     end
   end
