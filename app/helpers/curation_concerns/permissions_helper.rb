@@ -1,9 +1,7 @@
 module CurationConcerns
   module PermissionsHelper
-    def help_link(file, title, aria_label)
-      link_to help_icon, '#',
-              data: { toggle: 'popover', content: capture_content(file), 'original-title' => title },
-              'aria-label' => aria_label
+    def help_text(file)
+      capture_content(file)
     end
 
     private

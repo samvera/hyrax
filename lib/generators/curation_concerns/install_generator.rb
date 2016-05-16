@@ -17,7 +17,7 @@ module CurationConcerns
    7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
    8. Adds config/authorities/rights.yml to the application
    9. Adds config/authorities/resource_types.yml to the application
-   10. Runs simple_form:install --bootstrap
+   10. Copies modified simple_form initializers
          '
 
     def run_required_generators
@@ -101,8 +101,11 @@ module CurationConcerns
       copy_file "config/authorities/resource_types.yml", "config/authorities/resource_types.yml"
     end
 
-    def simple_form_bootstrap
-      generate 'simple_form:install --bootstrap'
+    def simple_form_initializers
+      copy_file 'config/initializers/simple_form.rb',
+                'config/initializers/simple_form.rb'
+      copy_file 'config/initializers/simple_form_bootstrap.rb',
+                'config/initializers/simple_form_bootstrap.rb'
     end
   end
 end
