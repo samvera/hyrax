@@ -32,7 +32,7 @@ class FeaturedWorkList
     end
 
     def ids
-      @works.pluck(:generic_work_id)
+      @works.pluck(:work_id)
     end
 
     def solr_docs
@@ -40,6 +40,6 @@ class FeaturedWorkList
     end
 
     def work_with_id(id)
-      @works.find { |w| w.generic_work_id == id }
+      @works.find { |w| w.work_id == id }
     end
 end

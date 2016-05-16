@@ -47,7 +47,7 @@ describe DashboardController, type: :controller do
           get :index
           expect(response).to be_success
           expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-          expect(assigns[:incoming].first.generic_work_id).to eq(incoming_work.id)
+          expect(assigns[:incoming].first.work_id).to eq(incoming_work.id)
         end
       end
 
@@ -64,7 +64,7 @@ describe DashboardController, type: :controller do
           get :index
           expect(response).to be_success
           expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-          expect(assigns[:outgoing].first.generic_work_id).to eq(outgoing_work.id)
+          expect(assigns[:outgoing].first.work_id).to eq(outgoing_work.id)
         end
       end
     end

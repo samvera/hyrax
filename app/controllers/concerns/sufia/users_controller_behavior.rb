@@ -57,7 +57,7 @@ module Sufia::UsersControllerBehavior
     # TODO: this should be moved to TrophiesController
     params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
       smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
-      current_user.trophies.where(generic_work_id: smash_trophy).destroy_all
+      current_user.trophies.where(work_id: smash_trophy).destroy_all
     end
     UserEditProfileEventJob.perform_later(@user)
     redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
@@ -73,12 +73,12 @@ module Sufia::UsersControllerBehavior
       redirect_to root_path, alert: "You do not have permissions to the work"
       return false
     end
-    t = current_user.trophies.where(generic_work_id: work_id).first
+    t = current_user.trophies.where(work_id: work_id).first
     if t
       t.destroy
       return false if t.persisted?
     else
-      t = current_user.trophies.create(generic_work_id: work_id)
+      t = current_user.trophies.create(work_id: work_id)
       return false unless t.persisted?
     end
     render json: t

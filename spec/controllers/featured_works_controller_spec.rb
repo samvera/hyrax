@@ -19,7 +19,7 @@ describe FeaturedWorksController, type: :controller do
     context "when there are 5 featured works" do
       before do
         5.times do |n|
-          FeaturedWork.create(generic_work_id: n.to_s)
+          FeaturedWork.create(work_id: n.to_s)
         end
       end
       it "does not create another" do
@@ -32,7 +32,7 @@ describe FeaturedWorksController, type: :controller do
   end
 
   describe "#destroy" do
-    let!(:featured_work) { FactoryGirl.create(:featured_work, generic_work_id: '1234abcd') }
+    let!(:featured_work) { FactoryGirl.create(:featured_work, work_id: '1234abcd') }
 
     before do
       sign_in FactoryGirl.create(:user)

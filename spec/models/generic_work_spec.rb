@@ -43,14 +43,14 @@ describe GenericWork do
       @w = described_class.create!(title: ['demoname']) do |gw|
         gw.apply_depositor_metadata(u)
       end
-      @t = Trophy.create(user_id: u.id, generic_work_id: @w.id)
+      @t = Trophy.create(user_id: u.id, work_id: @w.id)
     end
     it "has a trophy" do
-      expect(Trophy.where(generic_work_id: @w.id).count).to eq 1
+      expect(Trophy.where(work_id: @w.id).count).to eq 1
     end
     it "removes all trophies when work is deleted" do
       @w.destroy
-      expect(Trophy.where(generic_work_id: @w.id).count).to eq 0
+      expect(Trophy.where(work_id: @w.id).count).to eq 0
     end
   end
 

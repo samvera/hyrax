@@ -29,9 +29,9 @@ describe TransfersController, type: :controller do
         get :index
         expect(response).to be_success
         expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:incoming].first.generic_work_id).to eq(incoming_work.id)
+        expect(assigns[:incoming].first.work_id).to eq(incoming_work.id)
         expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:outgoing].first.generic_work_id).to eq(outgoing_work.id)
+        expect(assigns[:outgoing].first.work_id).to eq(outgoing_work.id)
       end
 
       describe "When the incoming request is for a deleted work" do
@@ -59,7 +59,7 @@ describe TransfersController, type: :controller do
           expect(response).to be_success
           expect(assigns[:generic_work]).to eq(work)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].generic_work_id).to eq(work.id)
+          expect(assigns[:proxy_deposit_request].work_id).to eq(work.id)
         end
       end
     end
@@ -78,7 +78,7 @@ describe TransfersController, type: :controller do
         expect(response).to redirect_to @routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.generic_work_id).to eq(work.id)
+        expect(proxy_request.work_id).to eq(work.id)
         expect(proxy_request.sending_user).to eq(user)
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]

@@ -41,7 +41,7 @@ module Sufia
 
       def featured?
         if @featured.nil?
-          @featured = FeaturedWork.where(generic_work_id: solr_document.id).exists?
+          @featured = FeaturedWork.where(work_id: solr_document.id).exists?
         end
         @featured
       end

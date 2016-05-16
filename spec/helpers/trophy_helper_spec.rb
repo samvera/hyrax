@@ -19,7 +19,7 @@ describe TrophyHelper, type: :helper do
 
     context "when there is a trophy" do
       before do
-        user.trophies.create(generic_work_id: id)
+        user.trophies.create(work_id: id)
       end
 
       it "has a link for highlighting" do

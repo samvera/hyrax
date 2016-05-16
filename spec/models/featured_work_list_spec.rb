@@ -6,8 +6,8 @@ describe FeaturedWorkList, type: :model do
 
   describe 'featured_works' do
     before do
-      create(:featured_work, generic_work_id: work1.id)
-      create(:featured_work, generic_work_id: work2.id)
+      create(:featured_work, work_id: work1.id)
+      create(:featured_work, work_id: work2.id)
     end
 
     it 'is a list of the featured work objects, each with the generic_work\'s solr_doc' do
@@ -20,8 +20,8 @@ describe FeaturedWorkList, type: :model do
 
   describe 'file deleted' do
     before do
-      create(:featured_work, generic_work_id: work1.id)
-      create(:featured_work, generic_work_id: work2.id)
+      create(:featured_work, work_id: work1.id)
+      create(:featured_work, work_id: work2.id)
       work1.destroy
     end
 
@@ -36,7 +36,7 @@ describe FeaturedWorkList, type: :model do
   describe '#empty?' do
     context "when there are featured works" do
       before do
-        create(:featured_work, generic_work_id: work1.id)
+        create(:featured_work, work_id: work1.id)
       end
       it { is_expected.not_to be_empty }
     end

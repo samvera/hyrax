@@ -2,7 +2,7 @@
 module TrophyHelper
   def display_trophy_link(user, id, args = {}, &_block)
     return unless user
-    trophy = user.trophies.where(generic_work_id: id).first
+    trophy = user.trophies.where(work_id: id).first
     trophyclass = trophy ? "trophy-on" : "trophy-off"
 
     args[:add_text] ||= "Highlight Work on Profile"

@@ -83,7 +83,7 @@ describe Sufia::HomepageController, type: :controller do
       let!(:my_work) { FactoryGirl.create(:work, user: user) }
 
       before do
-        FeaturedWork.create!(generic_work_id: my_work.id)
+        FeaturedWork.create!(work_id: my_work.id)
       end
 
       it "sets featured works" do

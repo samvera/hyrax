@@ -11,7 +11,7 @@ describe SufiaHelper, type: :helper do
     end
 
     context "when work is canceled" do
-      let(:request) { ProxyDepositRequest.create!(generic_work_id: work.id, receiving_user: user, sending_user: sender, status: 'canceled') }
+      let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender, status: 'canceled') }
       subject { helper.show_transfer_request_title request }
       it { expect(subject).to eq 'Test work' }
     end

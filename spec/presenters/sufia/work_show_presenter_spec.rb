@@ -48,7 +48,7 @@ describe Sufia::WorkShowPresenter do
     end
 
     context 'with a featured work' do
-      before { FeaturedWork.create(generic_work_id: work.id) }
+      before { FeaturedWork.create(work_id: work.id) }
       it 'can unfeature the work' do
         expect(presenter.display_feature_link?).to be false
         expect(presenter.display_unfeature_link?).to be true

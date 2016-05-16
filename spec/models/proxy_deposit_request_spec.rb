@@ -5,7 +5,7 @@ describe ProxyDepositRequest, type: :model do
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
   let(:work) do
-    GenericWork.new.tap do |w|
+    GenericWork.new do |w|
       w.title = ["Test work"]
       w.apply_depositor_metadata(sender.user_key)
       w.save!
@@ -13,7 +13,7 @@ describe ProxyDepositRequest, type: :model do
   end
 
   subject do
-    described_class.new(generic_work_id: work.id, sending_user: sender,
+    described_class.new(work_id: work.id, sending_user: sender,
                         receiving_user: receiver, sender_comment: "please take this")
   end
 
@@ -88,7 +88,7 @@ describe ProxyDepositRequest, type: :model do
         subject.transfer_to = receiver.user_key
         subject.save!
         proxy_request = receiver.proxy_deposit_requests.first
-        expect(proxy_request.generic_work_id).to eq(work.id)
+        expect(proxy_request.work_id).to eq(work.id)
         expect(proxy_request.sending_user).to eq(sender)
       end
     end
@@ -102,7 +102,7 @@ describe ProxyDepositRequest, type: :model do
     end
 
     context 'when the work is already being transferred' do
-      let(:subject2) { described_class.new(generic_work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this') }
+      let(:subject2) { described_class.new(work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this') }
 
       it 'raises an error' do
         subject.save!
