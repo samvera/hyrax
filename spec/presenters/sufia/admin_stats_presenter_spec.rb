@@ -88,10 +88,9 @@ describe Sufia::AdminStatsPresenter do
 
     context "when start date is provided" do
       let(:start_date) { one_day_ago }
+      let(:system_stats) { double(document_by_permission: {}) }
       it "queries by start date" do
-        expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(1.day.ago.beginning_of_day, nil).and_call_original
-        expect(GenericWork).to receive(:where_public).and_call_original
-        expect(GenericWork).to receive(:where_registered).and_call_original
+        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
         subject
       end
     end
@@ -99,10 +98,9 @@ describe Sufia::AdminStatsPresenter do
     context "when start and end date is provided" do
       let(:start_date) { two_days_ago }
       let(:end_date) { one_day_ago }
+      let(:system_stats) { double(document_by_permission: {}) }
       it "queries by start and date" do
-        expect(GenericWork).to receive(:find_by_date_created).exactly(3).times.with(two_days_ago_date.beginning_of_day, one_day_ago_date.end_of_day).and_call_original
-        expect(GenericWork).to receive(:where_public).and_call_original
-        expect(GenericWork).to receive(:where_registered).and_call_original
+        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
         subject
       end
     end
