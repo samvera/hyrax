@@ -3,21 +3,24 @@ require 'spec_helper'
 describe "sufia/homepage/_home_header.html.erb" do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }
+  let(:presenter) { Sufia::HomepagePresenter.new(ability) }
+
   describe "share your work button" do
     before do
+      assign(:presenter, presenter)
       allow(controller).to receive(:current_ability).and_return(ability)
-      allow(ability).to receive(:can?).with(:view_share_work, GenericWork).and_return(can_view_share_work)
+      allow(presenter).to receive(:display_share_button?).and_return(display_share_button)
       stub_template "sufia/homepage/_marketing.html.erb" => "marketing"
       render
     end
-    context "when the user can view" do
-      let(:can_view_share_work) { true }
+    context "when the button always displays" do
+      let(:display_share_button) { true }
       it "displays" do
         expect(rendered).to have_content t("sufia.share_button")
       end
     end
-    context "when the user can't view" do
-      let(:can_view_share_work) { false }
+    context "when the button displays for users with rights" do
+      let(:display_share_button) { false }
       it "does not display" do
         expect(rendered).not_to have_content t("sufia.share_button")
       end

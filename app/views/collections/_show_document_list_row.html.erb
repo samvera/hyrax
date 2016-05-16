@@ -1,5 +1,4 @@
 <% id = document.id %>
-<% presenter = document.is_a?(GenericWork) ? Sufia::WorkShowPresenter.new(document, nil) : nil %>
 <tr id="document_<%= id %>">
   <td>&nbsp;
     <% if current_user and document.depositor != current_user.user_key %>

@@ -132,6 +132,9 @@ Sufia.config do |config|
   # The default is true.
   # config.active_deposit_agreement_acceptance = true
 
+  # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
+  # config.always_display_share_button = true
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything

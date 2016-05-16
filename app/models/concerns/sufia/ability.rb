@@ -7,7 +7,6 @@ module Sufia
     end
 
     def sufia_abilities
-      file_set_abilities
       user_abilities
       featured_work_abilities
       editor_abilities
@@ -40,10 +39,6 @@ module Sufia
 
     def featured_work_abilities
       can [:create, :destroy, :update], FeaturedWork if admin?
-    end
-
-    def file_set_abilities
-      can :view_share_work, GenericWork
     end
 
     def editor_abilities

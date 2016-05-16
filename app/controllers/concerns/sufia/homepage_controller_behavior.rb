@@ -13,10 +13,13 @@ module Sufia::HomepageControllerBehavior
       Sufia::HomepageSearchBuilder
     end
 
+    class_attribute :presenter_class
+    self.presenter_class = Sufia::HomepagePresenter
     layout 'homepage'
   end
 
   def index
+    @presenter = presenter_class.new(current_ability)
     @featured_researcher = ContentBlock.featured_researcher
     @marketing_text = ContentBlock.marketing_text
     @featured_work_list = FeaturedWorkList.new

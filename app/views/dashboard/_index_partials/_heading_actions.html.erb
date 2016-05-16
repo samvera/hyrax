@@ -1,9 +1,15 @@
 <div class="col-xs-12 heading-row">
   <% if can?(:create, GenericWork) %>
     <div class="col-xs-6 col-sm-2 heading-tile">
-      <%= link_to new_curation_concerns_generic_work_path do %>
-          <span class="glyphicon glyphicon-upload"></span>
-          <%= I18n.t("sufia.dashboard.create_work") %>
+      <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
+      <% classification.each do |concern| %>
+        <%= link_to(new_polymorphic_path([sufia, concern]),
+              class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
+              role: 'menuitem'
+            ) do %>
+            <span class="glyphicon glyphicon-upload"></span>
+            <%= I18n.t("sufia.dashboard.create_work", work_type: concern.human_readable_type) %>
+        <% end %>
       <% end %>
     </div>
   <% end %>

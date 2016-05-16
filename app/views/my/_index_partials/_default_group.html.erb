@@ -14,12 +14,10 @@
   <tbody>
   <% docs.each_with_index do |document,counter| %>
     <% case document.hydra_model %>
-    <% when "GenericWork" %>
-      <%= render partial: 'my/_index_partials/list_works', locals: { document: document, counter: counter, presenter: Sufia::WorkShowPresenter.new(document, current_ability) } %>
     <% when "Collection" %>
-      <%= render partial: 'my/_index_partials/list_collections', locals: {document: document, counter: counter} %>
+      <%= render 'my/_index_partials/list_collections', document: document, counter: counter %>
     <% else %>
-      <tr><td colspan='6'><%= document.hydra_model %> : <%= document.id %></td></tr>
+      <%= render 'my/_index_partials/list_works', document: document, counter: counter, presenter: Sufia::WorkShowPresenter.new(document, current_ability) %>
     <% end %>
   <% end %>
   </tbody>

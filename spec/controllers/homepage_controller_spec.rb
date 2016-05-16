@@ -79,6 +79,12 @@ describe Sufia::HomepageController, type: :controller do
       end
     end
 
+    it "sets the presenter" do
+      get :index
+      expect(response).to be_success
+      expect(assigns(:presenter)).to be_kind_of Sufia::HomepagePresenter
+    end
+
     context "with featured works" do
       let!(:my_work) { FactoryGirl.create(:work, user: user) }
 
