@@ -24,5 +24,6 @@ class IngestFileJob < ActiveJob::Base
 
     # Do post file ingest actions
     CurationConcerns::VersioningService.create(file_set.send(relation.to_sym), user)
+    CharacterizeJob.perform_later(file_set, filename)
   end
 end

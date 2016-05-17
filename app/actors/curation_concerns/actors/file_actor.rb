@@ -14,8 +14,8 @@ module CurationConcerns
       end
 
       # Puts the uploaded content into a staging directory. Then kicks off a
-      # job to characterize and create derivatives with this on disk variant.
-      # Simultaneously moving a preservation copy to the repostiory.
+      # job to ingest the file into the repository, then characterize and
+      # create derivatives with this on disk variant.
       # TODO: create a job to monitor this directory and prune old files that
       # have made it to the repo
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file to save in the repository
@@ -23,7 +23,6 @@ module CurationConcerns
         working_file = copy_file_to_working_directory(file, file_set.id)
         mime_type = file.respond_to?(:content_type) ? file.content_type : nil
         IngestFileJob.perform_later(file_set, working_file, mime_type, user, relation)
-        make_derivative(file_set, working_file)
         true
       end
 
@@ -35,20 +34,16 @@ module CurationConcerns
 
         CurationConcerns::VersioningService.create(repository_file, user)
 
-        # Retrieve a copy of the orginal file from the repository
+        # Retrieve a copy of the original file from the repository
         working_file = copy_repository_resource_to_working_directory(repository_file)
-        make_derivative(file_set, working_file)
+        CharacterizeJob.perform_later(file_set, working_file)
         true
       end
 
       private
 
-        def make_derivative(file_set, working_file)
-          CharacterizeJob.perform_later(file_set, working_file)
-        end
-
         # @param [File, ActionDispatch::Http::UploadedFile] file
-        # @param [String] id the identifer of the FileSet
+        # @param [String] id the identifier of the FileSet
         # @return [String] path of the working file
         def copy_file_to_working_directory(file, id)
           file_name = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
@@ -61,7 +56,7 @@ module CurationConcerns
           copy_stream_to_working_directory(file_set.id, file.original_name, StringIO.new(file.content))
         end
 
-        # @param [String] id the identifer
+        # @param [String] id the identifier
         # @param [String] name the file name
         # @param [#read] stream the stream to copy to the working directory
         # @return [String] path of the working file

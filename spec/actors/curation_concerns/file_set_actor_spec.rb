@@ -21,7 +21,6 @@ describe CurationConcerns::Actors::FileSetActor do
     end
 
     before do
-      expect(CharacterizeJob).to receive(:perform_later)
       expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata(work)
@@ -67,14 +66,12 @@ describe CurationConcerns::Actors::FileSetActor do
 
   describe '#create_content' do
     it 'calls ingest file job' do
-      expect(CharacterizeJob).to receive(:perform_later)
       expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       actor.create_content(uploaded_file)
     end
 
     context 'when an alternative relationship is specified' do
       it 'calls ingest file job' do
-        expect(CharacterizeJob).to receive(:perform_later)
         expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'remastered')
         actor.create_content(uploaded_file, 'remastered')
       end
@@ -82,7 +79,6 @@ describe CurationConcerns::Actors::FileSetActor do
 
     context 'using ::File' do
       before do
-        allow(CharacterizeJob).to receive(:perform_later)
         allow(IngestFileJob).to receive(:perform_later)
         actor.create_content(local_file)
       end
@@ -104,7 +100,6 @@ describe CurationConcerns::Actors::FileSetActor do
       let(:actor)      { described_class.new(file_set, user) }
 
       before do
-        allow(CharacterizeJob).to receive(:perform_later)
         allow(IngestFileJob).to receive(:perform_later)
         allow(file_set).to receive(:label).and_return(short_name)
         # TODO: we should allow/expect call to IngestJob
@@ -129,7 +124,6 @@ describe CurationConcerns::Actors::FileSetActor do
 
       before do
         allow(IngestFileJob).to receive(:perform_later)
-        allow(CharacterizeJob).to receive(:perform_later)
         actor.create_content(fixture_file_upload(file))
       end
 
