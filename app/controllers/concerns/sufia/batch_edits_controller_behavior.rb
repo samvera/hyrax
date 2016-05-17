@@ -10,28 +10,10 @@ module Sufia
 
     def edit
       super
-      @generic_work = ::GenericWork.new
-      @generic_work.depositor = current_user.user_key
-      @terms = terms - [:title, :format, :resource_type]
+      generic_work = ::GenericWork.new
+      generic_work.depositor = current_user.user_key
 
-      h = {}
-      @names = []
-      permissions = []
-
-      # For each of the files in the batch, set the attributes to be the concatination of all the attributes
-      batch.each do |doc_id|
-        gw = ::GenericWork.load_instance_from_solr(doc_id)
-        terms.each do |key|
-          h[key] ||= []
-          h[key] = (h[key] + gw[key]).uniq
-        end
-        @names << gw.to_s
-        permissions = (permissions + gw.permissions).uniq
-      end
-
-      initialize_fields(h, @generic_work)
-
-      @generic_work.permissions_attributes = [{ type: 'group', name: 'public', access: 'read' }]
+      @form = form_class.new(generic_work, current_user, batch)
     end
 
     def after_update
@@ -76,21 +58,17 @@ module Sufia
         after_update
       end
 
-      # override this method if you need to initialize more complex RDF assertions (b-nodes)
-      def initialize_fields(attributes, file)
-        terms.each do |key|
-          # if value is empty, we create an one element array to loop over for output
-          file[key] = attributes[key].empty? ? [''] : attributes[key]
-        end
+      def form_class
+        Forms::BatchEditForm
       end
 
       def terms
-        Forms::BatchEditForm.terms
+        form_class.terms
       end
 
       def generic_work_params
         generic_work_params = params[:generic_work] || ActionController::Parameters.new
-        Forms::BatchEditForm.model_attributes(generic_work_params)
+        form_class.model_attributes(generic_work_params)
       end
 
       def redirect_to_return_controller

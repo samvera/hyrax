@@ -25,7 +25,6 @@ Metrics/MethodLength:
     - 'app/models/local_authority.rb'
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
-    - 'app/controllers/concerns/sufia/batch_edits_controller_behavior.rb'
 
 Style/HashSyntax:
   Exclude:
