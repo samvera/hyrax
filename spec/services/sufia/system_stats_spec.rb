@@ -5,7 +5,6 @@ describe Sufia::SystemStats do
   let(:morning_two_days_ago) { 2.days.ago.to_date.to_datetime.to_s }
   let(:yesterday) { 1.day.ago.to_datetime.to_s }
   let(:this_morning) { 0.days.ago.to_date.to_datetime.to_s }
-
   let(:stats) { described_class.new(depositor_count, user_stats[:start_date], user_stats[:end_date]) }
 
   describe "#top_depositors" do
@@ -47,8 +46,7 @@ describe Sufia::SystemStats do
       let(:actual_count) { 5 }
 
       it "queries for 5 items" do
-        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_ssim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_ssim":["example.com",4,"user2",3,"archivist1",1]}}'))
-        stats.top_depositors
+        expect(stats.limit).to eq actual_count
       end
     end
 
@@ -57,8 +55,7 @@ describe Sufia::SystemStats do
       let(:actual_count) { 20 }
 
       it "queries for 20 items" do
-        expect(stats).to receive(:open).with("#{ActiveFedora.solr.conn.uri}terms?terms.fl=depositor_ssim&terms.sort=count&terms.limit=#{actual_count}&wt=json&omitHeader=true").and_return(StringIO.new('{"terms":{"depositor_ssim":["example.com",4,"user2",3,"archivist1",1]}}'))
-        stats.top_depositors
+        expect(stats.limit).to eq actual_count
       end
     end
   end
