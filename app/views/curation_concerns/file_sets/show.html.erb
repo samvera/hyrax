@@ -7,7 +7,7 @@
       <%= render 'show_actions', presenter: @presenter, parent: parent %>
     </div>
     <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
-      <h1 class="visibility"><%= @presenter.title %> <%= render_visibility_badge @presenter %></h1>
+      <h1 class="presenter-title"><%= @presenter.title %> <%= render_visibility_badge @presenter %></h1>
       <p class="genericfile_description"><%= display_multiple @presenter.description %></p>
       <%# TODO: render 'show_descriptions' See https://github.com/projecthydra/sufia/issues/1481 %>
       <%= render 'show_details' %>

@@ -29,32 +29,10 @@ aside.form-progress {
     padding-right: 5px;
   }
 
-  .visibility {
-    padding-left: 20px;
-  }
-
   h3 {
     margin: 0;
     padding: 5px;
     font-size: 12pt;
   }
 
-  label { font-weight: normal; }
-  & > .form-group { padding: 0 1.75em; }
-
-  .form-inline {
-    .control-label, label {
-      padding-left: 0;
-      display: inline;
-      &:after {
-        content: ' ';
-      }
-    }
-    .help-block {
-      display: inline;
-      &:before {
-        content: ' ';
-      }
-    }
-  }
 }
