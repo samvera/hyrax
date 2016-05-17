@@ -33,7 +33,7 @@ class Sufia::SearchBuilder < Blacklight::SearchBuilder
   end
 
   def show_only_highlighted_works(solr_parameters)
-    ids = scope.current_user.trophies.pluck(:generic_work_id)
+    ids = scope.current_user.trophies.pluck(:work_id)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [
       ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids)
