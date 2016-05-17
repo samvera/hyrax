@@ -38,9 +38,9 @@ legend small {
 form label.optional { font-weight: normal; }
 form label.required { font-weight: bold; }
 
-#set-access-controls {
+.set-access-controls {
   label { font-weight: normal; }
-  & > .form-group { padding: 0 1.75em; }
+  & .form-group { padding: 0 1.75em; }
 
   .form-inline {
     .control-label, label {
