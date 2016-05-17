@@ -6,6 +6,7 @@ describe CurationConcerns::CollectionPresenter do
           id: 'adc12v',
           description: ['a nice collection'],
           title: ['A clever title'],
+          keyword: ['neologism'],
           date_created: ['some date'])
   end
   let(:work) { build(:work, title: ['unimaginitive title']) }
@@ -19,6 +20,11 @@ describe CurationConcerns::CollectionPresenter do
   describe '#title' do
     subject { presenter.title }
     it { is_expected.to eq ['A clever title'] }
+  end
+
+  describe '#keyword' do
+    subject { presenter.keyword }
+    it { is_expected.to eq ['neologism'] }
   end
 
   describe '#to_key' do
