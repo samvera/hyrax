@@ -1,7 +1,9 @@
 # Generated via
 #  `rails generate curation_concerns:work <%= class_name %>`
 
-class CurationConcerns::<%= class_name.pluralize %>Controller < ApplicationController
-  include CurationConcerns::CurationConcernController
-  self.curation_concern_type = <%= class_name %>
+module CurationConcerns
+  class <%= class_name.pluralize %>Controller < ApplicationController
+    include CurationConcerns::CurationConcernController
+    self.curation_concern_type = <%= class_name %>
+  end
 end
