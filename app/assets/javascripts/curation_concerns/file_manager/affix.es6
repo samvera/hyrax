@@ -3,7 +3,7 @@ Blacklight.onLoad(function() {
   if(tools.length > 0) {
     tools.affix({
       offset: {
-        top: $("#file-manager-tools").parent().offset().top,
+        top: $("#file-manager-tools .actions").offset().top,
         bottom: function() {
           return $("#file-manager-extra-tools").outerHeight(true) + $("footer").outerHeight(true)
         }

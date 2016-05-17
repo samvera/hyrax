@@ -102,7 +102,7 @@
     }
     @media (min-width: $screen-md-min) {
       &.affix {
-        top: 0;
+        top: -50px;
         width: 235px;
       }
     }
