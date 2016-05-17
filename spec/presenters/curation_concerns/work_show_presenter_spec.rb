@@ -109,6 +109,20 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
+  describe "#representative_presenter" do
+    let(:obj) { create(:work_with_representative_file) }
+    let(:attributes) { obj.to_solr }
+    let(:presenter_class) { double }
+    before do
+      allow(presenter).to receive(:file_presenter_class).and_return(presenter_class)
+    end
+    it "has a representative" do
+      expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
+        .with([obj.members[0].id], presenter_class, ability).and_return ["abc"]
+      expect(presenter.representative_presenter).to eq("abc")
+    end
+  end
+
   describe "#collection_presenters" do
     let(:collection) { create(:collection) }
     let(:obj) { create(:work) }

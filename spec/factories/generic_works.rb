@@ -23,6 +23,13 @@ FactoryGirl.define do
       end
     end
 
+    factory :work_with_representative_file do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
+        work.representative_id = work.members[0].id
+      end
+    end
+
     factory :work_with_file_and_work do
       before(:create) do |work, evaluator|
         work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)

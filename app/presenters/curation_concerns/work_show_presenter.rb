@@ -40,6 +40,12 @@ module CurationConcerns
       @file_set_presenters ||= member_presenters(ordered_ids & file_set_ids)
     end
 
+    # @return FileSetPresenter presenter for the representative FileSets
+    def representative_presenter
+      return nil if representative_id.blank?
+      @representative_presenter ||= member_presenters([representative_id]).first
+    end
+
     # @return [Array<WorkShowPresenter>] presenters for the ordered_members that are not FileSets
     def work_presenters
       @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)

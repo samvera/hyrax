@@ -1,5 +1,5 @@
-<% if presenter.representative_id.present? && (fs = ::FileSet.find(presenter.representative_id)) %>
-  <%= media_display fs %>
+<% if presenter.representative_id.present? %>
+  <%= media_display presenter.representative_presenter %>
 <% else %>
   <%= image_tag 'nope.png', class: "canonical-image" %>
 <% end %>
