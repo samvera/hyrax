@@ -37,11 +37,12 @@ class Sufia::Admin::DepositorStats
       DepositSearchBuilder.new([:include_depositor_facet], self)
     end
 
+    # TODO: This can probably be pushed into the DepositSearchBuilder
     def query
       search_builder.merge(q: date_query).query
     end
 
     def date_query
-      GenericWork.build_date_query(start_dt, end_dt) unless start_dt.blank?
+      Sufia::QueryService.new.build_date_query(start_dt, end_dt) unless start_dt.blank?
     end
 end

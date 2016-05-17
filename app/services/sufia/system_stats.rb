@@ -34,9 +34,9 @@ class Sufia::SystemStats
     return document_by_date_by_permission if start_date
 
     files_count = {}
-    files_count[:total] = ::GenericWork.count
-    files_count[:public] = ::GenericWork.where_public.count
-    files_count[:registered] = ::GenericWork.where_registered.count
+    files_count[:total] = query_service.count
+    files_count[:public] = query_service.where_public.count
+    files_count[:registered] = query_service.where_registered.count
     files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
     files_count
   end
@@ -87,11 +87,15 @@ class Sufia::SystemStats
 
     def document_by_date_by_permission
       files_count = {}
-      files_count[:total] = ::GenericWork.find_by_date_created(start_date, end_date).count
-      files_count[:public] = ::GenericWork.find_by_date_created(start_date, end_date).merge(::GenericWork.where_public).count
-      files_count[:registered] = ::GenericWork.find_by_date_created(start_date, end_date).merge(::GenericWork.where_registered).count
+      files_count[:total] = query_service.find_by_date_created(start_date, end_date).count
+      files_count[:public] = query_service.find_public_in_date_range(start_date, end_date).count
+      files_count[:registered] = query_service.find_registered_in_date_range(start_date, end_date).count
       files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
       files_count
+    end
+
+    def query_service
+      @query_service ||= Sufia::QueryService.new
     end
 
     def top_data(key, limit)
