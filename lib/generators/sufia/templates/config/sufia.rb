@@ -1,11 +1,5 @@
 Sufia.config do |config|
-  config.fits_to_desc_mapping = {
-    file_title: :title,
-    file_author: :creator
-  }
-
   config.max_days_between_audits = 7
-
   config.max_notifications_for_dashboard = 5
 
   config.permission_levels = {
