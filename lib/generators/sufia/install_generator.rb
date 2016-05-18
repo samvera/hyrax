@@ -47,7 +47,6 @@ module Sufia
         "add_social_to_users.rb",
         "add_ldap_attrs_to_user.rb",
         "add_avatars_to_users.rb",
-        "add_groups_to_users.rb",
         "create_local_authorities.rb",
         "create_trophies.rb",
         'add_linkedin_to_users.rb',

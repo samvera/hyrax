@@ -128,11 +128,6 @@ module Sufia::User
     nil
   end
 
-  # The basic groups method, override or will fallback to Sufia::Ldap::User
-  def groups
-    @groups ||= group_list ? group_list.split(";?;") : []
-  end
-
   def ability
     @ability ||= ::Ability.new(self)
   end
