@@ -1,5 +1,5 @@
 <li data-reorder-id='<%= node.id %>'>
-  <%= simple_form_for [main_app, node], remote: true do |f| %>
+  <%= simple_form_for [main_app, node], remote: true, html: {'data-type': 'json'} do |f| %>
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="order-title">

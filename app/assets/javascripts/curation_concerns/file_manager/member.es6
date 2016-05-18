@@ -63,14 +63,23 @@ class FileManagerMember {
     if(this.is_changed) {
       let form = this.element.find("form")
       let deferred = $.Deferred()
+      this.element.addClass("pending")
+      this.element.removeClass("success")
+      this.element.removeClass("failure")
       form.on("ajax:success", () => {
         this.elements.forEach((element) => {
           element.data("tracker").reset()
         })
         deferred.resolve()
+        this.element.addClass("success")
+        this.element.removeClass("failure")
+        this.element.removeClass("pending")
       })
       form.on("ajax:error", () => {
         deferred.reject()
+        this.element.addClass("failure")
+        this.element.removeClass("success")
+        this.element.removeClass("pending")
       })
       form.submit()
       return deferred
