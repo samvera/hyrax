@@ -84,6 +84,8 @@ module Sufia
     config.arkivo_api = false
     config.geonames_username = ""
     config.active_deposit_agreement_acceptance = true
+    config.batch_user_key = 'batchuser@example.com'
+    config.audit_user_key = 'audituser@example.com'
 
     # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
     config.always_display_share_button = true

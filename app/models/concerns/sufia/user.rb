@@ -159,7 +159,7 @@ module Sufia::User
 
     # Override this method if you aren't using email as the userkey
     def audituser_key
-      'audituser@example.com'
+      Sufia.config.audit_user_key
     end
 
     # Override this method if you aren't using email/password
@@ -169,7 +169,7 @@ module Sufia::User
 
     # Override this method if you aren't using email as the userkey
     def batchuser_key
-      'batchuser@example.com'
+      Sufia.config.batch_user_key
     end
 
     def from_url_component(component)
