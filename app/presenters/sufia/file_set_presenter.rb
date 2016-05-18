@@ -2,7 +2,8 @@ module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
     include Sufia::CharacterizationBehavior
 
-    delegate :depositor, :keyword, :date_created, :date_modified, to: :solr_document
+    delegate :depositor, :keyword, :date_created, :date_modified, :itemtype,
+             to: :solr_document
 
     def editor?
       current_ability.can?(:edit, solr_document)
@@ -20,14 +21,6 @@ module Sufia
     def rights
       return if solr_document.rights.nil?
       solr_document.rights.first
-    end
-
-    # Add a schema.org itemtype
-    def itemtype
-      # Look up the first non-empty resource type value in a hash from the config
-      Sufia.config.resource_types_to_schema[resource_type.to_a.reject(&:empty?).first] || 'http://schema.org/CreativeWork'
-    rescue
-      'http://schema.org/CreativeWork'
     end
 
     def stats_path

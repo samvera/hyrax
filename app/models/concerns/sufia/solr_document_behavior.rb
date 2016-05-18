@@ -9,7 +9,7 @@ module Sufia
 
     # Add a schema.org itemtype
     def itemtype
-      Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
+      ResourceTypesService.microdata_type(resource_type.first)
     end
 
     # Date created indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
