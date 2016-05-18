@@ -25,11 +25,21 @@
         "ordered_member_ids": this.order
       }
       params["_method"] = "PATCH"
+      this.element.addClass("pending")
+      this.element.removeClass("success")
+      this.element.removeClass("failure")
       let persisting = $.post(
         `/concern/${this.class_name}/${this.id}`,
         params
       ).done(() => {
         this.element.data("current-order", this.order)
+        this.element.addClass("success")
+        this.element.removeClass("failure")
+      }).fail(() => {
+        this.element.addClass("failure")
+        this.element.removeClass("success")
+      }).always(() => {
+        this.element.removeClass("pending")
       })
       return persisting
     }
