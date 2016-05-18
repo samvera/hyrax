@@ -72,7 +72,7 @@
                 <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
                 <div class="col-sm-7">
                   <select class="form-control resource_type_dropdown" name="resource_type[{%=file.id%}]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
-                    <% Sufia.config.resource_types.each do |type| %>
+                    <% ResourceTypesService.select_options.each do |type| %>
                       <option value="<%= type[0] %>"><%= type[1] %></option>
                     <% end %>
                   </select>

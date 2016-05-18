@@ -1,7 +1,8 @@
 module Sufia
   class WorkShowPresenter < ::CurationConcerns::WorkShowPresenter
     # delegate fields from Sufia::Works::Metadata to solr_document
-    delegate :based_near, :related_url, :depositor, :identifier, :resource_type, :keyword, to: :solr_document
+    delegate :based_near, :related_url, :depositor, :identifier, :resource_type,
+             :keyword, :itemtype, to: :solr_document
 
     def editor?
       current_ability.can?(:edit, solr_document)
@@ -22,15 +23,6 @@ module Sufia
 
     def display_unfeature_link?
       user_can_feature_works? && solr_document.public? && featured?
-    end
-
-    # Add a schema.org itemtype
-    def itemtype
-      # Look up the first non-empty resource type value in a hash from the config
-      resource_type = solr_document.resource_type.to_a.reject(&:empty?).first
-      Sufia.config.resource_types_to_schema[resource_type] || 'http://schema.org/CreativeWork'
-    rescue
-      'http://schema.org/CreativeWork'
     end
 
     def stats_path
