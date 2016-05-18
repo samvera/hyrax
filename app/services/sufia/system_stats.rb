@@ -98,17 +98,23 @@ class Sufia::SystemStats
       @query_service ||= Sufia::QueryService.new
     end
 
+    def solr_connection
+      ActiveFedora::SolrService.instance.conn
+    end
+
     def top_data(key, limit)
-      query_url = "#{ActiveFedora.solr_config[:url]}/terms?terms.fl=#{key}&terms.sort=count&terms.limit=#{limit}&wt=json&omitHeader=true"
-      # Parse JSON response (looks like {"terms":{"depositor_tesim":["mjg36",3]}} for depositor)
-      json = open(query_url).read
+      # Grab JSON response (looks like {"terms": {"depositor_tesim": {"mjg36": 3}}} for depositor)
+      json = solr_connection.get 'terms', params: { 'terms.fl' => key,
+                                                    'terms.sort' => 'count',
+                                                    'terms.limit' => limit,
+                                                    wt: 'json',
+                                                    'json.nl' => 'map',
+                                                    omitHeader: 'true' }
       unless json
-        Rails.logger.error "Unable to reach #{query_url}. Is the terms component enabled in your solr config?"
+        Rails.logger.error "Unable to reach TermsComponent via Solr connection. Is it enabled in your solr config?"
         return []
       end
 
-      tuples = JSON.parse(json)['terms'][key]
-      # Change to hash where keys = logins and values = counts
-      Hash[*tuples]
+      json['terms'][key]
     end
 end
