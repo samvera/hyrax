@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '>= 1.0.0.beta2', '< 2'
+  spec.add_dependency 'curation_concerns', '>= 1.0.0.beta3', '< 2'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
