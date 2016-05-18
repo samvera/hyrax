@@ -50,8 +50,8 @@ module Sufia
       def send_proxy_depositor_added_messages(grantor, grantee)
         message_to_grantee = "#{grantor.name} has assigned you as a proxy depositor"
         message_to_grantor = "You have assigned #{grantee.name} as a proxy depositor"
-        ::User.batchuser.send_message(grantor, message_to_grantor, "Proxy Depositor Added")
-        ::User.batchuser.send_message(grantee, message_to_grantee, "Proxy Depositor Added")
+        ::User.batch_user.send_message(grantor, message_to_grantor, "Proxy Depositor Added")
+        ::User.batch_user.send_message(grantee, message_to_grantee, "Proxy Depositor Added")
       end
   end
 end

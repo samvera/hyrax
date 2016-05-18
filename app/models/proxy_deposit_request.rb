@@ -38,11 +38,11 @@ class ProxyDepositRequest < ActiveRecord::Base
   def send_request_transfer_message
     if updated_at == created_at
       message = "#{link_to(sending_user.name, Sufia::Engine.routes.url_helpers.profile_path(sending_user.user_key))} wants to transfer a work to you. Review all <a href='#{Sufia::Engine.routes.url_helpers.transfers_path}'>transfer requests</a>"
-      User.batchuser.send_message(receiving_user, message, "Ownership Change Request")
+      User.batch_user.send_message(receiving_user, message, "Ownership Change Request")
     else
       message = "Your transfer request was #{status}."
       message += " Comments: #{receiver_comment}" unless receiver_comment.blank?
-      User.batchuser.send_message(sending_user, message, "Ownership Change #{status}")
+      User.batch_user.send_message(sending_user, message, "Ownership Change #{status}")
     end
   end
 

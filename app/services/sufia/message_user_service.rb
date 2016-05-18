@@ -24,7 +24,7 @@ module Sufia
     private
 
       def job_user
-        ::User.audituser
+        ::User.audit_user
       end
   end
 end
