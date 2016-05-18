@@ -20,6 +20,7 @@ describe IngestFileJob do
       Object.send(:remove_const, :FileSetWithExtras)
     end
     it 'uses the provided relationship' do
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set, filename)
       described_class.perform_now(file_set, filename, 'image/png', 'bob', 'remastered')
       expect(file_set.reload.remastered.mime_type).to eq 'image/png'
     end
@@ -27,6 +28,7 @@ describe IngestFileJob do
 
   context 'when given a mime_type' do
     it 'uses the provided mime_type' do
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set, filename)
       described_class.perform_now(file_set, filename, 'image/png', 'bob')
       expect(file_set.reload.original_file.mime_type).to eq 'image/png'
     end
@@ -38,6 +40,7 @@ describe IngestFileJob do
       # The parameter versioning: false instructs the machinery in Hydra::Works NOT to do versioning. So it can be handled later on.
       allow(CurationConcerns::VersioningService).to receive(:create)
       expect(Hydra::Works::AddFileToFileSet).to receive(:call).with(file_set, instance_of(::File), :original_file, versioning: false)
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set, filename)
       described_class.perform_now(file_set, filename, nil, 'bob')
     end
   end
@@ -49,6 +52,7 @@ describe IngestFileJob do
     let(:user2) { create(:user) }
 
     before do
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(any_args)
       described_class.perform_now(file_set, file1, 'image/png', user.user_key)
       described_class.perform_now(file_set, file2, 'text/plain', user2.user_key)
     end

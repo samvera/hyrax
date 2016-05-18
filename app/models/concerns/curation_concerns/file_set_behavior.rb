@@ -1,15 +1,11 @@
 module CurationConcerns
   module FileSetBehavior
     extend ActiveSupport::Concern
-    # BasicMetadata needs to be included before Characterization since
-    # both of them declare properties with the same predicate (dc:creator
-    # and dc:language.) Loading BasicMetadata first allows Characterization
-    # to detect the duplicate (via the AlreadyThereStrategy) and prevents
-    # the warning.
+
     include CurationConcerns::BasicMetadata
     include Hydra::Works::FileSetBehavior
     include Hydra::Works::VirusCheck
-    include CurationConcerns::Characterization
+    include CurationConcerns::FileSet::Characterization
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid

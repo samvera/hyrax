@@ -165,7 +165,6 @@ describe CurationConcerns::FileSetsController do
       context 'updating file content' do
         it 'is successful' do
           expect(IngestFileJob).to receive(:perform_later)
-          expect(CharacterizeJob).to receive(:perform_later).with(file_set, kind_of(String))
           post :update, id: file_set, file_set: { files: [file] }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
         end
