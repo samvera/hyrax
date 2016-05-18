@@ -217,7 +217,7 @@ module CurationConcerns
       # this is provided so that implementing application can override this behavior and map params to different attributes
       def update_metadata_from_upload_screen
         # Relative path is set by the jquery uploader when uploading a directory
-        curation_concer.relative_path = params[:relative_path] if params[:relative_path]
+        curation_concern.relative_path = params[:relative_path] if params[:relative_path]
       end
 
       def curation_concern_type
