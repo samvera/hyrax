@@ -1,0 +1,5 @@
+<ul id="sortable" data-id="<%= @presenter.id %>" data-class-name="<%= @presenter.model_name.plural %>" data-singular-class-name="<%= @presenter.model_name.singular %>" class="list-unstyled grid clearfix">
+ <% @presenter.file_presenters.each do |member| %>
+   <%= render "file_manager_member", node: member %>
+ <% end %>
+</ul>
