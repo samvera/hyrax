@@ -43,7 +43,7 @@
           <% classification.each do |concern| %>
             <li><%= link_to(
                   "New #{concern.human_readable_type}",
-                  new_polymorphic_path([sufia, concern]),
+                  new_polymorphic_path([main_app, concern]),
                   class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
                   role: 'menuitem'
                 ) %>
