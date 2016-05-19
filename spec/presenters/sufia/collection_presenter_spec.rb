@@ -58,4 +58,9 @@ describe Sufia::CollectionPresenter do
     subject { presenter.total_items }
     it { is_expected.to eq 0 }
   end
+
+  describe "#identifier" do
+    subject { presenter.identifier }
+    it { is_expected.to be_nil }
+  end
 end
