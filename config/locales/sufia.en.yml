@@ -190,6 +190,7 @@ en:
         add_another_rights: "add another Rights"
       generic_work:
         edit: "Edit"
+      browse_view: "Browse View"
     mailbox:
       date:     'Date'
       subject:  'Subject'

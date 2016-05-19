@@ -1,11 +1,11 @@
 module Sufia
   module WorksControllerBehavior
     extend ActiveSupport::Concern
+    include Sufia::Breadcrumbs
     include Sufia::Controller
     include CurationConcerns::CurationConcernController
 
     included do
-      include Sufia::Breadcrumbs
       before_action :has_access?, except: :show
       before_action :build_breadcrumbs, only: [:edit, :show]
       self.curation_concern_type = GenericWork
@@ -61,6 +61,19 @@ module Sufia
       # Called by CurationConcerns::FileSetsControllerBehavior#show
       def additional_response_formats(format)
         format.endnote { render text: presenter.solr_document.export_as_endnote }
+      end
+
+      def add_breadcrumb_for_controller
+        add_breadcrumb I18n.t('sufia.dashboard.my.works'), sufia.dashboard_works_path
+      end
+
+      def add_breadcrumb_for_action
+        case action_name
+        when 'edit'.freeze
+          add_breadcrumb I18n.t("sufia.work.browse_view"), main_app.curation_concerns_generic_work_path(params["id"])
+        when 'show'.freeze
+          add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
+        end
       end
   end
 end

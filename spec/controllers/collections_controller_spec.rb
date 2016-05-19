@@ -160,6 +160,28 @@ describe CollectionsController do
           expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
         end
       end
+
+      context "without a referer" do
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          get :show, id: collection
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a referer" do
+        before do
+          allow(controller.request).to receive(:referer).and_return('foo')
+        end
+
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with('My Collections', Sufia::Engine.routes.url_helpers.dashboard_collections_path)
+          expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id))
+          get :show, id: collection
+          expect(response).to be_successful
+        end
+      end
     end
 
     context "not signed in" do
@@ -178,6 +200,28 @@ describe CollectionsController do
       expect(response).to be_success
       expect(assigns[:form]).to be_instance_of Sufia::Forms::CollectionForm
       expect(flash[:notice]).to be_nil
+    end
+
+    context "without a referer" do
+      it "sets breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        get :edit, id: collection
+        expect(response).to be_successful
+      end
+    end
+
+    context "with a referer" do
+      before do
+        allow(controller.request).to receive(:referer).and_return('foo')
+      end
+
+      it "sets breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with('My Collections', Sufia::Engine.routes.url_helpers.dashboard_collections_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t("sufia.collection.browse_view"), collection_path(collection.id))
+        get :edit, id: collection
+        expect(response).to be_successful
+      end
     end
   end
 end
