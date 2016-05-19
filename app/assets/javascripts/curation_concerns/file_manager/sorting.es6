@@ -14,7 +14,6 @@
 
     initialize_sort() {
       this.element.sortable({handle: ".panel-heading"})
-      this.element.disableSelection()
       this.element.on("sortstop", this.stopped_sorting)
       this.element.on("sortstart", this.started_sorting)
     }
