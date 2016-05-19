@@ -8,8 +8,8 @@ FactoryGirl.define do
         # Create examples of single file successes and failures
         (1..10).each do |number|
           file = MockFile.new(number.to_s, "Single File #{number}")
-          User.batchuser.send_message(user, 'File 1 could not be updated. You do not have sufficient privileges to edit it.', file.to_s, false)
-          User.batchuser.send_message(user, 'File 1 has been saved', file.to_s, false)
+          User.batch_user.send_message(user, 'File 1 could not be updated. You do not have sufficient privileges to edit it.', file.to_s, false)
+          User.batch_user.send_message(user, 'File 1 has been saved', file.to_s, false)
         end
 
         # Create examples of mulitple file successes and failures
@@ -17,8 +17,8 @@ FactoryGirl.define do
         (1..50).each do |number|
           files << MockFile.new(number.to_s, "File #{number}")
         end
-        User.batchuser.send_message(user, 'These files could not be updated. You do not have sufficient privileges to edit them.', 'Batch upload permission denied', false)
-        User.batchuser.send_message(user, 'These files have been saved', 'Batch upload complete', false)
+        User.batch_user.send_message(user, 'These files could not be updated. You do not have sufficient privileges to edit them.', 'Batch upload permission denied', false)
+        User.batch_user.send_message(user, 'These files have been saved', 'Batch upload complete', false)
       end
     end
   end

@@ -2,6 +2,8 @@ require 'oauth'
 
 module Sufia::User
   extend ActiveSupport::Concern
+  extend Deprecation
+  self.deprecation_horizon = 'Sufia version 8.0.0'
 
   included do
     # Adds acts_as_messageable for user mailboxes
@@ -148,22 +150,26 @@ module Sufia::User
     end
 
     # Override this method if you aren't using email/password
-    def audituser
-      User.find_by_user_key(audituser_key) || User.create!(Devise.authentication_keys.first => audituser_key, password: Devise.friendly_token[0, 20])
+    def audit_user
+      User.find_by_user_key(audit_user_key) || User.create!(Devise.authentication_keys.first => audit_user_key, password: Devise.friendly_token[0, 20])
     end
 
-    # Override this method if you aren't using email as the userkey
-    def audituser_key
+    alias audituser audit_user
+    deprecation_deprecate audituser: 'use audit_user instead'
+
+    def audit_user_key
       Sufia.config.audit_user_key
     end
 
     # Override this method if you aren't using email/password
-    def batchuser
-      User.find_by_user_key(batchuser_key) || User.create!(Devise.authentication_keys.first => batchuser_key, password: Devise.friendly_token[0, 20])
+    def batch_user
+      User.find_by_user_key(batch_user_key) || User.create!(Devise.authentication_keys.first => batch_user_key, password: Devise.friendly_token[0, 20])
     end
 
-    # Override this method if you aren't using email as the userkey
-    def batchuser_key
+    alias batchuser batch_user
+    deprecation_deprecate batchuser: 'use batch_user instead'
+
+    def batch_user_key
       Sufia.config.batch_user_key
     end
 
