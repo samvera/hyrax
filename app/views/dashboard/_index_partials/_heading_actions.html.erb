@@ -3,7 +3,7 @@
     <div class="col-xs-6 col-sm-2 heading-tile">
       <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
       <% classification.each do |concern| %>
-        <%= link_to(new_polymorphic_path([sufia, concern]),
+        <%= link_to(new_polymorphic_path([main_app, concern]),
               class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
               role: 'menuitem'
             ) do %>
