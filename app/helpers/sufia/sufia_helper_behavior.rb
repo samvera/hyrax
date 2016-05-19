@@ -98,7 +98,7 @@ module Sufia
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|
-        "<i class='glyphicon glyphicon-new-window'></i>#{('&nbsp;' + value) if showLink}<br />"
+        "<span class='glyphicon glyphicon-new-window'></span>#{('&nbsp;' + value) if showLink}"
       end
     end
 

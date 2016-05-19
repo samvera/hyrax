@@ -27,7 +27,7 @@ describe 'catalog/_index_list_default' do
     expect(rendered).to include '<span class="attribute-label h4">Creator:</span>'
     expect(rendered).to include '<span itemprop="creator">Justin</span> and <span itemprop="creator">Joe</span>'
     expect(rendered).to include '<span class="attribute-label h4">Description:</span>'
-    expect(rendered).to include '<span itemprop="description">This links to <a href="http://example.com/"><i class="glyphicon glyphicon-new-window"></i> http://example.com/<br></a> What about that?</span>'
+    expect(rendered).to include '<span itemprop="description">This links to <a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span> http://example.com/</a> What about that?</span>'
     expect(rendered).to include '<span class="attribute-label h4">Date Uploaded:</span>'
     expect(rendered).to include '<span itemprop="datePublished">03/14/2013</span>'
     expect(rendered).to include '<span class="attribute-label h4">Depositor:</span>'
