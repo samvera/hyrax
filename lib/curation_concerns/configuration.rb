@@ -131,7 +131,7 @@ module CurationConcerns
     #   ActiveJob queue to handle ingest-like jobs.
     attr_writer :ingest_queue_name
     def ingest_queue_name
-      @ingest_queue_name ||= :ingest
+      @ingest_queue_name ||= :default
     end
 
     callback.enable :after_create_concern, :after_create_fileset,
