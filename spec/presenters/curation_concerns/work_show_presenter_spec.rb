@@ -6,7 +6,7 @@ describe CurationConcerns::WorkShowPresenter do
   let(:date_value) { Date.today }
   let(:date_index) { date_value.to_s }
   let(:attributes) do
-    { "title_tesim" => ["foo bar"],
+    { "title_tesim" => ['foo', 'bar'],
       "human_readable_type_tesim" => ["Generic Work"],
       "has_model_ssim" => ["GenericWork"],
       "date_created_tesim" => ['an unformatted date'],
@@ -19,7 +19,7 @@ describe CurationConcerns::WorkShowPresenter do
 
   describe "#to_s" do
     subject { presenter.to_s }
-    it { is_expected.to eq 'foo bar' }
+    it { is_expected.to eq 'foo, bar' }
   end
 
   describe "#human_readable_type" do
@@ -140,14 +140,18 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
+  describe '#page_title' do
+    subject { presenter.page_title }
+    it { is_expected.to eq 'foo' }
+  end
+
   describe "#attribute_to_html" do
-    let(:presenter) { described_class.new(solr_document, ability) }
     let(:renderer) { double('renderer') }
 
     context 'with an existing field' do
       before do
         allow(CurationConcerns::Renderers::AttributeRenderer).to receive(:new)
-          .with(:title, ["foo bar"], {})
+          .with(:title, ['foo', 'bar'], {})
           .and_return(renderer)
       end
 
