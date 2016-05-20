@@ -79,6 +79,7 @@ function batch_edit_init () {
             },
             combine_requests: function (requests) {
                 var data = deserialize(requests[0].data.replace(/\+/g, " "));
+                var adata;
                 form = [requests[0].form]
                 for (var i = requests.length - 1; i > 0; i--) {
                     req = requests.pop();
@@ -86,7 +87,7 @@ function batch_edit_init () {
 
                     for (key in  Object.keys(adata)) {
                         curKey = Object.keys(adata)[key];
-                        if (curKey.slice(0, 12) == "file_set") {
+                        if (curKey.slice(0, 12) == "generic_work") {
                             data[curKey] = adata[curKey];
                             form.push(req.form);
                         }
