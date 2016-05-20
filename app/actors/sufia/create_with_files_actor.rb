@@ -2,16 +2,21 @@ module Sufia
   # Creates a work and attaches files to the work
   class CreateWithFilesActor < CurationConcerns::Actors::AbstractActor
     def create(attributes)
-      @uploaded_file_ids = attributes.delete(:uploaded_files)
+      self.uploaded_file_ids = attributes.delete(:uploaded_files)
       validate_files && next_actor.create(attributes) && attach_files
     end
 
     def update(attributes)
-      @uploaded_file_ids = attributes.delete(:uploaded_files)
+      self.uploaded_file_ids = attributes.delete(:uploaded_files)
       validate_files && next_actor.update(attributes) && attach_files
     end
 
     protected
+
+      attr_reader :uploaded_file_ids
+      def uploaded_file_ids=(input)
+        @uploaded_file_ids = Array.wrap(input).select(&:present?)
+      end
 
       # ensure that the files we are given are owned by the depositor of the work
       def validate_files
@@ -34,8 +39,8 @@ module Sufia
 
       # Fetch uploaded_files from the database
       def uploaded_files
-        return [] unless @uploaded_file_ids
-        @uploaded_files ||= UploadedFile.find(@uploaded_file_ids)
+        return [] if uploaded_file_ids.empty?
+        @uploaded_files ||= UploadedFile.find(uploaded_file_ids)
       end
   end
 end
