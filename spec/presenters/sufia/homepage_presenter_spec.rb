@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Sufia::HomepagePresenter do
   let(:presenter) { described_class.new(ability) }
   let(:ability) { instance_double("Ability") }
+  subject { presenter }
+  it { is_expected.to delegate_method(:can?).to(:current_ability) }
 
   describe "#display_share_button?" do
     subject { presenter.display_share_button? }

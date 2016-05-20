@@ -90,9 +90,10 @@ describe User, type: :model do
     end
   end
 
-  it "has a cancan ability defined" do
-    expect(user).to respond_to(:can?)
-  end
+  subject { user }
+  it { is_expected.to delegate_method(:can?).to(:ability) }
+  it { is_expected.to delegate_method(:cannot?).to(:ability) }
+
   it "does not have any followers" do
     expect(user.followers_count).to eq(0)
     expect(another_user.follow_count).to eq(0)

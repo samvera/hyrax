@@ -59,8 +59,9 @@ describe Sufia::CollectionPresenter do
     it { is_expected.to eq 0 }
   end
 
-  describe "#identifier" do
-    subject { presenter.identifier }
-    it { is_expected.to be_nil }
-  end
+  subject { presenter }
+  it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
+  it { is_expected.to delegate_method(:based_near).to(:solr_document) }
+  it { is_expected.to delegate_method(:related_url).to(:solr_document) }
+  it { is_expected.to delegate_method(:identifier).to(:solr_document) }
 end

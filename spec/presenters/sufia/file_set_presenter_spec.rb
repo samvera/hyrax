@@ -6,11 +6,18 @@ describe Sufia::FileSetPresenter do
   let(:presenter) { described_class.new(solr_document, ability) }
   let(:attributes) { file.to_solr }
   let(:file) { build(:file_set, id: '123abc', user: user) }
+  let(:user) { double(user_key: 'sarah') }
 
   describe 'stats_path' do
-    let(:user) { double(user_key: 'sarah') }
     it { expect(presenter.stats_path).to eq Sufia::Engine.routes.url_helpers.stats_file_path(id: file) }
   end
+
+  subject { presenter }
+  it { is_expected.to delegate_method(:depositor).to(:solr_document) }
+  it { is_expected.to delegate_method(:keyword).to(:solr_document) }
+  it { is_expected.to delegate_method(:date_created).to(:solr_document) }
+  it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
+  it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
 
   describe '#tweeter' do
     subject { presenter.tweeter }
