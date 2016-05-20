@@ -64,17 +64,21 @@ module CurationConcerns
     def member_presenters(ids = ordered_ids, presenter_class = file_presenter_class)
       PresenterFactory.build_presenters(ids,
                                         presenter_class,
-                                        current_ability)
+                                        *presenter_factory_arguments)
     end
 
     # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
     def collection_presenters
       PresenterFactory.build_presenters(in_collection_ids,
                                         collection_presenter_class,
-                                        current_ability)
+                                        *presenter_factory_arguments)
     end
 
     private
+
+      def presenter_factory_arguments
+        [current_ability]
+      end
 
       # @return [Array<String>] ids of the collections that this work is a member of
       def in_collection_ids

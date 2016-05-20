@@ -30,7 +30,7 @@ describe CurationConcerns::PresenterFactory do
       let(:presenter_class) do
         Class.new(CurationConcerns::FileSetPresenter) do
           attr_reader :two, :three
-          def initialize(one, two, three)
+          def initialize(_one, two, three)
             @two = two
             @three = three
           end
@@ -41,7 +41,7 @@ describe CurationConcerns::PresenterFactory do
                                                  presenter_class,
                                                  'more',
                                                  'and more') }
-      it 'passes all the arguments' do 
+      it 'passes all the arguments' do
         expect(subject.first.two).to eq 'more'
         expect(subject.first.three).to eq 'and more'
       end
