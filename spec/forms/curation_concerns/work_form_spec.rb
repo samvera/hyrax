@@ -88,10 +88,11 @@ describe CurationConcerns::GenericWorkForm do
     it { is_expected.to eq 'restricted' }
   end
 
-  describe "on_behalf_of" do
-    subject { form.on_behalf_of }
-    it { is_expected.to be nil }
-  end
+  subject { form }
+
+  it { is_expected.to delegate_method(:on_behalf_of).to(:model) }
+  it { is_expected.to delegate_method(:depositor).to(:model) }
+  it { is_expected.to delegate_method(:permissions).to(:model) }
 
   describe "#agreement_accepted" do
     subject { form.agreement_accepted }

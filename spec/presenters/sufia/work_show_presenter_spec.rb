@@ -4,6 +4,15 @@ describe Sufia::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(work.to_solr) }
   let(:presenter) { described_class.new(solr_document, ability) }
 
+  subject { described_class.new(double, double) }
+  it { is_expected.to delegate_method(:based_near).to(:solr_document) }
+  it { is_expected.to delegate_method(:related_url).to(:solr_document) }
+  it { is_expected.to delegate_method(:depositor).to(:solr_document) }
+  it { is_expected.to delegate_method(:identifier).to(:solr_document) }
+  it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
+  it { is_expected.to delegate_method(:keyword).to(:solr_document) }
+  it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+
   describe 'stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }

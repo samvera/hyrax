@@ -18,6 +18,7 @@ describe Sufia::Admin::DepositorStats do
   end
 
   let(:service) { described_class.new(start_date, end_date) }
+
   describe "#depositors" do
     subject { service.depositors }
 

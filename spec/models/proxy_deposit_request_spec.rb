@@ -22,9 +22,7 @@ describe ProxyDepositRequest, type: :model do
   its(:fulfillment_date) { is_expected.to be_nil }
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
-  it "has a title for the file" do
-    expect(subject.to_s).to eq('Test work')
-  end
+  it { is_expected.to delegate_method(:to_s).to(:work) }
 
   context "After approval" do
     before do

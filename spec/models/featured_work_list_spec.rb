@@ -33,14 +33,5 @@ describe FeaturedWorkList, type: :model do
     end
   end
 
-  describe '#empty?' do
-    context "when there are featured works" do
-      before do
-        create(:featured_work, work_id: work1.id)
-      end
-      it { is_expected.not_to be_empty }
-    end
-
-    it { is_expected.to be_empty }
-  end
+  it { is_expected.to delegate_method(:empty?).to(:featured_works) }
 end
