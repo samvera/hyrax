@@ -15,7 +15,9 @@ describe 'Batch management of works', type: :feature do
     before do
       check 'check_all'
       click_on 'batch-edit'
-      fields.each { |f| fill_in_field(f) }
+      fields.each { |f| fill_in_field_fill(f) }
+      fields.each { |f| fill_in_field_save(f) }
+      fields.each { |f| fill_in_field_wait(f) }
       work1.reload
       work2.reload
     end
@@ -93,12 +95,21 @@ describe 'Batch management of works', type: :feature do
     ]
   end
 
-  def fill_in_field(id)
+  def fill_in_field_fill(id)
     expand(id)
     within "#form_#{id}" do
       fill_in "generic_work_#{id}", with: "NEW #{id}"
-      click_button "#{id}_save"
     end
+  end
+
+  def fill_in_field_save(id)
+    within "#form_#{id}" do
+      click_button "#{id}_save"
+      sleep 0.1
+    end
+  end
+
+  def fill_in_field_wait(id)
     within "#form_#{id}" do
       sleep 0.1 until page.text.include?('Changes Saved')
       expect(page).to have_content 'Changes Saved', wait: Capybara.default_max_wait_time * 4
