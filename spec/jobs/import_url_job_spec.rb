@@ -13,14 +13,13 @@ describe ImportUrlJob do
     end
   end
 
-  let(:mock_response) do
-    double('response').tap do |http_res|
-      allow(http_res).to receive(:start).and_yield
-      allow(http_res).to receive(:content_type).and_return('image/png')
-      allow(http_res).to receive(:read_body).and_yield(File.open(File.expand_path(file_path, __FILE__)).read)
-    end
-  end
   let(:log) { create(:operation) }
+
+  before do
+    stub_request(:get, "http://example.org#{file_hash}").to_return(
+      body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: { 'Content-Type' => 'image/png' }
+    )
+  end
 
   context 'after running the job' do
     let(:actor) { double }
@@ -32,7 +31,6 @@ describe ImportUrlJob do
     end
 
     it 'creates the content' do
-      expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       expect(actor).to receive(:create_content).and_return(true)
       described_class.perform_now(file_set, log)
       expect(log.status).to eq 'success'
@@ -51,7 +49,6 @@ describe ImportUrlJob do
       allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
       allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:create_content)
       allow_any_instance_of(Ability).to receive(:can?).and_return(true)
-      expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
     end
 
     it "does not kill all the metadata set by other processes" do

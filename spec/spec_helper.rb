@@ -22,6 +22,8 @@ Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'webmock/rspec'
+WebMock.allow_net_connect!
 
 $in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 

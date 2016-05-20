@@ -1,6 +1,6 @@
-require 'net/https'
 require 'uri'
 require 'tempfile'
+require 'browse_everything/retriever'
 
 class ImportUrlJob < ActiveJob::Base
   queue_as CurationConcerns.config.ingest_queue_name
@@ -38,18 +38,10 @@ class ImportUrlJob < ActiveJob::Base
       f.binmode
       # download file from url
       uri = URI(file_set.import_url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == 'https' # enable SSL/TLS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      mime_type = nil
-
-      http.start do
-        http.request_get(uri.request_uri) do |resp|
-          mime_type = resp.content_type
-          resp.read_body do |segment|
-            f.write(segment)
-          end
-        end
+      spec = { 'url' => uri }
+      retriever = BrowseEverything::Retriever.new
+      retriever.retrieve(spec) do |chunk|
+        f.write(chunk)
       end
       f.rewind
     end
