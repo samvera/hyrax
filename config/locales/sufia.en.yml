@@ -220,14 +220,14 @@ en:
       file_set:
         based_near:       "Location"
         description:      "Abstract or Summary"
-        keyword:              "Keyword"
+        keyword:          "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
         files:            "Upload a new version of this file from your computer"
       collection:
         based_near:       "Location"
         description:      "Abstract or Summary"
-        keyword:              "Keyword"
+        keyword:          "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
         total_items:      "Total Items"
@@ -252,15 +252,15 @@ en:
         publisher: "The person or group making the file available. Generally this is the institution."
         rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. &lt;em&gt;This is a required field&lt;/em&gt;."
       collection:
-        creator_html: 'The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. "Smith, John." &lt;em&gt;This is a required field&lt;/em&gt;.'
+        creator_html: "The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot; &lt;em&gt;This is a required field&lt;/em&gt;."
 
     aria_label:
       upload_set:
-        default: "Usage information for %{title}"
-        based_near: "Usage information for location"
+        default:     "Usage information for %{title}"
+        based_near:  "Usage information for location"
         description: "Usage information for abstract or summary"
-        keyword: "Usage information for keyword"
-        rights: "Usage information for rights"
+        keyword:     "Usage information for keyword"
+        rights:      "Usage information for rights"
 
   curation_concerns:
     base:
