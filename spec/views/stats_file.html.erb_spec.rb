@@ -8,23 +8,22 @@ describe 'stats/file.html.erb', type: :view do
   describe 'usage statistics' do
     before :each do
       allow_message_expectations_on_nil
-      expect(FileUsage).to receive(:new)
     end
 
     let(:no_stats) {
-      stub_model(FileUsage,
-                 created: Date.parse('2014-01-01'),
-                 total_pageviews: 0,
-                 total_downloads: 0,
-                 to_flot: [])
+      double('FileUsage',
+             created: Date.parse('2014-01-01'),
+             total_pageviews: 0,
+             total_downloads: 0,
+             to_flot: [])
     }
 
     let(:stats) {
-      stub_model(FileUsage,
-                 created: Date.parse('2014-01-01'),
-                 total_pageviews: 9,
-                 total_downloads: 4,
-                 to_flot: [[1_396_422_000_000, 2], [1_396_508_400_000, 3], [1_396_594_800_000, 4]])
+      double('FileUsage',
+             created: Date.parse('2014-01-01'),
+             total_pageviews: 9,
+             total_downloads: 4,
+             to_flot: [[1_396_422_000_000, 2], [1_396_508_400_000, 3], [1_396_594_800_000, 4]])
     }
 
     context 'when no analytics results returned' do
