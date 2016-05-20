@@ -16,16 +16,18 @@ task :spec do
   RSpec::Core::RakeTask.new(:spec)
 end
 
-desc 'Spin up hydra-jetty and run specs'
-task ci: ['rubocop', 'engine_cart:generate'] do
-  puts 'running continuous integration'
-
-  # No need to maintain minter state on Travis
+desc 'Spin up test servers and run specs'
+task spec_with_app_load: :rubocop  do
   reset_statefile! if ENV['TRAVIS'] == 'true'
-
   with_test_server do
     Rake::Task['spec'].invoke
   end
+end
+
+desc 'Generate the engine_cart and spin up test servers and run specs'
+task ci: ['rubocop', 'engine_cart:generate'] do
+  puts 'running continuous integration'
+  Rake::Task['spec_with_app_load'].invoke
 end
 
  def reset_statefile!
