@@ -3,18 +3,19 @@ module CurationConcerns
     class << self
       # @param [Array] ids the list of ids to load
       # @param [Class] klass the class of presenter to make
+      # @param [Array] args any other arguments to pass to the presenters
       # @return [Array] presenters for the documents in order of the ids
-      def build_presenters(ids, klass, ability)
-        new(ids, klass, ability).build
+      def build_presenters(ids, klass, *args)
+        new(ids, klass, *args).build
       end
     end
 
-    attr_reader :ids, :klass, :ability
+    attr_reader :ids, :klass, :args
 
-    def initialize(ids, klass, ability)
+    def initialize(ids, klass, *args)
       @ids = ids
       @klass = klass
-      @ability = ability
+      @args = args
     end
 
     def build
@@ -22,7 +23,7 @@ module CurationConcerns
       docs = load_docs
       ids.map do |id|
         solr_doc = docs.find { |doc| doc.id == id }
-        klass.new(solr_doc, ability) if solr_doc
+        klass.new(solr_doc, *args) if solr_doc
       end.compact
     end
 
