@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rdf', '~> 1.99'
   spec.add_dependency 'rdf-vocab', '~> 0'
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
+  spec.add_dependency 'browse-everything', '~> 0.10'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
@@ -58,5 +59,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'jasmine'
   spec.add_development_dependency 'rubocop', '~> 0.39'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.4.1'
+  spec.add_development_dependency 'webmock'
 
 end
