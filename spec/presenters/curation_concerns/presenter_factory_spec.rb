@@ -25,5 +25,26 @@ describe CurationConcerns::PresenterFactory do
         expect(subject.size).to eq 1
       end
     end
+
+    context "with more arguments" do
+      let(:presenter_class) do
+        Class.new(CurationConcerns::FileSetPresenter) do
+          attr_reader :two, :three
+          def initialize(_one, two, three)
+            @two = two
+            @three = three
+          end
+        end
+      end
+      let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
+      subject { described_class.build_presenters(['12', '13'],
+                                                 presenter_class,
+                                                 'more',
+                                                 'and more') }
+      it 'passes all the arguments' do
+        expect(subject.first.two).to eq 'more'
+        expect(subject.first.three).to eq 'and more'
+      end
+    end
   end
 end

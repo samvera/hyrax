@@ -119,7 +119,7 @@ module CurationConcerns::CurationConcernController
     end
 
     def presenter
-      @presenter ||= show_presenter.new(curation_concern_from_search_results, current_ability)
+      @presenter ||= show_presenter.new(curation_concern_from_search_results, current_ability, request)
     end
 
     def _prefixes

@@ -2,7 +2,7 @@ module CurationConcerns
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
-    attr_accessor :solr_document, :current_ability
+    attr_accessor :solr_document, :current_ability, :request
 
     class_attribute :collection_presenter_class, :file_presenter_class, :work_presenter_class
 
@@ -17,9 +17,11 @@ module CurationConcerns
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
-    def initialize(solr_document, current_ability)
+    # @param [ActionDispatch::Request] request the http request context
+    def initialize(solr_document, current_ability, request = nil)
       @solr_document = solr_document
       @current_ability = current_ability
+      @request = request
     end
 
     def page_title
@@ -64,17 +66,21 @@ module CurationConcerns
     def member_presenters(ids = ordered_ids, presenter_class = file_presenter_class)
       PresenterFactory.build_presenters(ids,
                                         presenter_class,
-                                        current_ability)
+                                        *presenter_factory_arguments)
     end
 
     # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
     def collection_presenters
       PresenterFactory.build_presenters(in_collection_ids,
                                         collection_presenter_class,
-                                        current_ability)
+                                        *presenter_factory_arguments)
     end
 
     private
+
+      def presenter_factory_arguments
+        [current_ability, request]
+      end
 
       # @return [Array<String>] ids of the collections that this work is a member of
       def in_collection_ids

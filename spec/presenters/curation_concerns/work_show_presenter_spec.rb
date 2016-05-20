@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
+  let(:request) { double }
   let(:date_value) { Date.today }
   let(:date_index) { date_value.to_s }
   let(:attributes) do
@@ -14,7 +15,7 @@ describe CurationConcerns::WorkShowPresenter do
   end
 
   let(:ability) { nil }
-  let(:presenter) { described_class.new(solr_document, ability) }
+  let(:presenter) { described_class.new(solr_document, ability, request) }
 
   describe "#to_s" do
     subject { presenter.to_s }
@@ -103,7 +104,7 @@ describe CurationConcerns::WorkShowPresenter do
 
       it "uses the set class" do
         expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
-          .with(['12', '33'], presenter_class, ability)
+          .with(['12', '33'], presenter_class, ability, request)
         presenter.file_set_presenters
       end
     end
@@ -118,7 +119,7 @@ describe CurationConcerns::WorkShowPresenter do
     end
     it "has a representative" do
       expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
-        .with([obj.members[0].id], presenter_class, ability).and_return ["abc"]
+        .with([obj.members[0].id], presenter_class, ability, request).and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end
   end

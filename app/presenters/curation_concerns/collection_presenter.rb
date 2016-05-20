@@ -3,13 +3,15 @@ module CurationConcerns
     include ModelProxy
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
-    attr_accessor :solr_document, :current_ability
+    attr_accessor :solr_document, :current_ability, :request
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
-    def initialize(solr_document, current_ability)
+    # @param [ActionDispatch::Request] request the http request context
+    def initialize(solr_document, current_ability, request = nil)
       @solr_document = solr_document
       @current_ability = current_ability
+      @request = request
     end
 
     # CurationConcern methods
