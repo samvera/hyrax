@@ -136,7 +136,7 @@ module CurationConcerns
           _, document_list = search_results(params)
           curation_concern = document_list.first
           raise CanCan::AccessDenied unless curation_concern
-          show_presenter.new(curation_concern, current_ability)
+          show_presenter.new(curation_concern, current_ability, request)
         end
       end
 
