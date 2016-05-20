@@ -19,18 +19,24 @@ describe Sufia::CreateWithFilesActor do
     allow(create_actor).to receive(:create).and_return(true)
   end
 
-  context "when uploaded_file_ids belong to me" do
-    it "attaches files" do
-      expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2])
-      expect(actor.create(attributes)).to be true
-    end
-  end
+  [:create, :update].each do |mode|
+    context "on #{mode}" do
+      context "when uploaded_file_ids belong to me" do
+        it "attaches files" do
+          expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2])
+          expect(actor.next_actor).to receive(mode).with(attributes.except(:uploaded_file_ids)).and_return(true)
+          expect(actor.public_send(mode, attributes)).to be true
+        end
+      end
 
-  context "when uploaded_file_ids don't belong to me" do
-    let(:uploaded_file2) { Sufia::UploadedFile.create }
-    it "doesn't attach files" do
-      expect(AttachFilesToWorkJob).not_to receive(:perform_later)
-      expect(actor.create(attributes)).to be false
+      context "when uploaded_file_ids don't belong to me" do
+        let(:uploaded_file2) { Sufia::UploadedFile.create }
+        it "doesn't attach files" do
+          expect(AttachFilesToWorkJob).not_to receive(:perform_later)
+          expect(actor.next_actor).to_not receive(mode)
+          expect(actor.public_send(mode, attributes)).to be false
+        end
+      end
     end
   end
 end
