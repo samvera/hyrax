@@ -75,7 +75,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("date_uploaded", :stored_sortable, type: :date), label: "Date Uploaded", itemprop: 'datePublished', helper_method: :human_readable_date
     config.add_index_field solr_name("date_modified", :stored_sortable, type: :date), label: "Date Modified", itemprop: 'dateModified', helper_method: :human_readable_date
     config.add_index_field solr_name("date_created", :stored_searchable), label: "Date Created", itemprop: 'dateCreated'
-    config.add_index_field solr_name("rights", :stored_searchable), label: "Rights"
+    config.add_index_field solr_name("rights", :stored_searchable), label: "Rights", helper_method: :rights_statement_links
     config.add_index_field solr_name("resource_type", :stored_searchable), label: "Resource Type"
     config.add_index_field solr_name("format", :stored_searchable), label: "File Format"
     config.add_index_field solr_name("identifier", :stored_searchable), label: "Identifier"

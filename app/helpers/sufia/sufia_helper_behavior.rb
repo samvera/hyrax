@@ -122,6 +122,12 @@ module Sufia
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
     end
 
+    # @param [Hash] options hash from blacklight passes from helper_method
+    #                       invocation. Maps rights URIs to links with labels.
+    def rights_statement_links(options = {})
+      options[:value].map { |right| link_to RightsService.label(right), right }.to_sentence.html_safe
+    end
+
     def link_to_telephone(user = nil)
       @user ||= user
       link_to @user.telephone, "wtai://wp/mc;#{@user.telephone}" if @user.telephone
