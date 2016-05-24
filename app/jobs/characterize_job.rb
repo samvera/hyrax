@@ -6,7 +6,8 @@ class CharacterizeJob < ActiveJob::Base
   def perform(file_set, filename)
     raise LoadError, "#{file_set.class.characterization_proxy} was not found" unless file_set.characterization_proxy?
     Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filename)
-    file_set.save!
+    file_set.characterization_proxy.save!
+    file_set.update_index
     CreateDerivativesJob.perform_later(file_set, filename)
   end
 end

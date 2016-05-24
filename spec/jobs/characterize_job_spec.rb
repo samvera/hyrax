@@ -16,7 +16,8 @@ describe CharacterizeJob do
   context 'when the characterization proxy content is present' do
     it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
       expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-      expect(file_set).to receive(:save!)
+      expect(file).to receive(:save!)
+      expect(file_set).to receive(:update_index)
       expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, filename)
       described_class.perform_now(file_set, filename)
     end
