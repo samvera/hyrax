@@ -38,9 +38,14 @@ module Sufia
                                              File.basename(uri.path),
                                              user.user_key)
           else
-            ImportUrlJob.perform_later(fs)
+            ImportUrlJob.perform_later(fs, log(actor.user))
           end
         end
+      end
+
+      def log(user)
+        CurationConcerns::Operation.create!(user: user,
+                                            operation_type: "Attach Remote File")
       end
   end
 end
