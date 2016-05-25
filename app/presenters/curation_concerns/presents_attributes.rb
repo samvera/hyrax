@@ -4,17 +4,19 @@ module CurationConcerns
     # Present the attribute as an HTML table row.
     #
     # @param [Hash] options
-    # @option options [true, false] :catalog_search_link return a link to a catalog search for that text if true
+    # @option options [TrueClass, FalseClass] :catalog_search_link return a link to a catalog search for that text if true
     # @option options [String] :search_field If the method_name of the attribute is different than
     #   how the attribute name should appear on the search URL,
     #   you can explicitly set the URL's search field name
     # @option options [String] :label The default label for the field if no translation is found
+    # @option options [TrueClass, FalseClass] :include_empty should we display a row if there are no values?
     def attribute_to_html(field, options = {})
       unless respond_to?(field)
         Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
         return
       end
-      CurationConcerns::Renderers::AttributeRenderer.new(field, send(field), options).render
+
+      renderer_for(field, options).new(field, send(field), options).render
     end
 
     def permission_badge
@@ -36,6 +38,16 @@ module CurationConcerns
     end
 
     private
+
+      def renderer_for(field, options)
+        if options[:catalog_search_link]
+          Renderers::LinkedAttributeRenderer
+        elsif field == :rights
+          Renderers::RightsAttributeRenderer
+        else
+          Renderers::AttributeRenderer
+        end
+      end
 
       def microdata_type_key
         "curation_concerns.schema_org.resource_type.#{human_readable_type}"

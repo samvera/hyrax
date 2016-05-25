@@ -45,9 +45,7 @@ module CurationConcerns
       private
 
         def attribute_value_to_html(value)
-          if field == :rights
-            rights_attribute_to_html(value)
-          elsif microdata_value_attributes(field).present?
+          if microdata_value_attributes(field).present?
             "<span#{html_attributes(microdata_value_attributes(field))}>#{li_value(value)}</span>"
           else
             li_value(value)
@@ -63,37 +61,8 @@ module CurationConcerns
           buffer
         end
 
-        def search_field
-          options.fetch(:search_field, field)
-        end
-
         def li_value(value)
-          if options[:catalog_search_link]
-            link_to(ERB::Util.h(value), search_path(value))
-          else
-            auto_link(ERB::Util.h(value))
-          end
-        end
-
-        def search_path(value)
-          Rails.application.routes.url_helpers.search_catalog_path(
-            search_field: search_field, q: ERB::Util.h(value))
-        end
-
-        ##
-        # Special treatment for license/rights.  A URL from the Sufia gem's config/sufia.rb is stored in the descMetadata of the
-        # curation_concern.  If that URL is valid in form, then it is used as a link.  If it is not valid, it is used as plain text.
-        def rights_attribute_to_html(value)
-          begin
-            parsed_uri = URI.parse(value)
-          rescue
-            nil
-          end
-          if parsed_uri.nil?
-            ERB::Util.h(value)
-          else
-            %(<a href=#{ERB::Util.h(value)} target="_blank">#{RightsService.label(value)}</a>)
-          end
+          auto_link(ERB::Util.h(value))
         end
     end
   end
