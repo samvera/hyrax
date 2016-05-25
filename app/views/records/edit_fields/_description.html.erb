@@ -1,5 +1,5 @@
 <% if f.object.class.multiple? key %>
-  <%= f.input :description, as: :multi_value_with_help, input_html: { rows: '14', type: 'textarea'}, required: false %>
+  <%= f.input :description, as: :multi_value, input_html: { rows: '14', type: 'textarea'}, required: false %>
 <% else %>
   <%= f.input :description, as: :text, input_html: { rows: '14' } %>
 <% end %>
