@@ -215,4 +215,20 @@ describe SufiaHelper, type: :helper do
       expect(subject).to include('class="glyphicon glyphicon-new-window"')
     end
   end
+
+  describe "#rights_statement_links" do
+    it "maps the url to a link with a label" do
+      expect(helper.rights_statement_links(
+               value: ["http://creativecommons.org/publicdomain/zero/1.0/"]
+      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>")
+    end
+
+    it "converts multiple rights statements to a sentence" do
+      expect(helper.rights_statement_links(
+               value: ["http://creativecommons.org/publicdomain/zero/1.0/",
+                       "http://creativecommons.org/publicdomain/mark/1.0/",
+                       "http://www.europeana.eu/portal/rights/rr-r.html"]
+      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, <a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
+    end
+  end
 end
