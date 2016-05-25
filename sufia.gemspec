@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'solr_wrapper', '~> 0.5'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
+  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
