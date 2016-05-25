@@ -5,7 +5,10 @@ describe 'catalog/_index_list_default' do
       'depositor_tesim' => ['jcoyne@justincoyne.com'],
       'proxy_depositor_ssim' => ['atz@stanford.edu'],
       'description_tesim' => ['This links to http://example.com/ What about that?'],
-      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' }
+      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z',
+      'rights_tesim' => ["http://creativecommons.org/publicdomain/zero/1.0/",
+                         "http://creativecommons.org/publicdomain/mark/1.0/",
+                         "http://www.europeana.eu/portal/rights/rr-r.html"] }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:blacklight_configuration_context) do
@@ -33,5 +36,7 @@ describe 'catalog/_index_list_default' do
     expect(rendered).to include '<a href="/users/atz@stanford-dot-edu">atz@stanford.edu</a>'
     expect(rendered).to include '<span class="attribute-label h4">Owner:</span>'
     expect(rendered).to include '<a href="/users/jcoyne@justincoyne-dot-com">jcoyne@justincoyne.com</a>'
+    expect(rendered).to include '<span class="attribute-label h4">Rights:</span>'
+    expect(rendered).to include '<a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a>, <a href="http://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</a>, and <a href="http://www.europeana.eu/portal/rights/rr-r.html">All rights reserved</a>'
   end
 end
