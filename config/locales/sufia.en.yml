@@ -217,42 +217,50 @@ en:
 
   simple_form:
     labels:
-      file_set:
+      generic_work: &work_labels
         based_near:       "Location"
         description:      "Abstract or Summary"
         keyword:          "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
         files:            "Upload a new version of this file from your computer"
+        collection_ids:   "Add as member of collection"
       collection:
-        based_near:       "Location"
-        description:      "Abstract or Summary"
-        keyword:          "Keyword"
-        date_created:     "Date Created"
-        related_url:      "Related URL"
         total_items:      "Total Items"
         size:             "Size"
-      generic_work:
-        collection_ids:   "Add as member of collection"
+        <<: *work_labels
 
     metadata_help:
-      file_set:
-        resource_type_html: "Pre-defined categories to describe the type of file content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
-        title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged."
-        keyword: "Words or phrases you select to describe what the file is about. These are used to search for content."
-        subject: "Headings or index terms describing what the file is about; these do need to conform to an existing vocabulary. Currently supports Library of Congress Subject Headings."
-        creator_html: "The person or group responsible for the file being uploaded. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;."
-        related_url: "A link to a website or other specific content (audio, video, PDF document) related to the file. An example is the URL of a research project from which the file was derived."
-        based_near_html: "A place name related to the file, such as its site of publication, or the city, state, or country the file's contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
-        contributor_html: "A person or group you want to recognize for playing a role in the creation of the file, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. &quot;Jones, Mary (advisor).&quot;."
-        date_created: "The date on which the file was generated. Dates are accepted in the form YYYY-MM-DD, e.g. 1776-07-04."
-        description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
-        identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
-        language: "The language of the file content."
-        publisher: "The person or group making the file available. Generally this is the institution."
-        rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list."
+      generic_work:
+        resource_type_html: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
+        title: "A name to aid in identifying a work."
+        keyword: "Words or phrases you select to describe what the work is about. These are used to search for content."
+        subject: "Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary."
+        creator_html: "The person or group responsible for the work. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;."
+        related_url: "A link to a website or other specific content (audio, video, PDF document) related to the work. An example is the URL of a research project from which the work was derived."
+        based_near_html: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
+        contributor_html: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
+        date_created: "The date on which the work was generated."
+        description: "Free-text notes about the work. Examples include abstracts of a paper or citation information for a journal article."
+        identifier: "A unique handle identifying the work. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
+        language: "The language of the work's content."
+        publisher: "The person or group making the work available. Generally this is the institution."
+        rights: "Licensing and distribution information governing access to the work. Select from the provided drop-down list."
       collection:
-        creator_html: "The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;."
+        resource_type_html: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
+        title: "A name to aid in identifying a collection."
+        keyword: "Words or phrases you select to describe what the collection is about. These are used to search for content."
+        subject: "Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary."
+        creator_html: "The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;."
+        related_url: "A link to a website or other specific content (audio, video, PDF document) related to the collection. An example is the URL of a research project from which the collection was derived."
+        based_near_html: "A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
+        contributor_html: "A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role."
+        date_created: "The date on which the collection was created."
+        description: "Free-text notes about the collection. Examples include abstracts of a paper or citation information for a journal article."
+        identifier: "A unique handle identifying the collection. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
+        language: "The language of the collection's content."
+        publisher: "The person or group making the collection available. Generally this is the institution."
+        rights: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
 
     aria_label:
       upload_set:
