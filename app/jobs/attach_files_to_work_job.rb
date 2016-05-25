@@ -10,9 +10,33 @@ class AttachFilesToWorkJob < ActiveJob::Base
       user = User.find_by_user_key(work.depositor)
       actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
       actor.create_metadata(work, visibility: work.visibility)
-      actor.create_content(uploaded_file.file.file.to_file)
-      # Set the uri so that we know this uploaded file has been used.
+
+      attach_content(actor, uploaded_file.file)
       uploaded_file.update(file_set_uri: file_set.uri)
     end
   end
+
+  private
+
+    # @param [CurationConcerns::Actors::FileSetActor] actor
+    # @param [UploadedFileUploader] file
+    def attach_content(actor, file)
+      case file.file
+      when CarrierWave::SanitizedFile
+        actor.create_content(file.file.to_file)
+      when CarrierWave::Storage::Fog::File
+        import_url(actor, file)
+      else
+        raise ArgumentError, "Unknown type of file #{file.class}"
+      end
+    end
+
+    # @param [CurationConcerns::Actors::FileSetActor] actor
+    # @param [UploadedFileUploader] file
+    def import_url(actor, file)
+      actor.file_set.update(import_url: file.url)
+      log = CurationConcerns::Operation.create!(user: actor.user,
+                                                operation_type: "Attach File")
+      ImportUrlJob.perform_later(actor.file_set, log)
+    end
 end
