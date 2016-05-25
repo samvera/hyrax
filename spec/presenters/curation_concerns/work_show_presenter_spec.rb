@@ -51,17 +51,6 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
-  describe "#file_presenters" do
-    let(:obj) { create(:work_with_ordered_files) }
-    let(:attributes) { obj.to_solr }
-
-    it "displays them in order" do
-      expect(obj.ordered_member_ids).not_to eq obj.member_ids
-      expect(Deprecation).to receive(:warn)
-      expect(presenter.file_presenters.map(&:id)).to eq obj.ordered_member_ids
-    end
-  end
-
   describe "#work_presenters" do
     let(:obj) { create(:work_with_file_and_work) }
     let(:attributes) { obj.to_solr }

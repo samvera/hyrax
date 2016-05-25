@@ -1,7 +1,6 @@
 require 'curation_concerns/callbacks'
 
 module CurationConcerns
-  extend Deprecation
   class << self
     attr_accessor :config
   end

@@ -22,10 +22,5 @@ module CurationConcerns::CatalogController
     def modified_field
       solr_name('date_modified', :stored_sortable, type: :date)
     end
-
-    def search_config
-      ActiveSupport::Deprecation.warn("#{self.class}.search_config is deprecated and will be removed in CurationConcerns 1.0")
-      { 'qf' => %w(title_tesim name_tesim), 'qt' => 'search', 'rows' => 10 }
-    end
   end
 end

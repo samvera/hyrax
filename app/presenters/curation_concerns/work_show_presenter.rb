@@ -53,13 +53,6 @@ module CurationConcerns
       @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)
     end
 
-    # @deprecated
-    # @return [Array<FileSetPresenter>] presenters for the orderd_members that are FileSets
-    def file_presenters
-      Deprecation.warn WorkShowPresenter, "file_presenters is deprecated and will be removed in CurationConcerns 1.0. Use file_set_presenters or member_presenters instead."
-      member_presenters
-    end
-
     # @param [Array<String>] ids a list of ids to build presenters for
     # @param [Class] presenter_class the type of presenter to build
     # @return [Array<presenter_class>] presenters for the ordered_members (not filtered by class)

@@ -16,11 +16,6 @@ module CurationConcerns::CurationConcernController
   end
 
   module ClassMethods
-    def set_curation_concern_type(curation_concern_type)
-      Deprecation.warn self, "set_curation_concern_type is deprecated and will be removed in curation_concerns 1.0. Use self.curation_concern_type = #{curation_concern_type} instead."
-      self.curation_concern_type = curation_concern_type
-    end
-
     def curation_concern_type=(curation_concern_type)
       load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager]
       self._curation_concern_type = curation_concern_type
