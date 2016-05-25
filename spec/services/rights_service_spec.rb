@@ -7,13 +7,19 @@ describe RightsService do
     stub_const("Qa::Authorities::LocalSubauthority::AUTHORITIES_CONFIG", qa_fixtures)
   end
 
-  describe "#select_options" do
+  describe "#select_active_options" do
     it "returns active terms" do
-      expect(described_class.select_options).to include(["First Active Term", "demo_id_01"], ["Second Active Term", "demo_id_02"])
+      expect(described_class.select_active_options).to include(["First Active Term", "demo_id_01"], ["Second Active Term", "demo_id_02"])
     end
 
     it "does not return inactive terms" do
-      expect(described_class.select_options).not_to include(["Third is an Inactive Term", "demo_id_03"], ["Fourth is an Inactive Term", "demo_id_04"])
+      expect(described_class.select_active_options).not_to include(["Third is an Inactive Term", "demo_id_03"], ["Fourth is an Inactive Term", "demo_id_04"])
+    end
+  end
+
+  describe "#select_all_options" do
+    it "returns both active and inactive terms" do
+      expect(described_class.select_all_options).to include(["Fourth is an Inactive Term", "demo_id_04"], ["First Active Term", "demo_id_01"])
     end
   end
 
