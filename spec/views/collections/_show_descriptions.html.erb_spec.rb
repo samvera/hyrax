@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do

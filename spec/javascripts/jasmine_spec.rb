@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'rake'
 
 # Run the jasmine tests by running the jasmine:ci rake command and parses the output for failures.

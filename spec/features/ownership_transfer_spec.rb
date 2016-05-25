@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 include Selectors::Header
 include Selectors::Dashboard
 include Selectors::NewTransfers

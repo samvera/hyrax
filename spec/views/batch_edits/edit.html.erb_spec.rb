@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'batch_edits/edit.html.erb' do
   let(:generic_work) { stub_model(GenericWork, id: nil, depositor: 'bob', rights: ['']) }

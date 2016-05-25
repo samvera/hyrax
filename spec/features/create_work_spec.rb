@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Creating a new Work', :js do
   let(:user) { create(:user) }
   let(:file1) { File.open(fixture_path + '/world.png') }

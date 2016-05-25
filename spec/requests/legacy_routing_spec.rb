@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'Legacy GenericFile routes' do
   it 'redirects to the work' do
     get '/files/gm80hv36p'

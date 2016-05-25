@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'collections/_form.html.erb' do
   let(:collection) { build(:collection) }

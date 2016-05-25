@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe UsersController, type: :controller do
   let(:user) { FactoryGirl.create(:user) }
   before(:each) do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::BatchUploadForm do
   let(:model) { GenericWork.new }
   let(:form) { described_class.new(model, ability) }

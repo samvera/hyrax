@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PagesController, type: :controller do
   let(:page_name) { "about_page" }
   context "content exists" do

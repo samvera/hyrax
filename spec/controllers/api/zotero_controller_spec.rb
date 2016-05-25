@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe API::ZoteroController, type: :controller do
   let(:user) { create(:user) }
 

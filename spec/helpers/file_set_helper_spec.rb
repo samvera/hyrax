@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FileSetHelper, type: :helper do
   describe '#display_multiple' do
     subject { helper.display_multiple(['Title with < 50Hz frequency. http://www.example.com. & More text', 'Other title']) }

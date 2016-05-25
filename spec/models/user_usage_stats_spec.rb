@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::UserUsageStats do
   subject { FactoryGirl.create(:user) }
 

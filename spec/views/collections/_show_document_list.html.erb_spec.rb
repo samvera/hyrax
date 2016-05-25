@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'collections/_show_document_list.html.erb', type: :view do
   let(:user) { create(:user) }

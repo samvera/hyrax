@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::UserStatImporter do
   before do
     allow(Sufia.config).to receive(:analytic_start_date) { dates[0] }

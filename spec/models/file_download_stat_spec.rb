@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FileDownloadStat, type: :model do
   let(:file_id) { "99" }
   let(:date) { Time.current }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'fffzzz' }

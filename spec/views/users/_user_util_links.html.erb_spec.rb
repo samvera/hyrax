@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe '/_user_util_links.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   before do

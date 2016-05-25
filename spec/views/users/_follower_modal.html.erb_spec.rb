@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/_follower_modal.html.erb', type: :view do
   let(:frank) { FactoryGirl.create(:user, display_name: "Frank") }
   let(:page) { Capybara::Node::Simple.new(rendered) }

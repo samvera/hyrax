@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::Analytics do
   before do
     token = OAuth2::AccessToken.new(nil, nil)

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentDeleteEventJob do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }

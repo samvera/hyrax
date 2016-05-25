@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "The Dashboard", type: :feature do
   before do
     sign_in :user_with_fixtures

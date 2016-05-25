@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe AuthoritiesController, type: :controller do
   describe "#query" do
     it "returns an array of hashes" do

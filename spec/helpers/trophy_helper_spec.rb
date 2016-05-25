@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TrophyHelper, type: :helper do
   describe "#display_trophy_link" do
     let(:user) { FactoryGirl.create(:user) }

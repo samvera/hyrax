@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::AdminStatsPresenter do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }

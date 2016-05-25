@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe Sufia::ImportUrlFailureService do
   let!(:depositor) { create(:user) }

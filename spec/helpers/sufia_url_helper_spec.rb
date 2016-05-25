@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SufiaUrlHelper do
   let(:document) { SolrDocument.new(id: 'foo123') }
 

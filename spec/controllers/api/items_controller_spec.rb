@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Sufia::Arkivo::Actor }
 

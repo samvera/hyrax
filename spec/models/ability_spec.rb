@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'cancan/matchers'
 
 describe Sufia::Ability, type: :model do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/_following_modal.html.erb', type: :view do
   before do
     allow(controller).to receive(:current_user) { current_user }

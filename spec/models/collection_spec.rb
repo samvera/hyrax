@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Collection do
   let(:collection) { create(:public_collection) }
 

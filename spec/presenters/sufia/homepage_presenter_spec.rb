@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::HomepagePresenter do
   let(:presenter) { described_class.new(ability) }
   let(:ability) { instance_double("Ability") }

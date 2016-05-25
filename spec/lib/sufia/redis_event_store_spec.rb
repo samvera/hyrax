@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::RedisEventStore do
   let(:redis_instance) { described_class.instance }
   before do

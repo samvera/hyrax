@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe WorkViewStat, type: :model do
   let(:work_id) { "199" }
   let(:user_id) { 123 }

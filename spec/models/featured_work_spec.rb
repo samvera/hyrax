@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FeaturedWork, type: :model do
   let(:feature) { described_class.create(work_id: "99") }
 

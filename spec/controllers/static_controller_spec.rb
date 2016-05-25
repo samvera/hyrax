@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe StaticController, type: :controller do
   routes { Sufia::Engine.routes }
   describe "#mendeley" do

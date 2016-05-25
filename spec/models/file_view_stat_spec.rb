@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe FileViewStat, type: :model do
   let(:file_id) { "99" }
   let(:user_id) { 123 }

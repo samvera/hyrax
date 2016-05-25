@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe CurationConcerns::AuditsController do
   routes { Sufia::Engine.routes }

@@ -1,5 +1,4 @@
 # coding: utf-8
-require 'spec_helper'
 
 describe "dashboard/index.html.erb", type: :view do
   let(:user) { create(:user, display_name: "Charles Francis Xavier") }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::ImportUrlSuccessService do
   let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }

@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'citations/work.html.erb', type: :view do
   let(:object_profile) { ["{\"id\":\"999\"}"] }

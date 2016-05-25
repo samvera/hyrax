@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TinymceAssetsController, type: :controller do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 

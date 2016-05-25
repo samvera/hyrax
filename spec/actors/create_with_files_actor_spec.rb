@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::CreateWithFilesActor do
   let(:create_actor) { double('create actor', create: true,
                                               curation_concern: work,

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe LocalAuthority, type: :model do
   def harvest_nt
     LocalAuthority.harvest_rdf("genres", [fixture_path + '/genreForms.nt'])

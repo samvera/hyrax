@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe My::SharesController, type: :controller do
   describe "logged in user" do

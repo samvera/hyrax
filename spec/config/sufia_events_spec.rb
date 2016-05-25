@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "sufia_events using CurationConcerns callbacks" do
   let(:curation_concern) { create(:work) }
   let(:file_set) { create(:file_set) }

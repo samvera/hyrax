@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::BatchCreateFailureService do
   let(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }

@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe "sufia/homepage/_featured_works.html.erb" do
   let(:list) { FeaturedWorkList.new }

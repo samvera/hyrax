@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CitationsController do
   let(:user) { create(:user) }
 

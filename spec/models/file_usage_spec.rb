@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FileUsage, type: :model do
   let(:file) do
     FileSet.new.tap do |file|

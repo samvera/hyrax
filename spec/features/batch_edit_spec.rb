@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'spec_helper'
 
 describe 'Batch management of works', type: :feature do
   let(:current_user) { create(:user) }

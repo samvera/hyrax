@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BatchCreateJob do
   let(:user) { create(:user) }
   let(:log) { create(:batch_create_operation, user: user) }

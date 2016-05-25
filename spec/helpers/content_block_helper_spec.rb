@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentBlockHelper, type: :helper do
   let(:content_block) { FactoryGirl.create(:content_block, value: "<p>foo bar</p>") }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
     before do

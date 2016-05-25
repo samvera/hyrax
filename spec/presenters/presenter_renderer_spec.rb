@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::PresenterRenderer, type: :view do
   let(:file_set) { FileSet.new }
   let(:ability) { double }

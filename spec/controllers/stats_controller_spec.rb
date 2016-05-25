@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe StatsController do
   let(:user) { create(:user) }
   before do

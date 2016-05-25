@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DepositorsController do
   let(:user) { create(:user) }
   let(:grantee) { create(:user) }

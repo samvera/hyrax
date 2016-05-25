@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ProxyDepositRequest, type: :model do
   let(:sender) { create(:user) }
   let(:receiver) { create(:user) }
