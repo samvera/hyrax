@@ -63,21 +63,8 @@ module CurationConcerns
           buffer
         end
 
-        def search_field
-          options.fetch(:search_field, field)
-        end
-
         def li_value(value)
-          if options[:catalog_search_link]
-            link_to(ERB::Util.h(value), search_path(value))
-          else
-            auto_link(ERB::Util.h(value))
-          end
-        end
-
-        def search_path(value)
-          Rails.application.routes.url_helpers.search_catalog_path(
-            search_field: search_field, q: ERB::Util.h(value))
+          auto_link(ERB::Util.h(value))
         end
 
         ##
