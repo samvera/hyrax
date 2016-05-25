@@ -1,7 +1,7 @@
 describe Sufia::PresenterRenderer, type: :view do
-  let(:file_set) { FileSet.new }
+  let(:work) { GenericWork.new }
   let(:ability) { double }
-  let(:presenter) { Sufia::FileSetPresenter.new(file_set.to_solr, ability) }
+  let(:presenter) { Sufia::WorkShowPresenter.new(work.to_solr, ability) }
   let(:renderer) { described_class.new(presenter, view) }
 
   describe "#label" do
