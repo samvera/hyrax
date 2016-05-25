@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }

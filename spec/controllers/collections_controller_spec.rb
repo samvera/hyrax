@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CollectionsController do
   routes { Rails.application.routes }
   before { allow_any_instance_of(User).to receive(:groups).and_return([]) }

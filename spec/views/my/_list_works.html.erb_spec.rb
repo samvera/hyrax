@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'my/_index_partials/_list_works.html.erb' do
   let(:id) { "3197z511f" }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FeaturedWorksController, type: :controller do
   describe "#create" do
     before do

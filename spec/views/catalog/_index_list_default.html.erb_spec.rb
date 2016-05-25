@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'catalog/_index_list_default' do
   let(:attributes) do

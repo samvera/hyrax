@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'catalog/index.html.erb' do
   let(:collection) { build(:collection, id: "abc123") }

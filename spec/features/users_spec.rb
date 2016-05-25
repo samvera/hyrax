@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "User Profile", type: :feature do
   before do
     sign_in user

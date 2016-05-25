@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::ActorFactory do
   let(:work) { GenericWork.new }
   let(:user) { double }

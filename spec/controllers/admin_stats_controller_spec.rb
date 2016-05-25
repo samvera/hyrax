@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::StatsController, type: :controller do
   let(:user1) { create(:user) }
 

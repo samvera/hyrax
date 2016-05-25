@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CurationConcerns::GenericWorksController do
   let(:user) { create(:user) }
 

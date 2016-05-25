@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe Sufia::UploadsController do
   let(:user) { create(:user) }

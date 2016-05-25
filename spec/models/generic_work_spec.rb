@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GenericWork do
   describe ".properties" do
     subject { described_class.properties.keys }

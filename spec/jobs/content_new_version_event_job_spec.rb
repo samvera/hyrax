@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentNewVersionEventJob do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }

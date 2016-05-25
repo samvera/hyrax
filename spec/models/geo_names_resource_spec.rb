@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GeoNamesResource, type: :model do
   before do
     state = {

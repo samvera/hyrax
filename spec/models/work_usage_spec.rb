@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe WorkUsage, type: :model do
   let!(:work) do
     GenericWork.create(id: '12345', title: ['bilbo work 1']) do |work|

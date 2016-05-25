@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'routing and paths', type: :routing do
   routes { Sufia::Engine.routes }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TransfersController, type: :controller do
   describe "with a signed in user" do
     let(:another_user) { create(:user) }

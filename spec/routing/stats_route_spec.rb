@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "stats routes", type: :routing do
   routes { Sufia::Engine.routes }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::FileSetCSVService do
   let(:mock_file) do
     double('original_file',

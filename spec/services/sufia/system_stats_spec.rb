@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::SystemStats do
   let(:user1) { create(:user) }
   let(:morning_two_days_ago) { 2.days.ago.to_date.to_datetime.to_s }

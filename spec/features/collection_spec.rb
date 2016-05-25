@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'collection', type: :feature do
   let(:user) { create(:user) }
 

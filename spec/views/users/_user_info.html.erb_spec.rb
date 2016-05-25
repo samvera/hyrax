@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/_user_info.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'jdoe42') }
 

@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'collections/_show_document_list_menu.html.erb', type: :view do
   context 'when user logged in displaying the collections of current user' do

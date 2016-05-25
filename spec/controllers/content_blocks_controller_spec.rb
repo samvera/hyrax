@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentBlocksController, type: :controller do
   describe "#update" do
     let(:content_block) { FactoryGirl.create(:content_block) }

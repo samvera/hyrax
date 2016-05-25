@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BatchEditsController, type: :controller do
   let(:user) { create(:user) }
   before do

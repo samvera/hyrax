@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::FileSetPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }

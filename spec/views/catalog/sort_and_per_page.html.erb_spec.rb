@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'catalog/_sort_and_per_page.html.erb', type: :view do
   let(:blacklight_configuration_context) do

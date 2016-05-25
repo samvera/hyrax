@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::AuditFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }

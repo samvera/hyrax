@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }

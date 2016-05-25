@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::Forms::BatchEditForm do
   let(:model) { GenericWork.new }
   let(:work1) { create :generic_work, title: ["title 1"], keyword: ["abc"], creator: ["Wilma"], language: ['en'], contributor: ['contributor1'], description: ['description1'], rights: ['rights1'], subject: ['subject1'], identifier: ['id1'], based_near: ['based_near1'], related_url: ['related_url1'] }

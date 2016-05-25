@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Browse Dashboard", type: :feature do
   let(:user) { FactoryGirl.create(:user) }
   let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet)) }

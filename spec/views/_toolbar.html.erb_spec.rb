@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe '/_toolbar.html.erb', type: :view do
   before do
     allow(view).to receive(:user_signed_in?).and_return(true)

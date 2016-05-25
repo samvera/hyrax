@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentDepositorChangeEventJob do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }

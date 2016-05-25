@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Notifications page", type: :feature do
   before do
     sign_in FactoryGirl.create(:user_with_mail)

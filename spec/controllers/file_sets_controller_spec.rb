@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CurationConcerns::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }

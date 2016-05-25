@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::SearchBuilder do
   let(:builder) { described_class.new([], self) }
   let(:solr_params) { { q: user_query } }

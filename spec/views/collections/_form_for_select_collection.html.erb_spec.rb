@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe 'collections/_form_for_select_collection.html.erb' do
   let(:collections) {

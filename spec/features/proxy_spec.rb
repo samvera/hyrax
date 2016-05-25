@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'proxy', type: :feature do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }

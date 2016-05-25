@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SufiaHelper, type: :helper do
   describe "show_transfer_request_title" do
     let(:sender) { create(:user) }

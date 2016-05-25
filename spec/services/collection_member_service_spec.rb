@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::CollectionMemberService do
   let(:work_attrs) { { id: '123', title_tesim: ['A generic work'] } }
 

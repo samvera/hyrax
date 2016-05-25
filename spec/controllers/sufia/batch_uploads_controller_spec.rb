@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::BatchUploadsController do
   let(:user) { create(:user) }
   before do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Selecting files to import from cloud providers", type: :feature do
   before do
     sign_in :user

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DashboardHelper, type: :helper do
   describe "#render_recent_activity" do
     context "when there is no activity" do

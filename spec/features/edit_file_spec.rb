@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Editing a file:", type: :feature do
   let(:user) { create(:user) }
   let(:file_title) { 'Some kind of title' }

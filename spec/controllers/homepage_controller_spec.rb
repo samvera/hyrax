@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::HomepageController, type: :controller do
   routes { Sufia::Engine.routes }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'catalog searching', type: :feature do
   before do
     allow(User).to receive(:find_by_user_key).and_return(stub_model(User, twitter_handle: 'bob'))

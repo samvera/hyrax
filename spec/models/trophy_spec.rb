@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Trophy, type: :model do
   before(:all) do
     @trophy = described_class.create(user_id: 99, work_id: "99")

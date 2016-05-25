@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::QueryService do
   let(:service) { described_class.new }
 

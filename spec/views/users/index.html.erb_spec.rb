@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/index.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   let(:search_state) { double('SearchState', params_for_search: {}) }

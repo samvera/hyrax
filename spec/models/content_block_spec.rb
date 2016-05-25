@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ContentBlock, type: :model do
   let!(:bilbo) do
     create(:content_block,

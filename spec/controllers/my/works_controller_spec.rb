@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe My::WorksController, type: :controller do
   let(:user) { create(:user) }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::Pageview, type: :model do
   before do
     @pageview = described_class

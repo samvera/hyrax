@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe "sufia/homepage/_announcement.html.erb" do
   let(:groups) { [] }

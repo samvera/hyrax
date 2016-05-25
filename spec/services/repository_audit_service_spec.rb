@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Sufia::RepositoryAuditService do
   let(:user) { FactoryGirl.create(:user) }
   let!(:file) do

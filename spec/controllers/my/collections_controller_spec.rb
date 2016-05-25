@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe My::CollectionsController, type: :controller do
   describe "logged in user" do
     let(:user)  { create(:user) }

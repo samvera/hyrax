@@ -1,5 +1,4 @@
 # coding: utf-8
-require 'spec_helper'
 
 describe "Browse catalog:", type: :feature do
   let!(:jills_work) do

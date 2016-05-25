@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe My::HighlightsController, type: :controller do
   describe "logged in user" do

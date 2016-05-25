@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe AttachFilesToWorkJob do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }

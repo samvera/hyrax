@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MailboxController, type: :controller do
   let(:mock_box) { {} }
 
