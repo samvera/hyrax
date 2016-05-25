@@ -2,6 +2,7 @@ module CurationConcerns
   module Renderers
     class LinkedAttributeRenderer < AttributeRenderer
       private
+
         def li_value(value)
           link_to(ERB::Util.h(value), search_path(value))
         end
@@ -17,4 +18,3 @@ module CurationConcerns
     end
   end
 end
-

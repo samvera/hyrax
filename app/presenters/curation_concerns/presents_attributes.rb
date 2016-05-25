@@ -15,8 +15,8 @@ module CurationConcerns
         Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
         return
       end
-       
-      renderer_for(options).new(field, send(field), options).render
+
+      renderer_for(field, options).new(field, send(field), options).render
     end
 
     def permission_badge
@@ -38,11 +38,14 @@ module CurationConcerns
     end
 
     private
-      def renderer_for(options)
+
+      def renderer_for(field, options)
         if options[:catalog_search_link]
-          CurationConcerns::Renderers::LinkedAttributeRenderer
+          Renderers::LinkedAttributeRenderer
+        elsif field == :rights
+          Renderers::RightsAttributeRenderer
         else
-          CurationConcerns::Renderers::AttributeRenderer
+          Renderers::AttributeRenderer
         end
       end
 

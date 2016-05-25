@@ -19,4 +19,3 @@ describe CurationConcerns::Renderers::LinkedAttributeRenderer do
     it { expect(subject).to be_equivalent_to(expected) }
   end
 end
-
