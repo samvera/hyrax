@@ -4,8 +4,9 @@ describe CurationConcerns::FileSetPresenter do
   let(:solr_document) { SolrDocument.new("title_tesim" => ["foo bar"],
                                          "human_readable_type_tesim" => ["File Set"],
                                          "mime_type_ssi" => 'image/jpeg',
+                                         'label_tesim' => ['one', 'two'],
                                          "has_model_ssim" => ["FileSet"]) }
-  let(:ability) { nil }
+  let(:ability) { double }
   let(:presenter) { described_class.new(solr_document, ability) }
 
   describe "#to_s" do
@@ -61,6 +62,19 @@ describe CurationConcerns::FileSetPresenter do
     it "delegates to the solr_document" do
       expect(solr_document).to receive(:fetch).and_call_original
       expect(presenter.fetch("has_model_ssim")).to eq ["FileSet"]
+    end
+  end
+
+  describe "#link_name" do
+    subject { presenter.link_name }
+    context "when it's readable" do
+      before { allow(ability).to receive(:can?).and_return(true) }
+      it { is_expected.to eq 'one' }
+    end
+
+    context "when it's not readable" do
+      before { allow(ability).to receive(:can?).and_return(false) }
+      it { is_expected.to eq 'File' }
     end
   end
 end

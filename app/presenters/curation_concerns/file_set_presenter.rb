@@ -21,17 +21,17 @@ module CurationConcerns
     delegate :has?, :first, :fetch, to: :solr_document
 
     # Metadata Methods
-    delegate :title, :description, :creator, :contributor, :subject, :publisher,
-             :language, :date_uploaded, :rights,
+    delegate :title, :label, :description, :creator, :contributor, :subject,
+             :publisher, :language, :date_uploaded, :rights,
              :embargo_release_date, :lease_expiration_date,
              :depositor, :keyword, :title_or_label, to: :solr_document
 
     def page_title
-      Array.wrap(solr_document['label_tesim']).first
+      label
     end
 
     def link_name
-      current_ability.can?(:read, id) ? Array.wrap(solr_document['label_tesim']).first : 'File'
+      current_ability.can?(:read, id) ? label : 'File'
     end
   end
 end

@@ -25,7 +25,7 @@ module CurationConcerns
     end
 
     def page_title
-      solr_document.title.first
+      title.first
     end
 
     # CurationConcern methods
