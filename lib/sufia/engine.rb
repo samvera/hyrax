@@ -86,6 +86,7 @@ module Sufia
     config.active_deposit_agreement_acceptance = true
     config.batch_user_key = 'batchuser@example.com'
     config.audit_user_key = 'audituser@example.com'
+    config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
 
     # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
     config.always_display_share_button = true
