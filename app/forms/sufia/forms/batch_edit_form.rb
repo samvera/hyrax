@@ -1,6 +1,6 @@
 module Sufia
   module Forms
-    class BatchEditForm < CurationConcerns::Forms::WorkForm
+    class BatchEditForm < Sufia::Forms::WorkForm
       self.terms = [:creator, :contributor, :description,
                     :keyword, :rights, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near,
