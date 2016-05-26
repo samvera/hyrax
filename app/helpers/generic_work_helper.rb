@@ -5,6 +5,6 @@ module GenericWorkHelper
     links = collection_list.map do |collection|
       link_to collection.title_or_label, collection_path(collection.id)
     end
-    content_tag :span, t(:is_part_of) + ': ' + links.join(', ').html_safe
+    content_tag :span, safe_join([t('sufia.collection.is_part_of'), ': '] + links)
   end
 end
