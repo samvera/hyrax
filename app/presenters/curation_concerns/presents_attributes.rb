@@ -4,7 +4,8 @@ module CurationConcerns
     # Present the attribute as an HTML table row.
     #
     # @param [Hash] options
-    # @option options [TrueClass, FalseClass] :catalog_search_link return a link to a catalog search for that text if true
+    # @option options [Symbol] :render_as use an alternate renderer
+    #   (e.g., :linked or :linked_attribute to use LinkedAttributeRenderer)
     # @option options [String] :search_field If the method_name of the attribute is different than
     #   how the attribute name should appear on the search URL,
     #   you can explicitly set the URL's search field name
@@ -39,11 +40,24 @@ module CurationConcerns
 
     private
 
-      def renderer_for(field, options)
-        if options[:catalog_search_link]
-          Renderers::LinkedAttributeRenderer
-        elsif field == :rights
-          Renderers::RightsAttributeRenderer
+      def find_renderer_class(name)
+        renderer = nil
+        ['Renderer', 'AttributeRenderer'].each do |suffix|
+          const_name = "#{name.to_s.camelize}#{suffix}".to_sym
+          renderer = begin
+            Renderers.const_get(const_name)
+          rescue NameError
+            nil
+          end
+          break unless renderer.nil?
+        end
+        raise NameError, "unknown renderer type `#{name}`" if renderer.nil?
+        renderer
+      end
+
+      def renderer_for(_field, options)
+        if options[:render_as]
+          find_renderer_class(options[:render_as])
         else
           Renderers::AttributeRenderer
         end
