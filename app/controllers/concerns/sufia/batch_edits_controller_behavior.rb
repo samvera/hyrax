@@ -12,7 +12,6 @@ module Sufia
       super
       generic_work = ::GenericWork.new
       generic_work.depositor = current_user.user_key
-
       @form = form_class.new(generic_work, current_user, batch)
     end
 

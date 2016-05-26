@@ -1,4 +1,4 @@
-describe Sufia::BatchUploadForm do
+describe Sufia::Forms::BatchUploadForm do
   let(:model) { GenericWork.new }
   let(:form) { described_class.new(model, ability) }
   let(:ability) { Ability.new(user) }

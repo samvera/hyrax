@@ -6,14 +6,12 @@ module Sufia
                     :subject, :language, :identifier, :based_near,
                     :related_url]
       self.required_fields = []
-
       self.model_class = ::GenericWork
 
       attr_accessor :names
 
       def initialize(model, current_ability, batch)
         super(model, current_ability)
-
         @names = []
         initialize_combined_fields(batch)
       end
