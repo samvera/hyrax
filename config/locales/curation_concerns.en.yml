@@ -159,6 +159,8 @@ en:
   file_manager:
     link_text: 'File Manager'
   simple_form:
+    required:
+      html: '<span class="label label-info required-tag">required</span>'
     hints:
       defaults:
         description: 'Please keep your description to 300 words or fewer.'
