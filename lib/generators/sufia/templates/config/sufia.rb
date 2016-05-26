@@ -89,6 +89,10 @@ Sufia.config do |config|
   # The user who runs audit jobs. Update this if you aren't using emails
   # config.audit_user_key = 'audituser@example.com'
 
+  # Temporary path to hold uploads before they are ingested into FCrepo.
+  # This must be a lambda that returns a Pathname
+  #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything
