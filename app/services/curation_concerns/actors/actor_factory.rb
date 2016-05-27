@@ -13,8 +13,7 @@ module CurationConcerns
          AttachFilesActor,
          ApplyOrderActor,
          InterpretVisibilityActor,
-         model_actor(curation_concern),
-         AssignIdentifierActor]
+         model_actor(curation_concern)]
       end
 
       def self.model_actor(curation_concern)
