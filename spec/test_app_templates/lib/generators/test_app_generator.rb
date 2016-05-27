@@ -37,6 +37,15 @@ class TestAppGenerator < Rails::Generators::Base
               "config.analytics = false", "config.analytics = true"
   end
 
+  def enable_i18n_translation_errors
+    say_status("info", "Adding i18n_translation_errors = true to dev and test", :blue)
+
+    gsub_file "config/environments/development.rb",
+              "# config.action_view.raise_on_missing_translations = true", "config.action_view.raise_on_missing_translations = true"
+    gsub_file "config/environments/test.rb",
+              "# config.action_view.raise_on_missing_translations = true", "config.action_view.raise_on_missing_translations = true"
+  end
+
   def enable_arkivo_api
     generate 'sufia:arkivo_api'
   end

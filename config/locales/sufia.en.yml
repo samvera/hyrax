@@ -7,9 +7,6 @@ en:
     sort_label: "Sort the listing of items"
     account_name:       "My Institution Account Id"
     account_label:      "User"
-    collection:
-       add_work:        "Add Work"
-       select_works:    "Select Works"
     passive_consent_to_agreement: "By saving this work I agree to the"
     active_consent_to_agreement:  "I have read and agree to the"
     deposit_agreement:  "Deposit Agreement"
@@ -79,12 +76,13 @@ en:
     dashboard:
       title:                    "My Dashboard"
       view_collections:         "View Collections"
+      create_collection:        "Create Collection"
       view_files:               "View Files"
       view_works:               "View Works"
       create_work:              "Create Work"
       user_activity:            "User Activity"
       no_activity:              "User has no recent activity"
-      user_notiticiations:      "User Notifications"
+      user_notifications:       "User Notifications"
       no_notifications:         "User has no notifications"
       additional_notifications: "See all notifications"
       proxy_activity:           "Proxy Activity"
@@ -110,6 +108,7 @@ en:
           collections:  "Filter your collections"
           highlighted: "Filter your highlights"
           shared:      "Filter your shares"
+          works:       "Filter your works"
         sr:
           show_label:     "Display all details of"
           detail_label:   "Display summary details of"
@@ -170,11 +169,15 @@ en:
     batch_uploads:
       new:
         header: Batch Create New Works
+      progress:
+        header: Batch Create Save Work
       files:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
     collection:
       no_visible_works: "The collection is either empty or does not contain items to which you have access."
       is_part_of: "Is part of"
+      add_work:        "Add Work"
+      select_works:    "Select Works"
       select_form:
         title: "Add to collection"
         no_collections: "You do not have access to any existing collections. You may create a new collection."
@@ -183,6 +186,7 @@ en:
         create: "Create Collection"
         update: "Update Collection"
         create_new: "Add to new Collection"
+
       manage_items: "Manage Items in this Collection"
       metadata:
         add_another_keyword: "add another Keyword"
@@ -214,6 +218,9 @@ en:
           heading: "Display files deposited by users"
           start_label: "Starting"
           end_label: "Ending [defaults to now]"
+    test:
+      progress:
+        header: "Test Header Title"
 
   simple_form:
     labels:
@@ -301,3 +308,7 @@ en:
       fields:
         show:
           keyword: Keyword
+
+  helpers:
+    action:
+      cancel: "Cancel"
