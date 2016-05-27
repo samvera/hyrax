@@ -8,7 +8,7 @@ describe Sufia::BatchUploadsController do
     it "is successful" do
       get :new
       expect(response).to be_successful
-      expect(assigns[:form]).to be_kind_of Sufia::BatchUploadForm
+      expect(assigns[:form]).to be_kind_of Sufia::Forms::BatchUploadForm
     end
   end
   describe "#create" do

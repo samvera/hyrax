@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'sufia/batch_uploads/_form.html.erb' do
   let(:work) { GenericWork.new }
   let(:ability) { double }
-  let(:form) { Sufia::BatchUploadForm.new(work, ability) }
+  let(:form) { Sufia::Forms::BatchUploadForm.new(work, ability) }
 
   before do
     view.lookup_context.view_paths.push "#{CurationConcerns::Engine.root}/app/views/curation_concerns/base"

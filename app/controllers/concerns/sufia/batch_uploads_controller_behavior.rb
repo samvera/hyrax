@@ -28,7 +28,7 @@ module Sufia
       # Gives the class of the form.
       # This overrides CurationConcerns
       def form_class
-        Sufia::BatchUploadForm
+        ::Sufia::Forms::BatchUploadForm
       end
 
       def redirect_after_update
