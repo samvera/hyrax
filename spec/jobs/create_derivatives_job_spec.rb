@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::CreateDerivativesJob do
+describe CreateDerivativesJob do
   let(:id) { '123' }
 
   before do
@@ -9,6 +9,14 @@ describe CurationConcerns::CreateDerivativesJob do
     allow(FileSet).to receive(:find).with(id).and_return(file_set)
     allow(file_set).to receive(:mime_type).and_return('audio/x-wav')
     allow(file_set).to receive(:id).and_return(id)
+  end
+
+  let(:file) do
+    Hydra::PCDM::File.new.tap do |f|
+      f.content = 'foo'
+      f.original_name = 'picture.png'
+      f.save!
+    end
   end
 
   let(:file_set) { FileSet.new }
@@ -21,7 +29,7 @@ describe CurationConcerns::CreateDerivativesJob do
     it 'calls create_derivatives and save on a file set' do
       expect(Hydra::Derivatives::AudioDerivatives).to receive(:create)
       expect(file_set).to receive(:update_index)
-      CreateDerivativesJob.perform_now(file_set, 'spec/fixtures/piano_note.wav')
+      described_class.perform_now(file_set, file.id)
     end
   end
 
@@ -37,7 +45,7 @@ describe CurationConcerns::CreateDerivativesJob do
 
       it 'updates the index of the parent object' do
         expect(parent).to receive(:update_index)
-        CreateDerivativesJob.perform_now(file_set, 'spec/fixtures/piano_note.wav')
+        described_class.perform_now(file_set, file.id)
       end
     end
 
@@ -46,7 +54,7 @@ describe CurationConcerns::CreateDerivativesJob do
 
       it "doesn't update the parent's index" do
         expect(parent).to_not receive(:update_index)
-        CreateDerivativesJob.perform_now(file_set, 'spec/fixtures/piano_note.wav')
+        described_class.perform_now(file_set, file.id)
       end
     end
   end

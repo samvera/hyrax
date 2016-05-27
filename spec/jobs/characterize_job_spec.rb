@@ -4,9 +4,16 @@ describe CharacterizeJob do
   include CurationConcerns::FactoryHelpers
 
   let(:file_set)    { FileSet.new(id: file_set_id) }
-  let(:file_set_id) { 'abc123' }
-  let(:filename)    { double }
-  let(:file)        { mock_file_factory }
+  let(:file_set_id) { 'abc12345678' }
+  let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'picture.png' }
+  let(:filename)    { file_path.to_s }
+  let(:file) do
+    Hydra::PCDM::File.new.tap do |f|
+      f.content = 'foo'
+      f.original_name = 'picture.png'
+      f.save!
+    end
+  end
 
   before do
     allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
@@ -18,15 +25,15 @@ describe CharacterizeJob do
       expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
       expect(file).to receive(:save!)
       expect(file_set).to receive(:update_index)
-      expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, filename)
-      described_class.perform_now(file_set, filename)
+      expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id)
+      described_class.perform_now(file_set, file.id)
     end
   end
 
   context 'when the characterization proxy content is absent' do
     before { allow(file_set).to receive(:characterization_proxy?).and_return(false) }
     it 'raises an error' do
-      expect { described_class.perform_now(file_set, filename) }.to raise_error(LoadError, 'original_file was not found')
+      expect { described_class.perform_now(file_set, file.id) }.to raise_error(LoadError, 'original_file was not found')
     end
   end
 end
