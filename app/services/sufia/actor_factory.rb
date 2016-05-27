@@ -8,8 +8,7 @@ module Sufia
        CurationConcerns::Actors::AttachFilesActor,
        CurationConcerns::Actors::ApplyOrderActor,
        CurationConcerns::Actors::InterpretVisibilityActor,
-       model_actor(curation_concern),
-       CurationConcerns::Actors::AssignIdentifierActor]
+       model_actor(curation_concern)]
     end
   end
 end

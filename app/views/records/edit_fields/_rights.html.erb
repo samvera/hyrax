@@ -1,5 +1,6 @@
-<%= f.input :rights, as: :select_with_modal_help,
-    collection: RightsService.select_options,
+<%= f.input :rights, as: :multi_value_select,
+    collection: RightsService.select_active_options,
     include_blank: true,
-    input_html: { class: 'form-control', multiple: true } %>
+    item_helper: method(:include_current_value),
+    input_html: { class: 'form-control' } %>
 <%= render "curation_concerns/file_sets/rights_modal" %>

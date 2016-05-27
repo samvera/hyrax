@@ -13,7 +13,7 @@ describe 'batch_edits/edit.html.erb' do
     render
   end
 
-  it "draws tooltip for description" do
-    expect(rendered).to have_selector ".generic_work_description a i.help-icon"
+  it "draws help for description" do
+    expect(rendered).to have_selector ".generic_work_description p.help-block"
   end
 end
