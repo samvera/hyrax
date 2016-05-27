@@ -9,7 +9,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
         id: "test",
         title_tesim: "Test",
         thumbnail_path_ss: "/test/image/path.jpg",
-        label_tesim: "file_name.tif"
+        label_tesim: ["file_name.tif"]
       )
     )
   end
