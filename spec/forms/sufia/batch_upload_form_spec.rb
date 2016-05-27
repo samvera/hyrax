@@ -7,13 +7,12 @@ describe Sufia::Forms::BatchUploadForm do
   describe "#primary_terms" do
     subject { form.primary_terms }
     it { is_expected.to eq [:creator, :keyword, :rights] }
+    it { is_expected.not_to include(:title) }
   end
 
   describe "#secondary_terms" do
-    subject { form.primary_terms }
-    it "doesn't have title" do
-      expect(subject).not_to include(:title)
-    end
+    subject { form.secondary_terms }
+    it { is_expected.not_to include(:title) } # title is per file, not per form
   end
 
   describe ".model_name" do
@@ -21,10 +20,7 @@ describe Sufia::Forms::BatchUploadForm do
     it "has a route_key" do
       expect(subject.route_key).to eq 'batch_uploads'
     end
-
     it "has a param_key" do
-      derp = subject
-      derp.param_key
       expect(subject.param_key).to eq 'generic_work'
     end
   end
