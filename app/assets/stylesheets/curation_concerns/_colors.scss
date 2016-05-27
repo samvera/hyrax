@@ -1,0 +1,16 @@
+//
+// Colors
+//
+// Many of the default Bootstrap theme colors
+// fail to meet WCAG AA color contrast standards.
+// These new variables at a minimum meet a 3:1
+// contrast ratio (which is ideal for large text).
+//
+//                          Contrast ratio as
+//                          foreground to #fff
+
+$brand-primary: #0275d8;    // 4.63:1
+$brand-success: #00ac07;    // 3.04:1
+$brand-info:    #17a0d3;    // 3:1
+$brand-warning: #d58000;    // 3.04:1
+$brand-danger:  #d9534f;    // 3.96:1
