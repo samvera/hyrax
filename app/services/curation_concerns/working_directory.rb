@@ -7,7 +7,10 @@ module CurationConcerns
       def find_or_retrieve(repository_file_id, id)
         repository_file = Hydra::PCDM::File.find(repository_file_id)
         working_path = full_filename(id, repository_file.original_name)
-        return working_path if File.exist?(working_path)
+        if File.exist?(working_path)
+          Rails.logger.debug "#{repository_file.original_name} already exists in the working directory at #{working_path}"
+          return working_path
+        end
         copy_repository_resource_to_working_directory(repository_file, id)
       end
 
@@ -20,8 +23,10 @@ module CurationConcerns
       end
 
       # @param [ActiveFedora::File] file the resource in the repo
+      # @param [String] id the identifier of the FileSet
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file, id)
+        Rails.logger.debug "Loading #{file.original_name} (#{file.id}) from the repository to the working directory"
         # TODO: this causes a load into memory, which we'd like to avoid
         copy_stream_to_working_directory(id, file.original_name, StringIO.new(file.content))
       end
@@ -34,6 +39,7 @@ module CurationConcerns
         # @return [String] path of the working file
         def copy_stream_to_working_directory(id, name, stream)
           working_path = full_filename(id, name)
+          Rails.logger.debug "Writing #{name} to the working directory at #{working_path}"
           FileUtils.mkdir_p(File.dirname(working_path))
           IO.copy_stream(stream, working_path)
           working_path
