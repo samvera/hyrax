@@ -20,7 +20,7 @@ module CurationConcerns
       # have made it to the repo
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file to save in the repository
       def ingest_file(file)
-        working_file = copy_file_to_working_directory(file, file_set.id)
+        working_file = WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
         mime_type = file.respond_to?(:content_type) ? file.content_type : nil
         IngestFileJob.perform_later(file_set, working_file, mime_type, user, relation)
         true
@@ -35,42 +35,10 @@ module CurationConcerns
         CurationConcerns::VersioningService.create(repository_file, user)
 
         # Retrieve a copy of the original file from the repository
-        working_file = copy_repository_resource_to_working_directory(repository_file)
+        working_file = WorkingDirectory.copy_repository_resource_to_working_directory(repository_file, file_set.id)
         CharacterizeJob.perform_later(file_set, working_file)
         true
       end
-
-      private
-
-        # @param [File, ActionDispatch::Http::UploadedFile] file
-        # @param [String] id the identifier of the FileSet
-        # @return [String] path of the working file
-        def copy_file_to_working_directory(file, id)
-          file_name = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
-          copy_stream_to_working_directory(id, file_name, file)
-        end
-
-        # @param [ActiveFedora::File] file the resource in the repo
-        # @return [String] path of the working file
-        def copy_repository_resource_to_working_directory(file)
-          copy_stream_to_working_directory(file_set.id, file.original_name, StringIO.new(file.content))
-        end
-
-        # @param [String] id the identifier
-        # @param [String] name the file name
-        # @param [#read] stream the stream to copy to the working directory
-        # @return [String] path of the working file
-        def copy_stream_to_working_directory(id, name, stream)
-          working_path = full_filename(id, name)
-          FileUtils.mkdir_p(File.dirname(working_path))
-          IO.copy_stream(stream, working_path)
-          working_path
-        end
-
-        def full_filename(id, original_name)
-          pair = id.scan(/..?/).first(4)
-          File.join(CurationConcerns.config.working_path, *pair, original_name)
-        end
     end
   end
 end

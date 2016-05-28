@@ -2,11 +2,12 @@ class CreateDerivativesJob < ActiveJob::Base
   queue_as CurationConcerns.config.ingest_queue_name
 
   # @param [FileSet] file_set
-  # @param [String] file_name
-  def perform(file_set, file_name)
+  # @param [String] file_id identifier for a Hydra::PCDM::File
+  def perform(file_set, file_id)
     return if file_set.video? && !CurationConcerns.config.enable_ffmpeg
+    filename = CurationConcerns::WorkingDirectory.find_or_retrieve(file_id, file_set.id)
 
-    file_set.create_derivatives(file_name)
+    file_set.create_derivatives(filename)
     # The thumbnail is indexed in the solr document, so reindex
     file_set.update_index
     file_set.parent.update_index if parent_needs_reindex?(file_set)

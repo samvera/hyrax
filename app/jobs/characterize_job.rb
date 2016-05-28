@@ -2,12 +2,13 @@ class CharacterizeJob < ActiveJob::Base
   queue_as CurationConcerns.config.ingest_queue_name
 
   # @param [FileSet] file_set
-  # @param [String] filename a local path for the file to characterize so we don't have to pull a copy out of fedora.
-  def perform(file_set, filename)
+  # @param [String] file_id identifier for a Hydra::PCDM::File
+  def perform(file_set, file_id)
+    filename = CurationConcerns::WorkingDirectory.find_or_retrieve(file_id, file_set.id)
     raise LoadError, "#{file_set.class.characterization_proxy} was not found" unless file_set.characterization_proxy?
     Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filename)
     file_set.characterization_proxy.save!
     file_set.update_index
-    CreateDerivativesJob.perform_later(file_set, filename)
+    CreateDerivativesJob.perform_later(file_set, file_id)
   end
 end
