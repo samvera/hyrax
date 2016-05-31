@@ -29,12 +29,12 @@ module CurationConcerns
     end
 
     def collection?
-      hydra_model == 'Collection'
+      hydra_model == ::Collection
     end
 
     # Method to return the ActiveFedora model
     def hydra_model
-      self[Solrizer.solr_name('active_fedora_model', Solrizer::Descriptor.new(:string, :stored, :indexed))]
+      fetch(Solrizer.solr_name('has_model', :symbol)).first.constantize
     end
 
     def human_readable_type
