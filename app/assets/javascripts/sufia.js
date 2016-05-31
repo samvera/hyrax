@@ -48,6 +48,7 @@
 //= require curation_concerns/batch_select
 //= require sufia/dashboard_actions
 //= require sufia/batch
+//= require sufia/flot_stats
 // Provide AMD module support
 //= require almond
 //= require sufia/save_work
