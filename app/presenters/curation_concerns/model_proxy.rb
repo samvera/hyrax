@@ -21,7 +21,7 @@ module CurationConcerns
     private
 
       def _delegated_to
-        @_delegated_to ||= solr_document.fetch(Solrizer.solr_name('has_model', :symbol)).first.constantize
+        @_delegated_to ||= solr_document.hydra_model
       end
   end
 end
