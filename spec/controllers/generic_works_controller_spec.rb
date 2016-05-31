@@ -94,9 +94,7 @@ describe CurationConcerns::GenericWorksController do
     let(:actor) { double('An actor') }
     let(:work) { create(:work) }
     before do
-      allow(controller).to receive(:actor)
-        .and_return(actor)
-
+      allow(controller).to receive(:actor).and_return(actor)
       # Stub out the creation of the work so we can redirect somewhere
       allow(controller).to receive(:curation_concern).and_return(work)
     end
@@ -136,12 +134,8 @@ describe CurationConcerns::GenericWorksController do
                                  file_set: {}
           }.to change(FileSet, :count).by(2)
           created_files = FileSet.all
-          ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
-            expect(created_files.map(&:import_url)).to include(url)
-          end
-          ["filepicker-demo.txt.txt", "Getting+Started.pdf"].each do |filename|
-            expect(created_files.map(&:label)).to include(filename)
-          end
+          expect(created_files.map(&:import_url)).to include(url1, url2)
+          expect(created_files.map(&:label)).to include("filepicker-demo.txt.txt", "Getting+Started.pdf")
         end
       end
 
