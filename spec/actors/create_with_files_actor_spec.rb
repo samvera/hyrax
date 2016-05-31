@@ -22,7 +22,7 @@ describe Sufia::CreateWithFilesActor do
       context "when uploaded_file_ids include nil" do
         let(:uploaded_file_ids) { [nil, uploaded_file1.id, nil] }
         it "will discard those nil values when attempting to find the associated UploadedFile" do
-          allow(AttachFilesToWorkJob).to receive(:perform_later)
+          expect(AttachFilesToWorkJob).to receive(:perform_later)
           expect(Sufia::UploadedFile).to receive(:find).with([uploaded_file1.id]).and_return([uploaded_file1])
           actor.public_send(mode, attributes)
         end
