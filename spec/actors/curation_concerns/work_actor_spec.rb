@@ -74,6 +74,18 @@ describe CurationConcerns::Actors::GenericWorkActor do
           end
         end
       end
+      context 'with in_work_ids' do
+        let(:parent) { FactoryGirl.create(:generic_work) }
+        let(:attributes) do
+          FactoryGirl.attributes_for(:generic_work, visibility: visibility).merge(
+            in_works_ids: [parent.id]
+          )
+        end
+        it "attaches the parent" do
+          expect(subject.create(attributes)).to be true
+          expect(curation_concern.in_works).to eq [parent]
+        end
+      end
       context 'with a file' do
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
@@ -171,6 +183,27 @@ describe CurationConcerns::Actors::GenericWorkActor do
       end
     end
 
+    context 'with in_works_ids' do
+      let(:parent) { FactoryGirl.create(:generic_work) }
+      let(:old_parent) { FactoryGirl.create(:generic_work) }
+      let(:attributes) do
+        FactoryGirl.attributes_for(:generic_work).merge(
+          in_works_ids: [parent.id]
+        )
+      end
+      before do
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+        old_parent.ordered_members << curation_concern
+        old_parent.save!
+      end
+      it "attaches the parent" do
+        expect(subject.update(attributes)).to be true
+        expect(curation_concern.in_works).to eq [parent]
+
+        expect(old_parent.reload.members).to eq []
+      end
+    end
     context 'adding to collections' do
       let!(:collection1) { create(:collection, user: user) }
       let!(:collection2) { create(:collection, user: user) }

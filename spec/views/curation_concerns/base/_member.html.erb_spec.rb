@@ -25,6 +25,9 @@ describe 'curation_concerns/base/_member.html.erb' do
     allow(view).to receive(:can?).with(:read, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:edit, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:destroy, String).and_return(true)
+    allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
+      CurationConcerns::ContextualPath.new(x, y).show
+    end
     render 'curation_concerns/base/member.html.erb', member: presenter
   end
 

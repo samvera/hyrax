@@ -14,6 +14,11 @@ describe GenericWork do
     it { is_expected.to eq 'curation_concerns_generic_work' }
   end
 
+  describe '.valid_child_concerns' do
+    it "is all registered curation concerns by default" do
+      expect(described_class.valid_child_concerns).to eq [described_class]
+    end
+  end
   context 'with attached files' do
     subject { FactoryGirl.create(:work_with_files) }
 
@@ -26,6 +31,13 @@ describe GenericWork do
   describe '#indexer' do
     subject { described_class.indexer }
     it { is_expected.to eq CurationConcerns::WorkIndexer }
+  end
+  context "with children" do
+    subject { FactoryGirl.create(:work_with_file_and_work) }
+    it "can have the thumbnail set to the work" do
+      subject.thumbnail = subject.ordered_members.to_a.last
+      expect(subject.save).to eq true
+    end
   end
 
   describe 'to_solr' do
@@ -61,5 +73,18 @@ describe GenericWork do
     let(:work) { described_class.new(id: '123') }
     subject { work.to_global_id }
     it { is_expected.to be_kind_of GlobalID }
+  end
+
+  describe "#in_works_ids" do
+    let(:parent) { FactoryGirl.create(:generic_work) }
+    subject { FactoryGirl.create(:generic_work) }
+    before do
+      parent.ordered_members << subject
+      parent.save!
+    end
+
+    it "returns ids" do
+      expect(subject.in_works_ids).to eq [parent.id]
+    end
   end
 end

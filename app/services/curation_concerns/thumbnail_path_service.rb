@@ -8,6 +8,7 @@ module CurationConcerns
 
         thumb = fetch_thumbnail(object)
         return unless thumb
+        return call(thumb) unless thumb.is_a?(::FileSet)
         if thumb.audio?
           audio_image
         elsif thumbnail?(thumb)
@@ -19,7 +20,7 @@ module CurationConcerns
 
       def fetch_thumbnail(object)
         return object if object.thumbnail_id == object.id
-        ::FileSet.find(object.thumbnail_id)
+        ::ActiveFedora::Base.find(object.thumbnail_id)
       rescue ActiveFedora::ObjectNotFoundError
         Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
         nil

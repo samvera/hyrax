@@ -15,6 +15,9 @@ module CurationConcerns
     # modify this attribute to use an alternate presenter class for the child works
     self.work_presenter_class = self
 
+    # Methods used by blacklight helpers
+    delegate :has?, :first, :fetch, to: :solr_document
+
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     # @param [ActionDispatch::Request] request the http request context
@@ -45,7 +48,15 @@ module CurationConcerns
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
-      @representative_presenter ||= member_presenters([representative_id]).first
+      @representative_presenter ||=
+        begin
+          result = member_presenters([representative_id]).first
+          if result.respond_to?(:representative_presenter)
+            result.representative_presenter
+          else
+            result
+          end
+        end
     end
 
     # @return [Array<WorkShowPresenter>] presenters for the ordered_members that are not FileSets
@@ -56,10 +67,14 @@ module CurationConcerns
     # @param [Array<String>] ids a list of ids to build presenters for
     # @param [Class] presenter_class the type of presenter to build
     # @return [Array<presenter_class>] presenters for the ordered_members (not filtered by class)
-    def member_presenters(ids = ordered_ids, presenter_class = file_presenter_class)
+    def member_presenters(ids = ordered_ids, presenter_class = composite_presenter_class)
       PresenterFactory.build_presenters(ids,
                                         presenter_class,
                                         *presenter_factory_arguments)
+    end
+
+    def composite_presenter_class
+      CompositePresenterFactory.new(file_presenter_class, work_presenter_class, ordered_ids & file_set_ids)
     end
 
     # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
@@ -67,6 +82,10 @@ module CurationConcerns
       PresenterFactory.build_presenters(in_collection_ids,
                                         collection_presenter_class,
                                         *presenter_factory_arguments)
+    end
+
+    def link_name
+      current_ability.can?(:read, id) ? to_s : 'File'
     end
 
     private

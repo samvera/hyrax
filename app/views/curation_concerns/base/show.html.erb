@@ -1,6 +1,14 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
-  <h1><%= @presenter %> <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span></h1>
+  <h1><%= @presenter %> </h1>
+  <% if @parent_presenter %>
+    <ul class="breadcrumb">
+      <li><%= link_to @parent_presenter, polymorphic_path([main_app, @parent_presenter]) %></li>
+      <li class="active"><%= @presenter.human_readable_type %></li>
+    </ul>
+  <% else %>
+    <span class="human_readable_type">(<%= @presenter.human_readable_type %>)</span>
+  <% end %>
 <% end %>
 
 <% collector = can?(:collect, @presenter.id) %>
