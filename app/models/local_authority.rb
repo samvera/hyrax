@@ -63,9 +63,11 @@ class LocalAuthority < ActiveRecord::Base
 
   def self.register_vocabulary(model, term, name)
     authority = find_by_name(name)
-    return if authority.blank?
-    model = model.to_s.sub(/RdfDatastream$/, '').underscore.pluralize
-    domain_term = DomainTerm.find_or_create_by(model: model, term: term)
+    if authority.blank?
+      Rails.logger.warn "Unable to find a local authority for #{name} in the database. You may want to `LocalAuthority.harvest_rdf(\"#{name}\", [\"path/to/rdf.nt\"])' or `LocalAuthority.harvest_tsv(\"#{name}\", [\"path/to/data.tsv\"])'"
+      return
+    end
+    domain_term = DomainTerm.find_or_create_by(model: model.model_name.plural, term: term)
     return if domain_term.local_authorities.include? authority
     domain_term.local_authorities << authority
   end

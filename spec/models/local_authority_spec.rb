@@ -8,11 +8,11 @@ describe LocalAuthority, type: :model do
   end
 
   before :all do
-    class MyTestRdfDatastream; end
+    class Manuscript < ActiveFedora::Base; end
   end
 
   after :all do
-    Object.send(:remove_const, :MyTestRdfDatastream)
+    Object.send(:remove_const, :Manuscript)
   end
 
   it "harvests an ntriples RDF vocab" do
@@ -59,14 +59,14 @@ describe LocalAuthority, type: :model do
       expect(LocalAuthorityEntry.count).to eq(num_entries)
     end
     it "registers a vocab" do
-      described_class.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
+      described_class.register_vocabulary(Manuscript, "geographic", "geo")
       expect(DomainTerm.count).to eq(1)
     end
 
     describe "when vocabs are registered" do
       before do
-        described_class.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
-        described_class.register_vocabulary(MyTestRdfDatastream, "genre", "genres")
+        described_class.register_vocabulary(Manuscript, "geographic", "geo")
+        described_class.register_vocabulary(Manuscript, "genre", "genres")
       end
 
       it "has some domain terms" do
@@ -76,7 +76,7 @@ describe LocalAuthority, type: :model do
       describe "#entries_by_term" do
         let(:query) { 'A' }
         let(:term) { 'genre' }
-        let(:model) { 'my_tests' }
+        let(:model) { 'manuscripts' }
         subject { described_class.entries_by_term(model, term, query) }
 
         context "when the query is empty" do
