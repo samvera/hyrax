@@ -34,20 +34,20 @@ module CurationConcerns
 
     # Method to return the ActiveFedora model
     def hydra_model
-      fetch(Solrizer.solr_name('has_model', :symbol)).first.constantize
+      first(Solrizer.solr_name('has_model', :symbol)).constantize
     end
 
     def human_readable_type
-      Array.wrap(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
+      first(Solrizer.solr_name('human_readable_type', :stored_searchable))
     end
 
     def representative_id
-      fetch(Solrizer.solr_name('hasRelatedMediaFragment', :symbol), []).first
+      first(Solrizer.solr_name('hasRelatedMediaFragment', :symbol))
     end
 
     # Date created is indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
     def date_created
-      fetch(Solrizer.solr_name("date_created"), []).first
+      first(Solrizer.solr_name("date_created"))
     end
 
     def date_modified
@@ -59,7 +59,7 @@ module CurationConcerns
     end
 
     def depositor(default = '')
-      val = Array.wrap(self[Solrizer.solr_name('depositor')]).first
+      val = first(Solrizer.solr_name('depositor'))
       val.present? ? val : default
     end
 
@@ -72,11 +72,11 @@ module CurationConcerns
     end
 
     def label
-      Array.wrap(self[Solrizer.solr_name('label')]).first
+      first(Solrizer.solr_name('label'))
     end
 
     def file_format
-      Array.wrap(self[Solrizer.solr_name('file_format')]).first
+      first(Solrizer.solr_name('file_format'))
     end
 
     def creator
@@ -140,7 +140,7 @@ module CurationConcerns
     private
 
       def date_field(field_name)
-        field = self[Solrizer.solr_name(field_name, :stored_sortable, type: :date)]
+        field = first(Solrizer.solr_name(field_name, :stored_sortable, type: :date))
         return unless field.present?
         begin
           Date.parse(field).to_formatted_s(:standard)
