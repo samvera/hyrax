@@ -1,6 +1,7 @@
 $(function() {
-
-  var stats = <%= @stats.to_flot.to_json.html_safe %>;
+  if (typeof stats === "undefined") {
+    return;
+  }
 
   function weekendAreas(axes) {
     var markings = [],
@@ -118,3 +119,4 @@ $(function() {
     plot.setSelection(ranges);
   });
 });
+
