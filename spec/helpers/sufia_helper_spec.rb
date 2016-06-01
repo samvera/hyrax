@@ -63,7 +63,7 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#collection_thumbnail" do
-    let(:document) { SolrDocument.new(active_fedora_model_ssi: 'Collection') }
+    let(:document) { SolrDocument.new(has_model_ssim: ['Collection']) }
     subject { helper.collection_thumbnail(document) }
     it { is_expected.to eq '<span class="fa fa-cubes collection-icon-search"></span>' }
   end

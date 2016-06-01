@@ -197,7 +197,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
-      let(:non_arkivo_gw) { create :generic_work, id: '777', arkivo_checksum: nil }
+      let(:non_arkivo_gw) { create :generic_work, id: 'abc123xyz', arkivo_checksum: nil }
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
@@ -323,7 +323,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a resource not deposited via Arkivo' do
-      let(:non_arkivo_gw) { create :generic_work, id: '777', arkivo_checksum: nil }
+      let(:non_arkivo_gw) { create :generic_work, id: 'xyz789abc', arkivo_checksum: nil }
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
