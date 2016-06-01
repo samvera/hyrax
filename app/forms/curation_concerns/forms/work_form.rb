@@ -15,7 +15,7 @@ module CurationConcerns
                     :representative_id, :thumbnail_id, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
-                    :visibility, :ordered_member_ids]
+                    :visibility, :ordered_member_ids, :source]
 
       self.required_fields = [:title]
 
@@ -40,17 +40,10 @@ module CurationConcerns
 
       class << self
         # This determines whether the allowed parameters are single or multiple.
-        # By default it delegates to the model, but we need to override for
-        # 'rights' which only has a single value on the form.
+        # By default it delegates to the model.
         def multiple?(term)
-          case term.to_s
-          when 'rights'
-            false
-          when 'ordered_member_ids'
-            true
-          else
-            super
-          end
+          return true if term.to_s == 'ordered_member_ids'
+          super
         end
 
         # Overriden to cast 'rights' to an array

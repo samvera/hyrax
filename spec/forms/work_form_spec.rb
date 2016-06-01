@@ -46,7 +46,8 @@ describe CurationConcerns::Forms::WorkForm do
       representative_id: '456',
       thumbnail_id: '789',
       keyword: ['derp'],
-      rights: 'http://creativecommons.org/licenses/by/3.0/us/')
+      source: ['related'],
+      rights: ['http://creativecommons.org/licenses/by/3.0/us/'])
     }
     subject { PirateShipForm.model_attributes(params) }
 
@@ -56,6 +57,7 @@ describe CurationConcerns::Forms::WorkForm do
       expect(subject['visibility']).to eq 'open'
       expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['keyword']).to eq ['derp']
+      expect(subject['source']).to eq ['related']
     end
 
     it 'excludes non-permitted params' do

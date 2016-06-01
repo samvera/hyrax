@@ -35,7 +35,7 @@ module CurationConcerns
     # Metadata Methods
     delegate :title, :date_created, :date_modified, :date_uploaded, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
-             :lease_expiration_date, :rights, to: :solr_document
+             :lease_expiration_date, :rights, :source, to: :solr_document
 
     # @return [Array<FileSetPresenter>] presenters for the orderd_members that are FileSets
     def file_set_presenters
