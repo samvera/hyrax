@@ -112,7 +112,7 @@ module CurationConcerns
     end
 
     def rights
-      self[Solrizer.solr_name('rights')]
+      fetch(Solrizer.solr_name('rights'), [])
     end
 
     def mime_type
@@ -121,6 +121,10 @@ module CurationConcerns
 
     def read_groups
       fetch(Hydra.config.permissions.read.group, [])
+    end
+
+    def source
+      fetch(Solrizer.solr_name('source'), [])
     end
 
     def visibility
