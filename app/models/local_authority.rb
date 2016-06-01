@@ -77,9 +77,9 @@ class LocalAuthority < ActiveRecord::Base
     # move lc_subject into it's own table since being part of the usual structure caused it to be too slow.
     # When/if we move to having multiple dictionaries for subject we will need to also do a check for the appropriate dictionary.
     if term == 'subject' && model == 'generic_works' # and local_authoritiy = lc_subject
-      sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{low_query}%").select("label, uri").limit(25).to_sql
+      sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{low_query}%").select("label, url").limit(25).to_sql
       SubjectLocalAuthorityEntry.find_by_sql(sql).each do |hit|
-        hits << { uri: hit.uri, label: hit.label }
+        hits << { uri: hit.url, label: hit.label }
       end
     else
       dterm = DomainTerm.find_by(model: model, term: term)

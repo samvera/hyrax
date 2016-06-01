@@ -69,24 +69,47 @@ describe LocalAuthority, type: :model do
         described_class.register_vocabulary(MyTestRdfDatastream, "genre", "genres")
       end
 
-      it "has some doamin terms" do
+      it "has some domain terms" do
         expect(DomainTerm.count).to eq(2)
       end
 
-      it "returns nil for empty queries" do
-        expect(described_class.entries_by_term("my_test", "geographic", "")).to be_nil
-      end
-      it "returns an empty array for unregistered models" do
-        expect(described_class.entries_by_term("my_foobar", "geographic", "E")).to eq([])
-      end
-      it "returns an empty array for unregistered terms" do
-        expect(described_class.entries_by_term("my_test", "foobar", "E")).to eq([])
-      end
-      it "returns entries by term" do
-        term = DomainTerm.where(model: "my_tests", term: "genre").first
-        authorities = term.local_authorities.collect(&:id).uniq
-        LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "A%").select("label, uri").limit(25)
-        expect(described_class.entries_by_term("my_tests", "genre", "A").count).to eq(6)
+      describe "#entries_by_term" do
+        let(:query) { 'A' }
+        let(:term) { 'genre' }
+        let(:model) { 'my_tests' }
+        subject { described_class.entries_by_term(model, term, query) }
+
+        context "when the query is empty" do
+          let(:query) { '' }
+          it { is_expected.to be_nil }
+        end
+
+        context "when the model is unregistered" do
+          let(:model) { 'my_foobar' }
+          it { is_expected.to be_empty }
+        end
+
+        context "when the terms is unregistered" do
+          let(:term) { 'foobar' }
+          it { is_expected.to be_empty }
+        end
+
+        context "for subject headings" do
+          let(:term) { 'subject' }
+          let(:model) { 'generic_works' }
+
+          before do
+            SubjectLocalAuthorityEntry.create!(lowerLabel: 'apple', url: 'http://example.com/foo')
+          end
+
+          it "returns subject terms" do
+            expect(subject.count).to eq 1
+          end
+        end
+
+        it "returns genre terms" do
+          expect(subject.count).to eq 6
+        end
       end
     end
   end
