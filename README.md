@@ -50,6 +50,7 @@ Sufia has the following features:
 * Flexible user- and group-based access controls
 * Transcoding of audio and video files
 * Generation and validation of identifiers
+* Generation of derivatives (served from the filesystem, not the repository)
 * Fixity checking
 * Version control
 * Characterization of uploaded files
@@ -121,6 +122,8 @@ Sufia requires the following software to work:
 Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/<your full path to>/LibreOffice.app/Contents/MacOS/"
 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
+
+**NOTE**: derivatives are served from the filesystem in Sufia 7, which is a difference from earlier versions of Sufia.
 
 ## Environments
 
