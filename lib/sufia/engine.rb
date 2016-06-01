@@ -27,7 +27,6 @@ module Sufia
     end
 
     initializer 'requires' do
-      require 'activerecord-import'
       require 'hydra/derivatives'
     end
 

@@ -39,7 +39,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'oauth2', '~> 0.9'
   spec.add_dependency 'google-api-client', '~> 0.7', '< 0.9'
   spec.add_dependency 'legato', '~> 0.3'
-  spec.add_dependency 'activerecord-import', '~> 0.5'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
   spec.add_dependency 'zeroclipboard-rails', '~> 0.0.13'
