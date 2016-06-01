@@ -10,11 +10,14 @@
  * http://www.opensource.org/licenses/MIT
  */
 
+.fileupload-buttonbar {
+  padding: 1.5em 0;
+}
 .fileinput-button {
   position: relative;
   overflow: hidden;
   float: left;
-  margin-right: 4px;
+  margin-right: 0.50em;
 }
 .fileinput-button input {
   position: absolute;
@@ -28,10 +31,6 @@
   -moz-transform: translate(-300px, 0) scale(4);
   direction: ltr;
   cursor: pointer;
-}
-.fileupload-buttonbar .btn,
-.fileupload-buttonbar .toggle {
-  margin-bottom: 5px;
 }
 .files .progress {
   width: 200px;
