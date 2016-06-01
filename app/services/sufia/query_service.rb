@@ -5,7 +5,7 @@ module Sufia
     # @param [DateTime] end_datetime ending date time for range query
     def find_by_date_created(start_datetime, end_datetime = nil)
       return [] if start_datetime.blank? # no date just return nothing
-      klass.where(build_date_query(start_datetime, end_datetime))
+      relation.where(build_date_query(start_datetime, end_datetime))
     end
 
     def find_registered_in_date_range(start_datetime, end_datetime = nil)
@@ -34,18 +34,16 @@ module Sufia
       "system_create_dtsi:[#{start_date_str} TO #{end_date_str}]"
     end
 
-    delegate :count, to: :klass
+    delegate :count, to: :relation
+
+    def relation
+      CurationConcerns::WorkRelation.new
+    end
 
     private
 
-      # TODO: In the future this method should go away and this service will
-      # allow you to query on multiple types of work.
-      def klass
-        CurationConcerns.config.curation_concerns.first
-      end
-
       def where_access_is(access_level)
-        klass.where Solrizer.solr_name('read_access_group', :symbol) => access_level
+        relation.where Solrizer.solr_name('read_access_group', :symbol) => access_level
       end
 
       def date_format
