@@ -1,7 +1,7 @@
 <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
   <% content_for :files_tab do %>
-    <p class="instructions"><strong><%= t("sufia.batch_uploads.files.instructions") %></strong></p>
     <p class="switch-upload-type">To create a single work for all the files, go to <%= link_to "New Work", new_curation_concerns_generic_work_path %></p>
+        <p class="instructions"><%= t("sufia.batch_uploads.files.instructions") %></p>
   <% end %>
   <%= render 'curation_concerns/base/guts4form', f: f, tabs: %w[files metadata relationships share] do %>
   <% end %>
