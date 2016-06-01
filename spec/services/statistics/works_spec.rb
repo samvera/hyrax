@@ -1,9 +1,9 @@
-RSpec.describe Sufia::Statistics::Collections do
+RSpec.describe Sufia::Statistics::Works do
   let(:service) { described_class.new }
 
   describe "#points" do
     before do
-      create(:collection)
+      create(:generic_work)
     end
 
     subject { service.points }
