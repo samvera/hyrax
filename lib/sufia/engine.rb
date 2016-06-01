@@ -66,6 +66,21 @@ module Sufia
       # https://github.com/rails/sprockets/issues/73#issuecomment-139113466
     end
 
+    config.after_initialize do
+      begin
+        Object.const_get(:GenericWork)
+        begin
+          LocalAuthority.register_vocabulary(GenericWork, "subject", "lc_subjects")
+          LocalAuthority.register_vocabulary(GenericWork, "language", "lexvo_languages")
+          LocalAuthority.register_vocabulary(GenericWork, "tag", "lc_genres")
+        rescue ActiveRecord::StatementInvalid
+          Rails.logger.error "tables for vocabularies missing #{e.class}"
+        end
+      rescue NameError
+        # nop, GenericWork hasn't been generated yet.
+      end
+    end
+
     # Set some configuration defaults
     config.persistent_hostpath = "http://localhost/files/"
     config.enable_ffmpeg = false
