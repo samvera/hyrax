@@ -1,6 +1,6 @@
 describe WorkUsage, type: :model do
   let!(:work) do
-    GenericWork.create(id: '12345', title: ['bilbo work 1']) do |work|
+    GenericWork.create(id: 'abc12345xy', title: ['bilbo work 1']) do |work|
       work.apply_depositor_metadata("gordonl")
     end
   end

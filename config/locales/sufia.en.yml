@@ -170,7 +170,7 @@ en:
       new:
         header: Batch Create New Works
       progress:
-        header: Batch Create Save Work
+        header: Save Works
       files:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
     collection:

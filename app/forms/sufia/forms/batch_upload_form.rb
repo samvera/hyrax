@@ -6,6 +6,15 @@ module Sufia
 
       self.terms -= [:title, :resource_type]
 
+      # The WorkForm delegates `#depositor` to `:model`, but `:model` in the
+      # BatchUpload context is a blank GenericWork with a `nil` depositor
+      # value. This causes the "Sharing With" widget to display the Depositor as
+      # "()". We should be able to reliably pull back the depositor of the new
+      # batch of works by asking the form's Ability what its `current_user` is.
+      def depositor
+        current_ability.current_user
+      end
+
       # On the batch upload, title is set per-file.
       def primary_terms
         super - [:title]
