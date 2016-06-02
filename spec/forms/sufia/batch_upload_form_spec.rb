@@ -58,6 +58,7 @@ describe Sufia::Forms::BatchUploadForm do
                             :visibility,
                             :ordered_member_ids,
                             :source,
+                            :in_works_ids,
                             :collection_ids] }
   end
 end
