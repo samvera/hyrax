@@ -13,6 +13,15 @@ describe CurationConcerns::GenericWorksController do
         get :show, id: a_work
         expect(response).to be_success
       end
+      context "with a parent work" do
+        render_views
+        it "renders a breadcrumb" do
+          parent = create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [a_work])
+          get :show, id: a_work, parent_id: parent
+
+          expect(response.body).to have_content "Parent Work"
+        end
+      end
     end
 
     context 'someone elses private work' do

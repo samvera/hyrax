@@ -1,7 +1,7 @@
-<% if presenter.file_set_presenters.present? %>
+<% if presenter.member_presenters.present? %>
 <div class="panel panel-default related_files">
   <div class="panel-heading">
-    <h2>Files</h2>
+    <h2><%= t('curation_concerns.show.related_files.heading') %></h2>
   </div>
   <table class="table table-striped">
     <thead>
@@ -14,11 +14,11 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.file_set_presenters %>
+      <%= render partial: 'member', collection: presenter.member_presenters %>
     </tbody>
   </table>
 </div>
 <% elsif can? :edit, presenter.id %>
-  <h2>Files</h2>
-  <p class="text-center"><em>This <%= presenter.human_readable_type %> has no files associated with it. You can add one using the "Attach a File" button below.</em></p>
+  <h2><%= t('curation_concerns.show.related_files.heading') %></h2>
+  <p class="text-center"><em>This <%= presenter.human_readable_type %> has no members associated with it. You can add one using the "Attach a File" button below.</em></p>
 <% end %>

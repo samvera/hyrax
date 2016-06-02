@@ -61,6 +61,17 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
+  describe "#member_presenters" do
+    let(:obj) { create(:work_with_file_and_work) }
+    let(:attributes) { obj.to_solr }
+
+    it "returns appropriate classes for each" do
+      expect(presenter.member_presenters.size).to eq 2
+      expect(presenter.member_presenters.first).to be_instance_of(::CurationConcerns::FileSetPresenter)
+      expect(presenter.member_presenters.last).to be_instance_of(described_class)
+    end
+  end
+
   describe "#file_set_presenters" do
     let(:obj) { create(:work_with_ordered_files) }
     let(:attributes) { obj.to_solr }
@@ -86,7 +97,7 @@ describe CurationConcerns::WorkShowPresenter do
       let(:attributes) { {} }
       let(:presenter_class) { double }
       before do
-        allow(presenter).to receive(:file_presenter_class).and_return(presenter_class)
+        allow(presenter).to receive(:composite_presenter_class).and_return(presenter_class)
         allow(presenter).to receive(:ordered_ids).and_return(['12', '33'])
         allow(presenter).to receive(:file_set_ids).and_return(['33', '12'])
       end
@@ -104,7 +115,7 @@ describe CurationConcerns::WorkShowPresenter do
     let(:attributes) { obj.to_solr }
     let(:presenter_class) { double }
     before do
-      allow(presenter).to receive(:file_presenter_class).and_return(presenter_class)
+      allow(presenter).to receive(:composite_presenter_class).and_return(presenter_class)
     end
     it "has a representative" do
       expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
@@ -132,6 +143,15 @@ describe CurationConcerns::WorkShowPresenter do
   describe '#page_title' do
     subject { presenter.page_title }
     it { is_expected.to eq 'foo' }
+  end
+
+  describe "#valid_child_concerns" do
+    subject { presenter }
+    it "delegates to the class attribute of the model" do
+      allow(GenericWork).to receive(:valid_child_concerns).and_return([GenericWork])
+
+      expect(subject.valid_child_concerns).to eq [GenericWork]
+    end
   end
 
   describe "#attribute_to_html" do

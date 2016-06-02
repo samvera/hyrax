@@ -19,6 +19,16 @@ module ActionDispatch::Routing
           end
         end
 
+        resources :parent, only: [] do
+          concerns_to_route.each do |curation_concern_name|
+            namespaced_resources curation_concern_name, except: [:index], &block
+          end
+        end
+
+        resources :parent, only: [] do
+          resources :file_sets, only: [:show]
+        end
+
         resources :permissions, only: [] do
           member do
             get :confirm

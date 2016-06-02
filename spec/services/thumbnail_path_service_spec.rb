@@ -32,7 +32,7 @@ describe CurationConcerns::ThumbnailPathService do
       let(:original_file)  { mock_file_factory(mime_type: 'image/jpeg') }
       before do
         allow(File).to receive(:exist?).and_return(true)
-        allow(FileSet).to receive(:find).with('999').and_return(representative)
+        allow(ActiveFedora::Base).to receive(:find).with('999').and_return(representative)
         allow(representative).to receive(:original_file).and_return(original_file)
       end
 

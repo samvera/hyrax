@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe "curation_concerns/base/file_manager.html.erb" do
-  let(:members) { [file_set] }
+  let(:members) { [file_set, member] }
   let(:file_set) { CurationConcerns::FileSetPresenter.new(solr_doc, nil) }
+  let(:member) { CurationConcerns::WorkShowPresenter.new(solr_doc_work, nil) }
   let(:solr_doc) do
     SolrDocument.new(
       resource.to_solr.merge(
@@ -10,6 +11,16 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
         title_tesim: "Test",
         thumbnail_path_ss: "/test/image/path.jpg",
         label_tesim: ["file_name.tif"]
+      )
+    )
+  end
+  let(:solr_doc_work) do
+    SolrDocument.new(
+      resource.to_solr.merge(
+        id: "work",
+        title_tesim: "Work",
+        thumbnail_path_ss: "/test/image/path.jpg",
+        label_tesim: ["work"]
       )
     )
   end
@@ -26,7 +37,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   let(:blacklight_config) { CatalogController.new.blacklight_config }
 
   before do
-    allow(parent_presenter).to receive(:file_presenters).and_return([file_set])
+    allow(parent_presenter).to receive(:member_presenters).and_return([file_set, member])
     assign(:presenter, parent_presenter)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
@@ -35,6 +46,9 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     allow(view).to receive(:search_session).and_return({})
     allow(view).to receive(:current_search_session).and_return(nil)
     allow(view).to receive(:curation_concern).and_return(parent)
+    allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
+      CurationConcerns::ContextualPath.new(x, y).show
+    end
     render
   end
 

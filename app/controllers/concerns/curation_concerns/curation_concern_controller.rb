@@ -12,7 +12,7 @@ module CurationConcerns::CurationConcernController
     class_attribute :_curation_concern_type, :show_presenter
     self.show_presenter = CurationConcerns::WorkShowPresenter
     attr_accessor :curation_concern
-    helper_method :curation_concern
+    helper_method :curation_concern, :contextual_path
   end
 
   module ClassMethods
@@ -53,7 +53,7 @@ module CurationConcerns::CurationConcernController
   #   or the user doesn't have access to it.
   def show
     respond_to do |wants|
-      wants.html { presenter }
+      wants.html { presenter && parent_presenter }
       wants.json do
         # load and authorize @curation_concern manually because it's skipped for html
         # This has to use #find instead of #load_instance_from_solr because
@@ -117,13 +117,22 @@ module CurationConcerns::CurationConcernController
       @presenter ||= show_presenter.new(curation_concern_from_search_results, current_ability, request)
     end
 
+    def parent_presenter
+      @parent_presenter ||=
+        begin
+          if params[:parent_id]
+            @parent_presenter ||= show_presenter.new(search_result_document(id: params[:parent_id]), current_ability, request)
+          end
+        end
+    end
+
     def _prefixes
       @_prefixes ||= super + ['curation_concerns/base']
     end
 
     def after_create_response
       respond_to do |wants|
-        wants.html { redirect_to [main_app, curation_concern] }
+        wants.html { redirect_to contextual_path(curation_concern, parent_presenter) }
         wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }
       end
     end
@@ -166,10 +175,18 @@ module CurationConcerns::CurationConcernController
       CurationConcerns::WorkSearchBuilder
     end
 
+    def contextual_path(presenter, parent_presenter)
+      ::CurationConcerns::ContextualPath.new(presenter, parent_presenter).show
+    end
+
   private
 
     def curation_concern_from_search_results
-      _, document_list = search_results(params)
+      search_result_document(params)
+    end
+
+    def search_result_document(search_params)
+      _, document_list = search_results(search_params)
       raise CanCan::AccessDenied.new(nil, :show) if document_list.empty?
       document_list.first
     end
