@@ -4,6 +4,7 @@ module Sufia
       [CreateWithRemoteFilesActor,
        CreateWithFilesActor,
        CurationConcerns::Actors::AddToCollectionActor,
+       CurationConcerns::Actors::AddToWorkActor,
        CurationConcerns::Actors::AssignRepresentativeActor,
        CurationConcerns::Actors::AttachFilesActor,
        CurationConcerns::Actors::ApplyOrderActor,

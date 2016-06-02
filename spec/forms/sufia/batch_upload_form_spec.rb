@@ -57,6 +57,8 @@ describe Sufia::Forms::BatchUploadForm do
                             :visibility_after_lease,
                             :visibility,
                             :ordered_member_ids,
+                            :source,
+                            :in_works_ids,
                             :collection_ids] }
   end
 end

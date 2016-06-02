@@ -12,9 +12,8 @@
   </thead>
   <% end %>
   <tbody>
-  <% docs.each_with_index do |document,counter| %>
-    <% case document.hydra_model %>
-    <% when "Collection" %>
+  <% docs.each_with_index do |document, counter| %>
+    <% if document.collection? %>
       <%= render 'my/_index_partials/list_collections', document: document, counter: counter %>
     <% else %>
       <%= render 'my/_index_partials/list_works', document: document, counter: counter, presenter: Sufia::WorkShowPresenter.new(document, current_ability) %>

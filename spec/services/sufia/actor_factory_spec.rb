@@ -7,6 +7,7 @@ describe Sufia::ActorFactory do
     it { is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
                             Sufia::CreateWithFilesActor,
                             CurationConcerns::Actors::AddToCollectionActor,
+                            CurationConcerns::Actors::AddToWorkActor,
                             CurationConcerns::Actors::AssignRepresentativeActor,
                             CurationConcerns::Actors::AttachFilesActor,
                             CurationConcerns::Actors::ApplyOrderActor,
@@ -20,6 +21,7 @@ describe Sufia::ActorFactory do
       expect(subject.more_actors).to eq [
         Sufia::CreateWithFilesActor,
         CurationConcerns::Actors::AddToCollectionActor,
+        CurationConcerns::Actors::AddToWorkActor,
         CurationConcerns::Actors::AssignRepresentativeActor,
         CurationConcerns::Actors::AttachFilesActor,
         CurationConcerns::Actors::ApplyOrderActor,
