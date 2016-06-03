@@ -2,15 +2,16 @@ require 'spec_helper'
 
 describe 'sufia/batch_uploads/_form.html.erb' do
   let(:work) { GenericWork.new }
-  let(:ability) { double }
+  let(:ability) { double('ability', current_user: user) }
   let(:form) { Sufia::Forms::BatchUploadForm.new(work, ability) }
+  let(:user) { stub_model(User) }
 
   before do
     view.lookup_context.view_paths.push "#{CurationConcerns::Engine.root}/app/views/curation_concerns/base"
     view.lookup_context.view_paths.push 'app/views/sufia/batch_uploads'
     view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
     allow(view).to receive(:curation_concern).and_return(work)
-    allow(controller).to receive(:current_user).and_return(stub_model(User))
+    allow(controller).to receive(:current_user).and_return(user)
     assign(:form, form)
   end
 
