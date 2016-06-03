@@ -5,7 +5,7 @@ module Sufia
 
         def point(min, max)
           query = QueryService.new.build_date_query(min, max)
-          GenericWork.where(query).count
+          CurationConcerns::WorkRelation.new.where(query).count
         end
     end
   end
