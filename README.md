@@ -85,12 +85,12 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Sufia
-v7.0.0.beta1__ (not yet released). If you are looking for instructions on installing a different
+v7.0.0.beta1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
 Prerequisites are required for both Creating a Sufia\-based app and Contributing new features to Sufia.
-After installing the Prerequisites: 
+After installing the Prerequisites:
  * If you would like to create a new application using Sufia follow the instructions for [Creating a Sufia\-based app](#creating-a-sufia-based-app).
  * If you would like to create new features for Sufia follow the instructions for [Contributing](#contributing) and [Development](#development).
 
@@ -151,7 +151,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.0.0.beta1' # NOT YET RELEASED
+gem 'sufia', '7.0.0.beta1'
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
