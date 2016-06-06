@@ -17,6 +17,17 @@ module Sufia
       end
     end
 
+    def presenter_types
+      CurationConcerns.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
+    end
+
+    def grouped_presenters(filtered_by: nil, except: nil)
+      grouped = collection_presenters.group_by(&:model_name).transform_keys { |key| key.to_s.underscore }
+      grouped.select! { |obj| obj.downcase == filtered_by } unless filtered_by.nil?
+      grouped.except!(*except) unless except.nil?
+      grouped
+    end
+
     def display_feature_link?
       user_can_feature_works? && solr_document.public? && FeaturedWork.can_create_another? && !featured?
     end

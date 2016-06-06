@@ -1,0 +1,24 @@
+<% member_presenters = presenter.member_presenters.group_by(&:model_name).transform_keys{|key| key.to_s.singularize.underscore}.select{ |k,v| k.to_sym != :file_set } %>
+<% if member_presenters.blank? %>
+  <tr>
+    <th><%= t(".label", type: presenter.human_readable_type) %></th>
+    <td>
+      <p><%= t('.empty', type: presenter.human_readable_type) %></p>
+    </td>
+  </tr>
+<% else %>
+  <% member_presenters.each_pair do |model_name, members| %>
+    <tr>
+      <th><%= t(".label", type: presenter.human_readable_type) %></th>
+      <td>
+        <ul class="tabular">
+          <% members.each do |member| %>
+            <li class='attribute title'>
+              <%= link_to member.title.first, [main_app, member] %>
+            </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+  <% end %>
+<% end %>

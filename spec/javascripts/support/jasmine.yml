@@ -38,7 +38,7 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
-  - 'helpers/**/*.js'
+  - 'helpers/**/*.{js,coffee,js.coffee}'
 
 # spec_files
 #

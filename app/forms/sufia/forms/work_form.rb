@@ -34,7 +34,19 @@ module Sufia::Forms
          :visibility_after_embargo, :visibility_during_lease,
          :lease_expiration_date, :visibility_after_lease, :visibility,
          :thumbnail_id, :representative_id, :ordered_member_ids,
-         :collection_ids]
+         :collection_ids, :in_works_ids]
+    end
+
+    # The ordered_members which are FileSet types
+    # @return [Array] All of the file sets in the ordered_members
+    def ordered_fileset_members
+      model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym == :file_set }
+    end
+
+    # The ordered_members which are not FileSet types
+    # @return [Array] All of the non file sets in the ordered_members
+    def ordered_work_members
+      model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym != :file_set }
     end
 
     def self.multiple?(term)
