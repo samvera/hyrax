@@ -11,7 +11,7 @@
             <% collection_presenters.each do |collection| %>
               <ul class="tabular">
                 <li class='attribute title'>
-                  <%= link_to collection.title, main_app.collection_path(collection) %>
+                  <%= link_to collection.to_s, main_app.collection_path(collection) %>
                 </li>
               </ul>
             <% end %>
