@@ -1,7 +1,7 @@
 module Sufia
   module Statistics
     # An abstract class for generating cumulative graphs
-    # you must provide a `point` method in the concrete class
+    # you must provide a `relation` method in the concrete class
     class OverTime
       # @param [Fixnum] delta_x change in x (in days)
       # @param [Time] x_min minimum date
@@ -24,12 +24,20 @@ module Sufia
 
       private
 
+        def point(min, max)
+          relation.where(query(min, max)).count
+        end
+
+        def query(min, max)
+          QueryService.new.build_date_query(min, max)
+        end
+
         def size
           ((@x_max - @x_min) / @delta_x.days.to_i).ceil
         end
 
-        def point
-          raise NotImplementedError, "Implement the point method in a base class"
+        def relation
+          raise NotImplementedError, "Implement the relation method in a concrete class"
         end
     end
   end
