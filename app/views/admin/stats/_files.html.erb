@@ -1,8 +1,0 @@
-<h3>File Statistics (<%= @presenter.date_filter_string %>)</h3>
-<h4>Total Files: <%= @presenter.files_count[:total] %> </h4>
-<h4>Totals by Visibility</h4>
-<ul>
-  <li>Open Access <span class="count">(<%= @presenter.files_count[:public] %>)</span></li>
-  <li><%= t("sufia.admin.stats.registered") %> <span class="count">(<%= @presenter.files_count[:registered] %>)</span></li>
-  <li>Private <span class="count">(<%= @presenter.files_count[:private] %>)</span></li>
-</ul>

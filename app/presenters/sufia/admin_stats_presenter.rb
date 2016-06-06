@@ -31,8 +31,8 @@ module Sufia
       @top_formats ||= stats.top_formats
     end
 
-    def files_count
-      @files_count ||= stats.document_by_permission
+    def works_count
+      @works_count ||= Sufia::Statistics::Works::Count.new(start_date, end_date).by_permission
     end
 
     def users_count
@@ -52,7 +52,7 @@ module Sufia
     private
 
       def stats
-        @stats ||= SystemStats.new(limit, start_date, end_date)
+        @stats ||= Sufia::Statistics::SystemStats.new(limit, start_date, end_date)
       end
   end
 end

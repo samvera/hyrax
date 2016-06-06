@@ -21,24 +21,6 @@ module Sufia
         @end_date = end_date
       end
 
-      # returns the total files in the system filtered by the start_date and end_date if present
-      #
-      # @return [Hash] A hash with the total files by permission for the system
-      # @option [Number] :total Total number of files without regard to permissions
-      # @option [Number] :public Total number of files that have public permissions
-      # @option [Number] :registered Total number of files that have registered (logged in) permissions
-      # @option [Number] :private Total number of files that have private permissions
-      def document_by_permission
-        return document_by_date_by_permission if start_date
-
-        files_count = {}
-        files_count[:total] = query_service.count
-        files_count[:public] = query_service.where_public.count
-        files_count[:registered] = query_service.where_registered.count
-        files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
-        files_count
-      end
-
       # returns a list (of size limit) of system users (depositors) that have the most deposits in the system
       # @return [Hash] a hash with the user name as the key and the number of deposits as the value
       #    { 'cam156' => 25, 'hjc14' => 24 ... }
@@ -81,19 +63,6 @@ module Sufia
           else
             count
           end
-        end
-
-        def document_by_date_by_permission
-          files_count = {}
-          files_count[:total] = query_service.find_by_date_created(start_date, end_date).count
-          files_count[:public] = query_service.find_public_in_date_range(start_date, end_date).count
-          files_count[:registered] = query_service.find_registered_in_date_range(start_date, end_date).count
-          files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
-          files_count
-        end
-
-        def query_service
-          @query_service ||= Sufia::QueryService.new
         end
 
         def solr_connection

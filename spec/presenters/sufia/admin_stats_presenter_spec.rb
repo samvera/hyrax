@@ -52,7 +52,7 @@ describe Sufia::AdminStatsPresenter do
     end
   end
 
-  describe "#files_count" do
+  describe "#works_count" do
     before do
       build(:generic_work, user: user1, id: "abc1223").update_index
       build(:public_generic_work, user: user1, id: "bbb1223").update_index
@@ -63,7 +63,7 @@ describe Sufia::AdminStatsPresenter do
     let(:one_day_ago)  { one_day_ago_date.strftime("%Y-%m-%d") }
     let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
 
-    subject { service.files_count }
+    subject { service.works_count }
 
     it "includes files but not collections" do
       expect(subject[:total]).to eq(3)
@@ -73,24 +73,24 @@ describe Sufia::AdminStatsPresenter do
     end
 
     context "when there is uncommitted work" do
-      let(:original_files_count) do
+      let(:original_works_count) do
         work = create(:generic_work, user: user1)
         original_files_count = GenericWork.count
         ActiveFedora::SolrService.instance.conn.delete_by_id(work.id)
         original_files_count
       end
-      it "provides accurate files_count, ensuring that solr deletes have been expunged first" do
-        expect(subject[:total]).to eq(original_files_count - 1)
+
+      it "provides accurate count, ensuring that solr deletes have been expunged first" do
+        expect(subject[:total]).to eq(original_works_count - 1)
       end
     end
 
     context "when start date is provided" do
       let(:start_date) { one_day_ago }
-      let(:system_stats) { double(document_by_permission: {}) }
+      let(:system_stats) { double(by_permission: {}) }
       it "queries by start date" do
-        expect(Sufia::SystemStats).to receive(:new)
-          .with(5,
-                one_day_ago_date.beginning_of_day,
+        expect(Sufia::Statistics::Works::Count).to receive(:new)
+          .with(one_day_ago_date.beginning_of_day,
                 nil)
           .and_return(system_stats)
         subject
@@ -100,11 +100,10 @@ describe Sufia::AdminStatsPresenter do
     context "when start and end date is provided" do
       let(:start_date) { two_days_ago }
       let(:end_date) { one_day_ago }
-      let(:system_stats) { double(document_by_permission: {}) }
+      let(:system_stats) { double(by_permission: {}) }
       it "queries by start and date" do
-        expect(Sufia::SystemStats).to receive(:new)
-          .with(5,
-                two_days_ago_date.beginning_of_day,
+        expect(Sufia::Statistics::Works::Count).to receive(:new)
+          .with(two_days_ago_date.beginning_of_day,
                 one_day_ago_date.end_of_day)
           .and_return(system_stats)
         subject
