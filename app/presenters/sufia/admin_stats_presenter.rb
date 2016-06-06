@@ -16,7 +16,7 @@ module Sufia
     end
 
     def depositors
-      @depositors ||= Sufia::Admin::DepositorStats.new(start_date, end_date).depositors
+      @depositors ||= Sufia::Statistics::Depositors::Summary.new(start_date, end_date).depositors
     end
 
     def recent_users

@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Sufia::Admin::DepositorStats do
+describe Sufia::Statistics::Depositors::Summary do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let!(:old_work) { create(:work, user: user1) }
