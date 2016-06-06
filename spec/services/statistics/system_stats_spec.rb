@@ -1,4 +1,4 @@
-describe Sufia::SystemStats do
+describe Sufia::Statistics::SystemStats do
   let(:user1) { create(:user) }
   let(:start_date) { nil }
   let(:end_date) { nil }
