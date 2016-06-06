@@ -26,7 +26,7 @@ describe Sufia::AdminStatsPresenter do
 
     subject { service.active_users }
     it "returns statistics" do
-      expect(subject).to eq(user1.user_key => 3, user2.user_key => 1)
+      expect(subject).to eq [{ label: user1.user_key, data: 3 }, { label: user2.user_key, data: 1 }]
     end
   end
 
@@ -48,7 +48,7 @@ describe Sufia::AdminStatsPresenter do
     subject { service.top_formats }
 
     it "gathers formats" do
-      expect(subject).to eq("png" => 2, "jpeg" => 1)
+      expect(subject).to eq [{ label: "png", data: 2 }, { label: "jpeg", data: 1 }]
     end
   end
 

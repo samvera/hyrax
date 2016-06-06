@@ -24,11 +24,11 @@ module Sufia
     end
 
     def active_users
-      @active_users ||= stats.top_depositors
+      @active_users ||= Sufia::Statistics::Works::ByDepositor.new(limit).query
     end
 
     def top_formats
-      @top_formats ||= stats.top_formats
+      @top_formats ||= Sufia::Statistics::FileSets::ByFormat.new(limit).query
     end
 
     def works_count

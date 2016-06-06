@@ -25,18 +25,10 @@ module Sufia
       # @return [Hash] a hash with the user name as the key and the number of deposits as the value
       #    { 'cam156' => 25, 'hjc14' => 24 ... }
       def top_depositors
-        top_data(depositor_field, limit)
+        TermQuery.new(limit).results(depositor_field)
       end
 
       delegate :depositor_field, to: DepositSearchBuilder
-
-      # returns a list (of size limit) of file formats (mime_types) that have the most files in the system
-      # @return [Hash] a hash with the file format as the key and the number of files as the value
-      #    { 'png' => 25, 'pdf' => 24 ... }
-      def top_formats
-        format_key = Solrizer.solr_name('file_format', Solrizer::Descriptor.new(:string, :indexed, :multivalued))
-        top_data(format_key, limit)
-      end
 
       # returns [Array<user>] a list (of size limit) of users most recently registered with the system
       #
@@ -63,26 +55,6 @@ module Sufia
           else
             count
           end
-        end
-
-        def solr_connection
-          ActiveFedora::SolrService.instance.conn
-        end
-
-        def top_data(key, limit)
-          # Grab JSON response (looks like {"terms": {"depositor_tesim": {"mjg36": 3}}} for depositor)
-          json = solr_connection.get 'terms', params: { 'terms.fl' => key,
-                                                        'terms.sort' => 'count',
-                                                        'terms.limit' => limit,
-                                                        wt: 'json',
-                                                        'json.nl' => 'map',
-                                                        omitHeader: 'true' }
-          unless json
-            Rails.logger.error "Unable to reach TermsComponent via Solr connection. Is it enabled in your solr config?"
-            return []
-          end
-
-          json['terms'][key]
         end
     end
   end
