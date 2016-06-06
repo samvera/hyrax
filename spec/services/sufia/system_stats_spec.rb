@@ -1,13 +1,10 @@
 describe Sufia::SystemStats do
   let(:user1) { create(:user) }
-  let(:morning_two_days_ago) { 2.days.ago.to_date.to_datetime.to_s }
-  let(:yesterday) { 1.day.ago.to_datetime.to_s }
-  let(:this_morning) { 0.days.ago.to_date.to_datetime.to_s }
-  let(:stats) { described_class.new(depositor_count, user_stats[:start_date], user_stats[:end_date]) }
+  let(:start_date) { nil }
+  let(:end_date) { nil }
+  let(:stats) { described_class.new(depositor_count, start_date, end_date) }
 
   describe "#top_depositors" do
-    let(:user_stats) { {} }
-
     context "when requested count is withing bounds" do
       let!(:user2) { create(:user) }
       let(:depositor_count) { 15 }
@@ -59,7 +56,6 @@ describe Sufia::SystemStats do
   end
 
   describe "#document_by_permission" do
-    let(:user_stats) { {} }
     let(:depositor_count) { nil }
 
     before do
@@ -78,13 +74,15 @@ describe Sufia::SystemStats do
     end
 
     context "when passing a start date" do
-      let(:user_stats) { { start_date: yesterday } }
-      it "get documents after date by permissions" do
+      let(:yesterday) { 1.day.ago }
+      let(:start_date) { yesterday.beginning_of_day }
+      it "gets documents after date by permissions" do
         expect(stats.document_by_permission).to include(public: 2, private: 1, registered: 1, total: 4)
       end
 
       context "when passing an end date" do
-        let(:user_stats) { { start_date: morning_two_days_ago, end_date: yesterday } }
+        let(:start_date) { 2.days.ago.beginning_of_day }
+        let(:end_date) { yesterday.end_of_day }
         it "get documents between dates by permissions" do
           expect(stats.document_by_permission).to include(public: 1, private: 0, registered: 0, total: 1)
         end
@@ -93,7 +91,6 @@ describe Sufia::SystemStats do
   end
 
   describe "#top_formats" do
-    let(:user_stats) { {} }
     let(:depositor_count) { nil }
     let(:pdf_file_set) do
       build(:public_pdf, user: user1, id: "pdf1111")
@@ -174,17 +171,13 @@ describe Sufia::SystemStats do
     let!(:user2) { create(:user) }
 
     let(:two_days_ago_date) { 2.days.ago.beginning_of_day }
-    let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
-
     let(:one_day_ago_date) { 1.day.ago.end_of_day }
-    let(:one_day_ago) { one_day_ago_date.strftime("%Y-%m-%d") }
 
     let(:depositor_count) { nil }
 
     subject { stats.recent_users }
 
     context "without dates" do
-      let(:user_stats) { {} }
       let(:mock_order) { double }
       let(:mock_limit) { double }
       it "defaults to latest 5 users" do
@@ -195,15 +188,16 @@ describe Sufia::SystemStats do
     end
 
     context "with start date" do
-      let(:user_stats) { { start_date: two_days_ago } }
+      let(:start_date) { two_days_ago_date }
 
-      it "allows queries against user_stats without an end date " do
+      it "allows queries  without an end date " do
         expect(User).to receive(:recent_users).with(two_days_ago_date, nil).and_return([user2])
         is_expected.to eq([user2])
       end
     end
     context "with start date and end date" do
-      let(:user_stats) { { start_date: two_days_ago, end_date: one_day_ago } }
+      let(:start_date) { two_days_ago_date }
+      let(:end_date) { one_day_ago_date }
       it "queries" do
         expect(User).to receive(:recent_users).with(two_days_ago_date, one_day_ago_date).and_return([user2])
         is_expected.to eq([user2])
@@ -212,7 +206,6 @@ describe Sufia::SystemStats do
   end
 
   describe "#users_count" do
-    let(:user_stats) { {} }
     let(:depositor_count) { nil }
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }

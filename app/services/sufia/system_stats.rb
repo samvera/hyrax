@@ -1,26 +1,22 @@
 # A class that retrieves system level statistics about the system
 #
-# @attr_reader int limit      limits the results returned from top_depositors and top_formats
+# @attr_reader [Integer] limit      limits the results returned from top_depositors and top_formats
 #                             Default is 5, maximum is 20, minimum is 5
-# @attr_reader int start_date Filters the statistics returned by the class to after the start date
-#                             blank means no filter
-# @attr_reader int end_date   Filters the statistics returned by the class to before end date (end of day)
-#                             blank means today
+# @attr_reader [Time] start_date Filters the statistics returned by the class to after the start date
+#                             nil means no filter
+# @attr_reader [Time] end_date   Filters the statistics returned by the class to before end date
+#                             nil means today
 class Sufia::SystemStats
   attr_reader :limit, :start_date, :end_date
 
-  # initialize the stats class setting the limitations
-  #
-  # @attr_reader int limit      limits the results returned from top_depositors and top_formats
-  #                             Default is 5, maximum is 20, minimum is 5
-  # @attr_reader int start_date Filters the statistics returned by the class to after the start date
-  #                             blank means no filter
-  # @attr_reader int end_date   Filters the statistics returned by the class to before end date (end of day)
-  #                             blank means today
-  def initialize(limit_records = 5, start_date_str = nil, end_date_str = nil)
+  # @attr_reader int limit
+  # @param [Fixnum] limit_records limits the results returned from top_depositors and top_formats. Maximum is 20, minimum is 5
+  # @param [Time] start_date Filters the statistics returned by the class to after this date. nil means no filter
+  # @param [Time] end_date Filters the statistics returned by the class to before this date. nil means today
+  def initialize(limit_records = 5, start_date = nil, end_date = nil)
     @limit = validate_limit(limit_records)
-    @start_date = Time.zone.parse(start_date_str).beginning_of_day unless start_date_str.blank?
-    @end_date = Time.zone.parse(end_date_str).end_of_day unless end_date_str.blank?
+    @start_date = start_date
+    @end_date = end_date
   end
 
   # returns the total files in the system filtered by the start_date and end_date if present

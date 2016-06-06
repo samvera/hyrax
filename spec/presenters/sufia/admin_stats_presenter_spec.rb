@@ -88,7 +88,11 @@ describe Sufia::AdminStatsPresenter do
       let(:start_date) { one_day_ago }
       let(:system_stats) { double(document_by_permission: {}) }
       it "queries by start date" do
-        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
+        expect(Sufia::SystemStats).to receive(:new)
+          .with(5,
+                one_day_ago_date.beginning_of_day,
+                nil)
+          .and_return(system_stats)
         subject
       end
     end
@@ -98,7 +102,11 @@ describe Sufia::AdminStatsPresenter do
       let(:end_date) { one_day_ago }
       let(:system_stats) { double(document_by_permission: {}) }
       it "queries by start and date" do
-        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
+        expect(Sufia::SystemStats).to receive(:new)
+          .with(5,
+                two_days_ago_date.beginning_of_day,
+                one_day_ago_date.end_of_day)
+          .and_return(system_stats)
         subject
       end
     end
@@ -151,15 +159,15 @@ describe Sufia::AdminStatsPresenter do
 
     context "with a start and no end date" do
       let(:start_date) { '2015-12-14' }
-      let(:today) { Time.zone.today.strftime("%Y-%m-%d") }
-      it { is_expected.to eq "2015-12-14 to #{today}" }
+      let(:today) { Time.zone.today.to_date.to_s(:standard) }
+      it { is_expected.to eq "12/14/2015 to #{today}" }
     end
 
     context 'with start and end dates' do
       let(:start_date) { '2015-12-14' }
       let(:end_date) { '2016-05-12' }
 
-      it { is_expected.to eq '2015-12-14 to 2016-05-12' }
+      it { is_expected.to eq '12/14/2015 to 05/12/2016' }
     end
   end
 end

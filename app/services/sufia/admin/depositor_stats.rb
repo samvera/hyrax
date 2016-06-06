@@ -2,11 +2,11 @@
 class Sufia::Admin::DepositorStats
   include Blacklight::SearchHelper
 
-  # @param [String] start_date optionally specify the start date to gather the stats from
-  # @param [String] end_date optionally specify the end date to gather the stats from
+  # @param [Time] start_date optionally specify the start date to gather the stats from
+  # @param [Time] end_date optionally specify the end date to gather the stats from
   def initialize(start_date, end_date)
-    @start_dt = Time.zone.parse(start_date) unless start_date.blank?
-    @end_dt = Time.zone.parse(end_date).end_of_day unless end_date.blank?
+    @start_dt = start_date
+    @end_dt = end_date
   end
 
   attr_accessor :start_dt, :end_dt

@@ -6,8 +6,8 @@ describe Sufia::Admin::DepositorStats do
   let!(:old_work) { create(:work, user: user1) }
   let(:two_days_ago_date) { Time.zone.now - 2.days }
 
-  let(:start_date) { '' }
-  let(:end_date) { '' }
+  let(:start_date) { nil }
+  let(:end_date) { nil }
   let!(:work1) { create(:work, user: user1) }
   let!(:work2) { create(:work, user: user2) }
   let!(:collection1) { create(:public_collection, user: user1) }
@@ -30,8 +30,8 @@ describe Sufia::Admin::DepositorStats do
     end
 
     context "when dates are present" do
-      let(:start_date) { 1.day.ago.strftime("%Y-%m-%d") }
-      let(:end_date) { 0.days.ago.strftime("%Y-%m-%d") }
+      let(:start_date) { 1.day.ago.beginning_of_day }
+      let(:end_date) { 0.days.ago.end_of_day }
       it "gathers user deposits during a date range" do
         expect(subject).to eq [{ key: user1.user_key, deposits: 1, user: user1 },
                                { key: user2.user_key, deposits: 1, user: user2 }]
