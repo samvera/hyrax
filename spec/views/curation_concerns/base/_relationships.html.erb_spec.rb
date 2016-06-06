@@ -15,7 +15,7 @@ describe 'curation_concerns/base/relationships' do
   end
 
   context "when collections are present" do
-    let(:collection_presenters) { [double(id: '456', title: 'Containing collection')] }
+    let(:collection_presenters) { [double(id: '456', title: ['Containing collection', 'foobar'], to_s: 'Containing collection')] }
     let(:page) { Capybara::Node::Simple.new(rendered) }
     before do
       allow(presenter).to receive(:collection_presenters).and_return(collection_presenters)
@@ -23,6 +23,9 @@ describe 'curation_concerns/base/relationships' do
     end
     it "links to collections" do
       expect(page).to have_link 'Containing collection'
+    end
+    it "labels the link using the presenter's #to_s method" do
+      expect(page).not_to have_content 'foobar'
     end
   end
 end
