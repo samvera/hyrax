@@ -30,7 +30,6 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name('language', :facetable), limit: 5
     config.add_facet_field solr_name('based_near', :facetable), limit: 5
     config.add_facet_field solr_name('publisher', :facetable), limit: 5
-    config.add_facet_field solr_name('file_format', :facetable), limit: 5
     config.add_facet_field 'generic_type_sim', show: false, single: true
 
     # Have BL send all facet field names to Solr, which has been the default
@@ -78,7 +77,7 @@ class CatalogController < ApplicationController
       label_name = solr_name('title', :stored_searchable, type: :string)
       contributor_name = solr_name('contributor', :stored_searchable, type: :string)
       field.solr_parameters = {
-        qf: "#{title_name} #{label_name} file_format_tesim #{contributor_name}",
+        qf: "#{title_name} #{label_name} #{contributor_name}",
         pf: title_name.to_s
       }
     end
