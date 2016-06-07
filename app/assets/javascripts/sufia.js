@@ -21,7 +21,6 @@
 //= require select2
 //= require fixedsticky
 
-//= require excanvas
 //= require jquery.flot
 //= require jquery.flot.time
 //= require jquery.flot.selection

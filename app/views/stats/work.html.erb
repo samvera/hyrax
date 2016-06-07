@@ -1,6 +1,4 @@
 <!-- Adapted from jquery-flot examples https://github.com/flot/flot/blob/master/examples/visitors/index.html -->
-<!--[if lte IE 8]><%= javascript_include_tag 'excanvas' %><![endif]-->
-
 <%= javascript_tag do %>
   var stats = <%= @stats.to_flot.to_json.html_safe %>;
 <% end %>
