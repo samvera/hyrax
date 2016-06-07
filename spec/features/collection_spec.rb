@@ -17,6 +17,17 @@ feature 'collection' do
     Collection.destroy_all
   end
 
+  describe 'collection creation fields' do
+    before do
+      sign_in user
+      visit '/collections/new'
+    end
+
+    it 'visibly marks the title field as required' do
+      expect(page).to have_content 'Title required'
+    end
+  end
+
   describe 'create collection' do
     before do
       sign_in user
