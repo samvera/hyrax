@@ -21,10 +21,10 @@
 //= require select2
 //= require fixedsticky
 
-//= require flot/excanvas
-//= require flot/jquery.flot
-//= require flot/jquery.flot.time
-//= require flot/jquery.flot.selection
+//= require excanvas
+//= require jquery.flot
+//= require jquery.flot.time
+//= require jquery.flot.selection
 
 //= require batch_edit
 //
