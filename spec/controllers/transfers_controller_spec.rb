@@ -1,4 +1,14 @@
 describe TransfersController, type: :controller do
+  describe "without a signed in user" do
+    describe "#index" do
+      it "redirects to sign in" do
+        get :index
+        expect(flash[:alert]).to eq "You need to sign in or sign up before continuing."
+        expect(response).to redirect_to main_app.new_user_session_path
+      end
+    end
+  end
+
   describe "with a signed in user" do
     let(:another_user) { create(:user) }
     let(:user) { create(:user) }

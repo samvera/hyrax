@@ -3,6 +3,7 @@ module Sufia
     extend ActiveSupport::Concern
 
     included do
+      before_action :authenticate_user!
       before_action :load_proxy_deposit_request, only: :create
       load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
       before_action :authorize_depositor_by_id, only: [:new, :create]
