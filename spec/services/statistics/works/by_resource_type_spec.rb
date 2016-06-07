@@ -15,6 +15,7 @@ RSpec.describe Sufia::Statistics::Works::ByResourceType do
       expect(subject).to eq [{ label: 'Conference Proceeding', data: 2 },
                              { label: 'Image', data: 1 },
                              { label: 'Journal', data: 1 }]
+      expect(subject.to_json).to eq "[{\"label\":\"Conference Proceeding\",\"data\":2},{\"label\":\"Image\",\"data\":1},{\"label\":\"Journal\",\"data\":1}]"
     end
   end
 end

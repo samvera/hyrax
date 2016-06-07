@@ -50,8 +50,8 @@ module Sufia
         end
 
         # Allows us to create a Flot charts pie-graph
-        def to_flot
-          @data
+        def as_json(opts)
+          @data.as_json(opts)
         end
       end
 
