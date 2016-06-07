@@ -1,7 +1,7 @@
 <div id="descriptions_display" class="tab-pane active">
   <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
-    <h1>Descriptions <span class="pull-right required"><abbr title="required">*</abbr> indicates required fields</span></h1>
+    <h1>Description</h1>
       <% f.object.terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>
       <% end %>
