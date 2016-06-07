@@ -10,11 +10,11 @@
     <!-- application js -->
     <%= javascript_include_tag 'application' %>
 
-    <%= render partial: '/ga', formats: [:html] %>
+    <%= render '/ga' %>
   </head>
 
 <body>
-  <%= render '/masthead', formats: [:html] %>
+  <%= render '/masthead' %>
   <div id="content-wrapper" class="container-fluid">
     <div class="row">
         <div class="col-sm-8 col-md-8 col-lg-8">
