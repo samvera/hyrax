@@ -5,6 +5,7 @@ module Sufia
     # These gems must be required outside of an initializer or it doesn't get loaded.
     require 'breadcrumbs_on_rails'
     require 'jquery-ui-rails'
+    require 'flot-rails'
     require 'zeroclipboard-rails'
 
     config.autoload_paths += %W(
