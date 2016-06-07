@@ -54,7 +54,7 @@ describe 'Batch management of works', type: :feature do
       expand("contributor")
       expect(page).to have_css "input#generic_work_contributor[value*='NEW contributor']"
       expand("description")
-      expect(page).to have_css "textarea#generic_work_description", 'NEW description'
+      expect(page).to have_css "textarea#generic_work_description", text: 'NEW description'
       expand("keyword")
       expect(page).to have_css "input#generic_work_keyword[value*='NEW keyword']"
       expand("publisher")
