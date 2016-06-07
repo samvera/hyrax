@@ -26,7 +26,7 @@ describe Sufia::AdminStatsPresenter do
 
     subject { service.active_users }
     it "returns statistics" do
-      expect(subject).to eq(user1.user_key => 3, user2.user_key => 1)
+      expect(subject).to eq [{ label: user1.user_key, data: 3 }, { label: user2.user_key, data: 1 }]
     end
   end
 
@@ -48,11 +48,11 @@ describe Sufia::AdminStatsPresenter do
     subject { service.top_formats }
 
     it "gathers formats" do
-      expect(subject).to eq("png" => 2, "jpeg" => 1)
+      expect(subject).to eq [{ label: "png", data: 2 }, { label: "jpeg", data: 1 }]
     end
   end
 
-  describe "#files_count" do
+  describe "#works_count" do
     before do
       build(:generic_work, user: user1, id: "abc1223").update_index
       build(:public_generic_work, user: user1, id: "bbb1223").update_index
@@ -63,7 +63,7 @@ describe Sufia::AdminStatsPresenter do
     let(:one_day_ago)  { one_day_ago_date.strftime("%Y-%m-%d") }
     let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
 
-    subject { service.files_count }
+    subject { service.works_count }
 
     it "includes files but not collections" do
       expect(subject[:total]).to eq(3)
@@ -73,22 +73,26 @@ describe Sufia::AdminStatsPresenter do
     end
 
     context "when there is uncommitted work" do
-      let(:original_files_count) do
+      let(:original_works_count) do
         work = create(:generic_work, user: user1)
         original_files_count = GenericWork.count
         ActiveFedora::SolrService.instance.conn.delete_by_id(work.id)
         original_files_count
       end
-      it "provides accurate files_count, ensuring that solr deletes have been expunged first" do
-        expect(subject[:total]).to eq(original_files_count - 1)
+
+      it "provides accurate count, ensuring that solr deletes have been expunged first" do
+        expect(subject[:total]).to eq(original_works_count - 1)
       end
     end
 
     context "when start date is provided" do
       let(:start_date) { one_day_ago }
-      let(:system_stats) { double(document_by_permission: {}) }
+      let(:system_stats) { double(by_permission: {}) }
       it "queries by start date" do
-        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
+        expect(Sufia::Statistics::Works::Count).to receive(:new)
+          .with(one_day_ago_date.beginning_of_day,
+                nil)
+          .and_return(system_stats)
         subject
       end
     end
@@ -96,9 +100,12 @@ describe Sufia::AdminStatsPresenter do
     context "when start and end date is provided" do
       let(:start_date) { two_days_ago }
       let(:end_date) { one_day_ago }
-      let(:system_stats) { double(document_by_permission: {}) }
+      let(:system_stats) { double(by_permission: {}) }
       it "queries by start and date" do
-        expect(Sufia::SystemStats).to receive(:new).with(5, start_date, end_date).and_return(system_stats)
+        expect(Sufia::Statistics::Works::Count).to receive(:new)
+          .with(two_days_ago_date.beginning_of_day,
+                one_day_ago_date.end_of_day)
+          .and_return(system_stats)
         subject
       end
     end
@@ -151,15 +158,15 @@ describe Sufia::AdminStatsPresenter do
 
     context "with a start and no end date" do
       let(:start_date) { '2015-12-14' }
-      let(:today) { Time.zone.today.strftime("%Y-%m-%d") }
-      it { is_expected.to eq "2015-12-14 to #{today}" }
+      let(:today) { Time.zone.today.to_date.to_s(:standard) }
+      it { is_expected.to eq "12/14/2015 to #{today}" }
     end
 
     context 'with start and end dates' do
       let(:start_date) { '2015-12-14' }
       let(:end_date) { '2016-05-12' }
 
-      it { is_expected.to eq '2015-12-14 to 2016-05-12' }
+      it { is_expected.to eq '12/14/2015 to 05/12/2016' }
     end
   end
 end

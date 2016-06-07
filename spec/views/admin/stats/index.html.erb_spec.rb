@@ -11,9 +11,7 @@ describe "admin/stats/index.html.erb" do
 
   context "default depositors" do
     let(:top_5_active_users) do
-      users = {}
-      5.times { |i| users[i.to_s] = i }
-      users
+      (1..5).map { |i| double(label: i.to_s, value: i) }
     end
     before do
       allow(presenter).to receive(:active_users).and_return(top_5_active_users)
@@ -27,15 +25,14 @@ describe "admin/stats/index.html.erb" do
 
   context "top 20 depositors" do
     let(:top_20_active_users) do
-      users = {}
-      20.times { |i| users[i.to_s] = i }
-      users
+      (1..20).map { |i| double(label: i.to_s, value: i) }
     end
     before do
       allow(presenter).to receive(:active_users).and_return(top_20_active_users)
       allow(presenter).to receive(:limit).and_return(20)
       render
     end
+
     it "shows top 20 depositors, without an option to view more" do
       expect(rendered).to have_content("(top 20)")
       expect(rendered).to_not have_content("View top 20")

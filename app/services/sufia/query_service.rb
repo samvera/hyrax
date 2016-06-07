@@ -1,6 +1,6 @@
 module Sufia
   class QueryService
-    # query to find generic files created during the time range
+    # query to find works created during the time range
     # @param [DateTime] start_datetime starting date time for range query
     # @param [DateTime] end_datetime ending date time for range query
     def find_by_date_created(start_datetime, end_datetime = nil)

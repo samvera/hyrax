@@ -1,4 +1,4 @@
-RSpec.describe Sufia::Statistics::Collections do
+RSpec.describe Sufia::Statistics::Collections::OverTime do
   let(:service) { described_class.new }
 
   describe "#points" do
