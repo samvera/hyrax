@@ -33,9 +33,10 @@
   padding-bottom: $padding-large-vertical;
 }
 
-#footer {
+footer.navbar {
   padding-bottom: 0;
   margin-bottom: 0;
+  border-radius: 0;
 }
 
 label.required, span.required {
