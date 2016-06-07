@@ -103,6 +103,12 @@ module Sufia
       generate "sufia:proxies"
     end
 
+    def solr_config
+      say_status("info", "GENERATING SUFIA FULL-TEXT", :blue)
+      source = File.expand_path("../../../../solr/config/solrconfig.xml", __FILE__)
+      copy_file source, 'solr/conf/solrconfig.xml', force: true
+    end
+
     # Sets up cached usage stats
     def cached_stats
       generate 'sufia:cached_stats'
