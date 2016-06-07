@@ -11,6 +11,8 @@ module CurationConcerns
                     :representative_id, :thumbnail_id, :identifier, :based_near,
                     :related_url, :visibility]
 
+      self.required_fields = [:title]
+
       # Test to see if the given field is required
       # @param [Symbol] key a field
       # @return [Boolean] is it required or not
