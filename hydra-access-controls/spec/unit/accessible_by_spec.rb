@@ -7,10 +7,6 @@ describe "active_fedora/accessible_by" do
   let(:public_obj) {FactoryGirl.create(:asset)}
   let(:editable_obj) {FactoryGirl.create(:asset)}
 
-  # let(:private_obj) {FactoryGirl.create(:default_access_asset)}
-  # let(:public_obj) {FactoryGirl.create(:open_access_asset)}
-  # let(:editable_obj) {FactoryGirl.create(:group_edit_asset)}
-
   before do
     private_obj.permissions_attributes = [{ name: "joe_creator", access: "edit", type: "person" }]
     private_obj.save
