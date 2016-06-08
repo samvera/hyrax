@@ -2,5 +2,12 @@
 class Sufia::MySharesSearchBuilder < Sufia::SearchBuilder
   include Sufia::MySearchBuilderBehavior
 
-  self.default_processor_chain = default_processor_chain - [:filter_models] + [:show_only_shared_files]
+  self.default_processor_chain += [:show_only_shared_files]
+
+  def show_only_shared_files(solr_parameters)
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] += [
+      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: scope.current_user.user_key)
+    ]
+  end
 end

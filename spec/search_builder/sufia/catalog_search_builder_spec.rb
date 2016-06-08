@@ -1,4 +1,4 @@
-describe Sufia::SearchBuilder do
+describe Sufia::CatalogSearchBuilder do
   let(:builder) { described_class.new([], self) }
   let(:solr_params) { { q: user_query } }
 
