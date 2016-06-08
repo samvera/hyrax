@@ -160,8 +160,10 @@ en:
     generic_works:
       new:
         header: Add New Work
+        in_collections: This Work in Collections
       edit:
         header: Edit Work
+        in_collections: This Work in Collections
       progress:
         header: Save Work
       show:
@@ -169,6 +171,7 @@ en:
     batch_uploads:
       new:
         header: Batch Create New Works
+        in_collections: These Works in Collections
       progress:
         header: Save Works
       files:

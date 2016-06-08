@@ -1,4 +1,4 @@
-<h3>This Work in Collections</h3>
+<h3><%= t("sufia.#{controller_name}.#{action_name}.in_collections") %></h3>
 <div id="collection-widget">
   <%= f.input :collection_ids, as: :select,
       collection: available_collections(nil),
