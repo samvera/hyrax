@@ -10,7 +10,6 @@ describe SearchBuilder do
   subject do
     search_builder.new(processor_chain, context)
   end
-  before { subject.current_ability = current_ability }
 
   it "extends classes with the necessary Hydra modules" do
     expect(described_class.included_modules).to include(Hydra::AccessControlsEnforcement)
