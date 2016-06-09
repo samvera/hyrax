@@ -73,6 +73,25 @@ en:
         details:            'Details'
         tab_label:          'Recently Uploaded'
         no_public:          'No public work has been contributed.'
+    toolbar:
+      admin:
+        menu: "Admin"
+        statistics: "Repository Statistics"
+      dashboard:
+        menu: "Dashboard"
+        my: "My Dashboard"
+        highlights: "Highlights"
+        transfers: "Transfers"
+        shares: "Shares"
+      works:
+        menu: "Works"
+        new: "New"
+        my: "My Works"
+        batch: "Batch Create"
+      collections:
+        menu: "Collections"
+        my: "My Collections"
+        new: "New Collection"
     dashboard:
       title:                    "My Dashboard"
       view_collections:         "View Collections"
