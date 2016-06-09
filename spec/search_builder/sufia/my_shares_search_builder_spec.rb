@@ -8,11 +8,13 @@ describe Sufia::MySharesSearchBuilder do
                        current_user: me) }
   let(:builder) { described_class.new(scope) }
 
+  before { allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"]) }
+
   subject { builder.to_hash['fq'] }
 
   it "filters things we have access to in which we are not the depositor" do
-    expect(subject).to eq ["edit_access_group_ssim:public OR edit_access_group_ssim:registered OR edit_access_person_ssim:#{me.user_key}",
+    expect(subject).to eq ["access_filter1 OR access_filter2",
                            "{!terms f=has_model_ssim}GenericWork,Collection",
-                           "-_query_:\"{!field f=depositor_ssim}#{me.user_key}\""]
+                           "-_query_:\"{!field f=depositor_ssim}#{me.email}\""]
   end
 end
