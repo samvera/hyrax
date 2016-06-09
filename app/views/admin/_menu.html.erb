@@ -1,0 +1,8 @@
+<li class="dropdown">
+  <%= link_to sufia.admin_stats_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+    <span class="fa fa-gear"></span> <%= t("sufia.toolbar.admin.menu") %> <span class="caret"></span>
+  <% end %>
+  <ul class="dropdown-menu">
+    <li><%= link_to t("sufia.toolbar.admin.statistics"), sufia.admin_stats_path %></li>
+  </ul>
+</li>

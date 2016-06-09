@@ -19,6 +19,17 @@ describe '/_toolbar.html.erb', type: :view do
     end
   end
 
+  context 'with an admin user' do
+    before do
+      allow(view).to receive(:can?).with(:manage, :all).and_return(true)
+    end
+
+    it 'shows the admin menu' do
+      render
+      expect(rendered).to have_link 'Admin', sufia.admin_stats_path
+    end
+  end
+
   it 'has dashboard links' do
     render
     expect(rendered).to have_link 'My Dashboard', sufia.dashboard_index_path
