@@ -1,42 +1,37 @@
 
 describe 'catalog/_index_list_default', type: :view do
   let(:attributes) do
-    { 'creator_tesim' => ['Justin', 'Joe'],
-      'depositor_tesim' => ['jcoyne@justincoyne.com'],
-      'proxy_depositor_ssim' => ['atz@stanford.edu'],
-      'description_tesim' => ['This links to http://example.com/ What about that?'],
-      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z',
-      'rights_tesim' => ["http://creativecommons.org/publicdomain/zero/1.0/",
-                         "http://creativecommons.org/publicdomain/mark/1.0/",
-                         "http://www.europeana.eu/portal/rights/rr-r.html"] }
+    { 'creator_tesim' => [''],
+      'depositor_tesim' => [''],
+      'proxy_depositor_ssim' => [''],
+      'description_tesim' => [''],
+      'date_uploaded_dtsi' => 'a date',
+      'rights_tesim' => [''] }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:blacklight_configuration_context) do
     Blacklight::Configuration::Context.new(controller)
   end
-  let(:joe) { stub_model(User, email: 'atz@stanford.edu') }
-  let(:justin) { stub_model(User, email: 'jcoyne@justincoyne.com') }
-
   before do
-    allow(User).to receive(:find_by_user_key).and_return(joe, justin)
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
+    allow(view).to receive(:render_index_field_value) { |_, conf| "Test #{conf[:field]}" }
     render 'catalog/index_list_default', document: document
   end
 
   it "displays metadata" do
     expect(rendered).not_to include 'Title:'
     expect(rendered).to include '<span class="attribute-label h4">Creator:</span>'
-    expect(rendered).to include '<span itemprop="creator">Justin</span> and <span itemprop="creator">Joe</span>'
+    expect(rendered).to include 'Test creator_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Description:</span>'
-    expect(rendered).to include '<span itemprop="description">This links to <a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span> http://example.com/</a> What about that?</span>'
+    expect(rendered).to include 'Test description_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Date Uploaded:</span>'
-    expect(rendered).to include '<span itemprop="datePublished">03/14/2013</span>'
+    expect(rendered).to include 'Test date_uploaded_dtsi'
     expect(rendered).to include '<span class="attribute-label h4">Depositor:</span>'
-    expect(rendered).to include '<a href="/users/atz@stanford-dot-edu">atz@stanford.edu</a>'
+    expect(rendered).to include 'Test proxy_depositor_ssim'
     expect(rendered).to include '<span class="attribute-label h4">Owner:</span>'
-    expect(rendered).to include '<a href="/users/jcoyne@justincoyne-dot-com">jcoyne@justincoyne.com</a>'
+    expect(rendered).to include 'Test depositor_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Rights:</span>'
-    expect(rendered).to include '<a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a>, <a href="http://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</a>, and <a href="http://www.europeana.eu/portal/rights/rr-r.html">All rights reserved</a>'
+    expect(rendered).to include 'Test rights_tesim'
   end
 end

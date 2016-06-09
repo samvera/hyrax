@@ -91,6 +91,18 @@ module Sufia
       link_to(label, main_app.search_catalog_path(state))
     end
 
+    def index_field_link(options = {})
+      field_name = options[:config][:field_name]
+      values = options[:value]
+      safe_join(values.map { |item| link_to_index_field(item, field_name) }, ", ")
+    end
+
+    def link_to_index_field(name, value)
+      params = { search_field: 'advanced', name => "\"#{value}\"" }
+      state = search_state.params_for_search(params)
+      link_to(name, main_app.search_catalog_path(state))
+    end
+
     # @param [String,Hash] text either the string to escape or a hash containing the
     #                           string to escape under the :value key.
     def iconify_auto_link(text, showLink = true)
