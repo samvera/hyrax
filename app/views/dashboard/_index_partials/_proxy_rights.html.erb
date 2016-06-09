@@ -1,13 +1,13 @@
 <div class="clearfix proxy-rights">
 
   <div class="col-xs-6 proxy-search">
-    <h3 class="panel-title">Authorize Proxy</h3>
-    <label class="sr-only" for="user">Proxy User</label>
+    <h3 class="panel-title"><%= t("sufia.dashboard.authorize_proxies") %></h3>
+    <label class="sr-only" for="user"><%= t("sufia.dashboard.proxy_user") %></label>
     <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
   </div>
 
   <div class="col-xs-6">
-    <h3 class="panel-title">Current Proxies</h3>
+    <h3 class="panel-title"><%= t("sufia.dashboard.current_proxies") %></h3>
     <table class="table table-condensed table-striped" id="authorizedProxies">
       <tbody>
         <% @user.can_receive_deposits_from.each do |depositor| %>
