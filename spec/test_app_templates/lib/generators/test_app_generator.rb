@@ -13,7 +13,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def browse_everything_install
-    generate "browse_everything:install"
+    generate "browse_everything:install --skip-assets"
   end
 
   def banner
