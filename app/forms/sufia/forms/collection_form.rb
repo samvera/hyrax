@@ -1,5 +1,7 @@
 module Sufia::Forms
   class CollectionForm < CurationConcerns::Forms::CollectionEditForm
+    delegate :id, to: :model
+
     def rendered_terms
       [:title,
        :creator,

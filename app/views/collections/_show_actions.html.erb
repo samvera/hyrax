@@ -1,7 +1,21 @@
-<h2 class="sr-only">Actions</h2>
+<h2 class="sr-only"><%= t('sufia.collection.actions.header') %></h2>
 <div class="actions-controls-collections">
-  <% if can? :edit, @presenter.solr_document %>
-    <span class="label label-default"><%= link_to "Edit", edit_collection_path, title: "Edit this Collection" %></span> &nbsp;&nbsp;
-    <span class="label label-default"><%= link_to "Add files",  sufia.dashboard_works_path(add_files_to_collection: @presenter.id), title: "Add files to this Collection" %></span>
-  <%end %>
+    <% if can? :edit, presenter.solr_document %>
+      <%= link_to t('sufia.collection.actions.edit.label'),
+                  edit_collection_path(presenter),
+                  title: t('sufia.collection.actions.edit.desc'),
+                  class: 'btn btn-default' %>
+      <%= link_to t('sufia.collection.actions.add_works.label'),
+                  sufia.dashboard_works_path(add_files_to_collection: presenter.id),
+                  title: t('sufia.collection.actions.add_works.desc') %>
+    <%end %>
+
+    <% if can? :destroy, presenter.solr_document %>
+      <%= link_to t('sufia.collection.actions.delete.label'),
+                  collection_path(presenter),
+                  title: t('sufia.collection.actions.delete.desc'),
+                  class: 'btn btn-danger',
+                  data: { confirm: t('sufia.collection.actions.delete.confirmation'),
+                          method: :delete } %>
+    <% end %>
 </div>

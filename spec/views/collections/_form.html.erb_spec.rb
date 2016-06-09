@@ -1,4 +1,3 @@
-
 describe 'collections/_form.html.erb' do
   let(:collection) { build(:collection) }
   let(:collection_form) { Sufia::Forms::CollectionForm.new(collection) }

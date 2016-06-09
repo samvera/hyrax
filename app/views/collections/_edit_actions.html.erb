@@ -1,5 +1,6 @@
-<h2 class="sr-only">Actions</h2>
+<h2 class="sr-only"><%= t('sufia.collection.actions.header') %></h2>
 <div class="actions-controls-collections">
-  <span class="label label-default"><%= link_to "Browse", collection_path %></span> &nbsp;&nbsp;
-  <span class="label label-default"><%= link_to "Add files",  sufia.dashboard_works_path %></span>
+  <%= link_to t('sufia.collection.actions.add_works.label'),
+              sufia.dashboard_works_path(add_files_to_collection: @form.id),
+              title: t('sufia.collection.actions.add_works.desc') %>
 </div>
