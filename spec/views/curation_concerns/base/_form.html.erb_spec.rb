@@ -16,6 +16,8 @@ describe 'curation_concerns/base/_form.html.erb' do
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     assign(:form, form)
+    controller.stub(:controller_name).and_return('batch_uploads')
+    controller.stub(:action_name).and_return('new')
   end
 
   let(:page) do
