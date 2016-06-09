@@ -8,6 +8,10 @@ class Sufia::AssetsGenerator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
+  def remove_blacklight_css
+    remove_file "app/assets/stylesheets/blacklight.scss"
+  end
+
   def inject_css
     copy_file "sufia.scss", "app/assets/stylesheets/sufia.scss"
   end
