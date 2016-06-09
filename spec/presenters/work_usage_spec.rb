@@ -127,7 +127,7 @@ describe WorkUsage, type: :model do
     let(:date_uploaded) { "2014-12-31" }
 
     let(:work_migrated) do
-      GenericWork.create(id: '6789', title: ['bilbo work 2']) do |work|
+      GenericWork.create(id: '678901234', title: ['bilbo work 2']) do |work|
         work.apply_depositor_metadata("gordonl")
         work.date_uploaded = date_uploaded
         work.save
