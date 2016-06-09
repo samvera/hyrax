@@ -1,8 +1,8 @@
 <div class="btn-group">
 
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= document.id %>" aria-haspopup="true">
-    <span class="sr-only">Press to </span>
-    Select an action
+    <span class="sr-only"><%= t("sufia.dashboard.my.sr.press_to") %> </span>
+    <%= t("sufia.dashboard.my.action.select") %>
     <span class="caret" aria-hidden="true"></span>
   </button>
 
@@ -11,14 +11,17 @@
     <li role="menuitem" tabindex="-1">
       <%= link_to(edit_curation_concerns_generic_work_path(document.id)) do %>
         <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
-        <span> Edit Work </span>
+        <span> <%= t("sufia.dashboard.my.action.edit_work") %> </span>
       <% end %>
     </li>
 
     <li role="menuitem" tabindex="-1">
-      <%= link_to(curation_concerns_generic_work_path(document.id), method: :delete, data: { confirm: "Deleting a work from #{application_name} is permanent. Click OK to delete this work from #{application_name}, or Cancel to cancel this operation" }) do %>
+      <%= link_to curation_concerns_generic_work_path(document.id),
+                  method: :delete,
+                  data: { 
+                    confirm: t("sufia.dashboard.my.action.work_confirmation", application_name: application_name) } do %>
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-        <span> Delete Work </span>
+        <span> <%= t("sufia.dashboard.my.action.delete_work") %> </span>
       <% end %>
     </li>
 
@@ -28,9 +31,9 @@
       <% end %>
     </li>
     <li role="menuitem" tabindex="-1">
-      <%= link_to(sufia.new_generic_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: 'Transfer Ownership of Work') do %>
+      <%= link_to(sufia.new_generic_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: t("sufia.dashboard.my.action.transfer")) do %>
         <i aria-hidden="true" class='glyphicon glyphicon-transfer'></i>
-        <span> Transfer Ownership of Work </span>
+        <span> <%= t("sufia.dashboard.my.action.transfer") %> </span>
       <% end %>
     </li>
   </ul>
