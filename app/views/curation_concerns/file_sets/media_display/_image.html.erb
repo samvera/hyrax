@@ -1,7 +1,7 @@
 <% if CurationConcerns.config.display_media_download_link %>
     <%= link_to main_app.download_path(file_set), target: "_new", title: "Download the full-sized image" do %>
         <figure>
-            <%= image_tag main_app.download_path(file_set, file: 'thumbnail'),
+            <%= image_tag thumbnail_url(file_set),
                           class: "img-responsive",
                           alt: "Download the full-sized image of #{file_set.to_s}" %>
             <figcaption>Download the full-sized image</figcaption>
@@ -9,7 +9,7 @@
     <% end %>
 <% else %>
     <figure>
-        <%= image_tag main_app.download_path(file_set, file: 'thumbnail'),
+        <%= image_tag thumbnail_url(file_set),
                       class: "img-responsive",
                       alt: "Thumbnail of #{file_set.to_s}" %>
     </figure>

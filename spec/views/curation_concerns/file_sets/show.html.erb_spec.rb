@@ -3,6 +3,8 @@ require 'spec_helper'
 describe 'curation_concerns/file_sets/show.html.erb', type: :view do
   before do
     allow(view).to receive(:parent).and_return(parent)
+    allow(view).to receive_messages(blacklight_config: CatalogController.blacklight_config,
+                                    blacklight_configuration_context: Blacklight::Configuration::Context.new(controller))
   end
 
   let(:parent) { stub_model(GenericWork) }
