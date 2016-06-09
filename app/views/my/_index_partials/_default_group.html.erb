@@ -1,13 +1,13 @@
 <table class="table table-striped">
-  <caption class="sr-only">Listing of items you have deposited in <%= application_name %></caption>
+  <caption class="sr-only"><%= t("sufia.dashboard.my.sr.listing") %> <%= application_name %></caption>
 <% unless params[:display_type] == 'list' %>
   <thead>
   <tr>
     <th><label for="check_all" class="sr-only"><%= t("sufia.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
-    <th>Title</th>
-    <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%=params[:sort]== "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort]== "#{CatalogController.uploaded_field} asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
-    <th>Visibility</th>
-    <th>Action</th>
+    <th><%= t("sufia.dashboard.my.heading.title") %></th>
+    <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%=params[:sort]== "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort]== "#{CatalogController.uploaded_field} asc" ? 'caret up' : ''%>"></i><%= t("sufia.dashboard.my.heading.date_uploaded") %></th>
+    <th><%= t("sufia.dashboard.my.heading.visibility") %></th>
+    <th><%= t("sufia.dashboard.my.heading.action") %></th>
   </tr>
   </thead>
   <% end %>
