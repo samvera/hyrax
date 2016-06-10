@@ -16,8 +16,8 @@ class FeaturedWorkList
     @works = FeaturedWork.all
     add_solr_document_to_works
     @works = @works.reject do |work|
-      work.destroy if work.generic_work_solr_document.blank?
-      work.generic_work_solr_document.blank?
+      work.destroy if work.presenter.blank?
+      work.presenter.blank?
     end
   end
 
@@ -26,8 +26,8 @@ class FeaturedWorkList
   private
 
     def add_solr_document_to_works
-      solr_docs.each do |doc|
-        work_with_id(doc['id']).generic_work_solr_document = SolrDocument.new(doc)
+      work_presenters.each do |presenter|
+        work_with_id(presenter.id).presenter = presenter
       end
     end
 
@@ -35,8 +35,11 @@ class FeaturedWorkList
       @works.pluck(:work_id)
     end
 
-    def solr_docs
-      ActiveFedora::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids))
+    def work_presenters
+      ability = nil
+      CurationConcerns::PresenterFactory.build_presenters(ids,
+                                                          Sufia::WorkShowPresenter,
+                                                          ability)
     end
 
     def work_with_id(id)
