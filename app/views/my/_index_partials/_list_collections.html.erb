@@ -1,14 +1,14 @@
 <% id = document.id %>
 <tr id="document_<%= id %>">
-  <td width="3%"></td>
-  <td width="41%">
+  <td></td>
+  <td>
     <div class="media">
       <%= link_to document, class: "pull-left", "aria-hidden" => true do %>
           <span class="fa fa-cubes collection-icon-small"></span>
       <% end %>
       <div class="media-body">
         <div class="media-heading">
-          <%= link_to collection_path(id), id: "src_copy_link#{id}" do %>
+          <%= link_to document, id: "src_copy_link#{id}" do %>
               <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
           <% end %>
@@ -20,9 +20,9 @@
       </div>
     </div>
   </td>
-  <td width="17%" class="text-center"><%= document.create_date %> </td>
-  <td width="5%" class="text-center visibility-link">
-    <%= render_visibility_label(document) %>
+  <td class="text-center"><%= document.create_date %> </td>
+  <td class="text-center">
+    <%= render_visibility_link(document) %>
   </td>
   <td class="text-center">
     <%= render 'collection_action_menu', id: id %>
@@ -32,7 +32,7 @@
   <td colspan="6">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2"><%= t("sufia.dashboard.my.collection_list.description") %></dt>
-      <dd class="col-xs-9 col-lg-10"> <%= document.description%></dd>
+      <dd class="col-xs-9 col-lg-10"><%= document.description.first %></dd>
       <dt class="col-xs-3 col-lg-2"><%= t("sufia.dashboard.my.collection_list.edit_access") %></dt>
       <dd class="col-xs-9 col-lg-10">
       <% if document.edit_groups.present? %>
