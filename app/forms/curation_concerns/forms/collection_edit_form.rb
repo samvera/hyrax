@@ -13,13 +13,6 @@ module CurationConcerns
 
       self.required_fields = [:title]
 
-      # Test to see if the given field is required
-      # @param [Symbol] key a field
-      # @return [Boolean] is it required or not
-      def required?(key)
-        model_class.validators_on(key).any? { |v| v.is_a? ActiveModel::Validations::PresenceValidator }
-      end
-
       # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
       def select_files
         Hash[all_files]
