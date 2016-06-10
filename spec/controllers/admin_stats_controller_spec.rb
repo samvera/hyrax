@@ -1,20 +1,27 @@
 describe Admin::StatsController, type: :controller do
-  let(:user1) { create(:user) }
+  let(:user) { create(:user) }
 
-  before do
-    allow(user1).to receive(:groups).and_return(['admin'])
+  context "a non admin" do
+    describe "#index" do
+      it 'is unauthorized' do
+        get :index
+        expect(response).to be_redirect
+      end
+    end
   end
 
-  describe "#index" do
+  context "as an admin" do
     before do
-      sign_in user1
+      allow(controller).to receive(:authorize!).and_return(true)
     end
 
-    it 'allows an authorized user to view the page' do
-      expect(Sufia::AdminStatsPresenter).to receive(:new).with({}, 5).and_call_original
-      get :index
-      expect(response).to be_success
-      expect(assigns[:presenter]).to be_kind_of Sufia::AdminStatsPresenter
+    describe "#index" do
+      it 'allows an authorized user to view the page' do
+        expect(Sufia::AdminStatsPresenter).to receive(:new).with({}, 5).and_call_original
+        get :index
+        expect(response).to be_success
+        expect(assigns[:presenter]).to be_kind_of Sufia::AdminStatsPresenter
+      end
     end
   end
 end
