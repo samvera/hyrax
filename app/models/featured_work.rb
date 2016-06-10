@@ -10,7 +10,7 @@ class FeaturedWork < ActiveRecord::Base
     errors.add(:base, "Limited to #{FEATURE_LIMIT} featured works.")
   end
 
-  attr_accessor :generic_work_solr_document
+  attr_accessor :presenter
 
   class << self
     def can_create_another?
