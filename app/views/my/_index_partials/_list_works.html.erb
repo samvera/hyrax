@@ -7,14 +7,14 @@
 
   <td>
     <div class='media'>
-      <%= link_to curation_concerns_generic_work_path(document), class: 'media-left', 'aria-hidden' => true do %>
+      <%= link_to document, class: 'media-left', 'aria-hidden' => true do %>
         <%= render_thumbnail_tag document, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
       <% end %>
 
       <div class='media-body'>
         <div class='media-heading'>
 
-          <%= link_to curation_concerns_generic_work_path(document), id: "src_copy_link#{document.id}", class: 'document-title' do %>
+          <%= link_to document, id: "src_copy_link#{document.id}", class: 'document-title' do %>
             <span class="sr-only">
               <%= t("sufia.dashboard.my.sr.show_label") %>
             </span>

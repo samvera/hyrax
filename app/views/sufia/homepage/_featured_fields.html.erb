@@ -1,6 +1,6 @@
 <h3>
   <span class="sr-only">Title</span>
-  <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '), curation_concerns_generic_work_path(featured)  %>
+  <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '), featured  %>
 </h3>
 <div>
   <span class="sr-only">Depositor</span>
@@ -8,7 +8,7 @@
 </div>
 <div>
   <span class="sr-only">Filename</span>
-  <%= link_to truncate(featured.label, length: 25), curation_concerns_generic_work_path(featured), title: featured.label %>
+  <%= link_to truncate(featured.label, length: 25), featured, title: featured.label %>
 </div>
 <div>
   <span class="sr-only">File type</span>

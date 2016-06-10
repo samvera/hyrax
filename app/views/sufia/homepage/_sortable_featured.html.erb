@@ -6,7 +6,7 @@
     <%= f.hidden_field :order, data: {property: "order"} %>
     <div class="main row">
       <div class="col-sm-3">
-        <%= link_to curation_concerns_generic_work_path(featured) do %>
+        <%= link_to featured do %>
           <%= render_thumbnail_tag featured, {width: 90} %>
         <% end %>
       </div>
@@ -20,7 +20,7 @@
             <% end %>
           </h3>
         <% end %>
-        <%= render partial: 'sufia/homepage/featured_fields', locals: {featured: featured} %>
+        <%= render 'sufia/homepage/featured_fields', featured: featured %>
       </div>
     </div>
   </div>
