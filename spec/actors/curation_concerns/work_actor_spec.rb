@@ -204,6 +204,43 @@ describe CurationConcerns::Actors::GenericWorkActor do
         expect(old_parent.reload.members).to eq []
       end
     end
+    context 'without in_works_ids' do
+      let(:old_parent) { FactoryGirl.create(:generic_work) }
+      let(:attributes) do
+        FactoryGirl.attributes_for(:generic_work).merge(
+          in_works_ids: []
+        )
+      end
+      before do
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+        old_parent.ordered_members << curation_concern
+        old_parent.save!
+      end
+      it "removes the old parent" do
+        expect(subject.update(attributes)).to be true
+        expect(curation_concern.in_works).to eq []
+        expect(old_parent.reload.members).to eq []
+      end
+    end
+    context 'with nil in_works_ids' do
+      let(:parent) { FactoryGirl.create(:generic_work) }
+      let(:attributes) do
+        FactoryGirl.attributes_for(:generic_work).merge(
+          in_works_ids: nil
+        )
+      end
+      before do
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+        parent.ordered_members << curation_concern
+        parent.save!
+      end
+      it "does nothing" do
+        expect(subject.update(attributes)).to be true
+        expect(curation_concern.in_works).to eq [parent]
+      end
+    end
     context 'adding to collections' do
       let!(:collection1) { create(:collection, user: user) }
       let!(:collection2) { create(:collection, user: user) }

@@ -14,7 +14,7 @@ module CurationConcerns
       private
 
         def add_to_works(new_work_ids)
-          return true unless new_work_ids.present?
+          return true if new_work_ids.nil?
           (curation_concern.in_works_ids - new_work_ids).each do |old_id|
             work = ::ActiveFedora::Base.find(old_id)
             work.ordered_members.delete(curation_concern)
