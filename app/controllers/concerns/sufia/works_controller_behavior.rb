@@ -45,11 +45,7 @@ module Sufia
     def after_create_response
       respond_to do |wants|
         wants.html do
-          flash[:notice] = "Your files are being processed by #{view_context.application_name} in " \
-            "the background. The metadata and access controls you specified are being applied. " \
-            "Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> " \
-            "until this process is complete (shouldn't take too long, hang in there!). You may need " \
-            "to refresh your dashboard to see these updates."
+          flash[:notice] = t('sufia.generic_works.new.after_create_html', application_name: view_context.application_name)
           redirect_to [main_app, curation_concern]
         end
         wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }
