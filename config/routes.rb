@@ -128,7 +128,7 @@ Sufia::Engine.routes.draw do
 
   # Permissions routes
   namespace :curation_concerns, path: :concern do
-    resources(:permissions, only: []) do
+    resources :permissions, only: [] do
       member do
         get :confirm
         post :copy
@@ -150,12 +150,8 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  if defined?(Sufia::StatsAdmin)
-    namespace :admin do
-      constraints Sufia::StatsAdmin do
-        get 'stats' => 'stats#index', as: :stats
-      end
-    end
+  namespace :admin do
+    get 'stats' => 'stats#index', as: :stats
   end
 
   resources :content_blocks, only: ['create', 'update']

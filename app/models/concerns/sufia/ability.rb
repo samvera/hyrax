@@ -51,6 +51,7 @@ module Sufia
     end
 
     def stats_abilities
+      can :read, Sufia::Statistics if admin?
       alias_action :stats, to: :read
     end
 
