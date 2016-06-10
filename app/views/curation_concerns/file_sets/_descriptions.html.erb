@@ -1,7 +1,7 @@
 <div id="descriptions_display" class="tab-pane active">
   <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
-    <h1>Description</h1>
+    <h1>Descriptions</h1>
       <% f.object.terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>
       <% end %>

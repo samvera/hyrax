@@ -214,7 +214,7 @@ en:
         in_collections: This Work in Collections
         additional_fields: "Additional fields"
         tab:
-          metadata:      "Description"
+          metadata:      "Descriptions"
           files:         "Files"
           relationships: "Relationships"
           share:         "Share"
@@ -247,7 +247,7 @@ en:
           confirmation: "Delete this collection?"
       edit:
         manage_items: "Manage Items in this Collection"
-        description: "Description"
+        description: "Descriptions"
         additional_fields: "Additional fields"
       document_list:
         edit: "Edit"
@@ -334,14 +334,6 @@ en:
         publisher: "The person or group making the collection available. Generally this is the institution."
         rights: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
 
-    aria_label:
-      upload_set:
-        default:     "Usage information for %{title}"
-        based_near:  "Usage information for location"
-        description: "Usage information for abstract or summary"
-        keyword:     "Usage information for keyword"
-        rights:      "Usage information for rights"
-
   curation_concerns:
     base:
       relationships:
@@ -349,7 +341,7 @@ en:
         empty:       "This %{type} is not currently in any collections."
         collections: "In collections:"
       metadata:
-        header: Description
+        header: Descriptions
         attribute_name_label: Attribute Name
         attribute_values_label: Values
       items:
