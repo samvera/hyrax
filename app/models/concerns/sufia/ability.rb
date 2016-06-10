@@ -3,17 +3,13 @@ module Sufia
     extend ActiveSupport::Concern
 
     included do
-      self.ability_logic += [:sufia_abilities]
-    end
-
-    def sufia_abilities
-      user_abilities
-      featured_work_abilities
-      editor_abilities
-      stats_abilities
-      citation_abilities
-      proxy_deposit_abilities
-      uploaded_file_abilities
+      self.ability_logic += [:user_abilities,
+                             :featured_work_abilities,
+                             :editor_abilities,
+                             :stats_abilities,
+                             :citation_abilities,
+                             :proxy_deposit_abilities,
+                             :uploaded_file_abilities]
     end
 
     def uploaded_file_abilities
