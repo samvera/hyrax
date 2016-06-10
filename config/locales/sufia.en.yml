@@ -224,10 +224,25 @@ en:
       files:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
     collection:
-      no_visible_works: "The collection is either empty or does not contain items to which you have access."
       is_part_of: "Is part of"
-      add_work:        "Add Work"
-      select_works:    "Select Works"
+      browse_view: "Browse View"
+      actions:
+        header: "Actions"
+        edit:
+          label: "Edit"
+          desc: "Edit this collection"
+        add_works:
+          label: "Add works"
+          desc: "Add works to this Collection"
+        delete:
+          label: "Delete"
+          desc: "Delete this collection"
+          confirmation: "Delete this collection?"
+      edit:
+        manage_items: "Manage Items in this Collection"
+      document_list:
+        edit: "Edit"
+        no_visible_works: "The collection is either empty or does not contain items to which you have access."
       select_form:
         title: "Add to collection"
         no_collections: "You do not have access to any existing collections. You may create a new collection."
@@ -236,15 +251,6 @@ en:
         create: "Create Collection"
         update: "Update Collection"
         create_new: "Add to new Collection"
-
-      manage_items: "Manage Items in this Collection"
-      metadata:
-        add_another_keyword: "add another Keyword"
-        add_another_creator: "add another Creator"
-        add_another_rights: "add another Rights"
-      generic_work:
-        edit: "Edit"
-      browse_view: "Browse View"
     mailbox:
       date:     'Date'
       subject:  'Subject'

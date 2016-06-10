@@ -44,4 +44,9 @@ describe Sufia::Forms::CollectionForm do
       :resource_type
     ] }
   end
+
+  describe "#id" do
+    subject { form.id }
+    it { is_expected.to be_nil }
+  end
 end
