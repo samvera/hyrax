@@ -1,7 +1,7 @@
     <tr>
       <td class="col-sm-2">
         <%= link_to_profile recent_document.depositor("no depositor value") %>
-        <%= link_to curation_concerns_generic_work_path(recent_document) do %>
+        <%= link_to recent_document do %>
           <%= render_thumbnail_tag recent_document, { width: 45 }, false %>
         <% end %>
       </td>

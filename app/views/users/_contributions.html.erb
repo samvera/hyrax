@@ -4,12 +4,12 @@
       <% @trophies.each do |t| %>
         <tr id="trophyrow_<%= t.id %>">
           <td>
-            <%= link_to curation_concerns_generic_work_path(t) do %>
+            <%= link_to t do %>
               <%= image_tag t.indexing_service.thumbnail_path, { width: 90 } %>
             <% end %>
           </td>
           <td>
-            <%= link_to t.to_s, curation_concerns_generic_work_path(t) %>
+            <%= link_to t.to_s, t %>
             <% if current_user == @user %>
               <%= display_trophy_link current_user, t.id, class: 'glyphicon glyphicon-star', data: {removerow: true} do %>
                 <i class='trophy-on glyphicon glyphicon-remove'></i>

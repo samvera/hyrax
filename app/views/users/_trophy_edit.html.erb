@@ -6,7 +6,7 @@
   <dl>
     <% trophies.each do |t| %>
       <dd>
-        <%= link_to t, curation_concerns_generic_work_path(t) %>
+        <%= link_to t, t %>
         <label class="checkbox fleft">
           <%= check_box_tag "remove_trophy_#{t.id}" %> Yes &nbsp;
         </label>

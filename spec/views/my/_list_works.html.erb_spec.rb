@@ -17,6 +17,7 @@ describe 'my/_index_partials/_list_works.html.erb' do
   end
 
   before do
+    allow(doc).to receive(:to_model).and_return(stub_model(GenericWork, id: id))
     allow(view).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:render_collection_links).with(doc).and_return("<a href=\"collection/1\">Collection Title</a>".html_safe)
     allow(view).to receive(:render_visibility_link).with(doc).and_return("<a class=\"visibility-link\">Private</a>".html_safe)
