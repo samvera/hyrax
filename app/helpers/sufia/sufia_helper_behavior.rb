@@ -159,16 +159,6 @@ module Sufia
               id: "permission_" + document.id, class: "visibility-link"
     end
 
-    def render_visibility_label(document)
-      if document.registered?
-        content_tag :span, institution_name, class: "label label-info", title: institution_name
-      elsif document.public?
-        content_tag :span, t('sufia.visibility.open'), class: "label label-success", title: t('sufia.visibility.open_title_attr')
-      else
-        content_tag :span, t('sufia.visibility.private'), class: "label label-danger", title: t('sufia.visibility.private_title_attr')
-      end
-    end
-
     def user_display_name_and_key(user_key)
       user = ::User.find_by_user_key(user_key)
       return user_key if user.nil?
@@ -181,6 +171,16 @@ module Sufia
     end
 
     private
+
+      def render_visibility_label(document)
+        if document.registered?
+          content_tag :span, institution_name, class: "label label-info", title: institution_name
+        elsif document.public?
+          content_tag :span, t('sufia.visibility.open'), class: "label label-success", title: t('sufia.visibility.open_title_attr')
+        else
+          content_tag :span, t('sufia.visibility.private'), class: "label label-danger", title: t('sufia.visibility.private_title_attr')
+        end
+      end
 
       def user_agent
         request.user_agent || ''
