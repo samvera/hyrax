@@ -45,12 +45,4 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
       puts "     \e[31mFailure\e[0m  Sufia requires a CurationConcerns::GenericWorksController object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
     end
   end
-
-  def install_assets
-    generate "sufia:assets"
-  end
-
-  def install_batch_edit
-    generate "hydra_batch_edit:install"
-  end
 end

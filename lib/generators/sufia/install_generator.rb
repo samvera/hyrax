@@ -23,8 +23,10 @@ module Sufia
    4. Adds controller behavior to the application controller
    5. Copies the catalog controller into the local app
    6. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
-   7. Updates simple_form to use browser validations
-   8. Installs Blacklight gallery
+   7. Installs sufia assets
+   8. Installs hydra:batch_edit
+   9. Updates simple_form to use browser validations
+   10. Installs Blacklight gallery (and removes it's scss)
          """
 
     def banner
@@ -205,6 +207,14 @@ module Sufia
       generate "sufia:upgrade700"
     end
 
+    def install_assets
+      generate "sufia:assets"
+    end
+
+    def install_batch_edit
+      generate "hydra_batch_edit:install"
+    end
+
     def use_browser_validations
       gsub_file 'config/initializers/simple_form.rb',
                 /browser_validations = false/,
@@ -213,6 +223,9 @@ module Sufia
 
     def install_blacklight_gallery
       generate "blacklight_gallery:install"
+      # This was pulling in an extra copy of bootstrap, so we added the needed
+      # includes to sufia.scss
+      remove_file 'app/assets/stylesheets/blacklight_gallery.css.scss'
     end
   end
 end
