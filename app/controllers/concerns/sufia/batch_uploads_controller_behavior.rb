@@ -13,13 +13,7 @@ module Sufia
     def create
       authenticate_user!
       create_update_job
-      flash[:notice] = <<-EOS.strip_heredoc.tr("\n", ' ')
-        Your files are being processed by #{view_context.application_name} in
-        the background. The metadata and access controls you specified are being applied.
-        Files will be marked <span class="label label-danger" title="Private">Private</span>
-        until this process is complete (shouldn't take too long, hang in there!). You may need
-        to refresh your dashboard to see these updates.
-      EOS
+      flash[:notice] = t('sufia.generic_works.new.after_create_html', application_name: view_context.application_name)
       redirect_after_update
     end
 

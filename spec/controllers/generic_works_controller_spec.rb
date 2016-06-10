@@ -106,7 +106,7 @@ describe CurationConcerns::GenericWorksController do
       post :create, generic_work: { title: ["First title"],
                                     visibility: 'open' },
                     uploaded_files: ['777', '888']
-      expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh your dashboard to see these updates."
+      expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
       expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
     end
 
@@ -156,7 +156,7 @@ describe CurationConcerns::GenericWorksController do
                         uploaded_files: uploaded_files,
                         parent_id: work.id,
                         generic_work: { title: ['First title'] }
-          expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh your dashboard to see these updates."
+          expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
           expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
         end
       end
