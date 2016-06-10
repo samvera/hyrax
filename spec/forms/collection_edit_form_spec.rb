@@ -13,6 +13,11 @@ describe CurationConcerns::Forms::CollectionEditForm do
     end
   end
 
+  describe "#required?" do
+    subject { form.required?(:title) }
+    it { is_expected.to be true }
+  end
+
   describe "#human_readable_type" do
     subject { form.human_readable_type }
     it { is_expected.to eq 'Collection' }
