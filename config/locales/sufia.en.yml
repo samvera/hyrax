@@ -212,6 +212,12 @@ en:
       edit:
         header: Edit Work
         in_collections: This Work in Collections
+        additional_fields: "Additional fields"
+        tab:
+          metadata:      "Description"
+          files:         "Files"
+          relationships: "Relationships"
+          share:         "Share"
       progress:
         header: Save Work
       show:
@@ -241,6 +247,8 @@ en:
           confirmation: "Delete this collection?"
       edit:
         manage_items: "Manage Items in this Collection"
+        description: "Description"
+        additional_fields: "Additional fields"
       document_list:
         edit: "Edit"
         no_visible_works: "The collection is either empty or does not contain items to which you have access."
@@ -341,7 +349,7 @@ en:
         empty:       "This %{type} is not currently in any collections."
         collections: "In collections:"
       metadata:
-        header: Metadata
+        header: Description
         attribute_name_label: Attribute Name
         attribute_values_label: Values
       items:

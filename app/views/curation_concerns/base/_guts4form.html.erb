@@ -11,7 +11,9 @@
         <% else %>
           <li role="presentation">
         <% end %>
-            <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab"><%= tab.capitalize %></a>
+            <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+              <%= t("sufia.generic_works.edit.tab.#{tab}") %>
+            </a>
           </li>
       <% end %>
     </ul>
