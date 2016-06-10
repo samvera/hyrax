@@ -24,11 +24,15 @@ describe Sufia::Forms::CollectionForm do
   let(:collection) { build(:collection) }
   let(:form) { described_class.new(collection) }
 
-  describe "#rendered_terms" do
-    subject { form.rendered_terms }
+  describe "#primary_terms" do
+    subject { form.primary_terms }
+    it { is_expected.to eq([:title]) }
+  end
+
+  describe "#secondary_terms" do
+    subject { form.secondary_terms }
 
     it { is_expected.to eq [
-      :title,
       :creator,
       :contributor,
       :description,

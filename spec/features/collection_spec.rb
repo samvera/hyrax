@@ -18,7 +18,7 @@ describe 'collection', type: :feature do
       visit '/dashboard'
       first('#hydra-collection-add').click
       expect(page).to have_content 'Create New Collection'
-
+      click_link('Additional fields')
       # Creator is a multi-value field, so it should have button to add more fields
       expect(page).to have_selector "div.collection_creator .input-append button.add"
 
