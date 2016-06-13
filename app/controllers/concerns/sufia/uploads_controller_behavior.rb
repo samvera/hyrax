@@ -2,7 +2,7 @@ module Sufia::UploadsControllerBehavior
   extend ActiveSupport::Concern
 
   included do
-    load_and_authorize_resource class: UploadedFile
+    load_and_authorize_resource class: Sufia::UploadedFile
   end
 
   def create
