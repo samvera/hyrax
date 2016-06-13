@@ -1,6 +1,4 @@
-require_relative 'abstract_migration_generator'
-
-class Sufia::ArkivoApiGenerator < Sufia::AbstractMigrationGenerator
+class Sufia::ArkivoApiGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
   desc """
@@ -24,11 +22,6 @@ This generator sets up Zotero/Arkivo API integration for your application:
   # Copy the routing constraint over
   def copy_routing_constraint
     copy_file 'config/arkivo_constraint.rb', 'config/initializers/arkivo_constraint.rb'
-  end
-
-  # Copy the database migration
-  def copy_migration
-    better_migration_template 'add_arkivo_to_users.rb'
   end
 
   # Copy the config files for Zotero and Arkivo

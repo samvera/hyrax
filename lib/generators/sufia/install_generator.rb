@@ -1,7 +1,5 @@
-require_relative 'abstract_migration_generator'
-
 module Sufia
-  class Install < Sufia::AbstractMigrationGenerator
+  class Install < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
     argument :model_name, type: :string, default: "user", desc: "Model name for User model (primarily passed to devise, but also used elsewhere)"
     class_option :skip_curation_concerns, type: :boolean, default: false, desc: "whether to skip the curation_concerns:models installer"
@@ -14,11 +12,6 @@ module Sufia
      * Generates GenericWork model.
      * Creates the sufia.rb configuration file
      * Generates mailboxer
-     * Runs proxies generator
-     * Runs cached stats generator
-     * Runs ORCID field generator
-     * Runs user stats generator
-     * Runs upload_to_collection config generator
    3. Adds Sufia's abilities into the Ability class
    4. Adds controller behavior to the application controller
    5. Copies the catalog controller into the local app
@@ -44,22 +37,7 @@ module Sufia
 
     # Setup the database migrations
     def copy_migrations
-      [
-        "acts_as_follower_migration.rb",
-        "add_social_to_users.rb",
-        "add_ldap_attrs_to_user.rb",
-        "add_avatars_to_users.rb",
-        "create_local_authorities.rb",
-        "create_trophies.rb",
-        'add_linkedin_to_users.rb',
-        'create_tinymce_assets.rb',
-        'create_content_blocks.rb',
-        'create_featured_works.rb',
-        'add_external_key_to_content_blocks.rb',
-        'create_uploaded_files.rb'
-      ].each do |file|
-        better_migration_template file
-      end
+      rake 'sufia:install:migrations'
     end
 
     def install_config
@@ -97,12 +75,7 @@ module Sufia
     end
 
     def configure_usage_stats
-      generate 'sufia:usagestats'
-    end
-
-    # Sets up proxies and transfers
-    def proxies
-      generate "sufia:proxies"
+      copy_file 'config/analytics.yml', 'config/analytics.yml'
     end
 
     def solr_config
@@ -111,24 +84,17 @@ module Sufia
       copy_file source, 'solr/conf/solrconfig.xml', force: true
     end
 
-    # Sets up cached usage stats
-    def cached_stats
-      generate 'sufia:cached_stats'
-    end
-
-    # Adds orcid field to user model
-    def orcid_field
-      generate 'sufia:orcid_field'
-    end
-
-    # Adds user stats-related migration & methods
+    # Adds user stats-related methods
     def user_stats
-      generate 'sufia:user_stats'
-    end
+      file_path = "app/models/#{model_name.underscore}.rb"
 
-    # Sets up cached usage stats
-    def cached_work_stats
-      generate 'sufia:cached_work_stats'
+      if File.exist?(file_path)
+        inject_into_file file_path, after: /include Sufia\:\:User.*$/ do
+          "\n  include Sufia::UserUsageStats"
+        end
+      else
+        puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generator assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails g sufia:user_stats client"
+      end
     end
 
     def insert_abilities
