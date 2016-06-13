@@ -1,16 +1,11 @@
 Sufia.config do |config|
-  config.max_days_between_audits = 7
-  config.max_notifications_for_dashboard = 5
+  config.register_curation_concern :generic_work
 
-  config.permission_levels = {
-    "Choose Access" => "none",
-    "View/Download" => "read",
-    "Edit" => "edit"
-  }
+  # How many notifications should be displayed on the dashboard
+  # config.max_notifications_for_dashboard = 5
 
-  config.owner_permission_levels = {
-    "Edit" => "edit"
-  }
+  # How frequently should a file be audited.
+  # config.max_days_between_audits = 7
 
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
@@ -45,10 +40,6 @@ Sufia.config do |config|
 
   # Store identifier minter's state in a file for later replayability
   # config.minter_statefile = '/tmp/minter-state'
-
-  # Process for translating Fedora URIs to identifiers and vice versa
-  # config.translate_uri_to_id = ActiveFedora::Noid.config.translate_uri_to_id
-  # config.translate_id_to_uri = ActiveFedora::Noid.config.translate_id_to_uri
 
   # Specify the prefix for Redis keys:
   # config.redis_namespace = "sufia"

@@ -27,8 +27,9 @@ module Sufia
   extend ActiveSupport::Autoload
 
   eager_autoload do
-    autoload :RedisEventStore
     autoload :Arkivo
+    autoload :Configuration
+    autoload :RedisEventStore
     autoload :Zotero
   end
 
@@ -39,7 +40,7 @@ module Sufia
   end
 
   def self.config(&block)
-    @config ||= Sufia::Engine::Configuration.new
+    @config ||= Sufia::Configuration.new
 
     yield @config if block
 

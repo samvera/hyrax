@@ -23,7 +23,7 @@ module Sufia
     end
 
     def after_deliver
-      return unless Sufia::Engine.config.enable_contact_form_delivery
+      return unless Sufia.config.enable_contact_form_delivery
     end
   end
 end
