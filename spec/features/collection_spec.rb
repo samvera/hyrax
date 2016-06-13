@@ -14,21 +14,20 @@ describe 'collection', type: :feature do
     let(:title) { "Test Collection" }
     let(:description) { "Description for collection we are testing." }
 
-    it "makes a new collection", :js do
+    it "makes a new collection" do
       visit '/dashboard'
       first('#hydra-collection-add').click
       expect(page).to have_content 'Create New Collection'
       click_link('Additional fields')
-      # Creator is a multi-value field, so it should have button to add more fields
-      expect(page).to have_selector "div.collection_creator .input-append button.add"
 
-      # Title is a multi-value field, so it should have the add another button
-      expect(page).to have_selector "div.collection_title .input-append button.add"
+      expect(page).to have_selector "input.collection_creator.multi_value"
+      expect(page).to have_selector "input.collection_title.multi_value"
 
       fill_in('Title', with: title)
       fill_in('Abstract or Summary', with: description)
       fill_in('Location', with: 'Over there')
       fill_in('Related URL', with: 'http://example.com/')
+
       click_button("Create Collection")
       expect(page).to have_content 'Items in this Collection'
       expect(page).to have_content title
