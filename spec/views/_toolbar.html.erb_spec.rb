@@ -43,7 +43,7 @@ describe '/_toolbar.html.erb', type: :view do
       it "has a link to upload" do
         allow(view).to receive(:can?).with(:create, GenericWork).and_return(true)
         render
-        expect(rendered).to have_link('New Work', href: sufia.new_curation_concerns_generic_work_path)
+        expect(rendered).to have_link('New Work', href: new_curation_concerns_generic_work_path)
       end
     end
 
