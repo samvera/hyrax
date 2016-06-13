@@ -13,9 +13,17 @@ describe "sufia/homepage/_featured_works.html.erb" do
   end
 
   context "with featured works" do
+    let(:doc) { SolrDocument.new(id: '12345678',
+                                 title_tesim: ['Doc title'],
+                                 has_model_ssim: ['GenericWork']) }
+    let(:presenter) { Sufia::WorkShowPresenter.new(doc, nil) }
+    let(:featured_work) { FeaturedWork.new }
     before do
       allow(view).to receive(:can?).with(:update, FeaturedWork).and_return(false)
+      allow(view).to receive(:render_thumbnail_tag).with(presenter, width: 90)
       allow(list).to receive(:empty?).and_return(false)
+      allow(list).to receive(:featured_works).and_return([featured_work])
+      allow(featured_work).to receive(:presenter).and_return(presenter)
       render
     end
 
