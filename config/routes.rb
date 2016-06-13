@@ -31,7 +31,6 @@ Sufia::Engine.routes.draw do
         get 'stats'
       end
     end
-    resources :generic_works
   end
 
   resources :files, only: [] do

@@ -83,7 +83,7 @@ describe CurationConcerns::GenericWorksController do
       it "sets breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
         expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
-        expect(controller).to receive(:add_breadcrumb).with('test title', Sufia::Engine.routes.url_helpers.curation_concerns_generic_work_path(work.id))
+        expect(controller).to receive(:add_breadcrumb).with('test title', main_app.curation_concerns_generic_work_path(work.id))
         get :show, id: work
         expect(response).to be_successful
       end
