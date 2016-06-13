@@ -14,6 +14,7 @@ class Sufia::ConfigGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
   def create_initializer_config_file
+    remove_file 'config/initializers/curation_concerns.rb'
     copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
   end
 

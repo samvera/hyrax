@@ -57,7 +57,7 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
 
     context "with passive deposit agreement" do
       before do
-        allow(Sufia::Engine.config).to receive(:active_deposit_agreement_acceptance)
+        allow(Sufia.config).to receive(:active_deposit_agreement_acceptance)
           .and_return(false)
       end
       it "shows accept text" do
