@@ -33,12 +33,6 @@ module Sufia
     autoload :Zotero
   end
 
-  attr_writer :queue
-
-  def self.queue
-    @queue ||= config.queue.new('sufia')
-  end
-
   def self.config(&block)
     @config ||= Sufia::Configuration.new
 
