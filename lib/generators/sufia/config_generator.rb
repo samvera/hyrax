@@ -18,18 +18,9 @@ class Sufia::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
   end
 
-  # Adds citations initialization
-  def citation_config
-    generate 'sufia:citation_config'
-  end
-
   # Add mini-magick configuration
-  def minimagic_config
-    generate 'sufia:minimagick_config'
-  end
-
-  def install_admin_stats
-    generate "sufia:admin_stat"
+  def minimagick_config
+    copy_file 'config/mini_magick.rb', 'config/initializers/mini_magick.rb'
   end
 
   def tinymce_config
