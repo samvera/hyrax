@@ -1,13 +1,10 @@
-require_relative 'abstract_migration_generator'
-
-class CurationConcerns::ModelsGenerator < CurationConcerns::AbstractMigrationGenerator
+class CurationConcerns::ModelsGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
   argument :model_name, type: :string, default: 'user'
   desc '
 This generator makes the following changes to your application:
- 1. Creates several database migrations if they do not exist in /db/migrate
- 2. Creates the curation_concerns.rb configuration file and several others
- 3. Creates the file_set.rb and collection.rb models
+ 1. Creates the curation_concerns.rb configuration file and several others
+ 2. Creates the file_set.rb and collection.rb models
        '
   def banner
     say_status('warning', 'GENERATING CURATION_CONCERNS MODELS', :yellow)
@@ -15,14 +12,7 @@ This generator makes the following changes to your application:
 
   # Setup the database migrations
   def copy_migrations
-    [
-      'create_version_committers.rb',
-      'create_checksum_audit_logs.rb',
-      'create_single_use_links.rb',
-      'create_operations.rb'
-    ].each do |file|
-      better_migration_template file
-    end
+    rake 'curation_concerns:install:migrations'
   end
 
   # Add behaviors to the user model
