@@ -13,6 +13,7 @@ describe CurationConcerns::GenericWorksController do
         get :show, id: a_work
         expect(response).to be_success
       end
+
       context "with a parent work" do
         render_views
         it "renders a breadcrumb" do
@@ -35,10 +36,20 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses public work' do
       let(:a_work) { create(:public_generic_work) }
-      it 'shows me the page' do
-        expect(controller). to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
-        get :show, id: a_work
-        expect(response).to be_success
+      context "html" do
+        it 'shows me the page' do
+          expect(controller). to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
+          get :show, id: a_work
+          expect(response).to be_success
+        end
+      end
+      context "ttl" do
+        it 'renders an turtle file' do
+          get :show, id: a_work, format: :ttl
+          expect(response).to be_successful
+          expect(response.body).to start_with "\n<http://localhost/concern/generic_works/#{a_work.id}>"
+          expect(response.body).to match %r{<http://purl\.org/dc/terms/title> "Test title";}
+        end
       end
     end
 

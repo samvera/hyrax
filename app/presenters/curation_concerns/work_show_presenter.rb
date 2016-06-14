@@ -16,7 +16,7 @@ module CurationConcerns
     self.work_presenter_class = self
 
     # Methods used by blacklight helpers
-    delegate :has?, :first, :fetch, to: :solr_document
+    delegate :has?, :first, :fetch, :export_formats, :export_as, to: :solr_document
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability

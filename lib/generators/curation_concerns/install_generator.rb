@@ -80,6 +80,12 @@ module CurationConcerns
           "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" \
             "  include CurationConcerns::SolrDocumentBehavior\n"
         end
+
+        insert_into_file file_path, after: /use_extension\(\s*Hydra::ContentNegotiation\s*\)/ do
+          "\n\n  # Overrides the connection provided by Hydra::ContentNegotiation so we" \
+          "\n  # can get the model too." \
+          "\n  use_extension(ConnectionWithModel)"
+        end
       else
         puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
       end
