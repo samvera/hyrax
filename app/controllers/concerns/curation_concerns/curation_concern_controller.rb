@@ -63,6 +63,7 @@ module CurationConcerns::CurationConcernController
         render :show, status: :ok
       end
       additional_response_formats(wants)
+      document_export_formats(wants)
     end
   end
 
@@ -177,6 +178,24 @@ module CurationConcerns::CurationConcernController
 
     def contextual_path(presenter, parent_presenter)
       ::CurationConcerns::ContextualPath.new(presenter, parent_presenter).show
+    end
+
+    def document_export_formats(format)
+      format.any do
+        format_name = params.fetch(:format, '').to_sym
+        raise ActionController::UnknownFormat unless presenter.export_formats.include? format_name
+        render_document_export_format format_name
+      end
+    end
+
+    ##
+    # Render the document export formats for a response
+    # First, try to render an appropriate template (e.g. index.endnote.erb)
+    # If that fails, just concatenate the document export responses with a newline.
+    def render_document_export_format(format_name)
+      render
+    rescue ActionView::MissingTemplate
+      render text: presenter.export_as(format_name), layout: false
     end
 
   private

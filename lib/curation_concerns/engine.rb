@@ -50,6 +50,7 @@ module CurationConcerns
         ActiveFedora::Noid.config.template = c.noid_template
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
+      Hydra.config.id_to_resource_uri = CurationConcerns.id_to_resource_uri
     end
   end
 end
