@@ -45,8 +45,8 @@ module CurationConcerns
         Hydra::Derivatives.fits_path      = c.fits_path
         Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
 
-        ActiveFedora::Base.translate_uri_to_id = ActiveFedora::Noid.config.translate_uri_to_id
-        ActiveFedora::Base.translate_id_to_uri = ActiveFedora::Noid.config.translate_id_to_uri
+        ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
+        ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
         ActiveFedora::Noid.config.template = c.noid_template
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
