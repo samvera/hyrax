@@ -30,6 +30,7 @@ module Sufia
     autoload :Arkivo
     autoload :Configuration
     autoload :RedisEventStore
+    autoload :ResourceSync
     autoload :Zotero
   end
 

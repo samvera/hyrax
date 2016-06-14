@@ -9,6 +9,11 @@ Sufia::Engine.routes.draw do
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
+  # ResourceSync routes
+  get '/.well-known/resourcesync' => 'sufia/resource_sync#source_description', as: :source_description
+  get '/capabilitylist' => 'sufia/resource_sync#capability_list', as: :capability_list
+  get '/resourcelist' => 'sufia/resource_sync#resource_list', as: :resource_list
+
   delete '/uploads/:id', to: 'sufia/uploads#destroy', as: :sufia_uploaded_file
   post '/uploads', to: 'sufia/uploads#create'
   # This is a hack that is required because the rails form the uploader is on
