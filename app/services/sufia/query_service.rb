@@ -43,7 +43,7 @@ module Sufia
     private
 
       def where_access_is(access_level)
-        relation.where Solrizer.solr_name('read_access_group', :symbol) => access_level
+        relation.where Hydra.config.permissions.read.group => access_level
       end
 
       def date_format
