@@ -43,7 +43,7 @@ Sufia::Engine.routes.draw do
   # Generic work routes
   resources :works, only: [] do
     member do
-      resources :transfers, as: :generic_work_transfers, only: [:new, :create]
+      resources :transfers, as: :work_transfers, only: [:new, :create]
       resource :featured_work, only: [:create, :destroy]
       get :citation, controller: :citations, action: :work, as: :citations
       get :stats, controller: :stats, action: :work, as: :stats

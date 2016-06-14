@@ -7,12 +7,12 @@ describe "proxy deposit and transfers routing", type: :routing do
   end
 
   it "creates a transfer" do
-    expect(generic_work_transfers_path('7')).to eq '/works/7/transfers'
+    expect(work_transfers_path('7')).to eq '/works/7/transfers'
     expect(post: '/works/7/transfers').to route_to(controller: 'transfers', action: 'create', id: '7')
   end
 
   it "shows a form for a new transfer" do
-    expect(new_generic_work_transfer_path('7')).to eq '/works/7/transfers/new'
+    expect(new_work_transfer_path('7')).to eq '/works/7/transfers/new'
     expect(get: '/works/7/transfers/new').to route_to(controller: 'transfers', action: 'new', id: '7')
   end
 
