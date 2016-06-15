@@ -1,9 +1,13 @@
 module Hydra::ContentNegotiation
   # Replaces Fedora URIs in a graph with a Hydra-configured alternative.
   class FedoraUriReplacer
-    def initialize(fedora_base_uri, graph)
+    # @param [String] fedora_base_uri the internal Fedora base uri
+    # @param [RDF::Graph] graph the original graph that needs URIs replaced
+    # @param [#call] replacer a function that is called with id and graph and returns a string representation of the new uri.
+    def initialize(fedora_base_uri, graph, replacer)
       @fedora_base_uri = fedora_base_uri
       @graph = graph
+      @replacer = replacer
     end
 
     def run
@@ -12,11 +16,11 @@ module Hydra::ContentNegotiation
 
     private
 
-    attr_reader :fedora_base_uri, :graph
+    attr_reader :fedora_base_uri, :graph, :replacer
 
     def replace_uri(uri)
       id = ActiveFedora::Base.uri_to_id(uri)
-      RDF::URI(Hydra.config.id_to_resource_uri.call(id, graph))
+      RDF::URI(replacer.call(id, graph))
     end
 
     def replaced_objects
