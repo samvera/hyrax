@@ -302,7 +302,7 @@ en:
         size:             "Size"
         <<: *work_labels
 
-    metadata_help:
+    hints:
       generic_work:
         resource_type_html: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
         title: "A name to aid in identifying a work."
