@@ -22,7 +22,7 @@ module Hydra::ContentNegotiation
     end
 
     def base_uri
-      @base_uri ||= uri.gsub(/#{id}$/,'')
+      @base_uri ||= ActiveFedora.fedora.host + ActiveFedora.fedora.base_path
     end
   end
 end
