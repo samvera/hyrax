@@ -23,11 +23,6 @@ module Sufia
       @libreoffice_path ||= "soffice"
     end
 
-    attr_writer :enable_contact_form_delivery
-    def enable_contact_form_delivery
-      @enable_contact_form_delivery ||= false
-    end
-
     attr_writer :browse_everything
     def browse_everything
       @browse_everything ||= nil
@@ -122,6 +117,16 @@ module Sufia
     attr_writer :translate_id_to_uri
     def translate_id_to_uri
       @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
+    end
+
+    attr_writer :from_email
+    def from_email
+      @from_email ||= "no-reply@example.org"
+    end
+
+    attr_writer :subject_prefix
+    def subject_prefix
+      @subject_prefix ||= "Contact form:"
     end
   end
 end
