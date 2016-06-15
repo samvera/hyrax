@@ -88,7 +88,23 @@ module CurationConcerns
       current_ability.can?(:read, id) ? to_s : 'File'
     end
 
+    def export_as_nt
+      graph.dump(:ntriples)
+    end
+
+    def export_as_jsonld
+      graph.dump(:jsonld, standard_prefixes: true)
+    end
+
+    def export_as_ttl
+      graph.dump(:ttl)
+    end
+
     private
+
+      def graph
+        GraphExporter.new(solr_document, request).fetch
+      end
 
       def presenter_factory_arguments
         [current_ability, request]

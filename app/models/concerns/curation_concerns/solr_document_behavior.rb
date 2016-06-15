@@ -148,14 +148,5 @@ module CurationConcerns
           Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
         end
       end
-
-      # This overrides the connection provided by Hydra::ContentNegotiation so we
-      # can get the model too.
-      module ConnectionWithModel
-        def connection
-          # TODO: clean the fedora added triples out.
-          @connection ||= CleanConnection.new(ActiveFedora.fedora.connection)
-        end
-      end
   end
 end

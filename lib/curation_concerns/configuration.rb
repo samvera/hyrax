@@ -143,12 +143,6 @@ module CurationConcerns
       @ingest_queue_name ||= :default
     end
 
-    # Hostname is used for the externally visible URI when RDF is requested
-    attr_writer :hostname
-    def hostname
-      @hostname ||= 'localhost'
-    end
-
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,
