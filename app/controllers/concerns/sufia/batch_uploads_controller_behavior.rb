@@ -7,7 +7,6 @@ module Sufia
     included do
       layout "sufia-one-column"
       self.curation_concern_type = GenericWork
-      before_action :has_access?
     end
 
     def create
