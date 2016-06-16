@@ -141,14 +141,6 @@ module Sufia::User
   end
 
   module ClassMethods
-    def current
-      Thread.current[:user]
-    end
-
-    def current=(user)
-      Thread.current[:user] = user
-    end
-
     # Override this method if you aren't using email/password
     def audit_user
       User.find_by_user_key(audit_user_key) || User.create!(Devise.authentication_keys.first => audit_user_key, password: Devise.friendly_token[0, 20])
