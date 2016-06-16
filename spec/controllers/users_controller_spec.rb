@@ -281,26 +281,4 @@ describe UsersController, type: :controller do
       expect(flash[:alert]).to include("You cannot follow or unfollow yourself")
     end
   end
-
-  describe "#toggle_trophy" do
-    let(:work) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
-    let(:work_id) { work.id }
-    let(:another_user) { FactoryGirl.create(:user) }
-
-    it "trophies a work" do
-      post :toggle_trophy, id: user.user_key, work_id: work_id
-      json = JSON.parse(response.body)
-      expect(json['user_id']).to eq user.id
-      expect(json['work_id']).to eq work_id
-    end
-    it "does not trophy a work for a different user" do
-      post :toggle_trophy, id: another_user.user_key, work_id: work_id
-      expect(response).to_not be_success
-    end
-    it "does not trophy a work with no edit privs" do
-      sign_in another_user
-      post :toggle_trophy, id: another_user.user_key, work_id: work_id
-      expect(response).to_not be_success
-    end
-  end
 end

@@ -121,10 +121,13 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'Users' do
+  describe 'Trophies' do
     it 'routes to user trophies' do
-      expect(post: '/users/bob135/trophy').to route_to(controller: 'users', action: 'toggle_trophy', id: 'bob135')
+      expect(post: '/works/1234abc/trophy').to route_to(controller: 'sufia/trophies', action: 'toggle_trophy', id: '1234abc')
     end
+  end
+
+  describe 'Users' do
     it 'routes to user profile' do
       expect(get: '/users/bob135').to route_to(controller: 'users', action: 'show', id: 'bob135')
     end
