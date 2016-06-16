@@ -8,17 +8,17 @@ describe CurationConcerns::GenericWorksController do
 
   describe '#show' do
     context 'my own private work' do
-      let(:a_work) { create(:private_generic_work, user: user) }
+      let(:work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
-        get :show, id: a_work
+        get :show, id: work
         expect(response).to be_success
       end
 
       context "with a parent work" do
         render_views
         it "renders a breadcrumb" do
-          parent = create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [a_work])
-          get :show, id: a_work, parent_id: parent
+          parent = create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work])
+          get :show, id: work, parent_id: parent
 
           expect(response.body).to have_content "Parent Work"
         end
@@ -26,38 +26,45 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'someone elses private work' do
-      let(:a_work) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'shows unauthorized message' do
-        get :show, id: a_work
+        get :show, id: work
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(:public_generic_work) }
+      let(:work) { create(:public_generic_work) }
       context "html" do
         it 'shows me the page' do
           expect(controller). to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
-          get :show, id: a_work
+          get :show, id: work
           expect(response).to be_success
         end
       end
+
       context "ttl" do
+        let(:presenter) { double }
+        before do
+          allow(controller).to receive(:presenter).and_return(presenter)
+          allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
+        end
+
         it 'renders an turtle file' do
-          get :show, id: a_work, format: :ttl
+          get :show, id: '99999999', format: :ttl
           expect(response).to be_successful
-          expect(response.body).to start_with "\n<http://localhost/concern/generic_works/#{a_work.id}>"
-          expect(response.body).to match %r{<http://purl\.org/dc/terms/title> "Test title";}
+          expect(response.body).to eq "ttl graph"
+          expect(response.content_type).to eq 'text/turtle'
         end
       end
     end
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
-        get :show, id: a_work
+        get :show, id: work
         expect(response).to be_success
       end
     end
@@ -120,9 +127,9 @@ describe CurationConcerns::GenericWorksController do
 
   describe '#edit' do
     context 'my own private work' do
-      let(:a_work) { create(:private_generic_work, user: user) }
+      let(:work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
-        get :edit, id: a_work
+        get :edit, id: work
         expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to be_success
       end
@@ -130,18 +137,18 @@ describe CurationConcerns::GenericWorksController do
 
     context 'someone elses private work' do
       routes { Rails.application.class.routes }
-      let(:a_work) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'shows the unauthorized message' do
-        get :edit, id: a_work
+        get :edit, id: work
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(:public_generic_work) }
+      let(:work) { create(:public_generic_work) }
       it 'shows the unauthorized message' do
-        get :edit, id: a_work
+        get :edit, id: work
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
@@ -149,16 +156,16 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
-        get :edit, id: a_work
+        get :edit, id: work
         expect(response).to be_success
       end
     end
   end
 
   describe '#update' do
-    let(:a_work) { create(:private_generic_work, user: user) }
+    let(:work) { create(:private_generic_work, user: user) }
     before do
       allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
       allow_any_instance_of(GenericWork).to receive(:visibility_changed?).and_return(visibility_changed)
@@ -167,12 +174,12 @@ describe CurationConcerns::GenericWorksController do
     let(:actor) { double(update: true) }
 
     it 'updates the work' do
-      patch :update, id: a_work, generic_work: {}
-      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
+      patch :update, id: work, generic_work: {}
+      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
     end
 
     it "can update file membership" do
-      patch :update, id: a_work, generic_work: { ordered_member_ids: ['foo_123'] }
+      patch :update, id: work, generic_work: { ordered_member_ids: ['foo_123'] }
       expect(actor).to have_received(:update).with(ordered_member_ids: ['foo_123'])
     end
 
@@ -181,18 +188,18 @@ describe CurationConcerns::GenericWorksController do
       let(:actor) { double(update: true) }
 
       context 'when there are children' do
-        let(:a_work) { create(:work_with_one_file, user: user) }
+        let(:work) { create(:work_with_one_file, user: user) }
 
         it 'prompts to change the files access' do
-          patch :update, id: a_work, generic_work: {}
+          patch :update, id: work, generic_work: {}
           expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
         end
       end
 
       context 'without children' do
         it "doesn't prompt to change the files access" do
-          patch :update, id: a_work, generic_work: {}
-          expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
+          patch :update, id: work, generic_work: {}
+          expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
         end
       end
     end
@@ -201,16 +208,16 @@ describe CurationConcerns::GenericWorksController do
       let(:actor) { double(update: false) }
 
       it 'renders the form' do
-        patch :update, id: a_work, generic_work: {}
+        patch :update, id: work, generic_work: {}
         expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to render_template('edit')
       end
     end
 
     context 'someone elses public work' do
-      let(:a_work) { create(:public_generic_work) }
+      let(:work) { create(:public_generic_work) }
       it 'shows the unauthorized message' do
-        get :update, id: a_work
+        get :update, id: work
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
@@ -218,10 +225,10 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      let(:a_work) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'someone elses private work should update the work' do
-        patch :update, id: a_work, generic_work: {}
-        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(a_work)
+        patch :update, id: work, generic_work: {}
+        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
       end
     end
   end

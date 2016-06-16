@@ -177,4 +177,40 @@ describe CurationConcerns::WorkShowPresenter do
       end
     end
   end
+
+  describe "graph export methods" do
+    let(:graph) do
+      RDF::Graph.new.tap do |g|
+        g << [RDF::URI('http://example.com/1'), RDF::Vocab::DC.title, 'Test title']
+      end
+    end
+
+    let(:exporter) { double }
+
+    before do
+      allow(CurationConcerns::GraphExporter).to receive(:new).and_return(exporter)
+      allow(exporter).to receive(:fetch).and_return(graph)
+    end
+
+    describe "#export_as_nt" do
+      subject { presenter.export_as_nt }
+      it { is_expected.to eq "<http://example.com/1> <http://purl.org/dc/terms/title> \"Test title\" .\n" }
+    end
+
+    describe "#export_as_ttl" do
+      subject { presenter.export_as_ttl }
+      it { is_expected.to eq "\n<http://example.com/1> <http://purl.org/dc/terms/title> \"Test title\" .\n" }
+    end
+
+    describe "#export_as_jsonld" do
+      subject { presenter.export_as_jsonld }
+      it { is_expected.to eq '{
+  "@context": {
+    "dc": "http://purl.org/dc/terms/"
+  },
+  "@id": "http://example.com/1",
+  "dc:title": "Test title"
+}' }
+    end
+  end
 end
