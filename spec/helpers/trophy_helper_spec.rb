@@ -4,7 +4,7 @@ describe TrophyHelper, type: :helper do
     let(:id) { '9999' }
 
     let(:text_attributes) { '[data-add-text="Highlight Work on Profile"][data-remove-text="Unhighlight Work"]' }
-    let(:url_attribute) { "[data-url=\"/users/#{user.to_param}/trophy?work_id=#{id}\"]" }
+    let(:url_attribute) { "[data-url=\"/works/#{id}/trophy\"]" }
 
     context "when there is no trophy" do
       it "has a link for highlighting" do

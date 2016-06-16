@@ -13,7 +13,7 @@ module TrophyHelper
     args[:data]['add-text'] = args[:add_text]
     args[:data]['remove-text'] = args[:remove_text]
 
-    args[:data][:url] = sufia.trophy_profile_path(user, work_id: id)
+    args[:data][:url] = sufia.trophy_work_path(id)
     link_to '#', class: args[:class], data: args[:data] do
       yield(text)
     end

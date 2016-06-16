@@ -60,23 +60,6 @@ module Sufia::UsersControllerBehavior
     ['1', 'true'].include? params[:user][:update_directory]
   end
 
-  def toggle_trophy
-    work_id = params[:work_id]
-    unless current_user.can? :edit, work_id
-      redirect_to root_path, alert: "You do not have permissions to the work"
-      return false
-    end
-    t = current_user.trophies.where(work_id: work_id).first
-    if t
-      t.destroy
-      return false if t.persisted?
-    else
-      t = current_user.trophies.create(work_id: work_id)
-      return false unless t.persisted?
-    end
-    render json: t
-  end
-
   # Follow a user
   def follow
     unless current_user.following?(@user)

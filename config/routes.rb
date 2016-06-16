@@ -52,6 +52,7 @@ Sufia::Engine.routes.draw do
       resource :featured_work, only: [:create, :destroy]
       get :citation, controller: :citations, action: :work, as: :citations
       get :stats, controller: :stats, action: :work, as: :stats
+      post 'trophy' => 'sufia/trophies#toggle_trophy' # used by sufia/trophy.js
     end
   end
 
@@ -71,7 +72,6 @@ Sufia::Engine.routes.draw do
   # User profile & follows
   resources :users, only: [:index, :show, :edit, :update], as: :profiles do
     member do
-      post 'trophy' => 'users#toggle_trophy' # used by trophy.js
       post 'follow' => 'users#follow'
       post 'unfollow' => 'users#unfollow'
     end
