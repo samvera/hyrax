@@ -17,13 +17,15 @@ module Sufia
         flash.now[:error] << @contact_form.errors.full_messages.map(&:to_s).join(",")
       end
       render :new
-    rescue
+    rescue RuntimeError
       flash.now[:error] = 'Sorry, this message was not delivered.'
       render :new
     end
 
+    # Override this method if you want to perform additional operations
+    # when a email is successfully sent, such as sending a confirmation
+    # response to the user.
     def after_deliver
-      return unless Sufia.config.enable_contact_form_delivery
     end
   end
 end

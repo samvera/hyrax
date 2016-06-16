@@ -1,6 +1,12 @@
 Sufia.config do |config|
   config.register_curation_concern :generic_work
 
+  # Account appearing in the "From" field of emails sent from the contact form
+  # config.from_email = "no-reply@example.org"
+
+  # Text prefacing the subject entered in the contact form
+  # config.subject_prefix = "Contact form:"
+
   # How many notifications should be displayed on the dashboard
   # config.max_notifications_for_dashboard = 5
 

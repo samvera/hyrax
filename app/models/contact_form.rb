@@ -20,8 +20,8 @@ class ContactForm < MailForm::Base
   # in ActionMailer accepts.
   def headers
     {
-      subject: "Contact Form:#{subject}",
-      to: Sufia.config.contact_email,
+      subject: "#{Sufia.config.subject_prefix} #{subject}",
+      to: email,
       from: Sufia.config.from_email
     }
   end
