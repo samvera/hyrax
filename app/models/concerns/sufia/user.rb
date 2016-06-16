@@ -98,10 +98,6 @@ module Sufia::User
   def populate_attributes
   end
 
-  def email_address
-    email
-  end
-
   def name
     display_name.titleize || raise
   rescue
