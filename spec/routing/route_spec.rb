@@ -146,20 +146,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe "Directory" do
-    it "routes to user" do
-      expect(get: '/directory/user/xxx666').to route_to(controller: 'directory', action: 'user', uid: 'xxx666')
-    end
-
-    it "routes to user attribute" do
-      expect(get: '/directory/user/zzz777/email').to route_to(controller: 'directory', action: 'user_attribute', uid: 'zzz777', attribute: 'email')
-    end
-
-    it "routes to group and allow periods" do
-      expect(get: '/directory/group/all.staff').to route_to(controller: 'directory', action: 'group', cn: 'all.staff')
-    end
-  end
-
   describe "Notifications" do
     it "has index" do
       expect(get: '/notifications').to route_to(controller: 'mailbox', action: 'index')
