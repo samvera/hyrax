@@ -68,16 +68,11 @@ module Sufia
 
     config.after_initialize do
       begin
-        Object.const_get(:GenericWork)
-        begin
-          LocalAuthority.register_vocabulary(GenericWork, "subject", "lc_subjects")
-          LocalAuthority.register_vocabulary(GenericWork, "language", "lexvo_languages")
-          LocalAuthority.register_vocabulary(GenericWork, "tag", "lc_genres")
-        rescue ActiveRecord::StatementInvalid
-          Rails.logger.error "tables for vocabularies missing #{e.class}"
-        end
-      rescue NameError
-        # nop, GenericWork hasn't been generated yet.
+        LocalAuthority.register_vocabulary('generic_works', "subject", "lc_subjects")
+        LocalAuthority.register_vocabulary('generic_works', "language", "lexvo_languages")
+        LocalAuthority.register_vocabulary('generic_works', "tag", "lc_genres")
+      rescue ActiveRecord::StatementInvalid => e
+        Rails.logger.error "tables for vocabularies missing #{e.class}"
       end
     end
   end
