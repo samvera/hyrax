@@ -4,6 +4,18 @@ Coveralls.wear!
 ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
+if ENV['COVERAGE'] || ENV['TRAVIS']
+  require 'simplecov'
+  SimpleCov.root(File.expand_path('../..', __FILE__))
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  SimpleCov.start('rails') do
+    add_filter '/.internal_test_app'
+    add_filter '/lib/generators'
+    add_filter '/spec'
+  end
+  SimpleCov.command_name 'spec'
+end
+
 require 'factory_girl'
 require 'engine_cart'
 EngineCart.load_application!
@@ -23,21 +35,6 @@ require 'database_cleaner'
 require 'support/features'
 require 'support/rake'
 require 'byebug' unless ENV['TRAVIS']
-
-if ENV['COVERAGE'] || ENV['TRAVIS']
-  require 'simplecov'
-  SimpleCov.root(File.expand_path('../..', __FILE__))
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  SimpleCov.start('rails') do
-    add_filter '/.internal_test_app'
-    add_filter '/jetty'
-    add_filter '/lib/generators'
-    add_filter '/solr_conf'
-    add_filter '/spec'
-    add_filter '/vendor'
-  end
-  SimpleCov.command_name 'spec'
-end
 
 Capybara.default_driver = :rack_test      # This is a faster driver
 Capybara.javascript_driver = :poltergeist # This is slower
