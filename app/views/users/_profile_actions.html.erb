@@ -1,6 +1,6 @@
     <!-- profile and view buttons -->
       <% if signed_in? %>
-        <% if current_user == @user %>
+        <% if presenter.current_user? %>
           <%= link_to sufia.edit_profile_path(@user), class: "btn btn-default" do %>
             <i class="glyphicon glyphicon-edit"></i> Edit Your Profile
           <% end %>

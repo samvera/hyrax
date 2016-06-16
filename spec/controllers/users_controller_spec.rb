@@ -10,29 +10,13 @@ describe UsersController, type: :controller do
     it "show the user profile if user exists" do
       get :show, id: user.user_key
       expect(response).to be_success
-      expect(response).to_not redirect_to(root_path)
-      expect(flash[:alert]).to be_nil
+      expect(assigns[:presenter]).to be_kind_of Sufia::UserProfilePresenter
     end
+
     it "redirects to root if user does not exist" do
       get :show, id: 'johndoe666'
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to include("User 'johndoe666' does not exist")
-    end
-
-    describe "when the user has trophies" do
-      let(:work1) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
-      let(:work2) { GenericWork.create(title: ["w2"]) { |w| w.apply_depositor_metadata(user) } }
-      let(:work3) { GenericWork.create(title: ["w3"]) { |w| w.apply_depositor_metadata(user) } }
-      let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
-      let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
-      let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
-      let!(:badtrophy) { user.trophies.create!(work_id: 'not_a_generic_work') }
-
-      it "show the user profile if user exists" do
-        get :show, id: user.user_key
-        expect(response).to be_success
-        expect(assigns[:trophies]).to match_array([work1, work2, work3])
-      end
     end
   end
   describe "#index" do

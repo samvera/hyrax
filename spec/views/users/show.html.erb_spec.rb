@@ -1,14 +1,16 @@
 describe 'users/show.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
+  let(:ability) { double(current_user: current_user) }
+  let(:user) { stub_model(User, user_key: 'cam156', created_at: join_date) }
+  let(:presenter) { Sufia::UserProfilePresenter.new(user, ability) }
+  let(:current_user) { stub_model(User, user_key: 'mjg') }
+
   before do
     allow(view).to receive(:signed_in?).and_return(true)
-    allow(view).to receive(:current_user).and_return(stub_model(User, user_key: 'mjg'))
+    allow(view).to receive(:current_user).and_return(current_user)
     allow(view).to receive(:can?).and_return(true)
-    assign(:user, stub_model(User, user_key: 'cam156', created_at: join_date))
-    assign(:followers, [])
-    assign(:following, [])
-    assign(:trophies, [])
-    assign(:events, [])
+    assign(:user, user)
+    assign(:presenter, presenter)
   end
 
   it "draws 3 tabs" do
@@ -31,7 +33,7 @@ describe 'users/show.html.erb', type: :view do
       allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
       allow(view).to receive(:current_search_session).and_return(nil)
-      assign(:trophies, [generic_work])
+      allow(presenter).to receive(:trophies).and_return([generic_work])
     end
 
     it "has trophy" do
