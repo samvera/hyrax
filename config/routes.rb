@@ -121,11 +121,6 @@ Sufia::Engine.routes.draw do
   # Authority vocabulary queries route
   get 'authorities/:model/:term' => 'authorities#query'
 
-  # LDAP-related routes for group and user lookups
-  get 'directory/user/:uid' => 'directory#user'
-  get 'directory/user/:uid/:attribute' => 'directory#user_attribute'
-  get 'directory/group/:cn' => 'directory#group', constraints: { cn: /.*/ }
-
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
