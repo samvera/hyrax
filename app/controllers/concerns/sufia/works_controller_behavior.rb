@@ -6,7 +6,6 @@ module Sufia
     include CurationConcerns::CurationConcernController
 
     included do
-      before_action :has_access?, except: :show
       before_action :build_breadcrumbs, only: [:edit, :show]
       self.curation_concern_type = GenericWork
       self.show_presenter = Sufia::WorkShowPresenter

@@ -2,7 +2,6 @@ describe CurationConcerns::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
   before do
-    allow(controller).to receive(:has_access?).and_return(true)
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     # prevents characterization and derivative creation

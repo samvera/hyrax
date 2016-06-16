@@ -14,11 +14,4 @@ module Sufia::Controller
   def after_sign_in_path_for(_resource)
     sufia.dashboard_index_path
   end
-
-  protected
-
-    ### Hook which is overridden in Sufia::Ldap::Controller
-    def has_access?
-      true
-    end
 end
