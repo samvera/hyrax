@@ -26,10 +26,6 @@ Metrics/MethodLength:
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
 
-Style/HashSyntax:
-  Exclude:
-    - 'lib/generators/sufia/templates/catalog_controller.rb'
-
 Style/LineEndConcatenation:
   Exclude:
     - 'spec/test_app_templates/lib/generators/**/*'
