@@ -45,7 +45,3 @@ Rails/HasAndBelongsToMany:
   Exclude:
     - 'app/models/domain_term.rb'
     - 'app/models/local_authority.rb'
-
-Lint/HandleExceptions:
-  Exclude:
-    - 'lib/sufia/engine.rb'

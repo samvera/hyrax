@@ -7,14 +7,6 @@ describe LocalAuthority, type: :model do
     LocalAuthority.harvest_tsv("geo", [fixture_path + '/cities15000.tsv'], prefix: 'http://sws.geonames.org/')
   end
 
-  before :all do
-    class Manuscript < ActiveFedora::Base; end
-  end
-
-  after :all do
-    Object.send(:remove_const, :Manuscript)
-  end
-
   it "harvests an ntriples RDF vocab" do
     harvest_nt
     expect(described_class.count).to eq(1)
@@ -59,14 +51,14 @@ describe LocalAuthority, type: :model do
       expect(LocalAuthorityEntry.count).to eq(num_entries)
     end
     it "registers a vocab" do
-      described_class.register_vocabulary(Manuscript, "geographic", "geo")
+      described_class.register_vocabulary('manuscripts', "geographic", "geo")
       expect(DomainTerm.count).to eq(1)
     end
 
     describe "when vocabs are registered" do
       before do
-        described_class.register_vocabulary(Manuscript, "geographic", "geo")
-        described_class.register_vocabulary(Manuscript, "genre", "genres")
+        described_class.register_vocabulary('manuscripts', "geographic", "geo")
+        described_class.register_vocabulary('manuscripts', "genre", "genres")
       end
 
       it "has some domain terms" do

@@ -61,13 +61,16 @@ class LocalAuthority < ActiveRecord::Base
   end
   private_class_method :import_or_save!
 
-  def self.register_vocabulary(model, term, name)
+  # @param [String] model_name the plural name for the model, (e.g. 'generic_works')
+  # @param [String] term the field name
+  # @param [String] name the vocabulary name
+  def self.register_vocabulary(model_name, term, name)
     authority = find_by_name(name)
     if authority.blank?
       Rails.logger.warn "Unable to find a local authority for #{name} in the database. You may want to `LocalAuthority.harvest_rdf(\"#{name}\", [\"path/to/rdf.nt\"])' or `LocalAuthority.harvest_tsv(\"#{name}\", [\"path/to/data.tsv\"])'"
       return
     end
-    domain_term = DomainTerm.find_or_create_by(model: model.model_name.plural, term: term)
+    domain_term = DomainTerm.find_or_create_by(model: model_name, term: term)
     return if domain_term.local_authorities.include? authority
     domain_term.local_authorities << authority
   end
