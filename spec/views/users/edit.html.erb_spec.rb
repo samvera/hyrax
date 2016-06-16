@@ -5,10 +5,7 @@ describe 'users/edit.html.erb', type: :view do
     allow(view).to receive(:signed_in?).and_return(true)
     allow(view).to receive(:current_user).and_return(user)
     assign(:user, user)
-    assign(:followers, [])
-    assign(:following, [])
     assign(:trophies, [])
-    assign(:events, [])
   end
 
   it "shows an ORCID field" do

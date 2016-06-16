@@ -58,7 +58,7 @@
     </div>
   </div><!-- .form-group -->
 
-  <%= render partial: 'trophy_edit', locals: {trophies: @trophies} %>
+  <%= render 'trophy_edit', trophies: @trophies %>
 
   <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Profile'.html_safe, type: 'submit', class: "btn btn-primary" %>
 <% end %>

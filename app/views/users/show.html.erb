@@ -1,15 +1,12 @@
-<%= javascript_tag do %>
-<% end %>
-
 <div class="col-xs-12 profile">
   <div class="pull-right">
-    <%= render 'profile_actions' %>
+    <%= render 'profile_actions', presenter: @presenter %>
   </div>
   <div class="col-xs-3">
     <%= render 'left_sidebar' %>
   </div>
   <!-- right col -->
   <div class="col-xs-9">
-    <%= render 'profile_tabs' %>
+    <%= render 'profile_tabs', presenter: @presenter %>
   </div>
 </div>

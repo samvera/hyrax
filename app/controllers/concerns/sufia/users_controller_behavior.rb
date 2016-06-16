@@ -28,14 +28,7 @@ module Sufia::UsersControllerBehavior
 
   # Display user profile
   def show
-    @events = if @user.respond_to? :profile_events
-                @user.profile_events(100)
-              else
-                []
-              end
-    @trophies = @user.trophy_works
-    @followers = @user.followers
-    @following = @user.all_following
+    @presenter = Sufia::UserProfilePresenter.new(@user, current_ability)
   end
 
   # Display form for users to edit their profile information
