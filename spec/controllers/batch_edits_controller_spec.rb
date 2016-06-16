@@ -9,16 +9,12 @@ describe BatchEditsController, type: :controller do
   routes { Internal::Application.routes }
 
   describe "#edit" do
+    let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
+    let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
     before do
-      @one = GenericWork.new(creator: ["Fred"], title: ["abc"], language: ['en'])
-      @one.apply_depositor_metadata('mjg36')
-      @two = GenericWork.new(creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar'])
-      @two.apply_depositor_metadata('mjg36')
-      @one.save!
-      @two.save!
-      controller.batch = [@one.id, @two.id]
-      expect(controller).to receive(:can?).with(:edit, @one.id).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, @two.id).and_return(true)
+      controller.batch = [one.id, two.id]
+      expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
     end
 
     it "is successful" do

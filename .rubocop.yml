@@ -82,3 +82,12 @@ Style/SingleLineBlockParams:
 
 Rails:
   Enabled: true
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/tasks/rake_spec.rb'
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/features/**/*'
+    - 'spec/config/sufia_events_spec.rb'
+
+

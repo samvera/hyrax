@@ -36,7 +36,7 @@ describe DepositorsController do
         end
 
         it 'does not send a message to the user' do
-          expect { redundant_request_to_grant_proxy }.to_not change { user.mailbox.inbox.count }
+          expect { redundant_request_to_grant_proxy }.not_to change { user.mailbox.inbox.count }
         end
       end
     end

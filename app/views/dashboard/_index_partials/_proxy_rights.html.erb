@@ -10,9 +10,9 @@
     <h3 class="panel-title"><%= t("sufia.dashboard.current_proxies") %></h3>
     <table class="table table-condensed table-striped" id="authorizedProxies">
       <tbody>
-        <% @user.can_receive_deposits_from.each do |depositor| %>
+        <% user.can_receive_deposits_from.each do |depositor| %>
           <tr><td class="depositor-name"><%= depositor.name %></td>
-            <td><%= link_to(sufia.user_depositor_path(@user, depositor), method: :delete, class: "remove-proxy-button") do %>
+            <td><%= link_to(sufia.user_depositor_path(user, depositor), method: :delete, class: "remove-proxy-button") do %>
               <i class="glyphicon glyphicon-remove"></i><% end %>
             </td></tr>
         <% end %>

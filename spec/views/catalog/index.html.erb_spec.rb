@@ -1,5 +1,5 @@
 
-describe 'catalog/index.html.erb' do
+describe 'catalog/index.html.erb', type: :view do
   let(:collection) { build(:collection, id: "abc123") }
   let(:doc) { SolrDocument.new(collection.to_solr) }
   let(:search_state) { double('SearchState', to_h: {}) }

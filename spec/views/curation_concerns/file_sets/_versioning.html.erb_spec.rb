@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe 'curation_concerns/file_sets/_versioning.html.erb' do
+describe 'curation_concerns/file_sets/_versioning.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
 
   before do

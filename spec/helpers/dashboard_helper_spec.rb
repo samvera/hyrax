@@ -20,7 +20,7 @@ describe DashboardHelper, type: :helper do
   describe "#on_the_dashboard?" do
     it "returns false for controllers that aren't a part of the dashboard" do
       allow(helper).to receive(:params).and_return(controller: "foo")
-      expect(helper).to_not be_on_the_dashboard
+      expect(helper).not_to be_on_the_dashboard
     end
 
     it "returns true for controllers that are part of the dashboard" do
@@ -38,7 +38,7 @@ describe DashboardHelper, type: :helper do
   describe "#on_my_works" do
     it "returns false when the controller isn't my works" do
       allow(helper).to receive(:params).and_return(controller: "my/collections")
-      expect(helper).to_not be_on_my_works
+      expect(helper).not_to be_on_my_works
     end
     it "returns true when the controller is my works" do
       allow(helper).to receive(:params).and_return(controller: "my/works")

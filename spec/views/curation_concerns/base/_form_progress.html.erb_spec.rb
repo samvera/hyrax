@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_form_progress.html.erb' do
+describe 'curation_concerns/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
@@ -51,7 +51,7 @@ describe 'curation_concerns/base/_form_progress.html.erb' do
       it "shows accept text" do
         expect(page).to have_content 'I have read and agree to the'
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
-        expect(page).to_not have_selector("#agreement[checked]")
+        expect(page).not_to have_selector("#agreement[checked]")
       end
     end
 

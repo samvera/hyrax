@@ -1,5 +1,5 @@
 
-describe 'catalog/_index_list_default' do
+describe 'catalog/_index_list_default', type: :view do
   let(:attributes) do
     { 'creator_tesim' => ['Justin', 'Joe'],
       'depositor_tesim' => ['jcoyne@justincoyne.com'],

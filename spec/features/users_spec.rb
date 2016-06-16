@@ -44,7 +44,7 @@ describe "User Profile", type: :feature do
       expect(page).to have_xpath("//td/a[@href='#{dewey_path}']")
       fill_in 'user_search', with: 'Dewey'
       click_button "user_submit"
-      expect(page).to_not have_xpath("//td/a[@href='#{profile_path}']")
+      expect(page).not_to have_xpath("//td/a[@href='#{profile_path}']")
       expect(page).to have_xpath("//td/a[@href='#{dewey_path}']")
     end
   end

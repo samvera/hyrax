@@ -1,4 +1,3 @@
-
 describe My::HighlightsController, type: :controller do
   describe "logged in user" do
     let(:user) { create(:user) }
@@ -8,16 +7,21 @@ describe My::HighlightsController, type: :controller do
       before do
         GenericWork.destroy_all
         Collection.destroy_all
-        @highlighted_work = create(:generic_work, user: user)
-        user.trophies.create(work_id: @highlighted_work.id)
+      end
 
-        @normal_work = create(:generic_work, user: user)
-        other_user = create(:user)
-        @unrelated_highlighted_work = create(:generic_work, user: other_user).tap do |r|
+      let(:other_user) { create(:user) }
+      let(:highlighted_work) { create(:generic_work, user: user) }
+      let!(:normal_work) { create(:generic_work, user: user) }
+      let(:unrelated_highlighted_work) do
+        create(:generic_work, user: other_user).tap do |r|
           r.edit_users += [user.user_key]
           r.save!
         end
-        other_user.trophies.create(work_id: @unrelated_highlighted_work.id)
+      end
+
+      before do
+        user.trophies.create(work_id: highlighted_work.id)
+        other_user.trophies.create(work_id: unrelated_highlighted_work.id)
       end
 
       it "paginates" do
@@ -35,17 +39,17 @@ describe My::HighlightsController, type: :controller do
         get :index
         expect(response).to be_successful
         # shows documents I've highlighted
-        expect(assigns[:document_list].map(&:id)).to include(@highlighted_work.id)
+        expect(assigns[:document_list].map(&:id)).to include(highlighted_work.id)
         # doesn't show non-highlighted files
-        expect(assigns[:document_list].map(&:id)).to_not include(@normal_work.id)
+        expect(assigns[:document_list].map(&:id)).not_to include(normal_work.id)
         # doesn't show other users' highlighted files
-        expect(assigns[:document_list].map(&:id)).to_not include(@unrelated_highlighted_work.id)
+        expect(assigns[:document_list].map(&:id)).not_to include(unrelated_highlighted_work.id)
       end
     end
 
     describe "when user has no highlights" do
       it "skips the call to Solr" do
-        expect(controller).to_not receive(:search_results)
+        expect(controller).not_to receive(:search_results)
         get :index
       end
     end

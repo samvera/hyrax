@@ -128,9 +128,9 @@ module Sufia
       options[:value].map { |right| link_to RightsService.label(right), right }.to_sentence.html_safe
     end
 
-    def link_to_telephone(user = nil)
-      @user ||= user
-      link_to @user.telephone, "wtai://wp/mc;#{@user.telephone}" if @user.telephone
+    def link_to_telephone(user)
+      return unless user
+      link_to user.telephone, "wtai://wp/mc;#{user.telephone}" if user.telephone
     end
 
     # Only display the current search parameters if the user is not in the dashboard.

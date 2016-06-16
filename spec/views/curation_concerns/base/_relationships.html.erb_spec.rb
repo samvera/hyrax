@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/relationships' do
+describe 'curation_concerns/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_doc, ability) }

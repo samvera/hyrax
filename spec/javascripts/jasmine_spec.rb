@@ -15,7 +15,7 @@ describe "Jasmine" do
       puts "************************  Jasmine Output *************\n\n"
     end
     expect(jasmine_out).to include "0 failures"
-    expect(jasmine_out).to_not include "\n0 specs"
+    expect(jasmine_out).not_to include "\n0 specs"
   end
 end
 

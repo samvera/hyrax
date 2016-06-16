@@ -1,5 +1,4 @@
-
-describe "sufia/homepage/_announcement.html.erb" do
+describe "sufia/homepage/_announcement.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }
   let(:announcement) { ContentBlock.new(name: ContentBlock::ANNOUNCEMENT, value: announcement_value) }

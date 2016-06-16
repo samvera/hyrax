@@ -1,4 +1,4 @@
-describe 'collections/show.html.erb' do
+describe 'collections/show.html.erb', type: :view do
   let(:document) { SolrDocument.new(id: 'xyz123z4',
                                     'title_tesim' => ['Make Collections Great Again']) }
   let(:ability) { double }

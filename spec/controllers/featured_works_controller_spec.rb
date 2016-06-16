@@ -23,7 +23,7 @@ describe FeaturedWorksController, type: :controller do
       it "does not create another" do
         expect {
           post :create, id: '1234abcd', format: :json
-        }.to_not change { FeaturedWork.count }
+        }.not_to change { FeaturedWork.count }
         expect(response.status).to eq 422
       end
     end

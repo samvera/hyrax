@@ -44,7 +44,7 @@ describe Sufia::HomepageController, type: :controller do
       get :index
       expect(response).to be_success
       titles = assigns(:recent_documents).map { |d| d['title_tesim'][0] }
-      expect(titles).to_not include('Test Private Document')
+      expect(titles).not_to include('Test Private Document')
     end
 
     it "includes only GenericWork objects in recent documents" do

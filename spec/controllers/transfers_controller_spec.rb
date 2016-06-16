@@ -83,7 +83,7 @@ describe TransfersController, type: :controller do
         expect {
           post :create, id: work.id, proxy_deposit_request: { transfer_to: another_user.user_key }
         }.to change(ProxyDepositRequest, :count).by(1)
-        expect(response).to redirect_to @routes.url_helpers.transfers_path
+        expect(response).to redirect_to routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work.id)
@@ -91,7 +91,7 @@ describe TransfersController, type: :controller do
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
         expect(notification.subject).to eq("Ownership Change Request")
-        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{@routes.url_helpers.transfers_path}\">transfer requests</a>")
+        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
       it "gives an error if the user is not found" do
         expect {
@@ -113,21 +113,21 @@ describe TransfersController, type: :controller do
         end
         it "is successful when retaining access rights" do
           put :accept, id: user.proxy_deposit_requests.first
-          expect(response).to redirect_to @routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([another_user.user_key, user.user_key])
         end
         it "is successful when resetting access rights" do
           put :accept, id: user.proxy_deposit_requests.first, reset: true
-          expect(response).to redirect_to @routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([user.user_key])
         end
         it "handles sticky requests" do
           put :accept, id: user.proxy_deposit_requests.first, sticky: true
-          expect(response).to redirect_to @routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(user.can_receive_deposits_from).to include(another_user)
@@ -161,7 +161,7 @@ describe TransfersController, type: :controller do
         end
         it "is successful" do
           put :reject, id: user.proxy_deposit_requests.first
-          expect(response).to redirect_to @routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer rejected")
           expect(assigns[:proxy_deposit_request].status).to eq('rejected')
         end
@@ -194,7 +194,7 @@ describe TransfersController, type: :controller do
         end
         it "is successful" do
           delete :destroy, id: another_user.proxy_deposit_requests.first
-          expect(response).to redirect_to @routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer canceled")
         end
       end

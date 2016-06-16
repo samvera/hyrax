@@ -30,10 +30,10 @@ describe 'searching' do
       visit '/'
       expect(page).to have_content("All")
       expect(page).to have_css("a[data-search-label*=All]", visible: false)
-      expect(page).to_not have_css("a[data-search-label*='My Works']", visible: false)
-      expect(page).to_not have_css("a[data-search-label*='My Collections']", visible: false)
-      expect(page).to_not have_css("a[data-search-label*='My Highlights']", visible: false)
-      expect(page).to_not have_css("a[data-search-label*='My Shares']", visible: false)
+      expect(page).not_to have_css("a[data-search-label*='My Works']", visible: false)
+      expect(page).not_to have_css("a[data-search-label*='My Collections']", visible: false)
+      expect(page).not_to have_css("a[data-search-label*='My Highlights']", visible: false)
+      expect(page).not_to have_css("a[data-search-label*='My Shares']", visible: false)
 
       click_button("All")
       expect(page).to have_content("All of Sufia")
@@ -49,9 +49,9 @@ describe 'searching' do
     it "does not display search options for dashboard files" do
       visit "/"
       within(".input-group-btn") do
-        expect(page).to_not have_content("My Works")
-        expect(page).to_not have_content("My Collections")
-        expect(page).to_not have_content("My Shares")
+        expect(page).not_to have_content("My Works")
+        expect(page).not_to have_content("My Collections")
+        expect(page).not_to have_content("My Shares")
       end
     end
   end

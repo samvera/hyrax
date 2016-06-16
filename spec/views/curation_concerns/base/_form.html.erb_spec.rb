@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe 'curation_concerns/base/_form.html.erb' do
+describe 'curation_concerns/base/_form.html.erb', type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456')
   end
