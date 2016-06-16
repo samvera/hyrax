@@ -11,10 +11,10 @@ describe 'sufia/batch_uploads/_form.html.erb' do
     view.lookup_context.view_paths.push 'app/views/sufia/batch_uploads'
     view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
     allow(view).to receive(:curation_concern).and_return(work)
-    allow(controller).to receive(:current_user).and_return(user)
     assign(:form, form)
-    controller.stub(:controller_name).and_return('batch_uploads')
-    controller.stub(:action_name).and_return('new')
+    allow(controller).to receive_messages(current_user: user,
+                                          controller_name: 'batch_uploads',
+                                          action_name: 'new')
   end
 
   let(:page) do
