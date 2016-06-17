@@ -119,9 +119,9 @@ module Sufia
       @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
     end
 
-    attr_writer :from_email
-    def from_email
-      @from_email ||= "no-reply@example.org"
+    attr_writer :contact_email
+    def contact_email
+      @contact_email ||= "repo-admin@example.org"
     end
 
     attr_writer :subject_prefix
