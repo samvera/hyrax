@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe "admin/stats/index.html.erb" do
+describe "admin/stats/index.html.erb", type: :view do
   let(:presenter) do
     Sufia::AdminStatsPresenter.new({}, 5)
   end
@@ -35,7 +33,7 @@ describe "admin/stats/index.html.erb" do
 
     it "shows top 20 depositors, without an option to view more" do
       expect(rendered).to have_content("(top 20)")
-      expect(rendered).to_not have_content("View top 20")
+      expect(rendered).not_to have_content("View top 20")
     end
   end
 end

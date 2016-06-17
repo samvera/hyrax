@@ -73,13 +73,13 @@ describe FileUsage, type: :model do
   end
 
   describe "statistics" do
-    before(:all) do
-      @system_timezone = ENV['TZ']
+    let!(:system_timezone) { ENV['TZ'] }
+    before do
       ENV['TZ'] = 'UTC'
     end
 
-    after(:all) do
-      ENV['TZ'] = @system_timezone
+    after do
+      ENV['TZ'] = system_timezone
     end
 
     it "counts the total numver of downloads" do

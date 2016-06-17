@@ -1,5 +1,5 @@
 
-describe "sufia/homepage/_home_header.html.erb" do
+describe "sufia/homepage/_home_header.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }
   let(:presenter) { Sufia::HomepagePresenter.new(ability) }

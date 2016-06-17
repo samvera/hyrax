@@ -1,5 +1,4 @@
-
-describe 'batch_edits/edit.html.erb' do
+describe 'batch_edits/edit.html.erb', type: :view do
   let(:generic_work) { stub_model(GenericWork, id: nil, depositor: 'bob', rights: ['']) }
   let(:form) { double }
 

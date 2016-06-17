@@ -1,4 +1,4 @@
-describe 'my/_index_partials/_list_works.html.erb' do
+describe 'my/_index_partials/_list_works.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:work_data) do
     {

@@ -20,7 +20,7 @@ RSpec.describe Sufia::TrophiesController do
     context "for a work that we don't have edit access on" do
       it "does not create a trophy" do
         post :toggle_trophy, id: work_id
-        expect(response).to_not be_success
+        expect(response).not_to be_success
       end
     end
   end

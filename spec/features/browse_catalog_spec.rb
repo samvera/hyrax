@@ -49,7 +49,7 @@ describe "Browse catalog:", type: :feature do
       end
 
       expect(page).to have_content jills_work.title.first
-      expect(page).to_not have_content jacks_work.title.first
+      expect(page).not_to have_content jacks_work.title.first
 
       # TODO:  After the _generic_work.html.erb view is finished
       #

@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/sufia/arkivo/metadata_munger.rb'
@@ -44,3 +46,69 @@ Rails/HasAndBelongsToMany:
   Exclude:
     - 'app/models/domain_term.rb'
     - 'app/models/local_authority.rb'
+
+RSpec/ExampleLength:
+  Max: 7 
+  Exclude:
+    - 'spec/controllers/api/items_controller_spec.rb'
+    - 'spec/controllers/authorities_controller_spec.rb'
+    - 'spec/controllers/collections_controller_spec.rb'
+    - 'spec/controllers/curation_concerns/file_sets_controller_spec.rb'
+    - 'spec/controllers/my/highlights_controller_spec.rb'
+    - 'spec/controllers/curation_concerns/generic_works_controller_spec.rb'
+    - 'spec/controllers/stats_controller_spec.rb'
+    - 'spec/controllers/sufia/batch_uploads_controller_spec.rb'
+    - 'spec/controllers/transfers_controller_spec.rb'
+    - 'spec/controllers/users_controller_spec.rb'
+    - 'spec/forms/sufia/forms/collection_form_spec.rb'
+    - 'spec/forms/sufia/forms/batch_edit_form_spec.rb'
+    - 'spec/forms/sufia/forms/batch_upload_form_spec.rb'
+    - 'spec/features/**/*'
+    - 'spec/helpers/sufia_helper_spec.rb'
+    - 'spec/helpers/dashboard_helper_spec.rb'
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/jobs/user_unfollow_event_job_spec.rb'
+    - 'spec/jobs/user_follow_event_job_spec.rb'
+    - 'spec/jobs/file_set_attached_event_job_spec.rb'
+    - 'spec/jobs/content_update_event_job_spec.rb'
+    - 'spec/jobs/content_restored_version_event_job_spec.rb'
+    - 'spec/jobs/content_new_version_event_job_spec.rb'
+    - 'spec/jobs/content_depositor_change_event_job_spec.rb'
+    - 'spec/jobs/content_deposit_event_job_spec.rb'
+    - 'spec/jobs/content_delete_event_job_spec.rb'
+    - 'spec/lib/sufia/user_stat_importer_spec.rb'
+    - 'spec/lib/sufia/resource_sync/capability_list_writer_spec.rb'
+    - 'spec/models/generic_work_spec.rb'
+    - 'spec/models/featured_work_spec.rb'
+    - 'spec/services/sufia/actor_factory_spec.rb'
+    - 'spec/views/catalog/_index_list_default.html.erb_spec.rb'
+    - 'spec/views/collections/_form.html.erb_spec.rb'
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Exclude:
+    - 'spec/controllers/api/items_controller_spec.rb'
+    - 'spec/controllers/api/zotero_controller_spec.rb'
+    - 'spec/controllers/batch_edits_controller_spec.rb'
+    - 'spec/controllers/collections_controller_spec.rb'
+    - 'spec/controllers/dashboard_controller_spec.rb'
+    - 'spec/controllers/downloads_controller_spec.rb'
+    - 'spec/controllers/mailbox_controller_spec.rb'
+    - 'spec/controllers/stats_controller_spec.rb'
+    - 'spec/controllers/curation_concerns/file_sets_controller_spec.rb'
+    - 'spec/controllers/users_controller_spec.rb'
+    - 'spec/controllers/transfers_controller_spec.rb'
+    - 'spec/jobs/file_set_attached_event_job_spec.rb'
+    - 'spec/jobs/content_update_event_job_spec.rb'
+    - 'spec/jobs/content_restored_version_event_job_spec.rb'
+    - 'spec/jobs/content_new_version_event_job_spec.rb'
+    - 'spec/jobs/content_depositor_change_event_job_spec.rb'
+    - 'spec/jobs/content_deposit_event_job_spec.rb'
+    - 'spec/lib/sufia/arkivo/create_subscription_job_spec.rb'
+    - 'spec/lib/sufia/arkivo/actor_spec.rb'
+    - 'spec/presenters/sufia/work_usage_spec.rb'
+    - 'spec/presenters/sufia/file_usage_spec.rb'
+    - 'spec/services/sufia/repository_audit_service_spec.rb'
+

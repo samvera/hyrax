@@ -1,4 +1,4 @@
-describe 'collections/_form.html.erb' do
+describe 'collections/_form.html.erb', type: :view do
   let(:collection) { build(:collection) }
   let(:collection_form) { Sufia::Forms::CollectionForm.new(collection) }
 
@@ -12,7 +12,7 @@ describe 'collections/_form.html.erb' do
     render
     expect(rendered).to have_selector("input#collection_title")
     expect(rendered).to have_selector("span", text: "required")
-    expect(rendered).to_not have_selector("div#additional_title.multi_value")
+    expect(rendered).not_to have_selector("div#additional_title.multi_value")
     expect(rendered).to have_selector("input#collection_creator.multi_value")
     expect(rendered).to have_selector("textarea#collection_description")
     expect(rendered).to have_selector("input#collection_contributor")

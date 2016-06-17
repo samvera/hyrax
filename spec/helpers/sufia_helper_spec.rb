@@ -69,21 +69,16 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#link_to_telephone" do
-    before do
-      @user = mock_model(User)
-      allow(@user).to receive(:telephone).and_return('867-5309')
+    subject { helper.link_to_telephone(user) }
+
+    context "when user is set" do
+      let(:user) { mock_model(User, telephone: '867-5309') }
+      it { is_expected.to eq "<a href=\"wtai://wp/mc;867-5309\">867-5309</a>" }
     end
 
-    context "when @user is set" do
-      it "returns a link to the user's telephone" do
-        expect(helper.link_to_telephone).to eq("<a href=\"wtai://wp/mc;867-5309\">867-5309</a>")
-      end
-    end
-
-    context "when @user is not set" do
-      it "returns a link to the user's telephone" do
-        expect(helper.link_to_telephone(@user)).to eq("<a href=\"wtai://wp/mc;867-5309\">867-5309</a>")
-      end
+    context "when user is not set" do
+      let(:user) { nil }
+      it { is_expected.to be_nil }
     end
   end
 

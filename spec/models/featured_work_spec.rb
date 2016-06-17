@@ -7,7 +7,7 @@ describe FeaturedWork, type: :model do
 
   it "does not allow six features" do
     5.times do |n|
-      expect(described_class.create(work_id: n.to_s)).to_not be_new_record
+      expect(described_class.create(work_id: n.to_s)).not_to be_new_record
     end
     described_class.create(work_id: "6").tap do |sixth|
       expect(sixth).to be_new_record

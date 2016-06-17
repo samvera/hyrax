@@ -1,5 +1,4 @@
-
-describe 'collections/_form_for_select_collection.html.erb' do
+describe 'collections/_form_for_select_collection.html.erb', type: :view do
   let(:collections) {
     [
       build(:collection, id: '1234', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:20:22 +0100')),

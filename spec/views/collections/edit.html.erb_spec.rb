@@ -1,4 +1,4 @@
-describe 'collections/edit.html.erb' do
+describe 'collections/edit.html.erb', type: :view do
   let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
   let(:form) { Sufia::Forms::CollectionForm.new(collection) }
   let(:solr_response) { double(response: { 'numFound' => 0 }) }

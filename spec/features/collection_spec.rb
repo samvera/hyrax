@@ -99,7 +99,7 @@ describe 'collection', type: :feature do
       # Should have search results / contents listing
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
-      expect(page).to_not have_css(".pager")
+      expect(page).not_to have_css(".pager")
 
       click_link "Gallery"
       expect(page).to have_content(work1.title.first)
@@ -126,7 +126,7 @@ describe 'collection', type: :feature do
       # Should have search results / contents listing
       expect(page).to have_content("Search Results")
       expect(page).to have_content(work1.title.first)
-      expect(page).to_not have_content(work2.title.first)
+      expect(page).not_to have_content(work2.title.first)
     end
   end
 

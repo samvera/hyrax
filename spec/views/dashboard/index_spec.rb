@@ -1,6 +1,4 @@
-# coding: utf-8
-
-describe "dashboard/index.html.erb", type: :view do
+RSpec.describe "dashboard/index.html.erb", type: :view do
   let(:user) { create(:user, display_name: "Charles Francis Xavier") }
   let(:ability) { instance_double("Ability") }
   before do
@@ -118,7 +116,7 @@ describe "dashboard/index.html.erb", type: :view do
       it "defaults to a limited number of notifications" do
         render
         expect(rendered).to include "Single File 9"
-        expect(rendered).to_not include "Single File 2"
+        expect(rendered).not_to include "Single File 2"
       end
 
       it "allows showing more notifications" do

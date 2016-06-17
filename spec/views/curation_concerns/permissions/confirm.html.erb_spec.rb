@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/permissions/confirm.html.erb', :no_clean do
+describe 'curation_concerns/permissions/confirm.html.erb', :no_clean, type: :view do
   let(:curation_concern) { stub_model(GenericWork) }
 
   before do

@@ -105,14 +105,14 @@ describe User, type: :model do
 
     it "is able to follow another user" do
       expect(user).to be_following(another_user)
-      expect(another_user).to_not be_following(user)
+      expect(another_user).not_to be_following(user)
       expect(another_user).to be_followed_by(user)
-      expect(user).to_not be_followed_by(another_user)
+      expect(user).not_to be_followed_by(another_user)
     end
     it "is able to unfollow another user" do
       user.stop_following(another_user)
-      expect(user).to_not be_following(another_user)
-      expect(another_user).to_not be_followed_by(user)
+      expect(user).not_to be_following(another_user)
+      expect(another_user).not_to be_followed_by(user)
     end
   end
 
@@ -154,19 +154,19 @@ describe User, type: :model do
     end
   end
   describe "proxy_deposit_rights" do
+    subject { create :user }
     before do
-      @subject = create :user
-      @subject.can_receive_deposits_from << user
-      @subject.can_make_deposits_for << another_user
-      @subject.save!
+      subject.can_receive_deposits_from << user
+      subject.can_make_deposits_for << another_user
+      subject.save!
     end
     it "can_receive_deposits_from" do
-      expect(@subject.can_receive_deposits_from.to_a).to eq [user]
-      expect(user.can_make_deposits_for.to_a).to eq [@subject]
+      expect(subject.can_receive_deposits_from.to_a).to eq [user]
+      expect(user.can_make_deposits_for.to_a).to eq [subject]
     end
     it "can_make_deposits_for" do
-      expect(@subject.can_make_deposits_for.to_a).to eq [another_user]
-      expect(another_user.can_receive_deposits_from.to_a).to eq [@subject]
+      expect(subject.can_make_deposits_for.to_a).to eq [another_user]
+      expect(another_user.can_receive_deposits_from.to_a).to eq [subject]
     end
   end
   describe "class methods" do

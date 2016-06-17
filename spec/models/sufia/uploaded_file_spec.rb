@@ -1,6 +1,6 @@
 describe Sufia::UploadedFile do
   let(:file1) { File.open(fixture_path + '/world.png') }
-  subject { Sufia::UploadedFile.create(file: file1) }
+  subject { described_class.create(file: file1) }
 
   it "is not in the public directory" do
     temp_dir = Rails.root + 'tmp'

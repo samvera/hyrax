@@ -1,5 +1,4 @@
-
-describe "sufia/homepage/_featured_works.html.erb" do
+describe "sufia/homepage/_featured_works.html.erb", type: :view do
   let(:list) { FeaturedWorkList.new }
   subject { rendered }
   before { assign(:featured_work_list, list) }
