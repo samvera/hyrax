@@ -17,7 +17,8 @@ module Sufia
         flash.now[:error] << @contact_form.errors.full_messages.map(&:to_s).join(",")
       end
       render :new
-    rescue RuntimeError
+    rescue RuntimeError => e
+      logger.error("Contact form failed to send: #{e.inspect}")
       flash.now[:error] = 'Sorry, this message was not delivered.'
       render :new
     end

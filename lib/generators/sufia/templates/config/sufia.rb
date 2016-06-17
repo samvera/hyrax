@@ -1,8 +1,8 @@
 Sufia.config do |config|
   config.register_curation_concern :generic_work
 
-  # Account appearing in the "From" field of emails sent from the contact form
-  # config.from_email = "no-reply@example.org"
+  # Email recipient of messages sent via the contact form
+  # config.contact_email = "repo-admin@example.org"
 
   # Text prefacing the subject entered in the contact form
   # config.subject_prefix = "Contact form:"

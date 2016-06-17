@@ -73,4 +73,16 @@ describe ContactFormController do
       end
     end
   end
+
+  context "when encoutering a RuntimeError" do
+    let(:logger) { double }
+    before do
+      allow(controller).to receive(:logger).and_return(logger)
+      allow(ContactForm).to receive(:new).and_raise(RuntimeError)
+    end
+    it "is logged via Rails" do
+      expect(logger).to receive(:error).with("Contact form failed to send: #<RuntimeError: RuntimeError>")
+      post :create, contact_form: required_params
+    end
+  end
 end
