@@ -17,7 +17,7 @@ module Sufia
       end
 
       def create_work_from_item
-        work = ::GenericWork.new
+        work = Sufia.primary_work_type.new
         work_actor = CurationConcerns::CurationConcern.actor(work, user)
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
         raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(create_attrs)
