@@ -5,9 +5,9 @@ module Sufia::UsersControllerBehavior
     include Blacklight::SearchContext
     layout "sufia-one-column"
     prepend_before_action :find_user, except: [:index, :search, :notifications_number]
-    before_action :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
+    before_action :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
     before_action :user_not_current_user, only: [:follow, :unfollow]
-    authorize_resource only: [:edit, :update, :toggle_trophy]
+    authorize_resource only: [:edit, :update]
     # Catch permission errors
     rescue_from CanCan::AccessDenied, with: :deny_access
   end
