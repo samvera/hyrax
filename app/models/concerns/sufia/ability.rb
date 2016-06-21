@@ -20,7 +20,7 @@ module Sufia
 
     def proxy_deposit_abilities
       can :transfer, String do |id|
-        depositor_for_document(id) == current_user.user_key
+        user_is_depositor?(id)
       end
       can :create, ProxyDepositRequest if registered_user?
       can :accept, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
@@ -57,8 +57,11 @@ module Sufia
 
     private
 
-      def depositor_for_document(document_id)
-        ::GenericWork.load_instance_from_solr(document_id).depositor
+      def user_is_depositor?(document_id)
+        CurationConcerns::WorkRelation.new.search_with_conditions(
+          id: document_id,
+          DepositSearchBuilder.depositor_field => current_user.user_key
+        ).any?
       end
   end
 end
