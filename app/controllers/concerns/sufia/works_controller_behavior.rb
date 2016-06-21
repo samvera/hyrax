@@ -7,7 +7,6 @@ module Sufia
 
     included do
       before_action :build_breadcrumbs, only: [:edit, :show]
-      self.curation_concern_type = GenericWork
       self.show_presenter = Sufia::WorkShowPresenter
       layout "sufia-one-column"
     end
