@@ -24,6 +24,15 @@ module CurationConcerns
       def update(attributes)
         actor.update(attributes.with_indifferent_access)
       end
+
+      def destroy
+        curation_concern.in_collection_ids.each do |id|
+          destination_collection = ::Collection.find(id)
+          destination_collection.members.delete(curation_concern)
+          destination_collection.update_index
+        end
+        curation_concern.destroy
+      end
     end
   end
 end

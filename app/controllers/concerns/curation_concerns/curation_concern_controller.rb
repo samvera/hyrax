@@ -95,9 +95,10 @@ module CurationConcerns::CurationConcernController
 
   def destroy
     title = curation_concern.to_s
-    curation_concern.destroy
-    CurationConcerns.config.callback.run(:after_destroy, curation_concern.id, current_user)
-    after_destroy_response(title)
+    if actor.destroy
+      CurationConcerns.config.callback.run(:after_destroy, curation_concern.id, current_user)
+      after_destroy_response(title)
+    end
   end
 
   def file_manager

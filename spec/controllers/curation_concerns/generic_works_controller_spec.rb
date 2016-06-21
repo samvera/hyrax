@@ -235,11 +235,25 @@ describe CurationConcerns::GenericWorksController do
 
   describe '#destroy' do
     let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
+    let(:parent_collection) { create(:collection) }
 
     it 'deletes the work' do
       delete :destroy, id: work_to_be_deleted
       expect(response).to redirect_to main_app.search_catalog_path
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
+    end
+
+    context "when work is a member of a collection" do
+      before do
+        parent_collection.members = [work_to_be_deleted]
+        parent_collection.save!
+      end
+      it 'deletes the work and updates the parent collection' do
+        delete :destroy, id: work_to_be_deleted
+        expect(GenericWork).not_to exist(work_to_be_deleted.id)
+        expect(response).to redirect_to main_app.search_catalog_path
+        expect(parent_collection.reload.members).to eq []
+      end
     end
 
     it "invokes the after_destroy callback" do
