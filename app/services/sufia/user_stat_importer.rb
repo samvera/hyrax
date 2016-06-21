@@ -5,7 +5,11 @@ module Sufia
     UserRecord = Struct.new("UserRecord", :id, :user_key, :last_stats_update)
 
     def initialize(options = {})
-      @verbose = options[:verbose]
+      if options[:verbose]
+        stdout_logger = Logger.new(Logger.new(STDOUT))
+        stdout_logger.level = Logger::INFO
+        Rails.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
+      end
       @logging = options[:logging]
       @delay_secs = options[:delay_secs].to_f
       @number_of_retries = options[:number_of_retries].to_i
@@ -140,7 +144,6 @@ module Sufia
       end
 
       def log_message(message)
-        puts message if @verbose
         Rails.logger.info "#{self.class}: #{message}" if @logging
       end
   end

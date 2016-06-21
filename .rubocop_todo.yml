@@ -40,7 +40,6 @@ Style/PredicateName:
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
-    - 'app/services/sufia/user_stat_importer.rb'
 
 Rails/HasAndBelongsToMany:
   Exclude:
