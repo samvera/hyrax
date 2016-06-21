@@ -41,4 +41,8 @@ module Sufia
 
     @config
   end
+
+  def self.primary_work_type
+    CurationConcerns::WorkRelation::DummyModel.primary_concern
+  end
 end

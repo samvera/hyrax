@@ -3,10 +3,8 @@ describe ProxyDepositRequest, type: :model do
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
   let(:work) do
-    GenericWork.new do |w|
-      w.title = ["Test work"]
+    GenericWork.create(title: ["Test work"]) do |w|
       w.apply_depositor_metadata(sender.user_key)
-      w.save!
     end
   end
 
@@ -20,7 +18,7 @@ describe ProxyDepositRequest, type: :model do
   its(:fulfillment_date) { is_expected.to be_nil }
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
-  it { is_expected.to delegate_method(:to_s).to(:work) }
+  it { is_expected.to delegate_method(:to_s).to(:solr_doc) }
 
   context "After approval" do
     before do
