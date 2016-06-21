@@ -1,9 +1,10 @@
 require 'cancan/matchers'
 
 describe Sufia::Ability, type: :model do
+  let(:ability) { Ability.new(user) }
+  subject { ability }
   describe "a user with no roles" do
     let(:user) { nil }
-    subject { Ability.new(user) }
     it { is_expected.not_to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
@@ -16,7 +17,6 @@ describe Sufia::Ability, type: :model do
 
   describe "a registered user" do
     let(:user) { create(:user) }
-    subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
@@ -28,7 +28,6 @@ describe Sufia::Ability, type: :model do
   describe "a user in the admin group" do
     let(:user) { create(:user) }
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
-    subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.to be_able_to(:create, TinymceAsset) }
     it { is_expected.to be_able_to(:create, ContentBlock) }
@@ -40,18 +39,13 @@ describe Sufia::Ability, type: :model do
   describe "proxies and transfers" do
     let(:sender) { create(:user) }
     let(:user) { create(:user) }
-    let(:work) do
-      GenericWork.create!(title: ["Test work"]) do |work|
-        work.apply_depositor_metadata(sender.user_key)
-      end
-    end
-    subject { Ability.new(user) }
+    let(:work) { create(:work, user: sender) }
+
     it { should_not be_able_to(:transfer, work.id) }
 
-    describe "depositor_for_document" do
-      it "returns the depositor" do
-        expect(subject.send(:depositor_for_document, work.id)).to eq sender.user_key
-      end
+    describe "user_is_depositor?" do
+      subject { ability.send(:user_is_depositor?, work.id) }
+      it { is_expected.to be false }
     end
 
     context "with a ProxyDepositRequest for a work they have deposited" do
