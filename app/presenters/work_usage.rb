@@ -6,7 +6,7 @@ class WorkUsage
   attr_accessor :id, :created, :path, :pageviews
 
   def initialize(id)
-    work = ::GenericWork.find(id)
+    work = CurationConcerns::WorkRelation.new.find(id)
     user = User.find_by(email: work.depositor)
     user_id = user ? user.id : nil
 

@@ -68,8 +68,10 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a resource not found in the repository' do
+      let(:relation) { double }
       before do
-        allow(GenericWork).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
         get :show, format: :json, id: default_work.id, token: token
       end
 
@@ -169,10 +171,12 @@ describe API::ItemsController, type: :controller do
     let(:put_item) { FactoryGirl.json(:put_item, token: token) }
     let(:token) { user.arkivo_token }
     let(:gw) { build :generic_work, id: '123' }
+    let(:relation) { double }
 
     before do
       # Mock ActiveFedora
-      allow(GenericWork).to receive(:find).with(gw.id).and_return(gw)
+      allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+      allow(relation).to receive(:find).with(gw.id).and_return(gw)
       # Mock Arkivo Actor
       allow(arkivo_actor).to receive(:update_work_from_item)
     end
@@ -198,12 +202,15 @@ describe API::ItemsController, type: :controller do
 
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
       let(:non_arkivo_gw) { create :generic_work, id: 'abc123xyz', arkivo_checksum: nil }
+      let(:relation) { double }
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
-        allow(GenericWork).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+
         # Post an update to a work with a nil arkivo_checksum
         put :update, put_item, id: non_arkivo_gw.id, format: :json
       end
@@ -216,8 +223,10 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a valid item, matching token, missing resource' do
+      let(:relation) { double }
       before do
-        allow(GenericWork).to receive(:find).with(gw.id) do
+        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(relation).to receive(:find).with(gw.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
         put :update, put_item, id: gw.id, format: :json
@@ -275,10 +284,12 @@ describe API::ItemsController, type: :controller do
     let(:item) { FactoryGirl.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
     let(:gw) { build :generic_work, id: '123' }
+    let(:relation) { double }
 
     before do
       # Mock ActiveFedora
-      allow(GenericWork).to receive(:find).with(gw.id).and_return(gw)
+      allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+      allow(relation).to receive(:find).with(gw.id).and_return(gw)
       # Mock ArkivoActor destroy work
       allow(arkivo_actor).to receive(:destroy_work)
     end
@@ -329,7 +340,8 @@ describe API::ItemsController, type: :controller do
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
-        allow(GenericWork).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
         # Make call to destroy
         delete :destroy, format: :json, id: non_arkivo_gw.id, token: token
       end
@@ -344,7 +356,8 @@ describe API::ItemsController, type: :controller do
       let(:not_found_id) { '409' }
       before do
         # Mock ActiveFedora
-        allow(GenericWork).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(relation).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
         delete :destroy, format: :json, id: not_found_id, token: token
       end
 
