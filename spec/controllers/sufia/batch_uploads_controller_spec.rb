@@ -16,6 +16,7 @@ describe Sufia::BatchUploadsController do
       it "is successful" do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
+                'GenericWork',
                 { '1' => 'foo' },
                 { '1' => 'Article' },
                 ['1'],

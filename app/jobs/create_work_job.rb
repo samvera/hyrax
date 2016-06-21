@@ -8,9 +8,13 @@ class CreateWorkJob < ActiveJob::Base
 
   # This copies metadata from the passed in attribute to all of the works that
   # are members of the given upload set
-  def perform(user, attributes, log)
+  # @param [User] user
+  # @param [String] model
+  # @param [Hash] attributes
+  # @param [BatchCreateOperation] log
+  def perform(user, model, attributes, log)
     log.performing!
-    work = GenericWork.new
+    work = model.constantize.new
     actor = work_actor(work, user)
     status = actor.create(attributes)
     return log.success! if status
