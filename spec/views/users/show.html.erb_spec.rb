@@ -28,19 +28,21 @@ describe 'users/show.html.erb', type: :view do
   end
 
   context "with trophy" do
-    let(:generic_work) { stub_model(GenericWork, title: ["Fake object"], id: "abc123") }
+    let(:trophy_presenter) { Sufia::TrophyPresenter.new(solr_document) }
+    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork') }
+
     before do
       allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
       allow(view).to receive(:current_search_session).and_return(nil)
-      allow(presenter).to receive(:trophies).and_return([generic_work])
+      allow(presenter).to receive(:trophies).and_return([trophy_presenter])
     end
 
     it "has trophy" do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
-      expect(page).to have_selector("#trophyrow_#{generic_work.id}")
+      expect(page).to have_selector("#trophyrow_#{solr_document.id}")
     end
   end
 end

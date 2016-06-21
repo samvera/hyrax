@@ -116,20 +116,6 @@ describe User, type: :model do
     end
   end
 
-  describe "trophy_works" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:work1) { GenericWork.create(title: ["work A"]) { |w| w.apply_depositor_metadata(user) } }
-    let(:work2) { GenericWork.create(title: ["work B"]) { |w| w.apply_depositor_metadata(user) } }
-    let(:work3) { GenericWork.create(title: ["work C"]) { |w| w.apply_depositor_metadata(user) } }
-    let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
-    let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
-    let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
-
-    it "returns a list of generic works" do
-      expect(user.trophy_works).to eq [work1, work2, work3]
-    end
-  end
-
   describe "activity streams" do
     let(:now) { Time.zone.now.to_i }
     let(:activities) {

@@ -18,6 +18,9 @@ RSpec.describe Sufia::UserProfilePresenter do
     let!(:badtrophy) { user.trophies.create!(work_id: 'not_a_generic_work') }
     subject { presenter.trophies }
 
-    it { is_expected.to match_array [work1, work2, work3] }
+    it "has an array of presenters" do
+      expect(subject).to all(be_kind_of Sufia::TrophyPresenter)
+      expect(subject.map(&:id)).to match_array [work1.id, work2.id, work3.id]
+    end
   end
 end

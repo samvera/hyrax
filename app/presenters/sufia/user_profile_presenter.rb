@@ -23,7 +23,7 @@ module Sufia
     end
 
     def trophies
-      @trophies ||= user.trophy_works
+      @trophies ||= Sufia::TrophyPresenter.find_by_user(user)
     end
   end
 end

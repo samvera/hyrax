@@ -16,7 +16,7 @@ module My
       end
 
       def query_solr
-        return empty_search_result if @user.trophy_works.count == 0
+        return empty_search_result if Sufia::TrophyPresenter.find_by_user(@user).count == 0
         super
       end
 

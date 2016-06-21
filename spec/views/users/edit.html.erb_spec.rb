@@ -14,15 +14,15 @@ describe 'users/edit.html.erb', type: :view do
   end
 
   context "with trophy" do
-    let(:generic_work) { stub_model(GenericWork, title: ["Fake object"], id: "abc123") }
+    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork') }
     before do
-      assign(:trophies, [generic_work])
+      assign(:trophies, [Sufia::TrophyPresenter.new(solr_document)])
+      render
     end
+    let(:page) { Capybara::Node::Simple.new(rendered) }
 
     it "has trophy" do
-      render
-      page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_selector("#remove_trophy_#{generic_work.id}")
+      expect(page).to have_selector("#remove_trophy_abc123")
     end
   end
 

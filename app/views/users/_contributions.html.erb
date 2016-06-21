@@ -5,7 +5,7 @@
         <tr id="trophyrow_<%= t.id %>">
           <td>
             <%= link_to t do %>
-              <%= image_tag t.indexing_service.thumbnail_path, { width: 90 } %>
+              <%= image_tag t.thumbnail_path, width: 90 %>
             <% end %>
           </td>
           <td>
