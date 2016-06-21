@@ -56,7 +56,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
-    ContentDepositorChangeEventJob.perform_later(generic_work, receiving_user, reset)
+    ContentDepositorChangeEventJob.perform_later(work, receiving_user, reset)
     self.status = 'accepted'
     self.fulfillment_date = Time.current
     save!
@@ -80,21 +80,21 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def deleted_work?
-    !GenericWork.exists?(work_id)
+    !work_relation.exists?(work_id)
   end
 
-  def generic_work
-    @generic_work ||= GenericWork.find(work_id)
+  def work
+    @work ||= work_relation.find(work_id)
   end
 
   # Delegate to the SolrDocument of the work
-  delegate :to_s, to: :work
+  delegate :to_s, to: :solr_doc
 
   private
 
-    def work
+    def solr_doc
       return 'work not found' if deleted_work?
-      @work ||= SolrDocument.new(solr_response['response']['docs'].first, solr_response)
+      @solr_doc ||= SolrDocument.new(solr_response['response']['docs'].first, solr_response)
     end
 
     def solr_response
@@ -103,5 +103,9 @@ class ProxyDepositRequest < ActiveRecord::Base
 
     def query
       ActiveFedora::SolrQueryBuilder.construct_query_for_ids([work_id])
+    end
+
+    def work_relation
+      CurationConcerns::WorkRelation.new
     end
 end
