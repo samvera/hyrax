@@ -1,4 +1,4 @@
-describe GenericWorkHelper do
+describe Sufia::CollectionsHelper do
   describe '#render_collection_links' do
     let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork']) }
 
