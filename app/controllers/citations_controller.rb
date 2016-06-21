@@ -6,13 +6,11 @@ class CitationsController < ApplicationController
   before_action :build_breadcrumbs, only: [:work, :file]
 
   def work
-    @curation_concern_type = GenericWork
     @presenter_class = Sufia::WorkShowPresenter
     show
   end
 
   def file
-    @curation_concern_type = FileSet
     @presenter_class = Sufia::FileSetPresenter
     show
   end
