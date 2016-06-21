@@ -110,17 +110,6 @@ module Sufia::User
     user_key.gsub(/\./, '-dot-')
   end
 
-  def trophy_works
-    trophies.map do |t|
-      begin
-        ::GenericWork.load_instance_from_solr(t.work_id)
-      rescue ActiveFedora::ObjectNotFoundError
-        logger.error("Invalid trophy for user #{user_key} (work id #{t.work_id})")
-        nil
-      end
-    end.compact
-  end
-
   # method needed for messaging
   def mailboxer_email(_obj = nil)
     nil

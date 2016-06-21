@@ -33,7 +33,7 @@ module Sufia::UsersControllerBehavior
 
   # Display form for users to edit their profile information
   def edit
-    @trophies = @user.trophy_works
+    @trophies = Sufia::TrophyPresenter.find_by_user(@user)
   end
 
   # Process changes from profile form

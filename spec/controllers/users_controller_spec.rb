@@ -117,7 +117,8 @@ describe UsersController, type: :controller do
       it "show the user profile if user exists" do
         get :edit, id: user.user_key
         expect(response).to be_success
-        expect(assigns[:trophies]).to match_array([work1, work2, work3])
+        expect(assigns[:trophies]).to all(be_kind_of Sufia::TrophyPresenter)
+        expect(assigns[:trophies].map(&:id)).to match_array [work1.id, work2.id, work3.id]
       end
     end
   end
