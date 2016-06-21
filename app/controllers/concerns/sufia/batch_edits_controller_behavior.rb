@@ -10,9 +10,9 @@ module Sufia
 
     def edit
       super
-      generic_work = ::GenericWork.new
-      generic_work.depositor = current_user.user_key
-      @form = form_class.new(generic_work, current_user, batch)
+      work = form_class.model_class.new
+      work.depositor = current_user.user_key
+      @form = form_class.new(work, current_user, batch)
     end
 
     def after_update
@@ -27,7 +27,7 @@ module Sufia
     end
 
     def update_document(obj)
-      obj.attributes = generic_work_params
+      obj.attributes = work_params
       obj.date_modified = Time.current.ctime
       obj.visibility = params[:visibility]
     end
@@ -65,9 +65,9 @@ module Sufia
         form_class.terms
       end
 
-      def generic_work_params
-        generic_work_params = params[:generic_work] || ActionController::Parameters.new
-        form_class.model_attributes(generic_work_params)
+      def work_params
+        work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
+        form_class.model_attributes(work_params)
       end
 
       def redirect_to_return_controller

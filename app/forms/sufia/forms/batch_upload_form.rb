@@ -1,7 +1,7 @@
 module Sufia
   module Forms
     class BatchUploadForm < Sufia::Forms::WorkForm
-      self.model_class = ::GenericWork
+      self.model_class = Sufia.primary_work_type
       include HydraEditor::Form::Permissions
 
       self.terms -= [:title, :resource_type]
