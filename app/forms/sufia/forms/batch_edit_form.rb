@@ -6,7 +6,7 @@ module Sufia
                     :subject, :language, :identifier, :based_near,
                     :related_url]
       self.required_fields = []
-      self.model_class = ::GenericWork
+      self.model_class = Sufia.primary_work_type
 
       attr_accessor :names
 
