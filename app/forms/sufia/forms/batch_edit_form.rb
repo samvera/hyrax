@@ -24,13 +24,13 @@ module Sufia
           permissions = []
           # For each of the files in the batch, set the attributes to be the concatination of all the attributes
           batch.each do |doc_id|
-            gw = ::GenericWork.load_instance_from_solr(doc_id)
+            work = model_class.load_instance_from_solr(doc_id)
             terms.each do |key|
               combined_attributes[key] ||= []
-              combined_attributes[key] = (combined_attributes[key] + gw[key]).uniq
+              combined_attributes[key] = (combined_attributes[key] + work[key]).uniq
             end
-            names << gw.to_s
-            permissions = (permissions + gw.permissions).uniq
+            names << work.to_s
+            permissions = (permissions + work.permissions).uniq
           end
 
           terms.each do |key|
