@@ -1,3 +1,3 @@
 module CurationConcerns
-  VERSION = "1.0.0.beta10".freeze
+  VERSION = "1.0.0".freeze
 end

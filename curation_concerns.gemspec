@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head', '>= 10.0.0.beta1', '< 11'
+  spec.add_dependency 'hydra-head', '>= 10.0.0', '< 11'
   spec.add_dependency 'blacklight', '~> 6.1'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3"
   spec.add_dependency "jquery-ui-rails"
