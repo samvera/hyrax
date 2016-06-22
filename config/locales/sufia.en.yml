@@ -68,6 +68,7 @@ en:
         tab_label:          'Featured Works'
         title:              'Featured Works'
         no_works:           'No works have been featured'
+        drag:               'Drag'
       recently_uploaded:
         depositor:          'Depositor'
         details:            'Details'
