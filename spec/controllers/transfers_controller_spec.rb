@@ -55,17 +55,13 @@ describe TransfersController, type: :controller do
     end
 
     describe "#new" do
-      let(:work) do
-        GenericWork.create!(title: ['a work']) do |w|
-          w.apply_depositor_metadata(user.user_key)
-        end
-      end
+      let(:work) { create(:work, user: user) }
       context 'when user is the depositor' do
         it "is successful" do
           sign_in user
           get :new, id: work.id
           expect(response).to be_success
-          expect(assigns[:generic_work]).to eq(work)
+          expect(assigns[:work]).to eq(work)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
           expect(assigns[:proxy_deposit_request].work_id).to eq(work.id)
         end
@@ -73,11 +69,7 @@ describe TransfersController, type: :controller do
     end
 
     describe "#create" do
-      let(:work) do
-        GenericWork.create!(title: ['a work']) do |w|
-          w.apply_depositor_metadata(user.user_key)
-        end
-      end
+      let(:work) { create(:work, user: user) }
       it "is successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {

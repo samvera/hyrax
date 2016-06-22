@@ -20,7 +20,7 @@ module Sufia
     end
 
     def new
-      @generic_work = ::GenericWork.load_instance_from_solr(@id)
+      @work = CurationConcerns::WorkRelation.new.find(params[:id])
     end
 
     def create
