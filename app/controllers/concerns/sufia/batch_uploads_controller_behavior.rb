@@ -42,7 +42,6 @@ module Sufia
         log = BatchCreateOperation.create!(user: current_user,
                                            operation_type: "Batch Create")
         BatchCreateJob.perform_later(current_user,
-                                     form_class.model_class.model_name.name,
                                      params[:title],
                                      params[:resource_type],
                                      params[:uploaded_files],

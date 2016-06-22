@@ -27,7 +27,6 @@ describe BatchCreateJob do
     let(:actor) { double(curation_concern: work) }
 
     subject { described_class.perform_later(user,
-                                            'GenericWork',
                                             title,
                                             resource_types,
                                             uploaded_files,

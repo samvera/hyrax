@@ -14,7 +14,7 @@ module Sufia
 
     def uploaded_file_abilities
       return unless registered_user?
-      can :create, UploadedFile
+      can :create, [UploadedFile, BatchUploadItem]
       can :destroy, UploadedFile, user: current_user
     end
 

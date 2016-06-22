@@ -11,12 +11,12 @@ describe Sufia::BatchUploadsController do
       expect(assigns[:form]).to be_kind_of Sufia::Forms::BatchUploadForm
     end
   end
+
   describe "#create" do
     context "enquing a update job" do
       it "is successful" do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
-                'GenericWork',
                 { '1' => 'foo' },
                 { '1' => 'Article' },
                 ['1'],
@@ -25,7 +25,7 @@ describe Sufia::BatchUploadsController do
         post :create, title: { '1' => 'foo' },
                       resource_type: { '1' => 'Article' },
                       uploaded_files: ['1'],
-                      generic_work: { keyword: [""], visibility: 'open' }
+                      batch_upload_item: { keyword: [""], visibility: 'open' }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -35,7 +35,7 @@ describe Sufia::BatchUploadsController do
       it "redirects to my shares page" do
         allow(BatchCreateJob).to receive(:perform_later)
         post :create,
-             generic_work: {
+             batch_upload_item: {
                permissions_attributes: [
                  { type: "group", name: "public", access: "read" }
                ],
@@ -52,7 +52,7 @@ describe Sufia::BatchUploadsController do
     before do
       controller.params = { title: { '1' => 'foo' },
                             uploaded_files: ['1'],
-                            generic_work: { keyword: [""], visibility: 'open' } }
+                            batch_upload_item: { keyword: [""], visibility: 'open' } }
     end
     it "excludes uploaded_files and title" do
       expect(subject).to eq('keyword' => [],
