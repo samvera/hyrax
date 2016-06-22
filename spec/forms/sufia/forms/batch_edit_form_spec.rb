@@ -13,6 +13,7 @@ describe Sufia::Forms::BatchEditForm do
                             :contributor,
                             :description,
                             :keyword,
+                            :resource_type,
                             :rights,
                             :publisher,
                             :date_created,
@@ -29,6 +30,7 @@ describe Sufia::Forms::BatchEditForm do
       expect(form.model.contributor).to eq ["contributor1", "contributor2"]
       expect(form.model.description).to eq ["description1", "description2"]
       expect(form.model.keyword).to eq ["abc", "123"]
+      expect(form.model.resource_type).to eq ["bar"]
       expect(form.model.rights).to eq ["rights1", "rights2"]
       expect(form.model.publisher).to eq ["Rand McNally"]
       expect(form.model.subject).to eq ["subject1", "subject2"]

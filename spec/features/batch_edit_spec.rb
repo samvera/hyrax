@@ -14,7 +14,13 @@ describe 'Batch management of works', type: :feature do
     before do
       check 'check_all'
       click_on 'batch-edit'
-      fields.each { |f| fill_in_field_fill(f) }
+      fields.each do |f|
+        if f == "resource_type"
+          select_field(f, 'Book')
+        else
+          fill_in_field_fill(f)
+        end
+      end
       fields.each { |f| fill_in_field_save(f) }
       fields.each { |f| fill_in_field_wait(f) }
       work1.reload
@@ -32,6 +38,7 @@ describe 'Batch management of works', type: :feature do
       expect(work1.identifier).to eq ['NEW identifier']
       expect(work1.based_near).to eq ['NEW based_near']
       expect(work1.related_url).to eq ['NEW related_url']
+      expect(work1.resource_type).to eq ['Book']
       expect(work2.creator).to eq ['NEW creator']
       expect(work2.contributor).to eq ['NEW contributor']
       expect(work2.description).to eq ['NEW description']
@@ -43,6 +50,7 @@ describe 'Batch management of works', type: :feature do
       expect(work2.identifier).to eq ['NEW identifier']
       expect(work2.based_near).to eq ['NEW based_near']
       expect(work2.related_url).to eq ['NEW related_url']
+      expect(work2.resource_type).to eq ['Book']
 
       # Reload the form and verify
       visit '/dashboard/works'
@@ -71,6 +79,8 @@ describe 'Batch management of works', type: :feature do
       expect(page).to have_css "input#generic_work_based_near[value*='NEW based_near']"
       expand("related_url")
       expect(page).to have_css "input#generic_work_related_url[value*='NEW related_url']"
+      expand("resource_type")
+      expect(page).to have_select "generic_work_resource_type", selected: 'Book'
     end
   end
 
@@ -90,7 +100,7 @@ describe 'Batch management of works', type: :feature do
   def fields
     [
       "creator", "contributor", "description", "keyword", "publisher", "date_created",
-      "subject", "language", "identifier", "based_near", "related_url"
+      "subject", "language", "identifier", "based_near", "related_url", "resource_type"
     ]
   end
 
@@ -121,5 +131,10 @@ describe 'Batch management of works', type: :feature do
       sleep 0.1
       link.click if link["class"].include?("collapsed")
     end
+  end
+
+  def select_field(id, option)
+    expand(id)
+    select(option, from: "generic_work_#{id}")
   end
 end
