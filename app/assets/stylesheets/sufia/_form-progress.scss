@@ -1,12 +1,21 @@
-.fixedsticky {
-  top: 0; /* Required to get consistent results in Safari and Chrome */
+@media (min-width: $screen-xs-min) {
+  .fixedsticky {
+    margin-top: 1em;
+  }
 }
 
-.fixedsticky-withoutfixedfixed .fixedsticky-on,
-.fixed-supported .fixedsticky-on {
-  left: $save-viz-widget-left;
-  /* Required so that the widget doesn't pop back to top when public desc long */
-  bottom: $save-viz-widget-bottom;
+@media (min-width: $screen-sm-min) {
+  .fixedsticky {
+    margin-top: 0;
+    top: 0; /* Required to get consistent results in Safari and Chrome */
+  }
+
+  .fixedsticky-withoutfixedfixed .fixedsticky-on,
+  .fixed-supported .fixedsticky-on {
+    left: $save-viz-widget-left;
+    /* Required so that the widget doesn't pop back to top when public desc long */
+    bottom: $save-viz-widget-bottom;
+  }
 }
 
 aside.form-progress {
