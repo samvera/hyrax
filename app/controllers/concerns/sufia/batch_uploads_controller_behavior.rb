@@ -6,7 +6,7 @@ module Sufia
 
     included do
       layout "sufia-one-column"
-      self.curation_concern_type = GenericWork
+      self.curation_concern_type = form_class.model_class
     end
 
     def create
@@ -16,12 +16,18 @@ module Sufia
       redirect_after_update
     end
 
+    module ClassMethods
+      def form_class
+        ::Sufia::Forms::BatchUploadForm
+      end
+    end
+
     protected
 
       # Gives the class of the form.
       # This overrides CurationConcerns
       def form_class
-        ::Sufia::Forms::BatchUploadForm
+        self.class.form_class
       end
 
       def redirect_after_update
