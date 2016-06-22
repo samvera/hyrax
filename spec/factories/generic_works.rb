@@ -23,6 +23,19 @@ FactoryGirl.define do
       end
     end
 
+    factory :work_with_one_child do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'])
+      end
+    end
+
+    factory :work_with_two_children do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "Blah")
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "Blah2")
+      end
+    end
+
     factory :work_with_representative_file do
       before(:create) do |work, evaluator|
         work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
