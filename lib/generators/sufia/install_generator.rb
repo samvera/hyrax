@@ -30,11 +30,6 @@ module Sufia
       generate "curation_concerns:install --skip-assets -f" unless options[:skip_curation_concerns]
     end
 
-    def run_curation_concerns_work_generator
-      say_status("info", "GENERATING DEFAULT GENERICWORK MODEL", :blue)
-      generate 'curation_concerns:work GenericWork'
-    end
-
     # Setup the database migrations
     def copy_migrations
       rake 'sufia:install:migrations'
@@ -54,13 +49,6 @@ module Sufia
         end
       else
         puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g sufia client"
-      end
-    end
-
-    def inject_sufia_work_behavior
-      insert_into_file 'app/models/generic_work.rb', after: 'include ::CurationConcerns::BasicMetadata' do
-        "\n  include Sufia::WorkBehavior" \
-        "\n  self.human_readable_type = 'Work'"
       end
     end
 
@@ -154,18 +142,6 @@ module Sufia
         end
       else
         puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
-      end
-    end
-
-    def inject_sufia_form
-      file_path = "app/forms/curation_concerns/generic_work_form.rb"
-      if File.exist?(file_path)
-        gsub_file file_path, /CurationConcerns::Forms::WorkForm/, "Sufia::Forms::WorkForm"
-        inject_into_file file_path, after: /model_class = ::GenericWork/ do
-          "\n    self.terms += [:resource_type]\n"
-        end
-      else
-        puts "     \e[31mFailure\e[0m  Sufia requires a GenericWorkForm object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
       end
     end
 

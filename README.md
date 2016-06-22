@@ -164,6 +164,15 @@ Install Sufia into your app using its built-in install generator. This step adds
 rails generate sufia:install -f
 ```
 
+## Generate a primary work type
+
+```
+rails generate sufia:work NAME
+```
+
+Pass the model name, either CamelCased or under\_scored to the generator.
+
+
 ## Database tables and indexes
 
 Now that Sufia's required database migrations have been generated into your app, you'll need to load them into your application's database.

@@ -1,6 +1,4 @@
 Sufia.config do |config|
-  config.register_curation_concern :generic_work
-
   # Email recipient of messages sent via the contact form
   # config.contact_email = "repo-admin@example.org"
 
