@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3"
   spec.add_dependency "jquery-ui-rails"
   spec.add_dependency "simple_form", '~> 3.1'
-  spec.add_dependency 'hydra-editor', '~> 2.0'
+  spec.add_dependency 'hydra-editor', '>= 2', '< 4'
   spec.add_dependency 'blacklight_advanced_search', '~> 6.0'
   spec.add_dependency 'rails_autolink'
   spec.add_dependency 'sprockets-es6'
