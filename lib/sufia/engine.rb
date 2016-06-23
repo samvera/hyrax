@@ -6,6 +6,7 @@ module Sufia
     require 'breadcrumbs_on_rails'
     require 'jquery-ui-rails'
     require 'flot-rails'
+    require 'almond-rails'
     require 'zeroclipboard-rails'
 
     config.autoload_paths += %W(
