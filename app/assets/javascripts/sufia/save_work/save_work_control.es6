@@ -56,12 +56,12 @@ export class SaveWorkControl {
     if (!this.form) {
       return
     }
-    this.requiredFields = new RequiredFields(this.form, () => this.formChanged())
-    this.uploads = new UploadedFiles(this.form, () => this.formChanged())
+    this.requiredFields = new RequiredFields(this.form, () => this.formStateChanged())
+    this.uploads = new UploadedFiles(this.form, () => this.formStateChanged())
 
     this.saveButton = this.element.find(':submit')
 
-    this.depositAgreement = new DepositAgreement(this.form, () => this.formChanged())
+    this.depositAgreement = new DepositAgreement(this.form, () => this.formStateChanged())
 
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
@@ -70,8 +70,15 @@ export class SaveWorkControl {
     this.formChanged()
   }
 
-  formChanged() {
+  // Called when a file has been uploaded, the deposit agreement is clicked or a form field has had text entered.
+  formStateChanged() {
     this.saveButton.prop("disabled", !this.isValid());
+  }
+
+  // called when a new field has been added to the form.
+  formChanged() {
+    this.requiredFields.reload();
+    this.formStateChanged();
   }
 
   isValid() {

@@ -12,7 +12,14 @@ Sufia = {
 
     saveWorkControl: function () {
         var sw = require('sufia/save_work/save_work_control');
-        new sw.SaveWorkControl($("#form-progress")).activate();
+        var control = new sw.SaveWorkControl($("#form-progress"))
+        control.activate();
+        $('.multi_value.form-group').bind('managed_field:add', function() {
+          control.formChanged()
+        })
+        $('.multi_value.form-group').bind('managed_field:remove', function() {
+          control.formChanged()
+        })
     },
 
     saveWorkFixed: function () {
