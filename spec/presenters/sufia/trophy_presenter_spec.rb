@@ -16,7 +16,7 @@ RSpec.describe Sufia::TrophyPresenter do
   end
 
   let(:presenter) { described_class.new(solr_document) }
-  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork') }
+  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
 
   describe "id" do
     subject { presenter.id }
@@ -37,5 +37,10 @@ RSpec.describe Sufia::TrophyPresenter do
     let(:solr_document) { SolrDocument.new(thumbnail_path_ss: '/foo/bar.png') }
     subject { presenter.thumbnail_path }
     it { is_expected.to eq '/foo/bar.png' }
+  end
+
+  describe '#to_s' do
+    subject { presenter.to_s }
+    it { is_expected.to eq("A Title") }
   end
 end
