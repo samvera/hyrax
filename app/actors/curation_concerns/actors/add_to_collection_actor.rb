@@ -20,8 +20,7 @@ module CurationConcerns
         def add_to_collections(new_collection_ids)
           return true unless new_collection_ids
           # remove from old collections
-          # TODO: Implement in_collection_ids https://github.com/projecthydra-labs/hydra-pcdm/issues/157
-          (curation_concern.in_collections.map(&:id) - new_collection_ids).each do |old_id|
+          (curation_concern.in_collection_ids - new_collection_ids).each do |old_id|
             collection = ::Collection.find(old_id)
             collection.members.delete(curation_concern)
             collection.save
