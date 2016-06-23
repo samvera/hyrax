@@ -16,40 +16,55 @@ Curation Concerns requires the following software to work:
 
 1. Solr
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
-1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
-1. [Redis](http://redis.io/), a key-value store
-1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
-1. [FITS](#characterization) version 0.6.x
-1. [LibreOffice](#derivatives)
+1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly.
+1. [Redis](http://redis.io/), a key-value store. The `redlock` gem requires Redis >= 2.6.
+1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support.
+1. [LibreOffice](https://www.libreoffice.org/download/libreoffice-fresh/)
+1. [FITS](#fits) version 0.8.5.
+1. [FFMPEG](#ffmpeg)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'curation_concerns'
+```ruby
+gem 'curation_concerns'
+```
 
-And then execute:
+Then execute:
 
-    $ bundle install
+```bash
+bundle install
+```
 
 Then run the install generator.  You will be prompted if you want to overwrite the default `app/controllers/catalog_controller.rb`, to which you should type `Y` (yes). If you don't want to be prompted on overwrite, you may run the generator with the `-f` (force) option.
 
-    $ rails generate curation_concerns:install
-    $ rake db:migrate
+```bash
+rails generate curation_concerns:install
+rake db:migrate
+```
 
-### FITS 0.8.5
+### FITS
 
-To install FITS:
- * Go to http://projects.iq.harvard.edu/fits/downloads, download __fits-0.8.5.zip__, and unpack it somewhere on your machine. You can also install FITS on OSX with homebrew: `brew install fits` (you may also have to create a symlink from fits.sh -> fits in the next step).
- * Mark fits.sh as executable (chmod a+x fits.sh)
- * Run "fits.sh -h" from the command line and see a help message to ensure FITS is properly installed
+To install FITS 0.8.5:
+ * Download [fits-0.8.5.zip](http://projects.iq.harvard.edu/files/fits/files/fits-0.8.5.zip) or possibly newer from the [project page](http://projects.iq.harvard.edu/fits/downloads). Unpack it somewhere on your machine. Alternatively, use homebrew on OSX: `brew install fits` (you may also have to create a symlink from fits.sh -> fits in the next step).
+ * Mark fits.sh as executable (`chmod a+x fits.sh`)
+ * Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
  * Give your app access to FITS by:
-     * Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), OR
-     * Changing config/initializers/sufia.rb to point to your FITS location: config.fits_path = "/<your full path>/fits.sh"
+     * Adding the full **fits.sh** path to your PATH (e.g., in your **.bash_profile**), OR
+     * Changing **config/initializers/sufia.rb** to point to your FITS location: `config.fits_path = "/<your full path>/fits.sh"`
 
-### Redis 2.6
+## FFMPEG
 
-The redlock gem requires Redis >= 2.6.
+Curation Concerns includes support for transcoding audio and video files with ffmpeg > 1.0 installed.
+
+On OSX, you can use homebrew:
+
+```bash
+brew install ffmpeg --with-fdk-aac --with-libvpx --with-libvorbis
+```
+
+Otherwise, to compile ffmpeg yourself, see the [CompilationGuide](https://trac.ffmpeg.org/wiki/CompilationGuide).
 
 ## Usage
 
@@ -57,31 +72,40 @@ The redlock gem requires Redis >= 2.6.
 
 To generate a new object type, use the `curation_concerns:work` Rails generator.  Follow the usage instructions provided on the command line when you run:
 
-    $ rails generate curation_concerns:work
+```bash
+rails generate curation_concerns:work
+```
 
 ### Virus Detection
 
-To turn on virus detection, install clamav on your system and add the `clamav` gem to your Gemfile
+To turn on virus detection, install clamav on your system and add the `clamav` gem to your Gemfile:
 
-    gem 'clamav'
+```ruby
+gem 'clamav'
+```
 
 ## Testing
 
 If you are modifying the curation_concerns gem and want to run the test suite, follow these steps to set up the test environment.
 
-    $ rake ci
-    
+```bash
+rake ci
+```
+
 Or you can do all the steps manually:
 
-    $ solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test
-    
-    # in another window
-    $ fcrepo_wrapper -p 8986 --no-jms
-    
-    # in another window
-    $ rake engine_cart:generate
-    $ rake curation_concerns:spec
+```bash
+solr_wrapper -p 8985 -d solr/config/ --collection_name hydra-test
+
+# in another window
+fcrepo_wrapper -p 8986 --no-jms
+
+# in another window
+rake engine_cart:generate
+rake curation_concerns:spec
+```
 
 ## Help
 
-If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by [the Hydra community IRC channel](irc://irc.freenode.net/projecthydra).
+If you have questions or need help, please email the [Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by the [Hydra community IRC channel](irc://irc.freenode.net/projecthydra).
+
