@@ -14,7 +14,7 @@ describe 'users/edit.html.erb', type: :view do
   end
 
   context "with trophy" do
-    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork') }
+    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork', title_tesim: ['Title']) }
     before do
       assign(:trophies, [Sufia::TrophyPresenter.new(solr_document)])
       render

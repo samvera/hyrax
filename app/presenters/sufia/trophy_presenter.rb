@@ -7,6 +7,8 @@ module Sufia
 
     attr_reader :solr_document
 
+    delegate :to_s, to: :solr_document
+
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
       query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(work_ids)
