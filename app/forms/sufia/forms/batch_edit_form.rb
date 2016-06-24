@@ -2,7 +2,7 @@ module Sufia
   module Forms
     class BatchEditForm < Sufia::Forms::WorkForm
       self.terms = [:creator, :contributor, :description,
-                    :keyword, :rights, :publisher, :date_created,
+                    :keyword, :resource_type, :rights, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near,
                     :related_url]
       self.required_fields = []
