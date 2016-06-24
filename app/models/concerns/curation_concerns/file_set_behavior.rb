@@ -11,7 +11,6 @@ module CurationConcerns
     include CurationConcerns::Noid
     include CurationConcerns::FileSet::Derivatives
     include CurationConcerns::Permissions
-    include CurationConcerns::FileSet::FullTextIndexing
     include CurationConcerns::FileSet::Indexing
     include CurationConcerns::FileSet::BelongsToWorks
     include CurationConcerns::FileSet::Querying
