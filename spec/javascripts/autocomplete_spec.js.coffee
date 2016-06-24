@@ -5,7 +5,7 @@ describe "auto complete", ->
     @spy_on_json = spyOn($, 'getJSON').and.returnValue resp
 
     #set up a key down event to trigger the auto complete
-    @typeEvent = $.Event( 'keydown' )
+    @typeEvent = $.Event('keydown')
     @typeEvent.keyCode = 70 # lower case f
 
     #define the jasmine clock so we can control time
@@ -18,8 +18,8 @@ describe "auto complete", ->
   describe "language", ->
     beforeEach ->
       # setup two inputs for us to attach  auto complete to
-      setFixtures  '<input class="generic_work_language"  value="" id="generic_work_language" type="text" >
-                    <input class="generic_work_language"  value="" type="text">'
+      setFixtures  '<input class="generic_work_language"  value="" id="generic_work_language" type="text" data-autocomplete="language" data-autocomplete-url="foo">
+                    <input class="generic_work_language"  value="" type="text" data-autocomplete="language" data-autocomplete-url="foo">'
 
       # run all Blacklight.onload functions
       Blacklight.activate()
@@ -58,8 +58,8 @@ describe "auto complete", ->
   describe "subject", ->
     beforeEach ->
       # setup two inputs for us to attach  auto complete to
-      setFixtures  '<input class="generic_work_subject"  value="" id="generic_work_subject" type="text" >
-                    <input class="generic_work_subject"  value="" type="text">'
+      setFixtures  '<input class="generic_work_subject"  value="" id="generic_work_subject" type="text" data-autocomplete="subject" data-autocomplete-url="foo">
+                    <input class="generic_work_subject"  value="" type="text" data-autocomplete="subject" data-autocomplete-url="foo">'
 
       # run all Blacklight.onload functions
       Blacklight.activate()
@@ -99,8 +99,8 @@ describe "auto complete", ->
   describe "location", ->
     beforeEach ->
       # setup two inputs for us to attach  auto complete to
-      setFixtures  '<input class="generic_work_based_near"  value="" id="generic_work_based_near" type="text" >
-                    <input class="generic_work_based_near"  value="" type="text">'
+      setFixtures  '<input class="generic_work_based_near"  value="" id="generic_work_based_near" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">
+                    <input class="generic_work_based_near"  value="" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">'
 
       # run all Blacklight.onload functions
       Blacklight.activate()

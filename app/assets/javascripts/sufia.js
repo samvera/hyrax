@@ -34,7 +34,6 @@
 //= require sufia/featured_works
 //= require sufia/featured_researcher
 //= require sufia/batch_select_all
-//= require sufia/edit_metadata
 //= require sufia/single_use_link
 //= require sufia/search
 //= require sufia/editor
@@ -53,6 +52,10 @@
 //= require sufia/save_work
 //= require sufia/permissions
 //= require sufia/notifications
+//= require sufia/autocomplete
+//= require sufia/autocomplete/location
+//= require sufia/autocomplete/subject
+//= require sufia/autocomplete/language
 
 //= require curation_concerns/collections
 //= require hydra-editor/hydra-editor

@@ -2,12 +2,24 @@
 // code should be called from here.
 Sufia = {
     initialize: function () {
+        this.autocomplete();
         this.saveWorkControl();
         this.saveWorkFixed();
         this.popovers();
         this.permissions();
         this.notifications();
         this.transfers();
+    },
+
+    autocomplete: function () {
+        var ac = require('sufia/autocomplete');
+        var autocomplete = new ac.Autocomplete()
+        $('.multi_value.form-group').manage_fields({
+          add: function(e, element) {
+            autocomplete.fieldAdded(element)
+          }
+        });
+        autocomplete.setup();
     },
 
     saveWorkControl: function () {
