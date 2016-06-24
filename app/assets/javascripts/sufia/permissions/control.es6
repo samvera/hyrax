@@ -6,17 +6,21 @@ export class PermissionsControl {
   /**
    * Initialize the save controls
    * @param {jQuery} element the jquery selector for the permissions container
-   * @param {String} object_name the name of the object to create 
    * @param {String} template_id the identifier of the template for the added elements 
    */
-  constructor(element, object_name, template_id) {
+  constructor(element, template_id) {
     if (element.size() == 0) {
       return
     }
     this.element = element
 
-    this.registry = new Registry(this.element, object_name, template_id)
+    this.registry = new Registry(this.element, this.object_name(), template_id)
     this.user_controls = new UserControls(this.element, this.registry)
     this.group_controls = new GroupControls(this.element, this.registry)
+  }
+
+  // retrieve object_name the name of the object to create 
+  object_name() {
+    return this.element.data('param-key')
   }
 }
