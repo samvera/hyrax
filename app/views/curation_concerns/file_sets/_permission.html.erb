@@ -1,5 +1,9 @@
   <div id="permissions_display" class="tab-pane">
-    <%= simple_form_for [main_app, file_set], html: { multipart: true, id: 'permission' } do |f| %>
+    <%= simple_form_for [main_app, file_set],
+                        html: { multipart: true,
+                                id: 'permission',
+                                data: { param_key: file_set.model_name.param_key }
+                              } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render "permission_form", f: f %>
       <div id="permissions_submit">

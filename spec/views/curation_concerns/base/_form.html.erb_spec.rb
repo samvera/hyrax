@@ -34,6 +34,9 @@ describe 'curation_concerns/base/_form.html.erb', type: :view do
         expect(page).to have_link('Batch upload')
         # does not render the BE upload widget
         expect(page).not_to have_selector('button#browse-btn')
+
+        # Draws the "Share" tab, with data for the javascript.
+        expect(page).to have_selector('#share[data-param-key="generic_work"]')
       end
     end
 

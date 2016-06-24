@@ -31,8 +31,8 @@ Sufia = {
 
     permissions: function () {
         var perm = require('sufia/permissions/control');
-        new perm.PermissionsControl($("#share"), 'generic_work', 'tmpl-work-grant');
-        new perm.PermissionsControl($("#permission"), 'file_set', 'tmpl-file-set-grant');
+        new perm.PermissionsControl($("#share"), 'tmpl-work-grant');
+        new perm.PermissionsControl($("#permission"), 'tmpl-file-set-grant');
     },
 
     notifications: function () {

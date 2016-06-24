@@ -20,7 +20,7 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <% tabs.each_with_index do | tab, i | %>
+      <% (tabs - ['share']).each_with_index do | tab, i | %>
         <% if i == 0 %>
           <div role="tabpanel" class="tab-pane active" id="<%= tab %>">
         <% else %>
@@ -30,6 +30,10 @@
         <%= render "form_#{tab}", f: f %>
         </div>
       <% end %>
+
+      <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%= f.object.model_name.param_key %>">
+          <%= render "form_share", f: f %>
+      </div>
     </div>
   </div>
 

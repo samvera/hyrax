@@ -3,6 +3,10 @@ module Sufia::Forms
     delegate :depositor, :on_behalf_of, :permissions, to: :model
     include HydraEditor::Form::Permissions
 
+    # TODO: remove this when https://github.com/projecthydra/hydra-editor/pull/115
+    # is merged and hydra-editor 3.0.0 is released
+    delegate :model_name, to: :model
+
     attr_reader :agreement_accepted
 
     self.terms += [:collection_ids]
