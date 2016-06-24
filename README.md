@@ -28,6 +28,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Rails](#rails)
     * [Sufia's Ruby\-related dependencies](#sufias-ruby-related-dependencies)
     * [Install Sufia](#install-sufia)
+    * [Generate a primary work type](#generate-a-primary-work-type)
     * [Database tables and indexes](#database-tables-and-indexes)
     * [Start Redis](#start-redis)
     * [Start Solr](#start-solr)
@@ -168,12 +169,19 @@ rails generate sufia:install -f
 
 ## Generate a primary work type
 
+While earlier versions of Sufia came with a pre-defined object model, Sufia 7.0 and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
+
+Pass a (CamelCased) model name to Sufia's work generator to get started, e.g.:
+
 ```
-rails generate sufia:work NAME
+rails generate sufia:work Work
 ```
 
-Pass the model name, either CamelCased or under\_scored to the generator.
+or
 
+```
+rails generate sufia:work MovingImage
+```
 
 ## Database tables and indexes
 
