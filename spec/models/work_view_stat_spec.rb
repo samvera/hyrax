@@ -1,8 +1,9 @@
 RSpec.describe WorkViewStat, type: :model do
-  let(:work_id) { "199" }
+  let(:work_id) { work.id }
   let(:user_id) { 123 }
   let(:date) { DateTime.new.in_time_zone }
   let(:work_stat) { described_class.create(work_views: "25", date: date, work_id: work_id, user_id: user_id) }
+  let(:work) { mock_model(GenericWork, id: 199) }
 
   it "has attributes" do
     expect(work_stat).to respond_to(:work_views)
@@ -14,7 +15,7 @@ RSpec.describe WorkViewStat, type: :model do
     expect(work_stat.user_id).to eq(user_id)
   end
 
-  describe "#get_float_statistics" do
+  describe "#statistics" do
     let(:dates) {
       ldates = []
       4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
@@ -38,14 +39,13 @@ RSpec.describe WorkViewStat, type: :model do
         OpenStruct.new(date: date_strs[0], pageviews: 4),
         OpenStruct.new(date: date_strs[1], pageviews: 8),
         OpenStruct.new(date: date_strs[2], pageviews: 6),
-        OpenStruct.new(date: date_strs[3], pageviews: 10),
-        # OpenStruct.new(date: date_strs[4], pageviews: 2)
+        OpenStruct.new(date: date_strs[3], pageviews: 10)
       ]
     }
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_work_pageview_statistics)
-        described_class.statistics(work_id, Time.zone.today - 4.days, user_id)
+        described_class.statistics(work, Time.zone.today - 4.days, user_id)
       end
 
       it "includes cached ga data" do
@@ -57,9 +57,9 @@ RSpec.describe WorkViewStat, type: :model do
         expect(stats.first.user_id).to eq user_id
 
         # at this point all data should be cached
-        allow(described_class).to receive(:ga_statistics).with(Time.zone.today, work_id).and_raise("We should not call Google Analytics All data should be cached!")
+        allow(described_class).to receive(:ga_statistics).with(Time.zone.today, work).and_raise("We should not call Google Analytics All data should be cached!")
 
-        stats2 = described_class.statistics(work_id, Time.zone.today - 5.days)
+        stats2 = described_class.statistics(work, Time.zone.today - 5.days)
         expect(described_class.to_flots(stats2)).to include(*view_output)
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe WorkViewStat, type: :model do
 
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_work_pageview_statistics)
-        described_class.statistics(work_id, Time.zone.today - 5.days)
+        described_class.statistics(work, Time.zone.today - 5.days)
       end
 
       it "includes cached data" do

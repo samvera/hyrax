@@ -13,7 +13,7 @@ class WorkUsage
     self.id = id
     self.path = Rails.application.routes.url_helpers.curation_concerns_generic_work_path(id)
     self.created = date_for_analytics(work)
-    self.pageviews = WorkViewStat.to_flots WorkViewStat.statistics(id, created, user_id)
+    self.pageviews = WorkViewStat.to_flots WorkViewStat.statistics(work, created, user_id)
   end
 
   def total_pageviews

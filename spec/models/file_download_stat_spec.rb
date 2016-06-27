@@ -1,7 +1,8 @@
 describe FileDownloadStat, type: :model do
-  let(:file_id) { "99" }
+  let(:file_id) { file.id }
   let(:date) { Time.current }
   let(:file_stat) { described_class.create(downloads: "2", date: date, file_id: file_id) }
+  let(:file) { mock_model(FileSet, id: 99) }
 
   it "has attributes" do
     expect(file_stat).to respond_to(:downloads)
@@ -12,7 +13,7 @@ describe FileDownloadStat, type: :model do
     expect(file_stat.downloads).to eq(2)
   end
 
-  describe "#get_float_statistics" do
+  describe "#statistics" do
     let(:dates) {
       ldates = []
       4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
@@ -36,15 +37,14 @@ describe FileDownloadStat, type: :model do
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[0], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3"),
-        # OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[4], totalEvents: "5"),
+        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3")
       ]
     }
 
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_download_statistics)
-        described_class.statistics(file_id, Time.zone.today - 4.days)
+        described_class.statistics(file, Time.zone.today - 4.days)
       end
 
       it "includes cached ga data" do
@@ -55,9 +55,9 @@ describe FileDownloadStat, type: :model do
         expect(described_class.to_flots(stats)).to include(*download_output)
 
         # at this point all data should be cached
-        allow(described_class).to receive(:ga_statistics).with(Time.zone.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
+        allow(described_class).to receive(:ga_statistics).with(Time.zone.today, file).and_raise("We should not call Google Analytics All data should be cached!")
 
-        stats2 = described_class.statistics(file_id, Time.zone.today - 4.days)
+        stats2 = described_class.statistics(file, Time.zone.today - 4.days)
         expect(described_class.to_flots(stats2)).to include(*download_output)
       end
     end
@@ -67,7 +67,7 @@ describe FileDownloadStat, type: :model do
 
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_download_statistics)
-        described_class.statistics(file_id, Time.zone.today - 5.days)
+        described_class.statistics(file, Time.zone.today - 5.days)
       end
 
       it "includes cached data" do
