@@ -21,9 +21,7 @@ describe CurationConcerns::FileSetIndexer do
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Medina, Saudi Arabia'],
-      related_url: ['http://example.org/TheWork/']) do |gf|
-        gf.full_text.content = 'abcxyz'
-      end
+      related_url: ['http://example.org/TheWork/'])
   end
 
   let(:mock_file) do
@@ -37,6 +35,11 @@ describe CurationConcerns::FileSetIndexer do
       file_size: ['12']
     )
   end
+
+  let(:mock_text) do
+    mock_file_factory(content: "abcxyz")
+  end
+
   let(:indexer) { described_class.new(file_set) }
 
   describe '#generate_solr_document' do
@@ -44,6 +47,7 @@ describe CurationConcerns::FileSetIndexer do
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
       allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
+      allow(file_set).to receive(:extracted_text).and_return(mock_text)
     end
     subject { indexer.generate_solr_document }
 
