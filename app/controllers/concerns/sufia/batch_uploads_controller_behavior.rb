@@ -12,7 +12,7 @@ module Sufia
     def create
       authenticate_user!
       create_update_job
-      flash[:notice] = t('sufia.generic_works.new.after_create_html', application_name: view_context.application_name)
+      flash[:notice] = t('sufia.works.new.after_create_html', application_name: view_context.application_name)
       redirect_after_update
     end
 
