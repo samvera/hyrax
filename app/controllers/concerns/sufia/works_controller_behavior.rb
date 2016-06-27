@@ -6,9 +6,17 @@ module Sufia
     include CurationConcerns::CurationConcernController
 
     included do
-      before_action :build_breadcrumbs, only: [:edit, :show]
       self.show_presenter = Sufia::WorkShowPresenter
       layout "sufia-one-column"
+    end
+
+    module ClassMethods
+      # We don't want the breadcrumb action to occur until after the concern has
+      # been loaded and authorized
+      def curation_concern_type=(curation_concern_type)
+        super
+        before_action :build_breadcrumbs, only: [:edit, :show]
+      end
     end
 
     def new
@@ -64,7 +72,7 @@ module Sufia
       def add_breadcrumb_for_action
         case action_name
         when 'edit'.freeze
-          add_breadcrumb I18n.t("sufia.work.browse_view"), main_app.curation_concerns_generic_work_path(params["id"])
+          add_breadcrumb I18n.t("sufia.work.browse_view"), main_app.polymorphic_path(curation_concern)
         when 'show'.freeze
           add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
         end
