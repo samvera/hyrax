@@ -4,7 +4,6 @@ require 'redis-namespace'
 require 'mailboxer'
 require 'acts_as_follower'
 require 'carrierwave'
-require "active_resource" # used by FileSet to catch errors & by GeoNamesResource
 require 'rails_autolink'
 require 'font-awesome-rails'
 require 'tinymce-rails'

@@ -15,6 +15,6 @@ RSpec.describe 'records/edit_fields/_based_near.html.erb', type: :view do
   end
 
   it 'has url for autocomplete service' do
-    expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/generic_works/location"][data-autocomplete="based_near"]')
+    expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/geonames"][data-autocomplete="based_near"]')
   end
 end

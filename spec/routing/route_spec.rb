@@ -115,12 +115,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'Authorities' do
-    it "routes to query" do
-      expect(get: '/authorities/subject/bio').to route_to(controller: 'authorities', action: 'query', model: 'subject', term: 'bio')
-    end
-  end
-
   describe 'Trophies' do
     it 'routes to user trophies' do
       expect(post: '/works/1234abc/trophy').to route_to(controller: 'sufia/trophies', action: 'toggle_trophy', id: '1234abc')

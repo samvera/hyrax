@@ -15,6 +15,6 @@ RSpec.describe 'records/edit_fields/_language.html.erb', type: :view do
   end
 
   it 'has url for autocomplete service' do
-    expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/generic_works/language"][data-autocomplete="language"]')
+    expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/local/languages"][data-autocomplete="language"]')
   end
 end

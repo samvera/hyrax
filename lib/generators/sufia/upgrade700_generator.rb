@@ -18,4 +18,10 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
     # Nuke old search_params_logic
     gsub_file 'app/controllers/catalog_controller.rb', '[:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]', '[:add_advanced_parse_q_to_solr] + search_params_logic + [:add_access_controls_to_solr_params]'
   end
+
+  def qa_routes
+    insert_into_file "config/routes.rb", after: ".draw do" do
+      "\n  mount Qa::Engine => '/authorities'\n"
+    end
+  end
 end
