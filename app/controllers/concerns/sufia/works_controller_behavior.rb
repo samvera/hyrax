@@ -53,7 +53,7 @@ module Sufia
       def after_create_response
         respond_to do |wants|
           wants.html do
-            flash[:notice] = t('sufia.generic_works.new.after_create_html', application_name: view_context.application_name)
+            flash[:notice] = t('sufia.works.new.after_create_html', application_name: view_context.application_name)
             redirect_to [main_app, curation_concern]
           end
           wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }

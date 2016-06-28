@@ -205,7 +205,7 @@ en:
       help:
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
         resource_type: "You may select multiple types to apply to all files"
-    generic_works:
+    works:
       new:
         header: Add New Work
         in_collections: This Work in Collections
