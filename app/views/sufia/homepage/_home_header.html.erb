@@ -1,7 +1,7 @@
 <div class="home_call_action col-xs-12 col-sm-4 pull-right">
   <% if @presenter.display_share_button? %>
     <div class="home_share_work">
-      <%= link_to new_curation_concerns_generic_work_path, class: "btn btn-primary btn-lg btn-block", id: "contribute_link" do %>
+      <%= link_to [:new, Sufia.primary_work_type.model_name.singular_route_key], class: "btn btn-primary btn-lg btn-block", id: "contribute_link" do %>
         <i class="glyphicon glyphicon-upload"></i> <%= t('sufia.share_button') %>
       <% end %>
       <p class="text-center"><a href="/terms/">Terms of Use</a></p>
