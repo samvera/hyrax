@@ -1,9 +1,5 @@
 describe WorkUsage, type: :model do
-  let!(:work) do
-    GenericWork.create(id: 'abc12345xy', title: ['bilbo work 1']) do |work|
-      work.apply_depositor_metadata("gordonl")
-    end
-  end
+  let!(:work) { create(:work, id: 'abc12345xy') }
 
   let(:dates) {
     ldates = []
@@ -54,6 +50,12 @@ describe WorkUsage, type: :model do
     it "sets the created date" do
       expect(usage.created).to eq(work.create_date)
     end
+  end
+
+  describe "#to_s" do
+    let(:work) { create(:work, title: ['Butter sculpture']) }
+    subject { usage.to_s }
+    it { is_expected.to eq 'Butter sculpture' }
   end
 
   describe "statistics" do
@@ -125,14 +127,7 @@ describe WorkUsage, type: :model do
 
   describe "on a migrated work" do
     let(:date_uploaded) { "2014-12-31" }
-
-    let(:work_migrated) do
-      GenericWork.create(id: '678901234', title: ['bilbo work 2']) do |work|
-        work.apply_depositor_metadata("gordonl")
-        work.date_uploaded = date_uploaded
-        work.save
-      end
-    end
+    let(:work_migrated) { create(:work, id: '678901234', date_uploaded: date_uploaded) }
 
     let(:usage) {
       expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
