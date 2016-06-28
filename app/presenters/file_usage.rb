@@ -9,8 +9,8 @@ class FileUsage
     self.id = id
     self.path = Rails.application.routes.url_helpers.curation_concerns_file_set_path(id)
     self.created = date_for_analytics(file)
-    self.downloads = FileDownloadStat.to_flots FileDownloadStat.statistics(id, created, user_id)
-    self.pageviews = FileViewStat.to_flots FileViewStat.statistics(id, created, user_id)
+    self.downloads = FileDownloadStat.to_flots FileDownloadStat.statistics(file, created, user_id)
+    self.pageviews = FileViewStat.to_flots FileViewStat.statistics(file, created, user_id)
   end
 
   # file.date_uploaded reflects the date the file was uploaded by the user

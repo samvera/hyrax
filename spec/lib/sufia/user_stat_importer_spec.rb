@@ -2,33 +2,33 @@ describe Sufia::UserStatImporter do
   before do
     allow(Sufia.config).to receive(:analytic_start_date) { dates[0] }
 
-    allow(FileViewStat).to receive(:ga_statistics) do |_date, file_id|
-      case file_id
-      when bilbo_file_1.id
+    allow(FileViewStat).to receive(:ga_statistics) do |_date, file|
+      case file
+      when bilbo_file_1
         bilbo_file_1_pageview_stats
-      when bilbo_file_2.id
+      when bilbo_file_2
         bilbo_file_2_pageview_stats
       else
         frodo_file_1_pageview_stats
       end
     end
 
-    allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file_id|
-      case file_id
-      when bilbo_file_1.id
+    allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file|
+      case file
+      when bilbo_file_1
         bilbo_file_1_download_stats
-      when bilbo_file_2.id
+      when bilbo_file_2
         bilbo_file_2_download_stats
       else
         frodo_file_1_download_stats
       end
     end
 
-    allow(WorkViewStat).to receive(:ga_statistics) do |_date, work_id|
-      case work_id
-      when bilbo_work_1.id
+    allow(WorkViewStat).to receive(:ga_statistics) do |_date, work|
+      case work
+      when bilbo_work_1
         bilbo_work_1_pageview_stats
-      when bilbo_work_2.id
+      when bilbo_work_2
         bilbo_work_2_pageview_stats
       else
         frodo_work_1_pageview_stats
@@ -36,48 +36,33 @@ describe Sufia::UserStatImporter do
     end
   end
 
-  let(:bilbo) { FactoryGirl.create(:user, email: 'bilbo@example.com') }
-  let(:frodo) { FactoryGirl.create(:user, email: 'frodo@example.com') }
-  let!(:gollum) { FactoryGirl.create(:user, email: 'gollum@example.com') }
+  let(:bilbo) { create(:user, email: 'bilbo@example.com') }
+  let(:frodo) { create(:user, email: 'frodo@example.com') }
+  let!(:gollum) { create(:user, email: 'gollum@example.com') }
 
   let!(:bilbo_file_1) do
-    FileSet.new(id: 'xyzbilbo1', title: ['bilbo 1']).tap do |f|
-      f.apply_depositor_metadata(bilbo.email)
-      f.save
-    end
+    create(:file_set, id: 'xyzbilbo1', user: bilbo)
   end
 
   let!(:bilbo_file_2) do
-    FileSet.new(id: 'xyzbilbo2', title: ['bilbo 2']).tap do |f|
-      f.apply_depositor_metadata(bilbo.email)
-      f.save
-    end
+    create(:file_set, id: 'xyzbilbo2', user: bilbo)
   end
 
   let!(:frodo_file_1) do
-    FileSet.new(id: 'xyzfrodo1', title: ['frodo 1']).tap do |f|
-      f.apply_depositor_metadata(frodo.email)
-      f.save
-    end
+    create(:file_set, id: 'xyzfrodo1', user: frodo)
   end
 
   # work
   let!(:bilbo_work_1) do
-    GenericWork.create(id: 'xyzbilbowork1', title: ['bilbo work 1']) do |work|
-      work.apply_depositor_metadata(bilbo.email)
-    end
+    create(:work, id: 'xyzbilbowork1', user: bilbo)
   end
 
   let!(:bilbo_work_2) do
-    GenericWork.create(id: 'xyzbilbowork2', title: ['bilbo work 2']) do |work|
-      work.apply_depositor_metadata(bilbo.email)
-    end
+    create(:work, id: 'xyzbilbowork2', user: bilbo)
   end
 
   let!(:frodo_work_1) do
-    GenericWork.create(id: 'xyzfrodowork1', title: ['frodo work 1']) do |work|
-      work.apply_depositor_metadata(frodo.email)
-    end
+    create(:work, id: 'xyzfrodowork1', user: frodo)
   end
 
   let(:dates) {
