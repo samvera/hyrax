@@ -8,7 +8,9 @@ class CreateDerivativesJob < ActiveJob::Base
     filename = CurationConcerns::WorkingDirectory.find_or_retrieve(file_id, file_set.id)
 
     file_set.create_derivatives(filename)
-    # The thumbnail is indexed in the solr document, so reindex
+
+    # Reload from Fedora and reindex for thumbnail and extracted text
+    file_set.reload
     file_set.update_index
     file_set.parent.update_index if parent_needs_reindex?(file_set)
   end
