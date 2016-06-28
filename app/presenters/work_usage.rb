@@ -3,7 +3,7 @@
 # and prepares it for visualization in /app/views/stats/work.html.erb
 
 class WorkUsage
-  attr_accessor :id, :created, :path, :pageviews, :work
+  attr_accessor :id, :created, :pageviews, :work
 
   def initialize(id)
     @work = CurationConcerns::WorkRelation.new.find(id)
@@ -11,7 +11,6 @@ class WorkUsage
     user_id = user ? user.id : nil
 
     self.id = id
-    self.path = Rails.application.routes.url_helpers.curation_concerns_generic_work_path(id)
     self.created = date_for_analytics(work)
     self.pageviews = WorkViewStat.to_flots WorkViewStat.statistics(work, created, user_id)
   end
