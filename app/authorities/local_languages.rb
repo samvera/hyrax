@@ -5,6 +5,6 @@ class LocalLanguages
   end
 
   def search(query)
-    LocalAuthority.entries_by_term('generic_works', 'language', query)
+    LocalAuthority.entries_by_term('language', query)
   end
 end

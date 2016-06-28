@@ -5,6 +5,6 @@ class LocalSubjects
   end
 
   def search(query)
-    LocalAuthority.entries_by_term('generic_works', 'subject', query)
+    LocalAuthority.entries_by_term('subject', query)
   end
 end
