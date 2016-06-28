@@ -10,6 +10,9 @@ module Sufia
 
       attr_accessor :names
 
+      # @param [ActiveFedora::Base] model the model backing the form
+      # @param [Ability] current_ability the user authorization model
+      # @param [Array<String>] batch a list of document ids in the batch
       def initialize(model, current_ability, batch)
         super(model, current_ability)
         @names = []
@@ -19,6 +22,7 @@ module Sufia
       private
 
         # override this method if you need to initialize more complex RDF assertions (b-nodes)
+        # @param [Array<String>] batch a list of document ids in the batch
         def initialize_combined_fields(batch)
           combined_attributes = {}
           permissions = []

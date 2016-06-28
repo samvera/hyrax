@@ -87,7 +87,7 @@ function batch_edit_init () {
 
                     for (key in  Object.keys(adata)) {
                         curKey = Object.keys(adata)[key];
-                        if (curKey.slice(0, 12) == "generic_work") {
+                        if (curKey.slice(0, 12) == req.key) {
                             data[curKey] = adata[curKey];
                             form.push(req.form);
                         }
@@ -100,9 +100,7 @@ function batch_edit_init () {
         };
     }());
 
-
     ajaxManager.run();
-
 
     function after_ajax(form) {
         form.enableForm();
@@ -145,6 +143,7 @@ function batch_edit_init () {
 
         ajaxManager.addReq({
             form: form_id,
+            key: form.data('model'),
             queue: "add_doc",
             url: form.attr("action"),
             dataType: "json",
