@@ -15,6 +15,20 @@ RSpec.describe WorkViewStat, type: :model do
     expect(work_stat.user_id).to eq(user_id)
   end
 
+  describe ".ga_statistic" do
+    let(:start_date) { 2.days.ago }
+    let(:views) { double }
+    let(:profile) { double(sufia__pageview: views) }
+    let(:expected_path) { Rails.application.routes.url_helpers.curation_concerns_generic_work_path(work) }
+    before do
+      allow(Sufia::Analytics).to receive(:profile).and_return(profile)
+    end
+    it "calls the Legato method with the correct path" do
+      expect(views).to receive(:for_path).with(expected_path)
+      described_class.ga_statistics(start_date, work)
+    end
+  end
+
   describe "#statistics" do
     let(:dates) {
       ldates = []

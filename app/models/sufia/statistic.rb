@@ -1,12 +1,13 @@
 module Sufia
   class Statistic < ActiveRecord::Base
-    include ActionDispatch::Routing::PolymorphicRoutes
-    include Rails.application.routes.url_helpers
     self.abstract_class = true
 
     class_attribute :cache_column, :event_type
 
     class << self
+      include ActionDispatch::Routing::PolymorphicRoutes
+      include Rails.application.routes.url_helpers
+
       def statistics_for(object)
         where(filter(object))
       end
