@@ -165,8 +165,12 @@ function batch_edit_init () {
 }
 
 Blacklight.onLoad(function() {
-  // set up global batch edit options to override the ones in the gem
-  window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
+  // set up global batch edit options to override the ones in the hydra-batch-edit gem
+  window.batch_edits_options = { checked_label: "",
+                                 unchecked_label: "",
+                                 progress_label: "",
+                                 status_label: "",
+                                 css_class: "batch_toggle" };
   batch_edit_init();
 
 }); //end of Blacklight.onload
