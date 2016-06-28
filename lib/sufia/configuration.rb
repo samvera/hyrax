@@ -32,6 +32,7 @@ module Sufia
     def analytics
       @analytics ||= false
     end
+
     attr_writer :citations
     def citations
       @citations ||= false
