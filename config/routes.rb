@@ -118,9 +118,6 @@ Sufia::Engine.routes.draw do
   # advanced routes for advanced search
   get 'search' => 'advanced#index', as: :advanced
 
-  # Authority vocabulary queries route
-  get 'authorities/:model/:term' => 'authorities#query'
-
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'

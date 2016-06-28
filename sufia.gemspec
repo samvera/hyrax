@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'select2-rails', '~> 3.5.9'
   spec.add_dependency 'json-schema'
   spec.add_dependency 'oauth'
-  spec.add_dependency 'activeresource', "~> 4.0" # No longer a dependency of rails 4.0
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
@@ -45,6 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'redis-namespace', '~> 1.5.2'
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'almond-rails', '~> 0.0.1'
+  spec.add_dependency 'qa', '~> 0.7' # questioning_authority
 
   spec.add_development_dependency 'engine_cart', '~> 0.8'
   spec.add_development_dependency 'mida', '~> 0.3'

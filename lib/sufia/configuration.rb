@@ -52,9 +52,8 @@ module Sufia
       @arkivo_api ||= false
     end
 
-    attr_writer :geonames_username
-    def geonames_username
-      @geonames_username ||= ""
+    def geonames_username=(username)
+      Qa::Authorities::Geonames.username = username
     end
 
     attr_writer :active_deposit_agreement_acceptance
