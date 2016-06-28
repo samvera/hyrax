@@ -43,10 +43,6 @@ describe WorkUsage, type: :model do
       expect(usage.id).to eq(work.id)
     end
 
-    it "sets the path" do
-      expect(usage.path).to eq("/concern/generic_works/#{URI.encode(work.id, '/')}")
-    end
-
     it "sets the created date" do
       expect(usage.created).to eq(work.create_date)
     end
