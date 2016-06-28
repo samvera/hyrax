@@ -26,6 +26,7 @@ export class SaveWorkControl {
     this.element = element
     this.form = element.closest('form')
     element.data('save_work_control', this)
+    this.activate();
   }
 
   /**
@@ -67,6 +68,8 @@ export class SaveWorkControl {
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
     new VisibilityComponent(this.element.find('.visibility'))
     this.preventSubmitUnlessValid()
+    $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
+    $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
     this.formChanged()
   }
 

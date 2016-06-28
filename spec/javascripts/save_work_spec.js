@@ -6,17 +6,13 @@ describe("SaveWorkControl", function() {
       check: function() { },
       uncheck: function() { },
     };
-    var form = {
-      on: function () { }
-    };
-    var element = {
-      size: function() { return 1 },
-      closest: function() { return form },
-      data: function() { return }
-    };
 
     beforeEach(function() {
-      target = new control.SaveWorkControl(element);
+      var fixture = setFixtures('<form id="edit_generic_work">' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
+        '<input type="submit"></aside></form>');
+      target = new control.SaveWorkControl(fixture.find('#form-progress'));
       target.requiredMetadata = mockCheckbox;
       spyOn(mockCheckbox, 'check').and.stub();
       spyOn(mockCheckbox, 'uncheck').and.stub();
@@ -80,25 +76,27 @@ describe("SaveWorkControl", function() {
       uncheck: function() { },
     };
     var form_id = 'new_generic_work';
-    var form = {
-      attr: function() { return form_id },
-      on: function() { },
-    };
-    var element = {
-      size: function() { return 1 },
-      closest: function() { return form },
-      data: function() { return }
-    };
+
+    var buildTarget = function(form_id) {
+      var buildFixture = function(id) {
+        return setFixtures('<form id="' + id + '">' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
+        '<input type="submit"></aside></form>')
+      }
+      target = new control.SaveWorkControl(buildFixture(form_id).find('#form-progress'));
+      target.requiredFiles = mockCheckbox;
+      return target
+    }
 
     beforeEach(function() {
-      target = new control.SaveWorkControl(element);
-      target.requiredFiles = mockCheckbox;
       spyOn(mockCheckbox, 'check').and.stub();
       spyOn(mockCheckbox, 'uncheck').and.stub();
     });
 
     describe("when required files are present", function() {
       beforeEach(function() {
+        target = buildTarget(form_id)
         target.uploads = {
           hasFiles: true
         };
@@ -112,6 +110,7 @@ describe("SaveWorkControl", function() {
 
     describe("when a required files are missing", function() {
       beforeEach(function() {
+        target = buildTarget(form_id)
         target.uploads = {
           hasFiles: false
         };
@@ -127,6 +126,7 @@ describe("SaveWorkControl", function() {
     describe("when a required files are missing and it's an edit form", function() {
       beforeEach(function() {
         form_id = 'edit_generic_work'
+        target = buildTarget(form_id)
       });
       it("is complete", function() {
         target.validateFiles();
