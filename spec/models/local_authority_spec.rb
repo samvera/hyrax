@@ -68,8 +68,7 @@ describe LocalAuthority, type: :model do
       describe "#entries_by_term" do
         let(:query) { 'A' }
         let(:term) { 'genre' }
-        let(:model) { 'manuscripts' }
-        subject { described_class.entries_by_term(model, term, query) }
+        subject { described_class.entries_by_term(term, query) }
 
         context "when the query is empty" do
           let(:query) { '' }
@@ -77,6 +76,7 @@ describe LocalAuthority, type: :model do
         end
 
         context "when the model is unregistered" do
+          subject { described_class.entries_by_term(term, query, model) }
           let(:model) { 'my_foobar' }
           it { is_expected.to be_empty }
         end

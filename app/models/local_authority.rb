@@ -75,27 +75,39 @@ class LocalAuthority < ActiveRecord::Base
     domain_term.local_authorities << authority
   end
 
-  def self.entries_by_term(model, term, query)
+  def self.entries_by_term(term, query, model = nil)
     return if query.empty?
     low_query = query.downcase
-    hits = []
-    # move lc_subject into it's own table since being part of the usual structure caused it to be too slow.
-    # When/if we move to having multiple dictionaries for subject we will need to also do a check for the appropriate dictionary.
-    if term == 'subject' && model == 'generic_works' # and local_authoritiy = lc_subject
-      sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{low_query}%").select("label, url").limit(25).to_sql
-      SubjectLocalAuthorityEntry.find_by_sql(sql).each do |hit|
-        hits << { uri: hit.url, label: hit.label }
+    # move lc_subject into it's own table since being part of the usual structure caused
+    # it to be too slow.  When/if we move to having multiple dictionaries for subject we
+    # will need to also do a check for the appropriate dictionary.
+    if term == 'subject'
+      build_subject_relation(low_query).map do |hit|
+        { uri: hit.url, label: hit.label }
       end
     else
-      dterm = DomainTerm.find_by(model: model, term: term)
-      if dterm
-        authorities = dterm.local_authorities.collect(&:id).uniq
-        sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{low_query}%").select("label, uri").limit(25).to_sql
-        LocalAuthorityEntry.find_by_sql(sql).each do |hit|
-          hits << { uri: hit.uri, label: hit.label }
-        end
+      build_relation(model, term, low_query).map do |hit|
+        { uri: hit.uri, label: hit.label }
       end
     end
-    hits
+  end
+
+  def self.build_relation(model, term, low_query)
+    dterm = domain_term(model, term)
+    return [] unless dterm
+    authorities = dterm.local_authorities.pluck(:id)
+    LocalAuthorityEntry.where("local_authority_id in (?) AND lower(label) like ?", authorities, "#{low_query}%").limit(25)
+  end
+
+  def self.build_subject_relation(low_query)
+    SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{low_query}%").limit(25)
+  end
+
+  def self.domain_term(model, term)
+    if model
+      DomainTerm.find_by(model: model, term: term)
+    else
+      DomainTerm.find_by(term: term)
+    end
   end
 end
