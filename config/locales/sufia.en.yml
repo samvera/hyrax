@@ -347,7 +347,7 @@ en:
         attribute_values_label: Values
       items:
         header: Items
-        empty:  "This %{type} has no files associated with it. You can add one using the \"Attach a File\" button below."
+        empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
       citations:
         header: 'Citations:'
     visibility:
