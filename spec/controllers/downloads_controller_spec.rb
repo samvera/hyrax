@@ -29,6 +29,11 @@ describe DownloadsController do
         expect(response).to redirect_to new_user_session_path
         expect(flash['alert']).to eq 'You are not authorized to access this page.'
       end
+
+      it 'authorizes the resource using only the id' do
+        expect(controller).to receive(:authorize!).with(:read, file_set.id)
+        get :show, id: file_set.to_param
+      end
     end
 
     context "when the user has access" do
@@ -56,6 +61,11 @@ describe DownloadsController do
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
             expect(response.headers['Accept-Ranges']).to eq "bytes"
+          end
+
+          it 'retrieves the thumbnail without contacting Fedora' do
+            expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
+            get :show, id: file_set, file: 'thumbnail'
           end
         end
 

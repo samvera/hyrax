@@ -1,21 +1,33 @@
 require 'spec_helper'
 
 describe CurationConcerns::DerivativePath do
-  before do
-    allow(CurationConcerns.config).to receive(:derivatives_path).and_return('tmp')
-  end
+  let(:id)     { '123' }
+  let(:object) { double(id: id) }
 
-  describe '.derivative_path_for_reference' do
-    subject { described_class.derivative_path_for_reference(object, destination_name) }
+  before { allow(CurationConcerns.config).to receive(:derivatives_path).and_return('tmp') }
 
-    let(:object) { double(id: '123') }
+  context "for a single path" do
     let(:destination_name) { 'thumbnail' }
 
-    it { is_expected.to eq 'tmp/12/3-thumbnail.jpeg' }
+    describe '.derivative_path_for_reference' do
+      subject { described_class.derivative_path_for_reference(object, destination_name) }
+      it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
+    end
+
+    describe '#derivative_path' do
+      context "with an object" do
+        subject { described_class.new(object, destination_name).derivative_path }
+        it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
+      end
+
+      context "with an id" do
+        subject { described_class.new(id, destination_name).derivative_path }
+        it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
+      end
+    end
   end
 
-  describe "#derivatives_for_reference" do
-    subject { described_class.derivatives_for_reference(object) }
+  context "for multiple paths" do
     before do
       FileUtils.mkdir_p("tmp/12")
       File.open("tmp/12/3-thumbnail.jpeg", 'w') do |f|
@@ -29,12 +41,21 @@ describe CurationConcerns::DerivativePath do
       FileUtils.rm_rf("tmp/12")
     end
 
-    let(:object) { double(id: '123') }
+    describe ".derivatives_for_reference" do
+      subject { described_class.derivatives_for_reference(object) }
+      it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
+    end
 
-    it "lists all the paths to derivatives" do
-      expect(subject).to eq [
-        "tmp/12/3-thumbnail.jpeg"
-      ]
+    describe "#all_paths" do
+      context "with an object" do
+        subject { described_class.new(object, nil).all_paths }
+        it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
+      end
+
+      context "with an id" do
+        subject { described_class.new(id, nil).all_paths }
+        it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
+      end
     end
   end
 end

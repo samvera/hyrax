@@ -1,49 +1,67 @@
 module CurationConcerns
   class DerivativePath
+    attr_reader :id, :destination_name
+
     class << self
       # Path on file system where derivative file is stored
+      # @param [ActiveFedora::Base or String] object either the AF object or its id
+      # @param [String] destintation_name
       def derivative_path_for_reference(object, destination_name)
-        destination_name = destination_name.gsub(/^original_file_/, '')
-        derivative_path(object, extension_for(destination_name), destination_name)
+        new(object, destination_name).derivative_path
       end
 
+      # @param [ActiveFedora::Base or String] object either the AF object or its id
       # @return [Array<String>] Array of paths to derivatives for this object.
       def derivatives_for_reference(object)
-        Dir.glob(root_path(object).join("*")).select do |path|
-          path.start_with?(path_prefix(object).to_s)
-        end
+        new(object).all_paths
+      end
+    end
+
+    # @param [ActiveFedora::Base, String] object either the AF object or its id
+    # @param [String] destination_name
+    def initialize(object, destination_name = nil)
+      @id = object.is_a?(String) ? object : object.id
+      @destination_name = destination_name.gsub(/^original_file_/, '') if destination_name
+    end
+
+    def derivative_path
+      "#{path_prefix}-#{file_name}"
+    end
+
+    def all_paths
+      Dir.glob(root_path.join("*")).select do |path|
+        path.start_with?(path_prefix.to_s)
+      end
+    end
+
+    private
+
+      # @return [String] Returns the root path where derivatives will be generated into.
+      def root_path
+        Pathname.new(derivative_path).dirname
       end
 
-      private
+      # @return <Pathname> Full prefix of the path for object.
+      def path_prefix
+        Pathname.new(CurationConcerns.config.derivatives_path).join(pair_path)
+      end
 
-        # @param [#id] object Object whose ID is used to generate root path
-        # @return [String] Returns the root path where derivatives will be generated into.
-        def root_path(object)
-          Pathname.new(derivative_path(object, "", "")).dirname
-        end
+      def pair_path
+        id.split('').each_slice(2).map(&:join).join('/')
+      end
 
-        # @return <Pathname> Full prefix of the path for object.
-        def path_prefix(object)
-          Pathname.new(CurationConcerns.config.derivatives_path).join(pair_path(object.id))
-        end
+      def file_name
+        return unless destination_name
+        destination_name + extension
+      end
 
-        def derivative_path(object, extension, destination_name)
-          file_name = destination_name + extension
-          "#{path_prefix(object)}-#{file_name}"
+      def extension
+        case destination_name
+        when 'thumbnail'
+          ".#{MIME::Types.type_for('jpg').first.extensions.first}"
+        else
+          ".#{destination_name}"
         end
-
-        def pair_path(id)
-          id.split('').each_slice(2).map(&:join).join('/')
-        end
-
-        def extension_for(destination_name)
-          case destination_name
-          when 'thumbnail'
-            ".#{MIME::Types.type_for('jpg').first.extensions.first}"
-          else
-            ".#{destination_name}"
-          end
-        end
-    end
+      end
   end
 end

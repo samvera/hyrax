@@ -7,16 +7,12 @@ module CurationConcerns
     included do
       helper CurationConcerns::MainAppHelpers
 
-      rescue_from ActiveFedora::ObjectNotFoundError do |_exception|
-        respond_to do |wants|
-          wants.json { render_json_response(response_type: :not_found) }
-          # default to HTML response, even for other non-HTML formats we don't
-          # neccesarily know about, seems to be consistent with what Rails4 does
-          # by default with uncaught ActiveRecord::RecordNotFound in production
-          wants.any do
-            render_404
-          end
-        end
+      rescue_from ActiveFedora::ObjectNotFoundError do |exception|
+        not_found_response(exception)
+      end
+
+      rescue_from Blacklight::Exceptions::InvalidSolrID do |exception|
+        not_found_response(exception)
       end
     end
 
@@ -60,5 +56,19 @@ module CurationConcerns
       json_body = CurationConcerns::API.generate_response_body(response_type: response_type, message: message, options: options)
       render json: json_body, status: response_type
     end
+
+    private
+
+      def not_found_response(_exception)
+        respond_to do |wants|
+          wants.json { render_json_response(response_type: :not_found) }
+          # default to HTML response, even for other non-HTML formats we don't
+          # neccesarily know about, seems to be consistent with what Rails4 does
+          # by default with uncaught ActiveRecord::RecordNotFound in production
+          wants.any do
+            render_404
+          end
+        end
+      end
   end
 end
