@@ -1,4 +1,4 @@
-# Given the id of a GenericWork, finds its parent collections
+# Given the id of a work, find the collections it is a member of
 class ParentCollectionSearchBuilder < CurationConcerns::CollectionSearchBuilder
   delegate :item, to: :scope
 
