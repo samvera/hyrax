@@ -35,10 +35,11 @@ module CurationConcerns
         { type: mime_type_for(file), disposition: 'inline' }
       end
 
-      # Customize the :download ability in your Ability class, or override this method
+      # Customize the :read ability in your Ability class, or override this method.
+      # Hydra::Ability#download_permissions can't be used in this case because it assumes
+      # that files are in a LDP basic container, and thus, included in the asset's uri.
       def authorize_download!
-        # authorize! :download, file # can't use this because Hydra::Ability#download_permissions assumes that files are in Basic Container (and thus include the asset's uri)
-        authorize! :read, asset
+        authorize! :read, params[asset_param_key]
       end
 
       # Overrides Hydra::Controller::DownloadBehavior#load_file, which is hard-coded to assume files are in BasicContainer.
@@ -51,7 +52,7 @@ module CurationConcerns
         file_reference = params[:file]
         return default_file unless file_reference
 
-        file_path = CurationConcerns::DerivativePath.derivative_path_for_reference(asset, file_reference)
+        file_path = CurationConcerns::DerivativePath.derivative_path_for_reference(params[asset_param_key], file_reference)
         File.exist?(file_path) ? file_path : nil
       end
 
