@@ -78,6 +78,7 @@ Sufia has the following features:
 * Dynamically configurable featured works and researchers on homepage
 * Proxy deposit and transfers of ownership
 * Integration with Zotero for automatic population of user content
+* Suggested values from controlled vocabularies provided by [Questioning Authority](https://github.com/projecthydra-labs/questioning_authority)
 
 See [Sufia's documentation site](http://sufia.io/) for more non-technical documentation.
 
