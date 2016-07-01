@@ -1,6 +1,7 @@
 module Sufia
   module SufiaHelperBehavior
     include Sufia::CitationsBehavior
+    include ERB::Util # provides html_escape
 
     def application_name
       t('sufia.product_name', default: super)
@@ -116,6 +117,7 @@ module Sufia
     end
 
     # @param text [String,Hash] string to escape or a hash containing that string under the :value key.
+    # @param showLink [Boolean]
     def iconify_auto_link(text, showLink = true)
       text = index_presenter(text[:document]).field_value(Array.wrap(text[:value]).first, text[:config]) if text.is_a? Hash
       # this block is only executed when a link is inserted;
