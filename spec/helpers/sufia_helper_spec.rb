@@ -50,18 +50,6 @@ describe SufiaHelper, type: :helper do
       end
     end
 
-    describe '#link_to_index_field' do
-      it 'requires 2 args' do
-        expect{ helper.link_to_index_field }.to raise_error ArgumentError
-        expect{ helper.link_to_index_field('foo') }.to raise_error ArgumentError
-      end
-      subject { helper.link_to_index_field('contributor', 'Fritz Lang') }
-      it 'returns link' do
-        expect(subject).to be_html_safe
-        expect(subject).to eq '<a href="/catalog?contributor=%22Fritz+Lang%22&amp;search_field=advanced">contributor</a>'
-      end
-    end
-
     describe '#index_field_link' do
       let(:args) { { config: { field_name: 'contributor' }, value: ['Fritz Lang', 'Mel Brooks'] } }
       it 'requires 1 arg' do
@@ -97,7 +85,6 @@ describe SufiaHelper, type: :helper do
 
   describe "#link_to_telephone" do
     subject { helper.link_to_telephone(user) }
-
     context "when user is set" do
       let(:user) { mock_model(User, telephone: '867-5309') }
       it { is_expected.to eq "<a href=\"wtai://wp/mc;867-5309\">867-5309</a>" }
