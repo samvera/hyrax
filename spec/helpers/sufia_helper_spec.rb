@@ -1,3 +1,7 @@
+def new_state
+  Blacklight::SearchState.new({}, CatalogController.blacklight_config)
+end
+
 describe SufiaHelper, type: :helper do
   describe "show_transfer_request_title" do
     let(:sender) { create(:user) }
@@ -15,36 +19,60 @@ describe SufiaHelper, type: :helper do
     end
   end
 
-  describe "#link_to_facet_list" do
-    def search_state_double(value)
-      double('SearchState', add_facet_params_and_redirect: { f: { vehicle_type_sim: [value] } })
-    end
-    let(:search_state_for_car) { search_state_double("car") }
-    let(:search_state_for_truck) { search_state_double("truck") }
+  context 'link helpers' do
     before do
-      allow(helper).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
-      allow(helper).to receive(:search_state).exactly(2).times.and_return(search_state_for_car, search_state_for_truck)
       allow(helper).to receive(:search_action_path) do |*args|
         search_catalog_path(*args)
       end
+      allow(helper).to receive(:search_state).and_return(new_state)
     end
 
-    context "with values" do
-      subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
+    describe "#link_to_facet_list" do
+      context "with values" do
+        subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
+        it "joins the values" do
+          expect(helper).to receive(:search_state).exactly(2).times
+          car_link   = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
+          truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
+          expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
+          expect(subject).to be_a ActiveSupport::SafeBuffer
+          expect(subject).to be_html_safe
+        end
+      end
 
-      it "joins the values" do
-        car_link = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
-        truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
-        expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
-        expect(subject).to be_html_safe
+      context "without values" do
+        subject { helper.link_to_facet_list([], 'vehicle_type') }
+        it "shows the default text" do
+          expect(subject).to eq "No value entered"
+          expect(subject).to be_a ActiveSupport::SafeBuffer
+          expect(subject).to be_html_safe
+        end
       end
     end
 
-    context "without values" do
-      subject { helper.link_to_facet_list([], 'vehicle_type') }
+    describe '#link_to_index_field' do
+      it 'requires 2 args' do
+        expect{ helper.link_to_index_field }.to raise_error ArgumentError
+        expect{ helper.link_to_index_field('foo') }.to raise_error ArgumentError
+      end
+      subject { helper.link_to_index_field('contributor', 'Fritz Lang') }
+      it 'returns link' do
+        expect(subject).to be_html_safe
+        expect(subject).to eq '<a href="/catalog?contributor=%22Fritz+Lang%22&amp;search_field=advanced">contributor</a>'
+      end
+    end
 
-      it "shows the default text" do
-        expect(subject).to eq "No value entered"
+    describe '#index_field_link' do
+      let(:args) { { config: { field_name: 'contributor' }, value: ['Fritz Lang', 'Mel Brooks'] } }
+      it 'requires 1 arg' do
+        expect { helper.index_field_link }.to raise_error ArgumentError
+        expect { helper.index_field_link({}, 'junk') }.to raise_error ArgumentError
+      end
+      subject { helper.index_field_link(args) }
+      it 'returns link' do
+        expect(subject).to be_html_safe
+        expect(subject).to eq '<a href="/catalog?contributor=%22Fritz+Lang%22&amp;search_field=advanced">Fritz Lang</a>, ' \
+                            + '<a href="/catalog?contributor=%22Mel+Brooks%22&amp;search_field=advanced">Mel Brooks</a>'
       end
     end
   end
@@ -55,7 +83,6 @@ describe SufiaHelper, type: :helper do
       before { allow(helper).to receive(:params).and_return(cq: 'foo') }
       it { is_expected.to have_collection_search_parameters }
     end
-
     context "when cq is not set" do
       before { allow(helper).to receive(:params).and_return(cq: '') }
       it { is_expected.not_to have_collection_search_parameters }
@@ -75,7 +102,6 @@ describe SufiaHelper, type: :helper do
       let(:user) { mock_model(User, telephone: '867-5309') }
       it { is_expected.to eq "<a href=\"wtai://wp/mc;867-5309\">867-5309</a>" }
     end
-
     context "when user is not set" do
       let(:user) { nil }
       it { is_expected.to be_nil }
@@ -167,7 +193,6 @@ describe SufiaHelper, type: :helper do
 
   describe '#zotero_label' do
     subject { helper }
-
     it { is_expected.to respond_to(:zotero_label) }
   end
 

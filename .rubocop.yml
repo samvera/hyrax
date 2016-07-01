@@ -90,4 +90,3 @@ RSpec/DescribeClass:
     - 'spec/features/**/*'
     - 'spec/config/sufia_events_spec.rb'
 
-
