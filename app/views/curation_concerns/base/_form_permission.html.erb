@@ -8,17 +8,12 @@
     <legend>
       Visibility
       <small>Who should be able to view or download this content?</small>
-      <span id="visibility_tooltip" class="h5">
-        <%= help_text 'visibility' %>
-      </span>
     </legend>
-
-    <%= render "form_permission_note" %>
 
     <div class="form-group">
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>
-        <%= t('curation_concerns.visibility.open.label_html') %>
+        <%= t('curation_concerns.visibility.open.label_html', type: 'work') %>
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>

@@ -94,11 +94,11 @@ en:
       open:
         text: "Open Access"
         class: "label-success"
-        label_html: <span class="label label-success">Open Access</span> Visible to the world.
+        label_html: <span class="label label-success">Open Access</span> Everyone. Check out <a href="">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
       authenticated:
         text: *INSTITUTION_NAME
         class: "label-info"
-        label_html: "<span class=\"label label-info\">%{institution}</span> Visible to all %{institution} users."
+        label_html: "<span class=\"label label-info\">%{institution}</span> Only users who are logged in through %{institution}."
       embargo:
         text: "Embargo"
         class: "label-warning"
@@ -108,7 +108,7 @@ en:
         class: "label-warning"
         label_html: <span class="label label-warning">Lease</span>
       private:
-        label_html: <span class="label label-danger">Private</span> Only visible to you and your delegates.
+        label_html: <span class="label label-danger">Private</span> Only users and/or groups that have been given specific access in the "Share With" section.
       restricted:
         text: "Private"
         class: "label-danger"
