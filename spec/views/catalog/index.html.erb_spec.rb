@@ -12,6 +12,7 @@ describe 'catalog/index.html.erb' do
     view.extend CurationConcerns::CollectionsHelper
     view.extend CurationConcerns::CatalogHelper
 
+    allow(controller).to receive(:action_name).and_return('index')
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     stub_template 'catalog/_search_sidebar.html.erb' => ''
