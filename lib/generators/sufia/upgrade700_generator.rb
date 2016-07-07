@@ -24,4 +24,8 @@ This generator for upgrading sufia from 6.0.0 to 7.0 makes the following changes
       "\n  mount Qa::Engine => '/authorities'\n"
     end
   end
+
+  def qa_tables
+    generate 'qa:local:tables'
+  end
 end

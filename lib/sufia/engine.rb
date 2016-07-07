@@ -66,15 +66,5 @@ module Sufia
       # in this way:
       # https://github.com/rails/sprockets/issues/73#issuecomment-139113466
     end
-
-    config.after_initialize do
-      begin
-        LocalAuthority.register_vocabulary('generic_works', "subject", "lc_subjects")
-        LocalAuthority.register_vocabulary('generic_works', "language", "lexvo_languages")
-        LocalAuthority.register_vocabulary('generic_works', "tag", "lc_genres")
-      rescue ActiveRecord::StatementInvalid => e
-        Rails.logger.error "tables for vocabularies missing #{e.class}"
-      end
-    end
   end
 end
