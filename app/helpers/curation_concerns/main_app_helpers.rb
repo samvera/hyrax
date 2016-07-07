@@ -10,5 +10,4 @@ module CurationConcerns::MainAppHelpers
   include CurationConcerns::CollectionsHelper
   include CurationConcerns::PermissionsHelper
   include CurationConcerns::RightsHelper
-  include CurationConcerns::BlacklightOverridesHelper
 end
