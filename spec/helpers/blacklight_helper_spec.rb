@@ -22,6 +22,7 @@ RSpec.describe BlacklightHelper, type: :helper do
   let(:document) { SolrDocument.new(attributes) }
   before do
     allow(helper).to receive(:blacklight_config).and_return(blacklight_config)
+    allow(controller).to receive(:action_name).and_return('index')
   end
 
   describe "render_index_field_value" do
@@ -44,37 +45,37 @@ RSpec.describe BlacklightHelper, type: :helper do
 
       context "keyword_tesim" do
         let(:field_name) { 'keyword_tesim' }
-        it { is_expected.to eq "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco\"><span itemprop=\"keywords\">taco</span></a></span> and <span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache\"><span itemprop=\"keywords\">mustache</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco\">taco</a></span> and <span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache\">mustache</a></span>" }
       end
 
       context "subject_tesim" do
         let(:field_name) { 'subject_tesim' }
-        it { is_expected.to eq "<span itemprop=\"about\"><a href=\"/catalog?f%5Bsubject_sim%5D%5B%5D=Awesome\"><span itemprop=\"about\">Awesome</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"about\"><a href=\"/catalog?f%5Bsubject_sim%5D%5B%5D=Awesome\">Awesome</a></span>" }
       end
 
       context "creator_tesim" do
         let(:field_name) { 'creator_tesim' }
-        it { is_expected.to eq "<span itemprop=\"creator\"><a href=\"/catalog?f%5Bcreator_sim%5D%5B%5D=Justin\"><span itemprop=\"creator\">Justin</span></a></span> and <span itemprop=\"creator\"><a href=\"/catalog?f%5Bcreator_sim%5D%5B%5D=Joe\"><span itemprop=\"creator\">Joe</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"creator\"><a href=\"/catalog?f%5Bcreator_sim%5D%5B%5D=Justin\">Justin</a></span> and <span itemprop=\"creator\"><a href=\"/catalog?f%5Bcreator_sim%5D%5B%5D=Joe\">Joe</a></span>" }
       end
 
       context "contributor_tesim" do
         let(:field_name) { 'contributor_tesim' }
-        it { is_expected.to eq "<span itemprop=\"contributor\"><a href=\"/catalog?Bird%2C+Big=%22contributor%22&amp;search_field=advanced\">Bird, Big</a></span>" }
+        it { is_expected.to eq "<span itemprop=\"contributor\"><a href=\"/catalog?f%5Bcontributor_sim%5D%5B%5D=Bird%2C+Big\">Bird, Big</a></span>" }
       end
 
       context "publisher_tesim" do
         let(:field_name) { 'publisher_tesim' }
-        it { is_expected.to eq "<span itemprop=\"publisher\"><a href=\"/catalog?f%5Bpublisher_sim%5D%5B%5D=Penguin+Random+House\"><span itemprop=\"publisher\">Penguin Random House</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"publisher\"><a href=\"/catalog?f%5Bpublisher_sim%5D%5B%5D=Penguin+Random+House\">Penguin Random House</a></span>" }
       end
 
       context "location_tesim" do
         let(:field_name) { 'based_near_tesim' }
-        it { is_expected.to eq "<span itemprop=\"contentLocation\"><a href=\"/catalog?f%5Bbased_near_sim%5D%5B%5D=Pennsylvania\"><span itemprop=\"contentLocation\">Pennsylvania</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"contentLocation\"><a href=\"/catalog?f%5Bbased_near_sim%5D%5B%5D=Pennsylvania\">Pennsylvania</a></span>" }
       end
 
       context "language_tesim" do
         let(:field_name) { 'language_tesim' }
-        it { is_expected.to eq "<span itemprop=\"inLanguage\"><a href=\"/catalog?f%5Blanguage_sim%5D%5B%5D=English\"><span itemprop=\"inLanguage\">English</span></a></span>" }
+        it { is_expected.to eq "<span itemprop=\"inLanguage\"><a href=\"/catalog?f%5Blanguage_sim%5D%5B%5D=English\">English</a></span>" }
       end
 
       context "resource_type_tesim" do

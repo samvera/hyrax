@@ -1,6 +1,6 @@
 # Pull in tasks from AF::Noid
-af_noid = Gem::Specification.find_by_name 'active_fedora-noid'
-load "#{af_noid.gem_dir}/lib/tasks/noid_tasks.rake"
+af_noid_path = Gem.loaded_specs['active_fedora-noid'].full_gem_path
+load "#{af_noid_path}/lib/tasks/noid_tasks.rake"
 
 namespace :sufia do
   namespace :noid do

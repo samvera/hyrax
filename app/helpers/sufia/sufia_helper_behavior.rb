@@ -107,7 +107,7 @@ module Sufia
     # @param [String,Hash] text either the string to escape or a hash containing the
     #                           string to escape under the :value key.
     def iconify_auto_link(text, showLink = true)
-      text = presenter(text[:document]).render_values(text[:value], text[:config]) if text.is_a? Hash
+      text = presenter(text[:document]).field_value(Array.wrap(text[:value]).first, text[:config]) if text.is_a? Hash
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|

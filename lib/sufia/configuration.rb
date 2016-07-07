@@ -86,6 +86,11 @@ module Sufia
       @always_display_share_button
     end
 
+    attr_writer :google_analytics_id
+    def google_analytics_id
+      @google_analytics_id ||= nil
+    end
+
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
