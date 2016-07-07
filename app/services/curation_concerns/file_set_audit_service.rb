@@ -1,8 +1,15 @@
 module CurationConcerns
   class FileSetAuditService
-    attr_reader :file_set
+    attr_reader :file_set, :id
+
+    # @param file_set [ActiveFedora::Base, String] file_set
     def initialize(file_set)
-      @file_set = file_set
+      if file_set.is_a?(String)
+        @id = file_set
+      else
+        @id = file_set.id
+        @file_set = file_set
+      end
     end
 
     NO_RUNS = 999
@@ -18,7 +25,7 @@ module CurationConcerns
     # Do not try to access the versions if we do not have access to them.
     # Use this when a file_set is loaded from solr instead of fedora
     def logged_audit_status
-      audit_results = ChecksumAuditLog.logs_for(file_set.id, "original_file")
+      audit_results = ChecksumAuditLog.logs_for(id, "original_file")
                                       .collect { |result| result["pass"] }
 
       if audit_results.length > 0
@@ -100,6 +107,11 @@ module CurationConcerns
       # @param [ChecksumAuditLog] latest_audit the most recent audit event
       def days_since_last_audit(latest_audit)
         (DateTime.now - latest_audit.updated_at.to_date).to_i
+      end
+
+      # Loads the FileSet from Fedora if needed
+      def file_set
+        @file_set ||= FileSet.find(id)
       end
   end
 end
