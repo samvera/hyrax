@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'curation_concerns/file_sets/show.html.erb', type: :view do
-  let(:parent) { stub_model(GenericWork) }
   let(:user) { double(user_key: 'sarah', twitter_handle: 'test') }
   let(:file_set) { build(:file_set, id: '123', depositor: user.user_key, title: ['My Title'], user: user, visibility: 'open') }
   let(:ability) { double }
@@ -17,7 +16,6 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
     }
   end
   before do
-    allow(view).to receive(:parent).and_return(parent)
     view.lookup_context.prefixes.push 'curation_concerns/base'
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
