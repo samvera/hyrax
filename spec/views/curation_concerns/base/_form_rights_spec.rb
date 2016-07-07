@@ -13,7 +13,7 @@ describe 'curation_concerns/base/_form_rights.html.erb' do
 
   before do
     qa_fixtures = { local_path: File.expand_path('../../../../fixtures/authorities', __FILE__) }
-    stub_const("Qa::Authorities::LocalSubauthority::AUTHORITIES_CONFIG", qa_fixtures)
+    allow(Qa::Authorities::Local).to receive(:config).and_return(qa_fixtures)
   end
 
   context "when active and inactive rights are associated with a work" do
