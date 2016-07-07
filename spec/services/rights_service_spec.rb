@@ -4,7 +4,7 @@ describe RightsService do
   before do
     # Configure QA to use fixtures
     qa_fixtures = { local_path: File.expand_path('../../fixtures/authorities', __FILE__) }
-    stub_const("Qa::Authorities::LocalSubauthority::AUTHORITIES_CONFIG", qa_fixtures)
+    allow(Qa::Authorities::Local).to receive(:config).and_return(qa_fixtures)
   end
 
   describe "#select_active_options" do
