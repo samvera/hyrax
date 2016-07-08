@@ -210,16 +210,36 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#iconify_auto_link" do
-    subject { helper.iconify_auto_link('Foo < http://www.example.com. & More text') }
-    it "escapes input" do
-      expect(subject).to start_with('Foo &lt;')
-      expect(subject).to end_with('. &amp; More text')
+    let(:text) { 'Foo < http://www.example.com. & More text' }
+    let(:document) { SolrDocument.new(has_model_ssim: ['Collection'], id: 512, title_tesim: 'Test Document') }
+    let(:blacklight_config) { CatalogController.blacklight_config }
+    before do
+      allow(controller).to receive(:action_name).and_return('index')
+      allow(helper).to receive(:blacklight_config).and_return(blacklight_config)
     end
-    it "adds links" do
-      expect(subject).to include('<a href="http://www.example.com">')
+    context "String argument" do
+      subject { helper.iconify_auto_link(text) }
+      it "escapes input" do
+        expect(subject).to start_with('Foo &lt;').and end_with('. &amp; More text')
+      end
+      it "adds links" do
+        expect(subject).to include('<a href="http://www.example.com">')
+      end
+      it "adds icons" do
+        expect(subject).to include('class="glyphicon glyphicon-new-window"')
+      end
     end
-    it "adds icons" do
-      expect(subject).to include('class="glyphicon glyphicon-new-window"')
+    context "Hash argument" do
+      subject { helper.iconify_auto_link(document: document, value: text, config: blacklight_config.search_fields['title']) }
+      it "escapes input" do
+        expect(subject).to start_with('Foo &lt;').and end_with('. &amp; More text')
+      end
+      it "adds links" do
+        expect(subject).to include('<a href="http://www.example.com">')
+      end
+      it "adds icons" do
+        expect(subject).to include('class="glyphicon glyphicon-new-window"')
+      end
     end
   end
 

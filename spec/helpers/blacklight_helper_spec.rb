@@ -35,7 +35,10 @@ RSpec.describe BlacklightHelper, type: :helper do
 
     context "description_tesim" do
       let(:field_name) { 'description_tesim' }
-      it { pending 'need a different way to process description?'; is_expected.to eq '<span itemprop="description">This links to <a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span> http://example.com/</a> What about that?</span>' }
+      it do
+        pending 'need a different way to process description?'
+        is_expected.to eq '<span itemprop="description">This links to <a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span> http://example.com/</a> What about that?</span>'
+      end
     end
 
     context "rights_tesim" do

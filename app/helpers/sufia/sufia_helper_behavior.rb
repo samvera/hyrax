@@ -35,13 +35,6 @@ module Sufia
       user_agent.include? 'Chrome'
     end
 
-    # A Blacklight helper_method
-    # @param [Hash] options from blacklight invocation of helper_method
-    # @return [Date]
-    def human_readable_date(options)
-      Date.parse(options[:value]).to_formatted_s(:standard)
-    end
-
     def error_messages_for(object)
       return '' unless object.try(:errors) && object.errors.full_messages.any?
       content_tag(:div, class: 'alert alert-block alert-error validation-errors') do
@@ -104,10 +97,22 @@ module Sufia
       link_to(label, main_app.search_catalog_path(state))
     end
 
+    ## GROUP: helper_methods
+
     # A Blacklight helper_method
-    # @param options [Hash] Blacklight sends :document, :field, :config, :value and whatever else was in options
-    # @option options [Hash] :config including {:field_name => "my_name"}
+    # @param [Hash] options from blacklight invocation of helper_method
+    # @see #index_field_link params
+    # @return [Date]
+    def human_readable_date(options)
+      Date.parse(options[:value]).to_formatted_s(:standard)
+    end
+
+    # A Blacklight helper_method
+    # @param options [Hash{Symbol=>Object}] Blacklight sends :document, :field, :config, :value and whatever else was in options
     # @option options [Array{String}] :value
+    # @option text [Hash] :config including {:field_name => "my_name"}
+    # @option text [Hash] :document
+    # @option text [Array{String}] :value the strings you might otherwise have passed to this method singly
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def index_field_link(options)
       raise ArgumentError unless options[:config] && options[:config][:field_name]
@@ -116,18 +121,21 @@ module Sufia
       safe_join(values.map { |item| link_to_field(name, item, item) }, ", ".html_safe)
     end
 
+    # *Sometimes* a Blacklight helper_method
     # @param text [String,Hash] string to escape or a hash containing that string under the :value key.
-    # @param showLink [Boolean]
-    def iconify_auto_link(text, showLink = true)
-      text = index_presenter(text[:document]).field_value(Array.wrap(text[:value]).first, text[:config]) if text.is_a? Hash
+    # @param show_link [Boolean]
+    # @return [ActiveSupport::SafeBuffer]
+    def iconify_auto_link(text, show_link = true)
+      text = presenter(text[:document]).field_value(Array.wrap(text[:value]).first, text[:config]) if text.is_a? Hash
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|
-        "<span class='glyphicon glyphicon-new-window'></span>#{('&nbsp;' + value) if showLink}"
+        "<span class='glyphicon glyphicon-new-window'></span>#{('&nbsp;' + value) if show_link}"
       end
     end
 
-    # @param [String,User,Hash] args if a hash, the user_key must be under :value
+    # *Sometimes* a Blacklight helper_method
+    # @param [String,User,Hash{Symbol=>Array}] args if a hash, the user_key must be under :value
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def link_to_profile(args)
       user_or_key = args.is_a?(Hash) ? args[:value].first : args
@@ -145,7 +153,7 @@ module Sufia
     # A Blacklight helper_method
     # @param [Hash] options from blacklight helper_method invocation. Maps rights URIs to links with labels.
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
-    def rights_statement_links(options = {})
+    def rights_statement_links(options)
       options[:value].map { |right| link_to RightsService.label(right), right }.to_sentence.html_safe
     end
 
