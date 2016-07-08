@@ -21,6 +21,7 @@ require 'engine_cart'
 EngineCart.load_application!
 
 require 'devise'
+require 'devise/version'
 require 'mida'
 require 'rspec/rails'
 require 'rspec/its'
@@ -150,9 +151,14 @@ RSpec.configure do |config|
 
   config.include Shoulda::Matchers::Independent
 
-  config.include Devise::TestHelpers, type: :controller
-  config.include EngineRoutes, type: :controller
+  if Devise::VERSION >= '4.2'
+    # This is for an unreleased version of Devise (will either be 4.2 or 5.0)
+    config.include Devise::Test::ControllerHelpers, type: :controller
+  else
+    config.include Devise::TestHelpers, type: :controller
+  end
 
+  config.include EngineRoutes, type: :controller
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
 
