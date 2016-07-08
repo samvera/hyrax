@@ -5,7 +5,7 @@ rvm: 2.3.0
 matrix:
   include:
     - rvm: 2.2.4
-      env: "BLACKLIGHT_VERSION=6.0.0"
+      env: "BLACKLIGHT_VERSION=6.3.1"
     - rvm: 2.2.4
       env: "BLACKLIGHT_VERSION=5.17.2"
 
