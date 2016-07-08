@@ -158,10 +158,6 @@ Sufia::Engine.routes.draw do
   # Static page routes (workaround)
   get ':action' => 'static#:action', constraints: { action: /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, as: :static
 
-  # Single use link errors
-  get 'single_use_link/not_found' => 'errors#single_use_error'
-  get 'single_use_link/expired' => 'errors#single_use_error'
-
   # Catch-all (for routing errors)
   unless Rails.env.development? || Rails.env.test?
     match '*error' => 'errors#routing', via: [:get, :post]
