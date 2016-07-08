@@ -1,10 +1,11 @@
     <div class="col-sm-9">
       <table class="table">
+        <% doc_presenter = index_presenter(document) %>
         <% index_fields(document).each do |field_name, field| -%>
           <% if should_render_index_field? document, field %>
             <tr>
               <th><span class="attribute-label h4"><%= render_index_field_label document, field: field_name %></span></th>
-              <td><%= render_index_field_value document, field: field_name %></td>
+              <td><%= doc_presenter.field_value field_name %></td>
             </tr>
           <% end %>
         <% end %>

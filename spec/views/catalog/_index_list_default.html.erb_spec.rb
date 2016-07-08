@@ -12,10 +12,12 @@ describe 'catalog/_index_list_default', type: :view do
   let(:blacklight_configuration_context) do
     Blacklight::Configuration::Context.new(controller)
   end
+  let(:presenter) { double }
   before do
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
-    allow(view).to receive(:render_index_field_value) { |_, conf| "Test #{conf[:field]}" }
+    allow(view).to receive(:index_presenter).and_return(presenter)
+    allow(presenter).to receive(:field_value) { |field| "Test #{field}" }
     render 'catalog/index_list_default', document: document
   end
 
