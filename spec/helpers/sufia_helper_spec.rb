@@ -1,3 +1,7 @@
+def new_state
+  Blacklight::SearchState.new({}, CatalogController.blacklight_config)
+end
+
 describe SufiaHelper, type: :helper do
   describe "show_transfer_request_title" do
     let(:sender) { create(:user) }
@@ -15,36 +19,48 @@ describe SufiaHelper, type: :helper do
     end
   end
 
-  describe "#link_to_facet_list" do
-    def search_state_double(value)
-      double('SearchState', add_facet_params_and_redirect: { f: { vehicle_type_sim: [value] } })
-    end
-    let(:search_state_for_car) { search_state_double("car") }
-    let(:search_state_for_truck) { search_state_double("truck") }
+  context 'link helpers' do
     before do
-      allow(helper).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
-      allow(helper).to receive(:search_state).exactly(2).times.and_return(search_state_for_car, search_state_for_truck)
       allow(helper).to receive(:search_action_path) do |*args|
         search_catalog_path(*args)
       end
+      allow(helper).to receive(:search_state).and_return(new_state)
     end
 
-    context "with values" do
-      subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
+    describe "#link_to_facet_list" do
+      context "with values" do
+        subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
+        it "joins the values" do
+          expect(helper).to receive(:search_state).exactly(2).times
+          car_link   = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
+          truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
+          expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
+          expect(subject).to be_a ActiveSupport::SafeBuffer
+          expect(subject).to be_html_safe
+        end
+      end
 
-      it "joins the values" do
-        car_link = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
-        truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
-        expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
-        expect(subject).to be_html_safe
+      context "without values" do
+        subject { helper.link_to_facet_list([], 'vehicle_type') }
+        it "shows the default text" do
+          expect(subject).to eq "No value entered"
+          expect(subject).to be_a ActiveSupport::SafeBuffer
+          expect(subject).to be_html_safe
+        end
       end
     end
 
-    context "without values" do
-      subject { helper.link_to_facet_list([], 'vehicle_type') }
-
-      it "shows the default text" do
-        expect(subject).to eq "No value entered"
+    describe '#index_field_link' do
+      let(:args) { { config: { field_name: 'contributor' }, value: ['Fritz Lang', 'Mel Brooks'] } }
+      it 'requires 1 arg' do
+        expect { helper.index_field_link }.to raise_error ArgumentError
+        expect { helper.index_field_link({}, 'junk') }.to raise_error ArgumentError
+      end
+      subject { helper.index_field_link(args) }
+      it 'returns link' do
+        expect(subject).to be_html_safe
+        expect(subject).to eq '<a href="/catalog?contributor=%22Fritz+Lang%22&amp;search_field=advanced">Fritz Lang</a>, ' \
+                            + '<a href="/catalog?contributor=%22Mel+Brooks%22&amp;search_field=advanced">Mel Brooks</a>'
       end
     end
   end
@@ -55,7 +71,6 @@ describe SufiaHelper, type: :helper do
       before { allow(helper).to receive(:params).and_return(cq: 'foo') }
       it { is_expected.to have_collection_search_parameters }
     end
-
     context "when cq is not set" do
       before { allow(helper).to receive(:params).and_return(cq: '') }
       it { is_expected.not_to have_collection_search_parameters }
@@ -70,12 +85,10 @@ describe SufiaHelper, type: :helper do
 
   describe "#link_to_telephone" do
     subject { helper.link_to_telephone(user) }
-
     context "when user is set" do
       let(:user) { mock_model(User, telephone: '867-5309') }
       it { is_expected.to eq "<a href=\"wtai://wp/mc;867-5309\">867-5309</a>" }
     end
-
     context "when user is not set" do
       let(:user) { nil }
       it { is_expected.to be_nil }
@@ -167,7 +180,6 @@ describe SufiaHelper, type: :helper do
 
   describe '#zotero_label' do
     subject { helper }
-
     it { is_expected.to respond_to(:zotero_label) }
   end
 
@@ -198,16 +210,40 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#iconify_auto_link" do
-    subject { helper.iconify_auto_link('Foo < http://www.example.com. & More text') }
-    it "escapes input" do
-      expect(subject).to start_with('Foo &lt;')
-      expect(subject).to end_with('. &amp; More text')
+    let(:text) { 'Foo < http://www.example.com. & More text' }
+    let(:document) { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
+    let(:blacklight_config) { CatalogController.blacklight_config }
+    before do
+      allow(controller).to receive(:action_name).and_return('index')
+      allow(helper).to receive(:blacklight_config).and_return(blacklight_config)
     end
-    it "adds links" do
-      expect(subject).to include('<a href="http://www.example.com">')
+    it "boring String argument" do
+      expect(helper.iconify_auto_link('no escapes or links necessary')).to eq 'no escapes or links necessary'
+      expect(helper.iconify_auto_link('no escapes or links necessary', false)).to eq 'no escapes or links necessary'
     end
-    it "adds icons" do
-      expect(subject).to include('class="glyphicon glyphicon-new-window"')
+    context "interesting String argument" do
+      subject { helper.iconify_auto_link(text) }
+      it "escapes input" do
+        expect(subject).to start_with('Foo &lt;').and end_with('. &amp; More text')
+      end
+      it "adds links" do
+        expect(subject).to include('<a href="http://www.example.com">')
+      end
+      it "adds icons" do
+        expect(subject).to include('class="glyphicon glyphicon-new-window"')
+      end
+    end
+    context "Hash argument for title" do # note: title typically is NOT configured with an iconify_auto_link helper
+      subject { helper.iconify_auto_link(document: document, value: text, config: blacklight_config.index_fields['title_tesim']) }
+      it { is_expected.to eq '<span>Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text</span>' }
+    end
+    context "Hash argument for description" do # note: description typically IS configured with an iconify_auto_link helper
+      let(:conf) { blacklight_config.index_fields['description_tesim'] }
+      subject { helper.iconify_auto_link(document: document, value: text, config: conf) }
+      it do
+        pending 'Need a different way to test description'
+        is_expected.to eq '<span>Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text</span>'
+      end
     end
   end
 

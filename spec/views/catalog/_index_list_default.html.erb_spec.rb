@@ -1,12 +1,12 @@
 
 describe 'catalog/_index_list_default', type: :view do
   let(:attributes) do
-    { 'creator_tesim' => [''],
-      'depositor_tesim' => [''],
+    { 'creator_tesim'        => [''],
+      'depositor_tesim'      => [''],
       'proxy_depositor_ssim' => [''],
-      'description_tesim' => [''],
-      'date_uploaded_dtsi' => 'a date',
-      'rights_tesim' => [''] }
+      'description_tesim'    => [''],
+      'date_uploaded_dtsi'   => 'a date',
+      'rights_tesim'         => [''] }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:blacklight_configuration_context) do
