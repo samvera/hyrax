@@ -110,9 +110,9 @@ module Sufia
     # A Blacklight helper_method
     # @param options [Hash{Symbol=>Object}] Blacklight sends :document, :field, :config, :value and whatever else was in options
     # @option options [Array{String}] :value
-    # @option text [Hash] :config including {:field_name => "my_name"}
-    # @option text [Hash] :document
-    # @option text [Array{String}] :value the strings you might otherwise have passed to this method singly
+    # @option options [Hash] :config including {:field_name => "my_name"}
+    # @option options [Hash] :document
+    # @option options [Array{String}] :value the strings you might otherwise have passed to this method singly
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def index_field_link(options)
       raise ArgumentError unless options[:config] && options[:config][:field_name]
@@ -122,11 +122,12 @@ module Sufia
     end
 
     # *Sometimes* a Blacklight helper_method
-    # @param text [String,Hash] string to escape or a hash containing that string under the :value key.
+    # @param text [String,Hash] string to format and escape or a hash as per helper_method
     # @param show_link [Boolean]
     # @return [ActiveSupport::SafeBuffer]
+    # @todo stop being a helper_method, start being part of the Blacklight render stack?
     def iconify_auto_link(text, show_link = true)
-      text = presenter(text[:document]).field_value(Array.wrap(text[:value]).first, text[:config]) if text.is_a? Hash
+      text = index_presenter(text[:document]).field_value(text[:config].key, text[:config]) if text.is_a? Hash
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|
