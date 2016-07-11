@@ -1,13 +1,15 @@
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container-fluid">
-    <ul class="nav navbar-nav col-sm-5 col-md-6">
-      <li <%= 'class=active' if current_page?(sufia.root_path) %>><%= link_to 'Home', sufia.root_path, :'data-no-turbolink'=>"true" %></li>
-      <li <%= 'class=active' if current_page?(sufia.about_path) %>><%= link_to 'About', sufia.about_path, :'data-no-turbolink'=>"true" %></li>
-      <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.static_path('help') %>">Help</a></li>
-      <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
-    </ul><!-- /.nav -->
-    <div class="navbar-right row col-sm-7 col-md-6">
-      <%= render partial: 'catalog/search_form' %>
+    <div class="row">
+      <ul class="nav navbar-nav col-sm-5 col-md-6">
+        <li <%= 'class=active' if current_page?(sufia.root_path) %>><%= link_to 'Home', sufia.root_path, :'data-no-turbolink'=>"true" %></li>
+        <li <%= 'class=active' if current_page?(sufia.about_path) %>><%= link_to 'About', sufia.about_path, :'data-no-turbolink'=>"true" %></li>
+        <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.static_path('help') %>">Help</a></li>
+        <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
+      </ul><!-- /.nav -->
+      <div class="navbar-right col-sm-7 col-md-6">
+        <%= render partial: 'catalog/search_form' %>
+      </div>
     </div>
   </div>
 </nav><!-- /.navbar -->
