@@ -44,7 +44,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
 
         it "returns 404 if the key is not present" do
           get :download, id: download_link_hash
-          expect(response).to render_template('error/single_use_error')
+          expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
         end
       end
     end
@@ -61,13 +61,13 @@ describe CurationConcerns::SingleUseLinksViewerController do
         before { SingleUseLink.find_by_downloadKey!(show_link_hash).destroy }
         it "returns 404 if the key is not present" do
           get :show, id: show_link_hash
-          expect(response).to render_template('error/single_use_error')
+          expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
         end
       end
 
       it "returns 404 on attempt to get show path with download hash" do
         get :show, id: download_link_hash
-        expect(response).to render_template('error/single_use_error')
+        expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
       end
     end
   end

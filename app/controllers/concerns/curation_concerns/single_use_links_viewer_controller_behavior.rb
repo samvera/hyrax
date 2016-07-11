@@ -74,7 +74,7 @@ module CurationConcerns
 
       def render_single_use_error(exception)
         logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
-        render template: '/error/single_use_error', layout: "error", formats: [:html], status: 404
+        render 'single_use_error', layout: "error", status: 404
       end
 
       def _prefixes
