@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'curation_concerns', '~> 1.1'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
-  spec.add_dependency 'browse-everything', '~> 0.10'
+  spec.add_dependency 'browse-everything', '>= 0.10.3'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.16.beta'
