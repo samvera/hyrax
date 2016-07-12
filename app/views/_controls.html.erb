@@ -7,7 +7,7 @@
         <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.static_path('help') %>">Help</a></li>
         <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
       </ul><!-- /.nav -->
-      <div class="navbar-right col-sm-7 col-md-6">
+      <div class="searchbar-right navbar-right col-sm-7 col-md-6">
         <%= render partial: 'catalog/search_form' %>
       </div>
     </div>
