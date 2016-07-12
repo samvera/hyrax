@@ -210,8 +210,9 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#iconify_auto_link" do
-    let(:text) { 'Foo < http://www.example.com. & More text' }
-    let(:document) { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
+    let(:text)              { 'Foo < http://www.example.com. & More text' }
+    let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text' }
+    let(:document)          { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
     let(:blacklight_config) { CatalogController.blacklight_config }
     before do
       allow(controller).to receive(:action_name).and_return('index')
@@ -233,16 +234,17 @@ describe SufiaHelper, type: :helper do
         expect(subject).to include('class="glyphicon glyphicon-new-window"')
       end
     end
-    context "Hash argument for title" do # note: title typically is NOT configured with an iconify_auto_link helper
-      subject { helper.iconify_auto_link(document: document, value: text, config: blacklight_config.index_fields['title_tesim']) }
-      it { is_expected.to eq '<span>Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text</span>' }
-    end
-    context "Hash argument for description" do # note: description typically IS configured with an iconify_auto_link helper
-      let(:conf) { blacklight_config.index_fields['description_tesim'] }
-      subject { helper.iconify_auto_link(document: document, value: text, config: conf) }
-      it do
-        pending 'Need a different way to test description'
-        is_expected.to eq '<span>Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text</span>'
+
+    context "when using a hash argument" do
+      subject { helper.iconify_auto_link(arg) }
+      describe "auto-linking in the title" do
+        let(:arg) { { document: document, value: [text], config: blacklight_config.index_fields['title_tesim'], field: 'title_tesim' } }
+        it { is_expected.to eq(linked_text) }
+      end
+
+      describe "auto-linking in the description" do
+        let(:arg) { { document: document, value: [text], config: blacklight_config.index_fields['description_tesim'], field: 'description_tesim' } }
+        it { is_expected.to eq(linked_text) }
       end
     end
   end
