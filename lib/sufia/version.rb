@@ -1,3 +1,3 @@
 module Sufia
-  VERSION = "7.0.0.beta4".freeze
+  VERSION = "7.0.0.rc1".freeze
 end
