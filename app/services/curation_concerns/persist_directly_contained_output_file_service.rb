@@ -14,7 +14,7 @@ module CurationConcerns
       o_name = determine_original_name(file)
       m_type = determine_mime_type(file)
       uri = URI(directives.fetch(:url))
-      raise ArgumentError, "#{uri} is not an http uri" unless uri.scheme == 'http'
+      raise ArgumentError, "#{uri} is not an http(s) uri" unless uri.is_a?(URI::HTTP)
       file_set = ActiveFedora::Base.find(ActiveFedora::Base.uri_to_id(uri.to_s))
       remote_file = file_set.send("build_#{directives.fetch(:container)}".to_sym)
       remote_file.content = file
