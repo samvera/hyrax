@@ -1,6 +1,5 @@
 #search-form-header {
   margin-top: $search-bar-margin-top;
-  margin-right: $search-bar-margin-right;
 }
 
 #masthead {
@@ -11,4 +10,8 @@
 
 .navbar + .navbar {
   margin-top: 0;
+}
+
+.searchbar-right {
+  margin-right: 0;
 }
