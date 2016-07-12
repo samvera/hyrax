@@ -100,10 +100,10 @@ After installing the Prerequisites:
 
 ## Prerequisites
 
-Sufia requires the following software to work:
+Sufia 7.x requires the following software to work:
 
-1. Solr
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
+1. Solr version >= 5.x
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
