@@ -9,6 +9,7 @@ describe Sufia::CreateWithRemoteFilesActor do
   let(:work) { create(:generic_work, user: user) }
   let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
   let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
+  let(:file) { "file:///local/file/here.txt" }
 
   let(:remote_files) { [{ url: url1,
                           expires: "2014-03-31T20:37:36.214Z",
@@ -23,8 +24,28 @@ describe Sufia::CreateWithRemoteFilesActor do
     allow(create_actor).to receive(:create).and_return(true)
   end
 
-  it "attaches files" do
-    expect(ImportUrlJob).to receive(:perform_later).with(FileSet, CurationConcerns::Operation).twice
-    expect(actor.create(attributes)).to be true
+  context "with source uris that are remote" do
+    let(:remote_files) { [{ url: url1,
+                            expires: "2014-03-31T20:37:36.214Z",
+                            file_name: "filepicker-demo.txt.txt" },
+                          { url: url2,
+                            expires: "2014-03-31T20:37:36.731Z",
+                            file_name: "Getting+Started.pdf" }] }
+
+    it "attaches files" do
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, CurationConcerns::Operation).twice
+      expect(actor.create(attributes)).to be true
+    end
+  end
+
+  context "with source uris that are local files" do
+    let(:remote_files) { [{ url: file,
+                            expires: "2014-03-31T20:37:36.214Z",
+                            file_name: "here.txt" }] }
+
+    it "attaches files" do
+      expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/here.txt", user)
+      expect(actor.create(attributes)).to be true
+    end
   end
 end

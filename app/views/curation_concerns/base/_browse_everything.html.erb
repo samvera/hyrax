@@ -4,18 +4,3 @@
 <%= button_tag(t('sufia.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-lg btn-success', id: "browse-btn",
   'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
   'data-target' => "##{f.object.persisted? ? 'edit' : 'new'}_#{f.object.model.model_name.param_key}" ) %>
-
-<p id="status">0 items selected</p>
-<script>
-  // Update the count in #status element when user selects files.
-  $(document).on('page:change', function() {
-    $('#browse-btn').browseEverything()
-      .done(function(data) {
-	$('#status').html(data.length.toString() + " <%= t('sufia.upload.browse_everything.files_selected')%>")
-        $('#submit-btn').html("Submit "+data.length.toString() + " selected files")
-	var evt = { isDefaultPrevented: function() { return false; } };
-	var files = $.map(data, function(d) { return { name: d.file_name, size: d.file_size, id: d.url } });
-	$.blueimp.fileupload.prototype.options.done.call($('#fileupload').fileupload(), evt, { result: { files: files }});
-      })
-  });
-</script>

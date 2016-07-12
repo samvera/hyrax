@@ -33,10 +33,7 @@ module Sufia
           fs.save!
           uri = URI.parse(url)
           if uri.scheme == 'file'
-            IngestLocalFileJob.perform_later(fs.id,
-                                             File.dirname(uri.path),
-                                             File.basename(uri.path),
-                                             user.user_key)
+            IngestLocalFileJob.perform_later(fs, uri.path, user)
           else
             ImportUrlJob.perform_later(fs, log(actor.user))
           end

@@ -34,6 +34,7 @@
 //= require sufia/featured_works
 //= require sufia/featured_researcher
 //= require sufia/batch_select_all
+//= require sufia/browse_everything
 //= require sufia/single_use_link
 //= require sufia/search
 //= require sufia/editor
@@ -59,7 +60,6 @@
 
 //= require curation_concerns/collections
 //= require hydra-editor/hydra-editor
-//= require browse_everything
 //= require nestable
 
 // this needs to be after batch_select so that the form ids get setup correctly
