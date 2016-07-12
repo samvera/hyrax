@@ -11,7 +11,9 @@
   <% if content_for?(:page_header) %>
     <div class="row">
       <div class="col-xs-12 main-header">
-        <%= yield(:page_header) %>
+        <div class="row">
+          <%= yield(:page_header) %>
+        </div>
       </div>
     </div>
   <% end %>
