@@ -2,7 +2,9 @@
 # It should never actually be persisted in the repository.
 # The properties on this form should be copied to a real work type.
 class BatchUploadItem < ActiveFedora::Base
-  include CurationConcerns::BasicMetadata
+  include ::CurationConcerns::WorkBehavior
+  include ::CurationConcerns::BasicMetadata
+  include Sufia::WorkBehavior
 
   # This mocks out the behavior of Hydra::PCDM::PcdmBehavior
   def in_collection_ids
