@@ -11,7 +11,7 @@ module CurationConcerns
 
         def sync_members(ordered_member_ids)
           return true if ordered_member_ids.nil?
-          existing_members_ids = curation_concern.member_ids
+          existing_members_ids = curation_concern.ordered_member_ids
           (existing_members_ids - ordered_member_ids).each do |old_id|
             work = ::ActiveFedora::Base.find(old_id)
             curation_concern.ordered_members.delete(work)
