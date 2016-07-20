@@ -1,5 +1,5 @@
 $(function() {
-  if (typeof stats === "undefined") {
+  if (typeof sufia_item_stats === "undefined") {
     return;
   }
 
@@ -55,7 +55,7 @@ $(function() {
     }
   };
 
-  var plot = $.plot("#usage-stats", stats, options);
+  var plot = $.plot("#usage-stats", sufia_item_stats, options);
 
   $("<div id='tooltip'></div>").css({
     position: "absolute",
@@ -79,7 +79,7 @@ $(function() {
     }
   });
 
-  var overview = $.plot("#overview", stats, {
+  var overview = $.plot("#overview", sufia_item_stats, {
     series: {
       lines: {
         show: true,
@@ -106,7 +106,7 @@ $(function() {
   });
 
   $("#usage-stats").bind("plotselected", function(event, ranges) {
-    plot = $.plot("#usage-stats", stats, $.extend(true, {}, options, {
+    plot = $.plot("#usage-stats", sufia_item_stats, $.extend(true, {}, options, {
       xaxis: {
         min: ranges.xaxis.from,
         max: ranges.xaxis.to

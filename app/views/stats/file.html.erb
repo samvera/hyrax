@@ -1,6 +1,6 @@
 <!-- Adapted from jquery-flot examples https://github.com/flot/flot/blob/master/examples/visitors/index.html -->
 <%= javascript_tag do %>
-  var stats = <%= @stats.to_flot.to_json.html_safe %>;
+  var sufia_item_stats = <%= @stats.to_flot.to_json.html_safe %>;
 <% end %>
 
 <%= content_tag :h1, @file_set, class: "lower" %>
