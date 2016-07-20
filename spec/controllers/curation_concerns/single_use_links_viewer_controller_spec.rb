@@ -31,7 +31,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
     describe "GET 'download'" do
       let(:expected_content) { ActiveFedora::Base.find(file.id).original_file.content }
 
-      it "and_return http success" do
+      it "downloads the file and deletes the link from the database" do
         expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
         get :download, id: download_link_hash
         expect(response.body).to eq expected_content
@@ -39,10 +39,10 @@ describe CurationConcerns::SingleUseLinksViewerController do
         expect { SingleUseLink.find_by_downloadKey!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end
 
-      context "and the key is not found" do
+      context "when the key is not found" do
         before { SingleUseLink.find_by_downloadKey!(download_link_hash).destroy }
 
-        it "returns 404 if the key is not present" do
+        it "returns 404" do
           get :download, id: download_link_hash
           expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
         end
@@ -50,16 +50,16 @@ describe CurationConcerns::SingleUseLinksViewerController do
     end
 
     describe "GET 'show'" do
-      it "and_return http success" do
+      it "renders the file set's show page and deletes the link from the database" do
         get 'show', id: show_link_hash
         expect(response).to be_success
         expect(assigns[:presenter].id).to eq file.id
         expect { SingleUseLink.find_by_downloadKey!(show_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end
 
-      context "and the key is not found" do
+      context "when the key is not found" do
         before { SingleUseLink.find_by_downloadKey!(show_link_hash).destroy }
-        it "returns 404 if the key is not present" do
+        it "returns 404" do
           get :show, id: show_link_hash
           expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
         end

@@ -11,5 +11,6 @@
 //= require bootstrap/affix
 //
 //= require jquery-ui/sortable
+//= require clipboard
 //
 //= require curation_concerns/curation_concerns

@@ -1,0 +1,20 @@
+<table class="table table-striped <%= dom_class(presenter) %> single-use-links">
+  <caption class="table-heading"><h2>Single-Use Links</h2></caption>
+  <thead>
+    <tr><th>Link</th><th>Key</th><th>Expires</th><th>Actions</th></tr>
+  </thead>
+  <tbody data-url="<%= curation_concerns.generated_single_use_links_path(presenter) %>">
+    <% if presenter.single_use_links.empty? %>
+      <tr><td>No links have been generated</td></tr>
+    <% else %>
+      <%= render 'single_use_link_rows', single_use_links: presenter.single_use_links %>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="form_actions">
+  <%= link_to "Generate Download Link", curation_concerns.generate_download_single_use_link_path(presenter),
+      class: 'btn btn-default generate-single-use-link' %>
+  <%= link_to "Generate Show Link", curation_concerns.generate_show_single_use_link_path(presenter),
+      class: 'btn btn-default generate-single-use-link' %>
+</div>

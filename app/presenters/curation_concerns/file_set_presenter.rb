@@ -33,5 +33,9 @@ module CurationConcerns
     def link_name
       current_ability.can?(:read, id) ? label : 'File'
     end
+
+    def single_use_links
+      @single_use_links ||= SingleUseLink.where(itemId: id)
+    end
   end
 end
