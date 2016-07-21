@@ -155,7 +155,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.0.0.beta1'
+gem 'sufia', '7.0.0.rc2'
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
