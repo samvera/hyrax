@@ -20,7 +20,7 @@ feature 'leases' do
       click_button 'Create Generic work'
 
       # chosen lease date is on the show page
-      expect(page).to have_content(future_date.to_datetime.iso8601.sub(/\+00:00/, 'Z'))
+      expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
 
       click_link 'Edit This Generic Work'
       click_link 'Lease Management Page'
@@ -31,7 +31,7 @@ feature 'leases' do
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Lease'
-      expect(page).to have_content(later_future_date.iso8601) # new lease date is displayed in message
+      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard)) # new lease date is displayed in message
     end
   end
 

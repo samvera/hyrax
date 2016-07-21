@@ -23,7 +23,7 @@ feature 'embargo' do
       click_button 'Create Generic work'
 
       # chosen embargo date is on the show page
-      expect(page).to have_content(future_date.to_datetime.iso8601.sub(/\+00:00/, 'Z'))
+      expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
 
       click_link 'Edit This Generic Work'
       click_link 'Embargo Management Page'
@@ -34,7 +34,7 @@ feature 'embargo' do
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Embargo'
-      expect(page).to have_content(later_future_date.iso8601)
+      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
     end
   end
 
