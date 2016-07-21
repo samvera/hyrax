@@ -1,7 +1,7 @@
 //= require browse_everything
 
 // Show the files in the queue
-$(document).on('turbolinks:load', function() {
+Blacklight.onLoad( function() {
   $('#browse-btn').browseEverything()
   .done(function(data) {
     var evt = { isDefaultPrevented: function() { return false; } };
