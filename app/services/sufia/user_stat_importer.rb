@@ -6,7 +6,7 @@ module Sufia
 
     def initialize(options = {})
       if options[:verbose]
-        stdout_logger = Logger.new(Logger.new(STDOUT))
+        stdout_logger = Logger.new(STDOUT)
         stdout_logger.level = Logger::INFO
         Rails.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
       end
