@@ -1,4 +1,4 @@
-<h3>Sharing With</h3>
+<h2>Sharing With</h2>
 <% depositor = f.object.depositor %>
 
 <div class="alert alert-info hidden" id="save_perm_note">Permissions are
@@ -38,10 +38,12 @@
 </table>
 
 
-<h3>Share work with other users</h3>
-
+<h2>Share work with other users</h2>
+<p class="sr-only">Use the add button to give access to one <%=t('sufia.account_label') %> at a time (it will be added to the list below).
+  Select the user, by name or <%= t('sufia.account_label') %>. Then select the access level you wish to grant and click on Add this
+  <%= t('sufia.account_label') %> to complete adding the permission.
+</p>
 <div class="form-group row">
-  <p class="sr-only">Use the add button to give access to one <%=t('sufia.account_label') %> at a time (it will be added to the list below).  Select the user, by name or <%= t('sufia.account_label') %>. Then select the access level you wish to grant and click on Add this <%= t('sufia.account_label') %> to complete adding the permission.</p>
   <div class="col-sm-5">
     <label for="new_user_name_skel" class="sr-only"><%= t('sufia.account_label') %> (without the <%= t('sufia.directory.suffix') %> part)</label>
     <%= text_field_tag 'new_user_name_skel', nil %>
@@ -59,10 +61,9 @@
   </div>
 </div>
 
-<h3>Share work with groups of users</h3>
-
+<h2>Share work with groups of users</h2>
+<p class="sr-only">Use the add button to give access to one group at a time (it will be added to the list below).</p>
 <div class="form-group row">
-  <p class="sr-only">Use the add button to give access to one group at a time (it will be added to the list below).</p>
   <div class="col-sm-5">
     <label for="new_group_name_skel" class="sr-only">Group</label>
     <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
