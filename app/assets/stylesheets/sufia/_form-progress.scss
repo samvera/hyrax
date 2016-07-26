@@ -18,12 +18,18 @@
   }
 }
 
-aside.form-progress {
-  ul.requirements {
-    list-style-type: none;
-    padding-left: 8px;
-  }
+.legend-save-work {
+  border: none;
+  font-size: $save-viz-widget-legend-font;
+  margin-bottom: $save-viz-widget-legend-margin;
+}
 
+.requirements, .visibility {
+  list-style-type: none;
+  padding-left: 8px;
+}
+
+aside.form-progress {
   .incomplete::before {
     content: "\e101";
     color: $brand-danger;
@@ -37,11 +43,4 @@ aside.form-progress {
     font-family: 'Glyphicons Halflings';
     padding-right: 5px;
   }
-
-  h3 {
-    margin: 0;
-    padding: 5px;
-    font-size: 12pt;
-  }
-
 }
