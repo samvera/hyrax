@@ -35,4 +35,8 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
       expect(rendered).to have_selector 'h1', text: 'My Title'
     end
   end
+
+  it "does not render single-use links" do
+    expect(rendered).not_to have_selector('table.single-use-links')
+  end
 end
