@@ -121,6 +121,7 @@ en:
         files:              "Files deposited"
         file_views:         "View"
         file_downloads:     "Download"
+        works:              "Works created"
         collections:        "Collections created"
         following:          "People you follow"
         followers:          "People who are following you"
