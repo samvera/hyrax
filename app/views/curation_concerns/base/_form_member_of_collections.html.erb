@@ -1,0 +1,6 @@
+<% if @form.respond_to? :member_of_collection_ids %>
+  <div class="row with-headroom">
+    <legend>Member of Collections</legend>
+    <%= f.input :member_of_collection_ids, collection: @form.collections_for_select, label: false, input_html: { multiple: true } %>
+  </div>
+<% end %>

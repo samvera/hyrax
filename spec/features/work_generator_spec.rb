@@ -53,14 +53,5 @@ feature 'Creating a new Work', :workflow do
     title = 'Genealogies of the American West'
     click_link 'Add a Collection'
     fill_in('Title', with: title)
-    click_button('Create Collection')
-    click_on('Add files from your dashboard')
-    find('#facet-human_readable_type_sim').click_link('Catapult')
-    within('.modal.fade', match: :first) do
-      select title, from: 'id'
-      click_on('Add to collection')
-    end
-    expect(page).to have_content('Collection was successfully updated.')
-    expect(page).to have_content(catapult_title)
   end
 end

@@ -14,7 +14,7 @@ describe 'curation_concerns/base/show_actions' do
     let(:editor) { true }
     let(:collector) { true }
     it "shows the add to collection link" do
-      expect(rendered).to have_link 'Add to a Collection'
+      expect(rendered).not_to have_link 'Add to a Collection'
     end
   end
 

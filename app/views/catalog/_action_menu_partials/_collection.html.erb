@@ -7,17 +7,13 @@
         <% end %>
       </li>
       <li>
-        <% if @collection # We're on the view page for @collection. -%>
-          <%= button_for_remove_from_collection(document) %>
-        <% else %>
-          <%= link_to document, class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
-                          confirm: "Deleting a collection from #{application_name} is permanent. Click OK to delete this collection from #{application_name}, or Cancel to cancel this operation" } do %>
-                          <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
-          <% end %>
+        <%= link_to document, class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
+                        confirm: "Deleting a collection from #{application_name} is permanent. Click OK to delete this collection from #{application_name}, or Cancel to cancel this operation" } do %>
+                        <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
         <% end %>
       </li>
     <% end %>
-    <% if can? :collect, document %>
+    <% if can?(:collect, document) && document.collection? %>
       <li>
         <%= link_to_select_collection document %>
       </li>

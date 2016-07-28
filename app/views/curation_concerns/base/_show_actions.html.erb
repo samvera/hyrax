@@ -20,9 +20,5 @@
       <% end %>
       <%= link_to "Delete This #{@presenter.human_readable_type}", [main_app, @presenter], class: 'btn btn-danger pull-right', data: { confirm: "Delete this #{@presenter.human_readable_type}?" }, method: :delete %>
     <% end %>
-    <% if collector %>
-      <%= render 'collections/add_to_collection_modal', collectible: @presenter %>
-      <%= link_to_select_collection @presenter, class: 'btn btn-default' %>
-    <% end %>
   </div>
 <% end %>

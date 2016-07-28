@@ -1,7 +1,6 @@
 <% provide :page_title, curation_concern_page_title(@collection) %>
 
-<h1>Edit <%= @collection %> <span class="human_readable_type">(<%= @collection.human_readable_type %>)</span></h1>
-
+<h1>Edit <%= @collection.first_title %> <span class="human_readable_type">(<%= @collection.human_readable_type %>)</span></h1>
 
 <% unless has_collection_search_parameters? %>
   <%= render 'collections/edit_actions' %>
@@ -15,3 +14,4 @@
 <%= render 'catalog/constraints', localized_params: params %>
 <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
 <%= render 'paginate' %>
+

@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sprockets-es6'
   spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
   spec.add_dependency 'active_attr'
-  spec.add_dependency 'hydra-works', '>= 0.14.0'
+  spec.add_dependency 'hydra-works', '>= 0.15.0'
   spec.add_dependency 'active_fedora-noid', '~> 2.0.0.beta5'
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'
@@ -45,6 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'flot-rails', '~> 0.0.7'
   spec.add_dependency 'highcharts-rails'
+  spec.add_dependency 'hydra-pcdm', '~> 0.9.0'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.16'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'

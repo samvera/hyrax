@@ -170,6 +170,10 @@ module CurationConcerns
       first(Solrizer.solr_name('workflow_state_name', :symbol))
     end
 
+    def member_of_collection_ids
+      fetch(Solrizer.solr_name('member_of_collection_ids', :symbol), [])
+    end
+
     private
 
       def date_field(field_name)

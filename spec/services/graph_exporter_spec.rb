@@ -8,10 +8,10 @@ RSpec.describe CurationConcerns::GraphExporter do
 
   describe "fetch" do
     subject { service.fetch }
-    let(:ttl) { subject.dump(:ttl) }
+    let(:ttl) { subject.dump(:ntriples) }
     it "transforms suburis to hashcodes" do
-      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> a ([^;]*)<http://projecthydra\.org/works/models#Work>}
-      expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title";}
+      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://projecthydra.org/works/models#Work>}
+      expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title"}
       expect(ttl).to match %r{<http://www\.w3\.org/ns/auth/acl#accessControl> <http://localhost/catalog/}
 
       query = subject.query([RDF::URI("http://localhost/concern/generic_works/#{work.id}"),

@@ -111,6 +111,7 @@ module CurationConcerns
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability)
+        @collections = ::Collection.all
       end
 
       def actor

@@ -16,6 +16,7 @@
       <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
       <% if @form.persisted? %>
         <%= link_to 'Cancel', collection_path(@form), class: 'btn btn-link' %>
+        <%= link_to "Delete", [main_app, @form], class: 'btn btn-danger pull-right', data: { confirm: "Delete this Collection?" }, method: :delete %>
       <% else %>
         <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
       <% end %>

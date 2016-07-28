@@ -250,11 +250,15 @@ module CurationConcerns
 
       def add_members_to_collection(collection = nil)
         collection ||= @collection
-        collection.add_members batch
+        collection.add_member_objects batch
       end
 
       def remove_members_from_collection
-        @collection.members.delete(batch.map { |pid| ActiveFedora::Base.find(pid) })
+        batch.each do |pid|
+          work = ActiveFedora::Base.find(pid)
+          work.member_of_collections.delete @collection
+          work.save!
+        end
       end
 
       def assign_batch_to_collection

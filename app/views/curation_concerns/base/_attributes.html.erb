@@ -9,5 +9,6 @@
     <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date) %>
     <%= presenter.attribute_to_html(:lease_expiration_date, render_as: :date) %>
     <%= presenter.attribute_to_html(:rights, render_as: :rights) %>
+    <%= render 'member_of_collections', presenter: presenter %>
   </tbody>
 </table>

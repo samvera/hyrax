@@ -11,6 +11,10 @@ module CurationConcerns
         index.as :stored_searchable, :facetable
       end
 
+      def first_title
+        title.first
+      end
+
       # We reserve date_uploaded for the original creation date of the record.
       # For example, when migrating data from a fedora3 repo to fedora4,
       # fedora's system created date will reflect the date when the record
