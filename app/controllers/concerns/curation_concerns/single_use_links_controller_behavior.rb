@@ -25,6 +25,16 @@ module CurationConcerns
       render text: curation_concerns.show_single_use_link_url(@su.downloadKey)
     end
 
+    def index
+      links = SingleUseLink.where(itemId: params[:id])
+      render partial: 'curation_concerns/file_sets/single_use_link_rows', locals: { single_use_links: links }
+    end
+
+    def destroy
+      SingleUseLink.find_by_downloadKey(params[:link_id]).destroy
+      head :ok
+    end
+
     protected
 
       def authorize_user!

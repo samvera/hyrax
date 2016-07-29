@@ -130,4 +130,37 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
       expect(rendered).to have_selector '.attribute.description', text: 'Lorem ipsum'
     end
   end
+
+  describe 'single use links' do
+    before do
+      allow(presenter).to receive(:single_use_links).and_return(links)
+      controller.params = { id: presenter.id }
+      render
+    end
+
+    context "when links are present" do
+      let(:show_link)     { create(:show_link) }
+      let(:download_link) { create(:download_link) }
+      let(:links)         { [show_link, download_link] }
+
+      it "renders single use links for the file set" do
+        expect(rendered).to have_selector('td', text: 'Show')
+        expect(rendered).to have_selector('td', text: 'Download')
+        expect(rendered).to have_selector('td', text: show_link.downloadKey)
+        expect(rendered).to have_selector('td', text: show_link.expires)
+        expect(rendered).to have_link("Generate Download Link")
+        expect(rendered).to have_link("Generate Show Link")
+      end
+    end
+
+    context "when no links are present" do
+      let(:links) { [] }
+
+      it "renders a table without links" do
+        expect(rendered).to have_selector('td', text: 'No links have been generated')
+        expect(rendered).to have_link("Generate Download Link")
+        expect(rendered).to have_link("Generate Show Link")
+      end
+    end
+  end
 end

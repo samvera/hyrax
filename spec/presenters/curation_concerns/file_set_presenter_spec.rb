@@ -77,4 +77,11 @@ describe CurationConcerns::FileSetPresenter do
       it { is_expected.to eq 'File' }
     end
   end
+
+  describe "single_use_links" do
+    it "returns ActiveRecord::Relation of all single use links for the file set" do
+      expect(SingleUseLink).to receive(:where).with(itemId: presenter.id)
+      presenter.single_use_links
+    end
+  end
 end

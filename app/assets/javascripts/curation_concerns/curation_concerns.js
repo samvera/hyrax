@@ -6,6 +6,7 @@
 //= require curation_concerns/file_manager/sorting
 //= require curation_concerns/file_manager/save_manager
 //= require curation_concerns/file_manager/member
+//= require curation_concerns/single_use_links_manager
 //= require curation_concerns/batch_select
 //= require curation_concerns/collections
 

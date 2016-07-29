@@ -2,78 +2,94 @@ require 'spec_helper'
 
 describe CurationConcerns::SingleUseLinksController, type: :controller do
   routes { CurationConcerns::Engine.routes }
-  let(:user) { create(:user) }
 
-  let(:file) do
-    FileSet.create do |file|
-      file.apply_depositor_metadata(user)
-    end
-  end
+  let(:user) { create(:user) }
+  let(:file) { create(:file_set, user: user) }
 
   describe "logged in user with edit permission" do
     let(:hash) { "some-dummy-sha2-hash" }
 
-    before do
-      sign_in user
-      allow(DateTime).to receive(:now).and_return(DateTime.now)
-      expect(Digest::SHA2).to receive(:new).and_return(hash)
-    end
+    before { sign_in user }
 
-    describe "GET 'download'" do
-      it "and_return http success" do
-        post 'create_download', id: file
-        expect(response).to be_success
-        expect(response.body).to eq download_single_use_link_url(hash)
+    context "POST create" do
+      before do
+        allow(DateTime).to receive(:now).and_return(DateTime.now)
+        expect(Digest::SHA2).to receive(:new).and_return(hash)
+      end
+
+      describe "creating a single-use download link" do
+        it "returns a link for downloading" do
+          post 'create_download', id: file
+          expect(response).to be_success
+          expect(response.body).to eq download_single_use_link_url(hash)
+        end
+      end
+
+      describe "creating a single-use show link" do
+        it "returns a link for showing" do
+          post 'create_show', id: file
+          expect(response).to be_success
+          expect(response.body).to eq show_single_use_link_url(hash)
+        end
       end
     end
 
-    describe "GET 'show'" do
-      it "and_return http success" do
-        post 'create_show', id: file
+    context "GET index" do
+      describe "viewing existing links" do
+        before { get :index, id: file }
+        subject { response }
+        it { is_expected.to be_success }
+      end
+    end
+
+    context "DELETE destroy" do
+      let!(:link) { create(:download_link) }
+      it "deletes the link" do
+        expect { delete :destroy, id: file, link_id: link }.to change { SingleUseLink.count }.by(-1)
         expect(response).to be_success
-        expect(response.body).to eq show_single_use_link_url(hash)
       end
     end
   end
 
   describe "logged in user without edit permission" do
-    before do
-      @other_user = create(:user)
-      file.read_users << @other_user
-      file.save!
-      sign_in @other_user
-      file.read_users << @other_user
-      file.save!
+    let(:other_user) { create(:user) }
+    let(:file) { create(:file_set, user: user, read_users: [other_user]) }
+
+    before { sign_in other_user }
+    subject { response }
+
+    describe "creating a single-use download link" do
+      before { post 'create_download', id: file }
+      it { is_expected.not_to be_success }
     end
 
-    describe "GET 'download'" do
-      it "and_return http success" do
-        post 'create_download', id: file
-        expect(response).not_to be_success
-      end
+    describe "creating a single-use show link" do
+      before { post 'create_show', id: file }
+      it { is_expected.not_to be_success }
     end
 
-    describe "GET 'show'" do
-      it "and_return http success" do
-        post 'create_show', id: file
-        expect(response).not_to be_success
-      end
+    describe "viewing existing links" do
+      before { get :index, id: file }
+      it { is_expected.not_to be_success }
     end
   end
 
   describe "unknown user" do
-    describe "GET 'download'" do
-      it "and_return http failure" do
-        post 'create_download', id: file
-        expect(response).not_to be_success
-      end
+    subject { response }
+
+    describe "creating a single-use download link" do
+      before { post 'create_download', id: file }
+      it { is_expected.not_to be_success }
     end
 
-    describe "GET 'show'" do
-      it "and_return http failure" do
-        post 'create_show', id: file
-        expect(response).not_to be_success
-      end
+    describe "creating a single-use show link" do
+      before { post 'create_show', id: file }
+      it { is_expected.not_to be_success }
+    end
+
+    describe "viewing existing links" do
+      before { get :index, id: file }
+      it { is_expected.not_to be_success }
     end
   end
 end
