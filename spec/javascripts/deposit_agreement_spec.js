@@ -39,6 +39,7 @@ describe("DepositAgreement", function() {
       describe("and the checkbox is not checked", function() {
         it("is false", function() {
           expect(target.isAccepted).toEqual(false);
+          expect(target.mustAgreeAgain).toEqual(false);
         });
       });
 
@@ -48,6 +49,7 @@ describe("DepositAgreement", function() {
         });
         it("is true", function() {
           expect(target.isAccepted).toEqual(true);
+          expect(target.mustAgreeAgain).toEqual(false);
         });
       });
     });
@@ -61,6 +63,7 @@ describe("DepositAgreement", function() {
 
       it("is true", function() {
         expect(target.isAccepted).toEqual(true);
+        expect(target.mustAgreeAgain).toEqual(false);
       });
     });
   });
