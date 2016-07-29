@@ -2,16 +2,19 @@ export class DepositAgreement {
   // Monitors the form and runs the callback if any files are added
   constructor(form, callback) {
     this.agreementCheckbox = form.find('input#agreement')
-    // If true, require the accept checkbox to be checked.
-    this.isActiveAgreement = this.agreementCheckbox.size() > 0
-    if (this.isActiveAgreement) {
-      this.setupActiveAgreement(callback)
-    }
 
+    // If true, require the accept checkbox to be checked.
     // Tracks whether the user needs to accept again to the depositor
     // agreement. Once the user has manually agreed once she does not
     // need to agree again regardless on how many files are being added.
-    this.mustAgreeAgain = this.isAccepted
+    this.isActiveAgreement = this.agreementCheckbox.size() > 0
+    if (this.isActiveAgreement) {
+      this.setupActiveAgreement(callback)
+      this.mustAgreeAgain = this.isAccepted
+    }
+    else {
+      this.mustAgreeAgain = false
+    }
   }
 
   setupActiveAgreement(callback) {
