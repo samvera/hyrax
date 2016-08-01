@@ -84,7 +84,7 @@ See [Sufia's documentation site](http://sufia.io/) for more non-technical docume
 
 # Help
 
-If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by [the Hydra community IRC channel](irc://irc.freenode.net/projecthydra).
+If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by the #dev channel in [the Hydra community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
 
 # Getting started
 
@@ -155,7 +155,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.0.0.rc2'
+gem 'sufia', '7.0.0'
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
