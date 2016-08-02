@@ -143,10 +143,10 @@ We recommend either Ruby 2.3 or the latest 2.2 version.
 
 ## Rails
 
-Generate a new Rails application. We recommend the latest Rails 4.2 release (4.2.6 when last updated).
+Generate a new Rails application. We recommend the latest Rails 4.2 release.
 
 ```
-gem install rails -v 4.2.6
+gem install rails -v 4.2.7
 rails new my_app
 ```
 
