@@ -35,7 +35,13 @@ module CurationConcerns
     end
 
     def single_use_links
-      @single_use_links ||= SingleUseLink.where(itemId: id)
+      @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }
     end
+
+    private
+
+      def link_presenter_class
+        CurationConcerns::SingleUseLinkPresenter
+      end
   end
 end

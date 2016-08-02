@@ -78,10 +78,10 @@ describe CurationConcerns::FileSetPresenter do
     end
   end
 
-  describe "single_use_links" do
-    it "returns ActiveRecord::Relation of all single use links for the file set" do
-      expect(SingleUseLink).to receive(:where).with(itemId: presenter.id)
-      presenter.single_use_links
-    end
+  describe "#single_use_links" do
+    let!(:show_link)     { create(:show_link, itemId: presenter.id) }
+    let!(:download_link) { create(:download_link, itemId: presenter.id) }
+    subject { presenter.single_use_links }
+    it { is_expected.to include(CurationConcerns::SingleUseLinkPresenter) }
   end
 end

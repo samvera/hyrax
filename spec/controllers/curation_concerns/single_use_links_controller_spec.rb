@@ -6,6 +6,11 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
   let(:user) { create(:user) }
   let(:file) { create(:file_set, user: user) }
 
+  describe "::show_presenter" do
+    subject { described_class }
+    its(:show_presenter) { is_expected.to eq(CurationConcerns::SingleUseLinkPresenter) }
+  end
+
   describe "logged in user with edit permission" do
     let(:hash) { "some-dummy-sha2-hash" }
 
