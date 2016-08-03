@@ -5,4 +5,4 @@
 <%= media_display @presenter %>
 <%= render "attributes", presenter: @presenter %>
 <%= render "show_actions", presenter: @presenter, parent: parent %>
-<%= render "single_use_links", presenter: @presenter %>
+<%= render "single_use_links", presenter: @presenter if can? :edit, @presenter.id %>

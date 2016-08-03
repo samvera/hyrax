@@ -1,18 +1,18 @@
-<% single_use_links.each_with_index do |link, index| %>
-  <% type = link.path =~ /downloads/ ? 'Download' : 'Show' %>
-  <% url_helper = link.path =~ /downloads/ ? 'download_single_use_link_url' : 'show_single_use_link_url' %>
+<% single_use_links.each do |presenter| %>
   <tr>
-    <td><%= type %></td>
-    <td><%= link.downloadKey %></td>
-    <td><%= link.expires %></td>
+    <td><%= presenter.link_type %></td>
+    <td><%= presenter.downloadKey %></td>
+    <td><%= presenter.human_readable_expiration %></td>
     <td>
       <button class="btn btn-xs btn-default copy-single-use-link"
-              data-clipboard-text="<%= curation_concerns.send(url_helper, link.downloadKey) %>"
-              data-toggle="tooltip" data-placement="bottom" title="Copied!">
-        Copy to Clipboard
+              data-clipboard-text="<%= curation_concerns.send(presenter.url_helper, presenter.downloadKey) %>"
+              data-toggle="tooltip" data-placement="bottom"
+              title="<%= t('curation_concerns.single_use_links.copy.tooltip') %>">
+        <%= t('curation_concerns.single_use_links.copy.button') %>
       </button>
-      <%= link_to "Delete", curation_concerns.delete_single_use_link_path(params[:id], link),
-          class: 'btn btn-xs btn-danger delete-single-use-link' %>
+      <%= link_to t('curation_concerns.single_use_links.delete'),
+                  curation_concerns.delete_single_use_link_path(params[:id], presenter),
+                  class: 'btn btn-xs btn-danger delete-single-use-link' %>
     </td>
   </tr>
 <% end %>

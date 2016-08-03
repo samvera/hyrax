@@ -2,6 +2,8 @@ module CurationConcerns
   module SingleUseLinksControllerBehavior
     extend ActiveSupport::Concern
     included do
+      class_attribute :show_presenter
+      self.show_presenter = CurationConcerns::SingleUseLinkPresenter
       before_action :authenticate_user!
       before_action :authorize_user!
       # Catch permission errors
@@ -26,7 +28,7 @@ module CurationConcerns
     end
 
     def index
-      links = SingleUseLink.where(itemId: params[:id])
+      links = SingleUseLink.where(itemId: params[:id]).map { |link| show_presenter.new(link) }
       render partial: 'curation_concerns/file_sets/single_use_link_rows', locals: { single_use_links: links }
     end
 

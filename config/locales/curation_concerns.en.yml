@@ -112,6 +112,27 @@ en:
       restricted:
         text: "Private"
         class: "label-danger"
+    single_use_links:
+      title: Single-Use Links
+      table:
+        link: Link
+        key: Key
+        expires: Expires
+        actions: Actions
+        no_links: No links have been generated
+      download: 
+        type: Download
+        generate: Generate Download Link
+      show: 
+        type: Show
+        generate: Generate Show Link
+      copy: 
+        tooltip: Copied!
+        button: Copy to Clipboard
+      delete: Delete
+      expiration:
+        time: "in %{value} hours"
+        lesser_time: in less than one hour
   blacklight:
     search:
       fields:
