@@ -17,13 +17,13 @@
 //= require bootstrap/tab
 
 //= require jquery.validate
-//= require zeroclipboard
 //= require select2
 //= require fixedsticky
 
 //= require jquery.flot
 //= require jquery.flot.time
 //= require jquery.flot.selection
+//= require clipboard
 
 //= require batch_edit
 //
@@ -35,7 +35,6 @@
 //= require sufia/featured_researcher
 //= require sufia/batch_select_all
 //= require sufia/browse_everything
-//= require sufia/single_use_link
 //= require sufia/search
 //= require sufia/editor
 //= require sufia/ga_events
@@ -45,6 +44,7 @@
 //= require sufia/proxy_rights
 //= require sufia/sorting
 //= require curation_concerns/batch_select
+//= require curation_concerns/single_use_links_manager
 //= require sufia/dashboard_actions
 //= require sufia/batch
 //= require sufia/flot_stats
@@ -64,4 +64,3 @@
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require sufia/batch_edit
-

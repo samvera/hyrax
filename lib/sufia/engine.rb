@@ -7,7 +7,6 @@ module Sufia
     require 'jquery-ui-rails'
     require 'flot-rails'
     require 'almond-rails'
-    require 'zeroclipboard-rails'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
@@ -58,7 +57,6 @@ module Sufia
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
 
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
-      app.config.assets.precompile += %w( ZeroClipboard.swf )
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
 
       Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
