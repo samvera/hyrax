@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_dependency "rails", '~> 4.0'
+  gem.add_dependency "railties", '>= 4.0.0', '< 6'
   gem.add_dependency 'hydra-access-controls', version
 
   gem.add_development_dependency 'sqlite3', '~> 1.3'

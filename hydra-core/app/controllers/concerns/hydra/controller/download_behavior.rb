@@ -87,8 +87,7 @@ module Hydra
       # render an HTTP HEAD response
       def content_head
         response.headers['Content-Length'] = file.size
-        response.headers['Content-Type'] = file.mime_type
-        head :ok
+        head :ok, content_type: file.mime_type
       end
 
       # render an HTTP Range response

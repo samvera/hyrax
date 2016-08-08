@@ -74,7 +74,7 @@ describe DownloadsController do
           allow(ContentHolder).to receive(:default_file_path).and_return('buzz')
           get :show, id: obj
           expect(response).to be_successful
-          expect(response.headers['Content-Type']).to eq "image/png"
+          expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"buzz.png\""
           expect(response.body).to eq 'fizz'
         end
@@ -83,7 +83,7 @@ describe DownloadsController do
           expect(DownloadsController.default_file_path).to eq "content"
           get :show, id: obj
           expect(response).to be_successful
-          expect(response.headers['Content-Type']).to eq "image/png"
+          expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
           expect(response.body).to eq 'foobarfoobarfoobar'
         end
@@ -99,7 +99,7 @@ describe DownloadsController do
             it "should return it" do
               get :show, id: obj, file: "descMetadata"
               expect(response).to be_successful
-              expect(response.headers['Content-Type']).to eq "text/plain"
+              expect(response.headers['Content-Type']).to start_with "text/plain"
               expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"metadata.xml\""
               expect(response.body).to eq "It's a stream"
             end
@@ -108,14 +108,14 @@ describe DownloadsController do
         it "should support setting disposition to inline" do
           get :show, id: obj, :disposition => "inline"
           expect(response).to be_successful
-          expect(response.headers['Content-Type']).to eq "image/png"
+          expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
           expect(response.body).to eq 'foobarfoobarfoobar'
         end
         it "should allow you to specify filename for download" do
           get :show, id: obj, "filename" => "my%20dog.png"
           expect(response).to be_successful
-          expect(response.headers['Content-Type']).to eq "image/png"
+          expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"my%20dog.png\""
           expect(response.body).to eq 'foobarfoobarfoobar'
         end
@@ -128,37 +128,42 @@ describe DownloadsController do
           parent.save!
           expect(controller).to receive(:authorize!).with(:download, instance_of(ActiveFedora::File)).and_return(true)
         end
+
         it "head request" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
           head :show, id: parent, file: 'webm'
           expect(response.headers['Content-Length']).to eq 16
           expect(response.headers['Accept-Ranges']).to eq 'bytes'
-          expect(response.headers['Content-Type']).to eq 'video/webm'
+          expect(response.headers['Content-Type']).to start_with 'video/webm'
         end
-        it "should send the whole thing" do
+
+        it "sends the whole thing" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq 'one1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 0-15/16'
           expect(response.headers["Content-Length"]).to eq '16'
           expect(response.headers['Accept-Ranges']).to eq 'bytes'
-          expect(response.headers['Content-Type']).to eq "video/webm"
+          expect(response.headers['Content-Type']).to start_with "video/webm"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"MyVideo.webm\""
           expect(response.status).to eq 206
         end
-        it "should send the whole thing when the range is open ended" do
+
+        it "sends the whole thing when the range is open ended" do
           request.env["HTTP_RANGE"] = 'bytes=0-'
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq 'one1two2threfour'
         end
-        it "should get a range not starting at the beginning" do
+
+        it "gets a range not starting at the beginning" do
           request.env["HTTP_RANGE"] = 'bytes=3-15'
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq '1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 3-15/16'
           expect(response.headers["Content-Length"]).to eq '13'
         end
-        it "should get a range not ending at the end" do
+
+        it "gets a range not ending at the end" do
           request.env["HTTP_RANGE"] = 'bytes=4-11'
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq 'two2thre'
