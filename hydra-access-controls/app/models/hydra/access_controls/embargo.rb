@@ -5,13 +5,10 @@ module Hydra::AccessControls
     property :embargo_release_date, predicate: Hydra::ACL.embargoReleaseDate, multiple:false
     property :embargo_history, predicate: Hydra::ACL.embargoHistory
 
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def embargo_release_date_with_casting=(date)
-      date = DateTime.parse(date) if date && date.kind_of?(String)
-      self.embargo_release_date_without_casting = date
+    def embargo_release_date=(date)
+      date = DateTime.parse(date) if date.kind_of?(String)
+      super(date)
     end
-    alias_method_chain :embargo_release_date=, :casting
 
     def active?
       (embargo_release_date.present? && Date.today < embargo_release_date)
