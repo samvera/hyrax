@@ -96,8 +96,8 @@ describe CatalogController do
           end
           it "should convert it" do
             graph = RDF::Graph.new << RDF::Reader.for(:ntriples).new(response.body)
-            title_statement = graph.query([nil, RDF::DC.title, nil]).first
-            related_statement = graph.query([nil, RDF::DC.isReferencedBy, nil]).first
+            title_statement = graph.query([nil, RDF::Vocab::DC.title, nil]).first
+            related_statement = graph.query([nil, RDF::Vocab::DC.isReferencedBy, nil]).first
             expect(title_statement.subject).to eq RDF::URI("http://hydra.box/catalog/#{asset.id}")
             expect(related_statement.object).to eq RDF::URI("http://hydra.box/catalog/#{related.id}")
           end
