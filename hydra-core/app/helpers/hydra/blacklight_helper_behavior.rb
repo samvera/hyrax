@@ -10,12 +10,17 @@ module Hydra
     # @param [String, Array] display_type a value suggestive of a partial
     # @return [String] the name of the partial to render
     # @example
-    #   type_field_to_partial_name(["info:fedora/hull-cModel:genericContent"])
+    #   type_field_to_partial_name(["GenericContent"])
     #   => 'generic_content'
-    #   type_field_to_partial_name(["info:fedora/hull-cModel:text.pdf"])
+    #   type_field_to_partial_name(["text.pdf"])
     #   => 'text_pdf'
     def type_field_to_partial_name(document, display_type)
-      Array(display_type).first.gsub(/^[^\/]+\/[^:]+:/,"").gsub("-","_").underscore.parameterize("_")
+      str = Array(display_type).join(' '.freeze).underscore
+      if Rails.version >= '5.0.0'
+        str.parameterize(separator: '_'.freeze)
+      else
+        str.parameterize('_'.freeze)
+      end
     end
   end
 end
