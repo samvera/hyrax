@@ -14,20 +14,20 @@ describe BlacklightHelper do
       allow(helper).to receive(:blacklight_config).and_return(config)
     end
 
-    it "should lop off everything before the first colin after the slash" do
-      expect(helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"])).to eq "presentation"
-      expect(helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"])).to eq "generic_content"
+    it "changes camel case to underscored lowercase" do
+      expect(helper.document_partial_name('has_model_s' => ["Presentation"])).to eq "presentation"
+      expect(helper.document_partial_name('has_model_s' => ["GenericContent"])).to eq "generic_content"
     end
 
     context "with a single valued field" do
-      let(:field_name) { 'active_fedora_model_ssi' }
+      let(:field_name) { 'has_model_s' }
       it "should support single valued fields" do
-        expect(helper.document_partial_name('active_fedora_model_ssi' => "Chicken")).to eq "chicken"
+        expect(helper.document_partial_name('has_model_s' => "Chicken")).to eq "chicken"
       end
     end
 
-    it "should handle periods" do
-      expect(helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:text.PDF"])).to eq "text_pdf"
+    it "handles periods" do
+      expect(helper.document_partial_name('has_model_s' => ["text.PDF"])).to eq "text_pdf"
     end
   end
 end
