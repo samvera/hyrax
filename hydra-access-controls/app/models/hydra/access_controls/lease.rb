@@ -5,12 +5,10 @@ module Hydra::AccessControls
     property :lease_expiration_date, predicate: Hydra::ACL.leaseExpirationDate, multiple:false
     property :lease_history, predicate: Hydra::ACL.leaseHistory
 
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def lease_expiration_date_with_casting=(date)
-      date = DateTime.parse(date) if date && date.kind_of?(String)
-      self.lease_expiration_date_without_casting = date
+    def lease_expiration_date=(date)
+      date = DateTime.parse(date) if date.kind_of?(String)
+      super(date)
     end
-    alias_method_chain :lease_expiration_date=, :casting
 
     def active?
       lease_expiration_date.present? && Date.today < lease_expiration_date

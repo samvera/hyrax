@@ -11,16 +11,12 @@ module Hydra
       index.as :searchable
     end
 
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def description_with_first
-      description_without_first.first
+    def description
+      super.first
     end
-    alias_method_chain :description, :first
 
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def title_with_first
-      title_without_first.first
+    def title
+      super.first
     end
-    alias_method_chain :title, :first
   end
 end
