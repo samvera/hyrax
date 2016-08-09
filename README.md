@@ -79,6 +79,7 @@ Sufia has the following features:
 * Proxy deposit and transfers of ownership
 * Integration with Zotero for automatic population of user content
 * Suggested values from controlled vocabularies provided by [Questioning Authority](https://github.com/projecthydra-labs/questioning_authority)
+* [ResourceSync](http://www.openarchives.org/rs/1.0/resourcesync) capability lists and resource lists
 
 See [Sufia's documentation site](http://sufia.io/) for more non-technical documentation.
 
