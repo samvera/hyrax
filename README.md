@@ -49,7 +49,7 @@ Sufia uses the full power of [Hydra](http://projecthydra.org/) and extends it to
 
 Sufia has the following features:
 
-* Multiple file, or folder, upload
+* Multiple file upload, and folder uploads (for Chrome browser only)
 * Flexible user- and group-based access controls
 * Transcoding of audio and video files
 * Generation and validation of identifiers
