@@ -15,14 +15,30 @@ describe CurationConcerns::FileSetsController do
 
       context 'on the happy path' do
         let(:date_today) { DateTime.now }
+        let(:expected_params) do
+          { files: [file],
+            title: ['test title'],
+            visibility: 'restricted' }
+        end
+        let(:actor) { controller.send(:actor) }
 
         before do
           allow(DateTime).to receive(:now).and_return(date_today)
         end
 
         it 'calls the actor to create metadata and content' do
-          expect(controller.send(:actor)).to receive(:create_metadata).with(parent, files: [file], title: ['test title'], visibility: 'restricted')
-          expect(controller.send(:actor)).to receive(:create_content).with(file).and_return(true)
+          if Rails.version < '5.0.0'
+            expect(actor).to receive(:create_metadata).with(parent, expected_params)
+            expect(actor).to receive(:create_content).with(file).and_return(true)
+          else
+            expect(actor).to receive(:create_metadata).with(parent, ActionController::Parameters) do |_work, ac_params|
+              expect(ac_params['files'].map(&:class)).to eq [ActionDispatch::Http::UploadedFile]
+              expect(ac_params['title']).to eq expected_params[:title]
+              expect(ac_params['visibility']).to eq expected_params[:visibility]
+            end
+            expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
+          end
+
           xhr :post, :create, parent_id: parent,
                               file_set: { files: [file],
                                           title: ['test title'],
@@ -62,7 +78,7 @@ describe CurationConcerns::FileSetsController do
       context 'when solr is down' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:create_content).with(file).and_raise(RSolr::Error::Http.new({}, {}))
+          allow(controller.send(:actor)).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
         end
 
         it 'errors out of create after on continuous rsolr error' do
@@ -75,7 +91,7 @@ describe CurationConcerns::FileSetsController do
       context 'when the file is not created' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:create_content).with(file).and_return(false)
+          allow(controller.send(:actor)).to receive(:create_content).and_return(false)
         end
 
         it 'errors out of create after on continuous rsolr error' do

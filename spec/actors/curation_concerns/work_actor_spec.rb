@@ -94,13 +94,15 @@ describe CurationConcerns::Actors::GenericWorkActor do
         end
 
         context 'authenticated visibility' do
+          let(:file_actor) { double }
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
             redlock_client_stub
+            allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 
           it 'stamps each file with the access rights' do
-            expect(CharacterizeJob).to receive(:perform_later)
+            expect(file_actor).to receive(:ingest_file).and_return(true)
             expect(subject.create(attributes)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
@@ -108,18 +110,16 @@ describe CurationConcerns::Actors::GenericWorkActor do
             expect(curation_concern.depositor).to eq user.user_key
             expect(curation_concern.representative).to_not be_nil
             expect(curation_concern.file_sets.size).to eq 1
-            # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
-            file_set = curation_concern.file_sets.first
-            file.rewind
-            expect(file_set.reload.original_file.content).to eq file.read
-
             expect(curation_concern).to be_authenticated_only_access
+            # Sanity test to make sure the file_set has same permission as parent.
+            file_set = curation_concern.file_sets.first
             expect(file_set).to be_authenticated_only_access
           end
         end
       end
 
       context 'with multiple files file' do
+        let(:file_actor) { double }
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
             a[:files] = [file, file]
@@ -130,10 +130,11 @@ describe CurationConcerns::Actors::GenericWorkActor do
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
             redlock_client_stub
+            allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 
           it 'stamps each file with the access rights' do
-            expect(CharacterizeJob).to receive(:perform_later).twice
+            expect(file_actor).to receive(:ingest_file).and_return(true).twice
 
             expect(subject.create(attributes)).to be true
             expect(curation_concern).to be_persisted

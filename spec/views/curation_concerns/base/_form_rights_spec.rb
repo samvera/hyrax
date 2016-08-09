@@ -23,14 +23,16 @@ describe 'curation_concerns/base/_form_rights.html.erb' do
       render inline: form_template, locals: { curation_concern: curation_concern }
     end
 
-    it 'will only include active values if the current value is active' do
-      expect(rendered).not_to have_xpath('//div/ul/li[1]/select/option[@value="demo_id_04"]')
-      expect(rendered).not_to have_xpath('//div/ul/li[1]/select/option[text()="Fourth is an Inactive Term"]')
-    end
+    it 'will only include inactive values if the current value is inactive' do
+      # only one of the select boxes will have the inactive rights statement
+      expect(rendered).to have_xpath('//option[@value="demo_id_04"]', count: 1)
+      # and it will be the selected option.
+      expect(rendered).to have_xpath('//option[@value="demo_id_04" and @selected]', count: 1)
 
-    it 'will always include the current value as an option' do
-      expect(rendered).to have_xpath('//div/ul/li[2]/select/option[@value="demo_id_04" and @selected="selected"]')
-      expect(rendered).to have_xpath('//div/ul/li[2]/select/option[text()="Fourth is an Inactive Term"]')
+      # the active values will be available in each select box
+      expect(rendered).to have_xpath('//option[@value="demo_id_01"]', count: 3)
+      # and one will be selected
+      expect(rendered).to have_xpath('//option[@value="demo_id_01" and @selected]', count: 1)
     end
 
     it 'only offers active values to add to a work' do

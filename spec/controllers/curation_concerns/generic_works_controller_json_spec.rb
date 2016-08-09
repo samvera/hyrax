@@ -75,8 +75,9 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'failed update' do
-      before { post :update, id: resource, generic_work: { title: [] }, format: :json }
-
+      before do
+        post :update, id: resource, generic_work: { title: [''] }, format: :json
+      end
       it "returns 422 and the errors" do
         expect(response).to respond_unprocessable_entity(errors: { title: ["Your work must have a title."] })
       end

@@ -127,7 +127,7 @@ describe CollectionsController do
                        batch_document_ids: [asset4.id]
         }.to change { collection.reload.members.size }.by(1)
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
-        expect(assigns[:collection].members).to eq [asset1, asset2, asset4]
+        expect(assigns[:collection].members).to match_array [asset1, asset2, asset4]
 
         asset_results = ActiveFedora::SolrService.instance.conn.get 'select', params: { fq: ["id:\"#{asset2.id}\""], fl: ['id'] }
         expect(asset_results['response']['numFound']).to eq 1

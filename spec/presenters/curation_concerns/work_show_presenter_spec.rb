@@ -77,7 +77,6 @@ describe CurationConcerns::WorkShowPresenter do
     let(:attributes) { obj.to_solr }
 
     it "displays them in order" do
-      expect(obj.ordered_member_ids).not_to eq obj.member_ids
       expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
     end
 

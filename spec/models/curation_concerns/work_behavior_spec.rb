@@ -19,7 +19,8 @@ describe CurationConcerns::WorkBehavior do
   end
   describe '#to_s' do
     it 'uses the provided titles' do
-      subject.title = %w(Hello World)
+      # The title property would return the terms in random order, so stub the behavior:
+      allow(subject).to receive(:title).and_return(%w(Hello World))
       expect(subject.to_s).to eq('Hello | World')
     end
   end
