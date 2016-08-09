@@ -34,8 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'qa', '~> 0.5'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'solrizer', '~> 3.4'
-  spec.add_dependency 'deprecation', '~> 1.0'
-  spec.add_dependency 'rdf', '~> 1.99'
+  spec.add_dependency 'rdf', '>= 1.99'
   spec.add_dependency 'rdf-vocab', '~> 0'
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
@@ -43,7 +42,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.13', '>= 0.13.1'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
-  spec.add_development_dependency "devise", "~> 3.0"
+  spec.add_development_dependency 'devise', '>= 3.0', '< 5'
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "engine_cart", "~> 0.9"
