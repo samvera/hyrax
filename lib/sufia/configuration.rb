@@ -63,6 +63,12 @@ module Sufia
       @active_deposit_agreement_acceptance
     end
 
+    attr_writer :work_requires_files
+    def work_requires_files
+      return true if @work_requires_files.nil?
+      @work_requires_files
+    end
+
     attr_writer :batch_user_key
     def batch_user_key
       @batch_user_key ||= 'batchuser@example.com'
