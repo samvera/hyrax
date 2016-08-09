@@ -264,4 +264,10 @@ describe SufiaHelper, type: :helper do
       )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, <a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
     end
   end
+
+  describe "#human_readable_date" do
+    it "ensures that the display of the date is human-readable" do
+      expect(helper.human_readable_date(value: ["2016-08-15T00:00:00Z"])).to eq("08/15/2016")
+    end
+  end
 end
