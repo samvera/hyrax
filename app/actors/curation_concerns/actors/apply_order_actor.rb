@@ -15,12 +15,14 @@ module CurationConcerns
           (existing_members_ids - ordered_member_ids).each do |old_id|
             work = ::ActiveFedora::Base.find(old_id)
             curation_concern.ordered_members.delete(work)
+            curation_concern.members.delete(work)
           end
 
           (ordered_member_ids - existing_members_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
             curation_concern.ordered_members << work
           end
+          curation_concern.save
           true
         end
 

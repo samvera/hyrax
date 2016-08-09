@@ -56,5 +56,25 @@ describe CurationConcerns::Actors::ApplyOrderActor do
         expect(subject.update(attributes)).to be true
       end
     end
+
+    context 'without an ordered_member_id that was associated with the curation concern' do
+      let(:curation_concern) { create(:work_with_two_children, user: user) }
+      let(:attributes) { { ordered_member_ids: ["Blah2"] } }
+      let(:root_actor) { double }
+      before do
+        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+        allow(root_actor).to receive(:update).with({}).and_return(true)
+        child.title = ["Generic Title"]
+        child.apply_depositor_metadata(user.user_key)
+        child.save!
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+      end
+      it "removes the first child" do
+        expect(subject.update(attributes)).to be true
+        expect(curation_concern.members.size).to eq(1)
+        expect(curation_concern.ordered_member_ids.size).to eq(1)
+      end
+    end
   end
 end
