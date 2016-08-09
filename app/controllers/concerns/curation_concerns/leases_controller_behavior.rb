@@ -4,10 +4,6 @@ module CurationConcerns
     include CurationConcerns::ManagesEmbargoes
     include CurationConcerns::Collections::AcceptsBatches
 
-    included do
-      skip_before_action :normalize_identifier, only: :update
-    end
-
     def index
       authorize! :index, Hydra::AccessControls::Lease
     end
