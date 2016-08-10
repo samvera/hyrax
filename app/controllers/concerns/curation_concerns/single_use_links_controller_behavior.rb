@@ -1,6 +1,7 @@
 module CurationConcerns
   module SingleUseLinksControllerBehavior
     extend ActiveSupport::Concern
+    include Blacklight::SearchHelper
     included do
       class_attribute :show_presenter
       self.show_presenter = CurationConcerns::SingleUseLinkPresenter
@@ -18,12 +19,12 @@ module CurationConcerns
     end
 
     def create_download
-      @su = SingleUseLink.create itemId: params[:id], path: main_app.download_path(id: asset)
+      @su = SingleUseLink.create itemId: params[:id], path: main_app.download_path(id: params[:id])
       render text: curation_concerns.download_single_use_link_url(@su.downloadKey)
     end
 
     def create_show
-      @su = SingleUseLink.create itemId: params[:id], path: polymorphic_path([main_app, asset])
+      @su = SingleUseLink.create(itemId: params[:id], path: asset_show_path)
       render text: curation_concerns.show_single_use_link_url(@su.downloadKey)
     end
 
@@ -40,11 +41,11 @@ module CurationConcerns
     protected
 
       def authorize_user!
-        authorize! :edit, asset
+        authorize! :edit, params[:id]
       end
 
-      def asset
-        @asset ||= ActiveFedora::Base.load_instance_from_solr(params[:id])
+      def asset_show_path
+        polymorphic_path([main_app, fetch(params[:id]).last])
       end
   end
 end

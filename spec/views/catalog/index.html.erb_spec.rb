@@ -34,9 +34,6 @@ describe 'catalog/index.html.erb' do
     allow(resp).to receive(:limit_value).and_return(10)
     allow(resp).to receive(:empty?).and_return(false)
 
-    # This stubs out the SolrDocument#to_model
-    allow(ActiveFedora::Base).to receive(:load_instance_from_solr).with('abc123', doc).and_return(collection)
-
     assign(:document_list, [doc])
   end
 

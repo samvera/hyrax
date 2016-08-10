@@ -51,6 +51,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency 'rspec-html-matchers'
+  spec.add_development_dependency 'equivalent-xml'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.5'
   spec.add_development_dependency "poltergeist", ">= 1.5.0"

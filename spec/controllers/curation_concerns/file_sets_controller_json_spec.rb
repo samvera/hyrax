@@ -35,7 +35,8 @@ describe CurationConcerns::FileSetsController do
 
     describe 'not found' do
       before { get :show, id: "non-existent-pid", format: :json }
-      it { is_expected.to respond_not_found(description: 'Could not find a resource that matches your request.') }
+      # Respond with forbidden to protect against object enumeration attack
+      it { is_expected.to respond_forbidden }
     end
 
     describe 'created' do
@@ -83,7 +84,8 @@ describe CurationConcerns::FileSetsController do
     describe 'found' do
       before { resource_request }
       it "returns json of the work" do
-        expect(assigns[:file_set]).to be_instance_of ::FileSet # this object is used by the jbuilder template
+        # this object is used by the jbuilder template
+        expect(assigns[:presenter]).to be_instance_of CurationConcerns::FileSetPresenter
         expect(controller).to render_template('curation_concerns/file_sets/show')
         expect(response.code).to eq "200"
       end
