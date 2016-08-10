@@ -212,10 +212,14 @@ en:
       new:
         header: Add New Work
         in_collections: This Work in Collections
+        in_this_work: Other Works in this Work
+        in_other_works: This Work in Other Works
         after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
       edit:
         header: Edit Work
         in_collections: This Work in Collections
+        in_this_work: Other Works in this Work
+        in_other_works: This Work in Other Works
         additional_fields: "Additional fields"
         tab:
           metadata:      "Descriptions"
@@ -230,6 +234,8 @@ en:
       new:
         header: Batch Create New Works
         in_collections: These Works in Collections
+        in_this_work: Other Works in this Work
+        in_other_works: This Work in Other Works
       progress:
         header: Save Works
       files:
@@ -342,8 +348,15 @@ en:
     base:
       relationships:
         header: Relationships
-        empty:       "This %{type} is not currently in any collections."
-        collections: "In collections:"
+        empty: "This %{type} is not currently in any collections."
+      relationships_parent_row:
+        label: "In %{type}:"
+      relationships_parent_row_empty:
+        label: "In %{type}:"
+        empty: "There are no %{type} relationships."
+      relationships_member_rows:
+        label: "Has related %{type}:"
+        empty: "This %{type} does not have any related works."
       metadata:
         header: Descriptions
         attribute_name_label: Attribute Name
@@ -372,6 +385,7 @@ en:
       fields:
         show:
           keyword: Keyword
+
 
   helpers:
     action:

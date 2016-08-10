@@ -1,0 +1,59 @@
+<%# Form UI behavior code and details;
+Code:
+  app/assets/javascripts/sufia/relationships
+CSS:
+  table.relationships-ajax-enabled : Used by sufia JS app as selector to wire up the UI functionality
+  tr.new-row : The basic template row for cloning when user clicks "Add"
+  .btn-remove-row : Button to remove its parent TR from the table
+  .btn-add-row : Button to clone its parent TR and inject a new row into the table
+  input.new-form-control : Input field for client client side validation and additional features
+  .message.has-warning : Used to display UI errors related to input values and server errors
+HTML Properties:
+  table:
+    data-query-url : URL base to append newly added work ID to for querying details (title, href)
+%>
+<% if f.object.class.multiple? key %>
+  <div class="form-group multi_value optional work_in_works_ids managed">
+    <table class="table table-striped related-files relationships-ajax-enabled"
+           data-query-url="<%=polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: '$id') %>">
+      <thead>
+        <tr>
+          <th>Parent Work</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% curation_concern.in_works.each do |parent| %>
+          <tr>
+            <td>
+              <%= link_to "#{parent.title.first}", polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: parent.id) %>
+              <input class="string multi_value optional form-control related_works_ids form-control multi-text-field hidden" name="<%= curation_concern.model_name.param_key %>[in_works_ids][]" value="<%= parent.id %>" id="work_in_works_ids" aria-labelledby="work_in_works_ids_label" type="text">
+            </td>
+            <td>
+              <div class="child-actions">
+                <%= link_to "Edit", edit_polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: parent.id), target: "_blank", class: 'btn btn-default' %>
+                <a class="btn btn-danger btn-remove-row">Remove</a>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <tr class="new-row">
+          <td>
+            <a href="" class="title hidden"></a>
+            <input class="new-form-control string multi_value optional related_works_ids form-control multi-text-field" name="<%= curation_concern.model_name.param_key %>[in_works_ids][]" value="" aria-labelledby="work_in_works_ids_label" type="text">
+            <div class="message has-warning hidden"></div>
+          </td>
+          <td>
+            <div class="child-actions">
+              <a href="" class="edit hidden btn btn-default" target="_blank">Edit</a>
+              <a class="btn btn-danger btn-remove-row hidden">Remove</a>
+              <a class="btn btn-primary btn-add-row">Add</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <%= f.input key, required: f.object.required?(key) %>
+<% end %>

@@ -9,6 +9,7 @@ Sufia = {
         this.permissions();
         this.notifications();
         this.transfers();
+        this.relationships_table();
     },
 
     autocomplete: function () {
@@ -58,6 +59,13 @@ Sufia = {
 
     transfers: function () {
         $("#proxy_deposit_request_transfer_to").userSearch();
+    },
+
+    relationships_table: function () {
+        var rel = require('sufia/relationships/table');
+        $('table.relationships-ajax-enabled').each(function () {
+            new rel.RelationshipsTable($(this));
+        });
     }
 };
 
