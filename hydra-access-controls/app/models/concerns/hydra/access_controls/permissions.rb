@@ -7,7 +7,7 @@ module Hydra
       included do
         belongs_to :access_control, predicate: ::ACL.accessControl, class_name: 'Hydra::AccessControl'
         before_destroy do |obj|
-          access_control.destroy
+          access_control.destroy unless access_control.nil?
         end
         after_save do
           # Only force save if autosave woudn't be called normally
