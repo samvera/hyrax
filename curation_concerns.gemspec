@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'hydra-head', '>= 10.0.0', '< 11'
+  spec.add_dependency 'active-fedora', '>= 10.0.0', '< 11.a'
   spec.add_dependency 'blacklight', '~> 6.3'
   spec.add_dependency 'breadcrumbs_on_rails', '>= 2.3', '< 4'
   spec.add_dependency 'jquery-ui-rails'
@@ -35,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'solrizer', '~> 3.4'
   spec.add_dependency 'rdf', '>= 1.99'
-  spec.add_dependency 'rdf-vocab', '~> 0'
+  spec.add_dependency 'rdf-vocab', '>= 0.8'
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
