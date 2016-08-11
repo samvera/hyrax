@@ -8,7 +8,9 @@
         <legend class="legend-save-work">Requirements</legend>
         <ul class="requirements">
           <li class="incomplete" id="required-metadata">Enter required metadata</li>
-          <li class="incomplete" id="required-files">Add files</li>
+          <% if Sufia.config.work_requires_files %>
+            <li class="incomplete" id="required-files">Add files</li>
+          <% end %>
         </ul>
       </fieldset>
     </div>

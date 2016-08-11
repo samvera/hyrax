@@ -98,7 +98,8 @@ describe("SaveWorkControl", function() {
       beforeEach(function() {
         target = buildTarget(form_id)
         target.uploads = {
-          hasFiles: true
+          hasFiles: true,
+          hasFileRequirement: true
         };
       });
       it("is complete", function() {
@@ -112,7 +113,8 @@ describe("SaveWorkControl", function() {
       beforeEach(function() {
         target = buildTarget(form_id)
         target.uploads = {
-          hasFiles: false
+          hasFiles: false,
+          hasFileRequirement: true
         };
       });
 
