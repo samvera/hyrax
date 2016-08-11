@@ -65,12 +65,7 @@ module CurationConcerns
     def show
       respond_to do |wants|
         wants.html { presenter }
-        wants.json do
-          # load and authorize @curation_concern manually because it's skipped for html
-          self.curation_concern ||= curation_concern_type.load_instance_from_solr(params[:id])
-          authorize! :show, curation_concern
-          render :show, status: :ok
-        end
+        wants.json { presenter }
         additional_response_formats(wants)
       end
     end

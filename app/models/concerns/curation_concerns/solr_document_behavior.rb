@@ -16,16 +16,35 @@ module CurationConcerns
       title_or_label
     end
 
+    class ModelWrapper
+      def initialize(model, id)
+        @model = model
+        @id = id
+      end
+
+      def persisted?
+        true
+      end
+
+      def to_param
+        @id
+      end
+
+      def model_name
+        @model.model_name
+      end
+
+      def to_partial_path
+        @model._to_partial_path
+      end
+    end
     ##
     # Offer the source (ActiveFedora-based) model to Rails for some of the
     # Rails methods (e.g. link_to).
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
-      @model ||= begin
-        m = ActiveFedora::Base.load_instance_from_solr(id, self)
-        m.class == ActiveFedora::Base ? self : m
-      end
+      @model ||= ModelWrapper.new(hydra_model, id)
     end
 
     def collection?

@@ -2,9 +2,11 @@ require 'spec_helper'
 
 describe 'curation_concerns/file_sets/show.json.jbuilder' do
   let(:file_set) { create(:file_set) }
+  let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
+  let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_doc, nil) }
 
   before do
-    assign(:file_set, file_set)
+    assign(:presenter, presenter)
     render
   end
 
@@ -12,10 +14,8 @@ describe 'curation_concerns/file_sets/show.json.jbuilder' do
     json = JSON.parse(rendered)
     expect(json['id']).to eq file_set.id
     expect(json['title']).to eq file_set.title
-    expected_fields = file_set.class.fields.select { |f| ![:has_model, :create_date].include? f }
-    expected_fields << :date_created
-    expected_fields.each do |field_symbol|
-      expect(json).to have_key(field_symbol.to_s)
-    end
+    expect(json).to have_key('label')
+    expect(json).to have_key('description')
+    expect(json).to have_key('creator')
   end
 end
