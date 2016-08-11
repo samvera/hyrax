@@ -25,65 +25,65 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     end
     @sample_policies = []
     # user discover
-    policy1 = Hydra::AdminPolicy.create("test-policy1")
+    policy1 = Hydra::AdminPolicy.create(id: "test-policy1")
     policy1.default_permissions.create(:type=>"person", :access=>"discover", :name=>"sara_student")
     policy1.save!
 
     @sample_policies << policy1
 
     # user read
-    policy2 = Hydra::AdminPolicy.create("test-policy2")
+    policy2 = Hydra::AdminPolicy.create(id: "test-policy2")
     policy2.default_permissions.create(:type=>"person", :access=>"read", :name=>"sara_student")
     policy2.save!
     @sample_policies << policy2
 
     # user edit
-    policy3 = Hydra::AdminPolicy.create("test-policy3")
+    policy3 = Hydra::AdminPolicy.create(id: "test-policy3")
     policy3.default_permissions.create(:type=>"person", :access=>"edit", :name=>"sara_student")
     policy3.save!
     @sample_policies << policy3
 
 
     # group discover
-    policy4 = Hydra::AdminPolicy.create("test-policy4")
+    policy4 = Hydra::AdminPolicy.create(id: "test-policy4")
     policy4.default_permissions.create(:type=>"group", :access=>"discover", :name=>"africana-104-students")
     policy4.save!
     @sample_policies << policy4
 
     # group read
-    policy5 = Hydra::AdminPolicy.create("test-policy5")
+    policy5 = Hydra::AdminPolicy.create(id: "test-policy5")
     policy5.default_permissions.create(:type=>"group", :access=>"read", :name=>"africana-104-students")
     policy5.save!
     @sample_policies << policy5
 
     # group edit
-    policy6 = Hydra::AdminPolicy.create("test-policy6")
+    policy6 = Hydra::AdminPolicy.create(id: "test-policy6")
     policy6.default_permissions.create(:type=>"group", :access=>"edit", :name=>"africana-104-students")
     policy6.save!
     @sample_policies << policy6
 
     # public discover
-    policy7 = Hydra::AdminPolicy.create("test-policy7")
+    policy7 = Hydra::AdminPolicy.create(id: "test-policy7")
     policy7.default_permissions.create(:type=>"group", :access=>"discover", :name=>"public")
     policy7.save!
     @sample_policies << policy7
 
     # public read
-    policy8 = Hydra::AdminPolicy.create("test-policy8")
+    policy8 = Hydra::AdminPolicy.create(id: "test-policy8")
     policy8.default_permissions.create(:type=>"group", :access=>"read", :name=>"public")
     policy8.save!
     @sample_policies << policy8
 
     # user discover policies for testing that all are applied when over 10 are applicable
     (9..11).each do |i|
-      policy = Hydra::AdminPolicy.create("test-policy#{i}")
+      policy = Hydra::AdminPolicy.create(id: "test-policy#{i}")
       policy.default_permissions.create(:type=>"person", :access=>"discover", :name=>"sara_student")
       policy.save!
       @sample_policies << policy
     end
 
     # no access
-    policy_no_access = Hydra::AdminPolicy.new("test-policy_no_access")
+    policy_no_access = Hydra::AdminPolicy.new(id: "test-policy_no_access")
     policy_no_access.save!
 
     @sample_policies << policy_no_access
