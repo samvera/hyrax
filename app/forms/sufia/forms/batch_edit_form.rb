@@ -26,9 +26,9 @@ module Sufia
         def initialize_combined_fields(batch)
           combined_attributes = {}
           permissions = []
-          # For each of the files in the batch, set the attributes to be the concatination of all the attributes
+          # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
           batch.each do |doc_id|
-            work = model_class.load_instance_from_solr(doc_id)
+            work = model_class.find(doc_id)
             terms.each do |key|
               combined_attributes[key] ||= []
               combined_attributes[key] = (combined_attributes[key] + work[key]).uniq
