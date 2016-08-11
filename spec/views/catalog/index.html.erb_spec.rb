@@ -1,4 +1,3 @@
-
 describe 'catalog/index.html.erb', type: :view do
   let(:collection) { build(:collection, id: "abc123") }
   let(:doc) { SolrDocument.new(collection.to_solr) }
@@ -31,9 +30,6 @@ describe 'catalog/index.html.erb', type: :view do
     allow(resp).to receive(:current_page).and_return(1)
     allow(resp).to receive(:limit_value).and_return(10)
     allow(resp).to receive(:empty?).and_return(false)
-
-    # This stubs out the SolrDocument#to_model
-    allow(ActiveFedora::Base).to receive(:load_instance_from_solr).with('abc123', doc).and_return(collection)
 
     assign(:document_list, [doc])
   end
