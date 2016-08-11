@@ -11,7 +11,7 @@ Docs: [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.sv
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
 
-Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/) [![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.0.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.0.0)
+Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/) [![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.2.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.2.0)
 
 # Table of Contents
 
@@ -90,7 +90,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Sufia
-v7.0.0.beta1__. If you are looking for instructions on installing a different
+v7.1.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -147,7 +147,7 @@ We recommend either Ruby 2.3 or the latest 2.2 version.
 Generate a new Rails application. We recommend the latest Rails 4.2 release.
 
 ```
-gem install rails -v 4.2.7
+gem install rails -v 4.2.7.1
 rails new my_app
 ```
 
@@ -156,7 +156,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.0.0'
+gem 'sufia', '7.1.0'
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
@@ -171,7 +171,7 @@ rails generate sufia:install -f
 
 ## Generate a primary work type
 
-While earlier versions of Sufia came with a pre-defined object model, Sufia 7.0 and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
+While earlier versions of Sufia came with a pre-defined object model, Sufia 7.x and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
 
 Pass a (CamelCased) model name to Sufia's work generator to get started, e.g.:
 
