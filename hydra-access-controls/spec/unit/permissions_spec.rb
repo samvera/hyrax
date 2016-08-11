@@ -229,5 +229,9 @@ describe Hydra::AccessControls::Permissions do
     it "destroys the associated permissions" do
       expect { subject.destroy }.to change { Hydra::AccessControls::Permission.count }.by(-1)
     end
+
+    it "does not raise an exception if permissions do not exist" do
+      expect { Foo.new.destroy }.not_to raise_error(NoMethodError)
+    end
   end
 end
