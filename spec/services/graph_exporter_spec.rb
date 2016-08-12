@@ -10,7 +10,7 @@ RSpec.describe CurationConcerns::GraphExporter do
     subject { service.fetch }
     let(:ttl) { subject.dump(:ttl) }
     it "transforms suburis to hashcodes" do
-      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> a <http://projecthydra\.org/works/models#Work>,}
+      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> a ([^;]*)<http://projecthydra\.org/works/models#Work>}
       expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title";}
       expect(ttl).to match %r{<http://www\.w3\.org/ns/auth/acl#accessControl> <http://localhost/catalog/}
 

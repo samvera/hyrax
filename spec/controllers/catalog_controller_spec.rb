@@ -72,7 +72,7 @@ describe CatalogController do
       let!(:work) { FactoryGirl.create(:generic_work, user: user, title: ["All my #{srand}"]) }
       render_views
       it 'returns json' do
-        xhr :get, :index, format: :json, q: work.title
+        xhr :get, :index, format: :json, q: work.title.first
         json = JSON.parse(response.body)
         # Grab the doc corresponding to work and inspect the json
         work_json = json['docs'].first

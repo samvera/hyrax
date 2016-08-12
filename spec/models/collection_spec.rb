@@ -65,7 +65,7 @@ describe Collection, type: :model do
         subject { described_class.create!(title: ['Some title'], members: [gf1, gf2]) { |c| c.apply_depositor_metadata(user) } }
 
         it "has many files" do
-          expect(subject.reload.members).to eq [gf1, gf2]
+          expect(subject.reload.members).to match_array [gf1, gf2]
         end
       end
 
@@ -78,14 +78,14 @@ describe Collection, type: :model do
           subject.reload
           subject.members << gf2
           subject.save
-          expect(subject.reload.members).to eq [gf1, gf2]
+          expect(subject.reload.members).to match_array [gf1, gf2]
         end
 
         it "allows multiple files to be added" do
           subject.reload
           subject.add_members [gf2.id, gf3.id]
           subject.save
-          expect(subject.reload.members).to eq [gf1, gf2, gf3]
+          expect(subject.reload.members).to match_array [gf1, gf2, gf3]
         end
       end
     end

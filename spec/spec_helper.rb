@@ -81,9 +81,22 @@ RSpec.configure do |config|
     config.include Devise::TestHelpers, type: :controller
     config.include Devise::TestHelpers, type: :view
   end
+
+  config.include TestViewHelpers, type: :view
+
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
+
+  config.include(ControllerLevelHelpers, type: :helper)
+  config.before(:each, type: :helper) { initialize_controller_helpers(helper) }
+
+  config.include(ControllerLevelHelpers, type: :view)
+  config.before(:each, type: :view) { initialize_controller_helpers(view) }
+
   config.include Controllers::EngineHelpers, type: :controller
+  config.include Controllers::EngineHelpers, type: :helper
+  config.include ::Rails.application.routes.url_helpers
+
   config.include Rails.application.routes.url_helpers, type: :routing
   config.include Capybara::DSL
   config.include InputSupport, type: :input

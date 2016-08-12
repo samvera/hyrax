@@ -42,6 +42,13 @@ describe CurationConcerns::FileSetAuditService do
     end
 
     context 'when no audit is pasing' do
+      around do |example|
+        original_adapter = ActiveJob::Base.queue_adapter
+        ActiveJob::Base.queue_adapter = :inline
+        example.run
+        ActiveJob::Base.queue_adapter = original_adapter
+      end
+
       before do
         CurationConcerns::VersioningService.create(f.original_file)
         ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
@@ -54,6 +61,13 @@ describe CurationConcerns::FileSetAuditService do
   end
 
   describe '#human_readable_audit_status' do
+    around do |example|
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :inline
+      example.run
+      ActiveJob::Base.queue_adapter = original_adapter
+    end
+
     before do
       CurationConcerns::VersioningService.create(f.original_file)
       ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')

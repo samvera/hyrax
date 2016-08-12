@@ -17,12 +17,16 @@ module CurationConcerns
         first_actor_class.new(curation_concern, user, inner_stack)
       end
 
-      def create(attributes)
-        actor.create(attributes.with_indifferent_access)
+      # @param [ActionController::Parameters,Hash,NilClass] new_attributes
+      def create(new_attributes)
+        new_attributes ||= {}
+        actor.create(new_attributes.with_indifferent_access)
       end
 
-      def update(attributes)
-        actor.update(attributes.with_indifferent_access)
+      # @param [ActionController::Parameters,Hash,NilClass] new_attributes
+      def update(new_attributes)
+        new_attributes ||= {}
+        actor.update(new_attributes.with_indifferent_access)
       end
 
       def destroy

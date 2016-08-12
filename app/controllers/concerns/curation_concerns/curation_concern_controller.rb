@@ -166,7 +166,9 @@ module CurationConcerns::CurationConcernController
     end
 
     def attributes_for_actor
-      form_class.model_attributes(params[hash_key_for_curation_concern])
+      raw_params = params[hash_key_for_curation_concern]
+      return unless raw_params
+      form_class.model_attributes(raw_params)
     end
 
     def hash_key_for_curation_concern

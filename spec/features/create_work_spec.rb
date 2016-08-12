@@ -15,7 +15,7 @@ feature 'Creating a new Work' do
     sign_in user
 
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
-    expect(CharacterizeJob).to receive(:perform_later)
+    allow(CharacterizeJob).to receive(:perform_later)
     redlock_client_stub
   end
 

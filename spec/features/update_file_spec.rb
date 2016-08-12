@@ -5,6 +5,13 @@ feature 'Editing attached files' do
   let!(:parent) { create(:work_with_one_file, user: user) }
   let!(:file_set) { parent.file_sets.first }
 
+  around do |example|
+    original_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :inline
+    example.run
+    ActiveJob::Base.queue_adapter = original_adapter
+  end
+
   before do
     sign_in user
 

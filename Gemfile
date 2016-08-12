@@ -46,3 +46,8 @@ else
 end
 # END ENGINE_CART BLOCK
 
+gem 'rails-controller-testing' if !ENV['RAILS_VERSION'] || ENV['RAILS_VERSION'] =~ /^5\./
+
+unless File.exist?(file)
+  eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__))
+end

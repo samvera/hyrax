@@ -180,7 +180,12 @@ describe CurationConcerns::GenericWorksController do
 
     it "can update file membership" do
       patch :update, id: work, generic_work: { ordered_member_ids: ['foo_123'] }
-      expect(actor).to have_received(:update).with(ordered_member_ids: ['foo_123'])
+      expected_params = { ordered_member_ids: ['foo_123'] }
+      if Rails.version < '5.0.0'
+        expect(actor).to have_received(:update).with(expected_params)
+      else
+        expect(actor).to have_received(:update).with(ActionController::Parameters.new(expected_params).permit!)
+      end
     end
 
     describe 'changing rights' do

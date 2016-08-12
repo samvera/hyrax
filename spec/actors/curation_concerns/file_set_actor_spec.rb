@@ -108,7 +108,7 @@ describe CurationConcerns::Actors::FileSetActor do
 
       subject { file_set.title }
 
-      it { is_expected.to eql [short_name] }
+      it { is_expected.to match_array [short_name] }
     end
 
     context 'when a label is already specified' do
