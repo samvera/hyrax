@@ -66,12 +66,6 @@ module Sufia
       copy_file 'config/analytics.yml', 'config/analytics.yml'
     end
 
-    def solr_config
-      say_status("info", "GENERATING SUFIA FULL-TEXT", :blue)
-      source = File.expand_path("../../../../solr/config/solrconfig.xml", __FILE__)
-      copy_file source, 'solr/conf/solrconfig.xml', force: true
-    end
-
     # Adds user stats-related methods
     def user_stats
       file_path = "app/models/#{model_name.underscore}.rb"
