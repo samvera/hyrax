@@ -57,6 +57,21 @@
     <defaultQuery>*:*</defaultQuery>
   </admin>
 
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.ulog.dir:}</str>
+    </updateLog>
+
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+
+    <autoSoftCommit>
+      <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+    </autoSoftCommit>
+  </updateHandler>
+
   <!-- SearchHandler
 
        http://wiki.apache.org/solr/SearchHandler
@@ -87,7 +102,6 @@
        -->
         <str name="qf">
           id
-          active_fedora_model_ssi
           title_tesim
           author_tesim
           subject_tesim
@@ -119,9 +133,6 @@
 
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
-       <str name="facet.limit">10</str>
-       <str name="facet.field">active_fedora_model_ssi</str>
-       <str name="facet.field">subject_sim</str>
 
        <str name="spellcheck">true</str>
        <str name="spellcheck.dictionary">default</str>
@@ -174,6 +185,17 @@
       <str name="rows">1</str>
       <str name="q">{!term f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
     </lst>
+  </requestHandler>
+
+  <searchComponent name="termsComponent" class="solr.TermsComponent" />
+
+  <requestHandler name="/terms" class="solr.SearchHandler">
+    <lst name="defaults">
+      <bool name="terms">true</bool>
+    </lst>
+    <arr name="components">
+      <str>termsComponent</str>
+    </arr>
   </requestHandler>
 
 <!-- Spell Check
