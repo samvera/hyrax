@@ -1,17 +1,17 @@
 <h2><%= t('.header') %></h2>
-<% if presenter.file_set_presenters.present? %>
+<% if presenter.member_presenters.present? %>
   <table class="table table-striped related-files">
     <thead>
       <tr>
-        <th>File</th>
-        <th>Filename</th>
-        <th>Date Uploaded</th>
-        <th>Visibility</th>
-        <th>Actions</th>
+        <th><%= t('.thumbnail') %></th>
+        <th><%= t('.title') %></th>
+        <th><%= t('.date_uploaded') %></th>
+        <th><%= t('.visibility') %></th>
+        <th><%= t('.actions') %></th>
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.file_set_presenters %>
+      <%= render partial: 'member', collection: presenter.member_presenters %>
     </tbody>
   </table>
 <% elsif can? :edit, presenter.id %>

@@ -354,15 +354,17 @@ en:
       relationships_parent_row_empty:
         label: "In %{type}:"
         empty: "There are no %{type} relationships."
-      relationships_member_rows:
-        label: "Has related %{type}:"
-        empty: "This %{type} does not have any related works."
       metadata:
         header: Descriptions
         attribute_name_label: Attribute Name
         attribute_values_label: Values
       items:
         header: Items
+        thumbnail: Thumbnail
+        title: Title
+        date_uploaded: "Date Uploaded"
+        visibility: Visibility
+        actions: Actions
         empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
       citations:
         header: 'Citations:'
