@@ -19,14 +19,12 @@ module CurationConcerns
 
       # @param [ActionController::Parameters,Hash,NilClass] new_attributes
       def create(new_attributes)
-        new_attributes ||= {}
-        actor.create(new_attributes.with_indifferent_access)
+        actor.create(cast_to_indifferent_hash(new_attributes))
       end
 
       # @param [ActionController::Parameters,Hash,NilClass] new_attributes
       def update(new_attributes)
-        new_attributes ||= {}
-        actor.update(new_attributes.with_indifferent_access)
+        actor.update(cast_to_indifferent_hash(new_attributes))
       end
 
       def destroy
@@ -37,6 +35,20 @@ module CurationConcerns
         end
         curation_concern.destroy
       end
+
+      private
+
+        # @param [ActionController::Parameters,Hash,NilClass] new_attributes
+        def cast_to_indifferent_hash(new_attributes)
+          new_attributes ||= {}
+          if new_attributes.respond_to?(:to_unsafe_h)
+            # This is the typical (not-ActionView::TestCase) code path.
+            new_attributes = new_attributes.to_unsafe_h
+          end
+          # In Rails 5 to_unsafe_h returns a HashWithIndifferentAccess, in Rails 4 it returns Hash
+          new_attributes = new_attributes.with_indifferent_access if new_attributes.instance_of? Hash
+          new_attributes
+        end
     end
   end
 end

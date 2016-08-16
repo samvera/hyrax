@@ -197,7 +197,7 @@ module CurationConcerns
       #   search_field: 'all_fields'
       # @return <Hash> the inputs required for the collection member search builder
       def params_for_members_query
-        params.symbolize_keys.merge(q: params[:cq])
+        params.merge(q: params[:cq])
       end
 
       def collection_member_search_builder
