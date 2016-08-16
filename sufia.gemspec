@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.16.beta'
   spec.add_dependency 'daemons', '~> 1.1'
-  spec.add_dependency 'mail_form', '~> 1.5'
   spec.add_dependency 'yaml_db', '~> 0.2'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'select2-rails', '~> 3.5.9'
