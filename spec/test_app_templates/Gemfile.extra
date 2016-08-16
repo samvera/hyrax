@@ -1,6 +1,6 @@
 # placeholder to use for pinning against specific gem commit references
 
-gem 'breadcrumbs_on_rails', git: 'https://github.com/jcoyne/breadcrumbs_on_rails.git', branch: 'alternative_fix'
+gem 'breadcrumbs_on_rails', git: 'https://github.com/weppos/breadcrumbs_on_rails.git'
 
 group :development do
   gem 'better_errors'
