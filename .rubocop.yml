@@ -83,6 +83,16 @@ Style/SingleLineBlockParams:
 Rails:
   Enabled: true
 
+Rails/OutputSafety:
+  Exclude:
+    - 'spec/views/my/_list_works.html.erb_spec.rb'
+    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/helpers/sufia/content_block_helper_behavior.rb'
+    - 'app/builders/sufia/form_builder.rb'
+    - 'app/helpers/sufia/citations_behaviors/formatters/apa_formatter.rb'
+    - 'app/helpers/sufia/citations_behaviors/formatters/chicago_formatter.rb'
+    - 'app/helpers/sufia/citations_behaviors/formatters/mla_formatter.rb'
+
 RSpec/DescribeClass:
   Exclude:
     - 'spec/tasks/rake_spec.rb'

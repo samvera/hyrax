@@ -49,7 +49,7 @@ module API
       end
 
       def token
-        (request.get? || request.delete?) ? params[:token] : item['token']
+        request.get? || request.delete? ? params[:token] : item['token']
       end
 
       def user

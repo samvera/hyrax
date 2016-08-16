@@ -58,7 +58,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
-  spec.add_development_dependency 'rubocop', '~> 0.40.0'
+  spec.add_development_dependency 'rubocop', '~> 0.42.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.5'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
 end
