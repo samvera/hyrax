@@ -22,7 +22,7 @@ describe ContactFormController do
 
   describe "#create" do
     subject { flash }
-    before { post :create, contact_form: params }
+    before { post :create, sufia_contact_form: params }
     context "with the required parameters" do
       let(:params) { required_params }
       its(:notice) { is_expected.to eq("Thank you for your message!") }
@@ -63,7 +63,7 @@ describe ContactFormController do
     context "with a successful email" do
       it "calls #after_deliver" do
         expect(controller).to receive(:after_deliver)
-        post :create, contact_form: required_params
+        post :create, sufia_contact_form: required_params
       end
     end
     context "with an unsuccessful email" do
@@ -78,11 +78,11 @@ describe ContactFormController do
     let(:logger) { double }
     before do
       allow(controller).to receive(:logger).and_return(logger)
-      allow(ContactForm).to receive(:new).and_raise(RuntimeError)
+      allow(Sufia::ContactMailer).to receive(:contact).and_raise(RuntimeError)
     end
     it "is logged via Rails" do
       expect(logger).to receive(:error).with("Contact form failed to send: #<RuntimeError: RuntimeError>")
-      post :create, contact_form: required_params
+      post :create, sufia_contact_form: required_params
     end
   end
 end
