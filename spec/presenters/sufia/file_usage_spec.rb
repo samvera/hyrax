@@ -93,10 +93,10 @@ describe FileUsage, type: :model do
       expect(usage.to_flot[1][:data]).to include(*download_output)
     end
 
-    let(:create_date) { DateTime.new(2014, 01, 01).iso8601 }
+    let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
 
     describe "analytics start date set" do
-      let(:earliest) { DateTime.new(2014, 01, 02).iso8601 }
+      let(:earliest) { DateTime.new(2014, 1, 2).iso8601 }
 
       before do
         Sufia.config.analytic_start_date = earliest
