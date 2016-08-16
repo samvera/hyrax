@@ -14,7 +14,7 @@ describe CurationConcerns::Actors::ApplyOrderActor do
     end
 
     context 'with ordered_member_ids that are already associated with the parent' do
-      let(:attributes) { { ordered_member_ids: ["Blah"] } }
+      let(:attributes) { { ordered_member_ids: ["BlahBlah1"] } }
       let(:root_actor) { double }
       before do
         allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
@@ -61,7 +61,7 @@ describe CurationConcerns::Actors::ApplyOrderActor do
 
     context 'without an ordered_member_id that was associated with the curation concern' do
       let(:curation_concern) { create(:work_with_two_children, user: user) }
-      let(:attributes) { { ordered_member_ids: ["Blah2"] } }
+      let(:attributes) { { ordered_member_ids: ["BlahBlah2"] } }
       let(:root_actor) { double }
       before do
         allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)

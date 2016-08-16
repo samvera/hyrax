@@ -31,8 +31,8 @@ FactoryGirl.define do
 
     factory :work_with_two_children do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "Blah")
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "Blah2")
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
       end
     end
 
