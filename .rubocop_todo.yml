@@ -46,6 +46,9 @@ Rails/HasAndBelongsToMany:
     - 'app/models/domain_term.rb'
     - 'app/models/local_authority.rb'
 
+RSpec/NamedSubject:
+  Enabled: false
+
 RSpec/ExampleLength:
   Max: 7 
   Exclude:
