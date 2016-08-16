@@ -1,10 +1,4 @@
-Blacklight.onLoad(function() {
-  $("li[data-reorder-id]").each(function(index, element) {
-    let manager_member = new FileManagerMember($(element), window.save_manager)
-    $(element).data("file_manager_member", manager_member)
-  })
-})
-class InputTracker {
+export class InputTracker {
   constructor(element, notifier) {
     this.element = element
     this.notifier = notifier
@@ -28,7 +22,7 @@ class InputTracker {
     }
   }
 }
-class FileManagerMember {
+export class FileManagerMember {
   constructor(element, save_manager) {
     this.element = element
     this.save_manager = save_manager

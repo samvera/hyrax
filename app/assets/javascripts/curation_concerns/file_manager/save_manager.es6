@@ -1,4 +1,4 @@
-class SaveManager {
+export default class SaveManager {
   constructor() {
     this.override_save_button()
     this.elements = []
@@ -66,5 +66,3 @@ class SaveManager {
     }
   }
 }
-
-window.save_manager = new SaveManager
