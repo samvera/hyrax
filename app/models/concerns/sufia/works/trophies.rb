@@ -6,7 +6,7 @@ module Sufia::Works
     end
 
     def cleanup_trophies
-      Trophy.destroy_all(work_id: id)
+      Trophy.where(work_id: id).destroy_all
     end
   end
 end

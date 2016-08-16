@@ -4,7 +4,12 @@ Coveralls.wear!
 ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
-if ENV['COVERAGE'] || ENV['TRAVIS']
+def coverage_needed?
+  (!ENV['RAILS_VERSION'] || ENV['RAILS_VERSION'].start_with?('5.0')) &&
+    (ENV['COVERAGE'] || ENV['TRAVIS'])
+end
+
+if coverage_needed?
   require 'simplecov'
   SimpleCov.root(File.expand_path('../..', __FILE__))
   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
@@ -23,6 +28,7 @@ EngineCart.load_application!
 require 'devise'
 require 'devise/version'
 require 'mida'
+require 'rails-controller-testing' if Rails::VERSION::MAJOR >= 5
 require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/matchers'
@@ -40,6 +46,8 @@ require 'byebug' unless ENV['TRAVIS']
 Capybara.default_driver = :rack_test      # This is a faster driver
 Capybara.javascript_driver = :poltergeist # This is slower
 Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
+
+ActiveJob::Base.queue_adapter = :inline
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)

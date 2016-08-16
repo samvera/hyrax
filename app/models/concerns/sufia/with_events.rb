@@ -1,7 +1,11 @@
 module Sufia
   module WithEvents
     def stream
-      Nest.new(self.class.name)[to_param]
+      Nest.new(event_class)[to_param]
+    end
+
+    def event_class
+      self.class.name
     end
 
     def event_store

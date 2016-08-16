@@ -18,7 +18,9 @@ Gem::Specification.new do |spec|
   spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 1.3', '>= 1.3.3'
+  spec.add_dependency 'curation_concerns', '~> 1.4'
+  # This is not required, but helps bundler resolve a bundle faster:
+  spec.add_dependency 'hydra-head', '>= 10.1'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '>= 0.10.3'
   spec.add_dependency 'blacklight-gallery', '~> 0.1'
@@ -60,4 +62,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.42.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.5'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
+  spec.add_development_dependency 'rails-controller-testing', '~> 0'
 end

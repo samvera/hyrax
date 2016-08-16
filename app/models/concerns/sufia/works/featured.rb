@@ -7,7 +7,7 @@ module Sufia::Works
     end
 
     def cleanup_featured_works
-      FeaturedWork.destroy_all(work_id: id)
+      FeaturedWork.where(work_id: id).destroy_all
     end
 
     def check_featureability

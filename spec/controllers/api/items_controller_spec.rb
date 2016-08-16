@@ -196,7 +196,8 @@ describe API::ItemsController, type: :controller do
 
       it 'calls the arkivo actor to update the work' do
         expect(arkivo_actor).to receive(:update_work_from_item)
-        put :update, put_item, id: gw.id, format: :json
+        request.env['RAW_POST_DATA'] = put_item
+        put :update, id: gw.id, format: :json
       end
     end
 
@@ -212,7 +213,8 @@ describe API::ItemsController, type: :controller do
         allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
 
         # Post an update to a work with a nil arkivo_checksum
-        put :update, put_item, id: non_arkivo_gw.id, format: :json
+        request.env['RAW_POST_DATA'] = put_item
+        put :update, id: non_arkivo_gw.id, format: :json
       end
 
       it "is forbidden" do
@@ -229,7 +231,8 @@ describe API::ItemsController, type: :controller do
         allow(relation).to receive(:find).with(gw.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
-        put :update, put_item, id: gw.id, format: :json
+        request.env['RAW_POST_DATA'] = put_item
+        put :update, id: gw.id, format: :json
       end
 
       it "is not found" do
@@ -244,7 +247,8 @@ describe API::ItemsController, type: :controller do
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(false)
         # Post an update with an resource unauthorized for the user
-        put :update, put_item, id: gw.id, format: :json
+        request.env['RAW_POST_DATA'] = put_item
+        put :update, id: gw.id, format: :json
       end
 
       it "is unauthorized" do
@@ -259,7 +263,10 @@ describe API::ItemsController, type: :controller do
       let(:bad_token) { 'unfamiliar_token' }
       let(:bad_token_item) { FactoryGirl.json(:put_item, token: bad_token) }
 
-      before { put :update, bad_token_item, id: gw.id, format: :json }
+      before do
+        request.env['RAW_POST_DATA'] = bad_token_item
+        put :update, id: gw.id, format: :json
+      end
 
       it "is unauthorized" do
         expect(subject).not_to be_success
@@ -270,7 +277,10 @@ describe API::ItemsController, type: :controller do
 
     context 'with an invalid item' do
       let(:invalid_item) { { foo: 'bar' }.to_json }
-      before { put :update, invalid_item, id: gw.id, format: :json }
+      before do
+        request.env['RAW_POST_DATA'] = invalid_item
+        put :update, id: gw.id, format: :json
+      end
 
       it "is a bad request" do
         expect(subject).to have_http_status(400)

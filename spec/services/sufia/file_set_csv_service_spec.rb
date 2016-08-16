@@ -17,6 +17,7 @@ describe Sufia::FileSetCSVService do
   let(:solr_document) { SolrDocument.new(file.to_solr) }
 
   before do
+    allow(file).to receive(:resource_type).and_return(['Book', 'Other'])
     allow(file).to receive(:original_file).and_return(mock_file)
   end
 

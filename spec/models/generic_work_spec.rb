@@ -5,8 +5,10 @@ describe GenericWork do
   end
 
   describe "basic metadata" do
+    before do
+      allow(subject).to receive(:title).and_return(['foo', 'bar'])
+    end
     it "has dc properties" do
-      subject.title = ['foo', 'bar']
       expect(subject.title).to eq ['foo', 'bar']
     end
   end

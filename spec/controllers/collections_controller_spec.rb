@@ -169,7 +169,7 @@ describe CollectionsController do
 
       context "with a referer" do
         before do
-          allow(controller.request).to receive(:referer).and_return('foo')
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
         end
 
         it "sets breadcrumbs" do
@@ -210,7 +210,7 @@ describe CollectionsController do
 
     context "with a referer" do
       before do
-        allow(controller.request).to receive(:referer).and_return('foo')
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
       it "sets breadcrumbs" do

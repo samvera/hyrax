@@ -5,7 +5,7 @@ describe CitationsController do
     let(:work) { create(:work, user: user) }
     before do
       sign_in user
-      allow(controller.request).to receive(:referer).and_return('foo')
+      request.env['HTTP_REFERER'] = 'http://test.host/foo'
     end
 
     it "is successful" do

@@ -11,11 +11,11 @@ describe StatsController do
     context 'when user has access to file' do
       before do
         sign_in user
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
       it 'renders the stats view' do
         expect(FileUsage).to receive(:new).with(file_set.id).and_return(usage)
-        allow(controller.request).to receive(:referer).and_return('foo')
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
@@ -52,7 +52,7 @@ describe StatsController do
     let(:work) { create(:generic_work, user: user) }
     before do
       sign_in user
-      allow(controller.request).to receive(:referer).and_return('foo')
+      request.env['HTTP_REFERER'] = 'http://test.host/foo'
     end
 
     it 'renders the stats view' do

@@ -1,6 +1,7 @@
 module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
     include Sufia::CharacterizationBehavior
+    include WithEvents
 
     delegate :depositor, :keyword, :date_created, :date_modified, :itemtype,
              to: :solr_document
@@ -27,8 +28,13 @@ module Sufia
       Sufia::Engine.routes.url_helpers.stats_file_path(self)
     end
 
-    def events
-      @events ||= solr_document.to_model.events(100)
+    def events(size = 100)
+      super(size)
+    end
+
+    # This overrides the method in WithEvents
+    def event_class
+      solr_document.to_model.model_name.name
     end
 
     def audit_status

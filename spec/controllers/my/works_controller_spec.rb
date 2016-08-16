@@ -25,21 +25,12 @@ describe My::WorksController, type: :controller do
     let!(:my_file)          { create(:file_set, user: user) }
     let!(:wrong_type)       { ActiveFedora::Base.create! }
 
-    let(:doc_ids)          { assigns[:document_list].map(&:id) }
-    let(:user_collections) { assigns[:user_collections].map(&:id) }
-    let(:sufia) do
-      Sufia::Engine.routes.url_helpers
-    end
-    before do
-      allow(controller.request).to receive(:referer).and_return("http://...blargh/")
-    end
-
     it 'shows only the correct records' do
       get :index
       expect(response).to be_successful
       expect(response).to render_template :index
-      expect(doc_ids).to contain_exactly(my_work.id)
-      expect(user_collections).to contain_exactly(my_collection.id)
+      expect(assigns[:document_list].map(&:id)).to contain_exactly(my_work.id)
+      expect(assigns[:user_collections].map(&:id)).to contain_exactly(my_collection.id)
     end
   end
 

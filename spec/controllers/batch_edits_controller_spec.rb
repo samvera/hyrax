@@ -18,12 +18,11 @@ describe BatchEditsController, type: :controller do
     end
 
     it "is successful" do
-      allow(controller.request).to receive(:referer).and_return('foo')
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       get :edit
       expect(response).to be_successful
-      expect(assigns[:form].model.creator).to eq ["Fred", "Wilma"]
+      expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
     end
 
     it "sets the breadcrumb trail" do

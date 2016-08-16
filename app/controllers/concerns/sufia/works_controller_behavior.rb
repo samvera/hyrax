@@ -62,7 +62,7 @@ module Sufia
 
       # Called by CurationConcerns::CurationConcernController#show
       def additional_response_formats(format)
-        format.endnote { render text: presenter.solr_document.export_as_endnote }
+        format.endnote { render plain: presenter.solr_document.export_as_endnote }
       end
 
       def add_breadcrumb_for_controller

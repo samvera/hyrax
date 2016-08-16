@@ -29,7 +29,11 @@ describe 'users/show.html.erb', type: :view do
 
   context "with trophy" do
     let(:trophy_presenter) { Sufia::TrophyPresenter.new(solr_document) }
-    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork') }
+    let(:solr_document) do
+      SolrDocument.new(id: 'abc123',
+                       has_model_ssim: 'GenericWork',
+                       thumbnail_path_ss: '/foo/bar.png')
+    end
 
     before do
       allow(view).to receive(:search_session).and_return({})

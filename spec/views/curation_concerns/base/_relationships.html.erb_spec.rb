@@ -4,8 +4,8 @@ describe 'curation_concerns/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_doc, ability) }
-  let(:generic_work) { GenericWork.new(id: '456', title: ['Containing work', 'barbaz']) }
-  let(:collection) { Collection.new(id: '345', title: ['Containing collection', 'foobar']) }
+  let(:generic_work) { GenericWork.new(id: '456', title: ['Containing work']) }
+  let(:collection) { Collection.new(id: '345', title: ['Containing collection']) }
 
   context "when collections are not present" do
     before do
