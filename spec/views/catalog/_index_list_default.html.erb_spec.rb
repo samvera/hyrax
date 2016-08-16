@@ -6,7 +6,9 @@ describe 'catalog/_index_list_default', type: :view do
       'proxy_depositor_ssim' => [''],
       'description_tesim'    => [''],
       'date_uploaded_dtsi'   => 'a date',
-      'rights_tesim'         => [''] }
+      'rights_tesim'         => [''],
+      'embargo_release_date_dtsi' => 'a date',
+      'lease_expiration_date_dtsi' => 'a date' }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:blacklight_configuration_context) do
@@ -35,5 +37,9 @@ describe 'catalog/_index_list_default', type: :view do
     expect(rendered).to include 'Test depositor_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Rights:</span>'
     expect(rendered).to include 'Test rights_tesim'
+    expect(rendered).to include '<span class="attribute-label h4">Embargo release date:</span>'
+    expect(rendered).to include 'Test embargo_release_date_dtsi'
+    expect(rendered).to include '<span class="attribute-label h4">Lease expiration date:</span>'
+    expect(rendered).to include 'Test lease_expiration_date_dtsi'
   end
 end

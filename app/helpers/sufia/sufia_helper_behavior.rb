@@ -104,7 +104,8 @@ module Sufia
     # @see #index_field_link params
     # @return [Date]
     def human_readable_date(options)
-      Date.parse(options[:value]).to_formatted_s(:standard)
+      value = options[:value].first
+      Date.parse(value).to_formatted_s(:standard)
     end
 
     # A Blacklight helper_method
