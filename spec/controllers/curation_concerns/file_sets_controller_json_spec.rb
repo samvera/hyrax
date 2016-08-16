@@ -121,6 +121,14 @@ describe CurationConcerns::FileSetsController do
       end
     end
 
+    describe "integration update" do
+      render_views
+      it "works" do
+        put :update, id: resource.id, file_set: { title: ['test'] }, format: :json
+        expect(response.status).to eq 200
+      end
+    end
+
     describe 'failed update' do
       before {
         expect(controller).to receive(:update_metadata) do

@@ -110,7 +110,10 @@ module CurationConcerns
         wants.html do
           redirect_to [main_app, curation_concern], notice: "The file #{view_context.link_to(curation_concern, [main_app, curation_concern])} has been updated."
         end
-        wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+        wants.json do
+          @presenter = show_presenter.new(curation_concern, current_ability)
+          render :show, status: :ok, location: polymorphic_path([main_app, curation_concern])
+        end
       end
     end
 
