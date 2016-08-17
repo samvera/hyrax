@@ -35,8 +35,7 @@ module Sufia
         end
 
         # Then, parse creators and contributors out
-        creator_names = munged_creators.select { |c| Sufia::Arkivo::CREATOR_TYPES.include? c['creatorType'] }.map { |c| c['name'] }
-        contributor_names = munged_creators.select { |c| Sufia::Arkivo::CONTRIBUTOR_TYPES.include? c['creatorType'] }.map { |c| c['name'] }
+        creator_names, contributor_names = split_creators_and_contributors(munged_creators)
         munged['creator'] = creator_names unless creator_names.blank?
         munged['contributor'] = contributor_names unless contributor_names.blank?
 
@@ -44,6 +43,18 @@ module Sufia
         munged.delete('creators') if munged['creators']
         munged
       end
+
+      private
+
+        def split_creators_and_contributors(list_of_creators)
+          creators = []
+          contributors = []
+          list_of_creators.each do |creator|
+            creators << creator['name'] if Sufia::Arkivo::CREATOR_TYPES.include? creator['creatorType']
+            contributors << creator['name'] if Sufia::Arkivo::CONTRIBUTOR_TYPES.include? creator['creatorType']
+          end
+          [creators, contributors]
+        end
     end
   end
 end

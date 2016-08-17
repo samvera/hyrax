@@ -106,7 +106,7 @@ module Sufia::User
 
   # Redefine this for more intuitive keys in Redis
   def to_param
-    # HACK: because rails doesn't like periods in urls.
+    # Rails doesn't like periods in urls
     user_key.gsub(/\./, '-dot-')
   end
 
@@ -128,7 +128,7 @@ module Sufia::User
   module ClassMethods
     # Override this method if you aren't using email/password
     def audit_user
-      User.find_by_user_key(audit_user_key) || User.create!(Devise.authentication_keys.first => audit_user_key, password: Devise.friendly_token[0, 20])
+      find_or_create_system_user(audit_user_key)
     end
 
     alias audituser audit_user
@@ -140,7 +140,7 @@ module Sufia::User
 
     # Override this method if you aren't using email/password
     def batch_user
-      User.find_by_user_key(batch_user_key) || User.create!(Devise.authentication_keys.first => batch_user_key, password: Devise.friendly_token[0, 20])
+      find_or_create_system_user(batch_user_key)
     end
 
     alias batchuser batch_user
@@ -148,6 +148,10 @@ module Sufia::User
 
     def batch_user_key
       Sufia.config.batch_user_key
+    end
+
+    def find_or_create_system_user(user_key)
+      User.find_by_user_key(user_key) || User.create!(Devise.authentication_keys.first => user_key, password: Devise.friendly_token[0, 20])
     end
 
     def from_url_component(component)
