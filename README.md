@@ -2,16 +2,18 @@
 
 Code: [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
-[![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 [![Coverage Status](https://coveralls.io/repos/projecthydra/sufia/badge.svg)](https://coveralls.io/r/projecthydra/sufia)
-[![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg?branch=master)](https://inch-ci.org/github/projecthydra/sufia)
 [![Code Climate](https://codeclimate.com/github/projecthydra/sufia/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/sufia)
+[![Dependency Update Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
+[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra/sufia/badge)](https://dependencyci.com/github/projecthydra/sufia)
 
-Docs: [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
-[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
+Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg?branch=master)](https://inch-ci.org/github/projecthydra/sufia)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
+[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
+[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
-Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/) [![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.2.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.2.0)
+Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
+[![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.2.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.2.0)
 
 # Table of Contents
 
@@ -264,6 +266,6 @@ See the [release management process](https://github.com/projecthydra/sufia/wiki/
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
-[Project Hydra website](http://projecthydra.org).
+[Project Hydra website](http://projecthydra.org/).
 
 ![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
