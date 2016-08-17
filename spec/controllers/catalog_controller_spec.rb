@@ -35,18 +35,16 @@ describe CatalogController do
 
     context 'Searching all works' do
       it 'returns all the works' do
-        get 'index', 'f' => { 'generic_type_sim' => 'Work' }
+        get 'index', params: { 'f' => { 'generic_type_sim' => 'Work' } }
         expect(response).to be_successful
         expect(assigns(:document_list).count).to eq 2
-        [work1.id, work2.id].each do |work_id|
-          expect(assigns(:document_list).map(&:id)).to include(work_id)
-        end
+        expect(assigns(:document_list).map(&:id)).to include(work1.id, work2.id)
       end
     end
 
     context 'Searching all collections' do
       it 'returns all the works' do
-        get 'index', 'f' => { 'generic_type_sim' => 'Collection' }
+        get 'index', params: { 'f' => { 'generic_type_sim' => 'Collection' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to eq [collection.id]
       end
@@ -54,7 +52,7 @@ describe CatalogController do
 
     context 'searching just my works' do
       it 'returns just my works' do
-        get 'index', works: 'mine', 'f' => { 'generic_type_sim' => 'Work' }
+        get 'index', params: { works: 'mine', 'f' => { 'generic_type_sim' => 'Work' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to eq [work1.id]
       end
@@ -62,7 +60,7 @@ describe CatalogController do
 
     context 'searching for one kind of work' do
       it 'returns just the specified type' do
-        get 'index', 'f' => { 'human_readable_type_sim' => 'Generic Work' }
+        get 'index', params: { 'f' => { 'human_readable_type_sim' => 'Generic Work' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to include(work1.id, work2.id)
       end
@@ -72,7 +70,7 @@ describe CatalogController do
       let!(:work) { FactoryGirl.create(:generic_work, user: user, title: ["All my #{srand}"]) }
       render_views
       it 'returns json' do
-        xhr :get, :index, format: :json, q: work.title.first
+        get :index, xhr: true, params: { format: :json, q: work.title.first }
         json = JSON.parse(response.body)
         # Grab the doc corresponding to work and inspect the json
         work_json = json['docs'].first
@@ -95,17 +93,17 @@ describe CatalogController do
 
     context 'searching all works' do
       it "returns other users' private works" do
-        get 'index', 'f' => { 'generic_type_sim' => 'Work' }
+        get 'index', params: { 'f' => { 'generic_type_sim' => 'Work' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to include(work1.id)
       end
       it "returns other users' embargoed works" do
-        get 'index', 'f' => { 'generic_type_sim' => 'Work' }
+        get 'index', params: { 'f' => { 'generic_type_sim' => 'Work' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to include(work2.id)
       end
       it "returns other users' private collections" do
-        get 'index', 'f' => { 'generic_type_sim' => 'Collection' }
+        get 'index', params: { 'f' => { 'generic_type_sim' => 'Collection' } }
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to include(collection.id)
       end

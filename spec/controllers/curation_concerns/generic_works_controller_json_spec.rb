@@ -8,7 +8,7 @@ describe CurationConcerns::GenericWorksController do
 
   context "JSON" do
     let(:resource) { create(:private_generic_work, user: user) }
-    let(:resource_request) { get :show, id: resource, format: :json }
+    let(:resource_request) { get :show, params: { id: resource, format: :json } }
     subject { response }
 
     describe "unauthorized" do
@@ -28,12 +28,12 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'not found' do
-      before { get :show, id: "non-existent-pid", format: :json }
+      before { get :show, params: { id: "non-existent-pid", format: :json } }
       it { is_expected.to respond_not_found }
     end
 
     describe 'created' do
-      before { post :create, generic_work: { title: ['a title'] }, format: :json }
+      before { post :create, params: { generic_work: { title: ['a title'] }, format: :json } }
       it "returns 201, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
@@ -45,7 +45,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'failed create' do
-      before { post :create, generic_work: {}, format: :json }
+      before { post :create, params: { generic_work: {}, format: :json } }
       it "returns 422 and the errors" do
         created_resource = assigns[:curation_concern]
         expect(response).to respond_unprocessable_entity(errors: created_resource.errors.messages.as_json)
@@ -63,7 +63,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'updated' do
-      before { put :update, id: resource, generic_work: { title: ['updated title'] }, format: :json }
+      before { put :update, params: { id: resource, generic_work: { title: ['updated title'] }, format: :json } }
       it "returns 200, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
@@ -76,7 +76,7 @@ describe CurationConcerns::GenericWorksController do
 
     describe 'failed update' do
       before do
-        post :update, id: resource, generic_work: { title: [''] }, format: :json
+        post :update, params: { id: resource, generic_work: { title: [''] }, format: :json }
       end
       it "returns 422 and the errors" do
         expect(response).to respond_unprocessable_entity(errors: { title: ["Your work must have a title."] })

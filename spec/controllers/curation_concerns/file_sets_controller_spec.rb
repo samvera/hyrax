@@ -9,9 +9,7 @@ describe CurationConcerns::FileSetsController do
     before { sign_in user }
 
     describe '#create' do
-      before do
-        FileSet.destroy_all
-      end
+      before { FileSet.destroy_all }
 
       context 'on the happy path' do
         let(:date_today) { DateTime.now }
@@ -39,10 +37,13 @@ describe CurationConcerns::FileSetsController do
             expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
           end
 
-          xhr :post, :create, parent_id: parent,
-                              file_set: { files: [file],
-                                          title: ['test title'],
-                                          visibility: 'restricted' }
+          post :create, xhr: true, params: { parent_id: parent,
+                                             file_set: {
+                                               files: [file],
+                                               title: ['test title'],
+                                               visibility: 'restricted'
+                                             }
+                                           }
           expect(response).to be_success
           expect(flash[:error]).to be_nil
         end
@@ -51,8 +52,11 @@ describe CurationConcerns::FileSetsController do
       context "on something that isn't a file" do
         # Note: This is a duplicate of coverage in file_sets_controller_json_spec.rb
         it 'renders error' do
-          xhr :post, :create, parent_id: parent, file_set: { files: ['hello'] },
-                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+          post :create, xhr: true, params: { parent_id: parent,
+                                             file_set: { files: ['hello'] },
+                                             permission: { group: { 'public' => 'read' } },
+                                             terms_of_service: '1'
+                                            }
           expect(response.status).to eq 400
           msg = JSON.parse(response.body)['message']
           expect(msg).to match(/no file for upload/i)
@@ -82,8 +86,12 @@ describe CurationConcerns::FileSetsController do
         end
 
         it 'errors out of create after on continuous rsolr error' do
-          xhr :post, :create, parent_id: parent, file_set: { files: [file] },
-                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+          post :create, xhr: true, params: {
+            parent_id: parent,
+            file_set: { files: [file] },
+            permission: { group: { 'public' => 'read' } },
+            terms_of_service: '1'
+          }
           expect(response.body).to include('Error occurred while creating a FileSet.')
         end
       end
@@ -95,8 +103,12 @@ describe CurationConcerns::FileSetsController do
         end
 
         it 'errors out of create after on continuous rsolr error' do
-          xhr :post, :create, parent_id: parent, file_set: { files: [file] },
-                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+          post :create, xhr: true, params: {
+            parent_id: parent,
+            file_set: { files: [file] },
+            permission: { group: { 'public' => 'read' } },
+            terms_of_service: '1'
+          }
           expect(response.body).to include('Error creating file image.png')
         end
       end
@@ -114,7 +126,7 @@ describe CurationConcerns::FileSetsController do
 
       it 'deletes the file' do
         expect(FileSet.find(file_set.id)).to be_kind_of FileSet
-        delete :destroy, id: file_set
+        delete :destroy, params: { id: file_set }
         expect { FileSet.find(file_set.id) }.to raise_error Ldp::Gone
         expect(response).to redirect_to main_app.curation_concerns_generic_work_path(parent)
       end
@@ -137,16 +149,20 @@ describe CurationConcerns::FileSetsController do
 
       context 'updating metadata' do
         it 'is successful and update attributes' do
-          post :update, id: file_set, file_set:
-            { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+          post :update, params: {
+            id: file_set,
+            file_set: { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+          }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
           expect(assigns[:file_set].title).to eq(['new_title'])
         end
 
         it 'goes back to edit on an error' do
           allow_any_instance_of(FileSet).to receive(:valid?).and_return(false)
-          post :update, id: file_set, file_set:
-            { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+          post :update, params: {
+            id: file_set,
+            file_set: { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+          }
           expect(response.status).to eq 422
           expect(response).to render_template('edit')
           expect(assigns[:groups]).to be_kind_of Array
@@ -157,19 +173,22 @@ describe CurationConcerns::FileSetsController do
         context 'updating visibility' do
           it 'applies public' do
             new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-            post :update, id: file_set, file_set: { visibility: new_visibility, embargo_release_date: '' }
+            post :update, params: { id: file_set, file_set: { visibility: new_visibility, embargo_release_date: '' } }
             expect(file_set.reload.visibility).to eq new_visibility
           end
 
           it 'applies embargo' do
-            post :update, id: file_set, file_set: {
-              visibility: 'embargo',
-              visibility_during_embargo: 'restricted',
-              embargo_release_date: '2099-09-05',
-              visibility_after_embargo: 'open',
-              visibility_during_lease: 'open',
-              lease_expiration_date: '2099-09-05',
-              visibility_after_lease: 'restricted'
+            post :update, params: {
+              id: file_set,
+              file_set: {
+                visibility: 'embargo',
+                visibility_during_embargo: 'restricted',
+                embargo_release_date: '2099-09-05',
+                visibility_after_embargo: 'open',
+                visibility_during_lease: 'open',
+                lease_expiration_date: '2099-09-05',
+                visibility_after_lease: 'restricted'
+              }
             }
             file_set.reload
             expect(file_set).to be_under_embargo
@@ -181,7 +200,7 @@ describe CurationConcerns::FileSetsController do
       context 'updating file content' do
         it 'is successful' do
           expect(IngestFileJob).to receive(:perform_later)
-          post :update, id: file_set, file_set: { files: [file] }
+          post :update, params: { id: file_set, file_set: { files: [file] } }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
         end
       end
@@ -200,7 +219,7 @@ describe CurationConcerns::FileSetsController do
         it 'is successful' do
           expect(file_set.latest_content_version.label).to eq('version2')
           expect(file_set.original_file.content).to eq("This is a test fixture for curation_concerns: <%= @id %>.\n")
-          post :update, id: file_set, revision: 'version1'
+          post :update, params: { id: file_set, revision: 'version1' }
           expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
           reloaded = file_set.reload.original_file
           expect(reloaded.versions.last.label).to eq 'version3'
@@ -218,7 +237,7 @@ describe CurationConcerns::FileSetsController do
 
     describe '#edit' do
       it 'gives me the unauthorized page' do
-        get :edit, id: public_file_set
+        get :edit, params: { id: public_file_set }
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
@@ -226,7 +245,7 @@ describe CurationConcerns::FileSetsController do
 
     describe '#show' do
       it 'allows access to the file' do
-        get :show, id: public_file_set
+        get :show, params: { id: public_file_set }
         expect(response).to be_success
       end
     end
@@ -238,27 +257,27 @@ describe CurationConcerns::FileSetsController do
 
     describe '#edit' do
       it 'requires login' do
-        get :edit, id: public_file_set
+        get :edit, params: { id: public_file_set }
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
       end
     end
 
     describe '#show' do
       it 'denies access to private files' do
-        get :show, id: private_file_set
+        get :show, params: { id: private_file_set }
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
       end
 
       it 'allows access to public files' do
         expect(controller).to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
-        get :show, id: public_file_set
+        get :show, params: { id: public_file_set }
         expect(response).to be_success
       end
     end
 
     describe '#new' do
       it 'does not let the user submit' do
-        get :new, parent_id: parent
+        get :new, params: { parent_id: parent }
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
       end
     end
