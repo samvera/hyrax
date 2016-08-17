@@ -2,8 +2,13 @@
 engines:
   brakeman:
     enabled: true
+    exclude_fingerprints:
+      - 6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83
   duplication:
     enabled: true
+    exclude_fingerprints:
+      - 3e30de88eb9d993e74c31d0309e13f7c
+      - 8173dcc032219344176991b7bafa15a6
     config:
       languages:
       - ruby
@@ -17,11 +22,7 @@ engines:
     enabled: true
   rubocop:
     enabled: true
-  reek:
-    enabled: true
   coffeelint:
-    enabled: true
-  scss-lint:
     enabled: true
 ratings:
   paths:
