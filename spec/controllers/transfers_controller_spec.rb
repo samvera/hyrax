@@ -108,7 +108,7 @@ describe TransfersController, type: :controller do
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_work.reload.edit_users).to eq([another_user.user_key, user.user_key])
+          expect(incoming_work.reload.edit_users).to match_array [another_user.user_key, user.user_key]
         end
         it "is successful when resetting access rights" do
           put :accept, id: user.proxy_deposit_requests.first, reset: true

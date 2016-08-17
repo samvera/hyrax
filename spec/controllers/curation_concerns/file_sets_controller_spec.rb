@@ -47,10 +47,10 @@ describe CurationConcerns::FileSetsController do
     before do
       binary = StringIO.new("hey")
       Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+      request.env['HTTP_REFERER'] = 'http://test.host/foo'
     end
 
     it "sets the breadcrumbs and versions presenter" do
-      allow(controller.request).to receive(:referer).and_return('foo')
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
@@ -240,7 +240,7 @@ describe CurationConcerns::FileSetsController do
       end
 
       before do
-        allow(controller.request).to receive(:referer).and_return('foo')
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
         work.ordered_members << file_set
         work.save!
         file_set.save!

@@ -38,7 +38,7 @@ describe CurationConcerns::GenericWorksController do
 
     context "with a referer" do
       before do
-        allow(controller.request).to receive(:referer).and_return('foo')
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
       it "sets breadcrumbs" do
@@ -77,7 +77,7 @@ describe CurationConcerns::GenericWorksController do
 
     context "with a referer" do
       before do
-        allow(controller.request).to receive(:referer).and_return('foo')
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
       it "sets breadcrumbs" do
@@ -148,10 +148,18 @@ describe CurationConcerns::GenericWorksController do
         it "records the work" do
           # TODO: ensure the actor stack, called with these params
           # makes one work, two file sets and calls ImportUrlJob twice.
-          expect(actor).to receive(:create)
-            .with(hash_including(uploaded_files: [],
-                                 remote_files: browse_everything_params.values))
-            .and_return(true)
+          if Rails.version < '5.0.0'
+            expect(actor).to receive(:create)
+              .with(hash_including(uploaded_files: [],
+                                   remote_files: browse_everything_params.values))
+              .and_return(true)
+          else
+            expect(actor).to receive(:create).with(ActionController::Parameters) do |ac_params|
+              expect(ac_params['uploaded_files']).to eq []
+              expect(ac_params['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
+            end
+          end
+
           post :create, selected_files: browse_everything_params,
                         uploaded_files: uploaded_files,
                         parent_id: work.id,

@@ -26,18 +26,18 @@ describe Sufia::Forms::BatchEditForm do
 
   describe "#model" do
     it "combines the models in the batch" do
-      expect(form.model.creator).to eq ["Wilma", "Fred"]
-      expect(form.model.contributor).to eq ["contributor1", "contributor2"]
-      expect(form.model.description).to eq ["description1", "description2"]
-      expect(form.model.keyword).to eq ["abc", "123"]
-      expect(form.model.resource_type).to eq ["bar"]
-      expect(form.model.rights).to eq ["rights1", "rights2"]
-      expect(form.model.publisher).to eq ["Rand McNally"]
-      expect(form.model.subject).to eq ["subject1", "subject2"]
-      expect(form.model.language).to eq ["en"]
-      expect(form.model.identifier).to eq ["id1", "id2"]
-      expect(form.model.based_near).to eq ["based_near1", "based_near2"]
-      expect(form.model.related_url).to eq ["related_url1", "related_url2"]
+      expect(form.model.creator).to match_array ["Wilma", "Fred"]
+      expect(form.model.contributor).to match_array ["contributor1", "contributor2"]
+      expect(form.model.description).to match_array ["description1", "description2"]
+      expect(form.model.keyword).to match_array ["abc", "123"]
+      expect(form.model.resource_type).to match_array ["bar"]
+      expect(form.model.rights).to match_array ["rights1", "rights2"]
+      expect(form.model.publisher).to match_array ["Rand McNally"]
+      expect(form.model.subject).to match_array ["subject1", "subject2"]
+      expect(form.model.language).to match_array ["en"]
+      expect(form.model.identifier).to match_array ["id1", "id2"]
+      expect(form.model.based_near).to match_array ["based_near1", "based_near2"]
+      expect(form.model.related_url).to match_array ["related_url1", "related_url2"]
     end
   end
 end

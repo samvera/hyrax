@@ -36,6 +36,22 @@ describe Sufia::FileSetPresenter do
     end
   end
 
+  describe "#event_class" do
+    subject { presenter.event_class }
+    it { is_expected.to eq 'FileSet' }
+  end
+
+  describe "#events" do
+    subject(:events) { presenter.events }
+    let(:store) { double }
+    let(:response) { double }
+    it "calls the event store" do
+      expect(Sufia::RedisEventStore).to receive(:for).with('FileSet:123abc:event').and_return(store)
+      allow(store).to receive(:fetch).with(100).and_return(response)
+      expect(events).to eq response
+    end
+  end
+
   describe "characterization" do
     let(:user) { double(user_key: 'user') }
 

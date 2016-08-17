@@ -1,8 +1,8 @@
 <% provide :page_title, "#{@selected_tab.capitalize} listing" %>
 
 <% content_for :head do %>
-  <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(format: 'rss')), title: "RSS for results") %>
-  <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(format: 'atom')), title: "Atom for results") %>
+  <%= rss_feed_link_tag route_set: sufia %>
+  <%= atom_feed_link_tag route_set: sufia %>
 <% end %>
 
 <%= javascript_tag do %>

@@ -14,13 +14,35 @@ describe Sufia::BatchUploadsController do
 
   describe "#create" do
     context "enquing a update job" do
+      let(:expected_types) do
+        if Rails.version < '5.0.0'
+          { '1' => 'Article' }
+        else
+          ActionController::Parameters.new('1' => 'Article')
+        end
+      end
+      let(:expected_individual_params) do
+        if Rails.version < '5.0.0'
+          { '1' => 'foo' }
+        else
+          ActionController::Parameters.new('1' => 'foo')
+        end
+      end
+      let(:expected_shared_params) do
+        if Rails.version < '5.0.0'
+          { keyword: [], visibility: 'open' }
+        else
+          ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
+        end
+      end
+
       it "is successful" do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
-                { '1' => 'foo' },
-                { '1' => 'Article' },
+                expected_individual_params,
+                expected_types,
                 ['1'],
-                { keyword: [], visibility: 'open' },
+                expected_shared_params,
                 CurationConcerns::Operation)
         post :create, title: { '1' => 'foo' },
                       resource_type: { '1' => 'Article' },
@@ -54,9 +76,15 @@ describe Sufia::BatchUploadsController do
                             uploaded_files: ['1'],
                             batch_upload_item: { keyword: [""], visibility: 'open' } }
     end
+    let(:expected_shared_params) do
+      if Rails.version < '5.0.0'
+        { 'keyword' => [], 'visibility' => 'open' }
+      else
+        ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
+      end
+    end
     it "excludes uploaded_files and title" do
-      expect(subject).to eq('keyword' => [],
-                            'visibility' => 'open')
+      expect(subject).to eq expected_shared_params
     end
   end
 end

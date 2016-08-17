@@ -155,8 +155,11 @@ Sufia::Engine.routes.draw do
   post '/tinymce_assets' => 'tinymce_assets#create'
 
   get 'about' => 'pages#show', id: 'about_page'
-  # Static page routes (workaround)
-  get ':action' => 'static#:action', constraints: { action: /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, as: :static
+
+  # Static page routes
+  %w(help terms zotero mendeley agreement subject_libraries versions).each do |action|
+    get action, controller: 'static', action: action, as: action
+  end
 
   # Catch-all (for routing errors)
   unless Rails.env.development? || Rails.env.test?

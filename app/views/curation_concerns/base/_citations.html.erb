@@ -5,7 +5,7 @@
     <div class='citations-heading'><%= t('.header') %></div>
     <p class='citations-list'>
     <%= link_to 'EndNote', polymorphic_path([main_app, presenter], format: 'endnote') %>
-    | <%= link_to 'Zotero', sufia.static_path('zotero'), id: 'zoteroLink', name: 'zotero' %>
-    | <%= link_to 'Mendeley', sufia.static_path('mendeley'), id: 'mendeleyLink', name: 'mendeley' %>
+    | <%= link_to 'Zotero', sufia.zotero_path, id: 'zoteroLink', name: 'zotero' %>
+    | <%= link_to 'Mendeley', sufia.mendeley_path, id: 'mendeleyLink', name: 'mendeley' %>
     </p>
 </div>

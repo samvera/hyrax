@@ -75,7 +75,7 @@ describe ContactFormController do
   end
 
   context "when encoutering a RuntimeError" do
-    let(:logger) { double }
+    let(:logger) { double(info?: true) }
     before do
       allow(controller).to receive(:logger).and_return(logger)
       allow(Sufia::ContactMailer).to receive(:contact).and_raise(RuntimeError)
