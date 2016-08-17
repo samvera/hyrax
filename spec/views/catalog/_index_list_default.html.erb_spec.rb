@@ -6,6 +6,7 @@ describe 'catalog/_index_list_default', type: :view do
       'proxy_depositor_ssim' => [''],
       'description_tesim'    => [''],
       'date_uploaded_dtsi'   => 'a date',
+      'date_modified_dtsi'   => 'a date',
       'rights_tesim'         => [''],
       'embargo_release_date_dtsi' => 'a date',
       'lease_expiration_date_dtsi' => 'a date' }
@@ -31,6 +32,8 @@ describe 'catalog/_index_list_default', type: :view do
     expect(rendered).to include 'Test description_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Date Uploaded:</span>'
     expect(rendered).to include 'Test date_uploaded_dtsi'
+    expect(rendered).to include '<span class="attribute-label h4">Date Modified:</span>'
+    expect(rendered).to include 'Test date_modified_dtsi'
     expect(rendered).to include '<span class="attribute-label h4">Depositor:</span>'
     expect(rendered).to include 'Test proxy_depositor_ssim'
     expect(rendered).to include '<span class="attribute-label h4">Owner:</span>'
