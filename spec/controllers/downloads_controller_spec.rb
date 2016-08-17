@@ -7,7 +7,7 @@ describe DownloadsController do
       FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
     end
     it 'calls render_404 if the object does not exist' do
-      expect(controller).to receive(:render_404) { controller.render nothing: true }
+      expect(controller).to receive(:render_404) { controller.render body: nil }
       get :show, params: { id: '8675309' }
     end
 
@@ -67,14 +67,14 @@ describe DownloadsController do
 
         context "that isn't persisted" do
           it "returns 404 if the requested file does not exist" do
-            expect(controller).to receive(:render_404) { controller.render nothing: true }
+            expect(controller).to receive(:render_404) { controller.render body: nil }
             get :show, params: { id: file_set, file: 'thumbnail' }
           end
         end
       end
 
       it "returns 404 if the requested association does not exist" do
-        expect(controller).to receive(:render_404) { controller.render nothing: true }
+        expect(controller).to receive(:render_404) { controller.render body: nil }
         get :show, params: { id: file_set, file: 'non-existant' }
       end
     end

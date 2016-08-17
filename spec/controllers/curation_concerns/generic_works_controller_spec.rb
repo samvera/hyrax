@@ -71,7 +71,7 @@ describe CurationConcerns::GenericWorksController do
     context 'when a ObjectNotFoundError is raised' do
       it 'returns 404 page' do
         allow(controller).to receive(:show).and_raise(ActiveFedora::ObjectNotFoundError)
-        expect(controller).to receive(:render_404) { controller.render nothing: true }
+        expect(controller).to receive(:render_404) { controller.render body: nil }
         get :show, params: { id: 'abc123' }
       end
     end
