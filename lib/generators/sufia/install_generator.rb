@@ -40,15 +40,16 @@ module Sufia
     end
 
     # Add behaviors to the user model
-    def inject_sufia_user_behavior
+    def inject_sufia_user_behaviors
       file_path = "app/models/#{model_name.underscore}.rb"
       if File.exist?(file_path)
         inject_into_file file_path, after: /include CurationConcerns\:\:User.*$/ do
           "\n  # Connects this user object to Sufia behaviors." \
-            "\n  include Sufia::User\n"
+          "\n  include Sufia::User" \
+          "\n  include Sufia::UserUsageStats\n"
         end
       else
-        puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g sufia client"
+        puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g sufia:install client"
       end
     end
 
@@ -64,19 +65,6 @@ module Sufia
 
     def configure_usage_stats
       copy_file 'config/analytics.yml', 'config/analytics.yml'
-    end
-
-    # Adds user stats-related methods
-    def user_stats
-      file_path = "app/models/#{model_name.underscore}.rb"
-
-      if File.exist?(file_path)
-        inject_into_file file_path, after: /include Sufia\:\:User.*$/ do
-          "\n  include Sufia::UserUsageStats"
-        end
-      else
-        puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generator assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails g sufia:user_stats client"
-      end
     end
 
     def insert_abilities

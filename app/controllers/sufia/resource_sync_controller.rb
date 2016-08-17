@@ -1,26 +1,14 @@
 class Sufia::ResourceSyncController < ApplicationController
   def source_description
-    # Caching based on host, for multitenancy support
-    body = Rails.cache.fetch("source_description_#{request.host}", expires_in: 1.week) do
-      build_source_description
-    end
-    render body: body, content_type: 'application/xml'
+    render_from_cache_as_xml(:source_description)
   end
 
   def capability_list
-    # Caching based on host, for multitenancy support
-    body = Rails.cache.fetch("source_description_#{request.host}", expires_in: 1.week) do
-      build_capability_list
-    end
-    render body: body, content_type: 'application/xml'
+    render_from_cache_as_xml(:capability_list)
   end
 
   def resource_list
-    # Caching based on host, for multitenancy support
-    body = Rails.cache.fetch("source_description_#{request.host}", expires_in: 1.week) do
-      build_resource_list
-    end
-    render body: body, content_type: 'application/xml'
+    render_from_cache_as_xml(:resource_list)
   end
 
   private
@@ -37,5 +25,13 @@ class Sufia::ResourceSyncController < ApplicationController
 
     def build_source_description
       Sufia::ResourceSync::SourceDescriptionWriter.new(capability_list_url: sufia.capability_list_url).write
+    end
+
+    def render_from_cache_as_xml(resource_sync_type)
+      # Caching based on host, for multi-tenancy support
+      body = Rails.cache.fetch("#{resource_sync_type}_#{request.host}", expires_in: 1.week) do
+        send("build_#{resource_sync_type}")
+      end
+      render body: body, content_type: 'application/xml'
     end
 end

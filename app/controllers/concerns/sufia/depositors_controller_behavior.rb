@@ -1,20 +1,11 @@
 module Sufia
   module DepositorsControllerBehavior
     extend ActiveSupport::Concern
+    include DenyAccessOverrideBehavior
 
     included do
       before_action :authenticate_user!
       before_action :validate_users, only: :create
-    end
-
-    # Overriding the default behavior from Hydra::Core::ContorllerBehavior
-    def deny_access(exception)
-      if current_user && current_user.persisted?
-        redirect_to root_path, alert: exception.message
-      else
-        session['user_return_to'.freeze] = request.url
-        redirect_to new_user_session_path, alert: exception.message
-      end
     end
 
     def create

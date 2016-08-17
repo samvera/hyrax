@@ -9,6 +9,10 @@ engines:
     exclude_fingerprints:
       - 3e30de88eb9d993e74c31d0309e13f7c
       - 8173dcc032219344176991b7bafa15a6
+      - 8a7dae1e94950e59319a7cd259732bb4
+      - 941c94b2e2f00eee9dcceb7a1faeb92f
+      - 93db286dbc27996f277d7246f80afd8a
+      - 5b45a0b1e0e92099ae4725fdbfb8fd3f
     config:
       languages:
       - ruby
