@@ -4,8 +4,8 @@ require 'blacklight/catalog'
 class CatalogController < ApplicationController
 
   include Hydra::Catalog
-  # These before_filters apply the hydra access controls
-  before_filter :enforce_show_permissions, only: :show
+  # This filter applies the hydra access controls
+  before_action :enforce_show_permissions, only: :show
 
   configure_blacklight do |config|
     ## Class for sending and receiving requests from a search index

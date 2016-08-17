@@ -5,7 +5,7 @@ module Hydra
 
       included do
         include Hydra::Controller::ControllerBehavior
-        before_filter :authorize_download!
+        before_action :authorize_download!
       end
 
       # Responds to http requests to show the file
