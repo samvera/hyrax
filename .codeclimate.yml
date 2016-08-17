@@ -24,23 +24,6 @@ engines:
     enabled: true
   coffeelint:
     enabled: true
-  scss-lint:
-    enabled: true
-    checks:
-      Comment:
-        enabled: false
-      StringQuotes:
-        enabled: false
-      SelectorFormat:
-        enabled: false
-      EmptyLineBetweenBlocks:
-        enabled: false
-      PropertySortOrder:
-        enabled: false
-      PlaceholderInExtend:
-        enabled: false
-      VendorPrefix:
-        enabled: false
 ratings:
   paths:
   - Gemfile.lock
