@@ -53,7 +53,7 @@ module CurationConcerns
         def apply_save_data_to_curation_concern(attributes)
           attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
           remove_blank_attributes!(attributes)
-          curation_concern.attributes = attributes.symbolize_keys
+          curation_concern.attributes = attributes
           curation_concern.date_modified = CurationConcerns::TimeService.time_in_utc
         end
 
