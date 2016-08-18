@@ -5,6 +5,7 @@
 //= require jquery-ui/position
 //= require jquery-ui/effect
 //= require jquery-ui/effect-highlight
+//= require jquery-ui/sortable
 
 //= require bootstrap/alert
 //= require bootstrap/button
@@ -61,6 +62,10 @@
 //= require curation_concerns/collections
 //= require hydra-editor/hydra-editor
 //= require nestable
+//= require curation_concerns/file_manager/sorting
+//= require curation_concerns/file_manager/save_manager
+//= require curation_concerns/file_manager/member
+//= require curation_concerns/file_manager
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require sufia/batch_edit

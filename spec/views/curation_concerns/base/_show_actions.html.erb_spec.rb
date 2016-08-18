@@ -47,7 +47,7 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
         allow(presenter).to receive(:member_presenters).and_return([])
         render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
       end
-      it "shows file manager link" do
+      it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
       end
       it "shows edit / delete links" do
@@ -60,7 +60,6 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
         allow(presenter).to receive(:member_presenters).and_return([member])
         render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
       end
-      before { allow(presenter).to receive(:member_presenters).and_return([member]) }
       it "shows file manager link" do
         expect(rendered).to have_link 'File Manager'
       end
