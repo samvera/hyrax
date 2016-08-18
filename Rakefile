@@ -28,10 +28,10 @@ namespace :curation_concerns do
 end
 
 desc 'Run test suite and style checker'
-task spec: ['curation_concerns:rubocop', 'curation_concerns:spec']
+task spec: ['curation_concerns:spec']
 
 desc 'Spin up Solr & Fedora and run the test suite'
-task ci: ['engine_cart:generate'] do
+task ci: ['curation_concerns:rubocop', 'engine_cart:generate'] do
   Rake::Task['spec'].invoke
 end
 
