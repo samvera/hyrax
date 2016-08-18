@@ -62,13 +62,13 @@ module CurationConcerns::CurationConcernController
       end
       additional_response_formats(wants)
       wants.ttl do
-        render text: presenter.export_as_ttl
+        render body: presenter.export_as_ttl, content_type: 'text/turtle'
       end
       wants.jsonld do
-        render text: presenter.export_as_jsonld
+        render body: presenter.export_as_jsonld, content_type: 'application/ld+json'
       end
       wants.nt do
-        render text: presenter.export_as_nt
+        render body: presenter.export_as_nt, content_type: 'application/n-triples'
       end
     end
   end
