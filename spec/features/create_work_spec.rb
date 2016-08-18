@@ -79,7 +79,7 @@ feature 'Creating a new Work', :js do
       click_link('Dashboard')
       click_link('Shares')
 
-      click_link('Files Shared with Me')
+      click_link('Works Shared with Me')
       expect(page).to have_content "My Test Work"
       # TODO: Show the work details (owner email)
       # first('i.glyphicon-chevron-right').click

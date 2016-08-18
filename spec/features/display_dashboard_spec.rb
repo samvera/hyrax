@@ -22,7 +22,7 @@ describe "The Dashboard", type: :feature do
       expect(page).to have_content "My Works"
       expect(page).to have_content "My Collections"
       expect(page).to have_content "My Highlights"
-      expect(page).to have_content "Files Shared with Me"
+      expect(page).to have_content "Works Shared with Me"
     end
   end
 end
