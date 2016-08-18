@@ -22,6 +22,11 @@ module CurationConcerns
         # between files on disk (in fcrepo.binary-store-path) and objects
         # in the repository.
         solr_doc[Solrizer.solr_name('digest', :symbol)] = digest_from_content
+        solr_doc[Solrizer.solr_name('page_count')] = object.page_count
+        solr_doc[Solrizer.solr_name('file_title')] = object.file_title
+        solr_doc[Solrizer.solr_name('duration')] = object.duration
+        solr_doc[Solrizer.solr_name('sample_rate')] = object.sample_rate
+        solr_doc[Solrizer.solr_name('original_checksum')] = object.original_checksum
       end
     end
 

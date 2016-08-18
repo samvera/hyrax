@@ -16,7 +16,7 @@ describe CurationConcerns::FileSet do
   describe '::characterization_terms' do
     subject { file_set.class.characterization_terms }
     it { is_expected.to contain_exactly(:format_label, :file_size, :height, :width, :filename, :well_formed,
-                                        :page_count, :file_title, :last_modified, :original_checksum, :mime_type) }
+                                        :page_count, :file_title, :last_modified, :original_checksum, :mime_type, :duration, :sample_rate) }
   end
 
   describe 'characterization_proxy' do

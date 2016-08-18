@@ -2,6 +2,7 @@ module CurationConcerns
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
     include Hydra::Works::MimeTypes
+    include CurationConcerns::SolrBehavior::Characterization
 
     def title_or_label
       return label if title.blank?

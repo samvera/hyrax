@@ -21,7 +21,8 @@ describe CurationConcerns::FileSetIndexer do
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Medina, Saudi Arabia'],
-      related_url: ['http://example.org/TheWork/'])
+      related_url: ['http://example.org/TheWork/']
+    )
   end
 
   let(:mock_file) do
@@ -32,7 +33,11 @@ describe CurationConcerns::FileSetIndexer do
       format_label: ['JPEG Image'],
       height: ['500'],
       width: ['600'],
-      file_size: ['12']
+      file_size: ['12'],
+      page_count: ['1'],
+      file_title: ['title'],
+      duration: ['0:1'],
+      sample_rate: ['sample rate']
     )
   end
 
@@ -81,6 +86,10 @@ describe CurationConcerns::FileSetIndexer do
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
       expect(subject[Solrizer.solr_name('digest', :symbol)]).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
+      expect(subject[Solrizer.solr_name('page_count')]).to eq ['1']
+      expect(subject[Solrizer.solr_name('file_title')]).to eq ['title']
+      expect(subject[Solrizer.solr_name('duration')]).to eq ['0:1']
+      expect(subject[Solrizer.solr_name('sample_rate')]).to eq ['sample rate']
     end
   end
 
