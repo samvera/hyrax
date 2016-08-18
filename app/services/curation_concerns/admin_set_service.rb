@@ -1,7 +1,10 @@
 module CurationConcerns
   class AdminSetService
-    def initialize(user)
-      @user = user
+    attr_reader :context
+
+    # @param [#repository,#blacklight_config,#current_ability] context
+    def initialize(context)
+      @context = context
     end
 
     def select_options
@@ -10,24 +13,12 @@ module CurationConcerns
       end
     end
 
-    def blacklight_config
-      ::CatalogController.blacklight_config
-    end
-
-    def current_ability
-      ::Ability.new(@user)
-    end
-
     private
 
       def search_results
-        builder = AdminSetSearchBuilder.new(self)
-        response = repository.search(builder)
+        builder = AdminSetSearchBuilder.new(context)
+        response = context.repository.search(builder)
         response.documents
-      end
-
-      def repository
-        ::CatalogController.new.repository
       end
   end
 end
