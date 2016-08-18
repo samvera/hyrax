@@ -131,7 +131,7 @@ en:
         works:        "My Works"
         collections:  "My Collections"
         highlights:   "My Highlights"
-        shares:       "Files Shared with Me"
+        shares:       "Works Shared with Me"
         facet_label:
           files:        "Filter your files"
           collections:  "Filter your collections"

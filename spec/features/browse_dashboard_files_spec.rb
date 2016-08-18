@@ -48,7 +48,7 @@ describe "Browse Dashboard", type: :feature do
     end
 
     # View other tabs
-    ["My Collections", "My Highlights", "Files Shared with Me"].each do |tab|
+    ["My Collections", "My Highlights", "Works Shared with Me"].each do |tab|
       within("#my_nav") do
         click_link(tab)
       end
