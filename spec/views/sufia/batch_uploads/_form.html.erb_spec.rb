@@ -14,7 +14,9 @@ describe 'sufia/batch_uploads/_form.html.erb', type: :view do
     assign(:form, form)
     allow(controller).to receive_messages(current_user: user,
                                           controller_name: 'batch_uploads',
-                                          action_name: 'new')
+                                          action_name: 'new',
+                                          repository: CurationConcerns::GenericWorksController.new.repository,
+                                          blacklight_config: CurationConcerns::GenericWorksController.new.blacklight_config)
   end
 
   let(:page) do

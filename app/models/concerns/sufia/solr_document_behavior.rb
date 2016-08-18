@@ -57,6 +57,10 @@ module Sufia
       Array.wrap(self['collection_ids_tesim'])
     end
 
+    def admin_set
+      fetch(Solrizer.solr_name('admin_set'), [])
+    end
+
     # Find the solr documents for the collections this object belongs to
     def collections
       return @collections if @collections

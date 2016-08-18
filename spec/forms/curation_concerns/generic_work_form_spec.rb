@@ -9,7 +9,7 @@ describe CurationConcerns::GenericWorkForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights, :admin_set_id] }
   end
 
   describe "#secondary_terms" do

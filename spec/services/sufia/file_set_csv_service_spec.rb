@@ -1,13 +1,11 @@
 describe Sufia::FileSetCSVService do
   let(:mock_file) do
-    double('original_file',
-           file_size: '',
-           height: '',
-           width: '',
-           format_label: '',
-           digest: '',
-           mime_type: 'application/pdf')
+    Hydra::PCDM::File.new
   end
+  before do
+    allow(mock_file).to receive(:mime_type).and_return('application/pdf')
+  end
+
   let(:file) do
     FileSet.new(id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
                 resource_type: ['Book', 'Other'], rights: ['Mine']) do |f|

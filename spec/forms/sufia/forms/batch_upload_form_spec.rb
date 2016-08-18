@@ -6,7 +6,7 @@ describe Sufia::Forms::BatchUploadForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:creator, :keyword, :rights] }
+    it { is_expected.to eq [:creator, :keyword, :rights, :admin_set_id] }
     it { is_expected.not_to include(:title) }
   end
 
@@ -59,6 +59,7 @@ describe Sufia::Forms::BatchUploadForm do
                             :ordered_member_ids,
                             :source,
                             :in_works_ids,
-                            :collection_ids] }
+                            :collection_ids,
+                            :admin_set_id] }
   end
 end
