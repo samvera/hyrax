@@ -12,6 +12,7 @@ module CurationConcerns::WorkBehavior
   include CurationConcerns::WithFileSets
   include CurationConcerns::Naming
   include CurationConcerns::RequiredMetadata
+  include CurationConcerns::InAdminSet
   include Hydra::AccessControls::Embargoable
   include GlobalID::Identification
   include CurationConcerns::NestedWorks
