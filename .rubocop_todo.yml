@@ -78,11 +78,11 @@ RSpec/ExampleLength:
     - 'spec/jobs/content_depositor_change_event_job_spec.rb'
     - 'spec/jobs/content_deposit_event_job_spec.rb'
     - 'spec/jobs/content_delete_event_job_spec.rb'
-    - 'spec/lib/sufia/user_stat_importer_spec.rb'
     - 'spec/lib/sufia/resource_sync/capability_list_writer_spec.rb'
     - 'spec/models/generic_work_spec.rb'
     - 'spec/models/featured_work_spec.rb'
     - 'spec/services/sufia/actor_factory_spec.rb'
+    - 'spec/services/sufia/user_stat_importer_spec.rb'
     - 'spec/views/catalog/_index_list_default.html.erb_spec.rb'
     - 'spec/views/collections/_form.html.erb_spec.rb'
 
