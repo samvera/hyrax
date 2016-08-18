@@ -12,7 +12,7 @@ describe CurationConcerns::OperationsController do
 
   describe "#index" do
     it "is successful" do
-      get :index, user_id: user
+      get :index, params: { user_id: user }
       expect(response).to be_successful
       expect(assigns[:operations]).to eq [parent]
     end
@@ -20,7 +20,7 @@ describe CurationConcerns::OperationsController do
 
   describe "#show" do
     it "is successful" do
-      get :show, user_id: user, id: parent
+      get :show, params: { user_id: user, id: parent }
       expect(response).to be_successful
       expect(assigns[:operation]).to eq parent
     end

@@ -15,7 +15,7 @@ describe CurationConcerns::FileSetsController do
 
   context "JSON" do
     let(:resource) { file_set }
-    let(:resource_request) { get :show, id: resource, format: :json }
+    let(:resource_request) { get :show, params: { id: resource, format: :json } }
     let(:actor) { controller.send(:actor) }
     subject { response }
     describe "unauthorized" do
@@ -35,7 +35,7 @@ describe CurationConcerns::FileSetsController do
     end
 
     describe 'not found' do
-      before { get :show, id: "non-existent-pid", format: :json }
+      before { get :show, params: { id: "non-existent-pid", format: :json } }
       # Respond with forbidden to protect against object enumeration attack
       it { is_expected.to respond_forbidden }
     end
@@ -56,7 +56,7 @@ describe CurationConcerns::FileSetsController do
         allow_any_instance_of(FileSet).to receive(:persisted?).and_return(true)
         allow_any_instance_of(FileSet).to receive(:to_param).and_return('999')
 
-        post :create, file_set: { title: ['a title'], files: [file] }, parent_id: parent.id, format: :json
+        post :create, params: { file_set: { title: ['a title'], files: [file] }, parent_id: parent.id, format: :json }
 
         expect(assigns[:file_set]).to be_instance_of ::FileSet # this object is used by the jbuilder template
         expect(controller).to render_template('curation_concerns/file_sets/jq_upload')
@@ -67,24 +67,24 @@ describe CurationConcerns::FileSetsController do
     end
 
     describe 'failed create: no file' do
-      before { post :create, file_set: { title: ["foo"] }, parent_id: parent.id, format: :json }
+      before { post :create, params: { file_set: { title: ["foo"] }, parent_id: parent.id, format: :json } }
       it { is_expected.to respond_bad_request(message: 'Error! No file to save') }
     end
 
     describe 'failed create: bad file' do
-      before { post :create, file_set: { files: ['not a file'] }, parent_id: parent.id, format: :json }
+      before { post :create, params: { file_set: { files: ['not a file'] }, parent_id: parent.id, format: :json } }
       it { is_expected.to respond_bad_request(message: 'Error! No file for upload', description: 'unknown file') }
     end
 
     describe 'failed create: empty file' do
-      before { post :create, file_set: { files: [empty_file] }, parent_id: parent.id, format: :json }
+      before { post :create, params: { file_set: { files: [empty_file] }, parent_id: parent.id, format: :json } }
       it { is_expected.to respond_unprocessable_entity(errors: { files: "#{empty_file.original_filename} has no content! (Zero length file)" }, description: I18n.t('curation_concerns.api.unprocessable_entity.empty_file')) }
     end
 
     describe 'failed create: solr error' do
       before do
         allow(controller).to receive(:process_file).and_raise(RSolr::Error::Http.new(controller.request, response))
-        post :create, file_set: { files: [file] }, parent_id: parent.id, format: :json
+        post :create, params: { file_set: { files: [file] }, parent_id: parent.id, format: :json }
       end
 
       it { is_expected.to respond_internal_error(message: 'Error occurred while creating a FileSet.') }
@@ -112,7 +112,7 @@ describe CurationConcerns::FileSetsController do
         else
           expect(actor).to receive(:update_metadata).with(ActionController::Parameters.new(expected_params).permit!).and_return(true)
         end
-        put :update, id: resource, file_set: { title: ['updated title'] }, format: :json
+        put :update, params: { id: resource, file_set: { title: ['updated title'] }, format: :json }
         expect(assigns[:file_set]).to be_instance_of ::FileSet # this object is used by the jbuilder template
         expect(response.status).to eq 200
         expect(controller).to render_template('curation_concerns/file_sets/show')
@@ -124,7 +124,7 @@ describe CurationConcerns::FileSetsController do
     describe "integration update" do
       render_views
       it "works" do
-        put :update, id: resource.id, file_set: { title: ['test'] }, format: :json
+        put :update, params: { id: resource.id, file_set: { title: ['test'] }, format: :json }
         expect(response.status).to eq 200
       end
     end
@@ -135,7 +135,7 @@ describe CurationConcerns::FileSetsController do
           controller.curation_concern.errors.add(:some_field, "This is not valid. Fix it.")
           false
         end
-        post :update, id: resource, file_set: { title: nil, depositor: nil }, format: :json
+        post :update, params: { id: resource, file_set: { title: nil, depositor: nil }, format: :json }
       }
       it "returns 422 and the errors" do
         expect(response).to respond_unprocessable_entity(errors: { some_field: ["This is not valid. Fix it."] })

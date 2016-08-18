@@ -26,14 +26,14 @@ describe LeasesController do
   describe '#edit' do
     context 'when I do not have edit permissions for the object' do
       it 'redirects' do
-        get :edit, id: not_my_work
+        get :edit, params: { id: not_my_work }
         expect(response.status).to eq 302
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
     context 'when I have permission to edit the object' do
       it 'shows me the page' do
-        get :edit, id: a_work
+        get :edit, params: { id: a_work }
         expect(response).to be_success
       end
     end
@@ -42,7 +42,7 @@ describe LeasesController do
   describe '#destroy' do
     context 'when I do not have edit permissions for the object' do
       it 'denies access' do
-        get :destroy, id: not_my_work
+        get :destroy, params: { id: not_my_work }
         expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.')
       end
     end
@@ -56,7 +56,7 @@ describe LeasesController do
       context 'that has no files' do
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy)
-          get :destroy, id: a_work
+          get :destroy, params: { id: a_work }
           expect(response).to redirect_to edit_lease_path(a_work)
         end
       end
@@ -69,7 +69,7 @@ describe LeasesController do
 
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy)
-          get :destroy, id: a_work
+          get :destroy, params: { id: a_work }
           expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
         end
       end
@@ -94,7 +94,7 @@ describe LeasesController do
       context 'with an expired lease' do
         let(:expiration_date) { Date.today - 2 }
         it 'deactivates lease, update the visibility and redirect' do
-          patch :update, batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } }
+          patch :update, params: { batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           expect(response).to redirect_to leases_path

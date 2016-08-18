@@ -24,7 +24,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
       describe "creating a single-use download link" do
         it "returns a link for downloading" do
-          post 'create_download', id: file
+          post 'create_download', params: { id: file }
           expect(response).to be_success
           expect(response.body).to eq download_single_use_link_url(hash)
         end
@@ -32,7 +32,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
       describe "creating a single-use show link" do
         it "returns a link for showing" do
-          post 'create_show', id: file
+          post 'create_show', params: { id: file }
           expect(response).to be_success
           expect(response.body).to eq show_single_use_link_url(hash)
         end
@@ -41,7 +41,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
     context "GET index" do
       describe "viewing existing links" do
-        before { get :index, id: file }
+        before { get :index, params: { id: file } }
         subject { response }
         it { is_expected.to be_success }
       end
@@ -50,7 +50,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
     context "DELETE destroy" do
       let!(:link) { create(:download_link) }
       it "deletes the link" do
-        expect { delete :destroy, id: file, link_id: link }.to change { SingleUseLink.count }.by(-1)
+        expect { delete :destroy, params: { id: file, link_id: link } }.to change { SingleUseLink.count }.by(-1)
         expect(response).to be_success
       end
     end
@@ -64,17 +64,17 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
     subject { response }
 
     describe "creating a single-use download link" do
-      before { post 'create_download', id: file }
+      before { post 'create_download', params: { id: file } }
       it { is_expected.not_to be_success }
     end
 
     describe "creating a single-use show link" do
-      before { post 'create_show', id: file }
+      before { post 'create_show', params: { id: file } }
       it { is_expected.not_to be_success }
     end
 
     describe "viewing existing links" do
-      before { get :index, id: file }
+      before { get :index, params: { id: file } }
       it { is_expected.not_to be_success }
     end
   end
@@ -83,17 +83,17 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
     subject { response }
 
     describe "creating a single-use download link" do
-      before { post 'create_download', id: file }
+      before { post 'create_download', params: { id: file } }
       it { is_expected.not_to be_success }
     end
 
     describe "creating a single-use show link" do
-      before { post 'create_show', id: file }
+      before { post 'create_show', params: { id: file } }
       it { is_expected.not_to be_success }
     end
 
     describe "viewing existing links" do
-      before { get :index, id: file }
+      before { get :index, params: { id: file } }
       it { is_expected.not_to be_success }
     end
   end

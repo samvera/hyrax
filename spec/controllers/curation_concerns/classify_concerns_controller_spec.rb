@@ -19,7 +19,7 @@ describe CurationConcerns::ClassifyConcernsController do
   describe '#create' do
     context 'without logging in' do
       it 'redirect to login page if user is not logged in' do
-        post :create, classify: { curation_concern_type: 'GenericWork' }
+        post :create, params: { classify: { curation_concern_type: 'GenericWork' } }
         expect(response).to redirect_to(main_app.user_session_path)
       end
     end
@@ -34,7 +34,7 @@ describe CurationConcerns::ClassifyConcernsController do
       let(:new_curation_concern_generic_work_path) { '/stub/path' }
 
       it 'requires authentication' do
-        post :create, classify_concern: { curation_concern_type: 'GenericWork' }
+        post :create, params: { classify_concern: { curation_concern_type: 'GenericWork' } }
         expect(response).to redirect_to(main_app.new_curation_concerns_generic_work_path)
       end
     end
