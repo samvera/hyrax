@@ -2,7 +2,7 @@
 
 Code: [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
-[![Coverage Status](https://coveralls.io/repos/projecthydra/sufia/badge.svg)](https://coveralls.io/r/projecthydra/sufia)
+[![Coverage Status](https://coveralls.io/repos/github/projecthydra/sufia/badge.svg?branch=master)](https://coveralls.io/github/projecthydra/sufia?branch=master)
 [![Code Climate](https://codeclimate.com/github/projecthydra/sufia/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/sufia)
 [![Dependency Update Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 [![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra/sufia/badge)](https://dependencyci.com/github/projecthydra/sufia)
