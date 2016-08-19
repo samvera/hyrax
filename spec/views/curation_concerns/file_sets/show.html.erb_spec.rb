@@ -72,28 +72,28 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
         context 'with an image' do
           let(:mime_type) { 'image/tiff' }
           it 'renders the download link' do
-            expect(rendered).to have_link('Download the full-sized image')
+            expect(rendered).to have_link('Download image')
           end
         end
 
         context 'with a PDF' do
           let(:mime_type) { 'application/pdf' }
           it 'renders the download link' do
-            expect(rendered).to have_link('Download the full-sized PDF')
+            expect(rendered).to have_link('Download PDF')
           end
         end
 
         context 'with a word document' do
           let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
           it 'renders the download link' do
-            expect(rendered).to have_link('Download the document')
+            expect(rendered).to have_link('Download file')
           end
         end
 
         context 'with anything else' do
           let(:mime_type) { 'application/binary' }
           it 'renders the download link' do
-            expect(rendered).to have_link('Download the document')
+            expect(rendered).to have_link('Download file')
           end
         end
       end
@@ -107,28 +107,28 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
         context 'with an image' do
           let(:mime_type) { 'image/tiff' }
           it 'does not render the download link' do
-            expect(rendered).not_to have_link('Download the full-sized image')
+            expect(rendered).not_to have_link('Download image')
           end
         end
 
         context 'with a PDF' do
           let(:mime_type) { 'application/pdf' }
           it 'does not render the download link' do
-            expect(rendered).not_to have_link('Download the full-sized PDF')
+            expect(rendered).not_to have_link('Download PDF')
           end
         end
 
         context 'with a word document' do
           let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
           it 'does not render the download link' do
-            expect(rendered).not_to have_link('Download the document')
+            expect(rendered).not_to have_link('Download file')
           end
         end
 
         context 'with anything else' do
           let(:mime_type) { 'application/binary' }
           it 'does not render the download link' do
-            expect(rendered).not_to have_link('Download the document')
+            expect(rendered).not_to have_link('Download file')
           end
         end
       end
