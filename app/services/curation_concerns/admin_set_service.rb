@@ -1,33 +1,26 @@
 module CurationConcerns
   class AdminSetService
-    def initialize(user)
-      @user = user
+    attr_reader :context
+
+    # @param [#repository,#blacklight_config,#current_ability] context
+    def initialize(context)
+      @context = context
     end
 
-    def select_options
-      search_results.map do |element|
+    # @param [Symbol] access :read or :edit
+    def select_options(access = :read)
+      search_results(access).map do |element|
         [element.to_s, element.id]
       end
     end
 
-    def blacklight_config
-      ::CatalogController.blacklight_config
-    end
-
-    def current_ability
-      ::Ability.new(@user)
-    end
-
     private
 
-      def search_results
-        builder = AdminSetSearchBuilder.new(self)
-        response = repository.search(builder)
+      # @param [Symbol] access :read or :edit
+      def search_results(access)
+        builder = AdminSetSearchBuilder.new(context, access)
+        response = context.repository.search(builder)
         response.documents
-      end
-
-      def repository
-        ::CatalogController.new.repository
       end
   end
 end

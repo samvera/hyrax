@@ -6,7 +6,7 @@ describe CurationConcerns::AdminSetSearchBuilder do
   let(:user) { double('user') }
   let(:solr_params) { { fq: [] } }
 
-  subject { described_class.new(context) }
+  subject { described_class.new(context, :read) }
   describe '#filter_models' do
     before { subject.filter_models(solr_params) }
 
