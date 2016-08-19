@@ -2,6 +2,7 @@ module CurationConcerns
   class FileSetPresenter
     include ModelProxy
     include PresentsAttributes
+    include CurationConcerns::CharacterizationBehavior
     attr_accessor :solr_document, :current_ability, :request
 
     # @param [SolrDocument] solr_document

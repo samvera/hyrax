@@ -68,7 +68,8 @@ describe FileSet do
         { type: 'group', access: 'read', name: 'group2' },
         { type: 'person', access: 'read', name: 'user2' },
         { type: 'person', access: 'read', name: 'user3' },
-        { type: 'person', access: 'edit', name: 'user1' }]
+        { type: 'person', access: 'edit', name: 'user1' }
+      ]
     end
 
     it "has attached content" do
@@ -107,6 +108,8 @@ describe FileSet do
       expect(subject).to respond_to(:well_formed)
       expect(subject).to respond_to(:page_count)
       expect(subject).to respond_to(:file_title)
+      expect(subject).to respond_to(:duration)
+      expect(subject).to respond_to(:sample_rate)
       # :creator is characterization metadata?
       expect(subject).to respond_to(:creator)
     end

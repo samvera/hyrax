@@ -19,7 +19,8 @@ module CurationConcerns
         class_attribute :characterization_terms, :characterization_proxy
         self.characterization_terms = [
           :format_label, :file_size, :height, :width, :filename, :well_formed,
-          :page_count, :file_title, :last_modified, :original_checksum, :mime_type
+          :page_count, :file_title, :last_modified, :original_checksum, :mime_type,
+          :duration, :sample_rate
         ]
         self.characterization_proxy = :original_file
 

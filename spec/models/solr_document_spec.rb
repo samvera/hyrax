@@ -64,4 +64,28 @@ describe SolrDocument do
       it { is_expected.to eq 'restricted' }
     end
   end
+
+  describe "#page_count" do
+    let(:attributes) { { page_count_tesim: ['1'] } }
+    subject { document.page_count }
+    it { is_expected.to eq ['1'] }
+  end
+
+  describe "#file_title" do
+    let(:attributes) { { file_title_tesim: ['title'] } }
+    subject { document.file_title }
+    it { is_expected.to eq ['title'] }
+  end
+
+  describe "#duration" do
+    let(:attributes) { { duration_tesim: ['time'] } }
+    subject { document.duration }
+    it { is_expected.to eq ['time'] }
+  end
+
+  describe "#sample_rate" do
+    let(:attributes) { { sample_rate_tesim: ['rate'] } }
+    subject { document.sample_rate }
+    it { is_expected.to eq ['rate'] }
+  end
 end
