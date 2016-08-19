@@ -6,6 +6,14 @@ module Sufia
     delegate :depositor, :keyword, :date_created, :date_modified, :itemtype,
              to: :solr_document
 
+    def page_title
+      title.first
+    end
+
+    def link_name
+      current_ability.can?(:read, id) ? page_title : 'File'
+    end
+
     def editor?
       current_ability.can?(:edit, solr_document)
     end

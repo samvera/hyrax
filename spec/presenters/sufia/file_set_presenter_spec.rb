@@ -3,7 +3,13 @@ describe Sufia::FileSetPresenter do
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
   let(:attributes) { file.to_solr }
-  let(:file) { build(:file_set, id: '123abc', user: user) }
+  let(:file) do
+    build(:file_set,
+          id: '123abc',
+          user: user,
+          title: ["File title"],
+          label: "filename.tif")
+  end
   let(:user) { double(user_key: 'sarah') }
 
   describe 'stats_path' do
@@ -16,6 +22,27 @@ describe Sufia::FileSetPresenter do
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
   it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
   it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+
+  describe '#link_name' do
+    context "with a user who can view the file" do
+      before do
+        allow(ability).to receive(:can?).with(:read, "123abc").and_return(true)
+      end
+      it "shows the title" do
+        expect(presenter.link_name).to eq 'File title'
+        expect(presenter.link_name).not_to eq 'filename.tif'
+      end
+    end
+
+    context "with a user who cannot view the file" do
+      before do
+        allow(ability).to receive(:can?).with(:read, "123abc").and_return(false)
+      end
+      it "hides the title" do
+        expect(presenter.link_name).to eq 'File'
+      end
+    end
+  end
 
   describe '#tweeter' do
     subject { presenter.tweeter }
