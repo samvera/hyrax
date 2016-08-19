@@ -20,6 +20,7 @@ module CurationConcerns
     # @params [Hash] solr_document the solr document to add the field to
     def index_thumbnails(solr_document)
       solr_document[thumbnail_field] = thumbnail_path
+      solr_document[Solrizer.solr_name('thumbnail_id', :symbol)] = object.thumbnail_id
     end
 
     # Returns the value for the thumbnail path to put into the solr document

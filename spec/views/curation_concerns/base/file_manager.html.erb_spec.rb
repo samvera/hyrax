@@ -77,10 +77,22 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   end
 
   it "renders a form for each member" do
-    expect(rendered).to have_selector("form", count: members.length)
+    expect(rendered).to have_selector("#sortable form", count: members.length)
   end
 
   it "renders an input for titles" do
     expect(rendered).to have_selector("input[name='file_set[title][]']")
+  end
+
+  it "renders a resource form for the entire resource" do
+    expect(rendered).to have_selector("form#resource-form")
+  end
+
+  it "renders a hidden field for the resource form thumbnail id" do
+    expect(rendered).to have_selector("#resource-form input[type=hidden][name='generic_work[thumbnail_id]']", visible: false)
+  end
+
+  it "renders a thumbnail field for each member" do
+    expect(rendered).to have_selector("input[name='thumbnail_id']", count: members.length)
   end
 end

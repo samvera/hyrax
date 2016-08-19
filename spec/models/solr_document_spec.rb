@@ -16,6 +16,12 @@ describe SolrDocument do
     it { is_expected.to eq 'one' }
   end
 
+  describe "thumbnail_id" do
+    let(:attributes) { { Solrizer.solr_name('thumbnail_id', :symbol) => ['one'] } }
+    subject { document.thumbnail_id }
+    it { is_expected.to eq 'one' }
+  end
+
   describe "creator" do
     let(:attributes) { { Solrizer.solr_name('creator') => ['one', 'two'] } }
     subject { document.creator }
