@@ -3,7 +3,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="order-title">
-          <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title" }, value: node.to_s, label: false %>
+          <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title" }, value: node.to_s, label: false, hint: false %>
         </div>
         <div class="file-set-link pull-right">
           <%= link_to contextual_path(node, @presenter), title: "Edit file" do %>
