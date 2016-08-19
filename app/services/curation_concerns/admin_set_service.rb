@@ -7,16 +7,18 @@ module CurationConcerns
       @context = context
     end
 
-    def select_options
-      search_results.map do |element|
+    # @param [Symbol] access :read or :edit
+    def select_options(access = :read)
+      search_results(access).map do |element|
         [element.to_s, element.id]
       end
     end
 
     private
 
-      def search_results
-        builder = AdminSetSearchBuilder.new(context)
+      # @param [Symbol] access :read or :edit
+      def search_results(access)
+        builder = AdminSetSearchBuilder.new(context, access)
         response = context.repository.search(builder)
         response.documents
       end
