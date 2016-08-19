@@ -10,6 +10,7 @@ Sufia = {
         this.notifications();
         this.transfers();
         this.relationships_table();
+        this.file_manager_init();
     },
 
     autocomplete: function () {
@@ -66,7 +67,13 @@ Sufia = {
         $('table.relationships-ajax-enabled').each(function () {
             new rel.RelationshipsTable($(this));
         });
-    }
+    },
+
+    file_manager_init: function () {
+        var fm = require('curation_concerns/file_manager');
+        var file_manager = new fm
+    },
+
 };
 
 Blacklight.onLoad(function () {
