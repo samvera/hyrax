@@ -67,4 +67,14 @@ describe Sufia::WorkShowPresenter do
       it { is_expected.to be true }
     end
   end
+
+  describe "#member_presenters" do
+    let(:work) { create(:work_with_one_file) }
+    let(:ability) { double "Ability" }
+
+    it "returns appropriate classes for each" do
+      expect(presenter.member_presenters.size).to eq 1
+      expect(presenter.member_presenters.first).to be_instance_of(::Sufia::FileSetPresenter)
+    end
+  end
 end

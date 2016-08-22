@@ -11,7 +11,7 @@ describe 'curation_concerns/base/items', type: :view do
       FactoryGirl.build(:file_set).to_solr.merge(
         id: "file",
         title_tesim: "Child File",
-        label_tesim: "Child File"
+        label_tesim: "ChildFile.pdf"
       )
     )
   end
@@ -41,7 +41,8 @@ describe 'curation_concerns/base/items', type: :view do
     it "links to child work" do
       expect(rendered).to have_link 'Child Work'
     end
-    it "links to child file" do
+    it "links to child file, using title as link text" do
+      expect(rendered).not_to have_link 'ChildFile.pdf'
       expect(rendered).to have_link 'Child File'
     end
   end
