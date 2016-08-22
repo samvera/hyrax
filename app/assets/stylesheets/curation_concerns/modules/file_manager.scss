@@ -35,6 +35,13 @@
       .attributes {
         @extend .col-xs-12;
       }
+      .member_resource_options {
+        @extend .col-xs-12;
+        float: none;
+        input[type=radio] {
+          margin-left: 1px;
+        }
+      }
       .order-title {
         width: 85%;
       }
@@ -58,6 +65,13 @@
       }
       .attributes {
         @extend .col-xs-6;
+      }
+      .member_resource_options {
+        @extend .col-xs-12;
+        float: none;
+        input[type=radio] {
+          margin-left: 1px;
+        }
       }
       .order-title {
         width: 49%;

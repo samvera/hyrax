@@ -1,6 +1,6 @@
 import SaveManager from 'curation_concerns/file_manager/save_manager'
 import SortManager from 'curation_concerns/file_manager/sorting'
-import {FileManagerMember} from 'curation_concerns/file_manager/member'
+import {InputTracker, FileManagerMember} from 'curation_concerns/file_manager/member'
 export default class FileManager {
   constructor() {
     this.save_manager = this.initialize_save_manager()
@@ -8,6 +8,7 @@ export default class FileManager {
     this.save_affix()
     this.member_tracking()
     this.sortable_placeholder()
+    this.resource_form()
   }
 
   initialize_save_manager() {
@@ -37,6 +38,22 @@ export default class FileManager {
     $("li[data-reorder-id]").each(function(index, element) {
       var manager_member = new FileManagerMember($(element), sm)
       $(element).data("file_manager_member", manager_member)
+    })
+  }
+
+  // Initialize a form that represents the parent resource as a whole.
+  // For the purpose of CC, this only comes with a thumbnail_id hidden field
+  // which is synchronized with the radio buttons on each member and then
+  // submitted with the SaveManager.
+  resource_form() {
+    let manager = new FileManagerMember($("#resource-form").parent(), this.save_manager)
+    $("#resource-form").parent().data("file_manager_member", manager)
+    // Track thumbnail ID hidden field
+    new InputTracker($("*[data-member-link=thumbnail_id]"), manager)
+    $("#sortable *[name=thumbnail_id]").change(function() {
+      let val = $("#sortable *[name=thumbnail_id]:checked").val()
+      $("*[data-member-link=thumbnail_id]").val(val)
+      $("*[data-member-link=thumbnail_id]").change()
     })
   }
 

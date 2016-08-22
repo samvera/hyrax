@@ -12,6 +12,7 @@ describe CurationConcerns::WorkIndexer do
     generic_work.works << child_work
     allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return("/downloads/#{file.id}?file=thumbnail")
     generic_work.representative_id = file.id
+    generic_work.thumbnail_id = file.id
   end
 
   subject { service.generate_solr_document }
@@ -20,6 +21,7 @@ describe CurationConcerns::WorkIndexer do
     expect(subject['member_ids_ssim']).to eq generic_work.member_ids
     expect(subject['generic_type_sim']).to eq ['Work']
     expect(subject.fetch('thumbnail_path_ss')).to eq "/downloads/#{file.id}?file=thumbnail"
+    expect(subject.fetch('thumbnail_id_ssim')).to eq file.id
   end
 
   context "when thumbnail_field is configured" do
