@@ -1,5 +1,5 @@
-require 'google/api_client'
 require 'oauth2'
+require 'signet/oauth_2/client'
 require 'legato'
 
 module Sufia
@@ -30,22 +30,25 @@ module Sufia
 
     # Generate an OAuth2 token for Google Analytics
     # @return [OAuth2::AccessToken] An OAuth2 access token for GA
-    def self.token
-      scope = 'https://www.googleapis.com/auth/analytics.readonly'
-      client = Google::APIClient.new(application_name: config.fetch('app_name'),
-                                     application_version: config.fetch('app_version'))
-      key = Google::APIClient::PKCS12.load_key(config.fetch('privkey_path'),
-                                               config.fetch('privkey_secret'))
-      service_account = Google::APIClient::JWTAsserter.new(config.fetch('client_email'),
-                                                           scope,
-                                                           key)
-      client.authorization = service_account.authorize
-      oauth_client = OAuth2::Client.new('',
-                                        '',
-                                        authorize_url: 'https://accounts.google.com/o/oauth2/auth',
-                                        token_url: 'https://accounts.google.com/o/oauth2/token')
-      OAuth2::AccessToken.new(oauth_client, client.authorization.access_token)
+    def self.token(scope = 'https://www.googleapis.com/auth/analytics.readonly')
+      access_token = auth_client(scope).fetch_access_token!
+      OAuth2::AccessToken.new(oauth_client, access_token['access_token'], expires_in: access_token['expires_in'])
     end
+
+    def self.oauth_client
+      OAuth2::Client.new('', '', authorize_url: 'https://accounts.google.com/o/oauth2/auth',
+                                 token_url: 'https://accounts.google.com/o/oauth2/token')
+    end
+
+    def self.auth_client(scope)
+      Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+                                 audience: 'https://accounts.google.com/o/oauth2/token',
+                                 scope: scope,
+                                 issuer: config.fetch('client_email'),
+                                 signing_key: OpenSSL::PKCS12.new(File.read(config.fetch('privkey_path')), config.fetch('privkey_secret')).key,
+                                 sub: config.fetch('client_email')
+    end
+
     private_class_method :token
 
     # Return a user object linked to a Google Analytics account
