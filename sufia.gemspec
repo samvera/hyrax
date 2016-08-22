@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'carrierwave', '~> 0.9'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
-  spec.add_dependency 'google-api-client', '~> 0.7', '< 0.9'
+  spec.add_dependency 'signet'
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
