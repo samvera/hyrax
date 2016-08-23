@@ -1,3 +1,6 @@
 <div class="no-preview">
   <%= t('sufia.works.show.no_preview') %>
+  <% if CurationConcerns.config.display_media_download_link %>
+    <p/><%= link_to t('sufia.file_set.show.download'), main_app.download_path(file_set), target: "_new" %>
+  <% end %>
 </div>

@@ -275,6 +275,8 @@ en:
       notifications_deleted: "Notifications have been deleted"
     file_set:
       browse_view: "Browse View"
+      show:
+        download: "Download the file"
     work:
       browse_view: "Browse View"
     footer:
