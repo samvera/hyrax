@@ -368,6 +368,12 @@ en:
         empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
       citations:
         header: 'Citations:'
+    file_sets:
+      groups_description:
+        description_html: >
+          The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
+          you are a member of.  You may select a specific group and assign an access level for a file 
+          within %{application_name}, similarly to adding user access levels.
     visibility:
       open:
         label_html: Public
