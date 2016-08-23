@@ -104,11 +104,7 @@ module Sufia
     def inject_routes
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
       gsub_file 'config/routes.rb', /'welcome#index'/, "'sufia/homepage#index'" # Replace the root path injected by CurationConcerns
-
-      routing_code = "\n  # This must be the very last route in the file because it has a catch-all route for 404 errors.\n" \
-        "  # This behavior seems to show up only in production mode.\n" \
-        "  mount Sufia::Engine => '/'\n"
-
+      routing_code = "\n mount Sufia::Engine => '/'\n"
       sentinel = /end\Z/
       inject_into_file 'config/routes.rb', routing_code, before: sentinel, verbose: false
     end
