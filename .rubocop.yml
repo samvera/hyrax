@@ -73,10 +73,6 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-Style/GlobalVars:
-  AllowedVariables:
-    - $in_travis
-
 Style/SingleLineBlockParams:
   Enabled: false
 

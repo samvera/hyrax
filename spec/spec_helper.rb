@@ -55,9 +55,7 @@ ActiveJob::Base.queue_adapter = :inline
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-$in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
-
-if $in_travis
+if ENV['TRAVIS'] == 'true'
   # Monkey-patches the FITS runner to return the PDF FITS fixture
   module Hydra::Works
     class CharacterizationService
