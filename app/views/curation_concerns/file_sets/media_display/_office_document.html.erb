@@ -1,16 +1,21 @@
 <% if CurationConcerns.config.display_media_download_link %>
-    <%= link_to main_app.download_path(file_set), target: "_new", title: "Download the document" do %>
-        <figure>
-            <%= image_tag thumbnail_url(file_set),
-                          class: "img-responsive",
-                          alt: "Download the document #{file_set.to_s}" %>
-            <figcaption>Download the document</figcaption>
-        </figure>
-    <% end %>
+    <div>
+      <h2 class="sr-only"><%= t('curation_concerns.show.downloadable_content.heading') %></h2>
+      <%= image_tag thumbnail_url(file_set),
+                    class: "representative-media",
+                    alt: "",
+                    role: "presentation" %>
+      <%= link_to main_app.download_path(file_set),
+                  target: "_new",
+                  class: "btn btn-default" do %>
+          <%= t('curation_concerns.show.downloadable_content.office_link') %>
+      <% end %>
+    </div>
 <% else %>
-    <figure>
-        <%= image_tag thumbnail_url(file_set),
-                      class: "img-responsive",
-                      alt: "Thumbnail of #{file_set.to_s}" %>
-    </figure>
+    <div>
+      <%= image_tag thumbnail_url(file_set),
+                    class: "representative-media",
+                    alt: "",
+                    role: "presentation" %>
+    </div>
 <% end %>

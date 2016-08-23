@@ -16,6 +16,12 @@ en:
     show:
       related_files:
         heading: 'Members'
+      downloadable_content:
+        heading: 'Downloadable Content'
+        default_link: 'Download file'
+        image_link: 'Download image'
+        office_link: 'Download file'
+        pdf_link: 'Download PDF'
     search:
       form:
         q:
