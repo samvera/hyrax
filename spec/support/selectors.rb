@@ -1,23 +1,4 @@
 module Selectors
-  module Header
-    def nav_toggle(section, link)
-      within '#masthead' do
-        click_on section
-        click_on link
-      end
-    end
-
-    def user_notifications_link
-      nav_toggle('Dashboard', 'Notifications')
-    end
-
-    def user_utility_toggle
-      within '#user_utility_links' do
-        find '.dropdown-toggle.btn.btn-default'
-      end
-    end
-  end
-
   module Dashboard
     def db_item_actions_toggle(item)
       within "#document_#{item.id}" do
