@@ -10,9 +10,9 @@ module BackportTestHelpers
       end
 
       if rest[:body]
-        super(action, rest[:body], rest.except(:params).merge(rest[:params]))
+        super(action, rest[:body], rest.except(:params).merge(rest.fetch(:params, {})))
       else
-        super(action, rest.except(:params).merge(rest[:params]))
+        super(action, rest.except(:params).merge(rest.fetch(:params, {})))
       end
     end
   end

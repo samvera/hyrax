@@ -13,7 +13,7 @@ describe Sufia::Analytics do
 
     context "When the yaml file has no values" do
       before do
-        described_class.send(:remove_instance_variable, :@config)
+        described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
         allow(File).to receive(:read).and_return("# Just comments\n# and comments\n")
       end
       it 'returns nil' do
