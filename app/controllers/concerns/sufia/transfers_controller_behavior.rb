@@ -72,7 +72,7 @@ module Sufia
       end
 
       def proxy_deposit_request_params
-        params.require(:proxy_deposit_request).permit(:transfer_to)
+        params.require(:proxy_deposit_request).permit(:transfer_to, :sender_comment)
       end
   end
 end

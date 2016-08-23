@@ -73,13 +73,17 @@ describe TransfersController, type: :controller do
       it "is successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {
-          post :create, id: work.id, proxy_deposit_request: { transfer_to: another_user.user_key }
+          post :create, id: work.id, proxy_deposit_request: {
+            transfer_to: another_user.user_key,
+            sender_comment: 'Hi mom!'
+          }
         }.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work.id)
         expect(proxy_request.sending_user).to eq(user)
+        expect(proxy_request.sender_comment).to eq 'Hi mom!'
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
         expect(notification.subject).to eq("Ownership Change Request")
