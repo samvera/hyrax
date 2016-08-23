@@ -34,9 +34,6 @@ en:
           my_collections:
             label_short:  "My Collections"
             label_long:   "My Collections"
-          my_highlights:
-            label_short:  "My Highlights"
-            label_long:   "My Highlights"
           my_shares:
             label_short:  "My Shares"
             label_long:   "My Shares"
