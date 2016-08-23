@@ -31,5 +31,9 @@ describe "display a work as its owner" do
       # Doesn't have the upload form for uploading more files
       expect(page).not_to have_selector "form#fileupload"
     end
+
+    it "has some social media buttons" do
+      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?text=Magnificent+splendor&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
+    end
   end
 end

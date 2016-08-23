@@ -365,6 +365,11 @@ en:
         empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
       citations:
         header: 'Citations:'
+      social_media:
+        facebook: 'Facebook'
+        twitter: 'Twitter'
+        tumblr: 'Tumblr'
+        google: 'Google+'
     file_sets:
       groups_description:
         description_html: >
