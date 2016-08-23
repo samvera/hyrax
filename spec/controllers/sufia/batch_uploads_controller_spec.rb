@@ -44,10 +44,12 @@ describe Sufia::BatchUploadsController do
                 ['1'],
                 expected_shared_params,
                 CurationConcerns::Operation)
-        post :create, title: { '1' => 'foo' },
-                      resource_type: { '1' => 'Article' },
-                      uploaded_files: ['1'],
-                      batch_upload_item: { keyword: [""], visibility: 'open' }
+        post :create, params: {
+          title: { '1' => 'foo' },
+          resource_type: { '1' => 'Article' },
+          uploaded_files: ['1'],
+          batch_upload_item: { keyword: [""], visibility: 'open' }
+        }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -56,14 +58,15 @@ describe Sufia::BatchUploadsController do
     describe "when submiting works on behalf of another user" do
       it "redirects to my shares page" do
         allow(BatchCreateJob).to receive(:perform_later)
-        post :create,
-             batch_upload_item: {
-               permissions_attributes: [
-                 { type: "group", name: "public", access: "read" }
-               ],
-               on_behalf_of: 'elrayle'
-             },
-             uploaded_files: ['1']
+        post :create, params: {
+          batch_upload_item: {
+            permissions_attributes: [
+              { type: "group", name: "public", access: "read" }
+            ],
+            on_behalf_of: 'elrayle'
+          },
+          uploaded_files: ['1']
+        }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_shares_path
       end
     end

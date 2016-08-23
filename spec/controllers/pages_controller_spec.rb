@@ -5,7 +5,7 @@ describe PagesController, type: :controller do
       let(:page) { ContentBlock.create!(name: page_name, value: "foo bar") }
 
       it "updates the node" do
-        get :show, id: page.name
+        get :show, params: { id: page.name }
         expect(response).to be_successful
         expect(assigns[:page]).to eq page
       end
@@ -14,7 +14,7 @@ describe PagesController, type: :controller do
   context "content does not exist" do
     describe "GET #show" do
       it "creates the node" do
-        get :show, id: "about_page"
+        get :show, params: { id: "about_page" }
         expect(response).to be_successful
         expect(assigns[:page]).not_to be_nil
       end

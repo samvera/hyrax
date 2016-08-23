@@ -40,6 +40,7 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'support/features'
+require 'support/backport_test_helpers'
 require 'support/rake'
 require 'byebug' unless ENV['TRAVIS']
 
@@ -164,6 +165,10 @@ RSpec.configure do |config|
     config.include Devise::Test::ControllerHelpers, type: :controller
   else
     config.include Devise::TestHelpers, type: :controller
+  end
+
+  if Rails::VERSION::MAJOR < 5
+    config.include BackportTestHelpers, type: :controller
   end
 
   config.include EngineRoutes, type: :controller

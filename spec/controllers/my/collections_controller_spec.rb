@@ -18,9 +18,9 @@ describe My::CollectionsController, type: :controller do
       context "with mulitple pages of collections" do
         before { 2.times { create(:public_collection, user: user) } }
         it "paginates" do
-          get :index, per_page: 2
+          get :index, params: { per_page: 2 }
           expect(assigns[:document_list].length).to eq 2
-          get :index, per_page: 2, page: 2
+          get :index, params: { per_page: 2, page: 2 }
           expect(assigns[:document_list].length).to be >= 1
         end
       end

@@ -29,9 +29,9 @@ describe My::HighlightsController, type: :controller do
         work2 = create(:work, user: user)
         user.trophies.create!(work_id: work1.id)
         user.trophies.create!(work_id: work2.id)
-        get :index, per_page: 2
+        get :index, params: { per_page: 2 }
         expect(assigns[:document_list].length).to eq 2
-        get :index, per_page: 2, page: 2
+        get :index, params: { per_page: 2, page: 2 }
         expect(assigns[:document_list].length).to be >= 1
       end
 

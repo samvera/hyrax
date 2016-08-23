@@ -25,9 +25,9 @@ describe My::SharesController, type: :controller do
       context "with multiple pages of results" do
         before { 2.times { create(:work, user: other_user, edit_users: [user, other_user]) } }
         it "paginates" do
-          get :index, per_page: 2
+          get :index, params: { per_page: 2 }
           expect(assigns[:document_list].length).to eq 2
-          get :index, per_page: 2, page: 2
+          get :index, params: { per_page: 2, page: 2 }
           expect(assigns[:document_list].length).to be >= 1
         end
       end

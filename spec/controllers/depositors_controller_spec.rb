@@ -9,7 +9,7 @@ describe DepositorsController do
 
     describe "#create" do
       context 'when the grantee has not yet been designated as a depositor' do
-        let(:request_to_grant_proxy) { post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' }
+        let(:request_to_grant_proxy) { post :create, params: { user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' } }
 
         it 'is successful' do
           expect { request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(1)
@@ -27,7 +27,7 @@ describe DepositorsController do
 
       context 'when the grantee is already an allowed depositor' do
         # For this test we just set the grantor to be eq to grantee.
-        let(:redundant_request_to_grant_proxy) { post :create, user_id: user.user_key, grantee_id: user.user_key, format: 'json' }
+        let(:redundant_request_to_grant_proxy) { post :create, params: { user_id: user.user_key, grantee_id: user.user_key, format: 'json' } }
 
         it 'does not add the user, and returns a 200, with empty response body' do
           expect { redundant_request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(0)
@@ -46,7 +46,7 @@ describe DepositorsController do
         user.can_receive_deposits_from << grantee
       end
       it "is successful" do
-        expect { delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json' }.to change { ProxyDepositRights.count }.by(-1)
+        expect { delete :destroy, params: { user_id: user.user_key, id: grantee.user_key, format: 'json' } }.to change { ProxyDepositRights.count }.by(-1)
       end
     end
   end
@@ -57,14 +57,14 @@ describe DepositorsController do
     end
     describe "create" do
       it "is not successful" do
-        post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json'
+        post :create, params: { user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' }
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
     describe "destroy" do
       it "is not successful" do
-        delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json'
+        delete :destroy, params: { user_id: user.user_key, id: grantee.user_key, format: 'json' }
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
