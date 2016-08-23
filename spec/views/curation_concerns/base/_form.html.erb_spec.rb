@@ -16,6 +16,8 @@ describe 'curation_concerns/base/_form.html.erb', type: :view do
     assign(:form, form)
     allow(controller).to receive(:controller_name).and_return('batch_uploads')
     allow(controller).to receive(:action_name).and_return('new')
+    allow(controller).to receive(:repository).and_return(CurationConcerns::GenericWorksController.new.repository)
+    allow(controller).to receive(:blacklight_config).and_return(CurationConcerns::GenericWorksController.new.blacklight_config)
   end
 
   let(:page) do

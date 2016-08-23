@@ -1,0 +1,4 @@
+<%= f.input :admin_set_id, as: :select,
+    collection: CurationConcerns::AdminSetService.new(controller).select_options,
+    include_blank: true,
+    input_html: { class: 'form-control' } %>

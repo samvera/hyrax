@@ -9,7 +9,7 @@ module Sufia::Forms
 
     attr_reader :agreement_accepted
 
-    self.terms += [:collection_ids]
+    self.terms += [:collection_ids, :admin_set_id]
     self.required_fields = [:title, :creator, :keyword, :rights]
 
     def initialize(model, current_ability)
@@ -24,7 +24,7 @@ module Sufia::Forms
 
     # Fields that are automatically drawn on the page above the fold
     def primary_terms
-      required_fields
+      required_fields + [:admin_set_id]
     end
 
     # Fields that are automatically drawn on the page below the fold
