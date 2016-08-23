@@ -200,13 +200,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe "Catch-all" do
-    it "routes non-existent routes to errors" do
-      pending "The default route is turned off in testing, so that errors are raised"
-      expect(get: '/awesome').to route_to(controller: 'errors', action: 'routing', error: 'awesome')
-    end
-  end
-
   describe 'main app routes' do
     routes { Rails.application.routes }
 

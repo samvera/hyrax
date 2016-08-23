@@ -160,9 +160,4 @@ Sufia::Engine.routes.draw do
   %w(help terms zotero mendeley agreement versions).each do |action|
     get action, controller: 'static', action: action, as: action
   end
-
-  # Catch-all (for routing errors)
-  unless Rails.env.development? || Rails.env.test?
-    match '*error' => 'errors#routing', via: [:get, :post]
-  end
 end
