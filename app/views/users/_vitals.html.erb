@@ -16,8 +16,3 @@
       <li><span class="badge badge-optional"><%= user.total_file_downloads %></span> <%= t("sufia.dashboard.stats.file_downloads").pluralize(user.total_file_downloads) %></li>
   </ul>
 </div>
-
-<div class="list-group-item">
-  <%= render "users/follower_modal", followers: user.followers, user: user %>
-  <%= render "users/following_modal", following: user.all_following, user: user %>
-</div>

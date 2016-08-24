@@ -15,13 +15,6 @@ class ContentEventJob < EventJob
     repo_object.log_event(event)
   end
 
-  # override to check file permissions before logging to followers
-  def log_to_followers(depositor)
-    depositor.followers.select { |user| user.can?(:read, repo_object) }.each do |follower|
-      follower.log_event(event)
-    end
-  end
-
   # log the event to the users profile stream
   def log_user_event(depositor)
     depositor.log_profile_event(event)

@@ -7,8 +7,6 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
     allow(user).to receive(:telephone).and_return("814.865.8399")
     allow(user).to receive(:email).and_return("chuck@xsgy.edu")
     allow(user).to receive(:login).and_return("chuck")
-    allow(user).to receive(:all_following).and_return([double(name: "magneto")])
-    allow(user).to receive(:followers).and_return([double(name: "wolverine"), double(name: "storm")])
     allow(user).to receive(:can_receive_deposits_from).and_return([])
     allow(user).to receive(:total_file_views).and_return(1)
     allow(user).to receive(:total_file_downloads).and_return(3)
@@ -77,8 +75,6 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
       expect(sidebar).to have_content "1 View"
       expect(sidebar).to have_content "3 Downloads"
       expect(sidebar).to have_content "15 Works created"
-      expect(sidebar).to have_content "2 Follower(s)"
-      expect(sidebar).to have_content "1 Following"
     end
 
     it "shows the statistics before the profile" do

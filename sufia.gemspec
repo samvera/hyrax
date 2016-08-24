@@ -34,7 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'json-schema'
   spec.add_dependency 'nest', '~> 2.0'
   spec.add_dependency 'mailboxer', '~> 0.12'
-  spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
   spec.add_dependency 'carrierwave', '~> 0.9'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'

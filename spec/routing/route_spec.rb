@@ -146,14 +146,6 @@ describe 'Routes', type: :routing do
     it "routes to update profile" do
       expect(put: '/users/bob135').to route_to(controller: 'users', action: 'update', id: 'bob135')
     end
-
-    it "routes to user follow" do
-      expect(post: '/users/bob135/follow').to route_to(controller: 'users', action: 'follow', id: 'bob135')
-    end
-
-    it "routes to user unfollow" do
-      expect(post: '/users/bob135/unfollow').to route_to(controller: 'users', action: 'unfollow', id: 'bob135')
-    end
   end
 
   describe "Notifications" do

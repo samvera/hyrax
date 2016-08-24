@@ -92,30 +92,6 @@ describe User, type: :model do
   it { is_expected.to delegate_method(:can?).to(:ability) }
   it { is_expected.to delegate_method(:cannot?).to(:ability) }
 
-  it "does not have any followers" do
-    expect(user.followers_count).to eq(0)
-    expect(another_user.follow_count).to eq(0)
-  end
-  describe "follow/unfollow" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:another_user) { FactoryGirl.create(:user) }
-    before do
-      user.follow(another_user)
-    end
-
-    it "is able to follow another user" do
-      expect(user).to be_following(another_user)
-      expect(another_user).not_to be_following(user)
-      expect(another_user).to be_followed_by(user)
-      expect(user).not_to be_followed_by(another_user)
-    end
-    it "is able to unfollow another user" do
-      user.stop_following(another_user)
-      expect(user).not_to be_following(another_user)
-      expect(another_user).not_to be_followed_by(user)
-    end
-  end
-
   describe "activity streams" do
     let(:now) { Time.zone.now.to_i }
     let(:activities) {

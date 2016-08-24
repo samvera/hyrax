@@ -1,4 +1,4 @@
-# A generic job for sending events to a user and their followers.
+# A generic job for sending events to a user.
 #
 # This class does not implement a usable action, so it must be implemented in a child class
 #
@@ -17,9 +17,6 @@ class EventJob < ActiveJob::Base
     @depositor = depositor
     # Log the event to the depositor's profile stream
     log_user_event(depositor)
-
-    # Fan out the event to all followers who have access
-    log_to_followers(depositor)
   end
 
   # override to provide your specific action for the event you are logging
@@ -36,12 +33,5 @@ class EventJob < ActiveJob::Base
   # log the event to the users event stream
   def log_user_event(depositor)
     depositor.log_event(event)
-  end
-
-  # log the event to the users followers
-  def log_to_followers(depositor)
-    depositor.followers.each do |follower|
-      follower.log_event(event)
-    end
   end
 end

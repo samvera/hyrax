@@ -17,11 +17,6 @@ module Sufia::User
     # set this up as a messageable object
     acts_as_messageable
 
-    # Users should be able to follow things
-    acts_as_follower
-    # Users should be followable
-    acts_as_followable
-
     # Set up proxy-related relationships
     has_many :proxy_deposit_requests, foreign_key: 'receiving_user_id'
     has_many :deposit_rights_given, foreign_key: 'grantor_id', class_name: 'ProxyDepositRights', dependent: :destroy
