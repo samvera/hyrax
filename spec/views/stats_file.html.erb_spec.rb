@@ -4,7 +4,7 @@
 
 describe 'stats/file.html.erb', type: :view do
   describe 'usage statistics' do
-    before :each do
+    before do
       allow_message_expectations_on_nil
     end
 

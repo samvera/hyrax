@@ -4,7 +4,7 @@ describe 'users/index.html.erb', type: :view do
   before do
     users = []
     (1..25).each { |i| users << stub_model(User, name: "name#{i}", user_key: "user#{i}", created_at: join_date) }
-    allow(User).to receive_message_chain(:all).and_return(users)
+    allow(User).to receive(:all).and_return(users)
     relation = User.all
     allow(relation).to receive(:limit_value).and_return(10)
     allow(relation).to receive(:current_page).and_return(1)
