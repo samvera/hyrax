@@ -1,6 +1,6 @@
 describe UsersController, type: :controller do
   let(:user) { FactoryGirl.create(:user) }
-  before(:each) do
+  before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
