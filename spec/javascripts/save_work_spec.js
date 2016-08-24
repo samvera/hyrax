@@ -180,6 +180,15 @@ describe("SaveWorkControl", function() {
         $('#new_generic_work').submit();
         expect(spyEvent).not.toHaveBeenPrevented();
       });
+
+      it("disables save after submission", function() {
+        spyOn(target, 'isValid').and.returnValue(true);
+        expect(target.saveButton).toBeDisabled();
+        target.saveButton.prop("disabled", false);
+        expect(target.saveButton).not.toBeDisabled();
+        $('#new_generic_work').submit();
+        expect(target.saveButton).toBeDisabled();
+      });
     });
   });
 });
