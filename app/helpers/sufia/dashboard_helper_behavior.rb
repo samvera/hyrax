@@ -42,14 +42,20 @@ module Sufia
 
     def number_of_works(user = current_user)
       CurationConcerns::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
+    rescue RSolr::Error::ConnectionRefused
+      'n/a'
     end
 
     def number_of_files(user = current_user)
       ::FileSet.where(DepositSearchBuilder.depositor_field => user.user_key).count
+    rescue RSolr::Error::ConnectionRefused
+      'n/a'
     end
 
     def number_of_collections(user = current_user)
       ::Collection.where(DepositSearchBuilder.depositor_field => user.user_key).count
+    rescue RSolr::Error::ConnectionRefused
+      'n/a'
     end
 
     def notifications_for_dashboard

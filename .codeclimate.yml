@@ -8,6 +8,7 @@ engines:
     enabled: true
     exclude_fingerprints:
       - 3e30de88eb9d993e74c31d0309e13f7c
+      - 3fe527befeb3a1f8ac773f6393f75e0c
       - 8173dcc032219344176991b7bafa15a6
       - 8a7dae1e94950e59319a7cd259732bb4
       - 941c94b2e2f00eee9dcceb7a1faeb92f

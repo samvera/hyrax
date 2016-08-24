@@ -63,6 +63,8 @@ module Sufia
 
     def number_of_deposits(user)
       ActiveFedora::Base.where(DepositSearchBuilder.depositor_field => user.user_key).count
+    rescue RSolr::Error::ConnectionRefused
+      'n/a'
     end
 
     # @param item [Object]

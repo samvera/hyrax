@@ -14,6 +14,8 @@ module Sufia
       query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(work_ids)
       results = CurationConcerns::WorkRelation.new.search_with_conditions(query)
       results.map { |result| TrophyPresenter.new(document_model.new(result)) }
+    rescue RSolr::Error::ConnectionRefused
+      []
     end
 
     def thumbnail_path
