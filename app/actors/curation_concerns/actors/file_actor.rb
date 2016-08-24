@@ -34,9 +34,8 @@ module CurationConcerns
 
         CurationConcerns::VersioningService.create(repository_file, user)
 
-        # Retrieve a copy of the original file from the repository
-        working_file = WorkingDirectory.copy_repository_resource_to_working_directory(repository_file, file_set.id)
-        CharacterizeJob.perform_later(file_set, working_file)
+        # Characterize the original file from the repository
+        CharacterizeJob.perform_later(file_set, repository_file.id)
         true
       end
     end

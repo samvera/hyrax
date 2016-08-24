@@ -30,8 +30,7 @@ describe CurationConcerns::Actors::FileActor do
 
     it 'reverts to a previous version of a file' do
       expect(CurationConcerns::VersioningService).to receive(:create).with(previous_version, user)
-      expect(CurationConcerns::WorkingDirectory).to receive(:copy_repository_resource_to_working_directory).with(previous_version, file_set.id).and_return(file_path)
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, file_path)
+      expect(CharacterizeJob).to receive(:perform_later).with(file_set, previous_version.id)
       actor.revert_to(revision_id)
     end
   end
