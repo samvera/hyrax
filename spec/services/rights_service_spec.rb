@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+Deprecation.default_deprecation_behavior = :silence
 describe RightsService do
   before do
     # Configure QA to use fixtures
@@ -33,3 +34,4 @@ describe RightsService do
     end
   end
 end
+Deprecation.default_deprecation_behavior = :stderr
