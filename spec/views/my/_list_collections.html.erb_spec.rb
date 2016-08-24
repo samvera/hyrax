@@ -33,5 +33,6 @@ describe 'my/_index_partials/_list_collections.html.erb', type: :view do
     expect(rendered).to have_link 'Delete Collection', href: collection_path(id)
     expect(rendered).to have_css 'a.visibility-link', text: 'Private'
     expect(rendered).to have_selector '.expanded-details dd', text: 'Collection Description'
+    expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small pull-left"></span></a>'
   end
 end

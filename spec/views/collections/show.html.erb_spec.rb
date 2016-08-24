@@ -20,6 +20,7 @@ describe 'collections/show.html.erb', type: :view do
     stub_template 'collections/_sort_and_per_page.html.erb' => 'sort and per page'
     stub_template 'collections/_document_list.html.erb' => 'document list'
     stub_template 'collections/_paginate.html.erb' => 'paginate'
+    stub_template 'collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     render
   end
 
@@ -28,5 +29,6 @@ describe 'collections/show.html.erb', type: :view do
     expect(rendered).to have_link 'Edit'
     expect(rendered).to have_link 'Delete'
     expect(rendered).to have_link 'Add works'
+    expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end
