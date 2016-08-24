@@ -112,7 +112,7 @@ describe API::ZoteroController, type: :controller do
     context 'with a non-matching token' do
       before do
         sign_in user
-        get :callback, oauth_token: 'woohoo', oauth_verifier: '12345'
+        get :callback, params: { oauth_token: 'woohoo', oauth_verifier: '12345' }
       end
 
       specify do
@@ -127,7 +127,7 @@ describe API::ZoteroController, type: :controller do
         allow_any_instance_of(User).to receive(:zotero_token) { user_token }
         allow(Sufia::Arkivo::CreateSubscriptionJob).to receive(:perform_later)
         sign_in user
-        get :callback, oauth_token: token_string, oauth_verifier: pin
+        get :callback, params: { oauth_token: token_string, oauth_verifier: pin }
       end
 
       let(:token_string) { 'woohoo' }

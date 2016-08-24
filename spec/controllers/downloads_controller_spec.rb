@@ -32,21 +32,21 @@ describe DownloadsController, type: :controller do
         it "defaults to returning configured default download" do
           expect(described_class.default_content_path).to eq :original_file
           expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'inline', type: 'image/png')
-          get "show", id: file
+          get :show, params: { id: file }
           expect(response).to be_success
           expect(response.body).to eq expected_content
         end
 
         it "supports setting disposition to inline" do
           expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'inline', type: 'image/png')
-          get "show", id: file, disposition: "inline"
+          get :show, params: { id: file, disposition: "inline" }
           expect(response.body).to eq expected_content
           expect(response).to be_success
         end
 
         it "allows you to specify filename for download" do
           expect(controller).to receive(:send_file_headers!).with(filename: 'my%20dog.png', disposition: 'inline', type: 'image/png')
-          get "show", id: file, "filename" => "my%20dog.png"
+          get :show, params: { id: file, "filename" => "my%20dog.png" }
           expect(response.body).to eq expected_content
           expect(response).to be_success
         end
@@ -60,7 +60,7 @@ describe DownloadsController, type: :controller do
 
       describe "show" do
         it "denies access" do
-          get "show", id: file
+          get :show, params: { id: file }
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq 'You are not authorized to access this page.'
         end

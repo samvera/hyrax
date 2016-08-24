@@ -31,7 +31,7 @@ describe CurationConcerns::FileSetsController do
       it "deletes the file" do
         expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user)
         expect {
-          delete :destroy, id: file_set
+          delete :destroy, params: { id: file_set }
         }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
       end
     end
@@ -54,7 +54,7 @@ describe CurationConcerns::FileSetsController do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
-      get :edit, id: file_set
+      get :edit, params: { id: file_set }
 
       expect(response).to be_success
       expect(assigns[:file_set]).to eq file_set
@@ -71,11 +71,16 @@ describe CurationConcerns::FileSetsController do
     context "when updating metadata" do
       it "spawns a content update event job" do
         expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set, user)
-        post :update, id: file_set,
-                      file_set: { title: ['new_title'], keyword: [''],
-                                  permissions_attributes: [{ type: 'person',
-                                                             name: 'archivist1',
-                                                             access: 'edit' }] }
+        post :update, params: {
+          id: file_set,
+          file_set: {
+            title: ['new_title'],
+            keyword: [''],
+            permissions_attributes: [{ type: 'person',
+                                       name: 'archivist1',
+                                       access: 'edit' }]
+          }
+        }
       end
     end
 
@@ -85,9 +90,8 @@ describe CurationConcerns::FileSetsController do
 
         expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
-        post :update, id: file_set, file_set: { files: [file], keyword: [''],
-                                                permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
+        post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
+        post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
       end
     end
 
@@ -108,7 +112,7 @@ describe CurationConcerns::FileSetsController do
         context "as the first user" do
           before do
             sign_in user
-            post :update, id: file_set, revision: version1
+            post :update, params: { id: file_set, revision: version1 }
           end
 
           let(:restored_content) { file_set.reload.original_file }
@@ -130,7 +134,7 @@ describe CurationConcerns::FileSetsController do
           end
 
           it "is unauthorized" do
-            post :update, id: file_set, revision: version1
+            post :update, params: { id: file_set, revision: version1 }
             expect(response.code).to eq '401'
             expect(response).to render_template 'unauthorized'
           end
@@ -139,12 +143,14 @@ describe CurationConcerns::FileSetsController do
     end
 
     it "adds new groups and users" do
-      post :update, id: file_set,
-                    file_set: { keyword: [''],
-                                permissions_attributes: [
-                                  { type: 'person', name: 'user1', access: 'edit' },
-                                  { type: 'group', name: 'group1', access: 'read' }
-                                ] }
+      post :update, params: {
+        id: file_set,
+        file_set: { keyword: [''],
+                    permissions_attributes: [
+                      { type: 'person', name: 'user1', access: 'edit' },
+                      { type: 'group', name: 'group1', access: 'read' }
+                    ] }
+      }
 
       expect(assigns[:file_set].read_groups).to eq ["group1"]
       expect(assigns[:file_set].edit_users).to include("user1", user.user_key)
@@ -153,11 +159,13 @@ describe CurationConcerns::FileSetsController do
     it "updates existing groups and users" do
       file_set.edit_groups = ['group3']
       file_set.save
-      post :update, id: file_set,
-                    file_set: { keyword: [''],
-                                permissions_attributes: [
-                                  { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
-                                ] }
+      post :update, params: {
+        id: file_set,
+        file_set: { keyword: [''],
+                    permissions_attributes: [
+                      { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
+                    ] }
+      }
 
       expect(assigns[:file_set].read_groups).to eq(["group3"])
     end
@@ -168,9 +176,12 @@ describe CurationConcerns::FileSetsController do
       expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
-      post :update, id: file_set.id, 'Filename' => 'The world',
-                    file_set: { files: [file], keyword: [''],
-                                permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+      post :update, params: {
+        id: file_set.id,
+        'Filename' => 'The world',
+        file_set: { files: [file], keyword: [''],
+                    permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+      }
     end
 
     context "when there's an error saving" do
@@ -181,7 +192,7 @@ describe CurationConcerns::FileSetsController do
       end
       it "draws the edit page" do
         expect_any_instance_of(FileSet).to receive(:valid?).and_return(false)
-        post :update, id: file_set, file_set: { keyword: [''] }
+        post :update, params: { id: file_set, file_set: { keyword: [''] } }
         expect(response.code).to eq '422'
         expect(response).to render_template('edit')
         expect(assigns[:file_set]).to eq file_set
@@ -207,7 +218,7 @@ describe CurationConcerns::FileSetsController do
 
     context "someone else's files" do
       it "sets flash error" do
-        get :edit, id: file_set
+        get :edit, params: { id: file_set }
         expect(response.code).to eq '401'
         expect(response).to render_template('unauthorized')
       end
@@ -221,7 +232,7 @@ describe CurationConcerns::FileSetsController do
     context "without a referer" do
       it "shows me the file and set breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-        get :show, id: file_set
+        get :show, params: { id: file_set }
         expect(response).to be_successful
         expect(flash).to be_empty
         expect(assigns[:presenter]).to be_kind_of Sufia::FileSetPresenter
@@ -251,7 +262,7 @@ describe CurationConcerns::FileSetsController do
         expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
         expect(controller).to receive(:add_breadcrumb).with('test title', main_app.curation_concerns_generic_work_path(work.id))
         expect(controller).to receive(:add_breadcrumb).with('test file', main_app.curation_concerns_file_set_path(file_set))
-        get :show, id: file_set
+        get :show, params: { id: file_set }
         expect(response).to be_successful
       end
     end

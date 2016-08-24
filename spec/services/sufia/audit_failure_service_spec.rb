@@ -11,7 +11,7 @@ describe Sufia::AuditFailureService do
   before do
     allow(file).to receive(:log_date).and_return('2015-07-15 03:06:59')
     allow(file).to receive(:title).and_return('World Icon')
-    allow(file.original_file).to receive(:uri).and_return("http://localhost:8983/fedora/rest/test/nv/93/5x/32/nv935x32f/files/e5b91275-aab7-4720-88d4-c153d7196c23")
+    allow(file).to receive(:original_file).and_return(double(uri: "http://localhost:8983/fedora/rest/test/nv/93/5x/32/nv935x32f/files/e5b91275-aab7-4720-88d4-c153d7196c23"))
   end
 
   describe "#call" do

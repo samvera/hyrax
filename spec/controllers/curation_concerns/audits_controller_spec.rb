@@ -12,7 +12,7 @@ describe CurationConcerns::AuditsController do
       before { sign_in user }
 
       it "returns json with the result" do
-        xhr :post, :create, file_set_id: file_set
+        post :create, params: { file_set_id: file_set }, xhr: true
         expect(response).to be_success
         json = JSON.parse(response.body)
         # json is a structure like this:
@@ -28,7 +28,7 @@ describe CurationConcerns::AuditsController do
   context "when not signed in" do
     describe "POST create" do
       it "returns json with the result" do
-        xhr :post, :create, file_set_id: file_set
+        post :create, params: { file_set_id: file_set }, xhr: true
         expect(response.code).to eq '401'
       end
     end

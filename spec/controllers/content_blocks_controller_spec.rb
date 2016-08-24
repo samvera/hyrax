@@ -5,12 +5,12 @@ describe ContentBlocksController, type: :controller do
 
     context "when not logged in" do
       it "UPDATE should redirect to sign_in path" do
-        patch :update, id: content_block, content_block: { value: 'foo' }
+        patch :update, params: { id: content_block, content_block: { value: 'foo' } }
         expect(response).to redirect_to main_app.new_user_session_path
       end
 
       it "CREATE should redirect to sign_in path" do
-        post :create, content_block: { name: 'NNN', value: 'VVV' }
+        post :create, params: { content_block: { name: 'NNN', value: 'VVV' } }
         expect(response).to redirect_to main_app.new_user_session_path
       end
 
@@ -37,14 +37,14 @@ describe ContentBlocksController, type: :controller do
         before { expect(user).to receive(:groups).and_return(['admin', 'registered']) }
 
         it "UPDATE should save" do
-          patch :update, id: content_block, content_block: { value: 'foo' }
+          patch :update, params: { id: content_block, content_block: { value: 'foo' } }
           expect(response).to redirect_to "whence_i_came"
           expect(assigns[:content_block].value).to eq 'foo'
         end
 
         it "CREATE should save" do
           expect {
-            post :create, content_block: { name: 'NNN', value: 'VVV', external_key: 'key' }
+            post :create, params: { content_block: { name: 'NNN', value: 'VVV', external_key: 'key' } }
           }.to change { ContentBlock.count }.by(1)
           expect(response).to redirect_to "whence_i_came"
           expect(assigns[:content_block].name).to eq 'NNN'
@@ -55,13 +55,13 @@ describe ContentBlocksController, type: :controller do
 
       context "as a user without permission" do
         it "UPDATE is unauthorized" do
-          patch :update, id: content_block, content_block: { value: 'foo' }
+          patch :update, params: { id: content_block, content_block: { value: 'foo' } }
           expect(response.code).to eq '401'
           expect(response).to render_template(:unauthorized)
         end
 
         it "CREATE should redirect to root path" do
-          post :create, content_block: { name: 'NNN', value: 'VVV' }
+          post :create, params: { content_block: { name: 'NNN', value: 'VVV' } }
           expect(response.code).to eq '401'
           expect(response).to render_template(:unauthorized)
         end

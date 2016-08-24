@@ -54,26 +54,26 @@ describe BatchEditsController, type: :controller do
     let(:mycontroller) { "my/works" }
 
     it "is successful" do
-      put :update, update_type: "delete_all"
+      put :update, params: { update_type: "delete_all" }
       expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: "dashboard", only_path: true))
       expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
       expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
     end
 
     it "redirects to the return controller" do
-      put :update, update_type: "delete_all", return_controller: mycontroller
+      put :update, params: { update_type: "delete_all", return_controller: mycontroller }
       expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: mycontroller, only_path: true))
     end
 
     it "updates the records" do
-      put :update, update_type: "update", generic_work: { subject: ["zzz"] }
+      put :update, params: { update_type: "update", generic_work: { subject: ["zzz"] } }
       expect(response).to be_redirect
       expect(GenericWork.find(one.id).subject).to eq ["zzz"]
       expect(GenericWork.find(two.id).subject).to eq ["zzz"]
     end
 
     it "updates permissions" do
-      put :update, update_type: "update", visibility: "authenticated"
+      put :update, params: { update_type: "update", visibility: "authenticated" }
       expect(response).to be_redirect
       expect(GenericWork.find(one.id).visibility).to eq "authenticated"
       expect(GenericWork.find(two.id).visibility).to eq "authenticated"

@@ -8,13 +8,13 @@ describe UsersController, type: :controller do
 
   describe "#show" do
     it "show the user profile if user exists" do
-      get :show, id: user.user_key
+      get :show, params: { id: user.user_key }
       expect(response).to be_success
       expect(assigns[:presenter]).to be_kind_of Sufia::UserProfilePresenter
     end
 
     it "redirects to root if user does not exist" do
-      get :show, id: 'johndoe666'
+      get :show, params: { id: 'johndoe666' }
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to include("User 'johndoe666' does not exist")
     end
@@ -32,7 +32,7 @@ describe UsersController, type: :controller do
     end
     describe "requesting json" do
       it "displays users" do
-        get :index, format: :json
+        get :index, params: { format: :json }
         expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json.map { |u| u['id'] }).to include(u1.email, u2.email)
@@ -42,7 +42,7 @@ describe UsersController, type: :controller do
 
     describe "query users" do
       it "finds the expected user via email" do
-        get :index, uq: u1.email
+        get :index, params: { uq: u1.email }
         expect(assigns[:users]).to include(u1)
         expect(assigns[:users]).not_to include(u2)
         expect(response).to be_successful
@@ -54,7 +54,7 @@ describe UsersController, type: :controller do
         u2.display_name = "Jr. Architect"
         u2.save
         allow_any_instance_of(User).to receive(:display_name).and_return("Dr. Curator", "Jr.Archivist")
-        get :index, uq: u1.display_name
+        get :index, params: { uq: u1.display_name }
         expect(assigns[:users]).to include(u1)
         expect(assigns[:users]).not_to include(u2)
         expect(response).to be_successful
@@ -77,7 +77,7 @@ describe UsersController, type: :controller do
 
   describe "#edit" do
     it "show edit form when user edits own profile" do
-      get :edit, id: user.user_key
+      get :edit, params: { id: user.user_key }
       expect(response).to be_success
       expect(response).to render_template('users/edit')
       expect(flash[:alert]).to be_nil
@@ -88,7 +88,7 @@ describe UsersController, type: :controller do
       context 'with default abilities' do
         it "redirects to show profile" do
           expect_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(false)
-          get :edit, id: another_user.to_param
+          get :edit, params: { id: another_user.to_param }
           expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
           expect(flash[:alert]).to include("Permission denied: cannot access this page.")
         end
@@ -98,7 +98,7 @@ describe UsersController, type: :controller do
           allow_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(true)
         end
         it "allows user to edit another user's profile" do
-          get :edit, id: another_user.to_param
+          get :edit, params: { id: another_user.to_param }
           expect(response).to be_success
           expect(response).not_to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
           expect(flash[:alert]).to be_nil
@@ -115,7 +115,7 @@ describe UsersController, type: :controller do
       let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
 
       it "show the user profile if user exists" do
-        get :edit, id: user.user_key
+        get :edit, params: { id: user.user_key }
         expect(response).to be_success
         expect(assigns[:trophies]).to all(be_kind_of Sufia::TrophyPresenter)
         expect(assigns[:trophies].map(&:id)).to match_array [work1.id, work2.id, work3.id]
@@ -127,7 +127,7 @@ describe UsersController, type: :controller do
     context "the profile of another user" do
       let(:another_user) { FactoryGirl.create(:user) }
       it "does not allow other users to update" do
-        post :update, id: another_user.user_key, user: { avatar: nil }
+        post :update, params: { id: another_user.user_key, user: { avatar: nil } }
         expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
         expect(flash[:alert]).to include("Permission denied: cannot access this page.")
       end
@@ -137,7 +137,7 @@ describe UsersController, type: :controller do
       expect(user.avatar?).to be false
       expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       f = fixture_file_upload('/1.5mb-avatar.jpg', 'image/jpg')
-      post :update, id: user.user_key, user: { avatar: f }
+      post :update, params: { id: user.user_key, user: { avatar: f } }
       expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
       expect(User.find_by_user_key(user.user_key).avatar?).to be true
@@ -145,14 +145,14 @@ describe UsersController, type: :controller do
     it "validates the content type of an avatar" do
       expect(UserEditProfileEventJob).to receive(:perform_later).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
-      post :update, id: user.user_key, user: { avatar: f }
+      post :update, params: { id: user.user_key, user: { avatar: f } }
       expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
       expect(flash[:alert]).to include("Avatar You are not allowed to upload \"jp2\" files, allowed types: jpg, jpeg, png, gif, bmp, tif, tiff")
     end
     it "validates the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
       expect(UserEditProfileEventJob).to receive(:perform_later).never
-      post :update, id: user.user_key, user: { avatar: f }
+      post :update, params: { id: user.user_key, user: { avatar: f } }
       expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
       expect(flash[:alert]).to include("Avatar file size must be less than 2MB")
     end
@@ -165,7 +165,7 @@ describe UsersController, type: :controller do
 
       it "deletes an avatar" do
         expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
-        post :update, id: user.user_key, user: { remove_avatar: 'true' }
+        post :update, params: { id: user.user_key, user: { remove_avatar: 'true' } }
         expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
         expect(User.find_by_user_key(user.user_key).avatar?).to be false
@@ -175,7 +175,7 @@ describe UsersController, type: :controller do
     it "refreshes directory attributes" do
       expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       expect_any_instance_of(User).to receive(:populate_attributes).once
-      post :update, id: user.user_key, user: { update_directory: 'true' }
+      post :update, params: { id: user.user_key, user: { update_directory: 'true' } }
       expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
     end
@@ -186,7 +186,7 @@ describe UsersController, type: :controller do
       expect(user.googleplus_handle).to be_blank
       expect(user.linkedin_handle).to be_blank
       expect(user.orcid).to be_blank
-      post :update, id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle: "link", orcid: '0000-0000-1111-2222' }
+      post :update, params: { id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle: "link", orcid: '0000-0000-1111-2222' } }
       expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
       u = User.find_by_user_key(user.user_key)
@@ -199,7 +199,7 @@ describe UsersController, type: :controller do
 
     it 'displays a flash when invalid ORCID is entered' do
       expect(user.orcid).to be_blank
-      post :update, id: user.user_key, user: { orcid: 'foobar' }
+      post :update, params: { id: user.user_key, user: { orcid: 'foobar' } }
       expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
       expect(flash[:alert]).to include('Orcid must be a string of 19 characters, e.g., "0000-0000-0000-0000"')
     end
@@ -211,7 +211,7 @@ describe UsersController, type: :controller do
       end
       it "removes a trophy" do
         expect {
-          post :update, id: user.user_key, 'remove_trophy_' + work.id => 'yes'
+          post :update, params: { id: user.user_key, 'remove_trophy_' + work.id => 'yes' }
         }.to change { user.trophies.count }.by(-1)
         expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
@@ -224,20 +224,20 @@ describe UsersController, type: :controller do
     it "follows another user if not already following, and log an event" do
       expect(user.following?(another_user)).to be false
       expect(UserFollowEventJob).to receive(:perform_later).with(user, another_user)
-      post :follow, id: another_user.user_key
+      post :follow, params: { id: another_user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are following #{another_user.user_key}")
     end
     it "redirects to profile if already following and not log an event" do
       allow_any_instance_of(User).to receive(:following?).with(another_user).and_return(true)
       expect(UserFollowEventJob).to receive(:perform_later).never
-      post :follow, id: another_user.user_key
+      post :follow, params: { id: another_user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are following #{another_user.user_key}")
     end
     it "redirects to profile if user attempts to self-follow and not log an event" do
       expect(UserFollowEventJob).to receive(:perform_later).never
-      post :follow, id: user.user_key
+      post :follow, params: { id: user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
       expect(flash[:alert]).to include("You cannot follow or unfollow yourself")
     end
@@ -248,20 +248,20 @@ describe UsersController, type: :controller do
     it "unfollows another user if already following, and log an event" do
       allow_any_instance_of(User).to receive(:following?).with(another_user).and_return(true)
       expect(UserUnfollowEventJob).to receive(:perform_later).with(user, another_user).once
-      post :unfollow, id: another_user.user_key
+      post :unfollow, params: { id: another_user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are no longer following #{another_user.user_key}")
     end
     it "redirects to profile if not following and not log an event" do
       allow(user).to receive(:following?).with(another_user).and_return(false)
       expect(UserUnfollowEventJob).to receive(:perform_later).never
-      post :unfollow, id: another_user.user_key
+      post :unfollow, params: { id: another_user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are no longer following #{another_user.user_key}")
     end
     it "redirects to profile if user attempts to self-follow and not log an event" do
       expect(UserUnfollowEventJob).to receive(:perform_later).never
-      post :unfollow, id: user.user_key
+      post :unfollow, params: { id: user.user_key }
       expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
       expect(flash[:alert]).to include("You cannot follow or unfollow yourself")
     end

@@ -24,7 +24,7 @@ describe API::ItemsController, type: :controller do
     let(:item_hash) { JSON.parse(item) }
 
     context 'with a missing token' do
-      before { get :show, format: :json, id: default_work.id }
+      before { get :show, params: { format: :json, id: default_work.id } }
 
       it "is unauthorized" do
         expect(subject).to have_http_status(401)
@@ -33,7 +33,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with an unfamiliar token' do
-      before { get :show, format: :json, id: default_work.id, token: get_token }
+      before { get :show, params: { format: :json, id: default_work.id, token: get_token } }
       let(:get_token) { 'foobar' }
 
       it "is unauthorized" do
@@ -45,7 +45,7 @@ describe API::ItemsController, type: :controller do
     context 'with an unauthorized resource' do
       before do
         allow_any_instance_of(User).to receive(:can?).with(:edit, default_work) { false }
-        get :show, format: :json, id: default_work.id, token: token
+        get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
       it 'is unauthorized' do
@@ -58,7 +58,7 @@ describe API::ItemsController, type: :controller do
     context 'with a resource not deposited via Arkivo' do
       before do
         allow_any_instance_of(GenericWork).to receive(:arkivo_checksum) { nil }
-        get :show, format: :json, id: default_work.id, token: token
+        get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
       it "is forbidden" do
@@ -72,7 +72,7 @@ describe API::ItemsController, type: :controller do
       before do
         allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
-        get :show, format: :json, id: default_work.id, token: token
+        get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
       it "is not found" do
@@ -82,7 +82,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with an authorized Arkivo-deposited resource' do
-      before { get :show, format: :json, id: default_work.id, token: token }
+      before { get :show, params: { format: :json, id: default_work.id, token: token } }
 
       specify do
         expect(subject).to have_http_status(204)
@@ -93,7 +93,7 @@ describe API::ItemsController, type: :controller do
 
   context 'with an HTTP POST' do
     context 'without an item' do
-      before { post :create, format: :json }
+      before { post :create, params: { format: :json } }
 
       it "is an bad request" do
         expect(subject).to have_http_status(400)
@@ -102,7 +102,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with an invalid item' do
-      before { post :create, item, format: :json }
+      before { post :create, body: item, params: { format: :json } }
       let(:item) { { foo: 'bar' }.to_json }
 
       it "is a bad request" do
@@ -125,7 +125,7 @@ describe API::ItemsController, type: :controller do
 
       it "delegates creating the work to the actor" do
         expect(arkivo_actor).to receive(:create_work_from_item)
-        post :create, item, format: :json
+        post :create, body: item, params: { format: :json }
       end
 
       # TODO: This test belongs in the Actor test as an integration test.
@@ -154,7 +154,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a valid item and unfamiliar token' do
-      before { post :create, item, format: :json }
+      before { post :create, body: item, params: { format: :json } }
 
       let(:token) { 'unfamiliar_token' }
       let(:item) { FactoryGirl.json(:post_item, token: token) }
@@ -197,7 +197,7 @@ describe API::ItemsController, type: :controller do
       it 'calls the arkivo actor to update the work' do
         expect(arkivo_actor).to receive(:update_work_from_item)
         request.env['RAW_POST_DATA'] = put_item
-        put :update, id: gw.id, format: :json
+        put :update, params: { id: gw.id, format: :json }
       end
     end
 
@@ -214,7 +214,7 @@ describe API::ItemsController, type: :controller do
 
         # Post an update to a work with a nil arkivo_checksum
         request.env['RAW_POST_DATA'] = put_item
-        put :update, id: non_arkivo_gw.id, format: :json
+        put :update, params: { id: non_arkivo_gw.id, format: :json }
       end
 
       it "is forbidden" do
@@ -232,7 +232,7 @@ describe API::ItemsController, type: :controller do
           raise(ActiveFedora::ObjectNotFoundError)
         end
         request.env['RAW_POST_DATA'] = put_item
-        put :update, id: gw.id, format: :json
+        put :update, params: { id: gw.id, format: :json }
       end
 
       it "is not found" do
@@ -248,7 +248,7 @@ describe API::ItemsController, type: :controller do
         allow(user).to receive(:can?).and_return(false)
         # Post an update with an resource unauthorized for the user
         request.env['RAW_POST_DATA'] = put_item
-        put :update, id: gw.id, format: :json
+        put :update, params: { id: gw.id, format: :json }
       end
 
       it "is unauthorized" do
@@ -265,7 +265,7 @@ describe API::ItemsController, type: :controller do
 
       before do
         request.env['RAW_POST_DATA'] = bad_token_item
-        put :update, id: gw.id, format: :json
+        put :update, params: { id: gw.id, format: :json }
       end
 
       it "is unauthorized" do
@@ -279,7 +279,7 @@ describe API::ItemsController, type: :controller do
       let(:invalid_item) { { foo: 'bar' }.to_json }
       before do
         request.env['RAW_POST_DATA'] = invalid_item
-        put :update, id: gw.id, format: :json
+        put :update, params: { id: gw.id, format: :json }
       end
 
       it "is a bad request" do
@@ -305,7 +305,7 @@ describe API::ItemsController, type: :controller do
     end
 
     context 'with a missing token' do
-      before { delete :destroy, format: :json, id: gw.id }
+      before { delete :destroy, params: { format: :json, id: gw.id } }
 
       it "is unauthorized." do
         expect(subject).to have_http_status(401)
@@ -319,7 +319,7 @@ describe API::ItemsController, type: :controller do
       before do
         # Mock not being able to find the user due to bad token
         allow(controller).to receive(:user).and_return(nil)
-        delete :destroy, format: :json, id: gw.id, token: bad_token
+        delete :destroy, params: { format: :json, id: gw.id, token: bad_token }
       end
 
       specify do
@@ -333,7 +333,7 @@ describe API::ItemsController, type: :controller do
         # Mock user being unauthorized
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).with(:edit, gw) { false }
-        delete :destroy, format: :json, id: gw.id, token: token
+        delete :destroy, params: { format: :json, id: gw.id, token: token }
       end
 
       it 'is unauthorized' do
@@ -353,7 +353,7 @@ describe API::ItemsController, type: :controller do
         allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
         # Make call to destroy
-        delete :destroy, format: :json, id: non_arkivo_gw.id, token: token
+        delete :destroy, params: { format: :json, id: non_arkivo_gw.id, token: token }
       end
 
       it "is forbidden" do
@@ -368,7 +368,7 @@ describe API::ItemsController, type: :controller do
         # Mock ActiveFedora
         allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
-        delete :destroy, format: :json, id: not_found_id, token: token
+        delete :destroy, params: { format: :json, id: not_found_id, token: token }
       end
 
       it "is not found" do
@@ -388,7 +388,7 @@ describe API::ItemsController, type: :controller do
 
       it "calls the actor to destroy the work" do
         expect(arkivo_actor).to receive(:destroy_work)
-        delete :destroy, format: :json, id: gw.id, token: token
+        delete :destroy, params: { format: :json, id: gw.id, token: token }
         expect(subject).to have_http_status(204)
         expect(subject.body).to be_blank
       end

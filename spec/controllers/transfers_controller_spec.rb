@@ -59,7 +59,7 @@ describe TransfersController, type: :controller do
       context 'when user is the depositor' do
         it "is successful" do
           sign_in user
-          get :new, id: work.id
+          get :new, params: { id: work.id }
           expect(response).to be_success
           expect(assigns[:work]).to eq(work)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
@@ -73,9 +73,12 @@ describe TransfersController, type: :controller do
       it "is successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {
-          post :create, id: work.id, proxy_deposit_request: {
-            transfer_to: another_user.user_key,
-            sender_comment: 'Hi mom!'
+          post :create, params: {
+            id: work.id,
+            proxy_deposit_request: {
+              transfer_to: another_user.user_key,
+              sender_comment: 'Hi mom!'
+            }
           }
         }.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to routes.url_helpers.transfers_path
@@ -91,7 +94,7 @@ describe TransfersController, type: :controller do
       end
       it "gives an error if the user is not found" do
         expect {
-          post :create, id: work.id, proxy_deposit_request: { transfer_to: 'foo' }
+          post :create, params: { id: work.id, proxy_deposit_request: { transfer_to: 'foo' } }
         }.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(response).to redirect_to(root_path)
@@ -108,21 +111,21 @@ describe TransfersController, type: :controller do
           end
         end
         it "is successful when retaining access rights" do
-          put :accept, id: user.proxy_deposit_requests.first
+          put :accept, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to match_array [another_user.user_key, user.user_key]
         end
         it "is successful when resetting access rights" do
-          put :accept, id: user.proxy_deposit_requests.first, reset: true
+          put :accept, params: { id: user.proxy_deposit_requests.first, reset: true }
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([user.user_key])
         end
         it "handles sticky requests" do
-          put :accept, id: user.proxy_deposit_requests.first, sticky: true
+          put :accept, params: { id: user.proxy_deposit_requests.first, sticky: true }
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
@@ -139,7 +142,7 @@ describe TransfersController, type: :controller do
           end
         end
         it "does not allow me" do
-          put :accept, id: another_user.proxy_deposit_requests.first
+          put :accept, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")
         end
@@ -156,7 +159,7 @@ describe TransfersController, type: :controller do
           end
         end
         it "is successful" do
-          put :reject, id: user.proxy_deposit_requests.first
+          put :reject, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer rejected")
           expect(assigns[:proxy_deposit_request].status).to eq('rejected')
@@ -172,7 +175,7 @@ describe TransfersController, type: :controller do
           end
         end
         it "does not allow me" do
-          put :reject, id: another_user.proxy_deposit_requests.first
+          put :reject, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")
         end
@@ -189,7 +192,7 @@ describe TransfersController, type: :controller do
           end
         end
         it "is successful" do
-          delete :destroy, id: another_user.proxy_deposit_requests.first
+          delete :destroy, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer canceled")
         end
@@ -204,7 +207,7 @@ describe TransfersController, type: :controller do
           end
         end
         it "does not allow me" do
-          delete :destroy, id: user.proxy_deposit_requests.first
+          delete :destroy, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")
         end

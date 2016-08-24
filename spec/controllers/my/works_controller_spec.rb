@@ -7,9 +7,9 @@ describe My::WorksController, type: :controller do
   context "with multiple pages of works" do
     before { 3.times { create(:work, user: user) } }
     it "paginates" do
-      get :index, per_page: 2
+      get :index, params: { per_page: 2 }
       expect(assigns[:document_list].length).to eq 2
-      get :index, per_page: 2, page: 2
+      get :index, params: { per_page: 2, page: 2 }
       expect(assigns[:document_list].length).to be >= 1
     end
   end
@@ -36,7 +36,7 @@ describe My::WorksController, type: :controller do
 
   context "when add_files_to_collection is provided" do
     it "sets add_files_to_collection ivar" do
-      get :index, add_files_to_collection: '12345'
+      get :index, params: { add_files_to_collection: '12345' }
       expect(assigns(:add_files_to_collection)).to eql('12345')
     end
   end

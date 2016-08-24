@@ -43,7 +43,7 @@ describe CatalogController, type: :controller do
       let(:objects) { [collection, rocks, clouds] }
 
       it 'finds collections' do
-        xhr :get, :index, q: 'rocks'
+        get :index, params: { q: 'rocks' }, xhr: true
         expect(response).to be_success
         doc_list = assigns(:document_list)
         expect(doc_list.map(&:id)).to match_array [collection.id, rocks.id]
@@ -53,7 +53,7 @@ describe CatalogController, type: :controller do
     describe 'term search' do
       let(:objects) { [rocks, clouds] }
       it 'finds works with the given search term' do
-        get :index, q: 'rocks', owner: 'all'
+        get :index, params: { q: 'rocks', owner: 'all' }
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to contain_exactly(rocks.id)
@@ -63,7 +63,7 @@ describe CatalogController, type: :controller do
     describe 'facet search' do
       let(:objects) { [rocks, clouds] }
       before do
-        get :index, 'f' => { 'contributor_tesim' => ['frodo'] }
+        get :index, params: { 'f' => { 'contributor_tesim' => ['frodo'] } }
       end
 
       it 'finds faceted works' do
@@ -76,7 +76,7 @@ describe CatalogController, type: :controller do
     describe 'full-text search', skip: 'Will GenericWorks have a full_text search?' do
       let(:objects) { [rocks, clouds] }
       it 'finds matching records' do
-        get :index, q: 'full_textfull_text'
+        get :index, params: { q: 'full_textfull_text' }
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
@@ -114,17 +114,17 @@ describe CatalogController, type: :controller do
       end
 
       it "finds work and work that contains file with title" do
-        get :index, q: 'find me'
+        get :index, params: { q: 'find me' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
       it "finds work that contains file with title" do
-        get :index, q: 'other file'
+        get :index, params: { q: 'other file' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
 
       it "finds work with title" do
-        get :index, q: 'me too'
+        get :index, params: { q: 'me too' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
     end

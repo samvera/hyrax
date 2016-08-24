@@ -10,7 +10,7 @@ describe TinymceAssetsController, type: :controller do
 
       it "uploads the file" do
         expect {
-          post :create, file: file
+          post :create, params: { file: file }
           expect(response).to be_successful
         }.to change { TinymceAsset.count }.by(1)
 
@@ -21,7 +21,7 @@ describe TinymceAssetsController, type: :controller do
 
     context "as a user who can't upload" do
       it "is unauthorized" do
-        post :create, file: file
+        post :create, params: { file: file }
         expect(response.code).to eq '401'
         expect(response).to render_template 'unauthorized'
       end
@@ -30,7 +30,7 @@ describe TinymceAssetsController, type: :controller do
 
   context "when not logged in" do
     it "redirects to root path" do
-      post :create, file: file
+      post :create, params: { file: file }
       expect(response).to redirect_to main_app.new_user_session_path
     end
   end

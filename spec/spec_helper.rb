@@ -40,6 +40,7 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'support/features'
+require 'support/backport_test_helpers'
 require 'support/rake'
 require 'byebug' unless ENV['TRAVIS']
 
@@ -54,9 +55,7 @@ ActiveJob::Base.queue_adapter = :inline
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-$in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
-
-if $in_travis
+if ENV['TRAVIS'] == 'true'
   # Monkey-patches the FITS runner to return the PDF FITS fixture
   module Hydra::Works
     class CharacterizationService
@@ -166,6 +165,10 @@ RSpec.configure do |config|
     config.include Devise::TestHelpers, type: :controller
   end
 
+  if Rails::VERSION::MAJOR < 5
+    config.include BackportTestHelpers, type: :controller
+  end
+
   config.include EngineRoutes, type: :controller
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
@@ -174,4 +177,21 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   config.infer_spec_type_from_file_location!
+
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+
+  config.default_formatter = 'doc' if config.files_to_run.one?
+
+  config.order = :random
+  Kernel.srand config.seed
+
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+
+  config.filter_run_when_matching :focus
+
+  config.example_status_persistence_file_path = 'spec/examples.txt'
+
+  config.profile_examples = 10
 end
