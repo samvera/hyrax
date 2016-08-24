@@ -23,6 +23,8 @@ describe 'collections/_form_for_select_collection.html.erb', type: :view do
     render
     collection_ids = doc.xpath("//input[@class='collection-selector']/@id").map(&:to_s)
     expect(collection_ids).to eql(["id_1237", "id_1234", "id_1235", "id_1236"])
+    expect(rendered).to have_selector("label", text: collections.first.title.first)
+    expect(rendered).not_to have_selector("label", text: "[\"#{collections.first.title.first}\"]")
   end
 
   it "selects the right collection when instructed to do so" do
