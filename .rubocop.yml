@@ -106,9 +106,6 @@ RSpec/ExpectActual:
 RSpec/LetSetup:
   Enabled: false
 
-RSpec/NestedGroups:
-  Enabled: false
-
 RSpec/MessageExpectation:
   Enabled: false
 
