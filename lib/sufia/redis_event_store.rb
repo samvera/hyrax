@@ -44,7 +44,7 @@ module Sufia
           timestamp: RedisEventStore.instance.hget("events:#{event_id}", "timestamp")
         }
       end
-    rescue Redis::CommandError
+    rescue Redis::CommandError, Redis::CannotConnectError
       RedisEventStore.logger.error("unable to fetch event: #{@key}")
       []
     end
@@ -52,7 +52,7 @@ module Sufia
     # Adds a value to the end of a list identified by key
     def push(value)
       RedisEventStore.instance.lpush(@key, value)
-    rescue Redis::CommandError
+    rescue Redis::CommandError, Redis::CannotConnectError
       RedisEventStore.logger.error("unable to push event: #{@key}")
       nil
     end

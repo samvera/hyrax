@@ -30,12 +30,20 @@ describe Sufia::RedisEventStore do
       before { allow(Redis).to receive(:current).and_raise(Redis::CommandError) }
       it { is_expected.to eq([]) }
     end
+    context "when the Redis is unavailable" do
+      before { allow(Redis).to receive(:current).and_raise(Redis::CannotConnectError) }
+      it { is_expected.to eq([]) }
+    end
   end
 
   describe "#push" do
     subject { described_class.new("key").push("some value") }
     context "when the Redis command fails" do
       before { allow(Redis).to receive(:current).and_raise(Redis::CommandError) }
+      it { is_expected.to be_nil }
+    end
+    context "when the Redis is unavailable" do
+      before { allow(Redis).to receive(:current).and_raise(Redis::CannotConnectError) }
       it { is_expected.to be_nil }
     end
   end
