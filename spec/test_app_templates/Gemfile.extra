@@ -2,6 +2,7 @@
 gem 'breadcrumbs_on_rails', git: 'https://github.com/weppos/breadcrumbs_on_rails.git'
 gem 'curation_concerns', git: 'https://github.com/projecthydra/curation_concerns.git'
 gem 'acts_as_follower', git: 'https://github.com/awjecc/acts_as_follower.git', branch: 'rails5-fix-parent_class_name'
+gem 'flip', git: 'https://github.com/jcoyne/flip.git', branch: 'alternate_classes'
 
 group :development do
   gem 'better_errors'

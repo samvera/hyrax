@@ -9,7 +9,8 @@ module Sufia
                              :stats_abilities,
                              :citation_abilities,
                              :proxy_deposit_abilities,
-                             :uploaded_file_abilities]
+                             :uploaded_file_abilities,
+                             :feature_abilities]
     end
 
     def uploaded_file_abilities
@@ -53,6 +54,10 @@ module Sufia
 
     def citation_abilities
       alias_action :citation, to: :read
+    end
+
+    def feature_abilities
+      can :manage, Sufia::Feature if admin?
     end
 
     private
