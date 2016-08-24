@@ -400,6 +400,8 @@ en:
     search:
       fields:
         show:
+          based_near: Location
+          contributor: Contributors
           keyword: Keyword
 
 
