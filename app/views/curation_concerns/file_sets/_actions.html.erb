@@ -18,16 +18,8 @@
       <%= link_to 'Versions',  edit_polymorphic_path([main_app, file_set], anchor: 'versioning_display'),
         { title: "Display previous versions" } %>
     </li>
-
-    <li role="menuitem" tabindex="-1">
-      <%= link_to t('sufia.single_use_links.button'), '#',
-                  class: "copypaste",
-                  title: "Single-Use Link to File",
-                  data: { generate_single_use_link_url: curation_concerns.generate_show_single_use_link_url(file_set.id) },
-                  id: "copy_link_#{file_set.id}" %>
-    </li>
-
   <% end %>
+
   <% if can?(:destroy, file_set.id) %>
     <li role="menuitem" tabindex="-1">
       <%= link_to 'Delete', polymorphic_path([main_app, file_set]),
