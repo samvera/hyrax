@@ -17,7 +17,7 @@
                   <li>
                     <% selected = (collection.id == @add_files_to_collection) || (@add_files_to_collection.blank? && index == 0) %>
                     <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
-                    <%= label_tag(:collection, collection.title, for: "id_#{collection.id}") %>
+                    <%= label_tag(:collection, collection.title_or_label, for: "id_#{collection.id}") %>
                   </li>
                 <% end %>
               </ul>
