@@ -32,6 +32,8 @@ module Sufia::HomepageControllerBehavior
     def recent
       # grab any recent documents
       (_, @recent_documents) = search_results(q: '', sort: sort_field, rows: 4)
+    rescue Blacklight::Exceptions::ECONNREFUSED
+      @recent_documents = []
     end
 
     def sort_field
