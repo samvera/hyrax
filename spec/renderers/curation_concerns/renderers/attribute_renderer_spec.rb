@@ -19,7 +19,7 @@ describe CurationConcerns::Renderers::AttributeRenderer do
 
     context 'without microdata enabled' do
       before do
-        CurationConcerns.config.display_microdata = false
+        allow(CurationConcerns.config).to receive(:display_microdata).and_return(false)
       end
       let(:tr_content) {
         "<tr><th>Name</th>\n" \
@@ -44,9 +44,6 @@ describe CurationConcerns::Renderers::AttributeRenderer do
     end
 
     context 'with microdata enabled' do
-      before do
-        CurationConcerns.config.display_microdata = true
-      end
       let(:tr_content) {
         "<tr><th>Name</th>\n" \
          "<td><ul class='tabular'><li class=\"attribute name\" itemscope itemtype=\"http://schema.org/Person\" itemprop=\"name\">" \

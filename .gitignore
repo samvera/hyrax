@@ -13,3 +13,4 @@ solr_conf/
 spec/mock_upload_directory
 fcrepo4-data
 fcrepo4-test-data
+/spec/examples.txt
