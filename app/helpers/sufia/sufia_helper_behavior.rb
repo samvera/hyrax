@@ -61,12 +61,6 @@ module Sufia
       !params[:cq].blank?
     end
 
-    def number_of_deposits(user)
-      ActiveFedora::Base.where(DepositSearchBuilder.depositor_field => user.user_key).count
-    rescue RSolr::Error::ConnectionRefused
-      'n/a'
-    end
-
     # @param item [Object]
     # @param field [String]
     # @return [ActiveSupport::SafeBuffer] the html_safe link

@@ -2,19 +2,19 @@
   <%= render partial: 'search_form' %>
   <h1><%= application_name %> Users</h1>
 </div>
-<table class="table table-striped"> 
-    <thead> 
-        <tr> 
-            <th>Avatar</th> 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Avatar</th>
             <th class="sorts"><i id="name" class="<%=params[:sort].blank? ? 'caret up' : params[:sort]== "name desc" ? 'caret' : params[:sort]== "name" ? 'caret up' : ''%>"></i> User Name</th>
             <th class="sorts"><i id="login" class="<%=params[:sort]== "login desc" ? 'caret' : params[:sort]== "login" ? 'caret up' : ''%>"></i> User Id</th>
             <th class="sorts"><i id="department" class="<%=params[:sort]== "department desc" ? 'caret' : params[:sort]== "department" ? 'caret up' : ''%>"></i> Department</th>
-            <th>Files Deposited</th> 
-        </tr> 
-    </thead> 
-    <tbody> 
-        <% @users.each do |user| %> 
-            <tr> 
+            <th>Works Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @users.each do |user| %>
+            <tr>
               <td><%= link_to sufia.profile_path(user) do %>
                     <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
                   <% end %>
@@ -22,11 +22,11 @@
                <td><%= link_to user.name, sufia.profile_path(user) %></td>
                <td><%= link_to user.user_key, sufia.profile_path(user) %></td>
                <td><%= user.department %></td>
-               <td><%= number_of_deposits(user) %></td>
-            </tr> 
-         <% end %> 
-    </tbody> 
-</table> 
+               <td><%= number_of_works(user) %></td>
+            </tr>
+         <% end %>
+    </tbody>
+</table>
 <div class="pager">
   <%= paginate @users, theme: 'blacklight', route_set: sufia %>
 </div>
