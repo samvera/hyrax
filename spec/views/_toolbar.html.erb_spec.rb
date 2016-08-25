@@ -21,7 +21,7 @@ describe '/_toolbar.html.erb', type: :view do
 
   context 'with an admin user' do
     before do
-      allow(view).to receive(:can?).with(:manage, :all).and_return(true)
+      allow(view).to receive(:can?).with(:read, :admin_dashboard).and_return(true)
     end
 
     it 'shows the admin menu' do
