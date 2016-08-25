@@ -41,6 +41,7 @@ module Sufia
       can :read, ContentBlock
       return unless admin?
 
+      can :read, :admin_dashboard
       can :create, TinymceAsset
       can [:create, :update], ContentBlock
       can :edit, ::SolrDocument
