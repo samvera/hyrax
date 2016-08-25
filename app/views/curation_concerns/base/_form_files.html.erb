@@ -1,6 +1,10 @@
      <div id="fileupload">
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
         <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+
+        <h2><%= t('curation_concerns.base.form_files.local_upload') %></h2>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="col-xs-7">
@@ -35,9 +39,13 @@
                 <div class="progress-extended">&nbsp;</div>
             </div>
         </div>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        <div class="dropzone">
+          <%= t('curation_concerns.base.form_files.dropzone') %>
+        </div>
      </div>
 
 <%= render 'sufia/uploads/js_templates' %>
-<%= render 'browse_everything', f: f if Sufia.config.browse_everything %>
+<% if Sufia.config.browse_everything %>
+  <h2><%= t('curation_concerns.base.form_files.external_upload') %></h2>
+  <%= render 'browse_everything', f: f %>
+<% end %>

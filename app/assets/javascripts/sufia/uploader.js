@@ -32,10 +32,39 @@
         maxFileSize: 500000000, // bytes, i.e. 500 MB
         autoUpload: true,
         url: '/uploads/',
-        type: 'POST'
+        type: 'POST',
+        dropZone: $(this).find('.dropzone')
       }, options))
       .bind('fileuploadadded', function (e, data) {
         $(e.currentTarget).find('button.cancel').removeClass('hidden');
+      });
+
+      $(document).bind('dragover', function(e) {
+        var dropZone = $('.dropzone'),
+            timeout = window.dropZoneTimeout;
+        if (!timeout) {
+            dropZone.addClass('in');
+        } else {
+            clearTimeout(timeout);
+        }
+        var found = false,
+            node = e.target;
+        do {
+            if (node === dropZone[0]) {
+                found = true;
+                break;
+            }
+            node = node.parentNode;
+        } while (node !== null);
+        if (found) {
+            dropZone.addClass('hover');
+        } else {
+            dropZone.removeClass('hover');
+        }
+        window.dropZoneTimeout = setTimeout(function () {
+            window.dropZoneTimeout = null;
+            dropZone.removeClass('in hover');
+        }, 100);
       });
     }
   });

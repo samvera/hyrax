@@ -356,6 +356,10 @@ en:
         header: Descriptions
         attribute_name_label: Attribute Name
         attribute_values_label: Values
+      form_files:
+        local_upload: Add Local Files
+        external_upload: Cloud Providers
+        dropzone: "Drop files here."
       items:
         header: Items
         thumbnail: Thumbnail
