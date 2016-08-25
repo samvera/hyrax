@@ -109,12 +109,6 @@ describe 'Routes', type: :routing do
     end
   end
 
-  describe 'Advanced Search' do
-    it "routes to search" do
-      expect(get: '/search').to route_to(controller: 'advanced', action: 'index')
-    end
-  end
-
   describe 'Trophies' do
     it 'routes to user trophies' do
       expect(post: '/works/1234abc/trophy').to route_to(controller: 'sufia/trophies', action: 'toggle_trophy', id: '1234abc')
