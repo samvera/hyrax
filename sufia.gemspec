@@ -47,7 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'almond-rails', '~> 0.0.1'
   spec.add_dependency 'qa', '~> 0.8' # questioning_authority
 
-  spec.add_development_dependency 'engine_cart', '~> 0.8'
+  spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'solr_wrapper', '~> 0.5'

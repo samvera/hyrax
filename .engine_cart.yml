@@ -1,0 +1,1 @@
+rails_options: "<%= '--skip-listen' if ENV.fetch('RAILS_VERSION', '') < '5.0' %>"
