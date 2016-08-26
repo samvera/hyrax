@@ -43,6 +43,17 @@ export class SaveWorkControl {
   }
 
   /**
+   * Keep the form from being submitted many times.
+   *
+   */
+  preventSubmitIfAlreadyInProgress() {
+    this.form.on('submit', (evt) => {
+      if (this.isValid())
+        this.saveButton.prop("disabled", true);
+    })
+  }
+
+  /**
    * Is the form for a new object (vs edit an exisiting object)
    */
   get isNew() {
@@ -68,6 +79,7 @@ export class SaveWorkControl {
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
     new VisibilityComponent(this.element.find('.visibility'))
     this.preventSubmitUnlessValid()
+    this.preventSubmitIfAlreadyInProgress()
     $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
     $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
     this.formChanged()
