@@ -5,15 +5,15 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) { work.to_solr }
   let(:ability) { double }
-  let(:work) { create(:work, id: "123", title: ["Parent"]) }
+  let(:work) { create(:work, title: ["Parent"]) }
   let(:member) { Sufia::WorkShowPresenter.new(member_document, ability) }
   let(:member_document) { SolrDocument.new(member_attributes) }
   let(:member_attributes) { member_work.to_solr }
-  let(:member_work) { create(:generic_work, id: "work", title: ["Child Work"]) }
+  let(:member_work) { create(:generic_work, title: ["Child Work"]) }
   let(:file_member) { Sufia::FileSetPresenter.new(file_document, ability) }
   let(:file_document) { SolrDocument.new(file_attributes) }
   let(:file_attributes) { file.to_solr }
-  let(:file) { create(:file_set, id: 'file') }
+  let(:file) { create(:file_set) }
 
   before do
     allow(ability).to receive(:can?).with(:create, FeaturedWork).and_return(false)
