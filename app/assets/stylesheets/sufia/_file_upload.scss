@@ -1,0 +1,20 @@
+.dropzone {
+  border: 1px dashed $gray-light;
+  font-weight: bold;
+  height: $padding-large-vertical * 5;
+  line-height: $padding-large-vertical * 5;
+  text-align: center;
+  transition: all 0.3s ease-out;
+
+  &.in {
+    background-color: lighten($gray-base, 98%);
+    font-size: larger;
+    height: $padding-large-vertical * 20;
+    line-height: $padding-large-vertical * 20;
+  }
+
+  &.hover {
+    background-color: $gray-lighter;
+    transition: background-color 0.1s ease-out;
+  }
+}
