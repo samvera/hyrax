@@ -7,6 +7,7 @@ module Sufia
     require 'jquery-ui-rails'
     require 'flot-rails'
     require 'almond-rails'
+    require 'flip'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns

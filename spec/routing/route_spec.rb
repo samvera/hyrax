@@ -15,6 +15,16 @@ describe 'Routes', type: :routing do
     end
   end
 
+  describe "Features" do
+    it "routes to the features controller" do
+      expect(get: '/admin/features').to route_to(controller: 'sufia/admin/features', action: 'index')
+    end
+
+    it "routes to the strategies controller" do
+      expect(patch: '/admin/features/foo/strategies/bar').to route_to(controller: 'sufia/admin/strategies', action: 'update', id: 'bar', feature_id: 'foo')
+    end
+  end
+
   describe 'Homepage' do
     it 'routes the root url to the homepage controller' do
       expect(get: '/').to route_to(controller: 'sufia/homepage', action: 'index')
