@@ -250,14 +250,23 @@ describe SufiaHelper, type: :helper do
   end
 
   describe "#rights_statement_links" do
+    let(:options) { instance_double(Hash) }
+    it "calls license_links" do
+      expect(Deprecation).to receive(:warn)
+      expect(helper).to receive(:license_links).with(options)
+      helper.rights_statement_links(options)
+    end
+  end
+
+  describe "#license_links" do
     it "maps the url to a link with a label" do
-      expect(helper.rights_statement_links(
+      expect(helper.license_links(
                value: ["http://creativecommons.org/publicdomain/zero/1.0/"]
       )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>")
     end
 
     it "converts multiple rights statements to a sentence" do
-      expect(helper.rights_statement_links(
+      expect(helper.license_links(
                value: ["http://creativecommons.org/publicdomain/zero/1.0/",
                        "http://creativecommons.org/publicdomain/mark/1.0/",
                        "http://www.europeana.eu/portal/rights/rr-r.html"]
