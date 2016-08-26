@@ -75,6 +75,12 @@ export class FileManagerMember {
         this.element.removeClass("success")
         this.element.removeClass("pending")
       })
+      // unset the callbacks after they've run so they don't build up
+      // and consume memory
+      deferred.always(function() {
+        form.off('ajax:success')
+        form.off('ajax:error')
+      })
       form.submit()
       return deferred
     } else {
