@@ -1,8 +1,15 @@
 module RightsService
+  extend Deprecation
   mattr_accessor :authority
-  self.authority = Qa::Authorities::Local.subauthority_for('rights')
+  begin
+    self.authority = Qa::Authorities::Local.subauthority_for('rights')
+  rescue Qa::InvalidSubAuthority
+    Deprecation.warn(RightsService, "You are using the deprecated RightsService module, but you do not have 'rights.yml'. Switch to CurationConcerns::LicenseService instead")
+    self.authority = Qa::Authorities::Local.subauthority_for('licenses')
+  end
 
   def self.select_all_options
+    Deprecation.warn(RightsService, "RightsService is deprecated. Use CurationConcerns::LicenseService instead. This will be removed in curation_concerns 2.0")
     authority.all.map do |element|
       [element[:label], element[:id]]
     end
@@ -21,6 +28,6 @@ module RightsService
   end
 
   def self.active_elements
-    authority.all.select { |e| authority.find(e[:id])[:active] }
+    authority.all.select { |e| active?(e[:id]) }
   end
 end

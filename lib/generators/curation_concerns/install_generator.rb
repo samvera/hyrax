@@ -15,9 +15,8 @@ module CurationConcerns
    5. Adds CurationConcerns abilities into the Ability class
    6. Copies the catalog controller into the local app
    7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
-   8. Adds config/authorities/rights.yml to the application
-   9. Adds config/authorities/resource_types.yml to the application
-   10. Copies modified simple_form initializers
+   8. Adds local authority files to the application
+   9. Copies modified simple_form initializers
          '
 
     def run_required_generators
@@ -93,12 +92,10 @@ module CurationConcerns
       copy_file 'curation_concerns_helper.rb', 'app/helpers/curation_concerns_helper.rb'
     end
 
-    def rights_config
-      copy_file "config/authorities/rights.yml", "config/authorities/rights.yml"
-    end
-
-    def resource_types_config
-      copy_file "config/authorities/resource_types.yml", "config/authorities/resource_types.yml"
+    def local_authorities
+      copy_file "config/authorities/licenses.yml"
+      copy_file "config/authorities/rights_statements.yml"
+      copy_file "config/authorities/resource_types.yml"
     end
 
     def simple_form_initializers
