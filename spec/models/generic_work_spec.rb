@@ -14,6 +14,28 @@ describe GenericWork do
     it { is_expected.to eq 'curation_concerns_generic_work' }
   end
 
+  describe '#state' do
+    let(:work) { described_class.new(state: inactive) }
+    let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
+    subject { work.state.rdf_subject }
+    it { is_expected.to eq inactive }
+  end
+
+  describe '#suppressed?' do
+    let(:work) { described_class.new(state: state) }
+    subject { work.suppressed? }
+
+    context "when the state is 'pending'" do
+      let(:state) { 'pending' }
+      it { is_expected.to be true }
+    end
+
+    context "when the state is something else" do
+      let(:state) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active') }
+      it { is_expected.to be false }
+    end
+  end
+
   describe '.valid_child_concerns' do
     it "is all registered curation concerns by default" do
       expect(described_class.valid_child_concerns).to eq [described_class]
@@ -41,7 +63,8 @@ describe GenericWork do
   end
 
   describe 'to_solr' do
-    subject { build(:work, date_uploaded: Date.today).to_solr }
+    let(:work) { build(:work, date_uploaded: Date.today) }
+    subject { work.to_solr }
 
     it 'indexes some fields' do
       expect(subject.keys).to include 'date_uploaded_dtsi'

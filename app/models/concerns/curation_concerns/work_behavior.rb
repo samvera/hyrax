@@ -16,6 +16,7 @@ module CurationConcerns::WorkBehavior
   include Hydra::AccessControls::Embargoable
   include GlobalID::Identification
   include CurationConcerns::NestedWorks
+  include CurationConcerns::Publishable
 
   included do
     property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
