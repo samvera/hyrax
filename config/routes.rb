@@ -115,9 +115,6 @@ Sufia::Engine.routes.draw do
     get '/shares/facet/:id',  controller: 'my/shares', action: :facet, as: 'dashboard_shares_facet'
   end
 
-  # advanced routes for advanced search
-  get 'search' => 'advanced#index', as: :advanced
-
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'

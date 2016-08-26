@@ -1,8 +1,0 @@
-<%- search_fields_for_advanced_search.each do |key, field_def| -%>
-  <div class="form-group">
-    <%= label_tag key, "#{field_def.label }:", class: 'control-label col-sm-4' %>
-    <div class="col-sm-8">
-      <%= text_field_tag key, label_tag_default_for(key), class: 'form-control' %>
-    </div>
-  </div>
-<%- end -%>
