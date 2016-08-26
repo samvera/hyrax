@@ -15,6 +15,7 @@ en:
     view_profile:       "View Profile"
     edit_profile:       "Edit Profile"
     single_use_links:
+      button: "Single-Use Link to File"
       expiration_message: "Link %{link} expires %{time}"
     directory:
       suffix:           "@example.org"
