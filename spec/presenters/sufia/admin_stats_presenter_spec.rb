@@ -141,14 +141,6 @@ describe Sufia::AdminStatsPresenter do
     end
   end
 
-  describe '#users_count' do
-    let!(:user1) { create(:user) }
-    let!(:user2) { create(:user) }
-
-    subject { service.users_count }
-    it { is_expected.to eq 2 }
-  end
-
   describe '#date_filter_string' do
     subject { service.date_filter_string }
 

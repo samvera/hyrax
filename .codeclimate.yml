@@ -24,7 +24,7 @@ engines:
       extensions:
         - .es6
   fixme:
-    enabled: true
+    enabled: false
   rubocop:
     enabled: true
   coffeelint:

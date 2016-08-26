@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe Sufia::Admin::StrategiesController do
-  routes { Sufia::Engine.routes }
   describe "#update" do
     before do
       sign_in user
@@ -23,7 +22,7 @@ RSpec.describe Sufia::Admin::StrategiesController do
 
       it "is successful" do
         patch :update, params: { feature_id: '123', id: 'database' }
-        expect(response).to redirect_to features_path
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.admin_features_path
       end
     end
   end

@@ -143,10 +143,10 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # TODO: if we can isolate the namespace, we can change this to: `namespace :admin`
-  scope path: 'admin' do
-    get 'stats' => 'admin/stats#index', as: :admin_stats
-
+  resource :admin, controller: 'sufia/admin', only: [:show] do
+    collection do
+      get 'stats' => 'admin/stats#index'
+    end
     resources :features, only: [:index], controller: 'sufia/admin/features' do
       resources :strategies, only: [:update, :destroy], controller: 'sufia/admin/strategies'
     end

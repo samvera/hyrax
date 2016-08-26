@@ -35,10 +35,6 @@ module Sufia
       @works_count ||= Sufia::Statistics::Works::Count.new(start_date, end_date).by_permission
     end
 
-    def users_count
-      @users_count ||= stats.users_count
-    end
-
     def date_filter_string
       if start_date.blank?
         "unfiltered"

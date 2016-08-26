@@ -26,7 +26,7 @@ describe '/_toolbar.html.erb', type: :view do
 
     it 'shows the admin menu' do
       render
-      expect(rendered).to have_link 'Admin', sufia.admin_stats_path
+      expect(rendered).to have_link 'Admin', sufia.stats_admin_path
     end
   end
 
