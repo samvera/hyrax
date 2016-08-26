@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.version       = Sufia::VERSION
   spec.license       = 'Apache2'
 
-  spec.add_dependency 'curation_concerns', '~> 1.4'
+  spec.add_dependency 'curation_concerns', '~> 1.5'
   # This is not required, but helps bundler resolve a bundle faster:
   spec.add_dependency 'hydra-head', '>= 10.1'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
