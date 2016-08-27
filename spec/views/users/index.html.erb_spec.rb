@@ -17,6 +17,7 @@ describe 'users/index.html.erb', type: :view do
     render
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_content("Sufia Users")
+    expect(page).to have_content("Works Created")
     (1..10).each do |i|
       expect(page).to have_content("user#{i}")
     end
