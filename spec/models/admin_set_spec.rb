@@ -12,12 +12,14 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe "#to_solr" do
-    let(:admin_set) { build(:admin_set, title: ['A good title']) }
+    let(:admin_set) { build(:admin_set, title: ['A good title'],
+                                        creator: ['jcoyne@justincoyne.com']) }
     let(:solr_document) { admin_set.to_solr }
 
-    it "has title information" do
+    it "has title and creator information" do
       expect(solr_document).to include 'title_tesim' => ['A good title'],
-                                       'title_sim' => ['A good title']
+                                       'title_sim' => ['A good title'],
+                                       'creator_ssim' => ['jcoyne@justincoyne.com']
     end
   end
 
