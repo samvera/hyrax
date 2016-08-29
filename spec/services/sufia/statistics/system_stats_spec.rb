@@ -41,14 +41,4 @@ describe Sufia::Statistics::SystemStats do
       end
     end
   end
-
-  describe "#users_count" do
-    let(:depositor_count) { nil }
-    let!(:user1) { create(:user) }
-    let!(:user2) { create(:user) }
-
-    subject { stats.users_count }
-
-    it { is_expected.to eq 2 }
-  end
 end

@@ -59,6 +59,7 @@ module Sufia
 
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
       app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
+      app.config.assets.precompile += %w(sufia/admin.css)
 
       Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
       # When we upgrade to Sprockets 4, we can ditch sprockets-es6 and config AMD

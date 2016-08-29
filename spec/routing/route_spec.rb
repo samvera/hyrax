@@ -31,6 +31,15 @@ describe 'Routes', type: :routing do
     end
   end
 
+  describe 'Admin' do
+    it 'routes the admin dashboard' do
+      expect(get: '/admin').to route_to(controller: 'sufia/admin', action: 'show')
+    end
+    it 'routes the statistics page' do
+      expect(get: '/admin/stats').to route_to(controller: 'admin/stats', action: 'index')
+    end
+  end
+
   describe "Audit" do
     it 'routes to audit' do
       expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'curation_concerns/audits', action: 'create', file_set_id: '7')

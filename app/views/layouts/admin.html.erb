@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- META SECTION -->
+        <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <%= render "layouts/head_tag_content"%>
+        <!-- END META SECTION -->
+
+        <!-- CSS INCLUDE -->
+        <%= stylesheet_link_tag 'sufia/admin' %>
+        <!-- EOF CSS INCLUDE -->
+    </head>
+    <body>
+        <!-- START PAGE CONTAINER -->
+        <div class="page-container">
+
+            <!-- START PAGE SIDEBAR -->
+            <div class="page-sidebar">
+                              <!-- START X-NAVIGATION -->
+                <ul class="x-navigation">
+                    <li class="xn-logo">
+                        <%= link_to root_path do %>
+                          <span class="glyphicon glyphicon-globe"></span>
+                          <%= application_name %>
+                        <% end %>
+                        <a href="#" class="x-navigation-control"></a>
+                    </li>
+                    <li><%= link_to sufia.stats_admin_path do %>
+                          <span class="fa fa-bar-chart"></span> Statistics
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+            <!-- END PAGE SIDEBAR -->
+
+            <!-- PAGE CONTENT -->
+            <div class="page-content">
+                <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                  <li class="dropdown pull-right">
+                    <%= link_to sufia.profile_path(current_user), role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false} do %>
+                      <span class="sr-only">View</span>
+                      <span class="hidden-xs">&nbsp;<%= current_user.name %></span>
+                      <span class="sr-only"> profile</span>
+                      <span class="fa fa-user"></span>
+                      <span class="caret" ></span>
+                    <% end %>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                      <li><%= link_to 'View Profile', sufia.profile_path(current_user) %></li>
+                      <li><%= link_to 'Edit Profile', sufia.edit_profile_path(current_user) %></li>
+                      <li class="divider"></li>
+                      <li><%= link_to 'Logout', main_app.destroy_user_session_path %></li>
+                    </ul>
+                  </li><!-- /.btn-group -->
+                  <li class="pull-right">
+                    <%= link_to sufia.notifications_path do %>
+                      Notifications
+                      <%= render partial: 'users/notify_number' %>
+                    <% end %>
+                  </li>
+                </ul>
+                <!-- START BREADCRUMB -->
+                <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
+                <%# <ul class="breadcrumb"> %>
+                <%#   <li><a href="sdr-home">Repository Home</a></li> %>
+                <%#   <li><a href="#">Administration</a></li> %>
+                <%#   <li class="active">Repository Dashboard</li> %>
+                <%# </ul> %>
+                <!-- END BREADCRUMB -->
+
+                <!-- PAGE CONTENT WRAPPER -->
+                <div class="page-content-wrap">
+                  <%= yield %>
+                </div>
+                <!-- END PAGE CONTENT WRAPPER -->
+            </div>
+            <!-- END PAGE CONTENT -->
+        </div>
+        <!-- END PAGE CONTAINER -->
+    </body>
+</html>

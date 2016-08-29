@@ -39,12 +39,6 @@ module Sufia
         ::User.recent_users start_date, end_date
       end
 
-      # returns [Number] the number of currently registered users
-      #
-      def users_count
-        ::User.count
-      end
-
       private
 
         def validate_limit(count)
