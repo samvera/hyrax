@@ -1,4 +1,4 @@
-describe "admin/stats/index.html.erb", type: :view do
+describe "sufia/admin/stats/show.html.erb", type: :view do
   let(:presenter) do
     Sufia::AdminStatsPresenter.new({}, 5)
   end

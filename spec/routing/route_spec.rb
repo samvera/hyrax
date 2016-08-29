@@ -36,7 +36,7 @@ describe 'Routes', type: :routing do
       expect(get: '/admin').to route_to(controller: 'sufia/admin', action: 'show')
     end
     it 'routes the statistics page' do
-      expect(get: '/admin/stats').to route_to(controller: 'admin/stats', action: 'index')
+      expect(get: '/admin/stats').to route_to(controller: 'sufia/admin/stats', action: 'show')
     end
   end
 

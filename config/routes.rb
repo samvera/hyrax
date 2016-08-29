@@ -143,12 +143,11 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  resource :admin, controller: 'sufia/admin', only: [:show] do
-    collection do
-      get 'stats' => 'admin/stats#index'
-    end
-    resources :features, only: [:index], controller: 'sufia/admin/features' do
-      resources :strategies, only: [:update, :destroy], controller: 'sufia/admin/strategies'
+  resource :admin, controller: 'sufia/admin', only: [:show]
+  scope 'admin', module: 'sufia/admin', as: 'admin' do
+    resource 'stats', only: [:show]
+    resources :features, only: [:index] do
+      resources :strategies, only: [:update, :destroy]
     end
   end
 
