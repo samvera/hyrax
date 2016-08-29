@@ -26,16 +26,16 @@ describe '/_toolbar.html.erb', type: :view do
 
     it 'shows the admin menu' do
       render
-      expect(rendered).to have_link 'Admin', sufia.stats_admin_path
+      expect(rendered).to have_link 'Admin', href: sufia.admin_path
     end
   end
 
   it 'has dashboard links' do
     render
-    expect(rendered).to have_link 'My Dashboard', sufia.dashboard_index_path
-    expect(rendered).to have_link 'Transfers', sufia.transfers_path
-    expect(rendered).to have_link 'Highlights', sufia.dashboard_highlights_path
-    expect(rendered).to have_link 'Shares', sufia.dashboard_shares_path
+    expect(rendered).to have_link 'My Dashboard', href: sufia.dashboard_index_path
+    expect(rendered).to have_link 'Transfers', href: sufia.transfers_path
+    expect(rendered).to have_link 'Highlights', href: sufia.dashboard_highlights_path
+    expect(rendered).to have_link 'Shares', href: sufia.dashboard_shares_path
   end
 
   describe "New Work button" do

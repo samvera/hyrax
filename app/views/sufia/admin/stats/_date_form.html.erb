@@ -1,4 +1,4 @@
-<%= form_for "stats_filters", url: sufia.stats_admin_path, method: "GET" do |f| %>
+<%= form_for "stats_filters", url: sufia.admin_stats_path, method: "GET" do |f| %>
   <%= f.label "Start *" %>
   <input type="date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" placeholder="yyyy-mm-dd" ></input>
   <%= f.label "end [defaults to now]" %>
