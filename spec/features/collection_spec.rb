@@ -86,6 +86,7 @@ feature 'collection' do
       within('#document_' + collection.id) do
         click_link('collection title')
       end
+      expect(page).to have_content 'Search Collection Test collection title', visible: false
       expect(page).to have_content 'Test collection title'
       expect(page).to have_content 'collection description'
       # Should have search results / contents listing
