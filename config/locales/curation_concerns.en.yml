@@ -6,6 +6,10 @@ en:
       index:
         type_tabs:
           all: All
+    collections:
+      search_form:
+        placeholder: "Search Collection"
+        label: "Search Collection %{title}"
     division:
       name: "Your Division at Institution"
       homepage_url: "#"
