@@ -1,4 +1,5 @@
 describe "FileManagerMember", ->
+  filemm = require('curation_concerns/file_manager/member')
   file_manager_member = null
   save_manager = null
   beforeEach () ->
@@ -7,7 +8,7 @@ describe "FileManagerMember", ->
       push_changed: () -> {},
       mark_unchanged: () -> {}
     }
-    file_manager_member = new FileManagerMember($("li"), save_manager)
+    file_manager_member = new filemm.FileManagerMember($("li"), save_manager)
   describe "#is_changed", ->
     it "is true when the form's label input is changed", ->
       $("#file_set_title").val("testing")
