@@ -1,5 +1,5 @@
 <%= presenter.attribute_to_html(:creator, render_as: :faceted) %>
-<%= presenter.attribute_to_html(:contributor, label: 'Contributors', render_as: :faceted) %>
+<%= presenter.attribute_to_html(:contributor, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:admin_set, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:subject, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:publisher, render_as: :faceted) %>
@@ -10,3 +10,4 @@
 <%= presenter.attribute_to_html(:based_near, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:related_url) %>
 <%= presenter.attribute_to_html(:resource_type, render_as: :faceted) %>
+<%= presenter.attribute_to_html(:source) %>
