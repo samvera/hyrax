@@ -145,6 +145,7 @@ Sufia::Engine.routes.draw do
 
   resource :admin, controller: 'sufia/admin', only: [:show]
   scope 'admin', module: 'sufia/admin', as: 'admin' do
+    resources :admin_sets
     resource 'stats', only: [:show]
     resources :features, only: [:index] do
       resources :strategies, only: [:update, :destroy]
