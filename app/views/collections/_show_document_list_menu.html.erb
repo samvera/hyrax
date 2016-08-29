@@ -1,16 +1,18 @@
 <div class="btn-group">
-  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select an action <span class="caret"></span>
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select an action<span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li>
-      <%= link_to [:edit, document],
-                  class: "itemicon itemedit",
-                  title: t('sufia.collection.document_list.edit'),
-                  id: "edit_work_link_#{document.id}" do %>
-        <i class='glyphicon glyphicon-pencil'></i> <%= t('sufia.collection.document_list.edit') %>
-      <% end %>
-    </li>
     <% if current_user %>
+      <% if can? :edit, document %>
+      <li>
+        <%= link_to [:edit, document],
+                    class: "itemicon itemedit",
+                    title: t('sufia.collection.document_list.edit'),
+                    id: "edit_work_link_#{document.id}" do %>
+          <i class='glyphicon glyphicon-pencil'></i> <%= t('sufia.collection.document_list.edit') %>
+        <% end %>
+      </li>
+      <% end %>
       <li>
         <%= display_trophy_link(current_user, document.id) do |text| %>
           <i class='glyphicon glyphicon-star'></i> <%= text %>
