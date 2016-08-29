@@ -82,3 +82,19 @@ form.per_page {
 .presenter-title {
   padding-left: 20px;
 }
+
+.icon-metadata {
+  @extend .fa-tags;
+}
+
+.icon-files {
+  @extend .fa-files-o;
+}
+
+.icon-relationships {
+  @extend .fa-link;
+}
+
+.icon-share {
+  @extend .fa-key;
+}
