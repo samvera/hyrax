@@ -1,10 +1,11 @@
 describe "FileManager Save Button", ->
+  savem = require('curation_concerns/file_manager/save_manager')
   save_manager = null
   handler = null
   deferred_result = null
   beforeEach () ->
     loadFixtures('save_button.html')
-    save_manager = new SaveManager
+    save_manager = new savem
     deferred_result = $.Deferred()
     handler = {
       persist: () =>

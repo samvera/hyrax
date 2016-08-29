@@ -41,7 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
 
-  spec.add_development_dependency 'solr_wrapper', '~> 0.13', '>= 0.13.1'
+  spec.add_development_dependency 'solr_wrapper', '~> 0.16'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
   spec.add_development_dependency 'devise', '>= 3.0', '< 5'
   spec.add_development_dependency "bundler", "~> 1.6"
