@@ -51,13 +51,6 @@ module CurationConcerns
             super
           end
         end
-
-        # Overriden to cast 'rights' to an array
-        def sanitize_params(form_params)
-          super.tap do |params|
-            params['rights'] = Array.wrap(params['rights']) if params.key?('rights')
-          end
-        end
       end
 
       private
