@@ -30,19 +30,6 @@ module CurationConcerns
         def presenter_class
           CurationConcerns::EmbargoPresenter
         end
-
-        def presenters(builder)
-          response = repository.search(builder)
-          response.documents.map { |d| presenter_class.new(d) }
-        end
-
-        def repository
-          config.repository
-        end
-
-        def config
-          @config ||= ::CatalogController.new
-        end
     end
   end
 end
