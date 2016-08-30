@@ -32,6 +32,10 @@
                           <span class="fa fa-bar-chart"></span> Statistics
                         <% end %>
                     </li>
+                    <li><%= link_to sufia.admin_features_path do %>
+                          <span class="fa fa-cog"></span> Settings
+                        <% end %>
+                    </li>
                 </ul>
             </div>
             <!-- END PAGE SIDEBAR -->
@@ -63,12 +67,13 @@
                 </ul>
                 <!-- START BREADCRUMB -->
                 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
-                <%# <ul class="breadcrumb"> %>
-                <%#   <li><a href="sdr-home">Repository Home</a></li> %>
-                <%#   <li><a href="#">Administration</a></li> %>
-                <%#   <li class="active">Repository Dashboard</li> %>
-                <%# </ul> %>
                 <!-- END BREADCRUMB -->
+
+                <% if content_for?(:page_header) %>
+                  <div class="page-title">
+                    <%= yield(:page_header) %>
+                  </div>
+                <% end %>
 
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
