@@ -147,6 +147,17 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:all, type: :feature) do
+    # Assets take a long time to compile. This causes two problems:
+    # 1) the profile will show the first feature test taking much longer than it
+    #    normally would.
+    # 2) The first feature test will trigger rack-timeout
+    #
+    # Precompile the assets to prevent these issues.
+    visit "/assets/application.css"
+    visit "/assets/application.js"
+  end
+
   config.after do
     DatabaseCleaner.clean
   end
