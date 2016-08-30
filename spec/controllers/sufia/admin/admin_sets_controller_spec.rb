@@ -30,6 +30,7 @@ describe Sufia::Admin::AdminSetsController do
       it 'allows an authorized user to view the page' do
         get :index
         expect(response).to be_success
+        expect(assigns[:admin_sets]).to be_kind_of Array
       end
     end
 

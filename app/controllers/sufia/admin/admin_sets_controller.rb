@@ -8,6 +8,7 @@ module Sufia
       add_breadcrumb  'Home', root_path
       add_breadcrumb  'Repository Dashboard', sufia.admin_path
       add_breadcrumb  'Administrative Sets', sufia.admin_admin_sets_path
+      @admin_sets = CurationConcerns::AdminSetService.new(self).send(:search_results, :read)
     end
 
     def new
@@ -21,6 +22,11 @@ module Sufia
         setup_create_form
         render :new
       end
+    end
+
+    # for the AdminSetService
+    def repository
+      repository_class.new(blacklight_config)
     end
 
     private
@@ -39,6 +45,10 @@ module Sufia
 
       def form_class
         Forms::AdminSetForm
+      end
+
+      def repository_class
+        blacklight_config.repository_class
       end
   end
 end

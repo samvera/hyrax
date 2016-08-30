@@ -11,6 +11,11 @@ Sufia = {
         this.transfers();
         this.relationships_table();
         this.file_manager_init();
+        this.datatable();
+    },
+
+    datatable: function () {
+        $('.datatable').DataTable();
     },
 
     autocomplete: function () {
