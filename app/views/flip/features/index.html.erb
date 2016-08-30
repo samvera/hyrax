@@ -1,0 +1,51 @@
+<% content_for :page_header do %>
+  <h1><span class="fa fa-cog"></span> Settings</h1>
+<% end %>
+<div class="flip row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped datatable">
+            <thead>
+              <th>Feature Name</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+            <% @p.definitions.each do |definition| %>
+              <tr>
+                <td class="name"><%= definition.name %></td>
+
+                <td class="description"><%= definition.description %></td>
+
+                <%= content_tag :td, class: @p.status(definition) do %>
+                  <%= @p.status definition %>
+                <% end %>
+
+                <% @p.strategies.each do |strategy| %>
+                  <% next unless strategy.name == 'database' %>
+                  <%= content_tag :td, class: @p.strategy_status(strategy, definition) || "pass" do %>
+                    <% if strategy.switchable? %>
+                      <% # set the status to the current or default status %>
+                      <%= form_tag(sufia.admin_feature_strategy_path(definition, strategy.name.underscore), method: :put) do %>
+                        <% unless @p.status(definition) == "on" %>
+                          <%= submit_tag "Switch On", class: 'btn btn-default' %>
+                        <% else %>
+                          <%= submit_tag "Switch Off", class: 'btn btn-default' %>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+
+                  <% end %>
+                <% end %>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
