@@ -306,6 +306,7 @@ en:
         related_url:      "Related URL"
         files:            "Upload a new version of this file from your computer"
         collection_ids:   "Add as member of collection"
+        admin_set_id:     "Add as member of administrative set"
       collection:
         total_items:      "Total Items"
         size:             "Size"
