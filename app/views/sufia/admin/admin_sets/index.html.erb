@@ -1,0 +1,62 @@
+<% content_for :page_header do %>
+  <h1><span class="fa fa-sitemap"></span> Administrative Sets</h1>
+  <div class="pull-right">
+    <%= link_to sufia.new_admin_admin_set_path, class: 'btn btn-primary' do %>
+      <span class="fa fa-edit"></span> Create new administrative set
+    <% end %>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <% if @admin_sets.present? %>
+          <div class="table-responsive">
+            <table class="table table-striped datatable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Date created</th>
+                  <th>Creator</th>
+                  <th>Visibility</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="admin-set-show.html">Steven Chu Papers</a></td>
+                  <td>2013-06-12</td>
+                  <td>repo-manager@stanford.edu</td>
+                  <td>Public</td>
+                </tr>
+                <tr>
+                  <td><a href="admin-set-show.html">Stanford Memorial Church Research Materials</a></td>
+                  <td>2014-10-19</td>
+                  <td>miller@example.com</td>
+                  <td>Embargo</td>
+                </tr>
+                <tr>
+                  <td><a href="admin-set-show.html">George Forsythe Papers</a></td>
+                  <td>2016-03-11</td>
+                  <td>thomas@example.com</td>
+                  <td>Your institution</td>
+                </tr>
+                <tr>
+                  <td><a href="admin-set-show.html">Stanford University, Graduate School of Business, slides</a></td>
+                  <td>2015-12-22</td>
+                  <td>repo-manager@stanford.edu</td>
+                  <td>No default</td>
+                </tr>
+              </tbody>
+            </table>
+          <% else %>
+            <p>No administrative sets have been created.</p>
+            <%= link_to sufia.new_admin_admin_set_path, class: 'btn btn-primary' do %>
+              <span class="fa fa-edit"></span> Create new administrative set
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

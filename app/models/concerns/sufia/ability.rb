@@ -10,7 +10,8 @@ module Sufia
                              :citation_abilities,
                              :proxy_deposit_abilities,
                              :uploaded_file_abilities,
-                             :feature_abilities]
+                             :feature_abilities,
+                             :admin_set_abilities]
     end
 
     def uploaded_file_abilities
@@ -59,6 +60,10 @@ module Sufia
 
     def feature_abilities
       can :manage, Sufia::Feature if admin?
+    end
+
+    def admin_set_abilities
+      can :manage, AdminSet if admin?
     end
 
     private

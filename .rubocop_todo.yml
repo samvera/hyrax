@@ -91,6 +91,7 @@ RSpec/VerifiedDoubles:
 
 RSpec/AnyInstance:
   Exclude:
+    - 'spec/controllers/sufia/admin/admin_sets_controller_spec.rb'
     - 'spec/controllers/api/items_controller_spec.rb'
     - 'spec/controllers/api/zotero_controller_spec.rb'
     - 'spec/controllers/batch_edits_controller_spec.rb'

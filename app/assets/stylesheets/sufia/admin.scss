@@ -7,11 +7,48 @@ $sidebar-icon-color: #ffffff !default;
 $sidebar-hover-background-color: #615c52 !default;
 $sidebar-hover-icon-color: #aca99f !default;
 
+$breadcrumb-background-color: #e8e8e8 !default;
+$breadcrumb-link-color: #8d8678 !default;
+
 $header-background-color: black !default;
 $header-text-color: #f7f7f7 !default;
 $header-logo-color: #ffffff !default;
 $header-height: 35px !default;
+$title-text-color: #4e4a42 !default;
 $content-background-color: #f5f5f5 !default;
+
+.page-title {
+  float: left;
+  padding: 5px 10px;
+  width: 100%;
+
+  h1 {
+    color: $title-text-color;
+    float: left;
+    font-size: 26px;
+    line-height: 30px;
+    margin: 0;
+    margin-bottom: 15px;
+    padding: 0;
+  }
+}
+
+.panel {
+  float: left;
+  width: 100%;
+
+  .panel-footer,
+  .panel-body {
+    float: left;
+    width: 100%;
+  }
+}
+
+.title-button {
+  margin-right: 15px;
+  margin-top: 10px;
+  width: auto;
+}
 
 .page-container {
   width: 100%;
@@ -52,7 +89,17 @@ $content-background-color: #f5f5f5 !default;
 
 .breadcrumb {
   float: left;
+  background: $breadcrumb-background-color;
+  margin-bottom: 10px;
+  padding: 6px 15px 7px;
   width: 100%;
+
+  li,
+  li a {
+    color: $breadcrumb-link-color;
+    font-size: 11px;
+    text-decoration: none;
+  }
 }
 
 .x-navigation {
