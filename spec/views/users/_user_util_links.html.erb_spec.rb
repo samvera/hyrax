@@ -17,7 +17,7 @@ describe '/_user_util_links.html.erb', type: :view do
 
   it 'shows the number of outstanding messages' do
     render
-    expect(rendered).to have_link 'Notifications 0 unread notifications', sufia.notifications_path
+    expect(rendered).to have_link 'Notifications 0 unread notifications', href: sufia.notifications_path
     expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
   end
 end
