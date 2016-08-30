@@ -8,6 +8,7 @@ module Sufia
     require 'flot-rails'
     require 'almond-rails'
     require 'flip'
+    require 'jquery-datatables-rails'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns

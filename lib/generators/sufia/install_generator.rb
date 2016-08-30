@@ -20,6 +20,7 @@ module Sufia
    8. Installs hydra:batch_edit
    9. Updates simple_form to use browser validations
    10. Installs Blacklight gallery (and removes it's scss)
+   11. Runs the jquery-datatables generator
          """
 
     def banner
@@ -145,6 +146,10 @@ module Sufia
       # This was pulling in an extra copy of bootstrap, so we added the needed
       # includes to sufia.scss
       remove_file 'app/assets/stylesheets/blacklight_gallery.css.scss'
+    end
+
+    def datatables
+      generate 'jquery:datatables:install bootstrap3'
     end
   end
 end
