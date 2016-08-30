@@ -24,7 +24,7 @@ module Sufia::Forms
 
     # Fields that are automatically drawn on the page above the fold
     def primary_terms
-      required_fields + [:admin_set_id]
+      required_fields
     end
 
     # Fields that are automatically drawn on the page below the fold
@@ -34,7 +34,7 @@ module Sufia::Forms
          :visibility_after_embargo, :visibility_during_lease,
          :lease_expiration_date, :visibility_after_lease, :visibility,
          :thumbnail_id, :representative_id, :ordered_member_ids,
-         :collection_ids, :in_works_ids]
+         :collection_ids, :in_works_ids, :admin_set_id]
     end
 
     # The ordered_members which are FileSet types

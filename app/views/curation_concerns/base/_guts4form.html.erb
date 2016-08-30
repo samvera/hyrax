@@ -26,13 +26,17 @@
         <% else %>
           <div role="tabpanel" class="tab-pane" id="<%= tab %>">
         <% end %>
-          <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
-        <%= render "form_#{tab}", f: f %>
+          <div class="form-tab-content">
+            <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
+            <%= render "form_#{tab}", f: f %>
+          </div>
         </div>
       <% end %>
 
       <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%= f.object.model_name.param_key %>">
-          <%= render "form_share", f: f %>
+          <div class="form-tab-content">
+            <%= render "form_share", f: f %>
+          </div>
       </div>
     </div>
   </div>
