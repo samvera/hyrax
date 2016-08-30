@@ -5,9 +5,9 @@ module Sufia
 
     def index
       authorize! :manage, AdminSet
-      add_breadcrumb  'Home', root_path
-      add_breadcrumb  'Repository Dashboard', sufia.admin_path
-      add_breadcrumb  'Administrative Sets', sufia.admin_admin_sets_path
+      add_breadcrumb t(:'sufia.controls.home'), root_path
+      add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
+      add_breadcrumb t(:'sufia.admin.sidebar.admin_sets'), sufia.admin_admin_sets_path
       @admin_sets = CurationConcerns::AdminSetService.new(self).send(:search_results, :read)
     end
 
