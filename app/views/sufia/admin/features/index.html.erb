@@ -1,0 +1,57 @@
+<% content_for :page_header do %>
+  <h1><span class="fa fa-cog"></span> Settings</h1>
+<% end %>
+<div class="flip row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="name">Feature</th>
+                <th class="description">Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            <% @feature_set.features.each do |feature| -%>
+              <tr data-feature="<%= feature.name.dasherize.parameterize %>">
+                <td class="status">
+                  <span class="<%= @feature_set.status(feature) -%>"><%= @feature_set.status(feature) -%></span>
+                </td>
+                <td class="name"><%= feature.name.humanize -%></td>
+                <td class="description"><%= feature.description -%></td>
+
+                <% @feature_set.strategies.each do |strategy| -%>
+                  <% next unless strategy.is_a? Flipflop::Strategies::ActiveRecordStrategy %>
+                  <td class="toggle" data-strategy="<%= strategy.name.dasherize.parameterize %>">
+                    <div class="toolbar">
+                      <%= form_tag(sufia.admin_feature_strategy_path(feature.key, strategy.key), method: :put) do -%>
+                        <div class="btn-group">
+                          <%= submit_tag "on",
+                            type: "submit",
+                            class: Flipflop.enabled?(feature.name.to_sym) ? 'active' : nil,
+                            disabled: !strategy.switchable?
+                          -%>
+
+                          <%= submit_tag "off",
+                            type: "submit",
+                            class: Flipflop.enabled?(feature.name.to_sym) ? nil : 'active',
+                            disabled: !strategy.switchable?
+                          -%>
+                        </div>
+                      <% end -%>
+                    </div>
+                  </td>
+                <% end -%>
+              </tr>
+            <% end -%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

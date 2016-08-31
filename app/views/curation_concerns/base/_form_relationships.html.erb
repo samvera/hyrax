@@ -1,4 +1,4 @@
-<% if Flip.assign_admin_set? %>
+<% if Flipflop.assign_admin_set? %>
   <%= f.input :admin_set_id, as: :select,
       collection: CurationConcerns::AdminSetService.new(controller).select_options,
       include_blank: true,

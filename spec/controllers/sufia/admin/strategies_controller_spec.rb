@@ -6,10 +6,11 @@ RSpec.describe Sufia::Admin::StrategiesController do
       sign_in user
     end
     let(:user) { create(:user) }
+    let(:strategy) { Flipflop::Strategies::ActiveRecordStrategy.new(class: Sufia::Feature).key }
 
     context "when not authorized" do
       it "redirects away" do
-        patch :update, params: { feature_id: '123', id: 'database' }
+        patch :update, params: { feature_id: '123', id: strategy }
         expect(response).to redirect_to root_path
       end
     end
@@ -21,7 +22,7 @@ RSpec.describe Sufia::Admin::StrategiesController do
       end
 
       it "is successful" do
-        patch :update, params: { feature_id: '123', id: 'database' }
+        patch :update, params: { feature_id: '123', id: strategy }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.admin_features_path
       end
     end

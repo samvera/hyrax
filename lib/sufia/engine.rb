@@ -7,8 +7,8 @@ module Sufia
     require 'jquery-ui-rails'
     require 'flot-rails'
     require 'almond-rails'
-    require 'flip'
     require 'jquery-datatables-rails'
+    require 'flipflop'
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
@@ -34,6 +34,9 @@ module Sufia
     end
 
     initializer 'configure' do
+      # Set the path for the flipflop config:
+      Flipflop::Engine.config_file = Sufia::Engine.root + "config/features.rb"
+
       Sufia.config.tap do |c|
         Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path
         Hydra::Derivatives.temp_file_base = c.temp_file_base
