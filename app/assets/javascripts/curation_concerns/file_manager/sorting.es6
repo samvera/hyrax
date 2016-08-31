@@ -5,6 +5,7 @@ export default class SortManager {
     this.initialize_sort()
     this.element.data("current-order", this.order)
     this.save_manager = save_manager
+    this.initialize_alpha_sort_button()
   }
 
   initialize_sort() {
@@ -42,17 +43,21 @@ export default class SortManager {
     return this.element.children().index(item)
   }
 
+  register_order_change() {
+    if(this.order.toString() != this.element.data("current-order").toString()) {
+      this.save_manager.push_changed(this)
+    } else {
+      this.save_manager.mark_unchanged(this)
+    }
+  }
+
   get stopped_sorting() {
     return (event, ui) => {
       this.sorting_info.end = this.get_sort_position($(ui.item))
       if(this.sorting_info.end == this.sorting_info.start) {
         return
       }
-      if(this.order.toString() != this.element.data("current-order").toString()) {
-        this.save_manager.push_changed(this)
-      } else {
-        this.save_manager.mark_unchanged(this)
-      }
+      this.register_order_change()
     }
   }
 
@@ -81,5 +86,39 @@ export default class SortManager {
         return $(this).data("reorder-id")
       }
     ).toArray()
+  }
+
+  get alpha_sort_button() {
+    return $("*[data-action='alpha-sort-action']")
+  }
+
+  initialize_alpha_sort_button() {
+    let that = this
+    this.alpha_sort_button.click(function() { that.sort_alpha() } )
+  }
+
+  sort_alpha() {
+    // create array of { title, element } objects
+    let array = []
+    let children = this.element.children().get()
+    children.forEach(function(child) {
+      let title = $(child).find("input.title").val()
+      array.push(
+        { title: title,
+          element: child }
+      )
+    })
+    // sort array by title of each object
+    array.sort(function(o1, o2) {
+      let a = o1.title.toLowerCase()
+      let b = o2.title.toLowerCase()
+      return a < b ? -1 : (a > b ? 1 : 0);
+    });
+    // replace contents of #sortable with elements from the array
+    this.element.empty()
+    for (let child of array) {
+      this.element.append(child.element)
+    }
+    this.register_order_change()
   }
 }
