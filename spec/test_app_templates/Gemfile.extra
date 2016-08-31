@@ -1,6 +1,7 @@
 # Use this file to reference specific commits of gems.
 gem 'acts_as_follower', git: 'https://github.com/awjecc/acts_as_follower.git', branch: 'rails5-fix-parent_class_name'
 gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'
+gem 'curation_concerns', git: 'https://github.com/projecthydra/curation_concerns.git'
 
 group :development do
   gem 'better_errors'
