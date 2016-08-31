@@ -1,6 +1,6 @@
 module Sufia
   module Admin
-    class FeaturesController < Flip::FeaturesController
+    class FeaturesController < Flipflop::FeaturesController
       layout 'admin'
       before_action do
         authorize! :manage, Sufia::Feature

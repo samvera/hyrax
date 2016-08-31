@@ -28,7 +28,7 @@ describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
 
   context 'with assign_admin_set turned on' do
     before do
-      allow(Flip).to receive(:assign_admin_set?).and_return(true)
+      allow(Flipflop).to receive(:assign_admin_set?).and_return(true)
     end
 
     it "draws the page" do
@@ -39,7 +39,7 @@ describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
 
   context 'with assign_admin_set disabled' do
     before do
-      allow(Flip).to receive(:assign_admin_set?).and_return(false)
+      allow(Flipflop).to receive(:assign_admin_set?).and_return(false)
     end
     it 'draws the page, but not the admin set widget' do
       expect(page).not_to have_content('administrative set')

@@ -1,8 +1,8 @@
 module Sufia
   module Admin
-    class StrategiesController < Flip::StrategiesController
+    class StrategiesController < Flipflop::StrategiesController
       before_action do
-        authorize! :manage, Feature
+        authorize! :manage, Sufia::Feature
       end
 
       # TODO: we could remove this if we used an isolated engine
