@@ -17,6 +17,11 @@ module CurationConcerns
       property :description, predicate: ::RDF::Vocab::DC.description do |index|
         index.as :stored_searchable
       end
+
+      property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
+        index.as :symbol
+      end
+
       has_many :members,
                predicate: ::RDF::Vocab::DC.isPartOf,
                class_name: 'ActiveFedora::Base'
