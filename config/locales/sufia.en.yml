@@ -1,5 +1,10 @@
 en:
   sufia:
+    controls:
+      home:             "Home"
+      about:            "About"
+      help:             "Help"
+      contact:          "Contact"
     product_name:       "Sufia"
     product_twitter_handle: "@HydraSphere"
     institution_name:   "Institution Name"
@@ -75,8 +80,7 @@ en:
         no_public:          'No public work has been contributed.'
     toolbar:
       admin:
-        menu: "Admin"
-        statistics: "Repository Statistics"
+        menu: "Administration"
       dashboard:
         menu: "Dashboard"
         my: "My Dashboard"
@@ -282,6 +286,10 @@ en:
     footer:
       copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
     admin:
+      sidebar:
+        admin_sets: "Administrative Sets"
+        settings:   "Settings"
+        statistics: "Statistics"
       stats:
         registered: "Registered"
         deposited_form:

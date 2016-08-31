@@ -2,10 +2,14 @@
   <div class="container-fluid">
     <div class="row">
       <ul class="nav navbar-nav col-sm-5 col-md-6">
-        <li <%= 'class=active' if current_page?(sufia.root_path) %>><%= link_to 'Home', sufia.root_path, :'data-no-turbolink'=>"true" %></li>
-        <li <%= 'class=active' if current_page?(sufia.about_path) %>><%= link_to 'About', sufia.about_path, :'data-no-turbolink'=>"true" %></li>
-        <li <%= 'class=active' if action_name == "help" %>><a href="<%= sufia.help_path %>">Help</a></li>
-        <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_path %>">Contact</a></li>
+        <li <%= 'class=active' if current_page?(sufia.root_path) %>>
+          <%= link_to t(:'sufia.controls.home'), sufia.root_path, :'data-no-turbolink'=>"true" %></li>
+        <li <%= 'class=active' if current_page?(sufia.about_path) %>>
+          <%= link_to t(:'sufia.controls.about'), sufia.about_path, :'data-no-turbolink'=>"true" %></li>
+        <li <%= 'class=active' if action_name == "help" %>>
+          <%= link_to t(:'sufia.controls.help'), sufia.help_path %></li>
+        <li <%= 'class=active' if current_page?(sufia.contact_path) %>>
+          <%= link_to t(:'sufia.controls.contact'), sufia.contact_path %></li>
       </ul><!-- /.nav -->
       <div class="searchbar-right navbar-right col-sm-7 col-md-6">
         <%= render partial: 'catalog/search_form' %>
