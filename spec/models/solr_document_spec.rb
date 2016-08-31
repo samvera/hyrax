@@ -23,9 +23,23 @@ describe SolrDocument do
   end
 
   describe "creator" do
-    let(:attributes) { { Solrizer.solr_name('creator') => ['one', 'two'] } }
     subject { document.creator }
-    it { is_expected.to eq ['one', 'two'] }
+
+    context "for a work" do
+      let(:attributes) do
+        { Solrizer.solr_name('creator') => ['one', 'two'],
+          Solrizer.solr_name('has_model', :symbol) => ["GenericWork"] }
+      end
+      it { is_expected.to eq ['one', 'two'] }
+    end
+
+    context "for an admin set" do
+      let(:attributes) do
+        { Solrizer.solr_name('creator', :symbol) => ['foo@example.com'],
+          Solrizer.solr_name('has_model', :symbol) => ["AdminSet"] }
+      end
+      it { is_expected.to eq ['foo@example.com'] }
+    end
   end
 
   describe "contributor" do
