@@ -1,6 +1,5 @@
 module Sufia
   class FileSetPresenter < ::CurationConcerns::FileSetPresenter
-    include Sufia::CharacterizationBehavior
     include WithEvents
 
     delegate :depositor, :keyword, :date_created, :date_modified, :itemtype,
