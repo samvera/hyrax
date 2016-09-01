@@ -20,11 +20,9 @@ module CurationConcerns
       # have made it to the repo
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file to save in the repository
       def ingest_file(file)
-        IngestFileJob.perform_later(
-          file_set,
-          working_file(file),
-          user,
-          ingest_options(file))
+        working_file = WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
+        mime_type = file.respond_to?(:content_type) ? file.content_type : nil
+        IngestFileJob.perform_later(file_set, working_file, mime_type, user, relation)
         true
       end
 
@@ -40,20 +38,6 @@ module CurationConcerns
         CharacterizeJob.perform_later(file_set, repository_file.id)
         true
       end
-
-      private
-
-        def working_file(file)
-          path = file.path
-          return path if File.exist?(path)
-          CurationConcerns::WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
-        end
-
-        def ingest_options(file, opts = {})
-          opts.merge!(mime_type: file.content_type) if file.respond_to?(:content_type)
-          opts.merge!(filename: file.original_filename) if file.respond_to?(:original_filename)
-          opts.merge!(relation: relation)
-        end
     end
   end
 end

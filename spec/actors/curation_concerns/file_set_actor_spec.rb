@@ -4,12 +4,11 @@ require 'redlock'
 describe CurationConcerns::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
-  let(:user)           { create(:user) }
-  let(:uploaded_file)  { fixture_file_upload('/world.png', 'image/png') }
-  let(:local_file)     { File.open(File.join(fixture_path, 'world.png')) }
-  let(:file_set)       { create(:file_set, content: local_file) }
-  let(:actor)          { described_class.new(file_set, user) }
-  let(:ingest_options) { { mime_type: 'image/png', relation: 'original_file', filename: 'world.png' } }
+  let(:user)          { create(:user) }
+  let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
+  let(:local_file)    { File.open(File.join(fixture_path, 'world.png')) }
+  let(:file_set)      { create(:file_set, content: local_file) }
+  let(:actor)         { described_class.new(file_set, user) }
 
   describe 'creating metadata and content' do
     let(:upload_set_id) { nil }
@@ -22,7 +21,7 @@ describe CurationConcerns::Actors::FileSetActor do
     end
 
     before do
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata(work)
       actor.create_content(uploaded_file)
@@ -67,14 +66,13 @@ describe CurationConcerns::Actors::FileSetActor do
 
   describe '#create_content' do
     it 'calls ingest file job' do
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
       actor.create_content(uploaded_file)
     end
 
     context 'when an alternative relationship is specified' do
-      let(:ingest_options) { { mime_type: 'image/png', relation: 'remastered', filename: 'world.png' } }
       it 'calls ingest file job' do
-        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
+        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'remastered')
         actor.create_content(uploaded_file, 'remastered')
       end
     end
@@ -285,6 +283,30 @@ describe CurationConcerns::Actors::FileSetActor do
       it "is a custom class" do
         expect(actor.file_actor_class).to eq(CustomFileActor)
       end
+    end
+  end
+
+  describe '#revert_content' do
+    let(:file_set) { create(:file_set, user: user) }
+    let(:file1)    { "small_file.txt" }
+    let(:file2)    { "curation_concerns_generic_stub.txt" }
+    let(:version1) { "version1" }
+
+    before do
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :inline
+      allow(CharacterizeJob).to receive(:perform_later)
+      actor.create_content(fixture_file_upload(file1))
+      actor.create_content(fixture_file_upload(file2))
+      ActiveJob::Base.queue_adapter = original_adapter
+      actor.file_set.reload
+    end
+
+    let(:restored_content) { file_set.reload.original_file }
+
+    it "restores the first versions's content and metadata" do
+      actor.revert_content(version1)
+      expect(restored_content.original_name).to eq file1
     end
   end
 end
