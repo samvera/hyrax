@@ -18,6 +18,7 @@ describe CurationConcerns::FileSetIndexer do
       subject: ['Theology'],
       language: ['Arabic'],
       rights: ['Wide open, buddy.'],
+      rights_statement: ['No Known Copyright'],
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Medina, Saudi Arabia'],
@@ -64,6 +65,7 @@ describe CurationConcerns::FileSetIndexer do
       expect(subject[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
       expect(subject[Solrizer.solr_name('date_modified', :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
       expect(subject[Solrizer.solr_name('rights')]).to eq ['Wide open, buddy.']
+      expect(subject[Solrizer.solr_name('rights_statement')]).to eq ['No Known Copyright']
       expect(subject[Solrizer.solr_name('related_url')]).to eq ['http://example.org/TheWork/']
       expect(subject[Solrizer.solr_name('contributor')]).to eq ['Mohammad']
       expect(subject[Solrizer.solr_name('creator')]).to eq ['Allah']

@@ -28,9 +28,17 @@ module CurationConcerns
       property :keyword, predicate: ::RDF::Vocab::DC11.relation do |index|
         index.as :stored_searchable, :facetable
       end
+
+      # Used for a license
       property :rights, predicate: ::RDF::Vocab::DC.rights do |index|
         index.as :stored_searchable
       end
+
+      # This is for the rights statement
+      property :rights_statement, predicate: ::RDF::Vocab::EDM.rights do |index|
+        index.as :stored_searchable
+      end
+
       property :publisher, predicate: ::RDF::Vocab::DC11.publisher do |index|
         index.as :stored_searchable, :facetable
       end
