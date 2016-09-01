@@ -14,13 +14,11 @@ module CurationConcerns
       end
     end
 
-    private
-
-      # @param [Symbol] access :read or :edit
-      def search_results(access)
-        builder = AdminSetSearchBuilder.new(context, access)
-        response = context.repository.search(builder)
-        response.documents
-      end
+    # @param [Symbol] access :read or :edit
+    def search_results(access)
+      builder = AdminSetSearchBuilder.new(context, access)
+      response = context.repository.search(builder)
+      response.documents
+    end
   end
 end
