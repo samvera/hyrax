@@ -17,8 +17,8 @@ describe CurationConcerns::CollectionPresenter do
   # Mock bytes so collection does not have to be saved.
   before { allow(collection).to receive(:bytes).and_return(0) }
 
-  describe '#title_or_label' do
-    subject { presenter.title_or_label }
+  describe '#to_s' do
+    subject { presenter.to_s }
     it { is_expected.to eq 'A clever title' }
   end
 
