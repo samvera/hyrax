@@ -1,5 +1,5 @@
   <%= form_for presenter, method: :get, class: "well form-search" do |f| %>
-      <label class="sr-only"><%= t('curation_concerns.collections.search_form.label', title: presenter.title_or_label) %></label>
+      <label class="sr-only"><%= t('curation_concerns.collections.search_form.label', title: presenter.to_s) %></label>
       <div class="input-group">
         <%= text_field_tag :cq, params[:cq], class: "collection-query form-control", placeholder: t('curation_concerns.collections.search_form.placeholder'), size: '30', type: "search", id: "collection_search" %>
         <div class="input-group-btn">
