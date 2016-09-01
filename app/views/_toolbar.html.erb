@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
   <ul class="nav navbar-nav">
-    <%= render '/admin/menu' if can? :read, :admin_dashboard %>
+    <%= render 'sufia/admin/menu' if can? :read, :admin_dashboard %>
     <li class="dropdown">
       <%= link_to sufia.dashboard_index_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
         <span class="fa fa-tachometer"></span> <%= t("sufia.toolbar.dashboard.menu") %> <span class="caret"></span>
