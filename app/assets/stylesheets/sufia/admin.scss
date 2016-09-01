@@ -1,11 +1,11 @@
 @import 'widgets';
 
-$sidebar-background-color: #534f46 !default;
-$sidebar-separator-color: #4d4a41 !default;
+$sidebar-background-color: #5f5f5f !default;
+$sidebar-separator-color: #555 !default;
 $sidebar-link-color: #ffffff !default;
 $sidebar-icon-color: #ffffff !default;
-$sidebar-hover-background-color: #615c52 !default;
-$sidebar-hover-icon-color: #aca99f !default;
+$sidebar-hover-background-color: #7f7f7f !default;
+$sidebar-hover-icon-color: #eee !default;
 
 $breadcrumb-background-color: #e8e8e8 !default;
 $breadcrumb-link-color: #8d8678 !default;
@@ -169,7 +169,7 @@ $content-background-color: #f5f5f5 !default;
 }
 
 .x-navigation.x-navigation-horizontal > li {
-  width: auto; 
+  width: auto;
 }
 
 .x-navigation.x-navigation-horizontal > li > a {
