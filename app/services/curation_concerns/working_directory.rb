@@ -1,12 +1,10 @@
 module CurationConcerns
-  class WorkingDirectory
+  module WorkingDirectory
     class << self
       # @param [String] repository_file_id identifier for Hydra::PCDM::File
       # @param [String] id the identifier of the FileSet
-      # @param [String, NilClass] filepath path to existing cached copy of the file
       # @return [String] path of the working file
-      def find_or_retrieve(repository_file_id, id, filepath = nil)
-        return filepath if filepath && File.exist?(filepath)
+      def find_or_retrieve(repository_file_id, id)
         repository_file = Hydra::PCDM::File.find(repository_file_id)
         working_path = full_filename(id, repository_file.original_name)
         if File.exist?(working_path)
