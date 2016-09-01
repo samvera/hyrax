@@ -4,24 +4,11 @@
 coverage
 rdoc
 pkg
-/.bundle
-db/*.sqlite3
-log/*.log
 tmp/
 console
 
 *.sqlite3
 *.log
-
-log/*
-
-public/plugin_assets
-public/plugin_assets/
-
-tmp/**/*
-tmp/performance
-
-db/schema.rb
 
 .project
 .buildpath
