@@ -16,6 +16,7 @@ module Sufia
     end
 
     def create
+      @admin_set.creator = [current_user.user_key]
       if @admin_set.save
         redirect_to sufia.admin_admin_sets_path
       else

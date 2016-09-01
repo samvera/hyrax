@@ -23,6 +23,7 @@ describe Sufia::Admin::AdminSetsController do
 
   context "as an admin" do
     before do
+      sign_in user
       allow(controller).to receive(:authorize!).and_return(true)
     end
 
@@ -48,6 +49,7 @@ describe Sufia::Admin::AdminSetsController do
             post :create, params: { admin_set: { title: 'Test title',
                                                  description: 'test description' } }
           }.to change { AdminSet.count }.by(1)
+          expect(assigns[:admin_set].creator).to eq [user.user_key]
         end
       end
 
