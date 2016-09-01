@@ -6,10 +6,16 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   let(:subject)     { 'history' }
   let(:description) { ['Lorem ipsum < lorem ipsum. http://my.link.com'] }
 
-  let(:solr_document) { SolrDocument.new(subject_tesim: subject,
-                                         contributor_tesim: contributor,
-                                         creator_tesim: creator,
-                                         description_tesim: description) }
+  let(:solr_document) { SolrDocument.new(attributes) }
+  let(:attributes) do
+    {
+      Solrizer.solr_name('has_model', :symbol) => ["GenericWork"],
+      subject_tesim: subject,
+      contributor_tesim: contributor,
+      creator_tesim: creator,
+      description_tesim: description
+    }
+  end
   let(:ability) { nil }
   let(:presenter) do
     CurationConcerns::WorkShowPresenter.new(solr_document, ability)

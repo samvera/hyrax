@@ -104,7 +104,8 @@ module CurationConcerns
     end
 
     def creator
-      fetch(Solrizer.solr_name('creator'), [])
+      descriptor = hydra_model.index_config[:creator].behaviors.first
+      fetch(Solrizer.solr_name('creator', descriptor), [])
     end
 
     def contributor
