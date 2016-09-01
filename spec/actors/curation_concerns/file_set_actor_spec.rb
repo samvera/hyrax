@@ -285,4 +285,28 @@ describe CurationConcerns::Actors::FileSetActor do
       end
     end
   end
+
+  describe '#revert_content' do
+    let(:file_set) { create(:file_set, user: user) }
+    let(:file1)    { "small_file.txt" }
+    let(:file2)    { "curation_concerns_generic_stub.txt" }
+    let(:version1) { "version1" }
+
+    before do
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :inline
+      allow(CharacterizeJob).to receive(:perform_later)
+      actor.create_content(fixture_file_upload(file1))
+      actor.create_content(fixture_file_upload(file2))
+      ActiveJob::Base.queue_adapter = original_adapter
+      actor.file_set.reload
+    end
+
+    let(:restored_content) { file_set.reload.original_file }
+
+    it "restores the first versions's content and metadata" do
+      actor.revert_content(version1)
+      expect(restored_content.original_name).to eq file1
+    end
+  end
 end
