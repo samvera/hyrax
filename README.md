@@ -45,7 +45,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Sufia?
 
-Sufia uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Sufia offers self-deposit and proxy deposit workflows with plans to develop one or more mediated deposit workflows in 2016. Sufia delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
+Sufia uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Sufia offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Sufia delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
 
 ## Feature list
 
@@ -82,6 +82,8 @@ Sufia has the following features:
 * Integration with Zotero for automatic population of user content
 * Suggested values from controlled vocabularies provided by [Questioning Authority](https://github.com/projecthydra-labs/questioning_authority)
 * [ResourceSync](http://www.openarchives.org/rs/1.0/resourcesync) capability lists and resource lists
+* Administrative sets (curated collections)
+* Administrative dashboard, w/ feature flippers
 
 See [Sufia's documentation site](http://sufia.io/) for more non-technical documentation.
 
@@ -105,8 +107,8 @@ After installing the Prerequisites:
 
 Sufia 7.x requires the following software to work:
 
-1. Solr version >= 5.x
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1
+1. Solr version >= 5.x (tested up to 6.2.0)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.6.0)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
@@ -146,10 +148,10 @@ We recommend either Ruby 2.3 or the latest 2.2 version.
 
 ## Rails
 
-Generate a new Rails application. We recommend the latest Rails 4.2 release.
+Generate a new Rails application. We recommend the latest Rails 5.0 or 4.2 release.
 
 ```
-gem install rails -v 4.2.7.1
+gem install rails -v 5.0.0.1
 rails new my_app
 ```
 
