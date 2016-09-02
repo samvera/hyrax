@@ -4,11 +4,12 @@ require 'redlock'
 describe CurationConcerns::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
-  let(:user)          { create(:user) }
-  let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
-  let(:local_file)    { File.open(File.join(fixture_path, 'world.png')) }
-  let(:file_set)      { create(:file_set, content: local_file) }
-  let(:actor)         { described_class.new(file_set, user) }
+  let(:user)           { create(:user) }
+  let(:uploaded_file)  { fixture_file_upload('/world.png', 'image/png') }
+  let(:local_file)     { File.open(File.join(fixture_path, 'world.png')) }
+  let(:file_set)       { create(:file_set, content: local_file) }
+  let(:actor)          { described_class.new(file_set, user) }
+  let(:ingest_options) { { mime_type: 'image/png', relation: 'original_file', filename: 'world.png' } }
 
   describe 'creating metadata and content' do
     let(:upload_set_id) { nil }
@@ -21,7 +22,7 @@ describe CurationConcerns::Actors::FileSetActor do
     end
 
     before do
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata(work)
       actor.create_content(uploaded_file)
@@ -66,13 +67,14 @@ describe CurationConcerns::Actors::FileSetActor do
 
   describe '#create_content' do
     it 'calls ingest file job' do
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'original_file')
+      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
       actor.create_content(uploaded_file)
     end
 
     context 'when an alternative relationship is specified' do
+      let(:ingest_options) { { mime_type: 'image/png', relation: 'remastered', filename: 'world.png' } }
       it 'calls ingest file job' do
-        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png$/, 'image/png', user, 'remastered')
+        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
         actor.create_content(uploaded_file, 'remastered')
       end
     end
