@@ -1,4 +1,5 @@
 h3. 10.3.0 (2016-09-02)
+
 2016-08-31: Bump blacklight-access_controls version [ Joe Atzberger ]
 
 2016-08-31: gitignore updates [ Joe Atzberger ]
@@ -15,6 +16,7 @@ h3. 10.3.0 (2016-09-02)
 
 
 h3. 10.1.0
+
 2016-08-08: Update document_partial_name for modern ActiveFedora fields [Justin
 Coyne]
 
