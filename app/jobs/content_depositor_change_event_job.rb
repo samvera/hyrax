@@ -43,11 +43,4 @@ class ContentDepositorChangeEventJob < ContentEventJob
   def proxy_depositor
     @proxy_depositor ||= ::User.find_by_user_key(work.proxy_depositor)
   end
-
-  # override to check file permissions before logging to followers
-  def log_to_followers(depositor)
-    depositor.followers.select { |user| user.can?(:read, work) }.each do |follower|
-      follower.log_event(event)
-    end
-  end
 end

@@ -126,8 +126,6 @@ en:
         file_downloads:     "Download"
         works:              "Works created"
         collections:        "Collections created"
-        following:          "People you follow"
-        followers:          "People who are following you"
       my:
         works:        "My Works"
         collections:  "My Collections"
@@ -190,10 +188,6 @@ en:
       open_title_attr: "Change the visibility of this resource"
       private_title_attr: "Change the visibility of this resource"
     user_profile:
-      no_followers: "No one is following you."
-      no_following: "You are not following anyone."
-      no_followers_other: "No one is following this user."
-      no_following_other: "This user is not following anyone."
       orcid:
         alt: "ORCID icon"
         label: "ORCID Profile"

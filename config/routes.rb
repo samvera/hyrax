@@ -69,13 +69,8 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # User profile & follows
-  resources :users, only: [:index, :show, :edit, :update], as: :profiles do
-    member do
-      post 'follow' => 'users#follow'
-      post 'unfollow' => 'users#unfollow'
-    end
-  end
+  # User profile
+  resources :users, only: [:index, :show, :edit, :update], as: :profiles
 
   resources :users, only: [] do
     resources :operations, only: [:index, :show], controller: 'sufia/operations'

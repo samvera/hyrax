@@ -5,8 +5,7 @@ module Sufia::UsersControllerBehavior
     include Blacklight::SearchContext
     layout "sufia-one-column"
     prepend_before_action :find_user, except: [:index, :search, :notifications_number]
-    before_action :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
-    before_action :user_not_current_user, only: [:follow, :unfollow]
+    before_action :authenticate_user!, only: [:edit, :update]
     authorize_resource only: [:edit, :update]
     # Catch permission errors
     rescue_from CanCan::AccessDenied, with: :deny_access
@@ -60,24 +59,6 @@ module Sufia::UsersControllerBehavior
     ['1', 'true'].include? params[:user][:update_directory]
   end
 
-  # Follow a user
-  def follow
-    unless current_user.following?(@user)
-      current_user.follow(@user)
-      UserFollowEventJob.perform_later(current_user, @user)
-    end
-    redirect_to sufia.profile_path(@user.to_param), notice: "You are following #{@user}"
-  end
-
-  # Unfollow a user
-  def unfollow
-    if current_user.following?(@user)
-      current_user.stop_following(@user)
-      UserUnfollowEventJob.perform_later(current_user, @user)
-    end
-    redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user}"
-  end
-
   def notifications_number
     @notify_number = 0
     return if action_name == "index" && controller_name == "mailbox"
@@ -100,10 +81,6 @@ module Sufia::UsersControllerBehavior
     def find_user
       @user = User.from_url_component(params[:id])
       redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
-    end
-
-    def user_not_current_user
-      redirect_to sufia.profile_path(@user.to_param), alert: "You cannot follow or unfollow yourself" if @user == current_user
     end
 
     def sort_value

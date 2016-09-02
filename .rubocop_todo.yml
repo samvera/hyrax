@@ -69,8 +69,6 @@ RSpec/ExampleLength:
     - 'spec/helpers/sufia_helper_spec.rb'
     - 'spec/helpers/dashboard_helper_spec.rb'
     - 'spec/javascripts/jasmine_spec.rb'
-    - 'spec/jobs/user_unfollow_event_job_spec.rb'
-    - 'spec/jobs/user_follow_event_job_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'
     - 'spec/jobs/content_update_event_job_spec.rb'
     - 'spec/jobs/content_restored_version_event_job_spec.rb'
