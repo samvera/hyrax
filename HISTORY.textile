@@ -1,3 +1,19 @@
+h3. 10.3.0 (2016-09-02)
+2016-08-31: Bump blacklight-access_controls version [ Joe Atzberger ]
+
+2016-08-31: gitignore updates [ Joe Atzberger ]
+
+2016-08-31: Refine rspec options [ Joe Atzberger ]
+
+2016-08-16: Switch the deprecated before_filter to before_action [ Justin Coyne ]
+
+2016-08-11: Check before attempting to destroy access_control [ cjcolvar ]
+
+2016-08-11: Pass hash instead of string when calling create [ cjcolvar ]
+
+2016-08-10: Allow active-fedora 10 or 11 [ Justin Coyne ]
+
+
 h3. 10.1.0
 2016-08-08: Update document_partial_name for modern ActiveFedora fields [Justin
 Coyne]
