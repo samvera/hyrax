@@ -10,9 +10,9 @@ Gem::Specification.new do |s|
   s.homepage    = "http://projecthydra.org"
   s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
-  s.files = ['lib/hydra/head.rb']
-  s.require_paths = ["lib"]
-  s.license = "APACHE2"
+  s.files         = ['lib/hydra/head.rb']
+  s.require_paths = ['lib']
+  s.license       = 'APACHE-2.0'
 
   s.required_ruby_version = '>= 1.9.3'
 
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'fcrepo_wrapper', '~> 0.2'
   s.add_development_dependency 'engine_cart', '~> 0.10'
   s.add_development_dependency 'yard'
+  s.add_development_dependency 'RedCloth'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'factory_girl_rails'
 end
