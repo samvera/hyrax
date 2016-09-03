@@ -1,3 +1,5 @@
+*these are now in the Github release notes
+
 h3. 10.3.0 (2016-09-02)
 
 2016-08-31: Bump blacklight-access_controls version [ Joe Atzberger ]
