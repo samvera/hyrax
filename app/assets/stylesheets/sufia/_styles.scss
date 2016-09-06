@@ -50,29 +50,6 @@ label.disabled {
   color: $gray-light;
 }
 
-@media only screen and (min-width: 768px) {
-  #home_header,
-  #home_header div.home_call_action,
-  #home_header div.home_call_action ~ div {
-    min-height: 18em;
-  }
-  .home_share_work {
-    margin: 1.5em 0;
-  }
-  .home_marketing_text {
-    margin-top: 1.5em;
-    padding-bottom: 1.5em;
-  }
-}
-
-@media only screen and (min-width: 992px) {
-  #home_header,
-  #home_header div.home_call_action,
-  #home_header div.home_call_action ~ div {
-    min-height: 20em;
-  }
-}
-
 .large-icon {
   font-size: 1.5em;
 }

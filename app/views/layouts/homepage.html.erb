@@ -6,8 +6,41 @@
 
 <body>
 <%= render '/masthead' %>
-<%= render '/controls' %>
+
+<div class="image-masthead">
+  <div class="background-container" style="background-image: url('<%= image_path 'pasture' %>')"></div>
+  <span class="background-container-gradient"></span>
+
+  <div class="container site-title-container">
+    <div class="site-title h1" style="text-align: center;">
+      <%= render "sufia/homepage/marketing" if controller_name == 'homepage' %>
+    </div>
+  </div>
+
+  <nav class="navbar" role="navigation">
+    <div class="container">
+      <div class="row">
+        <ul class="nav navbar-nav">
+          <li <%= 'class=active' if current_page?(sufia.root_path) %>>
+            <%= link_to t(:'sufia.controls.home'), sufia.root_path, :'data-no-turbolink'=>"true" %></li>
+          <li <%= 'class=active' if current_page?(sufia.about_path) %>>
+            <%= link_to t(:'sufia.controls.about'), sufia.about_path, :'data-no-turbolink'=>"true" %></li>
+          <li <%= 'class=active' if action_name == "help" %>>
+            <%= link_to t(:'sufia.controls.help'), sufia.help_path %></li>
+          <li <%= 'class=active' if current_page?(sufia.contact_path) %>>
+            <%= link_to t(:'sufia.controls.contact'), sufia.contact_path %></li>
+        </ul><!-- /.nav -->
+        <div class="searchbar-right navbar-right col-sm-7 col-md-6">
+          <%= render partial: 'catalog/search_form' %>
+        </div>
+      </div>
+    </div>
+  </nav><!-- /.navbar -->
+</div>
+
 <%= render '/flash_msg' %>
+<%= render 'sufia/homepage/announcement' if controller_name == 'homepage' %>
+
 <div id="content-wrapper" class="container-fluid">
   <%= yield %>
 </div><!-- /#content-wrapper -->

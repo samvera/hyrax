@@ -179,7 +179,7 @@ en:
           keyword: "could not be updated. You do not have sufficient privileges to edit them."
         title:  "Files failed"
         subject: "Batch upload permission denied"
-    background_attribution: "Background image courtesy of Penn State University"
+    background_attribution_html: "Background image CC by-nc-sa by <a href=\"https://flic.kr/p/eirxaf\">f2b1610</a>"
     bread_crumb:
       search_results: "Back to search results"
     visibility:
