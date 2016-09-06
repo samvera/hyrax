@@ -59,6 +59,7 @@ describe CurationConcerns::FileSetIndexer do
 
     it 'has fields' do
       expect(subject[Solrizer.solr_name('hasRelatedMediaFragment', :symbol)]).to eq 'foo123'
+      expect(subject[Solrizer.solr_name('hasRelatedImage', :symbol)]).to eq 'foo123'
       expect(subject[Solrizer.solr_name('part_of')]).to be_nil
       expect(subject[Solrizer.solr_name('date_uploaded')]).to be_nil
       expect(subject[Solrizer.solr_name('date_modified')]).to be_nil

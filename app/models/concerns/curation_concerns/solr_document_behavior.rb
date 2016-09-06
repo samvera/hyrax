@@ -66,7 +66,7 @@ module CurationConcerns
     end
 
     def thumbnail_id
-      first(Solrizer.solr_name('thumbnail_id', :symbol))
+      first(Solrizer.solr_name('hasRelatedImage', :symbol))
     end
 
     # Date created is indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
