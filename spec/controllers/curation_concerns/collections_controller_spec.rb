@@ -76,10 +76,9 @@ describe CollectionsController do
   end
 
   describe '#index' do
-    before { sign_in user }
-    let!(:collection1) { create(:collection, title: ['Beta'], user: user) }
-    let!(:collection2) { create(:collection, title: ['Alpha'], user: user) }
-    let!(:generic_work) { create(:generic_work, user: user) }
+    let!(:collection1) { create(:collection, :public, title: ['Beta']) }
+    let!(:collection2) { create(:collection, :public, title: ['Alpha']) }
+    let!(:generic_work) { create(:generic_work, :public) }
 
     it 'shows a list of collections sorted alphabetically' do
       get :index

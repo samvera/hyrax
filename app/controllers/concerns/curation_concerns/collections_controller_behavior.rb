@@ -29,7 +29,7 @@ module CurationConcerns
       end
 
       # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
-      before_action :authenticate_user!, except: [:show]
+      before_action :authenticate_user!, except: [:show, :index]
       load_and_authorize_resource except: [:index, :show], instance_name: :collection
 
       class_attribute :presenter_class, :form_class
