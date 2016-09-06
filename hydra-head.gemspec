@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'fcrepo_wrapper', '~> 0.2'
   s.add_development_dependency 'engine_cart', '~> 0.10'
   s.add_development_dependency 'yard'
-  s.add_development_dependency 'RedCloth'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'factory_girl_rails'
 end
