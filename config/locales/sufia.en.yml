@@ -1,5 +1,8 @@
 en:
   sufia:
+    admin_sets:
+      index:
+        header:         "Administrative Collections"
     controls:
       home:             "Home"
       about:            "About"
@@ -78,6 +81,8 @@ en:
         details:            'Details'
         tab_label:          'Recently Uploaded'
         no_public:          'No public work has been contributed.'
+      admin_sets:
+        link:               'View all administrative collections'
     toolbar:
       admin:
         menu: "Administration"

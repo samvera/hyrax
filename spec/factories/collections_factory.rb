@@ -8,7 +8,9 @@ FactoryGirl.define do
       work.apply_depositor_metadata(evaluator.user.user_key)
     }
 
-    factory :public_collection do
+    factory :public_collection, traits: [:public]
+
+    trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 

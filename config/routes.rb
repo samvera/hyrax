@@ -138,6 +138,8 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  resources :admin_sets, controller: 'sufia/admin_sets'
+
   resource :admin, controller: 'sufia/admin', only: [:show]
   scope 'admin', module: 'sufia/admin', as: 'admin' do
     resources :admin_sets
