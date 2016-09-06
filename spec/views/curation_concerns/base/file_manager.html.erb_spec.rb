@@ -95,4 +95,12 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   it "renders a thumbnail field for each member" do
     expect(rendered).to have_selector("input[name='thumbnail_id']", count: members.length)
   end
+
+  it "renders a hidden field for the resource form representative id" do
+    expect(rendered).to have_selector("#resource-form input[type=hidden][name='generic_work[representative_id]']", visible: false)
+  end
+
+  it "renders a representative field for each member" do
+    expect(rendered).to have_selector("input[name='representative_id']", count: members.length)
+  end
 end
