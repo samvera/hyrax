@@ -1,0 +1,38 @@
+<% content_for :page_header do %>
+  <h1><span class="fa fa-sitemap"></span> <%= t('.header') %></h1>
+<% end %>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2 class="panel-title display-page"><%= @presenter.to_s %></h2>
+        <div class="pull-right">
+          <%= link_to sufia.edit_admin_admin_set_path(@presenter), class: 'btn btn-primary' do %>
+            <span class="fa fa-edit"></span> Edit
+          <% end %>
+        </div>
+      </div>
+
+      <div class="panel-body admin-set row">
+        <div class="col-md-2">
+          <span class="fa fa-sitemap collection-icon-search"></span>
+        </div>
+        <div class="col-md-10">
+          <%= render 'collection_description', presenter: @presenter %>
+          <%= render 'show_descriptions' %>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <h3><%= t '.item_list_header' %></h3>
+        <%= render 'sort_and_per_page', collection: @presenter %>
+
+        <%= render_document_index @member_docs %>
+
+        <%= render 'paginate' %>
+      </div>
+    </div>
+  </div>
+</div>

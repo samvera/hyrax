@@ -68,5 +68,21 @@ describe Sufia::Admin::AdminSetsController do
         end
       end
     end
+
+    describe "#show" do
+      context "when it's successful" do
+        let(:admin_set) { create(:admin_set, edit_users: [user]) }
+        before do
+          create(:work, :public, admin_set: admin_set)
+        end
+
+        it 'defines a presenter' do
+          get :show, params: { id: admin_set }
+          expect(response).to be_success
+          expect(assigns[:presenter]).to be_kind_of Sufia::AdminSetPresenter
+          expect(assigns[:presenter].id).to eq admin_set.id
+        end
+      end
+    end
   end
 end

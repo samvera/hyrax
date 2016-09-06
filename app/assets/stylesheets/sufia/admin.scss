@@ -31,6 +31,11 @@ $content-background-color: #f5f5f5 !default;
     margin: 0;
     margin-bottom: 15px;
     padding: 0;
+
+    > .fa {
+      margin-left: 6px;
+      margin-right: 6px;
+    }
   }
 }
 
@@ -38,10 +43,20 @@ $content-background-color: #f5f5f5 !default;
   float: left;
   width: 100%;
 
+  .panel-heading,
   .panel-footer,
   .panel-body {
     float: left;
     width: 100%;
+  }
+
+  .panel-title {
+    color: $title-text-color;
+    display: block;
+    float: left;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
   }
 }
 
