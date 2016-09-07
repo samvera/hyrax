@@ -85,10 +85,21 @@ describe CurationConcerns::FileSetsController do
     end
 
     context "when updating the attached file" do
+      let(:actor) { double }
+      before do
+        allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(actor)
+      end
+      let(:expected_file_type) do
+        if Rails.version < '5.0.0'
+          Rack::Test::UploadedFile
+        else
+          ActionDispatch::Http::UploadedFile
+        end
+      end
       it "spawns a content new version event job" do
         expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
 
-        expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
+        expect(actor).to receive(:ingest_file).with(expected_file_type)
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
         post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
@@ -168,20 +179,6 @@ describe CurationConcerns::FileSetsController do
       }
 
       expect(assigns[:file_set].read_groups).to eq(["group3"])
-    end
-
-    it "spawns a virus check" do
-      file = fixture_file_upload('/world.png', 'image/png')
-
-      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-      expect(ClamAV.instance).to receive(:scanfile).and_return(0)
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, String)
-      post :update, params: {
-        id: file_set.id,
-        'Filename' => 'The world',
-        file_set: { files: [file], keyword: [''],
-                    permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
-      }
     end
 
     context "when there's an error saving" do
