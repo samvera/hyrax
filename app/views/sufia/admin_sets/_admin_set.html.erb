@@ -1,0 +1,14 @@
+<tr>
+  <td class="thumbnail-column">
+    <%= link_to [sufia, admin_set], class: "media-left" do %>
+      <%= render_thumbnail_tag admin_set, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
+    <% end %>
+  </td>
+  <td>
+    <%= link_to admin_set.to_s, [sufia, admin_set] %>
+    <p><%= admin_set.description.first %></p>
+  </td>
+  <td><%= admin_set.create_date %></td>
+  <td>N/A</td>
+  <td>N/A</td>
+</tr>

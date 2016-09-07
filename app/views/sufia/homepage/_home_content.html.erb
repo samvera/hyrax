@@ -12,8 +12,17 @@
     </div>
   </div>
 </div><!-- /.col-xs-6 -->
+
 <div class="col-xs-12 col-sm-6">
   <div>
-    <%= render partial: 'featured_researcher' %>
+    <%= render 'featured_researcher' %>
   </div>
+
+  <% if Flipflop.assign_admin_set? %>
+    <ul class="list-inline highlights-list">
+      <li>
+        <%= link_to t('sufia.homepage.admin_sets.link'), sufia.admin_sets_path, class: 'btn btn-default' %>
+      </li>
+    </ul>
+  <% end %>
 </div>
