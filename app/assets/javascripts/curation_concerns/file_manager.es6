@@ -42,8 +42,9 @@ export default class FileManager {
   }
 
   // Initialize a form that represents the parent resource as a whole.
-  // For the purpose of CC, this only comes with a thumbnail_id hidden field
-  // which is synchronized with the radio buttons on each member and then
+  // For the purpose of CC, this comes with hidden fields for
+  // thumbnail_id and representative_id
+  // which are synchronized with the radio buttons on each member and then
   // submitted with the SaveManager.
   resource_form() {
     let manager = new FileManagerMember($("#resource-form").parent(), this.save_manager)
@@ -54,6 +55,12 @@ export default class FileManager {
       let val = $("#sortable *[name=thumbnail_id]:checked").val()
       $("*[data-member-link=thumbnail_id]").val(val)
       $("*[data-member-link=thumbnail_id]").change()
+    })
+    new InputTracker($("*[data-member-link=representative_id]"), manager)
+    $("#sortable *[name=representative_id]").change(function() {
+      let val = $("#sortable *[name=representative_id]:checked").val()
+      $("*[data-member-link=representative_id]").val(val)
+      $("*[data-member-link=representative_id]").change()
     })
   }
 
