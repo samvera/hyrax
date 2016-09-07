@@ -16,8 +16,7 @@ module Sufia
     end
 
     def create
-      @admin_set.creator = [current_user.user_key]
-      if @admin_set.save
+      if create_admin_set
         redirect_to sufia.admin_admin_sets_path
       else
         setup_create_form
@@ -31,6 +30,10 @@ module Sufia
     end
 
     private
+
+      def create_admin_set
+        AdminSetService.new(@admin_set, current_user).create
+      end
 
       def setup_create_form
         add_breadcrumb  'Home', root_path
