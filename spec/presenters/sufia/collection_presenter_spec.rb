@@ -1,9 +1,10 @@
 describe Sufia::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
-    it { is_expected.to eq [:title, :total_items, :size, :resource_type, :description, :creator,
-                            :contributor, :keyword, :rights, :publisher, :date_created, :subject,
-                            :language, :identifier, :based_near, :related_url] }
+    it { is_expected.to eq [:total_items, :size, :resource_type, :creator,
+                            :contributor, :keyword, :rights, :publisher,
+                            :date_created, :subject, :language, :identifier,
+                            :based_near, :related_url] }
   end
 
   let(:collection) { build(:collection,
@@ -23,11 +24,9 @@ describe Sufia::CollectionPresenter do
 
   describe "#terms_with_values" do
     subject { presenter.terms_with_values }
-    it { is_expected.to eq [:title,
-                            :total_items,
+    it { is_expected.to eq [:total_items,
                             :size,
                             :resource_type,
-                            :description,
                             :based_near,
                             :related_url] }
   end
