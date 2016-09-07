@@ -36,4 +36,21 @@ describe CharacterizeJob do
       expect { described_class.perform_now(file_set, file.id) }.to raise_error(LoadError, 'original_file was not found')
     end
   end
+
+  context "when the file set's work is in a collection" do
+    let(:work)       { build(:generic_work) }
+    let(:collection) { build(:collection) }
+    before do
+      allow(file_set).to receive(:parent).and_return(work)
+      allow(work).to receive(:in_collections).and_return([collection])
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(file).to receive(:save!)
+      allow(file_set).to receive(:update_index)
+      allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+    end
+    it "reindexes the collection" do
+      expect(collection).to receive(:update_index)
+      described_class.perform_now(file_set, file.id)
+    end
+  end
 end

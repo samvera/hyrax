@@ -11,6 +11,7 @@ class CharacterizeJob < ActiveJob::Base
     Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.save!
     file_set.update_index
+    file_set.parent.in_collections.each(&:update_index) if file_set.parent
     CreateDerivativesJob.perform_later(file_set, file_id, filename)
   end
 end
