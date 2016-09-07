@@ -43,25 +43,27 @@ describe Sufia::Admin::AdminSetsController do
     end
 
     describe "#create" do
+      let(:service) { instance_double(Sufia::AdminSetService) }
+      before do
+        allow(Sufia::AdminSetService).to receive(:new)
+          .with(AdminSet, user)
+          .and_return(service)
+      end
+
       context "when it's successful" do
         it 'creates file sets' do
-          expect {
-            post :create, params: { admin_set: { title: 'Test title',
-                                                 description: 'test description' } }
-          }.to change { AdminSet.count }.by(1)
-          expect(assigns[:admin_set].creator).to eq [user.user_key]
+          expect(service).to receive(:create).and_return(true)
+          post :create, params: { admin_set: { title: 'Test title',
+                                               description: 'test description' } }
+          expect(response).to be_redirect
         end
       end
 
       context "when it fails" do
-        before do
-          allow_any_instance_of(AdminSet).to receive(:save).and_return(false)
-        end
         it 'shows the new form' do
-          expect {
-            post :create, params: { admin_set: { title: 'Test title',
-                                                 description: 'test description' } }
-          }.not_to change { AdminSet.count }
+          expect(service).to receive(:create).and_return(false)
+          post :create, params: { admin_set: { title: 'Test title',
+                                               description: 'test description' } }
           expect(response).to render_template 'new'
         end
       end
