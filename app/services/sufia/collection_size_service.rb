@@ -17,7 +17,7 @@ module Sufia
     end
 
     def collection_size
-      query = collection_search_builder.rows(max_collection_size).merge(fl: [size_field])
+      query = collection_search_builder.with('id' => collection.id).rows(max_collection_size).merge(fl: [size_field])
       resp = repository.search(query)
       field_name = size_field
       resp.documents.reduce(0) do |total, doc|
