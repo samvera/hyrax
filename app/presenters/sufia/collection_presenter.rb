@@ -2,11 +2,12 @@ module Sufia
   class CollectionPresenter < CurationConcerns::CollectionPresenter
     delegate :resource_type, :based_near, :related_url, :identifier, to: :solr_document
 
-    # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
+    # Terms is the list of fields displayed by
+    # app/views/collections/_show_descriptions.html.erb
     def self.terms
-      [:title, :total_items, :size, :resource_type, :description, :creator,
-       :contributor, :keyword, :rights, :publisher, :date_created, :subject,
-       :language, :identifier, :based_near, :related_url]
+      [:total_items, :size, :resource_type, :creator, :contributor, :keyword,
+       :rights, :publisher, :date_created, :subject, :language, :identifier,
+       :based_near, :related_url]
     end
 
     def terms_with_values
