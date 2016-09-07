@@ -6,12 +6,16 @@ module CurationConcerns
     # Defines which search_params_logic should be used when searching for Collection members
     self.default_processor_chain += [:include_collection_ids]
 
-    delegate :collection, to: :scope
-
     # include filters into the query to only include the collection memebers
     def include_collection_ids(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << "{!join from=#{from_field} to=id}id:#{collection.id}"
+      solr_parameters[:fq] << "{!join from=#{from_field} to=id}id:#{collection_id}"
     end
+
+    protected
+
+      def collection_id
+        blacklight_params.fetch('id')
+      end
   end
 end
