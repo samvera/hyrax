@@ -17,7 +17,7 @@ describe SolrDocument do
   end
 
   describe "thumbnail_id" do
-    let(:attributes) { { Solrizer.solr_name('thumbnail_id', :symbol) => ['one'] } }
+    let(:attributes) { { Solrizer.solr_name('hasRelatedImage', :symbol) => ['one'] } }
     subject { document.thumbnail_id }
     it { is_expected.to eq 'one' }
   end

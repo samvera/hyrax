@@ -22,7 +22,8 @@ describe CurationConcerns::WorkIndexer do
       expect(solr_document['member_ids_ssim']).to eq work.member_ids
       expect(solr_document['generic_type_sim']).to eq ['Work']
       expect(solr_document.fetch('thumbnail_path_ss')).to eq "/downloads/#{file.id}?file=thumbnail"
-      expect(subject.fetch('thumbnail_id_ssim')).to eq file.id
+      expect(subject.fetch('hasRelatedImage_ssim').first).to eq file.id
+      expect(subject.fetch('hasRelatedMediaFragment_ssim').first).to eq file.id
     end
 
     context "when thumbnail_field is configured" do
