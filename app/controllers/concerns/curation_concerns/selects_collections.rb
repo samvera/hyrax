@@ -1,7 +1,9 @@
 module CurationConcerns::SelectsCollections
   extend ActiveSupport::Concern
+  extend Deprecation
 
   included do
+    Deprecation.warn(CurationConcerns::SelectsCollections, "CurationConcerns::SelectsCollections is deprecated and will be removed in curation_concerns 2.0")
     configure_blacklight do |config|
       config.search_builder_class = CurationConcerns::CollectionSearchBuilder
     end
