@@ -1,48 +1,81 @@
-#home_header {
-  margin: 0 -15px;
+@mixin masthead-background-containers() {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: block;
+  width: auto;
+  height: 100%;
 }
 
-#home_header  {
-  background-image: image-url('old_main_tulips.jpg');
-  background-position: 50% 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-top: 8px solid #E1E1E1;
-  border-bottom: 8px solid #E1E1E1;
+.image-masthead {
+  border-bottom: 1px solid $navbar-default-border;
+  margin-bottom: $padding-large-vertical * 2.5;
+  position: relative;
+
+  .background-container {
+    @include masthead-background-containers();
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    // Add small amount of blur to help text stand out
+    -webkit-filter: blur($masthead-image-blur);
+    filter: blur($masthead-image-blur);
+  }
+
+  .background-container-gradient {
+    @include masthead-background-containers();
+    background:
+      linear-gradient(
+        rgba(0, 0, 0, 0.0),
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0.5)
+      );
+  }
+
+  .site-title {
+    min-height: $title-height;
+    padding-bottom: 6px;
+    position: relative;
+  }
+
+  .navbar {
+    background-color: $navbar-transparent-bg;
+    margin-bottom: 0;
+
+    li > a {
+      color: $navbar-transparent-link-color;
+      text-transform: uppercase;
+
+      &:hover,
+      &:focus {
+        background-color: $navbar-transparent-link-hover-bg;
+        color: $navbar-transparent-link-hover-color;
+      }
+    }
+
+    .active > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: $navbar-transparent-link-active-bg;
+        color: $navbar-transparent-link-active-color;
+      }
+    }
+  }
 }
 
 .home_share_work {
-  background: rgb(255,255,255) transparent;
-  background: rgba(255,255,255,0.8);
-  margin: 1em 0;
-  padding: 1em;
-}
+  margin-bottom: $padding-large-vertical * 2.5;
 
-.home_share_work p {
-  background-color: #FFF;
-  width: 40%;
-  margin: .25em auto;
+  p {
+    margin: 0.25em auto;
+    width: 40%;
+  }
 }
 
 .home_marketing_text {
-  background: rgb(0,0,0) transparent;
-  background: rgba(0,0,0,0.65);
-  color: #FFF;
-  margin: 1em 0;
-  padding-bottom: 1em;
-  text-shadow: black 2px 2px ;
-}
-
-.home_marketing_text h2 {
-  letter-spacing: .1em;
-}
-
-.home_marketing_text p {
-  letter-spacing: .1em;
-}
-
-#home_content {
-  padding: 2em 0;
+  color: $marketing-text-color;
+  text-shadow: $marketing-text-shadow;
 }
 
 // When we put a hidden label before the main search field, bootstrap stops

@@ -1,7 +1,6 @@
-
-describe "sufia/homepage/_home_header.html.erb", type: :view do
+describe "sufia/homepage/index.html.erb", type: :view do
   let(:groups) { [] }
-  let(:ability) { instance_double("Ability") }
+  let(:ability) { instance_double("Ability", can?: false) }
   let(:presenter) { Sufia::HomepagePresenter.new(ability) }
 
   describe "share your work button" do
@@ -10,6 +9,7 @@ describe "sufia/homepage/_home_header.html.erb", type: :view do
       allow(controller).to receive(:current_ability).and_return(ability)
       allow(presenter).to receive(:display_share_button?).and_return(display_share_button)
       stub_template "sufia/homepage/_marketing.html.erb" => "marketing"
+      stub_template "sufia/homepage/_home_content.html.erb" => "home content"
       render
     end
     context "when the button always displays" do
