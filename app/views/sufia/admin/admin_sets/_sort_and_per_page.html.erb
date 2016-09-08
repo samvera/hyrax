@@ -1,0 +1,5 @@
+<% if show_pagination? %>
+  <div id="sortAndPerPage" class="clearfix">
+    <%= render partial: "paginate_compact", object: @response %>
+  </div>
+<% end %>

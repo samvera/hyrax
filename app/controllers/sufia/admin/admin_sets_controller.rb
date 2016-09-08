@@ -1,7 +1,42 @@
 module Sufia
   class Admin::AdminSetsController < ApplicationController
+    include CurationConcerns::CollectionsControllerBehavior
     load_and_authorize_resource
     layout 'admin'
+    self.presenter_class = Sufia::AdminSetPresenter
+
+    def show
+      add_breadcrumb t(:'sufia.controls.home'), root_path
+      add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
+      add_breadcrumb t(:'sufia.admin.sidebar.admin_sets'), sufia.admin_admin_sets_path
+      add_breadcrumb 'View Set', request.path
+      super
+    end
+
+    # Override the default prefixes so that we use the collection partals.
+    def self.local_prefixes
+      ["sufia/admin/admin_sets", "collections", 'catalog']
+    end
+
+    # Overriding the way that the search builder is initialized
+    def collections_search_builder
+      collections_search_builder_class.new(self, :read)
+    end
+
+    # Used for the show action
+    def collection_search_builder_class
+      Sufia::SingleAdminSetSearchBuilder
+    end
+
+    # Used for the index action
+    def collections_search_builder_class
+      CurationConcerns::AdminSetSearchBuilder
+    end
+
+    # Used to get the members for the show action
+    def collection_member_search_builder_class
+      Sufia::AdminSetMemberSearchBuilder
+    end
 
     def index
       authorize! :manage, AdminSet
@@ -36,10 +71,10 @@ module Sufia
       end
 
       def setup_create_form
-        add_breadcrumb  'Home', root_path
-        add_breadcrumb  'Repository Dashboard', sufia.admin_path
-        add_breadcrumb  'Administrative Sets', sufia.admin_admin_sets_path
-        add_breadcrumb  'New', sufia.new_admin_admin_set_path
+        add_breadcrumb t(:'sufia.controls.home'), root_path
+        add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
+        add_breadcrumb t(:'sufia.admin.sidebar.admin_sets'), sufia.admin_admin_sets_path
+        add_breadcrumb t(:'helpers.action.admin_set.new'), sufia.new_admin_admin_set_path
         @form = form_class.new(@admin_set)
       end
 
