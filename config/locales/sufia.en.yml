@@ -286,6 +286,10 @@ en:
       copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
     admin:
       admin_sets:
+        edit:
+          header:         "Edit Administrative Set"
+        new:
+          header:         "Create New Administrative Set"
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
@@ -422,6 +426,7 @@ en:
       admin_set:
         new: "Create new administrative set"
       cancel: "Cancel"
+      edit: "Edit"
     submit:
       admin_set:
         create: 'Save'

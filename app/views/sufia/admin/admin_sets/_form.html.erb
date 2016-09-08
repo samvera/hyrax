@@ -1,0 +1,13 @@
+    <%= simple_form_for @form, url: [sufia, :admin, @form] do |f| %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <%= f.input :title %>
+          <%= f.input :description, as: :text %>
+        </div>
+        <div class="panel-footer">
+          <%= link_to 'Cancel', sufia.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+          <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+        </div>
+      </div>
+    <% end %>
+
