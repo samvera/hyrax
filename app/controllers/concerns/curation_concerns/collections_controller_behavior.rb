@@ -32,9 +32,23 @@ module CurationConcerns
       before_action :authenticate_user!, except: [:show, :index]
       load_and_authorize_resource except: [:index, :show], instance_name: :collection
 
-      class_attribute :presenter_class, :form_class
+      class_attribute :presenter_class,
+                      :form_class,
+                      :single_item_search_builder_class,
+                      :member_search_builder_class
+
+      alias_method :collection_search_builder_class, :single_item_search_builder_class
+      deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
+
+      alias_method :collection_member_search_builder_class, :member_search_builder_class
+      deprecation_deprecate collection_member_search_builder_class: "use member_search_builder_class instead"
+
       self.presenter_class = CurationConcerns::CollectionPresenter
       self.form_class = CurationConcerns::Forms::CollectionEditForm
+      # The search builder to find the collection
+      self.single_item_search_builder_class = CurationConcerns::WorkSearchBuilder
+      # The search builder to find the collections' members
+      self.member_search_builder_class = CurationConcerns::CollectionMemberSearchBuilder
     end
 
     def index
@@ -152,24 +166,30 @@ module CurationConcerns
         @presenter ||= begin
           # Query Solr for the collection.
           # run the solr query to find the collection members
-          response = repository.search(collection_search_builder.query)
+          response = repository.search(single_item_search_builder.query)
           curation_concern = response.documents.first
           raise CanCan::AccessDenied unless curation_concern
           presenter_class.new(curation_concern, current_ability)
         end
       end
 
-      def collection_search_builder
-        collection_search_builder_class.new(self).with(params.except(:q, :page))
+      # Instantiates the search builder that builds a query for a single item
+      # this is useful in the show view.
+      def single_item_search_builder
+        single_item_search_builder_class.new(self).with(params.except(:q, :page))
       end
 
-      def collection_search_builder_class
-        CurationConcerns::WorkSearchBuilder
+      alias collection_search_builder single_item_search_builder
+      deprecation_deprecate collection_search_builder: "use single_item_search_builder instead"
+
+      # Instantiates the search builder that builds a query for items that are
+      # members of the current collection. This is used in the show view.
+      def member_search_builder
+        @member_search_builder ||= member_search_builder_class.new(self)
       end
 
-      def collection_member_search_builder_class
-        CurationConcerns::CollectionMemberSearchBuilder
-      end
+      alias collection_member_search_builder member_search_builder
+      deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
 
       def collection_params
         form_class.model_attributes(params[:collection])
@@ -189,7 +209,7 @@ module CurationConcerns
 
       # @return <Hash> a representation of the solr query that find the collection members
       def query_for_collection_members
-        collection_member_search_builder.with(params_for_members_query).query
+        member_search_builder.with(params_for_members_query).query
       end
 
       # You can override this method if you need to provide additional inputs to the search
@@ -198,10 +218,6 @@ module CurationConcerns
       # @return <Hash> the inputs required for the collection member search builder
       def params_for_members_query
         params.merge(q: params[:cq])
-      end
-
-      def collection_member_search_builder
-        @collection_member_search_builder ||= collection_member_search_builder_class.new(self)
       end
 
       def process_member_changes
