@@ -8,12 +8,22 @@ class ContentBlocksController < ApplicationController
 
   def create
     @content_block.save
-    redirect_to :back
+    if respond_to? :redirect_back
+      redirect_back fallback_location: sufia.content_blocks_path
+    else
+      # Deprecated in Rails 5.0
+      redirect_to :back
+    end
   end
 
   def update
     @content_block.update(update_params)
-    redirect_to :back
+    if respond_to? :redirect_back
+      redirect_back fallback_location: sufia.content_blocks_path
+    else
+      # Deprecated in Rails 5.0
+      redirect_to :back
+    end
   end
 
   protected
