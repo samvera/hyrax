@@ -2,8 +2,7 @@
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select an action<span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <% if current_user %>
-      <% if can? :edit, document %>
+    <% if can? :edit, document %>
       <li>
         <%= link_to [:edit, document],
                     class: "itemicon itemedit",
@@ -12,12 +11,11 @@
           <i class='glyphicon glyphicon-pencil'></i> <%= t('sufia.collection.document_list.edit') %>
         <% end %>
       </li>
-      <% end %>
-      <li>
-        <%= display_trophy_link(current_user, document.id) do |text| %>
-          <i class='glyphicon glyphicon-star'></i> <%= text %>
-        <% end %>
-      </li>
     <% end %>
+    <li>
+      <%= display_trophy_link(current_user, document.id) do |text| %>
+        <i class='glyphicon glyphicon-star'></i> <%= text %>
+      <% end %>
+    </li>
   </ul>
 </div>
