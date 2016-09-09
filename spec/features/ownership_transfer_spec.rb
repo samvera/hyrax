@@ -1,8 +1,8 @@
-include Selectors::Dashboard
-include Selectors::NewTransfers
-include Selectors::Transfers
+RSpec.describe 'Transferring work ownership:', type: :feature do
+  include Selectors::Dashboard
+  include Selectors::NewTransfers
+  include Selectors::Transfers
 
-describe 'Transferring work ownership:', type: :feature do
   let(:original_owner) { create(:user) }
   let(:new_owner) { create(:user) }
   let!(:work) do

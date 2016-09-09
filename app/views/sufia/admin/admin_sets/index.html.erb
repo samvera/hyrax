@@ -34,7 +34,7 @@
           <% else %>
             <p>No administrative sets have been created.</p>
             <%= link_to sufia.new_admin_admin_set_path, class: 'btn btn-primary' do %>
-              <span class="fa fa-edit"></span> Create new administrative set
+              <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
             <% end %>
           <% end %>
         </div>

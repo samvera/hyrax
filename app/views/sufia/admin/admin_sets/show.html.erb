@@ -10,7 +10,7 @@
         <h2 class="panel-title display-page"><%= @presenter.to_s %></h2>
         <div class="pull-right">
           <%= link_to sufia.edit_admin_admin_set_path(@presenter), class: 'btn btn-primary' do %>
-            <span class="fa fa-edit"></span> Edit
+            <span class="fa fa-edit"></span> <%= t(:'helpers.action.edit') %>
           <% end %>
         </div>
       </div>
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="panel-body">
+      <div class="panel-body admin-set-members">
         <h3><%= t '.item_list_header' %></h3>
         <%= render 'sort_and_per_page', collection: @presenter %>
 
