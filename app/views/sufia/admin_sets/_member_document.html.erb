@@ -1,0 +1,16 @@
+<tr>
+  <td class="row">
+    <div class="col-sm-2">
+      <%= render_thumbnail_tag member_document %>
+    </div>
+    <div class="col-sm-10">
+      <%= link_to member_document.to_s, member_document %>
+    </div>
+  </td>
+  <td>
+    <%= member_document.create_date %>
+  </td>
+  <td>
+    <%= member_document.creator.join(', ') %>
+  </td>
+</tr>
