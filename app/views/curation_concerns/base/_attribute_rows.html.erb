@@ -8,6 +8,6 @@
 <%= presenter.attribute_to_html(:keyword, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:date_created, render_as: :linked, search_field: 'date_created_tesim') %>
 <%= presenter.attribute_to_html(:based_near, render_as: :faceted) %>
-<%= presenter.attribute_to_html(:related_url) %>
+<%= presenter.attribute_to_html(:related_url, render_as: :external_link) %>
 <%= presenter.attribute_to_html(:resource_type, render_as: :faceted) %>
 <%= presenter.attribute_to_html(:source) %>
