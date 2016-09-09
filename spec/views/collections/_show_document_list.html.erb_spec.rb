@@ -27,6 +27,7 @@ describe 'collections/_show_document_list.html.erb', type: :view do
     it "renders collection" do
       render(partial: 'collections/show_document_list.html.erb', locals: { documents: documents })
       expect(rendered).to have_content 'One Hundred Years of Solitude'
+      expect(rendered).not_to have_content 'Action'
     end
   end
 end
