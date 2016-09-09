@@ -9,7 +9,7 @@ module CurationConcerns
     # Add queries that excludes everything except for works and collections
     def filter_models(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << '{!terms f=has_model_ssim}' + (work_clauses + collection_clauses).join(',')
+      solr_parameters[:fq] << "{!terms f=has_model_ssim}#{models.join(',')}"
     end
 
     protected
@@ -20,6 +20,12 @@ module CurationConcerns
 
       def only_works?
         generic_type_field.include?('Work')
+      end
+
+      # Override this method if you want to filter for a different set of models.
+      # @return [Array<String>] a list of model names to include
+      def models
+        work_clauses + collection_clauses
       end
 
     private

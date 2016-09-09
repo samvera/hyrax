@@ -9,7 +9,7 @@ describe CurationConcerns::AdminSetSearchBuilder do
     before { builder.filter_models(solr_params) }
 
     it 'adds AdminSet to query' do
-      expect(solr_params[:fq].first).to include('{!field f=has_model_ssim}AdminSet')
+      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}AdminSet')
     end
   end
 
