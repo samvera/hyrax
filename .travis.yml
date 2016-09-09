@@ -7,7 +7,8 @@ cache:
     - "travis_phantomjs"
 
 before_install:
-  - gem install bundler
+  - gem uninstall -i /home/travis/.rvm/gems/ruby-2.3.1@global bundler -v 1.13.0
+  - gem install bundler -v 1.12.5
   - "phantomjs --version"
   - "export PATH=$PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH"
   - "phantomjs --version"
