@@ -59,7 +59,6 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
       end
       it 'has text area' do
         render inline: form_template
-        puts rendered
         expect(rendered).to have_selector('textarea[class="string multi_value required generic_work_description form-control multi-text-field"]')
       end
     end
