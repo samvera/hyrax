@@ -6,6 +6,16 @@ module Sufia
     self.presenter_class = Sufia::AdminSetPresenter
     self.form_class = Sufia::Forms::AdminSetForm
 
+    # Used for the show action
+    self.single_item_search_builder_class = Sufia::SingleAdminSetSearchBuilder
+
+    # Used to get the members for the show action
+    self.member_search_builder_class = Sufia::AdminSetMemberSearchBuilder
+
+    # Used to get a list of admin sets for the index action
+    class_attribute :list_search_builder_class
+    self.list_search_builder_class = CurationConcerns::AdminSetSearchBuilder
+
     def show
       add_breadcrumb t(:'sufia.controls.home'), root_path
       add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
@@ -62,22 +72,7 @@ module Sufia
 
       # Overriding the way that the search builder is initialized
       def collections_search_builder
-        collections_search_builder_class.new(self, :read)
-      end
-
-      # Used for the show action
-      def collection_search_builder_class
-        Sufia::SingleAdminSetSearchBuilder
-      end
-
-      # Used for the index action
-      def collections_search_builder_class
-        CurationConcerns::AdminSetSearchBuilder
-      end
-
-      # Used to get the members for the show action
-      def collection_member_search_builder_class
-        Sufia::AdminSetMemberSearchBuilder
+        list_search_builder_class.new(self, :read)
       end
 
       def create_admin_set
