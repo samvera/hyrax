@@ -23,7 +23,7 @@ describe CurationConcerns::FileSetSearchBuilder do
     end
 
     it 'adds id to query' do
-      expect(solr_params[:fq].first).to include('{!field f=id}12345')
+      expect(solr_params[:fq].first).to include('{!raw f=id}12345')
     end
   end
 end
