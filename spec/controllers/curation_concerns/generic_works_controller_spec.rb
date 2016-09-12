@@ -8,7 +8,7 @@ describe CurationConcerns::GenericWorksController do
     before { get :new }
     it "is successful" do
       expect(response).to be_successful
-      expect(response).to render_template("layouts/sufia-one-column")
+      expect(response).to render_template("layouts/curation_concerns/1_column")
       expect(assigns[:curation_concern]).to be_kind_of GenericWork
     end
 
@@ -24,7 +24,7 @@ describe CurationConcerns::GenericWorksController do
     it "is successful" do
       get :edit, params: { id: work }
       expect(response).to be_successful
-      expect(response).to render_template("layouts/sufia-one-column")
+      expect(response).to render_template("layouts/curation_concerns/1_column")
       expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
     end
 

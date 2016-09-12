@@ -5,7 +5,6 @@ module Sufia
     include CurationConcerns::CurationConcernController
 
     included do
-      layout "sufia-one-column"
       self.curation_concern_type = form_class.model_class
     end
 

@@ -7,7 +7,6 @@ module Sufia
 
     included do
       self.show_presenter = Sufia::WorkShowPresenter
-      layout "sufia-one-column"
     end
 
     module ClassMethods

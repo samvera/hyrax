@@ -87,12 +87,6 @@ module Sufia
       end
     end
 
-    def use_blacklight_layout_theme
-      file_path = "app/controllers/application_controller.rb"
-      return unless File.exist?(file_path)
-      gsub_file file_path, /with_themed_layout '1_column'/, "layout 'sufia-one-column'"
-    end
-
     def catalog_controller
       copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
     end

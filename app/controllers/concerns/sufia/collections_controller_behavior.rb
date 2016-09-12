@@ -5,7 +5,7 @@ module Sufia
 
     included do
       before_action :build_breadcrumbs, only: [:edit, :show]
-      layout "sufia-one-column"
+      with_themed_layout '1_column'
       # include the link_to_remove_from_collection view helper methods
       helper CurationConcerns::CollectionsHelper
       self.presenter_class = Sufia::CollectionPresenter

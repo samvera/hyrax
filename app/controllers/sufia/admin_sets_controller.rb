@@ -1,7 +1,6 @@
 module Sufia
   class AdminSetsController < ApplicationController
     include CurationConcerns::CollectionsControllerBehavior
-    layout "sufia-one-column"
 
     self.presenter_class = Sufia::AdminSetPresenter
 
