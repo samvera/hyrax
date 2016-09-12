@@ -10,11 +10,6 @@ describe My::CollectionsController, type: :controller do
     before { sign_in user }
 
     describe "#index" do
-      it "responds with success" do
-        get :index
-        expect(response).to be_successful
-      end
-
       context "with mulitple pages of collections" do
         before { 2.times { create(:public_collection, user: user) } }
         it "paginates" do
@@ -27,6 +22,7 @@ describe My::CollectionsController, type: :controller do
 
       it "shows only collections that I own" do
         get :index
+        expect(response).to be_successful
         expect(assigns[:document_list].map(&:id)).to contain_exactly(first_collection.id)
       end
     end

@@ -3,7 +3,6 @@ module Sufia
     extend ActiveSupport::Concern
     include Hydra::Catalog
     include Hydra::BatchEditBehavior
-    include CurationConcerns::SelectsCollections
 
     included do
       include Blacklight::Configurable
@@ -13,12 +12,14 @@ module Sufia
       before_action :authenticate_user!
       before_action :enforce_show_permissions, only: :show
       before_action :enforce_viewing_context_for_show_requests, only: :show
-      before_action :find_collections_with_edit_access, only: :index
 
       layout 'sufia-dashboard'
     end
 
     def index
+      # return the user's collections
+      @user_collections = Sufia::CollectionsService.new(self).search_results(:edit)
+
       @user = current_user
       (@response, @document_list) = query_solr
       @events = @user.events(100)

@@ -25,6 +25,7 @@ Metrics/MethodLength:
     - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
+    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
 
