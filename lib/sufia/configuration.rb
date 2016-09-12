@@ -7,6 +7,11 @@ module Sufia
     delegate(*(CurationConcerns.config.methods - Object.methods),
              to: :curation_concerns_config)
 
+    attr_writer :banner_image
+    def banner_image
+      @banner_image ||= "https://cloud.githubusercontent.com/assets/92044/18370978/88ecac20-75f6-11e6-8399-6536640ef695.jpg"
+    end
+
     attr_writer :persistent_hostpath
     def persistent_hostpath
       @persistent_hostpath ||= "http://localhost/files/"
