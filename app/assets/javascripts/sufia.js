@@ -29,6 +29,7 @@
 //= require batch_edit
 //
 //= require sufia/app
+//= require sufia/initialize
 //= require sufia/fileupload
 //= require sufia/trophy
 //= require sufia/facets

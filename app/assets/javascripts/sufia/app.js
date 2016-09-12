@@ -80,7 +80,3 @@ Sufia = {
     },
 
 };
-
-Blacklight.onLoad(function () {
-    Sufia.initialize();
-});
