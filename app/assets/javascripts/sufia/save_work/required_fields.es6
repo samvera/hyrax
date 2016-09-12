@@ -7,7 +7,11 @@ export class RequiredFields {
   }
 
   get areComplete() {
-    return this.requiredFields.filter((n, elem) => { return $(elem).val().length < 1 } ).length == 0
+    return this.requiredFields.filter((n, elem) => { return this.isValuePresent(elem) } ).length == 0
+  }
+
+  isValuePresent(elem) {
+    return ($(elem).val() === null) || ($(elem).val().length < 1)
   }
 
   // Reassign requiredFields because fields may have been added or removed.
