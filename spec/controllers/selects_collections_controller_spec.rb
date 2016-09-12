@@ -3,7 +3,9 @@ require "spec_helper"
 class SelectsCollectionsController < ApplicationController
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
-  include CurationConcerns::SelectsCollections
+  Deprecation.silence CurationConcerns::SelectsCollections do
+    include CurationConcerns::SelectsCollections
+  end
 end
 
 describe SelectsCollectionsController, type: :controller do

@@ -2,9 +2,7 @@ module CurationConcerns
   module CollectionsControllerBehavior
     extend ActiveSupport::Concern
     include Blacklight::AccessControls::Catalog
-
     include Blacklight::Base
-    include CurationConcerns::SelectsCollections
 
     included do
       before_action :filter_docs_with_read_access!, except: :show
@@ -34,17 +32,24 @@ module CurationConcerns
 
       class_attribute :presenter_class,
                       :form_class,
+                      :list_search_builder_class,
                       :single_item_search_builder_class,
                       :member_search_builder_class
 
       alias_method :collection_search_builder_class, :single_item_search_builder_class
       deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
 
+      alias_method :collections_search_builder_class, :list_search_builder_class
+      deprecation_deprecate collections_search_builder_class: "use list_search_builder_class instead"
+
       alias_method :collection_member_search_builder_class, :member_search_builder_class
       deprecation_deprecate collection_member_search_builder_class: "use member_search_builder_class instead"
 
       self.presenter_class = CurationConcerns::CollectionPresenter
       self.form_class = CurationConcerns::Forms::CollectionEditForm
+
+      # To build a query to find a list of collections
+      self.list_search_builder_class = CurationConcerns::CollectionSearchBuilder
       # The search builder to find the collection
       self.single_item_search_builder_class = CurationConcerns::WorkSearchBuilder
       # The search builder to find the collections' members
@@ -53,7 +58,7 @@ module CurationConcerns
 
     def index
       # run the solr query to find the collections
-      query = collections_search_builder.with(params).query
+      query = list_search_builder.with(params).query
       @response = repository.search(query)
       @document_list = @response.documents
     end
@@ -69,7 +74,7 @@ module CurationConcerns
 
     def edit
       query_collection_members
-      find_collections
+      @user_collections = find_collections_for_form
       form
     end
 
@@ -158,6 +163,17 @@ module CurationConcerns
 
     protected
 
+      # TODO: This method could become a collection service.
+      # TODO: It seems suspicious that this is returning collections with read
+      #       access rather than collections with edit access
+      # run a solr query to get the collections the user has access to read
+      # @return [Array] a list of the user's collections
+      def find_collections_for_form
+        query = list_search_builder.with(q: '').query
+        response = repository.search(query)
+        response.documents
+      end
+
       def remove_select_something_first_flash
         flash.delete(:notice) if flash.notice == 'Select something first'
       end
@@ -190,6 +206,13 @@ module CurationConcerns
 
       alias collection_member_search_builder member_search_builder
       deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
+
+      def list_search_builder
+        list_search_builder_class.new(self)
+      end
+
+      alias collections_search_builder list_search_builder
+      deprecation_deprecate collections_search_builder: "use list_search_builder instead"
 
       def collection_params
         form_class.model_attributes(params[:collection])
