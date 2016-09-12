@@ -6,7 +6,10 @@ RSpec.describe Sufia::SingleAdminSetSearchBuilder do
                          current_ability: ability) }
   let(:builder) { described_class.new(context) }
   describe "#query" do
+    before do
+      expect(builder).to receive(:find_one)
+    end
     subject { builder.with(id: '123').query.fetch('fq') }
-    it { is_expected.to match_array ["", "{!terms f=has_model_ssim}AdminSet", "_query_:\"{!field f=id}123\""] }
+    it { is_expected.to match_array ["", "{!terms f=has_model_ssim}AdminSet"] }
   end
 end
