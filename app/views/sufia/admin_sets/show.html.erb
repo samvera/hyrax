@@ -1,0 +1,27 @@
+<% provide :page_title, construct_page_title(@presenter.title) %>
+
+<div itemscope itemtype="http://schema.org/CollectionPage" class="row">
+  <div class="col-sm-10 pull-right">
+    <header>
+      <h1><%= @presenter %>
+          <%= link_to sufia.admin_sets_path do %>
+            <span class="label label-info">Administrative Collection</span>
+          <% end %>
+      </h1>
+    </header>
+    <%= render 'collection_description', presenter: @presenter %>
+    <%= render 'collections/show_descriptions' %>
+  </div>
+  <div class="col-sm-2">
+    <span class="fa fa-sitemap collection-icon-search"></span>
+  </div>
+</div>
+
+<h2>Works in this Collection</h2>
+
+<%= render 'sort_and_per_page', collection: @presenter %>
+
+<%= render_document_index @member_docs %>
+
+<%= render 'paginate' %>
+
