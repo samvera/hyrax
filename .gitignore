@@ -8,6 +8,7 @@ Gemfile.lock
 
 # don't push around data files (for dev envs only)
 fcrepo4-data
+fcrepo4-test-data
 
 ## MAC OS
 .DS_Store
