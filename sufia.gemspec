@@ -47,6 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'qa', '~> 0.8' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.2'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.3.0'
+  spec.add_dependency 'rdf-rdfxml'
 
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'
