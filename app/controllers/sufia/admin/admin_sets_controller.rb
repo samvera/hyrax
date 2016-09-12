@@ -13,7 +13,6 @@ module Sufia
     self.member_search_builder_class = Sufia::AdminSetMemberSearchBuilder
 
     # Used to get a list of admin sets for the index action
-    class_attribute :list_search_builder_class
     self.list_search_builder_class = CurationConcerns::AdminSetSearchBuilder
 
     def show
@@ -71,7 +70,7 @@ module Sufia
     private
 
       # Overriding the way that the search builder is initialized
-      def collections_search_builder
+      def list_search_builder
         list_search_builder_class.new(self, :read)
       end
 
