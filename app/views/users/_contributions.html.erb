@@ -2,7 +2,7 @@
   <% if presenter.trophies.count > 0 %>
     <table>
       <% presenter.trophies.each do |t| %>
-        <tr id="trophyrow_<%= t.id %>">
+        <tr id="trophyrow_<%= t.id %>" class='highlighted-works'>
           <td>
             <%= link_to t do %>
               <%= image_tag t.thumbnail_path, width: 90 %>
