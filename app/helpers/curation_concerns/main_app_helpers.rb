@@ -8,6 +8,5 @@ module CurationConcerns::MainAppHelpers
   include CurationConcerns::EmbargoHelper
   include CurationConcerns::LeaseHelper
   include CurationConcerns::CollectionsHelper
-  include CurationConcerns::PermissionsHelper
   include CurationConcerns::RightsHelper
 end
