@@ -34,8 +34,7 @@ if ENV['COVERAGE'] || $in_travis
   SimpleCov.formatters = $in_travis ? Coveralls::SimpleCov::Formatter : SimpleCov::Formatter::HTMLFormatter
   SimpleCov.start('rails') do
     add_filter '/spec'
-    add_filter '/lib/generators/curation_concerns/templates'
-    add_filter '/lib/generators/curation_concerns/install_generator.rb'
+    add_filter '/lib/generators/curation_concerns'
     add_filter '/.internal_test_app'
   end
   SimpleCov.command_name('spec')
