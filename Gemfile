@@ -3,10 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
-if ENV['RDF_VERSION']
-  gem 'rdf', ENV['RDF_VERSION']
-end
-
 group :development, :test do
   gem 'simplecov', '~> 0.9', require: false
   gem 'coveralls', require: false
