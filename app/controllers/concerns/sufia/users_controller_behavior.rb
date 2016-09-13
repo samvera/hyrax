@@ -3,7 +3,7 @@ module Sufia::UsersControllerBehavior
 
   included do
     include Blacklight::SearchContext
-    layout "sufia-one-column"
+    with_themed_layout '1_column'
     prepend_before_action :find_user, except: [:index, :search, :notifications_number]
     before_action :authenticate_user!, only: [:edit, :update]
     authorize_resource only: [:edit, :update]

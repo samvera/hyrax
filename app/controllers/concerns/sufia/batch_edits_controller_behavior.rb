@@ -4,7 +4,7 @@ module Sufia
     include Sufia::Breadcrumbs
 
     included do
-      layout "sufia-one-column"
+      with_themed_layout '1_column'
       before_action :build_breadcrumbs, only: :edit
     end
 

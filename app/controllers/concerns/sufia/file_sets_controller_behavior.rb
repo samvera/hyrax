@@ -6,7 +6,7 @@ module Sufia
     included do
       include Blacklight::Configurable
 
-      layout "sufia-one-column"
+      with_themed_layout '1_column'
 
       copy_blacklight_config_from(CatalogController)
 
