@@ -13,7 +13,7 @@ describe 'curation_concerns/file_sets/show.json.jbuilder' do
   it "renders json of the curation_concern" do
     json = JSON.parse(rendered)
     expect(json['id']).to eq file_set.id
-    expect(json['title']).to eq file_set.title
+    expect(json['title']).to match_array file_set.title
     expect(json).to have_key('label')
     expect(json).to have_key('description')
     expect(json).to have_key('creator')

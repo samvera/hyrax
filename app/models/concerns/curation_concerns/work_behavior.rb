@@ -37,7 +37,7 @@ module CurationConcerns::WorkBehavior
 
   def to_s
     if title.present?
-      Array.wrap(title).join(' | ')
+      title.join(' | ')
     else
       'No Title'
     end

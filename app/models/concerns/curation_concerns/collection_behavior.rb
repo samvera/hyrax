@@ -14,7 +14,7 @@ module CurationConcerns
     end
 
     def to_s
-      title.present? ? title : 'No Title'
+      title.present? ? title.join(' | ') : 'No Title'
     end
 
     module ClassMethods

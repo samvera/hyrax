@@ -166,6 +166,7 @@ feature 'collection' do
       within("#document_#{collection.id}") do
         click_link('Edit Collection')
       end
+
       expect(page).to have_field 'collection_title', with: 'Test collection title'
       expect(page).to have_field 'collection_description', with: 'collection description'
       expect(page).to have_content(gw1.title.first)

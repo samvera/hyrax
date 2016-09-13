@@ -27,10 +27,8 @@ describe FileSet do
   end
 
   context 'when it is initialized' do
-    it 'has empty arrays for all the properties' do
-      subject.attributes.each do |_k, v|
-        expect(Array.wrap(v)).to eq([])
-      end
+    it 'has empty arrays for the properties' do
+      expect(subject.title).to eq []
     end
   end
 
