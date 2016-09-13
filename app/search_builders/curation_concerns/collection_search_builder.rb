@@ -1,16 +1,18 @@
 module CurationConcerns
   class CollectionSearchBuilder < ::SearchBuilder
+    include FilterByType
     # Defines which search_params_logic should be used when searching for Collections
     self.default_processor_chain = [:default_solr_parameters, :add_query_to_solr,
-                                    :add_access_controls_to_solr_params, :add_collection_filter, :some_rows, :sort_by_title]
+                                    :add_access_controls_to_solr_params, :filter_models,
+                                    :some_rows, :sort_by_title]
 
     def some_rows(solr_parameters)
       solr_parameters[:rows] = '100'
     end
 
-    def add_collection_filter(solr_parameters)
-      solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::Collection.to_class_uri)
+    # This overrides FilterByType and ensures we only match on collections.
+    def only_collections?
+      true
     end
 
     # Sort results by title if no query was supplied.

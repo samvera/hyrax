@@ -9,7 +9,7 @@ module CurationConcerns
     # Add queries that excludes everything except for works and collections
     def filter_models(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << "{!terms f=has_model_ssim}#{models.join(',')}"
+      solr_parameters[:fq] << "{!terms f=has_model_ssim}#{models_to_solr_clause}"
     end
 
     protected
@@ -23,12 +23,17 @@ module CurationConcerns
       end
 
       # Override this method if you want to filter for a different set of models.
-      # @return [Array<String>] a list of model names to include
+      # @return [Array<Class>] a list of classes to include
       def models
-        work_clauses + collection_clauses
+        work_classes + collection_classes
       end
 
     private
+
+      def models_to_solr_clause
+        # to_class_uri is deprecated in AF 11
+        [ActiveFedora::Base.respond_to?(:to_rdf_representation) ? models.map(&:to_rdf_representation) : models.map(&:to_class_uri)].join(',')
+      end
 
       def generic_type_field
         Array.wrap(blacklight_params.fetch(:f, {}).fetch(:generic_type_sim, []))
@@ -41,14 +46,15 @@ module CurationConcerns
         CurationConcerns.config.curation_concerns
       end
 
-      def work_clauses
+      def work_classes
         return [] if only_collections?
-        work_types.map(&:to_class_uri)
+        work_types
       end
 
-      def collection_clauses
+      def collection_classes
         return [] if only_works?
-        [::Collection.to_class_uri]
+        # to_class_uri is deprecated in AF 11
+        [::Collection]
       end
   end
 end

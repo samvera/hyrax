@@ -7,7 +7,7 @@ module CurationConcerns
 
     # This overrides the models in FilterByType
     def models
-      [::AdminSet.to_class_uri]
+      [::AdminSet]
     end
 
     # Overrides Hydra::AccessControlsEnforcement

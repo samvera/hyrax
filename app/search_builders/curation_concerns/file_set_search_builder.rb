@@ -4,7 +4,7 @@ module CurationConcerns
 
     # This overrides the models in FilterByType
     def models
-      [::FileSet.to_class_uri]
+      [::FileSet]
     end
   end
 end
