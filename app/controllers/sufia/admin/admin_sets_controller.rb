@@ -40,7 +40,7 @@ module Sufia
     end
 
     def update
-      if @admin_set.update_attributes(admin_set_params)
+      if @admin_set.update(admin_set_params)
         redirect_to sufia.admin_admin_sets_path
       else
         setup_form

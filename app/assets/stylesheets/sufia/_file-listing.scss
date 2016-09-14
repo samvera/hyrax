@@ -19,6 +19,13 @@ h4 .small {
   overflow-x: visible;
 }
 
+.documents-list {
+  .media-body {
+    // Override bootstrap 3 style
+    width: auto;
+  }
+}
+
 .table {
   > tbody {
     > tr[id*='detail_'] {

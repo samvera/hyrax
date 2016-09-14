@@ -97,9 +97,14 @@ describe Sufia::Admin::AdminSetsController do
     describe "#update" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
       it 'updates a record' do
-        patch :update, params: { id: admin_set, admin_set: { title: "Improved title" } }
+        # Prevent a save which causes Fedora to complain it doesn't know the referenced node.
+        expect_any_instance_of(AdminSet).to receive(:save).and_return(true)
+        patch :update, params: { id: admin_set,
+                                 admin_set: { title: "Improved title",
+                                              thumbnail_id: "mw22v559x" } }
         expect(response).to be_redirect
         expect(assigns[:admin_set].title).to eq ['Improved title']
+        expect(assigns[:admin_set].thumbnail_id).to eq 'mw22v559x'
       end
     end
   end
