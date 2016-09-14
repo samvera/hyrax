@@ -83,9 +83,17 @@ Sufia has the following features:
 * Suggested values from controlled vocabularies provided by [Questioning Authority](https://github.com/projecthydra-labs/questioning_authority)
 * [ResourceSync](http://www.openarchives.org/rs/1.0/resourcesync) capability lists and resource lists
 * Administrative sets (curated collections)
-* Administrative dashboard, w/ feature flippers
+* Administrative dashboard, w/ feature flippers to turn features on and off in the UI
+* Contact form
+* Customizable banner image
+* Flexible object model: upload and manage single-file works, multi-file works, zero-file works, and works-within-works
+* Geonames integration for location-oriented metadata fields
+* Virus detection for uploaded files
+* Citation formatting suggestions
 
-See [Sufia's documentation site](http://sufia.io/) for more non-technical documentation.
+See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
+
+For non-technical documentation about Sufia, see its [documentation site](http://sufia.io/).
 
 # Help
 
