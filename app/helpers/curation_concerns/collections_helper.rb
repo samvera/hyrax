@@ -49,13 +49,10 @@ module CurationConcerns::CollectionsHelper
       if current_user.respond_to?(:collections)
         return current_user.collections.map { |c| [c.title.join(', '), c.id] }
       end
-      query = ActiveFedora::SolrQueryBuilder
-              .construct_query_for_rel(
-                has_model: Collection.to_class_uri)
       convert_solr_docs_to_select_options(
-        ActiveFedora::SolrService.query(query,
-                                        fl: 'title_tesim id',
-                                        rows: 1000)
+        ::Collection.search_with_conditions({},
+                                            fl: 'title_tesim id',
+                                            rows: 1000)
       )
     end
 

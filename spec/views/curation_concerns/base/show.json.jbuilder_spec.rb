@@ -11,7 +11,7 @@ describe 'curation_concerns/base/show.json.jbuilder' do
   it "renders json of the curation_concern" do
     json = JSON.parse(rendered)
     expect(json['id']).to eq curation_concern.id
-    expect(json['title']).to eq curation_concern.title
+    expect(json['title']).to match_array curation_concern.title
     expected_fields = curation_concern.class.fields.select { |f| ![:has_model, :create_date].include? f }
     expected_fields << :date_created
     expected_fields.each do |field_symbol|
