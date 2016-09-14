@@ -35,11 +35,10 @@ module CurationConcerns
 
       # One query per member_id because Solr is not a relational database
       sizes = member_ids.collect do |work_id|
-        query = ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::FileSet.to_class_uri)
         argz = { fl: "id, #{file_size_field}",
                  fq: "{!join from=#{member_ids_field} to=id}id:#{work_id}"
         }
-        files = ActiveFedora::SolrService.query(query, argz)
+        files = ::FileSet.search_with_conditions({}, argz)
         files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
       end
 
