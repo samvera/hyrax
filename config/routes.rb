@@ -120,6 +120,8 @@ Sufia::Engine.routes.draw do
       member do
         get :confirm
         post :copy
+        get :confirm_access
+        post :copy_access
       end
     end
   end

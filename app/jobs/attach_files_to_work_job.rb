@@ -9,7 +9,9 @@ class AttachFilesToWorkJob < ActiveJob::Base
       file_set = FileSet.new
       user = User.find_by_user_key(work.depositor)
       actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
-      actor.create_metadata(work, visibility: work.visibility)
+      actor.create_metadata(work, visibility: work.visibility) do |file|
+        file.permissions_attributes = work.permissions.map(&:to_hash)
+      end
 
       attach_content(actor, uploaded_file.file)
       uploaded_file.update(file_set_uri: file_set.uri)
