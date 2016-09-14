@@ -107,7 +107,7 @@ Style/HashSyntax:
 
 Style/PredicateName:
   Exclude:
-    - 'app/helpers/curation_concerns/collections_helper_behavior.rb'
+    - 'app/helpers/curation_concerns/collections_helper.rb'
 
 Style/GlobalVars:
   Exclude:
