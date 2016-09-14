@@ -1,6 +1,7 @@
+<% license_service = CurationConcerns::LicenseService.new %>
 <%= f.input :rights, as: :multi_value_select,
-    collection: CurationConcerns::LicenseService.new.select_active_options,
+    collection: license_service.select_active_options,
     include_blank: true,
-    item_helper: method(:include_current_value),
+    item_helper: license_service.method(:include_current_value),
     input_html: { class: 'form-control' } %>
 <%= render "curation_concerns/file_sets/rights_modal" %>
