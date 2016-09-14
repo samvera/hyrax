@@ -31,7 +31,7 @@ module Sufia
             work = model_class.find(doc_id)
             terms.each do |key|
               combined_attributes[key] ||= []
-              combined_attributes[key] = (combined_attributes[key] + work[key]).uniq
+              combined_attributes[key] = (combined_attributes[key] + work[key].to_a).uniq
             end
             names << work.to_s
             permissions = (permissions + work.permissions).uniq

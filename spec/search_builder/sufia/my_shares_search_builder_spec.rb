@@ -8,13 +8,18 @@ describe Sufia::MySharesSearchBuilder do
                        current_user: me) }
   let(:builder) { described_class.new(scope) }
 
-  before { allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"]) }
+  before do
+    allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"])
+    allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
+      .with(depositor: me.user_key)
+      .and_return("depositor")
+  end
 
   subject { builder.to_hash['fq'] }
 
   it "filters things we have access to in which we are not the depositor" do
     expect(subject).to eq ["access_filter1 OR access_filter2",
                            "{!terms f=has_model_ssim}GenericWork,Collection",
-                           "-_query_:\"{!field f=depositor_ssim}#{me.email}\""]
+                           "-depositor"]
   end
 end
