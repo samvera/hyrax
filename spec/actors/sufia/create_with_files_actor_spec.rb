@@ -44,4 +44,22 @@ describe Sufia::CreateWithFilesActor do
       end
     end
   end
+
+  describe "mediated deposit" do
+    subject { actor.curation_concern.state }
+    let(:inactive_uri) { RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
+    before do
+      allow(Flipflop).to receive(:enable_mediated_deposit?).and_return(mediation_enabled)
+      allow(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2])
+      actor.create(attributes)
+    end
+    context "when enabled" do
+      let(:mediation_enabled) { true }
+      it { is_expected.to eq inactive_uri }
+    end
+    context "when disabled" do
+      let(:mediation_enabled) { false }
+      it { is_expected.to be nil }
+    end
+  end
 end
