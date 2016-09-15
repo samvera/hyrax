@@ -76,13 +76,19 @@ en:
         title:              'Featured Works'
         no_works:           'No works have been featured'
         drag:               'Drag'
+      featured_researcher:
+        tab_label:          'Featured Researcher'
+        title:              'Featured Researcher'
       recently_uploaded:
         depositor:          'Depositor'
         details:            'Details'
         tab_label:          'Recently Uploaded'
+        title:              'Recently Uploaded'
         no_public:          'No public work has been contributed.'
       admin_sets:
         link:               'View all administrative collections'
+        tab_label:          'Explore Collections'
+        title:              'Explore Collections'
     toolbar:
       admin:
         menu: "Administration"

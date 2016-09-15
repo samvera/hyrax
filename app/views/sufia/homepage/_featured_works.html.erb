@@ -1,4 +1,4 @@
-<h2><%= t('sufia.homepage.featured_works.title') %></h2>
+<h2 class="sr-only"><%= t('sufia.homepage.featured_works.title') %></h2>
 <% if @featured_work_list.empty? %>
   <p><%= t('sufia.homepage.featured_works.no_works') %></p>
 <% elsif can? :update, FeaturedWork %>

@@ -24,10 +24,19 @@ module Sufia::HomepageControllerBehavior
     @marketing_text = ContentBlock.marketing_text
     @featured_work_list = FeaturedWorkList.new
     @announcement_text = ContentBlock.announcement_text
+    @admin_sets = fetch_admin_sets
     recent
   end
 
   protected
+
+    def fetch_admin_sets
+      return [] unless Flipflop.assign_admin_set?
+      builder = CurationConcerns::AdminSetSearchBuilder.new(self, current_ability)
+                                                       .rows(5)
+      response = repository.search(builder)
+      response.documents
+    end
 
     def recent
       # grab any recent documents

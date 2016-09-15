@@ -64,6 +64,23 @@
   }
 }
 
+.home-content {
+  .nav {
+    margin-bottom: 20px;
+  }
+}
+
+.collection-highlights {
+  img {
+    border: 1px solid #bbb;
+    height: 60px;
+    margin-right: 15px;
+    margin-top: 3px;
+    object-fit: cover;
+    width: 100px;
+  }
+}
+
 .home_share_work {
   margin-bottom: $padding-large-vertical * 2.5;
 
