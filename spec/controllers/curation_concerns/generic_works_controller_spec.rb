@@ -62,9 +62,19 @@ describe CurationConcerns::GenericWorksController do
       expect(assigns(:presenter)).to be_kind_of Sufia::WorkShowPresenter
     end
 
-    it 'renders an endnote file' do
-      get :show, params: { id: work, format: 'endnote' }
-      expect(response).to be_successful
+    context "with an endnote file" do
+      let(:disposition)  { response.header.fetch("Content-Disposition") }
+      let(:content_type) { response.header.fetch("Content-Type") }
+
+      render_views
+
+      it 'downloads the file' do
+        get :show, params: { id: work, format: 'endnote' }
+        expect(response).to be_successful
+        expect(disposition).to include("attachment")
+        expect(content_type).to eq("application/x-endnote-refer")
+        expect(response.body).to include("%T test title")
+      end
     end
 
     context "without a referer" do

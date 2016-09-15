@@ -20,6 +20,12 @@ module Sufia
         text.join("\n")
       end
 
+      # Name of the downloaded endnote file
+      # Override this if you want to use a different name
+      def endnote_filename
+        "#{id}.endnote"
+      end
+
       def persistent_url
         "#{Sufia.config.persistent_hostpath}#{id}"
       end
