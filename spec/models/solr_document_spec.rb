@@ -122,4 +122,10 @@ describe ::SolrDocument, type: :model do
     subject { document.width }
     it { is_expected.to eq '555' }
   end
+
+  context "when exporting in endnote format" do
+    let(:attributes) { { id: "1234" } }
+    subject { document.endnote_filename }
+    it { is_expected.to eq("1234.endnote") }
+  end
 end
