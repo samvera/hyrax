@@ -4,7 +4,6 @@ class FeaturedWorkList
   def featured_works_attributes=(attributes_collection)
     attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes } if attributes_collection.is_a? Hash
     attributes_collection.each do |attributes|
-      attributes = attributes.with_indifferent_access
       raise "Missing id" if attributes['id'].blank?
       existing_record = FeaturedWork.find(attributes['id'])
       existing_record.update(attributes.except('id'))
