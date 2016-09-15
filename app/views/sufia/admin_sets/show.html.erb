@@ -13,7 +13,11 @@
     <%= render 'collections/show_descriptions' %>
   </div>
   <div class="col-sm-2">
-    <span class="fa fa-sitemap collection-icon-search"></span>
+    <% if has_thumbnail? @presenter.solr_document %>
+      <%= render_thumbnail_tag @presenter.solr_document, {}, suppress_link: true %>
+    <% else %>
+      <span class="fa fa-sitemap collection-icon-search"></span>
+    <% end %>
   </div>
 </div>
 

@@ -1,13 +1,12 @@
 module Sufia
   module Forms
-    class AdminSetForm
-      include HydraEditor::Form
+    class AdminSetForm < CurationConcerns::Forms::CollectionEditForm
       self.model_class = AdminSet
-      self.terms = [:title, :description]
-      self.required_fields = [:title]
+      self.terms = [:title, :description, :thumbnail_id]
 
       # Cast any array values on the model to scalars.
-      def [](_key)
+      def [](key)
+        return super if key == :thumbnail_id
         super.first
       end
 
