@@ -74,6 +74,7 @@ module CurationConcerns
 
     def edit
       query_collection_members
+      # this is used to populate the "add to a collection" action for the members
       @user_collections = find_collections_for_form
       form
     end
@@ -164,13 +165,13 @@ module CurationConcerns
     protected
 
       # TODO: This method could become a collection service.
-      # TODO: It seems suspicious that this is returning collections with read
-      #       access rather than collections with edit access
-      # run a solr query to get the collections the user has access to read
+      # run a solr query to get the collections the user has access to edit
       # @return [Array] a list of the user's collections
       def find_collections_for_form
-        query = list_search_builder.with(q: '').query
-        response = repository.search(query)
+        builder = list_search_builder.with(q: '').tap do |b|
+          b.discovery_perms = ['edit']
+        end
+        response = repository.search(builder)
         response.documents
       end
 

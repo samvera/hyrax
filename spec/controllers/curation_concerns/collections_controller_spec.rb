@@ -12,9 +12,9 @@ describe CollectionsController do
                        user: user,
                        depositor: user.user_key) }
   let(:asset3) { build(:generic_work, title: ['Third of the Assets']) }
-  let!(:asset4) { create(:generic_work,
-                         title: ['Fourth of the Assets'],
-                         user: user) }
+  let(:asset4) { create(:generic_work,
+                        title: ['Fourth of the Assets'],
+                        user: user) }
   let(:bogus_depositor_asset) { create(:generic_work,
                                        title: ['Bogus Asset'],
                                        depositor: 'abc') }
@@ -245,11 +245,20 @@ describe CollectionsController do
   end
 
   describe '#edit' do
-    before { sign_in user }
+    let!(:my_collection) { create(:collection, user: user) }
 
-    it 'does not show flash' do
+    before do
+      # We expect to not see this collection in the list
+      create(:collection, :public)
+      sign_in user
+    end
+
+    it 'is successful' do
       get :edit, params: { id: collection }
       expect(flash[:notice]).to be_nil
+      # a list of collections I can add items to:
+      expect(assigns[:user_collections].map(&:id)).to match_array [collection.id,
+                                                                   my_collection.id]
     end
   end
 end
