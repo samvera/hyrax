@@ -86,17 +86,14 @@ module CurationConcerns::CollectionsHelper
       if current_user.respond_to?(:collections)
         return current_user.collections.map { |c| [c.title.join(', '), c.id] }
       end
-      convert_solr_docs_to_select_options(
-        ::Collection.search_with_conditions({},
-                                            fl: 'title_tesim id',
-                                            rows: 1000)
-      )
+      service = CurationConcerns::CollectionsService.new(controller)
+      convert_solr_docs_to_select_options(service.search_results(:edit))
     end
 
     def convert_solr_docs_to_select_options(results)
       option_values = results.map do |r|
-        title = SolrDocument.new(r).title
-        [title.present? ? title.join(', ') : nil, r['id']]
+        title = r.title
+        [title.present? ? title.join(', ') : nil, r.id]
       end
       option_values.sort do |a, b|
         if a.first && b.first

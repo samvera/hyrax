@@ -164,15 +164,10 @@ module CurationConcerns
 
     protected
 
-      # TODO: This method could become a collection service.
       # run a solr query to get the collections the user has access to edit
       # @return [Array] a list of the user's collections
       def find_collections_for_form
-        builder = list_search_builder.with(q: '').tap do |b|
-          b.discovery_perms = ['edit']
-        end
-        response = repository.search(builder)
-        response.documents
+        CurationConcerns::CollectionsService.new(self).search_results(:edit)
       end
 
       def remove_select_something_first_flash
