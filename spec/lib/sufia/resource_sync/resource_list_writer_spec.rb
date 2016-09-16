@@ -12,13 +12,16 @@ RSpec.describe Sufia::ResourceSync::ResourceListWriter do
   subject { described_class.new(resource_host: 'example.com', capability_list_url: capability_list).write }
   let(:xml) { Nokogiri::XML.parse(subject) }
 
-  it "has two urls" do
-    first_url = xml.xpath('//x:url[1]/x:loc', 'x' => sitemap).text
-    second_url = xml.xpath('//x:url[2]/x:loc', 'x' => sitemap).text
-    third_url = xml.xpath('//x:url[3]/x:loc', 'x' => sitemap).text
-    expect(first_url).to eq "http://example.com/collections/#{public_collection.id}"
-    expect(second_url).to eq "http://example.com/concern/generic_works/#{public_work.id}"
-    expect(third_url).to eq "http://example.com/concern/file_sets/#{file_set.id}"
+  it "has a list of resources" do
+    capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text
+    expect(capability).to eq capability_list
+    expect(query(1)).to eq "http://example.com/collections/#{public_collection.id}"
+    expect(query(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
+    expect(query(3)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
     expect(xml.xpath('//x:url', 'x' => sitemap).count).to eq 3
+  end
+
+  def query(n)
+    xml.xpath("//x:url[#{n}]/x:loc", 'x' => sitemap).text
   end
 end
