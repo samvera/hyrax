@@ -34,27 +34,27 @@ describe CurationConcerns::CollectionsHelper do
   describe '#collection_options_for_select' do
     let(:user) { create(:user) }
     let(:collection2) { double(id: '02870w10j') }
-    let(:doc1) { { "id" => "k930bx31t", "title_tesim" => ["One"] } }
-    let(:doc2) { { "id" => "02870w10j", "title_tesim" => ["Two"] } }
-    let(:doc3) { { "id" => "z029p500w", "title_tesim" => ["Three"] } }
+    let(:doc1) { SolrDocument.new("id" => "k930bx31t", "title_tesim" => ["One"]) }
+    let(:doc2) { SolrDocument.new("id" => "02870w10j", "title_tesim" => ["Two"]) }
+    let(:doc3) { SolrDocument.new("id" => "z029p500w", "title_tesim" => ["Three"]) }
+    let(:service) { instance_double(CurationConcerns::CollectionsService) }
 
     before do
       allow(helper).to receive(:current_user).and_return(user)
-      allow(Collection).to receive(:search_with_conditions)
-        .with({}, fl: 'title_tesim id', rows: 1000)
-        .and_return([doc1, doc2, doc3])
+      allow(CurationConcerns::CollectionsService).to receive(:new).with(controller).and_return(service)
+      expect(service).to receive(:search_results).with(:edit).and_return([doc1, doc2, doc3])
     end
 
     subject { helper.collection_options_for_select(collection2) }
 
     it 'excludes the passed in collection' do
-      expect(subject).to eq "<option value=\"#{doc1['id']}\">One</option>\n<option value=\"#{doc3['id']}\">Three</option>"
+      expect(subject).to eq "<option value=\"#{doc1.id}\">One</option>\n<option value=\"#{doc3.id}\">Three</option>"
     end
 
     context "when one of the documents doesn't have title_tesim" do
-      let(:doc1) { { "id" => "k930bx31t" } }
+      let(:doc1) { SolrDocument.new("id" => "k930bx31t") }
       it 'puts the collections without titles last' do
-        expect(subject).to eq "<option value=\"#{doc3['id']}\">Three</option>\n<option value=\"#{doc1['id']}\"></option>"
+        expect(subject).to eq "<option value=\"#{doc3.id}\">Three</option>\n<option value=\"#{doc1.id}\"></option>"
       end
     end
   end

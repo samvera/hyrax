@@ -26,6 +26,7 @@ describe 'curation_concerns/base/show.html.erb' do
     before do
       allow(view).to receive(:can?).with(:edit, String).and_return(true)
       allow(view).to receive(:can?).with(:collect, String).and_return(true)
+      allow(view).to receive(:collection_options_for_select)
       assign(:presenter, presenter)
       render
     end
