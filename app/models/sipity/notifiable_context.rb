@@ -5,14 +5,14 @@ module Sipity
   # the emails that should be sent.
   #
   # In Sipity this could be modeled by defining a NotifiableContext for a
-  # StrategyState and Email.
+  # WorkflowState and Email.
   #
   # @example
-  #   strategy_state = Sipity::Models::Processing::StrategyState.new
+  #   workflow_state = Sipity::Models::Processing::WorkflowState.new
   #   email = Sipity::Models::Notification::Email.new
   #
   #   Sipity::Models::Notification::NotifiableContext.new(
-  #     scope_for_notification: strategy_state,
+  #     scope_for_notification: workflow_state,
   #     reason_for_notification: 'on_enter',
   #     email: email
   #   )

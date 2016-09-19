@@ -7,10 +7,10 @@ module Sipity
     self.table_name = 'sipity_agents'
 
     ENTITY_LEVEL_AGENT_RELATIONSHIP = 'entity_level'.freeze
-    STRATEGY_LEVEL_AGENT_RELATIONSHIP = 'strategy_level'.freeze
+    WORKFLOW_LEVEL_AGENT_RELATIONSHIP = 'workflow_level'.freeze
 
     belongs_to :proxy_for, polymorphic: true
-    has_many :strategy_responsibilities, dependent: :destroy
+    has_many :workflow_responsibilities, dependent: :destroy
     has_many :entity_specific_responsibilities, dependent: :destroy
 
     has_many :comments,

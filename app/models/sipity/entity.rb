@@ -9,8 +9,8 @@ module Sipity
     self.table_name = 'sipity_entities'
 
     # The proxy_for column holds a GlobalID string
-    belongs_to :strategy
-    belongs_to :strategy_state
+    belongs_to :workflow
+    belongs_to :workflow_state
 
     has_many :entity_specific_responsibilities, dependent: :destroy
 
@@ -19,7 +19,7 @@ module Sipity
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 
-    delegate :name, to: :strategy_state, prefix: :strategy_state
-    delegate :name, to: :strategy, prefix: :strategy
+    delegate :name, to: :workflow_state, prefix: :workflow_state
+    delegate :name, to: :workflow, prefix: :workflow
   end
 end

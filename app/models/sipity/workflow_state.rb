@@ -1,22 +1,22 @@
 module Sipity
   # Throughout the workflow process, a processed entity may have numerous
   # states.
-  class StrategyState < ActiveRecord::Base
-    self.table_name = 'sipity_strategy_states'
+  class WorkflowState < ActiveRecord::Base
+    self.table_name = 'sipity_workflow_states'
 
-    belongs_to :strategy
-    has_many :originating_strategy_state_actions,
+    belongs_to :workflow
+    has_many :originating_workflow_state_actions,
              dependent: :destroy,
-             class_name: 'StrategyStateAction',
-             foreign_key: :originating_strategy_state_id
+             class_name: 'Sipity::WorkflowStateAction',
+             foreign_key: :originating_workflow_state_id
 
-    has_many :resulting_strategy_actions,
+    has_many :resulting_workflow_actions,
              dependent: :destroy,
-             class_name: 'StrategyAction',
-             foreign_key: :resulting_strategy_state_id
+             class_name: 'Sipity::WorkflowAction',
+             foreign_key: :resulting_workflow_state_id
 
     has_many :comments,
-             foreign_key: :originating_strategy_state_id,
+             foreign_key: :originating_workflow_state_id,
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 

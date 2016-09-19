@@ -24,9 +24,9 @@ module Sipity
   class Role < ActiveRecord::Base
     self.table_name = 'sipity_roles'
 
-    has_many :strategy_roles,
+    has_many :workflow_roles,
              dependent: :destroy,
-             class_name: 'Sipity::StrategyRole'
+             class_name: 'Sipity::WorkflowRole'
 
     has_many :email_recipients,
              dependent: :destroy,

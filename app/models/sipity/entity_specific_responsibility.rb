@@ -3,7 +3,7 @@ module Sipity
   class EntitySpecificResponsibility < ActiveRecord::Base
     self.table_name = 'sipity_entity_specific_responsibilities'
     belongs_to :entity
-    belongs_to :strategy_role
+    belongs_to :workflow_role
     belongs_to :agent
   end
 end

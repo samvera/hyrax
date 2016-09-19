@@ -1,7 +1,7 @@
 module Sipity
   # Responsible for capturing a :comment made by a given :actor on a given
-  # :entity at a given :originating_strategy_state as part of a given
-  # :originating_strategy_action.
+  # :entity at a given :originating_workflow_state as part of a given
+  # :originating_workflow_action.
   #
   # A :stale comment is a comment that is not relevant based on processing
   # that has happened.
@@ -15,8 +15,8 @@ module Sipity
 
     belongs_to :agent, class_name: 'Sipity::Agent'
     belongs_to :entity, class_name: 'Sipity::Entity'
-    belongs_to :originating_strategy_action, class_name: 'Sipity::StrategyAction'
-    belongs_to :originating_strategy_state, class_name: 'Sipity::StrategyState'
+    belongs_to :originating_workflow_action, class_name: 'Sipity::WorkflowAction'
+    belongs_to :originating_workflow_state, class_name: 'Sipity::WorkflowState'
 
     def name_of_commentor
       agent.proxy_for.name
