@@ -13,6 +13,7 @@ require 'devise'
 require 'mida'
 
 require 'rspec/matchers'
+require 'shoulda/matchers'
 require 'equivalent-xml/rspec_matchers'
 require 'rspec/its'
 require 'rspec/rails'
@@ -73,6 +74,8 @@ RSpec.configure do |config|
   end
 
   config.include FactoryGirl::Syntax::Methods
+  config.include Shoulda::Matchers::Independent
+
   if defined? Devise::Test::ControllerHelpers
     config.include Devise::Test::ControllerHelpers, type: :controller
     config.include Devise::Test::ControllerHelpers, type: :view

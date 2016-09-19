@@ -9,9 +9,9 @@ class CreateSipity < ActiveRecord::Migration[5.0]
     end
 
     add_index "sipity_notification_recipients", ["notification_id", "role_id", "recipient_strategy"], name: "sipity_notifications_recipients_surrogate"
-    add_index "sipity_notification_recipients", ["notification_id"], name: "sipity_notification_email_recipients_email"
-    add_index "sipity_notification_recipients", ["recipient_strategy"], name: "sipity_notification_email_recipients_recipient_strategy"
-    add_index "sipity_notification_recipients", ["role_id"], name: "sipity_notification_email_recipients_role"
+    add_index "sipity_notification_recipients", ["notification_id"], name: "sipity_notification_recipients_notification"
+    add_index "sipity_notification_recipients", ["recipient_strategy"], name: "sipity_notification_recipients_recipient_strategy"
+    add_index "sipity_notification_recipients", ["role_id"], name: "sipity_notification_recipients_role"
 
     create_table "sipity_notifications" do |t|
       t.string   "name",             null: false
@@ -21,7 +21,7 @@ class CreateSipity < ActiveRecord::Migration[5.0]
 
     add_index "sipity_notifications", ["name"], name: "index_sipity_notifications_on_name"
 
-    create_table "sipity_notification_notifiable_contexts" do |t|
+    create_table "sipity_notifiable_contexts" do |t|
       t.integer  "scope_for_notification_id",               null: false
       t.string   "scope_for_notification_type",             null: false
       t.string   "reason_for_notification",                 null: false
@@ -30,10 +30,10 @@ class CreateSipity < ActiveRecord::Migration[5.0]
       t.datetime "updated_at",                              null: false
     end
 
-    add_index "sipity_notification_notifiable_contexts", ["notification_id"], name: "sipity_notification_notifiable_contexts_notification_id"
-    add_index "sipity_notification_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type", "reason_for_notification", "notification_id"], name: "sipity_notification_notifiable_contexts_concern_surrogate", unique: true
-    add_index "sipity_notification_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type", "reason_for_notification"], name: "sipity_notification_notifiable_contexts_concern_context"
-    add_index "sipity_notification_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type"], name: "sipity_notification_notifiable_contexts_concern"
+    add_index "sipity_notifiable_contexts", ["notification_id"], name: "sipity_notifiable_contexts_notification_id"
+    add_index "sipity_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type", "reason_for_notification", "notification_id"], name: "sipity_notifiable_contexts_concern_surrogate", unique: true
+    add_index "sipity_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type", "reason_for_notification"], name: "sipity_notifiable_contexts_concern_context"
+    add_index "sipity_notifiable_contexts", ["scope_for_notification_id", "scope_for_notification_type"], name: "sipity_notifiable_contexts_concern"
 
     create_table "sipity_agents" do |t|
       t.string   "proxy_for_id",               null: false
@@ -62,15 +62,14 @@ class CreateSipity < ActiveRecord::Migration[5.0]
     add_index "sipity_comments", ["originating_strategy_state_id"], name: "sipity_comments_state_index"
 
     create_table "sipity_entities" do |t|
-      t.string   "proxy_for_id",                  null: false
-      t.string   "proxy_for_type",                null: false
+      t.string   "proxy_for",                     null: false
       t.integer  "strategy_id",                   null: false
       t.integer  "strategy_state_id",             null: false
       t.datetime "created_at",                    null: false
       t.datetime "updated_at",                    null: false
     end
 
-    add_index "sipity_entities", ["proxy_for_id", "proxy_for_type"], name: "sipity_entities_proxy_for", unique: true
+    add_index "sipity_entities", ["proxy_for"], name: "sipity_entities_proxy_for", unique: true
     add_index "sipity_entities", ["strategy_id"], name: "index_sipity_entities_on_strategy_id"
     add_index "sipity_entities", ["strategy_state_id"], name: "index_sipity_entities_on_strategy_state_id"
 
