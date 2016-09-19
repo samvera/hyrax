@@ -1,45 +1,47 @@
-//= require jquery.flot
-//= require jquery.flot.pie
-//= require jquery.flot.resize
+//= require highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/modules/drilldown
 
 (function( $ ){
-  $.fn.doughnut_chart = function( data ) {
-    $.plot(this, data,
-         {
-           series: {
-             pie: {
-               innerRadius: 0.5,
-               show: true,
-               radius: 1,
-               label: {
-                 show: true,
-                 radius: 3/4,
-                 formatter: labelFormatter,
-                 background: {
-                   opacity: 0.5,
-                   color: '#000'
-                 }
-               }
-             }
-           },
-           legend: {
-             show: false
-           },
-           grid: {
-             hoverable: true
-           }
-         }
-        );
+  $.fn.pie_chart = function(title = '', data) {
+    // Create the chart
+    $(this).highcharts({
+        chart: {
+            type: 'pie'
+        },
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}: {point.y}'
+                }
+            }
+        },
 
-    function labelFormatter(label, series) {
-      return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
-    }
+        credits: {
+          enabled: false
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.percentage:.2f}%</b> of total<br/>'
+        },
+        series: [{
+            name: title,
+            colorByPoint: true,
+            data: data.series
+        }],
+        title: null,
+        drilldown: data.drilldown
+    });
   };
 })( jQuery );
 
 Blacklight.onLoad(function () {
-    $('.stats-doughnut').each (function () {
-      data = $(this).data('flot');
-      $(this).doughnut_chart(data);
+    $('.stats-pie').each (function () {
+      series = $(this).data('series');
+      title = $(this).data('title');
+      drilldown = $(this).data('drilldown');
+      $(this).pie_chart(title, series, drilldown);
     });
 });

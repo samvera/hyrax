@@ -5,7 +5,7 @@ describe 'curation_concerns/admin/_total_objects_charts.html.erb', type: :view d
     assign(:configuration, configuration)
     allow(view).to receive(:action_name).and_return(:index)
     allow(CurationConcerns::ResourceStatisticsSource).to receive(:new).and_return(resource_stats)
-    stub_template 'curation_concerns/admin/widgets/_doughnut.html.erb' => 'Mine 1'
+    stub_template 'curation_concerns/admin/widgets/_pie.html.erb' => 'Mine 1'
   end
   let(:resource_stats) do
     instance_double(CurationConcerns::ResourceStatisticsSource,

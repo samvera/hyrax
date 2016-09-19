@@ -16,7 +16,7 @@ module CurationConcerns
     require 'awesome_nested_set'
     require 'breadcrumbs_on_rails'
     require 'rdf/vocab'
-    require 'flot-rails'
+    require 'highcharts-rails'
 
     config.autoload_paths += %W(
       #{config.root}/app/actors/concerns
