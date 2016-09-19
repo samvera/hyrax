@@ -7,12 +7,17 @@ describe AttachFilesToWorkJob do
     let(:generic_work) { create(:public_generic_work) }
 
     context "with uploaded files on the filesystem" do
-      it "attaches files, copies visibility and updates the uploaded files" do
+      before do
+        generic_work.permissions.build(name: 'userz@bbb.ddd', type: 'person', access: 'edit')
+        generic_work.save
+      end
+      it "attaches files, copies visibility and permissions and updates the uploaded files" do
         expect(CharacterizeJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
         generic_work.reload
         expect(generic_work.file_sets.count).to eq 2
         expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
+        expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))
         expect(uploaded_file1.reload.file_set_uri).not_to be_nil
       end
     end

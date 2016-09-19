@@ -15,6 +15,7 @@ module Sufia
       def curation_concern_type=(curation_concern_type)
         super
         before_action :build_breadcrumbs, only: [:edit, :show]
+        before_action :save_permissions, only: :update
       end
     end
 
@@ -59,6 +60,19 @@ module Sufia
         end
       end
 
+      def after_update_response
+        if permissions_changed? && curation_concern.file_sets.present?
+          redirect_to sufia.confirm_access_curation_concerns_permission_path(curation_concern)
+        elsif curation_concern.visibility_changed? && curation_concern.file_sets.present?
+          redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
+        else
+          respond_to do |wants|
+            wants.html { redirect_to [main_app, curation_concern] }
+            wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+          end
+        end
+      end
+
       # Called by CurationConcerns::CurationConcernController#show
       def additional_response_formats(format)
         format.endnote do
@@ -79,6 +93,14 @@ module Sufia
         when 'show'.freeze
           add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
         end
+      end
+
+      def save_permissions
+        @saved_permissions = curation_concern.permissions.map(&:to_hash)
+      end
+
+      def permissions_changed?
+        @saved_permissions != curation_concern.permissions.map(&:to_hash)
       end
   end
 end
