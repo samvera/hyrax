@@ -14,6 +14,12 @@ describe GenericWork do
     it { is_expected.to eq 'curation_concerns_generic_work' }
   end
 
+  describe "to_sipity_entity" do
+    let(:work) { create(:work) }
+    subject { work.to_sipity_entity }
+    it { is_expected.to be_kind_of Sipity::Entity }
+  end
+
   describe '#state' do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
