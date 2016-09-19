@@ -18,7 +18,7 @@ module Sufia
 
       private
 
-        def builder(capability_list_url: 'http://example.com/dataset1/capabilitylist.xml')
+        def builder
           Nokogiri::XML::Builder.new do |xml|
             xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
                        'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
