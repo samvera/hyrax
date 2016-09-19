@@ -1,0 +1,13 @@
+<%= csrf_meta_tag %>
+<meta charset="utf-8" />
+
+<!-- added for use on small devices like phones -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
+
+<!-- application css -->
+<%= stylesheet_link_tag 'application' %>
+
+<!-- application js -->
+<%= javascript_include_tag 'application' %>

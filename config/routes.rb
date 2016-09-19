@@ -6,6 +6,11 @@ CurationConcerns::Engine.routes.draw do
   get 'single_use_link/generated/:id' => 'single_use_links#index', as: :generated_single_use_links
   delete 'single_use_link/:id/delete/:link_id' => 'single_use_links#destroy', as: :delete_single_use_link
 
+  namespace :admin do
+    root action: :index
+    get :resource_details
+  end
+
   # mount BrowseEverything::Engine => '/remote_files/browse'
   resources :classify_concerns, only: [:new, :create]
 

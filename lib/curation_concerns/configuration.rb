@@ -164,6 +164,34 @@ module CurationConcerns
       @binaries_directory ||= "tmp/binaries"
     end
 
+    # @!attribute [w] dashboard_configuration
+    #   Configuration for dashboard rendering.
+    attr_writer :dashboard_configuration
+    def dashboard_configuration
+      @dashboard_configuration ||= {
+        menu: {
+          index: {},
+          resource_details: {}
+        },
+        actions: {
+          index: {
+            partials: [
+              "total_objects_charts",
+              "total_embargo_visibility"
+            ]
+          },
+          resource_details: {
+            partials: [
+              "total_objects"
+            ]
+          }
+        },
+        data_sources: {
+          resource_stats: CurationConcerns::ResourceStatisticsSource
+        }
+      }
+    end
+
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,
