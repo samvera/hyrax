@@ -1,4 +1,3 @@
-require 'power_converter'
 PowerConverter.define_conversion_for(:sipity_workflow_id) do |input|
   case input
   when Sipity::Workflow

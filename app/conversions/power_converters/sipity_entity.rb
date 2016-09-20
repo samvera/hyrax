@@ -1,4 +1,3 @@
-require 'power_converter'
 PowerConverter.define_conversion_for(:sipity_entity) do |input|
   case input
   when Sipity::Entity

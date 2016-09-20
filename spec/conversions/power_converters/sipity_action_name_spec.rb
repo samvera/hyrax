@@ -1,5 +1,4 @@
 require "spec_helper"
-require "#{CurationConcerns::Engine.root}/app/conversions/power_converters/sipity_action_name"
 
 RSpec.describe 'PowerConverter', :no_clean do
   context '#convert_to_sipity_action_name' do

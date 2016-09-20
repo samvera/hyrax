@@ -1,6 +1,4 @@
 require "spec_helper"
-require "#{CurationConcerns::Engine.root}/app/conversions/power_converters/sipity_workflow_id"
-require "#{CurationConcerns::Engine.root}/app/conversions/power_converters/sipity_entity"
 
 RSpec.describe 'PowerConverter' do
   [

@@ -1,5 +1,4 @@
 require "spec_helper"
-require "#{CurationConcerns::Engine.root}/app/conversions/power_converters/polymorphic_type"
 
 RSpec.describe 'PowerConverter', no_clean: true do
   describe '#convert_to_polymorphic_type' do

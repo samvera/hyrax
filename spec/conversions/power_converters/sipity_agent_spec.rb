@@ -1,5 +1,4 @@
 require "spec_helper"
-require "#{CurationConcerns::Engine.root}/app/conversions/power_converters/sipity_agent"
 
 RSpec.describe 'PowerConverter', no_clean: true do
   context '#convert_to_sipity_agent' do
