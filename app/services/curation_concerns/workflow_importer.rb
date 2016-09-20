@@ -9,7 +9,7 @@ module CurationConcerns
       def self.call(data:, schema:)
         validation = schema.call(data)
         return true unless validation.messages.present?
-        raise RuntimeError, validation.messages.inspect
+        raise validation.messages.inspect
       end
     end
 
@@ -65,28 +65,27 @@ module CurationConcerns
     private
 
       def find_or_create_from(configuration:)
-        FindOrCreateWorkType.call(name: configuration.fetch(:names)) do |_work_type, strategy, _initial_strategy_state|
-          find_or_create_strategy_permissions!(
-            strategy: strategy, strategy_permissions_configuration: configuration.fetch(:strategy_permissions, [])
-          )
-          generate_state_diagram(strategy: strategy, actions_configuration: configuration.fetch(:actions))
-          generate_state_emails(strategy: strategy, state_emails_configuration: configuration.fetch(:state_emails, []))
-        end
+        workflow = Sipity::Workflow.find_or_create_by!(name: "#{configuration.fetch(:names)} processing")
+        find_or_create_workflow_permissions!(
+          workflow: workflow, strategy_permissions_configuration: configuration.fetch(:strategy_permissions, [])
+        )
+        generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
+        generate_state_emails(workflow: workflow, state_emails_configuration: configuration.fetch(:state_emails, []))
       end
 
       extend Forwardable
       def_delegator WorkflowPermissionsGenerator, :call, :find_or_create_workflow_permissions!
       def_delegator SipityActionsGenerator, :call, :generate_state_diagram
 
-      def generate_state_emails(strategy:, state_emails_configuration:)
+      def generate_state_emails(workflow:, state_emails_configuration:)
         Array.wrap(state_emails_configuration).each do |configuration|
           scope = configuration.fetch(:state)
           reason = configuration.fetch(:reason)
           Array.wrap(configuration.fetch(:emails)).each do |email_configuration|
             email_name = email_configuration.fetch(:name)
             recipients = email_configuration.slice(:to, :cc, :bcc)
-            DataGenerators::EmailNotificationGenerator.call(
-              strategy: strategy, scope: scope, email_name: email_name, recipients: recipients, reason: reason
+            EmailNotificationGenerator.call(
+              workflow: workflow, scope: scope, email_name: email_name, recipients: recipients, reason: reason
             )
           end
         end
