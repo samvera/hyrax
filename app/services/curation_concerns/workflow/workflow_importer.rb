@@ -48,7 +48,7 @@ module CurationConcerns
         attr_accessor :schema
 
         def default_schema
-          Sipity::WorkflowSchema
+          CurationConcerns::Workflow::WorkflowSchema
         end
 
         def validate!
