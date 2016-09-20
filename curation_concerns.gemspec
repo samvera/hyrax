@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "engine_cart", "~> 1.0"
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "rspec-its"
-  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "rspec-rails", '~> 3.5'
   spec.add_development_dependency 'rspec-html-matchers'
   spec.add_development_dependency 'equivalent-xml'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
