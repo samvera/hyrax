@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
+  spec.add_dependency 'dry-validation', '~> 0.9'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.16'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
