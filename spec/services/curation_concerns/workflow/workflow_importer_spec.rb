@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe CurationConcerns::WorkflowImporter do
+RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
   let(:path) { double(read: json) }
   let(:json) do
     doc = <<-HERE
@@ -47,9 +47,9 @@ RSpec.describe CurationConcerns::WorkflowImporter do
 
   context 'data generation' do
     it 'creates the requisite data' do
-      expect(CurationConcerns::EmailNotificationGenerator).to receive(:call).and_call_original.exactly(3).times
-      expect_any_instance_of(CurationConcerns::WorkflowPermissionsGenerator).to receive(:call)
-      expect(CurationConcerns::SipityActionsGenerator).to receive(:call).and_call_original
+      # expect(CurationConcerns::Workflow::EmailNotificationGenerator).to receive(:call).and_call_original.exactly(3).times
+      expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call)
+      expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
       expect do
         described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
