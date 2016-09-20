@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe User, type: :model do
+describe User, type: :model, no_clean: true do
   let(:user) { FactoryGirl.build(:user) }
   let(:another_user) { FactoryGirl.build(:user) }
 
@@ -18,5 +18,16 @@ describe User, type: :model do
 
   it 'has a cancan ability defined' do
     expect(user).to respond_to(:can?)
+  end
+
+  describe '#to_sipity_agent' do
+    it 'will find or create a Sipity::Agent' do
+      user.save!
+      expect { user.to_sipity_agent }.to change { Sipity::Agent.count }.by(1)
+    end
+
+    it 'will fail if the User is not persisted' do
+      expect { user.to_sipity_agent }.to raise_error(ActiveRecord::StatementInvalid)
+    end
   end
 end
