@@ -8,33 +8,10 @@ RSpec.describe CurationConcerns::WorkflowImporter do
       "work_types": [
         {
           "name": "ulra_submission",
-          "strategy_permissions": [{
-            "group": "ULRA Review Committee",
-            "role": "ulra_reviewing"
-          }],
           "actions": [{
-            "name": "start_a_submission",
-            "transition_to": "new",
-            "emails": [{
-              "name": "confirmation_of_ulra_submission_started",
-              "to": "creating_user"
-            },{
-              "name": "faculty_assigned_for_ulra_submission",
-              "to": "advising"
-            }]
-          },{
-            "name": "start"
-          }],
-          "action_analogues": [{
-            "action": "start_a_submission", "analogous_to": "start"
-          }],
-          "state_emails": [{
-            "state": "new",
-            "reason": "processing_hook_triggered",
-            "emails": [{
-              "name": "student_has_indicated_attachments_are_complete",
-              "to": "ulra_reviewing"
-            }]
+            "name": "approve",
+            "transition_to": "reviewed",
+            "from_states": [{ "names": ["under_review"], "roles": ["ulra_reviewing"] }]
           }]
         }
       ]

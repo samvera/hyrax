@@ -4,40 +4,40 @@
       "name": "<%= file_name %>",
          "actions": [{
            "name": "finalize_digitization",
-           "from_states": [{"name": "pending"}],
+           "from_states": [{"names": ["pending"], "roles": ["reviewing"]}],
            "transition_to": "metadata_review",
            "attributes": {
              "presentation_sequence": 1
            }
          }, {
            "name": "finalize_metadata",
-           "from_states": [{"name":"metadata_review"}],
+           "from_states": [{"names": ["metadata_review"], "roles": ["finalizing"]}],
            "transition_to": "final_review",
            "attributes": {
            	"presentation_sequence": 2
            }
          }, {
            "name": "complete",
-           "from_states": [{"name":"final_review"}],
+           "from_states": [{"names": ["final_review"], "roles": ["completing"]}],
            "transition_to": "complete",
            "attributes": {
              "presentation_sequence": 3
            }
          }, {
            "name": "takedown",
-           "from_states": [{"name":"complete"}],
+           "from_states": [{"names": ["complete"], "roles": ["taking_down"]}],
            "transition_to": "takedown"
          }, {
            "name": "restore",
-           "from_states": [{"name":"takedown"}],
+           "from_states": [{"names": ["takedown"], "roles": ["restoring"]}],
            "transition_to": "complete"
          }, {
            "name": "flag",
-           "from_states": [{"name":"complete"}],
+           "from_states": [{"names": ["complete"], "roles": ["flagging"]}],
            "transition_to": "flag"
          }, {
            "name": "unflag",
-           "from_states": [{"name":"flag"}],
+           "from_states": [{"names":["flag"], "roles":["unflagging"]}],
            "transition_to": "complete"
         }]
      }

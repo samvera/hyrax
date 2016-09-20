@@ -8,11 +8,11 @@ module Sipity
           name: "valid",
           actions: [{
             name: "finalize_digitization",
-            from_states: [{ name: "pending", roles: ['finalizing_digitation_review'] }],
+            from_states: [{ names: ["pending"], roles: ['finalizing_digitation_review'] }],
             transition_to: "metadata_review"
           }, {
             name: "finalize_metadata",
-            from_states: [{ name: "metadata_review", roles: ['finalizing_metadata_review'] }],
+            from_states: [{ names: ["metadata_review"], roles: ['finalizing_metadata_review'] }],
             transition_to: "final_review"
           }]
         }]
@@ -24,7 +24,7 @@ module Sipity
       invalid_data = {
         work_types: [{
           actions: [
-            { name: "finalize_digitization", from_states: [{ name: "pending", roles: [] }], transition_to: "metadata_review", roles: [] }
+            { name: "finalize_digitization", from_states: [{ names: ["pending"], roles: [] }], transition_to: "metadata_review" }
           ]
         }]
       }

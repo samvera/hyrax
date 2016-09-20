@@ -8,7 +8,7 @@ module Sipity
       required(:actions).each do
         required(:name).filled(:str?)
         required(:from_states).each do
-          required(:name).filled(:str?)
+          required(:names) { array? { each(:str?) } }
           required(:roles) { array? { each(:str?) } }
         end
         required(:transition_to).filled(:str?)

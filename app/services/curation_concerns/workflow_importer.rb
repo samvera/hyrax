@@ -1,5 +1,18 @@
 module CurationConcerns
   class WorkflowImporter
+    module SchemaValidator
+      # @param data [Hash]
+      # @param schema [#call]
+      #
+      # @return true if the data validates from the schema
+      # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
+      def self.call(data:, schema:)
+        validation = schema.call(data)
+        return true unless validation.messages.present?
+        raise RuntimeError, validation.messages.inspect
+      end
+    end
+
     # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
     def self.generate_from_json_file(path:, **keywords)
       contents = path.respond_to?(:read) ? path.read : File.read(path)
@@ -34,7 +47,7 @@ module CurationConcerns
       attr_accessor :schema
 
       def default_schema
-        WorkTypeSchema
+        Sipity::WorkflowSchema
       end
 
       def validate!
@@ -52,7 +65,7 @@ module CurationConcerns
     private
 
       def find_or_create_from(configuration:)
-        FindOrCreateWorkType.call(name: configuration.fetch(:name)) do |_work_type, strategy, _initial_strategy_state|
+        FindOrCreateWorkType.call(name: configuration.fetch(:names)) do |_work_type, strategy, _initial_strategy_state|
           find_or_create_strategy_permissions!(
             strategy: strategy, strategy_permissions_configuration: configuration.fetch(:strategy_permissions, [])
           )
