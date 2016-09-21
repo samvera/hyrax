@@ -53,5 +53,9 @@ module CurationConcerns
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
     end
+
+    rake_tasks do
+      load File.expand_path('../../../tasks/workflow.rake', __FILE__)
+    end
   end
 end
