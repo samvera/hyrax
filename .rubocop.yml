@@ -48,6 +48,7 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/models/concerns/curation_concerns/solr_document_behavior.rb'
     - 'app/controllers/concerns/curation_concerns/collections_controller_behavior.rb'
+    - 'app/services/curation_concerns/workflow/permission_query.rb'
 
 Style/ZeroLengthPredicate:
   Enabled: false
