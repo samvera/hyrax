@@ -55,6 +55,7 @@ module CurationConcerns
       end
 
       def build_attributes(action_attributes)
+        action_attributes.delete('presentation_sequence') # TODO: remove this line when we want to support presentation_sequence
         existing_action_attributes = action.attributes.slice(*action_attributes.keys)
         unless action_attributes == existing_action_attributes
           action.update_attributes!(action_attributes)
