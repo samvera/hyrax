@@ -1,6 +1,6 @@
 module CurationConcerns
   module Workflow
-    class EmailNotificationGenerator
+    class NotificationGenerator
       def self.call(*)
       end
     end

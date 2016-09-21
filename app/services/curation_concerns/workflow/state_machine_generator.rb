@@ -8,14 +8,7 @@ module CurationConcerns
         ).call
       end
 
-      def self.call(workflow:, action_name:, config:)
-        new(
-          workflow: workflow, action_name: action_name, config: config,
-          email_generator_method_name: :deprecated_email_generator_method
-        ).call
-      end
-
-      def initialize(workflow:, action_name:, config:, email_generator_method_name: :deprecated_email_generator_method)
+      def initialize(workflow:, action_name:, config:, email_generator_method_name: :schema_based_email_generator_method)
         self.workflow = workflow
         self.action_name = action_name
         self.config = config
@@ -85,22 +78,13 @@ module CurationConcerns
         end
       end
 
-      def deprecated_email_generator_method(workflow:, config:)
-        config.fetch(:emails, {}).each do |email_name, recipients|
-          EmailNotificationGenerator.call(
-            workflow: workflow, email_name: email_name, recipients: recipients, scope: action_name,
-            reason: CurationConcerns::Workflow::NotificationContextParameter::REASON_ACTION_IS_TAKEN
-          )
-        end
-      end
-
       def schema_based_email_generator_method(workflow:, config:)
-        Array.wrap(config.fetch(:emails, [])).each do |configuration|
+        Array.wrap(config.fetch(:notifications, [])).each do |configuration|
           email_name = configuration.fetch(:name)
           recipients = configuration.slice(:to, :cc, :bcc)
-          EmailNotificationGenerator.call(
+          NotificationGenerator.call(
             workflow: workflow, email_name: email_name, recipients: recipients, scope: action_name,
-            reason: Parameters::NotificationContextParameter::REASON_ACTION_IS_TAKEN
+            reason: NotificationContextParameter::REASON_ACTION_IS_TAKEN
           )
         end
       end
