@@ -47,49 +47,6 @@ module CurationConcerns
         end
         builder.call
       end
-
-      # The spirit of the test is to make sure that permissions are enforced at the entity level
-      # We will need to move things into the Ability class to verify this behavior
-      xit 'will build the entity level permissions if an entity is specified' do
-        described_class.call(
-          agents: user,
-          roles: role,
-          entity: entity,
-          workflow: workflow,
-          workflow_state: workflow_state,
-          action_names: action_name
-        )
-        permission_to_action = Policies::Processing::ProcessingEntityPolicy.call(
-          user: user, entity: entity, action_to_authorize: action_name
-        )
-        expect(permission_to_action).to be_truthy
-
-        permission_to_another_entity_action = Policies::Processing::ProcessingEntityPolicy.call(
-          user: user, entity: another_entity, action_to_authorize: action_name
-        )
-        expect(permission_to_another_entity_action).to be_falsey
-      end
-
-      # The spirit of the test is to make sure that permissions are enforced at the workflow level
-      # We will need to move things into the Ability class to verify this behavior
-      xit 'will build the workflow level permissions if no entity is given' do
-        described_class.call(
-          agents: user,
-          roles: role,
-          workflow: workflow,
-          workflow_state: workflow_state,
-          action_names: action_name
-        )
-        permission_to_action = Policies::Processing::ProcessingEntityPolicy.call(
-          user: user, entity: entity, action_to_authorize: action_name
-        )
-        expect(permission_to_action).to be_truthy
-
-        permission_to_another_entity_action = Policies::Processing::ProcessingEntityPolicy.call(
-          user: user, entity: another_entity, action_to_authorize: action_name
-        )
-        expect(permission_to_another_entity_action).to be_truthy
-      end
     end
   end
 end
