@@ -1,5 +1,3 @@
-require 'dry/validation'
-
 module CurationConcerns
   module Workflow
     # Responsible for describing the JSON schema for a Workflow
