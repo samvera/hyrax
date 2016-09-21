@@ -16,7 +16,7 @@ module CurationConcerns
               from_states: [{ names: ["metadata_review"], roles: ['finalizing_metadata_review'] }],
               transition_to: "final_review",
               notifications: [{
-                name: 'thank_you', notification_type: 'email', to: ['finalizing_metadata_review']
+                name: 'thank_you', notification_type: Sipity::Notification::NOTIFICATION_TYPE_EMAIL, to: ['finalizing_metadata_review']
               }]
             }]
           }]
