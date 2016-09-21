@@ -14,12 +14,14 @@ class CreateSipity < ActiveRecord::Migration
     add_index "sipity_notification_recipients", ["role_id"], name: "sipity_notification_recipients_role"
 
     create_table "sipity_notifications" do |t|
-      t.string   "name",             null: false
-      t.datetime "created_at",              null: false
-      t.datetime "updated_at",              null: false
+      t.string   "name",              null: false
+      t.string   "notification_type", null: false
+      t.datetime "created_at",        null: false
+      t.datetime "updated_at",        null: false
     end
 
     add_index "sipity_notifications", ["name"], name: "index_sipity_notifications_on_name"
+    add_index "sipity_notifications", ["notification_type"], name: "index_sipity_notifications_on_notification_type"
 
     create_table "sipity_notifiable_contexts" do |t|
       t.integer  "scope_for_notification_id",               null: false

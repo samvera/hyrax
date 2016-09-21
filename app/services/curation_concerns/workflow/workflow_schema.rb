@@ -11,6 +11,13 @@ module CurationConcerns
             required(:roles) { array? { each(:str?) } }
           end
           required(:transition_to).filled(:str?)
+          optional(:notifications).each do
+            required(:name).value(format?: /\A[a-z|_]+\Z/i)
+            required(:notification_type).value(included_in?: ['email'])
+            required(:to) { array? { each(:str?) } }
+            optional(:cc) { array? { each(:str?) } }
+            optional(:bcc) { array? { each(:str?) } }
+          end
         end
       end
     end
