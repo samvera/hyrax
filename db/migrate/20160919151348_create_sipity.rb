@@ -20,7 +20,7 @@ class CreateSipity < ActiveRecord::Migration
       t.datetime "updated_at",        null: false
     end
 
-    add_index "sipity_notifications", ["name"], name: "index_sipity_notifications_on_name"
+    add_index "sipity_notifications", ["name"], name: "index_sipity_notifications_on_name", unique: true
     add_index "sipity_notifications", ["notification_type"], name: "index_sipity_notifications_on_notification_type"
 
     create_table "sipity_notifiable_contexts" do |t|
