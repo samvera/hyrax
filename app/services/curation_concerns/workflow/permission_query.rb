@@ -383,7 +383,7 @@ module CurationConcerns
       #
       # @param user [User]
       # @param workflow [Sipity::Workflow]
-      # @return [ActiveRecord::Relation<SipityWorkflowRole>]
+      # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def scope_processing_workflow_roles_for_user_and_workflow(user:, workflow:)
         responsibility_table = Sipity::WorkflowResponsibility.arel_table
         workflow_role_table = Sipity::WorkflowRole.arel_table
