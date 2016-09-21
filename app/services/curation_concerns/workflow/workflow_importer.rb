@@ -1,19 +1,6 @@
 module CurationConcerns
   module Workflow
     class WorkflowImporter
-      module SchemaValidator
-        # @param data [Hash]
-        # @param schema [#call]
-        #
-        # @return true if the data validates from the schema
-        # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
-        def self.call(data:, schema:)
-          validation = schema.call(data)
-          return true unless validation.messages.present?
-          raise validation.messages.inspect
-        end
-      end
-
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
       def self.generate_from_json_file(path:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
@@ -91,6 +78,18 @@ module CurationConcerns
             end
           end
         end
+      module SchemaValidator
+        # @param data [Hash]
+        # @param schema [#call]
+        #
+        # @return true if the data validates from the schema
+        # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
+        def self.call(data:, schema:)
+          validation = schema.call(data)
+          return true unless validation.messages.present?
+          raise validation.messages.inspect
+        end
+      end
     end
   end
 end
