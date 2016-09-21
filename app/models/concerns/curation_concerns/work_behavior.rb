@@ -24,25 +24,9 @@ module CurationConcerns::WorkBehavior
     self.indexer = CurationConcerns::WorkIndexer
   end
 
-  # TODO: this entity should be created by an Actor when the model is created.
   def to_sipity_entity
     raise "Can't create an entity until the model has been persisted" unless persisted?
-    @sipity_entity ||= Sipity::Entity.find_or_create_by(proxy_for: to_global_id.to_s,
-                                                        workflow: to_sipity_workflow,
-                                                        workflow_state: to_sipity_workflow_state)
-  end
-
-  # TODO: stub method to create a workflow
-  # This tells us which workflow to use.
-  def to_sipity_workflow
-    @sipity_workflow ||= Sipity::Workflow.find_or_create_by(name: "default-#{model_name.name}")
-  end
-
-  # TODO: stub method to create a workflow state
-  # This returns the current state.
-  def to_sipity_workflow_state
-    @sipity_workflow_state ||= Sipity::WorkflowState.find_or_create_by(workflow: to_sipity_workflow,
-                                                                       name: 'starting-point')
+    @sipity_entity ||= Sipity::Entity.find_by(proxy_for_global_id: to_global_id.to_s)
   end
 
   module ClassMethods

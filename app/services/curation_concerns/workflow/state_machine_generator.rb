@@ -42,8 +42,8 @@ module CurationConcerns
         end
 
         # Strategy State
-        config.fetch(:from_states, {}).each do |state_names, state_config|
-          build_from_state(state_names, state_config)
+        config.fetch(:from_states, []).each do |entry|
+          build_from_state(entry.fetch(:names), entry.fetch(:roles))
         end
 
         # Transitions
@@ -70,17 +70,14 @@ module CurationConcerns
         end
       end
 
-      def build_from_state(state_names, state_config)
-        # TODO: Once the schema load method is used tidy this up
-        if state_names.is_a?(Hash)
-          state_config = state_names.except(:names) if state_config.nil?
-          state_names = state_names.fetch(:names)
-        end
+      # @params state_names[Array]
+      # @params roles [Array]
+      def build_from_state(state_names, state_roles)
         Array.wrap(state_names).each do |state_name|
           workflow_state = Sipity::WorkflowState.find_or_create_by!(workflow: workflow, name: state_name.to_s)
           PermissionGenerator.call(
             actors: [],
-            roles: state_config.fetch(:roles),
+            roles: state_roles,
             workflow_state: workflow_state,
             action_names: action_name,
             workflow: workflow

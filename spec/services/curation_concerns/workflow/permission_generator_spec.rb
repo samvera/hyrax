@@ -8,10 +8,10 @@ module CurationConcerns
       let(:workflow) { Sipity::Workflow.create!(name: 'workflow') }
       let(:workflow_state) { workflow.initial_workflow_state }
       let(:entity) do
-        Sipity::Entity.create!(proxy_for: "gid://work/1", workflow: workflow, workflow_state: workflow_state)
+        Sipity::Entity.create!(proxy_for_global_id: "gid://work/1", workflow: workflow, workflow_state: workflow_state)
       end
       let(:another_entity) do
-        Sipity::Entity.create!(proxy_for: "gid://work/2", workflow: workflow, workflow_state: workflow_state)
+        Sipity::Entity.create!(proxy_for_global_id: "gid://work/2", workflow: workflow, workflow_state: workflow_state)
       end
       let(:action_name) { 'show' }
 

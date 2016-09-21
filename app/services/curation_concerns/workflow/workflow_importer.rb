@@ -66,7 +66,7 @@ module CurationConcerns
       private
 
         def find_or_create_from(configuration:)
-          workflow = Sipity::Workflow.find_or_create_by!(name: "#{configuration.fetch(:name)} processing")
+          workflow = Sipity::Workflow.find_or_create_by!(name: configuration.fetch(:name))
           find_or_create_workflow_permissions!(
             workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
           )

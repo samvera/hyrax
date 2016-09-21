@@ -33,14 +33,22 @@ describe CurationConcerns::GenericWorksController do
     end
 
     describe 'created' do
-      before { post :create, params: { generic_work: { title: ['a title'] }, format: :json } }
+      let(:actor) { double(create: create_status) }
+      let(:create_status) { true }
+      let(:model) { stub_model(GenericWork) }
+
+      before do
+        allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+        allow(controller).to receive(:curation_concern).and_return(model)
+        post :create, params: { generic_work: { title: ['a title'] }, format: :json }
+      end
+
       it "returns 201, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "201"
-        created_resource = assigns[:curation_concern]
-        expect(response.location).to eq main_app.curation_concerns_generic_work_path(created_resource)
+        expect(response.location).to eq main_app.curation_concerns_generic_work_path(model)
       end
     end
 

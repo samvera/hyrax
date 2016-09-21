@@ -71,6 +71,7 @@ RSpec.configure do |config|
     unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!
     end
+    FactoryGirl.create(:workflow_state) if example.metadata[:workflow]
   end
 
   config.include FactoryGirl::Syntax::Methods

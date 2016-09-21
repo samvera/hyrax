@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-feature 'Creating a new child Work' do
+feature 'Creating a new child Work', :workflow do
   let(:user) { FactoryGirl.create(:user) }
 
   let(:redlock_client_stub) { # stub out redis connection
