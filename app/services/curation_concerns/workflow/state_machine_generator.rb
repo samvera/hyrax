@@ -73,8 +73,8 @@ module CurationConcerns
       def build_from_state(state_names, state_config)
         # TODO: Once the schema load method is used tidy this up
         if state_names.is_a?(Hash)
-          state_config = state_names.except(:name) if state_config.nil?
-          state_names = state_names.fetch(:name)
+          state_config = state_names.except(:names) if state_config.nil?
+          state_names = state_names.fetch(:names)
         end
         Array.wrap(state_names).each do |state_name|
           workflow_state = Sipity::WorkflowState.find_or_create_by!(workflow: workflow, name: state_name.to_s)
