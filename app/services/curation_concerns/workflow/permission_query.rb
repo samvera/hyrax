@@ -64,7 +64,7 @@ module CurationConcerns
 
         agents_select_manager = agents.project(
           :*,
-          Arel.sql("'#{Sipity::Agent::ENTITY_LEVEL_ACTOR_PROCESSING_RELATIONSHIP}'").as('agent_processing_relationship')
+          Arel.sql("'#{Sipity::Agent::ENTITY_LEVEL_AGENT_RELATIONSHIP}'").as('agent_processing_relationship')
         ).where(
           agents[:id].in(
             entity_responsibilities.project(entity_responsibilities[:agent_id]).join(workflow_roles).on(
@@ -78,7 +78,7 @@ module CurationConcerns
         ).union(
           agents.project(
             :*,
-            Arel.sql("'#{Sipity::Agent::STRATEGY_LEVEL_ACTOR_PROCESSING_RELATIONSHIP}'").as('agent_processing_relationship')
+            Arel.sql("'#{Sipity::Agent::WORKFLOW_LEVEL_AGENT_RELATIONSHIP}'").as('agent_processing_relationship')
           ).where(
             agents[:id].in(
               workflow_responsibilities.project(workflow_responsibilities[:agent_id]).join(workflow_roles).on(
@@ -138,30 +138,9 @@ module CurationConcerns
       # @param action an object that can be converted into a Sipity::WorkflowAction#name
       # @return [Boolean]
       def authorized_for_processing?(user:, entity:, action:)
-        action_name = PowerConverter.convert_to_sipity_processing_action_name(action)
+        action_name = PowerConverter.convert_to_sipity_action_name(action)
         scope_permitted_workflow_actions_available_for_current_state(user: user, entity: entity)
           .where(Sipity::WorkflowAction.arel_table[:name].eq(action_name)).count > 0
-      end
-
-      # @api public
-      #
-      # An ActiveRecord::Relation scope that meets the following criteria:
-      #
-      # * Actions that are permitted to the current user
-      # * Actions that are available for the entity's current state.
-      #
-      # AND
-      #
-      # * Actions that are permitted to be taken multiple times within the
-      #   current state OR
-      # * Actions that are not allowed to be taken multiple times and have not
-      #   yet been taken.
-      #
-      # @param user [User]
-      # @param entity an object that can be converted into a Sipity::Entity
-      # @return [ActiveRecord::Relation<Sipity::WorkflowAction>]
-      def scope_permitted_entity_workflow_actions_for_current_state(user:, entity:)
-        # RAISE Figure this out
       end
 
       # @api public
@@ -342,12 +321,12 @@ module CurationConcerns
       def scope_users_for_entity_and_roles(entity:, roles:)
         entity = PowerConverter.convert_to_sipity_entity(entity)
         role_ids = Array.wrap(roles).map { |role| PowerConverter.convert_to_sipity_role(role).id }
-        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(User)
+        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
 
         workflow_roles = Sipity::WorkflowRole.arel_table
         workflow_responsibilities = Sipity::WorkflowResponsibility.arel_table
         entity_responsibilities = Sipity::EntitySpecificResponsibility.arel_table
-        user_table = User.arel_table
+        user_table = ::User.arel_table
         agent_table = Sipity::Agent.arel_table
 
         workflow_role_id_subquery = workflow_roles.project(workflow_roles[:id]).where(
@@ -370,7 +349,7 @@ module CurationConcerns
           agent_table[:proxy_for_type].eq(user_polymorphic_type)
         )
 
-        User.where(user_table[:id].in(sub_query_for_user))
+        ::User.where(user_table[:id].in(sub_query_for_user))
       end
 
       def user_emails_for_entity_and_roles(entity:, roles:)
