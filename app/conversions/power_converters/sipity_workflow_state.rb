@@ -1,6 +1,6 @@
 require 'power_converter'
 
-PowerConverter.define_conversion_for(:workflow_state) do |input, workflow|
+PowerConverter.define_conversion_for(:sipity_workflow_state) do |input, workflow|
   case input
   when Sipity::WorkflowState
     input
