@@ -8,7 +8,6 @@ module Sipity
   class Entity < ActiveRecord::Base
     self.table_name = 'sipity_entities'
 
-    # The proxy_for column holds a GlobalID string
     belongs_to :workflow
     belongs_to :workflow_state
 
@@ -21,5 +20,9 @@ module Sipity
 
     delegate :name, to: :workflow_state, prefix: :workflow_state
     delegate :name, to: :workflow, prefix: :workflow
+
+    def proxy_for
+      @proxy_for ||= GlobalID::Locator.locate(proxy_for_global_id)
+    end
   end
 end
