@@ -78,18 +78,18 @@ module CurationConcerns
             end
           end
         end
-      module SchemaValidator
-        # @param data [Hash]
-        # @param schema [#call]
-        #
-        # @return true if the data validates from the schema
-        # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
-        def self.call(data:, schema:)
-          validation = schema.call(data)
-          return true unless validation.messages.present?
-          raise validation.messages.inspect
+        module SchemaValidator
+          # @param data [Hash]
+          # @param schema [#call]
+          #
+          # @return true if the data validates from the schema
+          # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
+          def self.call(data:, schema:)
+            validation = schema.call(data)
+            return true unless validation.messages.present?
+            raise validation.messages.inspect
+          end
         end
-      end
     end
   end
 end

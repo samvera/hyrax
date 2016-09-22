@@ -80,12 +80,10 @@ module CurationConcerns
 
       def schema_based_email_generator_method(workflow:, config:)
         Array.wrap(config.fetch(:notifications, [])).each do |configuration|
-          email_name = configuration.fetch(:name)
-          recipients = configuration.slice(:to, :cc, :bcc)
-          NotificationGenerator.call(
-            workflow: workflow, email_name: email_name, recipients: recipients, scope: action_name,
-            reason: NotificationContextParameter::REASON_ACTION_IS_TAKEN
+          notification_configuration = NotificationConfigurationParameter.build_from_workflow_action_configuration(
+            workflow_action: action_name, config: configuration
           )
+          NotificationGenerator.call(workflow: workflow, notification_configuration: notification_configuration)
         end
       end
     end

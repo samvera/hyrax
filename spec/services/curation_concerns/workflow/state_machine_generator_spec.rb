@@ -16,7 +16,9 @@ module CurationConcerns
           { names: ["pending_advisor_completion"], roles: ['advising'] }
         ],
         transition_to: :under_review,
-        notifications: [{ name: 'confirmation_of_submitted_to_ulra_committee', to: 'creating_user', cc: 'advising' }]
+        notifications: [
+          { notification_type: 'email', name: 'confirmation_of_submitted_to_ulra_committee', to: 'creating_user', cc: 'advising' }
+        ]
       }
     end
 
@@ -24,10 +26,9 @@ module CurationConcerns
       subject { described_class.new(workflow: workflow, action_name: action_name, config: config) }
       it 'will generate the various data entries (but only once)' do
         expect do
-          expect do
-            subject.call
-          end.to change { Sipity::Notification.count }
-        end.to change { Sipity::WorkflowAction.count }
+          subject.call
+        end.to change { Sipity::Notification.count }
+          .and change { Sipity::WorkflowAction.count }
 
         # It can be called repeatedly without updating things
         [:update_attribute, :update_attributes, :update_attributes!, :save, :save!, :update, :update!].each do |method_names|
