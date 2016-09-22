@@ -168,6 +168,13 @@ en:
     workflow:
       generic_work:
         finalize_digitization: "Finalize Digitization"
+        finalize_metadata: "Finalize Metadata"
+        final_review: "Final Review"
+        complete: "Complete"
+        takedown: "Takedown"
+        flag: "Flag"
+        restore: "Restore"
+        unflag: "Remove Flag"
   blacklight:
     search:
       fields:
