@@ -1,21 +1,17 @@
-
-<div id="advisor_controls"class="panel panel-default advisor_affix">
+<div id="workflow_controls"class="panel panel-default workflow-affix">
   <div class="panel-heading">
-    <a data-toggle="collapse" href="#advisor_controls_collapse"><h2>Advisor Control</h2></a>
+    <a data-toggle="collapse" href="#workflow_controls_collapse"><h2>Review and Approval</h2></a>
   </div>
-  <div id="advisor_controls_collapse" class="row panel-collapse collapse">
-    <form>
-      <div class="col-sm-3 advisor_actions">
+  <div id="workflow_controls_collapse" class="row panel-collapse collapse">
+    <%= form_tag main_app.curation_concerns_workflow_action_path(presenter), method: :put do %>
+      <div class="col-sm-3 workflow-actions">
         <h4>Actions</h4>
 
-        <%= form_tag main_app.curation_concerns_workflow_action_path(presenter), method: :put do %>
           <%= collection_radio_buttons(:workflow_action, :name, presenter.workflow.actions, :first, :last) %>
-        <% end %>
       </div>
-      <div class="col-sm-9 advisor_comments">
-        <%= render 'advisor_comments.html.erb' %>
+      <div class="col-sm-9 workflow-comments">
+        <%= render 'workflow_comments' %>
       </div>
-    </form>
+    <% end %>
   </div>
-
 </div>

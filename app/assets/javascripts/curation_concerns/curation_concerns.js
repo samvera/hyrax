@@ -11,7 +11,7 @@
 //= require curation_concerns/file_manager
 //= require curation_concerns/boot
 //= require babel/polyfill
-//= require curation_concerns/advisor_actions_affix
+//= require curation_concerns/workflow_actions_affix
 
 // Initialize plugins and Bootstrap dropdowns on jQuery's ready event as well as
 // Turbolinks's page change event.
