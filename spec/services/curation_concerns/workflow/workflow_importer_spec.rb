@@ -37,7 +37,7 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
       expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
       expect do
-        described_class.generate_from_json_file(path: path)
+        expect(described_class.generate_from_json_file(path: path)).to match_array(kind_of(Sipity::Workflow))
       end.to change { Sipity::Workflow.count }.by(1)
     end
   end

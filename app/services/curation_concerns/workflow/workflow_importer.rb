@@ -1,7 +1,11 @@
 module CurationConcerns
   module Workflow
     class WorkflowImporter
+      # @api public
+      #
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
+      #
+      # @return [Array<Sipity::Workflow>]
       def self.generate_from_json_file(path:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
         data = JSON.parse(contents)
@@ -45,7 +49,7 @@ module CurationConcerns
       public
 
       def call
-        Array.wrap(data.fetch(:work_types)).each do |configuration|
+        Array.wrap(data.fetch(:work_types)).map do |configuration|
           find_or_create_from(configuration: configuration)
         end
       end
@@ -58,6 +62,7 @@ module CurationConcerns
             workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
           )
           generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
+          workflow
         end
 
         extend Forwardable
