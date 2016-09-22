@@ -5,9 +5,6 @@ module Sipity
       its(:column_names) { is_expected.to include('entity_id') }
       its(:column_names) { is_expected.to include('agent_id') }
       its(:column_names) { is_expected.to include('comment') }
-      its(:column_names) { is_expected.to include('originating_workflow_action_id') }
-      its(:column_names) { is_expected.to include('originating_workflow_state_id') }
-      its(:column_names) { is_expected.to include('stale') }
     end
 
     subject { described_class.new }
