@@ -37,8 +37,9 @@ module CurationConcerns
       require 'curation_concerns/noid'
       require 'curation_concerns/permissions'
       require 'curation_concerns/lockable'
-      require 'dry/validation'
       require 'power_converters'
+      require 'dry/equalizer'
+      require 'dry/validation'
     end
 
     initializer 'configure' do
