@@ -9,22 +9,54 @@ describe CurationConcerns::ChartsHelper do
         'Bar' => 10
       }
     end
-    it { is_expected.to eq(
-      drilldown: {
-        series: []
-      },
-      series:
-[
-  {
-    name: "Foo",
-    y: 5
-  },
-  {
-    name: "Bar",
-    y: 10
-  }
-]
-    )
+    it {
+      is_expected.to eq(
+        drilldown: {
+          series: []
+        },
+        series:
+        [
+          {
+            name: "Foo",
+            y: 5
+          },
+          {
+            name: "Bar",
+            y: 10
+          }
+        ]
+      )
     }
+    context "given a drilldown" do
+      let(:data) do
+        {
+          "Foo" => {
+            "Bar" => 1,
+            "Baz" => 2
+          }
+        }
+      end
+      it {
+        is_expected.to eq(
+          drilldown: {
+            series: [
+              {
+                name: "Foo",
+                id: "Foo",
+                data: [["Bar", 1], ["Baz", 2]]
+              }
+            ]
+          },
+          series:
+          [
+            {
+              name: "Foo",
+              y: 3,
+              drilldown: "Foo"
+            }
+          ]
+        )
+      }
+    end
   end
 end
