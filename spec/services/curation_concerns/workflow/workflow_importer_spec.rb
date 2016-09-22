@@ -26,29 +26,15 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
   its(:default_validator) { is_expected.to respond_to(:call) }
   its(:default_schema) { is_expected.to respond_to(:call) }
 
-  it 'exposes .generate_from_json_file as a convenience method' do
-    expect_any_instance_of(described_class).to receive(:call)
-    described_class.generate_from_json_file(path: path, validator: validator)
-  end
-
   it 'validates the data against the schema' do
     subject
     expect(validator).to have_received(:call).with(data: subject.send(:data), schema: subject.send(:schema))
   end
 
-  context '.generate_from_json_file' do
-    let(:path) { Rails.root.join('config/workflows/generic_work_workflow.json').to_s }
-
-    it 'will load the file and parse as JSON' do
-      expect_any_instance_of(described_class).to receive(:call)
-      described_class.generate_from_json_file(path: path)
-    end
-  end
-
   context 'data generation' do
-    it 'creates the requisite data' do
-      # expect(CurationConcerns::Workflow::EmailNotificationGenerator).to receive(:call).and_call_original.exactly(3).times
-      expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call)
+    let(:path) { Rails.root.join('config/workflows/generic_work_workflow.json').to_s }
+    it 'creates the requisite data from the configuration' do
+      expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
       expect do
         described_class.generate_from_json_file(path: path)

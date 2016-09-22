@@ -58,26 +58,12 @@ module CurationConcerns
             workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
           )
           generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
-          generate_state_emails(workflow: workflow, state_emails_configuration: configuration.fetch(:state_emails, []))
         end
 
         extend Forwardable
         def_delegator WorkflowPermissionsGenerator, :call, :find_or_create_workflow_permissions!
         def_delegator SipityActionsGenerator, :call, :generate_state_diagram
 
-        def generate_state_emails(workflow:, state_emails_configuration:)
-          Array.wrap(state_emails_configuration).each do |configuration|
-            scope = configuration.fetch(:state)
-            reason = configuration.fetch(:reason)
-            Array.wrap(configuration.fetch(:emails)).each do |email_configuration|
-              email_name = email_configuration.fetch(:name)
-              recipients = email_configuration.slice(:to, :cc, :bcc)
-              EmailNotificationGenerator.call(
-                workflow: workflow, scope: scope, email_name: email_name, recipients: recipients, reason: reason
-              )
-            end
-          end
-        end
         module SchemaValidator
           # @param data [Hash]
           # @param schema [#call]
