@@ -19,7 +19,7 @@ module Sipity
     NOTIFICATION_TYPE_EMAIL = 'email'.freeze
 
     # TODO: There are other types, but for now, we are assuming just emails to send.
-    enum(notification_type: { NOTIFICATION_TYPE_EMAIL => NOTIFICATION_TYPE_EMAIL } )
+    enum(notification_type: { NOTIFICATION_TYPE_EMAIL => NOTIFICATION_TYPE_EMAIL })
 
     def self.valid_notification_types
       notification_types.keys
