@@ -86,4 +86,10 @@ describe 'Routes', type: :routing do
       expect(get: '/downloads/9').to route_to(controller: 'downloads', action: 'show', id: '9')
     end
   end
+
+  describe 'WorkflowAction' do
+    it 'routes to update' do
+      expect(post: 'concern/workflow_actions/5').to route_to(controller: 'curation_concerns/workflow_actions', action: 'update', id: '5')
+    end
+  end
 end
