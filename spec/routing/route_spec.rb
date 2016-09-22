@@ -89,7 +89,7 @@ describe 'Routes', type: :routing do
 
   describe 'WorkflowAction' do
     it 'routes to update' do
-      expect(post: 'concern/workflow_actions/5').to route_to(controller: 'curation_concerns/workflow_actions', action: 'update', id: '5')
+      expect(put: 'concern/workflow_actions/5').to route_to(controller: 'curation_concerns/workflow_actions', action: 'update', id: '5')
     end
   end
 end
