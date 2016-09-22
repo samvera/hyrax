@@ -86,4 +86,11 @@ describe 'Routes', type: :routing do
       expect(get: '/downloads/9').to route_to(controller: 'downloads', action: 'show', id: '9')
     end
   end
+
+  describe 'Admin Dashboard' do
+    routes { CurationConcerns::Engine.routes }
+    it 'routes to the admin dashboard' do
+      expect(get: '/admin').to route_to(controller: 'curation_concerns/admin', action: 'index')
+    end
+  end
 end
