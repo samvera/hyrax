@@ -163,92 +163,23 @@ module CurationConcerns
         Sipity::Agent.where(user_constraints)
       end
 
-      # @api public
-      #
-      # This method crosses the boundary out of the processing subsystem to
-      # return an ActiveRecord::Relation scope of the objects that are proxied
-      # by the processing system. The returned scope will returng objects that
-      # meet the following criteria:
-      #
-      # * Processing Entities of the given proxy_for_type
-      # * Processing Entities in a state in which I have access to based on:
-      #   - The entity specific responsibility
-      #     - For which I've been assigned either as a group member or a user
-      #   - The workflow specific responsibility
-      #     - For which I've been assigned either as a group member or a user
-      #
-      # @param [User] user
-      # @param proxy_for_type something that can be converted to a polymorphic
-      #   type.
-      # @param [Hash] filter
-      # @option filter [String] :processing_state - Limit the returned objects
-      #   to those objects that are in the named :processing_state
-      # @param [Hash] query_criteria
-      # @option query_criteria [Hash] :where - A where clause to evaluate against
-      #   the ActiveRecord::Relation
-      # @option query_criteria [String,Array] :order - An order clause to evaluate against
-      #   the ActiveRecord::Relation
-      # @option query_criteria [Integer] :page - A page value to apply pagination
-      #   to the query
-      # @option query_criteria [Integer] :per - A value to apply pagination
-      #   to the query
-      #
-      # @return [ActiveRecord::Relation<proxy_for_types>]
-      def scope_proxied_objects_for_the_user_and_proxy_for_type(user:, proxy_for_type:, filter: {}, **query_criteria)
-        proxy_for_type = PowerConverter.convert_to_polymorphic_type(proxy_for_type)
-        scope = scope_processing_entities_for_the_user_and_proxy_for_type(
-          user: user, proxy_for_type: proxy_for_type, filter: filter
-        )
-
-        scope = proxy_for_type.where(
-          proxy_for_type.arel_table[proxy_for_type.primary_key].in(scope.entity).or(
-            proxy_for_type.arel_table[proxy_for_type.primary_key].in(scope.workflow)
-          )
-        )
-        if query_criteria.key?(:where)
-          scope = scope.where(query_criteria.fetch(:where))
-        end
-
-        if query_criteria.key?(:order)
-          scope = scope.order(query_criteria.fetch(:order))
-        end
-
-        if query_criteria.key?(:page)
-          scope = scope.page(query_criteria.fetch(:page))
-          scope = scope.per(query_criteria.fetch(:per)) if query_criteria.key?(:per)
-        end
-        scope
-      end
-
       PermissionScope = Struct.new(:entity, :workflow)
       private_constant :PermissionScope
 
-      # @api private
+      # @api public
       #
       # An ActiveRecord::Relation scope that meets the following criteria:
       #
-      # * Processing Entities of the given proxy_for_type
-      # * Processing Entities in a state in which I have access to based on:
+      # * Sipity::Entity in a state in which I have access to based on:
       #   - The entity specific responsibility
-      #     - For which I've been assigned either as a group member or a user
+      #     - For which I've been assigned a role
       #   - The workflow specific responsibility
-      #     - For which I've been assigned either as a group member or a user
-      #
-      # In other words, for the given user and the given proxy for type (i.e.
-      # Work), fetch all of the processing entities that I can, in some
-      # way, access based on the processing state.
+      #     - For which I've been assigned a role
       #
       # @param [User] user
-      # @param proxy_for_type something that can be converted to a polymorphic
-      #   type.
-      # @param [Hash] filter
-      # @option filter [String] :processing_state - Limit the returned objects
-      #   to those objects that are in the named :processing_state
       #
       # @return [ActiveRecord::Relation<Sipity::Entity>]
-      def scope_processing_entities_for_the_user_and_proxy_for_type(user:, proxy_for_type:, filter: {})
-        proxy_for_type = PowerConverter.convert_to_polymorphic_type(proxy_for_type)
-
+      def scope_entities_for_the_user(user:)
         entities = Sipity::Entity.arel_table
         workflow_state_actions = Sipity::WorkflowStateAction.arel_table
         workflow_states = Sipity::WorkflowState.arel_table
@@ -263,7 +194,7 @@ module CurationConcerns
 
         join_builder = lambda do |responsibility|
           entities.project(
-            entities[:proxy_for_id]
+            entities[:id]
           ).join(workflow_state_actions).on(
             workflow_state_actions[:originating_workflow_state_id].eq(entities[:workflow_state_id])
           ).join(workflow_state_action_permissions).on(
@@ -275,22 +206,7 @@ module CurationConcerns
           )
         end
 
-        where_builder = lambda do |responsibility|
-          returning = entities[:proxy_for_type].eq(proxy_for_type).and(
-            responsibility[:agent_id].in(user_agent_contraints)
-          )
-          processing_state = filter[:processing_state]
-          if processing_state.present?
-            returning = returning.and(
-              entities[:workflow_state_id].in(
-                workflow_states.project(workflow_states[:id]).where(
-                  workflow_states[:name].eq(processing_state)
-                )
-              )
-            )
-          end
-          returning
-        end
+        where_builder = -> (responsibility) { responsibility[:agent_id].in(user_agent_contraints) }
 
         entity_specific_joins = join_builder.call(entity_responsibilities)
         workflow_specific_joins = join_builder.call(workflow_responsibilities)
@@ -300,9 +216,9 @@ module CurationConcerns
         )
         workflow_specific_where = where_builder.call(workflow_responsibilities)
 
-        PermissionScope.new(
-          entity_specific_joins.where(entity_specific_where),
-          workflow_specific_joins.where(workflow_specific_where)
+        Sipity::Entity.where(
+          entities[:id].in(entity_specific_joins.where(entity_specific_where))
+          .or(entities[:id]).in(workflow_specific_joins.where(workflow_specific_where))
         )
       end
 
