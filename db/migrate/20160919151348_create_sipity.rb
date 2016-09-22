@@ -50,18 +50,13 @@ class CreateSipity < ActiveRecord::Migration
       t.integer  "entity_id",                                                    null: false
       t.integer  "agent_id",                                                     null: false
       t.text     "comment"
-      t.integer  "originating_workflow_action_id",                               null: false
-      t.integer  "originating_workflow_state_id",                                null: false
       t.datetime "created_at",                                                   null: false
       t.datetime "updated_at",                                                   null: false
-      t.boolean  "stale",                                        default: false
     end
 
     add_index "sipity_comments", ["agent_id"], name: "index_sipity_comments_on_agent_id"
     add_index "sipity_comments", ["created_at"], name: "index_sipity_comments_on_created_at"
     add_index "sipity_comments", ["entity_id"], name: "index_sipity_comments_on_entity_id"
-    add_index "sipity_comments", ["originating_workflow_action_id"], name: "sipity_comments_action_index"
-    add_index "sipity_comments", ["originating_workflow_state_id"], name: "sipity_comments_state_index"
 
     create_table "sipity_entities" do |t|
       t.string   "proxy_for_global_id",           null: false
