@@ -28,6 +28,7 @@ module CurationConcerns
     end
 
     def admin_permissions
+      can :read, :admin_dashboard
       alias_action :edit, to: :update
       alias_action :show, to: :read
       alias_action :discover, to: :read

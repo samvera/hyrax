@@ -11,7 +11,6 @@ Docs: [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.sv
 
 Join in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/) [![Ready](https://badge.waffle.io/projecthydra/curation_concerns.svg?label=ready&title=Ready)](http://waffle.io/projecthydra/curation_concerns)
 
-
 A Hydra-based Rails Engine that extends an application, adding the ability to Create, Read, Update and Destroy (CRUD) objects (based on [Hydra::Works](http://github.com/projecthydra/hydra-works)) and providing a generator for defining object types with custom workflows, views, access controls, etc.
 
 ## Prerequisites
@@ -125,6 +124,19 @@ CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
 ```
 
 _Something about notification should go here._
+
+### Adding Sample Data to Test Application
+
+Sometimes when working with the test application, it can be helpful to have a repository populated with some number of objects. Rather than having to create them all through the user interface, which can be timely, the test application bundled with CurationConcerns provides a rake task that automatically creates 24 objects in the test application repository with different titles, levels of visibility, embargoes, and leases:
+
+``` bash
+cd .internal_test_app
+rake db:seed
+```
+
+### Configuring the Administration Panel
+
+To configure the Administration Pane see [Admin Menu Guide](https://github.com/projecthydra/curation_concerns/wiki/Admin-Menu)
 
 ## Help
 

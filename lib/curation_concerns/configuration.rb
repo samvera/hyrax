@@ -143,6 +143,55 @@ module CurationConcerns
       @ingest_queue_name ||= :default
     end
 
+    # @!attribute [w] import_export_jar_file_path
+    #   Path to the jar file for the Fedora import/export tool
+    attr_writer :import_export_jar_file_path
+    def import_export_jar_file_path
+      @import_export_jar_file_path ||= "tmp/fcrepo-import-export.jar"
+    end
+
+    # @!attribute [w] descriptions_directory
+    #   Location where description files are exported
+    attr_writer :descriptions_directory
+    def descriptions_directory
+      @descriptions_directory ||= "tmp/descriptions"
+    end
+
+    # @!attribute [w] binaries_directory
+    #   Location where binary files are exported
+    attr_writer :binaries_directory
+    def binaries_directory
+      @binaries_directory ||= "tmp/binaries"
+    end
+
+    # @!attribute [w] dashboard_configuration
+    #   Configuration for dashboard rendering.
+    attr_writer :dashboard_configuration
+    def dashboard_configuration
+      @dashboard_configuration ||= {
+        menu: {
+          index: {},
+          resource_details: {}
+        },
+        actions: {
+          index: {
+            partials: [
+              "total_objects_charts",
+              "total_embargo_visibility"
+            ]
+          },
+          resource_details: {
+            partials: [
+              "total_objects"
+            ]
+          }
+        },
+        data_sources: {
+          resource_stats: CurationConcerns::ResourceStatisticsSource
+        }
+      }
+    end
+
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,

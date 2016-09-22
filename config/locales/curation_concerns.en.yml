@@ -1,38 +1,5 @@
 en:
   curation_concerns:
-    product_name: "Repository"
-    institution_name:  &INSTITUTION_NAME "Institution Name"
-    catalog:
-      index:
-        type_tabs:
-          all: All
-    collections:
-      search_form:
-        placeholder: "Search Collection"
-        label: "Search Collection %{title}"
-    division:
-      name: "Your Division at Institution"
-      homepage_url: "#"
-    document_language: "en"
-    institution:
-      name: "Your Institution"
-      homepage_url: "#"
-    show:
-      related_files:
-        heading: 'Members'
-      downloadable_content:
-        heading: 'Downloadable Content'
-        default_link: 'Download file'
-        image_link: 'Download image'
-        office_link: 'Download file'
-        pdf_link: 'Download PDF'
-    search:
-      form:
-        q:
-          label: "Search Repository"
-          placeholder: "Type keywords in here"
-    bread_crumb:
-      works_list: "the works browser"
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
@@ -53,6 +20,28 @@ en:
         default: "Unable to process your request.  See errors for more info."
       internal_error:
         default: "The server encountered an error."
+    bread_crumb:
+      works_list: "the works browser"
+    catalog:
+      index:
+        type_tabs:
+          all: All
+    collections:
+      search_form:
+        placeholder: "Search Collection"
+        label: "Search Collection %{title}"
+    dashboard:
+      menu:
+        index: "Admin Dashboard"
+    division:
+      name: "Your Division at Institution"
+      homepage_url: "#"
+    document_language: "en"
+    institution:
+      name: "Your Institution"
+      homepage_url: "#"
+    institution_name:  &INSTITUTION_NAME "Institution Name"
+    product_name: "Repository"
     schema_org:
       resource_type:
         Article: "http://schema.org/Article"
@@ -99,29 +88,20 @@ en:
         property: keywords
       title:
         property: name
-
-    visibility:
-      open:
-        text: "Open Access"
-        class: "label-success"
-        label_html: <span class="label label-success">Open Access</span> Everyone. Check out <a href="">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
-      authenticated:
-        text: *INSTITUTION_NAME
-        class: "label-info"
-        label_html: "<span class=\"label label-info\">%{institution}</span> Only users who are logged in through %{institution}."
-      embargo:
-        text: "Embargo"
-        class: "label-warning"
-        label_html: <span class="label label-warning">Embargo</span>
-      lease:
-        text: "Lease"
-        class: "label-warning"
-        label_html: <span class="label label-warning">Lease</span>
-      private:
-        label_html: <span class="label label-danger">Private</span> Only users and/or groups that have been given specific access in the "Share With" section.
-      restricted:
-        text: "Private"
-        class: "label-danger"
+    search:
+      form:
+        q:
+          label: "Search Repository"
+          placeholder: "Type keywords in here"
+    show:
+      related_files:
+        heading: 'Members'
+      downloadable_content:
+        heading: 'Downloadable Content'
+        default_link: 'Download file'
+        image_link: 'Download image'
+        office_link: 'Download file'
+        pdf_link: 'Download PDF'
     single_use_links:
       title: Single-Use Links
       table:
@@ -143,6 +123,48 @@ en:
       expiration:
         time: "in %{value} hours"
         lesser_time: in less than one hour
+    visibility:
+      open:
+        text: "Open Access"
+        class: "label-success"
+        label_html: <span class="label label-success">Open Access</span> Everyone. Check out <a href="">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
+      authenticated:
+        text: *INSTITUTION_NAME
+        class: "label-info"
+        label_html: "<span class=\"label label-info\">%{institution}</span> Only users who are logged in through %{institution}."
+      embargo:
+        text: "Embargo"
+        class: "label-warning"
+        label_html: <span class="label label-warning">Embargo</span>
+        expired:
+          authenticated:
+            text: "Embargo (Expired, Authenticated)"
+          open:
+            text: "Embargo (Expired, Open)"
+        active:
+          authenticated:
+            text: "Embargo (Active, Authenticated)"
+          restricted:
+            text: "Embargo (Active, Restricted)"
+      lease:
+        text: "Lease"
+        class: "label-warning"
+        label_html: <span class="label label-warning">Lease</span>
+        active:
+          authenticated:
+            text: "Lease (Active, Authenticated)"
+          open:
+            text: "Lease (Active, Open)"
+        expired:
+          authenticated:
+            text: "Lease (Expired, Authenticated)"
+          restricted:
+            text: "Lease (Expired, Restricted)"
+      private:
+        label_html: <span class="label label-danger">Private</span> Only users and/or groups that have been given specific access in the "Share With" section.
+      restricted:
+        text: "Private"
+        class: "label-danger"
     workflow:
       generic_work:
         finalize_digitization: "Finalize Digitization"

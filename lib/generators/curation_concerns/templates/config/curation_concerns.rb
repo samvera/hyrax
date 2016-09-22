@@ -53,6 +53,45 @@ CurationConcerns.configure do |config|
   # Leaving it blank will set the start date to when ever the file was uploaded by
   # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out
   # config.analytic_start_date = DateTime.new(2014,9,10)
+
+  # Fedora import/export tool
+  #
+  # Path to the Fedora import export tool jar file
+  # config.import_export_jar_file_path = "tmp/fcrepo-import-export.jar"
+  #
+  # Location where descriptive rdf should be exported
+  # config.descriptions_directory = "tmp/descriptions"
+  #
+  # Location where binaries are exported
+  # config.binaries_directory "tmp/binaries"
+
+  # To configure the Administration Dashboard to contain additional
+  #  menu items and corresponding actions uncomment the block below
+  #  and add in you new actions.
+  # See the CurationConcerns wiki for more information
+  #
+  # config.dashboard_configuration = {
+  #       menu: {
+  #           index: {},
+  #           resource_details: {}
+  #       },
+  #       actions: {
+  #           index: {
+  #               partials: [
+  #                   "total_objects_charts",
+  #                   "total_embargo_visibility"
+  #               ]
+  #           },
+  #           resource_details: {
+  #               partials: [
+  #                   "total_objects"
+  #               ]
+  #           }
+  #       },
+  #       data_sources: {
+  #           resource_stats: CurationConcerns::ResourceStatisticsSource
+  #       }
+  #   }
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'

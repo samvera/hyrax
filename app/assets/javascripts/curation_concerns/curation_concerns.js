@@ -10,6 +10,7 @@
 //= require curation_concerns/collections
 //= require curation_concerns/file_manager
 //= require curation_concerns/boot
+//= require curation_concerns/charts
 //= require babel/polyfill
 //= require curation_concerns/workflow_actions_affix
 

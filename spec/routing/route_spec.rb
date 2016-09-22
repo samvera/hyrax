@@ -92,4 +92,11 @@ describe 'Routes', type: :routing do
       expect(put: 'concern/workflow_actions/5').to route_to(controller: 'curation_concerns/workflow_actions', action: 'update', id: '5')
     end
   end
+
+  describe 'Admin Dashboard' do
+    routes { CurationConcerns::Engine.routes }
+    it 'routes to the admin dashboard' do
+      expect(get: '/admin').to route_to(controller: 'curation_concerns/admin', action: 'index')
+    end
+  end
 end
