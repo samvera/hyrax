@@ -4,7 +4,6 @@ module CurationConcerns
       include ActiveModel::Validations
       extend ActiveModel::Translation
 
-
       def initialize(current_ability:, work:, attributes: {})
         @current_ability = current_ability
         @work = work

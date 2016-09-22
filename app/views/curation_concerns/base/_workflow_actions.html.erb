@@ -9,7 +9,14 @@
       <div class="col-sm-3 workflow-actions">
         <h3>Actions</h3>
 
-          <%= collection_radio_buttons(:workflow_action, :name, presenter.workflow.actions, :first, :last) %>
+        <% presenter.workflow.actions.each do |key, label| %>
+          <div class="radio">
+            <label>
+              <input type="radio" name="workflow_action[name]" id="workflow_action_name_<%= key %>" value="<%= key %>">
+              <%= label %>
+            </label>
+          </div>
+        <% end %>
       </div>
       <div class="col-sm-9 workflow-comments">
         <%= render 'workflow_comments' %>

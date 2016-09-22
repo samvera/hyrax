@@ -10,7 +10,7 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
     described_class.new(current_ability: current_ability, work: sipity_entity, attributes: { name: 'an_action', comment: 'a_comment' })
   end
 
-  let(:an_action) { double('AnAction', resulting_workflow_state_id: 3)}
+  let(:an_action) { double('AnAction', resulting_workflow_state_id: 3) }
 
   before do
     allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
