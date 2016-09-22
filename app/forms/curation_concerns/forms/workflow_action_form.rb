@@ -1,35 +1,36 @@
 module CurationConcerns
   module Forms
-    # TODO: Get this working
     class WorkflowActionForm
-      # @api public
-      #
-      # @note Exposed as a convenience method and to ensure that collaborators need not worry about the sipity conversions that occur.
-      def self.save(**kwargs)
-        new(**kwargs).save
-      end
+      include ActiveModel::Validations
+      extend ActiveModel::Translation
 
-      def initialize(current_ability:, work:, workflow_action:)
+
+      def initialize(current_ability:, work:, attributes: {})
         @current_ability = current_ability
         @work = work
-        @workflow_action_name = workflow_action.fetch(:name)
-        @workflow_action_comment = workflow_action.fetch(:comment)
-        convert_to_sipity_objects!
+        @name = attributes.fetch(:name, false)
+        @comment = attributes.fetch(:comment, nil)
       end
 
-      attr_reader :current_ability, :work, :workflow_action_name, :workflow_action_comment
+      attr_reader :current_ability, :work, :name, :comment
 
       def save
+        convert_to_sipity_objects!
         return false unless valid?
         update_sipity_workflow_state
         create_sipity_comment
         true
       end
 
-      def valid?
-        CurationConcerns::Workflow::PermissionQuery.authorized_for_processing?(
+      validates :name, presence: true
+      validate :authorized_for_processing
+
+      def authorized_for_processing
+        return true if CurationConcerns::Workflow::PermissionQuery.authorized_for_processing?(
           user: agent, entity: entity, action: sipity_workflow_action
         )
+        errors.add(:base, :unauthorized)
+        false
       end
 
       private
@@ -37,7 +38,7 @@ module CurationConcerns
         def convert_to_sipity_objects!
           @entity = PowerConverter.convert(work, to: :sipity_entity)
           @agent = PowerConverter.convert(current_user, to: :sipity_agent)
-          @sipity_workflow_action = PowerConverter.convert_to_sipity_action(workflow_action_name, scope: entity.workflow)
+          @sipity_workflow_action = PowerConverter.convert_to_sipity_action(name, scope: entity.workflow)
         end
 
         attr_reader :entity, :agent, :sipity_workflow_action
@@ -45,7 +46,8 @@ module CurationConcerns
         delegate :current_user, to: :current_ability
 
         def create_sipity_comment
-          Sipity::Comment.create!(entity: entity, agent: agent, comment: workflow_action_comment)
+          return true unless comment.present?
+          Sipity::Comment.create!(entity: entity, agent: agent, comment: comment)
         end
 
         def update_sipity_workflow_state
