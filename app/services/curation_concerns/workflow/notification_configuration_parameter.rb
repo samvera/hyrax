@@ -40,18 +40,17 @@ module CurationConcerns
         self.notification_type = notification_type
       end
 
-      private
-        attr_accessor :notification_name, :recipients, :notification_type
+      attr_accessor :notification_name, :recipients, :notification_type
 
-        # Why are we sending the notification?
-        #
-        # @see Sipity::NotifiableContext::REASON_ENTERED_STATE
-        # @see Sipity::NotifiableContext::REASON_ACTION_IS_TAKEN
-        attr_accessor :reason
+      # Why are we sending the notification?
+      #
+      # @see Sipity::NotifiableContext::REASON_ENTERED_STATE
+      # @see Sipity::NotifiableContext::REASON_ACTION_IS_TAKEN
+      attr_accessor :reason
 
-        # For the given reason, there is a scope for that reason. Examples
-        # of scope include an action name or a state name.
-        attr_accessor :scope
+      # For the given reason, there is a scope for that reason. Examples
+      # of scope include an action name or a state name.
+      attr_accessor :scope
     end
   end
 end
