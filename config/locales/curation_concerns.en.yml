@@ -166,6 +166,7 @@ en:
     dashboard:
       menu:
         index: "Admin Dashboard"
+        resource_details: "Resource Details"
   blacklight:
     search:
       fields:
