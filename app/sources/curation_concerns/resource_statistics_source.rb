@@ -1,7 +1,7 @@
 module CurationConcerns
   class ResourceStatisticsSource
     attr_accessor :search_builder, :repository
-    def initialize(search_builder: ::CatalogController.new.search_builder, repository: ::CatalogController.new.repository)
+    def initialize(search_builder: ::CurationConcerns::AdminController.new.search_builder, repository: ::CurationConcerns::AdminController.new.repository)
       # Remove gated discovery.
       @search_builder = search_builder.except(:add_access_controls_to_solr_params)
       @repository = repository

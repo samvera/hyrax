@@ -14,6 +14,14 @@ module CurationConcerns
       end
     end
 
+    def search_builder
+      @search_builder ||= ::CatalogController.new.search_builder
+    end
+
+    def repository
+      @repository ||= ::CatalogController.new.repository
+    end
+
     private
 
       def require_permissions
