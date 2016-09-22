@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
-  spec.add_dependency 'flot-rails', '~> 0.0.7'
+  spec.add_dependency 'highcharts-rails'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.16'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
