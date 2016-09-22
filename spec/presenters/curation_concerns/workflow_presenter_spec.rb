@@ -1,0 +1,26 @@
+require 'spec_helper'
+
+RSpec.describe CurationConcerns::WorkflowPresenter do
+  let(:solr_document) { SolrDocument.new(attributes) }
+  let(:attributes) do
+    { "id" => '888888',
+      "has_model_ssim" => ["GenericWork"] }
+  end
+
+  let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
+  let(:presenter) { described_class.new(solr_document, ability) }
+  let(:entity) { instance_double(Sipity::Entity) }
+
+  describe "#actions" do
+    let(:workflow) { create(:workflow, name: 'testing') }
+    before do
+      allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state).and_return([Sipity::WorkflowAction.new(name: "complete", workflow: workflow)])
+      allow(I18n).to receive(:t).with('curation_concerns.workflow.testing.complete').and_return("Approve")
+      allow(presenter).to receive(:sipity_entity).and_return(entity)
+    end
+
+    subject { presenter.actions }
+    it { is_expected.to eq [['complete', 'Approve']] }
+  end
+end

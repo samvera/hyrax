@@ -91,6 +91,5 @@ module CurationConcerns
           end
         end
     end
-    private_constant :PermissionGenerator
   end
 end

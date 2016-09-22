@@ -6,7 +6,8 @@ describe CurationConcerns::WorkShowPresenter do
   let(:date_value) { Date.today }
   let(:date_index) { date_value.to_s }
   let(:attributes) do
-    { "title_tesim" => ['foo', 'bar'],
+    { "id" => '888888',
+      "title_tesim" => ['foo', 'bar'],
       "human_readable_type_tesim" => ["Generic Work"],
       "has_model_ssim" => ["GenericWork"],
       "date_created_tesim" => ['an unformatted date'],
@@ -174,6 +175,16 @@ describe CurationConcerns::WorkShowPresenter do
         expect(Rails.logger).to receive(:warn).with('CurationConcerns::WorkShowPresenter attempted to render restrictions, but no method exists with that name.')
         presenter.attribute_to_html(:restrictions)
       end
+    end
+  end
+
+  context "with workflow" do
+    let(:user) { create(:user) }
+    let(:ability) { Ability.new(user) }
+    let(:entity) { instance_double(Sipity::Entity) }
+    describe "#workflow" do
+      subject { presenter.workflow }
+      it { is_expected.to be_kind_of CurationConcerns::WorkflowPresenter }
     end
   end
 

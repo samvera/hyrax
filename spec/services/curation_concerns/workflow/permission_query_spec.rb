@@ -19,7 +19,7 @@ module CurationConcerns
       end
       before { CurationConcerns::Workflow::WorkflowImporter.new(data: workflow_config).call }
       let(:sipity_entity) do
-        Sipity::Entity.create!(proxy_for_global_id: 'gid://Mock/1',
+        Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/1',
                                workflow: sipity_workflow,
                                workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow)
                               )

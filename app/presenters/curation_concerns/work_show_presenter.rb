@@ -46,12 +46,8 @@ module CurationConcerns
       @file_set_presenters ||= member_presenters(ordered_ids & file_set_ids)
     end
 
-    def workflow_state
-      sipity_entity.workflow_state_name if sipity_entity
-    end
-
-    def workflow_state_label
-      workflow_state
+    def workflow
+      @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
     end
 
     # @return FileSetPresenter presenter for the representative FileSets
@@ -110,12 +106,6 @@ module CurationConcerns
     end
 
     private
-
-      def sipity_entity
-        PowerConverter.convert(solr_document, to: :sipity_entity)
-      rescue PowerConverter::ConversionError
-        nil
-      end
 
       def graph
         GraphExporter.new(solr_document, request).fetch

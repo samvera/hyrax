@@ -143,6 +143,9 @@ en:
       expiration:
         time: "in %{value} hours"
         lesser_time: in less than one hour
+    workflow:
+      generic_work:
+        finalize_digitization: "Finalize Digitization"
   blacklight:
     search:
       fields:

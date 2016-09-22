@@ -109,6 +109,23 @@ rake engine_cart:generate
 rake curation_concerns:spec
 ```
 
+### Workflow
+
+Load the workflows:
+
+```
+$ rails curation_concers:workflow:load
+```
+
+Give all the roles to all the users. This works for testing, but you probably don't want this in production:
+```ruby
+CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
+                                                     workflow: Sipity::Workflow.last,
+                                                     agents: User.all)
+```
+
+_Something about notification should go here._
+
 ## Help
 
 If you have questions or need help, please email the [Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by the [Hydra community IRC channel](irc://irc.freenode.net/projecthydra).

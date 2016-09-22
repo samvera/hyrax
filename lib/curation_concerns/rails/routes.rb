@@ -9,7 +9,6 @@ module ActionDispatch::Routing
       resources :downloads, only: :show
       resources :upload_sets, only: [:edit, :update]
 
-
       namespace :curation_concerns, path: :concern do
         namespaced_resources 'workflow_actions', only: [:update]
         concerns_to_route.each do |curation_concern_name|
