@@ -156,7 +156,7 @@ module CurationConcerns
 
         agent_table = Sipity::Agent.arel_table
 
-        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(user)
+        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
         agent = PowerConverter.convert_to_sipity_agent(user)
 
         user_constraints = agent_table[:proxy_for_type].eq(user_polymorphic_type).and(agent_table[:proxy_for_id].eq(agent.proxy_for_id))
