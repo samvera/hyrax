@@ -23,9 +23,8 @@ module CurationConcerns
     end
 
     def workflow
-      # TODO: need the query for entities that need action
-      # @actions = CurationConcerns::Workflow::PermissionQuery.entities_ready_for_action
-      @actions = []
+      # TODO: These are an ActiveRelation of Sipity::Entity objects; We will want to page that and cast to a SOLR doc.
+      @works = CurationConcerns::Workflow::PermissionQuery.scope_entities_for_the_user(user: current_user)
     end
 
     private

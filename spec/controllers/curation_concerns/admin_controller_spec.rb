@@ -27,7 +27,7 @@ RSpec.describe CurationConcerns::AdminController do
     it "is successful" do
       get :workflow
       expect(response).to be_successful
-      expect(assigns[:actions]).to be_kind_of Array
+      expect(assigns[:works]).to be_kind_of Array
     end
   end
 
