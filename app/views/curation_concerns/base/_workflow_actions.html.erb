@@ -6,7 +6,11 @@
   <div id="advisor_controls_collapse" class="row panel-collapse collapse">
     <form>
       <div class="col-sm-3 advisor_actions">
-        <%= render 'advisor_actions', presenter: presenter %>
+        <h4>Actions</h4>
+
+        <%= form_tag main_app.curation_concerns_workflow_action_path(presenter), method: :put do %>
+          <%= collection_radio_buttons(:workflow_action, :name, presenter.workflow.actions, :first, :last) %>
+        <% end %>
       </div>
       <div class="col-sm-9 advisor_comments">
         <%= render 'advisor_comments.html.erb' %>

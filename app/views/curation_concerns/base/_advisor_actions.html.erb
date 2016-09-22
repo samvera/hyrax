@@ -1,5 +1,0 @@
-<h4>Actions</h4>
-
-  <%= form_tag main_app.curation_concerns_workflow_action_path(presenter), method: :put do %>
-    <%= collection_radio_buttons(:workflow_action, :name, presenter.workflow.actions, :first, :last) %>
-  <% end %>
