@@ -171,7 +171,8 @@ module CurationConcerns
       @dashboard_configuration ||= {
         menu: {
           index: {},
-          resource_details: {}
+          resource_details: {},
+          workflow: {}
         },
         actions: {
           index: {
@@ -183,6 +184,11 @@ module CurationConcerns
           resource_details: {
             partials: [
               "total_objects"
+            ]
+          },
+          workflow: {
+            partials: [
+              "workflow"
             ]
           }
         },

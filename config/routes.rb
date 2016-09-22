@@ -9,6 +9,7 @@ CurationConcerns::Engine.routes.draw do
   namespace :admin do
     root action: :index
     get :resource_details
+    get :workflow
   end
 
   # mount BrowseEverything::Engine => '/remote_files/browse'

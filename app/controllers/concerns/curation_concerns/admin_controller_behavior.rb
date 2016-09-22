@@ -22,6 +22,12 @@ module CurationConcerns
       @repository ||= ::CatalogController.new.repository
     end
 
+    def workflow
+      # TODO: need the query for entities that need action
+      # @actions = CurationConcerns::Workflow::PermissionQuery.entities_ready_for_action
+      @actions = []
+    end
+
     private
 
       def require_permissions

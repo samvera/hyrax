@@ -4,7 +4,6 @@ RSpec.describe CurationConcerns::AdminController do
   routes { CurationConcerns::Engine.routes }
   describe "GET /admin" do
     context "when you have permission" do
-      let(:user) { FactoryGirl.create(:admin) }
       before do
         allow(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
       end
@@ -18,6 +17,17 @@ RSpec.describe CurationConcerns::AdminController do
         get :index
         expect(response).to redirect_to new_user_session_path
       end
+    end
+  end
+
+  describe "#workflow" do
+    before do
+      allow(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+    end
+    it "is successful" do
+      get :workflow
+      expect(response).to be_successful
+      expect(assigns[:actions]).to be_kind_of Array
     end
   end
 
