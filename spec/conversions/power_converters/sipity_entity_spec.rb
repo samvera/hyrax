@@ -2,15 +2,26 @@ require "spec_helper"
 
 RSpec.describe 'PowerConverter' do
   context '#convert_to_sipity_entity' do
-    it 'will return the object if it is a Sipity::Entity' do
-      object = Sipity::Entity.new
-      expect(PowerConverter.convert_to_sipity_entity(object)).to eq(object)
+    subject { PowerConverter.convert_to_sipity_entity(object) }
+    context "with a Sipity::Entity" do
+      let(:object) { Sipity::Entity.new }
+      it { is_expected.to eq object }
     end
 
-    it 'will return the object if it is a Sipity::Comment' do
-      entity = Sipity::Entity.new
-      object = Sipity::Comment.new(entity: entity)
-      expect(PowerConverter.convert_to_sipity_entity(object)).to eq(entity)
+    context "with a Sipity::Comment" do
+      let(:object) { Sipity::Comment.new(entity: entity) }
+      let(:entity) { Sipity::Entity.new }
+      it { is_expected.to eq entity }
+    end
+
+    context "with a SolrDocument" do
+      subject { PowerConverter.convert(object, to: :sipity_entity) }
+      let(:object) { SolrDocument.new(id: '9999', has_model_ssim: ["GenericWork"]) }
+      let(:workflow_state) { create(:workflow_state) }
+      let!(:entity) { Sipity::Entity.create(proxy_for_global_id: 'gid://internal/GenericWork/9999',
+                                            workflow_state: workflow_state,
+                                            workflow: workflow_state.workflow) }
+      it { is_expected.to eq entity }
     end
 
     context 'a Models::Work (because it will be processed)' do

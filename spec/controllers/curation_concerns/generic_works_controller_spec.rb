@@ -15,11 +15,11 @@ describe CurationConcerns::GenericWorksController do
       end
 
       context "with a parent work" do
-        render_views
-        it "renders a breadcrumb" do
-          parent = create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work])
+        let(:parent) { create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work]) }
+        it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
-          expect(response.body).to have_content "Parent Work"
+          expect(response).to be_success
+          expect(assigns[:parent_presenter]).to be_instance_of CurationConcerns::WorkShowPresenter
         end
       end
     end

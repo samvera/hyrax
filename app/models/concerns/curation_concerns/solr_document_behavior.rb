@@ -38,6 +38,10 @@ module CurationConcerns
       def to_partial_path
         @model._to_partial_path
       end
+
+      def to_global_id
+        URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
+      end
     end
     ##
     # Offer the source (ActiveFedora-based) model to Rails for some of the
