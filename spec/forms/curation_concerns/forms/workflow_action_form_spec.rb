@@ -1,11 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
-  let(:sipity_entity) { Sipity::Entity.create!(proxy_for_global_id: '12', workflow_id: 1, workflow_state_id: 2) }
+  # There is quite a bit of setup as I test this form.
+  let(:sipity_entity) { Sipity::Entity.create!(proxy_for_global_id: '12', workflow: sipity_workflow, workflow_state_id: 2) }
+  let(:sipity_workflow) { Sipity::Workflow.create!(name: 'testing') }
   let(:user) { FactoryGirl.create(:user) }
   let(:current_ability) { double(current_user: user) }
   let(:form) do
     described_class.new(current_ability: current_ability, work: sipity_entity, workflow_action: { name: 'an_action', comment: 'a_comment' })
+  end
+
+  let(:an_action) { double('AnAction', resulting_workflow_state_id: 3)}
+
+  before do
+    expect(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
   end
 
   it 'exposes .save as part of the public API' do
@@ -38,7 +46,9 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
     describe '#save' do
       subject { form.save }
       it { is_expected.to eq(true) }
-      xit 'will update the state of the given work'
+      it 'will update the state of the given work' do
+        expect { form.save }.to change { sipity_entity.reload.workflow_state_id }.from(2).to(an_action.resulting_workflow_state_id)
+      end
       it 'will create the given comment for the entity' do
         expect { form.save }.to change { Sipity::Comment.count }.by(1)
       end

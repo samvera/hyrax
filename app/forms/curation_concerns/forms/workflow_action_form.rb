@@ -28,7 +28,7 @@ module CurationConcerns
 
       def valid?
         CurationConcerns::Workflow::PermissionQuery.authorized_for_processing?(
-          user: agent, entity: entity, action: workflow_action_name
+          user: agent, entity: entity, action: sipity_workflow_action
         )
       end
 
@@ -37,9 +37,10 @@ module CurationConcerns
         def convert_to_sipity_objects!
           @entity = PowerConverter.convert(work, to: :sipity_entity)
           @agent = PowerConverter.convert(current_user, to: :sipity_agent)
+          @sipity_workflow_action = PowerConverter.convert_to_sipity_action(workflow_action_name, scope: entity.workflow)
         end
 
-        attr_reader :entity, :agent
+        attr_reader :entity, :agent, :sipity_workflow_action
 
         delegate :current_user, to: :current_ability
 
@@ -48,6 +49,7 @@ module CurationConcerns
         end
 
         def update_sipity_workflow_state
+          entity.update_attribute(:workflow_state_id, sipity_workflow_action.resulting_workflow_state_id)
         end
     end
   end
