@@ -38,6 +38,7 @@ module CurationConcerns
       require 'curation_concerns/permissions'
       require 'curation_concerns/lockable'
       require 'power_converters'
+      require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
     end
