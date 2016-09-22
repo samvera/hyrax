@@ -64,6 +64,34 @@ CurationConcerns.configure do |config|
   #
   # Location where binaries are exported
   # config.binaries_directory "tmp/binaries"
+
+  # To configure the Administration Dashboard to contain additional
+  #  menu items and corresponding actions uncomment the block below
+  #  and add in you new actions.
+  # See the CurationConcerns wiki for more information
+  #
+  # config.dashboard_configuration = {
+  #       menu: {
+  #           index: {},
+  #           resource_details: {}
+  #       },
+  #       actions: {
+  #           index: {
+  #               partials: [
+  #                   "total_objects_charts",
+  #                   "total_embargo_visibility"
+  #               ]
+  #           },
+  #           resource_details: {
+  #               partials: [
+  #                   "total_objects"
+  #               ]
+  #           }
+  #       },
+  #       data_sources: {
+  #           resource_stats: CurationConcerns::ResourceStatisticsSource
+  #       }
+  #   }
 end
 
 Date::DATE_FORMATS[:standard] = '%m/%d/%Y'
