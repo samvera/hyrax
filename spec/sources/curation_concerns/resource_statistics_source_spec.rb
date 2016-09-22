@@ -32,10 +32,12 @@ describe CurationConcerns::ResourceStatisticsSource do
   describe "#restricted_concerns_count" do
     context "when I have concerns" do
       before do
+        create :authenticated_generic_work
         create :generic_work
+        create :generic_work, read_groups: ['foo']
       end
       it "returns the number of open concerns" do
-        expect(subject.restricted_concerns_count).to eq(1)
+        expect(subject.restricted_concerns_count).to eq(2)
       end
     end
   end
@@ -49,6 +51,9 @@ describe CurationConcerns::ResourceStatisticsSource do
     end
 
     describe "#active_embargo_now_authenticated_concerns_count" do
+      before do
+        create :embargoed_work, embargo_date: Date.yesterday.to_s, current_state: current_state, future_state: future_state
+      end
       let(:embargo_date) { Date.tomorrow.to_s }
       let(:current_state) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       let(:future_state) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
