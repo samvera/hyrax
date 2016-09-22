@@ -113,7 +113,7 @@ rake curation_concerns:spec
 Load the workflows:
 
 ```
-$ rails curation_concers:workflow:load
+$ rails curation_concerns:workflow:load
 ```
 
 Give all the roles to all the users. This works for testing, but you probably don't want this in production:
