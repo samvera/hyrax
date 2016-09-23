@@ -118,7 +118,7 @@ module CurationConcerns
           expect_users_for(users: reviewing_user, entity: sipity_entity, roles: 'reviewing')
           expect_users_for(users: completing_user, entity: sipity_entity, roles: 'completing')
 
-          # TODO: expect_entities_for(user: reviewing_user, entities: [sipity_entity])
+          expect_entities_for(user: reviewing_user, entities: [sipity_entity])
           expect_entities_for(user: completing_user, entities: [])
 
           expect_roles_for(entity: sipity_entity, roles: ['reviewing', 'completing'])
@@ -145,7 +145,7 @@ module CurationConcerns
           expect_to_be_authorized(user: completing_user, entity: sipity_entity, action: 'complete')
 
           expect_entities_for(user: reviewing_user, entities: [])
-          # TODO: expect_entities_for(user: completing_user, entities: [sipity_entity])
+          expect_entities_for(user: completing_user, entities: [sipity_entity])
         end
       end
     end

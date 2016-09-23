@@ -218,7 +218,7 @@ module CurationConcerns
 
         Sipity::Entity.where(
           entities[:id].in(entity_specific_joins.where(entity_specific_where))
-          .or(entities[:id]).in(workflow_specific_joins.where(workflow_specific_where))
+          .or(entities[:id].in(workflow_specific_joins.where(workflow_specific_where)))
         )
       end
 
