@@ -21,7 +21,7 @@
         <li><%= link_to 'Leases', main_app.leases_path, role: 'menuitem' %></li>
       <% end %>
       <% if can? :read, :admin_dashboard %>
-        <li><%= link_to 'Admin Dashboard', curation_concerns.admin_root_path, role: 'menuitem' %></li>
+        <li><%= link_to 'Admin Dashboard', curation_concerns.admin_index_path, role: 'menuitem' %></li>
       <% end %>
 
       <% if include_works_link || include_collections_link %>
