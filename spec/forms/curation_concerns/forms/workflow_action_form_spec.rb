@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
+RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
   # There is quite a bit of setup as I test this form.
   let(:sipity_entity) { Sipity::Entity.create!(proxy_for_global_id: '12', workflow: sipity_workflow, workflow_state_id: 2) }
   let(:sipity_workflow) { Sipity::Workflow.create!(name: 'testing') }
@@ -28,6 +28,10 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
       it 'will not add a comment' do
         expect { form.save }.to_not change { Sipity::Comment.count }
       end
+      it 'will not send the #deliver_on_action_taken message to CurationConcerns::Workflow::NotificationService' do
+        expect(CurationConcerns::Workflow::NotificationService).to_not receive(:deliver_on_action_taken)
+        subject
+      end
     end
   end
   context 'if the given user can perform the given action' do
@@ -44,6 +48,12 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm do
       end
       it 'will create the given comment for the entity' do
         expect { form.save }.to change { Sipity::Comment.count }.by(1)
+      end
+      it 'will send the #deliver_on_action_taken message to CurationConcerns::Workflow::NotificationService' do
+        expect(CurationConcerns::Workflow::NotificationService).to(
+          receive(:deliver_on_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action)
+        )
+        subject
       end
     end
   end

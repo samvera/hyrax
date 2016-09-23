@@ -17,9 +17,9 @@ module CurationConcerns
         convert_to_sipity_objects!
         return false unless valid?
         update_sipity_workflow_state
-        handle_sipity_notifications
+        comment = create_sipity_comment
+        handle_sipity_notifications(comment: comment)
         handle_additional_sipity_workflow_action_processing
-        create_sipity_comment
         true
       end
 
@@ -55,8 +55,10 @@ module CurationConcerns
           entity.update_attribute(:workflow_state_id, sipity_workflow_action.resulting_workflow_state_id)
         end
 
-        # TODO: Implement
-        def handle_sipity_notifications
+        def handle_sipity_notifications(comment:)
+          CurationConcerns::Workflow::NotificationService.deliver_on_action_taken(
+            entity: entity, comment: comment, action: sipity_workflow_action
+          )
         end
         # TODO: Implement
         def handle_additional_sipity_workflow_action_processing
