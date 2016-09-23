@@ -9,8 +9,6 @@ group :development, :test do
   gem 'coveralls', require: false
 end
 
-gem 'hydra-role-management'
-
 # BEGIN ENGINE_CART BLOCK
 # engine_cart: 0.10.0
 # engine_cart stanza: 0.10.0
