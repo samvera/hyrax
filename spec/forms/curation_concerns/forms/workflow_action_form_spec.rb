@@ -55,13 +55,13 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
       end
       it 'will send the #deliver_on_action_taken message to CurationConcerns::Workflow::NotificationService' do
         expect(CurationConcerns::Workflow::NotificationService).to(
-          receive(:deliver_on_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action)
+          receive(:deliver_on_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action, user: user)
         )
         subject
       end
       it 'will send the #handle_action_taken message to CurationConcerns::Workflow::ActionTakenService' do
         expect(CurationConcerns::Workflow::ActionTakenService).to(
-          receive(:handle_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action)
+          receive(:handle_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action, user: user)
         )
         subject
       end
