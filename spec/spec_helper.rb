@@ -71,6 +71,9 @@ RSpec.configure do |config|
     unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!
     end
+
+    # This is a speedup for workflow specs.  If we don't have this, it will import the
+    # full workflow configuration files from config/workflows/*
     FactoryGirl.create(:workflow_state) if example.metadata[:workflow]
   end
 

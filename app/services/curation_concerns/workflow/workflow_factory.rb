@@ -25,10 +25,13 @@ module CurationConcerns
         true
       end
 
-      # This tells us which workflow to use.
+      # This tells us which workflow to use. If no workflow is found with the expected name
+      # then load the workflows in config/workflows/*.json and try again.
       # @return [Sipity::Workflow]
       def workflow
-        @workflow ||= Sipity::Workflow.find_by!(name: workflow_name)
+        @workflow ||= Sipity::Workflow.find_by(name: workflow_name) ||
+                      (CurationConcerns::Workflow::WorkflowImporter.load_workflows &&
+                       Sipity::Workflow.find_by!(name: workflow_name))
       end
 
       # You may override this method select a different workflow.
