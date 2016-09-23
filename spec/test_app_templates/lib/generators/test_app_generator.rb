@@ -24,4 +24,11 @@ class TestAppGenerator < Rails::Generators::Base
   def copy_fixture_data
     generate 'curation_concerns:sample_data', '-f'
   end
+
+  def enable_i18n_translation_errors
+    gsub_file "config/environments/development.rb",
+              "# config.action_view.raise_on_missing_translations = true", "config.action_view.raise_on_missing_translations = true"
+    gsub_file "config/environments/test.rb",
+              "# config.action_view.raise_on_missing_translations = true", "config.action_view.raise_on_missing_translations = true"
+  end
 end
