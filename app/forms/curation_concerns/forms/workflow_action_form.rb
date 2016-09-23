@@ -19,7 +19,7 @@ module CurationConcerns
         update_sipity_workflow_state
         comment = create_sipity_comment
         handle_sipity_notifications(comment: comment)
-        handle_additional_sipity_workflow_action_processing
+        handle_additional_sipity_workflow_action_processing(comment: comment)
         true
       end
 
@@ -60,8 +60,11 @@ module CurationConcerns
             entity: entity, comment: comment, action: sipity_workflow_action
           )
         end
-        # TODO: Implement
-        def handle_additional_sipity_workflow_action_processing
+
+        def handle_additional_sipity_workflow_action_processing(comment:)
+          CurationConcerns::Workflow::ActionTakenService.handle_action_taken(
+            entity: entity, comment: comment, action: sipity_workflow_action
+          )
         end
     end
   end

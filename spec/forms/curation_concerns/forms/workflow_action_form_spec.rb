@@ -32,6 +32,10 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
         expect(CurationConcerns::Workflow::NotificationService).to_not receive(:deliver_on_action_taken)
         subject
       end
+      it 'will not send the #handle_action_taken message to CurationConcerns::Workflow::ActionTakenService' do
+        expect(CurationConcerns::Workflow::ActionTakenService).to_not receive(:handle_action_taken)
+        subject
+      end
     end
   end
   context 'if the given user can perform the given action' do
@@ -52,6 +56,12 @@ RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
       it 'will send the #deliver_on_action_taken message to CurationConcerns::Workflow::NotificationService' do
         expect(CurationConcerns::Workflow::NotificationService).to(
           receive(:deliver_on_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action)
+        )
+        subject
+      end
+      it 'will send the #handle_action_taken message to CurationConcerns::Workflow::ActionTakenService' do
+        expect(CurationConcerns::Workflow::ActionTakenService).to(
+          receive(:handle_action_taken).with(entity: sipity_entity, comment: kind_of(Sipity::Comment), action: an_action)
         )
         subject
       end
