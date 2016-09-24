@@ -27,7 +27,7 @@ RSpec.describe CurationConcerns::AdminController do
     it "is successful" do
       get :workflow
       expect(response).to be_successful
-      expect(assigns[:works]).to respond_to(:each)
+      expect(assigns[:status_list]).to be_kind_of CurationConcerns::Workflow::StatusListService
     end
   end
 

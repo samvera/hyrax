@@ -89,6 +89,7 @@ RSpec.configure do |config|
   end
 
   config.include TestViewHelpers, type: :view
+  config.include Capybara::DSL, type: :view
 
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
@@ -105,7 +106,6 @@ RSpec.configure do |config|
   config.include ::Rails.application.routes.url_helpers
 
   config.include Rails.application.routes.url_helpers, type: :routing
-  config.include Capybara::DSL
   config.include InputSupport, type: :input
   config.include Capybara::RSpecMatchers, type: :input
   config.infer_spec_type_from_file_location!

@@ -110,18 +110,20 @@ rake curation_concerns:spec
 
 ### Workflow
 
-Load the workflows:
+Load the workflows, workflow states, transitions and user roles:
 
 ```
 $ rails curation_concerns:workflow:load
 ```
 
-Give all the roles to all the users. This works for testing, but you probably don't want this in production:
+Now that the Roles are loaded, grant all the roles to all the users. This works for testing, but you probably don't want this in production:
 ```ruby
 CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
                                                      workflow: Sipity::Workflow.last,
                                                      agents: User.all)
 ```
+
+In the future this functionality should be available in the user interface.
 
 _Something about notification should go here._
 

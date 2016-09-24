@@ -13,14 +13,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <%= link_to "A work I deposited ", '#' %>
-            </td>
-            <td>
-              <span class="state state-pending">Pending</span>
-            </td>
-          </tr>
+          <% @status_list.each do |work| %>
+            <tr>
+              <td>
+                <%= link_to work.document, [main_app, work.document] %>
+              </td>
+              <td>
+                <span class="state state-pending"><%= work.state %></span>
+              </td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>
