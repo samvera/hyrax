@@ -3,7 +3,7 @@
 //= require highcharts/modules/drilldown
 
 (function( $ ){
-  $.fn.pie_chart = function(title = '', data) {
+  $.fn.pie_chart = function(title, data) {
     // Create the chart
     $(this).highcharts({
         chart: {
