@@ -21,7 +21,7 @@ module CurationConcerns
             required(:names) { array? { each(:str?) } } # Sipity::WorkflowState#name
             required(:roles) { array? { each(:str?) } } # Sipity::Role#name
           end
-          required(:transition_to).filled(:str?) # Sipity::WorkflowState#name
+          optional(:transition_to).filled(:str?) # Sipity::WorkflowState#name
           optional(:notifications).each do
             required(:name).value(format?: /\A[a-z|_]+\Z/i) # Sipity::Notification#name
             required(:notification_type).value(included_in?: Sipity::Notification.valid_notification_types)

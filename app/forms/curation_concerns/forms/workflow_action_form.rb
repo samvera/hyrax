@@ -52,6 +52,7 @@ module CurationConcerns
         end
 
         def update_sipity_workflow_state
+          return true unless sipity_workflow_action.resulting_workflow_state_id.present?
           entity.update_attribute(:workflow_state_id, sipity_workflow_action.resulting_workflow_state_id)
         end
 
