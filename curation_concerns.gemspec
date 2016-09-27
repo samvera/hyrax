@@ -45,6 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'flot-rails', '~> 0.0.7'
+  spec.add_dependency 'highcharts-rails'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.16'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
