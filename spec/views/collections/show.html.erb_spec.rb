@@ -1,6 +1,7 @@
 describe 'collections/show.html.erb', type: :view do
   let(:document) { SolrDocument.new(id: 'xyz123z4',
-                                    'title_tesim' => ['Make Collections Great Again']) }
+                                    'title_tesim' => ['Make Collections Great Again'],
+                                    'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"]) }
   let(:ability) { double }
   let(:presenter) { Sufia::CollectionPresenter.new(document, ability) }
   let(:blacklight_config) { CatalogController.blacklight_config }
