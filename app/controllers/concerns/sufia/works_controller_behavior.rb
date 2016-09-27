@@ -2,7 +2,6 @@ module Sufia
   module WorksControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Breadcrumbs
-    include Sufia::Controller
     include CurationConcerns::CurationConcernController
 
     included do
