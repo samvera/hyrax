@@ -19,6 +19,18 @@ describe Sufia::Admin::AdminSetsController do
         expect(response).to be_redirect
       end
     end
+
+    describe "#show" do
+      context "a public admin set" do
+        # Even though the user can view this admin set, the should not be able to view
+        # it on the admin page.
+        let(:admin_set) { create(:admin_set, :public) }
+        it 'is unauthorized' do
+          get :show, params: { id: admin_set }
+          expect(response).to be_redirect
+        end
+      end
+    end
   end
 
   context "as an admin" do
