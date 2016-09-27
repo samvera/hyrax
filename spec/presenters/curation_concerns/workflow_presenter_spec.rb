@@ -23,4 +23,15 @@ RSpec.describe CurationConcerns::WorkflowPresenter do
     subject { presenter.actions }
     it { is_expected.to eq [['complete', 'Approve']] }
   end
+
+  describe "#comments" do
+    let(:comment) { instance_double(Sipity::Comment) }
+    before do
+      allow(entity).to receive(:comments).and_return([comment])
+      allow(presenter).to receive(:sipity_entity).and_return(entity)
+    end
+
+    subject { presenter.comments }
+    it { is_expected.to eq [comment] }
+  end
 end

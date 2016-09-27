@@ -9,7 +9,7 @@ module Sipity
 
     subject { described_class.new }
     it 'will expose #name_of_commentor' do
-      expect(subject).to receive_message_chain(:agent, :proxy_for, :name).and_return('Hiya')
+      expect(subject).to receive_message_chain(:agent, :proxy_for, :to_s).and_return('Hiya')
       expect(subject.name_of_commentor).to eq('Hiya')
     end
   end

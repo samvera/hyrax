@@ -23,6 +23,11 @@ module CurationConcerns
       actions.map { |action| [action.name, action_label(action)] }
     end
 
+    def comments
+      return [] unless sipity_entity
+      sipity_entity.comments
+    end
+
     private
 
       def action_label(action)

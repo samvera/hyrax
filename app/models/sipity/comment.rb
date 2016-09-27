@@ -19,7 +19,7 @@ module Sipity
     belongs_to :originating_workflow_state, class_name: 'Sipity::WorkflowState'
 
     def name_of_commentor
-      agent.proxy_for.name
+      agent.proxy_for.to_s
     end
   end
 end

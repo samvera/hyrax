@@ -20,11 +20,19 @@
       </div>
       <div class="col-sm-9 workflow-comments">
         <div class="form-group">
-          <label for="workflow_action_comment">Review summary:</label>
+          <label for="workflow_action_comment">Review comment:</label>
           <textarea class="form-control" name="workflow_action[comment]" id="workflow_action_comment"></textarea>
         </div>
 
         <input class="btn btn-primary" type="submit" value="Submit">
+
+        <h4>Previous Comments</h4>
+        <dl>
+          <% presenter.workflow.comments.each do |comment| %>
+            <dt><%= comment.name_of_commentor %></dt>
+            <dd><%= comment.comment %></dd>
+          <% end %>
+        </dl>
       </div>
     <% end %>
   </div>
