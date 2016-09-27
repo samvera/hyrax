@@ -17,15 +17,24 @@ RSpec.describe WorkViewStat, type: :model do
 
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
-    let(:views) { double }
-    let(:profile) { double(sufia__pageview: views) }
     let(:expected_path) { Rails.application.routes.url_helpers.curation_concerns_generic_work_path(work) }
     before do
       allow(Sufia::Analytics).to receive(:profile).and_return(profile)
     end
-    it "calls the Legato method with the correct path" do
-      expect(views).to receive(:for_path).with(expected_path)
-      described_class.ga_statistics(start_date, work)
+    context "when a profile is available" do
+      let(:views) { double }
+      let(:profile) { double(sufia__pageview: views) }
+      it "calls the Legato method with the correct path" do
+        expect(views).to receive(:for_path).with(expected_path)
+        described_class.ga_statistics(start_date, work)
+      end
+    end
+
+    context "when a profile not available" do
+      let(:profile) { nil }
+      it "calls the Legato method with the correct path" do
+        expect(described_class.ga_statistics(start_date, work)).to be_empty
+      end
     end
   end
 
