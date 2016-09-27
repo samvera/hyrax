@@ -2,9 +2,8 @@ require 'spec_helper'
 
 describe 'curation_concerns/admin/_total_objects_charts.html.erb', type: :view do
   before do
-    assign(:configuration, configuration)
     allow(view).to receive(:action_name).and_return(:index)
-    allow(CurationConcerns::ResourceStatisticsSource).to receive(:new).and_return(resource_stats)
+    assign(:resource_statistics, resource_stats)
     stub_template 'curation_concerns/admin/widgets/_pie.html.erb' => 'Mine 1'
   end
   let(:resource_stats) do
@@ -20,13 +19,6 @@ describe 'curation_concerns/admin/_total_objects_charts.html.erb', type: :view d
                     expired_lease_now_restricted_concerns_count: 7777,
                     active_lease_now_authenticated_concerns_count: 8888,
                     active_lease_now_open_concerns_count: 9999)
-  end
-  let(:configuration) do
-    {
-      data_sources: {
-        resource_stats: CurationConcerns::ResourceStatisticsSource
-      }
-    }
   end
 
   it "renders without error" do

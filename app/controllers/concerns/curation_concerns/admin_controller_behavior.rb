@@ -10,7 +10,8 @@ module CurationConcerns
       layout "admin"
 
       def index
-        render "index"
+        @resource_statistics = @configuration.fetch(:data_sources).fetch(:resource_stats).new
+        render 'index'
       end
     end
 
