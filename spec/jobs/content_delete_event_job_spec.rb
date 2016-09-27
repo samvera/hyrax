@@ -16,9 +16,9 @@ describe ContentDeleteEventJob do
     let(:curation_concern) { create(:file_set, title: ['Hamlet'], user: user) }
 
     it "logs the event to the depositor's profile" do
-      expect {
+      expect do
         described_class.perform_now(curation_concern.id, user)
-      }.to change { user.profile_events.length }.by(1)
+      end.to change { user.profile_events.length }.by(1)
       expect(user.profile_events.first).to eq(event)
     end
   end
@@ -27,9 +27,9 @@ describe ContentDeleteEventJob do
     let(:curation_concern) { create(:generic_work, title: ['BethsMac'], user: user) }
 
     it "logs the event to the depositor's profile" do
-      expect {
+      expect do
         described_class.perform_now(curation_concern.id, user)
-      }.to change { user.profile_events.length }.by(1)
+      end.to change { user.profile_events.length }.by(1)
       expect(user.profile_events.first).to eq(event)
     end
   end

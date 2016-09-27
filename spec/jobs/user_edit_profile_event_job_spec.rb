@@ -7,9 +7,9 @@ describe UserEditProfileEventJob do
   end
 
   it "logs the event to the editor's dashboards" do
-    expect {
+    expect do
       described_class.perform_now(user)
-    }.to change { user.events.length }.by(1)
+    end.to change { user.events.length }.by(1)
 
     expect(user.events.first).to eq(event)
   end

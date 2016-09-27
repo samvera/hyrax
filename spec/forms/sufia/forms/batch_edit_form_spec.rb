@@ -9,19 +9,21 @@ describe Sufia::Forms::BatchEditForm do
 
   describe "#terms" do
     subject { form.terms }
-    it { is_expected.to eq [:creator,
-                            :contributor,
-                            :description,
-                            :keyword,
-                            :resource_type,
-                            :rights,
-                            :publisher,
-                            :date_created,
-                            :subject,
-                            :language,
-                            :identifier,
-                            :based_near,
-                            :related_url] }
+    it do
+      is_expected.to eq [:creator,
+                         :contributor,
+                         :description,
+                         :keyword,
+                         :resource_type,
+                         :rights,
+                         :publisher,
+                         :date_created,
+                         :subject,
+                         :language,
+                         :identifier,
+                         :based_near,
+                         :related_url]
+    end
   end
 
   describe "#model" do

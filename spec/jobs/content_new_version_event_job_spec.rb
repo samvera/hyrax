@@ -10,9 +10,9 @@ describe ContentNewVersionEventJob do
   end
 
   it "logs the event to the depositor's profile and the FileSet" do
-    expect {
+    expect do
       described_class.perform_now(file_set, user)
-    }.to change { user.profile_events.length }.by(1)
+    end.to change { user.profile_events.length }.by(1)
       .and change { file_set.events.length }.by(1)
 
     expect(user.profile_events.first).to eq(event)

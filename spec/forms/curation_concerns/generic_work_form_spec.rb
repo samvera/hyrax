@@ -14,11 +14,13 @@ describe CurationConcerns::GenericWorkForm do
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
-    it { is_expected.not_to include(:title, :creator, :keyword, :rights,
-                                    :visibilty, :visibility_during_embargo,
-                                    :embargo_release_date, :visibility_after_embargo,
-                                    :visibility_during_lease, :lease_expiration_date,
-                                    :visibility_after_lease, :collection_ids) }
+    it do
+      is_expected.not_to include(:title, :creator, :keyword, :rights,
+                                 :visibilty, :visibility_during_embargo,
+                                 :embargo_release_date, :visibility_after_embargo,
+                                 :visibility_during_lease, :lease_expiration_date,
+                                 :visibility_after_lease, :collection_ids)
+    end
   end
 
   describe "#[]" do
@@ -37,17 +39,19 @@ describe CurationConcerns::GenericWorkForm do
   end
 
   describe '.model_attributes' do
-    let(:params) { ActionController::Parameters.new(
-      title: ['foo'],
-      description: [''],
-      visibility: 'open',
-      admin_set_id: '123',
-      representative_id: '456',
-      thumbnail_id: '789',
-      keyword: ['derp'],
-      rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
-      collection_ids: ['123456', 'abcdef']
-    ) }
+    let(:params) do
+      ActionController::Parameters.new(
+        title: ['foo'],
+        description: [''],
+        visibility: 'open',
+        admin_set_id: '123',
+        representative_id: '456',
+        thumbnail_id: '789',
+        keyword: ['derp'],
+        rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
+        collection_ids: ['123456', 'abcdef']
+      )
+    end
 
     subject { described_class.model_attributes(params) }
 
@@ -61,14 +65,16 @@ describe CurationConcerns::GenericWorkForm do
     end
 
     context '.model_attributes' do
-      let(:params) { ActionController::Parameters.new(
-        title: [''],
-        description: [''],
-        keyword: [''],
-        rights: [''],
-        collection_ids: [''],
-        on_behalf_of: 'Melissa'
-      ) }
+      let(:params) do
+        ActionController::Parameters.new(
+          title: [''],
+          description: [''],
+          keyword: [''],
+          rights: [''],
+          collection_ids: [''],
+          on_behalf_of: 'Melissa'
+        )
+      end
 
       it 'removes blank parameters' do
         expect(subject['title']).to be_empty

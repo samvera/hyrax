@@ -7,8 +7,10 @@ RSpec.describe Sufia::ResourceSync::CapabilityListWriter do
   let(:resource_list) { 'http://example.com/resourcelist.xml' }
   let(:description) { 'http://example.com/resourcesync_description.xml' }
 
-  subject { described_class.new(resource_list_url: resource_list,
-                                description_url: description).write }
+  subject do
+    described_class.new(resource_list_url: resource_list,
+                        description_url: description).write
+  end
   let(:xml) { Nokogiri::XML.parse(subject) }
 
   it "has url to the capability list" do

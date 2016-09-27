@@ -1,18 +1,22 @@
 describe Sufia::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
-    it { is_expected.to eq [:total_items, :size, :resource_type, :creator,
-                            :contributor, :keyword, :rights, :publisher,
-                            :date_created, :subject, :language, :identifier,
-                            :based_near, :related_url] }
+    it do
+      is_expected.to eq [:total_items, :size, :resource_type, :creator,
+                         :contributor, :keyword, :rights, :publisher,
+                         :date_created, :subject, :language, :identifier,
+                         :based_near, :related_url]
+    end
   end
 
-  let(:collection) { build(:collection,
-                           description: ['a nice collection'],
-                           based_near: ['Over there'],
-                           title: ['A clever title'],
-                           resource_type: ['Collection'],
-                           related_url: ['http://example.com/']) }
+  let(:collection) do
+    build(:collection,
+          description: ['a nice collection'],
+          based_near: ['Over there'],
+          title: ['A clever title'],
+          resource_type: ['Collection'],
+          related_url: ['http://example.com/'])
+  end
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
@@ -24,11 +28,13 @@ describe Sufia::CollectionPresenter do
 
   describe "#terms_with_values" do
     subject { presenter.terms_with_values }
-    it { is_expected.to eq [:total_items,
-                            :size,
-                            :resource_type,
-                            :based_near,
-                            :related_url] }
+    it do
+      is_expected.to eq [:total_items,
+                         :size,
+                         :resource_type,
+                         :based_near,
+                         :related_url]
+    end
   end
 
   describe "#title" do

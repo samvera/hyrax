@@ -18,9 +18,9 @@ describe FileSetAttachedEventJob do
     end
 
     it "logs the event to the right places" do
-      expect {
+      expect do
         described_class.perform_now(file_set, user)
-      }.to change { user.profile_events.length }.by(1)
+      end.to change { user.profile_events.length }.by(1)
         .and change { file_set.events.length }.by(1)
         .and change { curation_concern.events.length }.by(1)
 

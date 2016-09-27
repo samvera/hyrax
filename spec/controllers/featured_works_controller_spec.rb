@@ -7,9 +7,9 @@ describe FeaturedWorksController, type: :controller do
 
     context "when there are no featured works" do
       it "creates one" do
-        expect {
+        expect do
           post :create, params: { id: '1234abcd', format: :json }
-        }.to change { FeaturedWork.count }.by(1)
+        end.to change { FeaturedWork.count }.by(1)
         expect(response).to be_successful
       end
     end
@@ -21,9 +21,9 @@ describe FeaturedWorksController, type: :controller do
         end
       end
       it "does not create another" do
-        expect {
+        expect do
           post :create, params: { id: '1234abcd', format: :json }
-        }.not_to change { FeaturedWork.count }
+        end.not_to change { FeaturedWork.count }
         expect(response.status).to eq 422
       end
     end
@@ -38,9 +38,9 @@ describe FeaturedWorksController, type: :controller do
     end
 
     it "removes it" do
-      expect {
+      expect do
         delete :destroy, params: { id: '1234abcd', format: :json }
-      }.to change { FeaturedWork.count }.by(-1)
+      end.to change { FeaturedWork.count }.by(-1)
       expect(response.status).to eq 204
     end
   end

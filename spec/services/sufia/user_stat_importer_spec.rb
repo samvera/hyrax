@@ -65,20 +65,20 @@ RSpec.describe Sufia::UserStatImporter do
     create(:work, id: 'xyzfrodowork1', user: frodo)
   end
 
-  let(:dates) {
+  let(:dates) do
     ldates = []
     4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
     ldates
-  }
+  end
 
-  let(:date_strs) {
+  let(:date_strs) do
     ldate_strs = []
     dates.each { |date| ldate_strs << date.strftime("%Y%m%d") }
     ldate_strs
-  }
+  end
 
   # This is what the data looks like that's returned from Google Analytics via the Legato gem.
-  let(:bilbo_file_1_pageview_stats) {
+  let(:bilbo_file_1_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 1),
       OpenStruct.new(date: date_strs[1], pageviews: 2),
@@ -86,9 +86,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 4),
       OpenStruct.new(date: date_strs[4], pageviews: 5)
     ]
-  }
+  end
 
-  let(:bilbo_file_2_pageview_stats) {
+  let(:bilbo_file_2_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 11),
       OpenStruct.new(date: date_strs[1], pageviews: 12),
@@ -96,9 +96,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 14),
       OpenStruct.new(date: date_strs[4], pageviews: 15)
     ]
-  }
+  end
 
-  let(:frodo_file_1_pageview_stats) {
+  let(:frodo_file_1_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 2),
       OpenStruct.new(date: date_strs[1], pageviews: 4),
@@ -106,10 +106,10 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 1),
       OpenStruct.new(date: date_strs[4], pageviews: 9)
     ]
-  }
+  end
 
   # work
-  let(:bilbo_work_1_pageview_stats) {
+  let(:bilbo_work_1_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 1),
       OpenStruct.new(date: date_strs[1], pageviews: 2),
@@ -117,9 +117,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 4),
       OpenStruct.new(date: date_strs[4], pageviews: 5)
     ]
-  }
+  end
 
-  let(:bilbo_work_2_pageview_stats) {
+  let(:bilbo_work_2_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 11),
       OpenStruct.new(date: date_strs[1], pageviews: 12),
@@ -127,9 +127,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 14),
       OpenStruct.new(date: date_strs[4], pageviews: 15)
     ]
-  }
+  end
 
-  let(:frodo_work_1_pageview_stats) {
+  let(:frodo_work_1_pageview_stats) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 2),
       OpenStruct.new(date: date_strs[1], pageviews: 4),
@@ -137,9 +137,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(date: date_strs[3], pageviews: 1),
       OpenStruct.new(date: date_strs[4], pageviews: 9)
     ]
-  }
+  end
 
-  let(:bilbo_file_1_download_stats) {
+  let(:bilbo_file_1_download_stats) do
     [
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[0], totalEvents: "2"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[1], totalEvents: "3"),
@@ -147,9 +147,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[3], totalEvents: "3"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7")
     ]
-  }
+  end
 
-  let(:bilbo_file_2_download_stats) {
+  let(:bilbo_file_2_download_stats) do
     [
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[0], totalEvents: "1"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[1], totalEvents: "4"),
@@ -157,9 +157,9 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[3], totalEvents: "2"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3")
     ]
-  }
+  end
 
-  let(:frodo_file_1_download_stats) {
+  let(:frodo_file_1_download_stats) do
     [
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[0], totalEvents: "5"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[1], totalEvents: "4"),
@@ -167,7 +167,7 @@ RSpec.describe Sufia::UserStatImporter do
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[3], totalEvents: "1"),
       OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6")
     ]
-  }
+  end
 
   describe 'with empty cache' do
     it 'for each user it adds one entry per day to the cache' do

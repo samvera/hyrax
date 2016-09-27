@@ -210,9 +210,9 @@ describe UsersController, type: :controller do
         user.trophies.create!(work_id: work.id)
       end
       it "removes a trophy" do
-        expect {
+        expect do
           post :update, params: { id: user.user_key, 'remove_trophy_' + work.id => 'yes' }
-        }.to change { user.trophies.count }.by(-1)
+        end.to change { user.trophies.count }.by(-1)
         expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
       end

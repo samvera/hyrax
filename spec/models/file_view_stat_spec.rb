@@ -16,32 +16,32 @@ RSpec.describe FileViewStat, type: :model do
   end
 
   describe "#statistics" do
-    let(:dates) {
+    let(:dates) do
       ldates = []
       4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
       ldates
-    }
-    let(:date_strs) {
+    end
+    let(:date_strs) do
       dates.map { |date| date.strftime("%Y%m%d") }
-    }
+    end
 
-    let(:view_output) {
+    let(:view_output) do
       [[statistic_date(dates[0]), 4], [statistic_date(dates[1]), 8], [statistic_date(dates[2]), 6], [statistic_date(dates[3]), 10]]
-    }
+    end
 
     # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
     # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
     # Sample data structures were created by sending real events to GA from a test instance of
     # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
     # results from the Legato gem.
-    let(:sample_pageview_statistics) {
+    let(:sample_pageview_statistics) do
       [
         OpenStruct.new(date: date_strs[0], pageviews: 4),
         OpenStruct.new(date: date_strs[1], pageviews: 8),
         OpenStruct.new(date: date_strs[2], pageviews: 6),
         OpenStruct.new(date: date_strs[3], pageviews: 10)
       ]
-    }
+    end
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)

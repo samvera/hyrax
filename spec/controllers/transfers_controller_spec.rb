@@ -72,7 +72,7 @@ describe TransfersController, type: :controller do
       let(:work) { create(:work, user: user) }
       it "is successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
-        expect {
+        expect do
           post :create, params: {
             id: work.id,
             proxy_deposit_request: {
@@ -80,7 +80,7 @@ describe TransfersController, type: :controller do
               sender_comment: 'Hi mom!'
             }
           }
-        }.to change(ProxyDepositRequest, :count).by(1)
+        end.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
@@ -93,9 +93,9 @@ describe TransfersController, type: :controller do
         expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
       it "gives an error if the user is not found" do
-        expect {
+        expect do
           post :create, params: { id: work.id, proxy_deposit_request: { transfer_to: 'foo' } }
-        }.not_to change(ProxyDepositRequest, :count)
+        end.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(response).to redirect_to(root_path)
       end
