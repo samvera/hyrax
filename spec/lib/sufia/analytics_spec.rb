@@ -1,34 +1,65 @@
-describe Sufia::Analytics do
+describe Sufia::Analytics, :no_clean do
   before do
-    token = OAuth2::AccessToken.new(nil, nil)
-    allow(subject).to receive(:token).and_return(token)
+    described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end
 
   describe "configuration" do
+    let(:config) { described_class.send(:config) }
+
     context "When the yaml file has values" do
+      it "is valid" do
+        expect(config).to be_valid
+      end
+
       it 'reads its config from a yaml file' do
-        expect(subject.send(:config).keys.sort).to eql ['app_name', 'app_version', 'client_email', 'privkey_path', 'privkey_secret']
+        expect(config.app_name).to eql 'My App Name'
+        expect(config.app_version).to eql '0.0.1'
+        expect(config.privkey_path).to eql '/tmp/privkey.p12'
+        expect(config.privkey_secret).to eql 's00pers3kr1t'
+        expect(config.client_email).to eql 'oauth@example.org'
       end
     end
 
     context "When the yaml file has no values" do
       before do
-        described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
         allow(File).to receive(:read).and_return("# Just comments\n# and comments\n")
       end
-      it 'returns nil' do
+
+      it "is not valid" do
         expect(Rails.logger).to receive(:error)
           .with(starting_with("Unable to fetch any keys from"))
-        expect(subject.send(:config)).to be nil
+        expect(config).not_to be_valid
       end
     end
   end
 
-  it 'instantiates a user' do
-    expect(subject.send(:user)).to be_a(Legato::User)
+  describe "#user" do
+    before do
+      token = OAuth2::AccessToken.new(nil, nil)
+      allow(subject).to receive(:token).and_return(token)
+    end
+    it 'instantiates a user' do
+      expect(subject.send(:user)).to be_a(Legato::User)
+    end
   end
 
-  it 'responds to :profile' do
-    expect(subject).to respond_to(:profile)
+  describe "#profile" do
+    subject { described_class.profile }
+
+    context "when the private key file is missing" do
+      it "raises an error" do
+        expect { subject }.to raise_error RuntimeError, "Private key file for Google analytics was expected at '/tmp/privkey.p12', but no file was found."
+      end
+    end
+
+    context "when the config is not valid" do
+      before do
+        allow(File).to receive(:read).and_return("# Just comments\n# and comments\n")
+      end
+
+      it "returns nil" do
+        expect(subject).to be_nil
+      end
+    end
   end
 end
