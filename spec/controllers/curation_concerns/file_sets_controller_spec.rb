@@ -30,9 +30,9 @@ describe CurationConcerns::FileSetsController do
 
       it "deletes the file" do
         expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user)
-        expect {
+        expect do
           delete :destroy, params: { id: file_set }
-        }.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
+        end.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
       end
     end
   end

@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 describe Sufia::AdminSetPresenter do
-  let(:admin_set) { build(:admin_set,
-                          id: '123',
-                          description: ['An example admin set.'],
-                          title: ['Example Admin Set Title']) }
+  let(:admin_set) do
+    build(:admin_set,
+          id: '123',
+          description: ['An example admin set.'],
+          title: ['Example Admin Set Title'])
+  end
   let(:work) { build(:work, title: ['Example Work Title'], admin_set_id: '123') }
   let(:solr_document) { SolrDocument.new(admin_set.to_solr) }
   let(:ability) { double }

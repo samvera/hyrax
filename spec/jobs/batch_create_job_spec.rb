@@ -26,12 +26,14 @@ describe BatchCreateJob do
     let(:work) { double(errors: errors) }
     let(:actor) { double(curation_concern: work) }
 
-    subject { described_class.perform_later(user,
-                                            title,
-                                            resource_types,
-                                            uploaded_files,
-                                            metadata,
-                                            log) }
+    subject do
+      described_class.perform_later(user,
+                                    title,
+                                    resource_types,
+                                    uploaded_files,
+                                    metadata,
+                                    log)
+    end
 
     it "updates work metadata" do
       expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice

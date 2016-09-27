@@ -14,32 +14,32 @@ describe FileDownloadStat, type: :model do
   end
 
   describe "#statistics" do
-    let(:dates) {
+    let(:dates) do
       ldates = []
       4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
       ldates
-    }
-    let(:date_strs) {
+    end
+    let(:date_strs) do
       dates.map { |date| date.strftime("%Y%m%d") }
-    }
+    end
 
-    let(:download_output) {
+    let(:download_output) do
       [[statistic_date(dates[0]), 1], [statistic_date(dates[1]), 1], [statistic_date(dates[2]), 2], [statistic_date(dates[3]), 3]]
-    }
+    end
 
     # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
     # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
     # Sample data structures were created by sending real events to GA from a test instance of
     # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
     # results from the Legato gem.
-    let(:sample_download_statistics) {
+    let(:sample_download_statistics) do
       [
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[0], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3")
       ]
-    }
+    end
 
     describe "cache empty" do
       let(:stats) do

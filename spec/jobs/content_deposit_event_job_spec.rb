@@ -15,9 +15,9 @@ describe ContentDepositEventJob do
   end
 
   it "logs the event to the depositor's profile and the Work" do
-    expect {
+    expect do
       described_class.perform_now(curation_concern, user)
-    }.to change { user.profile_events.length }.by(1)
+    end.to change { user.profile_events.length }.by(1)
       .and change { curation_concern.events.length }.by(1)
 
     expect(user.profile_events.first).to eq(event)

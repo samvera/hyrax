@@ -43,9 +43,9 @@ describe ContentBlocksController, type: :controller do
         end
 
         it "CREATE should save" do
-          expect {
+          expect do
             post :create, params: { content_block: { name: 'NNN', value: 'VVV', external_key: 'key' } }
-          }.to change { ContentBlock.count }.by(1)
+          end.to change { ContentBlock.count }.by(1)
           expect(response).to redirect_to "whence_i_came"
           expect(assigns[:content_block].name).to eq 'NNN'
           expect(assigns[:content_block].value).to eq 'VVV'

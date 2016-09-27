@@ -5,7 +5,7 @@ describe 'curation_concerns/base/_citations.html.erb', type: :view do
   let(:object_profile) { ["{\"id\":\"999\"}"] }
   let(:contributor) { ['Frodo'] }
   let(:creator)     { ['Bilbo'] }
-  let(:solr_document) {
+  let(:solr_document) do
     SolrDocument.new(
       id: '999',
       object_profile_ssm: object_profile,
@@ -15,7 +15,7 @@ describe 'curation_concerns/base/_citations.html.erb', type: :view do
       creator_tesim: creator,
       rights_tesim: ['http://creativecommons.org/licenses/by/3.0/us/']
     )
-  }
+  end
   let(:ability) { Ability.new(user) }
   let(:presenter) do
     Sufia::WorkShowPresenter.new(solr_document, ability)

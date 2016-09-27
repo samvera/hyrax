@@ -94,13 +94,13 @@ describe User, type: :model do
 
   describe "activity streams" do
     let(:now) { Time.zone.now.to_i }
-    let(:activities) {
+    let(:activities) do
       [{ action: 'so and so edited their profile', timestamp: now },
        { action: 'so and so uploaded a file', timestamp: (now - 360) }]
-    }
-    let(:file_activities) {
+    end
+    let(:file_activities) do
       [{ action: 'uploaded a file', timestamp: now + 1 }]
-    }
+    end
 
     before do
       allow(user).to receive(:events).and_return(activities)

@@ -9,7 +9,6 @@ AllCops:
   Exclude:
     - 'db/**/*'
     - 'script/**/*'
-    - 'spec/internal/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
 
@@ -31,21 +30,9 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 15
 
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/**/*'
-
-Style/BlockEndNewline:
-  Exclude:
-    - 'spec/**/*'
-
 Style/SymbolProc: # https://github.com/bbatsov/rubocop/issues/3071
   Exclude:
     - 'app/models/sufia/uploaded_file.rb'
-
-Style/MultilineBlockLayout:
-  Exclude:
-    - 'spec/**/*'
 
 Style/IndentationConsistency:
   EnforcedStyle: rails

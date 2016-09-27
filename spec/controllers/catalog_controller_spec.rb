@@ -8,14 +8,14 @@ describe CatalogController, type: :controller do
   end
 
   describe "#index" do
-    let(:rocks) {
+    let(:rocks) do
       GenericWork.new(id: 'rock123', title: ['Rock Documents'], read_groups: ['public'])
-    }
+    end
 
-    let(:clouds) {
+    let(:clouds) do
       GenericWork.new(id: 'cloud123', title: ['Cloud Documents'], read_groups: ['public'],
                       contributor: ['frodo'])
-    }
+    end
 
     before do
       objects.each { |obj| ActiveFedora::SolrService.add(obj.to_solr) }

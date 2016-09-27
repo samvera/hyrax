@@ -4,15 +4,17 @@ describe Sufia::ActorFactory do
 
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
-    it { is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
-                            Sufia::CreateWithFilesActor,
-                            CurationConcerns::Actors::AddToCollectionActor,
-                            CurationConcerns::Actors::AddToWorkActor,
-                            CurationConcerns::Actors::AssignRepresentativeActor,
-                            CurationConcerns::Actors::AttachFilesActor,
-                            CurationConcerns::Actors::ApplyOrderActor,
-                            CurationConcerns::Actors::InterpretVisibilityActor,
-                            CurationConcerns::Actors::GenericWorkActor] }
+    it do
+      is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
+                         Sufia::CreateWithFilesActor,
+                         CurationConcerns::Actors::AddToCollectionActor,
+                         CurationConcerns::Actors::AddToWorkActor,
+                         CurationConcerns::Actors::AssignRepresentativeActor,
+                         CurationConcerns::Actors::AttachFilesActor,
+                         CurationConcerns::Actors::ApplyOrderActor,
+                         CurationConcerns::Actors::InterpretVisibilityActor,
+                         CurationConcerns::Actors::GenericWorkActor]
+    end
   end
 
   describe '.build' do

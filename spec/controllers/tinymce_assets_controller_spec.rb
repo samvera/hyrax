@@ -9,10 +9,10 @@ describe TinymceAssetsController, type: :controller do
       before { expect(controller).to receive(:authorize!).with(:create, TinymceAsset).and_return(true) }
 
       it "uploads the file" do
-        expect {
+        expect do
           post :create, params: { file: file }
           expect(response).to be_successful
-        }.to change { TinymceAsset.count }.by(1)
+        end.to change { TinymceAsset.count }.by(1)
 
         json = JSON.parse(response.body)
         expect(json).to eq("image" => { "url" => "/uploads/tinymce_asset/file/1/world.png" })

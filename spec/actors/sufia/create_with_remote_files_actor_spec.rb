@@ -1,7 +1,9 @@
 describe Sufia::CreateWithRemoteFilesActor do
-  let(:create_actor) { double('create actor', create: true,
-                                              curation_concern: work,
-                                              user: user) }
+  let(:create_actor) do
+    double('create actor', create: true,
+                           curation_concern: work,
+                           user: user)
+  end
   let(:actor) do
     CurationConcerns::Actors::ActorStack.new(work, user, [described_class])
   end
@@ -11,12 +13,14 @@ describe Sufia::CreateWithRemoteFilesActor do
   let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
   let(:file) { "file:///local/file/here.txt" }
 
-  let(:remote_files) { [{ url: url1,
-                          expires: "2014-03-31T20:37:36.214Z",
-                          file_name: "filepicker-demo.txt.txt" },
-                        { url: url2,
-                          expires: "2014-03-31T20:37:36.731Z",
-                          file_name: "Getting+Started.pdf" }] }
+  let(:remote_files) do
+    [{ url: url1,
+       expires: "2014-03-31T20:37:36.214Z",
+       file_name: "filepicker-demo.txt.txt" },
+     { url: url2,
+       expires: "2014-03-31T20:37:36.731Z",
+       file_name: "Getting+Started.pdf" }]
+  end
   let(:attributes) { { remote_files: remote_files } }
 
   before do
@@ -25,12 +29,14 @@ describe Sufia::CreateWithRemoteFilesActor do
   end
 
   context "with source uris that are remote" do
-    let(:remote_files) { [{ url: url1,
-                            expires: "2014-03-31T20:37:36.214Z",
-                            file_name: "filepicker-demo.txt.txt" },
-                          { url: url2,
-                            expires: "2014-03-31T20:37:36.731Z",
-                            file_name: "Getting+Started.pdf" }] }
+    let(:remote_files) do
+      [{ url: url1,
+         expires: "2014-03-31T20:37:36.214Z",
+         file_name: "filepicker-demo.txt.txt" },
+       { url: url2,
+         expires: "2014-03-31T20:37:36.731Z",
+         file_name: "Getting+Started.pdf" }]
+    end
 
     it "attaches files" do
       expect(ImportUrlJob).to receive(:perform_later).with(FileSet, CurationConcerns::Operation).twice
@@ -39,9 +45,11 @@ describe Sufia::CreateWithRemoteFilesActor do
   end
 
   context "with source uris that are local files" do
-    let(:remote_files) { [{ url: file,
-                            expires: "2014-03-31T20:37:36.214Z",
-                            file_name: "here.txt" }] }
+    let(:remote_files) do
+      [{ url: file,
+         expires: "2014-03-31T20:37:36.214Z",
+         file_name: "here.txt" }]
+    end
 
     it "attaches files" do
       expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/here.txt", user)
