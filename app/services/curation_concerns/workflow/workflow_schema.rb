@@ -12,6 +12,7 @@ module CurationConcerns
     # @see Sipity::WorkflowState
     # @see Sipity::Role
     # @see Sipity::Notification
+    # @see ./lib/generators/curation_concerns/work/templates/workflow.json.erb
     WorkflowSchema = Dry::Validation.Schema do
       required(:work_types).each do
         required(:name).filled(:str?) # Sipity::Workflow#name
