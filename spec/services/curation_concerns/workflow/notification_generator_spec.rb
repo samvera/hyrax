@@ -1,7 +1,7 @@
 require 'spec_helper'
 module CurationConcerns
   module Workflow
-    RSpec.describe NotificationGenerator do
+    RSpec.describe NotificationGenerator, no_clean: true do
       let(:workflow) { Sipity::Workflow.new(id: 1) }
       let(:recipients) { { to: 'creating_user', cc: 'advising', bcc: "data_observing" } }
 
@@ -31,7 +31,9 @@ module CurationConcerns
           it 'will generate the requisite entries' do
             workflow_state = Sipity::WorkflowState.create!(workflow_id: workflow.id, name: 'a_state')
             expect do
-              described_class.call(workflow: workflow, notification_configuration: notification_configuration)
+              expect(
+                described_class.call(workflow: workflow, notification_configuration: notification_configuration)
+              ).to be_a(Sipity::Notification)
             end.to change { Sipity::Notification.count }.by(1)
               .and change { Sipity::NotificationRecipient.count }.by(3)
               .and change { workflow_state.notifiable_contexts.count }.by(1)
