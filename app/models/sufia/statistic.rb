@@ -16,10 +16,6 @@ module Sufia
         new attrs.merge(filter(object))
       end
 
-      def to_flots(stats)
-        stats.map(&:to_flot)
-      end
-
       def convert_date(date_time)
         date_time.to_datetime.to_i * 1000
       end

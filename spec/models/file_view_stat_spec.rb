@@ -49,18 +49,18 @@ RSpec.describe FileViewStat, type: :model do
       end
 
       it "includes cached ga data" do
-        expect(described_class.to_flots(stats)).to include(*view_output)
+        expect(stats.map(&:to_flot)).to include(*view_output)
       end
 
       it "caches data" do
-        expect(described_class.to_flots(stats)).to include(*view_output)
+        expect(stats.map(&:to_flot)).to include(*view_output)
         expect(stats.first.user_id).to eq user_id
 
         # at this point all data should be cached
         allow(described_class).to receive(:ga_statistics).with(Time.zone.today, file).and_raise("We should not call Google Analytics All data should be cached!")
 
         stats2 = described_class.statistics(file, Time.zone.today - 5.days)
-        expect(described_class.to_flots(stats2)).to include(*view_output)
+        expect(stats2.map(&:to_flot)).to include(*view_output)
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe FileViewStat, type: :model do
       end
 
       it "includes cached data" do
-        expect(described_class.to_flots(stats)).to include([file_view_stat.date.to_i * 1000, file_view_stat.views], *view_output)
+        expect(stats.map(&:to_flot)).to include([file_view_stat.date.to_i * 1000, file_view_stat.views], *view_output)
       end
     end
   end
