@@ -15,11 +15,6 @@ module Sipity
              class_name: 'Sipity::WorkflowAction',
              foreign_key: :resulting_workflow_state_id
 
-    has_many :comments,
-             foreign_key: :originating_workflow_state_id,
-             dependent: :destroy,
-             class_name: 'Sipity::Comment'
-
     # TODO: What should be done with entities in the given state if the WorkflowState is destroyed?
     has_many :entities, class_name: 'Sipity::Workflow'
 

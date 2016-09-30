@@ -12,10 +12,5 @@ module Sipity
              dependent: :destroy,
              as: :scope_for_notification,
              class_name: 'Sipity::NotifiableContext'
-
-    has_many :comments,
-             foreign_key: :originating_workflow_action_id,
-             dependent: :destroy,
-             class_name: 'Sipity::Comment'
   end
 end
