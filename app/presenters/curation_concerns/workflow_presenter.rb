@@ -31,7 +31,7 @@ module CurationConcerns
     private
 
       def action_label(action)
-        I18n.t("curation_concerns.workflow.#{action.workflow.name}.#{action.name}")
+        I18n.t("curation_concerns.workflow.#{action.workflow.name}.#{action.name}", default: action.name.titleize)
       end
 
       def sipity_entity
