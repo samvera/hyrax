@@ -5,7 +5,7 @@ module Sipity
   # @see Sipity::Role for discussion of roles
   class WorkflowResponsibility < ActiveRecord::Base
     self.table_name = 'sipity_workflow_responsibilities'
-    belongs_to :agent
-    belongs_to :workflow_role
+    belongs_to :agent, class_name: 'Sipity::Agent'
+    belongs_to :workflow_role, class_name: 'Sipity::WorkflowRole'
   end
 end

@@ -8,10 +8,10 @@ module Sipity
   class Entity < ActiveRecord::Base
     self.table_name = 'sipity_entities'
 
-    belongs_to :workflow
-    belongs_to :workflow_state
+    belongs_to :workflow, class_name: 'Sipity::Workflow'
+    belongs_to :workflow_state, class_name: 'Sipity::WorkflowState'
 
-    has_many :entity_specific_responsibilities, dependent: :destroy
+    has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 
     has_many :comments,
              foreign_key: :entity_id,

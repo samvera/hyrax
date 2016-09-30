@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Sipity
-  RSpec.describe Notification, type: :model do
+  RSpec.describe Notification, type: :model, no_clean: true do
     subject { described_class.new }
     it 'will raise an ArgumentError if you provide an invalid #notification_type' do
       expect { subject.notification_type = '__incorrect_name__' }.to raise_error(ArgumentError)

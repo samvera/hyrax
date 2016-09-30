@@ -6,10 +6,10 @@ module Sipity
   class Workflow < ActiveRecord::Base
     self.table_name = 'sipity_workflows'
 
-    has_many :entities, dependent: :destroy
-    has_many :workflow_states, dependent: :destroy
-    has_many :workflow_actions, dependent: :destroy
-    has_many :workflow_roles, dependent: :destroy
+    has_many :entities, dependent: :destroy, class_name: 'Sipity::Entity'
+    has_many :workflow_states, dependent: :destroy, class_name: 'Sipity::WorkflowState'
+    has_many :workflow_actions, dependent: :destroy, class_name: 'Sipity::WorkflowAction'
+    has_many :workflow_roles, dependent: :destroy, class_name: 'Sipity::WorkflowRole'
 
     DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
     def initial_workflow_state

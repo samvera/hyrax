@@ -4,7 +4,7 @@ module Sipity
   class WorkflowState < ActiveRecord::Base
     self.table_name = 'sipity_workflow_states'
 
-    belongs_to :workflow
+    belongs_to :workflow, class_name: 'Sipity::Workflow'
     has_many :originating_workflow_state_actions,
              dependent: :destroy,
              class_name: 'Sipity::WorkflowStateAction',
@@ -20,7 +20,8 @@ module Sipity
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 
-    has_many :entities # TODO: should this be destroyed
+    # TODO: What should be done with entities in the given state if the WorkflowState is destroyed?
+    has_many :entities, class_name: 'Sipity::Workflow'
 
     has_many :notifiable_contexts,
              dependent: :destroy,

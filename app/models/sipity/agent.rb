@@ -10,8 +10,8 @@ module Sipity
     WORKFLOW_LEVEL_AGENT_RELATIONSHIP = 'workflow_level'.freeze
 
     belongs_to :proxy_for, polymorphic: true
-    has_many :workflow_responsibilities, dependent: :destroy
-    has_many :entity_specific_responsibilities, dependent: :destroy
+    has_many :workflow_responsibilities, dependent: :destroy, class_name: 'Sipity::WorkflowResponsibility'
+    has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 
     has_many :comments,
              foreign_key: :agent_id,

@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe Comment do
+  RSpec.describe Comment, type: :model, no_clean: true do
     context 'database configuration' do
       subject { described_class }
       its(:column_names) { is_expected.to include('entity_id') }
