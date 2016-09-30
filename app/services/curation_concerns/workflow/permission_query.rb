@@ -152,8 +152,8 @@ module CurationConcerns
       # @param user [User]
       # @return [ActiveRecord::Relation<Sipity::Agent>]
       def scope_processing_agents_for(user:)
-        return Sipity::Agent.where('1 = 0') unless user.present?
-        return Sipity::Agent.where('1 = 0') unless user.persisted?
+        return Sipity::Agent.none unless user.present?
+        return Sipity::Agent.none unless user.persisted?
         agent = PowerConverter.convert_to_sipity_agent(user)
         Sipity::Agent.where(id: agent.id)
       end
