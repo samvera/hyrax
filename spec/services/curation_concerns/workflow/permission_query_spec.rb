@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module CurationConcerns
   module Workflow
-    RSpec.describe PermissionQuery, slow_test: true do
+    RSpec.describe PermissionQuery, slow_test: true, no_clean: true do
       let(:reviewing_user) { FactoryGirl.create(:user) }
       let(:completing_user) { FactoryGirl.create(:user) }
       let(:workflow_config) do

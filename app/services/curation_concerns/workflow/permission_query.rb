@@ -155,7 +155,8 @@ module CurationConcerns
         return Sipity::Agent.none unless user.present?
         return Sipity::Agent.none unless user.persisted?
         agent = PowerConverter.convert_to_sipity_agent(user)
-        Sipity::Agent.where(id: agent.id)
+        user_constraints = Sipity::Agent.arel_table[:id].eq(agent.id)
+        Sipity::Agent.where(user_constraints)
       end
 
       PermissionScope = Struct.new(:entity, :workflow)
