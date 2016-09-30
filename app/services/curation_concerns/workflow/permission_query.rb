@@ -153,14 +153,9 @@ module CurationConcerns
       # @return [ActiveRecord::Relation<Sipity::Agent>]
       def scope_processing_agents_for(user:)
         return Sipity::Agent.where('1 = 0') unless user.present?
-
-        agent_table = Sipity::Agent.arel_table
-
-        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
+        return Sipity::Agent.where('1 = 0') unless user.persisted?
         agent = PowerConverter.convert_to_sipity_agent(user)
-
-        user_constraints = agent_table[:proxy_for_type].eq(user_polymorphic_type).and(agent_table[:proxy_for_id].eq(agent.proxy_for_id))
-        Sipity::Agent.where(user_constraints)
+        Sipity::Agent.where(id: agent.id)
       end
 
       PermissionScope = Struct.new(:entity, :workflow)

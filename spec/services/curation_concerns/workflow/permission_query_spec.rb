@@ -104,7 +104,7 @@ module CurationConcerns
       end
 
       # NOTE: I am stacking up expectations because these tests are non-trivial to build (lots of database interactions)
-      context 'permissions assigned at the entity level' do
+      describe 'permissions assigned at the entity level' do
         it 'will fullfil the battery of tests (of which they are nested because setup is expensive)' do
           PermissionGenerator.call(roles: 'reviewing', entity: sipity_entity, workflow: sipity_workflow, agents: reviewing_user)
           PermissionGenerator.call(roles: 'completing', entity: sipity_entity, workflow: sipity_workflow, agents: completing_user)
@@ -146,6 +146,24 @@ module CurationConcerns
 
           expect_entities_for(user: reviewing_user, entities: [])
           expect_entities_for(user: completing_user, entities: [sipity_entity])
+        end
+      end
+
+      describe '.scope_processing_agents_for', no_clean: true do
+        context 'when user is not persisted' do
+          subject { described_class.scope_processing_agents_for(user: ::User.new) }
+          it { is_expected.to eq([]) }
+        end
+        context 'when user is non-trivial' do
+          subject { described_class.scope_processing_agents_for(user: nil) }
+          it { is_expected.to eq([]) }
+        end
+        context 'when user is persisted' do
+          let(:user) { create(:user) }
+          subject { described_class.scope_processing_agents_for(user: user) }
+          it 'should eq [kind_of(Sipity::Agent)]' do
+            is_expected.to eq([PowerConverter.convert_to_sipity_agent(user)])
+          end
         end
       end
     end
