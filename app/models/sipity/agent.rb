@@ -17,10 +17,5 @@ module Sipity
              foreign_key: :agent_id,
              dependent: :destroy,
              class_name: 'Sipity::Comment'
-
-    has_many :actions_that_were_requested_by_me,
-             dependent: :destroy,
-             foreign_key: 'requested_by_agent_id',
-             class_name: "Sipity::EntityActionRegister"
   end
 end
