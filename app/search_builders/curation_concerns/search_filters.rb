@@ -1,6 +1,5 @@
 module CurationConcerns::SearchFilters
   extend ActiveSupport::Concern
-  include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include CurationConcerns::FilterByType
 
   # Override Hydra::AccessControlsEnforcement (or Hydra::PolicyAwareAccessControlsEnforcement)
