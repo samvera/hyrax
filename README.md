@@ -1,4 +1,4 @@
-# Sufia
+![Logo](https://raw.githubusercontent.com/projecthydra-labs/sufia.io/gh-pages/assets/images/sufia_logo_white_bg_small.png)
 
 Code: [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
@@ -279,3 +279,5 @@ This software has been developed by and is brought to you by the Hydra community
 [Project Hydra website](http://projecthydra.org/).
 
 ![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
+
+The Sufia logo uses the Hong Kong Hustle font, thanks to [Iconian's](http://www.iconian.com/) non-commercial use policy.
