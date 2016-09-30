@@ -1,8 +1,16 @@
 module CurationConcerns
   module Workflow
+    # Responsible for creating database entries for the given workflow's permissions
     class WorkflowPermissionsGenerator
-      def self.call(**keywords)
-        new(**keywords).call
+      # @api public
+      #
+      # Responsible for creating database entries for the given workflow's permissions
+      #
+      # @param workflow [Sipity::Workflow]
+      # @param workflow_permissions_configuration [Hash] as defined in CurationConcerns::Workflow::WorkflowSchema
+      # @return [Sipity::Workflow]
+      def self.call(workflow:, workflow_permissions_configuration:)
+        new(workflow:, workflow_permissions_configuration:).call
       end
 
       def initialize(workflow:, workflow_permissions_configuration:)

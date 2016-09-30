@@ -1,7 +1,12 @@
 module CurationConcerns
   module Workflow
+    # Responsible for writing the database records for the given :workflow and :notification_configuration.
     class NotificationGenerator
       # @api public
+      #
+      # @param workflow [Sipity::Workflow]
+      # @param notification_configuration [CurationConcerns::Workflow::NotificationConfigurationParameter]
+      # @return [Sipity::Notification]
       def self.call(workflow:, notification_configuration:)
         new(workflow: workflow, notification_configuration: notification_configuration).call
       end
@@ -18,6 +23,7 @@ module CurationConcerns
         notification = persist_notification
         assign_recipients_to(notification: notification)
         assign_scope_and_reason_to(notification: notification)
+        notification
       end
 
       private

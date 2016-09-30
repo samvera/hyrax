@@ -1,7 +1,14 @@
 module CurationConcerns
   module Workflow
+    # Responsible for creating database entries for the given workflow's actions
     class SipityActionsGenerator
-      # A convenience method for constructing and calling this function.
+      # @api public
+      #
+      # Responsible for creating database entries for the given workflow's actions
+      #
+      # @param workflow [Sipity::Workflow]
+      # @param actions_configuration [Hash] as defined in CurationConcerns::Workflow::WorkflowSchema
+      # @return [Sipity::Workflow]
       def self.call(**keywords, &block)
         new(**keywords, &block).call
       end
