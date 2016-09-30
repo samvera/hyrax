@@ -1,5 +1,17 @@
 module CurationConcerns
   module Forms
+    # Responsible for processing that the :current_ability (and
+    # associated current_user) has taken a Sipity::WorkflowAction on
+    # an object that has a Sipity::Entity.
+    #
+    # The form enforces that the action taken is valid.
+    #
+    # @see Ability
+    # @see Sipity::WorkflowAction
+    # @see Sipity::Entity
+    # @see CurationConcerns::Workflow::ActionTakenService
+    # @see CurationConcerns::Workflow::NotificationService
+    # @see CurationConcerns::Workflow::PermissionQuery
     class WorkflowActionForm
       include ActiveModel::Validations
       extend ActiveModel::Translation
