@@ -2,7 +2,7 @@ module Sipity
   # A proxy for something that can take an action.
   #
   # * A User can be an agent
-  # * A Group can be an agent
+  # * A Group can be an agent (though Group is outside the scope of this system)
   class Agent < ActiveRecord::Base
     self.table_name = 'sipity_agents'
 

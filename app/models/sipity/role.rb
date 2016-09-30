@@ -19,7 +19,6 @@ module Sipity
   #   have. It is not the "role" that they had in relation to the scholarly
   #   work that is being deposited (i.e. co-author on a paper).
   #
-  # @see Sipity::Collaborators
   # @see Sipity::Agent
   class Role < ActiveRecord::Base
     self.table_name = 'sipity_roles'

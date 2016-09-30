@@ -10,7 +10,7 @@ module CurationConcerns
       # @param workflow_permissions_configuration [Hash] as defined in CurationConcerns::Workflow::WorkflowSchema
       # @return [Sipity::Workflow]
       def self.call(workflow:, workflow_permissions_configuration:)
-        new(workflow:, workflow_permissions_configuration:).call
+        new(workflow: workflow, workflow_permissions_configuration: workflow_permissions_configuration).call
       end
 
       def initialize(workflow:, workflow_permissions_configuration:)

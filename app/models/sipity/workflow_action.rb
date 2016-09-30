@@ -1,5 +1,5 @@
 module Sipity
-  # A named thing that "happens" to a processing entity.
+  # A named thing that "happens" to an entity.
   class WorkflowAction < ActiveRecord::Base
     self.table_name = 'sipity_workflow_actions'
 
