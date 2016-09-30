@@ -161,7 +161,7 @@ module CurationConcerns
         context 'when user is persisted' do
           let(:user) { create(:user) }
           subject { described_class.scope_processing_agents_for(user: user) }
-          it 'should eq [kind_of(Sipity::Agent)]' do
+          it 'will equal [kind_of(Sipity::Agent)]' do
             is_expected.to eq([PowerConverter.convert_to_sipity_agent(user)])
           end
         end
