@@ -9,6 +9,7 @@ Example:
     app/actors/curation_concerns/scholarly_paper_actor.rb
     app/controllers/curation_concerns/scholarly_papers_controller.rb
     app/views/curation_concerns/scholarly_papers/.keep
+    config/workflows/scholary_paper_workflow.json
     spec/factories/scholarly_paper_factory.rb
     spec/models/scholarly_paper_spec.rb
     spec/actors/curation_concerns/scholarly_paper_actor_spec.rb
