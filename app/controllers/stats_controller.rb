@@ -5,11 +5,11 @@ class StatsController < ApplicationController
   before_action :build_breadcrumbs, only: [:work, :file]
 
   def work
-    @stats = WorkUsage.new(params[:id])
+    @stats = Sufia::WorkUsage.new(params[:id])
   end
 
   def file
-    @stats = FileUsage.new(params[:id])
+    @stats = Sufia::FileUsage.new(params[:id])
   end
 
   protected

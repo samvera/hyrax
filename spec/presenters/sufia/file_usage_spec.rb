@@ -1,8 +1,7 @@
-describe FileUsage, type: :model do
+RSpec.describe Sufia::FileUsage, type: :model do
   let(:file) do
-    FileSet.new.tap do |file|
+    FileSet.create do |file|
       file.apply_depositor_metadata("awead")
-      file.save
     end
   end
 
@@ -53,22 +52,28 @@ describe FileUsage, type: :model do
 
   let(:usage) do
     allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-    expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-    expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+    allow(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+    allow(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
     described_class.new(file.id)
   end
 
   describe "#initialize" do
-    it "sets the id" do
-      expect(usage.id).to eq(file.id)
-    end
-
-    it "sets the created date" do
-      expect(usage.created).to eq(file.create_date)
+    it "sets the model" do
+      expect(usage.model).to eq file
     end
   end
 
-  describe "statistics" do
+  describe "#to_flot" do
+    let(:flots) { usage.to_flot }
+    it "returns an array of hashes for use with JQuery Flot" do
+      expect(flots[0][:label]).to eq("Pageviews")
+      expect(flots[1][:label]).to eq("Downloads")
+      expect(flots[0][:data]).to include(*view_output)
+      expect(flots[1][:data]).to include(*download_output)
+    end
+  end
+
+  describe "#created" do
     let!(:system_timezone) { ENV['TZ'] }
     before do
       ENV['TZ'] = 'UTC'
@@ -76,6 +81,10 @@ describe FileUsage, type: :model do
 
     after do
       ENV['TZ'] = system_timezone
+    end
+
+    it "sets the created date" do
+      expect(usage.created).to eq(file.create_date)
     end
 
     it "counts the total numver of downloads" do
@@ -86,17 +95,9 @@ describe FileUsage, type: :model do
       expect(usage.total_pageviews).to eq(30)
     end
 
-    it "returns an array of hashes for use with JQuery Flot" do
-      expect(usage.to_flot[0][:label]).to eq("Pageviews")
-      expect(usage.to_flot[1][:label]).to eq("Downloads")
-      expect(usage.to_flot[0][:data]).to include(*view_output)
-      expect(usage.to_flot[1][:data]).to include(*download_output)
-    end
-
-    let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
-
-    describe "analytics start date set" do
+    context "when the analytics start date is set" do
       let(:earliest) { DateTime.new(2014, 1, 2).iso8601 }
+      let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
 
       before do
         Sufia.config.analytic_start_date = earliest
@@ -105,8 +106,6 @@ describe FileUsage, type: :model do
       describe "create date before earliest date set" do
         let(:usage) do
           allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-          expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-          expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           described_class.new(file.id)
         end
         it "sets the created date to the earliest date not the created date" do
@@ -117,8 +116,6 @@ describe FileUsage, type: :model do
       describe "create date after earliest" do
         let(:usage) do
           allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-          expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-          expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
           described_class.new(file.id)
         end
@@ -127,17 +124,18 @@ describe FileUsage, type: :model do
         end
       end
     end
-    describe "start date not set" do
+
+    context "when the start date is not set" do
       before do
         Sufia.config.analytic_start_date = nil
       end
+      let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
 
       let(:usage) do
         allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-        expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-        expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
         described_class.new(file.id)
       end
+
       it "sets the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)
       end
@@ -148,16 +146,12 @@ describe FileUsage, type: :model do
     let(:date_uploaded) { "2014-12-31" }
 
     let(:file_migrated) do
-      FileSet.new.tap do |file|
+      FileSet.create(date_uploaded: date_uploaded) do |file|
         file.apply_depositor_metadata("awead")
-        file.date_uploaded = date_uploaded
-        file.save
       end
     end
 
     let(:usage) do
-      expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-      expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
       described_class.new(file_migrated.id)
     end
 
