@@ -125,6 +125,8 @@ CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
 
 In the future this functionality should be available in the user interface.
 
+[Further documentation](https://github.com/projecthydra/curation_concerns/wiki/Defining-a-Workflow) for defining and customizing workflows.
+
 _Something about notification should go here._
 
 ### Adding Sample Data to Test Application
