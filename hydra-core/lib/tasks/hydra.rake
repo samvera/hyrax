@@ -4,7 +4,9 @@ namespace :hydra do
   desc "Start a solr, fedora and rails instance"
   task :server do
     with_server('development') do
-      IO.popen('rails server') do |io|
+      # If HOST specified, bind to that IP with -b
+      server_options = " -b #{ENV['HOST']}" if ENV['HOST']
+      IO.popen("rails server#{server_options}") do |io|
         begin
           io.each do |line|
             puts line
