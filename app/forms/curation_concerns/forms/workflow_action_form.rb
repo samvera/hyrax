@@ -70,7 +70,10 @@ module CurationConcerns
 
         def handle_sipity_notifications(comment:)
           CurationConcerns::Workflow::NotificationService.deliver_on_action_taken(
-            entity: entity, comment: comment, action: sipity_workflow_action, user: current_user
+            entity: entity,
+            comment: comment,
+            action: sipity_workflow_action,
+            user: current_user
           )
         end
 

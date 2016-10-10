@@ -1,5 +1,7 @@
 module CurationConcerns
   module Workflow
+    # Imports a single action for a workflow, including all of the adjacent states,
+    # permissions and notifications
     class StateMachineGenerator
       def self.generate_from_schema(workflow:, name:, **keywords)
         new(

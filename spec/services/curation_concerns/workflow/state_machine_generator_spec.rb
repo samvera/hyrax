@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module CurationConcerns
-  RSpec.describe Workflow::StateMachineGenerator do
+  RSpec.describe Workflow::StateMachineGenerator, :no_clean do
     let(:workflow) { Sipity::Workflow.create!(name: 'hello') }
     let(:action_name) { 'do_it' }
     it 'exposes .generate_from_schema as a convenience method' do
