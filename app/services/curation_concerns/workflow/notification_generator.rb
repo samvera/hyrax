@@ -56,16 +56,8 @@ module CurationConcerns
         attr_accessor :workflow, :notification_configuration
         attr_reader :scope
 
-        # Note this is a rather hideous switch statement related to coercing data.
         def assign_scope!
-          @scope = begin
-            case notification_configuration.reason
-            when Sipity::NotifiableContext::REASON_ACTION_IS_TAKEN
-              PowerConverter.convert_to_sipity_action(notification_configuration.scope, scope: workflow)
-            when Sipity::NotifiableContext::REASON_ENTERED_STATE
-              PowerConverter.convert_to_sipity_workflow_state(notification_configuration.scope, scope: workflow)
-            end
-          end
+          @scope = PowerConverter.convert_to_sipity_action(notification_configuration.scope, scope: workflow)
         end
     end
   end

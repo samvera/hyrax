@@ -20,24 +20,6 @@ module CurationConcerns
           expect(actual).to eq(expected)
         end
       end
-
-      describe '#build_from_workflow_state_configuration' do
-        let(:config) do
-          {
-            name: 'name_of_notification', notification_type: Sipity::Notification::NOTIFICATION_TYPE_EMAIL,
-            to: ['role_name_to'], cc: ['role_name_cc'], bcc: ['role_name_bcc']
-          }
-        end
-        it 'will build based on the given state name' do
-          expected = described_class.new scope: 'name_of_state',
-                                         reason: Sipity::NotifiableContext::REASON_ENTERED_STATE,
-                                         recipients: { to: config.fetch(:to), cc: config.fetch(:cc), bcc: config.fetch(:bcc) },
-                                         notification_name: config.fetch(:name),
-                                         notification_type: config.fetch(:notification_type)
-          actual = described_class.build_from_workflow_state_configuration(workflow_state: 'name_of_state', config: config)
-          expect(actual).to eq(expected)
-        end
-      end
     end
   end
 end

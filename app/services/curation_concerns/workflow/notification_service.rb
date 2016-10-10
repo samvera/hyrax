@@ -51,9 +51,6 @@ module CurationConcerns
         Rails.logger.error "Expected '#{class_name}' to respond to 'send_notification', but it didn't, so not sending notification"
         nil
       end
-
-      def resolve_recipients(notification)
-      end
     end
   end
 end

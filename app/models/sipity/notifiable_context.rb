@@ -21,7 +21,6 @@ module Sipity
     belongs_to :scope_for_notification, polymorphic: true
     belongs_to :notification, class_name: 'Sipity::Notification'
 
-    REASON_ENTERED_STATE = 'entered_state'.freeze
     REASON_ACTION_IS_TAKEN = 'action_is_taken'.freeze
   end
 end

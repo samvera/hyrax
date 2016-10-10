@@ -17,19 +17,6 @@ module CurationConcerns
         )
       end
 
-      def self.build_from_workflow_state_configuration(workflow_state:, config:)
-        notification_name = config.fetch(:name)
-        notification_type = config.fetch(:notification_type)
-        recipients = config.slice(:to, :cc, :bcc)
-        new(
-          notification_name: notification_name,
-          reason: Sipity::NotifiableContext::REASON_ENTERED_STATE,
-          recipients: recipients,
-          notification_type: notification_type,
-          scope: workflow_state
-        )
-      end
-
       include Dry::Equalizer(:reason, :scope, :notification_name, :recipients, :notification_type)
 
       def initialize(reason:, scope:, notification_name:, recipients:, notification_type:)
@@ -44,7 +31,6 @@ module CurationConcerns
 
       # Why are we sending the notification?
       #
-      # @see Sipity::NotifiableContext::REASON_ENTERED_STATE
       # @see Sipity::NotifiableContext::REASON_ACTION_IS_TAKEN
       attr_accessor :reason
 
