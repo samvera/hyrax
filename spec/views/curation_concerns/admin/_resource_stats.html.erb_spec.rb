@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe 'curation_concerns/admin/_resource_stats.html.erb', type: :view do
-  before do
-    assign(:resource_stats, resource_stats)
-  end
   let(:resource_stats) do
     instance_double(CurationConcerns::ResourceStatisticsSource,
                     open_concerns_count: 25,

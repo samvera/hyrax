@@ -1,6 +1,7 @@
 require 'open3'
 
 class ImportExportJob < ActiveJob::Base
+  attr_reader :mode
   include Open3
 
   # @param [String] uri of the resource
@@ -14,16 +15,17 @@ class ImportExportJob < ActiveJob::Base
   #   * import features are not yet available
   #   * exporting bags is not yet supported
   def perform(uri, options = {})
-    export(uri,
-           options.fetch(:desc_dir, CurationConcerns.config.descriptions_directory),
-           options.fetch(:bin_dir, CurationConcerns.config.binaries_directory),
-           options.fetch(:profile, nil))
+    @mode = options.fetch(:mode, "export")
+    call(uri,
+         options.fetch(:desc_dir, CurationConcerns.config.descriptions_directory),
+         options.fetch(:bin_dir, CurationConcerns.config.binaries_directory),
+         options.fetch(:profile, nil))
   end
 
   private
 
-    def export(uri, desc_dir, bin_dir, _profile = nil)
-      command = "java -jar #{CurationConcerns.config.import_export_jar_file_path} --mode export --resource #{uri} --descDir #{desc_dir} --binDir #{bin_dir}"
+    def call(uri, desc_dir, bin_dir, _profile = nil)
+      command = "java -jar #{CurationConcerns.config.import_export_jar_file_path} --mode #{mode} --resource #{uri} --descDir #{desc_dir} --binDir #{bin_dir}"
       internal_call(command)
     end
 

@@ -72,7 +72,7 @@ class CatalogController < ApplicationController
     # This one uses all the defaults set by the solr request handler. Which
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
-    config.add_search_field('all_fields', label: 'All Fields', include_in_advanced_search: false) do |field|
+    config.add_search_field('all_fields', label: 'All Fields') do |field|
       title_name = solr_name('title', :stored_searchable, type: :string)
       label_name = solr_name('title', :stored_searchable, type: :string)
       contributor_name = solr_name('contributor', :stored_searchable, type: :string)
@@ -167,7 +167,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('format') do |field|
-      field.include_in_advanced_search = false
       solr_name = solr_name('format', :stored_searchable, type: :string)
       field.solr_local_parameters = {
         qf: solr_name,
@@ -176,7 +175,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('identifier') do |field|
-      field.include_in_advanced_search = false
       solr_name = solr_name('id', :stored_searchable, type: :string)
       field.solr_local_parameters = {
         qf: solr_name,

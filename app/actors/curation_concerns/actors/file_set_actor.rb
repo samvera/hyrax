@@ -125,7 +125,7 @@ module CurationConcerns
         end
 
         def assign_visibility?(file_set_params = {})
-          !((file_set_params || {}).keys & %w(visibility embargo_release_date lease_expiration_date)).empty?
+          !((file_set_params || {}).keys.map(&:to_s) & %w(visibility embargo_release_date lease_expiration_date)).empty?
         end
 
         # copy visibility from source_concern to destination_concern

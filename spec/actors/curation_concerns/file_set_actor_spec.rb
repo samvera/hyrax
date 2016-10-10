@@ -207,6 +207,30 @@ describe CurationConcerns::Actors::FileSetActor do
     end
   end
 
+  describe "#assign_visibility?" do
+    context "when no params are specified" do
+      it "does not need to assign visibility" do
+        expect(actor.send(:assign_visibility?)).to eq false
+      end
+    end
+
+    context "when file set params with visibility are specified with symbols as keys" do
+      let(:file_set_params) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
+
+      it "does need to assign visibility" do
+        expect(actor.send(:assign_visibility?, file_set_params)).to eq true
+      end
+    end
+
+    context "when file set params with visibility are specified with strings as keys" do
+      let(:file_set_params) { { "visibility" => Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
+
+      it "does need to assign visibility" do
+        expect(actor.send(:assign_visibility?, file_set_params)).to eq true
+      end
+    end
+  end
+
   describe "#set_representative" do
     let!(:work) { build(:generic_work, representative: rep) }
     let!(:file_set) { build(:file_set) }

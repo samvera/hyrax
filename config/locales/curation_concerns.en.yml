@@ -33,6 +33,7 @@ en:
     dashboard:
       menu:
         index: "Admin Dashboard"
+        resource_details: "Resource Details"
     division:
       name: "Your Division at Institution"
       homepage_url: "#"

@@ -7,7 +7,7 @@ CurationConcerns::Engine.routes.draw do
   delete 'single_use_link/:id/delete/:link_id' => 'single_use_links#destroy', as: :delete_single_use_link
 
   namespace :admin do
-    root action: :index
+    get '/', action: :index, as: :index
     get :resource_details
     get :workflow
   end

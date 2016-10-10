@@ -18,7 +18,7 @@ describe 'shared/_my_actions.html.erb' do
       expect(rendered).to have_link("My Collections", href: search_path_for_my_collections)
       expect(rendered).to have_link("Embargos", href: embargoes_path)
       expect(rendered).to have_link("Leases", href: leases_path)
-      expect(rendered).to have_link("Admin Dashboard", href: curation_concerns.admin_root_path)
+      expect(rendered).to have_link("Admin Dashboard", href: curation_concerns.admin_index_path)
     end
   end
 
