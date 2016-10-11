@@ -51,16 +51,19 @@ describe SufiaHelper, type: :helper do
     end
 
     describe '#index_field_link' do
-      let(:args) { { config: { field_name: 'contributor' }, value: ['Fritz Lang', 'Mel Brooks'] } }
-      it 'requires 1 arg' do
-        expect { helper.index_field_link }.to raise_error ArgumentError
-        expect { helper.index_field_link({}, 'junk') }.to raise_error ArgumentError
+      let(:args) do
+        {
+          config: { field_name: 'contributor' },
+          value: ['Fritz Lang', 'Mel Brooks']
+        }
       end
+
       subject { helper.index_field_link(args) }
-      it 'returns link' do
+
+      it 'returns a link' do
         expect(subject).to be_html_safe
-        expect(subject).to eq '<a href="/catalog?contributor=%22Fritz+Lang%22&amp;search_field=advanced">Fritz Lang</a>, ' \
-                            + '<a href="/catalog?contributor=%22Mel+Brooks%22&amp;search_field=advanced">Mel Brooks</a>'
+        expect(subject).to eq '<a href="/catalog?q=%22Fritz+Lang%22&amp;search_field=contributor">Fritz Lang</a>, ' \
+                            + '<a href="/catalog?q=%22Mel+Brooks%22&amp;search_field=contributor">Mel Brooks</a>'
       end
     end
   end

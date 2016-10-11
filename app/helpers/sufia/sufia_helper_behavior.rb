@@ -89,7 +89,7 @@ module Sufia
     # @see Blacklight::SearchState#initialize
     def link_to_field(name, value, label = nil, facet_hash = {})
       label ||= value
-      params = { search_field: 'advanced', name => "\"#{value}\"" }
+      params = { search_field: name, q: "\"#{value}\"" }
       state = search_state_with_facets(params, facet_hash)
       link_to(label, main_app.search_catalog_path(state))
     end
@@ -115,8 +115,8 @@ module Sufia
     def index_field_link(options)
       raise ArgumentError unless options[:config] && options[:config][:field_name]
       name = options[:config][:field_name]
-      values = options[:value]
-      safe_join(values.map { |item| link_to_field(name, item, item) }, ", ".html_safe)
+      links = options[:value].map { |item| link_to_field(name, item, item) }
+      safe_join(links, ", ")
     end
 
     # Uses Rails auto_link to add links to fields

@@ -6,8 +6,8 @@ class Sufia::CatalogSearchBuilder < Sufia::SearchBuilder
 
   # show both works that match the query and works that contain files that match the query
   def show_works_or_works_that_contain_files(solr_parameters)
-    return if solr_parameters[:q].blank?
-    solr_parameters[:user_query] = solr_parameters[:q]
+    return if blacklight_params[:q].blank? || blacklight_params[:search_field]
+    solr_parameters[:user_query] = blacklight_params[:q]
     solr_parameters[:q] = new_query
   end
 

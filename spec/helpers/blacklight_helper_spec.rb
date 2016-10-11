@@ -94,7 +94,7 @@ RSpec.describe BlacklightHelper, type: :helper do
 
       context "identifier_tesim" do
         let(:field_name) { 'identifier_tesim' }
-        it { is_expected.to eq '<a href="/catalog?identifier=%2265434567654345654%22&amp;search_field=advanced">65434567654345654</a>' }
+        it { is_expected.to eq '<a href="/catalog?q=%2265434567654345654%22&amp;search_field=identifier">65434567654345654</a>' }
       end
     end
   end
