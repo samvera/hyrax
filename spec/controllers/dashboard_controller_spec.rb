@@ -18,15 +18,7 @@ describe DashboardController, type: :controller do
       get :index
       expect(response).to be_successful
       expect(assigns(:user)).to eq(user)
-    end
-
-    it "gathers the user's recent activity" do
-      get :index
       expect(assigns(:activity)).to be_empty
-    end
-
-    it "gathers the user's notifications" do
-      get :index
       expect(assigns(:notifications)).to be_truthy
     end
 
