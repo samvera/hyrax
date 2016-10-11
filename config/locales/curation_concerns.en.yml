@@ -32,8 +32,9 @@ en:
         label: "Search Collection %{title}"
     dashboard:
       menu:
-        index: "Admin Dashboard"
+        index:            "Admin Dashboard"
         resource_details: "Resource Details"
+        workflow:         "Workflow"
     division:
       name: "Your Division at Institution"
       homepage_url: "#"
