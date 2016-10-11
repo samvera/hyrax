@@ -1,7 +1,5 @@
 # Finds the child objects contained within a collection
 class CollectionSearchBuilder < CurationConcerns::MemberSearchBuilder
-  include BlacklightAdvancedSearch::AdvancedSearchBuilder
-
   self.from_field = 'child_object_ids_ssim'
   self.default_processor_chain += [:include_contained_files]
 
