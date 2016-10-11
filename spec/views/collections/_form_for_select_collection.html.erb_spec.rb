@@ -9,9 +9,7 @@ describe 'collections/_form_for_select_collection.html.erb', type: :view do
   end
   let(:solr_collections) do
     collections.map do |c|
-      SolrDocument.new(c.to_solr).tap do |sd|
-        sd['system_create_dtsi'] = c.create_date.to_s
-      end
+      SolrDocument.new(c.to_solr.merge('system_create_dtsi' => c.create_date.to_s))
     end
   end
 
