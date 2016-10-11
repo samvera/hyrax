@@ -33,10 +33,20 @@ module CurationConcerns
       def send_notification(notification)
         notifier = notifier(notification)
         return unless notifier
-        notifier.send_notification(notification: notification,
-                                   entity: entity,
+        notifier.send_notification(entity: entity,
                                    comment: comment,
-                                   user: user)
+                                   user: user,
+                                   recipients: recipients(notification))
+      end
+
+      # @return [Hash<String, Array>] a hash with keys being the strategy (e.g. "to", "cc") and
+      #                               the values are a list of users.
+      def recipients(notification)
+        notification.recipients.each_with_object({}) do |r, h|
+          h[r.recipient_strategy] ||= []
+          h[r.recipient_strategy] += PermissionQuery.scope_users_for_entity_and_roles(entity: entity,
+                                                                                      roles: r.role)
+        end
       end
 
       def notifier(notification)

@@ -36,8 +36,25 @@ RSpec.describe CurationConcerns::Workflow::NotificationService, :no_clean do
         Object.send(:remove_const, :ConfirmationOfSubmittedToUlraCommittee)
       end
 
+      let(:advisors) { [instance_double(User), instance_double(User)] }
+      let(:creator) { [instance_double(User)] }
+      let(:advisor_rel) { double(ActiveRecord::Relation, to_ary: advisors) }
+      let(:creator_rel) { double(ActiveRecord::Relation, to_ary: creator) }
+
+      before do
+        allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_users_for_entity_and_roles)
+          .with(entity: entity,
+                roles: advising)
+          .and_return(advisor_rel)
+
+        allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_users_for_entity_and_roles)
+          .with(entity: entity,
+                roles: creating_user)
+          .and_return(creator_rel)
+      end
+
       it "calls the notification" do
-        expect(ConfirmationOfSubmittedToUlraCommittee).to receive(:send_notification)
+        expect(ConfirmationOfSubmittedToUlraCommittee).to receive(:send_notification).with(hash_including(recipients: { "to" => creator, 'cc' => advisors }))
         subject
       end
     end
