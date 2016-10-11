@@ -16,10 +16,6 @@ module Sufia
         new attrs.merge(filter(object))
       end
 
-      def to_flots(stats)
-        stats.map(&:to_flot)
-      end
-
       def convert_date(date_time)
         date_time.to_datetime.to_i * 1000
       end
@@ -32,7 +28,12 @@ module Sufia
       # see Legato::ProfileMethods.method_name_from_klass
       def ga_statistics(start_date, object)
         path = polymorphic_path(object)
-        Sufia::Analytics.profile.sufia__pageview(sort: 'date', start_date: start_date).for_path(path)
+        profile = Sufia::Analytics.profile
+        unless profile
+          Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
+          return []
+        end
+        profile.sufia__pageview(sort: 'date', start_date: start_date).for_path(path)
       end
 
       private

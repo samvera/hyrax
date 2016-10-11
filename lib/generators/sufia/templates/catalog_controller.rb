@@ -2,7 +2,6 @@ class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
   include Sufia::Catalog
-  include BlacklightAdvancedSearch::Controller
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
@@ -16,13 +15,6 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
-    # default advanced config values
-    config.advanced_search ||= Blacklight::OpenStructWithHashAccess.new
-    # config.advanced_search[:qt] ||= 'advanced'
-    config.advanced_search[:url_key] ||= 'advanced'
-    config.advanced_search[:query_parser] ||= 'dismax'
-    config.advanced_search[:form_solr_parameters] ||= {}
-
     config.search_builder_class = Sufia::SearchBuilder
 
     # Show gallery view
@@ -33,7 +25,7 @@ class CatalogController < ApplicationController
     config.default_solr_params = {
       qt: "search",
       rows: 10,
-      qf: "title_tesim name_tesim"
+      qf: "title_tesim description_tesim keyword_tesim"
     }
 
     # solr field configuration for document/show views
@@ -118,7 +110,7 @@ class CatalogController < ApplicationController
     # This one uses all the defaults set by the solr request handler. Which
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
-    config.add_search_field('all_fields', label: 'All Fields', include_in_advanced_search: false) do |field|
+    config.add_search_field('all_fields', label: 'All Fields') do |field|
       all_names = config.show_fields.values.map(&:field).join(" ")
       title_name = solr_name("title", :stored_searchable)
       field.solr_parameters = {
@@ -212,7 +204,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('format') do |field|
-      field.include_in_advanced_search = false
       solr_name = solr_name("format", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
@@ -221,7 +212,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('identifier') do |field|
-      field.include_in_advanced_search = false
       solr_name = solr_name("id", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
@@ -247,7 +237,7 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('depositor') do |field|
-      solr_name = solr_name("depositor", :stored_searchable)
+      solr_name = solr_name("depositor", :symbol)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name

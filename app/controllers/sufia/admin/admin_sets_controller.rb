@@ -1,7 +1,10 @@
 module Sufia
   class Admin::AdminSetsController < ApplicationController
     include CurationConcerns::CollectionsControllerBehavior
+
+    before_action :ensure_admin!
     load_and_authorize_resource
+
     layout 'admin'
     self.presenter_class = Sufia::AdminSetPresenter
     self.form_class = Sufia::Forms::AdminSetForm
@@ -24,7 +27,6 @@ module Sufia
     end
 
     def index
-      authorize! :manage, AdminSet
       add_breadcrumb t(:'sufia.controls.home'), root_path
       add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
       add_breadcrumb t(:'sufia.admin.sidebar.admin_sets'), sufia.admin_admin_sets_path
@@ -68,6 +70,12 @@ module Sufia
     end
 
     private
+
+      def ensure_admin!
+        # Even though the user can view this admin set, they may not be able to view
+        # it on the admin page.
+        authorize! :read, :admin_dashboard
+      end
 
       # Overriding the way that the search builder is initialized
       def list_search_builder

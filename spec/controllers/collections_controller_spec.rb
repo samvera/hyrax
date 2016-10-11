@@ -29,32 +29,32 @@ describe CollectionsController do
     before { sign_in user }
 
     it "creates a Collection" do
-      expect {
+      expect do
         post :create, params: {
           collection: {
             title: ["My First Collection "],
             description: "The Description\r\n\r\nand more"
           }
         }
-      }.to change { Collection.count }.by(1)
+      end.to change { Collection.count }.by(1)
     end
 
     it "removes blank strings from params before creating Collection" do
-      expect {
+      expect do
         post :create, params: {
           collection: {
             title: ["My First Collection "],
             creator: [""]
           }
         }
-      }.to change { Collection.count }.by(1)
+      end.to change { Collection.count }.by(1)
       expect(assigns[:collection].title).to eq ["My First Collection "]
       expect(assigns[:collection].creator).to eq []
     end
 
     context "with files I can access" do
       it "creates a collection using only the accessible files" do
-        expect {
+        expect do
           post :create, params: {
             collection: {
               title: ["My own Collection"],
@@ -62,7 +62,7 @@ describe CollectionsController do
             },
             batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
           }
-        }.to change { Collection.count }.by(1)
+        end.to change { Collection.count }.by(1)
         collection = assigns(:collection)
         expect(collection.members).to match_array [asset1, asset2]
       end

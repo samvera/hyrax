@@ -3,7 +3,7 @@ describe 'citations/work.html.erb', type: :view do
   let(:object_profile) { ["{\"id\":\"999\"}"] }
   let(:contributor) { ['Gandalf Grey'] }
   let(:creator)     { ['Bilbo Baggins', 'Baggins, Frodo'] }
-  let(:solr_document) {
+  let(:solr_document) do
     SolrDocument.new(
       id: '999',
       object_profile_ssm: object_profile,
@@ -16,7 +16,7 @@ describe 'citations/work.html.erb', type: :view do
       based_near_tesim: ['London'],
       date_created_tesim: ['1969']
     )
-  }
+  end
   let(:ability) { nil }
   let(:presenter) do
     Sufia::WorkShowPresenter.new(solr_document, ability)

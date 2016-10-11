@@ -1,11 +1,13 @@
 describe Sufia::MySharesSearchBuilder do
   let(:me) { create(:user) }
   let(:config) { CatalogController.blacklight_config }
-  let(:scope) { double('The scope',
-                       blacklight_config: config,
-                       params: {},
-                       current_ability: Ability.new(me),
-                       current_user: me) }
+  let(:scope) do
+    double('The scope',
+           blacklight_config: config,
+           params: {},
+           current_ability: Ability.new(me),
+           current_user: me)
+  end
   let(:builder) { described_class.new(scope) }
 
   let(:solr_params) { { q: user_query } }

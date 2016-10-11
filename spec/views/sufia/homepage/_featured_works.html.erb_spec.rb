@@ -5,16 +5,18 @@ describe "sufia/homepage/_featured_works.html.erb", type: :view do
 
   context "without featured works" do
     before { render }
-    it {
+    it do
       is_expected.to have_content 'No works have been featured'
       is_expected.not_to have_selector('form')
-    }
+    end
   end
 
   context "with featured works" do
-    let(:doc) { SolrDocument.new(id: '12345678',
-                                 title_tesim: ['Doc title'],
-                                 has_model_ssim: ['GenericWork']) }
+    let(:doc) do
+      SolrDocument.new(id: '12345678',
+                       title_tesim: ['Doc title'],
+                       has_model_ssim: ['GenericWork'])
+    end
     let(:presenter) { Sufia::WorkShowPresenter.new(doc, nil) }
     let(:featured_work) { FeaturedWork.new }
     before do
@@ -26,10 +28,10 @@ describe "sufia/homepage/_featured_works.html.erb", type: :view do
       render
     end
 
-    it {
+    it do
       is_expected.not_to have_content 'No works have been featured'
       is_expected.not_to have_selector('form')
       is_expected.to have_selector('ol#featured_works')
-    }
+    end
   end
 end

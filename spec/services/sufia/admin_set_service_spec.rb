@@ -10,9 +10,9 @@ RSpec.describe Sufia::AdminSetService do
 
     context "when the admin_set is valid" do
       it "is successful" do
-        expect {
+        expect do
           expect(subject).to be true
-        }.to change { admin_set.persisted? }.from(false).to(true)
+        end.to change { admin_set.persisted? }.from(false).to(true)
         expect(admin_set.read_groups).to eq ['public']
         expect(admin_set.edit_groups).to eq ['admin']
         expect(admin_set.creator).to eq [user.user_key]

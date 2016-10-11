@@ -5,6 +5,8 @@ engines:
     exclude_fingerprints:
       - 6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83
       - c05c1baf940f00a565ffe12f8b8a213fa06cebd734e0dae92057db28dc7c018b
+      - b388847a782f9d55d164f632b892125496082b9cfe5813720327ae6afbaf607b
+      - c7c241833ba150c2e4c72a26e1ac4d674230cb5e5c87322bedfe2b50dd09247d
   duplication:
     enabled: true
     exclude_fingerprints:

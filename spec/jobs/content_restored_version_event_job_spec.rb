@@ -11,9 +11,9 @@ describe ContentRestoredVersionEventJob do
 
   it "logs the event to the depositor's profile and the FileSet" do
     described_class.perform_now(file_set, user, 'content.0')
-    expect {
+    expect do
       described_class.perform_now(file_set, user, 'content.0')
-    }.to change { user.profile_events.length }.by(1)
+    end.to change { user.profile_events.length }.by(1)
       .and change { file_set.events.length }.by(1)
 
     expect(user.profile_events.first).to eq(event)

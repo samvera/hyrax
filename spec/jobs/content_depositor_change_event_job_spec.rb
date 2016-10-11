@@ -9,9 +9,9 @@ describe ContentDepositorChangeEventJob do
   end
 
   it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
-    expect {
+    expect do
       described_class.perform_now(generic_work, another_user)
-    }.to change { user.profile_events.length }.by(1)
+    end.to change { user.profile_events.length }.by(1)
       .and change { another_user.events.length }.by(1)
       .and change { generic_work.events.length }.by(1)
 

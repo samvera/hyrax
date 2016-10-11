@@ -1,4 +1,4 @@
-# Sufia
+![Logo](https://raw.githubusercontent.com/projecthydra-labs/sufia.io/gh-pages/assets/images/sufia_logo_white_bg_small.png)
 
 Code: [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
@@ -13,7 +13,7 @@ Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.2.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.2.0)
+[![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.3.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.3.0)
 
 # Table of Contents
 
@@ -102,7 +102,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Sufia
-v7.1.0__. If you are looking for instructions on installing a different
+v7.2.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -168,7 +168,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '7.1.0'
+gem 'sufia', '7.2.0'
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
@@ -279,3 +279,5 @@ This software has been developed by and is brought to you by the Hydra community
 [Project Hydra website](http://projecthydra.org/).
 
 ![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
+
+The Sufia logo uses the Hong Kong Hustle font, thanks to [Iconian's](http://www.iconian.com/) non-commercial use policy.

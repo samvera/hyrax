@@ -27,9 +27,9 @@ describe Sufia::WorkShowPresenter do
     context 'when resource_type is Audio' do
       let(:type) { ['Audio'] }
 
-      it {
+      it do
         is_expected.to eq 'http://schema.org/AudioObject'
-      }
+      end
     end
 
     context 'when resource_type is Conference Proceeding' do

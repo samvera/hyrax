@@ -1,8 +1,10 @@
 describe Sufia::CreateWithFilesActor do
-  let(:create_actor) { double('create actor', create: true,
-                                              curation_concern: work,
-                                              update: true,
-                                              user: user) }
+  let(:create_actor) do
+    double('create actor', create: true,
+                           curation_concern: work,
+                           update: true,
+                           user: user)
+  end
   let(:actor) do
     CurationConcerns::Actors::ActorStack.new(work, user, [described_class])
   end

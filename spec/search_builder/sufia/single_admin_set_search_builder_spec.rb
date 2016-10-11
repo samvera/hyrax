@@ -2,8 +2,10 @@ require 'spec_helper'
 
 RSpec.describe Sufia::SingleAdminSetSearchBuilder do
   let(:ability) { instance_double(Ability, admin?: true) }
-  let(:context) { double(blacklight_config: CatalogController.blacklight_config,
-                         current_ability: ability) }
+  let(:context) do
+    double(blacklight_config: CatalogController.blacklight_config,
+           current_ability: ability)
+  end
   let(:builder) { described_class.new(context) }
   describe "#query" do
     before do

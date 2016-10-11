@@ -59,8 +59,8 @@ describe "Browse Dashboard", type: :feature do
   it "allows me to delete works in upload_sets", js: true do
     visit "/dashboard/works"
     first('input#check_all').click
-    expect {
+    expect do
       click_button('Delete Selected')
-    }.to change { GenericWork.count }.by(-3)
+    end.to change { GenericWork.count }.by(-3)
   end
 end

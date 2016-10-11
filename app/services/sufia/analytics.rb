@@ -11,22 +11,39 @@ module Sufia
     # `  privkey_path: GOOGLE_OAUTH_PRIVATE_KEY_PATH`
     # `  privkey_secret: GOOGLE_OAUTH_PRIVATE_KEY_SECRET`
     # `  client_email: GOOGLE_OAUTH_CLIENT_EMAIL`
-    # @return [Hash] A hash containing five keys: 'app_name', 'app_version', 'client_email', 'privkey_path', 'privkey_secret'
+    # @return [Config]
     def self.config
-      @config ||= load_config
+      @config ||= Config.load_from_yaml
     end
     private_class_method :config
 
-    def self.load_config
-      filename = File.join(Rails.root, 'config', 'analytics.yml')
-      yaml = YAML.load(File.read(filename))
-      unless yaml
-        Rails.logger.error("Unable to fetch any keys from #{filename}.")
-        return
+    class Config
+      def self.load_from_yaml
+        filename = File.join(Rails.root, 'config', 'analytics.yml')
+        yaml = YAML.load(File.read(filename))
+        unless yaml
+          Rails.logger.error("Unable to fetch any keys from #{filename}.")
+          return new({})
+        end
+        new yaml.fetch('analytics')
       end
-      yaml.fetch('analytics')
+
+      REQUIRED_KEYS = %w(app_name app_version privkey_path privkey_secret client_email).freeze
+
+      def initialize(config)
+        @config = config
+      end
+
+      # @return [Boolean] are all the required values present?
+      def valid?
+        config_keys = @config.keys
+        REQUIRED_KEYS.all? { |required| config_keys.include?(required) }
+      end
+
+      REQUIRED_KEYS.each do |key|
+        class_eval %{ def #{key};  @config.fetch('#{key}'); end }
+      end
     end
-    private_class_method :load_config
 
     # Generate an OAuth2 token for Google Analytics
     # @return [OAuth2::AccessToken] An OAuth2 access token for GA
@@ -41,12 +58,16 @@ module Sufia
     end
 
     def self.auth_client(scope)
+      unless File.exist?(config.privkey_path)
+        raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found."
+      end
+      private_key = File.read(config.privkey_path)
       Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
                                  audience: 'https://accounts.google.com/o/oauth2/token',
                                  scope: scope,
-                                 issuer: config.fetch('client_email'),
-                                 signing_key: OpenSSL::PKCS12.new(File.read(config.fetch('privkey_path')), config.fetch('privkey_secret')).key,
-                                 sub: config.fetch('client_email')
+                                 issuer: config.client_email,
+                                 signing_key: OpenSSL::PKCS12.new(private_key, config.privkey_secret).key,
+                                 sub: config.client_email
     end
 
     private_class_method :token
@@ -61,6 +82,7 @@ module Sufia
     # Return a Google Analytics profile matching specified ID
     # @ return [Legato::Management::Profile] A user profile associated with GA
     def self.profile
+      return unless config.valid?
       user.profiles.detect do |profile|
         profile.web_property_id == Sufia.config.google_analytics_id
       end

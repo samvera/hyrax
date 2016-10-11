@@ -1,20 +1,20 @@
-describe WorkUsage, type: :model do
+RSpec.describe Sufia::WorkUsage, type: :model do
   let!(:work) { create(:work, id: 'abc12345xy') }
 
-  let(:dates) {
+  let(:dates) do
     ldates = []
     4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
     ldates
-  }
-  let(:date_strs) {
+  end
+  let(:date_strs) do
     ldate_strs = []
     dates.each { |date| ldate_strs << date.strftime("%Y%m%d") }
     ldate_strs
-  }
+  end
 
-  let(:view_output) {
+  let(:view_output) do
     [[statistic_date(dates[0]), 4], [statistic_date(dates[1]), 8], [statistic_date(dates[2]), 6], [statistic_date(dates[3]), 10], [statistic_date(dates[4]), 2]]
-  }
+  end
 
   # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
   # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
@@ -22,7 +22,7 @@ describe WorkUsage, type: :model do
   # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
   # results from the Legato gem.
 
-  let(:sample_pageview_statistics) {
+  let(:sample_pageview_statistics) do
     [
       OpenStruct.new(date: date_strs[0], pageviews: 4),
       OpenStruct.new(date: date_strs[1], pageviews: 8),
@@ -30,17 +30,17 @@ describe WorkUsage, type: :model do
       OpenStruct.new(date: date_strs[3], pageviews: 10),
       OpenStruct.new(date: date_strs[4], pageviews: 2)
     ]
-  }
+  end
 
-  let(:usage) {
+  let(:usage) do
     allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-    expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+    allow(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
     described_class.new(work.id)
-  }
+  end
 
   describe "#initialize" do
-    it "sets the id" do
-      expect(usage.id).to eq(work.id)
+    it "sets the model" do
+      expect(usage.model).to eq work
     end
 
     it "sets the created date" do
@@ -54,7 +54,21 @@ describe WorkUsage, type: :model do
     it { is_expected.to eq 'Butter sculpture' }
   end
 
-  describe "statistics" do
+  describe "#to_flot" do
+    let(:flots) { usage.to_flot }
+    it "returns an array of hashes for use with JQuery Flot" do
+      expect(flots[0][:label]).to eq("Pageviews")
+      expect(flots[0][:data]).to include(*view_output)
+    end
+  end
+
+  describe "#total_pageviews" do
+    it "counts the total number of pageviews" do
+      expect(usage.total_pageviews).to eq(30)
+    end
+  end
+
+  describe "#created" do
     let!(:system_timezone) { ENV['TZ'] }
     before do
       ENV['TZ'] = 'UTC'
@@ -62,15 +76,6 @@ describe WorkUsage, type: :model do
 
     after do
       ENV['TZ'] = system_timezone
-    end
-
-    it "counts the total number of pageviews" do
-      expect(usage.total_pageviews).to eq(30)
-    end
-
-    it "returns an array of hashes for use with JQuery Flot" do
-      expect(usage.to_flot[0][:label]).to eq("Pageviews")
-      expect(usage.to_flot[0][:data]).to include(*view_output)
     end
 
     let(:create_date) { Time.zone.parse('2014-01-02 12:00:00').iso8601 }
@@ -83,23 +88,21 @@ describe WorkUsage, type: :model do
       end
 
       describe "create date before earliest date set" do
-        let(:usage) {
+        let(:usage) do
           allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
-          expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           described_class.new(work.id)
-        }
+        end
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
         end
       end
 
       describe "create date after earliest" do
-        let(:usage) {
+        let(:usage) do
           allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-          expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
           described_class.new(work.id)
-        }
+        end
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(work.create_date)
         end
@@ -110,11 +113,10 @@ describe WorkUsage, type: :model do
         Sufia.config.analytic_start_date = nil
       end
 
-      let(:usage) {
+      let(:usage) do
         allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
-        expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
         described_class.new(work.id)
-      }
+      end
       it "sets the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)
       end
@@ -125,10 +127,9 @@ describe WorkUsage, type: :model do
     let(:date_uploaded) { "2014-12-31" }
     let(:work_migrated) { create(:work, id: '678901234', date_uploaded: date_uploaded) }
 
-    let(:usage) {
-      expect(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+    let(:usage) do
       described_class.new(work_migrated.id)
-    }
+    end
 
     it "uses the date_uploaded for analytics" do
       expect(usage.created).to eq(date_uploaded)

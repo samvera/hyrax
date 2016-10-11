@@ -14,7 +14,9 @@
   </div>
   <div class="col-sm-2">
     <% if has_thumbnail? @presenter.solr_document %>
-      <%= render_thumbnail_tag @presenter.solr_document, {}, suppress_link: true %>
+      <div class="document-thumbnail">
+        <%= render_thumbnail_tag @presenter.solr_document, {}, suppress_link: true %>
+      </div>
     <% else %>
       <span class="fa fa-sitemap collection-icon-search"></span>
     <% end %>

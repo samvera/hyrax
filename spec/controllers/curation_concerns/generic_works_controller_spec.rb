@@ -144,9 +144,9 @@ describe CurationConcerns::GenericWorksController do
         it "ingests files from provide URLs" do
           skip "Creating a FileSet without a parent work is not yet supported"
           expect(ImportUrlJob).to receive(:perform_later).twice
-          expect {
+          expect do
             post :create, params: { selected_files: browse_everything_params, file_set: {} }
-          }.to change(FileSet, :count).by(2)
+          end.to change(FileSet, :count).by(2)
           created_files = FileSet.all
           expect(created_files.map(&:import_url)).to include(url1, url2)
           expect(created_files.map(&:label)).to include("filepicker-demo.txt.txt", "Getting+Started.pdf")

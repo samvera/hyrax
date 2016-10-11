@@ -102,9 +102,9 @@ describe Sufia::Arkivo::Actor do
     end
 
     it 'changes the arkivo checksum' do
-      expect {
+      expect do
         subject.update_work_from_item(work)
-      }.to change { work.arkivo_checksum }.from(checksum).to(item['file']['md5'])
+      end.to change { work.arkivo_checksum }.from(checksum).to(item['file']['md5'])
     end
 
     it 'calls update_content' do
@@ -126,9 +126,9 @@ describe Sufia::Arkivo::Actor do
   describe '#destroy_work' do
     let(:work) { create(:generic_work, user: user) }
     it 'deletes the file' do
-      expect {
+      expect do
         subject.destroy_work(work)
-      }.to change { work.destroyed? }.from(nil).to(true)
+      end.to change { work.destroyed? }.from(nil).to(true)
     end
   end
 end

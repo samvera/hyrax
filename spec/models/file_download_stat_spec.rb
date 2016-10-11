@@ -13,33 +13,56 @@ describe FileDownloadStat, type: :model do
     expect(file_stat.downloads).to eq(2)
   end
 
+  describe ".ga_statistic" do
+    let(:start_date) { 2.days.ago }
+    let(:expected_path) { Rails.application.routes.url_helpers.curation_concerns_file_set_path(file) }
+    before do
+      allow(Sufia::Analytics).to receive(:profile).and_return(profile)
+    end
+    context "when a profile is available" do
+      let(:views) { double }
+      let(:profile) { double(sufia__download: views) }
+      it "calls the Legato method with the correct path" do
+        expect(views).to receive(:for_file).with(99)
+        described_class.ga_statistics(start_date, file)
+      end
+    end
+
+    context "when a profile not available" do
+      let(:profile) { nil }
+      it "calls the Legato method with the correct path" do
+        expect(described_class.ga_statistics(start_date, file)).to be_empty
+      end
+    end
+  end
+
   describe "#statistics" do
-    let(:dates) {
+    let(:dates) do
       ldates = []
       4.downto(0) { |idx| ldates << (Time.zone.today - idx.day) }
       ldates
-    }
-    let(:date_strs) {
+    end
+    let(:date_strs) do
       dates.map { |date| date.strftime("%Y%m%d") }
-    }
+    end
 
-    let(:download_output) {
+    let(:download_output) do
       [[statistic_date(dates[0]), 1], [statistic_date(dates[1]), 1], [statistic_date(dates[2]), 2], [statistic_date(dates[3]), 3]]
-    }
+    end
 
     # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
     # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
     # Sample data structures were created by sending real events to GA from a test instance of
     # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
     # results from the Legato gem.
-    let(:sample_download_statistics) {
+    let(:sample_download_statistics) do
       [
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[0], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
         OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3")
       ]
-    }
+    end
 
     describe "cache empty" do
       let(:stats) do
@@ -48,17 +71,17 @@ describe FileDownloadStat, type: :model do
       end
 
       it "includes cached ga data" do
-        expect(described_class.to_flots(stats)).to include(*download_output)
+        expect(stats.map(&:to_flot)).to include(*download_output)
       end
 
       it "caches data" do
-        expect(described_class.to_flots(stats)).to include(*download_output)
+        expect(stats.map(&:to_flot)).to include(*download_output)
 
         # at this point all data should be cached
         allow(described_class).to receive(:ga_statistics).with(Time.zone.today, file).and_raise("We should not call Google Analytics All data should be cached!")
 
         stats2 = described_class.statistics(file, Time.zone.today - 4.days)
-        expect(described_class.to_flots(stats2)).to include(*download_output)
+        expect(stats2.map(&:to_flot)).to include(*download_output)
       end
     end
 
@@ -71,7 +94,7 @@ describe FileDownloadStat, type: :model do
       end
 
       it "includes cached data" do
-        expect(described_class.to_flots(stats)).to include([file_download_stat.date.to_i * 1000, file_download_stat.downloads], *download_output)
+        expect(stats.map(&:to_flot)).to include([file_download_stat.date.to_i * 1000, file_download_stat.downloads], *download_output)
       end
     end
   end
