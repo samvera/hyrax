@@ -27,15 +27,10 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Environments](#environments)
     * [Ruby](#ruby)
   * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
+    * [Redis](#redis)
     * [Rails](#rails)
-    * [Sufia's Ruby\-related dependencies](#sufias-ruby-related-dependencies)
-    * [Install Sufia](#install-sufia)
     * [Generate a primary work type](#generate-a-primary-work-type)
-    * [Database tables and indexes](#database-tables-and-indexes)
-    * [Start Redis](#start-redis)
-    * [Start Solr](#start-solr)
-    * [Start FCRepo](#start-fcrepo)
-    * [Spin up the web server](#spin-up-the-web-server)
+    * [Start servers](#start-servers)
   * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
   * [License](#license)
   * [Contributing](#contributing)
@@ -154,32 +149,28 @@ We recommend either Ruby 2.3 or the latest 2.2 version.
 
 # Creating a Sufia-based app
 
+## Redis
+
+[Redis](http://redis.io/) is a key-value store that Sufia uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
+
+Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
+
 ## Rails
 
 Generate a new Rails application. We recommend the latest Rails 5.0 or 4.2 release.
 
 ```
+# If you don't already have Rails at your disposal...
 gem install rails -v 5.0.0.1
-rails new my_app
+rails new my_app -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb
 ```
 
-## Sufia's Ruby-related dependencies
+Generating a new Rails application using Sufia's template above takes cares of a number of steps for you, including:
 
-Add the following lines to your application's Gemfile.
-
-```
-gem 'sufia', '7.2.0'
-```
-
-Then install Sufia as a dependency of your app via `bundle install`
-
-## Install Sufia
-
-Install Sufia into your app using its built-in install generator. This step adds a number of files that Sufia requires within your Rails app, including e.g. a number of database migrations.
-
-```
-rails generate sufia:install -f
-```
+* Adding Sufia (and any of its dependencies) to your application `Gemfile`, to declare that Sufia is a dependency of your application
+* Running `bundle install`, to install Sufia and its dependencies
+* Running Sufia's install generator, to add a number of files that Sufia requires within your Rails app, including e.g. database migrations
+* Loading all of Sufia's database migrations into your application's database
 
 ## Generate a primary work type
 
@@ -197,45 +188,12 @@ or
 rails generate sufia:work MovingImage
 ```
 
-## Database tables and indexes
+## Start servers
 
-Now that Sufia's required database migrations have been generated into your app, you'll need to load them into your application's database.
-
-```
-rake db:migrate
-```
-
-## Start Redis
-
-[Redis](http://redis.io/) is a key-value store that Sufia uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
-
-Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
-
-## Start Solr
-
-If you already have an instance of Solr that you would like to use, you may skip this step.  Open a new terminal window and type:
-```
-solr_wrapper -d solr/config/ --collection_name hydra-development
-```
-
-You can check to see if Solr is started by going to [localhost:8983](http://localhost:8983/).
-
-## Start FCRepo
-
-If you already have an instance of FCRepo that you would like to use, you may skip this step.  Open a new terminal window and type:
+To test-drive your new Sufia application in development mode, spin up the servers that Sufia needs (Solr, Fedora, and Rails):
 
 ```
-fcrepo_wrapper -p 8984
-```
-
-You can check to see if FCRepo is started by going to [localhost:8984](http://localhost:8984/).
-
-## Spin up the web server
-
-To test-drive your new Sufia application, spin up the web server that Rails provides:
-
-```
-rails server
+rake hydra:server
 ```
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
