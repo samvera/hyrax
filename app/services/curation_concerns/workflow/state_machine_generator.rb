@@ -47,6 +47,11 @@ module CurationConcerns
         end
 
         send(email_generator_method_name, workflow: workflow, config: config)
+
+        # Methods
+        if config.key?(:methods)
+          build_methods(Array.wrap(config.fetch(:methods)))
+        end
       end
 
       def build_attributes(action_attributes)
@@ -78,6 +83,10 @@ module CurationConcerns
             workflow: workflow
           )
         end
+      end
+
+      def build_methods(method_list)
+        MethodGenerator.call(action: action, list: method_list)
       end
 
       def schema_based_email_generator_method(workflow:, config:)

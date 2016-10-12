@@ -15,6 +15,7 @@ module Sipity
     belongs_to :resulting_workflow_state, class_name: 'Sipity::WorkflowState'
 
     has_many :workflow_state_actions, dependent: :destroy, class_name: 'Sipity::WorkflowStateAction'
+    has_many :triggered_methods, dependent: :destroy, class_name: 'Sipity::Method'
 
     has_many :notifiable_contexts,
              dependent: :destroy,

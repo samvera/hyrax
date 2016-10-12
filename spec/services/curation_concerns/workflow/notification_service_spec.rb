@@ -21,7 +21,7 @@ RSpec.describe CurationConcerns::Workflow::NotificationService, :no_clean do
 
   let(:instance) { described_class.new(entity: entity,
                                        action: action,
-                                       comment: "A plesant read",
+                                       comment: "A pleasant read",
                                        user: user) }
 
   describe "#call" do
