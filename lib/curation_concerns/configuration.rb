@@ -221,6 +221,18 @@ module CurationConcerns
       registered_curation_concern_types.map(&:constantize)
     end
 
+    # A configuration point for changing the behavior of the license service.
+    #
+    # @!attribute [w] license_service_class
+    #   A configuration point for changing the behavior of the license service.
+    #
+    #   @see CurationConcerns::LicenseService for implementation details
+    #   @see https://github.com/projecthydra/curation_concerns/pull/1047
+    attr_writer :license_service_class
+    def license_service_class
+      @license_service_class ||= CurationConcerns::LicenseService
+    end
+
     private
 
       # @param [Symbol] the symbol representing the model

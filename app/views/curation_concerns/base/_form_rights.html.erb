@@ -9,7 +9,7 @@
         <a href="http://creativecommons.org/licenses/" target="_blank">Here's some help</a> if you don't know which license to choose.
       </p>
 
-      <% license_service = CurationConcerns::LicenseService.new %>
+      <% license_service = CurationConcerns.config.license_service_class.new %>
       <%= f.input :rights, as: :multi_value_select,
         collection: license_service.select_active_options,
         include_blank: true,
