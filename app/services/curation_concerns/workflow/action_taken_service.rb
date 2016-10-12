@@ -4,7 +4,7 @@ module CurationConcerns
     class ActionTakenService
       # For the given :entity and :action
       # - Find the appropriate "function" to call
-      # - Then call that function
+      # - Then call that function. If the function returns a truthy value, then save the entity
       def self.handle_action_taken(entity:, action:, comment:, user:)
         new(entity: entity,
             action: action,
@@ -22,9 +22,14 @@ module CurationConcerns
       attr_reader :action, :entity, :comment, :user
 
       def call
-        action.triggered_methods.order(:weight).each do |method|
+        return unless action.triggered_methods.any?
+        success = action.triggered_methods.order(:weight).all? do |method|
           process_action(method.service_name)
         end
+
+        return entity.proxy_for.save if success
+        Rails.logger.error "Not all workflow methods were successful, so not saving (#{entity.id})"
+        false
       end
 
       def process_action(service_name)
