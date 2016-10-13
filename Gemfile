@@ -5,8 +5,9 @@ gemspec
 
 group :development, :test do
   gem "simplecov", require: false
-  gem 'byebug' unless ENV['CI']
   gem 'coveralls', require: false
+  gem 'pry' unless ENV['CI']
+  gem 'pry-byebug' unless ENV['CI']
 end
 
 # BEGIN ENGINE_CART BLOCK
