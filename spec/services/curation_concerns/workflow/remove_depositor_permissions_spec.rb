@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::Workflow::DeactivateObject do
-  let(:work) { instance_double(GenericWork) }
+RSpec.describe CurationConcerns::Workflow::RemoveDepositorPermissions do
+  let(:work) { create(:work) }
   let(:entity) { instance_double(Sipity::Entity, id: 9999, proxy_for: work) }
   let(:user) { User.new }
 
@@ -12,9 +12,10 @@ RSpec.describe CurationConcerns::Workflow::DeactivateObject do
                            user: user)
     end
 
-    it "makes it active" do
-      expect(work).to receive(:state=).with(Vocab::FedoraResourceStatus.inactive)
+    it "strips edit access " do
       subject
+      expect(work).to be_valid
+      expect(work.edit_users).to eq []
     end
   end
 end

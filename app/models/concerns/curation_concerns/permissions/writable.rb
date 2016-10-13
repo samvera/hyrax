@@ -9,6 +9,13 @@ module CurationConcerns
 
       included do
         validate :paranoid_permissions
+
+        class_attribute :paranoid_edit_permissions
+        self.paranoid_edit_permissions =
+          [
+            { key: :edit_groups, message: 'Public cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('public') } },
+            { key: :edit_groups, message: 'Registered cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('registered') } }
+          ]
       end
 
       def paranoid_permissions
@@ -20,14 +27,6 @@ module CurationConcerns
           valid = false
         end
         valid
-      end
-
-      def paranoid_edit_permissions
-        [
-          { key: :edit_users, message: 'Depositor must have edit access', condition: ->(obj) { !obj.edit_users.include?(obj.depositor) } },
-          { key: :edit_groups, message: 'Public cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('public') } },
-          { key: :edit_groups, message: 'Registered cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('registered') } }
-        ]
       end
     end
   end
