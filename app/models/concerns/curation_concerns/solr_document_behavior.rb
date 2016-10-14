@@ -166,6 +166,10 @@ module CurationConcerns
                       end
     end
 
+    def workflow_state
+      first(Solrizer.solr_name('workflow_state_name', :symbol))
+    end
+
     private
 
       def date_field(field_name)

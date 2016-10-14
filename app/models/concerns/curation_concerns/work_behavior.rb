@@ -24,11 +24,6 @@ module CurationConcerns::WorkBehavior
     self.indexer = CurationConcerns::WorkIndexer
   end
 
-  def to_sipity_entity
-    raise "Can't create an entity until the model has been persisted" unless persisted?
-    @sipity_entity ||= Sipity::Entity.find_by(proxy_for_global_id: to_global_id.to_s)
-  end
-
   module ClassMethods
     # This governs which partial to draw when you render this type of object
     def _to_partial_path #:nodoc:

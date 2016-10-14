@@ -1,4 +1,5 @@
 module CurationConcerns
+  # Workflow considerations
   module Publishable
     extend ActiveSupport::Concern
 
@@ -14,6 +15,11 @@ module CurationConcerns
     # display in the search results.
     def suppressed?
       state_workflow.new(state).pending?
+    end
+
+    def to_sipity_entity
+      raise "Can't create an entity until the model has been persisted" unless persisted?
+      @sipity_entity ||= Sipity::Entity.find_by(proxy_for_global_id: to_global_id.to_s)
     end
   end
 end

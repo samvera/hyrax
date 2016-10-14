@@ -118,6 +118,7 @@ module CurationConcerns
       # @return [ActiveRecord::Relation<Sipity::Role>]
       def scope_roles_associated_with_the_given_entity(entity:)
         entity = PowerConverter.convert_to_sipity_entity(entity)
+        return Sipity::Role.none unless entity
         workflow_roles = Sipity::WorkflowRole.arel_table
         Sipity::Role.where(
           Sipity::Role.arel_table[:id].in(

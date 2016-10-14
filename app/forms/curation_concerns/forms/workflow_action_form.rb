@@ -32,6 +32,7 @@ module CurationConcerns
         comment = create_sipity_comment
         handle_sipity_notifications(comment: comment)
         handle_additional_sipity_workflow_action_processing(comment: comment)
+        work.update_index # So that the new actions and state are written into solr.
         true
       end
 

@@ -13,13 +13,13 @@
           </tr>
         </thead>
         <tbody>
-          <% @status_list.each do |work| %>
+          <% @status_list.each do |document| %>
             <tr>
               <td>
-                <%= link_to work.document, [main_app, work.document] %>
+                <%= link_to document, [main_app, document] %>
               </td>
               <td>
-                <span class="state state-pending"><%= work.state %></span>
+                <span class="state state-pending"><%= document.workflow_state %></span>
               </td>
             </tr>
           <% end %>
