@@ -1,4 +1,4 @@
-describe Sufia::ActorFactory do
+describe Sufia::ActorFactory, :no_clean do
   let(:work) { GenericWork.new }
   let(:user) { double }
 
@@ -13,6 +13,7 @@ describe Sufia::ActorFactory do
                          CurationConcerns::Actors::AttachFilesActor,
                          CurationConcerns::Actors::ApplyOrderActor,
                          CurationConcerns::Actors::InterpretVisibilityActor,
+                         CurationConcerns::Actors::InitializeWorkflowActor,
                          CurationConcerns::Actors::GenericWorkActor]
     end
   end
@@ -28,6 +29,7 @@ describe Sufia::ActorFactory do
         CurationConcerns::Actors::AttachFilesActor,
         CurationConcerns::Actors::ApplyOrderActor,
         CurationConcerns::Actors::InterpretVisibilityActor,
+        CurationConcerns::Actors::InitializeWorkflowActor,
         CurationConcerns::Actors::GenericWorkActor
       ]
       expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor
