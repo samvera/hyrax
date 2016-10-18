@@ -379,6 +379,8 @@ en:
       relationships_parent_row_empty:
         label: "In %{type}:"
         empty: "There are no %{type} relationships."
+      show:
+        last_modified: "Last modified: %{value}"
       metadata:
         header: Descriptions
         attribute_name_label: Attribute Name
