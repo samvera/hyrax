@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe CurationConcerns::Actors::InitializeWorkflowActor, :workflow do
+describe CurationConcerns::Actors::GrantEditToDepositorActor, :workflow do
   let(:user) { create(:user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { title: ['test'] } }
@@ -24,10 +24,9 @@ describe CurationConcerns::Actors::InitializeWorkflowActor, :workflow do
   end
 
   describe 'create' do
-    it 'creates an entity' do
-      expect {
-        expect(subject.create(attributes)).to be true
-      }.to change { Sipity::Entity.count }.by(1)
+    it 'gives the creator depositor access' do
+      expect(subject.create(attributes)).to be true
+      expect(curation_concern.edit_users).to eq [user.user_key]
     end
   end
 end

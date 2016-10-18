@@ -38,8 +38,7 @@ module CurationConcerns
         end
 
         def apply_depositor_metadata
-          curation_concern.apply_depositor_metadata(user.user_key)
-          curation_concern.edit_users += [user.user_key]
+          curation_concern.depositor = user.user_key
         end
 
         def apply_deposit_date
