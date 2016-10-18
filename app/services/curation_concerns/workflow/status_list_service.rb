@@ -25,8 +25,10 @@ module CurationConcerns
         end
 
         def search_solr
-          ActiveFedora::Base.search_with_conditions(
-            { actionable_workflow_roles_ssim: roles_for_user },
+          actionable_roles = roles_for_user
+          return [] if actionable_roles.empty?
+          WorkRelation.new.search_with_conditions(
+            { actionable_workflow_roles_ssim: actionable_roles },
             fl: 'id title_tesim has_model_ssim, workflow_state_name_ssim',
             rows: 1000)
         end
