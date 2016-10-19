@@ -34,7 +34,6 @@ module CurationConcerns
     end
 
     initializer 'requires' do
-      require 'active_fedora/noid'
       require 'curation_concerns/noid'
       require 'curation_concerns/permissions'
       require 'curation_concerns/lockable'
