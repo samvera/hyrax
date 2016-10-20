@@ -2,7 +2,7 @@
   <h1 class="lower"><%= @presenter %></h1>
     <h2 class="non lower">Actions</h2>
     <p>
-      <%= link_to "Download (can only be used once)", @download_link, target: '_blank', data: { 'no-turbolink' => ''} %>
+      <%= link_to "Download (can only be used once)", @download_link, target: :_blank, data: { turbolinks: false } %>
     </p>
   <h2> Descriptions:</h2>
 
