@@ -34,6 +34,7 @@ module CurationConcerns
       alias_action :discover, to: :read
 
       can :manage, curation_concerns_models
+      can :manage, Sipity::WorkflowResponsibility
     end
 
     # Override this method in your ability model if you use a different group

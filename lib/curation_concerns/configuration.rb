@@ -172,7 +172,8 @@ module CurationConcerns
         menu: {
           index: {},
           resource_details: {},
-          workflow: {}
+          workflow: {},
+          workflow_roles: {}
         },
         actions: {
           index: {

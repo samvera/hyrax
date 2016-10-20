@@ -3,16 +3,13 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-      cattr_accessor :configuration
-      self.configuration = CurationConcerns.config.dashboard_configuration
+      include AdminPage
       before_action :require_permissions
-      before_action :load_configuration
-      layout "admin"
+    end
 
-      def index
-        @resource_statistics = @configuration.fetch(:data_sources).fetch(:resource_stats).new
-        render 'index'
-      end
+    def index
+      @resource_statistics = @configuration.fetch(:data_sources).fetch(:resource_stats).new
+      render 'index'
     end
 
     def search_builder
@@ -31,10 +28,6 @@ module CurationConcerns
 
       def require_permissions
         authorize! :read, :admin_dashboard
-      end
-
-      def load_configuration
-        @configuration = self.class.configuration.with_indifferent_access
       end
 
       # Loads the index action if it's only defined in the configuration.

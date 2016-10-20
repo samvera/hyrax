@@ -116,14 +116,7 @@ Load the workflows, workflow states, transitions and user roles:
 $ rails curation_concerns:workflow:load
 ```
 
-Now that the Roles are loaded, grant all the roles to all the users. This works for testing, but you probably don't want this in production:
-```ruby
-CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
-                                                     workflow: Sipity::Workflow.last,
-                                                     agents: User.all)
-```
-
-In the future this functionality should be available in the user interface.
+Now that the Roles are loaded, grant the appropriate roles to the users by visiting the "Workflow Roles" section of the admin dashboard
 
 [Further documentation](https://github.com/projecthydra/curation_concerns/wiki/Defining-a-Workflow) for defining and customizing workflows.
 

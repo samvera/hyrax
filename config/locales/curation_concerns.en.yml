@@ -1,5 +1,15 @@
 en:
   curation_concerns:
+    admin:
+      workflow_roles:
+        index:
+          header:
+            user:   User
+            roles:  Roles
+          no_roles: No roles
+          new_role: "Grant a role to a user:"
+          delete:
+            confirm: Are you sure?
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
@@ -35,6 +45,7 @@ en:
         index:            "Admin Dashboard"
         resource_details: "Resource Details"
         workflow:         "Workflow"
+        workflow_roles:   "Workflow Roles"
     division:
       name: "Your Division at Institution"
       homepage_url: "#"
@@ -225,6 +236,10 @@ en:
           identifier_tesim: "Identifier"
   file_manager:
     link_text: 'File Manager'
+  helpers:
+    submit:
+      sipity_workflow_responsibility:
+        create: "Add"
   simple_form:
     required:
       html: '<span class="label label-info required-tag">required</span>'

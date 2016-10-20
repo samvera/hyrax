@@ -10,6 +10,7 @@ CurationConcerns::Engine.routes.draw do
     get '/', action: :index, as: :index
     get :resource_details
     get :workflow
+    resources :workflow_roles
   end
 
   # mount BrowseEverything::Engine => '/remote_files/browse'
