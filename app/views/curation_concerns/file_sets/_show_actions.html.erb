@@ -1,5 +1,5 @@
   <div class="form-actions">
-    <%= link_to "Download this File", main_app.download_path(presenter), class: 'btn btn-default' %>
+    <%= link_to "Download this File", main_app.download_path(presenter), class: 'btn btn-default', data: { turbolinks: false } %>
     <% if can? :edit, presenter.id %>
       <%= link_to "Edit this File", edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default'  %>
     <% end %>
