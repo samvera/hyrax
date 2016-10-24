@@ -39,6 +39,10 @@ describe 'Routes', type: :routing do
     it 'routes to file_manager' do
       expect(get: 'concern/generic_works/6/file_manager').to route_to(controller: 'curation_concerns/generic_works', action: 'file_manager', id: '6')
     end
+
+    it 'routes to inspect_work' do
+      expect(get: 'concern/generic_works/6/inspect_work').to route_to(controller: 'curation_concerns/generic_works', action: 'inspect_work', id: '6')
+    end
   end
 
   describe 'Permissions' do

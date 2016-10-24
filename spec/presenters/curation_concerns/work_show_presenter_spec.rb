@@ -188,6 +188,15 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
+  context "with inspect_work" do
+    let(:user) { create(:user) }
+    let(:ability) { Ability.new(user) }
+    describe "#inspect_work" do
+      subject { presenter.inspect_work }
+      it { is_expected.to be_kind_of CurationConcerns::InspectWorkPresenter }
+    end
+  end
+
   describe "graph export methods" do
     let(:graph) do
       RDF::Graph.new.tap do |g|
