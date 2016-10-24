@@ -4,10 +4,21 @@ module Sufia
       self.model_class = AdminSet
       self.terms = [:title, :description, :thumbnail_id]
 
+      # @param model [AdminSet]
+      # @param permission_template [PermissionTemplate]
+      def initialize(model, permission_template)
+        super(model)
+        @permission_template = permission_template
+      end
+
       # Cast any array values on the model to scalars.
       def [](key)
         return super if key == :thumbnail_id
         super.first
+      end
+
+      def permission_template
+        PermissionTemplateForm.new(@permission_template)
       end
 
       class << self

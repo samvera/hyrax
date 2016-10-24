@@ -1,5 +1,11 @@
+<% content_for(:head) do %>
+  <%= stylesheet_link_tag 'sufia/admin', data: { turbolinks_track: 'reload' } %>
+<% end %>
+
 <% content_for(:sidebar) do %>
   <%= render 'sufia/admin/sidebar' %>
 <% end %>
+
+<% content_for(:container_class, 'container-fluid') %>
 
 <%= render template: 'layouts/sufia' %>

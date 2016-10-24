@@ -1,0 +1,95 @@
+@import 'bootstrap/variables';
+$tab-margin: 44px !default;
+$title-text-color: #4e4a42 !default;
+$tab-active-accent-color: $brand-primary !default;
+$admin-sidebar-background-color: #808080 !default;
+$admin-sidebar-link-color: #ffffff !default;
+$admin-sidebar-link-hover-color: #000000 !default;
+$admin-content-background-color: #f0f0f0 !default;
+$admin-vertical-padding: 10px !default;
+
+.tabs {
+  margin-top: $tab-margin;
+  position: relative;
+}
+
+.nav-tabs {
+  border-bottom: 0;
+  margin-bottom: 0;
+  margin-top: -$tab-margin;
+  padding: 0 5px;
+}
+
+.nav-tabs > li > a {
+  border-top: 2px solid transparent;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover {
+  border-top: 2px solid $tab-active-accent-color;
+}
+
+body {
+  background-color: $admin-sidebar-background-color;
+}
+
+#content-wrapper {
+  padding-bottom: 0;
+}
+
+.main-content {
+  padding-top: $admin-vertical-padding;
+  padding-bottom: $admin-vertical-padding;
+  background-color: $admin-content-background-color;
+}
+
+.sidebar {
+  padding-bottom: $admin-vertical-padding;
+  padding-top: $admin-vertical-padding;
+
+  a {
+    color: $admin-sidebar-link-color;
+  }
+
+  a:hover {
+    color: $admin-sidebar-link-hover-color;
+  }
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.panel {
+  border: 0;
+  float: left;
+  width: 100%;
+
+  .panel-heading,
+  .panel-footer,
+  .panel-body {
+    float: left;
+    width: 100%;
+  }
+
+  .panel-title {
+    color: $title-text-color;
+    display: block;
+    float: left;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+  }
+}
+
+.panel.panel-default {
+  border-top: 1px solid $panel-default-border;
+}
+
+.panel.panel-default.labels {
+  margin-bottom: 0;
+}
+
+.spacer {
+  margin-bottom: 5px;
+}

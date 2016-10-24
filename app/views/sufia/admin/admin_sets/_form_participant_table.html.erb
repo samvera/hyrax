@@ -1,0 +1,21 @@
+                  <h3><%= t(".#{access}.title") %></h3>
+                  <p><%= t(".#{access}.help") %></p>
+                  <table class="table table-striped share-status">
+                    <thead>
+                      <tr>
+                        <th><%= t(".#{access}.agent_name") %></th>
+                        <th><%= t(".#{access}.type") %></th>
+                        <th><%= t(".#{access}.action") %></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <% @form.permission_template.access_grants.select(&filter).each do |g| %>
+                      <tr>
+                        <td><%= g.agent_id %></td> 
+                        <td><%= g.agent_type.titleize %></td> 
+                        <td><%= button_to t(".#{access}.remove"), sufia.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-danger' %></td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+
