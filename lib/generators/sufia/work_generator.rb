@@ -23,9 +23,10 @@ module Sufia
     end
 
     def inject_sufia_work_behavior
-      insert_into_file "app/models/#{name.underscore}.rb", after: 'include ::CurationConcerns::BasicMetadata' do
+      underscored_name = name.underscore
+      insert_into_file "app/models/#{underscored_name}.rb", after: 'include ::CurationConcerns::BasicMetadata' do
         "\n  include Sufia::WorkBehavior" \
-        "\n  self.human_readable_type = 'Work'"
+        "\n  self.human_readable_type = '#{underscored_name.titleize}'"
       end
     end
 
