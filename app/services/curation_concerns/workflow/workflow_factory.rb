@@ -1,19 +1,29 @@
 module CurationConcerns
   module Workflow
     class WorkflowFactory
+      class_attribute :workflow_strategy
+      self.workflow_strategy = WorkflowByModelNameStrategy
+
+      # @param work [#to_global_id]
+      # @param attributes [Hash]
+      # @param strategy [#name] strategy for finding which workflow to use. Defaults to an instance of WorkflowByModelNameStrategy
       # @return [TrueClass]
-      def self.create(work, attributes)
-        new(work, attributes).create
+      def self.create(work, attributes, strategy = nil)
+        strategy ||= workflow_strategy.new(work, attributes)
+        new(work, attributes, strategy).create
       end
 
       # @param work [#to_global_id]
       # @param attributes [Hash]
-      def initialize(work, attributes)
+      # @param strategy [#name] strategy for finding which workflow to use
+      def initialize(work, attributes, strategy)
         @work = work
         @attributes = attributes
+        @strategy = strategy
       end
 
-      attr_accessor :work, :attributes
+      attr_reader :work, :attributes, :strategy
+      private :work, :attributes, :strategy
 
       # Creates a Sipity::Entity for the work.
       # The Sipity::Entity acts as a proxy to a work within a workflow
@@ -34,11 +44,7 @@ module CurationConcerns
                        Sipity::Workflow.find_by!(name: workflow_name))
       end
 
-      # You may override this method select a different workflow.
-      # @return [String]
-      def workflow_name
-        work.model_name.singular
-      end
+      delegate :workflow_name, to: :strategy
 
       # This returns the initial workflow state. This is derived by finding a WorkflowState
       # that has no WorkflowActions leading to it.
