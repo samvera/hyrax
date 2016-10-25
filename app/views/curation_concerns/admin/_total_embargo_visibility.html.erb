@@ -1,4 +1,8 @@
-    <h4>Embargos & Leases</h4>
+<div class="panel-heading">
+  <h4 class="panel-title">Embargos &amp; Leases</h4>
+</div>
+
+<div class="panel-body">
       <%= render "curation_concerns/admin/widgets/pie", label: "embargo",
         data: {
         t("curation_concerns.visibility.embargo.text") => {
@@ -14,3 +18,4 @@
           t("curation_concerns.visibility.lease.active.open.text") => @resource_statistics.active_lease_now_open_concerns_count,
         }
       }  %>
+</div>

@@ -1,7 +1,12 @@
-    <h4>Visibility</h4>
+<div class="panel-heading">
+  <h4 class="panel-title">Visibility</h4>
+</div>
+
+<div class="panel-body">
       <%= render "curation_concerns/admin/widgets/pie", label: "visibility",
               data: {
                   t("curation_concerns.visibility.open.text") => @resource_statistics.open_concerns_count,
                   t("curation_concerns.visibility.authenticated.text") => @resource_statistics.authenticated_concerns_count,
                   t("curation_concerns.visibility.restricted.text") =>  @resource_statistics.restricted_concerns_count
               } %>
+</div>

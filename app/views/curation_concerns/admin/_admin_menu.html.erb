@@ -1,5 +1,5 @@
 <% configuration[:menu].each do |key, config| %>
-  <li>
-  <%= link_to t("curation_concerns.dashboard.menu.#{key}"), polymorphic_path([curation_concerns, :admin, key]), class: action_name == key ? 'selected' : ''%>
-  </li>
+  <%= content_tag :li, class: (action_name == key ? 'active' : '') do %>
+    <%= link_to t("curation_concerns.dashboard.menu.#{key}"), polymorphic_path([curation_concerns, :admin, key])%>
+  <% end %>
 <% end %>
