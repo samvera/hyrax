@@ -104,7 +104,7 @@ en:
         shares: "Shares"
       works:
         menu: "Works"
-        new: "New"
+        new: "New %{type}"
         my: "My Works"
         batch: "Batch Create"
       collections:
@@ -220,7 +220,7 @@ en:
         resource_type: "You may select multiple types to apply to all files"
     works:
       new:
-        header: Add New Work
+        header: "Add New %{type}"
         in_collections: This Work in Collections
         in_this_work: Other Works in this Work
         in_other_works: This Work in Other Works
@@ -237,7 +237,7 @@ en:
           relationships: "Relationships"
           share:         "Share"
       progress:
-        header: Save Work
+        header: "Save Work"
       show:
         no_preview: No preview available
     batch_uploads:

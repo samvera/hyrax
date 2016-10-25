@@ -26,7 +26,7 @@
           <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
           <% classification.each do |concern| %>
             <li><%= link_to(
-                  "#{t("sufia.toolbar.works.new")} #{concern.human_readable_type}",
+                  t("sufia.toolbar.works.new", type: concern.human_readable_type),
                   new_polymorphic_path([main_app, concern]),
                   class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
                   role: 'menuitem'
