@@ -4,12 +4,11 @@
 
 #masthead {
   z-index: $zindex-navbar + 1;
-  margin-bottom: 0;
-  margin-top: 0;
 }
 
-.navbar + .navbar {
-  margin-top: 0;
+.navbar + .navbar,
+.navbar + .image-masthead {
+  margin-top: -1 * $navbar-margin-bottom;
 }
 
 .searchbar-right {
