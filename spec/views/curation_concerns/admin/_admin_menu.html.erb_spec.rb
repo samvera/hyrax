@@ -16,8 +16,8 @@ RSpec.describe "admin_menu.html.erb" do
     it "makes a link to the right action" do
       expect(rendered).to have_link "Admin Dashboard", href: curation_concerns.admin_index_path
     end
-    it "marks the current page as selected" do
-      expect(rendered).to have_selector "li > a.selected"
+    it "marks the current page as active" do
+      expect(rendered).to have_selector "li.active > a"
     end
   end
 end

@@ -1,0 +1,18 @@
+@mixin widget-partial($col: 12) {
+  @include make-sm-column(12);
+  @include make-md-column($col);
+  .partial-wrapper {
+    @extend .panel;
+    @extend .panel-default;
+  }
+}
+
+.partial-total_objects {
+  @include widget-partial;
+}
+.partial-total_objects_charts {
+  @include widget-partial(6);
+}
+.partial-total_embargo_visibility {
+  @include widget-partial(6);
+}

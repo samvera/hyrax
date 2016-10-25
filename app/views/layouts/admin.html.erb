@@ -1,43 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- META SECTION -->
-    <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<% content_for(:main) do %>
+  <div class="col-md-3 sidebar">
+    <%= render 'curation_concerns/admin/sidebar' %>
+  </div>
+  <div class="col-md-9 <%= yield(:content_class) %>">
+    <%= yield %>
+  </div>
+<% end %>
 
-    <%= render "layouts/head_tag_content"%>
-    <!-- END META SECTION -->
-
-    <!-- CSS INCLUDE -->
-    <%= stylesheet_link_tag 'curation_concerns/admin' %>
-    <!-- EOF CSS INCLUDE -->
-  </head>
-  <body>
-    <!-- START PAGE CONTAINER -->
-    <div class="page-container">
-      <header id="banner" role="banner">
-        <hgroup>
-        <%= render 'shared/brand_bar' %>
-        </hgroup>
-      </header>
-      <!-- START PAGE SIDEBAR -->
-      <div class="page-sidebar">
-        <%= render 'curation_concerns/admin/sidebar' %>
-      </div>
-      <!-- END PAGE SIDEBAR -->
-
-      <!-- PAGE CONTENT -->
-      <div class="page-content">
-
-        <!-- PAGE CONTENT WRAPPER -->
-        <div class="page-content-wrap">
-          <%= yield %>
-        </div>
-        <!-- END PAGE CONTENT WRAPPER -->
-      </div>
-      <!-- END PAGE CONTENT -->
-    </div>
-    <!-- END PAGE CONTAINER -->
-  </body>
-</html>
+<%= render template: "layouts/#{theme}" %>

@@ -27,6 +27,6 @@ describe 'curation_concerns/single_use_links_viewer/show.html.erb' do
   end
 
   it "has turbolinks disabled in the download link" do
-    expect(rendered).to have_selector "a[data-no-turbolink][href^='/single_use_link/download/']"
+    expect(rendered).to have_selector "a[data-turbolinks^='false'][href^='/single_use_link/download/']"
   end
 end

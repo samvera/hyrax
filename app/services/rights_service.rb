@@ -9,7 +9,7 @@ module RightsService
   end
 
   def self.select_all_options
-    Deprecation.warn(RightsService, "RightsService is deprecated. Use CurationConcerns::LicenseService instead. This will be removed in curation_concerns 2.0")
+    Deprecation.warn(RightsService, "RightsService is deprecated. Use CurationConcerns.config.license_service_class instead. This will be removed in curation_concerns 2.0")
     authority.all.map do |element|
       [element[:label], element[:id]]
     end
