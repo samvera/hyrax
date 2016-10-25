@@ -3,7 +3,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-feature 'Create a <%= class_name %>' do
+RSpec.feature 'Create a <%= class_name %>' do
   context 'a logged in user' do
     let(:user_attributes) do
       { <%= Devise.authentication_keys.first %>: 'test@example.com' }

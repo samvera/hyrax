@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe FileSet do
+RSpec.describe FileSet do
   it "has tests" do
     skip "Add your tests here"
   end
