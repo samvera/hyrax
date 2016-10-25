@@ -7,40 +7,36 @@
   </div>
 <% end %>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <% if @admin_sets.present? %>
-          <div class="table-responsive">
-            <table class="table table-striped datatable">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Date created</th>
-                  <th>Creator</th>
-                  <th>Works</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @admin_sets.each do |admin_set| %>
-                  <tr>
-                    <td><%= link_to admin_set.title.first, [sufia, :admin, admin_set] %></td>
-                    <td><%= admin_set.create_date %></td>
-                    <td><%= safe_join(admin_set.creator) %></td>
-                    <td><%= controller.presenter_class.new(admin_set, current_ability).total_items %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          <% else %>
-            <p>No administrative sets have been created.</p>
-            <%= link_to sufia.new_admin_admin_set_path, class: 'btn btn-primary' do %>
-              <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <% if @admin_sets.present? %>
+      <div class="table-responsive">
+        <table class="table table-striped datatable">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date created</th>
+              <th>Creator</th>
+              <th>Works</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @admin_sets.each do |admin_set| %>
+              <tr>
+                <td><%= link_to admin_set.title.first, [sufia, :admin, admin_set] %></td>
+                <td><%= admin_set.create_date %></td>
+                <td><%= safe_join(admin_set.creator) %></td>
+                <td><%= controller.presenter_class.new(admin_set, current_ability).total_items %></td>
+              </tr>
             <% end %>
-          <% end %>
-        </div>
+          </tbody>
+        </table>
       </div>
-    </div>
+      <% else %>
+        <p>No administrative sets have been created.</p>
+        <%= link_to sufia.new_admin_admin_set_path, class: 'btn btn-primary' do %>
+          <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
+        <% end %>
+      <% end %>
   </div>
 </div>
