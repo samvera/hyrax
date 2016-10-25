@@ -41,7 +41,6 @@ require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'support/features'
 require 'support/backport_test_helpers'
-require 'support/minter'
 require 'support/rake'
 require 'byebug' unless ENV['TRAVIS']
 
