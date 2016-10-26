@@ -27,7 +27,6 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#scholarsphere"
-      - "irc.freenode.org#projecthydra"
     template:
       - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
 services:
