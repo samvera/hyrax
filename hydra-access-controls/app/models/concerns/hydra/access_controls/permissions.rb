@@ -61,7 +61,7 @@ module Hydra
           prop['id'] = selected.id if selected
         end
 
-        clean_collection = remove_concurrent_deletes(attributes_collection)
+        clean_collection = remove_bad_deletes(attributes_collection)
 
         self.permissions_attributes_without_uniqueness = clean_collection
       end
@@ -441,12 +441,13 @@ module Hydra
       end
 
       # Removes any permissions if both a delete and an update are found for the same id
-      # Fixes https://github.com/projecthydra/sufia/issues/2821
-      def remove_concurrent_deletes(collection)
+      # or if a delete is present without an id.
+      def remove_bad_deletes(collection)
+        collection.delete_if { |permission| (has_destroy_flag?(permission) && !permission.has_key?(:id)) }
         collection.each do |permission|
           next unless has_destroy_flag?(permission)
           delete_id = permission.fetch(:id, nil)
-          if collection.map { |c| c if c.fetch(:id, nil) == delete_id }.count > 1
+           if collection.map { |c| c if c.fetch(:id, nil) == delete_id }.count > 1
             collection.delete_if { |permission| permission.fetch(:id, nil) == delete_id }
           end
         end

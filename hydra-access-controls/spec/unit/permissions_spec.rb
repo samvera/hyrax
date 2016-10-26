@@ -165,7 +165,20 @@ describe Hydra::AccessControls::Permissions do
             end
 
             it "leaves the permissions unchanged" do
-              expect(reloaded).to contain_exactly({:name=>"jcoyne", :type=>"person", :access=>"edit"}, {:name=>"group1", :type=>"group", :access=>"read"})
+              expect(reloaded).to contain_exactly({name: "jcoyne", type: "person", access: "edit"}, {name: "group1", type: "group", access: "read"})
+            end
+          end
+
+          context "when destroy is present without an id" do
+            let(:missing_id) do
+              [ { type: "group", access: "read", name: "group1", _destroy: '1' } ]
+            end
+            before do
+              subject.update permissions_attributes: missing_id
+            end
+
+            it "leaves the permissions unchanged" do
+              expect(reloaded).to contain_exactly({name: "jcoyne", type: "person", access: "edit"})
             end
           end
         end
