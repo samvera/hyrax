@@ -126,5 +126,19 @@ describe Sufia::HomepageController, type: :controller do
         expect(announcement.name).to eq 'announcement_text'
       end
     end
+
+    context "without solr" do
+      before do
+        allow(controller).to receive(:repository).and_return(instance_double(Blacklight::Solr::Repository))
+        allow(controller.repository).to receive(:search).and_raise Blacklight::Exceptions::ECONNREFUSED
+      end
+
+      it "errors gracefully" do
+        get :index
+        expect(response).to be_success
+        expect(assigns(:admin_sets)).to be_blank
+        expect(assigns(:recent_documents)).to be_blank
+      end
+    end
   end
 end
