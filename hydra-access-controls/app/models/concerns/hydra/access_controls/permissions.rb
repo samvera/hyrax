@@ -61,7 +61,9 @@ module Hydra
           prop['id'] = selected.id if selected
         end
 
-        self.permissions_attributes_without_uniqueness = attributes_collection
+        clean_collection = remove_concurrent_deletes(attributes_collection)
+
+        self.permissions_attributes_without_uniqueness = clean_collection
       end
 
       # Return a list of groups that have discover permission
@@ -436,6 +438,18 @@ module Hydra
       def person_agent?(agent)
         raise 'no agent' unless agent.present?
         agent.first.rdf_subject.to_s.start_with?(PERSON_AGENT_URL_PREFIX)
+      end
+
+      # Removes any permissions if both a delete and an update are found for the same id
+      # Fixes https://github.com/projecthydra/sufia/issues/2821
+      def remove_concurrent_deletes(collection)
+        collection.each do |permission|
+          next unless has_destroy_flag?(permission)
+          delete_id = permission.fetch(:id, nil)
+          if collection.map { |c| c if c.fetch(:id, nil) == delete_id }.count > 1
+            collection.delete_if { |permission| permission.fetch(:id, nil) == delete_id }
+          end
+        end
       end
     end
   end

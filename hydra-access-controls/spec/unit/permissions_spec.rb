@@ -151,6 +151,23 @@ describe Hydra::AccessControls::Permissions do
               expect(reloaded).to eq [{ type: "person", access: "edit", name: "jcoyne" }]
             end
           end
+
+          context "when destroy and update are simultaneously set" do
+            let(:simultaneous) do
+              [
+                { id: permissions_id, type: "group", access: "read", name: "group1", _destroy: '1' },
+                { id: permissions_id, type: "group", access: "read", name: "group1", }
+              ]
+            end
+            before do
+              subject.update permissions_attributes: [{ type: "group", access: "read", name: "group1" }]
+              subject.update permissions_attributes: simultaneous
+            end
+
+            it "leaves the permissions unchanged" do
+              expect(reloaded).to contain_exactly({:name=>"jcoyne", :type=>"person", :access=>"edit"}, {:name=>"group1", :type=>"group", :access=>"read"})
+            end
+          end
         end
 
         context "to a falsy value" do
