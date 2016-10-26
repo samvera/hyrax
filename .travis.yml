@@ -9,8 +9,6 @@ matrix:
     - rvm: 2.2.4
       env: "BLACKLIGHT_VERSION=5.17.2"
 
-notifications:
-  irc: "irc.freenode.org#projecthydra"
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
