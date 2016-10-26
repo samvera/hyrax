@@ -111,6 +111,14 @@ en:
         menu: "Collections"
         my: "My Collections"
         new: "New Collection"
+      notifications: "Notifications"
+      profile:
+        sr_action: "View"
+        sr_target: "profile"
+        view: "View Profile"
+        edit: "Edit Profile"
+        logout: "Logout"
+        login: "Login"
     dashboard:
       title:                    "My Dashboard"
       view_collections:         "View Collections"
@@ -408,7 +416,7 @@ en:
       groups_description:
         description_html: >
           The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
-          you are a member of.  You may select a specific group and assign an access level for a file 
+          you are a member of.  You may select a specific group and assign an access level for a file
           within %{application_name}, similarly to adding user access levels.
     visibility:
       open:
@@ -422,7 +430,7 @@ en:
       private:
         label_html: Private
     single_use_links:
-      copy: 
+      copy:
         button: Copy
   blacklight:
     search:
@@ -431,7 +439,6 @@ en:
           based_near: Location
           contributor: Contributors
           keyword: Keyword
-
 
   helpers:
     action:
