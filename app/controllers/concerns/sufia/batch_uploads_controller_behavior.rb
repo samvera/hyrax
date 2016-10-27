@@ -40,11 +40,12 @@ module Sufia
       def create_update_job
         log = BatchCreateOperation.create!(user: current_user,
                                            operation_type: "Batch Create")
+        # ActionController::Parameters are not serializable, so cast to a hash
         BatchCreateJob.perform_later(current_user,
-                                     params[:title],
-                                     params[:resource_type],
+                                     params[:title].permit!.to_h,
+                                     params[:resource_type].permit!.to_h,
                                      params[:uploaded_files],
-                                     attributes_for_actor,
+                                     attributes_for_actor.to_h,
                                      log)
       end
 
