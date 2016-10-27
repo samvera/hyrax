@@ -1,17 +1,17 @@
 # Hydra-Head
 
 [![Build Status](https://travis-ci.org/projecthydra/hydra-head.png?branch=master)](https://travis-ci.org/projecthydra/hydra-head)
-[![Version](https://badge.fury.io/rb/active-fedora.png)](http://badge.fury.io/rb/active-fedora)
+[![Version](https://badge.fury.io/rb/hydra-head.png)](http://badge.fury.io/rb/hydra-head)
 [![Dependencies](https://gemnasium.com/projecthydra/hydra-head.png)](https://gemnasium.com/projecthydra/hydra-head)
 [![Coverage Status](https://img.shields.io/coveralls/projecthydra/hydra-head.svg)](https://coveralls.io/r/projecthydra/hydra-head)
 
 Hydra-Head is a Ruby-on-Rails gem containing the core code for a web
 application using the full stack of hydra building blocks.
 
-See the github wikis for information targeted to developers:
+See the Github wikis for information targeted to developers:
 <http://github.com/projecthydra/hydra-head/wiki>
 
-See the duraspace hydra wikis for information at the architecture level:
+See the Duraspace Hydra wikis for information at the architecture level:
 <http://wiki.duraspace.org/display/hydra/>
 
 Additionally, new adopters and potential adopters may find the pages
@@ -33,7 +33,7 @@ Hydra](https://github.com/projecthydra/hydra/wiki/Dive-into-Hydra)
 
 ### Installation Prerequisites
 
-See the [Installation Preqrequisites](http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites) wiki page.
+See the [Installation Prerequisites](http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites) wiki page.
 
 Ruby 1.9.3+ is required by Hydra-Head release 6+; RVM is strongly suggested.
 
@@ -93,7 +93,7 @@ For those developers who want to or need to work on the hydra-head gem
 itself, see the [Instructions for
 Contributors](http://github.com/projecthydra/hydra-head/wiki/For-Contributors)
 
-## Acknowledgements
+## Acknowledgments
 
 ### Design & Strategic Contributions
 
