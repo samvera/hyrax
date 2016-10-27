@@ -16,11 +16,15 @@
                         <% end %>
                     </li>
                     <li><%= link_to sufia.admin_admin_sets_path do %>
-                      <span class="fa fa-sitemap"></span> <%= t('sufia.admin.sidebar.admin_sets') %>
+                          <span class="fa fa-sitemap"></span> <%= t('sufia.admin.sidebar.admin_sets') %>
                         <% end %>
                     </li>
                     <li><%= link_to curation_concerns.admin_workflow_path do %>
-                      <span class="fa fa-code-fork"></span> <%= t('sufia.admin.sidebar.workflow') %>
+                          <span class="fa fa-code-fork"></span> <%= t('sufia.admin.sidebar.workflow') %>
+                        <% end %>
+                    </li>
+                    <li><%= link_to curation_concerns.admin_workflow_roles_path do %>
+                          <span class="fa fa-users"></span> <%= t('sufia.admin.sidebar.workflow_roles') %>
                         <% end %>
                     </li>
                 </ul>
