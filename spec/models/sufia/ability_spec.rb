@@ -46,7 +46,7 @@ describe Sufia::Ability, type: :model do
     let(:user) { create(:user) }
     let(:work) { create(:work, user: sender) }
 
-    it { should_not be_able_to(:transfer, work.id) }
+    it { is_expected.not_to be_able_to(:transfer, work.id) }
 
     describe "user_is_depositor?" do
       subject { ability.send(:user_is_depositor?, work.id) }
@@ -55,34 +55,34 @@ describe Sufia::Ability, type: :model do
 
     context "with a ProxyDepositRequest for a work they have deposited" do
       subject { Ability.new(sender) }
-      it { should be_able_to(:transfer, work.id) }
+      it { is_expected.to be_able_to(:transfer, work.id) }
     end
 
     context "with a ProxyDepositRequest that they receive" do
       let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender) }
-      it { should be_able_to(:accept, request) }
-      it { should be_able_to(:reject, request) }
-      it { should_not be_able_to(:destroy, request) }
+      it { is_expected.to be_able_to(:accept, request) }
+      it { is_expected.to be_able_to(:reject, request) }
+      it { is_expected.not_to be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
         let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender, status: 'accepted') }
-        it { should_not be_able_to(:accept, request) }
-        it { should_not be_able_to(:reject, request) }
-        it { should_not be_able_to(:destroy, request) }
+        it { is_expected.not_to be_able_to(:accept, request) }
+        it { is_expected.not_to be_able_to(:reject, request) }
+        it { is_expected.not_to be_able_to(:destroy, request) }
       end
     end
 
     context "with a ProxyDepositRequest they are the sender of" do
       let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user) }
-      it { should_not be_able_to(:accept, request) }
-      it { should_not be_able_to(:reject, request) }
-      it { should be_able_to(:destroy, request) }
+      it { is_expected.not_to be_able_to(:accept, request) }
+      it { is_expected.not_to be_able_to(:reject, request) }
+      it { is_expected.to be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
         let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user, status: 'accepted') }
-        it { should_not be_able_to(:accept, request) }
-        it { should_not be_able_to(:reject, request) }
-        it { should_not be_able_to(:destroy, request) }
+        it { is_expected.not_to be_able_to(:accept, request) }
+        it { is_expected.not_to be_able_to(:reject, request) }
+        it { is_expected.not_to be_able_to(:destroy, request) }
       end
     end
   end
