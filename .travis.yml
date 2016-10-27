@@ -11,11 +11,5 @@ env:
       RDF_VERSION=1.99.1
     - RAILS_VERSION=5.0.0.1
       RDF_VERSION=2.1.0
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#projecthydra"
-    template:
-      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
 before_script:
   - jdk_switcher use oraclejdk8
