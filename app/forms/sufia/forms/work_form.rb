@@ -62,7 +62,7 @@ module Sufia::Forms
     def self.sanitize_params(form_params)
       params = super
       return params unless Flipflop.enable_mediated_deposit?
-      params[:permissions_attributes].reject! { |attributes| attributes['access'] == 'edit' }
+      params.fetch(:permissions_attributes, []).reject! { |attributes| attributes['access'] == 'edit' }
       params
     end
   end
