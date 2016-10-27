@@ -397,6 +397,10 @@ en:
         local_upload: Add Local Files
         external_upload: Cloud Providers
         dropzone: "Drop files here."
+      form_progress:
+        requirements:          Requirements
+        required_descriptions: Describe your work
+        required_files:        Add files
       items:
         header: Items
         thumbnail: Thumbnail
@@ -450,3 +454,5 @@ en:
       admin_set:
         create: 'Save'
         update: 'Save'
+      create: 'Save'
+      update: 'Save'
