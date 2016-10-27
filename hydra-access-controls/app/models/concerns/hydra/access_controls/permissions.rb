@@ -447,7 +447,7 @@ module Hydra
         collection.each do |permission|
           next unless has_destroy_flag?(permission)
           delete_id = permission.fetch(:id, nil)
-           if collection.map { |c| c if c.fetch(:id, nil) == delete_id }.count > 1
+           if collection.map { |c| c if c.fetch(:id, nil) == delete_id }.compact.count > 1
             collection.delete_if { |permission| permission.fetch(:id, nil) == delete_id }
           end
         end

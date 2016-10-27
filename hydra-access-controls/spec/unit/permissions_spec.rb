@@ -152,7 +152,7 @@ describe Hydra::AccessControls::Permissions do
             end
           end
 
-          context "when destroy and update are simultaneously set" do
+          context "when destroy and update are simultaneously set for the same id" do
             let(:simultaneous) do
               [
                 { id: permissions_id, type: "group", access: "read", name: "group1", _destroy: '1' },
@@ -179,6 +179,25 @@ describe Hydra::AccessControls::Permissions do
 
             it "leaves the permissions unchanged" do
               expect(reloaded).to contain_exactly({name: "jcoyne", type: "person", access: "edit"})
+            end
+          end
+
+          context "when updating multiple different permissions at the same time" do
+            before do
+              subject.update permissions_attributes: [{ type: "group", access: "read", name: "group1" }]
+              subject.update permissions_attributes: [
+                { id: permissions_id, type: "group", access: "read", name: "group1", _destroy: '1' },
+                { type: "group", access: "edit", name: "group2" },
+                { type: "person", access: "read", name: "joebob" } 
+              ]
+            end
+
+            it "removes permissions on existing groups and updates the others" do
+              expect(reloaded).to contain_exactly(
+                {name: "jcoyne", type: "person", access: "edit"},
+                {name: "group2", type: "group",  access: "edit"},
+                {name: "joebob", type: "person", access: "read"}
+              )
             end
           end
         end
