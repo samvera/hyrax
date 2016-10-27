@@ -16,6 +16,10 @@ module Sufia
       t('sufia.institution_name_full', default: institution_name)
     end
 
+    def banner_image
+      Sufia.config.banner_image
+    end
+
     def orcid_label(style_class = '')
       "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end
