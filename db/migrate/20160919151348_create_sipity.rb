@@ -85,6 +85,7 @@ class CreateSipity < ActiveRecord::Migration
 
     create_table "sipity_workflows" do |t|
       t.string   "name",                      null: false
+      t.string   "label"
       t.text     "description"
       t.datetime "created_at",                null: false
       t.datetime "updated_at",                null: false
