@@ -15,25 +15,13 @@ describe Sufia::BatchUploadsController do
   describe "#create" do
     context "enquing a update job" do
       let(:expected_types) do
-        if Rails.version < '5.0.0'
-          { '1' => 'Article' }
-        else
-          ActionController::Parameters.new('1' => 'Article')
-        end
+        { '1' => 'Article' }
       end
       let(:expected_individual_params) do
-        if Rails.version < '5.0.0'
-          { '1' => 'foo' }
-        else
-          ActionController::Parameters.new('1' => 'foo')
-        end
+        { '1' => 'foo' }
       end
       let(:expected_shared_params) do
-        if Rails.version < '5.0.0'
-          { keyword: [], visibility: 'open' }
-        else
-          ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
-        end
+        { 'keyword' => [], 'visibility' => 'open' }
       end
 
       it "is successful" do
@@ -65,6 +53,8 @@ describe Sufia::BatchUploadsController do
             ],
             on_behalf_of: 'elrayle'
           },
+          title: { '1' => 'foo' },
+          resource_type: { '1' => 'Article' },
           uploaded_files: ['1']
         }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_shares_path
