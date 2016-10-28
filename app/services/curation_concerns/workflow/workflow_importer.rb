@@ -61,7 +61,7 @@ module CurationConcerns
       public
 
       def call
-        Array.wrap(data.fetch(:work_types)).map do |configuration|
+        Array.wrap(data.fetch(:workflows)).map do |configuration|
           find_or_create_from(configuration: configuration)
         end
       end

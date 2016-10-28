@@ -5,7 +5,7 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
   let(:json) do
     doc = <<-HERE
     {
-      "work_types": [
+      "workflows": [
         {
           "name": "ulra_submission",
           "actions": [{

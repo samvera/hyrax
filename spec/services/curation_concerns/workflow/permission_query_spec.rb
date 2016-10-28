@@ -7,7 +7,7 @@ module CurationConcerns
       let(:completing_user) { FactoryGirl.create(:user) }
       let(:workflow_config) do
         {
-          work_types: [{
+          workflows: [{
             name: 'testing',
             actions: [{
               name: "forward", from_states: [{ names: ["initial"], roles: ["reviewing"] }], transition_to: 'forwarded'
