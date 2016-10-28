@@ -2,10 +2,10 @@ module CurationConcerns
   module Workflow
     # Responsible for describing the JSON schema for a Workflow.
     #
-    # The `work_types name` defines the name of the Sipity::Workflow.
-    # The `work_types actions` defines the actions that can be taken in the given states (e.g. :from_states) by the given :roles.
-    # The `work_types actions transition_to` defines the state to which we transition when the action is taken.
-    # The `work_types actions notifications` defines the notifications that should be sent when the action is taken.
+    # The `workflows name` defines the name of the Sipity::Workflow.
+    # The `workflows actions` defines the actions that can be taken in the given states (e.g. :from_states) by the given :roles.
+    # The `workflows actions transition_to` defines the state to which we transition when the action is taken.
+    # The `workflows actions notifications` defines the notifications that should be sent when the action is taken.
     #
     # @see Sipity::Workflow
     # @see Sipity::WorkflowAction
@@ -15,7 +15,7 @@ module CurationConcerns
     # @see Sipity::Method
     # @see ./lib/generators/curation_concerns/work/templates/workflow.json.erb
     WorkflowSchema = Dry::Validation.Schema do
-      required(:work_types).each do
+      required(:workflows).each do
         required(:name).filled(:str?) # Sipity::Workflow#name
         required(:actions).each do
           required(:name).filled(:str?) # Sipity::WorkflowAction#name

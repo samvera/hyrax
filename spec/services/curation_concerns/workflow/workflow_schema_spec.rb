@@ -5,7 +5,7 @@ module CurationConcerns
     RSpec.describe 'WorkflowSchema', no_clean: true do
       it 'will validate valid data by returning an empty message' do
         valid_data = {
-          work_types: [{
+          workflows: [{
             name: "valid",
             actions: [{
               name: "finalize_digitization",
@@ -26,7 +26,7 @@ module CurationConcerns
 
       it 'will report invalid data via the returned messages' do
         invalid_data = {
-          work_types: [{
+          workflows: [{
             actions: [
               { name: "finalize_digitization", from_states: [{ names: ["pending"], roles: [] }], transition_to: "metadata_review" }
             ]
