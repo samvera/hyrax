@@ -120,3 +120,28 @@ div.heading-tile:hover .glyphicon {
     margin-top: $padding-small-vertical;
   }
 }
+
+// submenu items
+ul.collapse > li > a,
+ul.collapsing > li > a {
+  padding-left: 40px;
+}
+
+.collapse-toggle {
+  margin-bottom: 0;
+
+  &::after {
+    content: "❯";
+    float: right;
+    transform: rotate(90deg);
+  }
+
+  &.collapsed {
+    border-bottom: 0;
+
+    &::after {
+      transform: rotate(0deg);
+      transition: transform 0.1s ease;
+    }
+  }
+}

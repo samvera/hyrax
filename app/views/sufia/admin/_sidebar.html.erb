@@ -14,14 +14,22 @@
       <span class="fa fa-sitemap"></span> <%= t('sufia.admin.sidebar.admin_sets') %>
     <% end %>
   </li>
-  <li class="<%= 'active' if current_page? curation_concerns.admin_workflow_path %>">
-      <%= link_to curation_concerns.admin_workflow_path do %>
-      <span class="fa fa-code-fork"></span> <%= t('sufia.admin.sidebar.workflow') %>
-  <% end %>
-  </li>
-  <li class="<%= 'active' if current_page? curation_concerns.admin_workflow_roles_path %>">
-      <%= link_to curation_concerns.admin_workflow_roles_path do %>
-      <span class="fa fa-users"></span> <%= t('sufia.admin.sidebar.workflow_roles') %>
-  <% end %>
+  <li>
+    <a role="button" class="collapsed collapse-toggle" data-toggle="collapse" href="#collapseWorkflows" aria-expanded="false" aria-controls="collapseWorkflows">
+      <span class="fa fa-code-fork"></span>
+      <span><%= t('sufia.admin.sidebar.workflow') %></span>
+    </a>
+    <ul class="collapse nav nav-pills nav-stacked" id="collapseWorkflows">
+      <li class="<%= 'active' if current_page? curation_concerns.admin_workflow_path %>">
+        <%= link_to curation_concerns.admin_workflow_path do %>
+          <span class="fa fa-flag"></span> <%= t('sufia.admin.sidebar.workflow_review') %>
+      <% end %>
+      </li>
+      <li class="<%= 'active' if current_page? curation_concerns.admin_workflow_roles_path %>">
+        <%= link_to curation_concerns.admin_workflow_roles_path do %>
+          <span class="fa fa-users"></span> <%= t('sufia.admin.sidebar.workflow_roles') %>
+      <% end %>
+      </li>
+    </ul>
   </li>
 </ul>

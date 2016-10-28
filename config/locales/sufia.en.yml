@@ -316,7 +316,8 @@ en:
         settings:   "Settings"
         statistics: "Statistics"
         workflow: "Workflows"
-        workflow_roles: "Workflow Roles"
+        workflow_review: "Review"
+        workflow_roles: "Roles"
       stats:
         registered: "Registered"
         deposited_form:
