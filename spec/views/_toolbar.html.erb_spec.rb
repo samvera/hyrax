@@ -43,7 +43,7 @@ describe '/_toolbar.html.erb', type: :view do
       it "has a link to upload" do
         allow(view).to receive(:can?).with(:create, GenericWork).and_return(true)
         render
-        expect(rendered).to have_link('New Work', href: new_curation_concerns_generic_work_path)
+        expect(rendered).to have_link('New Generic Work', href: new_curation_concerns_generic_work_path)
       end
     end
 
@@ -51,7 +51,7 @@ describe '/_toolbar.html.erb', type: :view do
       it "does not have a link to upload" do
         allow(view).to receive(:can?).with(:create, GenericWork).and_return(false)
         render
-        expect(rendered).not_to have_link('New Work')
+        expect(rendered).not_to have_link('New Generic Work')
       end
     end
   end

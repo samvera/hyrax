@@ -19,7 +19,7 @@ describe 'curation_concerns/base/edit.html.erb', type: :view do
   end
 
   it "sets a header and draws the form" do
-    expect(view).to receive(:provide).with(:page_title, 'A nice work // Work [456] // Sufia')
+    expect(view).to receive(:provide).with(:page_title, 'A nice work // Generic Work [456] // Sufia')
     expect(view).to receive(:provide).with(:page_header).and_yield
     render
     expect(rendered).to eq "  <h1>Edit Work</h1>\n\na form\n"

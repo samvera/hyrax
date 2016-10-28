@@ -1,50 +1,20 @@
-<!DOCTYPE html>
-<html lang="<%= t("sufia.document_language", default: '') %>">
-<head>
-  <%= render "layouts/head_tag_content"%>
-</head>
+<% content_for(:navbar) do %>
+  <div class="image-masthead">
+    <div class="background-container" style="background-image: url('<%= Sufia.config.banner_image %>')"></div>
+    <span class="background-container-gradient"></span>
 
-<body>
-<%= render '/masthead' %>
-
-<div class="image-masthead">
-  <div class="background-container" style="background-image: url('<%= Sufia.config.banner_image %>')"></div>
-  <span class="background-container-gradient"></span>
-
-  <div class="container site-title-container">
-    <div class="site-title h1" style="text-align: center;">
-      <%= render "sufia/homepage/marketing" if controller_name == 'homepage' %>
-    </div>
-  </div>
-
-  <nav class="navbar" role="navigation">
-    <div class="container">
-      <div class="row">
-        <ul class="nav navbar-nav">
-          <li <%= 'class=active' if current_page?(sufia.root_path) %>>
-            <%= link_to t(:'sufia.controls.home'), sufia.root_path, :'data-no-turbolink'=>"true" %></li>
-          <li <%= 'class=active' if current_page?(sufia.about_path) %>>
-            <%= link_to t(:'sufia.controls.about'), sufia.about_path, :'data-no-turbolink'=>"true" %></li>
-          <li <%= 'class=active' if action_name == "help" %>>
-            <%= link_to t(:'sufia.controls.help'), sufia.help_path %></li>
-          <li <%= 'class=active' if current_page?(sufia.contact_path) %>>
-            <%= link_to t(:'sufia.controls.contact'), sufia.contact_path %></li>
-        </ul><!-- /.nav -->
-        <div class="searchbar-right navbar-right col-sm-7 col-md-6">
-          <%= render partial: 'catalog/search_form' %>
-        </div>
+    <div class="container site-title-container">
+      <div class="site-title h1" style="text-align: center;">
+        <%= render "sufia/homepage/marketing" if controller_name == 'homepage' %>
       </div>
     </div>
-  </nav><!-- /.navbar -->
-</div>
 
-<%= render '/flash_msg' %>
-<%= render 'sufia/homepage/announcement' if controller_name == 'homepage' %>
+    <%= render '/controls' %>
+  </div>
+<% end %>
 
-<div id="content-wrapper" class="container">
-  <%= yield %>
-</div><!-- /#content-wrapper -->
-<%= render 'shared/footer' %>
-<%= render 'shared/ajax_modal' %>
-</body>
-</html>
+<% content_for(:precontainer_content) do %>
+  <%= render 'sufia/homepage/announcement' if controller_name == 'homepage' %>
+<% end %>
+
+<%= render template: 'layouts/sufia' %>

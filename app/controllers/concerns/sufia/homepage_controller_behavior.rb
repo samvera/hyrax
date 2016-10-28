@@ -34,6 +34,8 @@ module Sufia::HomepageControllerBehavior
                                                        .rows(5)
       response = repository.search(builder)
       response.documents
+    rescue Blacklight::Exceptions::ECONNREFUSED
+      []
     end
 
     def recent

@@ -1,6 +1,6 @@
 <% provide :page_title, curation_concern_page_title(curation_concern) %>
 <% provide :page_header do %>
-  <h1><%= t("sufia.works.#{action_name}.header") %></h1>
+  <h1><%= t("sufia.works.#{action_name}.header", type: curation_concern.human_readable_type) %></h1>
 <% end %>
 
 <%= render 'form' %>

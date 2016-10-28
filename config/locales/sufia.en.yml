@@ -104,13 +104,21 @@ en:
         shares: "Shares"
       works:
         menu: "Works"
-        new: "New"
+        new: "New %{type}"
         my: "My Works"
         batch: "Batch Create"
       collections:
         menu: "Collections"
         my: "My Collections"
         new: "New Collection"
+      notifications: "Notifications"
+      profile:
+        sr_action: "View"
+        sr_target: "profile"
+        view: "View Profile"
+        edit: "Edit Profile"
+        logout: "Logout"
+        login: "Login"
     dashboard:
       title:                    "My Dashboard"
       view_collections:         "View Collections"
@@ -220,7 +228,7 @@ en:
         resource_type: "You may select multiple types to apply to all files"
     works:
       new:
-        header: Add New Work
+        header: "Add New %{type}"
         in_collections: This Work in Collections
         in_this_work: Other Works in this Work
         in_other_works: This Work in Other Works
@@ -237,7 +245,7 @@ en:
           relationships: "Relationships"
           share:         "Share"
       progress:
-        header: Save Work
+        header: "Save Work"
       show:
         no_preview: No preview available
     batch_uploads:
@@ -381,6 +389,8 @@ en:
       relationships_parent_row_empty:
         label: "In %{type}:"
         empty: "There are no %{type} relationships."
+      show:
+        last_modified: "Last modified: %{value}"
       metadata:
         header: Descriptions
         attribute_name_label: Attribute Name
@@ -408,7 +418,7 @@ en:
       groups_description:
         description_html: >
           The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
-          you are a member of.  You may select a specific group and assign an access level for a file 
+          you are a member of.  You may select a specific group and assign an access level for a file
           within %{application_name}, similarly to adding user access levels.
     visibility:
       open:
@@ -422,7 +432,7 @@ en:
       private:
         label_html: Private
     single_use_links:
-      copy: 
+      copy:
         button: Copy
   blacklight:
     search:
@@ -431,7 +441,6 @@ en:
           based_near: Location
           contributor: Contributors
           keyword: Keyword
-
 
   helpers:
     action:
