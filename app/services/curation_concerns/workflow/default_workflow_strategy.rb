@@ -1,8 +1,7 @@
 module CurationConcerns
   module Workflow
-    class WorkflowByModelNameStrategy
-      def initialize(work, _attributes)
-        @work = work
+    class DefaultWorkflowStrategy
+      def initialize(_work, _attributes)
       end
 
       # @return [String] The name of the workflow to use

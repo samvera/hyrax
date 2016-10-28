@@ -2,7 +2,7 @@ module CurationConcerns
   module Workflow
     class WorkflowFactory
       class_attribute :workflow_strategy
-      self.workflow_strategy = WorkflowByModelNameStrategy
+      self.workflow_strategy = DefaultWorkflowStrategy
 
       # @param work [#to_global_id]
       # @param attributes [Hash]
