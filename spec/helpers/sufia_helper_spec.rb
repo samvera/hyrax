@@ -256,4 +256,10 @@ describe SufiaHelper, type: :helper do
       expect(helper.human_readable_date(value: ["2016-08-15T00:00:00Z"])).to eq("08/15/2016")
     end
   end
+
+  describe "#banner_image" do
+    it "returns the configured Sufia banner image" do
+      expect(helper.banner_image).to eq(Sufia.config.banner_image)
+    end
+  end
 end
