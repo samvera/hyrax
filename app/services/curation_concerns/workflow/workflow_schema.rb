@@ -17,6 +17,8 @@ module CurationConcerns
     WorkflowSchema = Dry::Validation.Schema do
       required(:work_types).each do
         required(:name).filled(:str?) # Sipity::Workflow#name
+        optional(:label).filled(:str?) # Sipity::Workflow#label
+        optional(:description).filled(:str?) # Sipity::Workflow#description
         required(:actions).each do
           required(:name).filled(:str?) # Sipity::WorkflowAction#name
           required(:from_states).each do

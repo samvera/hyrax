@@ -2,7 +2,10 @@
   "work_types": [
     {
       "name": "<%= file_name %>",
-         "actions": [{
+      "label": "Digital collections workflow",
+      "description": "A multi-step workflow for digital collections",
+      "actions": [
+         {
            "name": "finalize_digitization",
            "from_states": [{"names": ["pending"], "roles": ["reviewing"]}],
            "transition_to": "metadata_review",
@@ -50,7 +53,8 @@
            "name": "unflag",
            "from_states": [{"names":["flag"], "roles":["unflagging"]}],
            "transition_to": "complete"
-        }]
-     }
+         }
+      ]
+    }
   ]
 }

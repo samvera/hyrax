@@ -8,6 +8,8 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
       "work_types": [
         {
           "name": "ulra_submission",
+          "label": "This is the label",
+          "description": "This description could get really long",
           "actions": [{
             "name": "approve",
             "transition_to": "reviewed",
@@ -36,9 +38,13 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
     it 'creates the requisite data from the configuration' do
       expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
+      result = nil
       expect do
-        expect(described_class.generate_from_json_file(path: path)).to match_array(kind_of(Sipity::Workflow))
+        result = described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
+      expect(result).to match_array(kind_of(Sipity::Workflow))
+      expect(result.first.label).to eq "Digital collections workflow"
+      expect(result.first.description).to eq "A multi-step workflow for digital collections"
     end
   end
 end
