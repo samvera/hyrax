@@ -17,6 +17,7 @@ module CurationConcerns
    7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
    8. Adds local authority files to the application
    9. Copies modified simple_form initializers
+   10. Generates a default workflow
          '
 
     def run_required_generators
@@ -105,6 +106,10 @@ module CurationConcerns
                 'config/initializers/simple_form.rb'
       copy_file 'config/initializers/simple_form_bootstrap.rb',
                 'config/initializers/simple_form_bootstrap.rb'
+    end
+
+    def create_workflow
+      template('workflow.json.erb', "config/workflows/default_workflow.json")
     end
   end
 end

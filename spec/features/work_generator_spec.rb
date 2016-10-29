@@ -21,7 +21,6 @@ feature 'Creating a new Work', :workflow do
     load "#{EngineCart.destination}/config/initializers/curation_concerns.rb"
     load "#{EngineCart.destination}/config/routes.rb"
     load "app/helpers/curation_concerns/url_helper.rb"
-    CurationConcerns::Workflow::WorkflowImporter.generate_from_json_file(path: "#{EngineCart.destination}/config/workflows/catapult_workflow.json")
     sign_in user
 
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.

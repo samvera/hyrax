@@ -34,7 +34,7 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
   end
 
   context 'data generation' do
-    let(:path) { Rails.root.join('config/workflows/generic_work_workflow.json').to_s }
+    let(:path) { Rails.root.join('config/workflows/default_workflow.json').to_s }
     it 'creates the requisite data from the configuration' do
       expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original

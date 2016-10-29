@@ -80,10 +80,6 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
     readme 'README'
   end
 
-  def create_workflow
-    template('workflow.json.erb', "config/workflows/#{file_name}_workflow.json")
-  end
-
   private
 
     def rspec_installed?
