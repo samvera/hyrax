@@ -3,6 +3,12 @@ require 'generators/curation_concerns/work/work_generator'
 module Sufia
   class WorkGenerator < CurationConcerns::WorkGenerator
     source_root CurationConcerns::WorkGenerator.source_root
+
+    # Allows us to pull templates from sufia as well as from curation_concerns
+    def self.source_paths
+      [File.expand_path('../templates/', __FILE__)]
+    end
+
     desc """
   This generator makes the following changes to your application:
    1. Generates work model
@@ -13,6 +19,10 @@ module Sufia
     def create_model
       say_status("info", "GENERATING WORK MODEL", :blue)
       super
+    end
+
+    def create_i18n
+      template 'locale.en.yml.erb', "config/locales/#{file_name}.en.yml"
     end
 
     def register_work
