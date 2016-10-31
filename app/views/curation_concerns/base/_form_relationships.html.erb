@@ -1,6 +1,6 @@
 <% if Flipflop.assign_admin_set? %>
   <%= f.input :admin_set_id, as: :select,
-      collection: CurationConcerns::AdminSetService.new(controller).select_options,
+      collection: Sufia::AdminSetService.new(controller).select_options(:deposit),
       include_blank: true,
       input_html: { class: 'form-control' } %>
 <% end %>
