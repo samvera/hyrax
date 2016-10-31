@@ -65,4 +65,17 @@ RSpec.describe CurationConcerns::AdminSetService do
       end
     end
   end
+
+  context "with injection" do
+    let(:service) { described_class.new(context, search_builder) }
+    subject { service.search_results(access) }
+    let(:access) { :edit }
+    let(:search_builder) { double(new: search_builder_instance) }
+    let(:search_builder_instance) { double }
+
+    it "calls the injected search builder" do
+      expect(search_builder_instance).to receive(:reverse_merge).and_return({})
+      subject
+    end
+  end
 end
