@@ -83,7 +83,7 @@ module Sufia
       end
 
       def create_admin_set
-        AdminSetService.new(@admin_set, current_user).create
+        AdminSetCreateService.new(@admin_set, current_user).create
       end
 
       def setup_form
