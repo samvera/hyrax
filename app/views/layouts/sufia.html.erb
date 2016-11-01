@@ -2,6 +2,7 @@
 <html lang="<%= t("sufia.document_language", default: '') %>" prefix="og:http://ogp.me/ns#">
   <head>
     <%= render partial: 'layouts/head_tag_content' %>
+    <%= content_for(:head) %>
   </head>
 
   <body>
@@ -10,23 +11,34 @@
     <%= content_for(:navbar) %>
     <%= render partial: '/flash_msg' %>
     <%= content_for(:precontainer_content) %>
-    <div id="content-wrapper" class="container" role="main">
-      <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
-      <% if content_for?(:page_header) %>
-        <div class="row">
-          <div class="col-xs-12 main-header">
-            <%= yield(:page_header) %>
-          </div>
-        </div>
-      <% end %>
-      
+    <div id="content-wrapper" class="<%= content_for?(:container_class) ? yield(:container_class) : 'container' %>" role="main">
       <a name="skip_to_content"></a>
       
       <% if content_for?(:sidebar) %>
-        <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= content_for?(:content) ? yield(:content) : yield %></div>
-        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
+        <div class="col-xs-12 col-sm-9 col-sm-push-3 main-content">
+          <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
+          <% if content_for?(:page_header) %>
+            <div class="row">
+              <div class="col-xs-12 main-header">
+                <%= yield(:page_header) %>
+              </div>
+            </div>
+          <% end %>
+          
+          <%= content_for?(:content) ? yield(:content) : yield %>
+        </div>
+        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 sidebar"><%= yield :sidebar %></div>
       <% else %>
         <div class="col-xs-12">
+          <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
+          <% if content_for?(:page_header) %>
+            <div class="row">
+              <div class="col-xs-12 main-header">
+                <%= yield(:page_header) %>
+              </div>
+            </div>
+          <% end %>
+          
           <%= content_for?(:content) ? yield(:content) : yield %>
         </div>
       <% end %>

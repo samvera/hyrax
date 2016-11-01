@@ -1,6 +1,6 @@
 module Sufia
   # Creates AdminSets
-  class AdminSetService
+  class AdminSetCreateService
     # @param admin_set [AdminSet] the admin set to operate on
     # @param creating_user [User] the user who created the admin set.
     def initialize(admin_set, creating_user)

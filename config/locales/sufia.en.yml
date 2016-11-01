@@ -308,6 +308,37 @@ en:
           header:         "Edit Administrative Set"
         new:
           header:         "Create New Administrative Set"
+        form:
+          tabs:
+            description:        "Description"
+            participants:       "Participants"
+        form_participants:
+          add_group:            "Add group:"
+          add_user:             "Add user:"
+          add_participants:     "Add Participants"
+          current_participants: "Current Participants"
+        form_participant_table:
+          managers:
+            title:              "Managers"
+            help:               "Managers of this administrative set can edit the set metadata, participants, and release and visibility settings. Managers can also edit work metadata, add to or remove files from a work, and add new works to the set."
+            agent_name:         "Managers of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
+          depositors:
+            title:              "Depositors"
+            help:               "Depositors can add new works to this administrative set."
+            agent_name:         "Depositors of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
+          viewers:
+            title:              "Viewers"
+            help:               "Viewers of this administrative set can view works in the set regardless of the visibility settings applied to the work. For example, viewers can view works in this set even if the works are currently embargoed or restricted."
+            agent_name:         "Viewers of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
@@ -436,5 +467,10 @@ en:
       admin_set:
         create: 'Save'
         update: 'Save'
+      sufia_permission_template:
+        create: 'Save'
+        update: 'Save'
+      sufia_permission_template_access:
+        create: 'Add'
       create: 'Save'
       update: 'Save'

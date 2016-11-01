@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Sufia::AdminSetService do
+RSpec.describe Sufia::AdminSetCreateService do
   let(:admin_set) { AdminSet.new(title: ['test']) }
   let(:service) { described_class.new(admin_set, user) }
   let(:user) { create(:user) }
