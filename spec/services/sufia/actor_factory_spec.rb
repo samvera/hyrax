@@ -15,6 +15,7 @@ describe Sufia::ActorFactory, :no_clean do
                          CurationConcerns::Actors::InterpretVisibilityActor,
                          Sufia::GrantEditToDepositorActor,
                          CurationConcerns::Actors::InitializeWorkflowActor,
+                         Sufia::ApplyPermissionTemplateActor,
                          CurationConcerns::Actors::GenericWorkActor]
     end
   end
@@ -32,6 +33,7 @@ describe Sufia::ActorFactory, :no_clean do
         CurationConcerns::Actors::InterpretVisibilityActor,
         Sufia::GrantEditToDepositorActor,
         CurationConcerns::Actors::InitializeWorkflowActor,
+        Sufia::ApplyPermissionTemplateActor,
         CurationConcerns::Actors::GenericWorkActor
       ]
       expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor

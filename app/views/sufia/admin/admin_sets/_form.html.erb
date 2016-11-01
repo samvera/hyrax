@@ -1,18 +1,36 @@
-    <%= simple_form_for @form, url: [sufia, :admin, @form] do |f| %>
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <%= f.input :title %>
-          <%= f.input :description, as: :text %>
+    <div class="panel panel-default tabs">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+          <a href="#description"><%= t('.tabs.description') %></a>
+        </li>
+        <% if @form.persisted? %>
+          <li>
+            <a href="#participants"><%= t('.tabs.participants') %></a>
+          </li>
+        <% end %>
+      </ul>
+      <div class="tab-content">
+        <div id="description" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <%= simple_form_for @form, url: [sufia, :admin, @form] do |f| %>
+              <div class="panel-body">
+                <%= f.input :title %>
+                <%= f.input :description, as: :text %>
 
-          <% if f.object.persisted? && f.object.member_ids.present? %>
-            <%= f.input :thumbnail_id, collection: @form.select_files %>
-          <% end %>
-          
+                <% if f.object.persisted? && f.object.member_ids.present? %>
+                  <%= f.input :thumbnail_id, collection: @form.select_files %>
+                <% end %>
+                
+              </div>
+              <div class="panel-footer">
+                <%= link_to 'Cancel', sufia.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+                <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+              </div>
+            <% end %>
+          </div>
         </div>
-        <div class="panel-footer">
-          <%= link_to 'Cancel', sufia.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
-          <%= f.button :submit, class: 'btn btn-primary pull-right'%>
-        </div>
+        <% if @form.persisted? %>
+          <%= render 'form_participants' %>
+        <% end %>
       </div>
-    <% end %>
-
+    </div>

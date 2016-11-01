@@ -1,6 +1,7 @@
 require 'spec_helper'
 RSpec.describe Sufia::Forms::AdminSetForm do
-  let(:form) { described_class.new(model) }
+  let(:permission_template) { double }
+  let(:form) { described_class.new(model, permission_template) }
 
   describe "[] accessors" do
     let(:model) { AdminSet.new(description: ['one']) }

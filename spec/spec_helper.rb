@@ -1,6 +1,3 @@
-require 'coveralls'
-Coveralls.wear!
-
 ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
@@ -11,6 +8,7 @@ end
 
 if coverage_needed?
   require 'simplecov'
+  require 'coveralls'
   SimpleCov.root(File.expand_path('../..', __FILE__))
   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
   SimpleCov.start('rails') do

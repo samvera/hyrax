@@ -55,9 +55,9 @@ describe Sufia::Admin::AdminSetsController do
     end
 
     describe "#create" do
-      let(:service) { instance_double(Sufia::AdminSetService) }
+      let(:service) { instance_double(Sufia::AdminSetCreateService) }
       before do
-        allow(Sufia::AdminSetService).to receive(:new)
+        allow(Sufia::AdminSetCreateService).to receive(:new)
           .with(AdminSet, user)
           .and_return(service)
       end

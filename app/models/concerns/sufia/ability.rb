@@ -63,7 +63,8 @@ module Sufia
     end
 
     def admin_set_abilities
-      can :manage, AdminSet if admin?
+      return unless admin?
+      can :manage, [AdminSet, Sufia::PermissionTemplate, Sufia::PermissionTemplateAccess]
     end
 
     private

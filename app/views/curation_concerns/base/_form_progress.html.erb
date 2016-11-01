@@ -5,11 +5,11 @@
   <div class="list-group">
     <div class="list-group-item">
       <fieldset>
-        <legend class="legend-save-work">Requirements</legend>
+        <legend class="legend-save-work"><%= t('.requirements') %></legend>
         <ul class="requirements">
-          <li class="incomplete" id="required-metadata">Enter required metadata</li>
+          <li class="incomplete" id="required-metadata"><%= t('.required_descriptions') %></li>
           <% if Sufia.config.work_requires_files %>
-            <li class="incomplete" id="required-files">Add files</li>
+            <li class="incomplete" id="required-files"><%= t('.required_files') %></li>
           <% end %>
         </ul>
       </fieldset>
@@ -43,6 +43,6 @@
     <%= link_to t(:'helpers.action.cancel'),
                 sufia.dashboard_index_path,
                 class: 'btn btn-default' %>
-    <%= f.submit 'Save', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
+    <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
   </div>
 </aside>

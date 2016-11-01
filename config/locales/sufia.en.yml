@@ -308,6 +308,37 @@ en:
           header:         "Edit Administrative Set"
         new:
           header:         "Create New Administrative Set"
+        form:
+          tabs:
+            description:        "Description"
+            participants:       "Participants"
+        form_participants:
+          add_group:            "Add group:"
+          add_user:             "Add user:"
+          add_participants:     "Add Participants"
+          current_participants: "Current Participants"
+        form_participant_table:
+          managers:
+            title:              "Managers"
+            help:               "Managers of this administrative set can edit the set metadata, participants, and release and visibility settings. Managers can also edit work metadata, add to or remove files from a work, and add new works to the set."
+            agent_name:         "Managers of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
+          depositors:
+            title:              "Depositors"
+            help:               "Depositors can add new works to this administrative set."
+            agent_name:         "Depositors of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
+          viewers:
+            title:              "Viewers"
+            help:               "Viewers of this administrative set can view works in the set regardless of the visibility settings applied to the work. For example, viewers can view works in this set even if the works are currently embargoed or restricted."
+            agent_name:         "Viewers of This Set"
+            type:               "Type"
+            action:             "Action"
+            remove:             "Remove"
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
@@ -334,7 +365,9 @@ en:
 
   simple_form:
     labels:
-      generic_work: &work_labels
+      collection:
+        total_items:      "Total Items"
+        size:             "Size"
         based_near:       "Location"
         description:      "Abstract or Summary"
         keyword:          "Keyword"
@@ -343,27 +376,7 @@ en:
         files:            "Upload a new version of this file from your computer"
         collection_ids:   "Add as member of collection"
         admin_set_id:     "Add as member of administrative set"
-      collection:
-        total_items:      "Total Items"
-        size:             "Size"
-        <<: *work_labels
-
     hints:
-      generic_work:
-        resource: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
-        title: "A name to aid in identifying a work."
-        keyword: "Words or phrases you select to describe what the work is about. These are used to search for content."
-        subject: "Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary."
-        creator: "The person or group responsible for the work. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;."
-        related_url: "A link to a website or other specific content (audio, video, PDF document) related to the work. An example is the URL of a research project from which the work was derived."
-        based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
-        contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
-        date_created: "The date on which the work was generated."
-        description: "Free-text notes about the work. Examples include abstracts of a paper or citation information for a journal article."
-        identifier: "A unique handle identifying the work. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
-        language: "The language of the work's content."
-        publisher: "The person or group making the work available. Generally this is the institution."
-        rights: "Licensing and distribution information governing access to the work. Select from the provided drop-down list."
       collection:
         resource_type: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
         title: "A name to aid in identifying a collection."
@@ -400,6 +413,10 @@ en:
         local_upload: Add Local Files
         external_upload: Cloud Providers
         dropzone: "Drop files here."
+      form_progress:
+        requirements:          Requirements
+        required_descriptions: Describe your work
+        required_files:        Add files
       items:
         header: Items
         thumbnail: Thumbnail
@@ -453,3 +470,10 @@ en:
       admin_set:
         create: 'Save'
         update: 'Save'
+      sufia_permission_template:
+        create: 'Save'
+        update: 'Save'
+      sufia_permission_template_access:
+        create: 'Add'
+      create: 'Save'
+      update: 'Save'
