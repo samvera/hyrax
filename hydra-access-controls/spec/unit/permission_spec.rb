@@ -45,4 +45,19 @@ describe Hydra::AccessControls::Permission do
       expect(perm2).to_not eq perm3
     end
   end
+
+  describe "URI escaping" do
+    let(:permission) { described_class.new(type: 'person', name: 'john doe', access: 'read') }
+    let(:permission2) { described_class.new(type: 'group', name: 'hydra devs', access: 'read') }
+
+    it "should escape agent when building" do
+      expect(permission.agent.first.rdf_subject.to_s).to eq 'http://projecthydra.org/ns/auth/person#john%20doe'
+      expect(permission2.agent.first.rdf_subject.to_s).to eq 'http://projecthydra.org/ns/auth/group#hydra%20devs'
+    end
+
+    it "should unescape agent when parsing" do
+      expect(permission.agent_name).to eq 'john doe'
+      expect(permission2.agent_name).to eq 'hydra devs'
+    end
+  end
 end

@@ -37,7 +37,7 @@ module Hydra::AccessControls
     end
 
     def agent_name
-      parsed_agent.last
+      URI.decode(parsed_agent.last)
     end
 
     def access
@@ -58,9 +58,9 @@ module Hydra::AccessControls
       raise "Can't build agent #{inspect}" unless name && type
       self.agent = case type
                    when 'group'
-                     Agent.new(::RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
+                     Agent.new(::RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{URI.encode(name)}"))
                    when 'person'
-                     Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
+                     Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{URI.encode(name)}"))
                    else
                      raise ArgumentError, "Unknown agent type #{type.inspect}"
                    end
