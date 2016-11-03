@@ -19,7 +19,7 @@ RSpec.describe Sufia::Admin::PermissionTemplatesController do
   end
 
   context "when signed in as an admin" do
-    describe "update" do
+    describe "update participants" do
       let(:admin_set) { create(:admin_set) }
       let!(:permission_template) { Sufia::PermissionTemplate.create!(admin_set_id: admin_set.id) }
       let(:input_params) do
@@ -37,6 +37,25 @@ RSpec.describe Sufia::Admin::PermissionTemplatesController do
           put :update, params: input_params
         end.to change { permission_template.access_grants.count }.by(1)
         expect(response).to redirect_to(sufia.edit_admin_admin_set_path(admin_set, anchor: 'participants'))
+        expect(flash[:notice]).to eq 'Permissions updated'
+      end
+    end
+    describe "update visibility" do
+      let(:admin_set) { create(:admin_set) }
+      let!(:permission_template) { Sufia::PermissionTemplate.create!(admin_set_id: admin_set.id) }
+      let(:input_params) do
+        { admin_set_id: admin_set.id,
+          sufia_permission_template: {
+            visibility: 'open'
+          } }
+      end
+
+      it "is successful" do
+        expect(controller).to receive(:authorize!).with(:update, permission_template)
+        expect do
+          put :update, params: input_params
+        end.to change { permission_template.reload.visibility }.from(nil).to('open')
+        expect(response).to redirect_to(sufia.edit_admin_admin_set_path(admin_set, anchor: 'visibility'))
         expect(flash[:notice]).to eq 'Permissions updated'
       end
     end

@@ -6,7 +6,9 @@ module Sufia
       def update
         authorize! :update, @permission_template
         @permission_template.update(update_params)
-        redirect_to sufia.edit_admin_admin_set_path(params[:admin_set_id], anchor: 'participants'),
+        # Ensure we redirect to active tab
+        current_tab = params[:sufia_permission_template][:access_grants_attributes].present? ? 'participants' : 'visibility'
+        redirect_to sufia.edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
                     notice: 'Permissions updated'
       end
 
@@ -19,7 +21,7 @@ module Sufia
 
         def update_params
           params.require(:sufia_permission_template)
-                .permit(access_grants_attributes: [:access, :agent_id, :agent_type, :id])
+                .permit(:visibility, access_grants_attributes: [:access, :agent_id, :agent_type, :id])
         end
     end
   end

@@ -22,9 +22,10 @@ RSpec.describe "The admin sets, through the admin dashboard" do
     expect(page).to have_content "Works in This Set"
 
     click_link "Edit"
-
-    fill_in "Title", with: 'A better unique name'
-    click_button 'Save'
+    within('#description') do
+      fill_in "Title", with: 'A better unique name'
+      click_button 'Save'
+    end
     expect(page).to have_content "A better unique name"
   end
 end

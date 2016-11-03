@@ -312,6 +312,7 @@ en:
           tabs:
             description:        "Description"
             participants:       "Participants"
+            visibility:         "Release and Visibility"
         form_participants:
           add_group:            "Add group:"
           add_user:             "Add user:"
@@ -339,6 +340,16 @@ en:
             type:               "Type"
             action:             "Action"
             remove:             "Remove"
+        form_visibility:
+          page_description:     "Release and visibility settings control when works added to this set are made available for discovery and download and who can discover and download them."
+          visibility:
+            title:              "Visibility"
+            description:        "After its release date, works in this set can be discovered and downloaded by:"
+            everyone:           "Everyone -- all works in this set will be public"
+            varies:             "Varies -- default is public, but depositors can restrict the visibility of individual works"
+            institution:        "Institution -- all works will be visible only to authenticated users of this institution"
+            restricted:         "Restricted -- all works will be visible only to repository managers and managers and reviewers of this administrative set"
+          cancel:               "Cancel"
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
