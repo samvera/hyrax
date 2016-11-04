@@ -4,6 +4,11 @@ module CurationConcerns
   RSpec.describe Workflow::StateMachineGenerator, :no_clean do
     let(:workflow) { Sipity::Workflow.create!(name: 'hello') }
     let(:action_name) { 'do_it' }
+    before do
+      class ConfirmSubmission
+      end
+    end
+    after { CurationConcerns.send(:remove_const, :ConfirmSubmission) }
     it 'exposes .generate_from_schema as a convenience method' do
       expect_any_instance_of(described_class).to receive(:call)
       described_class.generate_from_schema(workflow: workflow, name: action_name, config: {})
@@ -17,7 +22,7 @@ module CurationConcerns
         ],
         transition_to: :under_review,
         notifications: [
-          { notification_type: 'email', name: 'confirmation_of_submitted_to_ulra_committee', to: 'creating_user', cc: 'advising' }
+          { notification_type: 'email', name: 'CurationConcerns::ConfirmSubmission', to: 'creating_user', cc: 'advising' }
         ]
       }
     end
