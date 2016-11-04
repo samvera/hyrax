@@ -15,6 +15,21 @@ module CurationConcerns
     # @see Sipity::Method
     # @see ./lib/generators/curation_concerns/work/templates/workflow.json.erb
     WorkflowSchema = Dry::Validation.Schema do
+      configure do
+        def self.messages
+          Dry::Validation::Messages.default.merge(
+            en: { errors: { constant_name?: 'must be an initialized Ruby constant' } }
+          )
+        end
+
+        def constant_name?(value)
+          value.constantize
+          true
+        rescue NameError
+          false
+        end
+      end
+
       required(:workflows).each do
         required(:name).filled(:str?) # Sipity::Workflow#name
         optional(:label).filled(:str?) # Sipity::Workflow#label
@@ -27,7 +42,7 @@ module CurationConcerns
           end
           optional(:transition_to).filled(:str?) # Sipity::WorkflowState#name
           optional(:notifications).each do
-            required(:name).value(format?: /\A[a-z|_]+\Z/i) # Sipity::Notification#name
+            required(:name).value(:constant_name?) # Sipity::Notification#name
             required(:notification_type).value(included_in?: Sipity::Notification.valid_notification_types)
             required(:to) { array? { each(:str?) } }
             optional(:cc) { array? { each(:str?) } }
