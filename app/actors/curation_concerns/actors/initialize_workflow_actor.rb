@@ -12,7 +12,7 @@ module CurationConcerns
 
         # @return [TrueClass]
         def create_workflow(attributes)
-          workflow_factory.create(curation_concern, attributes)
+          workflow_factory.create(curation_concern, attributes, user)
         end
     end
   end

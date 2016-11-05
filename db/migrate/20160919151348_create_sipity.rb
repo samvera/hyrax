@@ -61,7 +61,7 @@ class CreateSipity < ActiveRecord::Migration
     create_table "sipity_entities" do |t|
       t.string   "proxy_for_global_id",           null: false
       t.integer  "workflow_id",                   null: false
-      t.integer  "workflow_state_id",             null: false
+      t.integer  "workflow_state_id",             null: true
       t.datetime "created_at",                    null: false
       t.datetime "updated_at",                    null: false
     end

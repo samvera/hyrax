@@ -18,8 +18,9 @@ module Sipity
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 
-    # Defines the method #workflow_state_name
-    delegate :name, to: :workflow_state, prefix: :workflow_state
+    def workflow_state_name
+      workflow_state.name if workflow_state
+    end
 
     # Defines the method #workflow_name
     delegate :name, to: :workflow, prefix: :workflow

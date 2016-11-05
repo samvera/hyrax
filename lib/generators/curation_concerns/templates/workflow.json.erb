@@ -6,6 +6,11 @@
       "description": "A multi-step workflow for digital collections",
       "actions": [
          {
+           "name": "deposit",
+           "from_states": [],
+           "transition_to": "pending"
+         },
+         {
            "name": "finalize_digitization",
            "from_states": [{"names": ["pending"], "roles": ["reviewing"]}],
            "transition_to": "metadata_review",

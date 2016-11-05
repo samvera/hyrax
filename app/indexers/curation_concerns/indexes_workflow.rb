@@ -22,7 +22,7 @@ module CurationConcerns
       entity = PowerConverter.convert_to_sipity_entity(object)
       return if entity.nil?
       solr_document[workflow_role_field] = workflow_roles(entity).map { |role| "#{entity.workflow.name}-#{role}" }
-      solr_document[workflow_state_name_field] = entity.workflow_state.name
+      solr_document[workflow_state_name_field] = entity.workflow_state.name if entity.workflow_state
     end
 
     def workflow_state_name_field

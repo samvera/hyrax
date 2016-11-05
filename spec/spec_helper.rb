@@ -74,7 +74,7 @@ RSpec.configure do |config|
 
     # This is a speedup for workflow specs.  If we don't have this, it will import the
     # full workflow configuration files from config/workflows/*
-    FactoryGirl.create(:workflow_state) if example.metadata[:workflow]
+    FactoryGirl.create(:workflow_action) if example.metadata[:workflow]
   end
 
   config.include FactoryGirl::Syntax::Methods

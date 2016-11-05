@@ -12,7 +12,7 @@ module CurationConcerns
         @cloud_resources = attributes.delete(:cloud_resources.to_s)
         apply_creation_data_to_curation_concern
         apply_save_data_to_curation_concern(attributes)
-        next_actor.create(attributes) && save && run_callbacks(:after_create_concern)
+        save && next_actor.create(attributes) && run_callbacks(:after_create_concern)
       end
 
       def update(attributes)

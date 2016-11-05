@@ -36,7 +36,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
     context 'success' do
       before do
         redlock_client_stub
-        FactoryGirl.create(:workflow_state)
+        create(:workflow_action)
       end
 
       it "invokes the after_create_concern callback" do
@@ -51,7 +51,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       before do
         redlock_client_stub
-        FactoryGirl.create(:workflow_state)
+        create(:workflow_action)
       end
 
       context 'with embargo' do

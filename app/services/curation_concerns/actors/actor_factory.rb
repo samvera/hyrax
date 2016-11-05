@@ -15,8 +15,8 @@ module CurationConcerns
          ApplyOrderActor,
          InterpretVisibilityActor,
          GrantEditToDepositorActor,
-         InitializeWorkflowActor,
-         model_actor(curation_concern)]
+         model_actor(curation_concern),
+         InitializeWorkflowActor]
       end
 
       def self.model_actor(curation_concern)
