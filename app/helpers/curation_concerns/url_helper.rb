@@ -3,11 +3,8 @@ module CurationConcerns
     # override Blacklight so we can use our 'curation_concern' namespace
     # We may also pass in a ActiveFedora document instead of a SolrDocument
     def url_for_document(doc, _options = {})
-      if doc.collection?
-        doc
-      else
-        polymorphic_path([main_app, doc])
-      end
+      return doc if doc.collection?
+      [main_app, doc]
     end
 
     # generated models get registered as curation concerns and need a
