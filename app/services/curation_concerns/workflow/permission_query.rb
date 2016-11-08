@@ -155,9 +155,11 @@ module CurationConcerns
       def scope_processing_agents_for(user:)
         return Sipity::Agent.none unless user.present?
         return Sipity::Agent.none unless user.persisted?
-        agent = PowerConverter.convert_to_sipity_agent(user)
-        user_constraints = Sipity::Agent.arel_table[:id].eq(agent.id)
-        Sipity::Agent.where(user_constraints)
+        user_agent = PowerConverter.convert_to_sipity_agent(user)
+        group_agents = user.groups.map do |g|
+          PowerConverter.convert_to_sipity_agent(CurationConcerns::Group.new(g))
+        end
+        Sipity::Agent.where(id: group_agents + [user_agent])
       end
 
       PermissionScope = Struct.new(:entity, :workflow)

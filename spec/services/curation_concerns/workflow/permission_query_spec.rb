@@ -3,8 +3,8 @@ require 'spec_helper'
 module CurationConcerns
   module Workflow
     RSpec.describe PermissionQuery, slow_test: true, no_clean: true do
-      let(:reviewing_user) { FactoryGirl.create(:user) }
-      let(:completing_user) { FactoryGirl.create(:user) }
+      let(:reviewing_user) { create(:user) }
+      let(:completing_user) { create(:user) }
       let(:workflow_config) do
         {
           workflows: [{
@@ -59,14 +59,21 @@ module CurationConcerns
       end
 
       describe 'permissions assigned at the workflow level' do
-        it 'will fullfil the battery of tests (of which they are nested because setup is expensive)' do
+        let(:reviewing_group_member) { create(:user) }
+        let(:reviewing_group) { Group.new('librarians') }
+        before do
+          allow(reviewing_group_member).to receive(:groups).and_return(['librarians'])
           PermissionGenerator.call(roles: 'reviewing', workflow: sipity_workflow, agents: reviewing_user)
+          PermissionGenerator.call(roles: 'reviewing', workflow: sipity_workflow, agents: reviewing_group)
           PermissionGenerator.call(roles: 'completing', workflow: sipity_workflow, agents: completing_user)
+        end
 
-          expect_agents_for(entity: sipity_entity, role: 'reviewing', agents: [reviewing_user])
+        it 'will fullfil the battery of tests (of which they are nested because setup is expensive)' do
+          expect_agents_for(entity: sipity_entity, role: 'reviewing', agents: [reviewing_user, reviewing_group])
           expect_agents_for(entity: sipity_entity, role: 'completing', agents: [completing_user])
 
           expect_actions_for(user: reviewing_user, entity: sipity_entity, actions: ['forward'])
+          expect_actions_for(user: reviewing_group_member, entity: sipity_entity, actions: ['forward'])
           expect_actions_for(user: completing_user, entity: sipity_entity, actions: [])
 
           expect_users_for(users: reviewing_user, entity: sipity_entity, roles: 'reviewing')
@@ -162,7 +169,8 @@ module CurationConcerns
           let(:user) { create(:user) }
           subject { described_class.scope_processing_agents_for(user: user) }
           it 'will equal [kind_of(Sipity::Agent)]' do
-            is_expected.to eq([PowerConverter.convert_to_sipity_agent(user)])
+            is_expected.to eq([PowerConverter.convert_to_sipity_agent(user),
+                               PowerConverter.convert_to_sipity_agent(Group.new('registered'))])
           end
         end
       end
