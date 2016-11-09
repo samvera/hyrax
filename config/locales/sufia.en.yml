@@ -48,6 +48,10 @@ en:
       button:
         html: '<span class="glyphicon glyphicon-search"></span> Go'
         text: "Search"
+    select_type:
+      name:        "Work"
+      description: "General purpose worktype"
+      icon_class : 'fa fa-file-text-o'
     upload:
       my_computer:
         sr_tab_label: "Access Files from"
@@ -120,6 +124,10 @@ en:
         logout: "Logout"
         login: "Login"
     dashboard:
+      heading_actions:
+        close:                  "Close"
+        create_work:            "Create work"
+        select_type_of_work:    "Select type of work"
       title:                    "My Dashboard"
       view_collections:         "View Collections"
       create_collection:        "Create Collection"
