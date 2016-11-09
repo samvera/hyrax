@@ -15,6 +15,21 @@ module Sufia
          [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, I18n.t('.institution', scope: i18n_prefix)],
          [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, I18n.t('.restricted', scope: i18n_prefix)]]
       end
+
+      def update(attributes)
+        manage_grants = attributes[:access_grants_attributes].select { |x| x[:access] == 'manage' }
+        grant_admin_set_access(manage_grants) if manage_grants.present?
+        model.update(attributes)
+      end
+
+      private
+
+        def grant_admin_set_access(manage_grants)
+          admin_set = AdminSet.find(model.admin_set_id)
+          admin_set.edit_users = manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] }
+          admin_set.edit_groups = manage_grants.select { |x| x[:agent_type] == 'group' }.map { |x| x[:agent_id] }
+          admin_set.save!
+        end
     end
   end
 end
