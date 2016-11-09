@@ -1,0 +1,18 @@
+          <div id="visibility" class="tab-pane">
+            <div class="panel panel-default labels">
+              <%= simple_form_for @form.permission_template,
+                                  url: [sufia, :admin, @form, :permission_template] do |f| %>
+                <div class="panel-body">
+                  <p><%= t('.page_description') %></p>
+                  <h3><%= t('.visibility.title') %></h3>
+                  <p><%= t('.visibility.description') %></p>
+                  <%# List each option in a <div class='radio'> tag %>
+                  <%= f.collection_radio_buttons :visibility, f.object.visibility_options, :first, :last, item_wrapper_tag: :div, item_wrapper_class: 'radio' %>
+                </div>
+                <div class="panel-footer">
+                  <%= link_to t('.cancel'), sufia.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+                  <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+                </div>
+              <% end %>
+            </div>
+          </div>
