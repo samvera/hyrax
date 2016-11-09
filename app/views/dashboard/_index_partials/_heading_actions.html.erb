@@ -12,15 +12,15 @@
         </div>
     <% end  %>
     <div class="col-xs-6 col-sm-2 heading-tile">
-      <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
-          <span class="glyphicon glyphicon-th"></span>
-          <%= t("sufia.dashboard.view_collections") %>
-      <% end %>
-    </div>
-    <div class="col-xs-6 col-sm-2 heading-tile">
       <%= link_to sufia.dashboard_works_path  do %>
           <span class="glyphicon glyphicon-eye-open"></span>
           <%= t("sufia.dashboard.view_works") %>
+      <% end %>
+    </div>
+    <div class="col-xs-6 col-sm-2 heading-tile">
+      <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
+          <span class="glyphicon glyphicon-th"></span>
+          <%= t("sufia.dashboard.view_collections") %>
       <% end %>
     </div>
   </div>
