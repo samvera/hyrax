@@ -39,7 +39,7 @@ module CurationConcerns
 
       def authorized_for_processing
         return true if CurationConcerns::Workflow::PermissionQuery.authorized_for_processing?(
-          user: subject.agent,
+          user: subject.user,
           entity: subject.entity,
           action: sipity_workflow_action
         )
