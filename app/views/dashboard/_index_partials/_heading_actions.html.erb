@@ -4,20 +4,20 @@
       <%= render 'create_work_action' %>
     <% end %>
     <% if can?(:create, Collection) %>
-        <div class="col-xs-6 col-sm-2 heading-tile">
+        <div class="col-xs-6 col-sm-3 heading-tile">
           <%= link_to new_collection_path, id: "hydra-collection-add" do %>
               <span class="glyphicon glyphicon-plus"></span>
               <%= t("sufia.dashboard.create_collection") %>
           <% end %>
         </div>
     <% end  %>
-    <div class="col-xs-6 col-sm-2 heading-tile">
+    <div class="col-xs-6 col-sm-3 heading-tile">
       <%= link_to sufia.dashboard_works_path  do %>
           <span class="glyphicon glyphicon-eye-open"></span>
           <%= t("sufia.dashboard.view_works") %>
       <% end %>
     </div>
-    <div class="col-xs-6 col-sm-2 heading-tile">
+    <div class="col-xs-6 col-sm-3 heading-tile">
       <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
           <span class="glyphicon glyphicon-th"></span>
           <%= t("sufia.dashboard.view_collections") %>
