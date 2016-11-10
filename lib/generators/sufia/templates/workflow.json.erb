@@ -1,0 +1,24 @@
+{
+  "workflows": [
+    {
+      "name": "one_step_mediated_deposit",
+      "label": "One-step mediated deposit workflow",
+      "description": "A single-step workflow for mediated deposit",
+      "actions": [
+         {
+           "name": "deposit",
+           "from_states": [],
+           "transition_to": "pending_review"
+         },
+         {
+           "name": "approve",
+           "from_states": [{"names": ["pending_review"], "roles": ["approving"]}],
+           "transition_to": "complete",
+           "methods": [
+             "CurationConcerns::Workflow::ActivateObject"
+           ]
+         }
+      ]
+    }
+  ]
+}
