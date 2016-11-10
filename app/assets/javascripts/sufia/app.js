@@ -12,6 +12,12 @@ Sufia = {
         this.relationships_table();
         this.file_manager_init();
         this.datatable();
+        this.admin();
+    },
+
+    admin: function() {
+      var AdminSetControls = require('sufia/admin/admin_set_controls');
+      var controls = new AdminSetControls($('#admin-set-controls'));
     },
 
     datatable: function () {
