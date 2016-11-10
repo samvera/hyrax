@@ -26,7 +26,8 @@ module Sufia
 
         # This allows the attributes
         def grants_as_collection(attributes)
-          attributes_collection = Array.wrap(attributes[:access_grants_attributes])
+          return [] unless attributes[:access_grants_attributes]
+          attributes_collection = attributes[:access_grants_attributes]
 
           if attributes_collection.respond_to?(:permitted?)
             attributes_collection = attributes_collection.to_h
