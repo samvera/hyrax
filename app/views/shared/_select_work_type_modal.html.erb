@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <table class="table">
-          <% presenter.each do |row_presenter| %>
+          <% create_work_presenter.each do |row_presenter| %>
             <tr>
               <td class="select-work-icon">
                 <%= link_to(new_polymorphic_path([main_app, row_presenter.concern]),
@@ -36,11 +36,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="col-xs-6 col-sm-3 heading-tile">
-  <%= link_to('#', data: { toggle: "modal", target: "#worktypes-to-create" }) do %>
-    <span class="glyphicon glyphicon-upload"></span>
-    <%= t("sufia.dashboard.create_work") %>
-  <% end %>
 </div>

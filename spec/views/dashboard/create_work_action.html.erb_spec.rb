@@ -1,30 +1,24 @@
 require 'spec_helper'
 
-RSpec.describe 'dashboard/create_work_action.html.erb', type: :view do
-  let(:classification) { double }
+RSpec.describe 'dashboard/_create_work_action.html.erb', type: :view do
   before do
-    allow(CurationConcerns::QuickClassificationQuery).to receive(:new).and_return(classification)
-    allow(view).to receive(:current_user).and_return(double)
-    allow(classification).to receive(:authorized_models).and_return(results)
+    allow(view).to receive(:create_work_presenter).and_return(presenter)
+    allow(presenter).to receive(:first_model).and_yield(GenericWork)
+    render
   end
 
   context "when we have more than one model" do
-    let(:results) { [GenericWork, double] }
-    before do
-      stub_template 'dashboard/_select_work_type.html.erb' => 'SelectType'
-      render 'dashboard/create_work_action', classification: classification
-    end
+    let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: true) }
+
     it "renders the select template" do
-      expect(rendered).to have_content 'SelectType'
+      expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
+      expect(rendered).to have_link('Create Work', href: '#')
     end
   end
 
   context "when we have one model" do
-    let(:results) { [GenericWork] }
-    before do
-      allow(classification).to receive(:each).and_yield(GenericWork)
-      render 'dashboard/create_work_action', classification: classification
-    end
+    let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: false) }
+
     it "doesn't draw the modal" do
       expect(rendered).not_to include "modal"
       expect(rendered).to have_link "Create Work", href: '/concern/generic_works/new'
