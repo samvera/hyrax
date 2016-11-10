@@ -2,7 +2,7 @@
 <% if classification.authorized_models.size > 1 %>
   <%= render 'select_work_type', presenter: Sufia::SelectTypeListPresenter.new(classification) %>
 <% else %>
-  <div class="col-xs-6 col-sm-2 heading-tile">
+  <div class="col-xs-6 col-sm-3 heading-tile">
     <% classification.each do |concern| %>
       <%= link_to(new_polymorphic_path([main_app, concern]),
                             class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
