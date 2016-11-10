@@ -5,7 +5,7 @@ module Sufia
 
       def update
         authorize! :update, @permission_template
-        @permission_template.update(update_params)
+        Forms::PermissionTemplateForm.new(@permission_template).update(update_params)
         # Ensure we redirect to active tab
         current_tab = params[:sufia_permission_template][:access_grants_attributes].present? ? 'participants' : 'visibility'
         redirect_to sufia.edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),

@@ -5,7 +5,8 @@ RSpec.describe "The admin sets, through the admin dashboard" do
 
   before do
     create(:admin_set, title: ["A completely unique name"],
-                       description: ["A substantial description"])
+                       description: ["A substantial description"],
+                       edit_users: [user.user_key])
     allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
   end
 
