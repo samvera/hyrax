@@ -45,5 +45,14 @@ RSpec.describe Sufia::Forms::PermissionTemplateForm do
         expect(admin_set.reload.edit_users).to be_empty
       end
     end
+
+    context "with visibility only" do
+      let(:input_params) do
+        ActionController::Parameters.new(visibility: "open").permit!
+      end
+      it "updates the visibility" do
+        expect { subject }.to change { permission_template.reload.visibility }.from(nil).to('open')
+      end
+    end
   end
 end
