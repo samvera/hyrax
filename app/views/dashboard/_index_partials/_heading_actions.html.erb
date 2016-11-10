@@ -1,8 +1,6 @@
 <div class="col-xs-12 heading-row">
   <div class="row">
-    <% if can_ever_create_works? %>
-      <%= render 'create_work_action' %>
-    <% end %>
+    <%= render 'create_work_action' if can_ever_create_works? %>
     <% if can?(:create, Collection) %>
         <div class="col-xs-6 col-sm-3 heading-tile">
           <%= link_to new_collection_path, id: "hydra-collection-add" do %>

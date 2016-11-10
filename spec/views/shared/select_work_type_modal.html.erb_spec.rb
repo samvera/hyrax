@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'dashboard/select_work_type.html.erb', type: :view do
+RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
   let(:presenter) { instance_double Sufia::SelectTypeListPresenter }
   let(:row1) do
     instance_double(Sufia::SelectTypePresenter,
@@ -23,13 +23,13 @@ RSpec.describe 'dashboard/select_work_type.html.erb', type: :view do
   before do
     allow(presenter).to receive(:each).and_yield(row1).and_yield(row2)
     allow(view).to receive(:new_polymorphic_path).and_return('/foos/new')
-    render 'dashboard/select_work_type', presenter: presenter
+    allow(view).to receive(:create_work_presenter).and_return(presenter)
+    render
   end
   let(:results) { [GenericWork, other_model] }
 
   it "draws the modal" do
     expect(rendered).to have_selector "#worktypes-to-create.modal"
-    expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
     expect(rendered).to have_link "Book", href: '/foos/new'
     expect(rendered).to have_link "Generic Work"
   end

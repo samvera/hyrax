@@ -108,7 +108,7 @@ en:
         shares: "Shares"
       works:
         menu: "Works"
-        new: "New %{type}"
+        new: "New Work"
         my: "My Works"
         batch: "Batch Create"
       collections:
