@@ -7,7 +7,7 @@ module Sufia
     attr_reader :concern
 
     def icon_class
-      translate('icon_class')
+      ModelIcon.css_class_for(concern)
     end
 
     def description
