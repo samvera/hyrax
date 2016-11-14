@@ -39,4 +39,41 @@ RSpec.describe Sufia::AdminSetService, :no_clean do
       expect(subject).to eq [[doc1, 8], [doc2, 2], [doc3, nil]]
     end
   end
+
+  describe "#select_options" do
+    context "with permission_template visibility" do
+      subject { service.select_options }
+      let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'Public Set') }
+      let(:solr_doc2) { instance_double(SolrDocument, id: '345', to_s: 'Private Set') }
+      let(:solr_doc3) { instance_double(SolrDocument, id: '567', to_s: 'No Visibility Set') }
+      let!(:permission_template1) { create(:permission_template, admin_set_id: '123', visibility: 'open') }
+      let!(:permission_template2) { create(:permission_template, admin_set_id: '345', visibility: 'restricted') }
+      let!(:permission_template3) { create(:permission_template, admin_set_id: '567') }
+
+      before do
+        allow(service).to receive(:search_results)
+          .with(:read)
+          .and_return([solr_doc1, solr_doc2, solr_doc3])
+      end
+
+      it do
+        is_expected.to eq [['Public Set', '123', { 'data-visibility' => 'open' }],
+                           ['Private Set', '345', { 'data-visibility' => 'restricted' }],
+                           ['No Visibility Set', '567', { 'data-visibility' => nil }]]
+      end
+    end
+
+    context "with no permission_template" do
+      subject { service.select_options }
+      let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'No Template Set') }
+
+      before do
+        allow(service).to receive(:search_results)
+          .with(:read)
+          .and_return([solr_doc1])
+      end
+
+      it { is_expected.to eq [['No Template Set', '123', { 'data-visibility' => nil }]] }
+    end
+  end
 end

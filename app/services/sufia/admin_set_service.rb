@@ -20,5 +20,16 @@ module Sufia
         [doc, counts[doc.id]]
       end
     end
+
+    # @param [Symbol] access :read or :edit
+    def select_options(access = :read)
+      search_results(access).map do |element|
+        permission_template = PermissionTemplate.find_by(admin_set_id: element.id)
+        visibility = permission_template.visibility if permission_template
+        # Add HTML5 'data' attributes corresponding to permission template fields
+        # Used to limit visibility options of new works (via JS) when an AdminSet is selected
+        [element.to_s, element.id, { 'data-visibility' => visibility }]
+      end
+    end
   end
 end
