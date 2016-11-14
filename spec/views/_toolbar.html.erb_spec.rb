@@ -1,5 +1,7 @@
 describe '/_toolbar.html.erb', type: :view do
+  let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: false, first_model: GenericWork) }
   before do
+    allow(view).to receive(:create_work_presenter).and_return(presenter)
     allow(view).to receive(:user_signed_in?).and_return(true)
     allow(controller).to receive(:current_user).and_return(stub_model(User, user_key: 'userX'))
     allow(view).to receive(:can?).and_call_original
@@ -38,25 +40,35 @@ describe '/_toolbar.html.erb', type: :view do
     expect(rendered).to have_link 'Shares', href: sufia.dashboard_shares_path
   end
 
-  describe "New Work button" do
-    context "when the user can create file sets" do
+  describe "New Work link" do
+    context "when the user can create multiple work types" do
+      let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: true) }
       it "has a link to upload" do
-        allow(view).to receive(:can?).with(:create, GenericWork).and_return(true)
         render
-        expect(rendered).to have_link('New Generic Work', href: new_curation_concerns_generic_work_path)
+        expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
+        expect(rendered).to have_link('New Work', href: '#')
       end
     end
 
-    context "when the user can't create file sets" do
-      it "does not have a link to upload" do
-        allow(view).to receive(:can?).with(:create, GenericWork).and_return(false)
+    context "when the user can create GenericWorks" do
+      it "has a link to upload" do
         render
-        expect(rendered).not_to have_link('New Generic Work')
+        expect(rendered).to have_link('New Work', href: new_curation_concerns_generic_work_path)
+      end
+    end
+
+    context "when the user can't create any work types" do
+      before do
+        allow(view).to receive(:can_ever_create_works?).and_return(false)
+      end
+      it "does not have a link to upload" do
+        render
+        expect(rendered).not_to have_link('New Work')
       end
     end
   end
 
-  describe "New Collection button" do
+  describe "New Collection link" do
     context "when the user can create collections" do
       it "has a link to upload" do
         allow(view).to receive(:can?).with(:create, Collection).and_return(true)

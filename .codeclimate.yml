@@ -23,6 +23,8 @@ engines:
       - javascript
   eslint:
     enabled: true
+    exclude_fingerprints:
+      - 673b54674f33c17cc8d5683c1e469b15
     config:
       extensions:
         - .es6
