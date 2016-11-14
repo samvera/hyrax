@@ -364,6 +364,16 @@ en:
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
+      collections:
+        collection:         "Collection"
+        subtitle:           "Recent collection activity"
+        title:              "Collections"
+        works:              "Works"
+      show:
+        registered_users:   "Registered users"
+        total_visitors:     "Total Visitors"
+        returning_visitors: "Returning Visitors"
+        new_visitors:       "New Visitors"
       sidebar:
         admin_sets: "Administrative Sets"
         settings:   "Settings"
