@@ -17,12 +17,27 @@ module Sufia
       end
 
       def update(attributes)
-        manage_grants = attributes[:access_grants_attributes].select { |x| x[:access] == 'manage' }
+        manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
         grant_admin_set_access(manage_grants) if manage_grants.present?
         model.update(attributes)
       end
 
       private
+
+        # This allows the attributes
+        def grants_as_collection(attributes)
+          attributes_collection = attributes[:access_grants_attributes]
+
+          if attributes_collection.respond_to?(:permitted?)
+            attributes_collection = attributes_collection.to_h
+          end
+          if attributes_collection.is_a? Hash
+            attributes_collection = attributes_collection
+                                    .sort_by { |i, _| i.to_i }
+                                    .map { |_, attrs| attrs }
+          end
+          attributes_collection
+        end
 
         def grant_admin_set_access(manage_grants)
           admin_set = AdminSet.find(model.admin_set_id)

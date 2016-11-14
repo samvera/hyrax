@@ -1,4 +1,4 @@
-    <div class="panel panel-default tabs">
+    <div class="panel panel-default tabs" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
         <li class="active">
           <a href="#description"><%= t('.tabs.description') %></a>
@@ -23,7 +23,7 @@
                 <% if f.object.persisted? && f.object.member_ids.present? %>
                   <%= f.input :thumbnail_id, collection: @form.select_files %>
                 <% end %>
-                
+
               </div>
               <div class="panel-footer">
                 <%= link_to 'Cancel', sufia.admin_admin_sets_path, class: 'btn btn-default pull-right'%>

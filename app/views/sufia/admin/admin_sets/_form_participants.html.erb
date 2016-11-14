@@ -4,7 +4,8 @@
                 <h2><%= t('.add_participants') %></h2>
                 <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
                 <%= simple_form_for @form.permission_template,
-                                    url: [sufia, :admin, @form, :permission_template] do |f| %>
+                                    url: [sufia, :admin, @form, :permission_template],
+                                    html: { id: 'group-participants-form' } do |f| %>
                   <div class="clearfix spacer">
                   <%= f.fields_for 'access_grants_attributes',
                                    f.object.access_grants.build(agent_type: 'group'),
@@ -30,7 +31,9 @@
                   </div>
                 <% end %>
 
-                <%= simple_form_for @form.permission_template, url: [sufia, :admin, @form, :permission_template] do |f| %>
+                <%= simple_form_for @form.permission_template,
+                                    url: [sufia, :admin, @form, :permission_template],
+                                    html: { id: 'user-participants-form' } do |f| %>
                   <%= f.fields_for 'access_grants_attributes',
                                    f.object.access_grants.build(agent_type: 'user'),
                                    index: 0 do |builder| %>
@@ -63,4 +66,3 @@
               </div>
             </div>
           </div>
-
