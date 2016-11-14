@@ -82,11 +82,8 @@ body {
   }
 }
 
-.panel.panel-default {
-  border-top: 1px solid $panel-default-border;
-}
-
 .panel.panel-default.labels {
+  border-top: 1px solid $panel-default-border;
   margin-bottom: 0;
 }
 

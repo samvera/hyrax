@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="panel-title">
+          <h3><%= t('.title') %></h3>
+          <div><%= t('.subtitle') %></div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><%= t('.collection') %></th>
+              <th><%= t('.works') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @admin_set_rows.each do |row| %>
+              <tr>
+                <td><%= row.first %></td>
+                <td><%= row.second %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
