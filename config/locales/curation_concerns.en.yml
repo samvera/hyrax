@@ -221,7 +221,6 @@ en:
     hints:
       defaults:
         description: 'Please keep your description to 300 words or fewer.'
-        files:       'A PDF is preferred.'
     labels:
       defaults:
         lease_expiration_date:     'until'
