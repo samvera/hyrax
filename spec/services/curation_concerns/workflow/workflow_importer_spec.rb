@@ -43,8 +43,8 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
         result = described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
       expect(result).to match_array(kind_of(Sipity::Workflow))
-      expect(result.first.label).to eq "Digital collections workflow"
-      expect(result.first.description).to eq "A multi-step workflow for digital collections"
+      expect(result.first.label).to eq "Default workflow"
+      expect(result.first.description).to eq "A single submission step, default workflow"
     end
   end
 end
