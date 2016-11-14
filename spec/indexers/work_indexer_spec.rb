@@ -5,6 +5,7 @@ describe CurationConcerns::WorkIndexer do
   let(:user) { create(:user) }
   let(:service) { described_class.new(work) }
   subject(:solr_document) { service.generate_solr_document }
+  let(:work) { create(:generic_work) }
 
   context "with child works" do
     let!(:work) { create(:work_with_one_file, user: user) }
@@ -37,7 +38,6 @@ describe CurationConcerns::WorkIndexer do
   end
 
   context "the object status" do
-    let(:work) { build(:generic_work) }
     context "when suppressed" do
       before { allow(work).to receive(:suppressed?).and_return(true) }
 
@@ -50,6 +50,18 @@ describe CurationConcerns::WorkIndexer do
       it "indexed the suppressed field" do
         expect(solr_document.fetch('suppressed_bsi')).to be false
       end
+    end
+  end
+
+  context "the actionable workflow roles" do
+    before do
+      allow(PowerConverter).to receive(:convert_to_sipity_entity).with(work).and_return(create(:sipity_entity))
+      allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_roles_associated_with_the_given_entity)
+        .and_return(['approve', 'reject'])
+    end
+    it "indexed the roles and state" do
+      expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq ["generic_work-approve", "generic_work-reject"]
+      expect(solr_document.fetch('workflow_state_name_ssim')).to eq "initial"
     end
   end
 end

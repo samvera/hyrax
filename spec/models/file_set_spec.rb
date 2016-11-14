@@ -319,11 +319,15 @@ describe FileSet do
       end
     end
 
-    context 'when the depositor does not have edit access' do
+    describe '#paranoid_edit_permissions=' do
       before do
+        subject.paranoid_edit_permissions =
+          [
+            { key: :edit_users, message: 'Depositor must have edit access', condition: ->(obj) { !obj.edit_users.include?(obj.depositor) } }
+          ]
         subject.permissions = [Hydra::AccessControls::Permission.new(type: 'person', name: 'mjg36', access: 'read')]
       end
-      it 'is invalid' do
+      it 'uses the user supplied configuration for validation' do
         expect(subject).to_not be_valid
         expect(subject.errors[:edit_users]).to include('Depositor must have edit access')
       end

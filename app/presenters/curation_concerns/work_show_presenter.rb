@@ -46,6 +46,10 @@ module CurationConcerns
       @file_set_presenters ||= member_presenters(ordered_ids & file_set_ids)
     end
 
+    def workflow
+      @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?

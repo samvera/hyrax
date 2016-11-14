@@ -39,6 +39,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
   spec.add_dependency 'browse-everything', '~> 0.10'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
+  spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
+  spec.add_dependency 'dry-validation', '~> 0.9'
+  spec.add_dependency 'dry-equalizer', '~> 0.2'
+  spec.add_dependency 'dry-struct', '~> 0.1'
+  spec.add_dependency 'flot-rails', '~> 0.0.7'
   spec.add_dependency 'highcharts-rails'
 
   spec.add_development_dependency 'solr_wrapper', '~> 0.16'
@@ -51,6 +56,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "rspec-rails", '~> 3.5'
   spec.add_development_dependency 'rspec-html-matchers'
+  spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'equivalent-xml'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.5'

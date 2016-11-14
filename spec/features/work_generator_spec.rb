@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rails/generators'
 require 'redlock'
 
-feature 'Creating a new Work' do
+feature 'Creating a new Work', :workflow do
   let(:user) { FactoryGirl.create(:user) }
 
   let(:redlock_client_stub) { # stub out redis connection
@@ -32,7 +32,7 @@ feature 'Creating a new Work' do
     Rails::Generators.invoke('curation_concerns:work', ['Catapult'], behavior: :revoke, destination_root: Rails.root)
   end
 
-  it 'catapults should behave like generic works' do
+  it 'catapults should behave like generic works', :workflow do
     visit '/concern/catapults/new'
     # within("form.new_file_set") do
     #   attach_file("Upload a file", fixture_file_path('files/image.png'))

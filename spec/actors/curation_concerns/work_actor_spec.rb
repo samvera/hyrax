@@ -34,7 +34,10 @@ describe CurationConcerns::Actors::GenericWorkActor do
     end
 
     context 'success' do
-      before { redlock_client_stub }
+      before do
+        redlock_client_stub
+        create(:workflow_action)
+      end
 
       it "invokes the after_create_concern callback" do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
@@ -46,6 +49,10 @@ describe CurationConcerns::Actors::GenericWorkActor do
 
     context 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+      before do
+        redlock_client_stub
+        create(:workflow_action)
+      end
 
       context 'with embargo' do
         context "with attached files" do
@@ -61,8 +68,6 @@ describe CurationConcerns::Actors::GenericWorkActor do
               rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
           end
 
-          before { redlock_client_stub }
-
           it "applies embargo to attached files" do
             allow(CharacterizeJob).to receive(:perform_later).and_return(true)
             subject.create(attributes)
@@ -74,6 +79,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
           end
         end
       end
+
       context 'with in_work_ids' do
         let(:parent) { FactoryGirl.create(:generic_work) }
         let(:attributes) do
@@ -86,6 +92,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
           expect(curation_concern.in_works).to eq [parent]
         end
       end
+
       context 'with a file' do
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
@@ -97,7 +104,6 @@ describe CurationConcerns::Actors::GenericWorkActor do
           let(:file_actor) { double }
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
-            redlock_client_stub
             allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 
@@ -129,7 +135,6 @@ describe CurationConcerns::Actors::GenericWorkActor do
         context 'authenticated visibility' do
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
-            redlock_client_stub
             allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 

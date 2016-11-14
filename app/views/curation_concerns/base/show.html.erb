@@ -1,6 +1,7 @@
 <% provide :page_title, @presenter.page_title %>
 <% provide :page_header do %>
   <h1><%= @presenter %> </h1>
+  <span class="state state-<%= @presenter.workflow.state %>"><%= @presenter.workflow.state_label %></span>
   <% if @parent_presenter %>
     <ul class="breadcrumb">
       <li><%= link_to @parent_presenter, polymorphic_path([main_app, @parent_presenter]) %></li>
@@ -21,4 +22,5 @@
   <%= render 'multiple_upload', presenter: @presenter %>
 <% end %>
 
+<%= render 'workflow_actions', presenter: @presenter if @presenter.workflow.actions.present? %>
 <%= render "show_actions", collector: collector, editor: editor%>

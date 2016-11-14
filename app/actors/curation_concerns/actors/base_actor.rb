@@ -12,7 +12,7 @@ module CurationConcerns
         @cloud_resources = attributes.delete(:cloud_resources.to_s)
         apply_creation_data_to_curation_concern
         apply_save_data_to_curation_concern(attributes)
-        next_actor.create(attributes) && save && run_callbacks(:after_create_concern)
+        save && next_actor.create(attributes) && run_callbacks(:after_create_concern)
       end
 
       def update(attributes)
@@ -38,8 +38,7 @@ module CurationConcerns
         end
 
         def apply_depositor_metadata
-          curation_concern.apply_depositor_metadata(user.user_key)
-          curation_concern.edit_users += [user.user_key]
+          curation_concern.depositor = user.user_key
         end
 
         def apply_deposit_date

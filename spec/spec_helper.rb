@@ -13,6 +13,7 @@ require 'devise'
 require 'mida'
 
 require 'rspec/matchers'
+require 'shoulda/matchers'
 require 'equivalent-xml/rspec_matchers'
 require 'rspec/its'
 require 'rspec/rails'
@@ -70,9 +71,15 @@ RSpec.configure do |config|
     unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!
     end
+
+    # This is a speedup for workflow specs.  If we don't have this, it will import the
+    # full workflow configuration files from config/workflows/*
+    FactoryGirl.create(:workflow_action) if example.metadata[:workflow]
   end
 
   config.include FactoryGirl::Syntax::Methods
+  config.include Shoulda::Matchers::Independent
+
   if defined? Devise::Test::ControllerHelpers
     config.include Devise::Test::ControllerHelpers, type: :controller
     config.include Devise::Test::ControllerHelpers, type: :view
@@ -82,6 +89,7 @@ RSpec.configure do |config|
   end
 
   config.include TestViewHelpers, type: :view
+  config.include Capybara::DSL, type: :view
 
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
@@ -98,7 +106,6 @@ RSpec.configure do |config|
   config.include ::Rails.application.routes.url_helpers
 
   config.include Rails.application.routes.url_helpers, type: :routing
-  config.include Capybara::DSL
   config.include InputSupport, type: :input
   config.include Capybara::RSpecMatchers, type: :input
   config.infer_spec_type_from_file_location!

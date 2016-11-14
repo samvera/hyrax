@@ -15,6 +15,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
     let(:root_actor) { double }
     before do
       allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+      allow(curation_concern).to receive(:save).and_return(true)
     end
 
     context 'when visibility is  set to open' do

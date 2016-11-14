@@ -24,6 +24,17 @@ RSpec.describe CurationConcerns::AdminController do
     end
   end
 
+  describe "#workflow" do
+    before do
+      allow(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+    end
+    it "is successful" do
+      get :workflow
+      expect(response).to be_successful
+      expect(assigns[:status_list]).to be_kind_of CurationConcerns::Workflow::StatusListService
+    end
+  end
+
   describe "GET missing_thing" do
     before do
       # Add necessary route.

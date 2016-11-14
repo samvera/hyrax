@@ -1,0 +1,45 @@
+<div class="<%= "dashboard-#{action_name}" %>">
+  <div class="wrapper">
+    <div class="widget widget-default">
+      <table class="table table-striped">
+        <thead>
+          <th><%= t('.header.user') %></th>
+          <th><%= t('.header.roles') %></th>
+        </thead>
+        <tbody>
+        <% @presenter.users.each do |user| %>
+          <tr>
+            <td><%= user.user_key %></td>
+            <% agent_presenter = @presenter.presenter_for(user) %>
+            <% if agent_presenter %>
+              <td>
+                <ul>
+                  <% agent_presenter.responsibilities do |responsibility_presenter| %>
+                    <li><%= responsibility_presenter.label %>
+                      <%= link_to admin_workflow_role_path(responsibility_presenter.responsibility),
+                                  method: :delete,
+                                  data: { confirm: t('.delete.confirm') } do %>
+                        <span class="delete">&times;</span>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              </td>
+            <% else %>
+              <td><%= t('.no_roles') %></td>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <h2><%= t('.new_role') %></h2>
+      <%= simple_form_for CurationConcerns::Forms::WorkflowResponsibilityForm.new, url: admin_workflow_roles_path do |f| %>
+        <%= f.input :user_id, as: :select, collection: f.object.user_options %>
+        <%= f.input :workflow_role_id, as: :select, collection: f.object.workflow_role_options %>
+        <%= f.submit %>
+      <% end %>
+    </div>
+  </div>
+</div>
+

@@ -1,6 +1,7 @@
 require: rubocop-rspec
 AllCops:
   DisplayCopNames: true
+  TargetRubyVersion: 2.1
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -47,6 +48,8 @@ Metrics/ModuleLength:
     - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
     - 'app/models/concerns/curation_concerns/solr_document_behavior.rb'
     - 'app/controllers/concerns/curation_concerns/collections_controller_behavior.rb'
+    - 'app/services/curation_concerns/workflow/permission_query.rb'
+    - 'spec/services/curation_concerns/workflow/permission_query_spec.rb'
 
 Style/ZeroLengthPredicate:
   Enabled: false
@@ -165,6 +168,7 @@ RSpec/DescribeClass:
     - 'spec/views/**/*'
     - 'spec/routing/**/*'
     - 'spec/inputs/**/*'
+    - 'spec/conversions/**/*'
 
 RSpec/DescribedClass:
   Exclude:

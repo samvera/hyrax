@@ -1,38 +1,15 @@
 en:
   curation_concerns:
-    product_name: "Repository"
-    institution_name:  &INSTITUTION_NAME "Institution Name"
-    catalog:
-      index:
-        type_tabs:
-          all: All
-    collections:
-      search_form:
-        placeholder: "Search Collection"
-        label: "Search Collection %{title}"
-    division:
-      name: "Your Division at Institution"
-      homepage_url: "#"
-    document_language: "en"
-    institution:
-      name: "Your Institution"
-      homepage_url: "#"
-    show:
-      related_files:
-        heading: 'Members'
-      downloadable_content:
-        heading: 'Downloadable Content'
-        default_link: 'Download file'
-        image_link: 'Download image'
-        office_link: 'Download file'
-        pdf_link: 'Download PDF'
-    search:
-      form:
-        q:
-          label: "Search Repository"
-          placeholder: "Type keywords in here"
-    bread_crumb:
-      works_list: "the works browser"
+    admin:
+      workflow_roles:
+        index:
+          header:
+            user:   User
+            roles:  Roles
+          no_roles: No roles
+          new_role: "Grant a role to a user:"
+          delete:
+            confirm: Are you sure?
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
@@ -53,6 +30,31 @@ en:
         default: "Unable to process your request.  See errors for more info."
       internal_error:
         default: "The server encountered an error."
+    bread_crumb:
+      works_list: "the works browser"
+    catalog:
+      index:
+        type_tabs:
+          all: All
+    collections:
+      search_form:
+        placeholder: "Search Collection"
+        label: "Search Collection %{title}"
+    dashboard:
+      menu:
+        index:            "Admin Dashboard"
+        resource_details: "Resource Details"
+        workflow:         "Workflow"
+        workflow_roles:   "Workflow Roles"
+    division:
+      name: "Your Division at Institution"
+      homepage_url: "#"
+    document_language: "en"
+    institution:
+      name: "Your Institution"
+      homepage_url: "#"
+    institution_name:  &INSTITUTION_NAME "Institution Name"
+    product_name: "Repository"
     schema_org:
       resource_type:
         Article: "http://schema.org/Article"
@@ -99,7 +101,41 @@ en:
         property: keywords
       title:
         property: name
-
+    search:
+      form:
+        q:
+          label: "Search Repository"
+          placeholder: "Type keywords in here"
+    show:
+      related_files:
+        heading: 'Members'
+      downloadable_content:
+        heading: 'Downloadable Content'
+        default_link: 'Download file'
+        image_link: 'Download image'
+        office_link: 'Download file'
+        pdf_link: 'Download PDF'
+    single_use_links:
+      title: Single-Use Links
+      table:
+        link: Link
+        key: Key
+        expires: Expires
+        actions: Actions
+        no_links: No links have been generated
+      download: 
+        type: Download
+        generate: Generate Download Link
+      show: 
+        type: Show
+        generate: Generate Show Link
+      copy: 
+        tooltip: Copied!
+        button: Copy to Clipboard
+      delete: Delete
+      expiration:
+        time: "in %{value} hours"
+        lesser_time: in less than one hour
     visibility:
       open:
         text: "Open Access"
@@ -142,31 +178,16 @@ en:
       restricted:
         text: "Private"
         class: "label-danger"
-    single_use_links:
-      title: Single-Use Links
-      table:
-        link: Link
-        key: Key
-        expires: Expires
-        actions: Actions
-        no_links: No links have been generated
-      download: 
-        type: Download
-        generate: Generate Download Link
-      show: 
-        type: Show
-        generate: Generate Show Link
-      copy: 
-        tooltip: Copied!
-        button: Copy to Clipboard
-      delete: Delete
-      expiration:
-        time: "in %{value} hours"
-        lesser_time: in less than one hour
-    dashboard:
-      menu:
-        index: "Admin Dashboard"
-        resource_details: "Resource Details"
+    workflow:
+      generic_work:
+        finalize_digitization: "Finalize Digitization"
+        finalize_metadata: "Finalize Metadata"
+        final_review: "Final Review"
+        complete: "Complete"
+        takedown: "Takedown"
+        flag: "Flag"
+        restore: "Restore"
+        unflag: "Remove Flag"
   blacklight:
     search:
       fields:
@@ -215,6 +236,10 @@ en:
           identifier_tesim: "Identifier"
   file_manager:
     link_text: 'File Manager'
+  helpers:
+    submit:
+      sipity_workflow_responsibility:
+        create: "Add"
   simple_form:
     required:
       html: '<span class="label label-info required-tag">required</span>'

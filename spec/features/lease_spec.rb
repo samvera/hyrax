@@ -9,7 +9,7 @@ feature 'leases' do
     let(:future_date) { 5.days.from_now }
     let(:later_future_date) { 10.days.from_now }
 
-    it 'can be created, displayed and updated' do
+    it 'can be created, displayed and updated', :workflow do
       visit '/'
       click_link 'New Generic Work'
       fill_in 'Title', with: 'Lease test'

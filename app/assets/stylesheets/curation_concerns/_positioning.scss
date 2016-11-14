@@ -138,3 +138,14 @@ legend + .form-group {
   display: block;
   padding: 0.5em 0;
 }
+
+.workflow-affix {
+  position: fixed;
+  bottom: 0;
+  background: #FFF;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  max-width: 1140px;
+  margin: 0 auto;
+}

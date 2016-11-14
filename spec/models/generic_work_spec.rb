@@ -14,6 +14,18 @@ describe GenericWork do
     it { is_expected.to eq 'curation_concerns_generic_work' }
   end
 
+  describe "to_sipity_entity" do
+    let(:state) { FactoryGirl.create(:workflow_state) }
+    let(:work) { create(:work) }
+    before do
+      Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
+                             workflow_state: state,
+                             workflow: state.workflow)
+    end
+    subject { work.to_sipity_entity }
+    it { is_expected.to be_kind_of Sipity::Entity }
+  end
+
   describe '#state' do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }

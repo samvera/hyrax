@@ -31,7 +31,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     SolrDocument.new(parent.to_solr.merge(id: "resource"), nil)
   end
   let(:parent_presenter) do
-    CurationConcerns::WorkShowPresenter.new(parent_solr_doc, nil)
+    CurationConcerns::WorkShowPresenter.new(parent_solr_doc, nil, view)
   end
 
   let(:blacklight_config) { CatalogController.new.blacklight_config }
