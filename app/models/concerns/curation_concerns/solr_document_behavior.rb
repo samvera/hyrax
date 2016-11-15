@@ -56,6 +56,10 @@ module CurationConcerns
       hydra_model == ::Collection
     end
 
+    def suppressed?
+      first(Solrizer.solr_name('suppressed', stored_boolean_field))
+    end
+
     # Method to return the ActiveFedora model
     def hydra_model
       first(Solrizer.solr_name('has_model', :symbol)).constantize
@@ -180,6 +184,10 @@ module CurationConcerns
         rescue
           Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
         end
+      end
+
+      def stored_boolean_field
+        Solrizer::Descriptor.new(:boolean, :stored, :indexed)
       end
   end
 end

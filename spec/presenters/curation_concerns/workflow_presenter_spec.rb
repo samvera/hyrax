@@ -14,26 +14,40 @@ RSpec.describe CurationConcerns::WorkflowPresenter, no_clean: true do
 
   describe "#actions" do
     let(:workflow) { create(:workflow, name: 'testing') }
-    before do
-      allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state).and_return([Sipity::WorkflowAction.new(name: "complete", workflow: workflow)])
-      allow(presenter).to receive(:sipity_entity).and_return(entity)
-    end
-
     subject { presenter.actions }
-    it "is an Array of Sipity::Action#name and translated names" do
-      allow(I18n).to receive(:t).with('curation_concerns.workflow.testing.complete', default: 'Complete').and_return("Approve")
-      is_expected.to eq [['complete', 'Approve']]
+    context 'with a Sipity::Entity' do
+      before do
+        allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state).and_return([Sipity::WorkflowAction.new(name: "complete", workflow: workflow)])
+        allow(presenter).to receive(:sipity_entity).and_return(entity)
+      end
+      it "is an Array of Sipity::Action#name and translated names" do
+        allow(I18n).to receive(:t).with('curation_concerns.workflow.testing.complete', default: 'Complete').and_return("Approve")
+        is_expected.to eq [['complete', 'Approve']]
+      end
+    end
+    context 'without a Sipity::Entity' do
+      before do
+        allow(presenter).to receive(:sipity_entity).and_return(nil)
+      end
+      it { is_expected.to eq [] }
     end
   end
 
   describe "#comments" do
-    let(:comment) { instance_double(Sipity::Comment) }
-    before do
-      allow(entity).to receive(:comments).and_return([comment])
-      allow(presenter).to receive(:sipity_entity).and_return(entity)
-    end
-
     subject { presenter.comments }
-    it { is_expected.to eq [comment] }
+    context 'with a Sipity::Entity' do
+      let(:comment) { instance_double(Sipity::Comment) }
+      before do
+        allow(entity).to receive(:comments).and_return([comment])
+        allow(presenter).to receive(:sipity_entity).and_return(entity)
+      end
+      it { is_expected.to eq [comment] }
+    end
+    context 'without a Sipity::Entity' do
+      before do
+        allow(presenter).to receive(:sipity_entity).and_return(nil)
+      end
+      it { is_expected.to eq [] }
+    end
   end
 end

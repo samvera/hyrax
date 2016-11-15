@@ -3,6 +3,9 @@ require 'spec_helper'
 feature 'Add an attached file' do
   let(:user) { create(:user) }
   let!(:work) { create(:work, user: user) }
+  let!(:sipity_entity) do
+    create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+  end
 
   before do
     sign_in user

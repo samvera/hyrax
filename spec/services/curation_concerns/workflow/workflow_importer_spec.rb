@@ -34,7 +34,6 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
   end
 
   context 'data generation' do
-    let(:path) { Rails.root.join('config/workflows/default_workflow.json').to_s }
     it 'creates the requisite data from the configuration' do
       expect(CurationConcerns::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(CurationConcerns::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
@@ -43,8 +42,8 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
         result = described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
       expect(result).to match_array(kind_of(Sipity::Workflow))
-      expect(result.first.label).to eq "Default workflow"
-      expect(result.first.description).to eq "A single submission step, default workflow"
+      expect(result.first.label).to eq "This is the label"
+      expect(result.first.description).to eq "This description could get really long"
     end
   end
 end

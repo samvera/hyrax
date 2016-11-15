@@ -4,7 +4,13 @@ require 'spec_helper'
 # which is included into .internal_test_app/app/controllers/generic_works_controller.rb
 describe CurationConcerns::GenericWorksController do
   let(:user) { create(:user) }
-  before { sign_in user }
+  let(:work) { create(:generic_work, user: user) }
+  let!(:sipity_entity) do
+    create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+  end
+  before do
+    sign_in user
+  end
 
   describe '#show' do
     context 'my own private work' do
@@ -16,6 +22,9 @@ describe CurationConcerns::GenericWorksController do
 
       context "with a parent work" do
         let(:parent) { create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work]) }
+        let!(:parent_sipity_entity) do
+          create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
+        end
         it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
           expect(response).to be_success
@@ -193,7 +202,6 @@ describe CurationConcerns::GenericWorksController do
 
       context 'when there are children' do
         let(:work) { create(:work_with_one_file, user: user) }
-
         it 'prompts to change the files access' do
           patch :update, params: { id: work, generic_work: {} }
           expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
@@ -238,23 +246,23 @@ describe CurationConcerns::GenericWorksController do
   end
 
   describe '#destroy' do
-    let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
+    let(:work) { create(:private_generic_work, user: user) }
     let(:parent_collection) { create(:collection) }
 
     it 'deletes the work' do
-      delete :destroy, params: { id: work_to_be_deleted }
+      delete :destroy, params: { id: work }
       expect(response).to redirect_to main_app.search_catalog_path
-      expect(GenericWork).not_to exist(work_to_be_deleted.id)
+      expect(GenericWork).not_to exist(work.id)
     end
 
     context "when work is a member of a collection" do
       before do
-        parent_collection.members = [work_to_be_deleted]
+        parent_collection.members = [work]
         parent_collection.save!
       end
       it 'deletes the work and updates the parent collection' do
-        delete :destroy, params: { id: work_to_be_deleted }
-        expect(GenericWork).not_to exist(work_to_be_deleted.id)
+        delete :destroy, params: { id: work }
+        expect(GenericWork).not_to exist(work.id)
         expect(response).to redirect_to main_app.search_catalog_path
         expect(parent_collection.reload.members).to eq []
       end
@@ -262,31 +270,32 @@ describe CurationConcerns::GenericWorksController do
 
     it "invokes the after_destroy callback" do
       expect(CurationConcerns.config.callback).to receive(:run)
-        .with(:after_destroy, work_to_be_deleted.id, user)
-      delete :destroy, params: { id: work_to_be_deleted }
+        .with(:after_destroy, work.id, user)
+      delete :destroy, params: { id: work }
     end
 
     context 'someone elses public work' do
-      let(:work_to_be_deleted) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       it 'shows unauthorized message' do
-        delete :destroy, params: { id: work_to_be_deleted }
+        delete :destroy, params: { id: work }
         expect(response.code).to eq '401'
         expect(response).to render_template(:unauthorized)
       end
     end
 
     context 'when I am a repository manager' do
-      let(:work_to_be_deleted) { create(:private_generic_work) }
+      let(:work) { create(:private_generic_work) }
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
       it 'someone elses private work should delete the work' do
-        delete :destroy, params: { id: work_to_be_deleted }
-        expect(GenericWork).not_to exist(work_to_be_deleted.id)
+        delete :destroy, params: { id: work }
+        expect(GenericWork).not_to exist(work.id)
       end
     end
   end
 
   describe '#file_manager' do
     let(:work) { create(:private_generic_work, user: user) }
+
     it "is successful" do
       get :file_manager, params: { id: work.id }
       expect(response).to be_success

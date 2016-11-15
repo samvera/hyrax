@@ -24,7 +24,7 @@ module CurationConcerns
                                workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow)
                               )
       end
-      let(:sipity_workflow) { Sipity::Workflow.first }
+      let(:sipity_workflow) { Sipity::Workflow.find_by(name: 'testing') }
 
       def expect_actions_for(user:, entity:, actions:)
         actions = Array.wrap(actions).map { |action| PowerConverter.convert_to_sipity_action(action, scope: entity.workflow) }
@@ -169,8 +169,8 @@ module CurationConcerns
           let(:user) { create(:user) }
           subject { described_class.scope_processing_agents_for(user: user) }
           it 'will equal [kind_of(Sipity::Agent)]' do
-            is_expected.to eq([PowerConverter.convert_to_sipity_agent(user),
-                               PowerConverter.convert_to_sipity_agent(Group.new('registered'))])
+            is_expected.to contain_exactly(PowerConverter.convert_to_sipity_agent(user),
+                                           PowerConverter.convert_to_sipity_agent(Group.new('registered')))
           end
         end
       end

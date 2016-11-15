@@ -4,7 +4,9 @@ feature 'Editing attached files' do
   let(:user) { create(:user) }
   let!(:parent) { create(:work_with_one_file, user: user) }
   let!(:file_set) { parent.file_sets.first }
-
+  let!(:sipity_entity) do
+    create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
+  end
   around do |example|
     original_adapter = ActiveJob::Base.queue_adapter
     ActiveJob::Base.queue_adapter = :inline
@@ -14,7 +16,6 @@ feature 'Editing attached files' do
 
   before do
     sign_in user
-
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     expect(CharacterizeJob).to receive(:perform_later)
   end

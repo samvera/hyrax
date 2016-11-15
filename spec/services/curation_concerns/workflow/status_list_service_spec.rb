@@ -4,6 +4,7 @@ RSpec.describe CurationConcerns::Workflow::StatusListService do
   describe "#each" do
     let(:user) { create(:user) }
     let(:service) { described_class.new(user) }
+    let!(:sipity_entity) { create(:sipity_entity) }
     let(:document) { { id: '33333',
                        has_model_ssim: ['GenericWork'],
                        actionable_workflow_roles_ssim: ["generic_work-approving", "generic_work-rejecting"],
@@ -15,7 +16,6 @@ RSpec.describe CurationConcerns::Workflow::StatusListService do
     let(:workflow_role) { instance_double(Sipity::Role, name: 'approving') }
     let(:workflow_roles) { [instance_double(Sipity::WorkflowRole, role: workflow_role)] }
     before do
-      create(:sipity_entity)
       ActiveFedora::SolrService.add([document, ability], commit: true)
     end
 
@@ -24,6 +24,9 @@ RSpec.describe CurationConcerns::Workflow::StatusListService do
     context "when user has roles" do
       before do
         allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_processing_workflow_roles_for_user_and_workflow).and_return(workflow_roles)
+        allow_any_instance_of(described_class).to receive(:roles_for_user) do
+          "generic_work-#{workflow_role.name}"
+        end
       end
 
       it "returns status rows" do
