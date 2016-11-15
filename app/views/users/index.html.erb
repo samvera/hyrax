@@ -13,18 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <% @users.each do |user| %>
-            <tr>
-              <td><%= link_to sufia.profile_path(user) do %>
-                    <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
-                  <% end %>
-              </td>
-               <td><%= link_to user.name, sufia.profile_path(user) %></td>
-               <td><%= link_to user.user_key, sufia.profile_path(user) %></td>
-               <td><%= user.department %></td>
-               <td><%= number_of_works(user) %></td>
-            </tr>
-         <% end %>
+    <%= render partial: 'user_row', collection: @users, as: :user %>
     </tbody>
 </table>
 <div class="pager">
