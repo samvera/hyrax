@@ -78,7 +78,8 @@ module CurationConcerns
       end
 
       def _prefixes
-        # This allows us to use the attributes templates in curation_concerns/base
+        # This allows us to use the attributes templates in curation_concerns/base, while prefering
+        # our local paths. Thus we are unable to just override `self.local_prefixes`
         @_prefixes ||= super + ['curation_concerns/base']
       end
   end

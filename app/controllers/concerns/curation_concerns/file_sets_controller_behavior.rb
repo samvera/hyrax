@@ -174,8 +174,9 @@ module CurationConcerns
         params.fetch(:file_set, {}).except(:files).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
       end
 
+      # This allows us to use the unauthorized and form_permission template in curation_concerns/base,
+      # while prefering our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
-        # This allows us to use the unauthorized and form_permission template in curation_concerns/base
         @_prefixes ||= super + ['curation_concerns/base']
       end
 
