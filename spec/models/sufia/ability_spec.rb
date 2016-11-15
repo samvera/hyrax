@@ -26,8 +26,6 @@ describe Sufia::Ability, type: :model do
     it { is_expected.not_to be_able_to(:read, Sufia::Statistics) }
     it { is_expected.not_to be_able_to(:read, :admin_dashboard) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
-    it { is_expected.not_to be_able_to(:update, Sufia::PermissionTemplate) }
-    it { is_expected.not_to be_able_to(:destroy, Sufia::PermissionTemplateAccess) }
   end
 
   describe "a user in the admin group" do
@@ -40,9 +38,32 @@ describe Sufia::Ability, type: :model do
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.to be_able_to(:read, Sufia::Statistics) }
     it { is_expected.to be_able_to(:read, :admin_dashboard) }
-    it { is_expected.to be_able_to(:manage, AdminSet) }
-    it { is_expected.to be_able_to(:manage, Sufia::PermissionTemplate) }
-    it { is_expected.to be_able_to(:manage, Sufia::PermissionTemplateAccess) }
+    it { is_expected.not_to be_able_to(:manage, AdminSet) }
+    it { is_expected.to be_able_to(:create, AdminSet) }
+  end
+
+  describe "AdminSets and PermissionTemplates" do
+    let(:permission_template) { build(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template_access) { build(:permission_template_access, permission_template: permission_template) }
+    describe "a user with edit access" do
+      let(:user) { create(:user) }
+      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      it { is_expected.to be_able_to(:edit, admin_set) }
+      it { is_expected.to be_able_to(:update, admin_set) }
+      it { is_expected.to be_able_to(:destroy, admin_set) }
+      it { is_expected.to be_able_to(:create, permission_template) }
+      it { is_expected.to be_able_to(:create, permission_template_access) }
+    end
+
+    describe "a user without edit access" do
+      let(:user) { create(:user) }
+      let(:admin_set) { create(:admin_set) }
+      it { is_expected.not_to be_able_to(:edit, admin_set) }
+      it { is_expected.not_to be_able_to(:update, admin_set) }
+      it { is_expected.not_to be_able_to(:destroy, admin_set) }
+      it { is_expected.not_to be_able_to(:create, permission_template) }
+      it { is_expected.not_to be_able_to(:create, permission_template_access) }
+    end
   end
 
   describe "proxies and transfers" do

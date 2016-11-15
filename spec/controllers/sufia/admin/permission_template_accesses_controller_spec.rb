@@ -11,6 +11,9 @@ RSpec.describe Sufia::Admin::PermissionTemplateAccessesController do
 
   context "without admin privleges" do
     describe "destroy" do
+      before do
+        allow(controller.current_ability).to receive(:test_edit).with(admin_set_id).and_return(false)
+      end
       it "is unauthorized" do
         delete :destroy, params: { id: permission_template_access }
         expect(response).to be_unauthorized

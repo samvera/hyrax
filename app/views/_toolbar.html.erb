@@ -22,17 +22,24 @@
         <% end %>
         <ul class="dropdown-menu">
           <li><%= link_to t("sufia.toolbar.works.my"), sufia.dashboard_works_path %></li>
-
-          <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
-          <% classification.each do |concern| %>
-            <li><%= link_to(
-                  t("sufia.toolbar.works.new", type: concern.human_readable_type),
-                  new_polymorphic_path([main_app, concern]),
-                  class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
+          <li>
+          <% if create_work_presenter.many? %>
+            <%= link_to(
+                  t("sufia.toolbar.works.new"),
+                  '#',
+                  data: { toggle: "modal", target: "#worktypes-to-create" },
+                  class: "item-option contextual-quick-classify",
                   role: 'menuitem'
                 ) %>
-            </li>
+          <% else %>
+            <%= link_to(
+                  t("sufia.toolbar.works.new"),
+                  new_polymorphic_path([main_app, create_work_presenter.first_model]),
+                  class: "item-option contextual-quick-classify",
+                  role: 'menuitem'
+                ) %>
           <% end %>
+          </li>
           <li><%= link_to t("sufia.toolbar.works.batch"), sufia.new_batch_upload_path %></li>
         </ul>
       </li>
@@ -41,7 +48,7 @@
     <% if can?(:create, Collection) %>
       <li class="dropdown">
         <%= link_to sufia.dashboard_collections_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
-          <span class="fa fa-cubes"></span> <%= t("sufia.toolbar.collections.menu") %> <span class="caret"></span>
+          <span class="<%= Sufia::ModelIcon.css_class_for(Collection) %>"></span> <%= t("sufia.toolbar.collections.menu") %> <span class="caret"></span>
         <% end %>
         <ul class="dropdown-menu">
           <li><%= link_to t("sufia.toolbar.collections.my"), sufia.dashboard_collections_path %></li>

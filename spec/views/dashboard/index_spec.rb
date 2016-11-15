@@ -2,6 +2,7 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
   let(:user) { create(:user, display_name: "Charles Francis Xavier") }
   let(:ability) { instance_double("Ability") }
   before do
+    stub_template('dashboard/_create_work_action.html.erb' => "Create Work Stub")
     allow(user).to receive(:title).and_return("Professor, Head")
     allow(user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
     allow(user).to receive(:telephone).and_return("814.865.8399")
@@ -11,13 +12,17 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
     allow(user).to receive(:total_file_views).and_return(1)
     allow(user).to receive(:total_file_downloads).and_return(3)
     allow(user).to receive(:avatar).and_return(nil)
+
     allow(controller).to receive(:current_user).and_return(user)
     allow(controller).to receive(:current_ability).and_return(ability)
-    allow(ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
+
     allow(ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
     allow(ability).to receive(:can?).with(:edit, user).and_return(can_edit_user)
+
+    allow(view).to receive(:can_ever_create_works?).and_return(true)
     allow(view).to receive(:number_of_works).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
+
     assign(:activity, [])
     assign(:notifications, [])
   end
@@ -31,7 +36,7 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
     let(:heading) { view.content_for(:page_header) }
 
     it "displays welcome message and links" do
-      expect(heading).to have_link("Create Work", href: new_curation_concerns_generic_work_path)
+      expect(heading).to have_content "Create Work Stub"
       expect(heading).to have_link("Create Collection", href: new_collection_path)
       expect(heading).to have_link("View Works", href: sufia.dashboard_works_path)
       expect(heading).to include "My Dashboard"

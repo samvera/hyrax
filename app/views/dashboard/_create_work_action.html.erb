@@ -1,0 +1,20 @@
+<% if create_work_presenter.many? %>
+  <div class="col-xs-6 col-sm-3 heading-tile">
+    <%= link_to('#', data: { toggle: "modal", target: "#worktypes-to-create" }) do %>
+      <span class="glyphicon glyphicon-upload"></span>
+      <%= t("sufia.dashboard.create_work") %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="col-xs-6 col-sm-3 heading-tile">
+    <% create_work_presenter.first_model do |concern| %>
+      <%= link_to(new_polymorphic_path([main_app, concern]),
+                            class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
+                            role: 'menuitem'
+                    ) do %>
+                    <span class="glyphicon glyphicon-upload"></span>
+                    <%= I18n.t("sufia.dashboard.create_work", work_type: concern.human_readable_type) %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

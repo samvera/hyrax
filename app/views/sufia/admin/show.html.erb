@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading"><div class="h3 panel-title text-center">Registered users</div></div>
+      <div class="panel-heading"><div class="h3 panel-title text-center"><%= t('.registered_users') %></div></div>
       <div class="panel-body text-center">
         Current
         <div class="h3"><%= @presenter.user_count %></div>
@@ -11,7 +11,7 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading"><div class="h3 panel-title text-center">Total Visitors</div></div>
+      <div class="panel-heading"><div class="h3 panel-title text-center"><%= t('.total_visitors') %></div></div>
       <div class="panel-body text-center">Past 30 days
         <div class="h3">n/a</div>
       </div>
@@ -20,7 +20,7 @@
 
     <div class="col-md-3">
       <div class="panel panel-default">
-        <div class="panel-heading"><div class="h3 panel-title text-center">Returning Visitors</div></div>
+        <div class="panel-heading"><div class="h3 panel-title text-center"><%= t('.returning_visitors') %></div></div>
         <div class="panel-body text-center">Past 30 days
           <div class="h3">n/a</div>
         </div>
@@ -29,10 +29,11 @@
 
     <div class="col-md-3">
       <div class="panel panel-default">
-        <div class="panel-heading"><div class="h3 panel-title text-center">New Visitors</div></div>
+        <div class="panel-heading"><div class="h3 panel-title text-center"><%= t('.new_visitors') %></div></div>
         <div class="panel-body text-center">Past 30 days
           <div class="h3">n/a</div>
         </div>
       </div>
     </div>
 </div>
+<%= render 'collections' %>

@@ -1,37 +1,24 @@
 <div class="col-xs-12 heading-row">
   <div class="row">
-    <% if can?(:create, Sufia.primary_work_type) %>
-        <div class="col-xs-6 col-sm-2 heading-tile">
-          <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
-          <% classification.each do |concern| %>
-              <%= link_to(new_polymorphic_path([main_app, concern]),
-                          class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
-                          role: 'menuitem'
-                  ) do %>
-                  <span class="glyphicon glyphicon-upload"></span>
-                  <%= I18n.t("sufia.dashboard.create_work", work_type: concern.human_readable_type) %>
-              <% end %>
-          <% end %>
-        </div>
-    <% end %>
+    <%= render 'create_work_action' if can_ever_create_works? %>
     <% if can?(:create, Collection) %>
-        <div class="col-xs-6 col-sm-2 heading-tile">
+        <div class="col-xs-6 col-sm-3 heading-tile">
           <%= link_to new_collection_path, id: "hydra-collection-add" do %>
               <span class="glyphicon glyphicon-plus"></span>
               <%= t("sufia.dashboard.create_collection") %>
           <% end %>
         </div>
     <% end  %>
-    <div class="col-xs-6 col-sm-2 heading-tile">
-      <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
-          <span class="glyphicon glyphicon-th"></span>
-          <%= t("sufia.dashboard.view_collections") %>
-      <% end %>
-    </div>
-    <div class="col-xs-6 col-sm-2 heading-tile">
+    <div class="col-xs-6 col-sm-3 heading-tile">
       <%= link_to sufia.dashboard_works_path  do %>
           <span class="glyphicon glyphicon-eye-open"></span>
           <%= t("sufia.dashboard.view_works") %>
+      <% end %>
+    </div>
+    <div class="col-xs-6 col-sm-3 heading-tile">
+      <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
+          <span class="glyphicon glyphicon-th"></span>
+          <%= t("sufia.dashboard.view_collections") %>
       <% end %>
     </div>
   </div>
