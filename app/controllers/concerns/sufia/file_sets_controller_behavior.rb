@@ -4,15 +4,6 @@ module Sufia
     include Sufia::Breadcrumbs
 
     included do
-      include Blacklight::Configurable
-
-      with_themed_layout '1_column'
-
-      copy_blacklight_config_from(CatalogController)
-
-      # actions: index, create, new, edit, show, update,
-      #          destroy, permissions, citation, stats
-
       # prepend this hook so that it comes before load_and_authorize
       prepend_before_action :authenticate_user!, except: [:show, :citation, :stats]
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
