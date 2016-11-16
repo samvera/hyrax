@@ -19,17 +19,26 @@ describe UsersController, type: :controller do
       expect(flash[:alert]).to include("User 'johndoe666' does not exist")
     end
   end
+
   describe "#index" do
-    let!(:u1) { FactoryGirl.create(:user) }
-    let!(:u2) { FactoryGirl.create(:user) }
+    let!(:u1) { create(:user) }
+    let!(:u2) { create(:user) }
 
     describe "requesting html" do
-      it "tests users" do
+      before do
+        # These user types are excluded:
+        User.audit_user
+        User.batch_user
+        create(:user, :guest)
+      end
+
+      it "excludes the audit_user and batch_user" do
         get :index
-        expect(assigns[:users]).to include(u1, u2)
+        expect(assigns[:users].to_a).to match_array [user, u1, u2]
         expect(response).to be_successful
       end
     end
+
     describe "requesting json" do
       it "displays users" do
         get :index, params: { format: :json }

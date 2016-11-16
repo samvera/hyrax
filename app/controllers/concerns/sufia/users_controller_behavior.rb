@@ -12,13 +12,7 @@ module Sufia::UsersControllerBehavior
   end
 
   def index
-    query = params[:uq].blank? ? nil : "%" + params[:uq].downcase + "%"
-    base = User.where(*base_query)
-    unless query.blank?
-      base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", query, query)
-    end
-    @users = base.references(:trophies).order(sort_value).page(params[:page]).per(10)
-
+    @users = search(params[:uq])
     respond_to do |format|
       format.html
       format.json { render json: @users.to_json }
@@ -67,6 +61,23 @@ module Sufia::UsersControllerBehavior
   end
 
   protected
+
+    # TODO: this should move to a service.
+    # Returns a list of users excluding the system users and guest_users
+    # @param query [String] the query string
+    def search(query)
+      clause = query.blank? ? nil : "%" + query.downcase + "%"
+      base = User.where(*base_query)
+      unless clause.blank?
+        base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", clause, clause)
+      end
+      base.where("#{Devise.authentication_keys.first} not in (?)",
+                 [User.batch_user_key, User.audit_user_key])
+          .where(guest: false)
+          .references(:trophies)
+          .order(sort_value)
+          .page(params[:page]).per(10)
+    end
 
     def user_params
       params.require(:user).permit(:avatar, :facebook_handle, :twitter_handle,

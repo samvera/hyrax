@@ -22,6 +22,10 @@ FactoryGirl.define do
       end
     end
   end
+
+  trait :guest do
+    guest true
+  end
 end
 
 class MockFile
