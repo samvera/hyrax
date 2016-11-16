@@ -273,7 +273,8 @@ module CurationConcerns
         end
       end
 
-      # Include 'catalog' and 'curation_concerns/base' in the search path for views
+      # Include 'catalog' and 'curation_concerns/base' in the search path for views, while prefering
+      # our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
         @_prefixes ||= super + ['catalog', 'curation_concerns/base']
       end

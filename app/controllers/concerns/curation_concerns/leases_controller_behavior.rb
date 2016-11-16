@@ -29,11 +29,9 @@ module CurationConcerns
       redirect_to leases_path
     end
 
-    protected
-
-      def _prefixes
-        # This allows us to use the unauthorized template in curation_concerns/base
-        @_prefixes ||= super + ['curation_concerns/base']
-      end
+    # This allows us to use the unauthorized template in curation_concerns/base
+    def self.local_prefixes
+      ['curation_concerns/base']
+    end
   end
 end
