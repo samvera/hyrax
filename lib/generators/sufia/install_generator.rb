@@ -147,7 +147,7 @@ module Sufia
     end
 
     def create_workflow
-      template('workflow.json.erb', "config/workflows/mediated_deposit_workflow.json")
+      template('workflow.json.erb', "config/workflows/one_step_mediated_deposit_workflow.json")
     end
   end
 end

@@ -16,6 +16,14 @@ module Sufia
          [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, I18n.t('.restricted', scope: i18n_prefix)]]
       end
 
+      def initialize(model)
+        # This is a temporary way to make sure all new PermissionTemplates have
+        # a workflow assigned to them. Ultimately we want to expose workflows in
+        # the UI and have users choose a workflow for their PermissionTemplate.
+        model.workflow_name = 'one_step_mediated_deposit'
+        super(model)
+      end
+
       def update(attributes)
         manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
         grant_admin_set_access(manage_grants) if manage_grants.present?
