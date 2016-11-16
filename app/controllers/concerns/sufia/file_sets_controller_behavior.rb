@@ -44,12 +44,12 @@ module Sufia
       end
     end
 
-    protected
+    # This allows us to use the templates in curation_concerns/file_sets
+    def self.local_prefixes
+      ['curation_concerns/file_sets']
+    end
 
-      def _prefixes
-        # This allows us to use the templates in curation_concerns/file_sets
-        @_prefixes ||= ['curation_concerns/file_sets'] + super
-      end
+    protected
 
       def initialize_edit_form
         @version_list = version_list
