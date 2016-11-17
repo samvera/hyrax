@@ -22,14 +22,6 @@ module Sufia
       #{config.root}/app/models/sufia/pageview.rb
     )
 
-    rake_tasks do
-      load File.expand_path('../../../tasks/noid.rake', __FILE__)
-      load File.expand_path('../../../tasks/reindex.rake', __FILE__)
-      load File.expand_path('../../../tasks/stats_tasks.rake', __FILE__)
-      load File.expand_path('../../../tasks/sufia_user.rake', __FILE__)
-      load File.expand_path('../../../tasks/controlled_vocabularies.rake', __FILE__)
-    end
-
     initializer 'requires' do
       require 'hydra/derivatives'
     end

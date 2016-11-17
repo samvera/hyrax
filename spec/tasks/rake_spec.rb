@@ -2,11 +2,11 @@ require 'rake'
 
 describe "Rake tasks" do
   describe "sufia:user:list_emails" do
-    let!(:user1) { FactoryGirl.create(:user) }
-    let!(:user2) { FactoryGirl.create(:user) }
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
 
     before do
-      load_rake_environment [File.expand_path("../../../tasks/sufia_user.rake", __FILE__)]
+      load_rake_environment [File.expand_path("../../../lib/tasks/sufia_user.rake", __FILE__)]
     end
 
     it "creates a file" do

@@ -1,8 +1,8 @@
-namespace :curation_concerns do
+namespace :sufia do
   desc 'Print a count of each object type'
   task count: [:environment] do
     Rails.application.eager_load!
-    puts "Number of objects in fedora:"
+    puts "Number of objects in the repository:"
     ActiveFedora::Base.descendants.each do |model|
       puts "  #{model}: #{model.count}"
     end
