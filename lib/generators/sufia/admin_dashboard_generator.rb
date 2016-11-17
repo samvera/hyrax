@@ -1,6 +1,6 @@
 require 'rails/generators'
 
-module CurationConcerns
+module Sufia
   class AdminDashboardGenerator < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
 

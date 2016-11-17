@@ -2,7 +2,7 @@ Description:
   This generator creates the necessary files for new work types.
 
 Example:
-  rails generate curation_concerns:work ScholarlyPaper
+  rails generate sufia:work ScholarlyPaper
 
   This will create:
     app/models/scholarly_paper.rb
