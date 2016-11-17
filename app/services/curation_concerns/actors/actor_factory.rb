@@ -14,7 +14,6 @@ module CurationConcerns
          AttachFilesActor,
          ApplyOrderActor,
          InterpretVisibilityActor,
-         GrantEditToDepositorActor,
          model_actor(curation_concern),
          InitializeWorkflowActor]
       end

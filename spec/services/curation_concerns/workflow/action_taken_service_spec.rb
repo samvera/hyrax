@@ -6,18 +6,17 @@ RSpec.describe CurationConcerns::Workflow::ActionTakenService do
     it { is_expected.to respond_to(:handle_action_taken) }
   end
 
-  let(:triggered_methods) { [instance_double(Sipity::Method, service_name: 'foo_bar')] }
+  let(:triggered_methods) { [instance_double(Sipity::Method, service_name: 'FooBar')] }
   let(:triggered_methods_rel) do
     instance_double(Sipity::Method::ActiveRecord_Relation,
                     order: triggered_methods,
                     any?: true)
   end
-  let(:work) { instance_double(GenericWork) }
+  let(:work) { instance_double(GenericWork, id: '9999') }
   let(:action) { instance_double(Sipity::WorkflowAction, triggered_methods: triggered_methods_rel) }
-  let(:entity) { instance_double(Sipity::Entity, id: 9999, proxy_for: work) }
   let(:user) { User.new }
   let(:instance) do
-    described_class.new(entity: entity,
+    described_class.new(target: work,
                         action: action,
                         comment: "A pleasant read",
                         user: user)
@@ -38,14 +37,14 @@ RSpec.describe CurationConcerns::Workflow::ActionTakenService do
       context "and the method succeedes" do
         it "calls the method and saves the object" do
           expect(work).to receive(:save)
-          expect(FooBar).to receive(:call).with(entity: entity, user: user, comment: "A pleasant read").and_return(true)
+          expect(FooBar).to receive(:call).with(target: work, user: user, comment: "A pleasant read").and_return(true)
           subject
         end
       end
       context "and the method fails" do
         it "calls the method and saves the object" do
           expect(work).not_to receive(:save)
-          expect(FooBar).to receive(:call).with(entity: entity, user: user, comment: "A pleasant read").and_return(false)
+          expect(FooBar).to receive(:call).with(target: work, user: user, comment: "A pleasant read").and_return(false)
           expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (9999)")
           subject
         end

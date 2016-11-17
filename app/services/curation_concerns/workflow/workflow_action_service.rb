@@ -45,7 +45,7 @@ module CurationConcerns
         # Run any configured custom methods
         def handle_additional_sipity_workflow_action_processing(comment:)
           CurationConcerns::Workflow::ActionTakenService.handle_action_taken(
-            entity: subject.entity,
+            target: subject.work,
             comment: comment,
             action: action,
             user: subject.user

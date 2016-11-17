@@ -99,4 +99,10 @@ FactoryGirl.define do
       end
     end
   end
+
+  # Doesn't set up any edit_users
+  factory :work_without_access, class: GenericWork do
+    title ['Test title']
+    depositor { FactoryGirl.create(:user).user_key }
+  end
 end
