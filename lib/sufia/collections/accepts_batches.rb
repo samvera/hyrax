@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Collections
     module AcceptsBatches
       def batch
@@ -20,7 +20,7 @@ module CurationConcerns
           if params['batch_document_ids'].blank?
             []
           elsif params['batch_document_ids'] == 'all'
-            CurationConcerns::Collections::SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
+            SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
           else
             params['batch_document_ids']
           end

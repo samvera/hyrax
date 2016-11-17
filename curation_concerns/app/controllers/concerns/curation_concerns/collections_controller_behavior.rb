@@ -9,7 +9,7 @@ module CurationConcerns
       before_action :remove_select_something_first_flash, except: :show
       layout 'curation_concerns/1_column'
 
-      include CurationConcerns::Collections::AcceptsBatches
+      include Sufia::Collections::AcceptsBatches
 
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)

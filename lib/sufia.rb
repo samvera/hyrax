@@ -29,6 +29,7 @@ module Sufia
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero
+    autoload :Collections
   end
 
   def self.config(&block)

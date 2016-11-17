@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Collections
     class SearchService
       include Blacklight::Configurable

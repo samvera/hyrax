@@ -1,7 +1,4 @@
-require 'hydra/head'
-require 'hydra/works'
-
-module CurationConcerns
+module Sufia
   module Collections
     extend ActiveSupport::Autoload
     autoload :SearchService

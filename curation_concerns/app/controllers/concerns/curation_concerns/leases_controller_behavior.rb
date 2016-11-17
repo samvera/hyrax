@@ -2,7 +2,7 @@ module CurationConcerns
   module LeasesControllerBehavior
     extend ActiveSupport::Concern
     include CurationConcerns::ManagesEmbargoes
-    include CurationConcerns::Collections::AcceptsBatches
+    include Sufia::Collections::AcceptsBatches
 
     def index
       authorize! :index, Hydra::AccessControls::Lease
