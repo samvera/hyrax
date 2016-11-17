@@ -23,10 +23,6 @@ module CurationConcerns
       #{config.root}/lib
     )
 
-    initializer 'curation_concerns.initialize' do
-      require 'curation_concerns/rails/routes'
-    end
-
     initializer 'curation_concerns.assets.precompile' do |app|
       app.config.assets.paths << config.root.join('app', 'assets', 'images')
 

@@ -26,6 +26,10 @@ module Sufia
       require 'hydra/derivatives'
     end
 
+    initializer 'routing' do
+      require 'sufia/rails/routes'
+    end
+
     initializer 'configure' do
       # Set the path for the flipflop config:
       Flipflop::Engine.config_file = Sufia::Engine.root + "config/features.rb"

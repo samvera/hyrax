@@ -29,6 +29,7 @@ Metrics/MethodLength:
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
     - 'lib/sufia/configuration.rb'
+    - 'lib/sufia/rails/routes.rb'
 
 
 Style/LineEndConcatenation:
