@@ -2,46 +2,56 @@ module CurationConcerns
   module Workflow
     # Responsible for performing additional functions when the given criteria is met.
     class ActionTakenService
-      # For the given :entity and :action
+      # For the given target and :action
       # - Find the appropriate "function" to call
-      # - Then call that function. If the function returns a truthy value, then save the entity
-      def self.handle_action_taken(entity:, action:, comment:, user:)
-        new(entity: entity,
+      # - Then call that function. If the function returns a truthy value, then save the target
+      def self.handle_action_taken(target:, action:, comment:, user:)
+        new(target: target,
             action: action,
             comment: comment,
             user: user).call
       end
 
-      def initialize(entity:, action:, comment:, user:)
-        @entity = entity
+      def initialize(target:, action:, comment:, user:)
+        @target = target
         @action = action
         @comment = comment
         @user = user
       end
 
-      attr_reader :action, :entity, :comment, :user
+      attr_reader :action, :target, :comment, :user
 
+      # Calls all the workflow methods for this action. Stops calling methods if any return falsy
+      # @return [Boolean] true if all methods returned a truthy result
       def call
         return unless action.triggered_methods.any?
         success = action.triggered_methods.order(:weight).all? do |method|
-          process_action(method.service_name)
+          status = process_action(method.service_name)
+          Rails.logger.debug("Result of #{method.service_name} is #{status}")
+          status
         end
 
-        return entity.proxy_for.save if success
-        Rails.logger.error "Not all workflow methods were successful, so not saving (#{entity.id})"
+        return target.save if success
+        Rails.logger.error "Not all workflow methods were successful, so not saving (#{target.id})"
         false
       end
 
+      # @param service_name [String] the fully qualified class name to run the `call` method on
+      # @yieldparam status the result of calling the method
+      # @return the result of calling the method
       def process_action(service_name)
         service = resolve_service(service_name)
         return unless service
-        service.call(entity: entity,
-                     comment: comment,
-                     user: user)
+        result = service.call(target: target,
+                              comment: comment,
+                              user: user)
+        yield(result) if block_given?
+        result
       end
 
-      def resolve_service(service_name)
-        class_name = service_name.classify
+      # @param class_name [String] the fully qualified class name to run
+      # @return [Class, NilClass] return nil if unable to locate the class
+      def resolve_service(class_name)
         klass = begin
                   class_name.constantize
                 rescue NameError
