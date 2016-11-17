@@ -1,0 +1,10 @@
+<% content_for(:main) do %>
+  <div class="col-md-3 sidebar">
+    <%= render 'curation_concerns/admin/sidebar' %>
+  </div>
+  <div class="col-md-9 <%= yield(:content_class) %>">
+    <%= yield %>
+  </div>
+<% end %>
+
+<%= render template: "layouts/#{theme}" %>

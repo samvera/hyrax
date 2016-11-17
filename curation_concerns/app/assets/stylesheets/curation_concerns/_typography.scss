@@ -1,0 +1,57 @@
+#brand-bar-wrapper {
+}
+
+#main,
+.modal-header {
+  h1 {
+    .human_readable_type {
+      font-size:.66em;
+      padding-left:1em;
+    }
+  }
+}
+
+legend {
+  font-family: $headings-font-family;
+  line-height: 40px;
+
+  a {
+    font-family: $font-family-sans-serif;
+  }
+}
+
+.nested-field-heading {
+  font-family: $font-family-sans-serif;
+  font-size: 14px;
+  font-weight:normal;
+}
+
+#footer {
+  text-align:center;
+
+  p {
+    margin-bottom:.3em;
+  }
+}
+
+.inline-item-actions {
+  padding:0 .5em;
+
+  a {
+    margin-right:.5em;
+  }
+}
+
+.wide-text {
+  @media (min-width: 60em){
+    -webkit-column-count:2;
+    -webkit-column-gap:2em;
+    -moz-column-count:2;
+    -moz-column-gap:2em;
+    column-count:2;
+    column-gap:2em;
+    p {
+      column-break-inside:avoid;
+    }
+  }
+}

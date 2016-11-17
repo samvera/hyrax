@@ -1,0 +1,13 @@
+<table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+  <caption class="table-heading"><h2>Attributes</h2></caption>
+  <thead>
+    <tr><th>Attribute Name</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <%= render 'attribute_rows', presenter: presenter %>
+    <%= presenter.attribute_to_html(:permission_badge, label: 'Visibility') %>
+    <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date) %>
+    <%= presenter.attribute_to_html(:lease_expiration_date, render_as: :date) %>
+    <%= presenter.attribute_to_html(:rights, render_as: :rights) %>
+  </tbody>
+</table>

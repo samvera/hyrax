@@ -1,0 +1,37 @@
+<% provide :main do %>
+
+  <div class="row">
+  <% if content_for?(:sidebar) %>
+
+    <div class="col-md-3 sidebar">
+      <%= yield(:sidebar) %>
+    </div>
+
+    <% if content_for?(:call_to_action) %>
+      <div class="col-md-6 <%= yield(:content_class) %>">
+    <% else %>
+      <div class="col-md-9 <%= yield(:content_class) %>">
+    <% end %>
+      <%= yield %>
+    </div>
+
+    <% if content_for?(:call_to_action) %>
+
+    <div class="col-md-3 call-to-action">
+      <%= yield(:call_to_action) %>
+    </div>
+
+    <% end %>
+
+  <% else %>
+
+    <div class="col-md-12">
+      <%= yield %>
+    </div>
+
+  <% end %>
+  </div>
+
+<% end %>
+
+<%= render template: "layouts/#{theme}" %>

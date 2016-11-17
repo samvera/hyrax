@@ -1,0 +1,21 @@
+<div class="panel-heading">
+  <h4 class="panel-title">Embargos &amp; Leases</h4>
+</div>
+
+<div class="panel-body">
+      <%= render "curation_concerns/admin/widgets/pie", label: "embargo",
+        data: {
+        t("curation_concerns.visibility.embargo.text") => {
+          t("curation_concerns.visibility.embargo.expired.authenticated.text") => @resource_statistics.expired_embargo_now_authenticated_concerns_count,
+          t("curation_concerns.visibility.embargo.expired.open.text") => @resource_statistics.expired_embargo_now_open_concerns_count,
+          t("curation_concerns.visibility.embargo.active.authenticated.text") => @resource_statistics.active_embargo_now_authenticated_concerns_count,
+          t("curation_concerns.visibility.embargo.active.restricted.text") => @resource_statistics.active_embargo_now_restricted_concerns_count
+        },
+        t("curation_concerns.visibility.lease.text") => {
+          t("curation_concerns.visibility.lease.active.authenticated.text") => @resource_statistics.active_lease_now_authenticated_concerns_count,
+          t("curation_concerns.visibility.lease.expired.restricted.text") => @resource_statistics.expired_lease_now_restricted_concerns_count,
+          t("curation_concerns.visibility.lease.expired.authenticated.text") => @resource_statistics.expired_lease_now_authenticated_concerns_count,
+          t("curation_concerns.visibility.lease.active.open.text") => @resource_statistics.active_lease_now_open_concerns_count,
+        }
+      }  %>
+</div>

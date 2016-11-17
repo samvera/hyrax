@@ -1,0 +1,34 @@
+<% provide :page_title, "#{@presenter.title.join(', ')} - #{application_name}" %>
+
+<% provide :sidebar do %>
+  <%= render 'search_sidebar' %>
+<% end %>
+
+<div id="content">
+  <% @presenter.title.each do |title| %>
+    <h1 class="lower"><%= title %></h1>
+  <% end %>
+
+  <%= render 'curation_concerns/base/representative_media', presenter: @presenter %>
+
+  <%= @presenter.description.each do |description| %>
+    <h3><%= description %></h3>
+  <% end %>
+
+  <% unless has_collection_search_parameters? %>
+    <%= render 'collections/show_actions' %>
+    <%= render 'attributes', presenter: @presenter %>
+  <% end %>
+
+  <%= render 'search_form', presenter: @presenter %>
+  <%= render 'sort_and_per_page', collection: @presenter %>
+
+  <% if has_collection_search_parameters? %>
+    <h2>Search Results within this Collection</h2>
+  <% else %>
+    <h2>Items in this Collection</h2>
+  <% end %>
+  <%= render_document_index @member_docs %>
+
+  <%= render partial: 'paginate' %>
+</div>

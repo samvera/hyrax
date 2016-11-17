@@ -1,0 +1,26 @@
+<% if curation_concern.collections.present? %>
+<table class="table table-striped <%= dom_class(curation_concern) %> collections with-headroom">
+  <caption class="table-heading">
+    <h2>Collections</h2>
+  </caption>
+  <thead>
+    <tr>
+      <th>Collections Featuring this <%= curation_concern.human_readable_type %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% curation_concern.collections.each do |collection| %>
+      <tr class="collection attributes">
+        <td class="attribute title">
+          <%= link_to collection.title, collection %>
+          <span class="pull-right">
+            <% if can?(:edit, curation_concern) %>
+              <%= button_for_remove_item_from_collection(curation_concern, collection) %>
+            <% end %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

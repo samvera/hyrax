@@ -1,0 +1,10 @@
+      <div class="form-group radio_buttons member_resource_options">
+        <span class="radio">
+          <%= radio_button_tag "thumbnail_id", node.id, @presenter.thumbnail_id == node.id, id: "thumbnail_id_#{node.id}", class: "radio_buttons" %>
+          <%= label_tag "thumbnail_id_#{node.id}", "Thumbnail" %>
+        </span>
+        <span class="radio">
+          <%= radio_button_tag "representative_id", node.id, @presenter.representative_id == node.id, id: "representative_id_#{node.id}", class: "radio_buttons" %>
+          <%= label_tag "representative_id_#{node.id}", "Representative Media" %>
+        </span>
+      </div>

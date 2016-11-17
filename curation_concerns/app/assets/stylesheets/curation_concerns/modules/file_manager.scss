@@ -1,0 +1,129 @@
+*[data-action=file-manager] {
+  .actions {
+    padding: 10px;
+    .form-group div {
+      padding-left: 0;
+    }
+  }
+
+  .ui-selectable {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 61px;
+  }
+
+  .btn-group {
+    margin-bottom: 10px;
+    padding-left: 15px;
+  }
+
+  ul {
+    list-style-type: none;
+    &.grid li {
+      @extend .col-xs-4;
+      .thumbnail {
+        height: 150px;
+        @extend .col-xs-12;
+        img {
+          max-height: 140px;
+        }
+      }
+
+      .spacer {
+        @extend .col-xs-12;
+      }
+      .attributes {
+        @extend .col-xs-12;
+      }
+      .member_resource_options {
+        @extend .col-xs-12;
+        float: none;
+        input[type=radio] {
+          margin-left: 1px;
+        }
+      }
+      .order-title {
+        width: 85%;
+      }
+      .order-filename {
+        width: 100%;
+      }
+      .file-set-link {
+        padding-right: 15px;
+      }
+    }
+    li {
+      @extend .col-xs-12;
+      .text {
+        display: inline-block;
+      }
+      .thumbnail {
+        @extend .col-xs-3;
+      }
+      .spacer {
+        @extend .col-xs-3;
+      }
+      .attributes {
+        @extend .col-xs-6;
+      }
+      .member_resource_options {
+        @extend .col-xs-12;
+        float: none;
+        input[type=radio] {
+          margin-left: 1px;
+        }
+      }
+      .order-title {
+        width: 49%;
+        display: inline-block;
+      }
+      .order-filename {
+        width: 46%;
+        display: inline-block;
+      }
+      .file-set-link {
+        display: inline-block;
+        width: 3%;
+        a {
+          font-size: 20px;
+          color: #999;
+        }
+        span {
+          top: 5px;
+        }
+      }
+      .ui-selecting .panel-body {
+        background: #FECA40;
+      }
+      .ui-selected .panel-body {
+        background: #F39814;
+      }
+      .panel-heading {
+        cursor: grab;
+        cursor: -webkit-grab;
+        cursor: -moz-grab;
+      }
+      input[type=radio] {
+        width: 20px;
+      }
+    }
+  }
+  #file-manager-tools {
+    @media (max-width: $screen-md-min) {
+      &.affix {
+        position: inherit;
+      }
+    }
+    @media (min-width: $screen-md-min) {
+      &.affix {
+        top: -50px;
+        width: 235px;
+      }
+    }
+    @media (min-width: $screen-lg-min) {
+      &.affix {
+        width: 285px;
+      }
+    }
+  }
+}

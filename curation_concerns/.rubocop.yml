@@ -1,0 +1,175 @@
+require: rubocop-rspec
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.1
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
+    - '.internal_test_app/**/*'
+
+Rails:
+  Enabled: true
+
+Performance/RedundantMerge:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/services/curation_concerns/file_set_audit_service.rb'
+    - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/services/curation_concerns/file_set_audit_service.rb'
+    - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/curation_concerns/configuration.rb
+    - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
+    - 'app/actors/curation_concerns/file_set_actor.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/curation_concerns/curation_concern_controller.rb'
+    - 'app/controllers/concerns/curation_concerns/file_sets_controller_behavior.rb'
+    - 'app/models/concerns/curation_concerns/solr_document_behavior.rb'
+    - 'app/controllers/concerns/curation_concerns/collections_controller_behavior.rb'
+    - 'app/services/curation_concerns/workflow/permission_query.rb'
+    - 'spec/services/curation_concerns/workflow/permission_query_spec.rb'
+
+Style/ZeroLengthPredicate:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Exclude:
+    - 'spec/**/*'
+
+Style/AccessorMethodName:
+  Exclude:
+    - 'app/controllers/concerns/curation_concerns/curation_concern_controller.rb'
+
+Style/BlockEndNewline:
+  Exclude:
+    - 'spec/**/*'
+
+Style/MultilineBlockLayout:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Semicolon:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Lambda:
+  Exclude:
+    - 'spec/**/*'
+
+Style/IndentationConsistency:
+  EnforcedStyle: rails
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/WordArray:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashSyntax:
+  Exclude:
+    - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
+
+Style/PredicateName:
+  Exclude:
+    - 'app/helpers/curation_concerns/collections_helper.rb'
+
+Style/GlobalVars:
+  Exclude:
+    - 'spec/**/*'
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/ClassVars:
+  Exclude:
+    - 'lib/curation_concerns/models.rb'
+    - 'lib/curation_concerns/models/engine.rb'
+    - 'app/models/concerns/curation_concerns/file_set/versions.rb'
+
+Style/SignalException:
+  Enabled: false
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
+    - 'lib/generators/**/*'
+
+Rails/Date:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+RSpec/ExampleWording:
+  CustomTransform:
+    be: is
+    have: has
+    not: does not
+    NOT: does NOT
+  IgnoredWords:
+    - only
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/NotToNot:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/tasks/rake_spec.rb'
+    - 'spec/abilities/**/*'
+    - 'spec/views/**/*'
+    - 'spec/routing/**/*'
+    - 'spec/inputs/**/*'
+    - 'spec/conversions/**/*'
+
+RSpec/DescribedClass:
+  Exclude:
+    - 'spec/actors/curation_concerns/manages_embargoes_actor_spec.rb'

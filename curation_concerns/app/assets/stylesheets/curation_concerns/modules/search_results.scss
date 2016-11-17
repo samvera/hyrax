@@ -1,0 +1,46 @@
+#documents .document {
+  border-top: 1px solid $gray-lighter;
+  margin-top: $padding-base-vertical;
+  padding-top: $padding-base-vertical;
+
+  @extend .clearfix;
+  .document-title-heading {
+    @extend h5;
+  }
+
+  &:before {
+    //Overwrite blacklight
+    content: none;
+  }
+  &:first-child {
+    border-top:none;
+    margin-top:0;
+    padding-top:0;
+  }
+
+  .document-thumbnail {
+    @include make-xs-column(4);
+    @include make-sm-column(2);
+  }
+
+  .document-metadata {
+    @include make-xs-column(8);
+  }
+
+  .canonical-image {
+    width: 100%; // no bigger than the parent
+  }
+
+  .resource-type {
+    margin-bottom:0;
+    position:absolute;
+    right:0;
+    text-align:center;
+    top:0;
+    width:80%;
+  }
+
+  .modal {
+    text-align:left;
+  }
+}

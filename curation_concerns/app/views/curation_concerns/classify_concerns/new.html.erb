@@ -1,0 +1,25 @@
+<% provide :page_header do %>
+  <h2>What are you uploading?</h2>
+  <p>Before we can begin we need to know a little about what you're uploading.</p>
+<% end %>
+
+
+<div class="row">
+  <ul class="classify-work">
+    <% classify_concern.all_curation_concern_classes.each do |klass| %>
+      <% if can? :create, klass %>
+        <li class="work-type">
+          <h3 class="title"><%= klass.human_readable_type %></h3>
+          <p class="short-description"><%= klass.human_readable_short_description %></p>
+          <%= link_to 'Add New',
+            main_app.new_polymorphic_path(klass),
+            class: "add-button btn btn-primary #{dom_class(klass, 'add_new')}"
+          %>
+        </li>
+      <% end %>
+    <% end %>
+    <li class="work-type placeholder" aria-hidden="true"></li>
+    <li class="work-type placeholder" aria-hidden="true"></li>
+    <li class="work-type placeholder" aria-hidden="true"></li>
+  </ul>
+</div>

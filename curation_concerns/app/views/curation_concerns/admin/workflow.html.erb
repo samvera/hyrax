@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Review and comment</h3>
+  </div>
+  <div class="panel-body panel-body-table">
+
+    <div class="table-responsive">
+      <table class="table table-condensed table-bordered table-striped">
+        <thead>
+          <tr>
+            <th width="60%">Title</th>
+            <th width="20%">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @status_list.each do |document| %>
+            <tr>
+              <td>
+                <%= link_to document, [main_app, document] %>
+              </td>
+              <td>
+                <span class="state state-pending"><%= document.workflow_state %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

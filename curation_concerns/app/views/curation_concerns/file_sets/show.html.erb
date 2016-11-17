@@ -1,0 +1,8 @@
+<% provide :page_title, @presenter.page_title %>
+<% provide :page_header do %>
+  <h1>File Details <small><%= @presenter %></small></h1>
+<% end %>
+<%= media_display @presenter %>
+<%= render "attributes", presenter: @presenter %>
+<%= render "show_actions", presenter: @presenter, parent: parent %>
+<%= render "single_use_links", presenter: @presenter if can? :edit, @presenter.id %>

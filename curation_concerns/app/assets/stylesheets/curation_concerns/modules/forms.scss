@@ -1,0 +1,84 @@
+legend small {
+  margin-left:.5em;
+  color: #999999;
+  font-size: 15px;
+}
+
+.label-large {
+  font-size: 110%;
+  line-height: 1.2;
+  padding: .3em .6em;
+  white-space: normal;
+  position: relative;
+
+
+  input[type="checkbox"]{
+    margin:-2px 0 0;
+    position: absolute;
+    left:.5em;
+    top:38%;
+  }
+}
+
+.label-checkbox .label-text {
+  display:block;
+  padding-left:1.2em;
+}
+
+.form-group { margin-bottom: 2em; }
+
+.form-group.has-error input,
+.form-group.has-error option,
+.form-group.has-error textarea {
+  color:$gray-dark;
+}
+
+.form-actions {
+  margin-top: 1em;
+}
+
+form {
+  label { font-weight: bold; }
+
+  label { margin-bottom: 7px; }
+
+  .help-block {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.set-access-controls {
+  label { font-weight: normal; }
+  & .form-group { padding: 0 1.75em; }
+
+  .form-inline {
+    .control-label, label {
+      padding-left: 0;
+      display: inline;
+      &:after {
+        content: ' ';
+      }
+    }
+    .help-block {
+      display: inline;
+      &:before {
+        content: ' ';
+      }
+    }
+  }
+}
+
+.control-label.required {
+  abbr {
+    font-weight: bold;
+  }
+}
+
+form.button-to {
+  margin:0 .3em;
+}
+
+.required-tag {
+  vertical-align: super;
+}

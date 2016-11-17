@@ -1,0 +1,19 @@
+<nav id="brand-bar" class="navbar navbar-default navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <%= link_to application_name, main_app.root_path, id: 'home-link', class: 'navbar-brand' %>
+    </div>
+
+    <div class="collapse navbar-collapse" id="brand-bar-nav">
+      <div class="navbar-right">
+        <%= render 'shared/site_actions' if show_site_actions? %>
+      </div>
+    </div>
+  </div>
+</nav>

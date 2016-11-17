@@ -1,0 +1,11 @@
+<div class="<%= "dashboard-#{action_name}" %>">
+  <div class="wrapper">
+    <% @configuration[:actions][action_name][:partials].each do |partial_name| %>
+      <div class="<%= "partial-#{partial_name}" %>">
+        <div class="partial-wrapper">
+          <%= render partial_name %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

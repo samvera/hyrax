@@ -1,0 +1,18 @@
+<h1>Manage Embargoes</h1>
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#active" data-toggle="tab">All Active Embargoes</a></li>
+    <li><a href="#expired" data-toggle="tab">Expired Active Embargoes</a></li>
+    <li><a href="#deactivated" data-toggle="tab">Deactivated Embargoes</a></li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="active">
+    <%= render "list_active_embargoes" %>
+  </div>
+  <div class="tab-pane" id="expired">
+    <%= render "list_expired_active_embargoes" %>
+  </div>
+  <div class="tab-pane" id="deactivated">
+    <%= render "list_deactivated_embargoes" %>
+  </div>
+</div>

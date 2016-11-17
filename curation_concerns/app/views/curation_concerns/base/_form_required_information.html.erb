@@ -1,0 +1,11 @@
+<fieldset class="required">
+  <legend>Required Information</legend>
+
+  <%= f.input :title, as: :multi_value %>
+
+  <%= f.input :creator, as: :multi_value %>
+
+  <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
+
+  <%= f.input :description, as: :multi_value, input_html: { rows: '14', type: 'textarea'} %>
+</fieldset>

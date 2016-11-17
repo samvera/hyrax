@@ -1,0 +1,43 @@
+<div class="panel-heading">
+  <h4 class="panel-title">Totals by Visibility</h4>
+</div>
+
+<table class="table table-striped">
+  <tr>
+    <th>Visibility</th>
+    <th>Count</th>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.open.text") %></td><td><span class="count"><%= resource_stats.open_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.authenticated.text") %></td><td><span class="count"><%= resource_stats.authenticated_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.restricted.text") %></td><td><span class="count"><%= resource_stats.restricted_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.embargo.expired.authenticated.text") %></td><td><span class="count"><%= resource_stats.expired_embargo_now_authenticated_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.embargo.expired.open.text") %></td><td><span class="count"><%= resource_stats.expired_embargo_now_open_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.embargo.active.authenticated.text") %></td><td><span class="count"><%= resource_stats.active_embargo_now_authenticated_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.embargo.active.restricted.text") %></td><td><span class="count"><%= resource_stats.active_embargo_now_restricted_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.lease.expired.restricted.text") %></td><td><span class="count"><%= resource_stats.expired_lease_now_restricted_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.lease.expired.authenticated.text") %></td><td><span class="count"><%= resource_stats.expired_lease_now_authenticated_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.lease.active.authenticated.text") %></td><td><span class="count"><%= resource_stats.active_lease_now_authenticated_concerns_count %></span></td>
+  </tr>
+  <tr>
+    <td><%= t("curation_concerns.visibility.lease.active.open.text") %></td><td><span class="count"><%= resource_stats.active_lease_now_open_concerns_count %></span></td>
+  </tr>
+</table>

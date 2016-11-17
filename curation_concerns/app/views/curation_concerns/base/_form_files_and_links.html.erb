@@ -1,0 +1,21 @@
+<% unless f.object.persisted? %>
+  <fieldset id="work-contents">
+    <div class="row with-headroom">
+      <div class="span12">
+        <legend>
+          Add Your Content
+        </legend>
+
+        <p class="help-block">
+          The subject of your <%= f.object.human_readable_type.downcase %> can either be a file <em>or</em> a URL.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <fieldset class="col-md-5">
+        <%= f.input :files, as: :multifile %>
+      </fieldset>
+    </div>
+  </fieldset>
+<% end %>

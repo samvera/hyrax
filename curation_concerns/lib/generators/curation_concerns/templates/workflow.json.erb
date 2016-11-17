@@ -1,0 +1,20 @@
+{
+    "workflows": [
+        {
+            "name": "default",
+            "label": "Default workflow",
+            "description": "A single submission step, default workflow",
+            "actions": [
+                {
+                    "name": "deposit",
+                    "from_states": [],
+                    "transition_to": "deposited",
+                    "methods": [
+                        "CurationConcerns::Workflow::GrantEditToDepositor",
+                        "CurationConcerns::Workflow::ActivateObject"
+                    ]
+                }
+            ]
+        }
+    ]
+}

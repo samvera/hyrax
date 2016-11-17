@@ -1,0 +1,13 @@
+<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_header do %>
+  <h2>Manage Your Work</h2>
+  <p>
+    You can enrich the metadata describing your work at any time.
+    The more complete the description the easier it will be to find by yourself and others.
+  </p>
+  <p>
+    Please consider releasing your <%=curation_concern.human_readable_type.downcase %> as an Open Access work.
+  </p>
+<% end %>
+
+<%= render 'form' %>

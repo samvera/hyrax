@@ -1,0 +1,11 @@
+<% provide :main do %>
+
+  <div class="row">
+    <div class="<%= content_for?(:main_column_class) ? yield(:main_column_class) : "col-md-12" %>">
+      <%= yield %>
+    </div>
+  </div>
+
+<% end %>
+
+<%= render template: "layouts/#{theme}" %>

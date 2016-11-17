@@ -1,0 +1,7 @@
+en:
+  curation_concerns:
+    schema_org:
+      name:
+        type: "http://schema.org/Person"
+        property: name
+        value: firstName

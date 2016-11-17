@@ -1,0 +1,16 @@
+/.bundle
+Gemfile.lock
+coverage
+pkg
+tmp
+jetty
+/.rvmrc
+/.ruby-version
+/.ruby-gemset
+solr_conf/
+.internal_test_app
+.byebug_history
+spec/mock_upload_directory
+fcrepo4-data
+fcrepo4-test-data
+/spec/examples.txt

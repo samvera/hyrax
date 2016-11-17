@@ -1,0 +1,5 @@
+<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_header do %>
+  <h1>Updating Attached File to <span class="parent_container">"<%= parent %>"<span></h1>
+<% end %>
+<%= render 'form' %>

@@ -1,0 +1,13 @@
+<% provide :page_title, "#{application_name} Search Results" %>
+<% provide :page_class, 'search' %>
+<% provide :page_header do %>
+  <%= render 'navbar' %>
+<% end %>
+
+<% provide :sidebar do %>
+  <%= render 'search_sidebar' %>
+<% end %>
+
+<div id="content">
+  <%= render 'search_results' %>
+</div>

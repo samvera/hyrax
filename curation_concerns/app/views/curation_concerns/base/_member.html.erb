@@ -1,0 +1,12 @@
+<tr class="<%= dom_class(member) %> attributes">
+  <td class="thumbnail">
+    <%= render_thumbnail_tag member %>
+  </td>
+  <td class="attribute filename"><%= link_to(member.link_name, contextual_path(member, @presenter)) %></td>
+  <td class="attribute date_uploaded"><%= member.try(:date_uploaded) %></td>
+  <td class="attribute permission"><%= member.permission_badge %></td>
+  <td>
+    <%= render 'actions', member: member %>
+  </td>
+</tr>
+

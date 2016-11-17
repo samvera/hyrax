@@ -1,0 +1,11 @@
+<% if current_user %>
+  <%= render 'shared/add_content' %>
+  <%= render 'shared/my_actions' %>
+<% else %>
+  <ul class="nav navbar-nav">
+    <li>
+      <%= link_to 'Log In', main_app.new_user_session_path, class: 'login', role: 'menuitem' %>
+    </li>
+  </ul>
+<% end %>
+

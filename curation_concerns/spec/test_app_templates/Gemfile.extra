@@ -1,0 +1,10 @@
+# placeholder to use for pinning against specific gem commit references
+
+if ENV['RDF_VERSION']
+  gem 'rdf', ENV['RDF_VERSION']
+end
+
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+end
