@@ -8,6 +8,7 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'db/**/*'
+    - 'curation_concerns/db/**/*'
     - 'script/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
@@ -82,6 +83,7 @@ RSpec/DescribeClass:
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/features/**/*'
     - 'spec/config/sufia_events_spec.rb'
+    - 'spec/views/**/*'
 
 RSpec/ExpectActual:
   Enabled: false
