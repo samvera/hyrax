@@ -100,7 +100,7 @@ module CurationConcerns
           logger.warn "***AUDIT*** problem with audit log! Latest Audit is not nil, but updated_at is not set #{latest_audit}"
           return true
         end
-        days_since_last_audit(latest_audit) >= CurationConcerns.config.max_days_between_audits
+        days_since_last_audit(latest_audit) >= Sufia.config.max_days_between_audits
       end
 
       # Return the number of days since the latest audit event

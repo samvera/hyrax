@@ -1,5 +1,5 @@
 class IngestLocalFileJob < ActiveJob::Base
-  queue_as CurationConcerns.config.ingest_queue_name
+  queue_as Sufia.config.ingest_queue_name
 
   # @param [FileSet] file_set
   # @param [String] path
@@ -11,9 +11,9 @@ class IngestLocalFileJob < ActiveJob::Base
 
     if actor.create_content(File.open(path))
       FileUtils.rm(path)
-      CurationConcerns.config.callback.run(:after_import_local_file_success, file_set, user, path)
+      Sufia.config.callback.run(:after_import_local_file_success, file_set, user, path)
     else
-      CurationConcerns.config.callback.run(:after_import_local_file_failure, file_set, user, path)
+      Sufia.config.callback.run(:after_import_local_file_failure, file_set, user, path)
     end
   end
 end

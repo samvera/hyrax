@@ -43,7 +43,7 @@ module CurationConcerns
 
       # @return <Pathname> Full prefix of the path for object.
       def path_prefix
-        Pathname.new(CurationConcerns.config.derivatives_path).join(pair_path)
+        Pathname.new(Sufia.config.derivatives_path).join(pair_path)
       end
 
       def pair_path

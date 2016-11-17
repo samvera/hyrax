@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe CreateDerivativesJob do
   before do
-    @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
-    CurationConcerns.config.enable_ffmpeg = true
+    @ffmpeg_enabled = Sufia.config.enable_ffmpeg
+    Sufia.config.enable_ffmpeg = true
   end
 
-  after { CurationConcerns.config.enable_ffmpeg = @ffmpeg_enabled }
+  after { Sufia.config.enable_ffmpeg = @ffmpeg_enabled }
 
   context "with an audio file" do
     let(:id)       { '123' }

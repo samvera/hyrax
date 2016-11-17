@@ -41,7 +41,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
 
       it "invokes the after_create_concern callback" do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
-        expect(CurationConcerns.config.callback).to receive(:run)
+        expect(Sufia.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
         subject.create(title: ['Foo Bar'])
       end
@@ -183,7 +183,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
 
     context 'success' do
       it "invokes the after_update_metadata callback" do
-        expect(CurationConcerns.config.callback).to receive(:run)
+        expect(Sufia.config.callback).to receive(:run)
           .with(:after_update_metadata, curation_concern, user)
         subject.update(title: ['Other Title'])
       end

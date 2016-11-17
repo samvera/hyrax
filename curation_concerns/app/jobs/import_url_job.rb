@@ -3,7 +3,7 @@ require 'tempfile'
 require 'browse_everything/retriever'
 
 class ImportUrlJob < ActiveJob::Base
-  queue_as CurationConcerns.config.ingest_queue_name
+  queue_as Sufia.config.ingest_queue_name
 
   before_enqueue do |job|
     log = job.arguments.last
@@ -23,10 +23,10 @@ class ImportUrlJob < ActiveJob::Base
       # attach downloaded file to FileSet stubbed out
       if CurationConcerns::Actors::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
-        CurationConcerns.config.callback.run(:after_import_url_success, file_set, user)
+        Sufia.config.callback.run(:after_import_url_success, file_set, user)
         log.success!
       else
-        CurationConcerns.config.callback.run(:after_import_url_failure, file_set, user)
+        Sufia.config.callback.run(:after_import_url_failure, file_set, user)
         log.fail!(file_set.errors.full_messages.join(' '))
       end
     end

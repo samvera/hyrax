@@ -102,7 +102,7 @@ module ActionDispatch::Routing
 
       # @return [Array<String>] the list of works to build routes for
       def concerns_to_route
-        CurationConcerns.config.registered_curation_concern_types.map(&:tableize)
+        Sufia.config.registered_curation_concern_types.map(&:tableize)
       end
   end
 end

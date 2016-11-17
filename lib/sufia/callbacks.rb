@@ -1,7 +1,7 @@
 require 'active_support/concern'
-require 'curation_concerns/callbacks/registry'
+require 'sufia/callbacks/registry'
 
-module CurationConcerns
+module Sufia
   module Callbacks
     extend ActiveSupport::Concern
 

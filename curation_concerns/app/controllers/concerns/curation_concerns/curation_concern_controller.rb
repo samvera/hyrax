@@ -96,7 +96,7 @@ module CurationConcerns
     def destroy
       title = curation_concern.to_s
       if actor.destroy
-        CurationConcerns.config.callback.run(:after_destroy, curation_concern.id, current_user)
+        Sufia.config.callback.run(:after_destroy, curation_concern.id, current_user)
         after_destroy_response(title)
       end
     end

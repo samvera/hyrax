@@ -5,11 +5,11 @@ module CurationConcerns
     end
 
     def equivalent_class?(klass)
-      CurationConcerns.config.curation_concerns.include?(klass)
+      Sufia.config.curation_concerns.include?(klass)
     end
 
     def search_model_clause
-      clauses = CurationConcerns.config.curation_concerns.map do |k|
+      clauses = Sufia.config.curation_concerns.map do |k|
         ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: k.to_s)
       end
       clauses.size == 1 ? clauses.first : "(#{clauses.join(' OR ')})"
@@ -17,7 +17,7 @@ module CurationConcerns
 
     class DummyModel
       def self.primary_concern
-        CurationConcerns.config.curation_concerns.first
+        Sufia.config.curation_concerns.first
       end
 
       def self.delegated_attributes

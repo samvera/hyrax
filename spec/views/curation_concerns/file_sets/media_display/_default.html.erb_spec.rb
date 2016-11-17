@@ -6,7 +6,7 @@ describe 'curation_concerns/file_sets/mdeia_display/_default.html.erb', type: :v
   let(:link) { true }
 
   before do
-    allow(CurationConcerns.config).to receive(:display_media_download_link).and_return(link)
+    allow(Sufia.config).to receive(:display_media_download_link).and_return(link)
     render 'curation_concerns/file_sets/media_display/default', file_set: file_set
   end
 

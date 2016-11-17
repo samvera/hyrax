@@ -1,8 +1,8 @@
 class IngestFileJob < ActiveJob::Base
-  queue_as CurationConcerns.config.ingest_queue_name
+  queue_as Sufia.config.ingest_queue_name
 
   # @param [FileSet] file_set
-  # @param [String] filepath the cached file within the CurationConcerns.config.working_path
+  # @param [String] filepath the cached file within the Sufia.config.working_path
   # @param [User] user
   # @option opts [String] mime_type
   # @option opts [String] filename

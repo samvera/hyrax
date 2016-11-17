@@ -49,7 +49,7 @@ module CurationConcerns
 
         def full_filename(id, original_name)
           pair = id.scan(/..?/).first(4)
-          File.join(CurationConcerns.config.working_path, *pair, original_name)
+          File.join(Sufia.config.working_path, *pair, original_name)
         end
     end
   end

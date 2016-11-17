@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CurationConcerns::PersistDerivatives do
   before do
-    allow(CurationConcerns.config).to receive(:derivatives_path).and_return('tmp')
+    allow(Sufia.config).to receive(:derivatives_path).and_return('tmp')
   end
 
   describe '.output_file' do

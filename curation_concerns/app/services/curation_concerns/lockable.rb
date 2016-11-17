@@ -8,9 +8,9 @@ module CurationConcerns
 
     def lock_manager
       @lock_manager ||= CurationConcerns::LockManager.new(
-        CurationConcerns.config.lock_time_to_live,
-        CurationConcerns.config.lock_retry_count,
-        CurationConcerns.config.lock_retry_delay)
+        Sufia.config.lock_time_to_live,
+        Sufia.config.lock_retry_count,
+        Sufia.config.lock_retry_delay)
     end
   end
 end

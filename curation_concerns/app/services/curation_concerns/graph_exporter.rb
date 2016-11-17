@@ -59,7 +59,7 @@ module CurationConcerns
 
       def subject_replacer(result, resource_id, anchor = nil)
         klass = result.object.to_s.constantize
-        route_key = if CurationConcerns.config.curation_concerns.include?(klass)
+        route_key = if Sufia.config.curation_concerns.include?(klass)
                       klass.model_name.singular_route_key
                     else
                       SolrDocument.model_name.singular_route_key

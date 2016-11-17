@@ -4,7 +4,7 @@ module CurationConcerns
 
     included do
       cattr_accessor :configuration
-      self.configuration = CurationConcerns.config.dashboard_configuration
+      self.configuration = Sufia.config.dashboard_configuration
       before_action :load_configuration
       layout "admin"
     end

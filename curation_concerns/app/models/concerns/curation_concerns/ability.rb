@@ -62,7 +62,7 @@ module CurationConcerns
     private
 
       def curation_concerns_models
-        [::FileSet, ::Collection] + CurationConcerns.config.curation_concerns
+        [::FileSet, ::Collection] + Sufia.config.curation_concerns
       end
   end
 end

@@ -2,13 +2,13 @@ module CurationConcerns
   module Renderers
     module ConfiguredMicrodata
       def microdata?(field)
-        return false unless CurationConcerns.config.display_microdata
+        return false unless Sufia.config.display_microdata
         key = "curation_concerns.schema_org.#{field}.property"
         t(key, default: false)
       end
 
       def microdata_object?(field)
-        return false unless CurationConcerns.config.display_microdata
+        return false unless Sufia.config.display_microdata
         key = "curation_concerns.schema_org.#{field}.type"
         t(key, default: false)
       end

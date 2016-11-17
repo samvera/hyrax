@@ -4,11 +4,11 @@ describe BatchCreateJob do
 
   before do
     allow(CharacterizeJob).to receive(:perform_later)
-    allow(CurationConcerns.config.callback).to receive(:run)
-    allow(CurationConcerns.config.callback).to receive(:set?)
+    allow(Sufia.config.callback).to receive(:run)
+    allow(Sufia.config.callback).to receive(:set?)
       .with(:after_batch_create_success)
       .and_return(true)
-    allow(CurationConcerns.config.callback).to receive(:set?)
+    allow(Sufia.config.callback).to receive(:set?)
       .with(:after_batch_create_failure)
       .and_return(true)
   end
@@ -39,7 +39,7 @@ describe BatchCreateJob do
       expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
       expect(actor).to receive(:create).with(keyword: [], title: ['File One'], resource_type: ["Article"], uploaded_files: ['1']).and_return(true)
       expect(actor).to receive(:create).with(keyword: [], title: ['File Two'], resource_type: ["Image"], uploaded_files: ['2']).and_return(true)
-      expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_success, user)
+      expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_success, user)
       subject
       expect(log.status).to eq 'pending'
       expect(log.reload.status).to eq 'success'
@@ -71,7 +71,7 @@ describe BatchCreateJob do
       it "sends the failure message" do
         expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
         expect(actor).to receive(:create).and_return(true, false)
-        expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_failure, user)
+        expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_failure, user)
         subject
         expect(log.reload.status).to eq 'failure'
       end

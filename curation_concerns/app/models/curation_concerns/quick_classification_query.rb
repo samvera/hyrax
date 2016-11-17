@@ -9,7 +9,7 @@ module CurationConcerns
     def initialize(user, options = {})
       @user = user
       @concern_name_normalizer = options.fetch(:concern_name_normalizer, ClassifyConcern.method(:to_class))
-      @models = options.fetch(:models, CurationConcerns.config.registered_curation_concern_types)
+      @models = options.fetch(:models, Sufia.config.registered_curation_concern_types)
     end
 
     def each(&block)
@@ -18,7 +18,7 @@ module CurationConcerns
 
     # @return true if the requested concerns is same as all avaliable concerns
     def all?
-      models == CurationConcerns.config.registered_curation_concern_types
+      models == Sufia.config.registered_curation_concern_types
     end
 
     # @return [Array] a list of all the requested concerns that the user can create

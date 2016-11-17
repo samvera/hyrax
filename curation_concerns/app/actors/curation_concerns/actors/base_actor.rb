@@ -24,7 +24,7 @@ module CurationConcerns
       protected
 
         def run_callbacks(hook)
-          CurationConcerns.config.callback.run(hook, curation_concern, user)
+          Sufia.config.callback.run(hook, curation_concern, user)
           true
         end
 

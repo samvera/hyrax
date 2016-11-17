@@ -65,7 +65,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
     describe 'media display' do
       context 'when config is true' do
         before do
-          allow(CurationConcerns.config).to receive(:display_media_download_link) { true }
+          allow(Sufia.config).to receive(:display_media_download_link) { true }
           render
         end
 
@@ -100,7 +100,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
 
       context 'when config is false' do
         before do
-          allow(CurationConcerns.config).to receive(:display_media_download_link) { false }
+          allow(Sufia.config).to receive(:display_media_download_link) { false }
           render
         end
 

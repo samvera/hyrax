@@ -1,4 +1,4 @@
-CurationConcerns.configure do |config|
+Sufia.configure do |config|
   # Should schema.org microdata be displayed?
   # config.display_microdata = true
 

@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Callbacks
     class Registry
       attr_reader :callbacks

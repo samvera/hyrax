@@ -50,7 +50,7 @@ RSpec.describe CurationConcerns::AdminController do
     end
     context "when it exists in the configuration" do
       before do
-        config = CurationConcerns.config.dashboard_configuration
+        config = Sufia.config.dashboard_configuration
         config[:actions] = config[:actions].merge(missing_thing: {})
         described_class.configuration = config
       end

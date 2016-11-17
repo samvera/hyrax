@@ -51,7 +51,7 @@ module CurationConcerns
       def revert_content(revision_id, relation = 'original_file')
         file_actor = file_actor_class.new(file_set, relation, user)
         if file_actor.revert_to(revision_id)
-          CurationConcerns.config.callback.run(:after_revert_content, file_set, user, revision_id)
+          Sufia.config.callback.run(:after_revert_content, file_set, user, revision_id)
           true
         else
           false
@@ -62,7 +62,7 @@ module CurationConcerns
       # @param [String] relation ('original_file')
       def update_content(file, relation = 'original_file')
         file_actor_class.new(file_set, relation, user).ingest_file(file)
-        CurationConcerns.config.callback.run(:after_update_content, file_set, user)
+        Sufia.config.callback.run(:after_update_content, file_set, user)
         true
       end
 
@@ -76,7 +76,7 @@ module CurationConcerns
       def destroy
         unlink_from_work
         file_set.destroy
-        CurationConcerns.config.callback.run(:after_destroy, file_set.id, user)
+        Sufia.config.callback.run(:after_destroy, file_set.id, user)
       end
 
       def file_actor_class
@@ -121,7 +121,7 @@ module CurationConcerns
             # Save the work so the association between the work and the file_set is persisted (head_id)
             work.save
           end
-          CurationConcerns.config.callback.run(:after_create_fileset, file_set, user)
+          Sufia.config.callback.run(:after_create_fileset, file_set, user)
         end
 
         def assign_visibility?(file_set_params = {})

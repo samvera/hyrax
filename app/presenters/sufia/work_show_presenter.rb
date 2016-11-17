@@ -20,7 +20,7 @@ module Sufia
     end
 
     def presenter_types
-      CurationConcerns.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
+      Sufia.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
     end
 
     def grouped_presenters(filtered_by: nil, except: nil)

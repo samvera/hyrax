@@ -38,7 +38,6 @@ Metrics/MethodLength:
 
 Metrics/ClassLength:
   Exclude:
-    - lib/curation_concerns/configuration.rb
     - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
     - 'app/actors/curation_concerns/file_set_actor.rb'
 

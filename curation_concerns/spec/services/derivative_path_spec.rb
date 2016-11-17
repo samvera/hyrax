@@ -4,7 +4,7 @@ describe CurationConcerns::DerivativePath do
   let(:id)     { '123' }
   let(:object) { double(id: id) }
 
-  before { allow(CurationConcerns.config).to receive(:derivatives_path).and_return('tmp') }
+  before { allow(Sufia.config).to receive(:derivatives_path).and_return('tmp') }
 
   context "for a single path" do
     let(:destination_name) { 'thumbnail' }

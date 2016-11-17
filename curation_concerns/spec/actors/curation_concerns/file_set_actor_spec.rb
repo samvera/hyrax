@@ -200,7 +200,7 @@ describe CurationConcerns::Actors::FileSetActor do
     end
 
     it "writes to the most up to date version" do
-      expect(CurationConcerns.config.callback).to receive(:run).with(:after_create_fileset, file_set3, user)
+      expect(Sufia.config.callback).to receive(:run).with(:after_create_fileset, file_set3, user)
       # using send(), because attach_file_to_work is private
       actor.send(:attach_file_to_work, work_v1, file_set3, {})
       expect(work_v1.members.size).to eq 3

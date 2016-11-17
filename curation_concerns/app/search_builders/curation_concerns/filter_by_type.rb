@@ -43,7 +43,7 @@ module CurationConcerns
       # types from appearing in search results
       # @returns [Array<Class>] the list of work types to include in searches
       def work_types
-        CurationConcerns.config.curation_concerns
+        Sufia.config.curation_concerns
       end
 
       def work_classes

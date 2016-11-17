@@ -1,9 +1,9 @@
 class CharacterizeJob < ActiveJob::Base
-  queue_as CurationConcerns.config.ingest_queue_name
+  queue_as Sufia.config.ingest_queue_name
 
   # @param [FileSet] file_set
   # @param [String] file_id identifier for a Hydra::PCDM::File
-  # @param [String, NilClass] filepath the cached file within the CurationConcerns.config.working_path
+  # @param [String, NilClass] filepath the cached file within the Sufia.config.working_path
   def perform(file_set, file_id, filepath = nil)
     filename = CurationConcerns::WorkingDirectory.find_or_retrieve(file_id, file_set.id, filepath)
     raise LoadError, "#{file_set.class.characterization_proxy} was not found" unless file_set.characterization_proxy?

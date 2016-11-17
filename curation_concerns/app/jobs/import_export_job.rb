@@ -17,15 +17,15 @@ class ImportExportJob < ActiveJob::Base
   def perform(uri, options = {})
     @mode = options.fetch(:mode, "export")
     call(uri,
-         options.fetch(:desc_dir, CurationConcerns.config.descriptions_directory),
-         options.fetch(:bin_dir, CurationConcerns.config.binaries_directory),
+         options.fetch(:desc_dir, Sufia.config.descriptions_directory),
+         options.fetch(:bin_dir, Sufia.config.binaries_directory),
          options.fetch(:profile, nil))
   end
 
   private
 
     def call(uri, desc_dir, bin_dir, _profile = nil)
-      command = "java -jar #{CurationConcerns.config.import_export_jar_file_path} --mode #{mode} --resource #{uri} --descDir #{desc_dir} --binDir #{bin_dir}"
+      command = "java -jar #{Sufia.config.import_export_jar_file_path} --mode #{mode} --resource #{uri} --descDir #{desc_dir} --binDir #{bin_dir}"
       internal_call(command)
     end
 

@@ -44,7 +44,7 @@ module CurationConcerns
     end
 
     initializer 'configure' do
-      CurationConcerns.config.tap do |c|
+      Sufia.config.tap do |c|
         Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path
         Hydra::Derivatives.temp_file_base = c.temp_file_base
         Hydra::Derivatives.fits_path      = c.fits_path

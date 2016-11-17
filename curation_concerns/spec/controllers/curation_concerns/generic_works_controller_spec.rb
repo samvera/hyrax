@@ -261,7 +261,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     it "invokes the after_destroy callback" do
-      expect(CurationConcerns.config.callback).to receive(:run)
+      expect(Sufia.config.callback).to receive(:run)
         .with(:after_destroy, work_to_be_deleted.id, user)
       delete :destroy, params: { id: work_to_be_deleted }
     end

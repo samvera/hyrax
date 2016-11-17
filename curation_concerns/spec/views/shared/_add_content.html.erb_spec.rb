@@ -13,7 +13,7 @@ describe 'shared/_add_content.html.erb' do
     end
 
     it 'has links to create works and collections' do
-      CurationConcerns.config.curation_concerns.each do |curation_concern_type|
+      Sufia.config.curation_concerns.each do |curation_concern_type|
         expect(rendered).to have_link("New #{curation_concern_type.human_readable_type}", href: new_polymorphic_path(curation_concern_type))
       end
       expect(rendered).to have_link('Add a Collection', href: new_collection_path)
@@ -29,7 +29,7 @@ describe 'shared/_add_content.html.erb' do
     end
 
     it 'has links to add collections but not to add works' do
-      CurationConcerns.config.curation_concerns.each do |curation_concern_type|
+      Sufia.config.curation_concerns.each do |curation_concern_type|
         expect(rendered).not_to have_link("New #{curation_concern_type.human_readable_type}", href: new_polymorphic_path(curation_concern_type))
       end
       expect(rendered).to have_link('Add a Collection', href: new_collection_path)
@@ -46,7 +46,7 @@ describe 'shared/_add_content.html.erb' do
     it 'does not have links to add works or collections' do
       expect(rendered).not_to have_text('Add')
       expect(rendered).not_to have_text('Admin')
-      CurationConcerns.config.curation_concerns.each do |curation_concern_type|
+      Sufia.config.curation_concerns.each do |curation_concern_type|
         expect(rendered).not_to have_link("New #{curation_concern_type.human_readable_type}", href: new_polymorphic_path(curation_concern_type))
       end
       expect(rendered).not_to have_link('Add a Collection', href: new_collection_path)

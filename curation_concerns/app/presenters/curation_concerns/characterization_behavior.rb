@@ -48,7 +48,7 @@ module CurationConcerns
     # @return [Array] of truncated values
     def primary_characterization_values(term)
       values = values_for(term)
-      values.slice!(CurationConcerns.config.fits_message_length, (values.length - CurationConcerns.config.fits_message_length))
+      values.slice!(Sufia.config.fits_message_length, (values.length - Sufia.config.fits_message_length))
       truncate_all(values)
     end
 
@@ -58,7 +58,7 @@ module CurationConcerns
     # @return [Array] of truncated values
     def secondary_characterization_values(term)
       values = values_for(term)
-      additional_values = values.slice(CurationConcerns.config.fits_message_length, values.length - CurationConcerns.config.fits_message_length)
+      additional_values = values.slice(Sufia.config.fits_message_length, values.length - Sufia.config.fits_message_length)
       return [] unless additional_values
       truncate_all(additional_values)
     end

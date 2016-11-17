@@ -8,7 +8,7 @@ describe CurationConcerns::FileSet do
   end
 
   after do
-    dir = File.join(CurationConcerns.config.derivatives_path, file_set.id)
+    dir = File.join(Sufia.config.derivatives_path, file_set.id)
     FileUtils.rm_r(dir) if File.directory?(dir)
   end
 

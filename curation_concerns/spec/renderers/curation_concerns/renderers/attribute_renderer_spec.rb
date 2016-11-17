@@ -19,7 +19,7 @@ describe CurationConcerns::Renderers::AttributeRenderer do
 
     context 'without microdata enabled' do
       before do
-        allow(CurationConcerns.config).to receive(:display_microdata).and_return(false)
+        allow(Sufia.config).to receive(:display_microdata).and_return(false)
       end
       let(:tr_content) {
         "<tr><th>Name</th>\n" \
