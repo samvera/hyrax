@@ -17,7 +17,7 @@
         <% @form.terms.each do |term| %>
           <div class="row">
             <%= simple_form_for @form.model,
-                                url: batch_edits_path,
+                                url: sufia.batch_edits_path,
                                 method: :put,
                                 remote: true,
                                 builder: Sufia::FormBuilder,
@@ -46,7 +46,7 @@
       </div><!-- #descriptions_display -->
 
       <div id="permissions_display" class="tab-pane">
-        <%= simple_form_for @form.model, url: batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>
+        <%= simple_form_for @form.model, url: sufia.batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>
            <%= hidden_field_tag('update_type', 'update') %>
            <%= hidden_field_tag('key', 'permissions') %>
            <%= render "curation_concerns/file_sets/permission_form", f: f %>
@@ -59,6 +59,6 @@
    </div> <!-- .tab-content -->
 
 <!-- Ajax call to clear the batch before page uload. -->
-<%= button_to "Clear Batch", { controller: :batch_edits, action: :clear }, form_class: 'hidden', remote: true, id: 'clear_batch' %>
+<%= button_to "Clear Batch", sufia.clear_batch_edits_path, form_class: 'hidden', remote: true, id: 'clear_batch' %>
 
 </div><!-- descriptions_display -->

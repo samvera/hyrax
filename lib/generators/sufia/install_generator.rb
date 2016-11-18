@@ -25,10 +25,9 @@ module Sufia
   14. Copies the catalog controller into the local app
   15. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
   16. Installs sufia assets
-  17. Installs hydra:batch_edit
-  18. Updates simple_form to use browser validations
-  19. Installs Blacklight gallery (and removes it's scss)
-  20. Runs the jquery-datatables generator
+  17. Updates simple_form to use browser validations
+  18. Installs Blacklight gallery (and removes it's scss)
+  19. Runs the jquery-datatables generator
          """
 
     def run_required_generators
@@ -176,10 +175,6 @@ module Sufia
 
     def install_assets
       generate "sufia:assets"
-    end
-
-    def install_batch_edit
-      generate "hydra_batch_edit:install"
     end
 
     def use_browser_validations

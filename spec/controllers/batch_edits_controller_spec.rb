@@ -6,8 +6,6 @@ describe BatchEditsController, type: :controller do
     request.env["HTTP_REFERER"] = 'test.host/original_page'
   end
 
-  routes { Internal::Application.routes }
-
   describe "#edit" do
     let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
     let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }

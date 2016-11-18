@@ -23,6 +23,21 @@ Sufia::Engine.routes.draw do
   patch '/uploads', to: 'sufia/uploads#create'
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
+  resources :batch_edits, only: [:index] do
+    member do
+      delete :destroy
+    end
+    collection do
+      get :index
+      get :edit
+      put :update
+      delete :clear
+      put :state
+      put :all
+    end
+  end
+  match 'batch_edits/:id' => 'batch_edits#add', :via => :put
+  match 'batch_edits' => 'batch_edits#destroy_collection', :via => :delete
 
   # Notifications route for catalog index view
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
