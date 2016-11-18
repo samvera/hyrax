@@ -353,6 +353,20 @@ en:
             remove:             "Remove"
         form_visibility:
           page_description:     "Release and visibility settings control when works added to this set are made available for discovery and download and who can discover and download them."
+          release:
+            title:              "Release"
+            description:        "You can impose a delay (embargo) before works in this administrative set are released for discovery and download."
+            no_delay:           "No delay -- release all works as soon as they are deposited"
+            varies:
+              description:      "Varies -- depositors can set the release date for an individual work:"
+              between:          "Between \"now\" and"
+              embargo:
+                select:         "Select embargo period.."
+                6mos:           "6 months after deposit"
+                1yr:            "1 year after deposit"
+                2yrs:           "2 years after deposit"
+                3yrs:           "3 years after deposit"
+            fixed:              "Fixed -- delay release of all works until"
           visibility:
             title:              "Visibility"
             description:        "After its release date, works in this set can be discovered and downloaded by:"
