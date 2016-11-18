@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class RootActor
       attr_reader :curation_concern, :user, :cloud_resources

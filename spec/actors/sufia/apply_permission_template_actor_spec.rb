@@ -8,7 +8,7 @@ RSpec.describe Sufia::ApplyPermissionTemplateActor do
                            user: depositor)
   end
   let(:actor) do
-    CurationConcerns::Actors::ActorStack.new(work, depositor, [described_class])
+    Sufia::Actors::ActorStack.new(work, depositor, [described_class])
   end
   let(:depositor) { create(:user) }
   let(:work) { build(:generic_work) }
@@ -48,7 +48,7 @@ RSpec.describe Sufia::ApplyPermissionTemplateActor do
                agent_type: 'group',
                agent_id: 'readers',
                access: 'view')
-        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(create_actor)
+        allow(Sufia::Actors::RootActor).to receive(:new).and_return(create_actor)
         allow(create_actor).to receive(:create).and_return(true)
       end
 

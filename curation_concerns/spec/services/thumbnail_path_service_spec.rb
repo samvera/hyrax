@@ -20,7 +20,7 @@ describe CurationConcerns::ThumbnailPathService do
     end
 
     context "that has no thumbnail" do
-      let(:original_file) { mock_model('MockFile', mime_type: nil) }
+      let(:original_file) { mock_model('MockOriginal', mime_type: nil) }
       it { is_expected.to match %r{/assets/default-.+.png} }
     end
   end

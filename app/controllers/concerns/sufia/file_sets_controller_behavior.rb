@@ -54,7 +54,7 @@ module Sufia
       end
 
       def actor
-        @actor ||= CurationConcerns::Actors::FileSetActor.new(@file_set, current_user)
+        @actor ||= Sufia::Actors::FileSetActor.new(@file_set, current_user)
       end
   end
 end

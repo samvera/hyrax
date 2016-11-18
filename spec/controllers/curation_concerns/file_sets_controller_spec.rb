@@ -87,7 +87,7 @@ describe CurationConcerns::FileSetsController do
     context "when updating the attached file" do
       let(:actor) { double }
       before do
-        allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(actor)
+        allow(Sufia::Actors::FileActor).to receive(:new).and_return(actor)
       end
       let(:expected_file_type) do
         if Rails.version < '5.0.0'
@@ -111,8 +111,8 @@ describe CurationConcerns::FileSetsController do
       let(:file2)       { "image.jpg" }
       let(:second_user) { create(:user) }
       let(:version1)    { "version1" }
-      let(:actor1)      { CurationConcerns::Actors::FileSetActor.new(file_set, user) }
-      let(:actor2)      { CurationConcerns::Actors::FileSetActor.new(file_set, second_user) }
+      let(:actor1)      { Sufia::Actors::FileSetActor.new(file_set, user) }
+      let(:actor2)      { Sufia::Actors::FileSetActor.new(file_set, second_user) }
 
       before do
         actor1.create_content(fixture_file_upload(file1))

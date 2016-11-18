@@ -21,6 +21,14 @@ FactoryGirl.define do
         User.batch_user.send_message(user, 'These files have been saved', 'Batch upload complete', false)
       end
     end
+
+    factory :admin do
+      after(:build) do |user|
+        def user.groups
+          ['admin']
+        end
+      end
+    end
   end
 
   trait :guest do

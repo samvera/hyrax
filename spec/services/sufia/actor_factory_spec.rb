@@ -7,15 +7,15 @@ describe Sufia::ActorFactory, :no_clean do
     it do
       is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
                          Sufia::CreateWithFilesActor,
-                         CurationConcerns::Actors::AddToCollectionActor,
-                         CurationConcerns::Actors::AddToWorkActor,
-                         CurationConcerns::Actors::AssignRepresentativeActor,
-                         CurationConcerns::Actors::AttachFilesActor,
-                         CurationConcerns::Actors::ApplyOrderActor,
-                         CurationConcerns::Actors::InterpretVisibilityActor,
-                         CurationConcerns::Actors::InitializeWorkflowActor,
+                         Sufia::Actors::AddToCollectionActor,
+                         Sufia::Actors::AddToWorkActor,
+                         Sufia::Actors::AssignRepresentativeActor,
+                         Sufia::Actors::AttachFilesActor,
+                         Sufia::Actors::ApplyOrderActor,
+                         Sufia::Actors::InterpretVisibilityActor,
                          Sufia::ApplyPermissionTemplateActor,
-                         CurationConcerns::Actors::GenericWorkActor]
+                         Sufia::Actors::GenericWorkActor,
+                         Sufia::Actors::InitializeWorkflowActor]
     end
   end
 
@@ -24,15 +24,15 @@ describe Sufia::ActorFactory, :no_clean do
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
         Sufia::CreateWithFilesActor,
-        CurationConcerns::Actors::AddToCollectionActor,
-        CurationConcerns::Actors::AddToWorkActor,
-        CurationConcerns::Actors::AssignRepresentativeActor,
-        CurationConcerns::Actors::AttachFilesActor,
-        CurationConcerns::Actors::ApplyOrderActor,
-        CurationConcerns::Actors::InterpretVisibilityActor,
-        CurationConcerns::Actors::InitializeWorkflowActor,
+        Sufia::Actors::AddToCollectionActor,
+        Sufia::Actors::AddToWorkActor,
+        Sufia::Actors::AssignRepresentativeActor,
+        Sufia::Actors::AttachFilesActor,
+        Sufia::Actors::ApplyOrderActor,
+        Sufia::Actors::InterpretVisibilityActor,
         Sufia::ApplyPermissionTemplateActor,
-        CurationConcerns::Actors::GenericWorkActor
+        Sufia::Actors::GenericWorkActor,
+        Sufia::Actors::InitializeWorkflowActor
       ]
       expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor
     end

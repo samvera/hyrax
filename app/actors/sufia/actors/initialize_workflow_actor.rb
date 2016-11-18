@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class InitializeWorkflowActor < AbstractActor
       class_attribute :workflow_factory

@@ -6,7 +6,7 @@ describe Sufia::CreateWithFilesActor do
                            user: user)
   end
   let(:actor) do
-    CurationConcerns::Actors::ActorStack.new(work, user, [described_class])
+    Sufia::Actors::ActorStack.new(work, user, [described_class])
   end
   let(:user) { create(:user) }
   let(:uploaded_file1) { Sufia::UploadedFile.create(user: user) }
@@ -18,7 +18,7 @@ describe Sufia::CreateWithFilesActor do
   [:create, :update].each do |mode|
     context "on #{mode}" do
       before do
-        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(create_actor)
+        allow(Sufia::Actors::RootActor).to receive(:new).and_return(create_actor)
         allow(create_actor).to receive(mode).and_return(true)
       end
       context "when uploaded_file_ids include nil" do

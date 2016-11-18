@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     # actions for a file identified by file_set and relation (maps to use predicate)
     class FileActor
@@ -50,8 +50,8 @@ module CurationConcerns
         end
 
         def ingest_options(file, opts = {})
-          opts.merge!(mime_type: file.content_type) if file.respond_to?(:content_type)
-          opts.merge!(filename: file.original_filename) if file.respond_to?(:original_filename)
+          opts[:mime_type] = file.content_type if file.respond_to?(:content_type)
+          opts[:filename] = file.original_filename if file.respond_to?(:original_filename)
           opts.merge!(relation: relation)
         end
     end

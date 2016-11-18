@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-describe CurationConcerns::Actors::FileSetActor do
+describe Sufia::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
   let(:user)           { create(:user) }
@@ -11,27 +11,22 @@ describe CurationConcerns::Actors::FileSetActor do
   let(:actor)          { described_class.new(file_set, user) }
   let(:ingest_options) { { mime_type: 'image/png', relation: 'original_file', filename: 'world.png' } }
 
-  describe 'creating metadata and content' do
+  describe 'creating metadata, content and attaching to a work' do
     let(:upload_set_id) { nil }
     let(:work) { nil }
     subject { file_set.reload }
-    let(:date_today) { DateTime.now }
+    let(:date_today) { DateTime.current }
 
     before do
-      allow(DateTime).to receive(:now).and_return(date_today)
+      allow(DateTime).to receive(:current).and_return(date_today)
     end
 
     before do
       expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(work)
+      actor.create_metadata
       actor.create_content(uploaded_file)
-    end
-
-    context 'when a work is not provided' do
-      it "leaves the association blank" do
-        expect(subject.parents).to be_empty
-      end
+      actor.attach_file_to_work(work)
     end
 
     context 'when a work is provided' do
@@ -47,19 +42,19 @@ describe CurationConcerns::Actors::FileSetActor do
         expect(subject.depositor).to eq user.email
 
         # Confirm that embargo/lease are not set.
-        expect(subject).to_not be_under_embargo
-        expect(subject).to_not be_active_lease
+        expect(subject).not_to be_under_embargo
+        expect(subject).not_to be_active_lease
         expect(subject.visibility).to eq 'restricted'
       end
     end
   end
 
-  describe "#create_metadata" do
+  describe "#attach_file_to_work" do
     let(:work) { create(:public_generic_work) }
 
     it 'copies visibility from the parent' do
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.create_metadata(work)
+      actor.attach_file_to_work(work)
       saved_file = file_set.reload
       expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
@@ -180,30 +175,20 @@ describe CurationConcerns::Actors::FileSetActor do
       allow(Redlock::Client).to receive(:new).and_return(client)
     end
 
-    let(:file_set2) { create(:file_set) }
-    let(:file_set3) { create(:file_set) }
+    # The first version of the work has no members.
+    let!(:work_v1) { create(:generic_work) }
 
-    # The first version of the work has a single member.
-    let!(:work_v1) do
-      work = create(:generic_work)
-      work.ordered_members << file_set
-      work.save
-      work
-    end
-
-    # Create another version of the same work with a second member.
+    # Create another version of the same work with a member.
     let!(:work_v2) do
       work = ActiveFedora::Base.find(work_v1.id)
-      work.ordered_members << file_set2
+      work.ordered_members << create(:file_set)
       work.save
       work
     end
 
     it "writes to the most up to date version" do
-      expect(Sufia.config.callback).to receive(:run).with(:after_create_fileset, file_set3, user)
-      # using send(), because attach_file_to_work is private
-      actor.send(:attach_file_to_work, work_v1, file_set3, {})
-      expect(work_v1.members.size).to eq 3
+      actor.attach_file_to_work(work_v1, {})
+      expect(work_v1.members.size).to eq 2
     end
   end
 
@@ -284,7 +269,7 @@ describe CurationConcerns::Actors::FileSetActor do
   describe "#file_actor_class" do
     context "default" do
       it "is a FileActor" do
-        expect(actor.file_actor_class).to eq(CurationConcerns::Actors::FileActor)
+        expect(actor.file_actor_class).to eq(Sufia::Actors::FileActor)
       end
     end
 
@@ -292,9 +277,9 @@ describe CurationConcerns::Actors::FileSetActor do
       let(:actor) { CustomFileSetActor.new(file_set, user) }
 
       before do
-        class CustomFileActor < CurationConcerns::Actors::FileActor
+        class CustomFileActor < Sufia::Actors::FileActor
         end
-        class CustomFileSetActor < CurationConcerns::Actors::FileSetActor
+        class CustomFileSetActor < Sufia::Actors::FileSetActor
           def file_actor_class
             CustomFileActor
           end
@@ -315,7 +300,7 @@ describe CurationConcerns::Actors::FileSetActor do
   describe '#revert_content' do
     let(:file_set) { create(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
-    let(:file2)    { "curation_concerns_generic_stub.txt" }
+    let(:file2)    { "sufia_generic_stub.txt" }
     let(:version1) { "version1" }
 
     before do

@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class AddToWorkActor < AbstractActor
       def create(attributes)

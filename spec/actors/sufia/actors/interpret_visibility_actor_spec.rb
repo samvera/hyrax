@@ -1,20 +1,20 @@
 require 'spec_helper'
-describe CurationConcerns::Actors::InterpretVisibilityActor do
+describe Sufia::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
-    CurationConcerns::Actors::ActorStack.new(curation_concern,
-                                             user,
-                                             [described_class,
-                                              CurationConcerns::Actors::GenericWorkActor])
+    Sufia::Actors::ActorStack.new(curation_concern,
+                                  user,
+                                  [described_class,
+                                   Sufia::Actors::GenericWorkActor])
   end
-  let(:date) { Date.today + 2 }
+  let(:date) { Time.zone.today + 2 }
 
   describe 'the next actor' do
     let(:root_actor) { double }
     before do
-      allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+      allow(Sufia::Actors::RootActor).to receive(:new).and_return(root_actor)
       allow(curation_concern).to receive(:save).and_return(true)
     end
 
@@ -88,7 +88,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
       end
 
       context 'with a valid embargo date' do
-        let(:date) { Date.today + 2 }
+        let(:date) { Time.zone.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
           subject.create(attributes)
           expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
@@ -98,7 +98,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
       end
 
       context 'when embargo_release_date is in the past' do
-        let(:date) { Date.today - 2 }
+        let(:date) { Time.zone.today - 2 }
         it 'sets error on curation_concern and return false' do
           expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date'
@@ -116,7 +116,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
       end
 
       context 'with a valid lease date' do
-        let(:date) { Date.today + 2 }
+        let(:date) { Time.zone.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
           subject.create(attributes)
           expect(curation_concern.embargo_release_date).to be_nil
@@ -127,7 +127,7 @@ describe CurationConcerns::Actors::InterpretVisibilityActor do
       end
 
       context 'when lease_expiration_date is in the past' do
-        let(:date) { Date.today - 2 }
+        let(:date) { Time.zone.today - 2 }
         it 'sets error on curation_concern and return false' do
           expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'

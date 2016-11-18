@@ -1,23 +1,23 @@
 require 'spec_helper'
 
-describe CurationConcerns::Actors::ApplyOrderActor do
+describe Sufia::Actors::ApplyOrderActor do
   describe '#update' do
     let(:curation_concern) { create(:work_with_two_children, user: user) }
 
     let(:user) { create(:admin) }
 
     subject do
-      CurationConcerns::Actors::ActorStack.new(curation_concern,
-                                               user,
-                                               [described_class,
-                                                CurationConcerns::Actors::GenericWorkActor])
+      Sufia::Actors::ActorStack.new(curation_concern,
+                                    user,
+                                    [described_class,
+                                     Sufia::Actors::GenericWorkActor])
     end
 
     context 'with ordered_member_ids that are already associated with the parent' do
       let(:attributes) { { ordered_member_ids: ["BlahBlah1"] } }
       let(:root_actor) { double }
       before do
-        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+        allow(Sufia::Actors::RootActor).to receive(:new).and_return(root_actor)
         allow(root_actor).to receive(:update).with({}).and_return(true)
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
@@ -34,17 +34,17 @@ describe CurationConcerns::Actors::ApplyOrderActor do
     let(:child) { GenericWork.new(id: "blahblah3") }
 
     subject do
-      CurationConcerns::Actors::ActorStack.new(curation_concern,
-                                               user,
-                                               [described_class,
-                                                CurationConcerns::Actors::GenericWorkActor])
+      Sufia::Actors::ActorStack.new(curation_concern,
+                                    user,
+                                    [described_class,
+                                     Sufia::Actors::GenericWorkActor])
     end
 
     context 'with ordered_members_ids that arent associated with the curation concern yet.' do
       let(:attributes) { { ordered_member_ids: [child.id] } }
       let(:root_actor) { double }
       before do
-        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+        allow(Sufia::Actors::RootActor).to receive(:new).and_return(root_actor)
         allow(root_actor).to receive(:update).with({}).and_return(true)
         # TODO: This can be moved into the Factory
         child.title = ["Generic Title"]
@@ -64,7 +64,7 @@ describe CurationConcerns::Actors::ApplyOrderActor do
       let(:attributes) { { ordered_member_ids: ["BlahBlah2"] } }
       let(:root_actor) { double }
       before do
-        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+        allow(Sufia::Actors::RootActor).to receive(:new).and_return(root_actor)
         allow(root_actor).to receive(:update).with({}).and_return(true)
         child.title = ["Generic Title"]
         child.apply_depositor_metadata(user.user_key)

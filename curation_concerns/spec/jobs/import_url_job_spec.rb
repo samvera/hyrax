@@ -27,7 +27,7 @@ describe ImportUrlJob do
     before do
       file_set.id = 'abc123'
       allow(file_set).to receive(:reload)
-      allow(CurationConcerns::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
+      allow(Sufia::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
     end
 
     it 'creates the content' do
@@ -47,7 +47,7 @@ describe ImportUrlJob do
       file_set.save!
       allow(ActiveFedora::Base).to receive(:find).and_call_original
       allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
-      allow_any_instance_of(CurationConcerns::Actors::FileSetActor).to receive(:create_content)
+      allow_any_instance_of(Sufia::Actors::FileSetActor).to receive(:create_content)
       allow_any_instance_of(Ability).to receive(:can?).and_return(true)
     end
 

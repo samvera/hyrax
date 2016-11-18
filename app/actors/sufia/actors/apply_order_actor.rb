@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class ApplyOrderActor < AbstractActor
       def update(attributes)

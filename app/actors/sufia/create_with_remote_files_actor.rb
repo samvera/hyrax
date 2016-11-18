@@ -1,6 +1,6 @@
 module Sufia
   # Attaches remote files to the work
-  class CreateWithRemoteFilesActor < CurationConcerns::Actors::AbstractActor
+  class CreateWithRemoteFilesActor < Sufia::Actors::AbstractActor
     def create(attributes)
       remote_files = attributes.delete(:remote_files)
       next_actor.create(attributes) && attach_files(remote_files)
@@ -28,8 +28,9 @@ module Sufia
       # Used in to import files using URLs from a file picker like browse_everything
       def create_file_from_url(url, file_name)
         ::FileSet.new(import_url: url, label: file_name) do |fs|
-          actor = CurationConcerns::Actors::FileSetActor.new(fs, user)
-          actor.create_metadata(curation_concern, visibility: curation_concern.visibility)
+          actor = Sufia::Actors::FileSetActor.new(fs, user)
+          actor.create_metadata(visibility: curation_concern.visibility)
+          actor.attach_file_to_work(curation_concern)
           fs.save!
           uri = URI.parse(url)
           if uri.scheme == 'file'

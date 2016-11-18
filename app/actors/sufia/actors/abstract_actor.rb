@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     # The CurationConcern Abstract actor responds to two primary actions:
     # * #create

@@ -5,7 +5,7 @@ describe Sufia::CreateWithRemoteFilesActor do
                            user: user)
   end
   let(:actor) do
-    CurationConcerns::Actors::ActorStack.new(work, user, [described_class])
+    Sufia::Actors::ActorStack.new(work, user, [described_class])
   end
   let(:user) { create(:user) }
   let(:work) { create(:generic_work, user: user) }
@@ -24,7 +24,7 @@ describe Sufia::CreateWithRemoteFilesActor do
   let(:attributes) { { remote_files: remote_files } }
 
   before do
-    allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(create_actor)
+    allow(Sufia::Actors::RootActor).to receive(:new).and_return(create_actor)
     allow(create_actor).to receive(:create).and_return(true)
   end
 

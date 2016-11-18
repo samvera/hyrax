@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class ActorStack
       attr_reader :curation_concern, :user, :first_actor_class, :more_actors

@@ -26,5 +26,18 @@ FactoryGirl.define do
         work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
       end
     end
+
+    factory :work_with_one_child do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'])
+      end
+    end
+
+    factory :work_with_two_children do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+      end
+    end
   end
 end

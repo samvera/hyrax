@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'redlock'
 
-describe CurationConcerns::Actors::GenericWorkActor do
+describe Sufia::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { create(:user) }
-  let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
-
+  let(:file_path) { File.join(fixture_path, 'image.png') }
+  let(:file) { Rack::Test::UploadedFile.new(file_path, 'image/png', false) }
   # stub out redis connection
   let(:redlock_client_stub) do
     client = double('redlock client')
@@ -21,14 +21,16 @@ describe CurationConcerns::Actors::GenericWorkActor do
 
   describe '#create' do
     let(:curation_concern) { GenericWork.new }
-    let(:xmas) { DateTime.parse('2014-12-25 11:30') }
+    let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
 
     context 'failure' do
       let(:attributes) { {} }
+      before do
+        allow(subject).to receive(:attach_files).and_return(true)
+      end
 
       it 'returns false' do
-        expect_any_instance_of(described_class).to receive(:save).and_return(false)
-        allow(subject).to receive(:attach_files).and_return(true)
+        expect(curation_concern).to receive(:save).and_return(false)
         expect(subject.create(attributes)).to be false
       end
     end
@@ -43,6 +45,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
         expect(Sufia.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
+
         subject.create(title: ['Foo Bar'])
       end
     end
@@ -56,7 +59,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
 
       context 'with embargo' do
         context "with attached files" do
-          let(:date) { Date.today + 2 }
+          let(:date) { Time.zone.today + 2 }
           let(:attributes) do
             { title: ['New embargo'], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
               visibility_during_embargo: 'authenticated', embargo_release_date: date.to_s,
@@ -104,17 +107,20 @@ describe CurationConcerns::Actors::GenericWorkActor do
           let(:file_actor) { double }
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
-            allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
+            allow(Sufia::Actors::FileActor).to receive(:new).and_return(file_actor)
+            allow(Sufia.config.callback).to receive(:run).with(:after_create_concern, GenericWork, user)
           end
 
-          it 'stamps each file with the access rights' do
+          it 'stamps each file with the access rights and runs callbacks' do
+            expect(Sufia.config.callback).to receive(:run).with(:after_create_fileset, FileSet, user)
+
             expect(file_actor).to receive(:ingest_file).and_return(true)
             expect(subject.create(attributes)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
             expect(curation_concern.depositor).to eq user.user_key
-            expect(curation_concern.representative).to_not be_nil
+            expect(curation_concern.representative).not_to be_nil
             expect(curation_concern.file_sets.size).to eq 1
             expect(curation_concern).to be_authenticated_only_access
             # Sanity test to make sure the file_set has same permission as parent.
@@ -124,7 +130,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
         end
       end
 
-      context 'with multiple files file' do
+      context 'with multiple files' do
         let(:file_actor) { double }
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
@@ -135,7 +141,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
         context 'authenticated visibility' do
           before do
             allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
-            allow(CurationConcerns::Actors::FileActor).to receive(:new).and_return(file_actor)
+            allow(Sufia::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 
           it 'stamps each file with the access rights' do
@@ -176,7 +182,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
       let(:attributes) { {} }
 
       it 'returns false' do
-        expect_any_instance_of(described_class).to receive(:save).and_return(false)
+        expect(curation_concern).to receive(:save).and_return(false)
         expect(subject.update(attributes)).to be false
       end
     end

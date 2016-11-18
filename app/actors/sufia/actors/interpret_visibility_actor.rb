@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class InterpretVisibilityActor < AbstractActor
       class Intention
@@ -11,22 +11,11 @@ module CurationConcerns
         # or embargo, remove all the params.
         def sanitize_params
           if valid_lease?
-            @attributes.except(:visibility,
-                               :embargo_release_date,
-                               :visibility_during_embargo,
-                               :visibility_after_embargo)
+            sanitize_lease_params
           elsif valid_embargo?
-            @attributes.except(:visibility,
-                               :lease_expiration_date,
-                               :visibility_during_lease,
-                               :visibility_after_lease)
+            sanitize_embargo_params
           elsif !wants_lease? && !wants_embargo?
-            @attributes.except(:lease_expiration_date,
-                               :visibility_during_lease,
-                               :visibility_after_lease,
-                               :embargo_release_date,
-                               :visibility_during_embargo,
-                               :visibility_after_embargo)
+            sanitize_unrestricted_params
           else
             @attributes
           end
@@ -61,6 +50,29 @@ module CurationConcerns
         end
 
         private
+
+          def sanitize_unrestricted_params
+            @attributes.except(:lease_expiration_date,
+                               :visibility_during_lease,
+                               :visibility_after_lease,
+                               :embargo_release_date,
+                               :visibility_during_embargo,
+                               :visibility_after_embargo)
+          end
+
+          def sanitize_embargo_params
+            @attributes.except(:visibility,
+                               :lease_expiration_date,
+                               :visibility_during_lease,
+                               :visibility_after_lease)
+          end
+
+          def sanitize_lease_params
+            @attributes.except(:visibility,
+                               :embargo_release_date,
+                               :visibility_during_embargo,
+                               :visibility_after_embargo)
+          end
 
           def visibility
             @attributes[:visibility]

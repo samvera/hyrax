@@ -1,10 +1,11 @@
-module CurationConcerns
+module Sufia
   module Actors
     class AttachFilesActor < AbstractActor
       def create(attributes)
         files = [attributes.delete(:files)].flatten.compact
-        attach_files(files, visibility_attributes(attributes)) &&
-          next_actor.create(attributes)
+        file_sets = attach_files(files, visibility_attributes(attributes))
+        file_sets.all? { |fs| fs.is_a? FileSet } &&
+          next_actor.create(attributes) && send_create_notifications(file_sets)
       end
 
       def update(attributes)
@@ -15,17 +16,28 @@ module CurationConcerns
 
       private
 
+        # Run the after_create_fileset callback for each created FileSet
+        def send_create_notifications(file_sets)
+          file_sets.each do |file_set|
+            Sufia.config.callback.run(:after_create_fileset, file_set, user)
+          end
+        end
+
+        # @return [Array<FileSet>] returns the list of FileSet objects that were created
         def attach_files(files, visibility_attr)
-          files.all? do |file|
+          files.map do |file|
             attach_file(file, visibility_attr)
           end
         end
 
+        # @return [FileSet] the FileSet object that was created
         def attach_file(file, visibility_attr)
-          file_set = ::FileSet.new
-          file_set_actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
-          file_set_actor.create_metadata(curation_concern, visibility_attr)
-          file_set_actor.create_content(file)
+          ::FileSet.new do |file_set|
+            file_set_actor = Sufia::Actors::FileSetActor.new(file_set, user)
+            file_set_actor.create_metadata(visibility_attr)
+            file_set_actor.create_content(file)
+            file_set_actor.attach_file_to_work(curation_concern, visibility_attr)
+          end
         end
 
         # The attributes used for visibility - used to send as initial params to

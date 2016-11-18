@@ -8,19 +8,19 @@ class AttachFilesToWorkJob < ActiveJob::Base
     uploaded_files.each do |uploaded_file|
       file_set = FileSet.new
       user = User.find_by_user_key(work.depositor)
-      actor = CurationConcerns::Actors::FileSetActor.new(file_set, user)
-      actor.create_metadata(work, visibility: work.visibility) do |file|
-        file.permissions_attributes = work.permissions.map(&:to_hash)
-      end
-
+      actor = Sufia::Actors::FileSetActor.new(file_set, user)
+      actor.create_metadata(visibility: work.visibility)
       attach_content(actor, uploaded_file.file)
+      actor.attach_file_to_work(work)
+      actor.file_set.permissions_attributes = work.permissions.map(&:to_hash)
+
       uploaded_file.update(file_set_uri: file_set.uri)
     end
   end
 
   private
 
-    # @param [CurationConcerns::Actors::FileSetActor] actor
+    # @param [Sufia::Actors::FileSetActor] actor
     # @param [UploadedFileUploader] file
     def attach_content(actor, file)
       case file.file
@@ -33,7 +33,7 @@ class AttachFilesToWorkJob < ActiveJob::Base
       end
     end
 
-    # @param [CurationConcerns::Actors::FileSetActor] actor
+    # @param [Sufia::Actors::FileSetActor] actor
     # @param [UploadedFileUploader] file
     def import_url(actor, file)
       actor.file_set.update(import_url: file.url)

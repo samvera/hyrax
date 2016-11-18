@@ -1,5 +1,5 @@
 module Sufia
-  class ApplyPermissionTemplateActor < CurationConcerns::Actors::AbstractActor
+  class ApplyPermissionTemplateActor < Sufia::Actors::AbstractActor
     def create(attributes)
       add_edit_users(attributes)
       next_actor.create(attributes)

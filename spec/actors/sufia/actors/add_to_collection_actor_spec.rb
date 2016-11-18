@@ -1,18 +1,18 @@
 require 'spec_helper'
-describe CurationConcerns::Actors::AddToCollectionActor do
+describe Sufia::Actors::AddToCollectionActor do
   let(:user) { create(:user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
-    CurationConcerns::Actors::ActorStack.new(curation_concern,
-                                             user,
-                                             [described_class,
-                                              CurationConcerns::Actors::GenericWorkActor])
+    Sufia::Actors::ActorStack.new(curation_concern,
+                                  user,
+                                  [described_class,
+                                   Sufia::Actors::GenericWorkActor])
   end
   describe 'the next actor' do
     let(:root_actor) { double }
     before do
-      allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+      allow(Sufia::Actors::RootActor).to receive(:new).and_return(root_actor)
     end
 
     let(:attributes) do

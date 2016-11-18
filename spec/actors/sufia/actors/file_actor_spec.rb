@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe CurationConcerns::Actors::FileActor do
+describe Sufia::Actors::FileActor do
   include ActionDispatch::TestProcess
-  include CurationConcerns::FactoryHelpers
+  include Sufia::FactoryHelpers
 
   let(:user) { create(:user) }
   let(:file_set) { create(:file_set) }

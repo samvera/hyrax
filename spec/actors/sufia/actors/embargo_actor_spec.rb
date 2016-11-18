@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::Actors::EmbargoActor do
+describe Sufia::Actors::EmbargoActor do
   let(:actor) { described_class.new(work) }
 
   let(:work) do
@@ -17,7 +17,7 @@ describe CurationConcerns::Actors::EmbargoActor do
 
   describe "#destroy" do
     context "with an active embargo" do
-      let(:release_date) { Date.today + 2 }
+      let(:release_date) { Time.zone.today + 2 }
 
       it "removes the embargo" do
         actor.destroy
@@ -27,7 +27,7 @@ describe CurationConcerns::Actors::EmbargoActor do
     end
 
     context 'with an expired embargo' do
-      let(:release_date) { Date.today - 2 }
+      let(:release_date) { Time.zone.today - 2 }
       it "removes the embargo" do
         actor.destroy
         expect(work.reload.embargo_release_date).to be_nil

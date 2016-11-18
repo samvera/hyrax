@@ -166,7 +166,7 @@ module CurationConcerns
       end
 
       def actor
-        @actor ||= ::CurationConcerns::Actors::FileSetActor.new(curation_concern, current_user)
+        @actor ||= ::Sufia::Actors::FileSetActor.new(curation_concern, current_user)
       end
 
       def attributes

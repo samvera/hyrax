@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     class AssignRepresentativeActor < AbstractActor
       def create(attributes)

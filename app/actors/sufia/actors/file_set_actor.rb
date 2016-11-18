@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
     class FileSetActor
@@ -20,7 +20,7 @@ module CurationConcerns
       # @param [ActiveFedora::Base] work the parent work that will contain the file_set.
       # @param [Hash] file_set specifying the visibility, lease and/or embargo of the file set.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-      def create_metadata(work, file_set_params = {})
+      def create_metadata(file_set_params = {})
         file_set.apply_depositor_metadata(user)
         now = CurationConcerns::TimeService.time_in_utc
         file_set.date_uploaded = now
@@ -28,7 +28,6 @@ module CurationConcerns
         file_set.creator = [user.user_key]
 
         Actors::ActorStack.new(file_set, user, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
-        attach_file_to_work(work, file_set, file_set_params) if work
         yield(file_set) if block_given?
       end
 
@@ -44,6 +43,27 @@ module CurationConcerns
 
         file_actor_class.new(file_set, relation, user).ingest_file(file)
         true
+      end
+
+      # Adds a FileSet to the work using ore:Aggregations.
+      # Locks to ensure that only one process is operating on
+      # the list at a time.
+      def attach_file_to_work(work, file_set_params = {})
+        acquire_lock_for(work.id) do
+          # Ensure we have an up-to-date copy of the members association, so
+          # that we append to the end of the list.
+          work.reload unless work.new_record?
+          unless assign_visibility?(file_set_params)
+            copy_visibility(work, file_set)
+          end
+          work.ordered_members << file_set
+          set_representative(work, file_set)
+          set_thumbnail(work, file_set)
+
+          # Save the work so the association between the work and the file_set is persisted (head_id)
+          # NOTE: the work may not be valid, in which case this save doesn't do anything.
+          work.save
+        end
       end
 
       # @param [String] revision_id the revision to revert to
@@ -80,7 +100,7 @@ module CurationConcerns
       end
 
       def file_actor_class
-        CurationConcerns::Actors::FileActor
+        Sufia::Actors::FileActor
       end
 
       private
@@ -92,7 +112,7 @@ module CurationConcerns
           begin
             return false unless file_set.save
           rescue RSolr::Error::Http => error
-            ActiveFedora::Base.logger.warn "CurationConcerns::Actors::FileSetActor#save Caught RSOLR error #{error.inspect}"
+            ActiveFedora::Base.logger.warn "Sufia::Actors::FileSetActor#save Caught RSOLR error #{error.inspect}"
             save_tries += 1
             # fail for good if the tries is greater than 3
             raise error if save_tries >= 3
@@ -101,27 +121,6 @@ module CurationConcerns
           end
           yield if block_given?
           true
-        end
-
-        # Adds a FileSet to the work using ore:Aggregations.
-        # Locks to ensure that only one process is operating on
-        # the list at a time.
-        def attach_file_to_work(work, file_set, file_set_params)
-          acquire_lock_for(work.id) do
-            # Ensure we have an up-to-date copy of the members association, so
-            # that we append to the end of the list.
-            work.reload unless work.new_record?
-            unless assign_visibility?(file_set_params)
-              copy_visibility(work, file_set)
-            end
-            work.ordered_members << file_set
-            set_representative(work, file_set)
-            set_thumbnail(work, file_set)
-
-            # Save the work so the association between the work and the file_set is persisted (head_id)
-            work.save
-          end
-          Sufia.config.callback.run(:after_create_fileset, file_set, user)
         end
 
         def assign_visibility?(file_set_params = {})

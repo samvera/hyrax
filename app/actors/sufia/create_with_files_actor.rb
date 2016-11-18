@@ -1,6 +1,6 @@
 module Sufia
   # Creates a work and attaches files to the work
-  class CreateWithFilesActor < CurationConcerns::Actors::AbstractActor
+  class CreateWithFilesActor < Sufia::Actors::AbstractActor
     def create(attributes)
       self.uploaded_file_ids = attributes.delete(:uploaded_files)
       validate_files && mark_inactive && next_actor.create(attributes) && attach_files
