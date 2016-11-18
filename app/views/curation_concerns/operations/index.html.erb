@@ -13,7 +13,7 @@
       <tbody>
         <% @operations.each do |op| %>
           <tr>
-            <td><%= link_to op.operation_type, sufia.user_operation_path(params[:user_id], op) %></td>
+            <td><%= link_to op.operation_type, curation_concerns.user_operation_path(params[:user_id], op) %></td>
             <td><span class="label <%= op.status == 'failure' ? 'label-danger' : 'label-success' %>"><%= op.status %></span></td>
           </tr>
         <% end %>
