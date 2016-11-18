@@ -49,6 +49,7 @@ module Sufia
       end
 
       CurationConcerns::CurationConcern.actor_factory = Sufia::ActorFactory
+      CurationConcerns::Workflow::WorkflowFactory.workflow_strategy = Sufia::Workflow::WorkflowByAdminSetStrategy
       # Don't try to load this class until the application has been generated
       if defined? ::SearchBuilder
         CurationConcerns::AdminSetService.default_search_builder = Sufia::AdminSetSearchBuilder

@@ -1,7 +1,8 @@
 class Sufia::CatalogSearchBuilder < Sufia::SearchBuilder
   self.default_processor_chain += [
     :add_access_controls_to_solr_params,
-    :show_works_or_works_that_contain_files
+    :show_works_or_works_that_contain_files,
+    :show_only_active_records
   ]
 
   # show both works that match the query and works that contain files that match the query
@@ -9,6 +10,13 @@ class Sufia::CatalogSearchBuilder < Sufia::SearchBuilder
     return if blacklight_params[:q].blank? || blacklight_params[:search_field]
     solr_parameters[:user_query] = blacklight_params[:q]
     solr_parameters[:q] = new_query
+  end
+
+  # show works that are in the active state.
+  def show_only_active_records(solr_parameters)
+    return unless Flipflop.enable_mediated_deposit?
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << '-suppressed_bsi:true'
   end
 
   private
