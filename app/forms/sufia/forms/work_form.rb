@@ -57,5 +57,13 @@ module Sufia::Forms
     def self.build_permitted_params
       super + [:on_behalf_of, { collection_ids: [] }]
     end
+
+    # If mediated deposit is indicated, don't allow edit access to be granted to other users.
+    def self.sanitize_params(form_params)
+      params = super
+      return params unless Flipflop.enable_mediated_deposit?
+      params.fetch(:permissions_attributes, []).reject! { |attributes| attributes['access'] == 'edit' }
+      params
+    end
   end
 end

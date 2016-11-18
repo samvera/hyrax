@@ -378,6 +378,9 @@ en:
         admin_sets: "Administrative Sets"
         settings:   "Settings"
         statistics: "Statistics"
+        workflow: "Workflows"
+        workflow_review: "Review"
+        workflow_roles: "Roles"
       stats:
         registered: "Registered"
         deposited_form:

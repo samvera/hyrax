@@ -3,7 +3,7 @@ module Sufia
   class CreateWithFilesActor < CurationConcerns::Actors::AbstractActor
     def create(attributes)
       self.uploaded_file_ids = attributes.delete(:uploaded_files)
-      validate_files && next_actor.create(attributes) && attach_files
+      validate_files && mark_inactive && next_actor.create(attributes) && attach_files
     end
 
     def update(attributes)
@@ -41,6 +41,15 @@ module Sufia
       def uploaded_files
         return [] if uploaded_file_ids.empty?
         @uploaded_files ||= UploadedFile.find(uploaded_file_ids)
+      end
+
+      def mark_inactive
+        return true unless Flipflop.enable_mediated_deposit?
+        curation_concern.state = inactive_uri
+      end
+
+      def inactive_uri
+        ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive')
       end
   end
 end

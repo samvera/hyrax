@@ -7,4 +7,8 @@ Flipflop.configure do
   feature :assign_admin_set,
           default: true,
           description: "Ability to assign uploaded items to an admin set"
+
+  feature :enable_mediated_deposit,
+          default: false,
+          description: "Turn on mediation for all deposits"
 end

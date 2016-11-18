@@ -145,5 +145,9 @@ module Sufia
     def datatables
       generate 'jquery:datatables:install bootstrap3'
     end
+
+    def create_workflow
+      template('workflow.json.erb', "config/workflows/one_step_mediated_deposit_workflow.json")
+    end
   end
 end

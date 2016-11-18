@@ -9,6 +9,8 @@ module Sufia
        CurationConcerns::Actors::AttachFilesActor,
        CurationConcerns::Actors::ApplyOrderActor,
        CurationConcerns::Actors::InterpretVisibilityActor,
+       GrantEditToDepositorActor,
+       CurationConcerns::Actors::InitializeWorkflowActor,
        ApplyPermissionTemplateActor,
        model_actor(curation_concern)]
     end
