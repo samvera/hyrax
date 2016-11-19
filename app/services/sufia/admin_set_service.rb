@@ -1,7 +1,23 @@
 # frozen_string_literal: true
 module Sufia
   # Returns AdminSets that the current user has permission to use.
-  class AdminSetService < CurationConcerns::AdminSetService
+  class AdminSetService
+    attr_reader :context, :search_builder
+    class_attribute :default_search_builder
+    self.default_search_builder = Sufia::AdminSetSearchBuilder
+
+    # @param [#repository,#blacklight_config,#current_ability] context
+    def initialize(context, search_builder = default_search_builder)
+      @context = context
+      @search_builder = search_builder
+    end
+
+    # @param [Symbol] access :read or :edit
+    def search_results(access)
+      response = context.repository.search(builder(access))
+      response.documents
+    end
+
     # This performs a two pass query, first getting the AdminSets and then getting the work counts
     # @param [Symbol] access :read or :edit
     # @return [Array<Array>] a list with document, then work count
@@ -31,5 +47,12 @@ module Sufia
         [element.to_s, element.id, { 'data-visibility' => visibility }]
       end
     end
+
+    private
+
+      # @param [Symbol] access :read or :edit
+      def builder(access)
+        search_builder.new(context, access)
+      end
   end
 end

@@ -30,8 +30,8 @@ module Sufia::HomepageControllerBehavior
 
     def fetch_admin_sets
       return [] unless Flipflop.assign_admin_set?
-      builder = CurationConcerns::AdminSetSearchBuilder.new(self, current_ability)
-                                                       .rows(5)
+      builder = Sufia::AdminSetSearchBuilder.new(self, current_ability)
+                                            .rows(5)
       response = repository.search(builder)
       response.documents
     rescue Blacklight::Exceptions::ECONNREFUSED

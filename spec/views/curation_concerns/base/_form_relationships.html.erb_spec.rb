@@ -4,12 +4,12 @@ describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
   let(:form) do
     CurationConcerns::GenericWorkForm.new(work, ability)
   end
-  let(:service) { instance_double CurationConcerns::AdminSetService, select_options: [] }
+  let(:service) { instance_double Sufia::AdminSetService, select_options: [] }
 
   before do
     allow(view).to receive(:available_collections).and_return([])
     allow(view).to receive(:action_name).and_return('new')
-    allow(CurationConcerns::AdminSetService).to receive(:new).with(controller).and_return(service)
+    allow(Sufia::AdminSetService).to receive(:new).with(controller).and_return(service)
   end
 
   let(:form_template) do

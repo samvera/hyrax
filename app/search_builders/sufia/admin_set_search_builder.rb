@@ -1,6 +1,25 @@
 module Sufia
   ### Allows :deposit as a valid type
-  class AdminSetSearchBuilder < CurationConcerns::AdminSetSearchBuilder
+  class AdminSetSearchBuilder < ::SearchBuilder
+    def initialize(context, access)
+      @access = access
+      super(context)
+    end
+
+    # This overrides the models in FilterByType
+    def models
+      [::AdminSet]
+    end
+
+    # Overrides Hydra::AccessControlsEnforcement
+    def discovery_permissions
+      if @access == :edit
+        @discovery_permissions ||= ["edit"]
+      else
+        super
+      end
+    end
+
     # We're going to check the permission_templates
     def gated_discovery_filters
       return super if @access != :deposit

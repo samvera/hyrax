@@ -16,7 +16,7 @@ module Sufia
     self.member_search_builder_class = Sufia::AdminSetMemberSearchBuilder
 
     # Used to get a list of admin sets for the index action
-    self.list_search_builder_class = CurationConcerns::AdminSetSearchBuilder
+    self.list_search_builder_class = Sufia::AdminSetSearchBuilder
 
     def show
       add_breadcrumb t(:'sufia.controls.home'), root_path
@@ -30,7 +30,7 @@ module Sufia
       add_breadcrumb t(:'sufia.controls.home'), root_path
       add_breadcrumb t(:'sufia.toolbar.admin.menu'), sufia.admin_path
       add_breadcrumb t(:'sufia.admin.sidebar.admin_sets'), sufia.admin_admin_sets_path
-      @admin_sets = CurationConcerns::AdminSetService.new(self).search_results(:read)
+      @admin_sets = Sufia::AdminSetService.new(self).search_results(:read)
     end
 
     def new

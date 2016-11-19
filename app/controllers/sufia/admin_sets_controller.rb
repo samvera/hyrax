@@ -4,7 +4,7 @@ module Sufia
 
     self.presenter_class = Sufia::AdminSetPresenter
 
-    self.list_search_builder_class = CurationConcerns::AdminSetSearchBuilder
+    self.list_search_builder_class = Sufia::AdminSetSearchBuilder
     # Used for the show action
     self.single_item_search_builder_class = Sufia::SingleAdminSetSearchBuilder
     # Used to get the members for the show action
