@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Lockable
     extend ActiveSupport::Concern
 
@@ -7,7 +7,7 @@ module CurationConcerns
     end
 
     def lock_manager
-      @lock_manager ||= CurationConcerns::LockManager.new(
+      @lock_manager ||= LockManager.new(
         Sufia.config.lock_time_to_live,
         Sufia.config.lock_retry_count,
         Sufia.config.lock_retry_delay)

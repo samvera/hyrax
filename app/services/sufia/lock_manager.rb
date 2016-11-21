@@ -1,5 +1,5 @@
 require 'redlock'
-module CurationConcerns
+module Sufia
   class LockManager
     class UnableToAcquireLockError < StandardError; end
 

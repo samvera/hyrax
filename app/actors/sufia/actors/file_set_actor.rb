@@ -2,7 +2,7 @@ module Sufia
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
     class FileSetActor
-      include CurationConcerns::Lockable
+      include Lockable
 
       attr_reader :file_set, :user, :attributes
 
