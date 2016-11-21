@@ -21,21 +21,21 @@ describe AuditJob do
   end
 
   describe 'audit on a version of the content' do
-    let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.original_file).uri }
+    let(:uri) { Sufia::VersioningService.latest_version_of(file.original_file).uri }
     it 'passes' do
       expect(job).to eq(true)
     end
   end
 
   describe 'audit on an invalid version of the content' do
-    let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.original_file).uri + 'bogus' }
+    let(:uri) { Sufia::VersioningService.latest_version_of(file.original_file).uri + 'bogus' }
     it 'fails' do
       expect(job).to eq(false)
     end
   end
 
   describe 'run_audit' do
-    let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.original_file).uri }
+    let(:uri) { Sufia::VersioningService.latest_version_of(file.original_file).uri }
     let!(:old) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 1, created_at: 2.minutes.ago) }
     let!(:new) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 0) }
     let(:mock_service) { double('mock fixity check service') }

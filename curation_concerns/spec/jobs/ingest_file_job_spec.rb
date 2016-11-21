@@ -35,7 +35,7 @@ describe IngestFileJob do
   end
 
   context 'when not given a mime_type' do
-    before { allow(CurationConcerns::VersioningService).to receive(:create) }
+    before { allow(Sufia::VersioningService).to receive(:create) }
     it 'passes a decorated instance of the file with a nil mime_type' do
       # The parameter versioning: false instructs the machinery in Hydra::Works NOT to do versioning
       # so it can be handled later on.
@@ -66,7 +66,7 @@ describe IngestFileJob do
       expect(versions.all.count).to eq 2
 
       # the current version
-      expect(CurationConcerns::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
+      expect(Sufia::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
       expect(file_set.original_file.content).to eq File.open(file2).read
       expect(file_set.original_file.mime_type).to eq 'text/plain'
       expect(file_set.original_file.original_name).to eq 'small_file.txt'

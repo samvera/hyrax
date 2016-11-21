@@ -43,7 +43,7 @@ describe Sufia::Actors::FileActor do
     end
 
     it 'reverts to a previous version of a file' do
-      expect(CurationConcerns::VersioningService).to receive(:create).with(previous_version, user)
+      expect(Sufia::VersioningService).to receive(:create).with(previous_version, user)
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, previous_version.id)
       actor.revert_to(revision_id)
     end

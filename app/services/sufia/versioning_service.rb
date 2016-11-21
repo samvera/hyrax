@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class VersioningService
     # Make a version and record the version committer
     # @param [ActiveFedora::File] content

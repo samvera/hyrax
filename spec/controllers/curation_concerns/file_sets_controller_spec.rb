@@ -128,7 +128,7 @@ describe CurationConcerns::FileSetsController do
 
           let(:restored_content) { file_set.reload.original_file }
           let(:versions)         { restored_content.versions }
-          let(:latest_version)   { CurationConcerns::VersioningService.latest_version_of(restored_content) }
+          let(:latest_version)   { Sufia::VersioningService.latest_version_of(restored_content) }
 
           it "restores the first versions's content and metadata" do
             # expect(restored_content.mime_type).to eq "image/png"

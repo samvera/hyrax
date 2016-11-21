@@ -34,7 +34,7 @@ module Sufia
 
         return false unless file_set.save
 
-        CurationConcerns::VersioningService.create(repository_file, user)
+        Sufia::VersioningService.create(repository_file, user)
 
         # Characterize the original file from the repository
         CharacterizeJob.perform_later(file_set, repository_file.id)

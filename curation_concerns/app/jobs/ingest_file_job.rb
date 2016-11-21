@@ -28,7 +28,7 @@ class IngestFileJob < ActiveJob::Base
     repository_file = file_set.send(relation)
 
     # Do post file ingest actions
-    CurationConcerns::VersioningService.create(repository_file, user)
+    Sufia::VersioningService.create(repository_file, user)
 
     # TODO: this is a problem, the file may not be available at this path on another machine.
     # It may be local, or it may be in s3

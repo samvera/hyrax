@@ -8,7 +8,7 @@ describe CurationConcerns::FileSetAuditService do
   describe '#audit' do
     context 'when a file has two versions' do
       before do
-        CurationConcerns::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
+        Sufia::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
       end
       subject { service_by_object.audit[f.original_file.id] }
       specify 'returns two log results' do
@@ -50,7 +50,7 @@ describe CurationConcerns::FileSetAuditService do
       end
 
       before do
-        CurationConcerns::VersioningService.create(f.original_file)
+        Sufia::VersioningService.create(f.original_file)
         ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
       end
 
@@ -69,7 +69,7 @@ describe CurationConcerns::FileSetAuditService do
     end
 
     before do
-      CurationConcerns::VersioningService.create(f.original_file)
+      Sufia::VersioningService.create(f.original_file)
       ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
     end
     subject { service_by_object.human_readable_audit_status }

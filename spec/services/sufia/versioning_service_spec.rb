@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::VersioningService do
+describe Sufia::VersioningService do
   describe '#latest_version_of' do
     let(:file) do
       FileSet.create do |f|
@@ -10,7 +10,7 @@ describe CurationConcerns::VersioningService do
 
     before do
       # Add the original_file (this service  creates a version after saving when you call it with versioning: true)
-      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
+      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
     end
 
     describe 'latest_version_of' do

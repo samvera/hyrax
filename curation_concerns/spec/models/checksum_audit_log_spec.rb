@@ -17,7 +17,7 @@ describe ChecksumAuditLog do
   end
 
   let(:version_uri) do
-    CurationConcerns::VersioningService.create(f.original_file)
+    Sufia::VersioningService.create(f.original_file)
     f.original_file.versions.first.uri
   end
   let(:content_id) { f.original_file.id }
