@@ -31,7 +31,7 @@ module API
     private
 
       def my_load_and_authorize_resource
-        @work = CurationConcerns::WorkRelation.new.find(params[:id])
+        @work = Sufia::WorkRelation.new.find(params[:id])
 
         unless user.can? :edit, @work
           return render plain: "#{user} lacks access to #{@work}", status: :unauthorized

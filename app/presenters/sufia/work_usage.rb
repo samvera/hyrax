@@ -4,7 +4,7 @@
 module Sufia
   class WorkUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = CurationConcerns::WorkRelation.new.find(id)
+      self.model = Sufia::WorkRelation.new.find(id)
     end
 
     alias work model

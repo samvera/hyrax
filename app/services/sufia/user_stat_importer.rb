@@ -60,7 +60,7 @@ module Sufia
 
       def process_works(stats, user, start_date)
         work_ids_for_user(user).each do |work_id|
-          work = CurationConcerns::WorkRelation.new.find(work_id)
+          work = Sufia::WorkRelation.new.find(work_id)
           work_stats = rescue_and_retry("Retried WorkViewStat on #{user} for work #{work_id} too many times.") { WorkViewStat.statistics(work, start_date, user.id) }
           stats = tally_results(work_stats, :work_views, stats) unless work_stats.blank?
           delay
@@ -107,7 +107,7 @@ module Sufia
 
       def work_ids_for_user(user)
         ids = []
-        CurationConcerns::WorkRelation.new.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
+        Sufia::WorkRelation.new.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
           ids.concat group.map { |doc| doc["id"] }
         end
         ids

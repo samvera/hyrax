@@ -70,7 +70,7 @@ describe API::ItemsController, type: :controller do
     context 'with a resource not found in the repository' do
       let(:relation) { double }
       before do
-        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
         get :show, params: { format: :json, id: default_work.id, token: token }
       end
@@ -175,7 +175,7 @@ describe API::ItemsController, type: :controller do
 
     before do
       # Mock ActiveFedora
-      allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+      allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
       allow(relation).to receive(:find).with(gw.id).and_return(gw)
       # Mock Arkivo Actor
       allow(arkivo_actor).to receive(:update_work_from_item)
@@ -209,7 +209,7 @@ describe API::ItemsController, type: :controller do
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
-        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
 
         # Post an update to a work with a nil arkivo_checksum
@@ -227,7 +227,7 @@ describe API::ItemsController, type: :controller do
     context 'with a valid item, matching token, missing resource' do
       let(:relation) { double }
       before do
-        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(gw.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
@@ -298,7 +298,7 @@ describe API::ItemsController, type: :controller do
 
     before do
       # Mock ActiveFedora
-      allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+      allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
       allow(relation).to receive(:find).with(gw.id).and_return(gw)
       # Mock ArkivoActor destroy work
       allow(arkivo_actor).to receive(:destroy_work)
@@ -350,7 +350,7 @@ describe API::ItemsController, type: :controller do
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
-        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
         # Make call to destroy
         delete :destroy, params: { format: :json, id: non_arkivo_gw.id, token: token }
@@ -366,7 +366,7 @@ describe API::ItemsController, type: :controller do
       let(:not_found_id) { '409' }
       before do
         # Mock ActiveFedora
-        allow(CurationConcerns::WorkRelation).to receive(:new).and_return(relation)
+        allow(Sufia::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
         delete :destroy, params: { format: :json, id: not_found_id, token: token }
       end

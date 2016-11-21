@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class WorkRelation < ActiveFedora::Relation
     def initialize(opts = {})
       super(DummyModel, opts)

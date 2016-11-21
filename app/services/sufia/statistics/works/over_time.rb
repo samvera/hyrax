@@ -5,7 +5,7 @@ module Sufia
         private
 
           def relation
-            CurationConcerns::WorkRelation.new
+            Sufia::WorkRelation.new
           end
       end
     end

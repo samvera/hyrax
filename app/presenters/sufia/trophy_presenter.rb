@@ -12,7 +12,7 @@ module Sufia
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
       query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(work_ids)
-      results = CurationConcerns::WorkRelation.new.search_with_conditions(query)
+      results = Sufia::WorkRelation.new.search_with_conditions(query)
       results.map { |result| TrophyPresenter.new(document_model.new(result)) }
     rescue RSolr::Error::ConnectionRefused
       []

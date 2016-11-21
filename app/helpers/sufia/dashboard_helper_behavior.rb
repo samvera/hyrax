@@ -41,7 +41,7 @@ module Sufia
     end
 
     def number_of_works(user = current_user)
-      CurationConcerns::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
+      Sufia::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end

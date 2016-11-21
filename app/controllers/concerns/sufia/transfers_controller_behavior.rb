@@ -20,7 +20,7 @@ module Sufia
     end
 
     def new
-      @work = CurationConcerns::WorkRelation.new.find(params[:id])
+      @work = Sufia::WorkRelation.new.find(params[:id])
     end
 
     def create

@@ -12,7 +12,7 @@ class DepositSearchBuilder < ::SearchBuilder
     solr_parameters[:"facet.limit"] = ::User.count
 
     # only get work information
-    solr_parameters[:fq] = CurationConcerns::WorkRelation.new.search_model_clause
+    solr_parameters[:fq] = Sufia::WorkRelation.new.search_model_clause
 
     # we only want the facte counts not the actual data
     solr_parameters[:rows] = 0

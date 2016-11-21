@@ -77,7 +77,7 @@ module Sufia
     private
 
       def user_is_depositor?(document_id)
-        CurationConcerns::WorkRelation.new.search_with_conditions(
+        Sufia::WorkRelation.new.search_with_conditions(
           id: document_id,
           DepositSearchBuilder.depositor_field => current_user.user_key
         ).any?

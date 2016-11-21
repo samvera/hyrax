@@ -106,6 +106,6 @@ class ProxyDepositRequest < ActiveRecord::Base
     end
 
     def work_relation
-      CurationConcerns::WorkRelation.new
+      Sufia::WorkRelation.new
     end
 end

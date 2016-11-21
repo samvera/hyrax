@@ -37,7 +37,7 @@ module Sufia
     delegate :count, to: :relation
 
     def relation
-      CurationConcerns::WorkRelation.new
+      Sufia::WorkRelation.new
     end
 
     private

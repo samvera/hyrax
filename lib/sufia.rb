@@ -40,6 +40,6 @@ module Sufia
   end
 
   def self.primary_work_type
-    CurationConcerns::WorkRelation::DummyModel.primary_concern
+    Sufia::WorkRelation::DummyModel.primary_concern
   end
 end

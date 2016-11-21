@@ -9,6 +9,6 @@ module Sufia::SingularSubresourceController
   end
 
   def find_work
-    @work = CurationConcerns::WorkRelation.new.find(params[:id])
+    @work = Sufia::WorkRelation.new.find(params[:id])
   end
 end

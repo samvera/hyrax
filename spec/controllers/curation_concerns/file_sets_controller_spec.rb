@@ -135,7 +135,7 @@ describe CurationConcerns::FileSetsController do
             expect(restored_content.original_name).to eq file1
             expect(versions.all.count).to eq 3
             expect(versions.last.label).to eq latest_version.label
-            expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user.user_key]
+            expect(Sufia::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user.user_key]
           end
         end
 

@@ -20,7 +20,7 @@ module CurationConcerns
     end
 
     def committer
-      vc = VersionCommitter.where(version_id: @version.uri)
+      vc = Sufia::VersionCommitter.where(version_id: @version.uri)
       vc.empty? ? nil : vc.first.committer_login
     end
   end

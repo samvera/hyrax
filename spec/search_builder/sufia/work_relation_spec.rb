@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::WorkRelation do
+RSpec.describe Sufia::WorkRelation do
   let!(:work) { create(:generic_work) }
   let!(:file_set) { create(:file_set) }
   let!(:collection) { create(:collection) }

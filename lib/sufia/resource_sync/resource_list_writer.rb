@@ -38,7 +38,7 @@ module Sufia
         end
 
         def build_works(xml)
-          CurationConcerns::WorkRelation.new.search_in_batches(public_access) do |doc_set|
+          Sufia::WorkRelation.new.search_in_batches(public_access) do |doc_set|
             build_resources(xml, doc_set)
           end
         end
