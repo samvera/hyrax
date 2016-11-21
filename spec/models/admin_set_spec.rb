@@ -12,8 +12,10 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe "#to_solr" do
-    let(:admin_set) { build(:admin_set, title: ['A good title'],
-                                        creator: ['jcoyne@justincoyne.com']) }
+    let(:admin_set) do
+      build(:admin_set, title: ['A good title'],
+                        creator: ['jcoyne@justincoyne.com'])
+    end
     let(:solr_document) { admin_set.to_solr }
 
     it "has title and creator information" do

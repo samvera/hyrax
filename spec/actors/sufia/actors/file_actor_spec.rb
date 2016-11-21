@@ -10,13 +10,13 @@ describe Sufia::Actors::FileActor do
   let(:actor) { described_class.new(file_set, 'remastered', user) }
   let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
   let(:ingest_options) { { mime_type: 'image/png', relation: 'remastered', filename: 'world.png' } }
-  let(:working_file) { CurationConcerns::WorkingDirectory.copy_file_to_working_directory(uploaded_file, file_set.id) }
+  let(:working_file) { Sufia::WorkingDirectory.copy_file_to_working_directory(uploaded_file, file_set.id) }
 
   describe '#ingest_file' do
     context "when the file is available locally" do
       it 'calls ingest file job' do
         expect(IngestFileJob).to receive(:perform_later).with(file_set, uploaded_file.path, user, ingest_options)
-        expect(CurationConcerns::WorkingDirectory).not_to receive(:copy_file_to_working_directory)
+        expect(Sufia::WorkingDirectory).not_to receive(:copy_file_to_working_directory)
         actor.ingest_file(uploaded_file)
       end
     end

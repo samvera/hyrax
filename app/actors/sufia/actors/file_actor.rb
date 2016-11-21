@@ -46,7 +46,7 @@ module Sufia
         def working_file(file)
           path = file.path
           return path if File.exist?(path)
-          CurationConcerns::WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
+          Sufia::WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
         end
 
         def ingest_options(file, opts = {})

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SingleUseLink do
   let(:file) { FileSet.new(id: 'abc123') }
-  let(:now) { DateTime.now }
+  let(:now) { DateTime.current }
   let(:hash) { "sha2hash#{now.to_f}" }
 
   describe "create" do
@@ -38,7 +38,10 @@ describe SingleUseLink do
   describe "find" do
     describe "not expired" do
       before do
-        @su = described_class.create(downloadKey: 'sha2hashb', itemId: file.id, path: Rails.application.routes.url_helpers.download_path(file), expires: DateTime.now.advance(hours: 1))
+        described_class.create(downloadKey: 'sha2hashb',
+                               itemId: file.id,
+                               path: Rails.application.routes.url_helpers.download_path(file),
+                               expires: DateTime.current.advance(hours: 1))
       end
       it "retrieves link" do
         link = described_class.where(downloadKey: 'sha2hashb').first
@@ -55,9 +58,11 @@ describe SingleUseLink do
     end
     describe "expired" do
       before do
-        @su = described_class.create!(downloadKey: 'sha2hashb', itemId: file.id, path: Rails.application.routes.url_helpers.download_path(file))
+        su = described_class.create!(downloadKey: 'sha2hashb',
+                                     itemId: file.id,
+                                     path: Rails.application.routes.url_helpers.download_path(file))
 
-        @su.update_attribute :expires, DateTime.now.advance(hours: -1)
+        su.update_attribute :expires, DateTime.current.advance(hours: -1)
       end
 
       it "expires link" do

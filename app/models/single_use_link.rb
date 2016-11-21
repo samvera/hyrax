@@ -9,7 +9,7 @@ class SingleUseLink < ActiveRecord::Base
   end
 
   def expired?
-    DateTime.now > expires
+    DateTime.current > expires
   end
 
   def to_param
@@ -28,7 +28,7 @@ class SingleUseLink < ActiveRecord::Base
 
     def set_defaults
       return unless new_record?
-      self.expires ||= DateTime.now.advance(hours: 24)
+      self.expires ||= DateTime.current.advance(hours: 24)
       self.downloadKey ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
     end
 end

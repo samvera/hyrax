@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe ChecksumAuditLog do
-  before do
-    # stub out characterization so it does not get audited
-    allow_any_instance_of(Hydra::Works::CharacterizationService).to receive(:characterize)
-  end
-
   let(:f) do
     file = FileSet.create do |gf|
       gf.apply_depositor_metadata('mjg36')

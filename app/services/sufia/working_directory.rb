@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class WorkingDirectory
     class << self
       # @param [String] repository_file_id identifier for Hydra::PCDM::File

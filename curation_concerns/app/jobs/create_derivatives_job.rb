@@ -6,7 +6,7 @@ class CreateDerivativesJob < ActiveJob::Base
   # @param [String, NilClass] filepath the cached file within the Sufia.config.working_path
   def perform(file_set, file_id, filepath = nil)
     return if file_set.video? && !Sufia.config.enable_ffmpeg
-    filename = CurationConcerns::WorkingDirectory.find_or_retrieve(file_id, file_set.id, filepath)
+    filename = Sufia::WorkingDirectory.find_or_retrieve(file_id, file_set.id, filepath)
 
     file_set.create_derivatives(filename)
 
