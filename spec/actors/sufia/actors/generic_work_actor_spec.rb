@@ -106,7 +106,7 @@ describe Sufia::Actors::GenericWorkActor do
         context 'authenticated visibility' do
           let(:file_actor) { double }
           before do
-            allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+            allow(Sufia::TimeService).to receive(:time_in_utc) { xmas }
             allow(Sufia::Actors::FileActor).to receive(:new).and_return(file_actor)
             allow(Sufia.config.callback).to receive(:run).with(:after_create_concern, GenericWork, user)
           end
@@ -140,7 +140,7 @@ describe Sufia::Actors::GenericWorkActor do
 
         context 'authenticated visibility' do
           before do
-            allow(CurationConcerns::TimeService).to receive(:time_in_utc) { xmas }
+            allow(Sufia::TimeService).to receive(:time_in_utc) { xmas }
             allow(Sufia::Actors::FileActor).to receive(:new).and_return(file_actor)
           end
 

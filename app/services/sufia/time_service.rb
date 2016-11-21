@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class TimeService
     # @return [DateTime] the current time in UTC
     def self.time_in_utc

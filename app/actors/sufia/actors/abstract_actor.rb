@@ -1,6 +1,6 @@
 module Sufia
   module Actors
-    # The CurationConcern Abstract actor responds to two primary actions:
+    # The Sufia::AbstractActor responds to two primary actions:
     # * #create
     # * #update
     #

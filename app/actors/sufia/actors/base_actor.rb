@@ -1,6 +1,6 @@
 module Sufia
   module Actors
-    # The CurationConcern base actor responds to two primary actions:
+    # The Sufia::BaseActor responds to two primary actions:
     # * #create
     # * #update
     # it must instantiate the next actor in the chain and instantiate it.
@@ -42,7 +42,7 @@ module Sufia
         end
 
         def apply_deposit_date
-          curation_concern.date_uploaded = CurationConcerns::TimeService.time_in_utc
+          curation_concern.date_uploaded = TimeService.time_in_utc
         end
 
         def save
@@ -53,7 +53,7 @@ module Sufia
           attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
           remove_blank_attributes!(attributes)
           curation_concern.attributes = attributes
-          curation_concern.date_modified = CurationConcerns::TimeService.time_in_utc
+          curation_concern.date_modified = TimeService.time_in_utc
         end
 
         # If any attributes are blank remove them

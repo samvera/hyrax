@@ -22,7 +22,7 @@ module Sufia
 
       def create_metadata(file_set_params = {})
         file_set.apply_depositor_metadata(user)
-        now = CurationConcerns::TimeService.time_in_utc
+        now = TimeService.time_in_utc
         file_set.date_uploaded = now
         file_set.date_modified = now
         file_set.creator = [user.user_key]
