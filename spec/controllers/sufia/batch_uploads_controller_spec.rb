@@ -31,7 +31,7 @@ describe Sufia::BatchUploadsController do
                 expected_types,
                 ['1'],
                 expected_shared_params,
-                CurationConcerns::Operation)
+                Sufia::Operation)
         post :create, params: {
           title: { '1' => 'foo' },
           resource_type: { '1' => 'Article' },

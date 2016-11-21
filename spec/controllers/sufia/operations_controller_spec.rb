@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe CurationConcerns::OperationsController do
-  routes { CurationConcerns::Engine.routes }
+describe Sufia::OperationsController do
+  routes { Sufia::Engine.routes }
   let(:parent) { create(:operation, :pending, user: user) }
   let!(:child1) { create(:operation, :failing, parent: parent, user: user) }
   let!(:child2) { create(:operation, :pending, parent: parent, user: user) }

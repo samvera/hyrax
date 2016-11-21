@@ -1,5 +1,5 @@
 module Sufia
-  class BatchCreateOperation < CurationConcerns::Operation
+  class BatchCreateOperation < Operation
     set_callback :success, :after, :batch_success_message
     set_callback :failure, :after, :batch_failure_message
 

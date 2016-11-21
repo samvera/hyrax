@@ -37,8 +37,8 @@ class AttachFilesToWorkJob < ActiveJob::Base
     # @param [UploadedFileUploader] file
     def import_url(actor, file)
       actor.file_set.update(import_url: file.url)
-      log = CurationConcerns::Operation.create!(user: actor.user,
-                                                operation_type: "Attach File")
+      log = Sufia::Operation.create!(user: actor.user,
+                                     operation_type: "Attach File")
       ImportUrlJob.perform_later(actor.file_set, log)
     end
 end

@@ -33,9 +33,9 @@ class BatchCreateJob < ActiveJob::Base
                                       title: title,
                                       resource_type: resource_type)
         model = model_to_create(attributes)
-        child_log = CurationConcerns::Operation.create!(user: user,
-                                                        operation_type: "Create Work",
-                                                        parent: log)
+        child_log = Sufia::Operation.create!(user: user,
+                                             operation_type: "Create Work",
+                                             parent: log)
         CreateWorkJob.perform_later(user, model, attributes, child_log)
       end
     end

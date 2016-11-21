@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::Operation do
+describe Sufia::Operation do
   describe "rollup_status" do
     let(:parent) { create(:operation, :pending) }
     describe "with a pending process" do
@@ -8,7 +8,7 @@ describe CurationConcerns::Operation do
       let!(:child2) { create(:operation, :pending, parent: parent) }
       it "sets status to pending" do
         parent.rollup_status
-        expect(parent.status).to eq CurationConcerns::Operation::PENDING
+        expect(parent.status).to eq Sufia::Operation::PENDING
       end
     end
 
@@ -17,7 +17,7 @@ describe CurationConcerns::Operation do
       let!(:child2) { create(:operation, :successful, parent: parent) }
       it "sets status to failure" do
         parent.rollup_status
-        expect(parent.status).to eq CurationConcerns::Operation::FAILURE
+        expect(parent.status).to eq Sufia::Operation::FAILURE
       end
     end
 
@@ -26,7 +26,7 @@ describe CurationConcerns::Operation do
       let!(:child2) { create(:operation, :successful, parent: parent) }
       it "sets status to success" do
         parent.rollup_status
-        expect(parent.status).to eq CurationConcerns::Operation::SUCCESS
+        expect(parent.status).to eq Sufia::Operation::SUCCESS
       end
     end
   end
@@ -34,7 +34,7 @@ describe CurationConcerns::Operation do
   describe "performing!" do
     it "changes the status to performing" do
       subject.performing!
-      expect(subject.status).to eq CurationConcerns::Operation::PERFORMING
+      expect(subject.status).to eq Sufia::Operation::PERFORMING
     end
   end
 end

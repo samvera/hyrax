@@ -42,8 +42,8 @@ module Sufia
       end
 
       def log(user)
-        CurationConcerns::Operation.create!(user: user,
-                                            operation_type: "Attach Remote File")
+        Sufia::Operation.create!(user: user,
+                                 operation_type: "Attach Remote File")
       end
   end
 end

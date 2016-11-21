@@ -1,10 +1,11 @@
-module CurationConcerns
+module Sufia
   class Operation < ActiveRecord::Base
     PENDING = 'pending'.freeze
     PERFORMING = 'performing'.freeze
     FAILURE = 'failure'.freeze
     SUCCESS = 'success'.freeze
 
+    self.table_name = 'curation_concerns_operations'
     acts_as_nested_set
     define_callbacks :success, :failure
     belongs_to :user, class_name: '::User'
@@ -38,7 +39,7 @@ module CurationConcerns
     end
 
     def pending_job(job)
-      update(job_class: job.class.to_s, job_id: job.job_id, status: CurationConcerns::Operation::PENDING)
+      update(job_class: job.class.to_s, job_id: job.job_id, status: Sufia::Operation::PENDING)
     end
   end
 end

@@ -39,7 +39,7 @@ describe Sufia::CreateWithRemoteFilesActor do
     end
 
     it "attaches files" do
-      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, CurationConcerns::Operation).twice
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Sufia::Operation).twice
       expect(actor.create(attributes)).to be true
     end
   end

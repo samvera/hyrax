@@ -24,7 +24,7 @@ module CurationConcerns
     end
 
     def operation_abilities
-      can :read, Operation, user_id: current_user.id
+      can :read, Sufia::Operation, user_id: current_user.id
     end
 
     def admin_permissions

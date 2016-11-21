@@ -1,17 +1,17 @@
 FactoryGirl.define do
-  factory :operation, class: CurationConcerns::Operation do
+  factory :operation, class: Sufia::Operation do
     operation_type "Test operation"
 
     trait :failing do
-      status CurationConcerns::Operation::FAILURE
+      status Sufia::Operation::FAILURE
     end
 
     trait :pending do
-      status CurationConcerns::Operation::PENDING
+      status Sufia::Operation::PENDING
     end
 
     trait :successful do
-      status CurationConcerns::Operation::SUCCESS
+      status Sufia::Operation::SUCCESS
     end
 
     factory :batch_create_operation, class: Sufia::BatchCreateOperation do
