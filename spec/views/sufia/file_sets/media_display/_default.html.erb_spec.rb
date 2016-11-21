@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'curation_concerns/file_sets/mdeia_display/_default.html.erb', type: :view do
+describe 'sufia/file_sets/mdeia_display/_default.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
   let(:config) { double }
   let(:link) { true }
 
   before do
     allow(Sufia.config).to receive(:display_media_download_link).and_return(link)
-    render 'curation_concerns/file_sets/media_display/default', file_set: file_set
+    render 'sufia/file_sets/media_display/default', file_set: file_set
   end
 
   it "draws the view with the link" do

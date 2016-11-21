@@ -7,7 +7,7 @@
   RSpec::Matchers.define "respond_#{response_type}".to_sym do |expectation_options|
     match do |response|
       @expected_response_body = expectation_options.nil? ? default_response_body : default_response_body.merge(expectation_options)
-      expect(response.body).to_not be_empty
+      expect(response.body).not_to be_empty
       json = JSON.parse(response.body)
       expect(response.code).to eq(@expected_response_body[:code].to_s)
       @expected_response_body.each_pair do |key, value|

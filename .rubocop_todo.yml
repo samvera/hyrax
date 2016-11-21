@@ -17,15 +17,17 @@ Metrics/ParameterLists:
 
 Metrics/ModuleLength:
   Exclude:
+    - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
     - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
 
 Metrics/MethodLength:
   Exclude:
-    - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
+    - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
+    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
-    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
+    - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
     - 'lib/sufia/configuration.rb'

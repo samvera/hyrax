@@ -13,7 +13,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
 
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.curation_concerns_file_set_path(id: file)
+      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.sufia_file_set_path(id: file)
     end
 
     let :download_link do

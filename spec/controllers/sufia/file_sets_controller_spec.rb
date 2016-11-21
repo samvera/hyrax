@@ -1,9 +1,9 @@
-describe CurationConcerns::FileSetsController do
+describe Sufia::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
   before do
     sign_in user
-    allow_any_instance_of(User).to receive(:groups).and_return([])
+    # allow_any_instance_of(User).to receive(:groups).and_return([])
     # prevents characterization and derivative creation
     allow(CharacterizeJob).to receive(:perform_later)
     allow(CreateDerivativesJob).to receive(:perform_later)
@@ -53,7 +53,7 @@ describe CurationConcerns::FileSetsController do
     it "sets the breadcrumbs and versions presenter" do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.sufia_file_set_path(file_set))
       get :edit, params: { id: file_set }
 
       expect(response).to be_success
@@ -182,13 +182,16 @@ describe CurationConcerns::FileSetsController do
     end
 
     context "when there's an error saving" do
-      let!(:file_set) do
+      let(:file_set) do
         FileSet.create do |fs|
           fs.apply_depositor_metadata(user)
         end
       end
+      before do
+        allow(FileSet).to receive(:find).and_return(file_set)
+      end
       it "draws the edit page" do
-        expect_any_instance_of(FileSet).to receive(:valid?).and_return(false)
+        expect(file_set).to receive(:valid?).and_return(false)
         post :update, params: { id: file_set, file_set: { keyword: [''] } }
         expect(response.code).to eq '422'
         expect(response).to render_template('edit')
@@ -257,8 +260,8 @@ describe CurationConcerns::FileSetsController do
       it "shows me the breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
         expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
-        expect(controller).to receive(:add_breadcrumb).with('test title', main_app.curation_concerns_generic_work_path(work.id))
-        expect(controller).to receive(:add_breadcrumb).with('test file', main_app.curation_concerns_file_set_path(file_set))
+        expect(controller).to receive(:add_breadcrumb).with('test title', main_app.sufia_generic_work_path(work.id))
+        expect(controller).to receive(:add_breadcrumb).with('test file', main_app.sufia_file_set_path(file_set))
         get :show, params: { id: file_set }
         expect(response).to be_successful
       end

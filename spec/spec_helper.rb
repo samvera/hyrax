@@ -41,6 +41,7 @@ require 'support/features'
 require 'support/backport_test_helpers'
 require 'support/factory_helpers'
 require 'support/rake'
+require 'support/matchers/api_responses'
 require 'byebug' unless ENV['TRAVIS']
 
 Capybara.default_driver = :rack_test      # This is a faster driver

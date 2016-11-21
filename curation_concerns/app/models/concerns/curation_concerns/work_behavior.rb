@@ -10,7 +10,7 @@ module CurationConcerns::WorkBehavior
   include Solrizer::Common
   include CurationConcerns::HasRepresentative
   include CurationConcerns::WithFileSets
-  include CurationConcerns::Naming
+  include Sufia::Naming
   include CurationConcerns::RequiredMetadata
   include CurationConcerns::InAdminSet
   include Hydra::AccessControls::Embargoable

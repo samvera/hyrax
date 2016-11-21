@@ -1,5 +1,5 @@
 class CitationsController < ApplicationController
-  include CurationConcerns::CurationConcernController
+  include Sufia::CurationConcernController
   include Sufia::Breadcrumbs
   include Sufia::SingularSubresourceController
 

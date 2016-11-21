@@ -13,7 +13,7 @@ module CurationConcerns
       CurationConcerns::Actors::EmbargoActor.new(curation_concern).destroy
       flash[:notice] = curation_concern.embargo_history.last
       if curation_concern.work? && curation_concern.file_sets.present?
-        redirect_to confirm_curation_concerns_permission_path(curation_concern)
+        redirect_to confirm_sufia_permission_path(curation_concern)
       else
         redirect_to edit_embargo_path(curation_concern)
       end

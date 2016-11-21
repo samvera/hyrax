@@ -13,7 +13,7 @@ describe 'curation_concerns/base/edit.html.erb', type: :view do
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     assign(:form, form)
-    view.controller = CurationConcerns::GenericWorksController.new
+    view.controller = Sufia::GenericWorksController.new
     view.controller.action_name = 'edit'
     stub_template "curation_concerns/base/_form.html.erb" => 'a form'
   end

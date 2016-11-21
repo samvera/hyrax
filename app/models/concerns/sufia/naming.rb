@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Naming
     extend ActiveSupport::Concern
 
@@ -9,7 +9,7 @@ module CurationConcerns
           namespace = parents.detect do |n|
             n.respond_to?(:use_relative_model_naming?) && n.use_relative_model_naming?
           end
-          CurationConcerns::Name.new(self, namespace)
+          Sufia::Name.new(self, namespace)
         end
       end
     end

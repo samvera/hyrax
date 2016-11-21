@@ -28,7 +28,7 @@ module Sufia
     def add_breadcrumb_for_action
       case action_name
       when 'edit'.freeze
-        add_breadcrumb I18n.t("sufia.file_set.browse_view"), main_app.curation_concerns_file_set_path(params["id"])
+        add_breadcrumb I18n.t("sufia.file_set.browse_view"), main_app.sufia_file_set_path(params["id"])
       when 'show'.freeze
         add_breadcrumb presenter.parent.to_s, main_app.polymorphic_path(presenter.parent)
         add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)

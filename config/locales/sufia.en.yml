@@ -8,6 +8,12 @@ en:
       about:            "About"
       help:             "Help"
       contact:          "Contact"
+    file_sets:
+      groups_description:
+        description_html: >
+          The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
+          you are a member of.  You may select a specific group and assign an access level for a file
+          within %{application_name}, similarly to adding user access levels.
     product_name:       "Sufia"
     product_twitter_handle: "@HydraSphere"
     icons:
@@ -464,12 +470,6 @@ en:
         twitter: 'Twitter'
         tumblr: 'Tumblr'
         google: 'Google+'
-    file_sets:
-      groups_description:
-        description_html: >
-          The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
-          you are a member of.  You may select a specific group and assign an access level for a file
-          within %{application_name}, similarly to adding user access levels.
     visibility:
       open:
         label_html: Public

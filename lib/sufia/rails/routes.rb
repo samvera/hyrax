@@ -9,7 +9,7 @@ module ActionDispatch::Routing
       resources :downloads, only: :show
       resources :upload_sets, only: [:edit, :update]
 
-      namespace :curation_concerns, path: :concern do
+      namespace :sufia, path: :concern do
         namespaced_resources 'workflow_actions', only: [:update]
         concerns_to_route.each do |curation_concern_name|
           namespaced_resources curation_concern_name, except: [:index], &block
@@ -79,11 +79,11 @@ module ActionDispatch::Routing
     private
 
       # routing namepace arguments, for using a path other than the default
-      ROUTE_OPTIONS = { 'curation_concerns' => { path: :concern } }.freeze
+      ROUTE_OPTIONS = { 'sufia' => { path: :concern } }.freeze
 
       # Namespaces routes appropriately
-      # @example namespaced_resources("curation_concerns/my_work") is equivalent to
-      #   namespace "curation_concerns", path: :concern do
+      # @example namespaced_resources("sufia/my_work") is equivalent to
+      #   namespace "sufia", path: :concern do
       #     resources "my_work", except: [:index]
       #   end
       def namespaced_resources(target, opts = {}, &block)

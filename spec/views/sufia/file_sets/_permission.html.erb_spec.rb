@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe 'curation_concerns/file_sets/_permission.html.erb', type: :view do
+describe 'sufia/file_sets/_permission.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
 
   before do
-    stub_template "curation_concerns/file_sets/_permission_form.html.erb" => 'a form'
-    render 'curation_concerns/file_sets/permission', file_set: file_set
+    stub_template "sufia/file_sets/_permission_form.html.erb" => 'a form'
+    render 'sufia/file_sets/permission', file_set: file_set
   end
 
   context "without additional users" do

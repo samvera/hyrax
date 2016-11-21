@@ -32,7 +32,7 @@ class Sufia::WorkGenerator < Rails::Generators::NamedBase
 
   def create_controller_spec
     return unless rspec_installed?
-    template('controller_spec.rb.erb', "spec/controllers/curation_concerns/#{plural_file_name}_controller_spec.rb")
+    template('controller_spec.rb.erb', "spec/controllers/sufia/#{plural_file_name}_controller_spec.rb")
   end
 
   def create_actor_spec
@@ -51,7 +51,7 @@ class Sufia::WorkGenerator < Rails::Generators::NamedBase
   end
 
   def create_controller
-    template('controller.rb.erb', "app/controllers/curation_concerns/#{plural_file_name}_controller.rb")
+    template('controller.rb.erb', "app/controllers/sufia/#{plural_file_name}_controller.rb")
   end
 
   def create_actor
@@ -90,18 +90,6 @@ class Sufia::WorkGenerator < Rails::Generators::NamedBase
       end
     else
       puts "     \e[31mFailure\e[0m  Sufia requires a #{class_name}Form object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
-    end
-  end
-
-  def inject_sufia_work_controller_behavior
-    file_path = "app/controllers/curation_concerns/#{plural_file_name}_controller.rb"
-    if File.exist?(file_path)
-      inject_into_file file_path, after: /include CurationConcerns::CurationConcernController/ do
-        "\n    # Adds Sufia behaviors to the controller.\n" \
-          "    include Sufia::WorksControllerBehavior\n"
-      end
-    else
-      puts "     \e[31mFailure\e[0m  Sufia requires a #{controller_class_name} object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
     end
   end
 

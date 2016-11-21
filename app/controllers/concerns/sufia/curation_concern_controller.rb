@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module CurationConcernController
     extend ActiveSupport::Concern
     include Blacklight::Base
@@ -11,8 +11,8 @@ module CurationConcerns
       helper CurationConcerns::AbilityHelper
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service
-      self.show_presenter = WorkShowPresenter
-      self.work_form_service = WorkFormService
+      self.show_presenter = Sufia::WorkShowPresenter
+      self.work_form_service = CurationConcerns::WorkFormService
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
     end
@@ -95,10 +95,9 @@ module CurationConcerns
 
     def destroy
       title = curation_concern.to_s
-      if actor.destroy
-        Sufia.config.callback.run(:after_destroy, curation_concern.id, current_user)
-        after_destroy_response(title)
-      end
+      return unless actor.destroy
+      Sufia.config.callback.run(:after_destroy, curation_concern.id, current_user)
+      after_destroy_response(title)
     end
 
     def file_manager
@@ -146,7 +145,7 @@ module CurationConcerns
       def after_update_response
         # TODO: visibility or lease/embargo status
         if curation_concern.visibility_changed? && curation_concern.file_sets.present?
-          redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
+          redirect_to main_app.confirm_sufia_permission_path(curation_concern)
         else
           respond_to do |wants|
             wants.html { redirect_to [main_app, curation_concern] }
@@ -165,7 +164,7 @@ module CurationConcerns
 
       def attributes_for_actor
         raw_params = params[hash_key_for_curation_concern]
-        return unless raw_params
+        return {} unless raw_params
         work_form_service.form_class(curation_concern).model_attributes(raw_params)
       end
 

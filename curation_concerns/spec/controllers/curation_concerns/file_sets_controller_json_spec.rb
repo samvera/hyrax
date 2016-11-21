@@ -62,7 +62,7 @@ describe CurationConcerns::FileSetsController do
         expect(controller).to render_template('curation_concerns/file_sets/jq_upload')
         expect(response.status).to eq 201
         created_resource = controller.curation_concern
-        expect(response.location).to eq main_app.curation_concerns_file_set_path(created_resource)
+        expect(response.location).to eq main_app.sufia_file_set_path(created_resource)
       end
     end
 
@@ -117,7 +117,7 @@ describe CurationConcerns::FileSetsController do
         expect(response.status).to eq 200
         expect(controller).to render_template('curation_concerns/file_sets/show')
         created_resource = assigns[:file_set]
-        expect(response.location).to eq main_app.curation_concerns_file_set_path(created_resource)
+        expect(response.location).to eq main_app.sufia_file_set_path(created_resource)
       end
     end
 

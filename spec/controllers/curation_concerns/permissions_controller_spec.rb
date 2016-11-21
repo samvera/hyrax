@@ -17,7 +17,7 @@ describe CurationConcerns::PermissionsController do
       expect(VisibilityCopyJob).to receive(:perform_later).with(work)
       expect(InheritPermissionsJob).to receive(:perform_later).with(work)
       post :copy_access, params: { id: work }
-      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+      expect(response).to redirect_to main_app.sufia_generic_work_path(work)
       expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file acess levels.'
     end
   end

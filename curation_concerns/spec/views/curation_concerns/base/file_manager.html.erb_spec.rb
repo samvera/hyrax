@@ -69,7 +69,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   end
 
   it "has a link back to parent" do
-    expect(rendered).to have_link "Test title", href: curation_concerns_generic_work_path(id: "resource")
+    expect(rendered).to have_link "Test title", href: sufia_generic_work_path(id: "resource")
   end
 
   it "has thumbnails for each resource" do

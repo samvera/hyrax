@@ -15,7 +15,7 @@ describe FileDownloadStat, type: :model do
 
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
-    let(:expected_path) { Rails.application.routes.url_helpers.curation_concerns_file_set_path(file) }
+    let(:expected_path) { Rails.application.routes.url_helpers.sufia_file_set_path(file) }
     before do
       allow(Sufia::Analytics).to receive(:profile).and_return(profile)
     end

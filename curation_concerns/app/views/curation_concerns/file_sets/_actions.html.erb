@@ -1,7 +1,7 @@
 <% if can?(:edit, file_set.id) %>
   <%= link_to( 'Edit', edit_polymorphic_path([main_app, file_set]),
     { class: 'btn btn-default', title: "Edit #{file_set}" }) %>
-  <%= link_to( 'Rollback', main_app.versions_curation_concerns_file_set_path(file_set),
+  <%= link_to( 'Rollback', main_app.versions_sufia_file_set_path(file_set),
     { class: 'btn btn-default', title: "Rollback to previous version" }) %>
 <% end %>
 <% if can?(:destroy, file_set.id) %>

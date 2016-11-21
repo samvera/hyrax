@@ -37,7 +37,7 @@ describe 'curation_concerns/base/_member.html.erb' do
 
     # Action buttons
     expect(rendered).to have_selector "a[title=\"Edit My File\"][href='#{edit_polymorphic_path(presenter)}']", text: 'Edit'
-    expect(rendered).to have_selector "a[title=\"Rollback to previous version\"][href='#{versions_curation_concerns_file_set_path(presenter)}']", text: 'Rollback'
+    expect(rendered).to have_selector "a[title=\"Rollback to previous version\"][href='#{versions_sufia_file_set_path(presenter)}']", text: 'Rollback'
     expect(rendered).to have_selector "a[title=\"Delete My File\"][data-method='delete'][href='#{polymorphic_path(presenter)}']", text: 'Delete'
     expect(rendered).to have_link('Download')
     expect(rendered).to have_selector "a[title='Download \"My File\"'][href='#{download_path(presenter)}']", text: 'Download'

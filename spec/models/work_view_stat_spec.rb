@@ -17,7 +17,7 @@ RSpec.describe WorkViewStat, type: :model do
 
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
-    let(:expected_path) { Rails.application.routes.url_helpers.curation_concerns_generic_work_path(work) }
+    let(:expected_path) { Rails.application.routes.url_helpers.sufia_generic_work_path(work) }
     before do
       allow(Sufia::Analytics).to receive(:profile).and_return(profile)
     end

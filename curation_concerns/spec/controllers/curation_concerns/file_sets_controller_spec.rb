@@ -128,7 +128,7 @@ describe CurationConcerns::FileSetsController do
         expect(FileSet.find(file_set.id)).to be_kind_of FileSet
         delete :destroy, params: { id: file_set }
         expect { FileSet.find(file_set.id) }.to raise_error Ldp::Gone
-        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(parent)
+        expect(response).to redirect_to main_app.sufia_generic_work_path(parent)
       end
     end
 
@@ -153,7 +153,7 @@ describe CurationConcerns::FileSetsController do
             id: file_set,
             file_set: { title: ['new_title'], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           }
-          expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
+          expect(response).to redirect_to main_app.sufia_file_set_path(file_set)
           expect(assigns[:file_set].title).to eq(['new_title'])
         end
 
@@ -201,7 +201,7 @@ describe CurationConcerns::FileSetsController do
         it 'is successful' do
           expect(IngestFileJob).to receive(:perform_later)
           post :update, params: { id: file_set, file_set: { files: [file] } }
-          expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
+          expect(response).to redirect_to main_app.sufia_file_set_path(file_set)
         end
       end
 
@@ -220,7 +220,7 @@ describe CurationConcerns::FileSetsController do
           expect(file_set.latest_content_version.label).to eq('version2')
           expect(file_set.original_file.content).to eq("This is a test fixture for curation_concerns: <%= @id %>.\n")
           post :update, params: { id: file_set, revision: 'version1' }
-          expect(response).to redirect_to main_app.curation_concerns_file_set_path(file_set)
+          expect(response).to redirect_to main_app.sufia_file_set_path(file_set)
           reloaded = file_set.reload.original_file
           expect(reloaded.versions.last.label).to eq 'version3'
           expect(reloaded.content).to eq "small\n"

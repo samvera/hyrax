@@ -71,7 +71,7 @@ describe EmbargoesController do
         it 'deactivates embargo and checks to see if we want to copy the visibility to files' do
           expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
-          expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
+          expect(response).to redirect_to confirm_sufia_permission_path(a_work)
         end
       end
     end

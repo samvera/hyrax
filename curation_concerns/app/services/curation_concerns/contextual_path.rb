@@ -10,7 +10,9 @@ module CurationConcerns
 
     def show
       if parent_presenter
-        polymorphic_path([:curation_concerns, :parent, presenter.model_name.singular], parent_id: parent_presenter.id, id: presenter.id)
+        polymorphic_path([:sufia, :parent, presenter.model_name.singular],
+                         parent_id: parent_presenter.id,
+                         id: presenter.id)
       else
         polymorphic_path([presenter])
       end

@@ -15,7 +15,7 @@ HTML Properties:
 <% if f.object.class.multiple? key %>
   <div class="form-group multi_value optional work_in_works_ids managed">
     <table class="table table-striped related-files relationships-ajax-enabled"
-           data-query-url="<%=polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: '$id') %>">
+           data-query-url="<%=polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: '$id') %>">
       <thead>
         <tr>
           <th>Parent Work</th>
@@ -26,12 +26,12 @@ HTML Properties:
         <% curation_concern.in_works.each do |parent| %>
           <tr>
             <td>
-              <%= link_to "#{parent.title.first}", polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: parent.id) %>
+              <%= link_to "#{parent.title.first}", polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: parent.id) %>
               <input class="string multi_value optional form-control related_works_ids form-control multi-text-field hidden" name="<%= curation_concern.model_name.param_key %>[in_works_ids][]" value="<%= parent.id %>" id="work_in_works_ids" aria-labelledby="work_in_works_ids_label" type="text">
             </td>
             <td>
               <div class="child-actions">
-                <%= link_to "Edit", edit_polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: parent.id), target: "_blank", class: 'btn btn-default' %>
+                <%= link_to "Edit", edit_polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: parent.id), target: "_blank", class: 'btn btn-default' %>
                 <a class="btn btn-danger btn-remove-row">Remove</a>
               </div>
             </td>

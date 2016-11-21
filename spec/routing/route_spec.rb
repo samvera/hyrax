@@ -65,32 +65,32 @@ describe 'Routes', type: :routing do
 
       context "with a file_set" do
         it 'routes to create' do
-          expect(post: '/concern/container/12/file_sets').to route_to(controller: 'curation_concerns/file_sets', action: 'create', parent_id: '12')
+          expect(post: '/concern/container/12/file_sets').to route_to(controller: 'sufia/file_sets', action: 'create', parent_id: '12')
         end
 
         it 'routes to new' do
-          expect(get: '/concern/container/12/file_sets/new').to route_to(controller: 'curation_concerns/file_sets', action: 'new', parent_id: '12')
+          expect(get: '/concern/container/12/file_sets/new').to route_to(controller: 'sufia/file_sets', action: 'new', parent_id: '12')
         end
       end
 
       it 'routes to edit' do
-        expect(get: '/concern/file_sets/3/edit').to route_to(controller: 'curation_concerns/file_sets', action: 'edit', id: '3')
+        expect(get: '/concern/file_sets/3/edit').to route_to(controller: 'sufia/file_sets', action: 'edit', id: '3')
       end
 
       it "routes to show" do
-        expect(get: '/concern/file_sets/4').to route_to(controller: 'curation_concerns/file_sets', action: 'show', id: '4')
+        expect(get: '/concern/file_sets/4').to route_to(controller: 'sufia/file_sets', action: 'show', id: '4')
       end
 
       it "routes to update" do
-        expect(put: '/concern/file_sets/5').to route_to(controller: 'curation_concerns/file_sets', action: 'update', id: '5')
+        expect(put: '/concern/file_sets/5').to route_to(controller: 'sufia/file_sets', action: 'update', id: '5')
       end
 
       it "routes to destroy" do
-        expect(delete: '/concern/file_sets/6').to route_to(controller: 'curation_concerns/file_sets', action: 'destroy', id: '6')
+        expect(delete: '/concern/file_sets/6').to route_to(controller: 'sufia/file_sets', action: 'destroy', id: '6')
       end
 
       it "doesn't route to index" do
-        expect(get: '/concern/file_sets').not_to route_to(controller: 'curation_concerns/file_sets', action: 'index')
+        expect(get: '/concern/file_sets').not_to route_to(controller: 'sufia/file_sets', action: 'index')
       end
     end
   end
@@ -210,7 +210,7 @@ describe 'Routes', type: :routing do
 
     describe 'GenericWork' do
       it "routes to show" do
-        expect(get: '/concern/generic_works/4').to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: '4')
+        expect(get: '/concern/generic_works/4').to route_to(controller: 'sufia/generic_works', action: 'show', id: '4')
       end
     end
   end

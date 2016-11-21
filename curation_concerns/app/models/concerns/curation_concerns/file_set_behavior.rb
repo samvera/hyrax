@@ -16,7 +16,7 @@ module CurationConcerns
     include CurationConcerns::FileSet::Querying
     include CurationConcerns::HumanReadableType
     include CurationConcerns::RequiredMetadata
-    include CurationConcerns::Naming
+    include Sufia::Naming
     include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
 

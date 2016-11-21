@@ -21,7 +21,7 @@ class StatsController < ApplicationController
     def add_breadcrumb_for_action
       case action_name
       when 'file'.freeze
-        add_breadcrumb I18n.t("sufia.file_set.browse_view"), main_app.curation_concerns_file_set_path(params["id"])
+        add_breadcrumb I18n.t("sufia.file_set.browse_view"), main_app.sufia_file_set_path(params["id"])
       when 'work'.freeze
         add_breadcrumb I18n.t("sufia.work.browse_view"), polymorphic_path(@work)
       end

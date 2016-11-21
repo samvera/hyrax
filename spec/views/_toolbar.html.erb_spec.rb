@@ -53,7 +53,7 @@ describe '/_toolbar.html.erb', type: :view do
     context "when the user can create GenericWorks" do
       it "has a link to upload" do
         render
-        expect(rendered).to have_link('New Work', href: new_curation_concerns_generic_work_path)
+        expect(rendered).to have_link('New Work', href: new_sufia_generic_work_path)
       end
     end
 

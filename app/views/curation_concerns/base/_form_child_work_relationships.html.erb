@@ -13,10 +13,10 @@ HTML Properties:
     data-query-url : URL base to append newly added work ID to for querying details (title, href)
 %>
 <div class="form-group multi_value optional managed">
-  <%= link_to "Attach New Work", polymorphic_path([main_app, :new, :curation_concerns, :parent, curation_concern.model_name.singular], parent_id: params[:id]), target: "_blank", class: 'btn btn-primary' %>
+  <%= link_to "Attach New Work", polymorphic_path([main_app, :new, :sufia, :parent, curation_concern.model_name.singular], parent_id: params[:id]), target: "_blank", class: 'btn btn-primary' %>
 
   <table class="table table-striped related-files relationships-ajax-enabled"
-         data-query-url="<%= polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: '$id') %>">
+         data-query-url="<%= polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: '$id') %>">
     <thead>
     <tr>
       <th>Child Work</th>

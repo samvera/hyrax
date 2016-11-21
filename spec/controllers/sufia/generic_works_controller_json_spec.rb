@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-# This tests the CurationConcerns::CurationConcernController module
-# which is included into .internal_test_app/app/controllers/generic_works_controller.rb
-describe CurationConcerns::GenericWorksController do
+# This tests the Sufia::CurationConcernController module
+# which is included into .internal_test_app/app/controllers/sufia/generic_works_controller.rb
+describe Sufia::GenericWorksController do
+  routes { Rails.application.routes }
+
   let(:user) { create(:user) }
   before { sign_in user }
 
@@ -48,7 +50,7 @@ describe CurationConcerns::GenericWorksController do
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "201"
-        expect(response.location).to eq main_app.curation_concerns_generic_work_path(model)
+        expect(response.location).to eq main_app.sufia_generic_work_path(model)
       end
     end
 
@@ -78,7 +80,7 @@ describe CurationConcerns::GenericWorksController do
         expect(controller).to render_template('curation_concerns/base/show')
         expect(response.code).to eq "200"
         created_resource = assigns[:curation_concern]
-        expect(response.location).to eq main_app.curation_concerns_generic_work_path(created_resource)
+        expect(response.location).to eq main_app.sufia_generic_work_path(created_resource)
       end
     end
 

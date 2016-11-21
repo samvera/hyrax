@@ -1,17 +1,41 @@
 require 'spec_helper'
 
-# This tests the CurationConcerns::CurationConcernController module
-# which is included into .internal_test_app/app/controllers/generic_works_controller.rb
-describe CurationConcerns::GenericWorksController do
+# This tests the Sufia::CurationConcernController module
+# which is included into .internal_test_app/app/controllers/sufia/generic_works_controller.rb
+describe Sufia::GenericWorksController do
+  routes { Rails.application.routes }
   let(:user) { create(:user) }
   before { sign_in user }
 
   describe '#show' do
     context 'my own private work' do
-      let(:work) { create(:private_generic_work, user: user) }
+      let(:work) { create(:private_generic_work, user: user, title: ['test title']) }
       it 'shows me the page' do
         get :show, params: { id: work }
         expect(response).to be_success
+        expect(assigns(:presenter)).to be_kind_of Sufia::WorkShowPresenter
+      end
+
+      context "without a referer" do
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          get :show, params: { id: work }
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.sufia_generic_work_path(work.id))
+          get :show, params: { id: work }
+          expect(response).to be_successful
+        end
       end
 
       context "with a parent work" do
@@ -19,7 +43,22 @@ describe CurationConcerns::GenericWorksController do
         it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
           expect(response).to be_success
-          expect(assigns[:parent_presenter]).to be_instance_of CurationConcerns::WorkShowPresenter
+          expect(assigns[:parent_presenter]).to be_instance_of Sufia::WorkShowPresenter
+        end
+      end
+
+      context "with an endnote file" do
+        let(:disposition)  { response.header.fetch("Content-Disposition") }
+        let(:content_type) { response.header.fetch("Content-Type") }
+
+        render_views
+
+        it 'downloads the file' do
+          get :show, params: { id: work, format: 'endnote' }
+          expect(response).to be_successful
+          expect(disposition).to include("attachment")
+          expect(content_type).to eq("application/x-endnote-refer")
+          expect(response.body).to include("%T test title")
         end
       end
     end
@@ -60,7 +99,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      before { allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']) }
       let(:work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
         get :show, params: { id: work }
@@ -81,8 +120,12 @@ describe CurationConcerns::GenericWorksController do
     context 'my work' do
       it 'shows me the page' do
         get :new
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to be_success
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(assigns[:form].depositor).to eq user.user_key
+        expect(assigns[:curation_concern]).to be_kind_of GenericWork
+        expect(assigns[:curation_concern].depositor).to eq user.user_key
+        expect(response).to render_template("layouts/curation_concerns/1_column")
       end
     end
   end
@@ -99,7 +142,7 @@ describe CurationConcerns::GenericWorksController do
       it 'creates a work' do
         allow(controller).to receive(:curation_concern).and_return(work)
         post :create, params: { generic_work: { title: ['a title'] } }
-        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+        expect(response).to redirect_to main_app.sufia_generic_work_path(work)
       end
     end
 
@@ -122,6 +165,93 @@ describe CurationConcerns::GenericWorksController do
         expect(response).to render_template(:unauthorized)
       end
     end
+
+    context "with files" do
+      let(:actor) { double('An actor') }
+      let(:work) { create(:work) }
+      before do
+        allow(controller).to receive(:actor).and_return(actor)
+        # Stub out the creation of the work so we can redirect somewhere
+        allow(controller).to receive(:curation_concern).and_return(work)
+      end
+
+      it "attaches files" do
+        expect(actor).to receive(:create)
+          .with(hash_including(:uploaded_files))
+          .and_return(true)
+        post :create, params: {
+          generic_work: {
+            title: ["First title"],
+            visibility: 'open'
+          },
+          uploaded_files: ['777', '888']
+        }
+        expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
+        expect(response).to redirect_to main_app.sufia_generic_work_path(work)
+      end
+
+      context "from browse everything" do
+        let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
+        let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
+        let(:browse_everything_params) do
+          { "0" => { "url" => url1,
+                     "expires" => "2014-03-31T20:37:36.214Z",
+                     "file_name" => "filepicker-demo.txt.txt" },
+            "1" => { "url" => url2,
+                     "expires" => "2014-03-31T20:37:36.731Z",
+                     "file_name" => "Getting+Started.pdf" } }.with_indifferent_access
+        end
+        let(:uploaded_files) do
+          browse_everything_params.values.map { |v| v['url'] }
+        end
+
+        context "For a batch upload" do
+          # TODO: move this to batch_uploads controller
+          it "ingests files from provide URLs" do
+            skip "Creating a FileSet without a parent work is not yet supported"
+            expect(ImportUrlJob).to receive(:perform_later).twice
+            expect do
+              post :create, params: { selected_files: browse_everything_params, file_set: {} }
+            end.to change(FileSet, :count).by(2)
+            created_files = FileSet.all
+            expect(created_files.map(&:import_url)).to include(url1, url2)
+            expect(created_files.map(&:label)).to include("filepicker-demo.txt.txt", "Getting+Started.pdf")
+          end
+        end
+
+        context "when a work id is passed" do
+          let(:work) do
+            GenericWork.create!(title: ['test title']) do |w|
+              w.apply_depositor_metadata(user)
+            end
+          end
+          it "records the work" do
+            # TODO: ensure the actor stack, called with these params
+            # makes one work, two file sets and calls ImportUrlJob twice.
+            if Rails.version < '5.0.0'
+              expect(actor).to receive(:create)
+                .with(hash_including(uploaded_files: [],
+                                     remote_files: browse_everything_params.values))
+                .and_return(true)
+            else
+              expect(actor).to receive(:create).with(ActionController::Parameters) do |ac_params|
+                expect(ac_params['uploaded_files']).to eq []
+                expect(ac_params['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
+              end
+            end
+
+            post :create, params: {
+              selected_files: browse_everything_params,
+              uploaded_files: uploaded_files,
+              parent_id: work.id,
+              generic_work: { title: ['First title'] }
+            }
+            expect(flash[:notice]).to eq "Your files are being processed by Sufia in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
+            expect(response).to redirect_to main_app.sufia_generic_work_path(work)
+          end
+        end
+      end
+    end
   end
 
   describe '#edit' do
@@ -129,8 +259,31 @@ describe CurationConcerns::GenericWorksController do
       let(:work) { create(:private_generic_work, user: user) }
       it 'shows me the page' do
         get :edit, params: { id: work }
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
         expect(response).to be_success
+        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(response).to render_template("layouts/curation_concerns/1_column")
+      end
+
+      context "without a referer" do
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          get :edit, params: { id: work }
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with('My Works', Sufia::Engine.routes.url_helpers.dashboard_works_path)
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t("sufia.work.browse_view"), Rails.application.routes.url_helpers.sufia_generic_work_path(work))
+          get :edit, params: { id: work }
+          expect(response).to be_successful
+        end
       end
     end
 
@@ -154,7 +307,7 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      before { allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']) }
       let(:work) { create(:private_generic_work) }
       it 'someone elses private work should show me the page' do
         get :edit, params: { id: work }
@@ -169,17 +322,18 @@ describe CurationConcerns::GenericWorksController do
     let(:actor) { double(update: true) }
     before do
       allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
-      allow_any_instance_of(GenericWork).to receive(:visibility_changed?).and_return(visibility_changed)
+      allow(GenericWork).to receive(:find).and_return(work)
+      allow(work).to receive(:visibility_changed?).and_return(visibility_changed)
     end
 
     it 'updates the work' do
       patch :update, params: { id: work, generic_work: {} }
-      expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+      expect(response).to redirect_to main_app.sufia_generic_work_path(work)
     end
 
     it "can update file membership" do
       patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
-      expected_params = { ordered_member_ids: ['foo_123'] }
+      expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
       if Rails.version < '5.0.0'
         expect(actor).to have_received(:update).with(expected_params)
       else
@@ -196,14 +350,14 @@ describe CurationConcerns::GenericWorksController do
 
         it 'prompts to change the files access' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.confirm_curation_concerns_permission_path(controller.curation_concern)
+          expect(response).to redirect_to main_app.confirm_sufia_permission_path(controller.curation_concern)
         end
       end
 
       context 'without children' do
         it "doesn't prompt to change the files access" do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+          expect(response).to redirect_to main_app.sufia_generic_work_path(work)
         end
       end
     end
@@ -228,11 +382,12 @@ describe CurationConcerns::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      before { allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']) }
+
       let(:work) { create(:private_generic_work) }
       it 'someone elses private work should update the work' do
         patch :update, params: { id: work, generic_work: {} }
-        expect(response).to redirect_to main_app.curation_concerns_generic_work_path(work)
+        expect(response).to redirect_to main_app.sufia_generic_work_path(work)
       end
     end
   end
@@ -277,7 +432,7 @@ describe CurationConcerns::GenericWorksController do
 
     context 'when I am a repository manager' do
       let(:work_to_be_deleted) { create(:private_generic_work) }
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      before { allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']) }
       it 'someone elses private work should delete the work' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)

@@ -70,7 +70,7 @@ describe LeasesController do
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
-          expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
+          expect(response).to redirect_to confirm_sufia_permission_path(a_work)
         end
       end
     end

@@ -2,7 +2,7 @@ module Sufia
   module BatchUploadsControllerBehavior
     extend ActiveSupport::Concern
     include Hydra::Controller::ControllerBehavior
-    include CurationConcerns::CurationConcernController
+    include Sufia::CurationConcernController
 
     included do
       self.work_form_service = BatchUploadFormService

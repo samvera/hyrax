@@ -2,11 +2,7 @@ module Sufia
   module WorksControllerBehavior
     extend ActiveSupport::Concern
     include Sufia::Breadcrumbs
-    include CurationConcerns::CurationConcernController
-
-    included do
-      self.show_presenter = Sufia::WorkShowPresenter
-    end
+    include Sufia::CurationConcernController
 
     module ClassMethods
       # We don't want the breadcrumb action to occur until after the concern has
@@ -41,7 +37,6 @@ module Sufia
         # we need the hash of files with url and file_name
         browse_everything_files = selected_files
                                   .select { |v| uploaded_files.include?(v[:url]) }
-
         attributes[:remote_files] = browse_everything_files
         # Strip out any BrowseEverthing files from the regular uploads.
         attributes[:uploaded_files] = uploaded_files -
@@ -63,7 +58,7 @@ module Sufia
         if permissions_changed? && curation_concern.file_sets.present?
           redirect_to sufia.confirm_access_curation_concerns_permission_path(curation_concern)
         elsif curation_concern.visibility_changed? && curation_concern.file_sets.present?
-          redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
+          redirect_to main_app.confirm_sufia_permission_path(curation_concern)
         else
           respond_to do |wants|
             wants.html { redirect_to [main_app, curation_concern] }
@@ -72,7 +67,7 @@ module Sufia
         end
       end
 
-      # Called by CurationConcerns::CurationConcernController#show
+      # Called by Sufia::CurationConcernController#show
       def additional_response_formats(format)
         format.endnote do
           send_data(presenter.solr_document.export_as_endnote,

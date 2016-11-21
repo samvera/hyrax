@@ -18,7 +18,7 @@ describe StatsController do
         expect(Sufia::FileUsage).to receive(:new).with(file_set.id).and_return(usage)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.curation_concerns_file_set_path(file_set))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.file_set.browse_view'), Rails.application.routes.url_helpers.sufia_file_set_path(file_set))
         get :file, params: { id: file_set }
         expect(response).to be_success
         expect(response).to render_template('stats/file')
@@ -59,7 +59,7 @@ describe StatsController do
       expect(Sufia::WorkUsage).to receive(:new).with(work.id).and_return(usage)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.works'), Sufia::Engine.routes.url_helpers.dashboard_works_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.work.browse_view'), main_app.curation_concerns_generic_work_path(work))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.work.browse_view'), main_app.sufia_generic_work_path(work))
       get :work, params: { id: work }
       expect(response).to be_success
       expect(response).to render_template('stats/work')

@@ -30,7 +30,7 @@ RSpec.describe CurationConcerns::WorkflowActionsController, type: :controller do
       sign_in(user)
 
       put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
-      expect(response).to redirect_to(main_app.curation_concerns_generic_work_path(generic_work))
+      expect(response).to redirect_to(main_app.sufia_generic_work_path(generic_work))
     end
   end
 end

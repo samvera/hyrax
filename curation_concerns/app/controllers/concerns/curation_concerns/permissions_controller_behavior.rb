@@ -3,7 +3,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-      include CurationConcerns::CurationConcernController
+      include Sufia::CurationConcernController
 
       def confirm
       end
