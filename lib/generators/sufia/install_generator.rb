@@ -10,7 +10,7 @@ module Sufia
   4. Injects CurationConcerns routes
   5. Adds CurationConcerns abilities into the Ability class
   6. Copies the catalog controller into the local app
-  7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
+  7. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
   8. Adds local authority files to the application
   9. Copies modified simple_form initializers
   10. Generates a default workflow
@@ -23,11 +23,10 @@ module Sufia
   12. Adds Sufia's abilities into the Ability class
   13. Adds controller behavior to the application controller
   14. Copies the catalog controller into the local app
-  15. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
-  16. Installs sufia assets
-  17. Updates simple_form to use browser validations
-  18. Installs Blacklight gallery (and removes it's scss)
-  19. Runs the jquery-datatables generator
+  15. Installs sufia assets
+  16. Updates simple_form to use browser validations
+  17. Installs Blacklight gallery (and removes it's scss)
+  18. Runs the jquery-datatables generator
          """
 
     def run_required_generators
@@ -95,11 +94,11 @@ module Sufia
       file_path = 'app/models/solr_document.rb'
       if File.exist?(file_path)
         inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
-          "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" \
-            "  include CurationConcerns::SolrDocumentBehavior\n"
+          "\n  # Adds Sufia behaviors to the SolrDocument.\n" \
+            "  include Sufia::SolrDocumentBehavior\n"
         end
       else
-        puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+        puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
       end
     end
 
@@ -118,12 +117,6 @@ module Sufia
 
     def install_config
       generate "sufia:config"
-    end
-
-    def inject_sufia_file_set_behavior
-      insert_into_file 'app/models/file_set.rb', after: 'include ::CurationConcerns::FileSetBehavior' do
-        "\n  include Sufia::FileSetBehavior"
-      end
     end
 
     def install_mailboxer
@@ -155,19 +148,6 @@ module Sufia
 
     def copy_helper
       copy_file 'sufia_helper.rb', 'app/helpers/sufia_helper.rb'
-    end
-
-    # Add behaviors to the SolrDocument model
-    def inject_sufia_solr_document_behavior
-      file_path = "app/models/solr_document.rb"
-      if File.exist?(file_path)
-        inject_into_file file_path, after: /include CurationConcerns::SolrDocumentBehavior/ do
-          "\n  # Adds Sufia behaviors to the SolrDocument.\n" \
-            "  include Sufia::SolrDocumentBehavior\n"
-        end
-      else
-        puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generator assumes that the model is defined in the file #{file_path}, which does not exist."
-      end
     end
 
     def install_sufia_700

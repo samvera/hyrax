@@ -13,7 +13,7 @@ describe CurationConcerns::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together all the goodness' do
-    [::CurationConcerns::WithFileSets, ::CurationConcerns::HumanReadableType, CurationConcerns::Noid, CurationConcerns::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common].each do |mixin|
+    [::Sufia::WithFileSets, ::Sufia::HumanReadableType, Sufia::Noid, Sufia::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common].each do |mixin|
       expect(subject.class.ancestors).to include(mixin)
     end
   end

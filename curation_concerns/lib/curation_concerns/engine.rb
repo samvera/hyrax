@@ -30,8 +30,6 @@ module CurationConcerns
     end
 
     initializer 'requires' do
-      require 'curation_concerns/noid'
-      require 'curation_concerns/permissions'
       require 'power_converters'
       require 'dry/struct'
       require 'dry/equalizer'

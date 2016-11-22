@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module FileSet
     module Indexing
       extend ActiveSupport::Concern

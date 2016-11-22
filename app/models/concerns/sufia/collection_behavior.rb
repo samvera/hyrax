@@ -1,16 +1,23 @@
-module CurationConcerns
+module Sufia
   module CollectionBehavior
     extend ActiveSupport::Concern
-
     include Hydra::AccessControls::WithAccessRight
-    include CurationConcerns::Collection
-    include CurationConcerns::Noid
-    include CurationConcerns::HumanReadableType
-    include CurationConcerns::HasRepresentative
-    include CurationConcerns::Permissions
+    include Hydra::WithDepositor # for access to apply_depositor_metadata
+    include Hydra::AccessControls::Permissions
+    include Sufia::RequiredMetadata
+    include Hydra::Works::CollectionBehavior
+    include Sufia::Noid
+    include Sufia::HumanReadableType
+    include Sufia::HasRepresentative
+    include Sufia::Permissions
 
     included do
       validates_with HasOneTitleValidator
+    end
+
+    def add_members(new_member_ids)
+      return if new_member_ids.nil? || new_member_ids.empty?
+      members << ActiveFedora::Base.find(new_member_ids)
     end
 
     def to_s

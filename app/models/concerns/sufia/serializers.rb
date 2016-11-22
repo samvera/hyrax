@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Serializers
     def to_s
       if title.present?

@@ -10,7 +10,7 @@
 #
 # MyFileSet.characterization_proxy = :master_file
 # MyFileSet.characterization_terms = [:term1, :term2, :term3]
-module CurationConcerns
+module Sufia
   module FileSet
     module Characterization
       extend ActiveSupport::Concern

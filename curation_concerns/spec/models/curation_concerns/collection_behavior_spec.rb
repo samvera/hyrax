@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rspec/active_model/mocks'
 
-describe CurationConcerns::CollectionBehavior do
+describe Sufia::CollectionBehavior do
   include CurationConcerns::FactoryHelpers
 
   # All behavior for Collection are defined in CC::CollectionBehavior, so we use

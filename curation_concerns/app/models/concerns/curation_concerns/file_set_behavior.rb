@@ -2,20 +2,20 @@ module CurationConcerns
   module FileSetBehavior
     extend ActiveSupport::Concern
 
-    include CurationConcerns::BasicMetadata
+    include Sufia::BasicMetadata
     include Hydra::Works::FileSetBehavior
     include Hydra::Works::VirusCheck
-    include CurationConcerns::FileSet::Characterization
+    include Sufia::FileSet::Characterization
     include Hydra::WithDepositor
-    include CurationConcerns::Serializers
-    include CurationConcerns::Noid
-    include CurationConcerns::FileSet::Derivatives
-    include CurationConcerns::Permissions
-    include CurationConcerns::FileSet::Indexing
-    include CurationConcerns::FileSet::BelongsToWorks
-    include CurationConcerns::FileSet::Querying
-    include CurationConcerns::HumanReadableType
-    include CurationConcerns::RequiredMetadata
+    include Sufia::Serializers
+    include Sufia::Noid
+    include Sufia::FileSet::Derivatives
+    include Sufia::Permissions
+    include Sufia::FileSet::Indexing
+    include Sufia::FileSet::BelongsToWorks
+    include Sufia::FileSet::Querying
+    include Sufia::HumanReadableType
+    include Sufia::RequiredMetadata
     include Sufia::Naming
     include Hydra::AccessControls::Embargoable
     include GlobalID::Identification

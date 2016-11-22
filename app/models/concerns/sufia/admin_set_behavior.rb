@@ -1,11 +1,11 @@
-module CurationConcerns
+module Sufia
   module AdminSetBehavior
     extend ActiveSupport::Concern
 
     include Hydra::AccessControls::WithAccessRight
-    include CurationConcerns::Noid
-    include CurationConcerns::HumanReadableType
-    include CurationConcerns::HasRepresentative
+    include Sufia::Noid
+    include Sufia::HumanReadableType
+    include Sufia::HasRepresentative
 
     included do
       validates_with HasOneTitleValidator

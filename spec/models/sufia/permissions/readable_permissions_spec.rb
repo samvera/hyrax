@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe CurationConcerns::Permissions::Readable do
+describe Sufia::Permissions::Readable do
   class SubjectClass
-    include CurationConcerns::Permissions::Readable
+    include Sufia::Permissions::Readable
     attr_accessor :read_groups
   end
   let(:subject) { SubjectClass.new }
@@ -14,7 +14,7 @@ describe CurationConcerns::Permissions::Readable do
     end
     it 'returns fale for non-public items' do
       subject.read_groups = %w(notpublic othergroup)
-      expect(subject).to_not be_public
+      expect(subject).not_to be_public
     end
   end
 
@@ -25,7 +25,7 @@ describe CurationConcerns::Permissions::Readable do
     end
     it 'returns fale for non-registered items' do
       subject.read_groups = ['othergroup']
-      expect(subject).to_not be_registered
+      expect(subject).not_to be_registered
     end
   end
 
@@ -43,11 +43,11 @@ describe CurationConcerns::Permissions::Readable do
     context 'is false' do
       specify "when 'registered' group is present" do
         subject.read_groups = ['registered']
-        expect(subject).to_not be_private
+        expect(subject).not_to be_private
       end
       specify "when 'public' group is present" do
         subject.read_groups = ['public']
-        expect(subject).to_not be_private
+        expect(subject).not_to be_private
       end
     end
   end

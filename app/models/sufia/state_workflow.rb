@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class StateWorkflow
     # @param [String, RDF::Term] state a represesentation of the workflow
     def initialize(state)

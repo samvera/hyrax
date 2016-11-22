@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module FileSet
     module Derivatives
       extend ActiveSupport::Concern
@@ -58,7 +58,7 @@ module CurationConcerns
         end
 
         def derivative_path_factory
-          DerivativePath
+          CurationConcerns::DerivativePath
         end
     end
   end

@@ -48,7 +48,7 @@ module Sufia
 
       def process_files(stats, user, start_date)
         file_ids_for_user(user).each do |file_id|
-          file = FileSet.find(file_id)
+          file = ::FileSet.find(file_id)
           view_stats = rescue_and_retry("Retried FileViewStat on #{user} for file #{file_id} too many times.") { FileViewStat.statistics(file, start_date, user.id) }
           stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
           delay

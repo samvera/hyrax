@@ -1,4 +1,4 @@
-module CurationConcerns::HasRepresentative
+module Sufia::HasRepresentative
   extend ActiveSupport::Concern
 
   included do

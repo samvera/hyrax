@@ -1,6 +1,6 @@
 require 'active_fedora/noid'
 
-module CurationConcerns
+module Sufia
   module Noid
     extend ActiveSupport::Concern
 

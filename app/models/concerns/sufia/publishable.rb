@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # Workflow considerations
   module Publishable
     extend ActiveSupport::Concern

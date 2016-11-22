@@ -1,3 +1,3 @@
 class AdminSet < ActiveFedora::Base
-  include CurationConcerns::AdminSetBehavior
+  include Sufia::AdminSetBehavior
 end

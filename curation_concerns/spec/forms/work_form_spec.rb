@@ -3,9 +3,9 @@ require 'spec_helper'
 describe CurationConcerns::Forms::WorkForm do
   before do
     class PirateShip < ActiveFedora::Base
-      include CurationConcerns::RequiredMetadata
-      include CurationConcerns::BasicMetadata
-      include CurationConcerns::HasRepresentative
+      include Sufia::RequiredMetadata
+      include Sufia::BasicMetadata
+      include Sufia::HasRepresentative
     end
 
     class PirateShipForm < described_class

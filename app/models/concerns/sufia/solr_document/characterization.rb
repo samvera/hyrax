@@ -61,6 +61,46 @@ module Sufia
       def width
         self['width_is']
       end
+
+      def format_label
+        self[Solrizer.solr_name("format_label")]
+      end
+
+      def file_size
+        self[Solrizer.solr_name("file_size")]
+      end
+
+      def filename
+        self[Solrizer.solr_name("filename")]
+      end
+
+      def well_formed
+        self[Solrizer.solr_name("well_formed")]
+      end
+
+      def page_count
+        self[Solrizer.solr_name("page_count")]
+      end
+
+      def file_title
+        self[Solrizer.solr_name("file_title")]
+      end
+
+      def duration
+        self[Solrizer.solr_name("duration")]
+      end
+
+      def sample_rate
+        self[Solrizer.solr_name("sample_rate")]
+      end
+
+      def last_modified
+        self[Solrizer.solr_name("last_modified")]
+      end
+
+      def original_checksum
+        self[Solrizer.solr_name("original_checksum")]
+      end
     end
   end
 end

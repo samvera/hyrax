@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module NestedWorks
     extend ActiveSupport::Concern
 

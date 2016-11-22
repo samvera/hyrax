@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe CurationConcerns::Permissions::Writable do
+describe Sufia::Permissions::Writable do
   class SampleModel < ActiveFedora::Base
-    include CurationConcerns::Permissions::Writable
+    include Sufia::Permissions::Writable
   end
   let(:subject) { SampleModel.new }
 

@@ -73,14 +73,6 @@ class Sufia::WorkGenerator < Rails::Generators::NamedBase
     end
   end
 
-  def inject_sufia_work_behavior
-    underscored_name = name.underscore
-    insert_into_file "app/models/#{underscored_name}.rb", after: 'include ::CurationConcerns::BasicMetadata' do
-      "\n  include Sufia::WorkBehavior" \
-      "\n  self.human_readable_type = '#{underscored_name.titleize}'"
-    end
-  end
-
   def inject_sufia_form
     file_path = "app/forms/curation_concerns/#{file_name}_form.rb"
     if File.exist?(file_path)

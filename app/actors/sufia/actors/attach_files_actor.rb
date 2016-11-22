@@ -4,7 +4,7 @@ module Sufia
       def create(attributes)
         files = [attributes.delete(:files)].flatten.compact
         file_sets = attach_files(files, visibility_attributes(attributes))
-        file_sets.all? { |fs| fs.is_a? FileSet } &&
+        file_sets.all? { |fs| fs.is_a? ::FileSet } &&
           next_actor.create(attributes) && send_create_notifications(file_sets)
       end
 

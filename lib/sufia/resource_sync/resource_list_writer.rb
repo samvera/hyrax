@@ -44,7 +44,7 @@ module Sufia
         end
 
         def build_files(xml)
-          FileSet.search_in_batches(public_access) do |doc_set|
+          ::FileSet.search_in_batches(public_access) do |doc_set|
             build_resources(xml, doc_set)
           end
         end

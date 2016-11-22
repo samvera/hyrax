@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module InAdminSet
     extend ActiveSupport::Concern
 

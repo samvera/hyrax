@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Permissions
     module Writable
       extend ActiveSupport::Concern

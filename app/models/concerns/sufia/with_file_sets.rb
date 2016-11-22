@@ -1,5 +1,4 @@
-# Copied from Curate
-module CurationConcerns
+module Sufia
   module WithFileSets
     extend ActiveSupport::Concern
 

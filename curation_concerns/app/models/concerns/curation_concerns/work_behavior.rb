@@ -2,21 +2,21 @@ module CurationConcerns::WorkBehavior
   extend ActiveSupport::Concern
 
   include Hydra::Works::WorkBehavior
-  include CurationConcerns::HumanReadableType
-  include CurationConcerns::Noid
-  include CurationConcerns::Permissions
-  include CurationConcerns::Serializers
+  include Sufia::HumanReadableType
+  include Sufia::Noid
+  include Sufia::Permissions
+  include Sufia::Serializers
   include Hydra::WithDepositor
   include Solrizer::Common
-  include CurationConcerns::HasRepresentative
-  include CurationConcerns::WithFileSets
+  include Sufia::HasRepresentative
+  include Sufia::WithFileSets
   include Sufia::Naming
-  include CurationConcerns::RequiredMetadata
-  include CurationConcerns::InAdminSet
+  include Sufia::RequiredMetadata
+  include Sufia::InAdminSet
   include Hydra::AccessControls::Embargoable
   include GlobalID::Identification
-  include CurationConcerns::NestedWorks
-  include CurationConcerns::Publishable
+  include Sufia::NestedWorks
+  include Sufia::Publishable
 
   included do
     property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false

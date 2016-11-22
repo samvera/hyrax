@@ -10,8 +10,8 @@ describe 'curation_concerns/base/items', type: :view do
     SolrDocument.new(
       FactoryGirl.build(:file_set).to_solr.merge(
         id: "file",
-        title_tesim: "Child File",
-        label_tesim: "ChildFile.pdf"
+        title_tesim: ["Child File"],
+        label_tesim: ["ChildFile.pdf"]
       )
     )
   end
@@ -19,7 +19,7 @@ describe 'curation_concerns/base/items', type: :view do
     SolrDocument.new(
       FactoryGirl.build(:generic_work).to_solr.merge(
         id: "work",
-        title_tesim: "Child Work"
+        title_tesim: ["Child Work"]
       )
     )
   end
