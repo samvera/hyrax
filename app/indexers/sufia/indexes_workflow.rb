@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module IndexesWorkflow
     STORED_BOOL = Solrizer::Descriptor.new(:boolean, :stored, :indexed)
     # Adds thumbnail indexing to the solr document
@@ -34,7 +34,7 @@ module CurationConcerns
     end
 
     def workflow_roles(entity)
-      CurationConcerns::Workflow::PermissionQuery.scope_roles_associated_with_the_given_entity(entity: entity)
+      Workflow::PermissionQuery.scope_roles_associated_with_the_given_entity(entity: entity)
     end
 
     def suppressed_field

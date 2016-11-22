@@ -7,7 +7,7 @@ module Sipity
   # * Deliver one or more notifications (as defined by the
   #   :notifiable_contexts relation)
   #
-  # @see CurationConcerns::Forms::WorkflowActionForm
+  # @see Sufia::Forms::WorkflowActionForm
   class WorkflowAction < ActiveRecord::Base
     self.table_name = 'sipity_workflow_actions'
 

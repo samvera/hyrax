@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
+RSpec.describe Sufia::Forms::WorkflowActionForm, no_clean: true do
   let(:work) { create(:work) }
   let(:sipity_entity) do
     create(:sipity_entity,

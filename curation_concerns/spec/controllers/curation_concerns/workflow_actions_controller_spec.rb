@@ -3,12 +3,12 @@ require 'spec_helper'
 RSpec.describe CurationConcerns::WorkflowActionsController, type: :controller do
   let(:user) { FactoryGirl.create(:user) }
   let(:generic_work) { GenericWork.new(id: '123') }
-  let(:form) { instance_double(CurationConcerns::Forms::WorkflowActionForm) }
+  let(:form) { instance_double(Sufia::Forms::WorkflowActionForm) }
 
   before do
     allow(ActiveFedora::Base).to receive(:find).with(generic_work.to_param).and_return(generic_work)
     allow(generic_work).to receive(:persisted?).and_return(true)
-    allow(CurationConcerns::Forms::WorkflowActionForm).to receive(:new).and_return(form)
+    allow(Sufia::Forms::WorkflowActionForm).to receive(:new).and_return(form)
   end
 
   describe '#update' do

@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module Forms
     # Responsible for processing that the :current_ability (and
     # associated current_user) has taken a Sipity::WorkflowAction on

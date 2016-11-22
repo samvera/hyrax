@@ -1,7 +1,7 @@
 module CurationConcerns
   class WorkIndexer < ActiveFedora::IndexingService
     include IndexesThumbnails
-    include IndexesWorkflow
+    include Sufia::IndexesWorkflow
 
     def generate_solr_document
       super.tap do |solr_doc|

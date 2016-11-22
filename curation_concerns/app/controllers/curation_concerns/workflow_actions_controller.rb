@@ -4,7 +4,7 @@ module CurationConcerns
 
     def update
       work = ActiveFedora::Base.find(params[:id])
-      workflow_action_form = CurationConcerns::Forms::WorkflowActionForm.new(
+      workflow_action_form = Sufia::Forms::WorkflowActionForm.new(
         current_ability: current_ability,
         work: work,
         attributes: workflow_action_params

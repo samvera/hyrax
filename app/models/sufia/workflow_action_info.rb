@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # A simple data object for holding a user, work and their workflow proxies
   class WorkflowActionInfo
     def initialize(work, user)
