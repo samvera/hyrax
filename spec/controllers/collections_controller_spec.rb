@@ -16,6 +16,10 @@ describe CollectionsController do
   let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
   let(:unowned_asset)  { create(:work, user: other) }
 
+  let(:collection_attrs) do
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
+  end
+
   describe '#new' do
     before { sign_in user }
 
@@ -31,24 +35,19 @@ describe CollectionsController do
     it "creates a Collection" do
       expect do
         post :create, params: {
-          collection: {
-            title: ["My First Collection "],
-            description: "The Description\r\n\r\nand more"
-          }
+          collection: collection_attrs.merge(visibility: 'open')
         }
       end.to change { Collection.count }.by(1)
+      expect(assigns[:collection].visibility).to eq 'open'
     end
 
     it "removes blank strings from params before creating Collection" do
       expect do
         post :create, params: {
-          collection: {
-            title: ["My First Collection "],
-            creator: [""]
-          }
+          collection: collection_attrs.merge(creator: [''])
         }
       end.to change { Collection.count }.by(1)
-      expect(assigns[:collection].title).to eq ["My First Collection "]
+      expect(assigns[:collection].title).to eq ["My First Collection"]
       expect(assigns[:collection].creator).to eq []
     end
 
@@ -56,10 +55,7 @@ describe CollectionsController do
       it "creates a collection using only the accessible files" do
         expect do
           post :create, params: {
-            collection: {
-              title: ["My own Collection"],
-              description: "The Description\r\n\r\nand more"
-            },
+            collection: collection_attrs,
             batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
           }
         end.to change { Collection.count }.by(1)
@@ -70,7 +66,7 @@ describe CollectionsController do
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
         post :create, params: {
           batch_document_ids: [asset1.id],
-          collection: { title: "My Second Collection ", description: "The Description\r\n\r\nand more" }
+          collection: collection_attrs
         }
 
         expect(assigns[:collection].members).to eq [asset1]
@@ -78,58 +74,80 @@ describe CollectionsController do
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset1.id
-        afterupdate = GenericWork.find(asset1.id)
-        expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
       end
     end
+  end
 
-    context "when setting visibility" do
-      it 'creates a public Collection' do
-        col1 = create(:public_collection, title: ["Public collection"])
-        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      end
+  describe '#index' do
+    let!(:collection1) { create(:collection, :public, title: ['Beta']) }
+    let!(:collection2) { create(:collection, :public, title: ['Alpha']) }
+    let!(:generic_work) { create(:generic_work, :public) }
 
-      it 'creates an institutional Collection' do
-        col1 = create(:institution_collection, title: ["Institution collection"])
-        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      end
-
-      it 'creates a private Collection' do
-        col1 = create(:private_collection, title: ["Private collection"])
-        expect(col1.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-      end
+    it 'shows a list of collections sorted alphabetically' do
+      get :index
+      expect(response).to be_successful
+      expect(assigns[:document_list].map(&:id)).not_to include generic_work.id
+      expect(assigns[:document_list].map(&:id)).to match_array [collection2.id, collection1.id]
     end
   end
 
   describe "#update" do
     before { sign_in user }
 
-    context "a collections members" do
-      it "sets collection on members" do
-        put :update, params: {
-          id: collection,
-          collection: { members: "add" },
-          batch_document_ids: [asset3.id, asset1.id, asset2.id]
-        }
-        expect(response).to redirect_to routes.url_helpers.collection_path(collection)
-        expect(assigns[:collection].members).to match_array [asset2, asset3, asset1]
-        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
-        expect(asset_results["response"]["numFound"]).to eq 1
-        doc = asset_results["response"]["docs"].first
-        expect(doc["id"]).to eq asset2.id
-        afterupdate = GenericWork.find(asset2.id)
-        expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
+    context 'collection members' do
+      before do
+        [asset1, asset2].map(&:save) # bogus_depositor_asset is already saved
+        collection.members = [asset1, asset2]
+        collection.save!
+      end
 
-        put :update, params: {
-          id: collection,
-          collection: { members: "remove" },
-          batch_document_ids: [asset2]
-        }
-        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset2.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
-        expect(asset_results["response"]["numFound"]).to eq 1
-        doc = asset_results["response"]["docs"].first
-        expect(doc["id"]).to eq asset2.id
-        expect(doc[Solrizer.solr_name(:collection)]).to be_nil
+      it "adds members to the collection" do
+        expect do
+          put :update, params: { id: collection,
+                                 collection: { members: 'add' },
+                                 batch_document_ids: [asset3.id]
+                               }
+        end.to change { collection.reload.members.size }.by(1)
+        expect(response).to redirect_to routes.url_helpers.collection_path(collection)
+        expect(assigns[:collection].members).to match_array [asset1, asset2, asset3]
+      end
+
+      it "removes members from the collection" do
+        # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
+        expect do
+          put :update, params: { id: collection,
+                                 collection: { members: 'remove' },
+                                 batch_document_ids: [asset2]
+                               }
+        end.to change { collection.reload.members.size }.by(-1)
+        expect(assigns[:collection].members).to match_array [asset1]
+      end
+    end
+
+    context 'when moving members between collections' do
+      let(:asset1) { create(:generic_work, user: user) }
+      let(:asset2) { create(:generic_work, user: user) }
+      let(:asset3) { create(:generic_work, user: user) }
+      let(:collection2) do
+        Collection.create(title: ['Some Collection']) do |col|
+          col.apply_depositor_metadata(user.user_key)
+        end
+      end
+      before do
+        collection.members = [asset1, asset2, asset3]
+        collection.save!
+      end
+
+      it 'moves the members' do
+        put :update,
+            params: {
+              id: collection,
+              collection: { members: 'move' },
+              destination_collection_id: collection2,
+              batch_document_ids: [asset2, asset3]
+            }
+        expect(collection.reload.members).to eq [asset1]
+        expect(collection2.reload.members).to match_array [asset2, asset3]
       end
     end
 
@@ -175,8 +193,17 @@ describe CollectionsController do
         it "returns some works" do
           # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Third" }
-
+          expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
           expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
+        end
+      end
+
+      context 'when the page parameter is passed' do
+        it 'loads the collection (paying no attention to the page param)' do
+          get :show, params: { id: collection, page: '2' }
+          expect(response).to be_successful
+          expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
+          expect(assigns[:presenter].to_s).to eq 'My collection'
         end
       end
 

@@ -1,6 +1,6 @@
 module Sufia
   class AdminSetsController < ApplicationController
-    include CurationConcerns::CollectionsControllerBehavior
+    include Sufia::CollectionsControllerBehavior
 
     self.presenter_class = Sufia::AdminSetPresenter
 

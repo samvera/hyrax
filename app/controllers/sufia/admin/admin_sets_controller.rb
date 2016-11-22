@@ -1,6 +1,6 @@
 module Sufia
   class Admin::AdminSetsController < ApplicationController
-    include CurationConcerns::CollectionsControllerBehavior
+    include Sufia::CollectionsControllerBehavior
 
     before_action :ensure_admin!
     load_and_authorize_resource
