@@ -50,7 +50,7 @@ module Sufia
       end
 
       CurationConcerns::CurationConcern.actor_factory = Sufia::ActorFactory
-      CurationConcerns::Workflow::WorkflowFactory.workflow_strategy = Sufia::Workflow::WorkflowByAdminSetStrategy
+      Sufia::Workflow::WorkflowFactory.workflow_strategy = Sufia::Workflow::WorkflowByAdminSetStrategy
     end
 
     initializer 'sufia.assets.precompile' do |app|

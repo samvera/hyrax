@@ -2,7 +2,7 @@ module Sufia
   module Actors
     class InitializeWorkflowActor < AbstractActor
       class_attribute :workflow_factory
-      self.workflow_factory = ::CurationConcerns::Workflow::WorkflowFactory
+      self.workflow_factory = ::Sufia::Workflow::WorkflowFactory
 
       def create(attributes)
         next_actor.create(attributes) && create_workflow(attributes)

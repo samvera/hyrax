@@ -15,12 +15,22 @@ Metrics/ParameterLists:
   Exclude:
     - 'app/jobs/batch_create_job.rb'
 
+Metrics/AbcSize:
+  Exclude:
+    - 'app/controllers/concerns/sufia/admin/depositor_stats.rb'
+    - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
+    - 'app/services/sufia/user_stat_importer.rb'
+    - 'app/services/sufia/workflow/permission_query.rb'
+    - 'lib/sufia/arkivo/metadata_munger.rb'
+
 Metrics/ModuleLength:
   Exclude:
     - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
     - 'app/controllers/concerns/sufia/collections_controller_behavior.rb'
     - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/services/sufia/workflow/permission_query.rb'
+    - 'spec/services/sufia/workflow/permission_query_spec.rb'
 
 Metrics/MethodLength:
   Exclude:
@@ -28,12 +38,14 @@ Metrics/MethodLength:
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
+    - 'app/services/sufia/workflow/permission_query.rb'
     - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
     - 'lib/sufia/configuration.rb'
     - 'lib/sufia/rails/routes.rb'
     - 'spec/support/*'
+
 
 
 Style/LineEndConcatenation:
@@ -120,3 +132,7 @@ RSpec/AnyInstance:
     - 'spec/presenters/sufia/work_usage_spec.rb'
     - 'spec/presenters/sufia/file_usage_spec.rb'
     - 'spec/services/sufia/repository_audit_service_spec.rb'
+    - 'spec/services/sufia/workflow/permission_generator_spec.rb'
+    - 'spec/services/sufia/workflow/sipity_actions_generator_spec.rb'
+    - 'spec/services/sufia/workflow/state_machine_generator_spec.rb'
+    - 'spec/services/sufia/workflow/workflow_permissions_generator_spec.rb'
