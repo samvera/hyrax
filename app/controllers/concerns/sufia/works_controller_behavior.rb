@@ -1,18 +1,7 @@
 module Sufia
   module WorksControllerBehavior
     extend ActiveSupport::Concern
-    include Sufia::Breadcrumbs
     include Sufia::CurationConcernController
-
-    module ClassMethods
-      # We don't want the breadcrumb action to occur until after the concern has
-      # been loaded and authorized
-      def curation_concern_type=(curation_concern_type)
-        super
-        before_action :build_breadcrumbs, only: [:edit, :show]
-        before_action :save_permissions, only: :update
-      end
-    end
 
     def new
       curation_concern.depositor = current_user.user_key
@@ -73,19 +62,6 @@ module Sufia
           send_data(presenter.solr_document.export_as_endnote,
                     type: "application/x-endnote-refer",
                     filename: presenter.solr_document.endnote_filename)
-        end
-      end
-
-      def add_breadcrumb_for_controller
-        add_breadcrumb I18n.t('sufia.dashboard.my.works'), sufia.dashboard_works_path
-      end
-
-      def add_breadcrumb_for_action
-        case action_name
-        when 'edit'.freeze
-          add_breadcrumb I18n.t("sufia.work.browse_view"), main_app.polymorphic_path(curation_concern)
-        when 'show'.freeze
-          add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
         end
       end
 
