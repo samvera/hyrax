@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::LicenseService do
+describe Sufia::LicenseService do
   before do
     # Configure QA to use fixtures
     qa_fixtures = { local_path: File.expand_path('spec/fixtures/authorities') }

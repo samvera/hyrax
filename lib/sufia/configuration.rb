@@ -214,11 +214,11 @@ module Sufia
     # @!attribute [w] license_service_class
     #   A configuration point for changing the behavior of the license service.
     #
-    #   @see CurationConcerns::LicenseService for implementation details
+    #   @see Sufia::LicenseService for implementation details
     #   @see https://github.com/projecthydra/curation_concerns/pull/1047
     attr_writer :license_service_class
     def license_service_class
-      @license_service_class ||= CurationConcerns::LicenseService
+      @license_service_class ||= Sufia::LicenseService
     end
 
     attr_writer :banner_image

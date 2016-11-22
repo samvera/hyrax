@@ -4,7 +4,7 @@ module RightsService
   begin
     self.authority = Qa::Authorities::Local.subauthority_for('rights')
   rescue Qa::InvalidSubAuthority
-    Deprecation.warn(RightsService, "You are using the deprecated RightsService module, but you do not have 'rights.yml'. Switch to CurationConcerns::LicenseService instead")
+    Deprecation.warn(RightsService, "You are using the deprecated RightsService module, but you do not have 'rights.yml'. Switch to Sufia::LicenseService instead")
     self.authority = Qa::Authorities::Local.subauthority_for('licenses')
   end
 

@@ -175,7 +175,7 @@ module Sufia
     # @param [Hash] options from blacklight helper_method invocation. Maps rights URIs to links with labels.
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
     def license_links(options)
-      service = CurationConcerns::LicenseService.new
+      service = Sufia::LicenseService.new
       options[:value].map { |right| link_to service.label(right), right }.to_sentence.html_safe
     end
 

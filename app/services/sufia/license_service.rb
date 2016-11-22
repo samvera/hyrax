@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # Provide select options for the license (dcterms:rights) field
   class LicenseService < QaSelectService
     def initialize

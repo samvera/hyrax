@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::QaSelectService, no_clean: true do
+RSpec.describe Sufia::QaSelectService, no_clean: true do
   let(:authority) do
     # Implementing an ActiveRecord interface as required for this spec
+    # rubocop:disable RSpec/InstanceVariable
     Class.new do
       def initialize(map)
         @map = map
@@ -16,6 +17,7 @@ RSpec.describe CurationConcerns::QaSelectService, no_clean: true do
         @map.detect { |item| item[:id] == id }
       end
     end
+    # rubocop:enable RSpec/InstanceVariable
   end
   let(:authority_map) do
     [

@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # This is an abstract class to provide select options from a
   # questioning authority backed authority
   class QaSelectService
