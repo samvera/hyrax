@@ -1,6 +1,6 @@
-module CurationConcerns
+module Sufia
   class FileSetSearchBuilder < ::SearchBuilder
-    include CurationConcerns::SingleResult
+    include SingleResult
 
     # This overrides the models in FilterByType
     def models

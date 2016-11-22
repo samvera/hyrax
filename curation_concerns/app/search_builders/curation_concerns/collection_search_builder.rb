@@ -1,6 +1,6 @@
 module CurationConcerns
   class CollectionSearchBuilder < ::SearchBuilder
-    include FilterByType
+    include Sufia::FilterByType
     # Defines which search_params_logic should be used when searching for Collections
     self.default_processor_chain = [:default_solr_parameters, :add_query_to_solr,
                                     :add_access_controls_to_solr_params, :filter_models,

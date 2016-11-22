@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module FilterByType
     extend ActiveSupport::Concern
 

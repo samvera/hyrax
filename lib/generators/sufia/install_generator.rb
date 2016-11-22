@@ -55,7 +55,7 @@ module Sufia
 
     def insert_builder
       insert_into_file 'app/models/search_builder.rb', after: /include Hydra::AccessControlsEnforcement/ do
-        "\n  include CurationConcerns::SearchFilters\n"
+        "\n  include Sufia::SearchFilters\n"
       end
     end
 

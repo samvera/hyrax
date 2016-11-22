@@ -1,6 +1,6 @@
 module Sufia
   class SingleAdminSetSearchBuilder < Sufia::AdminSetSearchBuilder
-    include CurationConcerns::SingleResult
+    include Sufia::SingleResult
 
     def initialize(context)
       super(context, :read)

@@ -139,7 +139,7 @@ module CurationConcerns
       end
 
       def search_builder_class
-        CurationConcerns::FileSetSearchBuilder
+        Sufia::FileSetSearchBuilder
       end
 
       def initialize_edit_form

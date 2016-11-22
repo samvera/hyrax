@@ -1,7 +1,7 @@
 # Added to allow for the My controller to show only things I have edit access to
 class Sufia::MyWorksSearchBuilder < Sufia::SearchBuilder
   include Sufia::MySearchBuilderBehavior
-  include CurationConcerns::FilterByType
+  include Sufia::FilterByType
 
   self.default_processor_chain += [:show_only_resources_deposited_by_current_user]
 

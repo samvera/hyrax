@@ -53,7 +53,7 @@ module Sufia
       # To build a query to find a list of collections
       self.list_search_builder_class = CurationConcerns::CollectionSearchBuilder
       # The search builder to find the collection
-      self.single_item_search_builder_class = CurationConcerns::WorkSearchBuilder
+      self.single_item_search_builder_class = WorkSearchBuilder
       # The search builder to find the collections' members
       self.member_search_builder_class = CurationConcerns::CollectionMemberSearchBuilder
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::FileSetSearchBuilder do
+describe Sufia::FileSetSearchBuilder do
   let(:processor_chain) { [:filter_models] }
   let(:ability) { double('ability') }
   let(:context) { double('context') }
