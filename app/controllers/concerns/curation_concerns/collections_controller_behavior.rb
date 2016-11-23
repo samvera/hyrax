@@ -15,16 +15,7 @@ module CurationConcerns
       copy_blacklight_config_from(::CatalogController)
 
       # Catch permission errors
-      rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-        if exception.action == :edit
-          redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
-        elsif current_user && current_user.persisted?
-          redirect_to root_url, alert: exception.message
-        else
-          session['user_return_to'] = request.url
-          redirect_to new_user_session_url, alert: exception.message
-        end
-      end
+      rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_collection_access
 
       # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
       before_action :authenticate_user!, except: [:show, :index]
@@ -54,6 +45,17 @@ module CurationConcerns
       self.single_item_search_builder_class = CurationConcerns::WorkSearchBuilder
       # The search builder to find the collections' members
       self.member_search_builder_class = CurationConcerns::CollectionMemberSearchBuilder
+    end
+
+    def deny_collection_access(exception)
+      if exception.action == :edit
+        redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
+      elsif current_user && current_user.persisted?
+        redirect_to root_url, alert: exception.message
+      else
+        session['user_return_to'] = request.url
+        redirect_to new_user_session_url, alert: exception.message
+      end
     end
 
     def index
@@ -90,7 +92,6 @@ module CurationConcerns
 
     def after_create_error
       form
-
       respond_to do |format|
         format.html { render action: 'new' }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
@@ -120,7 +121,6 @@ module CurationConcerns
     def after_update_error
       form
       query_collection_members
-
       respond_to do |format|
         format.html { render action: 'edit' }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
