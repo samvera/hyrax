@@ -5,14 +5,8 @@ RSpec.describe Sufia::Workflow::CompleteNotification do
   let(:depositor) { create(:user) }
   let(:to_user) { create(:user) }
   let(:cc_user) { create(:user) }
-  let(:workflow) { Sipity::Workflow.create(name: 'foo') }
-  let(:workflow_state) { Sipity::WorkflowState.create(name: 'bar', workflow: workflow) }
   let(:work) { create(:generic_work, user: depositor) }
-  let(:entity) do
-    Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
-                           workflow: workflow,
-                           workflow_state: workflow_state)
-  end
+  let(:entity) { create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { to: [to_user], cc: [cc_user] } }
 
