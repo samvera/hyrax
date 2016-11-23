@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rdf', '>= 1.99'
   spec.add_dependency 'rdf-vocab', '>= 0.8'
   spec.add_dependency 'awesome_nested_set', '~> 3.0'
-  spec.add_dependency 'browse-everything', '~> 0.10'
+  spec.add_dependency 'browse-everything', '~> 0.10', '>= 0.10.5'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
   spec.add_dependency 'dry-validation', '~> 0.9'
