@@ -14,11 +14,6 @@ module Sufia
       Sufia::CitationsBehaviors::Formatters::ChicagoFormatter.new(self).format(work)
     end
 
-    # MIME: 'application/x-endnote-refer'
-    def export_as_endnote(work)
-      Sufia::CitationsBehaviors::Formatters::EndnoteFormatter.new(self).format(work)
-    end
-
     def export_as_mla_citation(work)
       Sufia::CitationsBehaviors::Formatters::MlaFormatter.new(self).format(work)
     end

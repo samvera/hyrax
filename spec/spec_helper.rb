@@ -16,7 +16,7 @@ if coverage_needed?
     add_filter '/lib/generators'
     add_filter '/spec'
     add_filter '/tasks'
-    add_filter '/lib/version.rb'
+    add_filter '/lib/sufia/version.rb'
     add_filter '/lib/sufia/engine.rb'
   end
   SimpleCov.command_name 'spec'
