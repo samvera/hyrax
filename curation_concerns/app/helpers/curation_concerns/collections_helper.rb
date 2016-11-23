@@ -86,7 +86,7 @@ module CurationConcerns::CollectionsHelper
       if current_user.respond_to?(:collections)
         return current_user.collections.map { |c| [c.title.join(', '), c.id] }
       end
-      service = CurationConcerns::CollectionsService.new(controller)
+      service = Sufia::CollectionsService.new(controller)
       convert_solr_docs_to_select_options(service.search_results(:edit))
     end
 

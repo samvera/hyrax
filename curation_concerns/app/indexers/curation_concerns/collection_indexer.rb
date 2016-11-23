@@ -1,6 +1,6 @@
 module CurationConcerns
   class CollectionIndexer < Hydra::PCDM::CollectionIndexer
-    include IndexesThumbnails
+    include Sufia::IndexesThumbnails
     STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
 
     def generate_solr_document

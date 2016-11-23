@@ -18,7 +18,7 @@ module Sufia
 
     def index
       # return the user's collections
-      @user_collections = CurationConcerns::CollectionsService.new(self).search_results(:edit)
+      @user_collections = Sufia::CollectionsService.new(self).search_results(:edit)
 
       @user = current_user
       (@response, @document_list) = query_solr

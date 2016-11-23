@@ -4,9 +4,9 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        Hydra::Derivatives.source_file_service = CurationConcerns::LocalFileService
-        Hydra::Derivatives.output_file_service = CurationConcerns::PersistDerivatives
-        Hydra::Derivatives::FullTextExtract.output_file_service = CurationConcerns::PersistDirectlyContainedOutputFileService
+        Hydra::Derivatives.source_file_service = Sufia::LocalFileService
+        Hydra::Derivatives.output_file_service = Sufia::PersistDerivatives
+        Hydra::Derivatives::FullTextExtract.output_file_service = Sufia::PersistDirectlyContainedOutputFileService
         after_destroy :cleanup_derivatives
       end
 
@@ -58,7 +58,7 @@ module Sufia
         end
 
         def derivative_path_factory
-          CurationConcerns::DerivativePath
+          Sufia::DerivativePath
         end
     end
   end

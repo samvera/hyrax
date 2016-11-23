@@ -24,6 +24,6 @@ class CreateWorkJob < ActiveJob::Base
   private
 
     def work_actor(work, user)
-      CurationConcerns::CurationConcern.actor(work, user)
+      Sufia::CurationConcern.actor(work, user)
     end
 end

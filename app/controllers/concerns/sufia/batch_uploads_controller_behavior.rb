@@ -17,7 +17,7 @@ module Sufia
     end
 
     # Gives the class of the form.
-    class BatchUploadFormService < CurationConcerns::WorkFormService
+    class BatchUploadFormService < Sufia::WorkFormService
       def self.form_class(_ = nil)
         ::Sufia::Forms::BatchUploadForm
       end

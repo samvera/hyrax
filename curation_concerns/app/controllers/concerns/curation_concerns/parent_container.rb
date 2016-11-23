@@ -17,7 +17,7 @@ module CurationConcerns::ParentContainer
   def lookup_parent_from_child
     # in_objects method is inherited from Hydra::PCDM::ObjectBehavior
     return curation_concern.in_objects.first if curation_concern
-    return CurationConcerns::ParentService.parent_for(@presenter.id) if @presenter
+    return Sufia::ParentService.parent_for(@presenter.id) if @presenter
     raise "no child"
   end
 

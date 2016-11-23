@@ -9,5 +9,4 @@ module CurationConcerns::MainAppHelpers
   include CurationConcerns::LeaseHelper
   include CurationConcerns::CollectionsHelper
   include CurationConcerns::ChartsHelper
-  include CurationConcerns::RightsHelper
 end

@@ -1,6 +1,6 @@
 module CurationConcerns
   class AdminSetIndexer < ActiveFedora::IndexingService
-    include IndexesThumbnails
+    include Sufia::IndexesThumbnails
 
     def generate_solr_document
       super.tap do |solr_doc|

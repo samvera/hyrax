@@ -58,7 +58,7 @@ module Sufia
     end
 
     def audit_service
-      @audit_service ||= CurationConcerns::FileSetAuditService.new(id)
+      @audit_service ||= Sufia::FileSetAuditService.new(id)
     end
   end
 end

@@ -51,7 +51,7 @@ describe CurationConcerns::FileSetIndexer do
   describe '#generate_solr_document' do
     before do
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
-      allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
+      allow(Sufia::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
       allow(file_set).to receive(:extracted_text).and_return(mock_text)
     end

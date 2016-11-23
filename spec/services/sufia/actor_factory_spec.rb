@@ -38,10 +38,10 @@ describe Sufia::ActorFactory, :no_clean do
     end
   end
 
-  describe 'CurationConcerns::CurationConcern.actor' do
+  describe 'Sufia::CurationConcern.actor' do
     it "calls the Sufia::ActorFactory" do
       expect(described_class).to receive(:build)
-      CurationConcerns::CurationConcern.actor(work, user)
+      Sufia::CurationConcern.actor(work, user)
     end
   end
 end

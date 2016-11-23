@@ -198,7 +198,7 @@ describe CurationConcerns::WorkShowPresenter do
     let(:exporter) { double }
 
     before do
-      allow(CurationConcerns::GraphExporter).to receive(:new).and_return(exporter)
+      allow(Sufia::GraphExporter).to receive(:new).and_return(exporter)
       allow(exporter).to receive(:fetch).and_return(graph)
     end
 

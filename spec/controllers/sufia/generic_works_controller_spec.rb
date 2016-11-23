@@ -133,7 +133,7 @@ describe Sufia::GenericWorksController do
   describe '#create' do
     let(:actor) { double(create: create_status) }
     before do
-      allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+      allow(Sufia::CurationConcern).to receive(:actor).and_return(actor)
     end
     let(:create_status) { true }
 
@@ -321,7 +321,7 @@ describe Sufia::GenericWorksController do
     let(:visibility_changed) { false }
     let(:actor) { double(update: true) }
     before do
-      allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+      allow(Sufia::CurationConcern).to receive(:actor).and_return(actor)
       allow(GenericWork).to receive(:find).and_return(work)
       allow(work).to receive(:visibility_changed?).and_return(visibility_changed)
     end

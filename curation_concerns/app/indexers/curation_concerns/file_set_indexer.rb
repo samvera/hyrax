@@ -1,6 +1,6 @@
 module CurationConcerns
   class FileSetIndexer < ActiveFedora::IndexingService
-    include IndexesThumbnails
+    include Sufia::IndexesThumbnails
     STORED_INTEGER = Solrizer::Descriptor.new(:integer, :stored)
 
     def generate_solr_document

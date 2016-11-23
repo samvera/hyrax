@@ -9,6 +9,6 @@ class CurationConcerns::AuditsController < ApplicationController
 
     def audit_service
       file_set = ::FileSet.find(params[:file_set_id])
-      CurationConcerns::FileSetAuditService.new(file_set)
+      Sufia::FileSetAuditService.new(file_set)
     end
 end

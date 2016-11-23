@@ -10,7 +10,7 @@ describe Sufia::RepositoryAuditService do
   describe "#audit_everything" do
     it "audits everything" do
       # make sure the audit gets called
-      expect_any_instance_of(CurationConcerns::FileSetAuditService).to receive(:audit)
+      expect_any_instance_of(Sufia::FileSetAuditService).to receive(:audit)
       described_class.audit_everything
     end
   end

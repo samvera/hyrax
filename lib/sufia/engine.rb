@@ -49,7 +49,7 @@ module Sufia
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
 
-      CurationConcerns::CurationConcern.actor_factory = Sufia::ActorFactory
+      Sufia::CurationConcern.actor_factory = Sufia::ActorFactory
       Sufia::Workflow::WorkflowFactory.workflow_strategy = Sufia::Workflow::WorkflowByAdminSetStrategy
     end
 

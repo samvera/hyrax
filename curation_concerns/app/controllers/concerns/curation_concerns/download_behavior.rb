@@ -52,7 +52,7 @@ module CurationConcerns
         file_reference = params[:file]
         return default_file unless file_reference
 
-        file_path = CurationConcerns::DerivativePath.derivative_path_for_reference(params[asset_param_key], file_reference)
+        file_path = Sufia::DerivativePath.derivative_path_for_reference(params[asset_param_key], file_reference)
         File.exist?(file_path) ? file_path : nil
       end
 

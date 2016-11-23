@@ -47,7 +47,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     allow(view).to receive(:current_search_session).and_return(nil)
     allow(view).to receive(:curation_concern).and_return(parent)
     allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
-      CurationConcerns::ContextualPath.new(x, y).show
+      Sufia::ContextualPath.new(x, y).show
     end
     render
   end

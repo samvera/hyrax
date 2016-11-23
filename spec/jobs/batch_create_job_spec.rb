@@ -36,7 +36,7 @@ describe BatchCreateJob do
     end
 
     it "updates work metadata" do
-      expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
+      expect(Sufia::CurationConcern).to receive(:actor).and_return(actor).twice
       expect(actor).to receive(:create).with(keyword: [], title: ['File One'], resource_type: ["Article"], uploaded_files: ['1']).and_return(true)
       expect(actor).to receive(:create).with(keyword: [], title: ['File Two'], resource_type: ["Image"], uploaded_files: ['2']).and_return(true)
       expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_success, user)
@@ -69,7 +69,7 @@ describe BatchCreateJob do
 
     context "when user does not have permission to edit all of the works" do
       it "sends the failure message" do
-        expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
+        expect(Sufia::CurationConcern).to receive(:actor).and_return(actor).twice
         expect(actor).to receive(:create).and_return(true, false)
         expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_failure, user)
         subject

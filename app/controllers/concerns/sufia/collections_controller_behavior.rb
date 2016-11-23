@@ -172,7 +172,7 @@ module Sufia
       # run a solr query to get the collections the user has access to edit
       # @return [Array] a list of the user's collections
       def find_collections_for_form
-        CurationConcerns::CollectionsService.new(self).search_results(:edit)
+        Sufia::CollectionsService.new(self).search_results(:edit)
       end
 
       def remove_select_something_first_flash

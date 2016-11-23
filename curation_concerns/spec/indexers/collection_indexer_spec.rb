@@ -7,7 +7,7 @@ describe CurationConcerns::CollectionIndexer do
   describe "#generate_solr_document" do
     before do
       allow(collection).to receive(:bytes).and_return(1000)
-      allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return("/downloads/1234?file=thumbnail")
+      allow(Sufia::ThumbnailPathService).to receive(:call).and_return("/downloads/1234?file=thumbnail")
     end
     subject { indexer.generate_solr_document }
 

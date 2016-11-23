@@ -40,7 +40,7 @@ describe Sufia::GenericWorksController do
       let(:model) { stub_model(GenericWork) }
 
       before do
-        allow(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor)
+        allow(Sufia::CurationConcern).to receive(:actor).and_return(actor)
         allow(controller).to receive(:curation_concern).and_return(model)
         post :create, params: { generic_work: { title: ['a title'] }, format: :json }
       end

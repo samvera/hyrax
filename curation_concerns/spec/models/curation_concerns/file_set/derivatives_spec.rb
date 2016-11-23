@@ -44,7 +44,7 @@ describe CurationConcerns::FileSet do
   describe 'audiovisual transcoding', unless: $in_travis do
     before do
       # stub the name service so it's easer to find where the file will be
-      allow(CurationConcerns::DerivativePath).to receive(:derivative_path_for_reference) do |object, key|
+      allow(Sufia::DerivativePath).to receive(:derivative_path_for_reference) do |object, key|
         "#{Rails.root}/tmp/derivatives/#{object.id}/#{key}.#{key}"
       end
     end
@@ -85,9 +85,9 @@ describe CurationConcerns::FileSet do
   describe "cleanup" do
     let(:mime_type) { 'image/jpg' }
     it "cleans up all created derivatives" do
-      allow(CurationConcerns::DerivativePath).to receive(:derivatives_for_reference).with(file_set).and_return([
-                                                                                                                 "tmp/1/2.jpg"
-                                                                                                               ])
+      allow(Sufia::DerivativePath).to receive(:derivatives_for_reference).with(file_set).and_return([
+                                                                                                      "tmp/1/2.jpg"
+                                                                                                    ])
       allow(FileUtils).to receive(:rm_f).with("tmp/1/2.jpg")
 
       file_set.destroy

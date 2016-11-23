@@ -12,7 +12,7 @@ module Sufia
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       self.show_presenter = Sufia::WorkShowPresenter
-      self.work_form_service = CurationConcerns::WorkFormService
+      self.work_form_service = Sufia::WorkFormService
       self.search_builder_class = WorkSearchBuilder
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
@@ -114,7 +114,7 @@ module Sufia
       end
 
       def actor
-        @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user)
+        @actor ||= Sufia::CurationConcern.actor(curation_concern, current_user)
       end
 
       def presenter
@@ -180,7 +180,7 @@ module Sufia
       end
 
       def contextual_path(presenter, parent_presenter)
-        ::CurationConcerns::ContextualPath.new(presenter, parent_presenter).show
+        ::Sufia::ContextualPath.new(presenter, parent_presenter).show
       end
 
     private

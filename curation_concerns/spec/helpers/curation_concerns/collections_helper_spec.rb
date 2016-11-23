@@ -37,11 +37,11 @@ describe CurationConcerns::CollectionsHelper do
     let(:doc1) { SolrDocument.new("id" => "k930bx31t", "title_tesim" => ["One"]) }
     let(:doc2) { SolrDocument.new("id" => "02870w10j", "title_tesim" => ["Two"]) }
     let(:doc3) { SolrDocument.new("id" => "z029p500w", "title_tesim" => ["Three"]) }
-    let(:service) { instance_double(CurationConcerns::CollectionsService) }
+    let(:service) { instance_double(Sufia::CollectionsService) }
 
     before do
       allow(helper).to receive(:current_user).and_return(user)
-      allow(CurationConcerns::CollectionsService).to receive(:new).with(controller).and_return(service)
+      allow(Sufia::CollectionsService).to receive(:new).with(controller).and_return(service)
       expect(service).to receive(:search_results).with(:edit).and_return([doc1, doc2, doc3])
     end
 

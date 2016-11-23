@@ -49,7 +49,7 @@ describe DownloadsController do
           let(:content) { file.read }
 
           before do
-            allow(CurationConcerns::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_file_path('world.png'))
+            allow(Sufia::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_file_path('world.png'))
           end
 
           it 'sends requested file content' do

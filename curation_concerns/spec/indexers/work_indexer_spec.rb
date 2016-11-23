@@ -14,7 +14,7 @@ describe CurationConcerns::WorkIndexer do
 
     before do
       work.works << child_work
-      allow(CurationConcerns::ThumbnailPathService).to receive(:call).and_return("/downloads/#{file.id}?file=thumbnail")
+      allow(Sufia::ThumbnailPathService).to receive(:call).and_return("/downloads/#{file.id}?file=thumbnail")
       work.representative_id = file.id
       work.thumbnail_id = file.id
     end

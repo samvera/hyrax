@@ -2,7 +2,12 @@ require: rubocop-rspec
 
 Metrics/CyclomaticComplexity:
   Exclude:
+    - 'app/services/sufia/file_set_audit_service.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/services/sufia/file_set_audit_service.rb'
 
 Metrics/ClassLength:
   Exclude:

@@ -16,7 +16,7 @@ describe Sufia::Actors::GenericWorkActor do
   end
 
   subject do
-    CurationConcerns::CurationConcern.actor(curation_concern, user)
+    Sufia::CurationConcern.actor(curation_concern, user)
   end
 
   describe '#create' do
