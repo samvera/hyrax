@@ -8,13 +8,15 @@ module CurationConcerns
       before_action :authenticate_user!
       before_action :authorize_user!
       # Catch permission errors
-      rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-        if current_user && current_user.persisted?
-          redirect_to main_app.root_url, alert: "You do not have sufficient privileges to create links to this document"
-        else
-          session["user_return_to"] = request.url
-          redirect_to new_user_session_url, alert: exception.message
-        end
+      rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_link_access
+    end
+
+    def deny_link_access(exception)
+      if current_user && current_user.persisted?
+        redirect_to main_app.root_url, alert: "You do not have sufficient privileges to create links to this document"
+      else
+        session["user_return_to"] = request.url
+        redirect_to new_user_session_url, alert: exception.message
       end
     end
 

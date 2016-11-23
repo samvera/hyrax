@@ -6,14 +6,8 @@ module CurationConcerns
 
     included do
       helper CurationConcerns::MainAppHelpers
-
-      rescue_from ActiveFedora::ObjectNotFoundError do |exception|
-        not_found_response(exception)
-      end
-
-      rescue_from Blacklight::Exceptions::InvalidSolrID do |exception|
-        not_found_response(exception)
-      end
+      rescue_from ActiveFedora::ObjectNotFoundError, with: :not_found_response
+      rescue_from Blacklight::Exceptions::InvalidSolrID, with: :not_found_response
     end
 
     def render_404
