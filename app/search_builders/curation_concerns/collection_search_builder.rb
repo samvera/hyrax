@@ -1,35 +1,60 @@
 module CurationConcerns
+  # Our parent class is the generated SearchBuilder descending from Blacklight::SearchBuilder
+  # It includes Blacklight::Solr::SearchBuilderBehavior, Hydra::AccessControlsEnforcement, CurationConcerns::SearchFilters
+  # @see https://github.com/projectblacklight/blacklight/blob/master/lib/blacklight/search_builder.rb Blacklight::SearchBuilder parent
+  # @see https://github.com/projectblacklight/blacklight/blob/master/lib/blacklight/solr/search_builder_behavior.rb Blacklight::Solr::SearchBuilderBehavior
+  # @note the default_processor_chain defined by Blacklight::Solr::SearchBuilderBehavior provides many possible points of override
+  #
   class CollectionSearchBuilder < ::SearchBuilder
     include FilterByType
     # Defines which search_params_logic should be used when searching for Collections
-    self.default_processor_chain = [:default_solr_parameters, :add_query_to_solr,
-                                    :add_access_controls_to_solr_params, :filter_models,
-                                    :some_rows, :sort_by_title]
-
-    def some_rows(solr_parameters)
-      solr_parameters[:rows] = '100'
+    # def initialize(context, access)
+    def initialize(context)
+      # @access = access_levels[access]
+      @rows = 100
+      super(context)
     end
 
-    # This overrides FilterByType and ensures we only match on collections.
-    def only_collections?
-      true
+    # @return [String] class URI of the model, as indexed in Solr has_model_ssim field
+    def model_class_uri
+      ::Collection.to_class_uri
     end
 
-    # Sort results by title if no query was supplied.
-    # This overrides the default 'relevance' sort.
-    def sort_by_title(solr_parameters)
-      return if solr_parameters[:q]
-      solr_parameters[:sort] ||= "#{sort_field} asc"
+    # @return [String] Solr field name indicating default sort order
+    def sort_field
+      Solrizer.solr_name('title', :sortable)
     end
 
-    attr_writer :discovery_perms
+    # @return [Hash{Symbol => Array[Symbol]}] bottom-up map of "what you need" to "what qualifies"
+    # @note i.e., requiring :read access is satisfied by either :read or :edit access
+    def access_levels
+      { read: [:read, :edit], edit: [:edit] }
+    end
 
+    attr_writer :discovery_perms # TODO: remove this line
+    ## Overrides
+
+    # unprotect lib/blacklight/access_controls/enforcement.rb methods
+    # Remove these when https://github.com/projectblacklight/blacklight-access_controls/pull/23 is merged/released/required
     def discovery_permissions
       @discovery_perms || super
     end
 
-    def sort_field
-      Solrizer.solr_name('title', :sortable)
+    def discovery_permissions=(*args)
+      super
+    end
+
+    # This overrides the filter_models in FilterByType
+    def filter_models(solr_parameters)
+      solr_parameters[:fq] ||= []
+      solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: model_class_uri)
+    end
+
+    # Sort results by title if no query was supplied.
+    # This overrides the default 'relevance' sort.
+    def add_sorting_to_solr(solr_parameters)
+      return if solr_parameters[:q]
+      solr_parameters[:sort] ||= "#{sort_field} asc"
     end
   end
 end
