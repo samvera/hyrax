@@ -11,9 +11,8 @@ end
 describe SelectsCollectionsController, type: :controller do
   describe "#find_collections" do
     it "uses the search builder" do
-      expect(subject.collections_search_builder_class.default_processor_chain).to include(
-        :default_solr_parameters, :add_query_to_solr, :add_access_controls_to_solr_params, :filter_models
-      )
+      expect(subject.collections_search_builder_class.default_processor_chain)
+        .to include(:default_solr_parameters, :add_query_to_solr, :add_access_controls_to_solr_params)
       expect(CurationConcerns::CollectionSearchBuilder).to receive(:new).with(subject).and_call_original
       subject.find_collections
     end
