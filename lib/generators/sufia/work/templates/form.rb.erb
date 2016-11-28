@@ -1,7 +1,8 @@
 # Generated via
-#  `rails generate curation_concerns:work <%= class_name %>`
-module CurationConcerns
-  class <%= class_name %>Form < CurationConcerns::Forms::WorkForm
+#  `rails generate sufia:work <%= class_name %>`
+module Sufia
+  class <%= class_name %>Form < Sufia::Forms::WorkForm
     self.model_class = ::<%= class_name %>
+    self.terms += [:resource_type]
   end
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'curation_concerns/base/_form_rights.html.erb' do
   let(:curation_concern) { GenericWork.new }
-  let(:form) { CurationConcerns::Forms::WorkForm.new(curation_concern, nil) }
+  let(:form) { Sufia::Forms::WorkForm.new(curation_concern, nil) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>

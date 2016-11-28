@@ -5,7 +5,7 @@ describe 'curation_concerns/base/edit.html.erb', type: :view do
   let(:ability) { double }
 
   let(:form) do
-    CurationConcerns::GenericWorkForm.new(work, ability)
+    Sufia::GenericWorkForm.new(work, ability)
   end
 
   before do

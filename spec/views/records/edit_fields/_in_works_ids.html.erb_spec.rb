@@ -12,7 +12,7 @@ describe "records/edit_fields/_in_works_ids.html.erb", type: :view do
   let(:ability) { double }
 
   let(:form) do
-    CurationConcerns::GenericWorkForm.new(work, ability)
+    Sufia::GenericWorkForm.new(work, ability)
   end
 
   let(:f) { double(object: form) }

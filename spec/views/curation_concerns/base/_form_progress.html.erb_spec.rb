@@ -4,7 +4,7 @@ describe 'curation_concerns/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
-    CurationConcerns::GenericWorkForm.new(work, ability)
+    Sufia::GenericWorkForm.new(work, ability)
   end
 
   before do

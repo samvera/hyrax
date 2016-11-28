@@ -121,7 +121,7 @@ describe Sufia::GenericWorksController do
       it 'shows me the page' do
         get :new
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Sufia::GenericWorkForm
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
         expect(assigns[:curation_concern].depositor).to eq user.user_key
@@ -151,7 +151,7 @@ describe Sufia::GenericWorksController do
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
         expect(response.status).to eq 422
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Sufia::GenericWorkForm
         expect(response).to render_template 'new'
       end
     end
@@ -260,7 +260,7 @@ describe Sufia::GenericWorksController do
       it 'shows me the page' do
         get :edit, params: { id: work }
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Sufia::GenericWorkForm
         expect(response).to render_template("layouts/curation_concerns/1_column")
       end
 
@@ -367,7 +367,7 @@ describe Sufia::GenericWorksController do
 
       it 'renders the form' do
         patch :update, params: { id: work, generic_work: {} }
-        expect(assigns[:form]).to be_kind_of CurationConcerns::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Sufia::GenericWorkForm
         expect(response).to render_template('edit')
       end
     end

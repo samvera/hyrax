@@ -2,7 +2,7 @@ describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { GenericWork.new }
   let(:form) do
-    CurationConcerns::GenericWorkForm.new(work, ability)
+    Sufia::GenericWorkForm.new(work, ability)
   end
   let(:service) { instance_double Sufia::AdminSetService, select_options: [] }
 

@@ -1,4 +1,4 @@
-describe CurationConcerns::GenericWorkForm do
+describe Sufia::GenericWorkForm do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil) }
 
