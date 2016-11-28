@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class MemberSearchBuilder < ::SearchBuilder
     class_attribute :from_field
     self.from_field = 'member_ids_ssim'

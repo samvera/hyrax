@@ -1,5 +1,5 @@
 module Sufia
-  class CollectionMemberSearchBuilder < CurationConcerns::MemberSearchBuilder
+  class CollectionMemberSearchBuilder < Sufia::MemberSearchBuilder
     include Sufia::FilterByType
   end
 end
