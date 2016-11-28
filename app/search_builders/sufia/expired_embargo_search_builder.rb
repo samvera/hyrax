@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # Finds embargoed objects with release dates in the past
   class ExpiredEmbargoSearchBuilder < EmbargoSearchBuilder
     self.default_processor_chain += [:only_expired_embargoes]

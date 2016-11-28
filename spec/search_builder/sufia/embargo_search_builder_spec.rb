@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::EmbargoSearchBuilder do
+describe Sufia::EmbargoSearchBuilder do
   let(:context) { double }
   let(:search_builder) { described_class.new(context) }
 

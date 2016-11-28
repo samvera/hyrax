@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # Finds embargoed objects
   class EmbargoSearchBuilder < Blacklight::SearchBuilder
     self.default_processor_chain = [:with_pagination, :with_sorting, :only_active_embargoes]

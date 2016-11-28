@@ -7,7 +7,7 @@ module Sufia
 
       # Returns all assets with embargo release date set to a date in the past
       def assets_with_expired_embargoes
-        builder = CurationConcerns::ExpiredEmbargoSearchBuilder.new(self)
+        builder = Sufia::ExpiredEmbargoSearchBuilder.new(self)
         presenters(builder)
       end
 
@@ -15,13 +15,13 @@ module Sufia
       #   (assumes that when lease visibility is applied to assets
       #    whose leases have expired, the lease expiration date will be removed from its metadata)
       def assets_under_embargo
-        builder = CurationConcerns::EmbargoSearchBuilder.new(self)
+        builder = Sufia::EmbargoSearchBuilder.new(self)
         presenters(builder)
       end
 
       # Returns all assets that have had embargoes deactivated in the past.
       def assets_with_deactivated_embargoes
-        builder = CurationConcerns::DeactivatedEmbargoSearchBuilder.new(self)
+        builder = Sufia::DeactivatedEmbargoSearchBuilder.new(self)
         presenters(builder)
       end
 

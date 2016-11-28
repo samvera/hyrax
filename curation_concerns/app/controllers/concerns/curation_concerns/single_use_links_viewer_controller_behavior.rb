@@ -42,7 +42,7 @@ module CurationConcerns
     protected
 
       def search_builder_class
-        CurationConcerns::SingleUseLinkSearchBuilder
+        Sufia::SingleUseLinkSearchBuilder
       end
 
       def content_options

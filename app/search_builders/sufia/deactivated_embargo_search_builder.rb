@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class DeactivatedEmbargoSearchBuilder < EmbargoSearchBuilder
     self.default_processor_chain += [:with_deactivated_embargos]
 

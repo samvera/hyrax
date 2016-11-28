@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   # Finds objects under lease
   class LeaseSearchBuilder < Blacklight::SearchBuilder
     self.default_processor_chain = [:with_pagination, :with_sorting, :only_active_leases]
