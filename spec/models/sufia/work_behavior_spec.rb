@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe CurationConcerns::WorkBehavior do
+describe Sufia::WorkBehavior do
   before do
     class EssentialWork < ActiveFedora::Base
-      include CurationConcerns::WorkBehavior
+      include Sufia::WorkBehavior
     end
   end
   after do

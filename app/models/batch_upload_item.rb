@@ -2,7 +2,6 @@
 # It should never actually be persisted in the repository.
 # The properties on this form should be copied to a real work type.
 class BatchUploadItem < ActiveFedora::Base
-  include ::CurationConcerns::WorkBehavior
   include ::Sufia::BasicMetadata
   include Sufia::WorkBehavior
 
