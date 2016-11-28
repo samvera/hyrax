@@ -1,8 +1,14 @@
 module Sufia
-  class WorkIndexer < CurationConcerns::WorkIndexer
+  class WorkIndexer < ActiveFedora::IndexingService
+    include Sufia::IndexesThumbnails
+    include Sufia::IndexesWorkflow
+
     self.thumbnail_path_service = Sufia::WorkThumbnailPathService
     def generate_solr_document
       super.tap do |solr_doc|
+        solr_doc[Solrizer.solr_name('member_ids', :symbol)] = object.member_ids
+        Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
+
         # This enables us to return a Work when we have a FileSet that matches
         # the search query.  While at the same time allowing us not to return Collections
         # when a work in the collection matches the query.

@@ -64,7 +64,7 @@ describe GenericWork do
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::WorkIndexer }
+    it { is_expected.to eq Sufia::WorkIndexer }
   end
   context "with children" do
     subject { FactoryGirl.create(:work_with_file_and_work) }
