@@ -50,7 +50,7 @@ module Sufia
       self.form_class = Sufia::Forms::CollectionForm
 
       # To build a query to find a list of collections
-      self.list_search_builder_class = CurationConcerns::CollectionSearchBuilder
+      self.list_search_builder_class = Sufia::CollectionSearchBuilder
       # The search builder to find the collection
       self.single_item_search_builder_class = WorkSearchBuilder
       # The search builder to find the collections' members

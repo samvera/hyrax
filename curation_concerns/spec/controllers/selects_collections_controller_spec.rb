@@ -15,7 +15,7 @@ describe SelectsCollectionsController, type: :controller do
         :default_solr_parameters, :add_query_to_solr,
         :add_access_controls_to_solr_params, :filter_models,
         :some_rows, :sort_by_title]
-      expect(CurationConcerns::CollectionSearchBuilder).to receive(:new).with(subject).and_call_original
+      expect(Sufia::CollectionSearchBuilder).to receive(:new).with(subject).and_call_original
       subject.find_collections
     end
   end

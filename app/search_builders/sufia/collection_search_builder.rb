@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class CollectionSearchBuilder < ::SearchBuilder
     include Sufia::FilterByType
     # Defines which search_params_logic should be used when searching for Collections

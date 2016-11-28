@@ -5,7 +5,7 @@ module CurationConcerns::SelectsCollections
   included do
     Deprecation.warn(CurationConcerns::SelectsCollections, "CurationConcerns::SelectsCollections is deprecated and will be removed in curation_concerns 2.0")
     configure_blacklight do |config|
-      config.search_builder_class = CurationConcerns::CollectionSearchBuilder
+      config.search_builder_class = Sufia::CollectionSearchBuilder
     end
   end
 
@@ -55,7 +55,7 @@ module CurationConcerns::SelectsCollections
   end
 
   def collections_search_builder_class
-    CurationConcerns::CollectionSearchBuilder
+    Sufia::CollectionSearchBuilder
   end
 
   def collections_search_builder(access_level = nil)

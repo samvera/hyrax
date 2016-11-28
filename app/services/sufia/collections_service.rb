@@ -3,7 +3,7 @@ module Sufia
     attr_reader :context
 
     class_attribute :list_search_builder_class
-    self.list_search_builder_class = CurationConcerns::CollectionSearchBuilder
+    self.list_search_builder_class = Sufia::CollectionSearchBuilder
 
     # @param [#repository,#blacklight_config,#current_ability] context
     def initialize(context)
