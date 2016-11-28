@@ -151,7 +151,7 @@ describe FileSet do
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::FileSetIndexer }
+    it { is_expected.to eq Sufia::FileSetIndexer }
 
     describe "setting" do
       before do
@@ -404,7 +404,7 @@ describe FileSet do
   describe 'to_solr' do
     let(:indexer) { double(generate_solr_document: {}) }
     before do
-      allow(CurationConcerns::FileSetIndexer).to receive(:new)
+      allow(Sufia::FileSetIndexer).to receive(:new)
         .with(subject).and_return(indexer)
     end
 

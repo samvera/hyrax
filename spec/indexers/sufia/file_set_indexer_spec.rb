@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe CurationConcerns::FileSetIndexer do
-  include CurationConcerns::FactoryHelpers
+describe Sufia::FileSetIndexer do
+  include Sufia::FactoryHelpers
 
   let(:file_set) do
     FileSet.new(

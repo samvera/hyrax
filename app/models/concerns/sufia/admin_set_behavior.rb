@@ -10,7 +10,7 @@ module Sufia
     included do
       validates_with HasOneTitleValidator
       class_attribute :human_readable_short_description, :indexer
-      self.indexer = CurationConcerns::AdminSetIndexer
+      self.indexer = Sufia::AdminSetIndexer
       property :title, predicate: ::RDF::Vocab::DC.title do |index|
         index.as :stored_searchable, :facetable
       end

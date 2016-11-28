@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class CollectionIndexer < Hydra::PCDM::CollectionIndexer
     include Sufia::IndexesThumbnails
     STORED_LONG = Solrizer::Descriptor.new(:long, :stored)

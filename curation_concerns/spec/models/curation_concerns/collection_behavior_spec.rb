@@ -16,7 +16,7 @@ describe Sufia::CollectionBehavior do
 
   describe "indexer" do
     subject { Collection.indexer }
-    it { is_expected.to eq CurationConcerns::CollectionIndexer }
+    it { is_expected.to eq Sufia::CollectionIndexer }
   end
 
   describe '.bytes' do

@@ -26,7 +26,7 @@ module Sufia
 
     module ClassMethods
       def indexer
-        CurationConcerns::CollectionIndexer
+        Sufia::CollectionIndexer
       end
     end
 
@@ -57,7 +57,7 @@ module Sufia
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
       def file_size_field
-        Solrizer.solr_name(:file_size, CurationConcerns::FileSetIndexer::STORED_INTEGER)
+        Solrizer.solr_name(:file_size, Sufia::FileSetIndexer::STORED_INTEGER)
       end
 
       # Solr field name collections and works use to index member ids

@@ -6,7 +6,7 @@ module Sufia
       included do
         class_attribute :indexer
         # the default indexing service
-        self.indexer = CurationConcerns::FileSetIndexer
+        self.indexer = Sufia::FileSetIndexer
       end
     end
   end

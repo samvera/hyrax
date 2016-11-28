@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class AdminSetIndexer < ActiveFedora::IndexingService
     include Sufia::IndexesThumbnails
 

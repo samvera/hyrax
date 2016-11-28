@@ -24,6 +24,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/sufia/admin/depositor_stats.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
+    - 'app/indexers/sufia/file_set_indexer.rb'
     - 'app/services/sufia/user_stat_importer.rb'
     - 'app/services/sufia/workflow/permission_query.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
@@ -43,6 +44,7 @@ Metrics/MethodLength:
     - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
+    - 'app/indexers/sufia/file_set_indexer.rb'
     - 'app/models/concerns/sufia/file_set/derivatives.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
     - 'app/services/sufia/workflow/permission_query.rb'

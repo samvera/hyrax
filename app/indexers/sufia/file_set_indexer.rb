@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class FileSetIndexer < ActiveFedora::IndexingService
     include Sufia::IndexesThumbnails
     STORED_INTEGER = Solrizer::Descriptor.new(:integer, :stored)
