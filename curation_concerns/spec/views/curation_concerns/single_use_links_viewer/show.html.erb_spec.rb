@@ -4,7 +4,7 @@ describe 'curation_concerns/single_use_links_viewer/show.html.erb' do
   let(:ability) { double }
   let(:model) { stub_model(FileSet, title: ['world.png']) }
   let(:solr_document) { SolrDocument.new(model.to_solr) }
-  let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_document, ability) }
+  let(:presenter) { Sufia::FileSetPresenter.new(solr_document, ability) }
   let(:download_link) { '/a_path' }
   before do
     assign(:presenter, presenter)

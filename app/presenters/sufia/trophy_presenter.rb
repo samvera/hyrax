@@ -1,6 +1,6 @@
 module Sufia
   class TrophyPresenter
-    include CurationConcerns::ModelProxy
+    include ModelProxy
     def initialize(solr_document)
       @solr_document = solr_document
     end

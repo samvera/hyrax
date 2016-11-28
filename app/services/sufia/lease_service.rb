@@ -25,7 +25,7 @@ module Sufia
       private
 
         def presenter_class
-          CurationConcerns::LeasePresenter
+          Sufia::LeasePresenter
         end
     end
   end

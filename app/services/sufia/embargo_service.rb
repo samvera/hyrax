@@ -28,7 +28,7 @@ module Sufia
       private
 
         def presenter_class
-          CurationConcerns::EmbargoPresenter
+          Sufia::EmbargoPresenter
         end
 
         def presenters(builder)

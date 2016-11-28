@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   let(:members) { [file_set, member] }
-  let(:file_set) { CurationConcerns::FileSetPresenter.new(solr_doc, nil) }
+  let(:file_set) { Sufia::FileSetPresenter.new(solr_doc, nil) }
   let(:member) { CurationConcerns::WorkShowPresenter.new(solr_doc_work, nil) }
   let(:solr_doc) do
     SolrDocument.new(

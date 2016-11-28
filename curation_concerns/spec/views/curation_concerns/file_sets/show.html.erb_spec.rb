@@ -32,7 +32,7 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
   let(:mime_type) { 'application/binary' }
   let(:ability) { double }
   let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
-  let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_doc, ability) }
+  let(:presenter) { Sufia::FileSetPresenter.new(solr_doc, ability) }
 
   before do
     view.lookup_context.prefixes.push 'curation_concerns/base'
@@ -150,8 +150,8 @@ describe 'curation_concerns/file_sets/show.html.erb', type: :view do
       end
 
       context "when links are present" do
-        let(:show_link)     { CurationConcerns::SingleUseLinkPresenter.new(create(:show_link)) }
-        let(:download_link) { CurationConcerns::SingleUseLinkPresenter.new(create(:download_link)) }
+        let(:show_link)     { Sufia::SingleUseLinkPresenter.new(create(:show_link)) }
+        let(:download_link) { Sufia::SingleUseLinkPresenter.new(create(:download_link)) }
         let(:links)         { [show_link, download_link] }
 
         it "renders single use links for the file set" do

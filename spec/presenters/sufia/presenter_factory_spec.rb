@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sufia::PresenterFactory do
   describe "#build_presenters" do
-    let(:presenter_class) { CurationConcerns::FileSetPresenter }
+    let(:presenter_class) { Sufia::FileSetPresenter }
 
     before do
       allow(ActiveFedora::SolrService.instance.conn).to receive(:post)
@@ -28,7 +28,7 @@ describe Sufia::PresenterFactory do
 
     context "with more arguments" do
       let(:presenter_class) do
-        Class.new(CurationConcerns::FileSetPresenter) do
+        Class.new(Sufia::FileSetPresenter) do
           attr_reader :two, :three
           def initialize(_one, two, three)
             @two = two

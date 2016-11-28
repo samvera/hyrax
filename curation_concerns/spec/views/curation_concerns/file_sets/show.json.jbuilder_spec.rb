@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'curation_concerns/file_sets/show.json.jbuilder' do
   let(:file_set) { create(:file_set) }
   let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
-  let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_doc, nil) }
+  let(:presenter) { Sufia::FileSetPresenter.new(solr_doc, nil) }
 
   before do
     assign(:presenter, presenter)

@@ -94,7 +94,7 @@ describe CurationConcerns::FileSetsController do
       before { resource_request }
       it "returns json of the work" do
         # this object is used by the jbuilder template
-        expect(assigns[:presenter]).to be_instance_of CurationConcerns::FileSetPresenter
+        expect(assigns[:presenter]).to be_instance_of Sufia::FileSetPresenter
         expect(controller).to render_template('curation_concerns/file_sets/show')
         expect(response.code).to eq "200"
       end

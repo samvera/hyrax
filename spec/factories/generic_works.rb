@@ -31,6 +31,13 @@ FactoryGirl.define do
       before(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user) } }
     end
 
+    factory :work_with_ordered_files do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)
+        work.ordered_member_proxies.insert_target_at(0, FactoryGirl.create(:file_set, user: evaluator.user))
+      end
+    end
+
     factory :work_with_one_child do
       before(:create) do |work, evaluator|
         work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'])
@@ -41,6 +48,20 @@ FactoryGirl.define do
       before(:create) do |work, evaluator|
         work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
         work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+      end
+    end
+
+    factory :work_with_representative_file do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
+        work.representative_id = work.members[0].id
+      end
+    end
+
+    factory :work_with_file_and_work do
+      before(:create) do |work, evaluator|
+        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)
+        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user)
       end
     end
   end

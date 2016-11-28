@@ -17,11 +17,56 @@ describe Sufia::FileSetPresenter do
   end
 
   subject { presenter }
-  it { is_expected.to delegate_method(:depositor).to(:solr_document) }
-  it { is_expected.to delegate_method(:keyword).to(:solr_document) }
-  it { is_expected.to delegate_method(:date_created).to(:solr_document) }
-  it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
-  it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+
+  describe "#to_s" do
+    subject { presenter.to_s }
+    it { is_expected.to eq 'File title' }
+  end
+
+  describe "#human_readable_type" do
+    subject { presenter.human_readable_type }
+    it { is_expected.to eq 'File' }
+  end
+
+  describe "#model_name" do
+    subject { presenter.model_name }
+    it { is_expected.to be_kind_of ActiveModel::Name }
+  end
+
+  describe "#to_partial_path" do
+    subject { presenter.to_partial_path }
+    it { is_expected.to eq 'file_sets/file_set' }
+  end
+
+  describe "office_document?" do
+    subject { presenter.office_document? }
+    it { is_expected.to be false }
+  end
+
+  describe "properties delegated to solr_document" do
+    let(:solr_properties) do
+      ["date_uploaded", "title_or_label",
+       "contributor", "creator", "title", "description", "publisher",
+       "subject", "language", "rights", "format_label", "file_size",
+       "height", "width", "filename", "well_formed", "page_count",
+       "file_title", "last_modified", "original_checksum", "mime_type",
+       "duration", "sample_rate"]
+    end
+    it "delegates to the solr_document" do
+      solr_properties.each do |property|
+        expect(solr_document).to receive(property.to_sym)
+        presenter.send(property)
+      end
+    end
+    it { is_expected.to delegate_method(:depositor).to(:solr_document) }
+    it { is_expected.to delegate_method(:keyword).to(:solr_document) }
+    it { is_expected.to delegate_method(:date_created).to(:solr_document) }
+    it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
+    it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+    it { is_expected.to delegate_method(:fetch).to(:solr_document) }
+    it { is_expected.to delegate_method(:first).to(:solr_document) }
+    it { is_expected.to delegate_method(:has?).to(:solr_document) }
+  end
 
   describe '#link_name' do
     context "with a user who can view the file" do
@@ -84,7 +129,19 @@ describe Sufia::FileSetPresenter do
 
     describe "#characterization_metadata" do
       subject { presenter.characterization_metadata }
-      it { is_expected.to be_kind_of(Hash) }
+
+      it "only has set attributes are in the metadata" do
+        expect(subject[:height]).to be_blank
+        expect(subject[:page_count]).to be_blank
+      end
+
+      context "when height is set" do
+        let(:attributes) { { height_is: '444' } }
+        it "only has set attributes are in the metadata" do
+          expect(subject[:height]).not_to be_blank
+          expect(subject[:page_count]).to be_blank
+        end
+      end
     end
 
     describe "#characterized?" do
@@ -93,6 +150,11 @@ describe Sufia::FileSetPresenter do
 
       context "when height is set" do
         let(:attributes) { { height_is: '444' } }
+        it { is_expected.to be_characterized }
+      end
+
+      context "when file_format is set" do
+        let(:attributes) { { file_format_tesim: ['format'] } }
         it { is_expected.to be_characterized }
       end
     end

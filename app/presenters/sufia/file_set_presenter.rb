@@ -1,9 +1,39 @@
 module Sufia
-  class FileSetPresenter < ::CurationConcerns::FileSetPresenter
+  class FileSetPresenter
+    include ModelProxy
+    include PresentsAttributes
+    include CharacterizationBehavior
     include WithEvents
 
-    delegate :depositor, :keyword, :date_created, :date_modified, :itemtype,
+    attr_accessor :solr_document, :current_ability, :request
+
+    # @param [SolrDocument] solr_document
+    # @param [Ability] current_ability
+    # @param [ActionDispatch::Request] request the http request context
+    def initialize(solr_document, current_ability, request = nil)
+      @solr_document = solr_document
+      @current_ability = current_ability
+      @request = request
+    end
+
+    # CurationConcern methods
+    delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
+             :audio?, :pdf?, :office_document?, :representative_id, :to_s, to: :solr_document
+
+    # Methods used by blacklight helpers
+    delegate :has?, :first, :fetch, to: :solr_document
+
+    # Metadata Methods
+    delegate :title, :label, :description, :creator, :contributor, :subject,
+             :publisher, :language, :date_uploaded, :rights,
+             :embargo_release_date, :lease_expiration_date,
+             :depositor, :keyword, :title_or_label, :depositor, :keyword,
+             :date_created, :date_modified, :itemtype,
              to: :solr_document
+
+    def single_use_links
+      @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }
+    end
 
     def page_title
       title.first
@@ -60,5 +90,11 @@ module Sufia
     def audit_service
       @audit_service ||= Sufia::FileSetAuditService.new(id)
     end
+
+    private
+
+      def link_presenter_class
+        SingleUseLinkPresenter
+      end
   end
 end

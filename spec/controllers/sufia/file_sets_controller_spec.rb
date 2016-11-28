@@ -58,7 +58,7 @@ describe Sufia::FileSetsController do
 
       expect(response).to be_success
       expect(assigns[:file_set]).to eq file_set
-      expect(assigns[:version_list]).to be_kind_of CurationConcerns::VersionListPresenter
+      expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
       expect(response).to render_template(:edit)
     end
   end

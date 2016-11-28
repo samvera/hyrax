@@ -13,7 +13,7 @@ module CurationConcerns
       copy_blacklight_config_from(::CatalogController)
 
       class_attribute :show_presenter, :form_class
-      self.show_presenter = CurationConcerns::FileSetPresenter
+      self.show_presenter = Sufia::FileSetPresenter
       self.form_class = Sufia::Forms::FileSetEditForm
 
       # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
@@ -158,7 +158,7 @@ module CurationConcerns
       end
 
       def version_list
-        CurationConcerns::VersionListPresenter.new(curation_concern.original_file.versions.all)
+        Sufia::VersionListPresenter.new(curation_concern.original_file.versions.all)
       end
 
       def wants_to_revert?

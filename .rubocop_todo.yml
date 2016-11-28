@@ -11,10 +11,11 @@ Metrics/PerceivedComplexity:
 
 Metrics/ClassLength:
   Exclude:
+    - 'app/presenters/sufia/work_show_presenter.rb'
+    - 'app/services/sufia/user_stat_importer.rb'
     - 'lib/generators/sufia/templates/catalog_controller.rb'
     - 'lib/generators/sufia/install_generator.rb'
     - 'lib/sufia/configuration.rb'
-    - 'app/services/sufia/user_stat_importer.rb'
 
 Metrics/ParameterLists:
   Exclude:

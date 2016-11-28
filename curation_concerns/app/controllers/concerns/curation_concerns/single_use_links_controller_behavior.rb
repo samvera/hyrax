@@ -4,7 +4,7 @@ module CurationConcerns
     include Blacklight::SearchHelper
     included do
       class_attribute :show_presenter
-      self.show_presenter = CurationConcerns::SingleUseLinkPresenter
+      self.show_presenter = Sufia::SingleUseLinkPresenter
       before_action :authenticate_user!
       before_action :authorize_user!
       # Catch permission errors

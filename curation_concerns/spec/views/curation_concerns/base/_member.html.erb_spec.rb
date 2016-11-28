@@ -10,7 +10,7 @@ describe 'curation_concerns/base/_member.html.erb' do
 
   # Ability is checked in FileSetPresenter#link_name
   let(:ability) { double(can?: true) }
-  let(:presenter) { CurationConcerns::FileSetPresenter.new(solr_document, ability) }
+  let(:presenter) { Sufia::FileSetPresenter.new(solr_document, ability) }
   let(:blacklight_configuration_context) do
     Blacklight::Configuration::Context.new(controller)
   end

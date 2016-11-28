@@ -8,7 +8,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
   describe "::show_presenter" do
     subject { described_class }
-    its(:show_presenter) { is_expected.to eq(CurationConcerns::SingleUseLinkPresenter) }
+    its(:show_presenter) { is_expected.to eq(Sufia::SingleUseLinkPresenter) }
   end
 
   describe "logged in user with edit permission" do

@@ -21,6 +21,52 @@ en:
       default:          'fa fa-cube'
     institution_name:   "Institution Name"
     institution_name_full: "The Institution Name"
+    schema_org:
+      resource_type:
+        Article: "http://schema.org/Article"
+        Audio: "http://schema.org/AudioObject"
+        Book: "http://schema.org/Book"
+        Conference Proceeding: "http://schema.org/ScholarlyArticle"
+        Dataset: "http://schema.org/Dataset"
+        Dissertation: "http://schema.org/ScholarlyArticle"
+        Image: "http://schema.org/ImageObject"
+        Map or Cartographic Material: "http://schema.org/Map"
+        Masters Thesis: "http://schema.org/ScholarlyArticle"
+        Part of Book: "http://schema.org/Book"
+        Research Paper: "http://schema.org/ScholarlyArticle"
+        Software or Program Code: "http://schema.org/Code"
+        Video: "http://schema.org/VideoObject"
+      based_near:
+        type: "http://schema.org/Place"
+        property: contentLocation
+        value: name
+      contributor:
+        type: "http://schema.org/Person"
+        property: contributor
+        # used as the itemprop value for itemscoped attributes
+        value: name
+      creator:
+        type: "http://schema.org/Person"
+        property: creator
+        value: name
+      date_created:
+        property: dateCreated
+      description:
+        property: description
+      language:
+        property: inLanguage
+      publisher:
+        type: "http://schema.org/Organization"
+        property: publisher
+        value: name
+      subject:
+        type: "http://schema.org/Thing"
+        property: about
+        value: name
+      keyword:
+        property: keywords
+      title:
+        property: name
     sort_label: "Sort the listing of items"
     account_name:       "My Institution Account Id"
     account_label:      "User"

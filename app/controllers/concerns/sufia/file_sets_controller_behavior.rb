@@ -7,8 +7,6 @@ module Sufia
       # prepend this hook so that it comes before load_and_authorize
       prepend_before_action :authenticate_user!, except: [:show, :citation, :stats]
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
-
-      self.show_presenter = Sufia::FileSetPresenter
     end
 
     # routed to /files/:id/stats
@@ -49,7 +47,7 @@ module Sufia
       def version_list
         original = @file_set.original_file
         versions = original ? original.versions.all : []
-        CurationConcerns::VersionListPresenter.new(versions)
+        Sufia::VersionListPresenter.new(versions)
       end
 
       def actor

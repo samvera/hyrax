@@ -17,7 +17,7 @@ describe 'curation_concerns/single_use_links_viewer/show.html.erb' do
   before do
     assign :asset, f
     assign :download_link, CurationConcerns::Engine.routes.url_helpers.download_single_use_link_path(hash)
-    assign :presenter, CurationConcerns::FileSetPresenter.new(solr_document, ability)
+    assign :presenter, Sufia::FileSetPresenter.new(solr_document, ability)
     view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
     render
   end

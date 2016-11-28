@@ -11,15 +11,21 @@ describe Sufia::CollectionPresenter do
 
   let(:collection) do
     build(:collection,
+          id: 'adc12v',
           description: ['a nice collection'],
           based_near: ['Over there'],
           title: ['A clever title'],
+          keyword: ['neologism'],
           resource_type: ['Collection'],
-          related_url: ['http://example.com/'])
+          related_url: ['http://example.com/'],
+          date_created: ['some date'])
   end
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+
+  # Mock bytes so collection does not have to be saved.
+  before { allow(collection).to receive(:bytes).and_return(0) }
 
   describe "#resource_type" do
     subject { presenter.resource_type }
@@ -32,14 +38,26 @@ describe Sufia::CollectionPresenter do
       is_expected.to eq [:total_items,
                          :size,
                          :resource_type,
+                         :keyword,
+                         :date_created,
                          :based_near,
                          :related_url]
     end
   end
 
+  describe '#to_s' do
+    subject { presenter.to_s }
+    it { is_expected.to eq 'A clever title' }
+  end
+
   describe "#title" do
     subject { presenter.title }
     it { is_expected.to eq ['A clever title'] }
+  end
+
+  describe '#keyword' do
+    subject { presenter.keyword }
+    it { is_expected.to eq ['neologism'] }
   end
 
   describe "#based_near" do
@@ -52,6 +70,11 @@ describe Sufia::CollectionPresenter do
     it { is_expected.to eq ['http://example.com/'] }
   end
 
+  describe '#to_key' do
+    subject { presenter.to_key }
+    it { is_expected.to eq ['adc12v'] }
+  end
+
   describe "#size" do
     subject { presenter.size }
     it { is_expected.to eq '0 Bytes' }
@@ -59,7 +82,21 @@ describe Sufia::CollectionPresenter do
 
   describe "#total_items" do
     subject { presenter.total_items }
-    it { is_expected.to eq 0 }
+
+    context "empty collection" do
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with work" do
+      let(:work) { build(:work, title: ['unimaginitive title']) }
+      before { collection.members << work }
+      it { is_expected.to eq 1 }
+    end
+
+    context "null members" do
+      let(:presenter) { described_class.new({}, nil) }
+      it { is_expected.to eq 0 }
+    end
   end
 
   subject { presenter }
@@ -67,4 +104,5 @@ describe Sufia::CollectionPresenter do
   it { is_expected.to delegate_method(:based_near).to(:solr_document) }
   it { is_expected.to delegate_method(:related_url).to(:solr_document) }
   it { is_expected.to delegate_method(:identifier).to(:solr_document) }
+  it { is_expected.to delegate_method(:date_created).to(:solr_document) }
 end

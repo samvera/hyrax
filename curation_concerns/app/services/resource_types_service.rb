@@ -14,7 +14,7 @@ module ResourceTypesService
 
   # @param [String] id identifier of the resource type
   def self.microdata_type(id)
-    I18n.t("curation_concerns.schema_org.resource_type.#{id}",
+    I18n.t("#{Sufia::Renderers::ConfiguredMicrodata::PREFIX}.resource_type.#{id}",
            default: Sufia.config.microdata_default_type)
   end
 end
