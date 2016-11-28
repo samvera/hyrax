@@ -1,6 +1,6 @@
 module Sufia
   # Finds the child objects contained within a collection
-  class MemberSearchBuilder < CurationConcerns::MemberSearchBuilder
+  class MemberWithFilesSearchBuilder < CurationConcerns::MemberSearchBuilder
     self.from_field = 'child_object_ids_ssim'
     self.default_processor_chain += [:include_contained_files]
 
