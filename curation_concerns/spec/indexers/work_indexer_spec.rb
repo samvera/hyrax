@@ -56,7 +56,7 @@ describe CurationConcerns::WorkIndexer do
   context "the actionable workflow roles" do
     before do
       allow(PowerConverter).to receive(:convert_to_sipity_entity).with(work).and_return(create(:sipity_entity))
-      allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_roles_associated_with_the_given_entity)
+      allow(Sufia::Workflow::PermissionQuery).to receive(:scope_roles_associated_with_the_given_entity)
         .and_return(['approve', 'reject'])
     end
     it "indexed the roles and state" do

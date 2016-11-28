@@ -25,7 +25,7 @@ RSpec.describe "Manage workflow roles", type: :feature do
               ],
               transition_to: "complete",
               methods: [
-                "CurationConcerns::Workflow::ActivateObject"
+                "Sufia::Workflow::ActivateObject"
               ]
             }
           ]
@@ -35,10 +35,10 @@ RSpec.describe "Manage workflow roles", type: :feature do
   end
   before do
     allow_any_instance_of(CurationConcerns::Admin::WorkflowRolesController).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
-    CurationConcerns::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
-    CurationConcerns::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
-                                                         workflow: Sipity::Workflow.last,
-                                                         agents: user)
+    Sufia::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
+    Sufia::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
+                                              workflow: Sipity::Workflow.last,
+                                              agents: user)
   end
 
   it "shows the roles" do

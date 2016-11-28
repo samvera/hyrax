@@ -31,7 +31,7 @@ RSpec.describe CurationConcerns::AdminController do
     it "is successful" do
       get :workflow
       expect(response).to be_successful
-      expect(assigns[:status_list]).to be_kind_of CurationConcerns::Workflow::StatusListService
+      expect(assigns[:status_list]).to be_kind_of Sufia::Workflow::StatusListService
     end
   end
 

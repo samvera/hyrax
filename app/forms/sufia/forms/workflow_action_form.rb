@@ -9,9 +9,9 @@ module Sufia
     # @see Ability
     # @see Sipity::WorkflowAction
     # @see Sipity::Entity
-    # @see CurationConcerns::Workflow::ActionTakenService
-    # @see CurationConcerns::Workflow::NotificationService
-    # @see CurationConcerns::Workflow::PermissionQuery
+    # @see Sufia::Workflow::ActionTakenService
+    # @see Sufia::Workflow::NotificationService
+    # @see Sufia::Workflow::PermissionQuery
     class WorkflowActionForm
       include ActiveModel::Validations
       extend ActiveModel::Translation
@@ -38,7 +38,7 @@ module Sufia
       validate :authorized_for_processing
 
       def authorized_for_processing
-        return true if CurationConcerns::Workflow::PermissionQuery.authorized_for_processing?(
+        return true if Sufia::Workflow::PermissionQuery.authorized_for_processing?(
           user: subject.user,
           entity: subject.entity,
           action: sipity_workflow_action

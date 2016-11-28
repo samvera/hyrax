@@ -21,7 +21,7 @@ module CurationConcerns
     end
 
     def workflow
-      @status_list = CurationConcerns::Workflow::StatusListService.new(current_user)
+      @status_list = Sufia::Workflow::StatusListService.new(current_user)
     end
 
     private
