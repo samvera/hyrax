@@ -9,7 +9,6 @@ module Sufia
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
 
       self.show_presenter = Sufia::FileSetPresenter
-      self.form_class = Sufia::Forms::FileSetEditForm
     end
 
     # routed to /files/:id/stats

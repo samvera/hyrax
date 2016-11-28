@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::Forms::FileSetEditForm do
+describe Sufia::Forms::FileSetEditForm do
   subject { described_class.new(FileSet.new) }
 
   describe '#terms' do

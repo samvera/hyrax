@@ -14,7 +14,7 @@ module CurationConcerns
 
       class_attribute :show_presenter, :form_class
       self.show_presenter = CurationConcerns::FileSetPresenter
-      self.form_class = CurationConcerns::Forms::FileSetEditForm
+      self.form_class = Sufia::Forms::FileSetEditForm
 
       # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
       # method. However the interface for various CurationConcern modules leverages the #curation_concern method
