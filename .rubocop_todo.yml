@@ -51,7 +51,7 @@ RSpec/NamedSubject:
   Enabled: false
 
 RSpec/ExampleLength:
-  Max: 7 
+  Max: 7
   Exclude:
     - 'spec/controllers/api/items_controller_spec.rb'
     - 'spec/controllers/authorities_controller_spec.rb'
@@ -113,4 +113,3 @@ RSpec/AnyInstance:
     - 'spec/presenters/sufia/work_usage_spec.rb'
     - 'spec/presenters/sufia/file_usage_spec.rb'
     - 'spec/services/sufia/repository_audit_service_spec.rb'
-

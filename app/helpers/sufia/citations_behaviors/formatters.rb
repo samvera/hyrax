@@ -14,7 +14,6 @@ module Sufia
 
       autoload :ApaFormatter, 'sufia/citations_behaviors/formatters/apa_formatter'
       autoload :ChicagoFormatter, 'sufia/citations_behaviors/formatters/chicago_formatter'
-      autoload :EndnoteFormatter, 'sufia/citations_behaviors/formatters/endnote_formatter'
       autoload :MlaFormatter, 'sufia/citations_behaviors/formatters/mla_formatter'
       autoload :OpenUrlFormatter, 'sufia/citations_behaviors/formatters/open_url_formatter'
     end

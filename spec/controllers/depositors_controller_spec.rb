@@ -2,7 +2,7 @@ describe DepositorsController do
   let(:user) { create(:user) }
   let(:grantee) { create(:user) }
 
-  describe "as a logged in user" do
+  context "as a logged in user" do
     before do
       sign_in user
     end
@@ -51,7 +51,7 @@ describe DepositorsController do
     end
   end
 
-  describe "as a user without access" do
+  context "as a user without access" do
     before do
       sign_in create(:user)
     end
