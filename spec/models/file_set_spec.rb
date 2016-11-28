@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 # This tests the FileSet model that is inserted into the host app by curation_concerns:models:install
-# It includes the CurationConcerns::FileSetBehavior module and nothing else
+# It includes the Sufia::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
 describe FileSet do
-  include CurationConcerns::FactoryHelpers
+  include Sufia::FactoryHelpers
 
   let(:user) { create(:user) }
 
@@ -156,7 +156,7 @@ describe FileSet do
     describe "setting" do
       before do
         class AltFile < ActiveFedora::Base
-          include CurationConcerns::FileSetBehavior
+          include Sufia::FileSetBehavior
         end
       end
       after do
@@ -182,20 +182,21 @@ describe FileSet do
     expect(subject.relative_path).to eq 'documents/research/NSF/2010'
   end
   describe 'create_thumbnail' do
-    before do
-      @f = described_class.new
-      @f.apply_depositor_metadata('mjg36')
+    let(:file_set) do
+      described_class.new do |f|
+        f.apply_depositor_metadata('mjg36')
+      end
     end
     describe 'with a video', if: Sufia.config.enable_ffmpeg do
       before do
-        allow(@f).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
-        @f.save
+        allow(file_set).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
+        file_set.save
         Hydra::Works::AddFileToFileSet.call(subject, File.open("#{fixture_path}/countdown.avi", 'rb'), :original_file)
       end
       it 'makes a png thumbnail' do
-        @f.create_thumbnail
-        expect(@f.thumbnail.content.size).to eq 4768 # this is a bad test. I just want to show that it did something.
-        expect(@f.thumbnail.mime_type).to eq 'image/png'
+        file_set.create_thumbnail
+        expect(file_set.thumbnail.content.size).to eq 4768 # this is a bad test. I just want to show that it did something.
+        expect(file_set.thumbnail.mime_type).to eq 'image/png'
       end
     end
   end
@@ -216,14 +217,15 @@ describe FileSet do
       subject { f1.reload.related_files }
       it 'returns all files contained in parent work(s) but excludes itself' do
         expect(subject).to include(f2)
-        expect(subject).to_not include(f1)
+        expect(subject).not_to include(f1)
       end
     end
   end
 
   describe 'noid integration' do
+    let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
     before do
-      allow_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).and_return(noid)
+      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
     end
 
     let(:noid) { 'wd3763094' }
@@ -233,7 +235,7 @@ describe FileSet do
     end
 
     it 'runs the overridden #assign_id method' do
-      expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
+      expect(service).to receive(:mint).once
       described_class.create { |f| f.apply_depositor_metadata('mjg36') }
     end
 
@@ -313,7 +315,7 @@ describe FileSet do
         before { subject.edit_groups = ['public'] }
 
         it 'is invalid' do
-          expect(subject).to_not be_valid
+          expect(subject).not_to be_valid
           expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
         end
       end
@@ -328,7 +330,7 @@ describe FileSet do
         subject.permissions = [Hydra::AccessControls::Permission.new(type: 'person', name: 'mjg36', access: 'read')]
       end
       it 'uses the user supplied configuration for validation' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors[:edit_users]).to include('Depositor must have edit access')
       end
     end
@@ -337,7 +339,7 @@ describe FileSet do
       before { subject.edit_groups = ['public'] }
 
       it 'is invalid' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
       end
     end
@@ -346,7 +348,7 @@ describe FileSet do
       before { subject.edit_groups = ['registered'] }
 
       it 'is invalid' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors[:edit_groups]).to include('Registered cannot have edit access')
       end
     end
@@ -373,7 +375,7 @@ describe FileSet do
       end
 
       it 'populates the errors hash during validation' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors.messages[:base].first).to eq "Failed to verify uploaded file is not a virus"
       end
 
@@ -501,9 +503,13 @@ describe FileSet do
   end
 
   describe 'assign_id' do
+    let(:service) { instance_double(ActiveFedora::Noid::Service) }
+    before do
+      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
+    end
     context 'with noids enabled (by default)' do
       it 'uses the noid service' do
-        expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
+        expect(service).to receive(:mint).once
         subject.assign_id
       end
     end
@@ -513,7 +519,7 @@ describe FileSet do
       after { Sufia.config.enable_noids = true }
 
       it 'does not use the noid service' do
-        expect_any_instance_of(ActiveFedora::Noid::Service).not_to receive(:mint)
+        expect(service).not_to receive(:mint)
         subject.assign_id
       end
     end

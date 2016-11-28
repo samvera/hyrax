@@ -5,7 +5,7 @@
 # any terms must be set on the ::characterization_proxy by the Hydra::Works::CharacterizationService
 #
 # class MyFileSet
-#   include CurationConcerns::FileSetBehavior
+#   include Sufia::FileSetBehavior
 # end
 #
 # MyFileSet.characterization_proxy = :master_file
