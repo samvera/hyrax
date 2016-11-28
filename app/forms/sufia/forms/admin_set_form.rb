@@ -1,6 +1,6 @@
 module Sufia
   module Forms
-    class AdminSetForm < CurationConcerns::Forms::CollectionEditForm
+    class AdminSetForm < Sufia::Forms::CollectionForm
       self.model_class = AdminSet
       self.terms = [:title, :description, :thumbnail_id]
 

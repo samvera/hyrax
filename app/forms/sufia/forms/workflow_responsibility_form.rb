@@ -1,12 +1,11 @@
-module CurationConcerns
+module Sufia
   module Forms
     class WorkflowResponsibilityForm
       def initialize(params = {})
         model_instance.workflow_role_id = params[:workflow_role_id]
-        if params[:user_id]
-          user = ::User.find(params[:user_id])
-          model_instance.agent = user.to_sipity_agent
-        end
+        return unless params[:user_id]
+        user = ::User.find(params[:user_id])
+        model_instance.agent = user.to_sipity_agent
       end
 
       def model_instance

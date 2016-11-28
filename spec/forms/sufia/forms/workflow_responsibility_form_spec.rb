@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::Forms::WorkflowResponsibilityForm, :no_clean do
+describe Sufia::Forms::WorkflowResponsibilityForm, :no_clean do
   let(:instance) { described_class.new }
 
   describe "#initialize" do

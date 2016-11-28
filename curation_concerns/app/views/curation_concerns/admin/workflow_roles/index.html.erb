@@ -34,7 +34,7 @@
       </table>
 
       <h2><%= t('.new_role') %></h2>
-      <%= simple_form_for CurationConcerns::Forms::WorkflowResponsibilityForm.new, url: admin_workflow_roles_path do |f| %>
+      <%= simple_form_for Sufia::Forms::WorkflowResponsibilityForm.new, url: admin_workflow_roles_path do |f| %>
         <%= f.input :user_id, as: :select, collection: f.object.user_options %>
         <%= f.input :workflow_role_id, as: :select, collection: f.object.workflow_role_options %>
         <%= f.submit %>
