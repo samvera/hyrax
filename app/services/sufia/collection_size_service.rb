@@ -26,7 +26,7 @@ module Sufia
     end
 
     def collection_search_builder
-      @collection_search_builder ||= CollectionSearchBuilder.new([:include_contained_files, :add_paging_to_solr], self)
+      @collection_search_builder ||= MemberSearchBuilder.new([:include_contained_files, :add_paging_to_solr], self)
     end
 
     def size_field
