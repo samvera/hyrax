@@ -4,7 +4,7 @@ module Sufia
 
     included do
       class_attribute :valid_child_concerns
-      self.valid_child_concerns = CurationConcerns::ClassifyConcern.new.all_curation_concern_classes
+      self.valid_child_concerns = Sufia::ClassifyConcern.new.all_curation_concern_classes
     end
 
     def in_works_ids

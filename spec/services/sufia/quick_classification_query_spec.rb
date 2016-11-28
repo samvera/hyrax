@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::QuickClassificationQuery do
+describe Sufia::QuickClassificationQuery do
   let(:user) { create(:user) }
 
   context "with no options" do

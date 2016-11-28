@@ -8,9 +8,7 @@ module CurationConcerns
     end
 
     def curation_concerns_permissions
-      unless current_user.new_record?
-        can :create, CurationConcerns::ClassifyConcern
-      end
+      can :create, Sufia::ClassifyConcern unless current_user.new_record?
 
       # user can version if they can edit
       alias_action :versions, to: :update

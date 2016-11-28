@@ -17,7 +17,7 @@ module Sufia
 
     def authorized_models
       return [] unless @current_user
-      @authorized_models ||= CurationConcerns::QuickClassificationQuery.new(@current_user).authorized_models
+      @authorized_models ||= Sufia::QuickClassificationQuery.new(@current_user).authorized_models
     end
 
     # Return or yield the first model in the list. This is used when the list

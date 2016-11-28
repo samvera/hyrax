@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::ClassifyConcernsController do
+describe Sufia::ClassifyConcernsController do
   routes { CurationConcerns::Engine.routes }
   let(:user) { FactoryGirl.create(:user) }
 

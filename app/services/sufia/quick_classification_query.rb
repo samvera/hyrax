@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class QuickClassificationQuery
     attr_reader :user
 

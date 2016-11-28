@@ -1,5 +1,5 @@
 require 'active_attr'
-module CurationConcerns
+module Sufia
   class ClassifyConcern
     include ActiveAttr::Model
     attribute :curation_concern_type
@@ -30,7 +30,7 @@ module CurationConcerns
       end
         self.class.to_class(curation_concern_type)
       else
-        fail 'Invalid :curation_concern_type'
+        raise 'Invalid :curation_concern_type'
       end
     end
 

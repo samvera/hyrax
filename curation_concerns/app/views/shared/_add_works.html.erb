@@ -1,6 +1,6 @@
           <strong class="menu-heading item-with-options">Add a Work</strong>
           <ul class="item-options quick-classify">
-            <% classification = CurationConcerns::QuickClassificationQuery.new(current_user) %>
+            <% classification = Sufia::QuickClassificationQuery.new(current_user) %>
             <% classification.each do |concern| %>
               <li><%= link_to(
                     "New #{concern.human_readable_type}",
