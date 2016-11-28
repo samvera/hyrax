@@ -36,9 +36,9 @@ class FeaturedWorkList
 
     def work_presenters
       ability = nil
-      CurationConcerns::PresenterFactory.build_presenters(ids,
-                                                          Sufia::WorkShowPresenter,
-                                                          ability)
+      Sufia::PresenterFactory.build_presenters(ids,
+                                               Sufia::WorkShowPresenter,
+                                               ability)
     end
 
     def work_with_id(id)

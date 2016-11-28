@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class PresenterFactory
     class << self
       # @param [Array] ids the list of ids to load
@@ -32,7 +32,7 @@ module CurationConcerns
       # @return [Array<SolrDocument>] a list of solr documents in no particular order
       def load_docs
         query("{!terms f=id}#{ids.join(',')}", rows: 1000)
-          .map { |res| SolrDocument.new(res) }
+          .map { |res| ::SolrDocument.new(res) }
       end
 
       # Query solr using POST so that the query doesn't get too large for a URI

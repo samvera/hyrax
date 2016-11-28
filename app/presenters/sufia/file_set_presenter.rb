@@ -52,9 +52,9 @@ module Sufia
       ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
                                             fl: ActiveFedora.id_field)
                                      .map { |x| x.fetch(ActiveFedora.id_field) }
-      @parent_presenter ||= CurationConcerns::PresenterFactory.build_presenters(ids,
-                                                                                WorkShowPresenter,
-                                                                                current_ability).first
+      @parent_presenter ||= Sufia::PresenterFactory.build_presenters(ids,
+                                                                     WorkShowPresenter,
+                                                                     current_ability).first
     end
 
     def audit_service

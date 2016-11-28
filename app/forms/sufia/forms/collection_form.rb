@@ -51,7 +51,7 @@ module Sufia::Forms
       end
 
       def member_presenters
-        CurationConcerns::PresenterFactory.build_presenters(model.member_ids, CurationConcerns::WorkShowPresenter, nil)
+        Sufia::PresenterFactory.build_presenters(model.member_ids, CurationConcerns::WorkShowPresenter, nil)
       end
   end
 end

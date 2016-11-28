@@ -100,7 +100,7 @@ module Sufia
         # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
         def file_presenters
           @file_sets ||=
-            CurationConcerns::PresenterFactory.build_presenters(model.member_ids, FileSetPresenter, current_ability)
+            Sufia::PresenterFactory.build_presenters(model.member_ids, FileSetPresenter, current_ability)
         end
     end
   end

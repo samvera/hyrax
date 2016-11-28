@@ -103,7 +103,7 @@ describe CurationConcerns::WorkShowPresenter do
       end
 
       it "uses the set class" do
-        expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
+        expect(Sufia::PresenterFactory).to receive(:build_presenters)
           .with(['12', '33'], presenter_class, ability, request)
         presenter.file_set_presenters
       end
@@ -118,7 +118,7 @@ describe CurationConcerns::WorkShowPresenter do
       allow(presenter).to receive(:composite_presenter_class).and_return(presenter_class)
     end
     it "has a representative" do
-      expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
+      expect(Sufia::PresenterFactory).to receive(:build_presenters)
         .with([obj.members[0].id], presenter_class, ability, request).and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end

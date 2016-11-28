@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::PresenterFactory do
+describe Sufia::PresenterFactory do
   describe "#build_presenters" do
     let(:presenter_class) { CurationConcerns::FileSetPresenter }
 
@@ -37,10 +37,12 @@ describe CurationConcerns::PresenterFactory do
         end
       end
       let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
-      subject { described_class.build_presenters(['12', '13'],
-                                                 presenter_class,
-                                                 'more',
-                                                 'and more') }
+      subject do
+        described_class.build_presenters(['12', '13'],
+                                         presenter_class,
+                                         'more',
+                                         'and more')
+      end
       it 'passes all the arguments' do
         expect(subject.first.two).to eq 'more'
         expect(subject.first.three).to eq 'and more'
