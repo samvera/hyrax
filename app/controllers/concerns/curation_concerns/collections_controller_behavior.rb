@@ -13,9 +13,6 @@ module CurationConcerns
 
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)
-      configure_blacklight do |config|
-        config.search_builder_class = CurationConcerns::CollectionSearchBuilder
-      end
 
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|

@@ -9,9 +9,7 @@ module CurationConcerns
   class CollectionSearchBuilder < ::SearchBuilder
     include FilterByType
     # Defines which search_params_logic should be used when searching for Collections
-    # def initialize(context, access)
     def initialize(context)
-      # @access = access_levels[access]
       @rows = 100
       super(context)
     end
