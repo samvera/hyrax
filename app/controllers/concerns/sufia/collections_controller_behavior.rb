@@ -54,7 +54,7 @@ module Sufia
       # The search builder to find the collection
       self.single_item_search_builder_class = WorkSearchBuilder
       # The search builder to find the collections' members
-      self.member_search_builder_class = CurationConcerns::CollectionMemberSearchBuilder
+      self.member_search_builder_class = Sufia::CollectionMemberSearchBuilder
 
       with_themed_layout '1_column'
       # include the link_to_remove_from_collection view helper methods
