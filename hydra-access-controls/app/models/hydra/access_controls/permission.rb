@@ -5,9 +5,13 @@ module Hydra::AccessControls
   class Permission < AccessControlList
     has_many :admin_policies, inverse_of: :default_permissions, class_name: 'Hydra::AdminPolicy'
 
+    # @param [Hash] args
+    # @option args [#to_s] :name name of agent
+    # @option args [#to_s] :type type of agent: group/person
+    # @option args [String] :access description of access: read/edit/discover
     def initialize(args)
       super()
-      build_agent(args[:name], args[:type].to_s)
+      build_agent(args[:name].to_s, args[:type].to_s)
       build_access(args[:access])
     end
 
