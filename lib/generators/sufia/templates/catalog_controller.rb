@@ -1,7 +1,6 @@
 class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
-  include Sufia::Catalog
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
@@ -15,7 +14,7 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
-    config.search_builder_class = Sufia::SearchBuilder
+    config.search_builder_class = Sufia::CatalogSearchBuilder
 
     # Show gallery view
     config.view.gallery.partials = [:index_header, :index]
