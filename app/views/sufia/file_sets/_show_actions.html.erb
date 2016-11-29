@@ -12,10 +12,9 @@
                   class: 'btn btn-danger', data: { confirm: "Delete this #{@presenter.human_readable_type}?" },
                   method: :delete %>
       <%= link_to t('sufia.single_use_links.button'),
-                  curation_concerns.generate_download_single_use_link_path(@presenter),
+                  sufia.generate_download_single_use_link_path(@presenter),
                   class: 'btn btn-default generate-single-use-link' %>
   <% end %>
 
   <%= render 'social_media' %>
 </div>
-

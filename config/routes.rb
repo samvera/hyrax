@@ -129,6 +129,13 @@ Sufia::Engine.routes.draw do
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
 
+  get 'single_use_link/show/:id' => 'sufia/single_use_links_viewer#show', as: :show_single_use_link
+  get 'single_use_link/download/:id' => 'sufia/single_use_links_viewer#download', as: :download_single_use_link
+  post 'single_use_link/generate_download/:id' => 'sufia/single_use_links#create_download', as: :generate_download_single_use_link
+  post 'single_use_link/generate_show/:id' => 'sufia/single_use_links#create_show', as: :generate_show_single_use_link
+  get 'single_use_link/generated/:id' => 'sufia/single_use_links#index', as: :generated_single_use_links
+  delete 'single_use_link/:id/delete/:link_id' => 'sufia/single_use_links#destroy', as: :delete_single_use_link
+
   # Permissions routes
   namespace :sufia, path: :concern do
     resources :permissions, only: [] do
@@ -167,6 +174,8 @@ Sufia::Engine.routes.draw do
     resources :features, only: [:index] do
       resources :strategies, only: [:update, :destroy]
     end
+    get :workflow
+    resources :workflow_roles
   end
 
   resources :content_blocks, only: ['create', 'update']

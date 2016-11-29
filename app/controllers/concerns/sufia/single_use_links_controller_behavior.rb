@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module SingleUseLinksControllerBehavior
     extend ActiveSupport::Concern
     include Blacklight::SearchHelper
@@ -20,12 +20,12 @@ module CurationConcerns
 
     def create_download
       @su = SingleUseLink.create itemId: params[:id], path: main_app.download_path(id: params[:id])
-      render plain: curation_concerns.download_single_use_link_url(@su.downloadKey)
+      render plain: sufia.download_single_use_link_url(@su.downloadKey)
     end
 
     def create_show
       @su = SingleUseLink.create(itemId: params[:id], path: asset_show_path)
-      render plain: curation_concerns.show_single_use_link_url(@su.downloadKey)
+      render plain: sufia.show_single_use_link_url(@su.downloadKey)
     end
 
     def index

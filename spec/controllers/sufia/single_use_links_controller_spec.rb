@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe CurationConcerns::SingleUseLinksController, type: :controller do
-  routes { CurationConcerns::Engine.routes }
+describe Sufia::SingleUseLinksController, type: :controller do
+  routes { Sufia::Engine.routes }
 
   let(:user) { create(:user) }
   let(:file) { create(:file_set, user: user) }
@@ -18,7 +18,6 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
 
     context "POST create" do
       before do
-        allow(DateTime).to receive(:now).and_return(DateTime.now)
         expect(Digest::SHA2).to receive(:new).and_return(hash)
       end
 
@@ -26,7 +25,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
         it "returns a link for downloading" do
           post 'create_download', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq download_single_use_link_url(hash)
+          expect(response.body).to eq Sufia::Engine.routes.url_helpers.download_single_use_link_url(hash, host: request.host)
         end
       end
 
@@ -34,7 +33,7 @@ describe CurationConcerns::SingleUseLinksController, type: :controller do
         it "returns a link for showing" do
           post 'create_show', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq show_single_use_link_url(hash)
+          expect(response.body).to eq Sufia::Engine.routes.url_helpers.show_single_use_link_url(hash, host: request.host)
         end
       end
     end

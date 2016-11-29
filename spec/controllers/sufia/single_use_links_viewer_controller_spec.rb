@@ -1,14 +1,12 @@
 require 'spec_helper'
 
-describe CurationConcerns::SingleUseLinksViewerController do
-  routes { CurationConcerns::Engine.routes }
+describe Sufia::SingleUseLinksViewerController do
+  routes { Sufia::Engine.routes }
   let(:file) do
-    file = FileSet.create do |lfile|
+    FileSet.create! do |lfile|
       lfile.label = 'world.png'
       lfile.apply_depositor_metadata('mjg')
     end
-    Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
-    file
   end
 
   describe "retrieval links" do
@@ -17,6 +15,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
     end
 
     let :download_link do
+      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
       SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.download_path(id: file)
     end
 
@@ -39,7 +38,7 @@ describe CurationConcerns::SingleUseLinksViewerController do
 
         it "returns 404" do
           get :download, params: { id: download_link_hash }
-          expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
+          expect(response).to render_template("sufia/single_use_links_viewer/single_use_error", "layouts/error")
         end
       end
     end
@@ -56,13 +55,13 @@ describe CurationConcerns::SingleUseLinksViewerController do
         before { SingleUseLink.find_by_downloadKey!(show_link_hash).destroy }
         it "returns 404" do
           get :show, params: { id: show_link_hash }
-          expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
+          expect(response).to render_template("sufia/single_use_links_viewer/single_use_error", "layouts/error")
         end
       end
 
       it "returns 404 on attempt to get show path with download hash" do
         get :show, params: { id: download_link_hash }
-        expect(response).to render_template("curation_concerns/single_use_links_viewer/single_use_error", "layouts/error")
+        expect(response).to render_template("sufia/single_use_links_viewer/single_use_error", "layouts/error")
       end
     end
   end

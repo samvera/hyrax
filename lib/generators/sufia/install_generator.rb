@@ -5,7 +5,7 @@ module Sufia
     desc """
   This generator makes the following changes to your application:
   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
-  2. Runs curation_concerns:models:install
+  2. Runs sufia:models:install
   3. Adds controller behavior to the application controller
   4. Injects CurationConcerns routes
   5. Adds CurationConcerns abilities into the Ability class
@@ -64,18 +64,13 @@ module Sufia
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
 
       inject_into_file 'config/routes.rb', after: /devise_for :users\s*\n/ do
-        "  mount CurationConcerns::Engine, at: '/'\n"\
+        "  mount Sufia::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
-        "  root 'welcome#index'\n"\
+        "  root 'sufia/homepage#index'\n"\
         "  curation_concerns_collections\n"\
         "  curation_concerns_basic_routes\n"\
         "  curation_concerns_embargo_management\n"\
       end
-      gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
-      gsub_file 'config/routes.rb', /'welcome#index'/, "'sufia/homepage#index'" # Replace the root path injected by CurationConcerns
-      routing_code = "\n  mount Sufia::Engine, at: '/'\n"
-      sentinel = /\s+mount CurationConcerns::Engine/
-      inject_into_file 'config/routes.rb', routing_code, before: sentinel, verbose: false
     end
 
     def inject_ability
@@ -102,9 +97,9 @@ module Sufia
       end
     end
 
-    def assets
-      generate 'curation_concerns:assets' unless options[:'skip-assets']
-    end
+    # def assets
+    #   generate 'curation_concerns:assets' unless options[:'skip-assets']
+    # end
 
     def add_helper
       copy_file 'curation_concerns_helper.rb', 'app/helpers/curation_concerns_helper.rb'

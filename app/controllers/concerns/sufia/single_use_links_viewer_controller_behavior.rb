@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module SingleUseLinksViewerControllerBehavior
     extend ActiveSupport::Concern
     include CurationConcerns::DownloadBehavior
@@ -28,7 +28,6 @@ module CurationConcerns
 
       # Authorize using SingleUseLinksViewerController::Ability
       authorize! :read, curation_concern
-
       raise not_found_exception unless single_use_link.path == polymorphic_path([main_app, curation_concern])
 
       # show the file
@@ -36,7 +35,7 @@ module CurationConcerns
 
       # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
       @su = single_use_link.create_for_path main_app.download_path(curation_concern.id)
-      @download_link = curation_concerns.download_single_use_link_path(@su.downloadKey)
+      @download_link = sufia.download_single_use_link_path(@su.downloadKey)
     end
 
     protected

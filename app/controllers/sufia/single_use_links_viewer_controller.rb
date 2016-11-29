@@ -1,6 +1,6 @@
-module CurationConcerns
+module Sufia
   class SingleUseLinksViewerController < ApplicationController
-    include CurationConcerns::SingleUseLinksViewerControllerBehavior
+    include Sufia::SingleUseLinksViewerControllerBehavior
 
     class Ability
       include CanCan::Ability
@@ -11,8 +11,7 @@ module CurationConcerns
         @user = user || ::User.new
 
         @single_use_link = single_use_link
-
-        can :read, [ActiveFedora::Base, SolrDocument] do |obj|
+        can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
           single_use_link.valid? && single_use_link.itemId == obj.id && single_use_link.destroy!
         end if single_use_link
       end
