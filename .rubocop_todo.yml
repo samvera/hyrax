@@ -70,7 +70,8 @@ Style/LineEndConcatenation:
 
 Style/PredicateName:
   Exclude:
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/helpers/sufia/collections_helper.rb'
+
 
 Rails/Output:
   Exclude:

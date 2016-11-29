@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module ChartsHelper
     # @example A chart with a drilldown
     #   {

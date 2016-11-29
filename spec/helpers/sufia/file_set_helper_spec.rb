@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::FileSetHelper do
+describe Sufia::FileSetHelper do
   describe '#media_display' do
     let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
     let(:mime_type) { 'image/tiff' }

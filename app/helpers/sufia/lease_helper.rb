@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module LeaseHelper
     def assets_with_expired_leases
       @assets_with_expired_leases ||= LeaseService.assets_with_expired_leases

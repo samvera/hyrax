@@ -1,7 +1,8 @@
-module CurationConcerns
+module Sufia
   module UrlHelper
     # override Blacklight so we can use our 'curation_concern' namespace
     # We may also pass in a ActiveFedora document instead of a SolrDocument
+    # TODO: move to BlacklightOverride
     def url_for_document(doc, _options = {})
       return doc if doc.collection?
       [main_app, doc]

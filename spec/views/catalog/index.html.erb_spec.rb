@@ -7,7 +7,7 @@ describe 'catalog/index.html.erb', type: :view do
   end
 
   before do
-    view.extend CurationConcerns::CollectionsHelper
+    view.extend Sufia::CollectionsHelper
     allow(view).to receive(:current_users_collections).and_return([])
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)

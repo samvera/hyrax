@@ -2,16 +2,16 @@ module Sufia
   module SufiaHelperBehavior
     include Sufia::CitationsBehavior
     include ERB::Util # provides html_escape
-    include CurationConcerns::TitleHelper
-    include CurationConcerns::FileSetHelper
-    include CurationConcerns::SearchPathsHelper
-    include CurationConcerns::RenderConstraintsHelper
-    include CurationConcerns::AbilityHelper
-    include CurationConcerns::UrlHelper
-    include CurationConcerns::EmbargoHelper
-    include CurationConcerns::LeaseHelper
-    include CurationConcerns::CollectionsHelper
-    include CurationConcerns::ChartsHelper
+    include Sufia::TitleHelper
+    include Sufia::FileSetHelper
+    include Sufia::SearchPathsHelper
+    include Sufia::RenderConstraintsHelper
+    include Sufia::AbilityHelper
+    include Sufia::UrlHelper
+    include Sufia::EmbargoHelper
+    include Sufia::LeaseHelper
+    include Sufia::CollectionsHelper
+    include Sufia::ChartsHelper
 
     def application_name
       t('sufia.product_name', default: super)
@@ -68,11 +68,6 @@ module Sufia
       else
         link_to(req.to_s, req.work)
       end
-    end
-
-    # @return [Boolean]
-    def has_collection_search_parameters?
-      !params[:cq].blank?
     end
 
     # @param item [Object]

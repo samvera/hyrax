@@ -1,4 +1,4 @@
-module CurationConcerns::TitleHelper
+module Sufia::TitleHelper
   def application_name
     t('curation_concerns.product_name', default: super)
   end

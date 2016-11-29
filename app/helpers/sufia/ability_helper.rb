@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module AbilityHelper
     def visibility_options(variant)
       options = [

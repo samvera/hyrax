@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module EmbargoHelper
     def assets_with_expired_embargoes
       @assets_with_expired_embargoes ||= EmbargoService.assets_with_expired_embargoes

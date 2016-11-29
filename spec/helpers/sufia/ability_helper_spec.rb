@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::AbilityHelper do
+describe Sufia::AbilityHelper do
   describe "#visibility_badge" do
     subject { helper.visibility_badge visibility }
     {

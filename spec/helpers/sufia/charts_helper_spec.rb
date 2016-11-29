@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::ChartsHelper do
+describe Sufia::ChartsHelper do
   describe '#hash_to_chart' do
     subject { helper.hash_to_chart(data) }
     let(:data) do
@@ -9,7 +9,7 @@ describe CurationConcerns::ChartsHelper do
         'Bar' => 10
       }
     end
-    it {
+    it do
       is_expected.to eq(
         drilldown: {
           series: []
@@ -26,7 +26,7 @@ describe CurationConcerns::ChartsHelper do
           }
         ]
       )
-    }
+    end
     context "given a drilldown" do
       let(:data) do
         {
@@ -36,7 +36,7 @@ describe CurationConcerns::ChartsHelper do
           }
         }
       end
-      it {
+      it do
         is_expected.to eq(
           drilldown: {
             series: [
@@ -56,7 +56,7 @@ describe CurationConcerns::ChartsHelper do
             }
           ]
         )
-      }
+      end
     end
   end
 end

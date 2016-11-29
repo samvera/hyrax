@@ -1,4 +1,4 @@
-module CurationConcerns::CatalogHelper
+module Sufia::CatalogHelper
   def type_tab(label, key = label)
     if params[:f] && params[:f][type_field] == [key]
       content_tag(:li, link_to(label, '#'), class: 'active')

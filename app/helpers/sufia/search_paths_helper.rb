@@ -1,4 +1,4 @@
-module CurationConcerns::SearchPathsHelper
+module Sufia::SearchPathsHelper
   def search_path_for_my_works(opts = {})
     params_for_my_works = { 'f[generic_type_sim][]' => 'Work', works: 'mine' }
     main_app.search_catalog_path(params_for_my_works.merge(opts))

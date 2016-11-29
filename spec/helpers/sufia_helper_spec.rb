@@ -226,15 +226,6 @@ describe SufiaHelper, type: :helper do
     end
   end
 
-  describe "#rights_statement_links" do
-    let(:options) { instance_double(Hash) }
-    it "calls license_links" do
-      expect(Deprecation).to receive(:warn)
-      expect(helper).to receive(:license_links).with(options)
-      helper.rights_statement_links(options)
-    end
-  end
-
   describe "#license_links" do
     it "maps the url to a link with a label" do
       expect(helper.license_links(
