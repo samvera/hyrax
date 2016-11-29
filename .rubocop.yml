@@ -59,6 +59,9 @@ Style/Documentation:
 Style/SingleLineBlockParams:
   Enabled: false
 
+Style/ZeroLengthPredicate:
+  Exclude:
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
 Rails:
   Enabled: true
 

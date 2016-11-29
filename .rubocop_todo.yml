@@ -2,11 +2,13 @@ require: rubocop-rspec
 
 Metrics/CyclomaticComplexity:
   Exclude:
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/services/sufia/file_set_audit_service.rb'
     - 'lib/sufia/arkivo/metadata_munger.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/services/sufia/file_set_audit_service.rb'
 
 Metrics/ClassLength:
@@ -24,6 +26,7 @@ Metrics/ParameterLists:
 Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/sufia/admin/depositor_stats.rb'
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/indexers/sufia/file_set_indexer.rb'
     - 'app/services/sufia/user_stat_importer.rb'
@@ -34,6 +37,7 @@ Metrics/ModuleLength:
   Exclude:
     - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
     - 'app/controllers/concerns/sufia/collections_controller_behavior.rb'
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/sufia/users_controller_behavior.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
     - 'app/models/concerns/sufia/solr_document_behavior.rb'
@@ -43,6 +47,7 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/indexers/sufia/file_set_indexer.rb'
