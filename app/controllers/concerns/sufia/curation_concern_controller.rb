@@ -6,7 +6,6 @@ module Sufia
 
     included do
       copy_blacklight_config_from(::CatalogController)
-      helper CurationConcerns::AbilityHelper
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       self.show_presenter = Sufia::WorkShowPresenter
