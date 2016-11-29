@@ -7,7 +7,7 @@ RSpec.describe Sufia::Workflow::PendingReviewNotification do
   let(:work) { create(:generic_work, user: depositor) }
   let(:entity) { create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
-  let(:recipients) { { to: [to_user], cc: [cc_user] } }
+  let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
 
   describe ".send_notification" do
     it 'sends a message to all users except depositor' do
