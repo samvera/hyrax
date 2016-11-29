@@ -42,7 +42,7 @@ describe 'Routes', type: :routing do
 
   describe "Audit" do
     it 'routes to audit' do
-      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'curation_concerns/audits', action: 'create', file_set_id: '7')
+      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'sufia/audits', action: 'create', file_set_id: '7')
     end
   end
 

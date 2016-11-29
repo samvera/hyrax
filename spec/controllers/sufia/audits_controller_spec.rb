@@ -1,5 +1,6 @@
+require 'spec_helper'
 
-describe CurationConcerns::AuditsController do
+describe Sufia::AuditsController do
   routes { Sufia::Engine.routes }
   let(:user) { create(:user) }
   let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }

@@ -44,7 +44,7 @@ Sufia::Engine.routes.draw do
   resources :batch_uploads, only: [:new, :create], controller: 'sufia/batch_uploads'
 
   # File Set routes
-  namespace :curation_concerns, path: :concern do
+  namespace :sufia, path: :concern do
     resources :file_sets, only: [] do
       resource :audit, only: [:create]
       member do
