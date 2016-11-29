@@ -10,12 +10,6 @@ module Sufia
     require 'jquery-datatables-rails'
     require 'flipflop'
 
-    config.autoload_paths += %W(
-      #{config.root}/app/controllers/concerns
-      #{config.root}/app/models/concerns
-      #{Hydra::Engine.root}/app/models/concerns
-    )
-
     # Force these models to be added to Legato's registry in development mode
     config.eager_load_paths += %W(
       #{config.root}/app/models/sufia/download.rb
