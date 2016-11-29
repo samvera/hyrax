@@ -21,8 +21,6 @@ This generator makes the following changes to your application:
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exist?(file_path)
       inject_into_file file_path, after: /include Hydra\:\:User.*$/ do
-        "\n  # Connects this user object to Curation Concerns behaviors." \
-        "\n  include CurationConcerns::User\n" \
         "\n  # Connects this user object to Sufia behaviors." \
         "\n  include Sufia::User" \
         "\n  include Sufia::UserUsageStats\n"

@@ -2,8 +2,6 @@ require 'oauth'
 
 module Sufia::User
   extend ActiveSupport::Concern
-  extend Deprecation
-  self.deprecation_horizon = 'Sufia version 8.0.0'
 
   included do
     # Adds acts_as_messageable for user mailboxes
@@ -36,7 +34,13 @@ module Sufia::User
     after_initialize :set_arkivo_token, unless: :persisted? if Sufia.config.arkivo_api
 
     has_many :trophies
+    has_one :sipity_agent, as: :proxy_for, dependent: :destroy, class_name: 'Sipity::Agent'
+
     attr_accessor :update_directory
+  end
+
+  def to_sipity_agent
+    sipity_agent || create_sipity_agent!
   end
 
   def profile_events(size = -1)
@@ -126,9 +130,6 @@ module Sufia::User
       find_or_create_system_user(audit_user_key)
     end
 
-    alias audituser audit_user
-    deprecation_deprecate audituser: 'use audit_user instead'
-
     def audit_user_key
       Sufia.config.audit_user_key
     end
@@ -137,9 +138,6 @@ module Sufia::User
     def batch_user
       find_or_create_system_user(batch_user_key)
     end
-
-    alias batchuser batch_user
-    deprecation_deprecate batchuser: 'use batch_user instead'
 
     def batch_user_key
       Sufia.config.batch_user_key
