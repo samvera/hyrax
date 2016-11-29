@@ -7,7 +7,6 @@ module Sufia
     included do
       before_action :filter_docs_with_read_access!, except: :show
       before_action :remove_select_something_first_flash, except: :show
-      layout 'curation_concerns/1_column'
 
       include Sufia::Collections::AcceptsBatches
 
@@ -56,7 +55,6 @@ module Sufia
       # The search builder to find the collections' members
       self.member_search_builder_class = Sufia::CollectionMemberSearchBuilder
 
-      with_themed_layout '1_column'
       # include the link_to_remove_from_collection view helper methods
       helper CurationConcerns::CollectionsHelper
     end

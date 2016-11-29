@@ -4,7 +4,6 @@ module CurationConcerns::CatalogController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BreadcrumbsOnRails::ActionController
-  include CurationConcerns::ThemedLayoutController
 
   included do
     with_themed_layout 'catalog'

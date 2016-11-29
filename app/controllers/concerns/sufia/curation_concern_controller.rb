@@ -6,8 +6,6 @@ module Sufia
 
     included do
       copy_blacklight_config_from(::CatalogController)
-      include CurationConcerns::ThemedLayoutController
-      with_themed_layout '1_column'
       helper CurationConcerns::AbilityHelper
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class

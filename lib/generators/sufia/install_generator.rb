@@ -49,7 +49,7 @@ module Sufia
 
     def replace_blacklight_layout
       gsub_file 'app/controllers/application_controller.rb', /layout 'blacklight'/,
-                "include CurationConcerns::ThemedLayoutController\n  with_themed_layout '1_column'\n"
+                "include Sufia::ThemedLayoutController\n  with_themed_layout '1_column'\n"
     end
 
     def insert_builder

@@ -5,8 +5,6 @@ module CurationConcerns
     include Blacklight::AccessControls::Catalog
 
     included do
-      include CurationConcerns::ThemedLayoutController
-      with_themed_layout '1_column'
       load_and_authorize_resource class: ::FileSet, except: :show
       helper_method :curation_concern
       include Sufia::ParentContainer

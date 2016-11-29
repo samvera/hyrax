@@ -1,7 +1,5 @@
 module CurationConcerns
   class ClassifyConcernsController < ApplicationController
-    include CurationConcerns::ThemedLayoutController
-    with_themed_layout '1_column'
     before_action :authenticate_user!
     load_and_authorize_resource
 
