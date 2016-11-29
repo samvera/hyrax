@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ResourceTypesService do
+describe Sufia::ResourceTypesService do
   describe "select_options" do
     subject { described_class.select_options }
 
