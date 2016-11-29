@@ -15,7 +15,7 @@
       </ul>
     </li>
 
-    <% if can_ever_create_works? %>
+    <% if current_ability.can_create_any_work? %>
       <li class="dropdown">
         <%= link_to sufia.dashboard_works_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
           <span class="fa fa-cube"></span> <%= t("sufia.toolbar.works.menu") %> <span class="caret"></span>

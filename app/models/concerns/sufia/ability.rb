@@ -14,6 +14,13 @@ module Sufia
                              :admin_set_abilities]
     end
 
+    # Returns true if can create at least one type of work
+    def can_create_any_work?
+      Sufia.config.curation_concerns.any? do |curation_concern_type|
+        can?(:create, curation_concern_type)
+      end
+    end
+
     def uploaded_file_abilities
       return unless registered_user?
       can :create, [UploadedFile, BatchUploadItem]

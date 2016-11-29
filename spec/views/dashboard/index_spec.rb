@@ -18,8 +18,7 @@ RSpec.describe "dashboard/index.html.erb", type: :view do
 
     allow(ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
     allow(ability).to receive(:can?).with(:edit, user).and_return(can_edit_user)
-
-    allow(view).to receive(:can_ever_create_works?).and_return(true)
+    allow(ability).to receive(:can_create_any_work?).and_return(true)
     allow(view).to receive(:number_of_works).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
 

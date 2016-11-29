@@ -24,7 +24,7 @@ describe 'shared/_add_content.html.erb' do
     let(:user) { create(:admin) }
     before do
       allow(view).to receive(:can?).and_return(true)
-      allow(view).to receive(:can_ever_create_works?).and_return(false)
+      allow(view.current_ability).to receive(:can_create_any_work?).and_return(false)
       render
     end
 

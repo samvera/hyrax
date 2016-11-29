@@ -5,7 +5,7 @@
       <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-      <% include_works_link ||= can_ever_create_works? %>
+      <% include_works_link ||= current_ability.can_create_any_work? %>
       <% include_collections_link ||= can?(:create, Collection) %>
       <% if include_works_link %>
         <li><%= link_to 'My Works', search_path_for_my_works, class: 'my-works', role: 'menuitem' %></li>

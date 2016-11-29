@@ -1,15 +1,5 @@
 module CurationConcerns
   module AbilityHelper
-    # Returns true if can create at least one type of work
-    def can_ever_create_works?
-      can = false
-      Sufia.config.curation_concerns.each do |curation_concern_type|
-        break if can
-        can = can?(:create, curation_concern_type)
-      end
-      can
-    end
-
     def visibility_options(variant)
       options = [
         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,

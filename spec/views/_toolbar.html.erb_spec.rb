@@ -59,7 +59,7 @@ describe '/_toolbar.html.erb', type: :view do
 
     context "when the user can't create any work types" do
       before do
-        allow(view).to receive(:can_ever_create_works?).and_return(false)
+        allow(view.current_ability).to receive(:can_create_any_work?).and_return(false)
       end
       it "does not have a link to upload" do
         render
