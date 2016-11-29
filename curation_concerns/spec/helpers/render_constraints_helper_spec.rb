@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcernsHelper do
+describe CurationConcerns::RenderConstraintsHelper do
   let(:search_params) do
     ActionController::Parameters.new(q: 'Simon',
                                      search_field: 'publisher',

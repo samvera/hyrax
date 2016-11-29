@@ -97,14 +97,6 @@ module Sufia
       end
     end
 
-    # def assets
-    #   generate 'curation_concerns:assets' unless options[:'skip-assets']
-    # end
-
-    def add_helper
-      copy_file 'curation_concerns_helper.rb', 'app/helpers/curation_concerns_helper.rb'
-    end
-
     def create_workflow
       template('workflow.json.erb', "config/workflows/default_workflow.json")
       template('mediated_deposit_workflow.json.erb', "config/workflows/mediated_deposit_workflow.json")

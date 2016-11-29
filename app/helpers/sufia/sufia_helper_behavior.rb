@@ -2,7 +2,16 @@ module Sufia
   module SufiaHelperBehavior
     include Sufia::CitationsBehavior
     include ERB::Util # provides html_escape
-    extend Deprecation
+    include CurationConcerns::TitleHelper
+    include CurationConcerns::FileSetHelper
+    include CurationConcerns::SearchPathsHelper
+    include CurationConcerns::RenderConstraintsHelper
+    include CurationConcerns::AbilityHelper
+    include CurationConcerns::UrlHelper
+    include CurationConcerns::EmbargoHelper
+    include CurationConcerns::LeaseHelper
+    include CurationConcerns::CollectionsHelper
+    include CurationConcerns::ChartsHelper
 
     def application_name
       t('sufia.product_name', default: super)
@@ -162,14 +171,6 @@ module Sufia
       text = user.respond_to?(:name) ? user.name : user_or_key
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
     end
-
-    # A Blacklight helper_method
-    # @param [Hash] options from blacklight helper_method invocation. Maps rights URIs to links with labels.
-    # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
-    def rights_statement_links(options)
-      license_links(options)
-    end
-    deprecation_deprecate rights_statement_links: "use licence_links instead"
 
     # A Blacklight index field helper_method
     # @param [Hash] options from blacklight helper_method invocation. Maps rights URIs to links with labels.
