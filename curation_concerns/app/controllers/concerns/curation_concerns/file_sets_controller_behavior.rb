@@ -9,7 +9,7 @@ module CurationConcerns
       with_themed_layout '1_column'
       load_and_authorize_resource class: ::FileSet, except: :show
       helper_method :curation_concern
-      include CurationConcerns::ParentContainer
+      include Sufia::ParentContainer
       copy_blacklight_config_from(::CatalogController)
 
       class_attribute :show_presenter, :form_class
