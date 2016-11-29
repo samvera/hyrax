@@ -25,17 +25,12 @@ describe CurationConcerns::FileSetsController do
         end
 
         it 'calls the actor to create metadata and content' do
-          if Rails.version < '5.0.0'
-            expect(actor).to receive(:create_metadata).with(parent, expected_params)
-            expect(actor).to receive(:create_content).with(file).and_return(true)
-          else
-            expect(actor).to receive(:create_metadata).with(parent, ActionController::Parameters) do |_work, ac_params|
-              expect(ac_params['files'].map(&:class)).to eq [ActionDispatch::Http::UploadedFile]
-              expect(ac_params['title']).to eq expected_params[:title]
-              expect(ac_params['visibility']).to eq expected_params[:visibility]
-            end
-            expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
+          expect(actor).to receive(:create_metadata).with(parent, ActionController::Parameters) do |_work, ac_params|
+            expect(ac_params['files'].map(&:class)).to eq [ActionDispatch::Http::UploadedFile]
+            expect(ac_params['title']).to eq expected_params[:title]
+            expect(ac_params['visibility']).to eq expected_params[:visibility]
           end
+          expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
 
           post :create, xhr: true, params: { parent_id: parent,
                                              file_set: {
