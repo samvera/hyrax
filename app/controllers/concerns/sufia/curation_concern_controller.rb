@@ -27,7 +27,7 @@ module Sufia
       end
 
       def cancan_resource_class
-        CurationConcerns::ControllerResource
+        Sufia::ControllerResource
       end
     end
 

@@ -25,6 +25,7 @@ module Sufia
     initializer 'requires' do
       require 'hydra/derivatives'
       require 'sufia/name'
+      require 'sufia/controller_resource'
     end
 
     initializer 'routing' do
