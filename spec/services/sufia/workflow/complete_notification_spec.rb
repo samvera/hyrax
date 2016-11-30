@@ -19,5 +19,14 @@ RSpec.describe Sufia::Workflow::CompleteNotification do
         .and change { to_user.mailbox.inbox.count }.by(1)
         .and change { cc_user.mailbox.inbox.count }.by(1)
     end
+    context 'without carbon-copied users' do
+      let(:recipients) { { 'to' => [to_user] } }
+      it 'sends a message to the to user(s)' do
+        expect(approver).to receive(:send_message).once.and_call_original
+        expect { described_class.send_notification(entity: entity, user: approver, comment: comment, recipients: recipients) }
+          .to change { depositor.mailbox.inbox.count }.by(1)
+          .and change { to_user.mailbox.inbox.count }.by(1)
+      end
+    end
   end
 end
