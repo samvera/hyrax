@@ -11,6 +11,7 @@ module Sufia
     require 'jquery-datatables-rails'
     require 'flipflop'
     require 'qa'
+    require 'clipboard/rails'
 
     # Force these models to be added to Legato's registry in development mode
     config.eager_load_paths += %W(

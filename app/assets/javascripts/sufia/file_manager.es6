@@ -1,6 +1,6 @@
-import SaveManager from 'curation_concerns/file_manager/save_manager'
-import SortManager from 'curation_concerns/file_manager/sorting'
-import {InputTracker, FileManagerMember} from 'curation_concerns/file_manager/member'
+import SaveManager from 'sufia/file_manager/save_manager'
+import SortManager from 'sufia/file_manager/sorting'
+import {InputTracker, FileManagerMember} from 'sufia/file_manager/member'
 export default class FileManager {
   constructor() {
     this.save_manager = this.initialize_save_manager()

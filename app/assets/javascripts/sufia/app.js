@@ -81,7 +81,7 @@ Sufia = {
     },
 
     file_manager_init: function () {
-        var fm = require('curation_concerns/file_manager');
+        var fm = require('sufia/file_manager');
         var file_manager = new fm
     },
 

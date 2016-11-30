@@ -1,5 +1,5 @@
 describe "FileManager Save Button", ->
-  savem = require('curation_concerns/file_manager/save_manager')
+  savem = require('sufia/file_manager/save_manager')
   save_manager = null
   handler = null
   deferred_result = null
@@ -49,6 +49,7 @@ describe "FileManager Save Button", ->
       save_manager.push_changed(handler)
 
       $("button").click()
+      console.log(save_manager)
       expect(save_manager.persist).toHaveBeenCalled()
     it "sets the text to be saving...", ->
       save_manager.push_changed(handler)

@@ -48,6 +48,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
   spec.add_dependency 'rdf-rdfxml'
   spec.add_dependency 'railties', '~> 5.0'
+  spec.add_dependency 'clipboard-rails', '~> 1.5'
+
 
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'

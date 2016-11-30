@@ -45,8 +45,8 @@
 //= require sufia/user_search
 //= require sufia/proxy_rights
 //= require sufia/sorting
-//= require curation_concerns/batch_select
-//= require curation_concerns/single_use_links_manager
+//= require sufia/batch_select
+//= require sufia/single_use_links_manager
 //= require sufia/dashboard_actions
 //= require sufia/batch
 //= require sufia/flot_stats
@@ -62,14 +62,17 @@
 //= require sufia/autocomplete/subject
 //= require sufia/autocomplete/language
 //= require sufia/relationships
-//= require curation_concerns/collections
+//= require sufia/collections
 //= require hydra-editor/hydra-editor
 //= require nestable
-//= require curation_concerns/file_manager/sorting
-//= require curation_concerns/file_manager/save_manager
-//= require curation_concerns/file_manager/member
-//= require curation_concerns/file_manager
+//= require sufia/file_manager/sorting
+//= require sufia/file_manager/save_manager
+//= require sufia/file_manager/member
+//= require sufia/file_manager
 //= require sufia/workflow_actions_affix
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require sufia/batch_edit
+
+// I think this is primarily needed for testing with PhantomJS:
+//= require babel/polyfill

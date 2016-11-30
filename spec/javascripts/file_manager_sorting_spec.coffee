@@ -1,5 +1,5 @@
 describe "FileManagerSorting", ->
-  sortm = require('curation_concerns/file_manager/sorting')
+  sortm = require('sufia/file_manager/sorting')
   sort_manager = null
   save_manager = null
   titles = null
