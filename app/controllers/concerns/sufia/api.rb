@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   module API
     # Generate appropriate json response for +response_type+
 

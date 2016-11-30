@@ -46,6 +46,7 @@ Metrics/ModuleLength:
 
 Metrics/MethodLength:
   Exclude:
+    - 'app/controllers/concerns/sufia/api.rb'
     - 'app/controllers/concerns/sufia/curation_concern_controller.rb'
     - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'

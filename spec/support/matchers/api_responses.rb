@@ -3,7 +3,7 @@
 # Accepts optional overrides to the expected response body.
 # @example Override the description expected in the JSON body of a :forbidden response
 #   expect(response).to respond_forbidden(description:"You can't create for that identity")
-::CurationConcerns::API.default_responses.each_pair do |response_type, default_response_body|
+::Sufia::API.default_responses.each_pair do |response_type, default_response_body|
   RSpec::Matchers.define "respond_#{response_type}".to_sym do |expectation_options|
     match do |response|
       @expected_response_body = expectation_options.nil? ? default_response_body : default_response_body.merge(expectation_options)
