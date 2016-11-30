@@ -42,6 +42,8 @@ require 'support/factory_helpers'
 require 'support/rake'
 require 'support/matchers/api_responses'
 require 'support/matchers/response_matchers'
+require 'webmock/rspec'
+WebMock.allow_net_connect!
 
 require 'byebug' unless ENV['TRAVIS']
 
