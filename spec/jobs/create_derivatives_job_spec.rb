@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe CreateDerivativesJob do
-  before do
-    @ffmpeg_enabled = Sufia.config.enable_ffmpeg
+  around do |example|
+    ffmpeg_enabled = Sufia.config.enable_ffmpeg
     Sufia.config.enable_ffmpeg = true
+    example.run
+    Sufia.config.enable_ffmpeg = ffmpeg_enabled
   end
-
-  after { Sufia.config.enable_ffmpeg = @ffmpeg_enabled }
 
   context "with an audio file" do
     let(:id)       { '123' }
@@ -57,7 +57,7 @@ describe CreateDerivativesJob do
 
         it "doesn't update the parent's index" do
           expect(file_set).to receive(:reload)
-          expect(parent).to_not receive(:update_index)
+          expect(parent).not_to receive(:update_index)
           described_class.perform_now(file_set, file.id)
         end
       end
@@ -70,7 +70,7 @@ describe CreateDerivativesJob do
 
     let(:file) do
       Hydra::PCDM::File.new.tap do |f|
-        f.content = File.open(File.join(fixture_path, "test.pdf")).read
+        f.content = File.open(File.join(fixture_path, "sufia/sufia_test4.pdf")).read
         f.original_name = 'test.pdf'
         f.save!
       end
