@@ -6,27 +6,26 @@ module Sufia
   This generator makes the following changes to your application:
   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
   2. Runs sufia:models:install
-  3. Adds controller behavior to the application controller
-  4. Injects CurationConcerns routes
-  5. Adds CurationConcerns abilities into the Ability class
-  6. Copies the catalog controller into the local app
-  7. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
-  8. Adds local authority files to the application
-  9. Copies modified simple_form initializers
-  10. Generates a default workflow
-  11. Installs model-related concerns
+  3. Injects Sufia routes
+  4. Adds CurationConcerns abilities into the Ability class
+  5. Copies the catalog controller into the local app
+  6. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
+  7. Adds local authority files to the application
+  8. Copies modified simple_form initializers
+  9. Generates a default workflow
+  10. Installs model-related concerns
      * Creates several database migrations if they do not exist in /db/migrate
      * Adds user behavior to the user model
      * Generates GenericWork model.
      * Creates the sufia.rb configuration file
      * Generates mailboxer
-  12. Adds Sufia's abilities into the Ability class
-  13. Adds controller behavior to the application controller
-  14. Copies the catalog controller into the local app
-  15. Installs sufia assets
-  16. Updates simple_form to use browser validations
-  17. Installs Blacklight gallery (and removes it's scss)
-  18. Runs the jquery-datatables generator
+  11. Adds Sufia's abilities into the Ability class
+  12. Adds controller behavior to the application controller
+  13. Copies the catalog controller into the local app
+  14. Installs sufia assets
+  15. Updates simple_form to use browser validations
+  16. Installs Blacklight gallery (and removes it's scss)
+  17. Runs the jquery-datatables generator
          """
 
     def run_required_generators
@@ -38,13 +37,6 @@ module Sufia
       generate "sufia:models#{options[:force] ? ' -f' : ''}"
       say_status('warning', '[Sufia] GENERATING ADMIN DASHBOARD', :yellow)
       generate "sufia:admin_dashboard#{options[:force] ? ' -f' : ''}"
-    end
-
-    def inject_application_controller_behavior
-      inject_into_file 'app/controllers/application_controller.rb', after: /Hydra::Controller::ControllerBehavior\s*\n/ do
-        "\n  # Adds CurationConcerns behaviors to the application controller.\n" \
-        "  include CurationConcerns::ApplicationControllerBehavior\n"
-      end
     end
 
     def replace_blacklight_layout
@@ -124,9 +116,9 @@ module Sufia
     def inject_sufia_application_controller_behavior
       file_path = "app/controllers/application_controller.rb"
       if File.exist?(file_path)
-        insert_into_file file_path, after: 'CurationConcerns::ApplicationControllerBehavior' do
-          "  \n  # Adds Sufia behaviors into the application controller \n" \
-          "  include Sufia::Controller\n"
+        insert_into_file file_path, after: /Hydra::Controller::ControllerBehavior\s*\n/ do
+          "\n  # Adds Sufia behaviors into the application controller" \
+          "\n  include Sufia::Controller\n"
         end
       else
         puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Sufia behaviors to your Controllers, you must include the Sufia::Controller module in the Controller class definition."
