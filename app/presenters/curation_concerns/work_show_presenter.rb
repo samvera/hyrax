@@ -50,6 +50,10 @@ module CurationConcerns
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
     end
 
+    def inspect_work
+      @inspect_workflow ||= InspectWorkPresenter.new(solr_document, current_ability)
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
