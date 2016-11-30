@@ -23,6 +23,10 @@ module Sufia
       require 'sufia/name'
       require 'sufia/controller_resource'
       require 'sufia/single_use_error'
+      require 'power_converters'
+      require 'dry/struct'
+      require 'dry/equalizer'
+      require 'dry/validation'
     end
 
     initializer 'routing' do
