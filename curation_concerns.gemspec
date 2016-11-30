@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active-fedora', '>= 10.3.0.rc1'
   spec.add_dependency 'blacklight', '~> 6.3'
   spec.add_dependency 'breadcrumbs_on_rails', '>= 3.0.1', '< 4'
-  spec.add_dependency 'jquery-ui-rails'
+  spec.add_dependency 'jquery-ui-rails', '~> 5.0.5'
   spec.add_dependency 'simple_form', '~> 3.1'
   spec.add_dependency 'hydra-editor', '>= 2', '< 4'
   spec.add_dependency 'rails_autolink'
