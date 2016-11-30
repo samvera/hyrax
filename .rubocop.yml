@@ -77,12 +77,17 @@ Rails/OutputSafety:
 
 RSpec/DescribeClass:
   Exclude:
+    - 'spec/abilities/**/*'
     - 'spec/config/sufia_events_spec.rb'
     - 'spec/conversions/**/*'
     - 'spec/features/**/*'
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/tasks/rake_spec.rb'
     - 'spec/views/**/*'
+
+RSpec/FilePath:
+  Exclude:
+    - 'spec/abilities/**/*'
 
 RSpec/ExpectActual:
   Enabled: false

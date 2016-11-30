@@ -5,7 +5,6 @@ describe Sufia::Ability, type: :model do
   subject { ability }
   describe "a user with no roles" do
     let(:user) { nil }
-    it { is_expected.not_to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
@@ -18,7 +17,6 @@ describe Sufia::Ability, type: :model do
 
   describe "a registered user" do
     let(:user) { create(:user) }
-    it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
@@ -31,7 +29,6 @@ describe Sufia::Ability, type: :model do
   describe "a user in the admin group" do
     let(:user) { create(:user) }
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
-    it { is_expected.to be_able_to(:create, FileSet) }
     it { is_expected.to be_able_to(:create, TinymceAsset) }
     it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }

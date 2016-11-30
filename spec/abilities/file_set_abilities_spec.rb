@@ -21,7 +21,7 @@ describe 'User' do
           is_expected.to be_able_to(:versions, file_set)
           is_expected.to be_able_to(:read, file_set)
           is_expected.to be_able_to(:update, file_set)
-          is_expected.to_not be_able_to(:delete, file_set)
+          is_expected.not_to be_able_to(:delete, file_set)
         end
       end
 
@@ -44,10 +44,10 @@ describe 'User' do
 
         it do
           is_expected.to be_able_to(:create, FileSet.new)
-          is_expected.to_not be_able_to(:versions, file_set)
-          is_expected.to_not be_able_to(:read, file_set)
-          is_expected.to_not be_able_to(:update, file_set)
-          is_expected.to_not be_able_to(:delete, file_set)
+          is_expected.not_to be_able_to(:versions, file_set)
+          is_expected.not_to be_able_to(:read, file_set)
+          is_expected.not_to be_able_to(:update, file_set)
+          is_expected.not_to be_able_to(:delete, file_set)
         end
       end
 
@@ -55,11 +55,11 @@ describe 'User' do
         let(:creating_user) { FactoryGirl.create(:user) }
         let(:current_user) { nil }
         it do
-          is_expected.to_not be_able_to(:create, FileSet.new)
-          is_expected.to_not be_able_to(:versions, file_set)
-          is_expected.to_not be_able_to(:read, file_set)
-          is_expected.to_not be_able_to(:update, file_set)
-          is_expected.to_not be_able_to(:delete, file_set)
+          is_expected.not_to be_able_to(:create, FileSet.new)
+          is_expected.not_to be_able_to(:versions, file_set)
+          is_expected.not_to be_able_to(:read, file_set)
+          is_expected.not_to be_able_to(:update, file_set)
+          is_expected.not_to be_able_to(:delete, file_set)
         end
       end
     end

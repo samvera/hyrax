@@ -7,25 +7,24 @@ module Sufia
   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
   2. Runs sufia:models:install
   3. Injects Sufia routes
-  4. Adds CurationConcerns abilities into the Ability class
-  5. Copies the catalog controller into the local app
-  6. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
-  7. Adds local authority files to the application
-  8. Copies modified simple_form initializers
-  9. Generates a default workflow
-  10. Installs model-related concerns
+  4. Copies the catalog controller into the local app
+  5. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
+  6. Adds local authority files to the application
+  7. Copies modified simple_form initializers
+  8. Generates a default workflow
+  9. Installs model-related concerns
      * Creates several database migrations if they do not exist in /db/migrate
      * Adds user behavior to the user model
      * Generates GenericWork model.
      * Creates the sufia.rb configuration file
      * Generates mailboxer
-  11. Adds Sufia's abilities into the Ability class
-  12. Adds controller behavior to the application controller
-  13. Copies the catalog controller into the local app
-  14. Installs sufia assets
-  15. Updates simple_form to use browser validations
-  16. Installs Blacklight gallery (and removes it's scss)
-  17. Runs the jquery-datatables generator
+  10. Adds Sufia's abilities into the Ability class
+  11. Adds controller behavior to the application controller
+  12. Copies the catalog controller into the local app
+  13. Installs sufia assets
+  14. Updates simple_form to use browser validations
+  15. Installs Blacklight gallery (and removes it's scss)
+  16. Runs the jquery-datatables generator
          """
 
     def run_required_generators
@@ -65,13 +64,6 @@ module Sufia
       end
     end
 
-    def inject_ability
-      inject_into_file 'app/models/ability.rb', after: /Hydra::Ability\s*\n/ do
-        "  include CurationConcerns::Ability\n"\
-        "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
-      end
-    end
-
     def catalog_controller
       copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
     end
@@ -106,9 +98,10 @@ module Sufia
       copy_file 'config/analytics.yml', 'config/analytics.yml'
     end
 
-    def insert_abilities
-      insert_into_file 'app/models/ability.rb', after: /CurationConcerns::Ability/ do
-        "\n  include Sufia::Ability\n"
+    def inject_ability
+      inject_into_file 'app/models/ability.rb', after: /Hydra::Ability\s*\n/ do
+        "  include Sufia::Ability\n"\
+        "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
       end
     end
 
