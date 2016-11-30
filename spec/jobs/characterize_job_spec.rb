@@ -5,7 +5,7 @@ describe CharacterizeJob do
 
   let(:file_set)    { FileSet.new(id: file_set_id) }
   let(:file_set_id) { 'abc12345' }
-  let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'picture.png' }
+  let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'picture.png' }
   let(:filename)    { file_path.to_s }
   let(:file) do
     Hydra::PCDM::File.new.tap do |f|
