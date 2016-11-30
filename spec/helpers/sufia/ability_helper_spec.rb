@@ -17,13 +17,13 @@ describe Sufia::AbilityHelper do
     }.each do |value, output|
       context value do
         let(:visibility) { value }
-        it { expect(subject).to eql(output % t('curation_concerns.institution_name')) }
+        it { expect(subject).to eql(output % t('sufia.institution_name')) }
       end
     end
   end
   describe "#visibility_options" do
     let(:public_opt) { ['Open Access', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
-    let(:authenticated_opt) { [t('curation_concerns.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
+    let(:authenticated_opt) { [t('sufia.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
     let(:private_opt) { ['Private', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE] }
     subject { helper.visibility_options(option) }
     context 'all options' do

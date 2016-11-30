@@ -13,9 +13,9 @@ module Sufia
 
     def human_readable_expiration
       if hours < 1
-        t('curation_concerns.single_use_links.expiration.lesser_time')
+        t('sufia.single_use_links.expiration.lesser_time')
       else
-        t('curation_concerns.single_use_links.expiration.time', value: hours)
+        t('sufia.single_use_links.expiration.time', value: hours)
       end
     end
 
@@ -25,9 +25,9 @@ module Sufia
 
     def link_type
       if download?
-        t('curation_concerns.single_use_links.download.type')
+        t('sufia.single_use_links.download.type')
       else
-        t('curation_concerns.single_use_links.show.type')
+        t('sufia.single_use_links.show.type')
       end
     end
 

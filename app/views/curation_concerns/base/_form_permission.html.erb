@@ -13,11 +13,11 @@
     <div class="form-group">
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>
-        <%= t('curation_concerns.visibility.open.label_html', type: 'work') %>
+        <%= t('sufia.visibility.open.label_html', type: 'work') %>
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
-        <%= t('curation_concerns.visibility.authenticated.label_html', institution: t('curation_concerns.institution.name')) %>
+        <%= t('sufia.visibility.authenticated.label_html', institution: t('sufia.institution_name')) %>
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>
@@ -29,7 +29,7 @@
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
-        <%= t('curation_concerns.visibility.private.label_html') %>
+        <%= t('sufia.visibility.private.label_html') %>
       </label>
     </div>
   </fieldset>

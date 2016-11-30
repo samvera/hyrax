@@ -15,9 +15,7 @@ module Sufia
         nil
       end
 
-      def logger
-        Rails.logger || CurationConcerns::NullLogger.new
-      end
+      delegate :logger, to: ActiveFedora::Base
 
       def instance
         if Redis.current.is_a? Redis::Namespace

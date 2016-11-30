@@ -13,7 +13,7 @@ describe 'batch_edits/edit.html.erb', type: :view do
     allow(form).to receive(:names).and_return(['title 1', 'title 2'])
     allow(form).to receive(:terms).and_return([:description, :rights])
     assign :form, form
-    view.lookup_context.view_paths.push "#{CurationConcerns::Engine.root}/app/views/curation_concerns/base"
+    view.lookup_context.view_paths.push "#{Sufia::Engine.root}/app/views/curation_concerns/base"
     render
   end
 

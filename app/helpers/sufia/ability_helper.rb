@@ -17,14 +17,14 @@ module Sufia
     end
 
     def visibility_badge(value)
-      klass = t("curation_concerns.visibility.#{value}.class", default: 'label-info')
+      klass = t("sufia.visibility.#{value}.class", default: 'label-info')
       content_tag :span, visibility_text(value), class: "label #{klass}"
     end
 
     private
 
       def visibility_text(value)
-        t("curation_concerns.visibility.#{value}.text", default: value)
+        t("sufia.visibility.#{value}.text", default: value)
       end
   end
 end

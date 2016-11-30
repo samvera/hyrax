@@ -7,18 +7,18 @@ describe Sufia::FileSetHelper do
 
     before do
       allow(helper).to receive(:media_display_partial).with(file_set)
-        .and_return('curation_concerns/file_sets/media_display/image')
+        .and_return('sufia/file_sets/media_display/image')
     end
 
     it "renders a partial" do
       expect(helper).to receive(:render)
-        .with('curation_concerns/file_sets/media_display/image', file_set: file_set)
+        .with('sufia/file_sets/media_display/image', file_set: file_set)
       helper.media_display(file_set)
     end
 
     it "takes options" do
       expect(helper).to receive(:render)
-        .with('curation_concerns/file_sets/media_display/image', file_set: file_set, transcript_id: '123')
+        .with('sufia/file_sets/media_display/image', file_set: file_set, transcript_id: '123')
       helper.media_display(file_set, transcript_id: '123')
     end
   end
@@ -30,32 +30,32 @@ describe Sufia::FileSetHelper do
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/image' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/image' }
     end
 
     context "with a video" do
       let(:mime_type) { 'video/webm' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/video' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/video' }
     end
 
     context "with an audio" do
       let(:mime_type) { 'audio/wav' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/audio' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/audio' }
     end
 
     context "with a pdf" do
       let(:mime_type) { 'application/pdf' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/pdf' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/pdf' }
     end
 
     context "with a word document" do
       let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/office_document' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/office_document' }
     end
 
     context "with anything else" do
       let(:mime_type) { 'application/binary' }
-      it { is_expected.to eq 'curation_concerns/file_sets/media_display/default' }
+      it { is_expected.to eq 'sufia/file_sets/media_display/default' }
     end
   end
 end

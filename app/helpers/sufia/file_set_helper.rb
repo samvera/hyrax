@@ -16,7 +16,7 @@ module Sufia::FileSetHelper
   end
 
   def media_display_partial(file_set)
-    'curation_concerns/file_sets/media_display/' +
+    'sufia/file_sets/media_display/' +
       if file_set.image?
         'image'
       elsif file_set.video?

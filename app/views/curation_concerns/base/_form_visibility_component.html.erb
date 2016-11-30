@@ -9,11 +9,11 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, data: { 'target': '#collapsePublic' }  %>
-            <%= t('curation_concerns.visibility.open.label_html') %>
+            <%= t('sufia.visibility.open.label_html') %>
             <div class="collapse" id="collapsePublic">
               <p>
                 <strong>Please note</strong>, making something visible to the world (i.e.
-                marking this as <%= t('curation_concerns.visibility.open.label_html') %>) may be
+                marking this as <%= t('sufia.visibility.open.label_html') %>) may be
                 viewed as publishing which could impact your ability to:
               </p>
               <ul>
@@ -30,13 +30,13 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
-            <%= t('curation_concerns.visibility.authenticated.label_html', institution: t('sufia.institution_name')) %>
+            <%= t('sufia.visibility.authenticated.label_html', institution: t('sufia.institution_name')) %>
           </label>
         </li>
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, data: { 'target': '#collapseEmbargo' } %>
-            <%= t('curation_concerns.visibility.embargo.label_html') %>
+            <%= t('sufia.visibility.embargo.label_html') %>
             <div class="collapse" id="collapseEmbargo">
               <div class="form-inline">
                 <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
@@ -49,7 +49,7 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, data: { 'target': '#collapseLease' } %>
-            <%= t('curation_concerns.visibility.lease.label_html') %>
+            <%= t('sufia.visibility.lease.label_html') %>
             <div class="collapse" id="collapseLease">
               <div class="form-inline">
                 <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
@@ -62,7 +62,7 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
-            <%= t('curation_concerns.visibility.private.label_html') %>
+            <%= t('sufia.visibility.private.label_html') %>
           </label>
         </li>
       </ul>

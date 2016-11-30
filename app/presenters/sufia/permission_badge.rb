@@ -31,7 +31,7 @@ module Sufia
         elsif open_access?
           'Open Access'
         elsif registered?
-          I18n.translate('curation_concerns.institution_name')
+          I18n.translate('sufia.institution_name')
         else
           'Private'
         end

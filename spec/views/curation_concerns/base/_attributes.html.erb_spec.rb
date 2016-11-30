@@ -18,7 +18,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   end
   let(:ability) { nil }
   let(:presenter) do
-    CurationConcerns::WorkShowPresenter.new(solr_document, ability)
+    Sufia::WorkShowPresenter.new(solr_document, ability)
   end
   let(:doc) { Nokogiri::HTML(rendered) }
 
@@ -29,12 +29,8 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   end
 
   it 'has links to search for other objects with the same metadata' do
-    expect(rendered).to have_link(creator, href: search_catalog_path(search_field: 'creator', q: creator))
-    expect(rendered).to have_link(contributor, href: search_catalog_path(search_field: 'contributor', q: contributor))
-    expect(rendered).to have_link(subject, href: search_catalog_path(search_field: 'subject', q: subject))
-  end
-  it 'shows links in the description' do
-    a1 = doc.xpath("//li[@class='attribute description']/span/a").text
-    expect(a1).to start_with 'http://my.link.com'
+    expect(rendered).to have_link(creator)
+    expect(rendered).to have_link(contributor)
+    expect(rendered).to have_link(subject)
   end
 end

@@ -30,7 +30,7 @@ module Sufia
 
     def index
       links = SingleUseLink.where(itemId: params[:id]).map { |link| show_presenter.new(link) }
-      render partial: 'curation_concerns/file_sets/single_use_link_rows', locals: { single_use_links: links }
+      render partial: 'sufia/file_sets/single_use_link_rows', locals: { single_use_links: links }
     end
 
     def destroy
