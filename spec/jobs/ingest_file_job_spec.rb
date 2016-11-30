@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IngestFileJob do
   let(:file_set) { create(:file_set) }
-  let(:filename) { fixture_file_path('/world.png') }
+  let(:filename) { fixture_path + '/world.png' }
   let(:user)     { create(:user) }
 
   context 'when given a relationship' do
@@ -51,8 +51,8 @@ describe IngestFileJob do
   end
 
   context 'with two existing versions from different users' do
-    let(:file1)    { fixture_file_path 'world.png' }
-    let(:file2)    { fixture_file_path 'small_file.txt' }
+    let(:file1)    { fixture_path + '/world.png' }
+    let(:file2)    { fixture_path + '/small_file.txt' }
     let(:versions) { file_set.reload.original_file.versions }
     let(:user2) { create(:user) }
 
@@ -72,8 +72,8 @@ describe IngestFileJob do
       expect(file_set.original_file.original_name).to eq 'small_file.txt'
 
       # the user for each version
-      expect(VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
-      expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user2.user_key]
+      expect(Sufia::VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
+      expect(Sufia::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user2.user_key]
     end
   end
 end
