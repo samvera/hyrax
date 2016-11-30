@@ -3,6 +3,10 @@ en:
     admin_sets:
       index:
         header:         "Administrative Collections"
+    collections:
+      search_form:
+        placeholder: "Search Collection"
+        label: "Search Collection %{title}"
     controls:
       home:             "Home"
       about:            "About"

@@ -54,6 +54,7 @@ Metrics/MethodLength:
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/indexers/sufia/file_set_indexer.rb'
+    - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/sufia/file_set/derivatives.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
     - 'app/services/sufia/workflow/permission_query.rb'
