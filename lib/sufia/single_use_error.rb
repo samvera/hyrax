@@ -1,3 +1,3 @@
-module CurationConcerns
+module Sufia
   class SingleUseError < StandardError; end
 end

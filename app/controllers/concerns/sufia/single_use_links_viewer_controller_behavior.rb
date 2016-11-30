@@ -1,7 +1,7 @@
 module Sufia
   module SingleUseLinksViewerControllerBehavior
     extend ActiveSupport::Concern
-    include Sufia::DownloadBehavior
+    include DownloadBehavior
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
 
@@ -9,11 +9,11 @@ module Sufia
       include ActionDispatch::Routing::PolymorphicRoutes
 
       skip_before_action :authorize_download!, only: :show
-      rescue_from CurationConcerns::SingleUseError, with: :render_single_use_error
+      rescue_from SingleUseError, with: :render_single_use_error
       rescue_from CanCan::AccessDenied, with: :render_single_use_error
       rescue_from ActiveRecord::RecordNotFound, with: :render_single_use_error
       class_attribute :presenter_class
-      self.presenter_class = Sufia::FileSetPresenter
+      self.presenter_class = FileSetPresenter
       copy_blacklight_config_from(::CatalogController)
     end
 
@@ -41,7 +41,7 @@ module Sufia
     protected
 
       def search_builder_class
-        Sufia::SingleUseLinkSearchBuilder
+        SingleUseLinkSearchBuilder
       end
 
       def content_options
@@ -60,7 +60,7 @@ module Sufia
       end
 
       def not_found_exception
-        CurationConcerns::SingleUseError.new('Single-Use Link Not Found')
+        SingleUseError.new('Single-Use Link Not Found')
       end
 
       def asset

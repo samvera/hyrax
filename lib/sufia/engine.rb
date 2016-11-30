@@ -22,6 +22,7 @@ module Sufia
       require 'hydra/derivatives'
       require 'sufia/name'
       require 'sufia/controller_resource'
+      require 'sufia/single_use_error'
     end
 
     initializer 'routing' do
