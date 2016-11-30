@@ -32,7 +32,7 @@ module Sufia
       private
 
         def users_to_notify
-          recipients[:to] + recipients[:cc]
+          recipients['to'] + recipients['cc']
         end
     end
   end
