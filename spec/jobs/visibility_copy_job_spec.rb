@@ -23,7 +23,7 @@ describe VisibilityCopyJob do
     before do
       expect(work.visibility).to eq 'restricted'
       expect(work).to be_under_embargo
-      expect(work.file_sets.first).to_not be_under_embargo
+      expect(work.file_sets.first).not_to be_under_embargo
     end
 
     before do
@@ -34,7 +34,7 @@ describe VisibilityCopyJob do
 
     it 'copies visibility to its contained files and apply a copy of the embargo to the files' do
       expect(file).to be_under_embargo
-      expect(file.embargo.id).to_not eq work.embargo.id
+      expect(file.embargo.id).not_to eq work.embargo.id
     end
   end
 
@@ -44,7 +44,7 @@ describe VisibilityCopyJob do
     before do
       expect(work.visibility).to eq 'open'
       expect(work).to be_active_lease
-      expect(work.file_sets.first).to_not be_active_lease
+      expect(work.file_sets.first).not_to be_active_lease
     end
 
     before do
@@ -55,7 +55,7 @@ describe VisibilityCopyJob do
 
     it 'copies visibility to its contained files and apply a copy of the lease to the files' do
       expect(file).to be_active_lease
-      expect(file.lease.id).to_not eq work.lease.id
+      expect(file.lease.id).not_to eq work.lease.id
     end
   end
 end
