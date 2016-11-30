@@ -48,7 +48,7 @@ module CurationConcerns
         end
 
         def full_filename(id, original_name)
-          pair = id.scan(/..?/).first(4)
+          pair = id.scan(/..?/)
           File.join(CurationConcerns.config.working_path, *pair, original_name)
         end
     end
