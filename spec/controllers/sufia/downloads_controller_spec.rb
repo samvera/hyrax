@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-describe DownloadsController do
+describe Sufia::DownloadsController do
+  routes { Sufia::Engine.routes }
+
   describe '#show' do
     let(:user) { FactoryGirl.create(:user) }
     let(:file_set) do
-      FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
+      FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
     end
     it 'calls render_404 if the object does not exist' do
       expect(controller).to receive(:render_404) { controller.render body: nil }
@@ -25,7 +27,7 @@ describe DownloadsController do
     context "when user isn't logged in" do
       it 'redirects to sign in' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to Rails.application.routes.url_helpers.new_user_session_path
         expect(flash['alert']).to eq 'You are not authorized to access this page.'
       end
 
@@ -45,11 +47,11 @@ describe DownloadsController do
 
       context "with an alternative file" do
         context "that is persisted" do
-          let(:file) { File.open(fixture_file_path('world.png'), 'rb') }
+          let(:file) { File.open(fixture_path + '/world.png', 'rb') }
           let(:content) { file.read }
 
           before do
-            allow(Sufia::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_file_path('world.png'))
+            allow(Sufia::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_path + '/world.png')
           end
 
           it 'sends requested file content' do

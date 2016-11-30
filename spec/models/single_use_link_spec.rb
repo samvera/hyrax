@@ -2,73 +2,36 @@ require 'spec_helper'
 
 describe SingleUseLink do
   let(:file) { FileSet.new(id: 'abc123') }
-  let(:now) { DateTime.current }
-  let(:hash) { "sha2hash#{now.to_f}" }
 
-  describe "create" do
-    subject { described_class.create itemId: file.id, path: path }
+  describe "default attributes" do
+    let(:hash) { "sha2hash#{DateTime.current.to_f}" }
+    let(:path) { '/foo/file/99999' }
 
-    before do
-      allow(DateTime).to receive(:now).and_return(now)
+    subject { described_class.new itemId: '99999', path: path }
+
+    it "creates link" do
       expect(Digest::SHA2).to receive(:new).and_return(hash)
-    end
-    after do
-      subject.delete
-    end
-
-    describe "show" do
-      let(:path) { Rails.application.routes.url_helpers.sufia_file_set_path(file.id) }
-
-      it "creates link" do
-        expect(subject.downloadKey).to eq(hash)
-        expect(subject.itemId).to eq(file.id)
-        expect(subject.path).to eq(Rails.application.routes.url_helpers.sufia_file_set_path(file.id))
-      end
-    end
-    describe "download" do
-      let(:path) { Rails.application.routes.url_helpers.download_path(file.id) }
-
-      it "creates link" do
-        expect(subject.downloadKey).to eq(hash)
-        expect(subject.itemId).to eq(file.id)
-        expect(subject.path).to eq(Rails.application.routes.url_helpers.download_path(file.id))
-      end
+      expect(subject.downloadKey).to eq hash
+      expect(subject.itemId).to eq '99999'
+      expect(subject.path).to eq path
     end
   end
-  describe "find" do
-    describe "not expired" do
-      before do
-        described_class.create(downloadKey: 'sha2hashb',
-                               itemId: file.id,
-                               path: Rails.application.routes.url_helpers.download_path(file),
-                               expires: DateTime.current.advance(hours: 1))
-      end
-      it "retrieves link" do
-        link = described_class.where(downloadKey: 'sha2hashb').first
-        expect(link.itemId).to eq(file.id)
-      end
-      it "retrieves link with find_by" do
-        link = described_class.find_by_downloadKey('sha2hashb')
-        expect(link.itemId).to eq(file.id)
-      end
-      it "expires link" do
-        link = described_class.where(downloadKey: 'sha2hashb').first
-        expect(link.expired?).to eq(false)
-      end
+
+  describe "#expired?" do
+    let(:link) do
+      described_class.new(expires: expires)
     end
-    describe "expired" do
-      before do
-        su = described_class.create!(downloadKey: 'sha2hashb',
-                                     itemId: file.id,
-                                     path: Rails.application.routes.url_helpers.download_path(file))
 
-        su.update_attribute :expires, DateTime.current.advance(hours: -1)
-      end
+    subject { link.expired? }
 
-      it "expires link" do
-        link = described_class.where(downloadKey: 'sha2hashb').first
-        expect(link.expired?).to eq(true)
-      end
+    context "when not expired" do
+      let(:expires) { DateTime.current.advance(hours: 1) }
+      it { is_expected.to be false }
+    end
+
+    context "when not expired" do
+      let(:expires) { DateTime.current.advance(hours: -1) }
+      it { is_expected.to be true }
     end
   end
 end

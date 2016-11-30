@@ -54,5 +54,17 @@ FactoryGirl.define do
       title ["Fake Wav File.wav"]
       subject %w(sed do eiusmod tempor incididunt ut labore)
     end
+
+    factory :file_with_work do
+      after(:build) do |file, _evaluator|
+        file.title = ['testfile']
+      end
+      after(:create) do |file, evaluator|
+        if evaluator.content
+          Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
+        end
+        FactoryGirl.create(:generic_work, user: evaluator.user).members << file
+      end
+    end
   end
 end

@@ -9,6 +9,8 @@ Sufia::Engine.routes.draw do
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
+  resources :downloads, only: :show, controller: 'sufia/downloads'
+
   # ResourceSync routes
   get '/.well-known/resourcesync' => 'sufia/resource_sync#source_description', as: :source_description
   get '/capabilitylist' => 'sufia/resource_sync#capability_list', as: :capability_list

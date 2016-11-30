@@ -1,5 +1,5 @@
 # Overrides Hydra::Controller::DownloadBehavior to accommodate the fact that PCDM Objects#files uses direct containment instead of basic containment
-module CurationConcerns
+module Sufia
   module DownloadBehavior
     extend ActiveSupport::Concern
     include Hydra::Controller::DownloadBehavior

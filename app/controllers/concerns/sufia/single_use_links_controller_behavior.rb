@@ -19,7 +19,7 @@ module Sufia
     end
 
     def create_download
-      @su = SingleUseLink.create itemId: params[:id], path: main_app.download_path(id: params[:id])
+      @su = SingleUseLink.create itemId: params[:id], path: sufia.download_path(id: params[:id])
       render plain: sufia.download_single_use_link_url(@su.downloadKey)
     end
 

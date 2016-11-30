@@ -1,7 +1,7 @@
 module Sufia
   module SingleUseLinksViewerControllerBehavior
     extend ActiveSupport::Concern
-    include CurationConcerns::DownloadBehavior
+    include Sufia::DownloadBehavior
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
 
@@ -18,7 +18,7 @@ module Sufia
     end
 
     def download
-      raise not_found_exception unless single_use_link.path == main_app.download_path(id: @asset)
+      raise not_found_exception unless single_use_link.path == sufia.download_path(id: @asset)
       send_content
     end
 
@@ -34,7 +34,7 @@ module Sufia
       @presenter = presenter_class.new(curation_concern, current_ability)
 
       # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
-      @su = single_use_link.create_for_path main_app.download_path(curation_concern.id)
+      @su = single_use_link.create_for_path sufia.download_path(curation_concern.id)
       @download_link = sufia.download_single_use_link_path(@su.downloadKey)
     end
 

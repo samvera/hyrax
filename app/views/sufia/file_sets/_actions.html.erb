@@ -30,12 +30,10 @@
 
   <% if can?(:read, file_set.id) %>
     <li role="menuitem" tabindex="-1">
-      <%= link_to 'Download', main_app.download_path(file_set),
+      <%= link_to 'Download', sufia.download_path(file_set),
         title: "Download #{file_set.to_s.inspect}", target: "_blank" %>
     </li>
   <% end %>
 
   </ul>
 </div>
-
-

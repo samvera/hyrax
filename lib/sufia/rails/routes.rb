@@ -6,7 +6,6 @@ module ActionDispatch::Routing
     #     concerns :exportable
     #   end
     def curation_concerns_basic_routes(&block)
-      resources :downloads, only: :show
       resources :upload_sets, only: [:edit, :update]
 
       namespace :sufia, path: :concern do

@@ -96,9 +96,8 @@ describe 'Routes', type: :routing do
   end
 
   describe 'Download' do
-    routes { Rails.application.routes }
     it "routes to show" do
-      expect(get: '/downloads/9').to route_to(controller: 'downloads', action: 'show', id: '9')
+      expect(get: '/downloads/9').to route_to(controller: 'sufia/downloads', action: 'show', id: '9')
     end
   end
 
