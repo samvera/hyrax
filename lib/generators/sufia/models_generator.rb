@@ -12,7 +12,6 @@ This generator makes the following changes to your application:
 
   # Setup the database migrations
   def copy_migrations
-    rake 'curation_concerns:install:migrations'
     rake 'sufia:install:migrations'
   end
 
