@@ -507,6 +507,8 @@ en:
         no_preview: No preview available
 
   simple_form:
+    required:
+      html: '<span class="label label-info required-tag">required</span>'
     labels:
       defaults:
         admin_set_id:              "Add as member of administrative set"

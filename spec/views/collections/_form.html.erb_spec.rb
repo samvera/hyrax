@@ -6,12 +6,12 @@ describe 'collections/_form.html.erb', type: :view do
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
     assign(:collection, collection)
+    render
   end
 
   it "draws the metadata fields for collection" do
-    render
     expect(rendered).to have_selector("input#collection_title")
-    expect(rendered).to have_selector("span", text: "required")
+    expect(rendered).to have_selector("span.required-tag", text: "required")
     expect(rendered).not_to have_selector("div#additional_title.multi_value")
     expect(rendered).to have_selector("input#collection_creator.multi_value")
     expect(rendered).to have_selector("textarea#collection_description")
