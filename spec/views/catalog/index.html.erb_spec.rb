@@ -18,7 +18,6 @@ describe 'catalog/index.html.erb', type: :view do
     allow(view).to receive(:search_session).and_return({})
     allow(view).to receive(:current_search_session).and_return(nil)
     allow(view).to receive(:document_counter_with_offset).and_return(5)
-    allow(view).to receive(:type_tab).and_return("TYPE")
     allow(view).to receive(:search_state).and_return(search_state)
     allow(controller).to receive(:render_bookmarks_control?).and_return(false)
 
