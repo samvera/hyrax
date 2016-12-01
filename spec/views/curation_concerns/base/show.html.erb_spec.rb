@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe 'curation_concerns/base/show.html.erb', type: :view do
-  let(:solr_document) { SolrDocument.new(id: '999', date_modified_dtsi: '2011-04-01') }
+  let(:solr_document) do
+    SolrDocument.new(id: '999',
+                     date_modified_dtsi: '2011-04-01',
+                     has_model_ssim: ['GenericWork'])
+  end
   let(:ability) { double }
   let(:presenter) do
     Sufia::WorkShowPresenter.new(solr_document, ability)

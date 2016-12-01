@@ -5,9 +5,7 @@
       <%= render 'work_title', presenter: @presenter %>
     </header>
 
-    <% if Flipflop.enable_mediated_deposit? %>
-      <span class="state state-<%= @presenter.workflow.state %>"><%= @presenter.workflow.state_label %></span>
-    <% end %>
+    <span class="state state-<%= @presenter.workflow.state %>"><%= @presenter.workflow.state_label %></span>
   </div>
   <div class="col-sm-8">
     <%= render 'work_description', presenter: @presenter %>
@@ -26,13 +24,9 @@
 <div class="row">
   <div class="col-sm-12">
     <%= render 'items', presenter: @presenter %>
-    <% if Flipflop.enable_mediated_deposit? %>
-      <%= render 'workflow_actions_widget', presenter: @presenter %>
-    <% end %>
+    <%= render 'workflow_actions_widget', presenter: @presenter %>
     <%# TODO: we may consider adding these partials in the future %>
     <%#= render 'sharing_with', presenter: @presenter %>
     <%#= render 'user_activity', presenter: @presenter %>
   </div>
 </div>
-
-
