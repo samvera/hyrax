@@ -12,7 +12,9 @@ module Sufia
     end
 
     def label(field)
-      t(:"#{model_name.param_key}.#{field}", scope: label_scope, default: field.to_s.humanize).presence
+      t(:"#{model_name.param_key}.#{field}",
+        scope: label_scope,
+        default: [:"defaults.#{field}", field.to_s.humanize]).presence
     end
 
     def fields(terms, &_block)
