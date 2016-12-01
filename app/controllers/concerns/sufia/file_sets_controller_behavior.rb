@@ -94,11 +94,6 @@ module Sufia
     # routed to /files/:id/citation
     def citation; end
 
-    # This allows us to use the templates in curation_concerns/file_sets
-    def self.local_prefixes
-      ['curation_concerns/file_sets']
-    end
-
     protected
 
       def create_from_upload(params)
