@@ -14,7 +14,6 @@ class Sufia::CatalogSearchBuilder < Sufia::SearchBuilder
 
   # show works that are in the active state.
   def show_only_active_records(solr_parameters)
-    return unless Flipflop.enable_mediated_deposit?
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << '-suppressed_bsi:true'
   end

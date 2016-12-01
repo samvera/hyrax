@@ -10,6 +10,6 @@ class Sufia::MySharesSearchBuilder < Sufia::SearchBuilder
       "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: scope.current_user.user_key)
     ]
 
-    solr_parameters[:fq] += ['-suppressed_bsi:true'] if Flipflop.enable_mediated_deposit?
+    solr_parameters[:fq] += ['-suppressed_bsi:true']
   end
 end
