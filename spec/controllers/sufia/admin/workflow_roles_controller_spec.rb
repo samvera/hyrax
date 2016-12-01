@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::Admin::WorkflowRolesController, :no_clean do
-  routes { CurationConcerns::Engine.routes }
+RSpec.describe Sufia::Admin::WorkflowRolesController, :no_clean do
+  routes { Sufia::Engine.routes }
 
   describe "#get" do
     context "when you have permission" do
@@ -12,14 +12,14 @@ RSpec.describe CurationConcerns::Admin::WorkflowRolesController, :no_clean do
       it "works" do
         get :index
         expect(response).to be_success
-        expect(assigns[:presenter]).to be_kind_of CurationConcerns::Admin::WorkflowRolePresenter
+        expect(assigns[:presenter]).to be_kind_of Sufia::Admin::WorkflowRolePresenter
       end
     end
 
     context "when they don't have permission" do
       it "throws a CanCan error" do
         get :index
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path
       end
     end
   end

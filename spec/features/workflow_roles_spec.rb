@@ -34,7 +34,7 @@ RSpec.describe "Manage workflow roles", type: :feature do
     }
   end
   before do
-    allow_any_instance_of(CurationConcerns::Admin::WorkflowRolesController).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+    allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
     Sufia::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
     Sufia::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
                                               workflow: Sipity::Workflow.last,
@@ -42,6 +42,7 @@ RSpec.describe "Manage workflow roles", type: :feature do
   end
 
   it "shows the roles" do
+    login_as(user, scope: :user)
     visit '/admin/workflow_roles'
     expect(page).to have_content 'one_step - approving'
   end

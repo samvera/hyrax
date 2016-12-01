@@ -12,6 +12,10 @@ describe 'Admin Routes', type: :routing do
     expect(get: '/admin/workflows').to route_to(controller: 'sufia/admin', action: 'workflows')
   end
 
+  it 'routes the workflow roles' do
+    expect(get: '/admin/workflow_roles').to route_to(controller: 'sufia/admin/workflow_roles', action: 'index')
+  end
+
   describe "Features" do
     it "routes to the features controller" do
       expect(get: '/admin/features').to route_to(controller: 'sufia/admin/features', action: 'index')

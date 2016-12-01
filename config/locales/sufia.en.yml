@@ -95,6 +95,15 @@ en:
           heading: "Display files deposited by users"
           start_label: "Starting"
           end_label: "Ending [defaults to now]"
+      workflow_roles:
+        index:
+          header:
+            user:   User
+            roles:  Roles
+          no_roles: No roles
+          new_role: "Grant a role to a user:"
+          delete:
+            confirm: Are you sure?
     admin_sets:
       index:
         header:         "Administrative Collections"

@@ -1,7 +1,6 @@
-module CurationConcerns
+module Sufia
   module Admin
     class WorkflowRolesController < ApplicationController
-      include AdminPage
       before_action :require_permissions
 
       def index
