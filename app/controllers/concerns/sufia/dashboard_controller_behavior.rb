@@ -6,8 +6,6 @@ module Sufia
       include ActionView::Helpers::DateHelper
 
       before_action :authenticate_user!
-
-      layout "sufia-dashboard"
     end
 
     # Render our dashboard page

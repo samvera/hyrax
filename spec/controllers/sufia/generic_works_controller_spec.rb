@@ -125,7 +125,7 @@ describe Sufia::GenericWorksController do
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
         expect(assigns[:curation_concern].depositor).to eq user.user_key
-        expect(response).to render_template("layouts/curation_concerns/1_column")
+        expect(response).to render_template("layouts/sufia/1_column")
       end
     end
   end
@@ -261,7 +261,7 @@ describe Sufia::GenericWorksController do
         get :edit, params: { id: work }
         expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Sufia::GenericWorkForm
-        expect(response).to render_template("layouts/curation_concerns/1_column")
+        expect(response).to render_template("layouts/sufia/1_column")
       end
 
       context "without a referer" do

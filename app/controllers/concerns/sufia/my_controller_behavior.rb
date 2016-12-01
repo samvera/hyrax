@@ -12,8 +12,6 @@ module Sufia
       before_action :authenticate_user!
       before_action :enforce_show_permissions, only: :show
       before_action :enforce_viewing_context_for_show_requests, only: :show
-
-      layout 'sufia-dashboard'
     end
 
     def index

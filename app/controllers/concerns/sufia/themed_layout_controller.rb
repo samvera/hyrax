@@ -4,7 +4,7 @@ module Sufia
 
     included do
       class_attribute :theme
-      self.theme = 'curation_concerns'
+      self.theme = 'sufia'
       helper_method :theme
       helper_method :show_site_actions?
       helper_method :show_site_search?
