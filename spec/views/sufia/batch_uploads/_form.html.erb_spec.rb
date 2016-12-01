@@ -7,7 +7,7 @@ describe 'sufia/batch_uploads/_form.html.erb', type: :view do
   let(:user) { stub_model(User) }
 
   before do
-    stub_template "curation_concerns/base/_guts4form.html.erb" => "Form guts"
+    stub_template "sufia/base/_guts4form.html.erb" => "Form guts"
     assign(:form, form)
   end
 

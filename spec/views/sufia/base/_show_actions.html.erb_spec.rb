@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
+describe 'sufia/base/_show_actions.html.erb', type: :view do
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) { work.to_solr }
@@ -22,7 +22,7 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
   context "as an unregistered user" do
     before do
       allow(presenter).to receive(:editor?).and_return(false)
-      render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
+      render 'sufia/base/show_actions.html.erb', presenter: presenter
     end
     it "doesn't show edit / delete links" do
       expect(rendered).not_to have_link 'Edit'
@@ -37,7 +37,7 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
     context "when the work does not contain children" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([])
-        render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
+        render 'sufia/base/show_actions.html.erb', presenter: presenter
       end
       it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
@@ -50,7 +50,7 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
     context "when the work contains 1 child" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([member])
-        render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
+        render 'sufia/base/show_actions.html.erb', presenter: presenter
       end
       it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
@@ -59,7 +59,7 @@ describe 'curation_concerns/base/_show_actions.html.erb', type: :view do
     context "when the work contains 2 children" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([member, file_member])
-        render 'curation_concerns/base/show_actions.html.erb', presenter: presenter
+        render 'sufia/base/show_actions.html.erb', presenter: presenter
       end
       it "shows file manager link" do
         expect(rendered).to have_link 'File Manager'

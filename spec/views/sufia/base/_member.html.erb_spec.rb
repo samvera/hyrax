@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_member.html.erb' do
+describe 'sufia/base/_member.html.erb' do
   let(:solr_document) do
     SolrDocument.new(id: '999',
                      has_model_ssim: ['FileSet'],
@@ -30,7 +30,7 @@ describe 'curation_concerns/base/_member.html.erb' do
     allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
       Sufia::ContextualPath.new(x, y).show
     end
-    render 'curation_concerns/base/member.html.erb', member: presenter
+    render 'sufia/base/member.html.erb', member: presenter
   end
 
   it 'renders the view' do

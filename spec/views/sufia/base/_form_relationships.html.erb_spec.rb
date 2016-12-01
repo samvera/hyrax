@@ -1,4 +1,4 @@
-describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
+describe 'sufia/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { GenericWork.new }
   let(:form) do
@@ -15,7 +15,7 @@ describe 'curation_concerns/base/_form_relationships.html.erb', type: :view do
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>
-        <%= render "curation_concerns/base/form_relationships", f: f %>
+        <%= render "sufia/base/form_relationships", f: f %>
       <% end %>
     )
   end

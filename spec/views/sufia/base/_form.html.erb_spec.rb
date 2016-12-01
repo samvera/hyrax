@@ -1,4 +1,4 @@
-describe 'curation_concerns/base/_form.html.erb', type: :view do
+describe 'sufia/base/_form.html.erb', type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456')
   end
@@ -9,7 +9,6 @@ describe 'curation_concerns/base/_form.html.erb', type: :view do
   end
 
   before do
-    view.lookup_context.view_paths.push 'app/views/curation_concerns'
     allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))

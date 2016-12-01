@@ -74,7 +74,7 @@ class Sufia::WorkGenerator < Rails::Generators::NamedBase
   end
 
   def create_views
-    create_file "app/views/curation_concerns/#{plural_file_name}/_#{file_name}.html.erb" do
+    create_file "app/views/sufia/#{plural_file_name}/_#{file_name}.html.erb" do
       "<%# This is a search result view %>\n" \
       "<%= render 'catalog/document', document: #{file_name}, document_counter: #{file_name}_counter  %>\n"
     end

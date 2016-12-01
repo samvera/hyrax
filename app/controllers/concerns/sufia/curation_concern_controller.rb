@@ -127,10 +127,10 @@ module Sufia
           end
       end
 
-      # Include 'curation_concerns/base' in the search path for views, while prefering
+      # Include 'sufia/base' in the search path for views, while prefering
       # our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
-        @_prefixes ||= super + ['curation_concerns/base']
+        @_prefixes ||= super + ['sufia/base']
       end
 
       def after_create_response

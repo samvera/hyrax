@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_citations.html.erb', type: :view do
+describe 'sufia/base/_citations.html.erb', type: :view do
   let(:user) { create(:user) }
   let(:object_profile) { ["{\"id\":\"999\"}"] }
   let(:contributor) { ['Frodo'] }
@@ -24,7 +24,7 @@ describe 'curation_concerns/base/_citations.html.erb', type: :view do
   before do
     Sufia.config.citations = citations
     allow(controller).to receive(:can?).with(:edit, presenter).and_return(false)
-    render 'curation_concerns/base/citations', presenter: presenter
+    render 'sufia/base/citations', presenter: presenter
   end
   context 'when enabled' do
     let(:citations) { true }

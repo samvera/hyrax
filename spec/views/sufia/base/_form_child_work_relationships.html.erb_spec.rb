@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "curation_concerns/base/_form_child_work_relationships.html.erb", type: :view do
+describe "sufia/base/_form_child_work_relationships.html.erb", type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456', title: ["MyWork"])
   end
@@ -23,7 +23,6 @@ describe "curation_concerns/base/_form_child_work_relationships.html.erb", type:
   end
 
   before do
-    view.lookup_context.view_paths.push 'app/views/curation_concerns'
     allow(view).to receive(:params).and_return(id: work.id)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(view).to receive(:f).and_return(f)

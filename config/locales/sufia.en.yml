@@ -128,6 +128,44 @@ en:
       internal_error:
         default: "The server encountered an error."
     background_attribution_html: "Background image CC by-nc-sa by <a href=\"https://flic.kr/p/eirxaf\">f2b1610</a>"
+    base:
+      relationships:
+        header: Relationships
+        empty: "This %{type} is not currently in any collections."
+      relationships_parent_row:
+        label: "In %{type}:"
+      relationships_parent_row_empty:
+        label: "In %{type}:"
+        empty: "There are no %{type} relationships."
+      show:
+        last_modified: "Last modified: %{value}"
+      metadata:
+        header: Descriptions
+        attribute_name_label: Attribute Name
+        attribute_values_label: Values
+      form_files:
+        local_upload: Add Local Files
+        external_upload: Cloud Providers
+        dropzone: "Drop files here."
+      form_progress:
+        requirements:          Requirements
+        required_descriptions: Describe your work
+        required_files:        Add files
+      items:
+        header: Items
+        thumbnail: Thumbnail
+        title: Title
+        date_uploaded: "Date Uploaded"
+        visibility: Visibility
+        actions: Actions
+        empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
+      citations:
+        header: 'Citations:'
+      social_media:
+        facebook: 'Facebook'
+        twitter: 'Twitter'
+        tumblr: 'Tumblr'
+        google: 'Google+'
     bread_crumb:
       search_results: "Back to search results"
     batch:
@@ -574,45 +612,6 @@ en:
         publisher: "The person or group making the collection available. Generally this is the institution."
         rights: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
 
-  curation_concerns:
-    base:
-      relationships:
-        header: Relationships
-        empty: "This %{type} is not currently in any collections."
-      relationships_parent_row:
-        label: "In %{type}:"
-      relationships_parent_row_empty:
-        label: "In %{type}:"
-        empty: "There are no %{type} relationships."
-      show:
-        last_modified: "Last modified: %{value}"
-      metadata:
-        header: Descriptions
-        attribute_name_label: Attribute Name
-        attribute_values_label: Values
-      form_files:
-        local_upload: Add Local Files
-        external_upload: Cloud Providers
-        dropzone: "Drop files here."
-      form_progress:
-        requirements:          Requirements
-        required_descriptions: Describe your work
-        required_files:        Add files
-      items:
-        header: Items
-        thumbnail: Thumbnail
-        title: Title
-        date_uploaded: "Date Uploaded"
-        visibility: Visibility
-        actions: Actions
-        empty:  "This %{type} has no files associated with it. Click \"edit\" to add more files."
-      citations:
-        header: 'Citations:'
-      social_media:
-        facebook: 'Facebook'
-        twitter: 'Twitter'
-        tumblr: 'Tumblr'
-        google: 'Google+'
   blacklight:
     search:
       fields:

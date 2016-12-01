@@ -229,10 +229,10 @@ module Sufia
         curation_concern.relative_path = params[:relative_path] if params[:relative_path]
       end
 
-      # This allows us to use the unauthorized and form_permission template in curation_concerns/base,
+      # This allows us to use the unauthorized and form_permission template in sufia/base,
       # while prefering our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
-        @_prefixes ||= super + ['curation_concerns/base']
+        @_prefixes ||= super + ['sufia/base']
       end
 
       def json_error(error, name = nil, additional_arguments = {})

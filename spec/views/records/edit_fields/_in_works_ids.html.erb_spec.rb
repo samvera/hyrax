@@ -23,7 +23,6 @@ describe "records/edit_fields/_in_works_ids.html.erb", type: :view do
   end
 
   before do
-    view.lookup_context.view_paths.push 'app/views/curation_concerns'
     allow(::ActiveFedora::Base).to receive(:find).and_return(work_2)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(view).to receive(:f).and_return(f)

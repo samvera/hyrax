@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/relationships', type: :view do
+describe 'sufia/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_doc, ability) }
@@ -9,7 +9,7 @@ describe 'curation_concerns/base/relationships', type: :view do
 
   context "when collections are not present" do
     before do
-      render 'curation_concerns/base/relationships', presenter: presenter
+      render 'sufia/base/relationships', presenter: presenter
     end
     it "shows the message" do
       expect(rendered).to match %r{There are no Collection relationships\.}
@@ -18,7 +18,7 @@ describe 'curation_concerns/base/relationships', type: :view do
 
   context "when parents are not present" do
     before do
-      render 'curation_concerns/base/relationships', presenter: presenter
+      render 'sufia/base/relationships', presenter: presenter
     end
     it "shows the message" do
       expect(rendered).to match %r{There are no Generic work relationships\.}
@@ -31,7 +31,7 @@ describe 'curation_concerns/base/relationships', type: :view do
     before do
       allow(view).to receive(:contextual_path).and_return("/collections/456")
       allow(presenter).to receive(:collection_presenters).and_return(collection_presenters)
-      render 'curation_concerns/base/relationships', presenter: presenter
+      render 'sufia/base/relationships', presenter: presenter
     end
     it "links to collections" do
       expect(page).to have_link 'Containing collection'
@@ -51,7 +51,7 @@ describe 'curation_concerns/base/relationships', type: :view do
     before do
       allow(view).to receive(:contextual_path).and_return("/concern/generic_works/456")
       allow(presenter).to receive(:collection_presenters).and_return(collection_presenters)
-      render 'curation_concerns/base/relationships', presenter: presenter
+      render 'sufia/base/relationships', presenter: presenter
     end
     it "links to work" do
       expect(page).to have_link 'Containing work'
@@ -71,7 +71,7 @@ describe 'curation_concerns/base/relationships', type: :view do
     before do
       allow(view).to receive(:contextual_path).and_return("/concern/generic_works/456")
       allow(presenter).to receive(:collection_presenters).and_return(collection_presenters)
-      render 'curation_concerns/base/relationships', presenter: presenter
+      render 'sufia/base/relationships', presenter: presenter
     end
     it "links to work and collection" do
       expect(page).to have_link 'Containing work'

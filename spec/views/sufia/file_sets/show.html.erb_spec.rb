@@ -16,7 +16,7 @@ describe 'sufia/file_sets/show.html.erb', type: :view do
     }
   end
   before do
-    view.lookup_context.prefixes.push 'curation_concerns/base'
+    view.lookup_context.prefixes.push 'sufia/base'
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(presenter).to receive(:audit_status).and_return(mock_metadata)

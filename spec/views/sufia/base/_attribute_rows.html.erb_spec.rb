@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_attribute_rows.html.erb', type: :view do
+describe 'sufia/base/_attribute_rows.html.erb', type: :view do
   let(:url) { "http://example.com" }
   let(:ability) { double }
   let(:work) { stub_model(GenericWork, related_url: [url]) }
@@ -8,7 +8,7 @@ describe 'curation_concerns/base/_attribute_rows.html.erb', type: :view do
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_document, ability) }
 
   let(:page) do
-    render 'curation_concerns/base/attribute_rows', presenter: presenter
+    render 'sufia/base/attribute_rows', presenter: presenter
     Capybara::Node::Simple.new(rendered)
   end
 

@@ -198,7 +198,7 @@ module Sufia
 
     def render_visibility_link(document)
       # Anchor must match with a tab in
-      # https://github.com/projecthydra/sufia/blob/master/app/views/curation_concerns/base/_guts4form.html.erb#L2
+      # https://github.com/projecthydra/sufia/blob/master/app/views/sufia/base/_guts4form.html.erb#L2
       link_to render_visibility_label(document),
               edit_polymorphic_path([main_app, document], anchor: "share"),
               id: "permission_" + document.id, class: "visibility-link"

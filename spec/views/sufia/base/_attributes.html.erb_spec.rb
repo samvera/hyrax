@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_attributes.html.erb' do
+describe 'sufia/base/_attributes.html.erb' do
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }
   let(:subject)     { 'history' }
@@ -25,7 +25,7 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   before do
     allow(view).to receive(:dom_class) { '' }
 
-    render 'curation_concerns/base/attributes', presenter: presenter
+    render 'sufia/base/attributes', presenter: presenter
   end
 
   it 'has links to search for other objects with the same metadata' do

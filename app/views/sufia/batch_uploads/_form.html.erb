@@ -3,7 +3,7 @@
     <p class="switch-upload-type">To create a single work for all the files, go to <%= link_to "New Work", [:new, Sufia.primary_work_type.model_name.singular_route_key] %></p>
         <p class="instructions"><%= t("sufia.batch_uploads.files.instructions") %></p>
   <% end %>
-  <%= render 'curation_concerns/base/guts4form', f: f, tabs: %w[files metadata relationships share] do %>
+  <%= render 'sufia/base/guts4form', f: f, tabs: %w[files metadata relationships share] do %>
   <% end %>
 <% end %>
 

@@ -48,7 +48,7 @@ describe Sufia::GenericWorksController do
       it "returns 201, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
-        expect(controller).to render_template('curation_concerns/base/show')
+        expect(controller).to render_template('sufia/base/show')
         expect(response.code).to eq "201"
         expect(response.location).to eq main_app.sufia_generic_work_path(model)
       end
@@ -67,7 +67,7 @@ describe Sufia::GenericWorksController do
       it "returns json of the work" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
-        expect(controller).to render_template('curation_concerns/base/show')
+        expect(controller).to render_template('sufia/base/show')
         expect(response.code).to eq "200"
       end
     end
@@ -77,7 +77,7 @@ describe Sufia::GenericWorksController do
       it "returns 200, renders show template sets location header" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
-        expect(controller).to render_template('curation_concerns/base/show')
+        expect(controller).to render_template('sufia/base/show')
         expect(response.code).to eq "200"
         created_resource = assigns[:curation_concern]
         expect(response.location).to eq main_app.sufia_generic_work_path(created_resource)

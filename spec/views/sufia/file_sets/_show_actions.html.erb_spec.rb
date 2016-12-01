@@ -26,7 +26,7 @@ describe 'sufia/file_sets/_show_actions.html.erb', type: :view do
       Sufia.config.citations = citations
       allow(controller).to receive(:can?).with(:edit, presenter).and_return(false)
       assign(:presenter, presenter)
-      view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
+      view.lookup_context.view_paths.push 'app/views/sufia/base'
       render
     end
 
@@ -51,7 +51,7 @@ describe 'sufia/file_sets/_show_actions.html.erb', type: :view do
     before do
       allow(presenter).to receive(:editor?).and_return(true)
       assign(:presenter, presenter)
-      view.lookup_context.view_paths.push 'app/views/curation_concerns/base'
+      view.lookup_context.view_paths.push 'app/views/sufia/base'
       render
     end
 

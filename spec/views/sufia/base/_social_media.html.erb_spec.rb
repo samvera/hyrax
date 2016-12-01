@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_social_media.html.erb', type: :view do
+describe 'sufia/base/_social_media.html.erb', type: :view do
   let(:url) { 'http://example.com/' }
   let(:title) { 'Example' }
   let(:page) do
-    render partial: 'curation_concerns/base/social_media', locals: { share_url: url, page_title: title }
+    render partial: 'sufia/base/social_media', locals: { share_url: url, page_title: title }
     Capybara::Node::Simple.new(rendered)
   end
 

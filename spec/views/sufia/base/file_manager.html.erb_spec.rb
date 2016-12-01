@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "curation_concerns/base/file_manager.html.erb" do
+RSpec.describe "sufia/base/file_manager.html.erb" do
   let(:members) { [file_set, member] }
   let(:file_set) { Sufia::FileSetPresenter.new(solr_doc, nil) }
   let(:member) { Sufia::WorkShowPresenter.new(solr_doc_work, nil) }

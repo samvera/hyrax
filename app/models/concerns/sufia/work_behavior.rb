@@ -35,7 +35,7 @@ module Sufia
         @_to_partial_path ||= begin
           element = ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.demodulize(name))
           collection = ActiveSupport::Inflector.tableize(name)
-          "curation_concerns/#{collection}/#{element}".freeze
+          "sufia/#{collection}/#{element}".freeze
         end
       end
     end

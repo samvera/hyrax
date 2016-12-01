@@ -66,7 +66,7 @@ module Sufia::Controller
         respond_to do |wants|
           wants.html do
             if [:show, :edit, :create, :update, :destroy].include? exception.action
-              render 'curation_concerns/base/unauthorized', status: :unauthorized
+              render 'sufia/base/unauthorized', status: :unauthorized
             else
               redirect_to main_app.root_url, alert: exception.message
             end

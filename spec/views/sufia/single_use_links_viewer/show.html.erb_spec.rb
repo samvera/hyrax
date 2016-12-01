@@ -18,7 +18,7 @@ describe 'sufia/single_use_links_viewer/show.html.erb' do
     assign :asset, f
     assign :download_link, Sufia::Engine.routes.url_helpers.download_single_use_link_path(hash)
     assign :presenter, Sufia::FileSetPresenter.new(solr_document, ability)
-    view.lookup_context.view_paths.push "#{Sufia::Engine.root}/app/views/curation_concerns/base"
+    view.lookup_context.view_paths.push "#{Sufia::Engine.root}/app/views/sufia/base"
     render
   end
 

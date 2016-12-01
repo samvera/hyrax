@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/unauthorized.html.erb' do
+describe 'sufia/base/unauthorized.html.erb' do
   context "when it responds to curation_concern" do
     let(:concern) { double(human_readable_type: 'Book', id: '777') }
     before do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/_form_progress.html.erb', type: :view do
+describe 'sufia/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
@@ -8,13 +8,12 @@ describe 'curation_concerns/base/_form_progress.html.erb', type: :view do
   end
 
   before do
-    view.lookup_context.view_paths.push 'app/views/curation_concerns'
     allow(controller).to receive(:current_user).and_return(user)
   end
 
   let(:page) do
     view.simple_form_for form do |f|
-      render 'curation_concerns/base/form_progress', f: f
+      render 'sufia/base/form_progress', f: f
     end
     Capybara::Node::Simple.new(rendered)
   end

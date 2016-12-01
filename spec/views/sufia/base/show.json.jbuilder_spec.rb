@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'curation_concerns/base/show.json.jbuilder' do
+describe 'sufia/base/show.json.jbuilder' do
   let(:curation_concern) { FactoryGirl.create(:generic_work) }
 
   before do

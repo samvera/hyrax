@@ -47,9 +47,9 @@ module Sufia
       end
 
       def _prefixes
-        # This allows us to use the templates in curation_concerns/base, while prefering
+        # This allows us to use the templates in sufia/base, while prefering
         # our local paths. Thus we are unable to just override `self.local_prefixes`
-        @_prefixes ||= super + ['curation_concerns/base']
+        @_prefixes ||= super + ['sufia/base']
       end
 
       def destroy_batch
