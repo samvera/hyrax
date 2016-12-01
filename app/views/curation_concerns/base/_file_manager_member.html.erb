@@ -10,9 +10,9 @@
               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             <% end %>
           </div>
-          <% if node.respond_to?(:page_title) %>
+          <% if node.respond_to?(:label) %>
             <div class="order-filename">
-              <em title="<%= node.page_title %>">(<%= truncate(node.page_title, length: 29) %>)</em>
+              <em title="<%= node.page_title %>">(<%= truncate(node.label, length: 29) %>)</em>
             </div>
           <% end %>
         </div>

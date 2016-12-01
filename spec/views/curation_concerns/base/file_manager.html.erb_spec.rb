@@ -3,12 +3,12 @@ require 'spec_helper'
 RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   let(:members) { [file_set, member] }
   let(:file_set) { Sufia::FileSetPresenter.new(solr_doc, nil) }
-  let(:member) { CurationConcerns::WorkShowPresenter.new(solr_doc_work, nil) }
+  let(:member) { Sufia::WorkShowPresenter.new(solr_doc_work, nil) }
   let(:solr_doc) do
     SolrDocument.new(
       resource.to_solr.merge(
         id: "test",
-        title_tesim: "Test",
+        title_tesim: ["Test"],
         thumbnail_path_ss: "/test/image/path.jpg",
         label_tesim: ["file_name.tif"]
       )
@@ -18,7 +18,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     SolrDocument.new(
       resource.to_solr.merge(
         id: "work",
-        title_tesim: "Work",
+        title_tesim: ["Work"],
         thumbnail_path_ss: "/test/image/path.jpg",
         label_tesim: ["work"]
       )
@@ -31,7 +31,7 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     SolrDocument.new(parent.to_solr.merge(id: "resource"), nil)
   end
   let(:parent_presenter) do
-    CurationConcerns::WorkShowPresenter.new(parent_solr_doc, nil, view)
+    Sufia::WorkShowPresenter.new(parent_solr_doc, nil, view)
   end
 
   let(:blacklight_config) { CatalogController.new.blacklight_config }
@@ -52,55 +52,44 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
     render
   end
 
-  it "has a bulk edit header" do
-    expect(rendered).to include "<h1>#{I18n.t('file_manager.link_text')}</h1>"
-  end
+  it "draws the page" do
+    # has a bulk edit header
+    expect(rendered).to include "<h1>#{I18n.t('sufia.file_manager.link_text')}</h1>"
 
-  it "displays each file set's label" do
+    # displays each file set's label
     expect(rendered).to have_selector "input[name='file_set[title][]'][type='text'][value='#{file_set}']"
-  end
 
-  it "displays each file set's file name" do
+    # displays each file set's file name
     expect(rendered).to have_content "file_name.tif"
-  end
 
-  it "has a link to edit each file set" do
+    # has a link to edit each file set
     expect(rendered).to have_selector('a[href="/concern/file_sets/test"]')
-  end
 
-  it "has a link back to parent" do
+    # has a link back to parent
     expect(rendered).to have_link "Test title", href: sufia_generic_work_path(id: "resource")
-  end
 
-  it "has thumbnails for each resource" do
+    # has thumbnails for each resource
     expect(rendered).to have_selector("img[src='/test/image/path.jpg']")
-  end
 
-  it "renders a form for each member" do
+    # renders a form for each member
     expect(rendered).to have_selector("#sortable form", count: members.length)
-  end
 
-  it "renders an input for titles" do
+    # renders an input for titles
     expect(rendered).to have_selector("input[name='file_set[title][]']")
-  end
 
-  it "renders a resource form for the entire resource" do
+    # renders a resource form for the entire resource
     expect(rendered).to have_selector("form#resource-form")
-  end
 
-  it "renders a hidden field for the resource form thumbnail id" do
+    # renders a hidden field for the resource form thumbnail id
     expect(rendered).to have_selector("#resource-form input[type=hidden][name='generic_work[thumbnail_id]']", visible: false)
-  end
 
-  it "renders a thumbnail field for each member" do
+    # renders a thumbnail field for each member
     expect(rendered).to have_selector("input[name='thumbnail_id']", count: members.length)
-  end
 
-  it "renders a hidden field for the resource form representative id" do
+    # renders a hidden field for the resource form representative id
     expect(rendered).to have_selector("#resource-form input[type=hidden][name='generic_work[representative_id]']", visible: false)
-  end
 
-  it "renders a representative field for each member" do
+    # renders a representative field for each member
     expect(rendered).to have_selector("input[name='representative_id']", count: members.length)
   end
 end
