@@ -20,8 +20,8 @@
       <span><%= t('sufia.admin.sidebar.workflow') %></span>
     </a>
     <ul class="collapse nav nav-pills nav-stacked" id="collapseWorkflows">
-      <li class="<%= 'active' if current_page? sufia.admin_workflow_path %>">
-        <%= link_to sufia.admin_workflow_path do %>
+      <li class="<%= 'active' if current_page? sufia.admin_workflows_path %>">
+        <%= link_to sufia.admin_workflows_path do %>
           <span class="fa fa-flag"></span> <%= t('sufia.admin.sidebar.workflow_review') %>
       <% end %>
       </li>

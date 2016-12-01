@@ -9,5 +9,9 @@ module Sufia
       @presenter = AdminDashboardPresenter.new
       @admin_set_rows = Sufia::AdminSetService.new(self).search_results_with_work_count(:read)
     end
+
+    def workflows
+      @status_list = Sufia::Workflow::StatusListService.new(current_user)
+    end
   end
 end
