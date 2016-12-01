@@ -41,5 +41,15 @@ describe "display a work as its owner" do
     it "has some social media buttons" do
       expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?text=Magnificent+splendor&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
     end
+
+    it 'exports EndNote' do
+      expect(page).to have_link 'EndNote'
+      click_link 'EndNote'
+      expect(page).to have_content '%0 Generic Work'
+      expect(page).to have_content '%T Magnificent splendor'
+      expect(page).to have_content '%R http://localhost/files/'
+      expect(page).to have_content '%~ Sufia'
+      expect(page).to have_content '%W Institution Name'
+    end
   end
 end

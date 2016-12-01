@@ -21,7 +21,8 @@ module Sufia
 
         def update_params
           params.require(:sufia_permission_template)
-                .permit(:visibility, access_grants_attributes: [:access, :agent_id, :agent_type, :id])
+                .permit(:release_date, :release_period, :release_varies, :release_embargo, :visibility,
+                        access_grants_attributes: [:access, :agent_id, :agent_type, :id])
         end
     end
   end
