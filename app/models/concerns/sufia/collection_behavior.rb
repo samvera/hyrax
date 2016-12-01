@@ -36,15 +36,14 @@ module Sufia
     # @return [Fixnum] size of collection in bytes
     # @raise [RuntimeError] unsaved record does not exist in solr
     def bytes
-      return 0 if member_ids.count == 0
+      return 0 if member_ids.empty?
 
       raise "Collection must be saved to query for bytes" if new_record?
 
       # One query per member_id because Solr is not a relational database
       sizes = member_ids.collect do |work_id|
         argz = { fl: "id, #{file_size_field}",
-                 fq: "{!join from=#{member_ids_field} to=id}id:#{work_id}"
-        }
+                 fq: "{!join from=#{member_ids_field} to=id}id:#{work_id}" }
         files = ::FileSet.search_with_conditions({}, argz)
         files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
       end

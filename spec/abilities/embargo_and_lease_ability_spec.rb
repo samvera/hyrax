@@ -8,16 +8,16 @@ describe "Ability on embargos and leases" do
 
   describe "a regular user" do
     it do
-      should_not be_able_to :index, Hydra::AccessControls::Embargo
-      should_not be_able_to :index, Hydra::AccessControls::Lease
+      is_expected.not_to be_able_to :index, Hydra::AccessControls::Embargo
+      is_expected.not_to be_able_to :index, Hydra::AccessControls::Lease
     end
   end
 
   describe "an admin user" do
     before { allow(current_user).to receive(:groups).and_return(['admin']) }
     it do
-      should be_able_to :index, Hydra::AccessControls::Embargo
-      should be_able_to :index, Hydra::AccessControls::Lease
+      is_expected.to be_able_to :index, Hydra::AccessControls::Embargo
+      is_expected.to be_able_to :index, Hydra::AccessControls::Lease
     end
   end
 end

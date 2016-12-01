@@ -9,7 +9,8 @@ module Sufia
 
         def search_path(value)
           Rails.application.routes.url_helpers.search_catalog_path(
-            search_field: search_field, q: ERB::Util.h(value))
+            search_field: search_field, q: ERB::Util.h(value)
+          )
         end
 
         def search_field

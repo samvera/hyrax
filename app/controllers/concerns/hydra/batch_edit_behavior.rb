@@ -19,8 +19,7 @@ module Hydra
       render json: { "OK" => "OK" }
     end
 
-    def edit
-    end
+    def edit; end
 
     # pulled out to allow a user to override the default redirect
     def after_update

@@ -576,75 +576,75 @@ describe FileSet do
     context '#image?' do
       context 'when image/jp2' do
         let(:mime_type) { 'image/jp2' }
-        it { should be_image }
+        it { is_expected.to be_image }
       end
       context 'when image/jpg' do
         let(:mime_type) { 'image/jpg' }
-        it { should be_image }
+        it { is_expected.to be_image }
       end
       context 'when image/png' do
         let(:mime_type) { 'image/png' }
-        it { should be_image }
+        it { is_expected.to be_image }
       end
       context 'when image/tiff' do
         let(:mime_type) { 'image/tiff' }
-        it { should be_image }
+        it { is_expected.to be_image }
       end
     end
 
     describe '#pdf?' do
       let(:mime_type) { 'application/pdf' }
-      it { should be_pdf }
+      it { is_expected.to be_pdf }
     end
 
     describe '#audio?' do
       context 'when x-wave' do
         let(:mime_type) { 'audio/x-wave' }
-        it { should be_audio }
+        it { is_expected.to be_audio }
       end
       context 'when x-wav' do
         let(:mime_type) { 'audio/x-wav' }
-        it { should be_audio }
+        it { is_expected.to be_audio }
       end
       context 'when mpeg' do
         let(:mime_type) { 'audio/mpeg' }
-        it { should be_audio }
+        it { is_expected.to be_audio }
       end
       context 'when mp3' do
         let(:mime_type) { 'audio/mp3' }
-        it { should be_audio }
+        it { is_expected.to be_audio }
       end
       context 'when ogg' do
         let(:mime_type) { 'audio/ogg' }
-        it { should be_audio }
+        it { is_expected.to be_audio }
       end
     end
 
     describe '#video?' do
       context 'should be true for avi' do
         let(:mime_type) { 'video/avi' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
 
       context 'should be true for webm' do
         let(:mime_type) { 'video/webm' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
       context 'should be true for mp4' do
         let(:mime_type) { 'video/mp4' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
       context 'should be true for mpeg' do
         let(:mime_type) { 'video/mpeg' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
       context 'should be true for quicktime' do
         let(:mime_type) { 'video/quicktime' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
       context 'should be true for mxf' do
         let(:mime_type) { 'application/mxf' }
-        it { should be_video }
+        it { is_expected.to be_video }
       end
     end
   end

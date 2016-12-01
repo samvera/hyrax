@@ -94,8 +94,7 @@ module Sufia::User
 
   # Populate user instance with attributes from remote system (e.g., LDAP)
   # There is no default implementation -- override this in your application
-  def populate_attributes
-  end
+  def populate_attributes; end
 
   def name
     display_name.titleize || raise

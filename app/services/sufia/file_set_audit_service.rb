@@ -71,7 +71,7 @@ module Sufia
         audit_results = audit_file(file).collect { |result| result['pass'] }
         # check how many non runs we had
         non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum + 1 : sum }
-        if non_runs == 0
+        if non_runs.zero?
           result = audit_results.reduce(true) { |sum, value| sum && value }
           stat_to_string(result)
         elsif non_runs < audit_results.length

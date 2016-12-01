@@ -39,7 +39,8 @@ module Sufia
       def label
         translate(
           :"blacklight.search.fields.show.#{field}",
-          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)])
+          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)]
+        )
       end
 
       private

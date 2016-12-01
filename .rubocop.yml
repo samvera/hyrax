@@ -8,7 +8,7 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'db/**/*'
-    - 'curation_concerns/db/**/*'
+    - 'curation_concerns/**/*'
     - 'script/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
@@ -41,6 +41,14 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
+Style/MethodMissing:
+  Exclude:
+    - 'app/models/concerns/sufia/file_set/characterization.rb'
+
+Style/NumericPredicate:
+  Exclude:
+    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
+
 Style/WordArray:
   Enabled: false
 
@@ -62,6 +70,7 @@ Style/SingleLineBlockParams:
 Style/ZeroLengthPredicate:
   Exclude:
     - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
+
 Rails:
   Enabled: true
 
@@ -69,11 +78,17 @@ Rails/OutputSafety:
   Exclude:
     - 'spec/views/my/_list_works.html.erb_spec.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
+    - 'app/helpers/sufia/collections_helper.rb'
     - 'app/helpers/sufia/content_block_helper_behavior.rb'
     - 'app/builders/sufia/form_builder.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/apa_formatter.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/chicago_formatter.rb'
     - 'app/helpers/sufia/citations_behaviors/formatters/mla_formatter.rb'
+    - 'app/presenters/sufia/presents_attributes.rb'
+    - 'app/renderers/sufia/renderers/attribute_renderer.rb'
+
+Rails/DynamicFindBy:
+  Enabled: false
 
 RSpec/DescribeClass:
   Exclude:

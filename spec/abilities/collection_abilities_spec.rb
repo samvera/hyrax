@@ -17,31 +17,31 @@ describe 'User' do
     describe 'the collection creator' do
       let(:current_user) { creating_user }
       it do
-        should be_able_to(:create, ::Collection.new)
-        should be_able_to(:create, ::Collection)
-        should be_able_to(:read, collection)
-        should be_able_to(:update, collection)
-        should be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:create, ::Collection.new)
+        is_expected.to be_able_to(:create, ::Collection)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:update, collection)
+        is_expected.to be_able_to(:destroy, collection)
       end
     end
 
     describe 'another authenticated user' do
       it do
-        should be_able_to(:create, ::Collection.new)
-        should be_able_to(:create, ::Collection)
-        should_not be_able_to(:read, collection)
-        should_not be_able_to(:update, collection)
-        should_not be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:create, ::Collection.new)
+        is_expected.to be_able_to(:create, ::Collection)
+        is_expected.not_to be_able_to(:read, collection)
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:destroy, collection)
       end
     end
 
     describe 'a nil user' do
       let(:current_user) { nil }
       it do
-        should_not be_able_to(:create, ::Collection.new)
-        should_not be_able_to(:read, collection)
-        should_not be_able_to(:update, collection)
-        should_not be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:create, ::Collection.new)
+        is_expected.not_to be_able_to(:read, collection)
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:destroy, collection)
       end
     end
   end

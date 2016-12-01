@@ -205,7 +205,7 @@ module Sufia
           )
         end
 
-        where_builder = -> (responsibility) { responsibility[:agent_id].in(user_agent_contraints) }
+        where_builder = ->(responsibility) { responsibility[:agent_id].in(user_agent_contraints) }
 
         entity_specific_joins = join_builder.call(entity_responsibilities)
         workflow_specific_joins = join_builder.call(workflow_responsibilities)

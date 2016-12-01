@@ -21,8 +21,7 @@ module Sufia
       let(:sipity_entity) do
         Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/1',
                                workflow: sipity_workflow,
-                               workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow)
-                              )
+                               workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow))
       end
       let(:sipity_workflow) { Sipity::Workflow.first }
 

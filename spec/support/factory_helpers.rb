@@ -18,8 +18,7 @@ module Sufia
                  original_checksum: opts.fetch(:original_checksum, []),
                  digest:            opts.fetch(:digest, []),
                  duration:          opts.fetch(:duration, []),
-                 sample_rate:       opts.fetch(:sample_rate, [])
-                )
+                 sample_rate:       opts.fetch(:sample_rate, []))
     end
   end
 end

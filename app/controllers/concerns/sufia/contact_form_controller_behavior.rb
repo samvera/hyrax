@@ -5,8 +5,7 @@ module Sufia
       before_action :build_contact_form
     end
 
-    def new
-    end
+    def new; end
 
     def create
       # not spam and a valid form
@@ -29,8 +28,7 @@ module Sufia
     # Override this method if you want to perform additional operations
     # when a email is successfully sent, such as sending a confirmation
     # response to the user.
-    def after_deliver
-    end
+    def after_deliver; end
 
     protected
 

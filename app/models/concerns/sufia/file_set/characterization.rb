@@ -40,8 +40,11 @@ module Sufia
           []
         end
 
-        def mime_type
+        def respond_to_missing?(_method_name, _include_private = false)
+          super
         end
+
+        def mime_type; end
       end
     end
   end

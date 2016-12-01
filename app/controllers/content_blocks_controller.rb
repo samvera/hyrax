@@ -3,8 +3,7 @@ class ContentBlocksController < ApplicationController
   before_action :load_featured_researchers, only: :index
   authorize_resource only: :index
 
-  def index
-  end
+  def index; end
 
   def create
     @content_block.save

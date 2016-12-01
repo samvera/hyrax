@@ -44,8 +44,7 @@ module Sufia
           text
         end
 
-        def format_date(pub_date)
-        end
+        def format_date(pub_date); end
 
         def format_title(title_info)
           return "" if title_info.blank?

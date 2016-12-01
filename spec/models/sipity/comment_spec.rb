@@ -7,10 +7,16 @@ module Sipity
       its(:column_names) { is_expected.to include('comment') }
     end
 
-    subject { described_class.new }
-    it 'will expose #name_of_commentor' do
-      expect(subject).to receive_message_chain(:agent, :proxy_for, :to_s).and_return('Hiya')
-      expect(subject.name_of_commentor).to eq('Hiya')
+    describe '#name_of_commentor' do
+      let(:instance) { described_class.new }
+      subject { instance.name_of_commentor }
+      let(:agent) { instance_double(Agent, proxy_for: user) }
+      let(:user) { instance_double(User, to_s: 'Hiya') }
+
+      before do
+        allow(instance).to receive(:agent).and_return(agent)
+      end
+      it { is_expected.to eq('Hiya') }
     end
   end
 end

@@ -10,7 +10,8 @@ module Sufia
       @lock_manager ||= LockManager.new(
         Sufia.config.lock_time_to_live,
         Sufia.config.lock_retry_count,
-        Sufia.config.lock_retry_delay)
+        Sufia.config.lock_retry_delay
+      )
     end
   end
 end

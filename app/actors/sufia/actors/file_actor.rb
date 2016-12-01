@@ -24,7 +24,8 @@ module Sufia
           file_set,
           working_file(file),
           user,
-          ingest_options(file))
+          ingest_options(file)
+        )
         true
       end
 

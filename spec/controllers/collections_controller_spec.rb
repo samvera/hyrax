@@ -105,8 +105,7 @@ describe CollectionsController do
         expect do
           put :update, params: { id: collection,
                                  collection: { members: 'add' },
-                                 batch_document_ids: [asset3.id]
-                               }
+                                 batch_document_ids: [asset3.id] }
         end.to change { collection.reload.members.size }.by(1)
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
         expect(assigns[:collection].members).to match_array [asset1, asset2, asset3]
@@ -117,8 +116,7 @@ describe CollectionsController do
         expect do
           put :update, params: { id: collection,
                                  collection: { members: 'remove' },
-                                 batch_document_ids: [asset2]
-                               }
+                                 batch_document_ids: [asset2] }
         end.to change { collection.reload.members.size }.by(-1)
         expect(assigns[:collection].members).to match_array [asset1]
       end

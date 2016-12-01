@@ -30,7 +30,8 @@ module Sufia
           WorkRelation.new.search_with_conditions(
             { actionable_workflow_roles_ssim: actionable_roles },
             fl: 'id title_tesim has_model_ssim, workflow_state_name_ssim',
-            rows: 1000)
+            rows: 1000
+          )
         end
 
         # @return [Array<String>] the list of workflow-role combinations this user has

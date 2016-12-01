@@ -39,8 +39,7 @@ describe Sufia::FileSetsController do
                                                files: [file],
                                                title: ['test title'],
                                                visibility: 'restricted'
-                                             }
-                                           }
+                                             } }
           expect(response).to be_success
           expect(flash[:error]).to be_nil
         end
@@ -52,8 +51,7 @@ describe Sufia::FileSetsController do
           post :create, xhr: true, params: { parent_id: parent,
                                              file_set: { files: ['hello'] },
                                              permission: { group: { 'public' => 'read' } },
-                                             terms_of_service: '1'
-                                            }
+                                             terms_of_service: '1' }
           expect(response.status).to eq 400
           msg = JSON.parse(response.body)['message']
           expect(msg).to match(/no file for upload/i)

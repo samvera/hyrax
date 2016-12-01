@@ -30,8 +30,7 @@ module Sufia
     end
 
     # routed to /files/new
-    def new
-    end
+    def new; end
 
     # routed to /files/:id/edit
     def edit
@@ -93,8 +92,7 @@ module Sufia
     end
 
     # routed to /files/:id/citation
-    def citation
-    end
+    def citation; end
 
     # This allows us to use the templates in curation_concerns/file_sets
     def self.local_prefixes
@@ -199,7 +197,8 @@ module Sufia
 
       def file_set_params
         params.require(:file_set).permit(
-          :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo, :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :visibility, title: [])
+          :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo, :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :visibility, title: []
+        )
       end
 
       def empty_file?(file)

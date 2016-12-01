@@ -6,7 +6,6 @@ module Sufia
       @operations = @operations.where(parent_id: nil)
     end
 
-    def show
-    end
+    def show; end
   end
 end

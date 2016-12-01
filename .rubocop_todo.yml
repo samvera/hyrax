@@ -1,4 +1,15 @@
 require: rubocop-rspec
+Metrics/BlockLength:
+  Exclude:
+    - 'app/controllers/concerns/sufia/collections_controller_behavior.rb'
+    - 'app/models/concerns/sufia/basic_metadata.rb'
+    - 'app/services/sufia/workflow/workflow_schema.rb'
+    - 'config/initializers/simple_form.rb'
+    - 'config/routes.rb'
+    - 'lib/generators/sufia/templates/catalog_controller.rb'
+    - 'lib/generators/sufia/templates/config/initializers/simple_form_bootstrap.rb'
+    - 'lib/sufia/rails/routes.rb'
+    - 'spec/**/*'
 
 Metrics/CyclomaticComplexity:
   Exclude:
@@ -92,22 +103,27 @@ RSpec/NamedSubject:
 RSpec/ExampleLength:
   Max: 7
   Exclude:
+    - 'spec/actors/sufia/actors/file_set_actor_spec.rb'
+    - 'spec/actors/sufia/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/api/items_controller_spec.rb'
     - 'spec/controllers/authorities_controller_spec.rb'
     - 'spec/controllers/collections_controller_spec.rb'
-    - 'spec/controllers/curation_concerns/file_sets_controller_spec.rb'
     - 'spec/controllers/my/highlights_controller_spec.rb'
-    - 'spec/controllers/curation_concerns/generic_works_controller_spec.rb'
     - 'spec/controllers/stats_controller_spec.rb'
     - 'spec/controllers/sufia/batch_uploads_controller_spec.rb'
+    - 'spec/controllers/sufia/file_sets_controller_spec.rb'
+    - 'spec/controllers/sufia/generic_works_controller_spec.rb'
     - 'spec/controllers/transfers_controller_spec.rb'
     - 'spec/controllers/users_controller_spec.rb'
     - 'spec/forms/sufia/forms/collection_form_spec.rb'
     - 'spec/forms/sufia/forms/batch_edit_form_spec.rb'
     - 'spec/forms/sufia/forms/batch_upload_form_spec.rb'
+    - 'spec/forms/sufia/forms/file_set_edit_form_spec.rb'
     - 'spec/features/**/*'
-    - 'spec/helpers/sufia_helper_spec.rb'
+    - 'spec/helpers/sufia/charts_helper_spec.rb'
     - 'spec/helpers/dashboard_helper_spec.rb'
+    - 'spec/helpers/sufia_helper_spec.rb'
+    - 'spec/indexers/sufia/file_set_indexer_spec.rb'
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'
     - 'spec/jobs/content_update_event_job_spec.rb'
@@ -116,16 +132,30 @@ RSpec/ExampleLength:
     - 'spec/jobs/content_depositor_change_event_job_spec.rb'
     - 'spec/jobs/content_deposit_event_job_spec.rb'
     - 'spec/jobs/content_delete_event_job_spec.rb'
+    - 'spec/jobs/ingest_file_job_spec.rb'
     - 'spec/lib/sufia/resource_sync/capability_list_writer_spec.rb'
-    - 'spec/models/generic_work_spec.rb'
+    - 'spec/models/checksum_audit_log_spec.rb'
     - 'spec/models/featured_work_spec.rb'
+    - 'spec/models/file_set_spec.rb'
+    - 'spec/models/generic_work_spec.rb'
     - 'spec/services/sufia/actor_factory_spec.rb'
+    - 'spec/services/sufia/graph_exporter_spec.rb'
     - 'spec/services/sufia/user_stat_importer_spec.rb'
-    - 'spec/views/catalog/_index_list_default.html.erb_spec.rb'
-    - 'spec/views/collections/_form.html.erb_spec.rb'
+    - 'spec/services/sufia/workflow/permission_generator_spec.rb'
+    - 'spec/services/sufia/workflow/permission_query_spec.rb'
+    - 'spec/services/sufia/workflow/state_machine_generator_spec.rb'
+    - 'spec/services/sufia/workflow/workflow_importer_spec.rb'
+    - 'spec/views/**/*'
 
 RSpec/VerifiedDoubles:
   Enabled: false
+RSpec/SubjectStub:
+  Exclude:
+    - 'spec/actors/sufia/actors/generic_work_actor_spec.rb'
+    - 'spec/controllers/sufia/file_sets_controller_spec.rb'
+    - 'spec/models/file_set_spec.rb'
+    - 'spec/models/sufia/work_behavior_spec.rb'
+    - 'spec/search_builder/sufia/file_set_search_builder_spec.rb'
 
 RSpec/AnyInstance:
   Exclude:
@@ -138,7 +168,6 @@ RSpec/AnyInstance:
     - 'spec/controllers/downloads_controller_spec.rb'
     - 'spec/controllers/mailbox_controller_spec.rb'
     - 'spec/controllers/stats_controller_spec.rb'
-    - 'spec/controllers/curation_concerns/file_sets_controller_spec.rb'
     - 'spec/controllers/users_controller_spec.rb'
     - 'spec/controllers/transfers_controller_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'

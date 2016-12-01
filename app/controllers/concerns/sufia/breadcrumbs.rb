@@ -26,11 +26,9 @@ module Sufia
     end
 
     # Override these in your controller
-    def add_breadcrumb_for_controller
-    end
+    def add_breadcrumb_for_controller; end
 
     # Override these in your controller
-    def add_breadcrumb_for_action
-    end
+    def add_breadcrumb_for_action; end
   end
 end
