@@ -42,6 +42,6 @@ class AuditJob < ActiveJob::Base
   private
 
     def logger
-      ActiveFedora::Base.logger || CurationConcerns::NullLogger.new
+      ActiveFedora::Base.logger
     end
 end
