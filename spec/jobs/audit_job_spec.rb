@@ -6,7 +6,7 @@ describe AuditJob do
   let(:file) do
     FileSet.create do |file|
       file.apply_depositor_metadata(user)
-      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
+      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
     end
   end
   let(:file_id) { file.original_file.id }
