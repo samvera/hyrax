@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe RoleMapper do
-  before do
-    allow(Devise).to receive(:authentication_keys).and_return(['uid'])
-  end
-
   it "defines the 4 roles" do
     expect(RoleMapper.role_names.sort).to eq %w(admin_policy_object_editor archivist donor patron researcher)
   end
@@ -51,11 +47,16 @@ describe RoleMapper do
       expect(RoleMapper.roles('archivist2@example.com')).to eq ['archivist']
     end
 
-    it "doesn't change its response when it's called repeatedly" do
-      u = User.new(:uid=>'leland_himself@example.com')
-      allow(u).to receive(:new_record?).and_return(false)
-      expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron']
-      expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron']
+    context "when called with a user instance" do
+      let(:user) { User.new(email: 'leland_himself@example.com') }
+      before do
+        allow(user).to receive(:new_record?).and_return(false)
+      end
+
+      it "doesn't change its response when it's called repeatedly" do
+        expect(RoleMapper.roles(user).sort).to eq ['archivist', 'donor', 'patron']
+        expect(RoleMapper.roles(user).sort).to eq ['archivist', 'donor', 'patron']
+      end
     end
 
     it "returns an empty array if there are no roles" do
