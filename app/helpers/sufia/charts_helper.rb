@@ -13,7 +13,7 @@ module Sufia
     #     "Second" => 4
     #   }
     def hash_to_chart(data)
-      data = ::CurationConcerns::ChartData.new(data)
+      data = ChartData.new(data)
       {
         drilldown: { series: data.drilldown },
         series: data.series

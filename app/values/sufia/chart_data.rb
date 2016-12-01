@@ -1,4 +1,4 @@
-module CurationConcerns
+module Sufia
   class ChartData
     attr_reader :data
     def initialize(data)
