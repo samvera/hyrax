@@ -118,7 +118,7 @@ Sufia 7.x requires the following software to work:
 1. [FITS](#characterization) version 0.8.x (0.8.5 is known to be good)
 1. [LibreOffice](#derivatives)
 
-**NOTE: If you do not already have Solr and Fedora instances you can use in your development environment, you may use hydra-jetty (instructions are provided below to get you up and running quickly and with minimal hassle).**
+**NOTE: The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
 
