@@ -81,6 +81,7 @@ RSpec/DescribeClass:
     - 'spec/config/sufia_events_spec.rb'
     - 'spec/conversions/**/*'
     - 'spec/features/**/*'
+    - 'spec/inputs/**/*'
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/tasks/rake_spec.rb'
     - 'spec/views/**/*'

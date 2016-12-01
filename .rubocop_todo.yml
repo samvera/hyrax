@@ -63,7 +63,7 @@ Metrics/MethodLength:
     - 'lib/sufia/arkivo/metadata_munger.rb'
     - 'lib/sufia/configuration.rb'
     - 'lib/sufia/rails/routes.rb'
-    - 'spec/support/*'
+    - 'spec/support/**/*'
 
 
 

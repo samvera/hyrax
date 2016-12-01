@@ -42,6 +42,7 @@ require 'support/factory_helpers'
 require 'support/rake'
 require 'support/matchers/api_responses'
 require 'support/matchers/response_matchers'
+require 'support/input_support'
 require 'webmock/rspec'
 WebMock.allow_net_connect!
 
@@ -184,6 +185,7 @@ RSpec.configure do |config|
   config.after(:each, type: :feature) { Warden.test_reset! }
 
   config.include Capybara::RSpecMatchers, type: :input
+  config.include InputSupport, type: :input
   config.include FactoryGirl::Syntax::Methods
 
   config.infer_spec_type_from_file_location!

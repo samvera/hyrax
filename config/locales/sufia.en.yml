@@ -494,17 +494,23 @@ en:
 
   simple_form:
     labels:
-      collection:
-        total_items:      "Total Items"
-        size:             "Size"
-        based_near:       "Location"
-        description:      "Abstract or Summary"
-        keyword:          "Keyword"
-        date_created:     "Date Created"
-        related_url:      "Related URL"
-        files:            "Upload a new version of this file from your computer"
-        collection_ids:   "Add as member of collection"
-        admin_set_id:     "Add as member of administrative set"
+      defaults:
+        admin_set_id:              "Add as member of administrative set"
+        based_near:                "Location"
+        collection_ids:            "Add as member of collection"
+        date_created:              "Date Created"
+        description:               "Abstract or Summary"
+        embargo_release_date:      'until'
+        files:                     'Upload a file'
+        keyword:                   "Keyword"
+        lease_expiration_date:     'until'
+        related_url:               "Related URL"
+        size:                      "Size"
+        total_items:               "Total Items"
+        visibility_during_embargo: 'Restricted to'
+        visibility_after_embargo:  'then open it up to'
+        visibility_during_lease:   'Is available for'
+        visibility_after_lease:    'then restrict it to'
     hints:
       collection:
         resource_type: "Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
