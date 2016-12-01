@@ -21,7 +21,7 @@ RSpec.describe Sufia::WorkflowPresenter, no_clean: true do
 
     subject { presenter.actions }
     it "is an Array of Sipity::Action#name and translated names" do
-      allow(I18n).to receive(:t).with('curation_concerns.workflow.testing.complete', default: 'Complete').and_return("Approve")
+      allow(I18n).to receive(:t).with('sufia.workflow.testing.complete', default: 'Complete').and_return("Approve")
       is_expected.to eq [['complete', 'Approve']]
     end
   end

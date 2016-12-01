@@ -550,6 +550,9 @@ en:
         class: "label-danger"
     work:
       browse_view: "Browse View"
+    workflow:
+      default:
+        deposit: "Deposit"
     works:
       new:
         header: "Add New %{type}"

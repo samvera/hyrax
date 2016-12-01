@@ -1,6 +1,6 @@
 module Sufia::TitleHelper
   def application_name
-    t('curation_concerns.product_name', default: super)
+    t('sufia.product_name', default: super)
   end
 
   def construct_page_title(*elements)

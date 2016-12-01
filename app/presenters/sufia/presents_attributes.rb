@@ -64,7 +64,7 @@ module Sufia
       end
 
       def microdata_type_key
-        "curation_concerns.schema_org.resource_type.#{human_readable_type}"
+        "sufia.schema_org.resource_type.#{human_readable_type}"
       end
   end
 end

@@ -104,7 +104,7 @@ module Sufia
         if !file
           render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
         elsif empty_file?(file)
-          render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('curation_concerns.api.unprocessable_entity.empty_file') })
+          render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('sufia.api.unprocessable_entity.empty_file') })
         else
           process_file(file)
         end

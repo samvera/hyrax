@@ -31,7 +31,7 @@ module Sufia
     private
 
       def action_label(action)
-        I18n.t("curation_concerns.workflow.#{action.workflow.name}.#{action.name}", default: action.name.titleize)
+        I18n.t("sufia.workflow.#{action.workflow.name}.#{action.name}", default: action.name.titleize)
       end
 
       def sipity_entity
