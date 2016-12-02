@@ -6,10 +6,16 @@ describe Sufia::SelectTypeListPresenter do
 
   describe "#many?" do
     subject { instance.many? }
-    it { is_expected.to be false }
 
-    context "if user is nil" do
+    context "if authorized_models returns one" do
+      before do
+        allow(instance).to receive(:authorized_models).and_return([double])
+      end
       it { is_expected.to be false }
+
+      context "if user is nil" do
+        it { is_expected.to be false }
+      end
     end
 
     context "if authorized_models returns more than one" do
