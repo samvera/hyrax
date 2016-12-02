@@ -14,6 +14,10 @@ describe Sufia::MySharesSearchBuilder do
 
   before do
     allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"])
+
+    # This prevents any generated classes from interfering with this test:
+    allow(builder).to receive(:work_classes).and_return([GenericWork])
+
     allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
       .with(depositor: me.user_key)
       .and_return("depositor")
