@@ -1,0 +1,36 @@
+<div class="panel panel-default" id="activity">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.user_activity") %></h3>
+  </div>
+  <div class="panel-body">
+    <%= render_recent_activity %>
+  </div>
+</div>
+
+<div class="panel panel-default" id="notifications">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.user_notifications") %></h3>
+  </div>
+  <div class="panel-body">
+    <%= render_recent_notifications %>
+    <%= link_to_additional_notifications %>
+  </div>
+</div>
+
+<div class="panel panel-default" id="proxy_management">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.manage_proxies") %></h3>
+  </div>
+  <div class="panel-body">
+    <%= render 'sufia/dashboard/_index_partials/proxy_rights', user: current_user %>
+  </div>
+</div>
+
+<div class="panel panel-default" id="transfers">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.transfer_of_ownership") %></h3>
+  </div>
+  <div class="panel-body">
+    <%= render 'sufia/dashboard/_index_partials/transfers' %>
+  </div>
+</div>

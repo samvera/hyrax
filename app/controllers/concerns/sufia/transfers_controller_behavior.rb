@@ -8,13 +8,13 @@ module Sufia
       load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
       before_action :authorize_depositor_by_id, only: [:new, :create]
       # Catch permission errors
-      # TODO: we should make this a module in Sufia
+      # TODO: Isn't this already handled?
       rescue_from CanCan::AccessDenied do |exception|
         if current_user && current_user.persisted?
           redirect_to root_url, alert: exception.message
         else
           session["user_return_to"] = request.url
-          redirect_to new_user_session_url, alert: exception.message
+          redirect_to main_app.new_user_session_url, alert: exception.message
         end
       end
     end

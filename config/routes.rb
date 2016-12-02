@@ -3,26 +3,26 @@ Sufia::Engine.routes.draw do
   resources :homepage, only: 'index'
 
   # Route the home page as the root
-  root to: 'sufia/homepage#index'
+  root to: 'homepage#index'
 
   # Handle routes that existed in Sufia < 7
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
-  resources :downloads, only: :show, controller: 'sufia/downloads'
+  resources :downloads, only: :show
 
   # ResourceSync routes
-  get '/.well-known/resourcesync' => 'sufia/resource_sync#source_description', as: :source_description
-  get '/capabilitylist' => 'sufia/resource_sync#capability_list', as: :capability_list
-  get '/resourcelist' => 'sufia/resource_sync#resource_list', as: :resource_list
+  get '/.well-known/resourcesync' => 'resource_sync#source_description', as: :source_description
+  get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list
+  get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
 
-  delete '/uploads/:id', to: 'sufia/uploads#destroy', as: :sufia_uploaded_file
-  post '/uploads', to: 'sufia/uploads#create'
+  delete '/uploads/:id', to: 'uploads#destroy', as: :sufia_uploaded_file
+  post '/uploads', to: 'uploads#create'
   # This is a hack that is required because the rails form the uploader is on
   # sets the _method parameter to patch when the work already exists.
   # Eventually it would be good to update the javascript so that it doesn't
   # submit the form, just the file and always uses POST.
-  patch '/uploads', to: 'sufia/uploads#create'
+  patch '/uploads', to: 'uploads#create'
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
   resources :batch_edits, only: [:index] do
@@ -43,10 +43,10 @@ Sufia::Engine.routes.draw do
 
   # Notifications route for catalog index view
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
-  resources :batch_uploads, only: [:new, :create], controller: 'sufia/batch_uploads'
+  resources :batch_uploads, only: [:new, :create], controller: 'batch_uploads'
 
   # File Set routes
-  namespace :sufia, path: :concern do
+  scope :concern do
     resources :file_sets, only: [] do
       resource :audit, only: [:create]
       member do
@@ -69,7 +69,7 @@ Sufia::Engine.routes.draw do
       resource :featured_work, only: [:create, :destroy]
       get :citation, controller: :citations, action: :work, as: :citations
       get :stats, controller: :stats, action: :work, as: :stats
-      post 'trophy' => 'sufia/trophies#toggle_trophy' # used by sufia/trophy.js
+      post 'trophy' => 'trophies#toggle_trophy' # used by sufia/trophy.js
     end
   end
 
@@ -90,7 +90,7 @@ Sufia::Engine.routes.draw do
   resources :users, only: [:index, :show, :edit, :update], as: :profiles
 
   resources :users, only: [] do
-    resources :operations, only: [:index, :show], controller: 'sufia/operations'
+    resources :operations, only: [:index, :show], controller: 'operations'
   end
 
   # Dashboard page
@@ -131,15 +131,15 @@ Sufia::Engine.routes.draw do
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
 
-  get 'single_use_link/show/:id' => 'sufia/single_use_links_viewer#show', as: :show_single_use_link
-  get 'single_use_link/download/:id' => 'sufia/single_use_links_viewer#download', as: :download_single_use_link
-  post 'single_use_link/generate_download/:id' => 'sufia/single_use_links#create_download', as: :generate_download_single_use_link
-  post 'single_use_link/generate_show/:id' => 'sufia/single_use_links#create_show', as: :generate_show_single_use_link
-  get 'single_use_link/generated/:id' => 'sufia/single_use_links#index', as: :generated_single_use_links
-  delete 'single_use_link/:id/delete/:link_id' => 'sufia/single_use_links#destroy', as: :delete_single_use_link
+  get 'single_use_link/show/:id' => 'single_use_links_viewer#show', as: :show_single_use_link
+  get 'single_use_link/download/:id' => 'single_use_links_viewer#download', as: :download_single_use_link
+  post 'single_use_link/generate_download/:id' => 'single_use_links#create_download', as: :generate_download_single_use_link
+  post 'single_use_link/generate_show/:id' => 'single_use_links#create_show', as: :generate_show_single_use_link
+  get 'single_use_link/generated/:id' => 'single_use_links#index', as: :generated_single_use_links
+  delete 'single_use_link/:id/delete/:link_id' => 'single_use_links#destroy', as: :delete_single_use_link
 
   # Permissions routes
-  namespace :sufia, path: :concern do
+  scope :concern do
     resources :permissions, only: [] do
       member do
         get :confirm
@@ -164,10 +164,10 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  resources :admin_sets, controller: 'sufia/admin_sets'
+  resources :admin_sets, controller: 'admin_sets'
 
-  resource :admin, controller: 'sufia/admin', only: [:show]
-  scope 'admin', module: 'sufia/admin', as: 'admin' do
+  resource :admin, controller: 'admin', only: [:show]
+  namespace :admin do
     resources :admin_sets do
       resource :permission_template
     end

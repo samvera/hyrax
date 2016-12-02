@@ -6,6 +6,7 @@ describe "sufia/homepage/_announcement.html.erb", type: :view do
   subject { rendered }
 
   before do
+    view.extend Sufia::ContentBlockHelper
     assign(:announcement_text, announcement)
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(ability).to receive(:can?).with(:update, ContentBlock).and_return(can_update_content_block)

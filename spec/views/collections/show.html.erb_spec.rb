@@ -12,6 +12,7 @@ describe 'collections/show.html.erb', type: :view do
   end
 
   before do
+    view.extend FileSetHelper
     allow(view).to receive(:blacklight_config).and_return(blacklight_config)
     allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     allow(document).to receive(:hydra_model).and_return(::Collection)

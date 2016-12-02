@@ -2,7 +2,7 @@ module Sufia
   module DashboardHelperBehavior
     def render_sent_transfers
       if @outgoing.present?
-        render partial: 'transfers/sent'
+        render 'sufia/transfers/sent'
       else
         t('sufia.dashboard.no_transfers')
       end
@@ -10,7 +10,7 @@ module Sufia
 
     def render_received_transfers
       if @incoming.present?
-        render partial: 'transfers/received'
+        render 'sufia/transfers/received'
       else
         t('sufia.dashboard.no_transfer_requests')
       end
@@ -20,7 +20,7 @@ module Sufia
       if @activity.empty?
         t('sufia.dashboard.no_activity')
       else
-        render partial: 'users/activity_log', locals: { events: @activity }
+        render 'sufia/users/activity_log', events: @activity
       end
     end
 
@@ -28,16 +28,16 @@ module Sufia
       if @notifications.empty?
         t('sufia.dashboard.no_notifications')
       else
-        render partial: "mailbox/notifications", locals: { messages: notifications_for_dashboard }
+        render "sufia/mailbox/notifications", messages: notifications_for_dashboard
       end
     end
 
     def on_the_dashboard?
-      params[:controller].match(/^dashboard|my/)
+      params[:controller].match(%r{^sufia/dashboard|sufia/my})
     end
 
     def on_my_works?
-      params[:controller].match(/^my\/works/)
+      params[:controller].match(%r{^sufia/my/works})
     end
 
     def number_of_works(user = current_user)

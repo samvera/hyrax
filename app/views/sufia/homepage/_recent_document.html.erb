@@ -1,13 +1,13 @@
     <tr>
       <td class="col-sm-2">
         <%= link_to_profile recent_document.depositor("no depositor value") %>
-        <%= link_to recent_document do %>
+        <%= link_to [main_app, recent_document] do %>
           <%= render_thumbnail_tag recent_document, { width: 45 }, false %>
         <% end %>
       </td>
       <td>
         <h3>
-          <span class="sr-only">Title</span><%= link_to truncate(recent_document.to_s, length: 28, separator: ' '), recent_document  %>
+          <span class="sr-only">Title</span><%= link_to truncate(recent_document.to_s, length: 28, separator: ' '), [main_app, recent_document] %>
         </h3>
         <p>
           <span class="sr-only">Keywords</span><%= link_to_facet_list(recent_document.keyword, 'keyword', 'no keywords specified').html_safe %>

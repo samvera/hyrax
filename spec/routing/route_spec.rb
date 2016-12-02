@@ -84,27 +84,27 @@ describe 'Routes', type: :routing do
 
   describe 'Dashboard' do
     it "routes to dashboard" do
-      expect(get: '/dashboard').to route_to(controller: 'dashboard', action: 'index')
+      expect(get: '/dashboard').to route_to(controller: 'sufia/dashboard', action: 'index')
     end
 
     it "routes to dashboard activity" do
-      expect(get: '/dashboard/activity').to route_to(controller: 'dashboard', action: 'activity')
+      expect(get: '/dashboard/activity').to route_to(controller: 'sufia/dashboard', action: 'activity')
     end
 
     it "routes to my works tab" do
-      expect(get: '/dashboard/works').to route_to(controller: 'my/works', action: 'index')
+      expect(get: '/dashboard/works').to route_to(controller: 'sufia/my/works', action: 'index')
     end
 
     it "routes to my collections tab" do
-      expect(get: '/dashboard/collections').to route_to(controller: 'my/collections', action: 'index')
+      expect(get: '/dashboard/collections').to route_to(controller: 'sufia/my/collections', action: 'index')
     end
 
     it "routes to my highlighted tab" do
-      expect(get: '/dashboard/highlights').to route_to(controller: 'my/highlights', action: 'index')
+      expect(get: '/dashboard/highlights').to route_to(controller: 'sufia/my/highlights', action: 'index')
     end
 
     it "routes to my shared tab" do
-      expect(get: '/dashboard/shares').to route_to(controller: 'my/shares', action: 'index')
+      expect(get: '/dashboard/shares').to route_to(controller: 'sufia/my/shares', action: 'index')
     end
   end
 
@@ -116,72 +116,72 @@ describe 'Routes', type: :routing do
 
   describe 'Users' do
     it 'routes to user profile' do
-      expect(get: '/users/bob135').to route_to(controller: 'users', action: 'show', id: 'bob135')
+      expect(get: '/users/bob135').to route_to(controller: 'sufia/users', action: 'show', id: 'bob135')
     end
 
     it "routes to edit profile" do
-      expect(get: '/users/bob135/edit').to route_to(controller: 'users', action: 'edit', id: 'bob135')
+      expect(get: '/users/bob135/edit').to route_to(controller: 'sufia/users', action: 'edit', id: 'bob135')
     end
 
     it "routes to update profile" do
-      expect(put: '/users/bob135').to route_to(controller: 'users', action: 'update', id: 'bob135')
+      expect(put: '/users/bob135').to route_to(controller: 'sufia/users', action: 'update', id: 'bob135')
     end
   end
 
   describe "Notifications" do
     it "has index" do
-      expect(get: '/notifications').to route_to(controller: 'mailbox', action: 'index')
+      expect(get: '/notifications').to route_to(controller: 'sufia/mailbox', action: 'index')
       expect(notifications_path).to eq '/notifications'
     end
     it "allows deleting" do
-      expect(delete: '/notifications/123').to route_to(controller: 'mailbox', action: 'destroy', id: '123')
+      expect(delete: '/notifications/123').to route_to(controller: 'sufia/mailbox', action: 'destroy', id: '123')
       expect(notification_path(123)).to eq '/notifications/123'
     end
     it "allows deleting all of them" do
-      expect(delete: '/notifications/delete_all').to route_to(controller: 'mailbox', action: 'delete_all')
+      expect(delete: '/notifications/delete_all').to route_to(controller: 'sufia/mailbox', action: 'delete_all')
       expect(delete_all_notifications_path).to eq '/notifications/delete_all'
     end
   end
 
   describe "Contact Form" do
     it "routes to new" do
-      expect(get: '/contact').to route_to(controller: 'contact_form', action: 'new')
+      expect(get: '/contact').to route_to(controller: 'sufia/contact_form', action: 'new')
     end
 
     it "routes to create" do
-      expect(post: '/contact').to route_to(controller: 'contact_form', action: 'create')
+      expect(post: '/contact').to route_to(controller: 'sufia/contact_form', action: 'create')
     end
   end
 
   describe "Dynamically edited pages" do
     it "routes to about" do
-      expect(get: '/about').to route_to(controller: 'pages', action: 'show', id: 'about_page')
+      expect(get: '/about').to route_to(controller: 'sufia/pages', action: 'show', id: 'about_page')
     end
   end
 
   describe "Static Pages" do
     it "routes to help" do
-      expect(get: '/help').to route_to(controller: 'static', action: 'help')
+      expect(get: '/help').to route_to(controller: 'sufia/static', action: 'help')
     end
 
     it "routes to terms" do
-      expect(get: '/terms').to route_to(controller: 'static', action: 'terms')
+      expect(get: '/terms').to route_to(controller: 'sufia/static', action: 'terms')
     end
 
     it "routes to zotero" do
-      expect(get: '/zotero').to route_to(controller: 'static', action: 'zotero')
+      expect(get: '/zotero').to route_to(controller: 'sufia/static', action: 'zotero')
     end
 
     it "routes to mendeley" do
-      expect(get: '/mendeley').to route_to(controller: 'static', action: 'mendeley')
+      expect(get: '/mendeley').to route_to(controller: 'sufia/static', action: 'mendeley')
     end
 
     it "routes to versions" do
-      expect(get: '/versions').to route_to(controller: 'static', action: 'versions')
+      expect(get: '/versions').to route_to(controller: 'sufia/static', action: 'versions')
     end
 
     it "*not*s route a bogus static page" do
-      expect(get: '/awesome').not_to route_to(controller: 'static', action: 'awesome')
+      expect(get: '/awesome').not_to route_to(controller: 'sufia/static', action: 'awesome')
     end
   end
 

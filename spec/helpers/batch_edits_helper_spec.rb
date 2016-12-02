@@ -1,42 +1,45 @@
 describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
+    subject { helper.render_check_all }
     before do
-      view.lookup_context.prefixes = ['my']
+      view.lookup_context.prefixes = ['sufia/my']
+      allow(helper).to receive(:params).and_return(controller: controller_path)
     end
 
     context "with my works" do
+      let(:controller_path) { "sufia/my/works" }
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/works")
-        expect(helper.render_check_all).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my shares" do
+      let(:controller_path) { "sufia/my/shares" }
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/shares")
-        expect(helper.render_check_all).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my highlights" do
+      let(:controller_path) { "sufia/my/highlights" }
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/shares")
-        expect(helper.render_check_all).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my collections" do
+      let(:controller_path) { "sufia/my/collections" }
       it "does not show the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/collections")
-        expect(helper.render_check_all).to be_nil
+        expect(subject).to be_nil
       end
     end
 
     context "with select all disabled" do
+      let(:controller_path) { "foo" }
+
       it "does not show the check all dropdown" do
-        allow(helper).to receive(:params).and_return(controller: "foo")
         assign(:disable_select_all, true)
-        expect(helper.render_check_all).to have_css("input[disabled=disabled]")
+        expect(subject).to have_css("input[disabled=disabled]")
       end
     end
   end

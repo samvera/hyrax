@@ -5,6 +5,9 @@ module Sufia
 
     included do
       before_action :build_breadcrumbs, only: :edit
+
+      # provides the help_text view method
+      helper PermissionsHelper
     end
 
     def edit

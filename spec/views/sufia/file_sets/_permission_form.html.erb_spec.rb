@@ -18,6 +18,7 @@ describe 'sufia/file_sets/_permission_form.html.erb', type: :view do
     allow(file_set).to receive(:permissions).and_return(permissions)
     allow(view).to receive(:f).and_return(form)
     view.lookup_context.prefixes.push 'sufia/base'
+    view.extend Sufia::PermissionsHelper
     render
   end
 

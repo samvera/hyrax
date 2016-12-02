@@ -10,7 +10,7 @@ describe 'collections/edit.html.erb', type: :view do
     assign(:form, form)
     assign(:response, solr_response)
     stub_template 'collections/_search_form.html.erb' => 'search form'
-    stub_template 'my/_did_you_mean.html.erb' => 'did you mean'
+    stub_template 'sufia/my/_did_you_mean.html.erb' => 'did you mean'
     stub_template 'collections/_sort_and_per_page.html.erb' => 'sort and per page'
     stub_template 'collections/_document_list.html.erb' => 'document list'
     stub_template 'collections/_paginate.html.erb' => 'paginate'

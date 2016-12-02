@@ -108,18 +108,18 @@ describe SufiaHelper, type: :helper do
 
     context "when the user is on any dashboard page" do
       it "is ignored on dashboard" do
-        allow(helper).to receive(:params).and_return(controller: "dashboard", q: "foo")
+        allow(helper).to receive(:params).and_return(controller: "sufia/dashboard", q: "foo")
         expect(helper.current_search_parameters).to be_nil
       end
 
       it "is ignored on dashboard works, collections, highlights and shares" do
-        allow(helper).to receive(:params).and_return(controller: "my/works", q: "foo")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/works", q: "foo")
         expect(helper.current_search_parameters).to be_nil
-        allow(helper).to receive(:params).and_return(controller: "my/collections", q: "foo")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/collections", q: "foo")
         expect(helper.current_search_parameters).to be_nil
-        allow(helper).to receive(:params).and_return(controller: "my/highlights", q: "foo")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/highlights", q: "foo")
         expect(helper.current_search_parameters).to be_nil
-        allow(helper).to receive(:params).and_return(controller: "my/shares", q: "foo")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/shares", q: "foo")
         expect(helper.current_search_parameters).to be_nil
       end
     end
@@ -135,35 +135,35 @@ describe SufiaHelper, type: :helper do
 
     context "when the user is on the dashboard page" do
       it "defaults to My Works" do
-        allow(helper).to receive(:params).and_return(controller: "dashboard")
+        allow(helper).to receive(:params).and_return(controller: "sufia/dashboard")
         expect(helper.search_form_action).to eq(sufia.dashboard_works_path)
       end
     end
 
     context "when the user is on the my works page" do
       it "returns the my dashboard works path" do
-        allow(helper).to receive(:params).and_return(controller: "my/works")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/works")
         expect(helper.search_form_action).to eq(sufia.dashboard_works_path)
       end
     end
 
     context "when the user is on the my collections page" do
       it "returns the my dashboard collections path" do
-        allow(helper).to receive(:params).and_return(controller: "my/collections")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/collections")
         expect(helper.search_form_action).to eq(sufia.dashboard_collections_path)
       end
     end
 
     context "when the user is on the my highlights page" do
       it "returns the my dashboard highlights path" do
-        allow(helper).to receive(:params).and_return(controller: "my/highlights")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/highlights")
         expect(helper.search_form_action).to eq(sufia.dashboard_highlights_path)
       end
     end
 
     context "when the user is on the my shares page" do
       it "returns the my dashboard shares path" do
-        allow(helper).to receive(:params).and_return(controller: "my/shares")
+        allow(helper).to receive(:params).and_return(controller: "sufia/my/shares")
         expect(helper.search_form_action).to eq(sufia.dashboard_shares_path)
       end
     end

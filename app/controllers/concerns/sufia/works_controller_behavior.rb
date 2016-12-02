@@ -45,9 +45,9 @@ module Sufia
 
       def after_update_response
         if permissions_changed? && curation_concern.file_sets.present?
-          redirect_to sufia.confirm_access_sufia_permission_path(curation_concern)
+          redirect_to sufia.confirm_access_permission_path(curation_concern)
         elsif curation_concern.visibility_changed? && curation_concern.file_sets.present?
-          redirect_to main_app.confirm_sufia_permission_path(curation_concern)
+          redirect_to sufia.confirm_permission_path(curation_concern)
         else
           respond_to do |wants|
             wants.html { redirect_to [main_app, curation_concern] }

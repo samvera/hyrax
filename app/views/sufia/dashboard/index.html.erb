@@ -1,0 +1,10 @@
+<%= provide :page_header do %>
+    <%= render "sufia/dashboard/_index_partials/heading_greetings" %>
+    <%= render "sufia/dashboard/_index_partials/heading_actions" %>
+<% end %>
+
+<%= content_for :sidebar do %>
+  <%= render 'sufia/users/user', user: current_user %>
+<% end %>
+
+<%= render "sufia/dashboard/_index_partials/contents" %>

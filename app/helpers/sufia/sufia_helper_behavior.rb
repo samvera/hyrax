@@ -12,6 +12,7 @@ module Sufia
     include Sufia::LeaseHelper
     include Sufia::CollectionsHelper
     include Sufia::ChartsHelper
+    include Sufia::DashboardHelperBehavior
 
     def application_name
       t('sufia.product_name', default: super)
@@ -66,7 +67,7 @@ module Sufia
       if req.deleted_work? || req.canceled?
         req.to_s
       else
-        link_to(req.to_s, req.work)
+        link_to(req.to_s, [main_app, req.work])
       end
     end
 
@@ -74,7 +75,7 @@ module Sufia
     # @param field [String]
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def link_to_facet(item, field)
-      path = search_action_path(search_state.add_facet_params_and_redirect(field, item))
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(field, item))
       link_to(item, path)
     end
 
@@ -233,13 +234,13 @@ module Sufia
 
       def search_action_for_dashboard
         case params[:controller]
-        when "my/works"
+        when "sufia/my/works"
           sufia.dashboard_works_path
-        when "my/collections"
+        when "sufia/my/collections"
           sufia.dashboard_collections_path
-        when "my/shares"
+        when "sufia/my/shares"
           sufia.dashboard_shares_path
-        when "my/highlights"
+        when "sufia/my/highlights"
           sufia.dashboard_highlights_path
         else
           sufia.dashboard_works_path

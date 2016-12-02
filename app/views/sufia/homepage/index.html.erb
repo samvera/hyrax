@@ -3,7 +3,7 @@
 <% if @presenter.display_share_button? %>
   <div class="home_share_work row">
     <div class="col-sm-12 text-center">
-      <%= link_to [:new, Sufia.primary_work_type.model_name.singular_route_key],
+      <%= link_to [main_app, :new, Sufia.primary_work_type.model_name.singular_route_key],
             class: "btn btn-primary btn-lg" do %>
         <i class="glyphicon glyphicon-upload"></i> <%= t('sufia.share_button') %>
       <% end %>

@@ -1,8 +1,0 @@
-<h1>User Notifications</h1>
-<%= link_to sufia.delete_all_notifications_path,
-            method: :delete,
-            class: 'btn btn-danger pull-right',
-            title: 'Delete all user notifications' do %>
-  <i class="glyphicon glyphicon-trash"></i> Delete All
-<% end %>
-<%= render "mailbox/notifications", messages: @messages %>   

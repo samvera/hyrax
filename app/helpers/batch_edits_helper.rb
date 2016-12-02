@@ -2,13 +2,13 @@
 module BatchEditsHelper
   # Displays the delete button for batch editing
   def batch_delete
-    render '/batch_edits/delete_selected'
+    render 'sufia/batch_edits/delete_selected'
   end
 
   # Displays a "check all" button with a dropdown that has "Select None"
   # and "Select current page" actions
   def render_check_all
-    return if controller_name == "my/collections"
-    render 'batch_edits/check_all'
+    return if params[:controller] == "sufia/my/collections"
+    render 'sufia/batch_edits/check_all'
   end
 end

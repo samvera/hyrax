@@ -1,6 +1,6 @@
 module Sufia
   class Engine < ::Rails::Engine
-    engine_name 'sufia'
+    isolate_namespace Sufia
 
     # These gems must be required outside of an initializer or they don't get loaded.
     require 'awesome_nested_set'

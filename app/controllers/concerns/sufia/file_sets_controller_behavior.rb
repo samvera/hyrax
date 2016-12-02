@@ -10,6 +10,9 @@ module Sufia
       load_and_authorize_resource class: ::FileSet, except: :show
       before_action :build_breadcrumbs, only: [:show, :edit, :stats]
 
+      # provides the help_text view method
+      helper PermissionsHelper
+
       helper_method :curation_concern
       include Sufia::ParentContainer
       copy_blacklight_config_from(::CatalogController)

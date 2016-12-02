@@ -10,6 +10,13 @@ module Sufia
 
       include Sufia::Collections::AcceptsBatches
 
+      # include the render_check_all view helper method
+      helper ::BatchEditsHelper
+      # include the display_trophy_link view helper method
+      helper Sufia::TrophyHelper
+      # include the present_terms view helper method
+      helper ::FileSetHelper
+
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)
 
@@ -21,7 +28,7 @@ module Sufia
           redirect_to root_url, alert: exception.message
         else
           session['user_return_to'] = request.url
-          redirect_to new_user_session_url, alert: exception.message
+          redirect_to main_app.new_user_session_url, alert: exception.message
         end
       end
 

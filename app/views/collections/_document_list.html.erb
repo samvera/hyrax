@@ -5,8 +5,8 @@
 <% else %>
   <% @document_list = documents %>
   <% if params[:action] == "edit" %>
-    <%= render partial:'my/_index_partials/default_group', locals:{documents: documents, docs:documents} %>
+    <%= render 'sufia/my/_index_partials/default_group', documents: documents, docs: documents %>
   <% else %>
-    <%= render partial: 'show_document_list', locals:{documents: documents} %>
+    <%= render 'show_document_list', documents: documents %>
   <% end %>
 <% end %>

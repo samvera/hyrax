@@ -76,7 +76,7 @@ Rails:
 
 Rails/OutputSafety:
   Exclude:
-    - 'spec/views/my/_list_works.html.erb_spec.rb'
+    - 'spec/views/sufia/my/_list_works.html.erb_spec.rb'
     - 'app/helpers/sufia/sufia_helper_behavior.rb'
     - 'app/helpers/sufia/collections_helper.rb'
     - 'app/helpers/sufia/content_block_helper_behavior.rb'

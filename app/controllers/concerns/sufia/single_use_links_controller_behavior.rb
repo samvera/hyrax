@@ -13,7 +13,7 @@ module Sufia
           redirect_to main_app.root_url, alert: "You do not have sufficient privileges to create links to this document"
         else
           session["user_return_to"] = request.url
-          redirect_to new_user_session_url, alert: exception.message
+          redirect_to main_app.new_user_session_url, alert: exception.message
         end
       end
     end

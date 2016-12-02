@@ -5,6 +5,7 @@ describe 'collections/_show_document_list_menu.html.erb', type: :view do
     let(:ability) { instance_double("Ability") }
     let(:document) { SolrDocument.new(id: '1234') }
     before do
+      view.extend Sufia::TrophyHelper
       allow(document).to receive(:to_model).and_return(stub_model(GenericWork))
       allow(controller).to receive(:current_ability).and_return(ability)
     end
@@ -20,7 +21,7 @@ describe 'collections/_show_document_list_menu.html.erb', type: :view do
 
     it "displays the action list in a drop down for an individual work the user cannot edit" do
       allow(ability).to receive(:can?).with(:edit, document).and_return(false)
-      render('collections/show_document_list_menu.html.erb', document: document, current_user: user)
+      render('collections/show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select an action'
       expect(rendered).not_to have_content 'Edit'
       expect(rendered).not_to have_content 'Download File'

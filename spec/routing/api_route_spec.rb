@@ -20,38 +20,38 @@ describe 'routing and paths', type: :routing do
       end
 
       it 'routes POSTs to the items resource' do
-        expect(post: '/api/items').to route_to(controller: 'api/items', action: 'create', format: :json)
+        expect(post: '/api/items').to route_to(controller: 'sufia/api/items', action: 'create', format: :json)
       end
 
       it 'does not route GETs to the items resource' do
-        expect(get: '/api/items').not_to route_to(controller: 'api/items', action: 'index', format: :json)
+        expect(get: '/api/items').not_to route_to(controller: 'sufia/api/items', action: 'index', format: :json)
       end
 
       it 'does not route DELETEs to the items resource' do
-        expect(delete: '/api/items').not_to route_to(controller: 'api/items', action: 'destroy', format: :json)
+        expect(delete: '/api/items').not_to route_to(controller: 'sufia/api/items', action: 'destroy', format: :json)
       end
 
       it 'does not route PUTs to the items resource' do
-        expect(put: '/api/items').not_to route_to(controller: 'api/items', action: 'update', format: :json)
+        expect(put: '/api/items').not_to route_to(controller: 'sufia/api/items', action: 'update', format: :json)
       end
 
       it 'does not route PATCHes to the items resource' do
-        expect(patch: '/api/items').not_to route_to(controller: 'api/items', action: 'update', format: :json)
+        expect(patch: '/api/items').not_to route_to(controller: 'sufia/api/items', action: 'update', format: :json)
       end
 
       context 'with a member resource' do
         subject { "/api/items/#{item_id}" }
 
         it 'routes GETs to an item resource' do
-          expect(get: subject).to route_to(controller: 'api/items', action: 'show', id: item_id, format: :json)
+          expect(get: subject).to route_to(controller: 'sufia/api/items', action: 'show', id: item_id, format: :json)
         end
 
         it 'routes PUTs to an item resource' do
-          expect(put: subject).to route_to(controller: 'api/items', action: 'update', id: item_id, format: :json)
+          expect(put: subject).to route_to(controller: 'sufia/api/items', action: 'update', id: item_id, format: :json)
         end
 
         it 'routes DELETEs to an item resource' do
-          expect(delete: subject).to route_to(controller: 'api/items', action: 'destroy', id: item_id, format: :json)
+          expect(delete: subject).to route_to(controller: 'sufia/api/items', action: 'destroy', id: item_id, format: :json)
         end
       end
     end
@@ -59,13 +59,13 @@ describe 'routing and paths', type: :routing do
 
   describe 'Zotero' do
     it 'routes GETs to the zotero resource' do
-      expect(get: '/api/zotero').to route_to(controller: 'api/zotero', action: 'initiate')
+      expect(get: '/api/zotero').to route_to(controller: 'sufia/api/zotero', action: 'initiate')
     end
   end
 
   describe 'Zotero callbacks' do
     it 'routes GETs to the callback resource' do
-      expect(get: '/api/zotero/callback').to route_to(controller: 'api/zotero', action: 'callback')
+      expect(get: '/api/zotero/callback').to route_to(controller: 'sufia/api/zotero', action: 'callback')
     end
   end
 

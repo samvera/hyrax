@@ -14,6 +14,7 @@ module Sufia::HomepageControllerBehavior
     class_attribute :presenter_class
     self.presenter_class = Sufia::HomepagePresenter
     layout 'homepage'
+    helper Sufia::ContentBlockHelper
   end
 
   def index

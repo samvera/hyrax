@@ -1,5 +1,7 @@
 module Sufia
   class PermissionTemplate < ActiveRecord::Base
+    self.table_name = 'permission_templates'
+
     has_many :access_grants, class_name: 'Sufia::PermissionTemplateAccess'
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
