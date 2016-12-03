@@ -1,3 +1,3 @@
 module Hyrax
-  VERSION = '8.0.0.alpha'.freeze
+  VERSION = '0.0.1.alpha'.freeze
 end
