@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jcoyne85@stanford.edu", 'mjgiarlo@stanford.edu', 'cam156@psu.edu', 'matt@databindery.com', "jeremy.n.friesen@gmail.com", 'tpendragon@princeton.edu', 'escowles@ticklefish.org']
   spec.description   = 'Hyrax is a featureful Hydra front-end based on the latest and greatest Hydra software components.'
   spec.summary       = "Hyrax is a front-end based on the robust Hydra framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins."
-  spec.homepage      = "http://hyrax.io/"
+  spec.homepage      = "http://github.com/projecthydra-labs/hyrax"
 
   spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }
