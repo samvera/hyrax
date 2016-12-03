@@ -1,4 +1,4 @@
 class CollectionsController < ApplicationController
-  include Sufia::CollectionsControllerBehavior
-  include Sufia::BreadcrumbsForCollections
+  include Hyrax::CollectionsControllerBehavior
+  include Hyrax::BreadcrumbsForCollections
 end

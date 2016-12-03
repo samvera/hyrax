@@ -5,7 +5,7 @@
 
     <div class="container site-title-container">
       <div class="site-title h1" style="text-align: center;">
-        <%= render "sufia/homepage/marketing" if controller_name == 'homepage' %>
+        <%= render "hyrax/homepage/marketing" if controller_name == 'homepage' %>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
 <% end %>
 
 <% content_for(:precontainer_content) do %>
-  <%= render 'sufia/homepage/announcement' if controller_name == 'homepage' %>
+  <%= render 'hyrax/homepage/announcement' if controller_name == 'homepage' %>
 <% end %>
 
-<%= render template: 'layouts/sufia' %>
+<%= render template: 'layouts/hyrax' %>

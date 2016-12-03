@@ -1,4 +1,4 @@
-<% service = Sufia::LicenseService.new %>
+<% service = Hyrax::LicenseService.new %>
 <% record.rights.each do |r| %>
   <%= link_to_field('rights', r, service.label(r)) %> <%= iconify_auto_link(r, false) %><br />
 <% end %>

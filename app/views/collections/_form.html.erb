@@ -1,12 +1,12 @@
 <%= simple_form_for @form, html: { class: 'editor' } do |f| %>
   <div id="descriptions_display">
-    <h2 class="non lower"><%= t('sufia.collection.edit.description') %></h2>
+    <h2 class="non lower"><%= t('hyrax.collection.edit.description') %></h2>
     <div id="base-terms">
       <% f.object.primary_terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>
       <% end %>
     </div>
-    <%= link_to t('sufia.collection.edit.additional_fields'),
+    <%= link_to t('hyrax.collection.edit.additional_fields'),
             '#extended-terms',
             class: 'btn btn-default additional-fields',
             data: { toggle: 'collapse' },

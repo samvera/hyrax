@@ -37,7 +37,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   def send_request_transfer_message
     if updated_at == created_at
-      message = "#{link_to(sending_user.name, Sufia::Engine.routes.url_helpers.profile_path(sending_user.user_key))} wants to transfer a work to you. Review all <a href='#{Sufia::Engine.routes.url_helpers.transfers_path}'>transfer requests</a>"
+      message = "#{link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.profile_path(sending_user.user_key))} wants to transfer a work to you. Review all <a href='#{Hyrax::Engine.routes.url_helpers.transfers_path}'>transfer requests</a>"
       User.batch_user.send_message(receiving_user, message, "Ownership Change Request")
     else
       message = "Your transfer request was #{status}."
@@ -106,6 +106,6 @@ class ProxyDepositRequest < ActiveRecord::Base
     end
 
     def work_relation
-      Sufia::WorkRelation.new
+      Hyrax::WorkRelation.new
     end
 end

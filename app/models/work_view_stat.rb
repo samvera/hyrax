@@ -1,4 +1,4 @@
-class WorkViewStat < Sufia::Statistic
+class WorkViewStat < Hyrax::Statistic
   self.cache_column = :work_views
   self.event_type = :pageviews
 

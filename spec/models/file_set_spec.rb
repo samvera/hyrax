@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 # This tests the FileSet model that is inserted into the host app by curation_concerns:models:install
-# It includes the Sufia::FileSetBehavior module and nothing else
+# It includes the Hyrax::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
 describe FileSet do
-  include Sufia::FactoryHelpers
+  include Hyrax::FactoryHelpers
 
   let(:user) { create(:user) }
 
@@ -151,12 +151,12 @@ describe FileSet do
 
   describe '#indexer' do
     subject { described_class.indexer }
-    it { is_expected.to eq Sufia::FileSetIndexer }
+    it { is_expected.to eq Hyrax::FileSetIndexer }
 
     describe "setting" do
       before do
         class AltFile < ActiveFedora::Base
-          include Sufia::FileSetBehavior
+          include Hyrax::FileSetBehavior
         end
       end
       after do
@@ -187,7 +187,7 @@ describe FileSet do
         f.apply_depositor_metadata('mjg36')
       end
     end
-    describe 'with a video', if: Sufia.config.enable_ffmpeg do
+    describe 'with a video', if: Hyrax.config.enable_ffmpeg do
       before do
         allow(file_set).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
         file_set.save
@@ -406,7 +406,7 @@ describe FileSet do
   describe 'to_solr' do
     let(:indexer) { double(generate_solr_document: {}) }
     before do
-      allow(Sufia::FileSetIndexer).to receive(:new)
+      allow(Hyrax::FileSetIndexer).to receive(:new)
         .with(subject).and_return(indexer)
     end
 
@@ -515,8 +515,8 @@ describe FileSet do
     end
 
     context 'with noids disabled' do
-      before { Sufia.config.enable_noids = false }
-      after { Sufia.config.enable_noids = true }
+      before { Hyrax.config.enable_noids = false }
+      after { Hyrax.config.enable_noids = true }
 
       it 'does not use the noid service' do
         expect(service).not_to receive(:mint)

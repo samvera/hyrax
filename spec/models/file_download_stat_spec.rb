@@ -15,13 +15,13 @@ describe FileDownloadStat, type: :model do
 
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
-    let(:expected_path) { Rails.application.routes.url_helpers.sufia_file_set_path(file) }
+    let(:expected_path) { Rails.application.routes.url_helpers.hyrax_file_set_path(file) }
     before do
-      allow(Sufia::Analytics).to receive(:profile).and_return(profile)
+      allow(Hyrax::Analytics).to receive(:profile).and_return(profile)
     end
     context "when a profile is available" do
       let(:views) { double }
-      let(:profile) { double(sufia__download: views) }
+      let(:profile) { double(hyrax__download: views) }
       it "calls the Legato method with the correct path" do
         expect(views).to receive(:for_file).with(99)
         described_class.ga_statistics(start_date, file)
@@ -57,10 +57,10 @@ describe FileDownloadStat, type: :model do
     # results from the Legato gem.
     let(:sample_download_statistics) do
       [
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[0], totalEvents: "1"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3")
+        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[0], totalEvents: "1"),
+        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[1], totalEvents: "1"),
+        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[2], totalEvents: "2"),
+        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[3], totalEvents: "3")
       ]
     end
 

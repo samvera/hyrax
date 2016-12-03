@@ -24,24 +24,24 @@ describe DashboardHelper, type: :helper do
     end
 
     it "returns true for controllers that are part of the dashboard" do
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/works")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/works")
       expect(helper).to be_on_the_dashboard
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/collections")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/collections")
       expect(helper).to be_on_the_dashboard
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/highlights")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/highlights")
       expect(helper).to be_on_the_dashboard
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/shares")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/shares")
       expect(helper).to be_on_the_dashboard
     end
   end
 
   describe "#on_my_works" do
     it "returns false when the controller isn't my works" do
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/collections")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/collections")
       expect(helper).not_to be_on_my_works
     end
     it "returns true when the controller is my works" do
-      allow(helper).to receive(:params).and_return(controller: "sufia/my/works")
+      allow(helper).to receive(:params).and_return(controller: "hyrax/my/works")
       expect(helper).to be_on_my_works
     end
   end

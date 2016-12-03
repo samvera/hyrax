@@ -1,7 +1,7 @@
 Flipflop.configure do
   # Strategies will be used in the order listed here.
   strategy :cookie
-  strategy :active_record, class: Sufia::Feature
+  strategy :active_record, class: Hyrax::Feature
   strategy :default
 
   feature :assign_admin_set,

@@ -14,7 +14,7 @@ describe "Editing a file:", type: :feature do
 
   context 'when the user tries to update file content, but forgets to select a file:' do
     it 'shows the edit page again' do
-      visit edit_sufia_file_set_path(file_set)
+      visit edit_hyrax_file_set_path(file_set)
       click_link 'Versions'
       click_button 'Upload New Version'
       expect(page).to have_content "Edit #{file_title}"

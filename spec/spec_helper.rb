@@ -16,8 +16,8 @@ if coverage_needed?
     add_filter '/lib/generators'
     add_filter '/spec'
     add_filter '/tasks'
-    add_filter '/lib/sufia/version.rb'
-    add_filter '/lib/sufia/engine.rb'
+    add_filter '/lib/hyrax/version.rb'
+    add_filter '/lib/hyrax/engine.rb'
   end
   SimpleCov.command_name 'spec'
 end
@@ -109,7 +109,7 @@ FactoryGirl.find_definitions
 
 module EngineRoutes
   def self.included(base)
-    base.routes { Sufia::Engine.routes }
+    base.routes { Hyrax::Engine.routes }
   end
 
   def main_app

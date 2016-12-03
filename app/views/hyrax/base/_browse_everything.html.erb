@@ -1,0 +1,6 @@
+<div class="alert alert-success">
+  <%= t("hyrax.upload.cloud_timeout_message_html", contact_href: link_to(t("hyrax.upload.alert.contact_href_text"), hyrax.contact_form_index_path)) %>
+</div>
+<%= button_tag(t('hyrax.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-lg btn-success', id: "browse-btn",
+  'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
+  'data-target' => "##{f.object.persisted? ? 'edit' : 'new'}_#{f.object.model.model_name.param_key}" ) %>

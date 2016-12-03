@@ -12,7 +12,7 @@ describe 'collections/_show_descriptions.html.erb', type: :view do
 
     let(:ability) { double }
     let(:solr_document) { SolrDocument.new(collection.to_solr) }
-    let(:presenter) { Sufia::CollectionPresenter.new(solr_document, ability) }
+    let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }
 
     it "draws the metadata fields for collection" do
       render

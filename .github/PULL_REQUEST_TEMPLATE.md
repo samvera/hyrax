@@ -19,4 +19,4 @@ Changes proposed in this pull request:
 * 
 * 
 
-@projecthydra/sufia-code-reviewers
+@projecthydra/hyrax-code-reviewers

@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-describe Sufia::Ability, type: :model do
+describe Hyrax::Ability, type: :model do
   let(:ability) { Ability.new(user) }
   subject { ability }
   describe "a user with no roles" do
@@ -21,7 +21,7 @@ describe Sufia::Ability, type: :model do
     it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    it { is_expected.not_to be_able_to(:read, Sufia::Statistics) }
+    it { is_expected.not_to be_able_to(:read, Hyrax::Statistics) }
     it { is_expected.not_to be_able_to(:read, :admin_dashboard) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
   end
@@ -33,7 +33,7 @@ describe Sufia::Ability, type: :model do
     it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    it { is_expected.to be_able_to(:read, Sufia::Statistics) }
+    it { is_expected.to be_able_to(:read, Hyrax::Statistics) }
     it { is_expected.to be_able_to(:read, :admin_dashboard) }
     it { is_expected.not_to be_able_to(:manage, AdminSet) }
     it { is_expected.to be_able_to(:create, AdminSet) }

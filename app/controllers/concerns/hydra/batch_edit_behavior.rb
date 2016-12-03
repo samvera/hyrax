@@ -3,7 +3,7 @@ module Hydra
     extend ActiveSupport::Concern
 
     included do
-      include Sufia::Collections::AcceptsBatches
+      include Hyrax::Collections::AcceptsBatches
 
       before_action :filter_docs_with_access!, only: [:edit, :update, :destroy_collection]
       before_action :check_for_empty!, only: [:edit, :update, :destroy_collection]
@@ -43,7 +43,7 @@ module Hydra
     end
 
     def all
-      self.batch = Sufia::Collections::SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
+      self.batch = Hyrax::Collections::SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
       respond_to do |format|
         format.html { redirect_to edit_batch_edits_path }
         format.js { render json: batch }

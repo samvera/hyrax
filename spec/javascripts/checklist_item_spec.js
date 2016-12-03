@@ -1,5 +1,5 @@
 describe("ChecklistItem", function() {
-  var control = require('sufia/save_work/checklist_item');
+  var control = require('hyrax/save_work/checklist_item');
   var target, element = null;
 
   beforeEach(function() {

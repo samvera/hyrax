@@ -5,7 +5,7 @@ describe 'collections/show.html.erb', type: :view do
                      'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"])
   end
   let(:ability) { double }
-  let(:presenter) { Sufia::CollectionPresenter.new(document, ability) }
+  let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:blacklight_configuration_context) do
     Blacklight::Configuration::Context.new(controller)

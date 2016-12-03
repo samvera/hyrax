@@ -1,11 +1,11 @@
-Sufia::Engine.routes.draw do
+Hyrax::Engine.routes.draw do
   # Downloads controller route
   resources :homepage, only: 'index'
 
   # Route the home page as the root
   root to: 'homepage#index'
 
-  # Handle routes that existed in Sufia < 7
+  # Handle routes that existed in Hyrax < 7
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
@@ -16,7 +16,7 @@ Sufia::Engine.routes.draw do
   get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list
   get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
 
-  delete '/uploads/:id', to: 'uploads#destroy', as: :sufia_uploaded_file
+  delete '/uploads/:id', to: 'uploads#destroy', as: :hyrax_uploaded_file
   post '/uploads', to: 'uploads#create'
   # This is a hack that is required because the rails form the uploader is on
   # sets the _method parameter to patch when the work already exists.
@@ -69,7 +69,7 @@ Sufia::Engine.routes.draw do
       resource :featured_work, only: [:create, :destroy]
       get :citation, controller: :citations, action: :work, as: :citations
       get :stats, controller: :stats, action: :work, as: :stats
-      post 'trophy' => 'trophies#toggle_trophy' # used by sufia/trophy.js
+      post 'trophy' => 'trophies#toggle_trophy' # used by hyrax/trophy.js
     end
   end
 
@@ -151,10 +151,10 @@ Sufia::Engine.routes.draw do
   end
 
   # API routes
-  if Sufia.config.arkivo_api
+  if Hyrax.config.arkivo_api
     namespace :api do
-      if defined?(Sufia::ArkivoConstraint)
-        constraints Sufia::ArkivoConstraint do
+      if defined?(Hyrax::ArkivoConstraint)
+        constraints Hyrax::ArkivoConstraint do
           resources :items, except: [:index, :edit, :new], defaults: { format: :json }
         end
       end

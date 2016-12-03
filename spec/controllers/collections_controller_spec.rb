@@ -179,10 +179,10 @@ describe CollectionsController do
       end
 
       it "returns the collection and its members" do
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
         get :show, params: { id: collection }
         expect(response).to be_successful
-        expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
+        expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
@@ -191,7 +191,7 @@ describe CollectionsController do
         it "returns some works" do
           # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Third" }
-          expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
+          expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
           expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
         end
       end
@@ -200,14 +200,14 @@ describe CollectionsController do
         it 'loads the collection (paying no attention to the page param)' do
           get :show, params: { id: collection, page: '2' }
           expect(response).to be_successful
-          expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
+          expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
           expect(assigns[:presenter].to_s).to eq 'My collection'
         end
       end
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
           get :show, params: { id: collection }
           expect(response).to be_successful
         end
@@ -219,8 +219,8 @@ describe CollectionsController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
-          expect(controller).to receive(:add_breadcrumb).with('My Collections', Sufia::Engine.routes.url_helpers.dashboard_collections_path)
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path)
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -242,13 +242,13 @@ describe CollectionsController do
     it "is successful" do
       get :edit, params: { id: collection }
       expect(response).to be_success
-      expect(assigns[:form]).to be_instance_of Sufia::Forms::CollectionForm
+      expect(assigns[:form]).to be_instance_of Hyrax::Forms::CollectionForm
       expect(flash[:notice]).to be_nil
     end
 
     context "without a referer" do
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end
@@ -260,9 +260,9 @@ describe CollectionsController do
       end
 
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Sufia::Engine.routes.url_helpers.dashboard_index_path)
-        expect(controller).to receive(:add_breadcrumb).with('My Collections', Sufia::Engine.routes.url_helpers.dashboard_collections_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t("sufia.collection.browse_view"), collection_path(collection.id))
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id))
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end

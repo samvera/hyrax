@@ -1,23 +1,23 @@
-![Logo](https://raw.githubusercontent.com/projecthydra-labs/sufia.io/gh-pages/assets/images/sufia_logo_white_bg_small.png)
+![Logo](https://raw.githubusercontent.com/projecthydra-labs/hyrax.io/gh-pages/assets/images/hyrax_logo_white_bg_small.png)
 
-Code: [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
-[![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
-[![Coverage Status](https://coveralls.io/repos/github/projecthydra/sufia/badge.svg?branch=master)](https://coveralls.io/github/projecthydra/sufia?branch=master)
-[![Code Climate](https://codeclimate.com/github/projecthydra/sufia/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/sufia)
-[![Dependency Update Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
-[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra/sufia/badge)](https://dependencyci.com/github/projecthydra/sufia)
+Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
+[![Build Status](https://travis-ci.org/projecthydra/hyrax.png?branch=master)](https://travis-ci.org/projecthydra/hyrax)
+[![Coverage Status](https://coveralls.io/repos/github/projecthydra/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra/hyrax?branch=master)
+[![Code Climate](https://codeclimate.com/github/projecthydra/hyrax/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/hyrax)
+[![Dependency Update Status](https://gemnasium.com/projecthydra/hyrax.png)](https://gemnasium.com/projecthydra/hyrax)
+[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra/hyrax/badge)](https://dependencyci.com/github/projecthydra/hyrax)
 
-Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra/sufia.svg?branch=master)](https://inch-ci.org/github/projecthydra/sufia)
-[![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
+Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra/hyrax.svg?branch=master)](https://inch-ci.org/github/projecthydra/hyrax)
+[![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hyrax)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/projecthydra/sufia.png?label=ready&milestone=7.3.0&title=Ready)](https://waffle.io/projecthydra/sufia?milestone=7.3.0)
+[![Ready Tickets](https://badge.waffle.io/projecthydra/hyrax.png?label=ready&milestone=7.3.0&title=Ready)](https://waffle.io/projecthydra/hyrax?milestone=7.3.0)
 
 # Table of Contents
 
-  * [What is Sufia?](#what-is-sufia)
+  * [What is Hyrax?](#what-is-hyrax)
     * [Feature list](#feature-list)
   * [Help](#help)
   * [Getting started](#getting-started)
@@ -26,25 +26,25 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
-  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
+  * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
     * [Redis](#redis)
     * [Rails](#rails)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
-  * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
+  * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
   * [Release process](#release-process)
   * [Acknowledgments](#acknowledgments)
 
-# What is Sufia?
+# What is Hyrax?
 
-Sufia uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Sufia offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Sufia delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
+Hyrax uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Hyrax offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Hyrax delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
 
 ## Feature list
 
-Sufia has the following features:
+Hyrax has the following features:
 
 * Multiple file upload, and folder uploads (for Chrome browser only)
 * Flexible user- and group-based access controls
@@ -86,9 +86,9 @@ Sufia has the following features:
 * Virus detection for uploaded files
 * Citation formatting suggestions
 
-See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
+See the [Hyrax Management Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
 
-For non-technical documentation about Sufia, see its [documentation site](http://sufia.io/).
+For non-technical documentation about Hyrax, see its [documentation site](http://hyrax.io/).
 
 # Help
 
@@ -96,19 +96,19 @@ If you have questions or need help, please email [the Hydra community tech list]
 
 # Getting started
 
-This document contains instructions specific to setting up an app with __Sufia
+This document contains instructions specific to setting up an app with __Hyrax
 v7.2.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
-Prerequisites are required for both Creating a Sufia\-based app and Contributing new features to Sufia.
+Prerequisites are required for both Creating a Hyrax\-based app and Contributing new features to Hyrax.
 After installing the Prerequisites:
- * If you would like to create a new application using Sufia follow the instructions for [Creating a Sufia\-based app](#creating-a-sufia-based-app).
- * If you would like to create new features for Sufia follow the instructions for [Contributing](#contributing) and [Development](#development).
+ * If you would like to create a new application using Hyrax follow the instructions for [Creating a Hyrax\-based app](#creating-a-hyrax-based-app).
+ * If you would like to create new features for Hyrax follow the instructions for [Contributing](#contributing) and [Development](#development).
 
 ## Prerequisites
 
-Sufia 7.x requires the following software to work:
+Hyrax 7.x requires the following software to work:
 
 1. Solr version >= 5.x (tested up to 6.2.0)
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.6.0)
@@ -125,9 +125,9 @@ Sufia 7.x requires the following software to work:
 1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS (see above to pick a known working version) & unpack it somewhere on your machine.
 1. Mark fits.sh as executable: `chmod a+x fits.sh`
 1. Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
-1. Give your Sufia app access to FITS by:
+1. Give your Hyrax app access to FITS by:
     1. Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), **OR**
-    1. Changing `config/initializers/sufia.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
+    1. Changing `config/initializers/hyrax.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
 
 ### Derivatives
 
@@ -135,11 +135,11 @@ Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns 
 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
 
-**NOTE**: derivatives are served from the filesystem in Sufia 7, which is a difference from earlier versions of Sufia.
+**NOTE**: derivatives are served from the filesystem in Hyrax 7, which is a difference from earlier versions of Hyrax.
 
 ## Environments
 
-Note here that the following commands assume you're setting up Sufia in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
+Note here that the following commands assume you're setting up Hyrax in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
 
 ## Ruby
 
@@ -147,11 +147,11 @@ First, you'll need a working Ruby installation. You can install this via your op
 
 We recommend either Ruby 2.3 or the latest 2.2 version.
 
-# Creating a Sufia-based app
+# Creating a Hyrax-based app
 
 ## Redis
 
-[Redis](http://redis.io/) is a key-value store that Sufia uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
+[Redis](http://redis.io/) is a key-value store that Hyrax uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
 
 Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
 
@@ -162,35 +162,35 @@ Generate a new Rails application. We recommend the latest Rails 5.0 or 4.2 relea
 ```
 # If you don't already have Rails at your disposal...
 gem install rails -v 5.0.0.1
-rails new my_app -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb
+rails new my_app -m https://raw.githubusercontent.com/projecthydra/hyrax/master/template.rb
 ```
 
-Generating a new Rails application using Sufia's template above takes cares of a number of steps for you, including:
+Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
 
-* Adding Sufia (and any of its dependencies) to your application `Gemfile`, to declare that Sufia is a dependency of your application
-* Running `bundle install`, to install Sufia and its dependencies
-* Running Sufia's install generator, to add a number of files that Sufia requires within your Rails app, including e.g. database migrations
-* Loading all of Sufia's database migrations into your application's database
+* Adding Hyrax (and any of its dependencies) to your application `Gemfile`, to declare that Hyrax is a dependency of your application
+* Running `bundle install`, to install Hyrax and its dependencies
+* Running Hyrax's install generator, to add a number of files that Hyrax requires within your Rails app, including e.g. database migrations
+* Loading all of Hyrax's database migrations into your application's database
 
 ## Generate a primary work type
 
-While earlier versions of Sufia came with a pre-defined object model, Sufia 7.x and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
+While earlier versions of Hyrax came with a pre-defined object model, Hyrax 7.x and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
 
-Pass a (CamelCased) model name to Sufia's work generator to get started, e.g.:
+Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
 ```
-rails generate sufia:work Work
+rails generate hyrax:work Work
 ```
 
 or
 
 ```
-rails generate sufia:work MovingImage
+rails generate hyrax:work MovingImage
 ```
 
 ## Start servers
 
-To test-drive your new Sufia application in development mode, spin up the servers that Sufia needs (Solr, Fedora, and Rails):
+To test-drive your new Hyrax application in development mode, spin up the servers that Hyrax needs (Solr, Fedora, and Rails):
 
 ```
 rake hydra:server
@@ -198,9 +198,9 @@ rake hydra:server
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
 
-# Managing a Sufia-based app
+# Managing a Hyrax-based app
 
-The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Sufia application, including guidance specific to:
+The [Hyrax Management Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
 * Production implementations
 * Configuration of background workers
@@ -211,31 +211,31 @@ The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Ma
 
 # License
 
-Sufia is available under [the Apache 2.0 license](LICENSE.md).
+Hyrax is available under [the Apache 2.0 license](LICENSE.md).
 
 # Contributing
 
-We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](./.github/CONTRIBUTING.md).
+We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/sufia). There are other ways to help, too.
+If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/hyrax). There are other ways to help, too.
 
-* [Contribute a user story](https://github.com/projecthydra/sufia/issues/new).
-* Help us improve [Sufia's test coverage](https://coveralls.io/r/projecthydra/sufia) or [documentation coverage](https://inch-ci.org/github/projecthydra/sufia).
-* Refactor away [code smells](https://codeclimate.com/github/projecthydra/sufia).
+* [Contribute a user story](https://github.com/projecthydra/hyrax/issues/new).
+* Help us improve [Hyrax's test coverage](https://coveralls.io/r/projecthydra/hyrax) or [documentation coverage](https://inch-ci.org/github/projecthydra/hyrax).
+* Refactor away [code smells](https://codeclimate.com/github/projecthydra/hyrax).
 
 # Development
 
-The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Sufia itself, not an application that uses Sufia.
+The [Hyrax Development Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
 
 # Release process
 
-See the [release management process](https://github.com/projecthydra/sufia/wiki/Release-management-process).
+See the [release management process](https://github.com/projecthydra/hyrax/wiki/Release-management-process).
 
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
 [Project Hydra website](http://projecthydra.org/).
 
-![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
+![Project Hydra Logo](http://hyrax.io/assets/images/hydra_logo.png)
 
-The Sufia logo uses the Hong Kong Hustle font, thanks to [Iconian's](http://www.iconian.com/) non-commercial use policy.
+The Hyrax logo uses the Hong Kong Hustle font, thanks to [Iconian's](http://www.iconian.com/) non-commercial use policy.

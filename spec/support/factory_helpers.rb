@@ -1,4 +1,4 @@
-module Sufia
+module Hyrax
   module FactoryHelpers
     module_function
 

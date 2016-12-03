@@ -1,5 +1,5 @@
 describe 'RelationshipsTable', ->
-  control = require('sufia/relationships/table')
+  control = require('hyrax/relationships/table')
   form = null
   element = null
   btn_remove = null

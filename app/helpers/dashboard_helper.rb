@@ -1,3 +1,3 @@
 module DashboardHelper
-  include Sufia::DashboardHelperBehavior
+  include Hyrax::DashboardHelperBehavior
 end

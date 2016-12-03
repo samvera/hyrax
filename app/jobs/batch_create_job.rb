@@ -11,7 +11,7 @@ class BatchCreateJob < ActiveJob::Base
   # @param [User] user
   # @param [Array<String>] titles
   # @param [Array<String>] resource_types
-  # @param [Array<Sufia::UploadedFile>] uploaded_files
+  # @param [Array<Hyrax::UploadedFile>] uploaded_files
   # @param [Hash] attributes attributes to apply to all works
   # @param [BatchCreateOperation] log
   def perform(user, titles, resource_types, uploaded_files, attributes, log)
@@ -33,7 +33,7 @@ class BatchCreateJob < ActiveJob::Base
                                       title: title,
                                       resource_type: resource_type)
         model = model_to_create(attributes)
-        child_log = Sufia::Operation.create!(user: user,
+        child_log = Hyrax::Operation.create!(user: user,
                                              operation_type: "Create Work",
                                              parent: log)
         CreateWorkJob.perform_later(user, model, attributes, child_log)
@@ -44,6 +44,6 @@ class BatchCreateJob < ActiveJob::Base
     # @param [Hash] attributes
     # @return String the model to create
     def model_to_create(attributes)
-      Sufia.config.model_to_create.call(attributes)
+      Hyrax.config.model_to_create.call(attributes)
     end
 end

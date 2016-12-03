@@ -1,0 +1,23 @@
+<div class="clearfix proxy-rights">
+<div class="row">
+  <div class="col-xs-6 proxy-search">
+    <h4><%= t("hyrax.dashboard.authorize_proxies") %></h4>
+    <label class="sr-only" for="user"><%= t("hyrax.dashboard.proxy_user") %></label>
+    <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
+  </div>
+
+  <div class="col-xs-6">
+    <h4><%= t("hyrax.dashboard.current_proxies") %></h4>
+    <table class="table table-condensed table-striped" id="authorizedProxies">
+      <tbody>
+      <% user.can_receive_deposits_from.each do |depositor| %>
+          <tr><td class="depositor-name"><%= depositor.name %></td>
+            <td><%= link_to(hyrax.user_depositor_path(user, depositor), method: :delete, class: "remove-proxy-button") do %>
+                  <i class="glyphicon glyphicon-remove"></i><% end %>
+            </td></tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>

@@ -8,7 +8,7 @@ describe 'Batch creation of works', type: :feature do
   end
 
   it "renders the batch create form" do
-    visit sufia.new_batch_upload_path
+    visit hyrax.new_batch_upload_path
     within("li.active") do
       expect(page).to have_content("Files")
     end

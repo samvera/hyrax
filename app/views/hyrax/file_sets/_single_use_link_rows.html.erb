@@ -1,0 +1,19 @@
+<% single_use_links.each do |presenter| %>
+  <tr>
+    <td>
+      <%= t('hyrax.single_use_links.expiration_message', link: presenter.short_key,
+                                                         time: presenter.human_readable_expiration) %>
+    </td>
+    <td>
+      <button class="btn btn-xs btn-default copy-single-use-link"
+              data-clipboard-text="<%= hyrax.send(presenter.url_helper, presenter.downloadKey) %>"
+              data-toggle="tooltip" data-placement="bottom"
+              title="<%= t('hyrax.single_use_links.copy.tooltip') %>">
+        <%= t('hyrax.single_use_links.copy.button') %>
+      </button>
+      <%= link_to t('hyrax.single_use_links.delete'),
+                  hyrax.delete_single_use_link_path(params[:id], presenter),
+                  class: 'btn btn-xs btn-danger delete-single-use-link' %>
+    </td>
+  </tr>
+<% end %>

@@ -10,8 +10,8 @@ feature 'Editing a work', type: :feature do
   end
 
   context 'when the user changes permissions' do
-    it 'confirms copying permissions to files using Sufia layout' do
-      visit edit_sufia_generic_work_path(work)
+    it 'confirms copying permissions to files using Hyrax layout' do
+      visit edit_hyrax_generic_work_path(work)
       choose('generic_work_visibility_open')
       check('agreement')
       click_on('Save')

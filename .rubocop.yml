@@ -15,7 +15,7 @@ AllCops:
 
 Lint/ImplicitStringConcatenation:
   Exclude:
-    - 'lib/generators/sufia/**/*'
+    - 'lib/generators/hyrax/**/*'
 
 Metrics/LineLength:
   Max: 400
@@ -28,7 +28,7 @@ Metrics/MethodLength:
 
 Style/SymbolProc: # https://github.com/bbatsov/rubocop/issues/3071
   Exclude:
-    - 'app/models/sufia/uploaded_file.rb'
+    - 'app/models/hyrax/uploaded_file.rb'
 
 Style/IndentationConsistency:
   EnforcedStyle: rails
@@ -43,11 +43,11 @@ Style/CollectionMethods:
 
 Style/MethodMissing:
   Exclude:
-    - 'app/models/concerns/sufia/file_set/characterization.rb'
+    - 'app/models/concerns/hyrax/file_set/characterization.rb'
 
 Style/NumericPredicate:
   Exclude:
-    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
+    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
 
 Style/WordArray:
   Enabled: false
@@ -69,23 +69,23 @@ Style/SingleLineBlockParams:
 
 Style/ZeroLengthPredicate:
   Exclude:
-    - 'app/controllers/concerns/sufia/file_sets_controller_behavior.rb'
+    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
 
 Rails:
   Enabled: true
 
 Rails/OutputSafety:
   Exclude:
-    - 'spec/views/sufia/my/_list_works.html.erb_spec.rb'
-    - 'app/helpers/sufia/sufia_helper_behavior.rb'
-    - 'app/helpers/sufia/collections_helper.rb'
-    - 'app/helpers/sufia/content_block_helper_behavior.rb'
-    - 'app/builders/sufia/form_builder.rb'
-    - 'app/helpers/sufia/citations_behaviors/formatters/apa_formatter.rb'
-    - 'app/helpers/sufia/citations_behaviors/formatters/chicago_formatter.rb'
-    - 'app/helpers/sufia/citations_behaviors/formatters/mla_formatter.rb'
-    - 'app/presenters/sufia/presents_attributes.rb'
-    - 'app/renderers/sufia/renderers/attribute_renderer.rb'
+    - 'spec/views/hyrax/my/_list_works.html.erb_spec.rb'
+    - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
+    - 'app/helpers/hyrax/collections_helper.rb'
+    - 'app/helpers/hyrax/content_block_helper_behavior.rb'
+    - 'app/builders/hyrax/form_builder.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/apa_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/chicago_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/mla_formatter.rb'
+    - 'app/presenters/hyrax/presents_attributes.rb'
+    - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
 
 Rails/DynamicFindBy:
   Enabled: false
@@ -93,7 +93,7 @@ Rails/DynamicFindBy:
 RSpec/DescribeClass:
   Exclude:
     - 'spec/abilities/**/*'
-    - 'spec/config/sufia_events_spec.rb'
+    - 'spec/config/hyrax_events_spec.rb'
     - 'spec/conversions/**/*'
     - 'spec/features/**/*'
     - 'spec/inputs/**/*'

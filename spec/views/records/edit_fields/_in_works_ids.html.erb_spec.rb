@@ -12,7 +12,7 @@ describe "records/edit_fields/_in_works_ids.html.erb", type: :view do
   let(:ability) { double }
 
   let(:form) do
-    Sufia::GenericWorkForm.new(work, ability)
+    Hyrax::GenericWorkForm.new(work, ability)
   end
 
   let(:f) { double(object: form) }

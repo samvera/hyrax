@@ -2,12 +2,12 @@
 af_noid_path = Gem.loaded_specs['active_fedora-noid'].full_gem_path
 load "#{af_noid_path}/lib/tasks/noid_tasks.rake"
 
-namespace :sufia do
+namespace :hyrax do
   namespace :noid do
     desc 'Migrate minter state file'
     task migrate_statefile: :environment do
-      ENV['AFNOID_STATEFILE'] = Sufia.config.minter_statefile
-      Rake::Task['active_fedora:noid:migrate_statefile'].invoke if needs_migration?(Sufia.config.minter_statefile)
+      ENV['AFNOID_STATEFILE'] = Hyrax.config.minter_statefile
+      Rake::Task['active_fedora:noid:migrate_statefile'].invoke if needs_migration?(Hyrax.config.minter_statefile)
     end
   end
 end

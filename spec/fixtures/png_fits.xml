@@ -11,7 +11,7 @@
   </identification>
   <fileinfo>
     <lastmodified toolname="Exiftool" toolversion="9.06" status="SINGLE_RESULT">2013:05:13 11:02:08-04:00</lastmodified>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/Users/jfriesen/Repositories/sufia/spec/fixtures/world.png</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/Users/jfriesen/Repositories/hyrax/spec/fixtures/world.png</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">spec/fixtures/world.png</filename>
     <size toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">4218</size>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">28da6259ae5707c68708192a40b3e85c</md5checksum>

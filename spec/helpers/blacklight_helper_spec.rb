@@ -26,7 +26,7 @@ RSpec.describe BlacklightHelper, type: :helper do
   end
 
   describe "render_index_field_value" do
-    include SufiaHelper # FIXME: isolate testing BlacklightHelper, not SufiaHelper. Also, this method is odd.
+    include HyraxHelper # FIXME: isolate testing BlacklightHelper, not HyraxHelper. Also, this method is odd.
     def search_action_path(stuff)
       search_catalog_path(stuff)
     end

@@ -8,7 +8,7 @@ class AttachFilesToWorkJob < ActiveJob::Base
     uploaded_files.each do |uploaded_file|
       file_set = FileSet.new
       user = User.find_by_user_key(work.depositor)
-      actor = Sufia::Actors::FileSetActor.new(file_set, user)
+      actor = Hyrax::Actors::FileSetActor.new(file_set, user)
       actor.create_metadata(visibility: work.visibility)
       attach_content(actor, uploaded_file.file)
       actor.attach_file_to_work(work)
@@ -20,7 +20,7 @@ class AttachFilesToWorkJob < ActiveJob::Base
 
   private
 
-    # @param [Sufia::Actors::FileSetActor] actor
+    # @param [Hyrax::Actors::FileSetActor] actor
     # @param [UploadedFileUploader] file
     def attach_content(actor, file)
       case file.file
@@ -33,11 +33,11 @@ class AttachFilesToWorkJob < ActiveJob::Base
       end
     end
 
-    # @param [Sufia::Actors::FileSetActor] actor
+    # @param [Hyrax::Actors::FileSetActor] actor
     # @param [UploadedFileUploader] file
     def import_url(actor, file)
       actor.file_set.update(import_url: file.url)
-      log = Sufia::Operation.create!(user: actor.user,
+      log = Hyrax::Operation.create!(user: actor.user,
                                      operation_type: "Attach File")
       ImportUrlJob.perform_later(actor.file_set, log)
     end

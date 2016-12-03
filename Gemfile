@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Please see sufia.gemspec for dependency information.
+# Please see hyrax.gemspec for dependency information.
 gemspec
 
 group :development, :test do

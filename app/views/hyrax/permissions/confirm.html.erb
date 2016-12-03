@@ -1,0 +1,15 @@
+<div class="panel panel-default permissions-confirm">
+  <div class="panel-heading">
+    <h4>Apply changes to contents?<h4>
+  </div>
+  <div class="panel-body">
+      <%= I18n.t("hyrax.upload.change_permissions_message_html",
+        curation_concern_human_readable_type: curation_concern.human_readable_type,
+        curation_concern: curation_concern,
+        visibility_badge: visibility_badge(curation_concern.visibility)).html_safe %>
+  </div>
+  <div class="form-actions panel-footer">
+    <%= button_to "Yes please.", main_app.copy_hyrax_permission_path(curation_concern), class: 'btn btn-primary' %>
+    <%= link_to "No. I'll update it manually.", [main_app, curation_concern], class: 'btn' %>
+  </div>
+</div>

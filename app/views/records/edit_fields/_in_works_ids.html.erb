@@ -1,8 +1,8 @@
 <%# Form UI behavior code and details;
 Code:
-  app/assets/javascripts/sufia/relationships
+  app/assets/javascripts/hyrax/relationships
 CSS:
-  table.relationships-ajax-enabled : Used by sufia JS app as selector to wire up the UI functionality
+  table.relationships-ajax-enabled : Used by hyrax JS app as selector to wire up the UI functionality
   tr.new-row : The basic template row for cloning when user clicks "Add"
   .btn-remove-row : Button to remove its parent TR from the table
   .btn-add-row : Button to clone its parent TR and inject a new row into the table
@@ -15,7 +15,7 @@ HTML Properties:
 <% if f.object.class.multiple? key %>
   <div class="form-group multi_value optional work_in_works_ids managed">
     <table class="table table-striped related-files relationships-ajax-enabled"
-           data-query-url="<%=polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: '$id') %>">
+           data-query-url="<%=polymorphic_path([main_app, :hyrax, curation_concern.model_name.singular], id: '$id') %>">
       <thead>
         <tr>
           <th>Parent Work</th>
@@ -26,12 +26,12 @@ HTML Properties:
         <% curation_concern.in_works.each do |parent| %>
           <tr>
             <td>
-              <%= link_to "#{parent.title.first}", polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: parent.id) %>
+              <%= link_to "#{parent.title.first}", polymorphic_path([main_app, :hyrax, curation_concern.model_name.singular], id: parent.id) %>
               <input class="string multi_value optional form-control related_works_ids form-control multi-text-field hidden" name="<%= curation_concern.model_name.param_key %>[in_works_ids][]" value="<%= parent.id %>" id="work_in_works_ids" aria-labelledby="work_in_works_ids_label" type="text">
             </td>
             <td>
               <div class="child-actions">
-                <%= link_to "Edit", edit_polymorphic_path([main_app, :sufia, curation_concern.model_name.singular], id: parent.id), target: "_blank", class: 'btn btn-default' %>
+                <%= link_to "Edit", edit_polymorphic_path([main_app, :hyrax, curation_concern.model_name.singular], id: parent.id), target: "_blank", class: 'btn btn-default' %>
                 <a class="btn btn-danger btn-remove-row">Remove</a>
               </div>
             </td>

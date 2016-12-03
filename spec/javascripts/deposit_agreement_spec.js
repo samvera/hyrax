@@ -1,5 +1,5 @@
 describe("DepositAgreement", function() {
-  var control = require('sufia/save_work/deposit_agreement');
+  var control = require('hyrax/save_work/deposit_agreement');
 
   describe("isActiveAgreement", function() {
     describe("with a checkbox agreement", function() {

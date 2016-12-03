@@ -14,12 +14,12 @@ describe ImportUrlJob do
   end
 
   let(:log) { create(:operation) }
-  let(:success_service) { instance_double(Sufia::ImportUrlSuccessService) }
-  let(:actor) { instance_double(Sufia::Actors::FileSetActor, create_content: true) }
+  let(:success_service) { instance_double(Hyrax::ImportUrlSuccessService) }
+  let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
 
   before do
-    allow(Sufia::ImportUrlSuccessService).to receive(:new).and_return(success_service)
-    allow(Sufia::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
+    allow(Hyrax::ImportUrlSuccessService).to receive(:new).and_return(success_service)
+    allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
 
     stub_request(:get, "http://example.org#{file_hash}").to_return(
       body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: { 'Content-Type' => 'image/png' }

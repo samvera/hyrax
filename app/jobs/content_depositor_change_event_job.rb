@@ -30,7 +30,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   alias log_file_set_event log_work_event
 
   def work
-    @work ||= Sufia::ChangeContentDepositorService.call(repo_object, depositor, reset)
+    @work ||= Hyrax::ChangeContentDepositorService.call(repo_object, depositor, reset)
   end
 
   # overriding default to log the event to the depositor instead of their profile

@@ -1,0 +1,12 @@
+  <div class="form-group">
+    <%= f.label :zotero, class: 'col-xs-4 control-label' do %>
+      <%= zotero_label %>
+    <% end %>
+    <div class="col-xs-8">
+    <% if user.zotero_userid.present? %>
+       <%= link_to t('hyrax.user_profile.zotero.connected'), zotero_profile_url(user.zotero_userid), class: "form-control" %>
+    <% else %>
+       <%= link_to t('hyrax.user_profile.zotero.unlinked'), hyrax.api_zotero_initiate_path, id: "zotero", class: "btn btn-mini btn-primary" %>
+    <% end %>
+    </div>
+  </div><!-- .form-group -->

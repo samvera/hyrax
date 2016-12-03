@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe CreateDerivativesJob do
   around do |example|
-    ffmpeg_enabled = Sufia.config.enable_ffmpeg
-    Sufia.config.enable_ffmpeg = true
+    ffmpeg_enabled = Hyrax.config.enable_ffmpeg
+    Hyrax.config.enable_ffmpeg = true
     example.run
-    Sufia.config.enable_ffmpeg = ffmpeg_enabled
+    Hyrax.config.enable_ffmpeg = ffmpeg_enabled
   end
 
   context "with an audio file" do
@@ -70,7 +70,7 @@ describe CreateDerivativesJob do
 
     let(:file) do
       Hydra::PCDM::File.new.tap do |f|
-        f.content = File.open(File.join(fixture_path, "sufia/sufia_test4.pdf")).read
+        f.content = File.open(File.join(fixture_path, "hyrax/hyrax_test4.pdf")).read
         f.original_name = 'test.pdf'
         f.save!
       end

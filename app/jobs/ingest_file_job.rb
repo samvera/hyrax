@@ -1,8 +1,8 @@
 class IngestFileJob < ActiveJob::Base
-  queue_as Sufia.config.ingest_queue_name
+  queue_as Hyrax.config.ingest_queue_name
 
   # @param [FileSet] file_set
-  # @param [String] filepath the cached file within the Sufia.config.working_path
+  # @param [String] filepath the cached file within the Hyrax.config.working_path
   # @param [User] user
   # @option opts [String] mime_type
   # @option opts [String] filename
@@ -28,7 +28,7 @@ class IngestFileJob < ActiveJob::Base
     repository_file = file_set.send(relation)
 
     # Do post file ingest actions
-    Sufia::VersioningService.create(repository_file, user)
+    Hyrax::VersioningService.create(repository_file, user)
 
     # TODO: this is a problem, the file may not be available at this path on another machine.
     # It may be local, or it may be in s3

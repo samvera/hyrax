@@ -1,5 +1,5 @@
 describe "FileManager Save Button", ->
-  savem = require('sufia/file_manager/save_manager')
+  savem = require('hyrax/file_manager/save_manager')
   save_manager = null
   handler = null
   deferred_result = null

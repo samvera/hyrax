@@ -2,33 +2,33 @@ describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
     subject { helper.render_check_all }
     before do
-      view.lookup_context.prefixes = ['sufia/my']
+      view.lookup_context.prefixes = ['hyrax/my']
       allow(helper).to receive(:params).and_return(controller: controller_path)
     end
 
     context "with my works" do
-      let(:controller_path) { "sufia/my/works" }
+      let(:controller_path) { "hyrax/my/works" }
       it "shows the check all dropdown" do
         expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my shares" do
-      let(:controller_path) { "sufia/my/shares" }
+      let(:controller_path) { "hyrax/my/shares" }
       it "shows the check all dropdown" do
         expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my highlights" do
-      let(:controller_path) { "sufia/my/highlights" }
+      let(:controller_path) { "hyrax/my/highlights" }
       it "shows the check all dropdown" do
         expect(subject).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my collections" do
-      let(:controller_path) { "sufia/my/collections" }
+      let(:controller_path) { "hyrax/my/collections" }
       it "does not show the check all dropdown" do
         expect(subject).to be_nil
       end

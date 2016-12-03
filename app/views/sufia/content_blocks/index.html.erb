@@ -1,7 +1,0 @@
-<h1> Featured Researchers </h1>
-
-<div class="col-xs-12 col-sm-6">
-  <%= render partial: 'featured_researcher', collection: @content_blocks, as: :featured_researcher_block %>
-
-  <%= paginate @content_blocks, outer_window: 2, theme: 'blacklight', route_set: sufia %>
-</div>

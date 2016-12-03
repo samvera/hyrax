@@ -1,5 +1,5 @@
 describe "FileManagerSorting", ->
-  sortm = require('sufia/file_manager/sorting')
+  sortm = require('hyrax/file_manager/sorting')
   sort_manager = null
   save_manager = null
   titles = null

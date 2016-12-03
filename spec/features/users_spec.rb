@@ -3,7 +3,7 @@ describe "User Profile", type: :feature do
     sign_in user
   end
   let(:user) { create(:user) }
-  let(:profile_path) { Sufia::Engine.routes.url_helpers.profile_path(user) }
+  let(:profile_path) { Hyrax::Engine.routes.url_helpers.profile_path(user) }
 
   context 'when visiting user profile' do
     it 'renders page properly' do
@@ -35,7 +35,7 @@ describe "User Profile", type: :feature do
 
   context 'user profile' do
     let!(:dewey) { create(:user, display_name: 'Melvil Dewey') }
-    let(:dewey_path) { Sufia::Engine.routes.url_helpers.profile_path(dewey) }
+    let(:dewey_path) { Hyrax::Engine.routes.url_helpers.profile_path(dewey) }
 
     it 'is searchable' do
       visit profile_path

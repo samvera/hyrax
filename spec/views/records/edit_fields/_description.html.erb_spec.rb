@@ -1,6 +1,6 @@
 RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:form) { Sufia::Forms::WorkForm.new(work, nil) }
+  let(:form) { Hyrax::Forms::WorkForm.new(work, nil) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>
@@ -14,7 +14,7 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
 
   context "when single valued" do
     before do
-      expect(Sufia::Forms::WorkForm).to receive(:multiple?).and_return(false)
+      expect(Hyrax::Forms::WorkForm).to receive(:multiple?).and_return(false)
     end
 
     context "when not required" do
@@ -40,7 +40,7 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
 
   context "when multi valued" do
     before do
-      expect(Sufia::Forms::WorkForm).to receive(:multiple?).and_return(true)
+      expect(Hyrax::Forms::WorkForm).to receive(:multiple?).and_return(true)
     end
 
     context "when not required" do

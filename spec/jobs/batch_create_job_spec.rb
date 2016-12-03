@@ -4,11 +4,11 @@ describe BatchCreateJob do
 
   before do
     allow(CharacterizeJob).to receive(:perform_later)
-    allow(Sufia.config.callback).to receive(:run)
-    allow(Sufia.config.callback).to receive(:set?)
+    allow(Hyrax.config.callback).to receive(:run)
+    allow(Hyrax.config.callback).to receive(:set?)
       .with(:after_batch_create_success)
       .and_return(true)
-    allow(Sufia.config.callback).to receive(:set?)
+    allow(Hyrax.config.callback).to receive(:set?)
       .with(:after_batch_create_failure)
       .and_return(true)
   end
@@ -16,8 +16,8 @@ describe BatchCreateJob do
   describe "#perform" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
-    let(:upload1) { Sufia::UploadedFile.create(user: user, file: file1) }
-    let(:upload2) { Sufia::UploadedFile.create(user: user, file: file2) }
+    let(:upload1) { Hyrax::UploadedFile.create(user: user, file: file1) }
+    let(:upload2) { Hyrax::UploadedFile.create(user: user, file: file2) }
     let(:title) { { upload1.id.to_s => 'File One', upload2.id.to_s => 'File Two' } }
     let(:resource_types) { { upload1.id.to_s => 'Article', upload2.id.to_s => 'Image' } }
     let(:metadata) { { keyword: [] } }
@@ -36,10 +36,10 @@ describe BatchCreateJob do
     end
 
     it "updates work metadata" do
-      expect(Sufia::CurationConcern).to receive(:actor).and_return(actor).twice
+      expect(Hyrax::CurationConcern).to receive(:actor).and_return(actor).twice
       expect(actor).to receive(:create).with(keyword: [], title: ['File One'], resource_type: ["Article"], uploaded_files: ['1']).and_return(true)
       expect(actor).to receive(:create).with(keyword: [], title: ['File Two'], resource_type: ["Image"], uploaded_files: ['2']).and_return(true)
-      expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_success, user)
+      expect(Hyrax.config.callback).to receive(:run).with(:after_batch_create_success, user)
       subject
       expect(log.status).to eq 'pending'
       expect(log.reload.status).to eq 'success'
@@ -69,9 +69,9 @@ describe BatchCreateJob do
 
     context "when user does not have permission to edit all of the works" do
       it "sends the failure message" do
-        expect(Sufia::CurationConcern).to receive(:actor).and_return(actor).twice
+        expect(Hyrax::CurationConcern).to receive(:actor).and_return(actor).twice
         expect(actor).to receive(:create).and_return(true, false)
-        expect(Sufia.config.callback).to receive(:run).with(:after_batch_create_failure, user)
+        expect(Hyrax.config.callback).to receive(:run).with(:after_batch_create_failure, user)
         subject
         expect(log.reload.status).to eq 'failure'
       end

@@ -1,0 +1,40 @@
+    <div class="panel panel-default tabs" id="admin-set-controls">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+          <a href="#description"><%= t('.tabs.description') %></a>
+        </li>
+        <% if @form.persisted? %>
+          <li>
+            <a href="#participants"><%= t('.tabs.participants') %></a>
+          </li>
+          <li>
+            <a href="#visibility"><%= t('.tabs.visibility') %></a>
+          </li>
+        <% end %>
+      </ul>
+      <div class="tab-content">
+        <div id="description" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <%= simple_form_for @form, url: [hyrax, :admin, @form] do |f| %>
+              <div class="panel-body">
+                <%= f.input :title %>
+                <%= f.input :description, as: :text %>
+
+                <% if f.object.persisted? && f.object.member_ids.present? %>
+                  <%= f.input :thumbnail_id, collection: @form.select_files %>
+                <% end %>
+
+              </div>
+              <div class="panel-footer">
+                <%= link_to 'Cancel', hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+                <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <% if @form.persisted? %>
+          <%= render 'form_participants' %>
+          <%= render 'form_visibility' %>
+        <% end %>
+      </div>
+    </div>

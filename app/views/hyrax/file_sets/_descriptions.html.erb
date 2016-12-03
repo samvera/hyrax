@@ -1,0 +1,14 @@
+<div id="descriptions_display" class="tab-pane active">
+  <%= simple_form_for [hyrax, @form], html: { multipart: true } do |f| %>
+    <%= hidden_field_tag('redirect_tab', 'descriptions') %>
+    <h1>Descriptions</h1>
+      <% f.object.terms.each do |term| %>
+        <%= render_edit_field_partial(term, f: f) %>
+      <% end %>
+    <div>
+      <%= button_tag class: 'btn btn-primary btn-lg', id: "upload_submit", name: "update_descriptions" do %>
+        <i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions
+      <% end %>
+    </div>
+  <% end %>
+</div>

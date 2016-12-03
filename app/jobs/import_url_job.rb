@@ -3,7 +3,7 @@ require 'tempfile'
 require 'browse_everything/retriever'
 
 class ImportUrlJob < ActiveJob::Base
-  queue_as Sufia.config.ingest_queue_name
+  queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
     log = job.arguments.last
@@ -21,12 +21,12 @@ class ImportUrlJob < ActiveJob::Base
       file_set.reload
 
       # attach downloaded file to FileSet stubbed out
-      if Sufia::Actors::FileSetActor.new(file_set, user).create_content(f)
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
-        Sufia.config.callback.run(:after_import_url_success, file_set, user)
+        Hyrax.config.callback.run(:after_import_url_success, file_set, user)
         log.success!
       else
-        Sufia.config.callback.run(:after_import_url_failure, file_set, user)
+        Hyrax.config.callback.run(:after_import_url_failure, file_set, user)
         log.fail!(file_set.errors.full_messages.join(' '))
       end
     end

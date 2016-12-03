@@ -1,0 +1,25 @@
+<tr>
+  <td>
+    <div class='media'>
+      <%= link_to [hyrax, admin_set], class: 'media-left', 'aria-hidden' => true do %>
+        <%= render_thumbnail_tag admin_set, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
+      <% end %>
+
+      <div class='media-body'>
+        <div class='media-heading'>
+          <%= link_to [hyrax, admin_set], class: 'document-title' do %>
+            <span class="sr-only">
+              <%= t("hyrax.dashboard.my.sr.show_label") %>
+            </span>
+            <%= admin_set.title_or_label %>
+          <% end %>
+          <br>
+          <%= admin_set.description.join('; ') %>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td><%= admin_set.create_date %></td>
+  <td>N/A</td>
+  <td>N/A</td>
+</tr>

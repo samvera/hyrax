@@ -1,4 +1,4 @@
-class FileViewStat < Sufia::Statistic
+class FileViewStat < Hyrax::Statistic
   self.cache_column = :views
   self.event_type = :pageviews
 

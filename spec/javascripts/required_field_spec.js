@@ -1,5 +1,5 @@
 describe('RequiredFields', function() {
-  var control = require('sufia/save_work/required_fields');
+  var control = require('hyrax/save_work/required_fields');
   var target = null;
 
   describe('areComplete', function() {

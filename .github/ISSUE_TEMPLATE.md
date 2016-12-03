@@ -1,6 +1,6 @@
 ### Descriptive summary
 
-Include what version of Sufia relates to this issue (7.x, 6.x, HEAD, etc.) if appropriate, and any relevant tracebacks if you're reporting a bug.
+Include what version of Hyrax relates to this issue (7.x, 6.x, HEAD, etc.) if appropriate, and any relevant tracebacks if you're reporting a bug.
 
 ### Expected behavior
 

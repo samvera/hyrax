@@ -1,9 +1,9 @@
-gem 'sufia', '7.2.0'
+gem 'hyrax', '7.2.0'
 gem 'flipflop', github: 'jcoyne/flipflop', branch: 'hydra'
 
 run 'bundle install'
 
-generate 'sufia:install', '-f'
+generate 'hyrax:install', '-f'
 
 # Support Rails 4.2 and 5.0
 begin

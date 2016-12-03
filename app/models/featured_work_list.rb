@@ -36,8 +36,8 @@ class FeaturedWorkList
 
     def work_presenters
       ability = nil
-      Sufia::PresenterFactory.build_presenters(ids,
-                                               Sufia::WorkShowPresenter,
+      Hyrax::PresenterFactory.build_presenters(ids,
+                                               Hyrax::WorkShowPresenter,
                                                ability)
     end
 

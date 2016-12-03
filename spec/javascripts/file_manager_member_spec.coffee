@@ -1,5 +1,5 @@
 describe "FileManagerMember", ->
-  filemm = require('sufia/file_manager/member')
+  filemm = require('hyrax/file_manager/member')
   file_manager_member = null
   save_manager = null
   beforeEach () ->

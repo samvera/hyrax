@@ -1,0 +1,51 @@
+     <div id="fileupload">
+        <!-- Redirect browsers with JavaScript disabled to the origin page -->
+        <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+
+        <h2><%= t('hyrax.base.form_files.local_upload') %></h2>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="col-xs-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span>Add files...</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <% if browser_supports_directory_upload? %>
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span>Add folder...</span>
+                    <input type="file" name="files[]" multiple directory webkitdirectory>
+                </span>
+                <% end %>
+                <button type="reset" class="btn btn-warning cancel hidden">
+                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <span>Cancel upload</span>
+                </button>
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-xs-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <div class="dropzone">
+          <%= t('hyrax.base.form_files.dropzone') %>
+        </div>
+     </div>
+
+<%= render 'hyrax/uploads/js_templates' %>
+<% if Hyrax.config.browse_everything %>
+  <h2><%= t('hyrax.base.form_files.external_upload') %></h2>
+  <%= render 'browse_everything', f: f %>
+<% end %>

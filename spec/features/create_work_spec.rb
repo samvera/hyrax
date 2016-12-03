@@ -38,7 +38,7 @@ feature 'Creating a new Work', :js do
       puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
       expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Sufia in the background."
+      expect(page).to have_content "Your files are being processed by Hyrax in the background."
     end
   end
 
@@ -74,7 +74,7 @@ feature 'Creating a new Work', :js do
       click_on('Save')
 
       expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Sufia in the background."
+      expect(page).to have_content "Your files are being processed by Hyrax in the background."
 
       click_link('Dashboard')
       click_link('Shares')

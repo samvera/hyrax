@@ -11,10 +11,10 @@ class AuditJob < ActiveJob::Base
     log = run_audit(file_set, file_id, uri)
     fixity_ok = log.pass == 1
     unless fixity_ok
-      if Sufia.config.callback.set?(:after_audit_failure)
+      if Hyrax.config.callback.set?(:after_audit_failure)
         login = file_set.depositor
         user = User.find_by_user_key(login)
-        Sufia.config.callback.run(:after_audit_failure, file_set, user, log.created_at)
+        Hyrax.config.callback.run(:after_audit_failure, file_set, user, log.created_at)
       end
     end
     fixity_ok

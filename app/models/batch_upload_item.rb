@@ -2,8 +2,8 @@
 # It should never actually be persisted in the repository.
 # The properties on this form should be copied to a real work type.
 class BatchUploadItem < ActiveFedora::Base
-  include ::Sufia::BasicMetadata
-  include Sufia::WorkBehavior
+  include ::Hyrax::BasicMetadata
+  include Hyrax::WorkBehavior
 
   # This mocks out the behavior of Hydra::PCDM::PcdmBehavior
   def in_collection_ids

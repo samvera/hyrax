@@ -1,5 +1,5 @@
 describe("UploadedFiles", function() {
-  var control = require('sufia/save_work/uploaded_files');
+  var control = require('hyrax/save_work/uploaded_files');
 
   describe("hasFileRequirement", function() {
     describe("with required file element", function() {

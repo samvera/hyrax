@@ -1,3 +1,3 @@
 class AdminSet < ActiveFedora::Base
-  include Sufia::AdminSetBehavior
+  include Hyrax::AdminSetBehavior
 end

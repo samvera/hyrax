@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
-  let(:presenter) { instance_double Sufia::SelectTypeListPresenter }
+  let(:presenter) { instance_double Hyrax::SelectTypeListPresenter }
   let(:row1) do
-    instance_double(Sufia::SelectTypePresenter,
+    instance_double(Hyrax::SelectTypePresenter,
                     icon_class: 'icon',
                     name: 'Generic Work',
                     description: 'Workhorse',
                     concern: GenericWork)
   end
   let(:row2) do
-    instance_double(Sufia::SelectTypePresenter,
+    instance_double(Hyrax::SelectTypePresenter,
                     icon_class: 'icon',
                     name: 'Book',
                     description: 'Book of things',

@@ -1,3 +1,3 @@
 class ContentBlock < ActiveRecord::Base
-  include Sufia::ContentBlockBehavior
+  include Hyrax::ContentBlockBehavior
 end

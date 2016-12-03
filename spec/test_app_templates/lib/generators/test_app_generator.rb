@@ -4,11 +4,11 @@ class TestAppGenerator < Rails::Generators::Base
   source_root "./spec/test_app_templates"
 
   def install_engine
-    generate 'sufia:install', '-f'
+    generate 'hyrax:install', '-f'
   end
 
   def create_generic_work
-    generate 'sufia:work GenericWork'
+    generate 'hyrax:work GenericWork'
   end
 
   def comment_out_web_console
@@ -37,7 +37,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def enable_analytics
-    gsub_file "config/initializers/sufia.rb",
+    gsub_file "config/initializers/hyrax.rb",
               "config.analytics = false", "config.analytics = true"
   end
 
@@ -49,7 +49,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def enable_arkivo_api
-    generate 'sufia:arkivo_api'
+    generate 'hyrax:arkivo_api'
   end
 
   def relax_routing_constraint

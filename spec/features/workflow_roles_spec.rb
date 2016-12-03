@@ -25,7 +25,7 @@ RSpec.describe "Manage workflow roles", type: :feature do
               ],
               transition_to: "complete",
               methods: [
-                "Sufia::Workflow::ActivateObject"
+                "Hyrax::Workflow::ActivateObject"
               ]
             }
           ]
@@ -35,8 +35,8 @@ RSpec.describe "Manage workflow roles", type: :feature do
   end
   before do
     allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
-    Sufia::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
-    Sufia::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
+    Hyrax::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
+    Hyrax::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
                                               workflow: Sipity::Workflow.last,
                                               agents: user)
   end

@@ -1,0 +1,8 @@
+<h3>Work Statistics (<%= @presenter.date_filter_string %>)</h3>
+<h4>Total Works: <%= @presenter.works_count[:total] %> </h4>
+<h4>Totals by Visibility</h4>
+<ul>
+  <li>Open Access <span class="count">(<%= @presenter.works_count[:public] %>)</span></li>
+  <li><%= t("hyrax.admin.stats.registered") %> <span class="count">(<%= @presenter.works_count[:registered] %>)</span></li>
+  <li>Private <span class="count">(<%= @presenter.works_count[:private] %>)</span></li>
+</ul>

@@ -1,0 +1,6 @@
+<!-- profile and view buttons -->
+<% if signed_in? && presenter.current_user? %>
+  <%= link_to hyrax.edit_profile_path(@user), class: "btn btn-default" do %>
+    <i class="glyphicon glyphicon-edit"></i> Edit Your Profile
+  <% end %>
+<% end %>

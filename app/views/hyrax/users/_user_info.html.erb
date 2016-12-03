@@ -1,0 +1,81 @@
+<dl id="user_info">
+
+<% if user.orcid.present? %>
+  <dt><%= orcid_label('profile') %></dt>
+  <dd><%= link_to user.orcid, user.orcid, { target: '_blank' } %></dd>
+<% end %>
+
+<% if Hyrax.config.arkivo_api && user.zotero_userid.present? %>
+  <dt><%= zotero_label(html_class: 'profile') %></dt>
+  <dd><%= link_to zotero_profile_url(user.zotero_userid), zotero_profile_url(user.zotero_userid), { target: '_blank' } %></dd>
+<% end %>
+
+<% if user.facebook_handle.present? %>
+  <dt><i class="fa fa-facebook"></i> Facebook Handle</dt>
+  <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+<% end %>
+
+<% if user.twitter_handle.present? %>
+  <dt><i class="fa fa-twitter"></i> Twitter Handle</dt>
+  <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+<% end %>
+
+<% if user.googleplus_handle.present? %>
+  <dt><i class="fa fa-google-plus"></i> Google+ Handle</dt>
+  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+<% end %>
+
+<% if user.linkedin_handle.present? %>
+  <dt><i class="fa fa-linkedin"></i> LinkedIn</dt>
+  <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
+<% end %>
+
+  <dt><i class="fa fa-envelope"></i> Email</dt>
+  <dd><%= mail_to user.email %></dd>
+
+  <% if user.chat_id %>
+    <dt><i class="glyphicon glyphicon-bullhorn"></i> Chat ID</dt>
+    <dd><%= user.chat_id %></dd>
+  <% end %>
+
+  <% if user.website %>
+    <dt><i class="glyphicon glyphicon-globe"></i> Website(s)</dt>
+    <dd><%= iconify_auto_link(user.website) %></dd>
+  <% end %>
+
+  <% if user.title %>
+    <dt>Title</dt>
+    <dd><%= user.title %></dd>
+  <% end %>
+
+  <% if user.admin_area %>
+    <dt>Administrative Area</dt>
+    <dd><%= user.admin_area %></dd>
+  <% end %>
+
+  <% if user.department %>
+    <dt>Department</dt>
+    <dd><%= user.department %></dd>
+  <% end %>
+
+  <% if user.office %>
+    <dt>Office</dt>
+    <dd><%= user.office %></dd>
+  <% end %>
+
+  <% if user.address %>
+    <dt><i class="glyphicon glyphicon-map-marker"></i> Address</dt>
+    <dd><%= user.address %></dd>
+  <% end %>
+
+  <% if user.affiliation %>
+    <dt>Affiliation</dt>
+    <dd><%= user.affiliation %></dd>
+  <% end %>
+
+  <% if user.telephone %>
+    <dt><i class="glyphicon glyphicon-earphone"></i> Telephone</dt>
+    <dd><%= link_to_telephone(user) %></dd>
+  <% end %>
+
+</dl>

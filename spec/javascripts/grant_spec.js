@@ -1,6 +1,6 @@
 describe("Grant", function() {
-  var person = require('sufia/permissions/person');
-  var pkg = require('sufia/permissions/grant');
+  var person = require('hyrax/permissions/person');
+  var pkg = require('hyrax/permissions/grant');
   var target
 
   beforeEach(function() {

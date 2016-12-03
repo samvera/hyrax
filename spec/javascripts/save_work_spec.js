@@ -1,5 +1,5 @@
 describe("SaveWorkControl", function() {
-  var control = require('sufia/save_work/save_work_control');
+  var control = require('hyrax/save_work/save_work_control');
 
   describe("validateMetadata", function() {
     var mockCheckbox = {

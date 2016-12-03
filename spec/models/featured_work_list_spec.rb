@@ -11,7 +11,7 @@ describe FeaturedWorkList, type: :model do
     it 'is a list of the featured work objects, each with the generic_work\'s solr_doc' do
       expect(subject.featured_works.size).to eq 2
       presenter = subject.featured_works.first.presenter
-      expect(presenter).to be_kind_of Sufia::WorkShowPresenter
+      expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
       expect(presenter.id).to eq work1.id
     end
   end
@@ -26,7 +26,7 @@ describe FeaturedWorkList, type: :model do
     it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
       expect(subject.featured_works.size).to eq 1
       presenter = subject.featured_works.first.presenter
-      expect(presenter).to be_kind_of Sufia::WorkShowPresenter
+      expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
       expect(presenter.id).to eq work2.id
     end
   end

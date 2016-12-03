@@ -7,7 +7,7 @@ class EventJob < ActiveJob::Base
   include ActionView::Helpers
   include ActionView::Helpers::DateHelper
   include Hydra::AccessControlsEnforcement
-  include SufiaHelper
+  include HyraxHelper
 
   queue_as :event
   attr_reader :depositor
@@ -27,7 +27,7 @@ class EventJob < ActiveJob::Base
 
   # create an event with an action and a timestamp for the user
   def event
-    @event ||= Sufia::Event.create(action, Time.current.to_i)
+    @event ||= Hyrax::Event.create(action, Time.current.to_i)
   end
 
   # log the event to the users event stream

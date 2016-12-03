@@ -1,5 +1,5 @@
 describe '/_toolbar.html.erb', type: :view do
-  let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: false, first_model: GenericWork) }
+  let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: false, first_model: GenericWork) }
   before do
     allow(view).to receive(:create_work_presenter).and_return(presenter)
     allow(view).to receive(:user_signed_in?).and_return(true)
@@ -28,21 +28,21 @@ describe '/_toolbar.html.erb', type: :view do
 
     it 'shows the admin menu' do
       render
-      expect(rendered).to have_link 'Admin', href: sufia.admin_path
+      expect(rendered).to have_link 'Admin', href: hyrax.admin_path
     end
   end
 
   it 'has dashboard links' do
     render
-    expect(rendered).to have_link 'My Dashboard', href: sufia.dashboard_index_path
-    expect(rendered).to have_link 'Transfers', href: sufia.transfers_path
-    expect(rendered).to have_link 'Highlights', href: sufia.dashboard_highlights_path
-    expect(rendered).to have_link 'Shares', href: sufia.dashboard_shares_path
+    expect(rendered).to have_link 'My Dashboard', href: hyrax.dashboard_index_path
+    expect(rendered).to have_link 'Transfers', href: hyrax.transfers_path
+    expect(rendered).to have_link 'Highlights', href: hyrax.dashboard_highlights_path
+    expect(rendered).to have_link 'Shares', href: hyrax.dashboard_shares_path
   end
 
   describe "New Work link" do
     context "when the user can create multiple work types" do
-      let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: true) }
+      let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
       it "has a link to upload" do
         render
         expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
@@ -53,7 +53,7 @@ describe '/_toolbar.html.erb', type: :view do
     context "when the user can create GenericWorks" do
       it "has a link to upload" do
         render
-        expect(rendered).to have_link('New Work', href: new_sufia_generic_work_path)
+        expect(rendered).to have_link('New Work', href: new_hyrax_generic_work_path)
       end
     end
 
