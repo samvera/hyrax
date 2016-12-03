@@ -1,5 +1,3 @@
-![Logo](https://raw.githubusercontent.com/projecthydra-labs/sufia.io/gh-pages/assets/images/sufia_logo_white_bg_small.png)
-
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
 [![Build Status](https://travis-ci.org/projecthydra-labs/hyrax.png?branch=master)](https://travis-ci.org/projecthydra-labs/hyrax)
 [![Coverage Status](https://coveralls.io/repos/github/projecthydra-labs/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra-labs/hyrax?branch=master)
@@ -40,7 +38,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Hyrax?
 
-Hyrax uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Hyrax offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Hyrax delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps.
+Hyrax uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Hyrax offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Hyrax delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
 ## Feature list
 
@@ -86,9 +84,9 @@ Hyrax has the following features:
 * Virus detection for uploaded files
 * Citation formatting suggestions
 
-See the [Hyrax Management Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
+See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
 
-For non-technical documentation about Hyrax, see its [documentation site](http://hyrax.io/).
+For non-technical documentation about Hyrax, see the Sufia [documentation site](http://sufia.io/).
 
 # Help
 
@@ -97,7 +95,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v7.2.0__. If you are looking for instructions on installing a different
+v0.0.1.alpha__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -108,7 +106,7 @@ After installing the Prerequisites:
 
 ## Prerequisites
 
-Hyrax 7.x requires the following software to work:
+Hyrax 0.0.x requires the following software to work:
 
 1. Solr version >= 5.x (tested up to 6.2.0)
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.6.0)
@@ -126,7 +124,7 @@ Hyrax 7.x requires the following software to work:
 1. Mark fits.sh as executable: `chmod a+x fits.sh`
 1. Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
 1. Give your Hyrax app access to FITS by:
-    1. Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), **OR**
+    1. Adding the full fits.sh path to your PATH (e.g., in your .bash\_profile), **OR**
     1. Changing `config/initializers/hyrax.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
 
 ### Derivatives
@@ -135,7 +133,7 @@ Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns 
 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
 
-**NOTE**: derivatives are served from the filesystem in Hyrax 7, which is a difference from earlier versions of Hyrax.
+**NOTE**: Derivatives are served from the filesystem in Hyrax.
 
 ## Environments
 
@@ -157,7 +155,7 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Generate a new Rails application. We recommend the latest Rails 5.0 or 4.2 release.
+Generate a new Rails application. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
@@ -174,7 +172,7 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 
 ## Generate a primary work type
 
-While earlier versions of Hyrax came with a pre-defined object model, Hyrax 7.x and greater allow you to specify your primary work type by using tooling provided by the CurationConcerns gem. Work on the 7.x series will include adding support for users to generate an arbitrary number of work types, not **just** a primary work type. At this time we do *not* recommend generating multiple work types.
+Hyrax allows you to specify your work types by using a generator.
 
 Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
@@ -200,7 +198,7 @@ And now you should be able to browse to [localhost:3000](http://localhost:3000/)
 
 # Managing a Hyrax-based app
 
-The [Hyrax Management Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
+The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
 * Production implementations
 * Configuration of background workers
@@ -219,23 +217,21 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 
 If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/hyrax). There are other ways to help, too.
 
-* [Contribute a user story](https://github.com/projecthydra/hyrax/issues/new).
-* Help us improve [Hyrax's test coverage](https://coveralls.io/r/projecthydra/hyrax) or [documentation coverage](https://inch-ci.org/github/projecthydra/hyrax).
-* Refactor away [code smells](https://codeclimate.com/github/projecthydra/hyrax).
+* [Contribute a user story](https://github.com/projecthydra-labs/hyrax/issues/new).
+* Help us improve [Hyrax's test coverage](https://coveralls.io/r/projecthydra-labs/hyrax) or [documentation coverage](https://inch-ci.org/github/projecthydra-labs/hyrax).
+* Refactor away [code smells](https://codeclimate.com/github/projecthydra-labs/hyrax).
 
 # Development
 
-The [Hyrax Development Guide](https://github.com/projecthydra/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
 
 # Release process
 
-See the [release management process](https://github.com/projecthydra/hyrax/wiki/Release-management-process).
+See the [release management process](https://github.com/projecthydra/sufia/wiki/Release-management-process).
 
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
 [Project Hydra website](http://projecthydra.org/).
 
-![Project Hydra Logo](http://hyrax.io/assets/images/hydra_logo.png)
-
-The Hyrax logo uses the Hong Kong Hustle font, thanks to [Iconian's](http://www.iconian.com/) non-commercial use policy.
+![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
