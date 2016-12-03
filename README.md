@@ -1,19 +1,19 @@
-![Logo](https://raw.githubusercontent.com/projecthydra-labs/hyrax.io/gh-pages/assets/images/hyrax_logo_white_bg_small.png)
+![Logo](https://raw.githubusercontent.com/projecthydra-labs/sufia.io/gh-pages/assets/images/sufia_logo_white_bg_small.png)
 
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
-[![Build Status](https://travis-ci.org/projecthydra/hyrax.png?branch=master)](https://travis-ci.org/projecthydra/hyrax)
-[![Coverage Status](https://coveralls.io/repos/github/projecthydra/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra/hyrax?branch=master)
-[![Code Climate](https://codeclimate.com/github/projecthydra/hyrax/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/hyrax)
-[![Dependency Update Status](https://gemnasium.com/projecthydra/hyrax.png)](https://gemnasium.com/projecthydra/hyrax)
-[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra/hyrax/badge)](https://dependencyci.com/github/projecthydra/hyrax)
+[![Build Status](https://travis-ci.org/projecthydra-labs/hyrax.png?branch=master)](https://travis-ci.org/projecthydra-labs/hyrax)
+[![Coverage Status](https://coveralls.io/repos/github/projecthydra-labs/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra-labs/hyrax?branch=master)
+[![Code Climate](https://codeclimate.com/github/projecthydra-labs/hyrax/badges/gpa.svg)](https://codeclimate.com/github/projecthydra-labs/hyrax)
+[![Dependency Update Status](https://gemnasium.com/projecthydra-labs/hyrax.png)](https://gemnasium.com/projecthydra-labs/hyrax)
+[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra-labs/hyrax/badge)](https://dependencyci.com/github/projecthydra-labs/hyrax)
 
-Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra/hyrax.svg?branch=master)](https://inch-ci.org/github/projecthydra/hyrax)
+Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra-labs/hyrax.svg?branch=master)](https://inch-ci.org/github/projecthydra-labs/hyrax)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hyrax)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/projecthydra/hyrax.png?label=ready&milestone=7.3.0&title=Ready)](https://waffle.io/projecthydra/hyrax?milestone=7.3.0)
+[![Ready Tickets](https://badge.waffle.io/projecthydra-labs/hyrax.png?label=ready&milestone=1.0.0&title=Ready)](https://waffle.io/projecthydra-labs/hyrax?milestone=1.0.0)
 
 # Table of Contents
 
