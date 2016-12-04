@@ -21,6 +21,14 @@ module Sufia
         PermissionTemplateForm.new(@permission_template)
       end
 
+      def workflow_name
+        @permission_template.workflow_name
+      end
+
+      def workflows
+        Sipity::Workflow.all.map { |workflow| [workflow.label, workflow.name] }
+      end
+
       class << self
         # This determines whether the allowed parameters are single or multiple.
         # By default it delegates to the model.
