@@ -14,11 +14,6 @@ module CurationConcerns
       super(context)
     end
 
-    # @return [String] class URI of the model, as indexed in Solr has_model_ssim field
-    def model_class_uri
-      ::Collection.to_class_uri
-    end
-
     # @return [String] Solr field name indicating default sort order
     def sort_field
       Solrizer.solr_name('title', :sortable)
@@ -43,10 +38,9 @@ module CurationConcerns
       super
     end
 
-    # This overrides the filter_models in FilterByType
-    def filter_models(solr_parameters)
-      solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: model_class_uri)
+    # This overrides the models in FilterByType
+    def models
+      collection_classes
     end
 
     # Sort results by title if no query was supplied.
