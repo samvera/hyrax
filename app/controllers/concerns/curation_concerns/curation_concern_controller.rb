@@ -15,6 +15,8 @@ module CurationConcerns
       self.work_form_service = WorkFormService
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
+
+      rescue_from WorkflowAuthorizationException, with: :render_unavailable
     end
 
     module ClassMethods
@@ -198,10 +200,40 @@ module CurationConcerns
         search_result_document(params)
       end
 
+      # Only returns unsuppressed documents the user has read access to
       def search_result_document(search_params)
         _, document_list = search_results(search_params)
-        raise CanCan::AccessDenied.new(nil, :show) if document_list.empty?
-        document_list.first
+        return document_list.first unless document_list.empty?
+        document_not_found!
+      end
+
+      def document_not_found!
+        doc = SolrDocument.find(params[:id])
+        raise WorkflowAuthorizationException if doc.suppressed?
+        raise CanCan::AccessDenied.new(nil, :show)
+      end
+
+      def render_unavailable
+        message = I18n.t("curation_concerns.workflow.unauthorized")
+        respond_to do |wants|
+          wants.html do
+            flash[:notice] = message
+            render 'unavailable', status: :unauthorized
+          end
+          wants.json do
+            render plain: message, status: :unauthorized
+          end
+          additional_response_formats(wants)
+          wants.ttl do
+            render plain: message, status: :unauthorized
+          end
+          wants.jsonld do
+            render plain: message, status: :unauthorized
+          end
+          wants.nt do
+            render plain: message, status: :unauthorized
+          end
+        end
       end
   end
 end

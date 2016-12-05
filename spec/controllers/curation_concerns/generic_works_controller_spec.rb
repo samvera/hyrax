@@ -12,6 +12,18 @@ describe CurationConcerns::GenericWorksController do
     sign_in user
   end
 
+  describe 'integration test for suppressed documents' do
+    let(:work) do
+      create(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
+    end
+    it 'renders the unavailable message because it is in workflow' do
+      get :show, params: { id: work }
+      expect(response.code).to eq '401'
+      expect(response).to render_template(:unavailable)
+      expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+    end
+  end
+
   describe '#show' do
     context 'my own private work' do
       let(:work) { create(:private_generic_work, user: user) }
@@ -59,7 +71,7 @@ describe CurationConcerns::GenericWorksController do
           allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
         end
 
-        it 'renders an turtle file' do
+        it 'renders a turtle file' do
           get :show, params: { id: '99999999', format: :ttl }
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
@@ -74,6 +86,35 @@ describe CurationConcerns::GenericWorksController do
       it 'someone elses private work should show me the page' do
         get :show, params: { id: work }
         expect(response).to be_success
+      end
+    end
+
+    context 'with work still in workflow' do
+      before do
+        allow(controller).to receive(:search_results).and_return([nil, document_list])
+      end
+      context 'with a user lacking workflow permission' do
+        before do
+          allow(SolrDocument).to receive(:find).and_return(document)
+        end
+        let(:document_list) { [] }
+        let(:document) { instance_double(SolrDocument, suppressed?: true) }
+        it 'shows the unauthorized message' do
+          get :show, params: { id: '99999' }
+          expect(response.code).to eq '401'
+          expect(response).to render_template(:unavailable)
+          expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+        end
+      end
+      context 'with a user granted workflow permission' do
+        let(:document_list) { [document] }
+        let(:document) { instance_double(SolrDocument) }
+        it 'renders without the unauthorized message' do
+          get :show, params: { id: '88888' }
+          expect(response.code).to eq '200'
+          expect(response).to render_template(:show)
+          expect(flash[:notice]).to be_nil
+        end
       end
     end
 
