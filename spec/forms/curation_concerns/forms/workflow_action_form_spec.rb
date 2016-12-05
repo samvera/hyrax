@@ -3,9 +3,7 @@ require 'spec_helper'
 RSpec.describe CurationConcerns::Forms::WorkflowActionForm, no_clean: true do
   let(:work) { create(:work) }
   let(:sipity_entity) do
-    create(:sipity_entity,
-           proxy_for_global_id: work.to_global_id.to_s,
-           workflow_state_id: 2)
+    create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s, workflow_state_id: 2)
   end
   let(:user) { create(:user) }
   let(:current_ability) { double(current_user: user) }

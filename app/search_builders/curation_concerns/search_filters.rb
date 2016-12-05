@@ -1,6 +1,7 @@
 module CurationConcerns::SearchFilters
   extend ActiveSupport::Concern
   include CurationConcerns::FilterByType
+  include CurationConcerns::FilterSuppressed
 
   # Override Hydra::AccessControlsEnforcement (or Hydra::PolicyAwareAccessControlsEnforcement)
   # Allows admin users to see everything (don't apply any gated_discovery_filters for those users)

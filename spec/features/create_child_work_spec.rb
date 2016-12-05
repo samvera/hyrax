@@ -2,23 +2,23 @@ require 'spec_helper'
 require 'redlock'
 
 feature 'Creating a new child Work', :workflow do
-  let(:user) { FactoryGirl.create(:user) }
-
+  let(:user) { create(:user) }
+  let!(:sipity_entity) do
+    create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
+  end
   let(:redlock_client_stub) { # stub out redis connection
     client = double('redlock client')
     allow(client).to receive(:lock).and_yield(true)
     allow(Redlock::Client).to receive(:new).and_return(client)
     client
   }
-  let(:parent) { FactoryGirl.create(:generic_work, user: user, title: ["Parent First"]) }
+  let!(:parent) { create(:generic_work, user: user, title: ["Parent First"]) }
 
   before do
     sign_in user
-
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
     redlock_client_stub
-    parent
   end
 
   it 'creates the child work' do
@@ -34,7 +34,14 @@ feature 'Creating a new child Work', :workflow do
   end
 
   context "when it's being updated" do
-    let(:curation_concern) { FactoryGirl.create(:generic_work, user: user) }
+    let(:curation_concern) { create(:generic_work, user: user) }
+    let(:new_parent) { create(:generic_work, user: user) }
+    let!(:cc_sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: curation_concern.to_global_id.to_s)
+    end
+    let!(:new_sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: new_parent.to_global_id.to_s)
+    end
     before do
       parent.ordered_members << curation_concern
       parent.save!
@@ -46,7 +53,6 @@ feature 'Creating a new child Work', :workflow do
       expect(parent.reload.ordered_members.to_a.length).to eq 1
     end
     it "doesn't lose other memberships" do
-      new_parent = FactoryGirl.create(:generic_work, user: user)
       new_parent.ordered_members << curation_concern
       new_parent.save!
 

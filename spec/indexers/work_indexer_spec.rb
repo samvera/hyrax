@@ -37,30 +37,34 @@ describe CurationConcerns::WorkIndexer do
     end
   end
 
-  context "the object status" do
+  describe 'suppressed state' do
+    before { allow(work).to receive(:suppressed?).and_return(suppressed) }
     context "when suppressed" do
-      before { allow(work).to receive(:suppressed?).and_return(true) }
-
-      it "indexed the suppressed field" do
+      let(:suppressed) { true }
+      it "indexes the suppressed field with a true value" do
         expect(solr_document.fetch('suppressed_bsi')).to be true
       end
     end
 
     context "when not suppressed" do
-      it "indexed the suppressed field" do
+      let(:suppressed) { false }
+      it "indexes the suppressed field with a false value" do
         expect(solr_document.fetch('suppressed_bsi')).to be false
       end
     end
   end
 
   context "the actionable workflow roles" do
+    let!(:sipity_entity) do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
     before do
-      allow(PowerConverter).to receive(:convert_to_sipity_entity).with(work).and_return(create(:sipity_entity))
+      allow(PowerConverter).to receive(:convert_to_sipity_entity).with(work).and_return(sipity_entity)
       allow(CurationConcerns::Workflow::PermissionQuery).to receive(:scope_roles_associated_with_the_given_entity)
         .and_return(['approve', 'reject'])
     end
     it "indexed the roles and state" do
-      expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq ["generic_work-approve", "generic_work-reject"]
+      expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq ["#{sipity_entity.workflow.name}-approve", "#{sipity_entity.workflow.name}-reject"]
       expect(solr_document.fetch('workflow_state_name_ssim')).to eq "initial"
     end
   end

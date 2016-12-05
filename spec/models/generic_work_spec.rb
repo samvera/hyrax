@@ -35,16 +35,25 @@ describe GenericWork do
 
   describe '#suppressed?' do
     let(:work) { described_class.new(state: state) }
-    subject { work.suppressed? }
-
-    context "when the state is 'pending'" do
-      let(:state) { 'pending' }
-      it { is_expected.to be true }
+    context "when state is inactive" do
+      let(:state) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
+      it 'is suppressed' do
+        expect(work).to be_suppressed
+      end
     end
 
-    context "when the state is something else" do
+    context "when the state is active" do
       let(:state) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active') }
-      it { is_expected.to be false }
+      it 'is not suppressed' do
+        expect(work).not_to be_suppressed
+      end
+    end
+
+    context "when the state is nil" do
+      let(:state) { nil }
+      it 'is not suppressed' do
+        expect(work).not_to be_suppressed
+      end
     end
   end
 
