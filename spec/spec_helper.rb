@@ -2,8 +2,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
 def coverage_needed?
-  (!ENV['RAILS_VERSION'] || ENV['RAILS_VERSION'].start_with?('5.0')) &&
-    (ENV['COVERAGE'] || ENV['TRAVIS'])
+  ENV['COVERAGE'] || ENV['TRAVIS']
 end
 
 if coverage_needed?
@@ -29,7 +28,7 @@ EngineCart.load_application!
 require 'devise'
 require 'devise/version'
 require 'mida'
-require 'rails-controller-testing' if Rails::VERSION::MAJOR >= 5
+require 'rails-controller-testing'
 require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/matchers'

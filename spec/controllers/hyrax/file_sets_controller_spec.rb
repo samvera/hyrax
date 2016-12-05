@@ -192,12 +192,9 @@ describe Hyrax::FileSetsController do
           allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
         end
         let(:expected_file_type) do
-          if Rails.version < '5.0.0'
-            Rack::Test::UploadedFile
-          else
-            ActionDispatch::Http::UploadedFile
-          end
+          ActionDispatch::Http::UploadedFile
         end
+
         it "spawns a content new version event job" do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
 

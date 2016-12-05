@@ -17,7 +17,7 @@ describe Hyrax::Admin::StatsController, type: :controller do
 
     describe "#show" do
       let(:expected_params) do
-        Rails.version < '5.0.0' ? {} : ActionController::Parameters.new
+        ActionController::Parameters.new
       end
 
       it 'allows an authorized user to view the page' do
