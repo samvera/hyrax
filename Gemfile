@@ -8,6 +8,9 @@ group :development, :test do
   gem 'coveralls', require: false
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
+
+  # We need > 2.5.1 to fix intermittent errors
+  gem 'jasmine', git: 'https://github.com/jasmine/jasmine-gem.git'
 end
 
 # BEGIN ENGINE_CART BLOCK
