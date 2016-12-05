@@ -66,7 +66,8 @@ describe Sufia::Admin::AdminSetsController do
         it 'creates file sets' do
           expect(service).to receive(:create).and_return(true)
           post :create, params: { admin_set: { title: 'Test title',
-                                               description: 'test description' } }
+                                               description: 'test description',
+                                               workflow_name: 'default' } }
           expect(response).to be_redirect
         end
       end
@@ -108,15 +109,16 @@ describe Sufia::Admin::AdminSetsController do
 
     describe "#update" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:permission_template) { Sufia::PermissionTemplate.find_or_create_by(admin_set_id: admin_set.id) }
       it 'updates a record' do
         # Prevent a save which causes Fedora to complain it doesn't know the referenced node.
         expect_any_instance_of(AdminSet).to receive(:save).and_return(true)
         patch :update, params: { id: admin_set,
-                                 admin_set: { title: "Improved title",
-                                              thumbnail_id: "mw22v559x" } }
+                                 admin_set: { title: "Improved title", thumbnail_id: "mw22v559x", workflow_name: "one_step_mediated_deposit" } }
         expect(response).to be_redirect
         expect(assigns[:admin_set].title).to eq ['Improved title']
         expect(assigns[:admin_set].thumbnail_id).to eq 'mw22v559x'
+        expect(permission_template.workflow_name).to eq 'one_step_mediated_deposit'
       end
     end
   end
