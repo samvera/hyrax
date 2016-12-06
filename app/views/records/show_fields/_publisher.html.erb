@@ -1,7 +1,0 @@
-<% record.publisher.each do |pub| %>
-  <span itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <span itemprop="name"><%= link_to_facet(pub, Solrizer.solr_name("publisher", :facetable)) %></span>
-        </span>
-  <br />
-<% end %>
-

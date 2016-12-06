@@ -1,7 +1,0 @@
-menubar: false
-toolbar1: styleselect | bold italic | link image | undo redo
-toolbar2: table | fullscreen | uploadimage
-plugins:
-  - table
-  - fullscreen
-  - uploadimage

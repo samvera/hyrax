@@ -1,9 +1,0 @@
-The file(s)
-<%=
-  total_shown = 20
-  file_sets.first(total_shown)
-           .map { |fs| link_to(fs, file_set_url(fs)) }
-           .tap { |fs| fs << '...' if file_sets.length > total_shown }
-           .join(', ')
-%>
- could not be updated.  You do not have sufficient privileges to edit it.

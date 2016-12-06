@@ -1,6 +1,0 @@
-<%# this includes the fields in a form necissary for manipulating a single item in a collection %>
-<%# form - form these fields will reside in %>
-<%# action - collection action: add or remove %>
-<%# document - current document %>
-<%= form.hidden_field :members, :value => action %>
-<%= hidden_field :batch_document_ids, '', {value:document.id} %>

@@ -1,5 +1,0 @@
-<li id="document_<%= document.to_param %>" class="document <%= render_document_class document %>" itemscope itemtype="<%= document.itemtype %>">
-  <div class="row">
-    <%= render_document_partials document, blacklight_config.view_config(document_index_view_type).partials, document_counter: document_counter %>
-  </div>
-</li>

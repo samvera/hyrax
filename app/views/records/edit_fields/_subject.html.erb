@@ -1,8 +1,0 @@
-<%= f.input key,
-            as: :multi_value,
-            input_html: {
-              class: 'form-control',
-              data: { 'autocomplete-url' => "/authorities/search/local/subjects",
-                      'autocomplete' => key }
-            },
-            required: f.object.required?(key) %>

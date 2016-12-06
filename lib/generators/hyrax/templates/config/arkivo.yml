@@ -1,6 +1,0 @@
-development:
-  url: http://localhost:8888/
-test:
-  url: http://localhost:8888/
-production:
-  url: http://production.host/

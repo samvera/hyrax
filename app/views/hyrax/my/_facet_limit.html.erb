@@ -1,9 +1,0 @@
-<ul class="facet-values list-unstyled">
-  <% paginator = facet_paginator(facet_field, display_facet) %>
-  <%= render_facet_limit_list paginator, solr_field %>
-
-  <% unless paginator.last_page? || params[:action] == "facet" %>
-    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»',
-       hyrax.dashboard_works_facet_path(solr_field), class: "more_facets_link" %></li>
-  <% end %>
-</ul>

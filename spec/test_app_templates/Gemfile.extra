@@ -1,7 +1,0 @@
-# Use this file to reference specific commits of gems.
-gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'
-
-group :development do
-  gem 'better_errors'
-  gem 'binding_of_caller'
-end

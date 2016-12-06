@@ -1,6 +1,0 @@
-<div class="resource-form-container">
-  <%= simple_form_for [main_app, @presenter], remote: true, html: { id: 'resource-form', 'data-type': 'json' } do |f| %>
-    <%= f.input :thumbnail_id, as: :hidden, input_html: { data: {member_link: 'thumbnail_id'}} %>
-    <%= f.input :representative_id, as: :hidden, input_html: { data: {member_link: 'representative_id'}} %>
-  <% end %>
-</div>

@@ -1,7 +1,0 @@
-<% record.subject.each do |sub| %>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <span itemprop="name"><%= link_to_facet(sub, Solrizer.solr_name("subject", :facetable)) %></span>
-  </span>
-  <br />
-<% end %>
-
