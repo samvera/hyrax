@@ -3,6 +3,15 @@ require 'cancan/matchers'
 describe Hyrax::Ability, type: :model do
   let(:ability) { Ability.new(user) }
   subject { ability }
+
+  describe "#registered_user?" do
+    subject { ability.send :registered_user? }
+    context "with a guest user" do
+      let(:user) { create(:user, :guest) }
+      it { is_expected.to be false }
+    end
+  end
+
   describe "a user with no roles" do
     let(:user) { nil }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
@@ -60,52 +69,6 @@ describe Hyrax::Ability, type: :model do
       it { is_expected.not_to be_able_to(:destroy, admin_set) }
       it { is_expected.not_to be_able_to(:create, permission_template) }
       it { is_expected.not_to be_able_to(:create, permission_template_access) }
-    end
-  end
-
-  describe "proxies and transfers" do
-    let(:sender) { create(:user) }
-    let(:user) { create(:user) }
-    let(:work) { create(:work, user: sender) }
-
-    it { is_expected.not_to be_able_to(:transfer, work.id) }
-
-    describe "user_is_depositor?" do
-      subject { ability.send(:user_is_depositor?, work.id) }
-      it { is_expected.to be false }
-    end
-
-    context "with a ProxyDepositRequest for a work they have deposited" do
-      subject { Ability.new(sender) }
-      it { is_expected.to be_able_to(:transfer, work.id) }
-    end
-
-    context "with a ProxyDepositRequest that they receive" do
-      let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender) }
-      it { is_expected.to be_able_to(:accept, request) }
-      it { is_expected.to be_able_to(:reject, request) }
-      it { is_expected.not_to be_able_to(:destroy, request) }
-
-      context "and the request has already been accepted" do
-        let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender, status: 'accepted') }
-        it { is_expected.not_to be_able_to(:accept, request) }
-        it { is_expected.not_to be_able_to(:reject, request) }
-        it { is_expected.not_to be_able_to(:destroy, request) }
-      end
-    end
-
-    context "with a ProxyDepositRequest they are the sender of" do
-      let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user) }
-      it { is_expected.not_to be_able_to(:accept, request) }
-      it { is_expected.not_to be_able_to(:reject, request) }
-      it { is_expected.to be_able_to(:destroy, request) }
-
-      context "and the request has already been accepted" do
-        let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user, status: 'accepted') }
-        it { is_expected.not_to be_able_to(:accept, request) }
-        it { is_expected.not_to be_able_to(:reject, request) }
-        it { is_expected.not_to be_able_to(:destroy, request) }
-      end
     end
   end
 end
