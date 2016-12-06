@@ -16,7 +16,7 @@ Hyrax::Engine.routes.draw do
   get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list
   get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
 
-  delete '/uploads/:id', to: 'uploads#destroy', as: :hyrax_uploaded_file
+  delete '/uploads/:id', to: 'uploads#destroy', as: :uploaded_file
   post '/uploads', to: 'uploads#create'
   # This is a hack that is required because the rails form the uploader is on
   # sets the _method parameter to patch when the work already exists.
