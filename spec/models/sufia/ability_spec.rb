@@ -38,16 +38,17 @@ describe Sufia::Ability, type: :model do
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.to be_able_to(:read, Sufia::Statistics) }
     it { is_expected.to be_able_to(:read, :admin_dashboard) }
-    it { is_expected.not_to be_able_to(:manage, AdminSet) }
+    it { is_expected.to be_able_to(:manage, AdminSet) }
     it { is_expected.to be_able_to(:create, AdminSet) }
   end
 
   describe "AdminSets and PermissionTemplates" do
     let(:permission_template) { build(:permission_template, admin_set_id: admin_set.id) }
     let(:permission_template_access) { build(:permission_template_access, permission_template: permission_template) }
-    describe "a user with edit access" do
-      let(:user) { create(:user) }
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+    let(:user) { create(:user) }
+    let(:admin_set) { create(:admin_set) }
+
+    RSpec.shared_examples 'A user with additional access' do
       it { is_expected.to be_able_to(:edit, admin_set) }
       it { is_expected.to be_able_to(:update, admin_set) }
       it { is_expected.to be_able_to(:destroy, admin_set) }
@@ -55,9 +56,23 @@ describe Sufia::Ability, type: :model do
       it { is_expected.to be_able_to(:create, permission_template_access) }
     end
 
+    describe 'as admin' do
+      before { expect(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']).at_least(1).times }
+      it '#admin? is true' do
+        expect(ability).to be_admin
+      end
+      it_behaves_like 'A user with additional access'
+    end
+
+    describe 'via AdminSet-specific edit_users' do
+      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      it '#admin? is false' do
+        expect(ability).not_to be_admin
+      end
+      it_behaves_like 'A user with additional access'
+    end
+
     describe "a user without edit access" do
-      let(:user) { create(:user) }
-      let(:admin_set) { create(:admin_set) }
       it { is_expected.not_to be_able_to(:edit, admin_set) }
       it { is_expected.not_to be_able_to(:update, admin_set) }
       it { is_expected.not_to be_able_to(:destroy, admin_set) }
