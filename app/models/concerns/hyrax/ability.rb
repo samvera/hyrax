@@ -47,10 +47,16 @@ module Hyrax
       end
 
       def proxy_deposit_abilities
-        can :transfer, String do |id|
-          user_is_depositor?(id)
+        if Flipflop.transfer_works?
+          can :transfer, String do |id|
+            user_is_depositor?(id)
+          end
         end
-        can :create, ProxyDepositRequest if registered_user?
+
+        if Flipflop.proxy_deposit? && registered_user?
+          can :create, ProxyDepositRequest
+        end
+
         can :accept, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
         can :reject, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
         # a user who sent a proxy deposit request can cancel it if it's pending.
@@ -105,7 +111,7 @@ module Hyrax
       end
 
       def curation_concerns_permissions
-        can :create, Hyrax::ClassifyConcern unless current_user.new_record?
+        can :create, Hyrax::ClassifyConcern if registered_user?
 
         # user can version if they can edit
         alias_action :versions, to: :update
@@ -127,14 +133,17 @@ module Hyrax
       end
 
       def add_to_collection
-        return if current_user.new_record?
+        return unless registered_user?
         can :collect, :all
       end
 
       def registered_user?
+        return false if current_user.guest?
         user_groups.include? 'registered'
       end
 
+      # Returns true if the current user is the depositor of the specified work
+      # @param document_id [String] the id of the document.
       def user_is_depositor?(document_id)
         Hyrax::WorkRelation.new.search_with_conditions(
           id: document_id,
