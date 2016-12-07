@@ -34,9 +34,8 @@ module Hyrax
       end
 
       def update_work_from_item(work)
-        reset_metadata(work)
         work_actor = Hyrax::CurationConcern.actor(work, user)
-        work_attributes = attributes.merge(arkivo_checksum: item['file']['md5'])
+        work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
         work_actor.update(work_attributes)
         file_set = work.file_sets.first
         file_actor = ::Hyrax::Actors::FileSetActor.new(file_set, user)
@@ -50,20 +49,23 @@ module Hyrax
 
       private
 
-        def reset_metadata(work)
-          work.resource_type = []
-          work.title = []
-          work.rights = []
-          work.keyword = []
-          work.creator = []
-          work.description = []
-          work.publisher = []
-          work.date_created = []
-          work.based_near = []
-          work.identifier = []
-          work.related_url = []
-          work.language = []
-          work.contributor = []
+        # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
+        def default_attributes
+          {
+            "resource_type" => [],
+            "title" => [],
+            "rights" => [],
+            "keyword" => [],
+            "creator" => [],
+            "description" => [],
+            "publisher" => [],
+            "date_created" => [],
+            "based_near" => [],
+            "identifier" => [],
+            "related_url" => [],
+            "language" => [],
+            "contributor" => []
+          }
         end
 
         def default_visibility

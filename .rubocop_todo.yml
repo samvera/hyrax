@@ -132,6 +132,7 @@ RSpec/ExampleLength:
     - 'spec/jobs/content_deposit_event_job_spec.rb'
     - 'spec/jobs/content_delete_event_job_spec.rb'
     - 'spec/jobs/ingest_file_job_spec.rb'
+    - 'spec/lib/hyrax/arkivo/actor_spec.rb'
     - 'spec/lib/hyrax/resource_sync/capability_list_writer_spec.rb'
     - 'spec/models/checksum_audit_log_spec.rb'
     - 'spec/models/featured_work_spec.rb'
