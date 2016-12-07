@@ -1,14 +1,14 @@
     <div class="panel panel-default tabs" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
         <li class="active">
-          <a href="#description"><%= t('.tabs.description') %></a>
+          <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
         </li>
         <% if @form.persisted? %>
           <li>
-            <a href="#participants"><%= t('.tabs.participants') %></a>
+            <a href="#participants" role="tab" data-toggle="tab"><%= t('.tabs.participants') %></a>
           </li>
           <li>
-            <a href="#visibility"><%= t('.tabs.visibility') %></a>
+            <a href="#visibility" role="tab" data-toggle="tab"><%= t('.tabs.visibility') %></a>
           </li>
         <% end %>
       </ul>
