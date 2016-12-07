@@ -70,11 +70,7 @@ describe Hyrax::BatchUploadsController do
                             batch_upload_item: { keyword: [""], visibility: 'open' } }
     end
     let(:expected_shared_params) do
-      if Rails.version < '5.0.0'
-        { 'keyword' => [], 'visibility' => 'open' }
-      else
-        ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
-      end
+      ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
     end
     it "excludes uploaded_files and title" do
       expect(subject).to eq expected_shared_params

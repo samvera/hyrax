@@ -66,7 +66,7 @@ module Hydra
 
     def check_for_empty!
       return unless check_for_empty_batch?
-      redirect_to :back
+      redirect_back fallback_location: hyrax.batch_edits_path
       false
     end
   end

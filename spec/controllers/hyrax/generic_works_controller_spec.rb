@@ -228,16 +228,9 @@ describe Hyrax::GenericWorksController do
           it "records the work" do
             # TODO: ensure the actor stack, called with these params
             # makes one work, two file sets and calls ImportUrlJob twice.
-            if Rails.version < '5.0.0'
-              expect(actor).to receive(:create)
-                .with(hash_including(uploaded_files: [],
-                                     remote_files: browse_everything_params.values))
-                .and_return(true)
-            else
-              expect(actor).to receive(:create).with(ActionController::Parameters) do |ac_params|
-                expect(ac_params['uploaded_files']).to eq []
-                expect(ac_params['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
-              end
+            expect(actor).to receive(:create).with(ActionController::Parameters) do |ac_params|
+              expect(ac_params['uploaded_files']).to eq []
+              expect(ac_params['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
             end
 
             post :create, params: {
@@ -334,11 +327,7 @@ describe Hyrax::GenericWorksController do
     it "can update file membership" do
       patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
       expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
-      if Rails.version < '5.0.0'
-        expect(actor).to have_received(:update).with(expected_params)
-      else
-        expect(actor).to have_received(:update).with(ActionController::Parameters.new(expected_params).permit!)
-      end
+      expect(actor).to have_received(:update).with(ActionController::Parameters.new(expected_params).permit!)
     end
 
     describe 'changing rights' do

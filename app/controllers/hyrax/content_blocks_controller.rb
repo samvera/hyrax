@@ -8,22 +8,12 @@ module Hyrax
 
     def create
       @content_block.save
-      if respond_to? :redirect_back
-        redirect_back fallback_location: hyrax.content_blocks_path
-      else
-        # Deprecated in Rails 5.0
-        redirect_to :back
-      end
+      redirect_back fallback_location: hyrax.content_blocks_path
     end
 
     def update
       @content_block.update(update_params)
-      if respond_to? :redirect_back
-        redirect_back fallback_location: hyrax.content_blocks_path
-      else
-        # Deprecated in Rails 5.0
-        redirect_to :back
-      end
+      redirect_back fallback_location: hyrax.content_blocks_path
     end
 
     protected
