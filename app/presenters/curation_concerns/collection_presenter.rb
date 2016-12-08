@@ -29,5 +29,9 @@ module CurationConcerns
     def total_items
       @solr_document.fetch('member_ids_ssim', []).length
     end
+
+    def to_s
+      title.first
+    end
   end
 end

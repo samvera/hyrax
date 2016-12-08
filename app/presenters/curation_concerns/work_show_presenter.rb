@@ -80,12 +80,8 @@ module CurationConcerns
       CompositePresenterFactory.new(file_presenter_class, work_presenter_class, ordered_ids & file_set_ids)
     end
 
-    # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
-    def collection_presenters
-      PresenterFactory.build_presenters(in_collection_ids, collection_presenter_class,
-                                        *presenter_factory_arguments)
-    end
-
+    # Get presenters for the collections this work is a member of via the member_of_collections association.
+    # @return [Array<CollectionPresenter>] presenters
     def member_of_collection_presenters
       PresenterFactory.build_presenters(member_of_collection_ids, collection_presenter_class,
                                         *presenter_factory_arguments)
