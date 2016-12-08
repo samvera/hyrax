@@ -9,8 +9,10 @@ module CurationConcerns
     extend ActiveSupport::Concern
     include CurationConcerns::FilterSuppressed
 
+    # Skip the filter if the current user is permitted to take
+    # workflow actions on the work corresponding to the SolrDocument
+    # with id = `blacklight_params[:id]`
     def only_active_works(solr_parameters)
-      # Do not filter works if current user is permitted to take workflow actions
       return if user_has_active_workflow_role?
       super
     end
