@@ -6,28 +6,28 @@ describe BatchEditsHelper, type: :helper do
 
     context "with my works" do
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/works")
+        allow(controller).to receive(:params).and_return(controller: "my/works")
         expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my shares" do
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/shares")
+        allow(controller).to receive(:params).and_return(controller: "my/shares")
         expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my highlights" do
       it "shows the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/shares")
+        allow(controller).to receive(:params).and_return(controller: "my/shares")
         expect(helper.render_check_all).to have_css("span.glyphicon-cog")
       end
     end
 
     context "with my collections" do
       it "does not show the check all dropdown" do
-        allow(controller).to receive(:controller_name).and_return("my/collections")
+        allow(controller).to receive(:params).and_return(controller: "my/collections")
         expect(helper.render_check_all).to be_nil
       end
     end
