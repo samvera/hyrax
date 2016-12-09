@@ -4,7 +4,8 @@ FactoryGirl.define do
       user { FactoryGirl.create(:user) }
     end
     sequence(:title) { |n| ["Title #{n}"] }
-    before(:create) do |work, evaluator|
+
+    after(:build) do |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
 

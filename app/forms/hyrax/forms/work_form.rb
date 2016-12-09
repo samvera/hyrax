@@ -12,9 +12,10 @@ module Hyrax
                :open_access_with_embargo_release_date?, :private_access?,
                :embargo_release_date, :lease_expiration_date, :member_ids,
                :visibility, :in_works_ids, :depositor, :on_behalf_of, :permissions,
-               to: :model
+               :member_of_collection_ids, to: :model
 
       attr_reader :agreement_accepted
+
       self.terms = [:title, :creator, :contributor, :description,
                     :keyword, :rights, :publisher, :date_created, :subject, :language,
                     :identifier, :based_near, :related_url,
@@ -22,24 +23,25 @@ module Hyrax
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
-                    :collection_ids, :admin_set_id]
+                    :member_of_collection_ids, :admin_set_id]
 
       self.required_fields = [:title, :creator, :keyword, :rights]
 
-      def initialize(model, current_ability)
+      def initialize(model, current_ability, controller)
         @current_ability = current_ability
         @agreement_accepted = !model.new_record?
+        @controller = controller
         super(model)
       end
 
-      # The value for embargo_relase_date and lease_expiration_date should not
-      # be initialized to empty string
+      # The value for some fields should not be set to the defaults ([''])
+      # because it should be an empty array instead
       def initialize_field(key)
         super unless [:embargo_release_date, :lease_expiration_date].include?(key)
       end
 
       def [](key)
-        return model.in_collection_ids if key == :collection_ids
+        return model.member_of_collection_ids if key == :member_of_collection_ids
         super
       end
 
@@ -61,7 +63,7 @@ module Hyrax
            :visibility_after_embargo, :visibility_during_lease,
            :lease_expiration_date, :visibility_after_lease, :visibility,
            :thumbnail_id, :representative_id, :ordered_member_ids,
-           :collection_ids, :in_works_ids, :admin_set_id]
+           :member_of_collection_ids, :in_works_ids, :admin_set_id]
       end
 
       # The ordered_members which are FileSet types
@@ -76,15 +78,43 @@ module Hyrax
         model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym != :file_set }
       end
 
+      # Get a list of collection id/title pairs for the select form
+      def collections_for_select
+        service = Hyrax::CollectionsService.new(@controller)
+        convert_solr_docs_to_select_options(service.search_results(:edit))
+      end
+
+      def convert_solr_docs_to_select_options(results)
+        option_values = results.map do |r|
+          [r.to_s, r.id]
+        end
+        option_values.sort do |a, b|
+          if a.first && b.first
+            a.first <=> b.first
+          else
+            a.first ? -1 : 1
+          end
+        end
+      end
+
       # This determines whether the allowed parameters are single or multiple.
-      # By default it delegates to the model.
-      def self.multiple?(term)
-        return true if ['rights', 'collection_ids', 'ordered_member_ids', 'in_works_ids'].include? term.to_s
+      # We are returning true for properties that are backed by methods, for
+      # which the HydraEditor::FieldMetadataService cannot determine are multiple.
+      # The instance variable is used when choosing which UI widget to draw.
+      def multiple?(field)
+        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
+        super
+      end
+
+      # The class method _multiple?_ is used for building the permitted params
+      # for the update action
+      def self.multiple?(field)
+        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
         super
       end
 
       def self.build_permitted_params
-        super + [:on_behalf_of, { collection_ids: [] }]
+        super + [:on_behalf_of]
       end
 
       # If mediated deposit is indicated, don't allow edit access to be granted to other users.

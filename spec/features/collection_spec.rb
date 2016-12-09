@@ -1,8 +1,6 @@
 describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
-  let(:work1) { create(:work, title: ["King Louie"], user: user) }
-  let(:work2) { create(:work, title: ["King Kong"], user: user) }
   let(:collection1) { create(:public_collection, user: user) }
   let(:collection2) { create(:public_collection, user: user) }
 
@@ -37,10 +35,10 @@ describe 'collection', type: :feature do
 
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
     let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user) }
+    let!(:work1) { create(:work, title: ["King Louie"], user: user) }
+    let!(:work2) { create(:work, title: ["King Kong"], user: user) }
 
     before do
-      work1
-      work2
       sign_in user
     end
 
@@ -76,9 +74,11 @@ describe 'collection', type: :feature do
   end
 
   describe 'collection show page' do
-    let!(:collection) do
-      create(:public_collection, description: ["Collection description"], members: [work1, work2], user: user)
+    let(:collection) do
+      create(:public_collection, user: user, description: ['collection description'])
     end
+    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
+    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
     before do
       sign_in user
       visit '/dashboard/collections'
@@ -191,7 +191,9 @@ describe 'collection', type: :feature do
   end
 
   describe 'edit collection' do
-    let!(:collection) { create(:named_collection, members: [work1, work2], user: user) }
+    let(:collection) { create(:named_collection, user: user) }
+    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
+    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
     before do
       sign_in user
@@ -231,7 +233,9 @@ describe 'collection', type: :feature do
   end
 
   describe "Removing a files from a collection" do
-    let!(:collection) { create(:named_collection, members: [work1, work2], user: user) }
+    let(:collection) { create(:named_collection, user: user) }
+    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
+    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
     before do
       sign_in user
@@ -260,8 +264,12 @@ describe 'collection', type: :feature do
   end
 
   describe 'show pages of a collection' do
-    let(:works)       { (0..12).map { create(:work, user: user) } }
-    let!(:collection) { create(:named_collection, members: works, user: user) }
+    before do
+      (0..12).map do
+        create(:work, member_of_collections: [collection], user: user)
+      end
+    end
+    let(:collection) { create(:named_collection, user: user) }
 
     before { sign_in user }
 

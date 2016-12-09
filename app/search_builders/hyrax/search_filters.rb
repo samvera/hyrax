@@ -2,6 +2,7 @@ module Hyrax
   module SearchFilters
     extend ActiveSupport::Concern
     include Hyrax::FilterByType
+    include FilterSuppressed
 
     # Override Hydra::AccessControlsEnforcement (or Hydra::PolicyAwareAccessControlsEnforcement)
     # Allows admin users to see everything (don't apply any gated_discovery_filters for those users)

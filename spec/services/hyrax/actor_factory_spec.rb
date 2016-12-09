@@ -7,7 +7,7 @@ describe Hyrax::ActorFactory, :no_clean do
     it do
       is_expected.to eq [Hyrax::CreateWithRemoteFilesActor,
                          Hyrax::CreateWithFilesActor,
-                         Hyrax::Actors::AddToCollectionActor,
+                         Hyrax::Actors::AddAsMemberOfCollectionsActor,
                          Hyrax::Actors::AddToWorkActor,
                          Hyrax::Actors::AssignRepresentativeActor,
                          Hyrax::Actors::AttachFilesActor,
@@ -24,7 +24,7 @@ describe Hyrax::ActorFactory, :no_clean do
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
         Hyrax::CreateWithFilesActor,
-        Hyrax::Actors::AddToCollectionActor,
+        Hyrax::Actors::AddAsMemberOfCollectionsActor,
         Hyrax::Actors::AddToWorkActor,
         Hyrax::Actors::AssignRepresentativeActor,
         Hyrax::Actors::AttachFilesActor,

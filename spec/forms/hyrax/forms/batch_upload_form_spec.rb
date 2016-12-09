@@ -1,6 +1,7 @@
 describe Hyrax::Forms::BatchUploadForm do
   let(:model) { GenericWork.new }
-  let(:form) { described_class.new(model, ability) }
+  let(:controller) { instance_double(Hyrax::BatchUploadsController) }
+  let(:form) { described_class.new(model, ability, controller) }
   let(:ability) { Ability.new(user) }
   let(:user) { build(:user, display_name: 'Jill Z. User') }
 
@@ -60,7 +61,7 @@ describe Hyrax::Forms::BatchUploadForm do
                          :ordered_member_ids,
                          :source,
                          :in_works_ids,
-                         :collection_ids,
+                         :member_of_collection_ids,
                          :admin_set_id]
     end
   end

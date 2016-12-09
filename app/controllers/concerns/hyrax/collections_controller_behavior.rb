@@ -21,16 +21,7 @@ module Hyrax
       copy_blacklight_config_from(::CatalogController)
 
       # Catch permission errors
-      rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-        if exception.action == :edit
-          redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
-        elsif current_user && current_user.persisted?
-          redirect_to root_url, alert: exception.message
-        else
-          session['user_return_to'] = request.url
-          redirect_to main_app.new_user_session_url, alert: exception.message
-        end
-      end
+      rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_collection_access
 
       # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
       before_action :authenticate_user!, except: [:show, :index]
@@ -58,9 +49,20 @@ module Hyrax
       # To build a query to find a list of collections
       self.list_search_builder_class = Hyrax::CollectionSearchBuilder
       # The search builder to find the collection
-      self.single_item_search_builder_class = WorkSearchBuilder
+      self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
       self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
+    end
+
+    def deny_collection_access(exception)
+      if exception.action == :edit
+        redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
+      elsif current_user && current_user.persisted?
+        redirect_to root_url, alert: exception.message
+      else
+        session['user_return_to'] = request.url
+        redirect_to main_app.new_user_session_url, alert: exception.message
+      end
     end
 
     def index
@@ -97,7 +99,6 @@ module Hyrax
 
     def after_create_error
       form
-
       respond_to do |format|
         format.html { render action: 'new' }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
@@ -127,7 +128,6 @@ module Hyrax
     def after_update_error
       form
       query_collection_members
-
       respond_to do |format|
         format.html { render action: 'edit' }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
@@ -257,11 +257,15 @@ module Hyrax
 
       def add_members_to_collection(collection = nil)
         collection ||= @collection
-        collection.add_members batch
+        collection.add_member_objects batch
       end
 
       def remove_members_from_collection
-        @collection.members.delete(batch.map { |pid| ActiveFedora::Base.find(pid) })
+        batch.each do |pid|
+          work = ActiveFedora::Base.find(pid)
+          work.member_of_collections.delete @collection
+          work.save!
+        end
       end
 
       def assign_batch_to_collection

@@ -1,6 +1,9 @@
 module Hyrax
   ### Allows :deposit as a valid type
   class AdminSetSearchBuilder < ::SearchBuilder
+    # This skips the filter added by FilterSuppressed
+    self.default_processor_chain -= [:only_active_works]
+
     def initialize(context, access)
       @access = access
       super(context)

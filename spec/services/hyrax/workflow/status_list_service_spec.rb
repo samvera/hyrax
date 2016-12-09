@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
   describe "#each" do
     let(:user) { create(:user) }
     let(:service) { described_class.new(user) }
+    let!(:sipity_entity) { create(:sipity_entity) }
     let(:document) do
       { id: '33333',
         has_model_ssim: ['GenericWork'],
@@ -19,7 +20,6 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     let(:workflow_role) { instance_double(Sipity::Role, name: 'approving') }
     let(:workflow_roles) { [instance_double(Sipity::WorkflowRole, role: workflow_role)] }
     before do
-      create(:sipity_entity)
       ActiveFedora::SolrService.add([document, ability], commit: true)
     end
 
@@ -28,6 +28,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     context "when user has roles" do
       before do
         allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_processing_workflow_roles_for_user_and_workflow).and_return(workflow_roles)
+        allow(Sipity::Workflow).to receive(:all).and_return([instance_double(Sipity::Workflow, name: 'generic_work')])
       end
 
       it "returns status rows" do

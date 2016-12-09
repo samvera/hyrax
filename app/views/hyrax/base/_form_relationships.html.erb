@@ -6,13 +6,7 @@
 <% end %>
 
 <%= render 'form_in_works', f: f %>
-
-<h2><%= t("hyrax.works.#{action_name}.in_collections") %></h2>
-<div id="collection-widget">
-  <%= f.input :collection_ids, as: :select,
-              collection: available_collections(nil),
-              input_html: { class: 'form-control', multiple: true } %>
-</div>
+<%= render 'form_member_of_collections', f: f %>
 
 <% if params[:id] %>
   <h3><%= t("hyrax.works.#{action_name}.in_this_work") %></h3>

@@ -13,15 +13,15 @@ describe Hyrax::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together all the goodness' do
-    [::Hyrax::WithFileSets, ::Hyrax::HumanReadableType, Hyrax::Noid, Hyrax::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common].each do |mixin|
+    [::Hyrax::WithFileSets, ::Hyrax::HumanReadableType, Hyrax::Noid, Hyrax::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common, Hyrax::Suppressible].each do |mixin|
       expect(subject.class.ancestors).to include(mixin)
     end
   end
   describe '#to_s' do
     it 'uses the provided titles' do
-      # The title property would return the terms in random order, so stub the behavior:
-      allow(subject).to receive(:title).and_return(%w(Hello World))
-      expect(subject.to_s).to eq('Hello | World')
+      subject.title = %w(Hello World)
+      expect(subject.to_s).to include 'Hello'
+      expect(subject.to_s).to include 'World'
     end
   end
 

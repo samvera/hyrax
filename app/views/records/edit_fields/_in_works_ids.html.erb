@@ -12,7 +12,7 @@ HTML Properties:
   table:
     data-query-url : URL base to append newly added work ID to for querying details (title, href)
 %>
-<% if f.object.class.multiple? key %>
+<% if f.object.multiple? key %>
   <div class="form-group multi_value optional work_in_works_ids managed">
     <table class="table table-striped related-files relationships-ajax-enabled"
            data-query-url="<%=polymorphic_path([main_app, :hyrax, curation_concern.model_name.singular], id: '$id') %>">

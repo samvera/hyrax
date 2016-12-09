@@ -24,6 +24,7 @@ module Hyrax
       require 'hyrax/name'
       require 'hyrax/controller_resource'
       require 'hyrax/single_use_error'
+      require 'hyrax/workflow_authorization_exception'
       require 'power_converters'
       require 'dry/struct'
       require 'dry/equalizer'

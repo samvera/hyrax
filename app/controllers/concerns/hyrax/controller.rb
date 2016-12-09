@@ -8,13 +8,8 @@ module Hyrax::Controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
 
-    rescue_from ActiveFedora::ObjectNotFoundError do |exception|
-      not_found_response(exception)
-    end
-
-    rescue_from Blacklight::Exceptions::InvalidSolrID do |exception|
-      not_found_response(exception)
-    end
+    rescue_from ActiveFedora::ObjectNotFoundError, with: :not_found_response
+    rescue_from Blacklight::Exceptions::InvalidSolrID, with: :not_found_response
   end
 
   # Override Devise method to redirect to dashboard after signing in

@@ -3,7 +3,7 @@ module Hyrax
     def self.stack_actors(curation_concern)
       [CreateWithRemoteFilesActor,
        CreateWithFilesActor,
-       Hyrax::Actors::AddToCollectionActor,
+       Hyrax::Actors::AddAsMemberOfCollectionsActor,
        Hyrax::Actors::AddToWorkActor,
        Hyrax::Actors::AssignRepresentativeActor,
        Hyrax::Actors::AttachFilesActor,

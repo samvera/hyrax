@@ -1,6 +1,7 @@
+# TODO: this should be merged with work_form_spec.rb
 describe Hyrax::GenericWorkForm do
   let(:work) { GenericWork.new }
-  let(:form) { described_class.new(work, nil) }
+  let(:form) { described_class.new(work, nil, nil) }
 
   describe "#required_fields" do
     subject { form.required_fields }
@@ -25,12 +26,13 @@ describe Hyrax::GenericWorkForm do
 
   describe "#[]" do
     subject { form[term] }
-    context "for collection_ids" do
-      let(:term) { :collection_ids }
+    context "for member_of_collection_ids" do
+      let(:term) { :member_of_collection_ids }
       it { is_expected.to eq [] }
+
       context "when the model has collection ids" do
         before do
-          allow(work).to receive(:in_collection_ids).and_return(['col1', 'col2'])
+          allow(work).to receive(:member_of_collection_ids).and_return(['col1', 'col2'])
         end
         # This allows the edit form to show collections the work is already a member of.
         it { is_expected.to eq ['col1', 'col2'] }
@@ -49,7 +51,7 @@ describe Hyrax::GenericWorkForm do
         thumbnail_id: '789',
         keyword: ['derp'],
         rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
-        collection_ids: ['123456', 'abcdef']
+        member_of_collection_ids: ['123456', 'abcdef']
       )
     end
 
@@ -61,7 +63,7 @@ describe Hyrax::GenericWorkForm do
       expect(subject['visibility']).to eq 'open'
       expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['keyword']).to eq ['derp']
-      expect(subject['collection_ids']).to eq ['123456', 'abcdef']
+      expect(subject['member_of_collection_ids']).to eq ['123456', 'abcdef']
     end
 
     context '.model_attributes' do
@@ -71,7 +73,7 @@ describe Hyrax::GenericWorkForm do
           description: [''],
           keyword: [''],
           rights: [''],
-          collection_ids: [''],
+          member_of_collection_ids: [''],
           on_behalf_of: 'Melissa'
         )
       end
@@ -81,7 +83,7 @@ describe Hyrax::GenericWorkForm do
         expect(subject['description']).to be_empty
         expect(subject['rights']).to be_empty
         expect(subject['keyword']).to be_empty
-        expect(subject['collection_ids']).to be_empty
+        expect(subject['member_of_collection_ids']).to be_empty
         expect(subject['on_behalf_of']).to eq 'Melissa'
       end
     end
