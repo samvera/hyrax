@@ -73,10 +73,15 @@ feature 'collection' do
 
   describe 'show collection' do
     let!(:collection) do
-      create(:collection, user: user, description: ['collection description'], members: [gw1, gw2])
+      create(:collection, user: user, description: ['collection description'])
     end
 
     before do
+      [gw1, gw2].each do |gw|
+        gw.member_of_collections = [collection]
+        gw.save
+      end
+
       sign_in user
       visit search_path_for_my_collections
     end
@@ -120,9 +125,14 @@ feature 'collection' do
 
   describe 'edit collection' do
     let!(:collection) do
-      create(:collection, user: user, description: ['collection description'], members: [gw1, gw2])
+      create(:collection, user: user, description: ['collection description'])
     end
     before do
+      [gw1, gw2].each do |gw|
+        gw.member_of_collections = [collection]
+        gw.save!
+      end
+
       sign_in user
       visit search_path_for_my_collections
     end
@@ -174,6 +184,8 @@ feature 'collection' do
       within("#document_#{gw1.id}") do
         click_link('Remove From Collection')
       end
+
+      visit collection_path collection.id
       expect(page).to have_content 'Test collection title'
       expect(page).to have_content 'collection description'
       expect(page).not_to have_content(gw1.title.first)
@@ -190,6 +202,8 @@ feature 'collection' do
       within("#document_#{gw1.id}") do
         click_link('Remove From Collection')
       end
+
+      visit collection_path collection.id
       expect(page).to have_content 'Test collection title'
       expect(page).to have_content 'collection description'
       expect(page).not_to have_content(gw1.title.first)
@@ -216,14 +230,15 @@ feature 'collection' do
   end
 
   describe 'show pages of a collection' do
-    let(:generic_works) do
-      (0..12).map { create(:generic_work, user: user) }
-    end
     let!(:collection) do
-      create(:collection, user: user, description: ['collection description'], members: generic_works)
+      create(:collection, user: user, description: ['collection description'])
     end
 
     before do
+      12.times do
+        create(:generic_work, user: user, member_of_collections: [collection])
+      end
+
       sign_in user
       visit search_path_for_my_collections
     end

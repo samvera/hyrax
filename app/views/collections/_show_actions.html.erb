@@ -2,7 +2,7 @@
   <h2 class="non lower">Actions</h2>
   <p>
       <%= link_to "Edit", edit_collection_path, class: 'btn btn-default' %> &nbsp;&nbsp;
-      <%= link_to "Add files from your dashboard",  search_path_for_my_works, class: 'btn btn-default' %>
+      <%= link_to "Delete", [main_app, @presenter], class: 'btn btn-danger pull-right', data: { confirm: "Delete this Collection?" }, method: :delete %>
   </p>
 <%end %>
 

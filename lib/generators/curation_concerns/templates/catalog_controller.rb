@@ -30,6 +30,7 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name('language', :facetable), limit: 5
     config.add_facet_field solr_name('based_near', :facetable), limit: 5
     config.add_facet_field solr_name('publisher', :facetable), limit: 5
+    config.add_facet_field solr_name('member_of_collections', :symbol), limit: 5, label: 'Collections'
     config.add_facet_field 'generic_type_sim', show: false, single: true
 
     # Have BL send all facet field names to Solr, which has been the default

@@ -124,22 +124,6 @@ describe CurationConcerns::WorkShowPresenter do
     end
   end
 
-  describe "#collection_presenters" do
-    let(:collection) { create(:collection) }
-    let(:obj) { create(:work) }
-    let(:attributes) { obj.to_solr }
-
-    before do
-      collection.members << obj
-      collection.save!
-      obj.save!
-    end
-
-    it "filters out members that are not file sets" do
-      expect(presenter.collection_presenters.map(&:id)).to eq [collection.id]
-    end
-  end
-
   describe '#page_title' do
     subject { presenter.page_title }
     it { is_expected.to eq 'foo' }

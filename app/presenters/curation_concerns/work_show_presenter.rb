@@ -39,7 +39,7 @@ module CurationConcerns
     delegate :title, :date_created, :date_modified, :date_uploaded, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
              :lease_expiration_date, :rights, :source, :thumbnail_id, :representative_id,
-             to: :solr_document
+             :member_of_collection_ids, to: :solr_document
 
     # @return [Array<FileSetPresenter>] presenters for the orderd_members that are FileSets
     def file_set_presenters
@@ -77,19 +77,17 @@ module CurationConcerns
     # @param [Class] presenter_class the type of presenter to build
     # @return [Array<presenter_class>] presenters for the ordered_members (not filtered by class)
     def member_presenters(ids = ordered_ids, presenter_class = composite_presenter_class)
-      PresenterFactory.build_presenters(ids,
-                                        presenter_class,
-                                        *presenter_factory_arguments)
+      PresenterFactory.build_presenters(ids, presenter_class, *presenter_factory_arguments)
     end
 
     def composite_presenter_class
       CompositePresenterFactory.new(file_presenter_class, work_presenter_class, ordered_ids & file_set_ids)
     end
 
-    # @return [Array<CollectionPresenter>] presenters for the collections that this work is a member of
-    def collection_presenters
-      PresenterFactory.build_presenters(in_collection_ids,
-                                        collection_presenter_class,
+    # Get presenters for the collections this work is a member of via the member_of_collections association.
+    # @return [Array<CollectionPresenter>] presenters
+    def member_of_collection_presenters
+      PresenterFactory.build_presenters(member_of_collection_ids, collection_presenter_class,
                                         *presenter_factory_arguments)
     end
 
@@ -121,16 +119,14 @@ module CurationConcerns
 
       # @return [Array<String>] ids of the collections that this work is a member of
       def in_collection_ids
-        ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
-                                        fl: ActiveFedora.id_field)
+        ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", fl: ActiveFedora.id_field)
                                  .map { |x| x.fetch(ActiveFedora.id_field) }
       end
 
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
         @ordered_ids ||= begin
-                           ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
-                                                           fl: "ordered_targets_ssim")
+                           ActiveFedora::SolrService.query("proxy_in_ssi:#{id}", fl: "ordered_targets_ssim")
                                                     .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
                          end
       end

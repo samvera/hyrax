@@ -1,4 +1,4 @@
-<% if can?(:edit, document) || can?(:collect, document) %>
+<% if can?(:edit, document) %>
   <div class="btn-group">
     <button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown" href="#">Select an action <span class="caret"></span></button>
     <ul class="dropdown-menu">
@@ -20,12 +20,6 @@
           <% end %>
         </li>
       <% end %>
-      <% if can? :collect, document %>
-        <li>
-          <%= link_to_select_collection document %>
-        </li>
-      <% end %>
     </ul>
-    <%= render 'collections/add_to_collection_modal', collectible: document if can? :collect, document %>
   </div>
 <% end %>

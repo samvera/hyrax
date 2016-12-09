@@ -55,55 +55,19 @@ describe Collection, type: :model do
     end
   end
 
-  describe "#members" do
+  describe "#members_objects" do
+    before do
+      subject.save
+    end
     it "is empty by default" do
-      expect(subject.members).to be_empty
+      expect(subject.member_objects).to match_array []
     end
 
     context "adding members" do
-      context "using assignment" do
-        subject { described_class.create!(title: ['Some title'], members: [gf1, gf2]) { |c| c.apply_depositor_metadata(user) } }
-
-        it "has many files" do
-          expect(subject.reload.members).to match_array [gf1, gf2]
-        end
-      end
-
-      context "using append" do
-        before do
-          subject.members = [gf1]
-          subject.save
-        end
-        it "allows new files to be added" do
-          subject.reload
-          subject.members << gf2
-          subject.save
-          expect(subject.reload.members).to match_array [gf1, gf2]
-        end
-
-        it "allows multiple files to be added" do
-          subject.reload
-          subject.add_members [gf2.id, gf3.id]
-          subject.save
-          expect(subject.reload.members).to match_array [gf1, gf2, gf3]
-        end
-      end
-    end
-
-    context "removing members" do
-      before do
-        subject.members = [gf1, gf2]
-        subject.save!
-      end
-
-      it "allows files to be removed" do
-        # force the "in_collections" to be cached:
-        expect(gf1.in_collections).to eq [subject]
-
-        # We need to ensure that deleting causes the collection to be flushed.
-        subject.reload.members.delete(gf1)
+      it "allows multiple files to be added" do
+        subject.add_member_objects [gf1.id, gf2.id, gf3.id]
         subject.save
-        expect(subject.reload.members).to eq [gf2]
+        expect(subject.reload.member_objects).to match_array [gf1, gf2, gf3]
       end
     end
   end
@@ -150,16 +114,15 @@ describe Collection, type: :model do
     end
 
     let(:member) { Member.create }
-    let(:collection) { OtherCollection.new }
+    let(:collection) { OtherCollection.create }
 
     before do
-      collection.members << member
-      collection.save
+      collection.add_member_objects member.id
     end
 
     it "have members that know about the collection" do
       member.reload
-      expect(member.in_collections).to eq [collection]
+      expect(member.member_of_collections).to eq [collection]
     end
   end
 end
