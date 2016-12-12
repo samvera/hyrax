@@ -117,12 +117,6 @@ module CurationConcerns
         [current_ability, request]
       end
 
-      # @return [Array<String>] ids of the collections that this work is a member of
-      def in_collection_ids
-        ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", fl: ActiveFedora.id_field)
-                                 .map { |x| x.fetch(ActiveFedora.id_field) }
-      end
-
       # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
         @ordered_ids ||= begin
