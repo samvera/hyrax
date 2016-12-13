@@ -1,3 +1,5 @@
+![Logo](https://raw.githubusercontent.com/projecthydra-labs/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
+
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
 [![Build Status](https://travis-ci.org/projecthydra-labs/hyrax.png?branch=master)](https://travis-ci.org/projecthydra-labs/hyrax)
 [![Coverage Status](https://coveralls.io/repos/github/projecthydra-labs/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra-labs/hyrax?branch=master)
