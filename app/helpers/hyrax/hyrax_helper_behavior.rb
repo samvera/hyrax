@@ -222,9 +222,9 @@ module Hyrax
         if document.registered?
           content_tag :span, institution_name, class: "label label-info", title: institution_name
         elsif document.public?
-          content_tag :span, t('hyrax.visibility.open'), class: "label label-success", title: t('hyrax.visibility.open_title_attr')
+          content_tag :span, t('hyrax.visibility.open.text'), class: "label label-success", title: t('hyrax.visibility.open_title_attr')
         else
-          content_tag :span, t('hyrax.visibility.private'), class: "label label-danger", title: t('hyrax.visibility.private_title_attr')
+          content_tag :span, t('hyrax.visibility.private.text'), class: "label label-danger", title: t('hyrax.visibility.private_title_attr')
         end
       end
 
