@@ -528,7 +528,7 @@ en:
       authenticated:
         text: *INSTITUTION_NAME
         class: "label-info"
-        label_html: "%{institution}"
+        label_html: <span class="label label-info">%{institution}</span> Restrict access to only users and/or groups from %{institution}
       embargo:
         text: "Embargo"
         class: "label-warning"
