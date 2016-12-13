@@ -45,6 +45,7 @@ require 'support/rake'
 require 'support/matchers/api_responses'
 require 'support/matchers/response_matchers'
 require 'support/input_support'
+require 'support/speedup'
 require 'webmock/rspec'
 WebMock.allow_net_connect!
 
