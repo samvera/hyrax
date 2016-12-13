@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('sufia.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="select-worktype-label"><%= t('sufia.dashboard.heading_actions.select_type_of_work') %></h4>
       </div>
       <div class="modal-body">
@@ -26,13 +26,17 @@
                     <p><%= row_presenter.description %></p>
                 <% end %>
               </td>
+              <td class="select-work-batch">
+                <%= link_to(sufia.new_batch_upload_path(concern: row_presenter.concern), class: 'btn btn-info', role: 'button') do %>
+                    <h4><%= t('sufia.toolbar.works.batch') %></h4>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('sufia.dashboard.heading_actions.close') %></button>
-        <button type="button" class="btn btn-primary"><%= t('sufia.dashboard.heading_actions.create_work') %></button>
       </div>
     </div>
   </div>
