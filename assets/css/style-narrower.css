@@ -115,7 +115,7 @@
 		background-image: linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.3)), url("images/bg01.png");
 		height: 44px;
 		line-height: 44px;
-		box-shadow: 0 4px 0 0 #37c0fb;
+		box-shadow: 0 4px 0 0 #27ae60;
 	}
 
 		#titleBar .title {
