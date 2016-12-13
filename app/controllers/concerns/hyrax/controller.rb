@@ -7,7 +7,7 @@ module Hyrax::Controller
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
-
+    before_action :set_locale
     rescue_from ActiveFedora::ObjectNotFoundError do |exception|
       not_found_response(exception)
     end
@@ -28,7 +28,16 @@ module Hyrax::Controller
     @create_work_presenter ||= create_work_presenter_class.new(current_user)
   end
 
+  # Ensure that the locale choice is persistent across requests
+  def default_url_options
+    super.merge(locale: I18n.locale)
+  end
+
   private
+
+    def set_locale
+      I18n.locale = params[:locale] || I18n.default_locale
+    end
 
     def not_found_response(_exception)
       respond_to do |wants|

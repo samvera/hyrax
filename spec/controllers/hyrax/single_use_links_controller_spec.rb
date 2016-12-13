@@ -25,7 +25,7 @@ describe Hyrax::SingleUseLinksController, type: :controller do
         it "returns a link for downloading" do
           post 'create_download', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.download_single_use_link_url(hash, host: request.host)
+          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.download_single_use_link_url(hash, host: request.host, locale: 'en')
         end
       end
 
@@ -33,7 +33,7 @@ describe Hyrax::SingleUseLinksController, type: :controller do
         it "returns a link for showing" do
           post 'create_show', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.show_single_use_link_url(hash, host: request.host)
+          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.show_single_use_link_url(hash, host: request.host, locale: 'en')
         end
       end
     end

@@ -18,7 +18,7 @@ describe Hyrax::GenericWorksController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -30,9 +30,9 @@ describe Hyrax::GenericWorksController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path)
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -142,7 +142,7 @@ describe Hyrax::GenericWorksController do
       it 'creates a work' do
         allow(controller).to receive(:curation_concern).and_return(work)
         post :create, params: { generic_work: { title: ['a title'] } }
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       end
     end
 
@@ -187,7 +187,7 @@ describe Hyrax::GenericWorksController do
           uploaded_files: ['777', '888']
         }
         expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       end
 
       context "from browse everything" do
@@ -240,7 +240,7 @@ describe Hyrax::GenericWorksController do
               generic_work: { title: ['First title'] }
             }
             expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
-            expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
           end
         end
       end
@@ -259,7 +259,7 @@ describe Hyrax::GenericWorksController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
           get :edit, params: { id: work }
           expect(response).to be_successful
         end
@@ -271,9 +271,9 @@ describe Hyrax::GenericWorksController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path)
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.work.browse_view"), Rails.application.routes.url_helpers.hyrax_generic_work_path(work))
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.work.browse_view"), Rails.application.routes.url_helpers.hyrax_generic_work_path(work, locale: 'en'))
           get :edit, params: { id: work }
           expect(response).to be_successful
         end
@@ -321,7 +321,7 @@ describe Hyrax::GenericWorksController do
 
     it 'updates the work' do
       patch :update, params: { id: work, generic_work: {} }
-      expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+      expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
     end
 
     it "can update file membership" do
@@ -339,14 +339,14 @@ describe Hyrax::GenericWorksController do
 
         it 'prompts to change the files access' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern)
+          expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
         end
       end
 
       context 'without children' do
         it "doesn't prompt to change the files access" do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+          expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
         end
       end
     end
@@ -376,7 +376,7 @@ describe Hyrax::GenericWorksController do
       let(:work) { create(:private_generic_work) }
       it 'someone elses private work should update the work' do
         patch :update, params: { id: work, generic_work: {} }
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       end
     end
   end
@@ -387,7 +387,7 @@ describe Hyrax::GenericWorksController do
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
-      expect(response).to redirect_to main_app.search_catalog_path
+      expect(response).to redirect_to main_app.search_catalog_path(locale: 'en')
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
@@ -399,7 +399,7 @@ describe Hyrax::GenericWorksController do
       it 'deletes the work and updates the parent collection' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to main_app.search_catalog_path
+        expect(response).to redirect_to main_app.search_catalog_path(locale: 'en')
         expect(parent_collection.reload.members).to eq []
       end
     end

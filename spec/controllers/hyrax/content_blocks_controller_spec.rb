@@ -6,12 +6,12 @@ describe Hyrax::ContentBlocksController, type: :controller do
     context "when not logged in" do
       it "UPDATE should redirect to sign_in path" do
         patch :update, params: { id: content_block, content_block: { value: 'foo' } }
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       end
 
       it "CREATE should redirect to sign_in path" do
         post :create, params: { content_block: { name: 'NNN', value: 'VVV' } }
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       end
 
       context "get INDEX" do

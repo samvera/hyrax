@@ -27,7 +27,7 @@ describe Hyrax::DownloadsController do
     context "when user isn't logged in" do
       it 'redirects to sign in' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to Rails.application.routes.url_helpers.new_user_session_path
+        expect(response).to redirect_to Rails.application.routes.url_helpers.new_user_session_path(locale: 'en')
         expect(flash['alert']).to eq 'You are not authorized to access this page.'
       end
 

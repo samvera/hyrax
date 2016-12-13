@@ -496,6 +496,7 @@ es:
         my: "Mi Panel de Control"
         shares: "Compartido"
         transfers: "Transferencias"
+      language_switch: "Cambiar idioma:"
       notifications: "Notifications"
       profile:
         edit: "Editar Perfil"

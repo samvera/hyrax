@@ -16,9 +16,9 @@ describe Hyrax::StatsController do
 
       it 'renders the stats view' do
         expect(Hyrax::FileUsage).to receive(:new).with(file_set.id).and_return(usage)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
         get :file, params: { id: file_set }
         expect(response).to be_success
         expect(response).to render_template('stats/file')
@@ -43,7 +43,7 @@ describe Hyrax::StatsController do
 
       it 'redirects to root_url' do
         get :file, params: { id: file_set }
-        expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.root_path)
+        expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
       end
     end
   end
@@ -57,9 +57,9 @@ describe Hyrax::StatsController do
 
     it 'renders the stats view' do
       expect(Hyrax::WorkUsage).to receive(:new).with(work.id).and_return(usage)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.work.browse_view'), main_app.hyrax_generic_work_path(work))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.work.browse_view'), main_app.hyrax_generic_work_path(work, locale: 'en'))
       get :work, params: { id: work }
       expect(response).to be_success
       expect(response).to render_template('stats/work')

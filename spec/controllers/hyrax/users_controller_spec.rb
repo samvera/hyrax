@@ -98,7 +98,7 @@ describe Hyrax::UsersController, type: :controller do
         it "redirects to show profile" do
           expect_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(false)
           get :edit, params: { id: another_user.to_param }
-          expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
+          expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param, locale: 'en'))
           expect(flash[:alert]).to include("Permission denied: cannot access this page.")
         end
       end
@@ -109,7 +109,7 @@ describe Hyrax::UsersController, type: :controller do
         it "allows user to edit another user's profile" do
           get :edit, params: { id: another_user.to_param }
           expect(response).to be_success
-          expect(response).not_to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
+          expect(response).not_to redirect_to(routes.url_helpers.profile_path(another_user.to_param, locale: 'en'))
           expect(flash[:alert]).to be_nil
         end
       end
@@ -137,7 +137,7 @@ describe Hyrax::UsersController, type: :controller do
       let(:another_user) { FactoryGirl.create(:user) }
       it "does not allow other users to update" do
         post :update, params: { id: another_user.user_key, user: { avatar: nil } }
-        expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param))
+        expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param, locale: 'en'))
         expect(flash[:alert]).to include("Permission denied: cannot access this page.")
       end
     end
@@ -147,7 +147,7 @@ describe Hyrax::UsersController, type: :controller do
       expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       f = fixture_file_upload('/1.5mb-avatar.jpg', 'image/jpg')
       post :update, params: { id: user.user_key, user: { avatar: f } }
-      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param, locale: 'en'))
       expect(flash[:notice]).to include("Your profile has been updated")
       expect(User.find_by_user_key(user.user_key).avatar?).to be true
     end
@@ -155,14 +155,14 @@ describe Hyrax::UsersController, type: :controller do
       expect(UserEditProfileEventJob).to receive(:perform_later).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, params: { id: user.user_key, user: { avatar: f } }
-      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param, locale: 'en'))
       expect(flash[:alert]).to include("Avatar You are not allowed to upload \"jp2\" files, allowed types: jpg, jpeg, png, gif, bmp, tif, tiff")
     end
     it "validates the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
       expect(UserEditProfileEventJob).to receive(:perform_later).never
       post :update, params: { id: user.user_key, user: { avatar: f } }
-      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param, locale: 'en'))
       expect(flash[:alert]).to include("Avatar file size must be less than 2MB")
     end
 
@@ -175,7 +175,7 @@ describe Hyrax::UsersController, type: :controller do
       it "deletes an avatar" do
         expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
         post :update, params: { id: user.user_key, user: { remove_avatar: 'true' } }
-        expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
+        expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param, locale: 'en'))
         expect(flash[:notice]).to include("Your profile has been updated")
         expect(User.find_by_user_key(user.user_key).avatar?).to be false
       end
@@ -185,7 +185,7 @@ describe Hyrax::UsersController, type: :controller do
       expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
       expect_any_instance_of(User).to receive(:populate_attributes).once
       post :update, params: { id: user.user_key, user: { update_directory: 'true' } }
-      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param, locale: 'en'))
       expect(flash[:notice]).to include("Your profile has been updated")
     end
 
@@ -196,7 +196,7 @@ describe Hyrax::UsersController, type: :controller do
       expect(user.linkedin_handle).to be_blank
       expect(user.orcid).to be_blank
       post :update, params: { id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle: "link", orcid: '0000-0000-1111-2222' } }
-      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param, locale: 'en'))
       expect(flash[:notice]).to include("Your profile has been updated")
       u = User.find_by_user_key(user.user_key)
       expect(u.twitter_handle).to eq 'twit'
@@ -209,7 +209,7 @@ describe Hyrax::UsersController, type: :controller do
     it 'displays a flash when invalid ORCID is entered' do
       expect(user.orcid).to be_blank
       post :update, params: { id: user.user_key, user: { orcid: 'foobar' } }
-      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param))
+      expect(response).to redirect_to(routes.url_helpers.edit_profile_path(user.to_param, locale: 'en'))
       expect(flash[:alert]).to include('Orcid must be a string of 19 characters, e.g., "0000-0000-0000-0000"')
     end
 
@@ -222,7 +222,7 @@ describe Hyrax::UsersController, type: :controller do
         expect do
           post :update, params: { id: user.user_key, 'remove_trophy_' + work.id => 'yes' }
         end.to change { user.trophies.count }.by(-1)
-        expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param))
+        expect(response).to redirect_to(routes.url_helpers.profile_path(user.to_param, locale: 'en'))
         expect(flash[:notice]).to include("Your profile has been updated")
       end
     end

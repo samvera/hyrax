@@ -1,4 +1,9 @@
 class Hyrax::ResourceSyncController < ApplicationController
+  # We don't need locale here
+  def default_url_options
+    super.except(:locale)
+  end
+
   def source_description
     render_from_cache_as_xml(:source_description)
   end

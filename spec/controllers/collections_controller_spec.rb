@@ -107,7 +107,7 @@ describe CollectionsController do
                                  collection: { members: 'add' },
                                  batch_document_ids: [asset3.id] }
         end.to change { collection.reload.members.size }.by(1)
-        expect(response).to redirect_to routes.url_helpers.collection_path(collection)
+        expect(response).to redirect_to routes.url_helpers.collection_path(collection, locale: 'en')
         expect(assigns[:collection].members).to match_array [asset1, asset2, asset3]
       end
 
@@ -179,7 +179,7 @@ describe CollectionsController do
       end
 
       it "returns the collection and its members" do
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -207,7 +207,7 @@ describe CollectionsController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
         end
@@ -219,9 +219,9 @@ describe CollectionsController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-          expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path)
-          expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id))
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
         end
@@ -248,7 +248,7 @@ describe CollectionsController do
 
     context "without a referer" do
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end
@@ -260,9 +260,9 @@ describe CollectionsController do
       end
 
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
-        expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id))
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id, locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end
