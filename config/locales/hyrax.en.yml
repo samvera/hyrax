@@ -216,11 +216,28 @@ en:
       search_form:
         placeholder: "Search Collection"
         label: "Search Collection %{title}"
+    contact_form:
+      button_label: "Send"
+      email_label: "Your Email"
+      header: "Contact Form"
+      issue_types:
+        depositing: "Depositing content"
+        changing: "Making changes to my content"
+        browsing: "Browsing and searching"
+        reporting: "Reporting a problem"
+        general: "General inquiry or request"
+      message_label: "Message"
+      name_label: "Your Name"
+      notice: "Please use the contact form to submit inquiries about this system; to report a problem you are experiencing with the system; to request assistance using the system; or to provide general feedback. See the Help page for additional information about this system."
+      select_type: "Select an Issue Type"
+      subject_label: "Subject"
+      type_label: "Issue Type"
     controls:
       home:             "Home"
       about:            "About"
       help:             "Help"
       contact:          "Contact"
+      terms:            "Terms of Use"
     dashboard:
       heading_actions:
         close:                  "Close"
@@ -297,6 +314,7 @@ en:
       suffix:           "@example.org"
     document_language:  "en"
     edit_profile:       "Edit Profile"
+    featured_researchers: "Featured Researchers"
     file_manager:
       link_text: 'File Manager'
     file_set:
@@ -317,6 +335,10 @@ en:
           within %{application_name}, similarly to adding user access levels.
     footer:
       copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
+      service_html: A service of <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Project Hydra</a>.
+    help:
+      header: "User Support"
+      override_text: "Use app/views/static/help.html.erb to override this file."
     homepage:
       featured_works:
         tab_label:          'Featured Works'
@@ -326,6 +348,7 @@ en:
       featured_researcher:
         tab_label:          'Featured Researcher'
         title:              'Featured Researcher'
+        view_more:          'View other featured researchers'
       recently_uploaded:
         depositor:          'Depositor'
         details:            'Details'

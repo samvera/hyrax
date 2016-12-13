@@ -7,7 +7,7 @@
             class: "btn btn-primary btn-lg" do %>
         <i class="glyphicon glyphicon-upload"></i> <%= t('hyrax.share_button') %>
       <% end %>
-      <p><a href="/terms/">Terms of Use</a></p>
+      <p><%= link_to t(:'hyrax.controls.terms'), hyrax.terms_path %></p>
     </div>
   </div>
 <% end %>

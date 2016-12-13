@@ -240,11 +240,28 @@ es:
       search_form:
         label: "Buscar Collección %{title}"
         placeholder: "Buscar Collección"
+    contact_form:
+      button_label: "Enviar"
+      email_label: "Tu Correo Electrónico"
+      header: "Formulario de Contacto"
+      issue_types:
+        depositing: "Depósito contenido"
+        changing: "Hacer cambios en mi contenido"
+        browsing: "Navegación y búsqueda"
+        reporting: "Informar de un problema"
+        general: "Consulta general o solicitud"
+      message_label: "Mensaje"
+      name_label: "Tu Nombre"
+      notice: "Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; Para reportar un problema que está experimentando con el sistema; Solicitar ayuda usando el sistema; O para proporcionar retroalimentación general. Consulte la página de ayuda para obtener información adicional acerca de este sistema."
+      select_type: "Seleccionar el Tipo de Problema"
+      subject_label: "Tema"
+      type_label: "Tipo de Problema"
     controls:
       about:            "Acerca de"
       contact:          "Contacto"
       help:             "Ayuda"
       home:             "Inicio"
+      terms:            "Términos de Uso"
     dashboard:
       additional_notifications: "ver todas las notificaciones"
       authorize_proxies:        "Autorizar Proxies"
@@ -321,6 +338,7 @@ es:
       suffix:           "@ejemplo.org"
     document_language:  "es"
     edit_profile:       "Editar Perfil"
+    featured_researchers: "Investigadores Destacados"
     file_manager:
       link_text: 'Administrador de archivos'
     file_set:
@@ -340,7 +358,11 @@ es:
           Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
           dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
     footer:
-      copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> bajo licencia de Apache, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2016 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
+      service_html: Un servicio de <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Proyecto Hydra</a>.
+    help:
+      header: "Soporte al Usuario"
+      override_text: "Utilice app/views/static/help.html.erb para anular este archivo"
     homepage:
       admin_sets:
         link:               'Ver todas las colecciones administrativas'
@@ -349,6 +371,7 @@ es:
       featured_researcher:
         tab_label:          'Investigador destacado'
         title:              'Investigador destacado'
+        view_more:          'Ver otros investigadores destacados'
       featured_works:
         drag:               'Arrastrar'
         no_works:           'No hay trabajos destacados'
