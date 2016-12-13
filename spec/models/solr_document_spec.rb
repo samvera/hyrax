@@ -4,8 +4,9 @@ describe ::SolrDocument, type: :model do
 
   describe "#itemtype" do
     let(:attributes) { { resource_type_tesim: ['Article'] } }
-    it "delegates to the ResourceTypesService" do
-      expect(ResourceTypesService).to receive(:microdata_type).with('Article')
+    it "delegates to the Hyrax::ResourceTypesService" do
+      expect(Hyrax::ResourceTypesService).to receive(:microdata_type).with('Article')
+      subject
     end
     subject { document.itemtype }
     it { is_expected.to eq 'http://schema.org/Article' }
