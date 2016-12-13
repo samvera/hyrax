@@ -543,6 +543,7 @@ en:
         label_html: <span class="label label-success">Open Access</span> Everyone. Check out <a href="">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
       open_title_attr: "Change the visibility of this resource"
       private:
+        text: "Private"
         label_html: <span class="label label-danger">Private</span> Only users and/or groups that have been given specific access in the "Share With" section.
       private_title_attr: "Change the visibility of this resource"
       restricted:
