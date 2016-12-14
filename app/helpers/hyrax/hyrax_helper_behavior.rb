@@ -18,7 +18,7 @@ module Hyrax
     # Which translations are available for the user to select
     # @return [Hash<String,String>] locale abbreviations as keys and flags as values
     def available_translations
-      { 'en' => '🇬🇧', 'es' => '🇪🇸' }
+      { 'en' => 'English', 'es' => 'Español' }
     end
 
     def application_name

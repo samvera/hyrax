@@ -22,7 +22,7 @@ describe HyraxHelper, :no_clean, type: :helper do
 
   describe '#available_translations' do
     subject { helper.available_translations }
-    it { is_expected.to eq('en' => '🇬🇧', 'es' => '🇪🇸') }
+    it { is_expected.to eq('en' => 'English', 'es' => 'Español') }
   end
 
   context 'link helpers' do

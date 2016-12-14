@@ -1,13 +1,5 @@
 <ul id="user_utility_links" class="nav navbar-nav navbar-right">
-    <li>
-        <% available_translations.each do |lang, flag| %>
-            <% next if lang == I18n.locale.to_s %>
-            <span class="sr-only"><%= t('hyrax.toolbar.language_switch') %></span>
-            <%= link_to "?locale=#{lang}" do %>
-                <span class="locale-choice locale-choice-<%= lang %>"><%= flag %></span>
-            <% end %>
-        <% end %>
-    </li>
+    <%= render 'shared/locale_picker' if available_translations.size > 1 %>
     <% if user_signed_in? %>
     <li>
       <%= link_to hyrax.notifications_path do %>

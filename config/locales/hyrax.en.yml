@@ -491,7 +491,7 @@ en:
         highlights: "Highlights"
         transfers: "Transfers"
         shares: "Shares"
-      language_switch: "Switch language:"
+      language_switch: "Switch language"
       works:
         menu: "Works"
         new: "New Work"
