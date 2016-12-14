@@ -11,12 +11,12 @@ describe Hyrax::SingleUseLinksViewerController do
 
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.hyrax_file_set_path(id: file)
+      SingleUseLink.create itemId: file.id, path: Rails.application.routes.url_helpers.hyrax_file_set_path(id: file, locale: 'en')
     end
 
     let :download_link do
       Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
-      SingleUseLink.create itemId: file.id, path: Hyrax::Engine.routes.url_helpers.download_path(id: file)
+      SingleUseLink.create itemId: file.id, path: Hyrax::Engine.routes.url_helpers.download_path(id: file, locale: 'en')
     end
 
     let(:show_link_hash) { show_link.downloadKey }

@@ -19,7 +19,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController, :no_clean do
     context "when they don't have permission" do
       it "throws a CanCan error" do
         get :index
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       end
     end
   end

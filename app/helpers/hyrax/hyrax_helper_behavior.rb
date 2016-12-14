@@ -1,3 +1,4 @@
+# coding: utf-8
 module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior
@@ -13,6 +14,12 @@ module Hyrax
     include Hyrax::CollectionsHelper
     include Hyrax::ChartsHelper
     include Hyrax::DashboardHelperBehavior
+
+    # Which translations are available for the user to select
+    # @return [Hash<String,String>] locale abbreviations as keys and flags as values
+    def available_translations
+      { 'en' => 'English', 'es' => 'Español' }
+    end
 
     def application_name
       t('hyrax.product_name', default: super)

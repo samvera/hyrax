@@ -1,4 +1,3 @@
-
 describe Hyrax::UploadsController do
   let(:user) { create(:user) }
   describe "#create" do
@@ -49,7 +48,7 @@ describe Hyrax::UploadsController do
     context "when not signed in" do
       it "is redirected to sign in" do
         delete :destroy, params: { id: uploaded_file }
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       end
     end
   end

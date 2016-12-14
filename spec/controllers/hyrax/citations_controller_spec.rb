@@ -11,7 +11,7 @@ describe Hyrax::CitationsController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
         get :work, params: { id: work }
         expect(response).to be_successful
         expect(assigns(:presenter)).to be_kind_of Hyrax::WorkShowPresenter
@@ -21,7 +21,7 @@ describe Hyrax::CitationsController do
     context "with an unauthenticated user" do
       it "is not successful" do
         get :work, params: { id: work }
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
         expect(flash[:alert]).to eq "You are not authorized to access this page."
         expect(session['user_return_to']).to eq request.url
       end
@@ -38,7 +38,7 @@ describe Hyrax::CitationsController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
         get :file, params: { id: file_set }
         expect(response).to be_successful
         expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
@@ -48,7 +48,7 @@ describe Hyrax::CitationsController do
     context "with an unauthenticated user" do
       it "is not successful" do
         get :file, params: { id: file_set }
-        expect(response).to redirect_to main_app.new_user_session_path
+        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
         expect(flash[:alert]).to eq "You are not authorized to access this page."
         expect(session['user_return_to']).to eq request.url
       end

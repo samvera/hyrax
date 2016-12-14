@@ -31,7 +31,7 @@ describe Hyrax::TinymceAssetsController, type: :controller do
   context "when not logged in" do
     it "redirects to root path" do
       post :create, params: { file: file }
-      expect(response).to redirect_to main_app.new_user_session_path
+      expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
     end
   end
 end

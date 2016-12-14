@@ -1,0 +1,663 @@
+es:
+  blacklight:
+    search:
+      fields:
+        show:
+          based_near: "Ubicación"
+          contributor: "Colaboradores"
+          keyword: "Palabra Clave"
+  helpers:
+    action:
+      admin_set:
+        new: "Crear un nuevo conjunto administrativo"
+      cancel: "Cancelar"
+      edit: "Editar"
+    submit:
+      admin_set:
+        create: 'Guardar'
+        update: 'Actualizar'
+      create: 'Guardar'
+      hyrax_permission_template:
+        create: 'Guardar'
+        update: 'Guardar'
+      hyrax_permission_template_access:
+        create: 'Agregar'
+      update: 'Guardar'
+  hyrax:
+    account_label:      "Usuario"
+    account_name:       "Mi identificador de cuenta institucional"
+    active_consent_to_agreement:  "He leído y estoy de acuerdo con"
+    admin:
+      admin_sets:
+        edit:
+          header:         "Editar Conjunto Administrativo"
+        form:
+          tabs:
+            description:        "Descripción"
+            participants:       "Participantes"
+            visibility:         "Lanzamiento y Visibilidad"
+        form_participant_table:
+          depositors:
+            action:             "Acción"
+            agent_name:         "Depositantes de este Conjunto"
+            help:               "Los depositantes pueden agregar nuevas obras a este conjunto administrativo."
+            remove:             "Quitar"
+            title:              "Depositantes"
+            type:               "Tipo"
+          managers:
+            action:             "Acción"
+            agent_name:         "Administradores de este Conjunto"
+            help:               "Los administradores de este conjunto administrativo pueden editar los metadatos establecidos, los participantes y los valores de liberación y visibilidad. Los administradores también pueden editar metadatos de trabajo, agregar o quitar archivos de un trabajo y agregar nuevos trabajos al conjunto."
+            remove:             "Quitar"
+            title:              "Administradores"
+            type:               "Tipo"
+          viewers:
+            action:             "Acción"
+            agent_name:         "Espectadores de este Conjunto"
+            help:               "Los espectadores de este conjunto administrativo pueden ver los trabajos en el conjunto independientemente de la configuración de visibilidad aplicada a la obra. Por ejemplo, los espectadores pueden ver obras en este conjunto incluso si las obras están actualmente embargadas o restringidas."
+            remove:             "Quitar"
+            title:              "Espectadores"
+            type:               "Tipo"
+        form_participants:
+          add_group:            "Agregar grupo:"
+          add_participants:     "Agregar participantes"
+          add_user:             "Agregar usuario:"
+          current_participants: "Participantes actuales"
+        form_visibility:
+          cancel:               "Cancelar"
+          page_description:     "Los controles de liberación y visibilidad controlan cuando las obras añadidas a este conjunto se ponen a disposición para su detección y descarga y quiénes pueden descubrirlas y descargarlas."
+          release:
+            description:        "Puede imponer un retraso (embargo) antes de que las obras de este conjunto administrativo se liberen para su detección y descarga."
+            fixed:              "Fijo -- retrasar la liberación de todos los trabajos hasta"
+            no_delay:           "Sin demora -- liberar todas las obras tan pronto como se depositen"
+            title:              "Lanzamiento"
+            varies:
+              between:          "Entre \"ahora\" y"
+              description:      "Varía -- los depositantes pueden fijar la fecha de lanzamiento para un trabajo individual:"
+              embargo:
+                1yr:            "Un año después del depósito"
+                2yrs:           "Dos años después del depósito"
+                3yrs:           "Tres años después del depósito"
+                6mos:           "Seis meses después del depósito"
+                select:         "Seleccione el período de embargo..."
+          visibility:
+            description:        "Después de su fecha de lanzamiento, las obras de este conjunto pueden ser descubiertas y descargadas por:"
+            everyone:           "Todos -- todos los trabajos de este conjunto serán públicas."
+            institution:        "Institución -- todos los trabajos serán visibles sólo para los usuarios autenticados de esta institución"
+            restricted:         "Restringido -- todos los trabajos sólo serán visibles para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
+            title:              "Visibilidad"
+            varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
+        new:
+          header:         "Crear nuevo conjunto Administrativo"
+        show:
+          header:           "Conjunto Administrativo"
+          item_list_header: "Trabajos en este conjunto"
+      collections:
+        collection:         "Collección"
+        subtitle:           "Actividad reciente de la colección"
+        title:              "Colleccións"
+        works:              "Trabajos"
+      show:
+        new_visitors:       "Nuevos visitantes"
+        registered_users:   "Usuarios registrados"
+        returning_visitors: "Regresos de visitantes"
+        total_visitors:     "Total de visitantes"
+      sidebar:
+        admin_sets: "Conjuntos Administrativos"
+        settings:   "Ajustes"
+        statistics: "Estadísticas"
+        workflow: "Flujos de trabajo"
+        workflow_review: "Repaso"
+        workflow_roles: "Roles"
+      stats:
+        deposited_form:
+          end_label: "Finalizando [por defecto a ahora]"
+          heading: "Ver Archivos depositados:"
+          start_label: "Comenzar"
+        registered: "Registrado"
+        user_deposits:
+          end_label: "Finalizando [por defecto a ahora]"
+          heading: "Ver archivos depositados por los usuarios"
+          start_label: "Comenzando"
+      workflow_roles:
+        index:
+          delete:
+            confirm: "¿Estás seguro?"
+          header:
+            roles: "Roles"
+            user: "Usuario"
+          new_role: "Asignar un papel a un usuario:"
+          no_roles: "Ningunos roles"
+    admin_sets:
+      index:
+        header: "Colecciones Administrativas"
+    api:
+      accepted:
+        default: "Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver trabajo para más información."
+      bad_request:
+        default: "No se puede procesar su solicitud. Ver errores para más información."
+      deleted:
+        default: "Eliminado el recurso"
+      forbidden:
+        default: "No está autorizado para acceder a este contenido."
+      internal_error:
+        default: "El servidor encontró un error."
+      not_found:
+        default: "No se pudo encontrar un recurso que coincida con tu solicitud."
+      success:
+        default: "Su solicitud se procesó correctamente."
+      unauthorized:
+        default: "¡Debe iniciar sesión para hacer eso!"
+      unprocessable_entity:
+        default: "El recurso que intentó modificar no se puede modificar de acuerdo con su solicitud."
+        empty_file: "El archivo que subiste no tiene contenido."
+    background_attribution_html: "Imagen de fondo CC by-nc-sa por <a href=\"https://flic.kr/p/eirxaf\">f2b1610</a>"
+    base:
+      citations:
+        header: 'Citaciones:'
+      form_files:
+        dropzone: "Soltar archivos aquí."
+        external_upload: Proveedores en la Nube
+        local_upload: Agregar Archivos locales
+      form_progress:
+        required_descriptions: Describa su trabajo
+        required_files:        Agregar archivos
+        requirements:          Requisitos
+      items:
+        actions: Acciones
+        date_uploaded: "Fecha de carga"
+        empty:  "Este %{type} no tiene archivos asociados con él. Presione \"editar\" para agregar más archivos."
+        header: Items
+        thumbnail: Miniatura
+        title: Título
+        visibility: Visibilidad
+      metadata:
+        attribute_name_label: Nombre del atributo
+        attribute_values_label: Valores
+        header: Descripciones
+      relationships:
+        empty: "Este %{type} no está actualmente disponible en ninguna colección."
+        header: Relaciones
+      relationships_parent_row:
+        label: "En %{type}:"
+      relationships_parent_row_empty:
+        empty: "No hay relaciones con %{type} relationships."
+        label: "En %{type}:"
+      show:
+        last_modified: "Última modificación: %{value}"
+      social_media:
+        facebook: 'Facebook'
+        google: 'Google+'
+        tumblr: 'Tumblr'
+        twitter: 'Twitter'
+    batch:
+      help:
+        resource_type: "Puedes seleccionar múltiples tipos para aplicar a todos los archivos"
+        title: "El nombre de archivo será el título predeterminado. Por favor introduzca un título con más significado y los archivos aún serán preservados en el sistema."
+    batch_uploads:
+      files:
+        instructions: Cada archivo será cargado en un nuevo trabajo separado, resultando en un trabajo por archivo cargado.
+      new:
+        header: Crear nuevos Trabajos en lote
+        in_collections: Estos Trabajos en Colecciones
+        in_other_works: Este Trabajo en otros Trabajos
+        in_this_work: Otros Trabajos en este Trabajo
+      progress:
+        header: Guardar Trabajos
+    bread_crumb:
+      search_results: "Regresar a los resultados de búsqueda"
+    collection:
+      actions:
+        add_works:
+          desc: "Agregar trabajos a esta Colección"
+          label: "Agregar trabajos"
+        delete:
+          confirmation: "Borrar esta colección?"
+          desc: "Borrar esta colección"
+          label: "Borrar"
+        edit:
+          desc: "Editar esta colección"
+          label: "Editar"
+        header: "Acciones"
+      browse_view: "Navegar Vista"
+      document_list:
+        edit: "Editar"
+        no_visible_works: "La colección o está vacía o no contiene items a los cuales tengas acceso."
+      edit:
+        additional_fields: "Campos adicionales"
+        description: "Descripciones"
+        manage_items: "Administrar Items in this Colección"
+      is_part_of: "Es part de"
+      select_form:
+        close: "Cerrar"
+        create: "Crear Colección"
+        create_new: "Agregar a una nueva Colección"
+        no_collections: "No tienes acceso a ninguna colección existente. Puedes crear una nueva colección."
+        select_heading: "Seleccionar la colección para agregar tus archivos a:"
+        title: "Agregar a la colección"
+        update: "Actualizar Colección"
+    collections:
+      search_form:
+        label: "Buscar Collección %{title}"
+        placeholder: "Buscar Collección"
+    contact_form:
+      button_label: "Enviar"
+      email_label: "Tu Correo Electrónico"
+      header: "Formulario de Contacto"
+      issue_types:
+        depositing: "Depósito contenido"
+        changing: "Hacer cambios en mi contenido"
+        browsing: "Navegación y búsqueda"
+        reporting: "Informar de un problema"
+        general: "Consulta general o solicitud"
+      message_label: "Mensaje"
+      name_label: "Tu Nombre"
+      notice: "Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; Para reportar un problema que está experimentando con el sistema; Solicitar ayuda usando el sistema; O para proporcionar retroalimentación general. Consulte la página de ayuda para obtener información adicional acerca de este sistema."
+      select_type: "Seleccionar el Tipo de Problema"
+      subject_label: "Tema"
+      type_label: "Tipo de Problema"
+    controls:
+      about:            "Acerca de"
+      contact:          "Contacto"
+      help:             "Ayuda"
+      home:             "Inicio"
+      terms:            "Términos de Uso"
+    dashboard:
+      additional_notifications: "ver todas las notificaciones"
+      authorize_proxies:        "Autorizar Proxies"
+      create_collection:        "Crear Colección"
+      create_work:              "Crear Trabajo"
+      current_proxies:          "Proxies actuales"
+      heading_actions:
+        close:                  "Cerrar"
+        create_work:            "Crear trabajo"
+        select_type_of_work:    "Seleccionar el tipo de trabajo"
+      manage_proxies:           "Administrar Proxies"
+      my:
+        action:
+          collection_confirmation: "Borrar una colección de %{application_name} es permanente. Presionar sobre OK para borrar esta colección de %{application_name}, o sobre Cancelar para cancelar esta operación"
+          delete_collection:       "Borrar Colección"
+          delete_work:             "Borrar Trabajo"
+          edit_collection:         "Editar Colección"
+          edit_work:               "Editar Trabajo"
+          select:                  "Seleccionar una acción"
+          transfer:                "Transferir propiedad del Trabajo"
+          work_confirmation:       "Borrar un trabajo de %{application_name} es permanente. Presionar sobre OK para borrar este trabajo de %{application_name}, o sobre Cancelar para cancelar esta operación"
+        collection_list:
+          description:    "Descripción:"
+          edit_access:    "Editar Acceso:"
+          groups:         "Grupos:"
+          users:          "Users:"
+        collections:  "Mis Colecciones"
+        facet_label:
+          collections:  "Filtrar tus colecciones"
+          files:        "Filtrar tus archivos"
+          highlighted: "Filtrar tus aspectos destacados"
+          shared:      "Filtrar tus archivos compartidos"
+          works:       "Filtrar tus trabajos"
+        heading:
+          action:         "Acción"
+          date_uploaded:  "Fecha de carga"
+          title:          "Título"
+          visibility:     "Visibilidad"
+        highlights:   "Mis aspectos destacados"
+        shares:       "Trabajos compartidos conmigo"
+        sr:
+          batch_checkbox:   "Marque para agregar a una colección o editar la lista"
+          check_all_label:  "Seleccione todos los archivos para ser agregados o editados  a la colección"
+          detail_label:     "Ver el resumen de "
+          listing:          "Enlistar los items que has depositado"
+          press_to:         "Presionar para"
+          show_label:       "Ver todos los detalles de "
+        works:        "Mis Trabajos"
+      no_activity:              "El Usuario no tiene actividad reciente"
+      no_notifications:         "El Usuario no tiene notificaciones"
+      no_transfer_requests:     "No ha recibido ninguna petición de transferencia"
+      no_transfers:             "No has transferido ningún trabajo"
+      proxy_activity:           "Actividad de Proxy"
+      proxy_user:               "Usuario de Proxy"
+      stats:
+        collections:        "Colecciones creadas"
+        file_downloads:     "Descargar"
+        file_views:         "Ver"
+        files:              "Archivos depositados"
+        heading:            "Tus Estadísticas"
+        works:              "Trabajos creados"
+      title:                    "Mi Panel de Control"
+      transfer_of_ownership:    "Transferencia de propiedad"
+      transfer_works_link:      "Seleccionar los trabajos a transferir"
+      transfers_received:       "Recibido"
+      transfers_sent:           "Enviado"
+      user_activity:            "Actividad de usuario"
+      user_notifications:       "Notificaciones de Usuario"
+      view_collections:         "Ver Colecciones"
+      view_files:               "Ver Archivos"
+      view_works:               "Ver Trabajos"
+    deposit_agreement:  "Aceptación del Depósito"
+    directory:
+      suffix:           "@ejemplo.org"
+    document_language:  "es"
+    edit_profile:       "Editar Perfil"
+    featured_researchers: "Investigadores Destacados"
+    file_manager:
+      link_text: 'Administrador de archivos'
+    file_set:
+      browse_view: "Navegar Vista"
+      show:
+        download: "Descargar el archivo"
+        downloadable_content:
+          default_link: 'Descargar el archivo'
+          heading: 'Contenido Descargable'
+          image_link: 'Descargar la imagen'
+          office_link: 'Descargar el archivo'
+          pdf_link: 'Descargar PDF'
+    file_sets:
+      groups_description:
+        description_html: >
+          La lista de grupos en el listado marcados como "Seleccionar un grupo" es una lista de Grupos de Usuarios Administrados de la cual
+          Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
+          dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
+    footer:
+      copyright_html: "<strong>Copyright &copy; 2016 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
+      service_html: Un servicio de <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Proyecto Hydra</a>.
+    help:
+      header: "Soporte al Usuario"
+      override_text: "Utilice app/views/static/help.html.erb para anular este archivo"
+    homepage:
+      admin_sets:
+        link:               'Ver todas las colecciones administrativas'
+        tab_label:          'Explorar Colecciones'
+        title:              'Explorar Colecciones'
+      featured_researcher:
+        tab_label:          'Investigador destacado'
+        title:              'Investigador destacado'
+        view_more:          'Ver otros investigadores destacados'
+      featured_works:
+        drag:               'Arrastrar'
+        no_works:           'No hay trabajos destacados'
+        tab_label:          'Trabajos destacados'
+        title:              'Trabajos destacados'
+      recently_uploaded:
+        depositor:          'Depositante'
+        details:            'Detalles'
+        no_public:          'No se han aportado trabajos públicos.'
+        tab_label:          'Cargados recientemente'
+        title:              'Cargados recientemente'
+    icons:
+      collection:       'fa fa-cubes'
+      default:          'fa fa-cube'
+    institution_name: &INSTITUTION_NAME "Nombre de la institución"
+    institution_name_full: "El nombre de la institución"
+    mailbox:
+      date:     'Fecha'
+      delete:   'Borrar Mensaje'
+      message:  'Mensaje'
+      notifications_deleted: "Las notificaciones han sido borradas"
+      subject:  'Asunto'
+    messages:
+      failure:
+        multiple:
+          keyword: "no pudieron ser actualizados. No tienes suficientes privilegios para editarlos."
+          link: "Estos archivos"
+        single: "no pudo ser actualizada. No tienes suficientes privilegios para editar."
+        subject: "Carga de permisos denegada"
+        title:  "Archivos fallados"
+      success:
+        multiple:
+          keyword: "han sido guardados."
+          link: "Estos archivos"
+        single: "ha sido guardado."
+        subject: "Carga en lote completa"
+        title:  "Archivos cargados satisfactoriamente"
+    passive_consent_to_agreement: "Al salvar este trabajo yo acepto a"
+    product_name: "Hyrax"
+    product_twitter_handle: "@HydraSphere"
+    schema_org:
+      based_near:
+        property: contentLocation
+        type: "http://schema.org/Place"
+        value: name
+      contributor:
+        property: contributor
+        # used as the itemprop value for itemscoped attributes
+        type: "http://schema.org/Person"
+        value: name
+      creator:
+        property: creator
+        type: "http://schema.org/Person"
+        value: name
+      date_created:
+        property: dateCreated
+      description:
+        property: description
+      keyword:
+        property: keywords
+      language:
+        property: inLanguage
+      publisher:
+        property: publisher
+        type: "http://schema.org/Organization"
+        value: name
+      resource_type:
+        Article: "http://schema.org/Article"
+        Audio: "http://schema.org/AudioObject"
+        Book: "http://schema.org/Book"
+        Conference Proceeding: "http://schema.org/ScholarlyArticle"
+        Dataset: "http://schema.org/Dataset"
+        Dissertation: "http://schema.org/ScholarlyArticle"
+        Image: "http://schema.org/ImageObject"
+        Map or Cartographic Material: "http://schema.org/Map"
+        Masters Thesis: "http://schema.org/ScholarlyArticle"
+        Part of Book: "http://schema.org/Book"
+        Research Paper: "http://schema.org/ScholarlyArticle"
+        Software or Program Code: "http://schema.org/Code"
+        Video: "http://schema.org/VideoObject"
+      subject:
+        property: about
+        type: "http://schema.org/Thing"
+        value: name
+      title:
+        property: name
+    search:
+      button:
+        html: '<span class="glyphicon glyphicon-search"></span> Ir'
+        text: "Buscar"
+      form:
+        option:
+          all:
+            label_long:   "Todo Hyrax"
+            label_short:  "Todo"
+          my_collections:
+            label_long:   "Mis Colecciones"
+            label_short:  "Mis Colecciones"
+          my_shares:
+            label_long:   "Lo que he compartido"
+            label_short:  "Lo que he compartido"
+          my_works:
+            label_long:   "Mis trabajos"
+            label_short:  "Mis trabajos"
+        q:
+          label:          "Buscar en Hyrax"
+          placeholder:    "Introduce términos de búsqueda"
+    select_type:
+      description: "Tipo de trabajo de propósito general."
+      icon_class : 'fa fa-file-text-o'
+      name:        "Trabajo"
+    share_button:       "Comparte tu Trabajo"
+    single_use_links:
+      button: "Vínculo a archivo de uso único"
+      copy:
+        button: Copiar
+        tooltip: Copiado!
+      delete: Borrar
+      download:
+        type: Descargar
+      expiration:
+        lesser_time: En menos de una hora.
+        time: "en %{value} horas"
+      expiration_message: "El Vínculo %{link} expira en %{time}"
+      show:
+        type: Mostrar
+      table:
+        actions: Acciónes
+        expires: Expira
+        key: Clave
+        link: Vínculo
+        no_links: No se han generado vínculos.
+      title: Vínculos de uso único
+    sort_label: "Ordenar el listado de items"
+    toolbar:
+      admin:
+        menu: "Administración"
+      collections:
+        menu: "Colecciones"
+        my: "Mis Colecciones"
+        new: "Nueva Colección"
+      dashboard:
+        highlights: "Aspectos destacados"
+        menu: "Panel de Control"
+        my: "Mi Panel de Control"
+        shares: "Compartido"
+        transfers: "Transferencias"
+      language_switch: "Cambiar idioma"
+      notifications: "Notifications"
+      profile:
+        edit: "Editar Perfil"
+        login: "Iniciar sesión"
+        logout: "Cerrar sesión"
+        sr_action: "Ver"
+        sr_target: "perfil"
+        view: "Ver Perfil"
+      works:
+        batch: "Crear lote"
+        menu: "Trabajos"
+        my: "Mis Trabajos"
+        new: "Nuevo"
+    upload:
+      alert:
+        contact_href_text: "formulario de contacto"
+        fail_html: "Hubo un problema durante la carga, ninguno de sus archivos se ha cargado de forma correcta. Por favor %{reload_href}.  Utilizar la %{contact_href} para reportar si el error persiste."
+        fail_restart_href_text: "comenzar nuevamente"
+        partial_fail_html: "Uno o más archivos no se han cargado de forma correcta. Para continuar utilizando los archivos cargados %{metadata_href}. <br /> Utilizar la %{contact_href} para reportar si el error persiste."
+        partial_fail_metadata_href_text: "editar los metadatos"
+      browse_everything:
+        browse_files_button: "Navegar archivos en la nube"
+        files_selected: "archivos seleccionados"
+        sr_tab_label: "Acceder a los archivos desde"
+        tab_label: "Proveedores en la Nube"
+      change_access_flash_message: "Actualizar los niveles de acceso. Esto puede tomar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los niveles de acceso."
+      change_access_message_html: "<p>Ha cambiado los permisos de acceso en el trabajo <i>%{curation_concern}</i>, haciéndolo accesible a otros usuarios o grupos para ver o editar.</p><p>¿Quisiera cambiar todos los archivos dentro del mismo trabajo para que tengan los mismos usuarios de acceso, grupos y visibilidad también?</p>"
+      change_access_no_message: "No. Yo los actualizaré automáticamente."
+      change_access_yes_message: "Si, por favor."
+      change_permissions_message_html: "<p>Ha cambiado los permisos en  %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, haciéndolo visible para <b>%{visibility_badge}</b>.</p><p>¿Quisiera cambiar todos los archivos dentro de %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> también?</p>"
+      cloud_timeout_message_html: "En caso de subir una gran cantidad de archivos en un corto periodo de tiempo, el proveedor en la nube podría no ser capaz de resolver la petición. Si se experimentan errores durante la carga, favor de comunicarse con nosotros a través de %{contact_href}."
+      local_ingest:
+        tab_label: "Ubicación en Red/Servidor"
+      my_computer:
+        sr_instructions: "Acepto a los términos de depósito y después seleccionar los archivos.  Presiona el botón de subir una vez que todos los archivos se hayan seleccionado."
+        sr_tab_label: "Acceder a archivos desde"
+        tab_label: "Mi computadora"
+      permissions_message: "Actualizar permisos de archivo. Esto puede tardar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los permisos actualizados."
+      processing: "El archivo se está procesando; se puede editar en cuanto termine el procesamiento"
+    user_profile:
+      orcid:
+        alt: "Ícono ORCID"
+        label: "Perfil ORCID"
+      tab_activity: "Actividad"
+      tab_highlighted: "Destacado"
+      tab_profile: "Perfil"
+      zotero:
+        alt: "Ícono de Zotero"
+        connected: "Conectado!"
+        label: "Perfil de Zotero"
+        unlinked: "Vincular con Zotero"
+    view_profile:       "Ver Perfil"
+    visibility:
+      authenticated:
+        class: "label-info"
+        label_html: "%{institution}"
+        text: *INSTITUTION_NAME
+      embargo:
+        class: "label-warning"
+        label_html: <span class="label label-warning">Embargo</span>
+        text: "Embargo"
+      lease:
+        class: "label-warning"
+        label_html: <span class="label label-warning">Arrendamiento</span>
+        text: "Arrendamiento"
+      open:
+        class: "label-success"
+        label_html: <span class="label label-success">Público</span> Todo el mundo. Consulte <a href="">SHERPA / RoMEO</a> para las políticas de derechos de autor de editores específicos si planea patentar y / o publicar su %{type} en un diario
+        text: "Acceso abierto"
+      open_title_attr: "Cambiar la visibilidad de este recurso"
+      private:
+        label_html: <span class="label label-danger">Privado</span> Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
+      private_title_attr: "Cambiar la visibilidad de este recurso"
+      restricted:
+        class: "label-danger"
+        text: "Privado"
+    work:
+      browse_view: "Navegar Vista"
+    workflow:
+      default:
+        deposit: "Depositar"
+    works:
+      edit:
+        additional_fields: "Campos adicionales"
+        header: Editar Trabajo
+        in_collections: Este Trabajo en Colecciones
+        in_other_works: Este Trabajo en otros Trabajos
+        in_this_work: Otros Trabajos en este Trabajo
+        tab:
+          files:         "Archivos"
+          metadata:      "Descripciones"
+          relationships: "Relaciones"
+          share:         "Compartir"
+      new:
+        after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Los archivos serán marcados <span class=\"label label-danger\" title=\"Privado\">Privado</span> hasta que el proceso esté completo (no debería de tomar mucho tiempo, por favor espera). Quizás requieras recargar la página para ver las actualizaciones."
+        header: Agregar nuevo Trabajo
+        in_collections: Este Trabajo en Colecciones
+        in_other_works: Este Trabajo en otros Trabajos
+        in_this_work: Otros Trabajos en este Trabajo
+      progress:
+        header: Guardar Trabajo
+      show:
+        no_preview: No hay vista previa disponible
+  simple_form:
+    hints:
+      collection:
+        based_near: "Nombre de un lugar relacionado con la colección, tal como el sitio de publicación, o ciudad, estado, o país, que esté relacionado con los contenidos de la colección. Llamados a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
+        contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación de la colección, pero no el rol principal."
+        creator: "La persona o grupo responsable de la colección. Generalmente es el autor del contenido. Nombres personales deben ser introducidos con el apellidos al principio, ej. &quot;Smith, John.&quot;."
+        date_created: "La fecha en la cual la colección fue generada."
+        description: "Notas de texto libre acerca de la colección. Algunos ejemplos incluyen resúmenes de una publicación o información de citación de un artículo."
+        identifier: "Un identificador único de la colección. Un ejemplo podría ser el DOI para un artículo de revista, o un ISBN o número OCLC para un libro."
+        keyword: "Palabras o frases seleccionadas para describir de qué trata la colección. Éstas son usadas para buscar contenido."
+        language: "El idioma del contenido de la colección."
+        publisher: "La persona o grupo que hizo disponible la colección. Generalmente ésta es una institución."
+        related_url: "Un vínculo a una página web u otro contenido específico (audio, video, un documento PDF) relacionado a la colección. Un ejemplo es la URL de un proyecto de investigación de la cual proviene la colección"
+        resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha cargado, tal como &quot;artículo&quot; or &quot;conjunto de datos.&quot;  Más de un tipo puede ser seleccionado."
+        rights: "Licencias e información de distribución sobre la colección. Seleccionar uno de la lista."
+        subject: "Cabeceras o términos de índices que describen de qué trata la colección; éstos no tienen que pertenecer a un vocabulario existente.."
+        title: "Un nombre para ayudar a la identificación de una colección."
+    labels:
+      collection:
+        size:             "Tamaño"
+        total_items:      "Items totales"
+      defaults:
+        admin_set_id:     "Agregar como miembro del conjunto administrativo"
+        based_near:       "Ubicación"
+        collection_ids:   "Agregar como miembro de la colección"
+        date_created:     "Fecha de creación"
+        description:      "Resumen or Sumario"
+        embargo_release_date:      'hasta'
+        files:            "Cargar una nueva versión de este archivo desde tu computadora"
+        keyword:          "Palabra Clave"
+        lease_expiration_date:     'hasta'
+        related_url:      "URL relacionada"
+        visibility_after_embargo:  'luego abrirlo a'
+        visibility_after_lease:    'luego restringirlo a'
+        visibility_during_embargo: 'Restringido a'
+        visibility_during_lease:   'Está disponible para'
+    required:
+      html: '<span class="label label-info required-tag">obligatorio</span>'

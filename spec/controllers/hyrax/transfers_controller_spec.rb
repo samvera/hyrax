@@ -81,7 +81,7 @@ describe Hyrax::TransfersController, type: :controller do
             }
           }
         end.to change(ProxyDepositRequest, :count).by(1)
-        expect(response).to redirect_to routes.url_helpers.transfers_path
+        expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work.id)
@@ -112,21 +112,21 @@ describe Hyrax::TransfersController, type: :controller do
         end
         it "is successful when retaining access rights" do
           put :accept, params: { id: user.proxy_deposit_requests.first }
-          expect(response).to redirect_to routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to match_array [another_user.user_key, user.user_key]
         end
         it "is successful when resetting access rights" do
           put :accept, params: { id: user.proxy_deposit_requests.first, reset: true }
-          expect(response).to redirect_to routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([user.user_key])
         end
         it "handles sticky requests" do
           put :accept, params: { id: user.proxy_deposit_requests.first, sticky: true }
-          expect(response).to redirect_to routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(user.can_receive_deposits_from).to include(another_user)
@@ -160,7 +160,7 @@ describe Hyrax::TransfersController, type: :controller do
         end
         it "is successful" do
           put :reject, params: { id: user.proxy_deposit_requests.first }
-          expect(response).to redirect_to routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer rejected")
           expect(assigns[:proxy_deposit_request].status).to eq('rejected')
         end
@@ -193,7 +193,7 @@ describe Hyrax::TransfersController, type: :controller do
         end
         it "is successful" do
           delete :destroy, params: { id: another_user.proxy_deposit_requests.first }
-          expect(response).to redirect_to routes.url_helpers.transfers_path
+          expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer canceled")
         end
       end

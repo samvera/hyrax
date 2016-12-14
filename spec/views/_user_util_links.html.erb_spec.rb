@@ -1,3 +1,4 @@
+# coding: utf-8
 describe '/_user_util_links.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   before do
@@ -19,5 +20,26 @@ describe '/_user_util_links.html.erb', type: :view do
     render
     expect(rendered).to have_link 'Notifications 0 unread notifications', href: hyrax.notifications_path
     expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
+  end
+
+  describe 'translations' do
+    context 'with two languages' do
+      before do
+        allow(view).to receive(:available_translations) { { 'en' => 'English', 'es' => 'Español' } }
+        render
+      end
+      it 'displays the current language' do
+        expect(rendered).to have_link('English')
+      end
+    end
+    context 'with one language' do
+      before do
+        allow(view).to receive(:available_translations) { { 'en' => 'English' } }
+        render
+      end
+      it 'does not display the language picker' do
+        expect(rendered).not_to have_link('English')
+      end
+    end
   end
 end

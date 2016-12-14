@@ -38,7 +38,7 @@ describe Hyrax::BatchUploadsController do
           uploaded_files: ['1'],
           batch_upload_item: { keyword: [""], visibility: 'open' }
         }
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
         expect(flash[:notice]).to include("Your files are being processed")
       end
     end
@@ -57,7 +57,7 @@ describe Hyrax::BatchUploadsController do
           resource_type: { '1' => 'Article' },
           uploaded_files: ['1']
         }
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_shares_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_shares_path(locale: 'en')
       end
     end
   end
