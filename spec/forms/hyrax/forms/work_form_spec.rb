@@ -1,6 +1,6 @@
 describe Hyrax::Forms::WorkForm, :no_clean do
   let(:work) { GenericWork.new }
-  let(:form) { described_class.new(work, nil) }
+  let(:form) { described_class.new(work, nil, nil) }
 
   describe "#select_files" do
     let(:work) { create(:work_with_one_file) }

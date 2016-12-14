@@ -4,7 +4,7 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability)
+    Hyrax::GenericWorkForm.new(work, ability, controller)
   end
 
   before do

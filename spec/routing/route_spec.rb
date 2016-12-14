@@ -192,6 +192,10 @@ describe 'Routes', type: :routing do
       it "routes to show" do
         expect(get: '/concern/generic_works/4').to route_to(controller: 'hyrax/generic_works', action: 'show', id: '4')
       end
+
+      it 'routes to inspect_work' do
+        expect(get: 'concern/generic_works/6/inspect_work').to route_to(controller: 'hyrax/generic_works', action: 'inspect_work', id: '6')
+      end
     end
   end
 end

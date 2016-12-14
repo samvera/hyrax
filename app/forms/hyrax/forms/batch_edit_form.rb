@@ -10,11 +10,13 @@ module Hyrax
 
       attr_accessor :names
 
+      delegate :[], to: :model
+
       # @param [ActiveFedora::Base] model the model backing the form
       # @param [Ability] current_ability the user authorization model
       # @param [Array<String>] batch a list of document ids in the batch
       def initialize(model, current_ability, batch)
-        super(model, current_ability)
+        super(model, current_ability, nil)
         @names = []
         initialize_combined_fields(batch)
       end

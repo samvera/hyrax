@@ -43,6 +43,18 @@ describe ::SolrDocument, type: :model do
     it { is_expected.to eq id }
   end
 
+  describe "#suppressed?" do
+    let(:attributes) { { 'suppressed_bsi' => suppressed_value } }
+    subject { document }
+    context 'when true' do
+      let(:suppressed_value) { true }
+      it { is_expected.to be_suppressed }
+    end
+    context 'when false' do
+      let(:suppressed_value) { false }
+      it { is_expected.not_to be_suppressed }
+    end
+  end
   describe "document types" do
     class Mimes
       include Hydra::Works::MimeTypes

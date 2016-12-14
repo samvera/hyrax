@@ -1,0 +1,10 @@
+<tr>
+  <td>Member of Collections</td>
+  <td>
+    <ul class="member_of_collections">
+      <% presenter.member_of_collection_presenters.each do |p| %>
+        <li><%= link_to p.to_s, main_app.collection_path(p.id), class: 'collection-link' %></li>
+      <% end %>
+    </ul>
+  </td>
+</tr>

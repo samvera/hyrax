@@ -1,4 +1,4 @@
-<% presenters = presenter.collection_presenters %>
+<% presenters = presenter.member_of_collection_presenters %>
 <% if presenters.blank? %>
   <% presenter.presenter_types.each do |type| %>
     <%= render 'relationships_parent_row_empty', type: type, presenter: presenter %>

@@ -1,5 +1,8 @@
 describe "display a work as its owner" do
   let(:work_path) { "/concern/generic_works/#{work.id}" }
+  before do
+    create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+  end
 
   context "as the work owner" do
     let(:work) { create(:work_with_one_file, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"], user: user) }
@@ -36,13 +39,11 @@ describe "display a work as its owner" do
 
       # Doesn't have the upload form for uploading more files
       expect(page).not_to have_selector "form#fileupload"
-    end
 
-    it "has some social media buttons" do
+      # has some social media buttons
       expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?text=Magnificent+splendor&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
-    end
 
-    it 'exports EndNote' do
+      # exports EndNote
       expect(page).to have_link 'EndNote'
       click_link 'EndNote'
       expect(page).to have_content '%0 Generic Work'

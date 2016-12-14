@@ -554,6 +554,7 @@ en:
     workflow:
       default:
         deposit: "Deposit"
+      unauthorized: "The work is not currently available because it has not yet completed the approval process"
     works:
       new:
         header: "Add New %{type}"

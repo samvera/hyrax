@@ -5,7 +5,7 @@ describe 'hyrax/base/edit.html.erb', type: :view do
   let(:ability) { double }
 
   let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability)
+    Hyrax::GenericWorkForm.new(work, ability, controller)
   end
 
   before do
