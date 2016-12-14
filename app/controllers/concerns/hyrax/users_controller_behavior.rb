@@ -100,6 +100,10 @@ module Hyrax::UsersControllerBehavior
         'display_name'
       when 'name desc'
         'display_name DESC'
+      when 'login'
+        Devise.authentication_keys.first
+      when 'login desc'
+        "#{Devise.authentication_keys.first} DESC"
       else
         sort
       end
