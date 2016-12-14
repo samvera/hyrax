@@ -39,28 +39,10 @@ describe Hyrax::CatalogSearchBuilder do
   end
 
   describe "#show_only_active_records" do
-    before do
-      allow(Flipflop).to receive(:enable_mediated_deposit?).and_return(mediation_enabled)
-    end
-
     subject { builder.show_only_active_records(solr_params) }
-
-    context "with mediated deposit enabled" do
-      let(:user_query) { nil }
-      let(:mediation_enabled) { true }
-      it "includes suppressed switch" do
-        subject
-        expect(solr_params[:fq]).to eq ["-suppressed_bsi:true"]
-      end
-    end
-
-    context "with mediated deposit disabled" do
-      let(:user_query) { nil }
-      let(:mediation_enabled) { false }
-      it "does not include suppressed switch" do
-        subject
-        expect(solr_params[:fq]).to be_empty
-      end
+    it "includes suppressed switch" do
+      subject
+      expect(solr_params[:fq]).to eq ["-suppressed_bsi:true"]
     end
   end
 end

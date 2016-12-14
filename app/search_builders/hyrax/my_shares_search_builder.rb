@@ -9,7 +9,5 @@ class Hyrax::MySharesSearchBuilder < Hyrax::SearchBuilder
     solr_parameters[:fq] += [
       "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: scope.current_user.user_key)
     ]
-
-    solr_parameters[:fq] += ['-suppressed_bsi:true'] if Flipflop.enable_mediated_deposit?
   end
 end

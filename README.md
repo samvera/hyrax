@@ -110,15 +110,15 @@ After installing the Prerequisites:
 
 Hyrax 0.0.x requires the following software to work:
 
-1. Solr version >= 5.x (tested up to 6.2.0)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.6.0)
+1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.3.0)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.0)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
 1. [FITS](#characterization) version 0.8.x (0.8.5 is known to be good)
 1. [LibreOffice](#derivatives)
 
-**NOTE: If you do not already have Solr and Fedora instances you can use in your development environment, you may use hydra-jetty (instructions are provided below to get you up and running quickly and with minimal hassle).**
+**NOTE: The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
 

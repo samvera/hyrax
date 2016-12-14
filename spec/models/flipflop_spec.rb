@@ -8,13 +8,6 @@ RSpec.describe Flipflop do
     end
   end
 
-  describe "enable_mediated_deposit?" do
-    subject { described_class.enable_mediated_deposit? }
-    it "defaults to false" do
-      is_expected.to be false
-    end
-  end
-
   describe "proxy_deposit?" do
     subject { described_class.proxy_deposit? }
     it "defaults to true" do

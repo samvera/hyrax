@@ -21,10 +21,8 @@ describe Hyrax::MySharesSearchBuilder do
     allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
       .with(depositor: me.user_key)
       .and_return("depositor")
-    allow(Flipflop).to receive(:enable_mediated_deposit?).and_return(mediation_enabled)
   end
 
-  let(:mediation_enabled) { false }
   subject { builder.to_hash['fq'] }
 
   it "filters things we have access to in which we are not the depositor" do
@@ -32,25 +30,5 @@ describe Hyrax::MySharesSearchBuilder do
                            "{!terms f=has_model_ssim}GenericWork,Collection",
                            "-suppressed_bsi:true",
                            "-depositor"]
-  end
-
-  describe "mediated deposit" do
-    let(:user_query) { nil }
-
-    context "with mediated deposit enabled" do
-      let(:mediation_enabled) { true }
-      it "does includes suppressed switch" do
-        builder.show_only_shared_files(solr_params)
-        expect(solr_params[:fq]).to eq ["-depositor", "-suppressed_bsi:true"]
-      end
-    end
-
-    context "with mediated deposit disabled" do
-      let(:mediation_enabled) { false }
-      it "does not include suppressed switch" do
-        builder.show_only_shared_files(solr_params)
-        expect(solr_params[:fq]).to eq ["-depositor"]
-      end
-    end
   end
 end
