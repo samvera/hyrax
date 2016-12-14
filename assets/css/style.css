@@ -708,10 +708,10 @@
 
 	#banner {
 		background-image: url("../images/hyrax_logo_horizontal_white_background.png");
-		background-position: center center;
-		background-size: contain;
-                background-repeat: no-repeat;
-		height: 28em;
+		background-position: 50% 10px;
+		background-size: auto 140px;
+    background-repeat: no-repeat;
+		height: 13em;
 		text-align: center;
 		position: relative;
 	}

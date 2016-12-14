@@ -55,7 +55,8 @@
 /* Banner */
 
 	#banner {
-		height: 12em;
+		height: 22em;
+		background-size: 100%;
 	}
 
 		#banner header {
