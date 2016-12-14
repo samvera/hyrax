@@ -178,22 +178,6 @@ describe Hyrax::WorkShowPresenter do
     end
   end
 
-  describe "#collection_presenters" do
-    let(:collection) { create(:collection) }
-    let(:obj) { create(:work) }
-    let(:attributes) { obj.to_solr }
-
-    before do
-      collection.members << obj
-      collection.save!
-      obj.save!
-    end
-
-    it "filters out members that are not file sets" do
-      expect(presenter.collection_presenters.map(&:id)).to eq [collection.id]
-    end
-  end
-
   describe '#page_title' do
     subject { presenter.page_title }
     it { is_expected.to eq 'foo' }
@@ -239,6 +223,15 @@ describe Hyrax::WorkShowPresenter do
     describe "#workflow" do
       subject { presenter.workflow }
       it { is_expected.to be_kind_of Hyrax::WorkflowPresenter }
+    end
+  end
+
+  context "with inspect_work" do
+    let(:user) { create(:user) }
+    let(:ability) { Ability.new(user) }
+    describe "#inspect_work" do
+      subject { presenter.inspect_work }
+      it { is_expected.to be_kind_of Hyrax::InspectWorkPresenter }
     end
   end
 

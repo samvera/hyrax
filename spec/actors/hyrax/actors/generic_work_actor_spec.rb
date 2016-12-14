@@ -257,18 +257,17 @@ describe Hyrax::Actors::GenericWorkActor do
       let!(:collection1) { create(:collection, user: user) }
       let!(:collection2) { create(:collection, user: user) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work, collection_ids: [collection2.id])
+        FactoryGirl.attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
       end
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.member_of_collections = [collection1]
         curation_concern.save!
-        collection1.members << curation_concern
-        collection1.save!
       end
 
       it 'remove from the old collection and adds to the new collection' do
         curation_concern.reload
-        expect(curation_concern.in_collections).to eq [collection1]
+        expect(curation_concern.member_of_collection_ids).to eq [collection1.id]
         # before running actor.update, the work is in collection1
 
         expect(subject.update(attributes)).to be true
@@ -277,7 +276,7 @@ describe Hyrax::Actors::GenericWorkActor do
         expect(curation_concern.identifier).to be_blank
         expect(curation_concern).to be_persisted
         # after running actor.update, the work is in collection2 and no longer in collection1
-        expect(curation_concern.in_collections).to eq [collection2]
+        expect(curation_concern.member_of_collections).to eq [collection2]
       end
     end
 

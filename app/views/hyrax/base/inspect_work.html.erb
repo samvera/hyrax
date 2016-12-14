@@ -1,0 +1,37 @@
+<h1><%= t("inspect_work.link_text") %></h1>
+<ul class="breadcrumb">
+  <li>
+    Back to <%= link_to @presenter.to_s, [main_app, @presenter] %>
+  </li>
+</ul>
+
+<h3>Workflow</h3>
+<dl>
+  <% workflow = @presenter.inspect_work.workflow %>
+  <dt>Object Name</dt>
+  <dd><%= @presenter.to_s %></dd>
+  <dt>Processing Entity ID</dt>
+  <dd>Entity ID: <%= workflow[:entity_id] %> (Proxy for <%= workflow[:proxy_for] %>)</dd>
+  <dt>Workflow</dt>
+  <dd>Name: <%= workflow[:workflow_name] %> (ID=<%= workflow[:workflow_id] %>)</dd>
+  <dt>State</dt>
+  <dd>State Name: <%= workflow[:state_name] %> (ID=<%= workflow[:state_id] %>)</dd>
+  <dt>Workflow Comments</dt>
+  <dd>
+    <% workflow[:comments].each do |comment| %>
+        <dd><%= comment[:created_at] %>, <%= comment[:comment] %></dd>
+    <% end %>
+  </dd>
+  <dt>Roles</dt>
+  <dd>
+    <% workflow[:roles].each do |role| %>
+      <dd><%= role[:name] %> (ID=<%= role[:id] %>) <%= role[:description] %> Users: <%= role[:users] %></dd>
+  <% end %>
+  </dd>
+</dl>
+
+<h3>Persistence</h3>
+<dl>
+  <dt>Solr</dt>
+  <dd><%= @presenter.inspect_work.solr %></dd>
+</dl>

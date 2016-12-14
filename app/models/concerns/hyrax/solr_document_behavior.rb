@@ -64,6 +64,10 @@ module Hyrax
       hydra_model == ::Collection
     end
 
+    def suppressed?
+      first(Solrizer.solr_name('suppressed', stored_boolean_field))
+    end
+
     # Method to return the ActiveFedora model
     def hydra_model
       first(Solrizer.solr_name('has_model', :symbol)).constantize
@@ -219,6 +223,7 @@ module Hyrax
     end
 
     # Find the solr documents for the collections this object belongs to
+    # TODO: can we remove this method now?
     def collections
       return @collections if @collections
       query = 'id:' + collection_ids.map { |id| '"' + id + '"' }.join(' OR ')
@@ -226,6 +231,10 @@ module Hyrax
       @collections = result['response']['docs'].map do |hash|
         ::SolrDocument.new(hash)
       end
+    end
+
+    def member_of_collection_ids
+      fetch(Solrizer.solr_name('member_of_collection_ids', :symbol), [])
     end
 
     private
@@ -238,6 +247,10 @@ module Hyrax
         rescue
           Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
         end
+      end
+
+      def stored_boolean_field
+        Solrizer::Descriptor.new(:boolean, :stored, :indexed)
       end
   end
 end

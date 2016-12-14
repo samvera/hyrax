@@ -7,7 +7,26 @@ describe Hyrax::GenericWorksController do
   let(:user) { create(:user) }
   before { sign_in user }
 
+  describe 'integration test for suppressed documents' do
+    let(:work) do
+      create(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
+    end
+    before do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
+
+    it 'renders the unavailable message because it is in workflow' do
+      get :show, params: { id: work }
+      expect(response.code).to eq '401'
+      expect(response).to render_template(:unavailable)
+      expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+    end
+  end
+
   describe '#show' do
+    before do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
     context 'my own private work' do
       let(:work) { create(:private_generic_work, user: user, title: ['test title']) }
       it 'shows me the page' do
@@ -40,6 +59,11 @@ describe Hyrax::GenericWorksController do
 
       context "with a parent work" do
         let(:parent) { create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work]) }
+
+        before do
+          create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
+        end
+
         it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
           expect(response).to be_success
@@ -89,7 +113,7 @@ describe Hyrax::GenericWorksController do
           allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
         end
 
-        it 'renders an turtle file' do
+        it 'renders a turtle file' do
           get :show, params: { id: '99999999', format: :ttl }
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
@@ -107,7 +131,40 @@ describe Hyrax::GenericWorksController do
       end
     end
 
+    context 'with work still in workflow' do
+      before do
+        allow(controller).to receive(:search_results).and_return([nil, document_list])
+      end
+      let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999') }
+
+      context 'with a user lacking workflow permission' do
+        before do
+          allow(SolrDocument).to receive(:find).and_return(document)
+        end
+        let(:document_list) { [] }
+        let(:document) { instance_double(SolrDocument, suppressed?: true) }
+        it 'shows the unauthorized message' do
+          get :show, params: { id: work.id }
+          expect(response.code).to eq '401'
+          expect(response).to render_template(:unavailable)
+          expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+        end
+      end
+
+      context 'with a user granted workflow permission' do
+        let(:document_list) { [document] }
+        let(:document) { instance_double(SolrDocument) }
+        it 'renders without the unauthorized message' do
+          get :show, params: { id: work.id }
+          expect(response.code).to eq '200'
+          expect(response).to render_template(:show)
+          expect(flash[:notice]).to be_nil
+        end
+      end
+    end
+
     context 'when a ObjectNotFoundError is raised' do
+      let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999') }
       it 'returns 404 page' do
         allow(controller).to receive(:show).and_raise(ActiveFedora::ObjectNotFoundError)
         expect(controller).to receive(:render_404) { controller.render body: nil }
@@ -431,6 +488,9 @@ describe Hyrax::GenericWorksController do
 
   describe '#file_manager' do
     let(:work) { create(:private_generic_work, user: user) }
+    before do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
     it "is successful" do
       get :file_manager, params: { id: work.id }
       expect(response).to be_success

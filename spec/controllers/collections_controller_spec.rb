@@ -60,7 +60,7 @@ describe CollectionsController do
           }
         end.to change { Collection.count }.by(1)
         collection = assigns(:collection)
-        expect(collection.members).to match_array [asset1, asset2]
+        expect(collection.member_objects).to match_array [asset1, asset2]
       end
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
@@ -69,7 +69,7 @@ describe CollectionsController do
           collection: collection_attrs
         }
 
-        expect(assigns[:collection].members).to eq [asset1]
+        expect(assigns[:collection].member_objects).to eq [asset1]
         asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
@@ -96,9 +96,10 @@ describe CollectionsController do
 
     context 'collection members' do
       before do
-        [asset1, asset2].map(&:save) # bogus_depositor_asset is already saved
-        collection.members = [asset1, asset2]
-        collection.save!
+        [asset1, asset2].each do |asset|
+          asset.member_of_collections << collection
+          asset.save!
+        end
       end
 
       it "adds members to the collection" do
@@ -106,9 +107,9 @@ describe CollectionsController do
           put :update, params: { id: collection,
                                  collection: { members: 'add' },
                                  batch_document_ids: [asset3.id] }
-        end.to change { collection.reload.members.size }.by(1)
+        end.to change { collection.reload.member_objects.size }.by(1)
         expect(response).to redirect_to routes.url_helpers.collection_path(collection, locale: 'en')
-        expect(assigns[:collection].members).to match_array [asset1, asset2, asset3]
+        expect(assigns[:collection].member_objects).to match_array [asset1, asset2, asset3]
       end
 
       it "removes members from the collection" do
@@ -117,8 +118,8 @@ describe CollectionsController do
           put :update, params: { id: collection,
                                  collection: { members: 'remove' },
                                  batch_document_ids: [asset2] }
-        end.to change { collection.reload.members.size }.by(-1)
-        expect(assigns[:collection].members).to match_array [asset1]
+        end.to change { asset2.reload.member_of_collections.size }.by(-1)
+        expect(assigns[:collection].member_objects).to match_array [asset1]
       end
     end
 
@@ -132,8 +133,10 @@ describe CollectionsController do
         end
       end
       before do
-        collection.members = [asset1, asset2, asset3]
-        collection.save!
+        [asset1, asset2, asset3].each do |asset|
+          asset.member_of_collections << collection
+          asset.save
+        end
       end
 
       it 'moves the members' do
@@ -144,8 +147,8 @@ describe CollectionsController do
               destination_collection_id: collection2,
               batch_document_ids: [asset2, asset3]
             }
-        expect(collection.reload.members).to eq [asset1]
-        expect(collection2.reload.members).to match_array [asset2, asset3]
+        expect(collection.reload.member_objects).to eq [asset1]
+        expect(collection2.reload.member_objects).to match_array [asset2, asset3]
       end
     end
 
@@ -174,8 +177,10 @@ describe CollectionsController do
     context "when signed in" do
       before do
         sign_in user
-        collection.members = [asset1, asset2, asset3]
-        collection.save
+        [asset1, asset2, asset3].each do |asset|
+          asset.member_of_collections = [collection]
+          asset.save
+        end
       end
 
       it "returns the collection and its members" do

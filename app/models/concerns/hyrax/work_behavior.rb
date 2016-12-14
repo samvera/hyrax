@@ -16,7 +16,7 @@ module Hyrax
     include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
     include NestedWorks
-    include Publishable
+    include Suppressible
     include ProxyDeposit
     include Works::Trophies
     include Works::Metadata

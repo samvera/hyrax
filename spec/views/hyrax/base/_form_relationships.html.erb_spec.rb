@@ -2,12 +2,12 @@ describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { GenericWork.new }
   let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability)
+    Hyrax::GenericWorkForm.new(work, ability, controller)
   end
   let(:service) { instance_double Hyrax::AdminSetService, select_options: [] }
 
   before do
-    allow(view).to receive(:available_collections).and_return([])
+    allow(form).to receive(:collections_for_select).and_return([])
     allow(view).to receive(:action_name).and_return('new')
     allow(Hyrax::AdminSetService).to receive(:new).with(controller).and_return(service)
   end

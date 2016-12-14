@@ -7,19 +7,22 @@ module Hyrax
     before_action :build_breadcrumbs, only: [:work, :file]
 
     def work
-      @presenter_class = WorkShowPresenter
       show
     end
 
     def file
-      @presenter_class = FileSetPresenter
+      # We set _@presenter_ here so it isn't set in CurationConcernController#presenter
+      # which is intended to find works (not files)
+      solr_file = ::SolrDocument.find(params[:id])
+      authorize! :show, solr_file
+      @presenter = FileSetPresenter.new(solr_file, current_ability, request)
       show
     end
 
-    protected
+    private
 
       def show_presenter
-        @presenter_class
+        WorkShowPresenter
       end
   end
 end

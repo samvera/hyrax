@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Hyrax::Admin::AdminSetsController do
+  routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }
 
   context "a non admin" do

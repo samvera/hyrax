@@ -12,7 +12,7 @@ describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
   let(:ability) { double }
 
   let(:form) do
-    Hyrax::Forms::WorkForm.new(work, ability)
+    Hyrax::Forms::WorkForm.new(work, ability, controller)
   end
 
   let(:f) { double }

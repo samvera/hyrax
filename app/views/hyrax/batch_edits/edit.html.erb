@@ -16,7 +16,7 @@
       <div class="tab-pane active" id="descriptions_display">
         <% @form.terms.each do |term| %>
           <div class="row">
-            <%= simple_form_for @form.model,
+            <%= simple_form_for @form,
                                 url: hyrax.batch_edits_path,
                                 method: :put,
                                 remote: true,

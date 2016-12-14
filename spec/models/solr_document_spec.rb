@@ -2,6 +2,16 @@ describe ::SolrDocument, type: :model do
   let(:document) { described_class.new(attributes) }
   let(:attributes) { {} }
 
+  describe "#itemtype" do
+    let(:attributes) { { resource_type_tesim: ['Article'] } }
+    it "delegates to the Hyrax::ResourceTypesService" do
+      expect(Hyrax::ResourceTypesService).to receive(:microdata_type).with('Article')
+      subject
+    end
+    subject { document.itemtype }
+    it { is_expected.to eq 'http://schema.org/Article' }
+  end
+
   describe "date_uploaded" do
     let(:attributes) { { 'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.date_uploaded }
@@ -43,6 +53,18 @@ describe ::SolrDocument, type: :model do
     it { is_expected.to eq id }
   end
 
+  describe "#suppressed?" do
+    let(:attributes) { { 'suppressed_bsi' => suppressed_value } }
+    subject { document }
+    context 'when true' do
+      let(:suppressed_value) { true }
+      it { is_expected.to be_suppressed }
+    end
+    context 'when false' do
+      let(:suppressed_value) { false }
+      it { is_expected.not_to be_suppressed }
+    end
+  end
   describe "document types" do
     class Mimes
       include Hydra::Works::MimeTypes

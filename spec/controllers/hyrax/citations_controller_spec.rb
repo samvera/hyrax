@@ -7,6 +7,7 @@ describe Hyrax::CitationsController do
       before do
         sign_in user
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
       end
 
       it "is successful" do
@@ -36,12 +37,11 @@ describe Hyrax::CitationsController do
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
-      # TODO: fix this behavior
-      it "is not successful" do
+      it "is successful" do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
         get :file, params: { id: file_set }
-        expect(response).not_to be_successful
-        # expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
+        expect(response).to be_successful
+        expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
       end
     end
 
