@@ -18,6 +18,9 @@ module Sufia
       return unless registered_user?
       can :create, [UploadedFile, BatchUploadItem]
       can :destroy, UploadedFile, user: current_user
+      # BatchUploadItem permissions depend on the kind of objects being made by the batch,
+      # but it must be authorized directly in the controller, not here.
+      # Note: cannot call `authorized_models` without going recursive.
     end
 
     def proxy_deposit_abilities

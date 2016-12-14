@@ -6,24 +6,33 @@ module Sufia
 
     included do
       self.work_form_service = BatchUploadFormService
-      self.curation_concern_type = work_form_service.form_class.model_class
+      self.curation_concern_type = work_form_service.form_class.model_class # includes CanCan side-effects
+      # We use BatchUploadItem as a null stand-in curation_concern_type.
+      # The actual permission is checked dynamically via `authorize!` during #create.
     end
 
+    # The permissions to create a batch are not as important as the permissions for the concern being batched.
     def create
       authenticate_user!
+      authorize! :create, params[:batch_upload_item][:payload_concern].constantize
       create_update_job
       flash[:notice] = t('sufia.works.new.after_create_html', application_name: view_context.application_name)
       redirect_after_update
     end
 
-    # Gives the class of the form.
     class BatchUploadFormService < CurationConcerns::WorkFormService
-      def self.form_class(_ = nil)
+      # Gives the class of the form.
+      def self.form_class(_curation_concern = nil)
         ::Sufia::Forms::BatchUploadForm
       end
     end
 
     protected
+
+      def build_form
+        super
+        @form.payload_concern = params[:payload_concern]
+      end
 
       def redirect_after_update
         if uploading_on_behalf_of?

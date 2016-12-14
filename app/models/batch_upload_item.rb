@@ -6,6 +6,8 @@ class BatchUploadItem < ActiveFedora::Base
   include ::CurationConcerns::BasicMetadata
   include Sufia::WorkBehavior
 
+  attr_accessor :payload_concern # a Class name: what is this a batch of?
+
   # This mocks out the behavior of Hydra::PCDM::PcdmBehavior
   def in_collection_ids
     []
