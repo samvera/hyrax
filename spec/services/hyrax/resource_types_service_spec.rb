@@ -28,5 +28,10 @@ describe Hyrax::ResourceTypesService do
       let(:id) { "missing" }
       it { is_expected.to eq 'http://schema.org/CreativeWork' }
     end
+
+    context "when the id is nil" do
+      let(:id) { nil }
+      it { is_expected.to eq 'http://schema.org/CreativeWork' }
+    end
   end
 end

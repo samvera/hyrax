@@ -2,6 +2,16 @@ describe ::SolrDocument, type: :model do
   let(:document) { described_class.new(attributes) }
   let(:attributes) { {} }
 
+  describe "#itemtype" do
+    let(:attributes) { { resource_type_tesim: ['Article'] } }
+    it "delegates to the Hyrax::ResourceTypesService" do
+      expect(Hyrax::ResourceTypesService).to receive(:microdata_type).with('Article')
+      subject
+    end
+    subject { document.itemtype }
+    it { is_expected.to eq 'http://schema.org/Article' }
+  end
+
   describe "date_uploaded" do
     let(:attributes) { { 'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.date_uploaded }
