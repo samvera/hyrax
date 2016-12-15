@@ -120,9 +120,10 @@ describe Hydra::AdminPolicy do
   # Policy-based Access Controls
   #
   describe "When accessing assets with Policies associated" do
+    let(:user) { FactoryGirl.build(:martia_morocco) }
+
     before do
-      @user = FactoryGirl.build(:martia_morocco)
-      allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
+      allow(user).to receive(:groups).and_return(["faculty", "africana-faculty"])
     end
 
     before(:all) do
@@ -135,7 +136,7 @@ describe Hydra::AdminPolicy do
       Object.send(:remove_const, :TestAbility)
     end
 
-    subject { TestAbility.new(@user) }
+    subject { TestAbility.new(user) }
 
     context "Given a policy grants read access to a group I belong to" do
       before do
@@ -191,7 +192,7 @@ describe Hydra::AdminPolicy do
     	context "And a subscribing asset grants read access to me as an individual" do
     	  before do
           @asset = ModsAsset.new()
-          @asset.read_users = [@user.uid]
+          @asset.read_users = [user.uid]
           @asset.admin_policy = @policy
           @asset.save
         end
@@ -235,7 +236,7 @@ describe Hydra::AdminPolicy do
       context "And a subscribing asset grants read access to me as an individual" do
         before do
           @asset = ModsAsset.new()
-          @asset.read_users = [@user.uid]
+          @asset.read_users = [user.uid]
           @asset.admin_policy = @policy
           @asset.save
         end

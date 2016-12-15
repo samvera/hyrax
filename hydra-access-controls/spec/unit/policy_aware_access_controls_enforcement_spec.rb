@@ -101,7 +101,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   describe "policies_with_access" do
     context "Authenticated user" do
       before do
-        allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
+        allow(user).to receive(:groups).and_return(["student", "africana-104-students"])
       end
 
       it "should return the policies that provide discover permissions" do
@@ -128,8 +128,9 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   describe "apply_gated_discovery" do
     let(:governed_field) { ActiveFedora.index_field_mapper.solr_name('isGovernedBy', :symbol) }
     let(:policy_queries) { @solr_parameters[:fq].first.split(" OR ") }
-
-    before { allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles) }
+    before do
+      allow(user).to receive(:groups).and_return(["student", "africana-104-students"])
+    end
 
     context "when policies are included" do
       before { subject.apply_gated_discovery(@solr_parameters) }
@@ -155,21 +156,28 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   end
 
   describe "apply_policy_role_permissions" do
-    it "should escape slashes in the group names" do
-      allow(RoleMapper).to receive(:roles).with(user).and_return(["abc/123","cde/567"])
-      user_access_filters = subject.apply_policy_group_permissions
-      ["edit","discover","read"].each do |type|
-        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\\/123")
-        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cde\\\/567")
+    before do
+      allow(user).to receive(:groups).and_return(groups)
+    end
+    context "when there are slashes in the group names" do
+      let(:groups) { ["abc/123","cde/567"] }
+      it "escapes slashes" do
+        user_access_filters = subject.apply_policy_group_permissions
+        ["edit","discover","read"].each do |type|
+          expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\\/123")
+          expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cde\\\/567")
+        end
       end
     end
 
-    it "should escape spaces in the group names" do
-      allow(RoleMapper).to receive(:roles).with(user).and_return(["abc 123","cd/e 567"])
-      user_access_filters = subject.apply_policy_group_permissions
-      ["edit","discover","read"].each do |type|
-        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\ 123")
-        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cd\\\/e\\ 567")
+    context "when there are spaces in the group names" do
+      let(:groups) { ["abc 123","cd/e 567"] }
+      it "escapes spaces" do
+        user_access_filters = subject.apply_policy_group_permissions
+        ["edit","discover","read"].each do |type|
+          expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\ 123")
+          expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cd\\\/e\\ 567")
+        end
       end
     end
   end

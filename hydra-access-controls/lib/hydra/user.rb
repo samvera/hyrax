@@ -2,15 +2,16 @@
 # By default, this module assumes you are using the User model created by Blacklight, which uses Devise.
 # To integrate your own User implementation into Hydra, override this Module or define your own User model in app/models/user.rb within your Hydra head.
 module Hydra::User
+  extend ActiveSupport::Concern
   include Blacklight::AccessControls::User
   
-  def self.included(klass)
-    # Other modules to auto-include
-    klass.extend(ClassMethods)
+  included do
+    class_attribute :group_service
+    self.group_service = RoleMapper
   end
 
   def groups
-    RoleMapper.roles(self)
+    group_service.fetch_groups(user: self)
   end
   
   module ClassMethods
