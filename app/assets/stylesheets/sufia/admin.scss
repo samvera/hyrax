@@ -33,6 +33,10 @@ body {
   background-color: $admin-sidebar-background-color;
 }
 
+fieldset {
+  width: 100%;
+}
+
 #content-wrapper {
   padding-bottom: 0;
 }
