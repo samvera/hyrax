@@ -16,8 +16,8 @@ describe RoleMapper do
   it "doesn't change its response when it's called repeatedly" do
     u = User.new(:uid=>'leland_himself@example.com')
     allow(u).to receive(:new_record?).and_return(false)
-    expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron', "registered"]
-    expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron', "registered"]
+    expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron']
+    expect(RoleMapper.roles(u).sort).to eq ['archivist', 'donor', 'patron']
   end
 
   it "returns an empty array if there are no roles" do
