@@ -33,8 +33,12 @@ body {
   background-color: $admin-sidebar-background-color;
 }
 
+/* This is needed in Chrome for the admin/admin_sets edit view to render the participants tab
+ * Without this the contents of that tab flow off the right-hand side of the screen
+ * (The other containers on that page have `float: left` except for the fieldset.)
+ */
 fieldset {
-  width: 100%;
+  float: left;
 }
 
 #content-wrapper {
