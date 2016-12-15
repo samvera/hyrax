@@ -84,6 +84,10 @@ describe 'collection', type: :feature do
       visit '/dashboard/collections'
     end
 
+    it "has creation date for collections" do
+      expect(page).to have_content(collection1.create_date.to_date.to_formatted_s(:standard))
+    end
+
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
@@ -143,10 +147,6 @@ describe 'collection', type: :feature do
 
       sign_in user
       visit '/dashboard/collections'
-    end
-
-    it "has creation date for collections" do
-      expect(page).to have_content(collection1.create_date.to_date.to_formatted_s(:standard))
     end
 
     it "allows changing sort order" do

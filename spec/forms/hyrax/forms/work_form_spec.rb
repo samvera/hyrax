@@ -80,26 +80,14 @@ describe Hyrax::Forms::WorkForm, :no_clean do
       expect(subject).not_to have_key 'parent_id'
     end
 
-    context "without mediated deposit" do
-      context "and a user is granted edit access" do
-        let(:attributes) { { permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
-        it { is_expected.to eq ActionController::Parameters.new(permissions_attributes: [ActionController::Parameters.new(type: 'person', name: 'justin', access: 'edit')]).permit! }
-      end
+    context "when a user is granted edit access" do
+      let(:attributes) { { permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
+      it { is_expected.to eq ActionController::Parameters.new(permissions_attributes: [ActionController::Parameters.new(type: 'person', name: 'justin', access: 'edit')]).permit! }
     end
 
-    context "with mediated deposit" do
-      before do
-        allow(Flipflop).to receive(:enable_mediated_deposit?).and_return(true)
-      end
-      context "and a user is granted edit access" do
-        let(:attributes) { { permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
-        it { is_expected.to eq ActionController::Parameters.new(permissions_attributes: []).permit! }
-      end
-
-      context "without permssions being set" do
-        let(:attributes) { {} }
-        it { is_expected.to eq ActionController::Parameters.new.permit! }
-      end
+    context "without permssions being set" do
+      let(:attributes) { {} }
+      it { is_expected.to eq ActionController::Parameters.new.permit! }
     end
   end
 
