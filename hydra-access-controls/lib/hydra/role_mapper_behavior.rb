@@ -17,9 +17,7 @@ module Hydra::RoleMapperBehavior
         user = user_or_uid
         user_id = user.user_key
       end
-      array = byname[user_id].dup || []
-      array = array << 'registered' unless (user.nil? || user.new_record?)
-      array
+      byname[user_id].dup || []
     end
 
     def whois(r)
