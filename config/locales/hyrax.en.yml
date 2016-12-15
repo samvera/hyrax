@@ -553,7 +553,7 @@ en:
         text: *INSTITUTION_NAME
         class: "label-info"
         label_html: <span class="label label-info">%{institution}</span>
-        note: Restrict access to only users and/or groups from %{institution}
+        note_html: Restrict access to only users and/or groups from %{institution}
       embargo:
         text: "Embargo"
         class: "label-warning"
@@ -566,12 +566,12 @@ en:
         text: "Open Access"
         class: "label-success"
         label_html: <span class="label label-success">Open Access</span>
-        note:  Everyone. Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
+        note_html:  Everyone. Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
       open_title_attr: "Change the visibility of this resource"
       private:
         text: "Private"
         label_html: <span class="label label-danger">Private</span>
-        note: Only users and/or groups that have been given specific access in the "Share With" section.
+        note_html: Only users and/or groups that have been given specific access in the "Share With" section.
       private_title_attr: "Change the visibility of this resource"
       restricted:
         text: "Private"
