@@ -37,6 +37,16 @@ describe Hyrax::UsersController, type: :controller do
         expect(assigns[:users].to_a).to match_array [user, u1, u2]
         expect(response).to be_successful
       end
+
+      it "sorts by the user key when login is specified" do
+        get :index, params: { sort: 'login' }
+        expect(assigns[:users].to_a).to match_array [user, u1, u2]
+      end
+
+      it "sorts by the user key when login desc is specified" do
+        get :index, params: { sort: 'login desc' }
+        expect(assigns[:users].to_a).to match_array [user, u1, u2]
+      end
     end
 
     describe "requesting json" do
