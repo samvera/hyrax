@@ -10,8 +10,9 @@ describe DownloadsController do
   end
 
   describe "routing" do
-    it "should route" do
-      assert_recognizes( {:controller=>"downloads", :action=>"show", "id"=>"test1"}, "/downloads/test1?filename=my%20dog.jpg" )
+    it "routes" do
+      assert_recognizes({ controller: "downloads", action: "show", id: "test1" },
+                        "/downloads/test1?filename=my%20dog.jpg")
     end
   end
 
@@ -41,8 +42,8 @@ describe DownloadsController do
     context "when not logged in" do
 
       context "when a specific datastream is requested" do
-        it "should redirect to the root path and display an error" do
-          get :show, id: obj, file: "descMetadata"
+        it "redirects to the root path and display an error" do
+          get :show, params: { id: obj, file: "descMetadata" }
           expect(response).to redirect_to new_user_session_path
           expect(flash[:alert]).to eq "You are not authorized to access this page."
         end
@@ -55,8 +56,8 @@ describe DownloadsController do
         sign_in user
       end
       context "when a specific datastream is requested" do
-        it "should redirect to the root path and display an error" do
-          get :show, id: obj, file: "descMetadata"
+        it "redirects to the root path and display an error" do
+          get :show, params: { id: obj, file: "descMetadata" }
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq "You are not authorized to access this page."
         end
@@ -72,7 +73,7 @@ describe DownloadsController do
       describe "#show" do
         it "defaults to returning default download configured by object" do
           allow(ContentHolder).to receive(:default_file_path).and_return('buzz')
-          get :show, id: obj
+          get :show, params: { id: obj }
           expect(response).to be_successful
           expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"buzz.png\""
@@ -81,7 +82,7 @@ describe DownloadsController do
 
         it "defaults to returning default download configured by controller" do
           expect(DownloadsController.default_file_path).to eq "content"
-          get :show, id: obj
+          get :show, params: { id: obj }
           expect(response).to be_successful
           expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
@@ -90,14 +91,14 @@ describe DownloadsController do
 
         context "when a specific datastream is requested" do
           context "and it doesn't exist" do
-            it "should return :not_found when the datastream doesn't exist" do
-              get :show, id: obj, file: "thumbnail"
+            it "returns :not_found when the datastream doesn't exist" do
+              get :show, params: { id: obj, file: "thumbnail" }
               expect(response).to be_not_found
             end
           end
           context "and it exists" do
-            it "should return it" do
-              get :show, id: obj, file: "descMetadata"
+            it "returns it" do
+              get :show, params: { id: obj, file: "descMetadata" }
               expect(response).to be_successful
               expect(response.headers['Content-Type']).to start_with "text/plain"
               expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"metadata.xml\""
@@ -105,15 +106,17 @@ describe DownloadsController do
             end
           end
         end
-        it "should support setting disposition to inline" do
-          get :show, id: obj, :disposition => "inline"
+
+        it "supports setting disposition to inline" do
+          get :show, params: { id: obj, disposition: "inline" }
           expect(response).to be_successful
           expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
           expect(response.body).to eq 'foobarfoobarfoobar'
         end
-        it "should allow you to specify filename for download" do
-          get :show, id: obj, "filename" => "my%20dog.png"
+
+        it "allows you to specify filename for download" do
+          get :show, params: { id: obj, "filename" => "my%20dog.png" }
           expect(response).to be_successful
           expect(response.headers['Content-Type']).to start_with "image/png"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"my%20dog.png\""
@@ -131,7 +134,7 @@ describe DownloadsController do
 
         it "head request" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
-          head :show, id: parent, file: 'webm'
+          head :show, params: { id: parent, file: 'webm' }
           expect(response.headers['Content-Length']).to eq 16
           expect(response.headers['Accept-Ranges']).to eq 'bytes'
           expect(response.headers['Content-Type']).to start_with 'video/webm'
@@ -139,7 +142,7 @@ describe DownloadsController do
 
         it "sends the whole thing" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
-          get :show, id: '1234', file: 'webm'
+          get :show, params: { id: '1234', file: 'webm' }
           expect(response.body).to eq 'one1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 0-15/16'
           expect(response.headers["Content-Length"]).to eq '16'
@@ -151,13 +154,13 @@ describe DownloadsController do
 
         it "sends the whole thing when the range is open ended" do
           request.env["HTTP_RANGE"] = 'bytes=0-'
-          get :show, id: '1234', file: 'webm'
+          get :show, params: { id: '1234', file: 'webm' }
           expect(response.body).to eq 'one1two2threfour'
         end
 
         it "gets a range not starting at the beginning" do
           request.env["HTTP_RANGE"] = 'bytes=3-15'
-          get :show, id: '1234', file: 'webm'
+          get :show, params: { id: '1234', file: 'webm' }
           expect(response.body).to eq '1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 3-15/16'
           expect(response.headers["Content-Length"]).to eq '13'
@@ -165,7 +168,7 @@ describe DownloadsController do
 
         it "gets a range not ending at the end" do
           request.env["HTTP_RANGE"] = 'bytes=4-11'
-          get :show, id: '1234', file: 'webm'
+          get :show, params: { id: '1234', file: 'webm' }
           expect(response.body).to eq 'two2thre'
           expect(response.headers["Content-Range"]).to eq 'bytes 4-11/16'
           expect(response.headers["Content-Length"]).to eq '8'
@@ -182,9 +185,9 @@ describe DownloadsController do
         end
         sign_in @user
       end
-      it "should use the custom param value to retrieve the asset" do
+      it "uses the custom param value to retrieve the asset" do
         allow(controller).to receive(:asset_param_key).and_return(:object_id)
-        get :show, object_id: obj
+        get :show, params: { object_id: obj }
         expect(response).to be_successful
       end
     end
