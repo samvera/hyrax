@@ -30,7 +30,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
       let(:grant_attributes) { [{ "agent_type" => "user", "agent_id" => "bob", "access" => "view" }] }
       let(:input_params) do
         { admin_set_id: admin_set.id,
-          hyrax_permission_template: form_attributes }
+          permission_template: form_attributes }
       end
       let(:form_attributes) { { visibility: 'open', access_grants_attributes: grant_attributes } }
 
