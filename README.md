@@ -171,6 +171,7 @@ Generating a new Rails application using Sufia's template above takes cares of a
 * Running `bundle install`, to install Sufia and its dependencies
 * Running Sufia's install generator, to add a number of files that Sufia requires within your Rails app, including e.g. database migrations
 * Loading all of Sufia's database migrations into your application's database
+* Loading Sufia's default workflows into your application's database
 
 ## Generate a primary work type
 
