@@ -7,7 +7,7 @@ module Hyrax
         authorize! :update, @permission_template
         Forms::PermissionTemplateForm.new(@permission_template).update(update_params)
         # Ensure we redirect to active tab
-        current_tab = params[:hyrax_permission_template][:access_grants_attributes].present? ? 'participants' : 'visibility'
+        current_tab = params[:permission_template][:access_grants_attributes].present? ? 'participants' : 'visibility'
         redirect_to hyrax.edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
                     notice: 'Permissions updated'
       end
@@ -20,7 +20,7 @@ module Hyrax
         end
 
         def update_params
-          params.require(:hyrax_permission_template)
+          params.require(:permission_template)
                 .permit(:release_date, :release_period, :release_varies, :release_embargo, :visibility,
                         access_grants_attributes: [:access, :agent_id, :agent_type, :id])
         end
