@@ -181,7 +181,7 @@ es:
       relationships_parent_row:
         label: "En %{type}:"
       relationships_parent_row_empty:
-        empty: "No hay relaciones con %{type} relationships."
+        empty: "No hay relaciones con %{type}."
         label: "En %{type}:"
       show:
         last_modified: "Última modificación: %{value}"
@@ -520,7 +520,7 @@ es:
         shares: "Compartido"
         transfers: "Transferencias"
       language_switch: "Cambiar idioma"
-      notifications: "Notifications"
+      notifications: "Notificaciones"
       profile:
         edit: "Editar Perfil"
         login: "Iniciar sesión"
