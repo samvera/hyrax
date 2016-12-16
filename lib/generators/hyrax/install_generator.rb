@@ -55,6 +55,7 @@ module Hyrax
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
 
       inject_into_file 'config/routes.rb', after: /devise_for :users\s*\n/ do
+        "  mount Qa::Engine => '/authorities'\n"\
         "  mount Hyrax::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
         "  root 'hyrax/homepage#index'\n"\
@@ -98,6 +99,7 @@ module Hyrax
       copy_file 'config/analytics.yml', 'config/analytics.yml'
     end
 
+    # we're going to inject this into the local app, so that it's easy to disable.
     def inject_ability
       inject_into_file 'app/models/ability.rb', after: /Hydra::Ability\s*\n/ do
         "  include Hyrax::Ability\n"\
@@ -122,8 +124,8 @@ module Hyrax
       copy_file 'hyrax_helper.rb', 'app/helpers/hyrax_helper.rb'
     end
 
-    def install_hyrax_700
-      generate "hyrax:upgrade700"
+    def qa_tables
+      generate 'qa:local:tables'
     end
 
     def install_assets
