@@ -88,7 +88,7 @@ Hyrax has the following features:
 
 See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
 
-For non-technical documentation about Hyrax, see the Sufia [documentation site](http://sufia.io/).
+For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyrax.projecthydra.org/).
 
 # Help
 
@@ -236,4 +236,4 @@ See the [release management process](https://github.com/projecthydra/sufia/wiki/
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
 [Project Hydra website](http://projecthydra.org/).
 
-![Project Hydra Logo](http://sufia.io/assets/images/hydra_logo.png)
+![Project Hydra Logo](http://hyrax.projecthydra.org/assets/images/hydra_logo.png)
