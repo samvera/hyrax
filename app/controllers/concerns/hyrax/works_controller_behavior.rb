@@ -1,6 +1,7 @@
 module Hyrax
   module WorksControllerBehavior
     extend ActiveSupport::Concern
+    # TODO: merge with CurationConcernController
     include Hyrax::CurationConcernController
 
     def new

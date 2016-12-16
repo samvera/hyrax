@@ -3,11 +3,12 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
   argument :model_name, type: :string, default: 'user'
   desc '
 This generator makes the following changes to your application:
- 1. Creates the curation_concerns.rb configuration file and several others
- 2. Creates the file_set.rb and collection.rb models
+ 1. Injects the user behavior onto the user models.
+ 2. Creates the file_set.rb and collection.rb models.
+ 3. Generates the clam anti-virus configuration.
        '
   def banner
-    say_status('warning', 'GENERATING SUFIA MODELS', :yellow)
+    say_status('warning', 'GENERATING HYRAX MODELS', :yellow)
   end
 
   # Setup the database migrations
@@ -16,7 +17,7 @@ This generator makes the following changes to your application:
   end
 
   # Add behaviors to the user model
-  def inject_curation_concerns_user_behavior
+  def inject_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exist?(file_path)
       inject_into_file file_path, after: /include Hydra\:\:User.*$/ do
@@ -25,7 +26,7 @@ This generator makes the following changes to your application:
         "\n  include Hyrax::UserUsageStats\n"
       end
     else
-      puts "     \e[31mFailure\e[0m  Hyrax requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g curation_concerns client"
+      puts "     \e[31mFailure\e[0m  Hyrax requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g hyrax:models client"
     end
   end
 
