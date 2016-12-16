@@ -64,6 +64,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
 
   def create_i18n
     template 'locale.en.yml.erb', "config/locales/#{file_name}.en.yml"
+    template 'locale.es.yml.erb', "config/locales/#{file_name}.es.yml"
   end
 
   def register_work
