@@ -24,5 +24,16 @@ RSpec.describe Hyrax::GraphExporter do
       # It includes the list nodes on the graph
       expect(subject.query([proxy, nil, nil]).count).to eq 2
     end
+
+    context "when a Ldp::NotFound is raised" do
+      let(:mock_service) { instance_double(Hydra::ContentNegotiation::CleanGraphRepository) }
+      before do
+        allow(service).to receive(:clean_graph_repository).and_return(mock_service)
+        allow(mock_service).to receive(:find).and_raise(Ldp::NotFound)
+      end
+      it "raises a error that the controller catches and handles" do
+        expect { subject }.to raise_error ActiveFedora::ObjectNotFoundError
+      end
+    end
   end
 end

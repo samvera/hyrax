@@ -19,6 +19,9 @@ module Hyrax
           g << stmt
         end
       end
+    rescue Ldp::NotFound
+      # this error is handled with a 404 page.
+      raise ActiveFedora::ObjectNotFoundError
     end
 
     private
