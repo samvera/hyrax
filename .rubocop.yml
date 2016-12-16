@@ -8,7 +8,6 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'db/**/*'
-    - 'curation_concerns/**/*'
     - 'script/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'

@@ -215,7 +215,6 @@ module Hyrax
     #   A configuration point for changing the behavior of the license service.
     #
     #   @see Hyrax::LicenseService for implementation details
-    #   @see https://github.com/projecthydra/curation_concerns/pull/1047
     attr_writer :license_service_class
     def license_service_class
       @license_service_class ||= Hyrax::LicenseService
