@@ -6,7 +6,7 @@
     <%= f.hidden_field :order, data: { property: "order" } %>
     <div class="main row">
       <div class="col-sm-3">
-        <%= link_to presenter do %>
+        <%= link_to [main_app, presenter] do %>
           <%= render_thumbnail_tag presenter, width: 90 %>
         <% end %>
       </div>
