@@ -190,4 +190,15 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       end
     end
   end
+
+  describe "#workflows" do
+    let(:admin_set) { create(:admin_set) }
+    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+    let(:form) { described_class.new(permission_template) }
+
+    it "returns all of the workflows" do
+      expect(Sipity::Workflow).to receive(:all).and_return(:the_workflows)
+      expect(form.workflows).to eq(:the_workflows)
+    end
+  end
 end
