@@ -31,6 +31,8 @@ module Hyrax
 
     private
 
+      # @return [Array<String>] a list of admin set ids for admin sets the current user
+      #   has deposit or manage permissions to.
       def admin_set_ids
         PermissionTemplateAccess.joins(:permission_template)
                                 .where(agent_type: 'user',
