@@ -1,23 +1,28 @@
 module Hydra::RoleMapperBehavior
   extend ActiveSupport::Concern
+  extend Deprecation
 
   module ClassMethods
     def role_names
       map.keys
     end
 
+    def fetch_groups(user:)
+      _groups(user.user_key)
+    end
+
     ##
     # @param user_or_uid either the User object or user id
     # If you pass in a nil User object (ie. user isn't logged in), or a uid that doesn't exist, it will return an empty array
     def roles(user_or_uid)
-      if user_or_uid.kind_of?(String)
-        user = Hydra::Ability.user_class.find_by_user_key(user_or_uid)
-        user_id = user_or_uid
-      elsif user_or_uid.kind_of?(Hydra::Ability.user_class) && user_or_uid.user_key
-        user = user_or_uid
-        user_id = user.user_key
-      end
-      byname[user_id].dup || []
+      Deprecation.warn(self, "roles is deprecated and will be removed in Hydra-Head 11.  Use fetch_groups instead")
+      user_id = case user_or_uid
+                  when String
+                    user_or_uid
+                  else
+                    user_or_uid.user_key
+                end
+      _groups(user_id)
     end
 
     def whois(r)
@@ -36,6 +41,14 @@ module Hydra::RoleMapperBehavior
     end
 
     private
+
+      ##
+      # @param user_id [String] the identfying user key
+      # @return [Array<String>] a list of group names. If a nil user id, or a user id that doesn't exist is passed in, it will return an empty array
+      def _groups(user_id)
+        byname[user_id].dup || []
+      end
+
       def load_role_map
         require 'erb'
         require 'yaml'

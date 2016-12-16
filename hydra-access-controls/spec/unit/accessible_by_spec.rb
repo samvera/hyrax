@@ -14,7 +14,7 @@ describe "active_fedora/accessible_by" do
     public_obj.save
     editable_obj.permissions_attributes = [{ name:"africana-faculty", access: "edit", type: "group" }, {name: "calvin_collaborator", access: "edit", type: "person"}]
     editable_obj.save
-    expect(user).to receive(:groups).at_most(:once).and_return(user.roles)
+    expect(user).to receive(:groups).at_most(:once).and_return(["faculty", "africana-faculty"])
   end
 
   after do

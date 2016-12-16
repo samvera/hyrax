@@ -2,31 +2,39 @@ require 'spec_helper'
 
 describe User do
 
-  describe "user_key" do
+  describe "#user_key" do
     let(:user) { User.new.tap {|u| u.email = "foo@example.com"} }
     before do
       allow(user).to receive(:username).and_return('foo')
     end
+    subject { user.user_key }
 
-    it "should return email" do
-      expect(user.user_key).to eq 'foo@example.com'
+    context "by default" do
+      it "returns email" do
+        expect(subject).to eq 'foo@example.com'
+      end
     end
 
-    it "should return username" do
-      allow(Devise).to receive(:authentication_keys).and_return([:username])
-      expect(user.user_key).to eq 'foo'
+    context "when devise is configured to use the username" do
+      before do
+        allow(Devise).to receive(:authentication_keys).and_return([:username])
+      end
+      it "returns username" do
+        expect(subject).to eq 'foo'
+      end
     end
-
   end
 
-end
-
-module UserTestAttributes
-  ['first_name','last_name','full_name','affiliation','photo'].each do |attr|
-    class_eval <<-EOM
-      def #{attr}
-        "test_#{attr}"
-      end
-    EOM
+  describe "#groups" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:mock_service) { double }
+    before do
+      user.group_service = mock_service
+    end
+    subject { user.groups }
+    it "returns a list of groups" do
+      expect(mock_service).to receive(:fetch_groups).with(user: user).and_return(['my_group'])
+      expect(subject).to eq ['my_group']
+    end
   end
 end
