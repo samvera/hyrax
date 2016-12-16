@@ -10,6 +10,7 @@
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, data: { 'target': '#collapsePublic' }  %>
             <%= t('hyrax.visibility.open.label_html') %>
+            <%= t('hyrax.visibility.open.note_html', type: f.object.human_readable_type) %>
             <div class="collapse" id="collapsePublic">
               <p>
                 <strong>Please note</strong>, making something visible to the world (i.e.
@@ -31,6 +32,7 @@
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
             <%= t('hyrax.visibility.authenticated.label_html', institution: t('hyrax.institution_name')) %>
+            <%= t('hyrax.visibility.authenticated.note_html', institution: t('hyrax.institution_name')) %>
           </label>
         </li>
         <li class="radio">
@@ -63,6 +65,7 @@
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
             <%= t('hyrax.visibility.private.label_html') %>
+            <%= t('hyrax.visibility.private.note_html') %>
           </label>
         </li>
       </ul>
