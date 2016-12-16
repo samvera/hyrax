@@ -1,10 +1,8 @@
 module Hyrax
+  # Overrides of methods defined by the Blacklight gem.
   module BlacklightOverride
-    # This overrides curation_concerns so we aren't removing any fields.
-    # @return [Array<Symbol>] a list of fields to remove on the render_constraint_element
-    # You can override this if you have different fields to remove
-    def fields_to_exclude_from_constraint_element
-      []
+    def application_name
+      t('hyrax.product_name', default: super)
     end
   end
 end

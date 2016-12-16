@@ -6,7 +6,6 @@ module Hyrax
     include Hyrax::TitleHelper
     include Hyrax::FileSetHelper
     include Hyrax::SearchPathsHelper
-    include Hyrax::RenderConstraintsHelper
     include Hyrax::AbilityHelper
     include Hyrax::UrlHelper
     include Hyrax::EmbargoHelper
@@ -19,10 +18,6 @@ module Hyrax
     # @return [Hash<String,String>] locale abbreviations as keys and flags as values
     def available_translations
       { 'en' => 'English', 'es' => 'Español' }
-    end
-
-    def application_name
-      t('hyrax.product_name', default: super)
     end
 
     def institution_name
