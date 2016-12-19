@@ -38,8 +38,9 @@ Blacklight.onLoad(function() {
        url: anchor.attr('href'),
        type: "post",
        success: function(data) {
-         anchor.before("Featured");
-         anchor.remove();
+         anchor.addClass('collapse');
+         $('a[data-behavior="unfeature"]').removeClass('collapse')
+
        }
     });
   });
@@ -50,12 +51,10 @@ Blacklight.onLoad(function() {
     $.ajax({
        url: anchor.attr('href'),
        type: "post",
-       data: {"_method":"delete"}, 
+       data: {"_method":"delete"},
        success: function(data) {
-         row = anchor.closest('li')
-         row.fadeOut(1000, function() {
-           row.remove();
-         });
+         anchor.addClass('collapse');
+         $('a[data-behavior="feature"]').removeClass('collapse')
        }
     });
   });

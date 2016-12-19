@@ -144,12 +144,16 @@ module Hyrax
       grouped
     end
 
+    def work_featurable?
+      user_can_feature_works? && solr_document.public?
+    end
+
     def display_feature_link?
-      user_can_feature_works? && solr_document.public? && FeaturedWork.can_create_another? && !featured?
+      work_featurable? && FeaturedWork.can_create_another? && !featured?
     end
 
     def display_unfeature_link?
-      user_can_feature_works? && solr_document.public? && featured?
+      work_featurable? && featured?
     end
 
     def stats_path

@@ -9,14 +9,17 @@
           <%= link_to t("hyrax.file_manager.link_text"), polymorphic_path([main_app, :file_manager, presenter]), class: 'btn btn-default' %>
       <% end %>
   <% end %>
-  <% if presenter.display_feature_link? %>
+
+  <% if presenter.work_featurable? %>
       <%= link_to "Feature", hyrax.featured_work_path(presenter, format: :json),
-          data: {behavior: 'feature'}, id: 'featureLink', name: 'featureLink', class: 'btn btn-default' %>
-  <% end %>
-  <% if presenter.display_unfeature_link? %>
+          data: { behavior: 'feature' },
+          class: presenter.display_unfeature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
+
       <%= link_to "Unfeature", hyrax.featured_work_path(presenter, format: :json),
-          data: {behavior: 'unfeature'}, id: 'unfeatureLink', name: 'unfeatureLink', class: 'btn btn-default' %>
+          data: { behavior: 'unfeature' },
+          class: presenter.display_feature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
   <% end %>
+
 <!-- COinS hook for Zotero -->
   <span class="Z3988" title="<%= export_as_openurl_ctx_kev(presenter) %>"></span>
 </div>
