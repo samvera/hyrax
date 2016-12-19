@@ -123,6 +123,33 @@ module Sufia
       safe_join(links, ", ")
     end
 
+    # A Blacklight helper_method
+    #
+    # @example
+    #   link_to_each_facet_field({ value: "Imaging > Object Photography", config: { helper_facet: :document_types_sim }})
+    #   ```html
+    #   <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> &gt; <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>
+    #   ```
+    #
+    # @param options [Hash] from blacklight invocation of helper_method
+    # @option options [Array<#strip>] :value
+    # @option options [Hash>] :config Example: { separator: '>', helper_facet: :document_types_sim, output_separator: '::' }
+    # @return the html_safe facet links separated by the given separator (default: ' > ') to indicate facet hierarchy
+    #
+    # @raise KeyError when the options are note properly configured
+    def link_to_each_facet_field(options)
+      config = options.fetch(:config)
+      separator = config.fetch(:separator, ' > ')
+      output_separator = config.fetch(:output_separator, separator)
+      facet_search = config.fetch(:helper_facet)
+      facet_fields = Array.wrap(options.fetch(:value)).first.split(separator).map(&:strip)
+
+      facet_links = facet_fields.map do |type|
+        link_to(type, main_app.search_catalog_path(f: { facet_search => [type] }))
+      end
+      safe_join(facet_links, output_separator)
+    end
+
     # Uses Rails auto_link to add links to fields
     #
     # @param field [String,Hash] string to format and escape, or a hash as per helper_method
