@@ -76,6 +76,7 @@ describe Hyrax::WorkShowPresenter do
     context 'with a new public work' do
       it 'can feature the work' do
         allow(user).to receive(:can?).with(:create, FeaturedWork).and_return(true)
+        expect(presenter.work_featurable?).to be true
         expect(presenter.display_feature_link?).to be true
         expect(presenter.display_unfeature_link?).to be false
       end
@@ -84,6 +85,7 @@ describe Hyrax::WorkShowPresenter do
     context 'with a featured work' do
       before { FeaturedWork.create(work_id: attributes.fetch('id')) }
       it 'can unfeature the work' do
+        expect(presenter.work_featurable?).to be true
         expect(presenter.display_feature_link?).to be false
         expect(presenter.display_unfeature_link?).to be true
       end
