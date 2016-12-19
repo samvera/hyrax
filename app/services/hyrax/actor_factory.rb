@@ -9,9 +9,10 @@ module Hyrax
        Hyrax::Actors::AttachFilesActor,
        Hyrax::Actors::ApplyOrderActor,
        Hyrax::Actors::InterpretVisibilityActor,
+       DefaultAdminSetActor,
+       Hyrax::Actors::InitializeWorkflowActor,
        ApplyPermissionTemplateActor,
-       model_actor(curation_concern),
-       Hyrax::Actors::InitializeWorkflowActor]
+       model_actor(curation_concern)]
     end
 
     def self.build(curation_concern, current_user)

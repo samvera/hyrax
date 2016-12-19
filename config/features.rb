@@ -12,6 +12,8 @@ Flipflop.configure do
           default: true,
           description: "Depositors may transfer their works to another user"
 
+  # Note, if this is deactivated, a default admin set will be created and all
+  # works will be assigned to it when they are created.
   feature :assign_admin_set,
           default: true,
           description: "Ability to assign uploaded items to an admin set"

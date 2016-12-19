@@ -13,9 +13,10 @@ describe Hyrax::ActorFactory, :no_clean do
                          Hyrax::Actors::AttachFilesActor,
                          Hyrax::Actors::ApplyOrderActor,
                          Hyrax::Actors::InterpretVisibilityActor,
+                         Hyrax::DefaultAdminSetActor,
+                         Hyrax::Actors::InitializeWorkflowActor,
                          Hyrax::ApplyPermissionTemplateActor,
-                         Hyrax::Actors::GenericWorkActor,
-                         Hyrax::Actors::InitializeWorkflowActor]
+                         Hyrax::Actors::GenericWorkActor]
     end
   end
 
@@ -30,9 +31,10 @@ describe Hyrax::ActorFactory, :no_clean do
         Hyrax::Actors::AttachFilesActor,
         Hyrax::Actors::ApplyOrderActor,
         Hyrax::Actors::InterpretVisibilityActor,
+        Hyrax::DefaultAdminSetActor,
+        Hyrax::Actors::InitializeWorkflowActor,
         Hyrax::ApplyPermissionTemplateActor,
-        Hyrax::Actors::GenericWorkActor,
-        Hyrax::Actors::InitializeWorkflowActor
+        Hyrax::Actors::GenericWorkActor
       ]
       expect(subject.first_actor_class).to eq Hyrax::CreateWithRemoteFilesActor
     end
