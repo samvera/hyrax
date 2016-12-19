@@ -24,18 +24,7 @@ describe Sufia::MySharesSearchBuilder do
   it "filters things we have access to in which we are not the depositor" do
     expect(subject).to eq ["access_filter1 OR access_filter2",
                            "{!terms f=has_model_ssim}GenericWork,Collection",
-                           "-depositor",
-                           "-suppressed_bsi:true"]
-  end
-
-  describe "mediated deposit" do
-    let(:user_query) { nil }
-
-    context "with suppressed items" do
-      it "does includes suppressed switch" do
-        builder.show_only_shared_files(solr_params)
-        expect(solr_params[:fq]).to eq ["-depositor", "-suppressed_bsi:true"]
-      end
-    end
+                           "-suppressed_bsi:true",
+                           "-depositor"]
   end
 end
