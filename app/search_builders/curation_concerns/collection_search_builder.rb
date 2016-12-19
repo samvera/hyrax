@@ -9,9 +9,9 @@ module CurationConcerns
   class CollectionSearchBuilder < ::SearchBuilder
     include FilterByType
     # Defines which search_params_logic should be used when searching for Collections
-    def initialize(context)
+    def initialize(*)
       @rows = 100
-      super(context)
+      super
     end
 
     # @return [String] Solr field name indicating default sort order
