@@ -9,8 +9,10 @@ module Hyrax
        Hyrax::Actors::AttachFilesActor,
        Hyrax::Actors::ApplyOrderActor,
        Hyrax::Actors::InterpretVisibilityActor,
+       DefaultAdminSetActor,
        ApplyPermissionTemplateActor,
        model_actor(curation_concern),
+       # Initialize workflow after model is saved
        Hyrax::Actors::InitializeWorkflowActor]
     end
 

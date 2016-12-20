@@ -74,6 +74,29 @@ describe HyraxHelper, :no_clean, type: :helper do
     end
   end
 
+  describe "#link_to_each_facet_field" do
+    subject { helper.link_to_each_facet_field(options) }
+    context "with helper_facet and default separator" do
+      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym }, value: ["Imaging > Object Photography"] } }
+      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> &gt; <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+    end
+
+    context "with helper_facet and optional separator" do
+      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, separator: " : " }, value: ["Imaging : Object Photography"] } }
+      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> : <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+    end
+
+    context "with :output_separator" do
+      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: ' ~ ', separator: ":" }, value: ["Imaging : Object Photography"] } }
+      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> ~ <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+    end
+
+    context "with :no_spaces_around_separator" do
+      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: '~', separator: ":" }, value: ["Imaging : Object Photography"] } }
+      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a>~<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+    end
+  end
+
   describe "has_collection_search_parameters?" do
     subject { helper }
     context "when cq is set" do

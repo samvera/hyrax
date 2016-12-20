@@ -13,6 +13,7 @@ describe Hyrax::ActorFactory, :no_clean do
                          Hyrax::Actors::AttachFilesActor,
                          Hyrax::Actors::ApplyOrderActor,
                          Hyrax::Actors::InterpretVisibilityActor,
+                         Hyrax::DefaultAdminSetActor,
                          Hyrax::ApplyPermissionTemplateActor,
                          Hyrax::Actors::GenericWorkActor,
                          Hyrax::Actors::InitializeWorkflowActor]
@@ -30,6 +31,7 @@ describe Hyrax::ActorFactory, :no_clean do
         Hyrax::Actors::AttachFilesActor,
         Hyrax::Actors::ApplyOrderActor,
         Hyrax::Actors::InterpretVisibilityActor,
+        Hyrax::DefaultAdminSetActor,
         Hyrax::ApplyPermissionTemplateActor,
         Hyrax::Actors::GenericWorkActor,
         Hyrax::Actors::InitializeWorkflowActor
