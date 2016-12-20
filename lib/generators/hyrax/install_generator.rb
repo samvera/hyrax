@@ -59,7 +59,6 @@ module Hyrax
         "  mount Hyrax::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
         "  root 'hyrax/homepage#index'\n"\
-        "  curation_concerns_collections\n"\
         "  curation_concerns_basic_routes\n"\
         "  curation_concerns_embargo_management\n"\
       end

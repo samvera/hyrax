@@ -7,12 +7,12 @@
   </td>
   <td>
     <div class="media">
-      <%= link_to document, class: "media-left" do %>
+      <%= link_to [main_app, document], class: "media-left" do %>
         <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
       <% end %>
       <div class="media-body">
         <h4 class="media-heading">
-          <%= link_to document.title_or_label, document, id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+          <%= link_to document.title_or_label, [main_app, document], id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
           <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
         </h4>
         <%= render_collection_links(document) %>

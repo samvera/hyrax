@@ -7,11 +7,11 @@
 <% unless has_collection_search_parameters? %>
   <div class="row">
     <div class="col-xs-12 col-sm-10 pull-right">
-      <%= render 'collections/form' %>
+      <%= render 'hyrax/collections/form' %>
     </div>
     <div class="col-xs-12 col-sm-2">
-      <%= render 'collections/media_display', presenter: @collection %>
-      <%= render 'collections/edit_actions' %>
+      <%= render 'hyrax/collections/media_display', presenter: @collection %>
+      <%= render 'hyrax/collections/edit_actions' %>
     </div>
   </div>
 <% end %>
@@ -24,7 +24,6 @@
 </div>
 <%= render 'hyrax/my/did_you_mean' %>
 <%= render 'hyrax/my/facet_selected' %>
-<%= render 'collections/sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
+<%= render 'hyrax/collections/sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
 <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
 <%= render 'paginate' %>
-

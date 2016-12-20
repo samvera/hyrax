@@ -15,11 +15,11 @@ module Hyrax
     end
 
     def button_for_remove_from_collection(collection, document, label = 'Remove From Collection')
-      render '/collections/button_remove_from_collection', collection: collection, label: label, document: document
+      render 'hyrax/collections/button_remove_from_collection', collection: collection, label: label, document: document
     end
 
     def button_for_remove_selected_from_collection(collection, label = 'Remove From Collection')
-      render '/collections/button_for_remove_selected_from_collection', collection: collection, label: label
+      render 'hyrax/collections/button_for_remove_selected_from_collection', collection: collection, label: label
     end
 
     # add hidden fields to a form for removing a single document from a collection
@@ -31,7 +31,7 @@ module Hyrax
 
       # add hidden fields to a form for performing an action on a single document on a collection
       def single_item_action_form_fields(form, document, action)
-        render '/collections/single_item_action_fields', form: form, document: document, action: action
+        render 'hyrax/collections/single_item_action_fields', form: form, document: document, action: action
       end
   end
 end

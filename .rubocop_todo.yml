@@ -106,9 +106,9 @@ RSpec/ExampleLength:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/authorities_controller_spec.rb'
-    - 'spec/controllers/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
+    - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
     - 'spec/controllers/hyrax/my/highlights_controller_spec.rb'
@@ -165,11 +165,11 @@ RSpec/SubjectStub:
 
 RSpec/AnyInstance:
   Exclude:
-    - 'spec/controllers/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/admin/admin_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
+    - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
     - 'spec/controllers/hyrax/mailbox_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'

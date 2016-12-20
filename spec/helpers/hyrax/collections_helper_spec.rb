@@ -1,4 +1,13 @@
 describe Hyrax::CollectionsHelper do
+  before do
+    # Stub route because helper specs don't handle engine routes
+    # https://github.com/rspec/rspec-rails/issues/1250
+    allow(view).to receive(:collection_path) do |collection|
+      id = collection.respond_to?(:id) ? collection.id : collection
+      "/collections/#{id}"
+    end
+  end
+
   describe '#render_collection_links' do
     let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork']) }
 
@@ -51,7 +60,7 @@ describe Hyrax::CollectionsHelper do
       str = button_for_remove_from_collection collection, item
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.collection_path(collection)
       expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
       expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
     end
@@ -74,7 +83,7 @@ describe Hyrax::CollectionsHelper do
         str = button_for_remove_from_collection collection, item
         doc = Nokogiri::HTML(str)
         form = doc.xpath('//form').first
-        expect(form.attr('action')).to eq collection_path(collection)
+        expect(form.attr('action')).to eq hyrax.collection_path(collection)
         expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
         expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
       end
@@ -88,7 +97,7 @@ describe Hyrax::CollectionsHelper do
       str = button_for_remove_selected_from_collection collection
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.collection_path(collection)
       i = form.xpath('.//input')[2]
       expect(i.attr('value')).to eq("remove")
       expect(i.attr('name')).to eq("collection[members]")
@@ -98,7 +107,7 @@ describe Hyrax::CollectionsHelper do
       str = button_for_remove_selected_from_collection collection, "Remove My Button"
       doc = Nokogiri::HTML(str)
       form = doc.css('form').first
-      expect(form.attr('action')).to eq collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.collection_path(collection)
       expect(form.css('input[type="submit"]').attr('value').value).to eq "Remove My Button"
     end
   end

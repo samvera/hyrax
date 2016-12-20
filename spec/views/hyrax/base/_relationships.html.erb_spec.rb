@@ -4,8 +4,27 @@ describe 'hyrax/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { instance_double(SolrDocument, id: '123', human_readable_type: 'Work') }
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_doc, ability) }
-  let(:generic_work) { GenericWork.new(id: '456', title: ['Containing work']) }
-  let(:collection) { Collection.new(id: '345', title: ['Containing collection']) }
+  let(:generic_work) do
+    Hyrax::WorkShowPresenter.new(
+      SolrDocument.new(
+        id: '456',
+        has_model_ssim: ['GenericWork'],
+        title_tesim: ['Containing work']
+      ),
+      ability
+    )
+  end
+
+  let(:collection) do
+    Hyrax::CollectionPresenter.new(
+      SolrDocument.new(
+        id: '345',
+        has_model_ssim: ['Collection'],
+        title_tesim: ['Containing collection']
+      ),
+      ability
+    )
+  end
 
   context "when collections are not present" do
     before do

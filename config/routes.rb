@@ -45,6 +45,17 @@ Hyrax::Engine.routes.draw do
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
   resources :batch_uploads, only: [:new, :create], controller: 'batch_uploads'
 
+  resources :collections do
+    member do
+      get 'page/:page', action: :index
+      get 'facet/:id', action: :facet, as: :dashboard_facet
+    end
+    collection do
+      put '', action: :update
+      put :remove_member
+    end
+  end
+
   # File Set routes
   scope :concern do
     resources :file_sets, only: [] do

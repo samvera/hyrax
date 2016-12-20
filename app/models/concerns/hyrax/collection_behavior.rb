@@ -42,6 +42,15 @@ module Hyrax
       def indexer
         Hyrax::CollectionIndexer
       end
+
+      # This governs which partial to draw when you render this type of object
+      def _to_partial_path #:nodoc:
+        @_to_partial_path ||= begin
+          element = ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.demodulize(name))
+          collection = ActiveSupport::Inflector.tableize(name)
+          "hyrax/#{collection}/#{element}".freeze
+        end
+      end
     end
 
     # Compute the sum of each file in the collection using Solr to

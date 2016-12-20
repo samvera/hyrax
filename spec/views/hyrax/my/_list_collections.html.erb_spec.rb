@@ -28,9 +28,9 @@ describe 'hyrax/my/_index_partials/_list_collections.html.erb', type: :view do
 
   it 'the line item displays the work and its actions' do
     expect(rendered).to have_selector("tr#document_#{id}")
-    expect(rendered).to have_link 'Collection Title', href: collection_path(id)
-    expect(rendered).to have_link 'Edit Collection', href: edit_collection_path(id)
-    expect(rendered).to have_link 'Delete Collection', href: collection_path(id)
+    expect(rendered).to have_link 'Collection Title', href: hyrax.collection_path(id)
+    expect(rendered).to have_link 'Edit Collection', href: hyrax.edit_collection_path(id)
+    expect(rendered).to have_link 'Delete Collection', href: hyrax.collection_path(id)
     expect(rendered).to have_css 'a.visibility-link', text: 'Private'
     expect(rendered).to have_selector '.expanded-details dd', text: 'Collection Description'
     expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small pull-left"></span></a>'

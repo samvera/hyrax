@@ -202,9 +202,10 @@ module Hyrax
     def render_visibility_link(document)
       # Anchor must match with a tab in
       # https://github.com/projecthydra/hyrax/blob/master/app/views/hyrax/base/_guts4form.html.erb#L2
+      path = document.collection? ? hyrax.edit_collection_path(document, anchor: 'share') : edit_polymorphic_path([main_app, document], anchor: 'share')
       link_to(
         render_visibility_label(document),
-        edit_polymorphic_path([main_app, document], anchor: 'share'),
+        path,
         id: "permission_#{document.id}",
         class: 'visibility-link'
       )

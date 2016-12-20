@@ -50,16 +50,7 @@ module ActionDispatch::Routing
     # @example in routes.rb:
     #     curation_concerns_collections
     def curation_concerns_collections
-      resources :collections do
-        member do
-          get 'page/:page', action: :index
-          get 'facet/:id', action: :facet, as: :dashboard_facet
-        end
-        collection do
-          put '', action: :update
-          put :remove_member
-        end
-      end
+      Deprecation.warn(self, "curation_concerns_collections is deprecated and will be removed")
     end
 
     # kmr added :show to make tests pass

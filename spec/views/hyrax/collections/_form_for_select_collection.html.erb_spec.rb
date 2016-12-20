@@ -1,4 +1,4 @@
-describe 'collections/_form_for_select_collection.html.erb', type: :view do
+describe 'hyrax/collections/_form_for_select_collection.html.erb', type: :view do
   let(:collections) do
     [
       build(:collection, id: '1234', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:20:22 +0100')),
@@ -15,7 +15,13 @@ describe 'collections/_form_for_select_collection.html.erb', type: :view do
 
   let(:doc) { Nokogiri::HTML(rendered) }
 
-  before { allow(view).to receive(:user_collections).and_return(solr_collections) }
+  before do
+    # Stub route because view specs don't handle engine routes
+    allow(view).to receive(:collection_path).and_return("/collection/123")
+    allow(view).to receive(:new_collection_path).and_return("/collection/new")
+
+    allow(view).to receive(:user_collections).and_return(solr_collections)
+  end
 
   it "sorts the collections" do
     render

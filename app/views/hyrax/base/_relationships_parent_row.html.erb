@@ -7,7 +7,7 @@
       <ul class="tabular">
         <% items.each do |item| %>
           <li class='attribute title'>
-            <%= link_to item.title.first, [main_app, item] %>
+            <%= link_to item.title.first, url_for_document(item) %>
           </li>
         <% end %>
       </ul>

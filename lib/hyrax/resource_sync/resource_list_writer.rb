@@ -33,29 +33,32 @@ module Hyrax
 
         def build_collections(xml)
           Collection.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set)
+            build_resources(xml, doc_set, hyrax_routes)
           end
         end
 
         def build_works(xml)
           Hyrax::WorkRelation.new.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set)
+            build_resources(xml, doc_set, main_app_routes)
           end
         end
 
         def build_files(xml)
           ::FileSet.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set)
+            build_resources(xml, doc_set, main_app_routes)
           end
         end
 
-        def build_resources(xml, doc_set)
+        def build_resources(xml, doc_set, routes)
           doc_set.each do |doc|
-            build_resource(xml, doc)
+            build_resource(xml, doc, routes)
           end
         end
 
-        def build_resource(xml, doc)
+        # @param xml [Nokogiri::XML::Builder]
+        # @param doc [Hash]
+        # @param routes [Module] has the routes for the object
+        def build_resource(xml, doc, routes)
           xml.url do
             key = doc.fetch('has_model_ssim', []).first.constantize.model_name.singular_route_key
             xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
@@ -63,8 +66,12 @@ module Hyrax
           end
         end
 
-        def routes
+        def main_app_routes
           Rails.application.routes.url_helpers
+        end
+
+        def hyrax_routes
+          Hyrax::Engine.routes.url_helpers
         end
 
         delegate :collection_url, to: :routes
