@@ -10,9 +10,10 @@ module Hyrax
        Hyrax::Actors::ApplyOrderActor,
        Hyrax::Actors::InterpretVisibilityActor,
        DefaultAdminSetActor,
-       Hyrax::Actors::InitializeWorkflowActor,
        ApplyPermissionTemplateActor,
-       model_actor(curation_concern)]
+       model_actor(curation_concern),
+       # Initialize workflow after model is saved
+       Hyrax::Actors::InitializeWorkflowActor]
     end
 
     def self.build(curation_concern, current_user)
