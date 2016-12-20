@@ -1,4 +1,4 @@
-describe 'collections/_form.html.erb', type: :view do
+describe 'hyrax/collections/_form.html.erb', type: :view do
   let(:collection) { build(:collection) }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection) }
 
@@ -6,6 +6,8 @@ describe 'collections/_form.html.erb', type: :view do
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
     assign(:collection, collection)
+    # Stub route because view specs don't handle engine routes
+    allow(view).to receive(:collections_path).and_return("/collections")
     render
   end
 

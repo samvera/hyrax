@@ -35,12 +35,19 @@ module Hyrax
       @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }
     end
 
+    # The title of the webpage that shows this FileSet.
     def page_title
+      first_title
+    end
+
+    # The first title assertion
+    def first_title
       title.first
     end
 
+    # The link text when linking to the show page of this FileSet
     def link_name
-      current_ability.can?(:read, id) ? page_title : 'File'
+      current_ability.can?(:read, id) ? first_title : 'File'
     end
 
     def editor?

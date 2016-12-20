@@ -71,7 +71,7 @@ module Hyrax
 
     # Override the default prefixes so that we use the collection partals.
     def self.local_prefixes
-      ["hyrax/admin/admin_sets", "collections", 'catalog']
+      ["hyrax/admin/admin_sets", "hyrax/collections", 'catalog']
     end
 
     private

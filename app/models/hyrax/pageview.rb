@@ -1,6 +1,6 @@
 module Hyrax
   class Pageview
-    extend Legato::Model
+    extend ::Legato::Model
 
     metrics :pageviews
     dimensions :date

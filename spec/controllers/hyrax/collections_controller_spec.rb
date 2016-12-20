@@ -1,5 +1,5 @@
-describe CollectionsController do
-  routes { Rails.application.routes }
+describe Hyrax::CollectionsController do
+  routes { Hyrax::Engine.routes }
   before { allow_any_instance_of(User).to receive(:groups).and_return([]) }
 
   let(:user)  { create(:user) }

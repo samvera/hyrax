@@ -1,6 +1,5 @@
 require 'oauth2'
 require 'signet/oauth_2/client'
-require 'legato'
 
 module Hyrax
   module Analytics

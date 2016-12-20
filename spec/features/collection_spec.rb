@@ -232,7 +232,7 @@ describe 'collection', type: :feature do
     end
   end
 
-  describe "Removing a files from a collection" do
+  describe "Removing files from a collection" do
     let(:collection) { create(:named_collection, user: user) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }

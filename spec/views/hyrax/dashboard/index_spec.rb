@@ -36,7 +36,7 @@ RSpec.describe "hyrax/dashboard/index.html.erb", type: :view do
 
     it "displays welcome message and links" do
       expect(heading).to have_content "Create Work Stub"
-      expect(heading).to have_link("Create Collection", href: new_collection_path)
+      expect(heading).to have_link("Create Collection", href: hyrax.new_collection_path)
       expect(heading).to have_link("View Works", href: hyrax.dashboard_works_path)
       expect(heading).to include "My Dashboard"
     end
@@ -50,7 +50,7 @@ RSpec.describe "hyrax/dashboard/index.html.erb", type: :view do
     context "when the user can't create collections" do
       let(:can_create_collection) { false }
       it "does not display the create collection button" do
-        expect(heading).not_to have_link("Create Collection", href: new_collection_path)
+        expect(heading).not_to have_link("Create Collection", href: hyrax.new_collection_path)
       end
     end
   end

@@ -10,7 +10,7 @@
       </h1>
     </header>
     <%= render 'collection_description', presenter: @presenter %>
-    <%= render 'collections/show_descriptions' %>
+    <%= render 'show_descriptions' %>
   </div>
   <div class="col-sm-2">
     <% if has_thumbnail? @presenter.solr_document %>
@@ -30,4 +30,3 @@
 <%= render_document_index @member_docs %>
 
 <%= render 'paginate' %>
-

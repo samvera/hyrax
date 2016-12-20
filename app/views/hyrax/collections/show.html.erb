@@ -7,13 +7,13 @@
     <%= render 'collection_description', presenter: @presenter %>
 
     <% unless has_collection_search_parameters? %>
-      <%= render 'collections/show_descriptions' %>
+      <%= render 'show_descriptions' %>
     <% end %>
   </div>
   <div class="col-sm-2">
-    <%= render 'collections/media_display', presenter: @presenter %>
+    <%= render 'media_display', presenter: @presenter %>
     <% unless has_collection_search_parameters? %>
-      <%= render 'collections/show_actions', presenter: @presenter %>
+      <%= render 'show_actions', presenter: @presenter %>
     <% end %>
   </div>
 </div>
