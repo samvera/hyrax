@@ -19,4 +19,4 @@ Changes proposed in this pull request:
 * 
 * 
 
-@projecthydra/hyrax-code-reviewers
+@projecthydra-labs/hyrax-code-reviewers
