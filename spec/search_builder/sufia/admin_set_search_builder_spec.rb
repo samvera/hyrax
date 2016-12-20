@@ -18,7 +18,9 @@ describe Sufia::AdminSetSearchBuilder do
   context "when searching for read access" do
     let(:access) { :read }
     it 'is successful' do
-      expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR discover_access_person_ssim:#{user.user_key} OR read_access_person_ssim:#{user.user_key}", "{!terms f=has_model_ssim}AdminSet"]
+      expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR discover_access_person_ssim:#{user.user_key} OR read_access_person_ssim:#{user.user_key}",
+                                   "{!terms f=has_model_ssim}AdminSet",
+                                   "-suppressed_bsi:true"]
     end
   end
 
@@ -47,7 +49,9 @@ describe Sufia::AdminSetSearchBuilder do
     end
 
     it 'is successful' do
-      expect(subject['fq']).to eq ["{!terms f=id}7,8", "{!terms f=has_model_ssim}AdminSet"]
+      expect(subject['fq']).to eq ["{!terms f=id}7,8",
+                                   "{!terms f=has_model_ssim}AdminSet",
+                                   "-suppressed_bsi:true"]
     end
   end
 end
