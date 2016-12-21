@@ -100,6 +100,32 @@ Hyrax.config do |config|
   # If you use a multi-server architecture, this MUST be a shared volume.
   # config.derivatives_path = File.join(Rails.root, 'tmp', 'derivatives')
 
+  # Should schema.org microdata be displayed?
+  # config.display_microdata = true
+
+  # What default microdata type should be used if a more appropriate
+  # type can not be found in the locale file?
+  # config.microdata_default_type = 'http://schema.org/CreativeWork'
+
+  # Location on local file system where uploaded files will be staged
+  # prior to being ingested into the repository or having derivatives generated.
+  # If you use a multi-server architecture, this MUST be a shared volume.
+  # config.working_path = File.join(Rails.root, 'tmp', 'uploads')
+
+  # Specify whether the media display partial should render a download link
+  # config.display_media_download_link = true
+
+  # Fedora import/export tool
+  #
+  # Path to the Fedora import export tool jar file
+  # config.import_export_jar_file_path = "tmp/fcrepo-import-export.jar"
+  #
+  # Location where descriptive rdf should be exported
+  # config.descriptions_directory = "tmp/descriptions"
+  #
+  # Location where binaries are exported
+  # config.binaries_directory = "tmp/binaries"
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything

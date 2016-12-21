@@ -16,7 +16,7 @@ feature 'Editing a work', type: :feature do
       check('agreement')
       click_on('Save')
       expect(page).to have_content 'Apply changes to contents?'
-      expect(page).not_to have_content "Powered by CurationConcerns"
+      expect(page).not_to have_content "Powered by Hyrax"
     end
   end
 end

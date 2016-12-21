@@ -19,7 +19,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
   argument :attributes, type: :array, default: [], banner: 'field:type field:type'
 
   # Why all of these antics with defining individual methods?
-  # Because I want the output of CurationConcerns::WorkGenerator to include all the processed files.
+  # Because I want the output of Hyrax::WorkGenerator to include all the processed files.
   def create_model_spec
     return unless rspec_installed?
     template 'model_spec.rb.erb', "spec/models/#{file_name}_spec.rb"

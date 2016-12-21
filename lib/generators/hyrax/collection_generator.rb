@@ -1,6 +1,6 @@
 require 'rails/generators'
 
-module CurationConcerns
+module Hyrax
   class CollectionGenerator < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
 

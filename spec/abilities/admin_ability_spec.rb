@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'cancan/matchers'
 
-describe CurationConcerns::Ability, type: :model do
+describe Hyrax::Ability, type: :model do
   context "with a registered user" do
     let(:user) { create(:user) }
     subject { Ability.new(user) }
