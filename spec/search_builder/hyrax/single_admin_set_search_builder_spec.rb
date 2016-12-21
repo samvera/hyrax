@@ -12,6 +12,9 @@ RSpec.describe Hyrax::SingleAdminSetSearchBuilder do
       expect(builder).to receive(:find_one)
     end
     subject { builder.with(id: '123').query.fetch('fq') }
-    it { is_expected.to match_array ["", "{!terms f=has_model_ssim}AdminSet"] }
+    it do
+      is_expected.to match_array ["",
+                                  "{!terms f=has_model_ssim}AdminSet"]
+    end
   end
 end
