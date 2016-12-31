@@ -76,7 +76,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   spec.add_development_dependency 'rubocop', '~> 0.46'
-  spec.add_development_dependency 'rubocop-rspec'#, '~> 1.4.1'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.8.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
   spec.add_development_dependency 'webmock'
