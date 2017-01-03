@@ -162,7 +162,7 @@ Generate a new Rails application. We recommend the latest Rails 5.0 release.
 ```
 # If you don't already have Rails at your disposal...
 gem install rails -v 5.0.0.1
-rails new my_app -m https://raw.githubusercontent.com/projecthydra/hyrax/master/template.rb
+rails new my_app -m https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
