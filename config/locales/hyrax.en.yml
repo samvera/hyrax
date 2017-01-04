@@ -532,7 +532,7 @@ en:
       change_access_message_html: "<p>You have changed the access level on work <i>%{curation_concern}</i>, making it accessible to other users or groups to view or edit.</p><p>Would you like change all of the files within the work to have the same access users, groups and visibility as well?</p>"
       change_access_yes_message: "Yes please."
       change_access_no_message: "No. I'll update it manually."
-      change_access_flash_message: "Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file acess levels."
+      change_access_flash_message: "Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file access levels."
       alert:
         fail_html: "There was a problem during upload, none of your files uploaded correctly. Please %{reload_href}.  Use the %{contact_href} to report the error if it persists."
         fail_restart_href_text: "start over"

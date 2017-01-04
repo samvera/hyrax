@@ -41,7 +41,7 @@ describe Hyrax::PermissionsController do
       expect(InheritPermissionsJob).to receive(:perform_later).with(work)
       post :copy_access, params: { id: work }
       expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
-      expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file acess levels.'
+      expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file access levels.'
     end
   end
 end
