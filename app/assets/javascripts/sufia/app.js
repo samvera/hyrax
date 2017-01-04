@@ -21,7 +21,11 @@ Sufia = {
     },
 
     datatable: function () {
-        $('.datatable').DataTable();
+        // This keeps the datatable from being added to a table that already has it.
+        // This is a problem when turbolinks is active.
+        if ($('.dataTables_wrapper').size() === 0) {
+            $('.datatable').DataTable();
+        }
     },
 
     autocomplete: function () {
