@@ -125,6 +125,7 @@ es:
           heading: "Ver archivos depositados por los usuarios"
           start_label: "Comenzando"
       workflow_roles:
+        header:     "Funciones del Flujo de Trabajo"
         index:
           delete:
             confirm: "¿Estás seguro?"
