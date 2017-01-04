@@ -31,6 +31,9 @@ describe Hyrax::API::ZoteroController, type: :controller do
       before do
         allow(Hyrax::Zotero).to receive(:config) { broken_config }
         sign_in user
+
+        stub_request(:get, %r{https://www.zotero.org/oauth/request\?oauth_callback=http://test\.host/api/zotero/callback&oauth_consumer_key=%7B:client_key=%3E%22foo%22,%20:client_secret=%3E%22bar%22%7D})
+          .to_return(status: 401, body: "oauth_problem=consumer_key_unknown")
         get :initiate
       end
 
