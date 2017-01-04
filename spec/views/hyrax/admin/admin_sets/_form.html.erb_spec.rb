@@ -8,7 +8,10 @@ RSpec.describe 'hyrax/admin/admin_sets/_form.html.erb', type: :view do
     @form = Hyrax::Forms::AdminSetForm.new(admin_set, permission_template)
     render
   end
-  it "has the edit form" do
-    expect(rendered).to have_select('admin_set[workflow_name]', selected: 'default')
+  it "has 4 tabs" do
+    expect(rendered).to have_selector('#description')
+    expect(rendered).to have_selector('#participants')
+    expect(rendered).to have_selector('#visibility')
+    expect(rendered).to have_selector('#workflow')
   end
 end

@@ -2,9 +2,10 @@ module Hyrax
   module Forms
     class PermissionTemplateForm
       include HydraEditor::Form
+
       self.model_class = PermissionTemplate
       self.terms = []
-      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
+      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, :workflow_name, to: :model
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -31,10 +32,6 @@ module Hyrax
       end
 
       def initialize(model)
-        # This is a temporary way to make sure all new PermissionTemplates have
-        # a workflow assigned to them. Ultimately we want to expose workflows in
-        # the UI and have users choose a workflow for their PermissionTemplate.
-        model.workflow_name = 'one_step_mediated_deposit'
         super(model)
         # Ensure proper form options selected, based on model
         select_release_varies_option(model)
@@ -45,6 +42,10 @@ module Hyrax
         grant_admin_set_access(manage_grants) if manage_grants.present?
         update_release_attributes(attributes)
         model.update(attributes)
+      end
+
+      def workflows
+        Sipity::Workflow.all
       end
 
       private

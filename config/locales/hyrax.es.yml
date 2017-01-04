@@ -36,6 +36,8 @@ es:
             description:        "Descripción"
             participants:       "Participantes"
             visibility:         "Lanzamiento y Visibilidad"
+            workflow:           "Flujo de trabajo"
+          cancel:               "Cancelar"
         form_participant_table:
           depositors:
             action:             "Acción"
@@ -87,6 +89,9 @@ es:
             restricted:         "Restringido -- todos los trabajos sólo serán visibles para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
             title:              "Visibilidad"
             varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
+        form_workflow: # TODO: verify text; added via google translate
+          page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
+          cancel:         "Cancelar"
         new:
           header:         "Crear nuevo conjunto Administrativo"
         show:

@@ -10,6 +10,9 @@
           <li>
             <a href="#visibility" role="tab" data-toggle="tab"><%= t('.tabs.visibility') %></a>
           </li>
+          <li>
+            <a href="#workflow" role="tab" data-toggle="tab"><%= t('.tabs.workflow') %></a>
+          </li>
         <% end %>
       </ul>
       <div class="tab-content">
@@ -23,11 +26,11 @@
                 <% if f.object.persisted? && f.object.member_ids.present? %>
                   <%= f.input :thumbnail_id, collection: @form.select_files %>
                 <% end %>
-                <%= f.input :workflow_name, as: :select, collection: f.object.workflows %>
+
               </div>
 
               <div class="panel-footer">
-                <%= link_to 'Cancel', hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+                <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
                 <%= f.button :submit, class: 'btn btn-primary pull-right'%>
               </div>
             <% end %>
@@ -36,6 +39,7 @@
         <% if @form.persisted? %>
           <%= render 'form_participants' %>
           <%= render 'form_visibility' %>
+          <%= render 'form_workflow' %>
         <% end %>
       </div>
     </div>
