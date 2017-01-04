@@ -96,6 +96,7 @@ en:
           start_label: "Starting"
           end_label: "Ending [defaults to now]"
       workflow_roles:
+        header:     "Workflow Roles"
         index:
           header:
             user:   User
