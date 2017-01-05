@@ -13,6 +13,7 @@ module Hyrax
         @comment = comment.respond_to?(:comment) ? comment.comment.to_s : ''
         @recipients = recipients
         @user = user
+        @entity = entity
       end
 
       def call
@@ -27,6 +28,16 @@ module Hyrax
 
         def message
           "#{title} (#{work_id}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
+        end
+
+        # @return [ActiveFedora::Base] the document (work) the the Abstract WorkFlow is creating a notification for
+        def document
+          @entity.proxy_for
+        end
+
+        def document_path
+          key = document.model_name.singular_route_key
+          Rails.application.routes.url_helpers.send(key + "_path", document.id)
         end
 
       private
