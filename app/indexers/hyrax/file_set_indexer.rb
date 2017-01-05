@@ -1,7 +1,7 @@
 module Hyrax
   class FileSetIndexer < ActiveFedora::IndexingService
     include Hyrax::IndexesThumbnails
-    STORED_INTEGER = Solrizer::Descriptor.new(:integer, :stored)
+    STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
 
     def generate_solr_document
       super.tap do |solr_doc|
@@ -12,7 +12,7 @@ module Hyrax
         solr_doc[Solrizer.solr_name('label', :stored_sortable)] = object.label
         solr_doc[Solrizer.solr_name('file_format')] = file_format
         solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
-        solr_doc[Solrizer.solr_name(:file_size, STORED_INTEGER)] = object.file_size[0]
+        solr_doc[Solrizer.solr_name(:file_size, STORED_LONG)] = object.file_size[0]
         solr_doc['all_text_timv'] = object.extracted_text.content if object.extracted_text.present?
         solr_doc['height_is'] = Integer(object.height.first) if object.height.present?
         solr_doc['width_is'] = Integer(object.width.first) if object.width.present?

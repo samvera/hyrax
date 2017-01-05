@@ -210,6 +210,7 @@ module Hyrax
         message = I18n.t("hyrax.workflow.unauthorized")
         respond_to do |wants|
           wants.html do
+            unavailable_presenter
             flash[:notice] = message
             render 'unavailable', status: :unauthorized
           end
@@ -227,6 +228,10 @@ module Hyrax
             render plain: message, status: :unauthorized
           end
         end
+      end
+
+      def unavailable_presenter
+        @presenter ||= show_presenter.new(::SolrDocument.find(params[:id]), current_ability, request)
       end
   end
 end
