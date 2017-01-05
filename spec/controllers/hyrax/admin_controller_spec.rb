@@ -6,7 +6,7 @@ RSpec.describe Hyrax::AdminController do
     let(:results) { instance_double(Array) }
 
     before do
-      allow(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+      expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
       allow(Hyrax::AdminSetService).to receive(:new).and_return(service)
     end
 
@@ -19,7 +19,7 @@ RSpec.describe Hyrax::AdminController do
 
   describe "#workflows" do
     before do
-      allow(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+      expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
     end
     it "is successful" do
       get :workflows
