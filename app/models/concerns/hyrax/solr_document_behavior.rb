@@ -178,7 +178,6 @@ module Hyrax
     end
 
     # Date created indexed as a string. This allows users to enter values like: 'Circa 1840-1844'
-    # This overrides the default behavior of CurationConcerns which indexes a date
     def date_created
       fetch(Solrizer.solr_name("date_created"), [])
     end

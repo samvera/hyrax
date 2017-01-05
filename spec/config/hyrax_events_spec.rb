@@ -1,4 +1,4 @@
-describe "hyrax_events using CurationConcerns callbacks" do
+describe "hyrax_events using Hyrax callbacks" do
   let(:curation_concern) { create(:work) }
   let(:file_set) { create(:file_set) }
   let(:user) { create(:user) }

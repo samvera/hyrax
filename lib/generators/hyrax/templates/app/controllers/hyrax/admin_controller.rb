@@ -1,4 +1,4 @@
-module CurationConcerns
+module Hyrax
   # Controller for displaying the Administration console.
   #
   # This controller provides a framework for reading in a configuration
@@ -41,13 +41,13 @@ module CurationConcerns
   #           }
   #         },
   #         data_sources: {
-  #           resource_stats: CurationConcerns::ResourceStatisticsSource
+  #           resource_stats: Hyrax::ResourceStatisticsSource
   #         }
   #      }
   #
   # Example AdminController
   #      class AdminController < ApplicationController
-  #         include CurationConcerns::AdminControllerBehavior
+  #         include Hyrax::AdminControllerBehavior
   #
   #         def complex_action
   #            # do complex stuff and render how I want
@@ -56,6 +56,6 @@ module CurationConcerns
   #      end
   #
   class AdminController < ApplicationController
-    include CurationConcerns::AdminControllerBehavior
+    include Hyrax::AdminControllerBehavior
   end
 end

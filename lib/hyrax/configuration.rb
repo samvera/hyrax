@@ -175,7 +175,7 @@ module Hyrax
           }
         },
         data_sources: {
-          resource_stats: CurationConcerns::ResourceStatisticsSource
+          resource_stats: Hyrax::ResourceStatisticsSource
         }
       }
     end
