@@ -31,8 +31,8 @@ describe Hyrax::Statistics::Depositors::Summary do
       let(:start_date) { 1.day.ago.beginning_of_day }
       let(:end_date) { 0.days.ago.end_of_day }
       it "gathers user deposits during a date range" do
-        expect(subject).to eq [{ key: user1.user_key, deposits: 1, user: user1 },
-                               { key: user2.user_key, deposits: 1, user: user2 }]
+        expect(subject).to match_array [{ key: user1.user_key, deposits: 1, user: user1 },
+                                        { key: user2.user_key, deposits: 1, user: user2 }]
       end
     end
   end
