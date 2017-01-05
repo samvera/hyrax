@@ -1,0 +1,39 @@
+<div id="workflow_controls"class="panel panel-default workflow-affix">
+  <div class="panel-heading">
+    <a data-toggle="collapse" href="#workflow_controls_collapse">
+      <h2 class="panel-title">Review and Approval</h2>
+    </a>
+  </div>
+  <div id="workflow_controls_collapse" class="row panel-body panel-collapse collapse">
+    <%= form_tag main_app.hyrax_workflow_action_path(presenter), method: :put do %>
+      <div class="col-sm-3 workflow-actions">
+        <h3>Actions</h3>
+
+        <% presenter.workflow.actions.each do |key, label| %>
+          <div class="radio">
+            <label>
+              <input type="radio" name="workflow_action[name]" id="workflow_action_name_<%= key %>" value="<%= key %>">
+              <%= label %>
+            </label>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-sm-9 workflow-comments">
+        <div class="form-group">
+          <label for="workflow_action_comment">Review comment:</label>
+          <textarea class="form-control" name="workflow_action[comment]" id="workflow_action_comment"></textarea>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Submit">
+
+        <h4>Previous Comments</h4>
+        <dl>
+          <% presenter.workflow.comments.each do |comment| %>
+            <dt><%= comment.name_of_commentor %></dt>
+            <dd><%= comment.comment %></dd>
+          <% end %>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+</div>
