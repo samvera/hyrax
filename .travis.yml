@@ -10,6 +10,6 @@ env:
     - RAILS_VERSION=4.2.7.1
       RDF_VERSION=1.99.1
     - RAILS_VERSION=5.0.0.1
-      RDF_VERSION=2.1.0
+      RDF_VERSION=2.1.1
 before_script:
   - jdk_switcher use oraclejdk8
