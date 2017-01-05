@@ -31,9 +31,9 @@ module Sufia
           actor = CurationConcerns::Actors::FileSetActor.new(fs, user)
           actor.create_metadata(curation_concern, visibility: curation_concern.visibility)
           fs.save!
-          uri = URI.parse(url)
+          uri = URI.parse(URI.encode(url))
           if uri.scheme == 'file'
-            IngestLocalFileJob.perform_later(fs, uri.path, user)
+            IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), user)
           else
             ImportUrlJob.perform_later(fs, log(actor.user))
           end
