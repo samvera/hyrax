@@ -20,6 +20,7 @@ describe CurationConcerns::GenericWorksController do
       get :show, params: { id: work }
       expect(response.code).to eq '401'
       expect(response).to render_template(:unavailable)
+      expect(assigns[:presenter]).to be_instance_of CurationConcerns::WorkShowPresenter
       expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
     end
   end
