@@ -20,8 +20,7 @@
           <div class="panel panel-default labels">
             <%= simple_form_for @form, url: [hyrax, :admin, @form] do |f| %>
               <div class="panel-body">
-                <%= f.input :title %>
-                <%= f.input :description, as: :text %>
+                <%= render 'form_metadata', f: f %>
 
                 <% if f.object.persisted? && f.object.member_ids.present? %>
                   <%= f.input :thumbnail_id, collection: @form.select_files %>

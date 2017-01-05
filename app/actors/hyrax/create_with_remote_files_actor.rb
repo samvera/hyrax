@@ -32,9 +32,9 @@ module Hyrax
           actor.create_metadata(visibility: curation_concern.visibility)
           actor.attach_file_to_work(curation_concern)
           fs.save!
-          uri = URI.parse(url)
+          uri = URI.parse(URI.encode(url))
           if uri.scheme == 'file'
-            IngestLocalFileJob.perform_later(fs, uri.path, user)
+            IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), user)
           else
             ImportUrlJob.perform_later(fs, log(actor.user))
           end
