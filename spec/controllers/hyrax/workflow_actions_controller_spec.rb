@@ -1,14 +1,15 @@
 require 'spec_helper'
 
-RSpec.describe CurationConcerns::WorkflowActionsController, type: :controller do
+RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
   let(:user) { FactoryGirl.create(:user) }
   let(:generic_work) { GenericWork.new(id: '123') }
-  let(:form) { instance_double(Sufia::Forms::WorkflowActionForm) }
+  let(:form) { instance_double(Hyrax::Forms::WorkflowActionForm) }
+  routes { Rails.application.routes }
 
   before do
     allow(ActiveFedora::Base).to receive(:find).with(generic_work.to_param).and_return(generic_work)
     allow(generic_work).to receive(:persisted?).and_return(true)
-    allow(Sufia::Forms::WorkflowActionForm).to receive(:new).and_return(form)
+    allow(Hyrax::Forms::WorkflowActionForm).to receive(:new).and_return(form)
   end
 
   describe '#update' do
@@ -30,7 +31,7 @@ RSpec.describe CurationConcerns::WorkflowActionsController, type: :controller do
       sign_in(user)
 
       put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
-      expect(response).to redirect_to(main_app.sufia_generic_work_path(generic_work))
+      expect(response).to redirect_to(main_app.hyrax_generic_work_path(generic_work, locale: 'en'))
     end
   end
 end

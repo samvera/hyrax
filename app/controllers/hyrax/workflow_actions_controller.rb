@@ -1,10 +1,10 @@
-module CurationConcerns
+module Hyrax
   class WorkflowActionsController < ApplicationController
     before_action :authenticate_user!
 
     def update
       work = ActiveFedora::Base.find(params[:id])
-      workflow_action_form = Sufia::Forms::WorkflowActionForm.new(
+      workflow_action_form = Hyrax::Forms::WorkflowActionForm.new(
         current_ability: current_ability,
         work: work,
         attributes: workflow_action_params
@@ -12,7 +12,7 @@ module CurationConcerns
       if workflow_action_form.save
         redirect_to [main_app, work], notice: "The #{work.human_readable_type} has been updated."
       else
-        render 'curation_concerns/base/unauthorized', status: :unauthorized
+        render 'hyrax/base/unauthorized', status: :unauthorized
       end
     end
 
