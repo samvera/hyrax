@@ -1,9 +1,10 @@
 module Hyrax
   class AdminController < ApplicationController
     include Blacklight::Base
+    before_action :authorize_user
     layout 'admin'
+
     def show
-      authorize! :read, :admin_dashboard
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
       @presenter = AdminDashboardPresenter.new
@@ -13,5 +14,11 @@ module Hyrax
     def workflows
       @status_list = Hyrax::Workflow::StatusListService.new(current_user)
     end
+
+    private
+
+      def authorize_user
+        authorize! :read, :admin_dashboard
+      end
   end
 end
