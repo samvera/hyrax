@@ -6,15 +6,9 @@ describe 'hyrax/collections/show.html.erb', type: :view do
   end
   let(:ability) { double }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
-  let(:blacklight_config) { CatalogController.blacklight_config }
-  let(:blacklight_configuration_context) do
-    Blacklight::Configuration::Context.new(controller)
-  end
 
   before do
     view.extend FileSetHelper
-    allow(view).to receive(:blacklight_config).and_return(blacklight_config)
-    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     allow(document).to receive(:hydra_model).and_return(::Collection)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:can?).with(:edit, document).and_return(true)

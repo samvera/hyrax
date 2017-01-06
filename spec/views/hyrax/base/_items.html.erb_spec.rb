@@ -23,17 +23,12 @@ describe 'hyrax/base/items', type: :view do
       )
     )
   end
-  let(:blacklight_config) { CatalogController.new.blacklight_config }
-  let(:blacklight_configuration_context) do
-    Blacklight::Configuration::Context.new(controller)
-  end
 
   context "when children are present" do
     before do
       stub_template 'hyrax/base/_actions.html.erb' => 'Actions'
       allow(presenter).to receive(:member_presenters).and_return([file_set, member])
-      allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
-      allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
+      view.blacklight_config = Blacklight::Configuration.new
       allow(view).to receive(:contextual_path).and_return("/whocares")
       allow(ability).to receive(:can?).and_return(true)
       render 'hyrax/base/items', presenter: presenter

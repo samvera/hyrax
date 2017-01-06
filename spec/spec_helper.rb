@@ -40,6 +40,7 @@ require 'capybara/rails'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
+require 'support/controller_level_helpers'
 require 'support/features'
 require 'support/factory_helpers'
 require 'support/rake'
@@ -176,6 +177,9 @@ RSpec.configure do |config|
       DatabaseCleaner.start
     end
   end
+
+  config.include(ControllerLevelHelpers, type: :view)
+  config.before(:each, type: :view) { initialize_controller_helpers(view) }
 
   config.before(:all, type: :feature) do
     # Assets take a long time to compile. This causes two problems:

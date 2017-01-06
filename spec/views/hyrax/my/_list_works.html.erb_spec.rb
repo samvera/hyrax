@@ -10,18 +10,12 @@ describe 'hyrax/my/_index_partials/_list_works.html.erb', type: :view do
 
   let(:doc) { SolrDocument.new(work_data) }
   let(:collection) { mock_model(Collection) }
-  let(:config) { Hyrax::My::WorksController.blacklight_config }
   let(:presenter) { Hyrax::WorkShowPresenter.new(doc, nil) }
-  let(:blacklight_configuration_context) do
-    Blacklight::Configuration::Context.new(controller)
-  end
 
   before do
     allow(view).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:render_collection_links).with(doc).and_return("<a href=\"collection/1\">Collection Title</a>".html_safe)
     allow(view).to receive(:render_visibility_link).with(doc).and_return("<a class=\"visibility-link\">Private</a>".html_safe)
-    allow(view).to receive(:blacklight_config) { config }
-    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     stub_template 'hyrax/my/_index_partials/_work_action_menu.html.erb' => 'actions'
     render 'hyrax/my/_index_partials/list_works', document: doc, presenter: presenter
   end

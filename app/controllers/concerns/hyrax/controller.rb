@@ -28,6 +28,11 @@ module Hyrax::Controller
     super.merge(locale: I18n.locale)
   end
 
+  # Override Blacklight to use the Hyrax::SearchState
+  def search_state
+    @search_state ||= Hyrax::SearchState.new(params, blacklight_config)
+  end
+
   private
 
     def set_locale
