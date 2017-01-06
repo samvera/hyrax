@@ -6,7 +6,7 @@ module Hyrax
 
       # @param work [#to_global_id]
       # @param attributes [Hash]
-      # @param strategy [#name] strategy for finding which workflow to use. Defaults to an instance of WorkflowByModelNameStrategy
+      # @param strategy [#name] strategy for finding which workflow to use. Defaults to an instance of DefaultWorkflowStrategy
       # @return [TrueClass]
       def self.create(work, attributes, user, strategy = nil)
         strategy ||= workflow_strategy.new(work, attributes)
