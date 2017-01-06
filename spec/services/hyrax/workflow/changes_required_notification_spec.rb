@@ -12,7 +12,7 @@ RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
 
   describe ".send_notification" do
     it 'sends a message to all users' do
-      expect(approver).to receive(:send_message).once.and_call_original
+      expect(approver).to receive(:send_message).with(anything, "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) requires additional changes before approval.\n\n 'A pleasant read'", anything).once.and_call_original
 
       expect { described_class.send_notification(entity: entity, user: approver, comment: comment, recipients: recipients) }
         .to change { depositor.mailbox.inbox.count }.by(1)
