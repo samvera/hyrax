@@ -100,3 +100,6 @@ RSpec/NestedGroups:
 
 RSpec/LeadingSubject:
   Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
