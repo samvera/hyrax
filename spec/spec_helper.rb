@@ -28,6 +28,7 @@ EngineCart.load_application!
 require 'devise'
 require 'devise/version'
 require 'mida'
+require 'active_fedora/noid/rspec'
 require 'rails-controller-testing'
 require 'rspec/rails'
 require 'rspec/its'
@@ -141,6 +142,8 @@ end
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
+  include ActiveFedora::Noid::RSpec
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
@@ -152,6 +155,11 @@ RSpec.configure do |config|
 
   config.before :suite do
     DatabaseCleaner.clean_with(:truncation)
+    disable_production_minter!
+  end
+
+  config.after :suite do
+    enable_production_minter!
   end
 
   config.before :each do |example|

@@ -47,10 +47,11 @@ module Hyrax
         Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
         Hydra::Derivatives.libreoffice_path = c.libreoffice_path
 
-        # TODO: Remove when https://github.com/projecthydra/curation_concerns/pull/848 is merged
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+
         ActiveFedora::Noid.config.template = c.noid_template
+        ActiveFedora::Noid.config.minter_class = c.noid_minter_class
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
 

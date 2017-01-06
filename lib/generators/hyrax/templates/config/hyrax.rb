@@ -42,6 +42,9 @@ Hyrax.config do |config|
   # Specify a different template for your repository's NOID IDs
   # config.noid_template = ".reeddeeddk"
 
+  # Use the database-backed minter class
+  # config.noid_minter_class = ActiveFedora::Noid::Minter::Db
+
   # Store identifier minter's state in a file for later replayability
   # config.minter_statefile = '/tmp/minter-state'
 

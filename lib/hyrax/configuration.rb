@@ -76,6 +76,11 @@ module Hyrax
       @noid_template ||= '.reeddeeddk'
     end
 
+    attr_writer :noid_minter_class
+    def noid_minter_class
+      @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
+    end
+
     attr_writer :minter_statefile
     def minter_statefile
       @minter_statefile ||= '/tmp/minter-state'
