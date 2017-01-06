@@ -364,7 +364,7 @@ es:
           Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
           dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
     footer:
-      copyright_html: "<strong>Copyright &copy; 2016 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2017 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
       service_html: Un servicio de <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Proyecto Hydra</a>.
     help:
       header: "Soporte al Usuario"
