@@ -13,17 +13,17 @@ describe Sufia::BatchUploadsController do
   end
 
   describe "#create" do
-    context "enquing a update job" do
-      let(:expected_types) do
-        { '1' => 'Article' }
-      end
-      let(:expected_individual_params) do
-        { '1' => 'foo' }
-      end
-      let(:expected_shared_params) do
-        { 'keyword' => [], 'visibility' => 'open' }
-      end
+    let(:expected_types) do
+      { '1' => 'Article' }
+    end
+    let(:expected_individual_params) do
+      { '1' => 'foo' }
+    end
+    let(:expected_shared_params) do
+      { 'keyword' => [], 'visibility' => 'open' }
+    end
 
+    context "enquing a update job" do
       it "is successful" do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
@@ -33,8 +33,8 @@ describe Sufia::BatchUploadsController do
                 expected_shared_params,
                 CurationConcerns::Operation)
         post :create, params: {
-          title: { '1' => 'foo' },
-          resource_type: { '1' => 'Article' },
+          title: expected_individual_params,
+          resource_type: expected_types,
           uploaded_files: ['1'],
           batch_upload_item: { keyword: [""], visibility: 'open' }
         }
@@ -47,15 +47,15 @@ describe Sufia::BatchUploadsController do
       it "redirects to my shares page" do
         allow(BatchCreateJob).to receive(:perform_later)
         post :create, params: {
+          title: expected_individual_params,
+          resource_type: expected_types,
+          uploaded_files: ['1'],
           batch_upload_item: {
             permissions_attributes: [
               { type: "group", name: "public", access: "read" }
             ],
             on_behalf_of: 'elrayle'
-          },
-          title: { '1' => 'foo' },
-          resource_type: { '1' => 'Article' },
-          uploaded_files: ['1']
+          }
         }
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_shares_path
       end
