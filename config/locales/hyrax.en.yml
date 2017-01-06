@@ -340,7 +340,7 @@ en:
           you are a member of.  You may select a specific group and assign an access level for a file
           within %{application_name}, similarly to adding user access levels.
     footer:
-      copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2017 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
       service_html: A service of <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Project Hydra</a>.
     help:
       header: "User Support"
