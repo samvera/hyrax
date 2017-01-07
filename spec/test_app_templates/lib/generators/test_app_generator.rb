@@ -10,6 +10,10 @@ class TestAppGenerator < Rails::Generators::Base
   def create_generic_work
     generate 'sufia:work GenericWork'
   end
+  
+  def create_atlas_work
+    generate 'sufia:work Atlas'
+  end
 
   def comment_out_web_console
     gsub_file "Gemfile",
