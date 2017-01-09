@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "curation_concerns/base/_form_child_work_relationships.html.erb", type: :view do
+describe "curation_concerns/base/_form_parent_work_relationships.html.erb", type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456', title: ["MyWork"])
   end
 
   let(:work_2) do
-    stub_model(GenericWork, id: '567', title: ["Child Work"])
+    stub_model(GenericWork, id: '567', title: ["Parent Work"])
   end
 
   let(:ability) { double }
@@ -34,11 +34,11 @@ describe "curation_concerns/base/_form_child_work_relationships.html.erb", type:
   end
 
   context "When editing a work" do
-    context "and no children works are present" do
+    context "and no parent works are present" do
       before do
-        allow(work).to receive(:ordered_members).and_return([])
+        allow(work).to receive(:in_works).and_return([])
       end
-      it "has 1 empty child work input" do
+      it "has 1 empty parent work input" do
         expect(page).to have_selector("input[value='']", count: 1)
       end
 
@@ -50,25 +50,25 @@ describe "curation_concerns/base/_form_child_work_relationships.html.erb", type:
         expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
       end
     end
-    context "When 1 child work is present" do
+    context "When 1 parent work is present" do
       let(:work_2) do
-        stub_model(GenericWork, id: '567', title: ["Test Child Work"])
+        stub_model(GenericWork, id: '567', title: ["Test Parent Work"])
       end
 
       before do
-        allow(work).to receive(:ordered_members).and_return([work_2])
+        allow(work).to receive(:in_works).and_return([work_2])
       end
-      it "has 1 empty child work input with add button" do
+      it "has 1 empty parent work input with add button" do
         expect(page).to have_selector("input[value='']", count: 1)
         expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
       end
 
-      it "has an input box that is filled in with the child id" do
+      it "has an input box that is filled in with the parent id" do
         expect(page).to have_selector("input[value='#{work_2.id}']", count: 1)
       end
 
-      it "generates a link for the childs first title" do
-        expect(page).to have_link("Test Child Work")
+      it "generates a link for the parents first title" do
+        expect(page).to have_link("Test Parent Work")
       end
 
       it "has an edit and remove button" do
@@ -78,29 +78,29 @@ describe "curation_concerns/base/_form_child_work_relationships.html.erb", type:
         end
       end
     end
-    context "When multiple child works are present" do
+    context "When multiple parent works are present" do
       let(:work_2) do
-        stub_model(GenericWork, id: '567', title: ["Test Child Work"])
+        stub_model(GenericWork, id: '567', title: ["Test Parent Work"])
       end
       let(:work_3) do
-        stub_model(GenericWork, id: '789', title: ["Test Child Work 2"])
+        stub_model(GenericWork, id: '789', title: ["Test Parent Work 2"])
       end
       before do
-        allow(work).to receive(:ordered_members).and_return([work_2, work_3])
+        allow(work).to receive(:in_works).and_return([work_2, work_3])
       end
-      it "has 1 empty child work input with add button" do
+      it "has 1 empty parent work input with add button" do
         expect(page).to have_selector("input[value='']", count: 1)
         expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
       end
 
-      it "has an input box that is filled in with the child ids" do
+      it "has an input box that is filled in with the parent ids" do
         expect(page).to have_selector("input[value='#{work_2.id}']", count: 1)
         expect(page).to have_selector("input[value='#{work_3.id}']", count: 1)
       end
 
-      it "generates a link for the childs first title" do
-        expect(page).to have_link("Test Child Work")
-        expect(page).to have_link("Test Child Work 2")
+      it "generates a link for the parents first title" do
+        expect(page).to have_link("Test Parent Work")
+        expect(page).to have_link("Test Parent Work 2")
       end
 
       it "has an edit and remove button" do

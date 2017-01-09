@@ -49,6 +49,12 @@ module Sufia::Forms
       model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym != :file_set }
     end
 
+    # The in_work items
+    # @return [Array] All of the works that this work is a member of
+    def in_work_members
+      model.in_works.to_a
+    end
+
     def self.multiple?(term)
       return true if [:rights, :collection_ids].include? term
       super

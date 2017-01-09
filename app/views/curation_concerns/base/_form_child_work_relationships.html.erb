@@ -49,7 +49,7 @@ HTML Properties:
     <tr class="new-row">
       <td>
         <a href="" class="title hidden"></a>
-        <input class="new-form-control string multi_value optional related_works_ids work_child_members_ids form-control multi-text-field" value="" id="work_child_members_ids" aria-labelledby="work_child_members_ids_label" name="<%= f.object.model_name.param_key %>[ordered_member_ids][]" type="text">
+        <%= render "find_work_widget", f: f, id_name: 'work_child_members_ids', id_type: 'ordered_member_ids', user_email: current_user.email, id: f.object.model.id %>
         <div class="message has-warning hidden"></div>
       </td>
       <td>
