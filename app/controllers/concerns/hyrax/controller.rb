@@ -30,7 +30,7 @@ module Hyrax::Controller
 
   # Override Blacklight to use the Hyrax::SearchState
   def search_state
-    @search_state ||= Hyrax::SearchState.new(params, blacklight_config)
+    @search_state ||= Hyrax::SearchState.new(self)
   end
 
   private
