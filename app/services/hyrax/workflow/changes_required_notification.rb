@@ -1,8 +1,6 @@
 module Hyrax
   module Workflow
     class ChangesRequiredNotification < AbstractNotification
-      include ActionView::Helpers::UrlHelper
-
       protected
 
         def subject

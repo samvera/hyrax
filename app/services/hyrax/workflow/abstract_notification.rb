@@ -1,6 +1,8 @@
 module Hyrax
   module Workflow
     class AbstractNotification
+      include ActionView::Helpers::UrlHelper
+
       def self.send_notification(entity:, comment:, user:, recipients:)
         new(entity, comment, user, recipients).call
       end
@@ -27,7 +29,7 @@ module Hyrax
         end
 
         def message
-          "#{title} (#{work_id}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
+          "#{title} (#{link_to work_id, document_path}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
         end
 
         # @return [ActiveFedora::Base] the document (work) the the Abstract WorkFlow is creating a notification for
