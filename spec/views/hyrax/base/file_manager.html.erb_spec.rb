@@ -34,15 +34,11 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     Hyrax::WorkShowPresenter.new(parent_solr_doc, nil, view)
   end
 
-  let(:blacklight_config) { CatalogController.new.blacklight_config }
-
   before do
     allow(parent_presenter).to receive(:member_presenters).and_return([file_set, member])
     assign(:presenter, parent_presenter)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
-    allow(view).to receive(:blacklight_config).and_return(blacklight_config)
-    allow(view).to receive(:blacklight_configuration_context).and_return(CatalogController.new.send(:blacklight_configuration_context))
     allow(view).to receive(:search_session).and_return({})
     allow(view).to receive(:current_search_session).and_return(nil)
     allow(view).to receive(:curation_concern).and_return(parent)
