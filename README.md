@@ -1,6 +1,6 @@
 # hyrax.projecthydra.org
 
-A home for [Hyrax](http://github.org/projecthydra-labs/hyrax) on the world wide web
+A home for [Hyrax](http://github.com/projecthydra-labs/hyrax) on the world wide web
 
 ## Contributing
 
