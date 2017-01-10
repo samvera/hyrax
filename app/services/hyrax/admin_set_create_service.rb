@@ -1,6 +1,14 @@
 module Hyrax
   # Creates AdminSets
   class AdminSetCreateService
+    # Creates an admin set, setting the creator and the default access controls.
+    # @param admin_set [AdminSet] the admin set to operate on
+    # @param creating_user [User] the user who created the admin set.
+    # @return [TrueClass, FalseClass] true if it was successful
+    def self.call(admin_set, creating_user)
+      new(admin_set, creating_user).create
+    end
+
     # @param admin_set [AdminSet] the admin set to operate on
     # @param creating_user [User] the user who created the admin set.
     def initialize(admin_set, creating_user)

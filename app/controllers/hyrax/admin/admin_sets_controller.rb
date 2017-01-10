@@ -2,6 +2,8 @@ module Hyrax
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
 
+    # added skip to allow flash notices. see https://github.com/projecthydra-labs/hyrax/issues/202
+    skip_before_action :filter_docs_with_read_access!
     before_action :ensure_admin!
     load_and_authorize_resource
 
@@ -17,6 +19,10 @@ module Hyrax
 
     # Used to get a list of admin sets for the index action
     self.list_search_builder_class = Hyrax::AdminSetSearchBuilder
+
+    # Used to create the admin set
+    class_attribute :admin_set_create_service
+    self.admin_set_create_service = AdminSetCreateService
 
     def show
       add_breadcrumb t(:'hyrax.controls.home'), root_path
@@ -41,9 +47,9 @@ module Hyrax
       setup_form
     end
 
+    # TODO: consolidate admin set and permission template into a service class.
     def update
       if @admin_set.update(admin_set_params)
-
         permission_template.update(permission_template_params)
         redirect_to hyrax.admin_admin_sets_path
       else
@@ -52,12 +58,13 @@ module Hyrax
       end
     end
 
+    # TODO: consolidate admin set and permission template into a service class.
     def create
       if create_admin_set
         permission_template_holder = permission_template
         permission_template_holder.attributes = permission_template_params
         permission_template_holder.save! # to create permission template on create
-        redirect_to hyrax.admin_admin_sets_path
+        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :new
@@ -88,7 +95,7 @@ module Hyrax
       end
 
       def create_admin_set
-        AdminSetCreateService.new(@admin_set, current_user).create
+        admin_set_create_service.call(@admin_set, current_user)
       end
 
       def setup_form

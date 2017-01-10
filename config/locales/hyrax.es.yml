@@ -38,6 +38,11 @@ es:
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
           cancel:               "Cancelar"
+          permission_update_notices:
+            new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
+            visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
+            workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
+            participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
         form_participant_table:
           depositors:
             action:             "Acción"
@@ -89,8 +94,9 @@ es:
             restricted:         "Restringido -- todos los trabajos sólo serán visibles para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
             title:              "Visibilidad"
             varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
-        form_workflow: # TODO: verify text; added via google translate
+        form_workflow:
           page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
+          no_workflows:   "No hay flujos de trabajo que seleccionar."
           cancel:         "Cancelar"
         new:
           header:         "Crear nuevo conjunto Administrativo"
