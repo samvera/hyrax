@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    class CompleteNotification < AbstractNotification
+    class DepositedNotification < AbstractNotification
       protected
 
         def subject
