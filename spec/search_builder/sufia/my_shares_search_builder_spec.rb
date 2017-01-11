@@ -23,7 +23,7 @@ describe Sufia::MySharesSearchBuilder do
 
   it "filters things we have access to in which we are not the depositor" do
     expect(subject).to eq ["access_filter1 OR access_filter2",
-                           "{!terms f=has_model_ssim}GenericWork,Collection",
+                           "{!terms f=has_model_ssim}GenericWork,Atlas,Collection",
                            "-suppressed_bsi:true",
                            "-depositor"]
   end

@@ -12,7 +12,7 @@ describe Sufia::HomepagePresenter do
     context "when config is not set to always_display_share_button" do
       before do
         allow(Sufia.config).to receive(:always_display_share_button).and_return(false)
-        allow(ability).to receive(:can?).with(:create, GenericWork).and_return(false)
+        allow(ability).to receive(:can?).with(:create, an_instance_of(Class)).and_return(false)
       end
       it { is_expected.to be false }
     end
