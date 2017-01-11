@@ -15,6 +15,7 @@ Hyrax::Engine.routes.draw do
   get '/.well-known/resourcesync' => 'resource_sync#source_description', as: :source_description
   get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list
   get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
+  get '/changelist' => 'resource_sync#change_list', as: :change_list
 
   delete '/uploads/:id', to: 'uploads#destroy', as: :uploaded_file
   post '/uploads', to: 'uploads#create'

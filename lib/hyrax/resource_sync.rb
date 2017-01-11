@@ -4,6 +4,7 @@ module Hyrax
 
     eager_autoload do
       autoload :CapabilityListWriter
+      autoload :ChangeListWriter
       autoload :ResourceListWriter
       autoload :SourceDescriptionWriter
     end
