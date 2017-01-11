@@ -25,10 +25,19 @@ module Sufia
       template 'locale.en.yml.erb', "config/locales/#{file_name}.en.yml"
     end
 
+    # Inserts after the last registering work, or at the top of the config block
     def register_work
-      inject_into_file 'config/initializers/sufia.rb', after: "Sufia.config do |config|\n" do
-        "  # Injected via `rails g sufia:work #{class_name}`\n" \
-        "  config.register_curation_concern :#{file_name}\n"
+      config = 'config/initializers/sufia.rb'
+      lastmatch = nil
+      File.open(config).each_line do |line|
+        lastmatch = line if line =~ /^\s*config.register_curation_concern :.*\n$/
+      end
+      content = "  # Injected via `rails g sufia:work #{class_name}`\n" \
+                "  config.register_curation_concern :#{file_name}\n"
+      content = "  # Note: order of registration affects Zotero/Arkivo\n#{content}" unless lastmatch
+      anchor = lastmatch || "Sufia.config do |config|\n"
+      inject_into_file config, after: anchor do
+        content
       end
     end
 
