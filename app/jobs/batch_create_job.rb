@@ -16,10 +16,8 @@ class BatchCreateJob < ActiveJob::Base
   # @param [BatchCreateOperation] log
   def perform(user, titles, resource_types, uploaded_files, attributes, log)
     log.performing!
-
     titles ||= {}
     resource_types ||= {}
-
     create(user, titles, resource_types, uploaded_files, attributes, log)
   end
 
@@ -32,18 +30,12 @@ class BatchCreateJob < ActiveJob::Base
         attributes = attributes.merge(uploaded_files: [upload_id],
                                       title: title,
                                       resource_type: resource_type)
-        model = model_to_create(attributes)
+        model = attributes.delete(:model)
+        raise ArgumentError, "attributes must include :model" unless model
         child_log = CurationConcerns::Operation.create!(user: user,
                                                         operation_type: "Create Work",
                                                         parent: log)
         CreateWorkJob.perform_later(user, model, attributes, child_log)
       end
-    end
-
-    # Override this method if you have a different rubric for choosing the model
-    # @param [Hash] attributes
-    # @return String the model to create
-    def model_to_create(attributes)
-      Sufia.config.model_to_create.call(attributes)
     end
 end
