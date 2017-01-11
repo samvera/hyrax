@@ -58,6 +58,12 @@
                             "to": ["approving"]
                         }
                     ]
+                }, {
+                    "name": "no_state_change",
+                    "from_states": [
+                        { "names": ["pending_review", "deposited"], "roles": ["approving"] },
+                        { "names": ["changes_required"], "roles": ["depositing"] }
+                    ]
                 }
             ]
         }
