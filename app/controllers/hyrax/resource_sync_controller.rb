@@ -12,11 +12,20 @@ class Hyrax::ResourceSyncController < ApplicationController
     render_from_cache_as_xml(:capability_list)
   end
 
+  def change_list
+    render_from_cache_as_xml(:change_list)
+  end
+
   def resource_list
     render_from_cache_as_xml(:resource_list)
   end
 
   private
+
+    def build_change_list
+      Hyrax::ResourceSync::ChangeListWriter.new(capability_list_url: hyrax.capability_list_url,
+                                                resource_host: request.host).write
+    end
 
     def build_resource_list
       Hyrax::ResourceSync::ResourceListWriter.new(capability_list_url: hyrax.capability_list_url,
@@ -25,6 +34,7 @@ class Hyrax::ResourceSyncController < ApplicationController
 
     def build_capability_list
       Hyrax::ResourceSync::CapabilityListWriter.new(resource_list_url: hyrax.resource_list_url,
+                                                    change_list_url: hyrax.change_list_url,
                                                     description_url: hyrax.source_description_url).write
     end
 

@@ -101,7 +101,7 @@ RSpec/NamedSubject:
   Enabled: false
 
 RSpec/ExampleLength:
-  Max: 7
+  Max: 9
   Exclude:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
