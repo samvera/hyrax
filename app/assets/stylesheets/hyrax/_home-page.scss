@@ -42,14 +42,16 @@
     background-color: $navbar-transparent-bg;
     margin-bottom: 0;
 
-    li > a {
-      color: $navbar-transparent-link-color;
-      text-transform: uppercase;
+    .navbar-nav {
+      a {
+        color: $navbar-transparent-link-color;
+        text-transform: uppercase;
 
-      &:hover,
-      &:focus {
-        background-color: $navbar-transparent-link-hover-bg;
-        color: $navbar-transparent-link-hover-color;
+        &:hover,
+        &:focus {
+          background-color: $navbar-transparent-link-hover-bg;
+          color: $navbar-transparent-link-hover-color;
+        }
       }
     }
 

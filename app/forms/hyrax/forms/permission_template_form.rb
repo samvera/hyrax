@@ -76,16 +76,16 @@ module Hyrax
         # In form, select appropriate radio button under Release "Varies" option based on saved permission_template
         def select_release_varies_option(permission_template)
           # Ignore 'no_delay' or 'fixed' values, as they are separate options
-          return if permission_template.release_no_delay? || permission_template.release_fixed?
+          return if permission_template.release_no_delay? || permission_template.release_fixed_date?
 
-          # If release_period BEFORE a specified date, then 'before' option under "varies" was selected
-          if permission_template.release_before_date?
-            @release_varies = Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE
           # If embargo specified, then 'embargo' option under "varies" was selected and embargo period selected
-          elsif permission_template.release_embargo?
+          if permission_template.release_max_embargo?
             # If release_period is some other value, it is specifying an embargo period (e.g. 6mos, 1yr, etc)
             @release_varies = Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO
             @release_embargo = permission_template.release_period
+          # Else If release_period BEFORE a specified date, then 'before' option under "varies" was selected
+          elsif permission_template.release_before_date?
+            @release_varies = Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE
           end
         end
 
