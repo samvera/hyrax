@@ -186,4 +186,23 @@ describe CurationConcerns::GenericWorksController do
       end
     end
   end
+
+  describe "#delete" do
+    let!(:work) { create(:work, title: ['test title'], user: user) }
+
+    context "after deletion" do
+      it "redirects to My Works" do
+        delete :destroy, params: { id: work }
+        expect(response).to redirect_to(Sufia::Engine.routes.url_helpers.dashboard_works_path)
+        expect(flash[:notice]).to eq "Deleted test title"
+      end
+
+      it "returns json" do
+        delete :destroy, params: { format: :json, id: work }
+        json = JSON.parse(response.body)
+        json_description = json['description']
+        expect(json_description).to eq "Deleted #{work.id}"
+      end
+    end
+  end
 end

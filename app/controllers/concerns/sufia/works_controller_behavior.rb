@@ -72,6 +72,13 @@ module Sufia
         end
       end
 
+      def after_destroy_response(title)
+        respond_to do |wants|
+          wants.html { redirect_to sufia.dashboard_works_path, notice: "Deleted #{title}" }
+          wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
+        end
+      end
+
       # Called by CurationConcerns::CurationConcernController#show
       def additional_response_formats(format)
         format.endnote do
