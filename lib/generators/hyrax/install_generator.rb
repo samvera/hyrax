@@ -15,7 +15,6 @@ module Hyrax
   9. Installs model-related concerns
      * Creates several database migrations if they do not exist in /db/migrate
      * Adds user behavior to the user model
-     * Generates GenericWork model.
      * Creates the hyrax.rb configuration file
      * Generates mailboxer
   10. Adds Hyrax's abilities into the Ability class

@@ -1,0 +1,30 @@
+// Styles below keep footer at bottom of viewport
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: $footer-height + $footer-top-margin;
+}
+
+.site-footer {
+  margin-top: $footer-top-margin;
+  padding: 10px;
+
+  // Styles below keep footer at bottom of viewport
+  position: absolute;
+  bottom: 0;
+  height: $footer-height;
+  width: 100%;
+}
+
+@media (max-width: $screen-sm) {
+  // make more room in the footer for mobile devices
+  body {
+    margin-bottom: 2 * $footer-height + $footer-top-margin;
+  }
+  .site-footer {
+    height: 2 * $footer-height;
+  }
+}

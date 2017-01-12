@@ -67,10 +67,21 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template 'locale.es.yml.erb', "config/locales/#{file_name}.es.yml"
   end
 
+  # Inserts after the last registering work, or at the top of the config block
   def register_work
-    inject_into_file 'config/initializers/hyrax.rb', after: "Hyrax.config do |config|\n" do
-      "  # Injected via `rails g hyrax:work #{class_name}`\n" \
-      "  config.register_curation_concern :#{file_name}\n"
+    config = 'config/initializers/hyrax.rb'
+    lastmatch = nil
+    in_root do
+      File.open(config).each_line do |line|
+        lastmatch = line if line =~ /^\s*config.register_curation_concern :.*\n$/
+      end
+      content = "  # Injected via `rails g hyrax:work #{class_name}`\n" \
+                "  config.register_curation_concern :#{file_name}\n"
+      content = "  # Note: order of registration affects Zotero/Arkivo\n#{content}" unless lastmatch
+      anchor = lastmatch || "Hyrax.config do |config|\n"
+      inject_into_file config, after: anchor do
+        content
+      end
     end
   end
 

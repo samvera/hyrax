@@ -13,5 +13,9 @@ RSpec.describe 'hyrax/admin/admin_sets/_form.html.erb', type: :view do
     expect(rendered).to have_selector('#participants')
     expect(rendered).to have_selector('#visibility')
     expect(rendered).to have_selector('#workflow')
+
+    # metadata fields
+    expect(rendered).to have_selector('input[type=text][name="admin_set[title]"]')
+    expect(rendered).to have_selector('textarea[name="admin_set[description]"]')
   end
 end
