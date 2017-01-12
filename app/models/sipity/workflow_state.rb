@@ -16,7 +16,7 @@ module Sipity
              foreign_key: :resulting_workflow_state_id
 
     # TODO: What should be done with entities in the given state if the WorkflowState is destroyed?
-    has_many :entities, class_name: 'Sipity::Workflow'
+    has_many :entities, class_name: 'Sipity::Entity'
 
     has_many :notifiable_contexts,
              dependent: :destroy,
