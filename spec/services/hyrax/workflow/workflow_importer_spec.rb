@@ -41,6 +41,10 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
   end
 
   context 'data generation' do
+    before do
+      described_class.clear_load_errors
+    end
+
     it 'creates the requisite data from the configuration' do
       expect(Hyrax::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(Hyrax::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
@@ -49,8 +53,67 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
         result = described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
       expect(result).to match_array(kind_of(Sipity::Workflow))
+      expect(described_class.load_errors).to be_empty
       expect(result.first.label).to eq "This is the label"
       expect(result.first.description).to eq "This description could get really long"
+    end
+  end
+  context "when I load twice" do
+    let!(:workflow1) { described_class.generate_from_json_file(path: path)[0] }
+    let(:workflow2) { described_class.generate_from_json_file(path: path)[0] }
+    let(:workflow2_errors) { described_class.load_errors }
+    it "creates the same results" do
+      expect(workflow2).to eq(workflow1)
+      expect(workflow2_errors).to be_empty
+    end
+    context "When the json changes" do
+      let(:workflow_name) { "awsome workflow" }
+      let(:action_name)  { "awesome action" }
+      let(:state_name)   { "awesome state" }
+      let(:second_path) { double(read: json2) }
+      let(:workflow2) { described_class.generate_from_json_file(path: second_path)[0] }
+      let(:json2) do
+        doc = <<-HERE
+        {
+          "workflows": [
+            {
+              "name": "#{workflow_name}",
+              "label": "This is the label for the second json",
+              "description": "This description could get really long",
+              "actions": [{
+                "name": "#{action_name}",
+                "transition_to": "#{state_name}",
+                "from_states": [{ "names": ["under_review"], "roles": ["ulra_reviewing"] }]
+              }]
+            }
+          ]
+        }
+        HERE
+        doc.strip
+      end
+      it "creates another workflow" do
+        expect(workflow2).not_to eq(workflow1)
+        expect(Sipity::Workflow.count).to eq(2)
+        expect(workflow2_errors).to be_empty
+      end
+      context "when the workflow name stays the same" do
+        let(:workflow_name) { "ulra_submission" }
+        it "modifies the same workflow" do
+          expect(workflow2.label).not_to eq(workflow1.label)
+          expect(Sipity::Workflow.count).to eq(1)
+          expect(workflow2_errors).to be_empty
+          expect(Sipity::WorkflowAction.count).to eq(1)
+          expect(Sipity::WorkflowState.count).to eq(1)
+        end
+        context "when entites are in the state" do
+          let!(:entity) { Sipity::Entity.create(workflow_state: workflow1.reload.workflow_states[0], proxy_for_global_id: "abc123", workflow_id: workflow1.id) }
+          it "can not modify the same workflow" do
+            expect(workflow2.label).to eq(workflow1.label)
+            expect(Sipity::Workflow.count).to eq(1)
+            expect(workflow2_errors).to eq(["The workflow: ulra_submission has not been updated.  You are removing a state: reviewed with 1 entitie(s).  A state may not be removed while it has active enities!"])
+          end
+        end
+      end
     end
   end
 end

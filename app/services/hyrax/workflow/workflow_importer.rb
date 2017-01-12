@@ -1,12 +1,22 @@
 module Hyrax
   module Workflow
     class WorkflowImporter
+      class << self
+        attr_accessor :load_errors
+
+        def clear_load_errors
+          self.load_errors = []
+        end
+      end
+
       # @api public
       #
       # Load all the workflows in config/workflows/*.json
       # @return [TrueClass]
       def self.load_workflows
+        clear_load_errors
         Dir.glob(Rails.root.join('config', 'workflows', '*.json')) do |config|
+        Dir.glob(Rails.root + "config/workflows/*.json") do |config|
           Rails.logger.info "Loading workflow: #{config}"
           generate_from_json_file(path: config)
         end
@@ -21,7 +31,12 @@ module Hyrax
       def self.generate_from_json_file(path:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
         data = JSON.parse(contents)
-        new(data: data, **keywords).call
+        importer = new(data: data, **keywords)
+        workflow = importer.call
+        self.load_errors ||= []
+        load_errors.concat(importer.errors)
+
+        workflow
       end
 
       # @param data [#deep_symbolize_keys] the configuration information from which we will generate all the data entries
@@ -60,25 +75,34 @@ module Hyrax
 
       public
 
+      attr_accessor :errors
+
       def call
+        self.errors = []
         Array.wrap(data.fetch(:workflows)).map do |configuration|
-          find_or_create_from(configuration: configuration)
+          begin
+            find_or_create_from(configuration: configuration)
+          rescue InvalidStateRemovalException => e
+            error = I18n.t('hyrax.workflow.load.state_error', workflow_name: e.state.workflow.name, state_name: e.state.name, entity_count: e.state.entities.count)
+            Rails.logger.error(error)
+            errors << error
+            Sipity::Workflow.find_by(name: configuration[:name])
+          end
         end
       end
 
       private
 
         def find_or_create_from(configuration:)
-          workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name)) do |wf|
-            wf.label = configuration.fetch(:label, nil)
-            wf.description = configuration.fetch(:description, nil)
-            wf.save!
-          end
+          workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name))
+          generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
 
           find_or_create_workflow_permissions!(
             workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
           )
-          generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
+          workflow.label = configuration.fetch(:label, nil)
+          workflow.description = configuration.fetch(:description, nil)
+          workflow.save!
           workflow
         end
 
