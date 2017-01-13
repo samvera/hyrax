@@ -1,5 +1,5 @@
 class CreateWorkJob < ActiveJob::Base
-  queue_as :ingest
+  queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
     log = job.arguments.last
