@@ -117,4 +117,64 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       end
     end
   end
+
+  context 'data generation' do
+    let(:invalid_data) do
+      {
+        workflows: [
+          {
+            name: "ulra_submission",
+            label: "",
+            description: "",
+            actions: [{ name: "approve", transition_to: "reviewed", from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }] }]
+          }
+        ]
+      }
+    end
+    let(:amending_with_invalid_data) do
+      {
+        workflows: [
+          {
+            name: "ulra_submission",
+            label: "",
+            description: "",
+            actions: [
+              {
+                name: "approve", transition_to: "reviewed", from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
+              }, {
+                name: "something", transition_to: "somewhere", from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
+              }
+            ]
+          }
+        ]
+      }
+    end
+
+    context 'with incomplete data' do
+      it 'will not load any of the data' do
+        expect do
+          expect do
+            expect do
+              expect do
+                described_class.generate_from_hash(data: invalid_data)
+              end.to raise_error(RuntimeError)
+            end.not_to change { Sipity::Workflow.count }
+          end.not_to change { Sipity::WorkflowAction.count }
+        end.not_to change { Sipity::WorkflowState.count }
+      end
+
+      it 'will not amend when new data is invalid' do
+        described_class.generate_from_json_file(path: path)
+        expect do
+          expect do
+            expect do
+              expect do
+                described_class.generate_from_hash(data: invalid_data)
+              end.to raise_error(RuntimeError)
+            end.not_to change { Sipity::Workflow.count }
+          end.not_to change { Sipity::WorkflowAction.count }
+        end.not_to change { Sipity::WorkflowState.count }
+      end
+    end
+  end
 end
