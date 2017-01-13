@@ -1,6 +1,6 @@
 describe BatchCreateJob do
   let(:user) { create(:user) }
-  let(:log) { create(:batch_create_operation, user: user) }
+  let(:log)  { create(:batch_create_operation, user: user) }
 
   before do
     allow(CharacterizeJob).to receive(:perform_later)
@@ -18,13 +18,13 @@ describe BatchCreateJob do
     let(:file2) { File.open(fixture_path + '/image.jp2') }
     let(:upload1) { Sufia::UploadedFile.create(user: user, file: file1) }
     let(:upload2) { Sufia::UploadedFile.create(user: user, file: file2) }
-    let(:title) { { upload1.id.to_s => 'File One', upload2.id.to_s => 'File Two' } }
-    let(:resource_types) { { upload1.id.to_s => 'Article', upload2.id.to_s => 'Image' } }
-    let(:metadata) { { keyword: [] } }
+    let(:title)          { { upload1.id.to_s => 'File One', upload2.id.to_s => 'File Two' } }
+    let(:resource_types) { { upload1.id.to_s => 'Article',  upload2.id.to_s => 'Image'    } }
+    let(:metadata)       { { keyword: [], model: 'GenericWork' } }
     let(:uploaded_files) { [upload1.id.to_s, upload2.id.to_s] }
     let(:errors) { double(full_messages: "It's broke!") }
-    let(:work) { double(errors: errors) }
-    let(:actor) { double(curation_concern: work) }
+    let(:work)   { double(errors: errors) }
+    let(:actor)  { double(curation_concern: work) }
 
     subject do
       described_class.perform_later(user,
