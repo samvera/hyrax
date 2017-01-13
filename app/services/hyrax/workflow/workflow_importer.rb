@@ -21,6 +21,15 @@ module Hyrax
       def self.generate_from_json_file(path:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
         data = JSON.parse(contents)
+        generate_from_hash(data: data, **keywords)
+      end
+
+      # @api public
+      #
+      # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
+      #
+      # @return [Array<Sipity::Workflow>]
+      def self.generate_from_hash(data:, **keywords)
         new(data: data, **keywords).call
       end
 
