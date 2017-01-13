@@ -5,25 +5,19 @@ describe BatchCreateJob do
   before do
     allow(CharacterizeJob).to receive(:perform_later)
     allow(CurationConcerns.config.callback).to receive(:run)
-    allow(CurationConcerns.config.callback).to receive(:set?)
-      .with(:after_batch_create_success)
-      .and_return(true)
-    allow(CurationConcerns.config.callback).to receive(:set?)
-      .with(:after_batch_create_failure)
-      .and_return(true)
+    allow(CurationConcerns.config.callback).to receive(:set?).with(:after_batch_create_success).and_return(true)
+    allow(CurationConcerns.config.callback).to receive(:set?).with(:after_batch_create_failure).and_return(true)
   end
 
   describe "#perform" do
-    let(:file1) { File.open(fixture_path + '/world.png') }
-    let(:file2) { File.open(fixture_path + '/image.jp2') }
-    let(:upload1) { Sufia::UploadedFile.create(user: user, file: file1) }
-    let(:upload2) { Sufia::UploadedFile.create(user: user, file: file2) }
+    let(:upload1) { Sufia::UploadedFile.create(user: user, file: File.open(fixture_path + '/world.png')) }
+    let(:upload2) { Sufia::UploadedFile.create(user: user, file: File.open(fixture_path + '/image.jp2')) }
     let(:title)          { { upload1.id.to_s => 'File One', upload2.id.to_s => 'File Two' } }
     let(:resource_types) { { upload1.id.to_s => 'Article',  upload2.id.to_s => 'Image'    } }
     let(:metadata)       { { keyword: [], model: 'GenericWork' } }
     let(:uploaded_files) { [upload1.id.to_s, upload2.id.to_s] }
-    let(:errors) { double(full_messages: "It's broke!") }
-    let(:work)   { double(errors: errors) }
+    # let(:errors) { double(full_messages: "It's broke!") }
+    let(:work)   { build(:generic_work) }
     let(:actor)  { double(curation_concern: work) }
 
     subject do
@@ -36,7 +30,7 @@ describe BatchCreateJob do
     end
 
     it "updates work metadata" do
-      expect(CurationConcerns::CurationConcern).to receive(:actor).and_return(actor).twice
+      expect(CurationConcerns::CurationConcern).to receive(:actor).with(an_instance_of(GenericWork), user).and_return(actor).twice
       expect(actor).to receive(:create).with(keyword: [], title: ['File One'], resource_type: ["Article"], uploaded_files: ['1']).and_return(true)
       expect(actor).to receive(:create).with(keyword: [], title: ['File Two'], resource_type: ["Image"], uploaded_files: ['2']).and_return(true)
       expect(CurationConcerns.config.callback).to receive(:run).with(:after_batch_create_success, user)
@@ -46,24 +40,19 @@ describe BatchCreateJob do
     end
 
     context "when permissions_attributes are passed" do
-      let(:metadata) do
-        { "permissions_attributes" => [{ "type" => "group", "name" => "public", "access" => "read" }] }
-      end
+      let(:permissions) { { 'permissions_attributes' => [{ 'type' => 'group', 'name' => 'public', 'access' => 'read' }] } }
+      let(:metadata) { super().merge(permissions) }
       it "sets the groups" do
         subject
-        work = GenericWork.last
-        expect(work.read_groups).to include "public"
+        expect(GenericWork.last.read_groups).to include "public"
       end
     end
 
     context "when visibility is passed" do
-      let(:metadata) do
-        { "visibility" => 'open' }
-      end
+      let(:metadata) { super().merge('visibility' => 'open') }
       it "sets public read access" do
         subject
-        work = GenericWork.last
-        expect(work.reload.read_groups).to eq ['public']
+        expect(GenericWork.last.reload.read_groups).to eq ['public']
       end
     end
 

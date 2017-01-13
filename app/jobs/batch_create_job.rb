@@ -24,9 +24,9 @@ class BatchCreateJob < ActiveJob::Base
   private
 
     def create(user, titles, resource_types, uploaded_files, attributes, log)
+      model = attributes.delete(:model) || attributes.delete('model')
+      raise ArgumentError, 'attributes must include "model" => ClassName.to_s' unless model
       uploaded_files.each do |upload_id|
-        model = attributes.delete(:model) || attributes.delete('model')
-        raise ArgumentError, 'attributes must include "model" => ClassName.to_s' unless model
         title = [titles[upload_id]] if titles[upload_id]
         resource_type = [resource_types[upload_id]] if resource_types[upload_id]
         attributes = attributes.merge(uploaded_files: [upload_id],

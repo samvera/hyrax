@@ -9,8 +9,8 @@ module Sufia
     end
 
     module ClassMethods
-      # We don't want the breadcrumb action to occur until after the concern has
-      # been loaded and authorized
+      # We don't want the actions to occur until after the concern has been loaded and authorized
+      # @note this is a terribly side-effecty kludge
       def curation_concern_type=(curation_concern_type)
         super
         before_action :build_breadcrumbs, only: [:edit, :show]
