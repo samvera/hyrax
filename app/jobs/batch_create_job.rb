@@ -9,10 +9,10 @@ class BatchCreateJob < ActiveJob::Base
   # This copies metadata from the passed in attribute to all of the works that
   # are members of the given upload set
   # @param [User] user
-  # @param [Array<String>] titles
-  # @param [Array<String>] resource_types
-  # @param [Array<Sufia::UploadedFile>] uploaded_files
-  # @param [Hash] attributes attributes to apply to all works
+  # @param [Hash<String => String>] titles
+  # @param [Hash<String => String>] resource_types
+  # @param [Array<String>] uploaded_files Sufia::UploadedFile IDs
+  # @param [Hash] attributes attributes to apply to all works, including :model
   # @param [BatchCreateOperation] log
   def perform(user, titles, resource_types, uploaded_files, attributes, log)
     log.performing!
@@ -25,13 +25,13 @@ class BatchCreateJob < ActiveJob::Base
 
     def create(user, titles, resource_types, uploaded_files, attributes, log)
       uploaded_files.each do |upload_id|
+        model = attributes.delete(:model) || attributes.delete('model')
+        raise ArgumentError, 'attributes must include "model" => ClassName.to_s' unless model
         title = [titles[upload_id]] if titles[upload_id]
         resource_type = [resource_types[upload_id]] if resource_types[upload_id]
         attributes = attributes.merge(uploaded_files: [upload_id],
                                       title: title,
                                       resource_type: resource_type)
-        model = attributes.delete(:model)
-        raise ArgumentError, "attributes must include :model" unless model
         child_log = CurationConcerns::Operation.create!(user: user,
                                                         operation_type: "Create Work",
                                                         parent: log)
