@@ -5,6 +5,15 @@ RSpec.describe Hyrax::AdminSetCreateService do
   let(:service) { described_class.new(admin_set, user) }
   let(:user) { create(:user) }
 
+  describe ".call" do
+    it "is a convenience method for .new#create" do
+      service = instance_double(described_class)
+      expect(described_class).to receive(:new).and_return(service)
+      expect(service).to receive(:create)
+      described_class.call(admin_set, user)
+    end
+  end
+
   describe "#create" do
     subject { service.create }
 

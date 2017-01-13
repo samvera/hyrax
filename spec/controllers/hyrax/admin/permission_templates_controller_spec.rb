@@ -39,7 +39,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
         expect(form).to receive(:update).with(ActionController::Parameters.new(form_attributes).permit!)
         put :update, params: input_params
         expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(admin_set, locale: 'en', anchor: 'participants'))
-        expect(flash[:notice]).to eq 'Permissions updated'
+        expect(flash[:notice]).to eq "The administrative set's participant rights have been updated"
       end
     end
   end

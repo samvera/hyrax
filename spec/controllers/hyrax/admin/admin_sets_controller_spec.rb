@@ -56,26 +56,29 @@ describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#create" do
-      let(:service) { instance_double(Hyrax::AdminSetCreateService) }
       before do
-        allow(Hyrax::AdminSetCreateService).to receive(:new)
-          .with(AdminSet, user)
-          .and_return(service)
+        controller.admin_set_create_service = service
       end
 
       context "when it's successful" do
+        let(:service) do
+          lambda do |admin_set, _|
+            admin_set.id = 123
+            true
+          end
+        end
         it 'creates file sets' do
-          expect(service).to receive(:create).and_return(true)
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description',
                                                workflow_name: 'default' } }
-          expect(response).to be_redirect
+          admin_set = assigns(:admin_set)
+          expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
         end
       end
 
       context "when it fails" do
+        let(:service) { ->(_, _) { false } }
         it 'shows the new form' do
-          expect(service).to receive(:create).and_return(false)
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description' } }
           expect(response).to render_template 'new'
