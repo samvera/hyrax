@@ -7,7 +7,7 @@ describe Sufia::BatchUploadsController do
     { '1' => 'foo' }
   end
   let(:expected_shared_params) do
-    { 'keyword' => [], 'visibility' => 'open', 'model' => 'GenericWork' }
+    { 'keyword' => [], 'visibility' => 'open', :model => 'GenericWork' }
   end
   let(:batch_upload_item) do
     { keyword: [""], visibility: 'open', payload_concern: 'GenericWork' }
@@ -44,7 +44,7 @@ describe Sufia::BatchUploadsController do
                 expected_types,
                 ['1'],
                 expected_shared_params,
-                a_kind_of(CurationConcerns::Operation))
+                a_kind_of(Sufia::BatchCreateOperation))
         post :create, params: post_params
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
