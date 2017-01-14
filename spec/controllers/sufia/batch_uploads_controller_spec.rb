@@ -44,7 +44,7 @@ describe Sufia::BatchUploadsController do
                 expected_types,
                 ['1'],
                 expected_shared_params,
-                CurationConcerns::Operation)
+                a_kind_of(CurationConcerns::Operation))
         post :create, params: post_params
         expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
         expect(flash[:notice]).to include("Your files are being processed")
