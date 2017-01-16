@@ -614,7 +614,7 @@ es:
       default:
         deposit: "Depositar"
       load:
-        state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} entitie(s).  ¡Un estado no puede ser removido mientras tiene enidades activas!"
+        state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
     works:
       edit:
         additional_fields: "Campos adicionales"

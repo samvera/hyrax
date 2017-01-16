@@ -1,11 +1,10 @@
 module Hyrax
   module Workflow
     class InvalidStateRemovalException < ::RuntimeError
-      attr_reader :state
-
-      def initialize(message, state)
+      attr_reader :states
+      def initialize(message, states)
         super(message)
-        @state = state
+        @states = states
       end
     end
   end

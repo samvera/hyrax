@@ -15,8 +15,8 @@ module Sipity
              class_name: 'Sipity::WorkflowAction',
              foreign_key: :resulting_workflow_state_id
 
-    # TODO: What should be done with entities in the given state if the WorkflowState is destroyed?
-    has_many :entities, class_name: 'Sipity::Entity'
+    # It is not acceptable to delete a WorkflowState if there are associated entities.
+    has_many :entities, class_name: 'Sipity::Entity', dependent: :restrict_with_exception
 
     has_many :notifiable_contexts,
              dependent: :destroy,

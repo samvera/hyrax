@@ -1,12 +1,20 @@
 module Hyrax
   module Workflow
+    # Responsible for loading workflows from a data source.
+    #
+    # @see .load_workflows
+    # @see .generate_from_json_file
     class WorkflowImporter
       class << self
-        attr_accessor :load_errors
-
-        def clear_load_errors
+        def clear_load_errors!
           self.load_errors = []
         end
+
+        attr_reader :load_errors
+
+        private
+
+          attr_writer :load_errors
       end
 
       # @api public
@@ -14,9 +22,8 @@ module Hyrax
       # Load all the workflows in config/workflows/*.json
       # @return [TrueClass]
       def self.load_workflows
-        clear_load_errors
+        clear_load_errors!
         Dir.glob(Rails.root.join('config', 'workflows', '*.json')) do |config|
-        Dir.glob(Rails.root + "config/workflows/*.json") do |config|
           Rails.logger.info "Loading workflow: #{config}"
           generate_from_json_file(path: config)
         end
@@ -83,9 +90,11 @@ module Hyrax
           begin
             find_or_create_from(configuration: configuration)
           rescue InvalidStateRemovalException => e
-            error = I18n.t('hyrax.workflow.load.state_error', workflow_name: e.state.workflow.name, state_name: e.state.name, entity_count: e.state.entities.count)
-            Rails.logger.error(error)
-            errors << error
+            e.states.each do |state|
+              error = I18n.t('hyrax.workflow.load.state_error', workflow_name: state.workflow.name, state_name: state.name, entity_count: state.entities.count)
+              Rails.logger.error(error)
+              errors << error
+            end
             Sipity::Workflow.find_by(name: configuration[:name])
           end
         end
@@ -95,7 +104,7 @@ module Hyrax
 
         def find_or_create_from(configuration:)
           workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name))
-          generate_state_diagram(workflow: workflow, actions_configuration: configuration.fetch(:actions))
+          generate_state_diagram!(workflow: workflow, actions_configuration: configuration.fetch(:actions))
 
           find_or_create_workflow_permissions!(
             workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
@@ -108,7 +117,7 @@ module Hyrax
 
         extend Forwardable
         def_delegator WorkflowPermissionsGenerator, :call, :find_or_create_workflow_permissions!
-        def_delegator SipityActionsGenerator, :call, :generate_state_diagram
+        def_delegator SipityActionsGenerator, :call, :generate_state_diagram!
 
         module SchemaValidator
           # @param data [Hash]
