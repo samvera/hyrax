@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-describe Hyrax::Ability, type: :model do
+describe 'Hyrax::Ability', type: :model do
   let(:ability) { Ability.new(user) }
   subject { ability }
 

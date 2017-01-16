@@ -22,11 +22,18 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     doc.strip
   end
   let(:validator) { double(call: true) }
+  let(:importer) { described_class.new(data: {}, validator: validator) }
+  subject { importer }
 
-  subject { described_class.new(data: {}, validator: validator) }
+  context '#default_validator' do
+    subject { importer.send(:default_validator) }
+    it { is_expected.to respond_to(:call) }
+  end
 
-  its(:default_validator) { is_expected.to respond_to(:call) }
-  its(:default_schema) { is_expected.to respond_to(:call) }
+  context '#default_schema' do
+    subject { importer.send(:default_schema) }
+    it { is_expected.to respond_to(:call) }
+  end
 
   it 'validates the data against the schema' do
     subject

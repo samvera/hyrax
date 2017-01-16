@@ -268,10 +268,9 @@ describe 'collection', type: :feature do
       (0..12).map do
         create(:work, member_of_collections: [collection], user: user)
       end
+      sign_in user
     end
     let(:collection) { create(:named_collection, user: user) }
-
-    before { sign_in user }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/collections'

@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
   routes { Hyrax::Engine.routes }
   before do
     sign_in create(:user)
+    allow(Hyrax::Forms::PermissionTemplateForm).to receive(:new).with(permission_template).and_return(form)
   end
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }
 
@@ -19,9 +20,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
   end
 
   let(:form) { instance_double(Hyrax::Forms::PermissionTemplateForm) }
-  before do
-    allow(Hyrax::Forms::PermissionTemplateForm).to receive(:new).with(permission_template).and_return(form)
-  end
 
   context "when signed in as an admin" do
     describe "update participants" do

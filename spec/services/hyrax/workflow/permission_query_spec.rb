@@ -90,8 +90,8 @@ module Hyrax
                                       message: 'should be unauthorized because the action is not available in this state'
 
           # Then transition to Sipity::Entity
-          sipity_entity.update_attribute(
-            :workflow_state, PowerConverter.convert_to_sipity_workflow_state('forwarded', scope: sipity_workflow)
+          sipity_entity.update!(
+            workflow_state: PowerConverter.convert_to_sipity_workflow_state('forwarded', scope: sipity_workflow)
           )
 
           # Now permissions have changed
@@ -136,8 +136,8 @@ module Hyrax
                                       message: 'should be unauthorized because the action is not available in this state'
 
           # Then transition to Sipity::Entity
-          sipity_entity.update_attribute(
-            :workflow_state, PowerConverter.convert_to_sipity_workflow_state('forwarded', scope: sipity_workflow)
+          sipity_entity.update!(
+            workflow_state: PowerConverter.convert_to_sipity_workflow_state('forwarded', scope: sipity_workflow)
           )
 
           # Now permissions have changed
