@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'hyrax/base/relationships', type: :view do
   let(:ability) { double }
-  let(:solr_doc) { instance_double(SolrDocument, id: '123', human_readable_type: 'Work') }
+  let(:solr_doc) { instance_double(SolrDocument, id: '123', human_readable_type: 'Work', admin_set: nil) }
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_doc, ability) }
   let(:generic_work) do
     Hyrax::WorkShowPresenter.new(
@@ -105,6 +105,14 @@ describe 'hyrax/base/relationships', type: :view do
     it "does not show the empty messages" do
       expect(page).not_to have_content "There are no Collection relationships."
       expect(page).not_to have_content "There are no Generic work relationships."
+    end
+  end
+
+  context "admin sets" do
+    it "will render through the attribute_to_html" do
+      allow(solr_doc).to receive(:member_of_collection_ids).and_return([])
+      expect(presenter).to receive(:attribute_to_html).with(:admin_set, render_as: :faceted)
+      render 'hyrax/base/relationships', presenter: presenter
     end
   end
 end
