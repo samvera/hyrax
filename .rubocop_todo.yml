@@ -16,15 +16,6 @@ Metrics/BlockLength:
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/**/*'
 
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'app/services/hyrax/file_set_audit_service.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - 'app/services/hyrax/file_set_audit_service.rb'
-
 Metrics/ClassLength:
   Exclude:
     - 'app/presenters/hyrax/work_show_presenter.rb'
@@ -44,7 +35,6 @@ Metrics/AbcSize:
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -72,7 +62,6 @@ Metrics/MethodLength:
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'lib/generators/hyrax/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/hyrax/install_generator.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
     - 'lib/hyrax/configuration.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
