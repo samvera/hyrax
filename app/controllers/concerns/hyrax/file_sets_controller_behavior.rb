@@ -62,26 +62,10 @@ module Hyrax
 
     # routed to /files/:id (PUT)
     def update
-      success = if wants_to_revert?
-                  actor.revert_content(params[:revision])
-                elsif params.key?(:file_set)
-                  if params[:file_set].key?(:files)
-                    actor.update_content(params[:file_set][:files].first)
-                  else
-                    update_metadata
-                  end
-                end
-      if success
+      if attempt_update
         after_update_response
       else
-        respond_to do |wants|
-          wants.html do
-            initialize_edit_form
-            flash[:error] = "There was a problem processing your request."
-            render 'edit', status: :unprocessable_entity
-          end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-        end
+        after_update_failure_response
       end
     rescue RSolr::Error::Http => error
       flash[:error] = error.message
@@ -104,13 +88,7 @@ module Hyrax
         return render_json_response(response_type: :bad_request, options: { message: 'Error! No file to save' }) unless params.key?(:file_set) && params.fetch(:file_set).key?(:files)
 
         file = params[:file_set][:files].detect { |f| f.respond_to?(:original_filename) }
-        if !file
-          render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
-        elsif empty_file?(file)
-          render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('hyrax.api.unprocessable_entity.empty_file') })
-        else
-          process_file(file)
-        end
+        process_file_for_create_from_upload(file)
       rescue RSolr::Error::Http => error
         logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
         render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
@@ -119,10 +97,55 @@ module Hyrax
         file.tempfile.delete if file.respond_to?(:tempfile)
       end
 
+      def process_file_for_create_from_upload(file)
+        if !file
+          render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
+        elsif empty_file?(file)
+          render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('hyrax.api.unprocessable_entity.empty_file') })
+        else
+          update_metadata_from_upload_screen
+          actor.create_metadata(find_parent_by_id, params[:file_set])
+          if actor.create_content(file)
+            response_for_successfully_processed_file
+          else
+            msg = curation_concern.errors.full_messages.join(', ')
+            flash[:error] = msg
+            json_error "Error creating file #{file.original_filename}: #{msg}"
+          end
+        end
+      end
+
+      def response_for_successfully_processed_file
+        respond_to do |format|
+          format.html do
+            if request.xhr?
+              render 'jq_upload', formats: 'json', content_type: 'text/html'
+            else
+              redirect_to [main_app, curation_concern.parent]
+            end
+          end
+          format.json do
+            render 'jq_upload', status: :created, location: polymorphic_path([main_app, curation_concern])
+          end
+        end
+      end
+
       # this is provided so that implementing application can override this behavior and map params to different attributes
       def update_metadata
         file_attributes = form_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
+      end
+
+      def attempt_update
+        if wants_to_revert?
+          actor.revert_content(params[:revision])
+        elsif params.key?(:file_set)
+          if params[:file_set].key?(:files)
+            actor.update_content(params[:file_set][:files].first)
+          else
+            update_metadata
+          end
+        end
       end
 
       def after_update_response
@@ -134,6 +157,17 @@ module Hyrax
             @presenter = show_presenter.new(curation_concern, current_ability)
             render :show, status: :ok, location: polymorphic_path([main_app, curation_concern])
           end
+        end
+      end
+
+      def after_update_failure_response
+        respond_to do |wants|
+          wants.html do
+            initialize_edit_form
+            flash[:error] = "There was a problem processing your request."
+            render 'edit', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
         end
       end
 
@@ -201,29 +235,6 @@ module Hyrax
 
       def empty_file?(file)
         (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
-      end
-
-      def process_file(file)
-        update_metadata_from_upload_screen
-        actor.create_metadata(find_parent_by_id, params[:file_set])
-        if actor.create_content(file)
-          respond_to do |format|
-            format.html do
-              if request.xhr?
-                render 'jq_upload', formats: 'json', content_type: 'text/html'
-              else
-                redirect_to [main_app, curation_concern.parent]
-              end
-            end
-            format.json do
-              render 'jq_upload', status: :created, location: polymorphic_path([main_app, curation_concern])
-            end
-          end
-        else
-          msg = curation_concern.errors.full_messages.join(', ')
-          flash[:error] = msg
-          json_error "Error creating file #{file.original_filename}: #{msg}"
-        end
       end
 
       # this is provided so that implementing application can override this behavior and map params to different attributes

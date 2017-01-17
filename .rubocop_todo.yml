@@ -18,13 +18,11 @@ Metrics/BlockLength:
 
 Metrics/CyclomaticComplexity:
   Exclude:
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/services/hyrax/file_set_audit_service.rb'
     - 'lib/hyrax/arkivo/metadata_munger.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/services/hyrax/file_set_audit_service.rb'
 
 Metrics/ClassLength:
@@ -42,7 +40,6 @@ Metrics/ParameterLists:
 Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/hyrax/admin/depositor_stats.rb'
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
@@ -66,7 +63,6 @@ Metrics/MethodLength:
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
     - 'app/helpers/hyrax/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
