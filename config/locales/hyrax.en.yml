@@ -594,6 +594,8 @@ en:
       default:
         deposit: "Deposit"
       unauthorized: "The work is not currently available because it has not yet completed the approval process"
+      load:
+        state_error: "The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!"
     works:
       new:
         header: "Add New %{type}"
