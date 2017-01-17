@@ -51,6 +51,7 @@ require 'support/speedup'
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
+require 'i18n/debug' unless ENV['TRAVIS']
 require 'byebug' unless ENV['TRAVIS']
 
 Capybara.default_driver = :rack_test      # This is a faster driver
