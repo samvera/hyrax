@@ -12,48 +12,42 @@ module Hyrax
     class MetadataMunger
       def initialize(metadata)
         @metadata = metadata
+        @munged = {}
       end
 
+      # @return [Hash]
       def call
-        munged = {}
-
-        # First, normalize camelCase symbols to underscore strings
-        @metadata.each do |key, value|
-          munged[key.to_s.underscore] = Array.wrap(value)
-        end
-
-        # Then, rename the url key to related_url
-        munged['related_url'] = munged.delete('url') if munged['url']
-
-        # Then, rename the tags key to keyword
-        munged['keyword'] = munged.delete('tags') if munged['tags']
-
-        # Then, normalize creator names
-        munged_creators = munged['creators'].each do |entry|
-          next if entry['name']
-          entry['name'] = "#{entry.delete('lastName')}, #{entry.delete('firstName')}".strip
-        end
-
-        # Then, parse creators and contributors out
-        creator_names, contributor_names = split_creators_and_contributors(munged_creators)
-        munged['creator'] = creator_names unless creator_names.blank?
-        munged['contributor'] = contributor_names unless contributor_names.blank?
-
-        # And remove the original creators array
-        munged.delete('creators') if munged['creators']
-        munged
+        normalize_keys_and_values
+        rename_key(from: 'url', to: 'related_url')
+        rename_key(from: 'tags', to: 'keyword')
+        extract_creator_and_contributor_from_creators
+        @munged
       end
 
       private
 
-        def split_creators_and_contributors(list_of_creators)
-          creators = []
-          contributors = []
-          list_of_creators.each do |creator|
-            creators << creator['name'] if Hyrax::Arkivo::CREATOR_TYPES.include? creator['creatorType']
-            contributors << creator['name'] if Hyrax::Arkivo::CONTRIBUTOR_TYPES.include? creator['creatorType']
+        def normalize_keys_and_values
+          # First, normalize camelCase symbols to underscore strings
+          @metadata.each do |key, value|
+            @munged[key.to_s.underscore] = Array.wrap(value)
           end
-          [creators, contributors]
+        end
+
+        def rename_key(from:, to:)
+          @munged[to] = @munged.delete(from) if @munged.key?(from)
+        end
+
+        def extract_creator_and_contributor_from_creators
+          creator_names = []
+          contributor_names = []
+          @munged['creators'].each do |entry|
+            entry['name'] ||= "#{entry.delete('lastName')}, #{entry.delete('firstName')}".strip
+            creator_names << entry['name'] if Hyrax::Arkivo::CREATOR_TYPES.include?(entry['creatorType'])
+            contributor_names << entry['name'] if Hyrax::Arkivo::CONTRIBUTOR_TYPES.include?(entry['creatorType'])
+          end
+          @munged['creator'] = creator_names if creator_names.present?
+          @munged['contributor'] = contributor_names if contributor_names.present?
+          @munged.delete('creators')
         end
     end
   end
