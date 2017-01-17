@@ -33,7 +33,7 @@ module Hyrax
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       documents.map do |doc|
-        [doc, counts[doc.id]]
+        [doc, counts[doc.id].to_i]
       end
     end
 
