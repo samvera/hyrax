@@ -72,8 +72,8 @@ RSpec.describe Hyrax::AdminSetService do
                                                                   "facet.field" => "isPartOf_ssim" }).and_return(results)
     end
 
-    it "returns rows with document in the first column and count in the second column" do
-      expect(subject).to eq [[doc1, 8], [doc2, 2], [doc3, nil]]
+    it "returns rows with document in the first column and integer count value in the second column" do
+      expect(subject).to eq [[doc1, 8], [doc2, 2], [doc3, 0]]
     end
   end
 
