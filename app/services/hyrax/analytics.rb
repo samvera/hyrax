@@ -18,8 +18,8 @@ module Hyrax
 
     class Config
       def self.load_from_yaml
-        filename = File.join(Rails.root, 'config', 'analytics.yml')
-        yaml = YAML.load(File.read(filename))
+        filename = Rails.root.join('config', 'analytics.yml')
+        yaml = YAML.safe_load(File.read(filename))
         unless yaml
           Rails.logger.error("Unable to fetch any keys from #{filename}.")
           return new({})

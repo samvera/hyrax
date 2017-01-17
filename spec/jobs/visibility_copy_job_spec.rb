@@ -24,9 +24,6 @@ describe VisibilityCopyJob do
       expect(work.visibility).to eq 'restricted'
       expect(work).to be_under_embargo
       expect(work.file_sets.first).not_to be_under_embargo
-    end
-
-    before do
       described_class.perform_now(work)
       work.reload
     end
@@ -45,9 +42,6 @@ describe VisibilityCopyJob do
       expect(work.visibility).to eq 'open'
       expect(work).to be_active_lease
       expect(work.file_sets.first).not_to be_active_lease
-    end
-
-    before do
       described_class.perform_now(work)
       work.reload
     end

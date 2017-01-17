@@ -6,7 +6,7 @@ module Hyrax
       # Load all the workflows in config/workflows/*.json
       # @return [TrueClass]
       def self.load_workflows
-        Dir.glob(Rails.root + "config/workflows/*.json") do |config|
+        Dir.glob(Rails.root.join('config', 'workflows', '*.json')) do |config|
           Rails.logger.info "Loading workflow: #{config}"
           generate_from_json_file(path: config)
         end

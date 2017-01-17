@@ -62,7 +62,7 @@ module Hyrax::Controller
     # on raising an ActiveRecord::RecordNotFound. Rails.root IS needed
     # for it to work under testing, without worrying about CWD.
     def render_404
-      render file: "#{Rails.root}/public/404.html", status: :not_found, layout: false
+      render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
     end
 
     # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught

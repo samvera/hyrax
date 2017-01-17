@@ -21,13 +21,13 @@ module Hyrax
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
-      @derivatives_path ||= File.join(Rails.root, 'tmp', 'derivatives')
+      @derivatives_path ||= Rails.root.join('tmp', 'derivatives')
     end
 
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :working_path
     def working_path
-      @working_path ||= File.join(Rails.root, 'tmp', 'uploads')
+      @working_path ||= Rails.root.join('tmp', 'uploads')
     end
 
     attr_writer :enable_ffmpeg

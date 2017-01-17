@@ -25,7 +25,7 @@ module Hyrax
 
         def update_sipity_workflow_state
           return true unless action.resulting_workflow_state_id.present?
-          subject.entity.update_attribute(:workflow_state_id, action.resulting_workflow_state_id)
+          subject.entity.update!(workflow_state_id: action.resulting_workflow_state_id)
         end
 
         def create_sipity_comment

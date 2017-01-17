@@ -52,7 +52,7 @@ module Hyrax
         end
 
         def download_dir
-          @download_dir ||= File.join(Rails.root, 'tmp')
+          @download_dir ||= Rails.root.join('tmp')
           FileUtils.mkdir_p @download_dir
           @download_dir
         end

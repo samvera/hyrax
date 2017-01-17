@@ -1,4 +1,9 @@
 require: rubocop-rspec
+
+Security/MarshalLoad:
+  Exclude:
+    - 'app/models/concerns/hyrax/user.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'

@@ -3,9 +3,9 @@ describe Hyrax::HomepageController, type: :controller do
 
   describe "#index" do
     let(:user) { create(:user) }
-    before { sign_in user }
 
     before do
+      sign_in user
       2.times { create(:work, user: user) }
     end
 
