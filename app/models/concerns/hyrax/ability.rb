@@ -42,9 +42,9 @@ module Hyrax
 
       def uploaded_file_abilities
         return unless registered_user?
-        can :create, [UploadedFile, BatchUploadItem]
+        can :create, [UploadedFile, BatchUpload]
         can :destroy, UploadedFile, user: current_user
-        # BatchUploadItem permissions depend on the kind of objects being made by the batch,
+        # BatchUpload permissions depend on the kind of objects being made by the batch,
         # but it must be authorized directly in the controller, not here.
         # Note: cannot call `authorized_models` without going recursive.
       end
