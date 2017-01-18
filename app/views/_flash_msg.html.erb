@@ -1,13 +1,8 @@
-<% flash_types_to_classes = { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' } %>
-<% [:notice, :error, :alert].each do |type| %>
-  <% if flash[type] %>
-    <div class="alert <%= flash_types_to_classes[type] rescue '' %> alert-dismissable" role="alert">
+<% { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }.each do |type, flash_dom_class| %>
+  <% if flash[type].present? %>
+    <div class="alert <%= flash_dom_class %> alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <% if flash[type].respond_to? :join %>
-        <%= flash[type].join("<br/>").html_safe %>
-      <% else %>
-        <%= flash[type].html_safe %>
-      <% end %>
+      <%= safe_join(Array.wrap(flash[type]), '<br/>') %>
     </div>
     <% flash.delete(type) %>
   <% end %>
