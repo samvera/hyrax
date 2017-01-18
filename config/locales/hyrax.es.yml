@@ -3,9 +3,11 @@ es:
     search:
       fields:
         show:
+          admin_set: "En Conjunto Administrativo:"
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+
   helpers:
     action:
       admin_set:
