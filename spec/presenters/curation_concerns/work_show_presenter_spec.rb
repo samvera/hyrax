@@ -81,6 +81,16 @@ describe CurationConcerns::WorkShowPresenter do
       expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
     end
 
+    context "solr query" do
+      before do
+        expect(ActiveFedora::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
+      end
+
+      it "requests >10 rows" do
+        presenter.file_set_presenters
+      end
+    end
+
     context "when some of the members are not file sets" do
       let(:another_work) { create(:work) }
       before do
