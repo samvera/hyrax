@@ -30,7 +30,6 @@ Metrics/ParameterLists:
 
 Metrics/AbcSize:
   Exclude:
-    - 'app/controllers/concerns/hyrax/admin/depositor_stats.rb'
     - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
