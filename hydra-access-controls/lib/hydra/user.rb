@@ -15,11 +15,11 @@ module Hydra::User
   end
   
   module ClassMethods
-    # This method should find User objects using the user_key you've chosen.
-    # By default, uses the unique identifier specified in by devise authentication_keys (ie. find_by_id, or find_by_email).  
-    # You must have that find method implemented on your user class, or must override find_by_user_key
+    # This method finds User objects using the user_key as specified by the
+    # Devise authentication_keys configuration variable. This method encapsulates
+    # whether we use email or username (or something else) as the identifing user attribute.
     def find_by_user_key(key)
-      self.send("find_by_#{Devise.authentication_keys.first}".to_sym, key)
+      find_by(Devise.authentication_keys.first.to_sym => key)
     end
   end
 end
