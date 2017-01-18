@@ -4,6 +4,8 @@ module Hyrax
 
     def index
       @operations = @operations.where(parent_id: nil)
+                               .order(updated_at: :desc)
+                               .page(params[:page])
     end
 
     def show; end
