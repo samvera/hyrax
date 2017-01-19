@@ -4,20 +4,28 @@
 <% end %>
 
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-sm-6">
+    <%= page_entries_info @operations %>
     <table class="table">
       <thead>
         <th>Operation Type</th>
         <th>Status</th>
+        <th>Updated</th>
       </thead>
       <tbody>
         <% @operations.each do |op| %>
           <tr>
             <td><%= link_to op.operation_type, hyrax.user_operation_path(params[:user_id], op) %></td>
             <td><span class="label <%= op.status == 'failure' ? 'label-danger' : 'label-success' %>"><%= op.status %></span></td>
+            <td>
+              <relative-time datetime="<%= op.updated_at.getutc.iso8601 %>" title="<%= op.updated_at.to_formatted_s(:standard) %>">
+                <%= op.updated_at.to_formatted_s(:long_ordinal) %>
+              </relative-time>
+            </td>
           </tr>
         <% end %>
       </tbody>
     </table>
+    <%= paginate @operations %>
   </div>
 </div>
