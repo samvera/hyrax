@@ -12,10 +12,6 @@ module Hyrax::UsersControllerBehavior
 
   def index
     @users = search(params[:uq])
-    respond_to do |format|
-      format.html
-      format.json { render json: @users.to_json }
-    end
   end
 
   # Display user profile

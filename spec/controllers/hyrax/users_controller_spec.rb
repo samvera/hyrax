@@ -50,11 +50,13 @@ describe Hyrax::UsersController, type: :controller do
     end
 
     describe "requesting json" do
+      render_views
+
       it "displays users" do
         get :index, params: { format: :json }
         expect(response).to be_successful
-        json = JSON.parse(response.body)
-        expect(json.map { |u| u['id'] }).to include(u1.email, u2.email)
+        json = JSON.parse(response.body).fetch('users')
+        expect(json.map { |u| u['id'] }).to include(u1.id, u2.id)
         expect(json.map { |u| u['text'] }).to include(u1.email, u2.email)
       end
     end
