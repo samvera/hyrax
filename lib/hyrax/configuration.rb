@@ -8,16 +8,6 @@ module Hyrax
       @registered_concerns = []
     end
 
-    # An anonymous function that receives a path to a file
-    # and returns AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE if no
-    # virus is found; Any other returned value means a virus was found
-    attr_writer :default_antivirus_instance
-    def default_antivirus_instance
-      @default_antivirus_instance ||= lambda do |_file_path|
-        AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE
-      end
-    end
-
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
