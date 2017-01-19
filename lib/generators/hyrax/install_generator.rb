@@ -25,6 +25,7 @@ module Hyrax
   15. Installs Blacklight gallery (and removes it's scss)
   16. Runs the jquery-datatables generator
   17. Initializes the active-fedora_noid database-backed minter
+  18. Adds configuration to config/application.rb to fix tinymce asset compiling
          """
 
     def run_required_generators
@@ -150,6 +151,16 @@ module Hyrax
 
     def af_noid_database_minter_initialize
       generate 'active_fedora:noid:install'
+    end
+
+    def inject_tinymce_fix
+      file_path = "config/application.rb"
+      insert_into_file file_path, after: /Rails::Application\s*\n/ do
+        "\n      # The compile method (default in tinymce-rails 4.5.2) doesn't work when also" \
+        "\n      # using tinymce-rails-imageupload, so revert to the :copy method" \
+        "\n      # https://github.com/spohlenz/tinymce-rails/issues/183" \
+        "\n      config.tinymce.install = :copy\n"
+      end
     end
   end
 end
