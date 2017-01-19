@@ -54,7 +54,6 @@ Metrics/MethodLength:
     - 'app/helpers/hyrax/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/inputs/multi_value_select_input.rb'
-    - 'app/models/concerns/hyrax/file_set/derivatives.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'lib/generators/hyrax/templates/migrations/create_local_authorities.rb'
