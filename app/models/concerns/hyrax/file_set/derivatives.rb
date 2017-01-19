@@ -4,76 +4,55 @@ module Hyrax
       extend ActiveSupport::Concern
 
       included do
+        # TODO: These should be moved to an initializer. However, there is a timing bug in place.
+        #       If the following Hydra::Derivatives configuration is moved to an initializer, then the
+        #       Hydra::Works configuration (https://github.com/projecthydra/hydra-works/blob/d0e87d017c20ffbecbaeda8c09b376747b9cdebc/lib/hydra/works/models/concerns/file_set/derivatives.rb) obliterates
+        #       our new configuration. This manifests as the following errors:
+        #
+        #       The following errors were encountered by moving the following class variables
+        #       Failures:
+        #
+        #       1) IngestFileJob with two existing versions from different users has two versions
+        #          Failure/Error: yield ::File.open(file_name)
+        #
+        #          KeyError:
+        #            key not found: :object
+        #          # ./app/services/hyrax/local_file_service.rb:7:in `call'
+        #          # ./app/services/hyrax/file_set_derivatives_service.rb:60:in `create_image_derivatives'
+        #          # ./app/services/hyrax/file_set_derivatives_service.rb:24:in `create_derivatives'
+        #          # ./app/models/concerns/hyrax/file_set/derivatives.rb:11:in `create_derivatives'
+        #          # ./app/jobs/create_derivatives_job.rb:11:in `perform'
+        #          # ./app/jobs/characterize_job.rb:15:in `perform'
+        #          # ./app/jobs/ingest_file_job.rb:35:in `perform'
+        #          # ./spec/jobs/ingest_file_job_spec.rb:61:in `block (3 levels) in <top (required)>'
+        #
+        #       2) CreateDerivativesJob with a pdf file searches the extracted content
+        #          Failure/Error: yield ::File.open(file_name)
+        #
+        #          KeyError:
+        #            key not found: :object
+        #          # ./app/services/hyrax/local_file_service.rb:7:in `call'
+        #          # ./app/services/hyrax/file_set_derivatives_service.rb:31:in `create_pdf_derivatives'
+        #          # ./app/services/hyrax/file_set_derivatives_service.rb:20:in `create_derivatives'
+        #          # ./app/models/concerns/hyrax/file_set/derivatives.rb:11:in `create_derivatives'
+        #          # ./app/jobs/create_derivatives_job.rb:11:in `perform'
+        #          # ./spec/jobs/create_derivatives_job_spec.rb:88:in `block (3 levels) in <top (required)>'
+        #          # ./spec/jobs/create_derivatives_job_spec.rb:7:in `block (2 levels) in <top (required)>'
+        #
         Hydra::Derivatives.source_file_service = Hyrax::LocalFileService
         Hydra::Derivatives.output_file_service = Hyrax::PersistDerivatives
         Hydra::Derivatives::FullTextExtract.output_file_service = Hyrax::PersistDirectlyContainedOutputFileService
         after_destroy :cleanup_derivatives
-      end
-
-      # This completely overrides the version in Hydra::Works so that we
-      # read and write to a local file. It's important that characterization runs
-      # before derivatives so that we have a credible mime_type field to work with.
-      def create_derivatives(filename)
-        case mime_type
-        when *self.class.pdf_mime_types             then create_pdf_derivatives(filename)
-        when *self.class.office_document_mime_types then create_office_document_derivatives(filename)
-        when *self.class.audio_mime_types           then create_audio_derivatives(filename)
-        when *self.class.video_mime_types           then create_video_derivatives(filename)
-        when *self.class.image_mime_types           then create_image_derivatives(filename)
-        end
+        # This completely overrides the version in Hydra::Works so that we
+        # read and write to a local file. It's important that characterization runs
+        # before derivatives so that we have a credible mime_type field to work with.
+        delegate :cleanup_derivatives, :create_derivatives, to: :file_set_derivatives_service
       end
 
       private
 
-        def create_pdf_derivatives(filename)
-          Hydra::Derivatives::PdfDerivatives.create(filename,
-                                                    outputs: [{ label: :thumbnail, format: 'jpg', size: '338x493', url: derivative_url('thumbnail') }])
-          Hydra::Derivatives::FullTextExtract.create(filename,
-                                                     outputs: [{ url: uri, container: "extracted_text" }])
-        end
-
-        def create_office_document_derivatives(filename)
-          Hydra::Derivatives::DocumentDerivatives.create(filename,
-                                                         outputs: [{ label: :thumbnail, format: 'jpg',
-                                                                     size: '200x150>',
-                                                                     url: derivative_url('thumbnail') }])
-          Hydra::Derivatives::FullTextExtract.create(filename,
-                                                     outputs: [{ url: uri, container: "extracted_text" }])
-        end
-
-        def create_audio_derivatives(filename)
-          Hydra::Derivatives::AudioDerivatives.create(filename,
-                                                      outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3') },
-                                                                { label: 'ogg', format: 'ogg', url: derivative_url('ogg') }])
-        end
-
-        def create_video_derivatives(filename)
-          Hydra::Derivatives::VideoDerivatives.create(filename,
-                                                      outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail') },
-                                                                { label: 'webm', format: 'webm', url: derivative_url('webm') },
-                                                                { label: 'mp4', format: 'mp4', url: derivative_url('mp4') }])
-        end
-
-        def create_image_derivatives(filename)
-          Hydra::Derivatives::ImageDerivatives.create(filename,
-                                                      outputs: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: derivative_url('thumbnail') }])
-        end
-
-        # The destination_name parameter has to match up with the file parameter
-        # passed to the DownloadsController
-        def derivative_url(destination_name)
-          path = derivative_path_factory.derivative_path_for_reference(self, destination_name)
-          URI("file://#{path}").to_s
-        end
-
-        def cleanup_derivatives
-          derivative_path_factory.derivatives_for_reference(self).each do |path|
-            FileUtils.rm_f(path)
-          end
-        end
-
-        def derivative_path_factory
-          Hyrax::DerivativePath
+        def file_set_derivatives_service
+          @file_set_derivatives_service ||= Hyrax::FileSetDerivativesService.new(self)
         end
     end
   end
