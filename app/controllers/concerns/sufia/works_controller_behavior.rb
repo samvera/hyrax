@@ -9,8 +9,8 @@ module Sufia
     end
 
     module ClassMethods
-      # We don't want the breadcrumb action to occur until after the concern has
-      # been loaded and authorized
+      # We don't want the actions to occur until after the concern has been loaded and authorized
+      # @note this is a terribly side-effecty kludge
       def curation_concern_type=(curation_concern_type)
         super
         before_action :build_breadcrumbs, only: [:edit, :show]
@@ -62,13 +62,8 @@ module Sufia
       def after_update_response
         if permissions_changed? && curation_concern.file_sets.present?
           redirect_to sufia.confirm_access_curation_concerns_permission_path(curation_concern)
-        elsif curation_concern.visibility_changed? && curation_concern.file_sets.present?
-          redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
         else
-          respond_to do |wants|
-            wants.html { redirect_to [main_app, curation_concern] }
-            wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
-          end
+          super
         end
       end
 
