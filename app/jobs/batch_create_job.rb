@@ -28,7 +28,7 @@ class BatchCreateJob < ActiveJob::Base
       raise ArgumentError, 'attributes must include "model" => ClassName.to_s' unless model
       uploaded_files.each do |upload_id|
         title = [titles[upload_id]] if titles[upload_id]
-        resource_type = [resource_types[upload_id]] if resource_types[upload_id]
+        resource_type = Array(resource_types[upload_id]) if resource_types[upload_id]
         attributes = attributes.merge(uploaded_files: [upload_id],
                                       title: title,
                                       resource_type: resource_type)

@@ -65,5 +65,14 @@ describe BatchCreateJob do
         expect(log.reload.status).to eq 'failure'
       end
     end
+
+    context "when multiple resource types are passed" do
+      let(:resource_types) { { upload1.id.to_s => ['Image', 'Text'], upload2.id.to_s => ['Image', 'Text'] } }
+      it "sets them all on the record" do
+        subject
+        expect(GenericWork.last.reload.resource_type).to include 'Image'
+        expect(GenericWork.last.reload.resource_type).to include 'Text'
+      end
+    end
   end
 end
