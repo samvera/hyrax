@@ -9,8 +9,9 @@ Sufia = {
         this.permissions();
         this.notifications();
         this.transfers();
-        this.relationships_table();
-        this.file_manager_init();
+        this.relationshipsTable();
+        this.fileManager();
+        this.selectWorkType();
         this.datatable();
         this.admin();
     },
@@ -77,14 +78,21 @@ Sufia = {
         $("#proxy_deposit_request_transfer_to").userSearch();
     },
 
-    relationships_table: function () {
+    relationshipsTable: function () {
         var rel = require('sufia/relationships/table');
         $('table.relationships-ajax-enabled').each(function () {
             new rel.RelationshipsTable($(this));
         });
     },
 
-    file_manager_init: function () {
+    selectWorkType: function () {
+        var selectWork = require('sufia/select_work_type');
+        $("[data-behavior=select-work]").each(function () {
+            new selectWork($(this))
+        });
+    },
+
+    fileManager: function () {
         var fm = require('curation_concerns/file_manager');
         var file_manager = new fm
     },

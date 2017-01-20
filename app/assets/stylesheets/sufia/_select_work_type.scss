@@ -1,0 +1,43 @@
+.select-worktype:first-child {
+  border-top: none;
+}
+.select-worktype {
+  border-top: 1px solid $table-border-color;
+  padding: 10px;
+  
+  label {
+    margin: 0;
+    width: 100%;
+  }
+
+  input[type="radio"] {
+    float: left;
+    position: relative;
+    width: 10%;
+  }
+
+  .select-work-icon {
+    float: left;
+    font-size: 400%;
+    line-height: 1;
+    position: relative;
+    text-align: center;
+    width: 20%;
+
+    .fa {
+      vertical-align: top
+    }
+  }
+  .select-work-description {
+    float: left;
+    position: relative;
+    width: 70%;
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+}
+.new-work-select {
+  clear: both;
+}
