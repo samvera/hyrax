@@ -2,7 +2,7 @@ module Hyrax
   module Admin
     class WorkflowRolePresenter
       def users
-        ::User.where(guest: false)
+        ::User.registered
       end
 
       def presenter_for(user)

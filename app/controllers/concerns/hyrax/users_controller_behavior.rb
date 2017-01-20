@@ -70,9 +70,9 @@ module Hyrax::UsersControllerBehavior
       unless clause.blank?
         base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", clause, clause)
       end
-      base.where("#{Devise.authentication_keys.first} not in (?)",
+      base.registered
+          .where("#{Devise.authentication_keys.first} not in (?)",
                  [User.batch_user_key, User.audit_user_key])
-          .where(guest: false)
           .references(:trophies)
           .order(sort_value)
           .page(params[:page]).per(10)
