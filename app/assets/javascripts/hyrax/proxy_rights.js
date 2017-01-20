@@ -7,14 +7,14 @@
 
     var $container = this;
 
-    function addContributor(name, id, grantor) {
-      data = {name: name, id: id}
+    function addContributor(name, user_key, grantor) {
+      data = {name: name, user_key: user_key}
 
       $.ajax({
         type: "POST",
         url: '/users/'+grantor+'/depositors',
         dataType: 'json',
-        data: {grantee_id: id},
+        data: {grantee_key: user_key},
         success: function (data) {
           if (data.name !== undefined) {
             row = rowTemplate(data);
@@ -54,7 +54,7 @@
       obj = $("#user").select2("data")
       grantor = $('#user').data('grantor')
       $("#user").select2("val", '')
-      addContributor(obj.text, obj.id, grantor);
+      addContributor(obj.text, obj.user_key, grantor);
     });
 
     $('body').on('click', 'a.remove-proxy-button', removeContributor);

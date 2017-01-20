@@ -10,7 +10,7 @@ module Hyrax
 
     def create
       grantor = authorize_and_return_grantor
-      grantee = ::User.from_url_component(params[:grantee_id])
+      grantee = ::User.from_url_component(params[:grantee_key])
       if grantor.can_receive_deposits_from.include?(grantee)
         head :ok
       else
