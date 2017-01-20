@@ -11,7 +11,7 @@ RSpec.describe 'hyrax/dashboard/_create_work_action.html.erb', type: :view do
     let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
 
     it "renders the select template" do
-      expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
+      expect(rendered).to have_selector 'a[data-behavior="select-work"][data-target="#worktypes-to-create"][data-create-type="single"]'
       expect(rendered).to have_link('Create Work', href: '#')
     end
   end

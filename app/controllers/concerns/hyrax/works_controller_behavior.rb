@@ -47,13 +47,15 @@ module Hyrax
       def after_update_response
         if permissions_changed? && curation_concern.file_sets.present?
           redirect_to hyrax.confirm_access_permission_path(curation_concern)
-        elsif curation_concern.visibility_changed? && curation_concern.file_sets.present?
-          redirect_to hyrax.confirm_permission_path(curation_concern)
         else
-          respond_to do |wants|
-            wants.html { redirect_to [main_app, curation_concern] }
-            wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
-          end
+          super
+        end
+      end
+
+      def after_destroy_response(title)
+        respond_to do |wants|
+          wants.html { redirect_to dashboard_works_path, notice: "Deleted #{title}" }
+          wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
         end
       end
 

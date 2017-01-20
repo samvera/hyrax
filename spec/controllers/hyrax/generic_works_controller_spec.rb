@@ -445,7 +445,7 @@ describe Hyrax::GenericWorksController do
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
-      expect(response).to redirect_to main_app.search_catalog_path(locale: 'en')
+      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
@@ -457,7 +457,7 @@ describe Hyrax::GenericWorksController do
       it 'deletes the work and updates the parent collection' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to main_app.search_catalog_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
         expect(parent_collection.reload.members).to eq []
       end
     end

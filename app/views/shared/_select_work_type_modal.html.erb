@@ -2,38 +2,33 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="select-worktype-label"><%= t('hyrax.dashboard.heading_actions.select_type_of_work') %></h4>
       </div>
-      <div class="modal-body">
-        <table class="table">
+      <form class="new-work-select">
+        <div class="modal-body">
           <% create_work_presenter.each do |row_presenter| %>
-            <tr>
-              <td class="select-work-icon">
-                <%= link_to(new_polymorphic_path([main_app, row_presenter.concern]),
-                            class: "item-option contextual-quick-classify #{dom_class(row_presenter.concern, 'new').gsub('_', '-')}",
-                            role: 'menuitem'
-                    ) do %>
-                    <span class="<%= row_presenter.icon_class %>"></span>
-                <% end %>
-              </td>
-              <td class="select-work-description">
-                <%= link_to(new_polymorphic_path([main_app, row_presenter.concern]),
-                            class: "item-option contextual-quick-classify #{dom_class(row_presenter.concern, 'new').gsub('_', '-')}",
-                            role: 'menuitem'
-                    ) do %>
-                    <h3><%= row_presenter.name %></h3>
-                    <p><%= row_presenter.description %></p>
-                <% end %>
-              </td>
-            </tr>
+            <div class="select-worktype">
+              <label>
+                <input type="radio" name="payload_concern" value="<%= row_presenter.concern %>"
+                                                             data-single="<%= new_polymorphic_path([main_app, row_presenter.concern]) %>"
+                                                             data-batch="<%= hyrax.new_batch_upload_path(payload_concern: row_presenter.concern) %>">
+                <div class="select-work-icon">
+                  <span class="<%= row_presenter.icon_class %>"></span>
+                </div>
+                <div class="select-work-description">
+                  <h3><%= row_presenter.name %></h3>
+                  <p><%= row_presenter.description %></p>
+                </div>
+              </label>
+            </div>
           <% end %>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
-        <button type="button" class="btn btn-primary"><%= t('hyrax.dashboard.heading_actions.create_work') %></button>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
+          <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>">
+        </div>
+      </form>
     </div>
   </div>
 </div>

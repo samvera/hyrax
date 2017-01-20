@@ -1,6 +1,6 @@
 <% if create_work_presenter.many? %>
   <div class="col-xs-6 col-sm-3 heading-tile">
-    <%= link_to('#', data: { toggle: "modal", target: "#worktypes-to-create" }) do %>
+    <%= link_to('#', data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' }) do %>
       <span class="glyphicon glyphicon-upload"></span>
       <%= t("hyrax.dashboard.create_work") %>
     <% end %>
