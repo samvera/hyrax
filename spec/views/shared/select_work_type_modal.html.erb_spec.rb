@@ -26,9 +26,7 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
     expect(rendered).to have_selector '#worktypes-to-create.modal'
     expect(rendered).to have_content 'Generic Work'
     expect(rendered).to have_content 'Atlas'
-    expect(rendered).to have_link 'Create Work', class: ['new-generic-work', 'select-work-single'], href: '/concern/generic_works/new'
-    expect(rendered).to have_link 'Batch Create', class: ['new-generic-work', 'select-work-batch'], href: '/batch_uploads/new?payload_concern=GenericWork'
-    expect(rendered).to have_link 'Create Work', class: ['new-atlas', 'select-work-single'], href: '/concern/atlas/new'
-    expect(rendered).to have_link 'Batch Create', class: ['new-atlas', 'select-work-batch'], href: '/batch_uploads/new?payload_concern=Atlas'
+    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new"][data-batch="/batch_uploads/new?payload_concern=GenericWork"]'
+    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/atlas/new"][data-batch="/batch_uploads/new?payload_concern=Atlas"]'
   end
 end

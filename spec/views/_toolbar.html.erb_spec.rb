@@ -45,8 +45,11 @@ describe '/_toolbar.html.erb', type: :view do
       let(:presenter) { instance_double(Sufia::SelectTypeListPresenter, many?: true) }
       it "has a link to upload" do
         render
-        expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
+        expect(rendered).to have_selector 'a[data-behavior="select-work"][data-target="#worktypes-to-create"][data-create-type="single"]'
         expect(rendered).to have_link('New Work', href: '#')
+
+        expect(rendered).to have_selector 'a[data-behavior="select-work"][data-target="#worktypes-to-create"][data-create-type="batch"]'
+        expect(rendered).to have_link('Batch Create', href: '#')
       end
     end
 

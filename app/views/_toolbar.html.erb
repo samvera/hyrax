@@ -23,16 +23,27 @@
         <ul class="dropdown-menu">
           <li><%= link_to t("sufia.toolbar.works.my"), sufia.dashboard_works_path %></li>
           <% if create_work_presenter.many? %>
+            <% # launch the type selector modal %>
             <li>
               <%= link_to(
                     t("sufia.toolbar.works.new"),
                     '#',
-                    data: { toggle: "modal", target: "#worktypes-to-create" },
+                    data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+                    class: "item-option contextual-quick-classify",
+                    role: 'menuitem'
+                  ) %>
+            </li>
+            <li>
+              <%= link_to(
+                    t("sufia.toolbar.works.batch"),
+                    '#',
+                    data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'batch' },
                     class: "item-option contextual-quick-classify",
                     role: 'menuitem'
                   ) %>
             </li>
           <% else %>
+            <% # simple link to the first work type %>
             <li>
             <%= link_to(
                   t("sufia.toolbar.works.new"),

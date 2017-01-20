@@ -63,6 +63,7 @@
 //= require sufia/autocomplete/subject
 //= require sufia/autocomplete/language
 //= require sufia/relationships
+//= require sufia/select_work_type
 //= require curation_concerns/collections
 //= require hydra-editor/hydra-editor
 //= require nestable
