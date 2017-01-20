@@ -8,26 +8,16 @@ module Hyrax
       @registered_concerns = []
     end
 
-    # An anonymous function that receives a path to a file
-    # and returns AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE if no
-    # virus is found; Any other returned value means a virus was found
-    attr_writer :default_antivirus_instance
-    def default_antivirus_instance
-      @default_antivirus_instance ||= lambda do |_file_path|
-        AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE
-      end
-    end
-
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
-      @derivatives_path ||= File.join(Rails.root, 'tmp', 'derivatives')
+      @derivatives_path ||= Rails.root.join('tmp', 'derivatives')
     end
 
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :working_path
     def working_path
-      @working_path ||= File.join(Rails.root, 'tmp', 'uploads')
+      @working_path ||= Rails.root.join('tmp', 'uploads')
     end
 
     attr_writer :enable_ffmpeg
@@ -74,6 +64,11 @@ module Hyrax
     attr_writer :noid_template
     def noid_template
       @noid_template ||= '.reeddeeddk'
+    end
+
+    attr_writer :noid_minter_class
+    def noid_minter_class
+      @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
     end
 
     attr_writer :minter_statefile

@@ -98,6 +98,7 @@ describe Collection do
       class Member < ActiveFedora::Base
         include Hydra::Works::WorkBehavior
       end
+      collection.add_member_objects member.id
     end
     after do
       Object.send(:remove_const, :OtherCollection)
@@ -106,10 +107,6 @@ describe Collection do
 
     let(:member) { Member.create }
     let(:collection) { OtherCollection.create(title: ['test title']) }
-
-    before do
-      collection.add_member_objects member.id
-    end
 
     it "have members that know about the collection" do
       member.reload

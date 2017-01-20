@@ -29,6 +29,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
   * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
     * [Redis](#redis)
     * [Rails](#rails)
+    * [Message Queue](#message-queue)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
@@ -130,6 +131,28 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Running Hyrax's install generator, to add a number of files that Hyrax requires within your Rails app, including e.g. database migrations
 * Loading all of Hyrax's database migrations into your application's database
 * Loading Hyrax's default workflows into your application's database
+
+## Message Queue
+Many of the services performed by Hyrax are resource intensive, and therefore are well suited to running as background jobs that can be managed and executed by a Message Queue system. Examples include:
+* File ingest
+* Derivative generation
+* Characterization
+* Fixity
+* Solr indexing
+
+Hyrax implements these jobs using [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html), allowing you to choose the message queue system of your choice.
+
+For initial testing and development, it is recommended that you change the default ActiveJob adapter `:async` to `:inline`. This adapter will execute jobs immediately as they are received. This can be accomplished by adding the following to your `config/application.rb`
+
+```
+class Application < Rails::Application
+  # ...
+  config.active_job.queue_adapter = :inline
+  # ...
+end
+```
+
+**For production applications** you will want to setup a 3rd party system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
 
 ## Generate a primary work type
 

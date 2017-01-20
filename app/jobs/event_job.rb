@@ -9,7 +9,7 @@ class EventJob < ActiveJob::Base
   include Hydra::AccessControlsEnforcement
   include HyraxHelper
 
-  queue_as :event
+  queue_as Hyrax.config.ingest_queue_name
   attr_reader :depositor
 
   # @param [User] depositor the user to create the event for

@@ -1,4 +1,9 @@
 require: rubocop-rspec
+
+Security/MarshalLoad:
+  Exclude:
+    - 'app/models/concerns/hyrax/user.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'
@@ -10,17 +15,6 @@ Metrics/BlockLength:
     - 'lib/generators/hyrax/templates/config/initializers/simple_form_bootstrap.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/**/*'
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
-    - 'app/services/hyrax/file_set_audit_service.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
-    - 'app/services/hyrax/file_set_audit_service.rb'
 
 Metrics/ClassLength:
   Exclude:
@@ -36,13 +30,8 @@ Metrics/ParameterLists:
 
 Metrics/AbcSize:
   Exclude:
-    - 'app/controllers/concerns/hyrax/admin/depositor_stats.rb'
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
-    - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
-    - 'app/services/hyrax/user_stat_importer.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -61,7 +50,6 @@ Metrics/MethodLength:
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
     - 'app/helpers/hyrax/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
@@ -71,7 +59,6 @@ Metrics/MethodLength:
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'lib/generators/hyrax/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/hyrax/install_generator.rb'
-    - 'lib/hyrax/arkivo/metadata_munger.rb'
     - 'lib/hyrax/configuration.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
@@ -101,7 +88,7 @@ RSpec/NamedSubject:
   Enabled: false
 
 RSpec/ExampleLength:
-  Max: 7
+  Max: 9
   Exclude:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'

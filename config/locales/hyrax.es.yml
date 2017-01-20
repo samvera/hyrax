@@ -3,9 +3,11 @@ es:
     search:
       fields:
         show:
+          admin_set: "En Conjunto Administrativo:"
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+
   helpers:
     action:
       admin_set:
@@ -38,6 +40,11 @@ es:
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
           cancel:               "Cancelar"
+          permission_update_notices:
+            new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
+            visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
+            workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
+            participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
         form_participant_table:
           depositors:
             action:             "Acción"
@@ -89,8 +96,9 @@ es:
             restricted:         "Restringido -- todos los trabajos sólo serán visibles para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
             title:              "Visibilidad"
             varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
-        form_workflow: # TODO: verify text; added via google translate
+        form_workflow:
           page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
+          no_workflows:   "No hay flujos de trabajo que seleccionar."
           cancel:         "Cancelar"
         new:
           header:         "Crear nuevo conjunto Administrativo"
@@ -364,7 +372,7 @@ es:
           Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
           dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
     footer:
-      copyright_html: "<strong>Copyright &copy; 2016 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2017 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
       service_html: Un servicio de <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Proyecto Hydra</a>.
     help:
       header: "Soporte al Usuario"
@@ -607,6 +615,8 @@ es:
     workflow:
       default:
         deposit: "Depositar"
+      load:
+        state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
     works:
       edit:
         additional_fields: "Campos adicionales"

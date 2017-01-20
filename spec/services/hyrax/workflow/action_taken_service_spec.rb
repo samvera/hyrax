@@ -27,8 +27,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
     context "when the method exists" do
       around do |example|
         class FooBar
-          def self.call
-          end
+          def self.call; end
         end
         example.run
         Object.send(:remove_const, :FooBar)

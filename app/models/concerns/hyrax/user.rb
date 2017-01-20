@@ -22,6 +22,9 @@ module Hyrax::User
     has_many :deposit_rights_received, foreign_key: 'grantee_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_make_deposits_for, through: :deposit_rights_received, source: :grantor
 
+    scope :guests, ->() { where(guest: true) }
+    scope :registered, ->() { where(guest: false) }
+
     # Validate and normalize ORCIDs
     validates_with OrcidValidator
     after_validation :normalize_orcid

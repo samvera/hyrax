@@ -4,6 +4,8 @@ describe Hyrax::Arkivo::Actor do
   before do
     # Don't test characterization on these items; it breaks TravisCI and it's slow
     allow(CharacterizeJob).to receive(:perform_later)
+    allow(Hyrax::CurationConcern).to receive(:actor).and_return(work_actor)
+    allow(Hyrax::Actors::FileSetActor).to receive(:new).and_return(file_actor)
   end
 
   subject { described_class.new(user, item) }
@@ -22,10 +24,6 @@ describe Hyrax::Arkivo::Actor do
 
   let(:work_actor) { instance_double(Hyrax::Actors::ActorStack) }
   let(:file_actor) { double }
-  before do
-    allow(Hyrax::CurationConcern).to receive(:actor).and_return(work_actor)
-    allow(Hyrax::Actors::FileSetActor).to receive(:new).and_return(file_actor)
-  end
 
   describe '#create_work_from_item' do
     it 'creates a work and a file and returns a GenericWork' do

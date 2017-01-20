@@ -89,6 +89,10 @@ Rails/OutputSafety:
 Rails/DynamicFindBy:
   Enabled: false
 
+Rails/FilePath:
+  Exclude:
+    - 'spec/abilities/**/*'
+
 RSpec/DescribeClass:
   Exclude:
     - 'spec/abilities/**/*'
@@ -100,9 +104,16 @@ RSpec/DescribeClass:
     - 'spec/tasks/rake_spec.rb'
     - 'spec/views/**/*'
 
-RSpec/FilePath:
+# By default RSpec/MessageSpies has the following:
+#   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
+# The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
+RSpec/MessageSpies:
+  Enabled: true
+  EnforcedStyle: receive
   Exclude:
-    - 'spec/abilities/**/*'
+    - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
+    - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
+    - 'spec/services/hyrax/workflow/workflow_importer_spec.rb'
 
 RSpec/ExpectActual:
   Enabled: false

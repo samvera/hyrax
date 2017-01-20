@@ -1,6 +1,6 @@
 # Converts UploadedFiles into FileSets and attaches them to works.
 class AttachFilesToWorkJob < ActiveJob::Base
-  queue_as :ingest
+  queue_as Hyrax.config.ingest_queue_name
 
   # @param [ActiveFedora::Base] the work class
   # @param [Array<UploadedFile>] an array of files to attach

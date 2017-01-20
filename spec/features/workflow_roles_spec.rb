@@ -23,7 +23,7 @@ RSpec.describe "Manage workflow roles", type: :feature do
                   roles: ["approving"]
                 }
               ],
-              transition_to: "complete",
+              transition_to: "deposited",
               methods: [
                 "Hyrax::Workflow::ActivateObject"
               ]

@@ -15,7 +15,12 @@ en:
             participants:       "Participants"
             visibility:         "Release and Visibility"
             workflow:           "Workflow"
-          cancel:               "Cancel"  
+          cancel:               "Cancel"
+          permission_update_notices:
+            new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
+            visibility:         "The administrative set's visibilty settings have been updated."
+            workflow:           "The administrative set's workflow has been updated."
+            participants:       "The administrative set's participant rights have been updated"
         form_participants:
           add_group:            "Add group:"
           add_user:             "Add user:"
@@ -69,6 +74,7 @@ en:
           cancel:               "Cancel"
         form_workflow:
           page_description:     "Each administrative set has a workflow associated with it. This workflow is applied to all works added to the administrative set. Select the workflow to be used for this administrative set below."
+          no_workflows:         "There are no workflows to select."
           cancel:               "Cancel"
         show:
           header:           "Administrative Set"
@@ -340,7 +346,7 @@ en:
           you are a member of.  You may select a specific group and assign an access level for a file
           within %{application_name}, similarly to adding user access levels.
     footer:
-      copyright_html: "<strong>Copyright &copy; 2016 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; 2017 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
       service_html: A service of <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Project Hydra</a>.
     help:
       header: "User Support"
@@ -588,6 +594,8 @@ en:
       default:
         deposit: "Deposit"
       unauthorized: "The work is not currently available because it has not yet completed the approval process"
+      load:
+        state_error: "The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!"
     works:
       new:
         header: "Add New %{type}"
@@ -669,6 +677,7 @@ en:
     search:
       fields:
         show:
+          admin_set: "In Admin Set:"
           based_near: Location
           contributor: Contributors
           keyword: Keyword

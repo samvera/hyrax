@@ -5,10 +5,12 @@ RSpec.describe Hyrax::ResourceSync::CapabilityListWriter do
   let(:rs) { 'http://www.openarchives.org/rs/terms/' }
 
   let(:resource_list) { 'http://example.com/resourcelist.xml' }
+  let(:change_list) { 'http://example.com/changelist.xml' }
   let(:description) { 'http://example.com/resourcesync_description.xml' }
 
   subject do
     described_class.new(resource_list_url: resource_list,
+                        change_list_url: change_list,
                         description_url: description).write
   end
   let(:xml) { Nokogiri::XML.parse(subject) }
@@ -24,5 +26,10 @@ RSpec.describe Hyrax::ResourceSync::CapabilityListWriter do
     expect(url).to eq resource_list
     capability = xml.xpath('//x:url[1]/rs:md/@capability', 'x' => sitemap, 'rs' => rs).map(&:value)
     expect(capability).to eq ["resourcelist"]
+
+    url = xml.xpath('//x:url[2]/x:loc', 'x' => sitemap).text
+    expect(url).to eq change_list
+    capability = xml.xpath('//x:url[2]/rs:md/@capability', 'x' => sitemap, 'rs' => rs).map(&:value)
+    expect(capability).to eq ["changelist"]
   end
 end

@@ -37,8 +37,7 @@ RSpec.describe Hyrax::Workflow::NotificationService, :no_clean do
     context "when the notification exists" do
       around do |example|
         class ConfirmationOfSubmittedToUlraCommittee
-          def self.send_notification
-          end
+          def self.send_notification; end
         end
         example.run
         Object.send(:remove_const, :ConfirmationOfSubmittedToUlraCommittee)

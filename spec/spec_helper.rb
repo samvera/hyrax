@@ -28,6 +28,7 @@ EngineCart.load_application!
 require 'devise'
 require 'devise/version'
 require 'mida'
+require 'active_fedora/noid/rspec'
 require 'rails-controller-testing'
 require 'rspec/rails'
 require 'rspec/its'
@@ -39,6 +40,7 @@ require 'capybara/rails'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
+require 'support/controller_level_helpers'
 require 'support/features'
 require 'support/factory_helpers'
 require 'support/rake'
@@ -141,6 +143,8 @@ end
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
+  include ActiveFedora::Noid::RSpec
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
@@ -152,6 +156,11 @@ RSpec.configure do |config|
 
   config.before :suite do
     DatabaseCleaner.clean_with(:truncation)
+    disable_production_minter!
+  end
+
+  config.after :suite do
+    enable_production_minter!
   end
 
   config.before :each do |example|
@@ -168,6 +177,9 @@ RSpec.configure do |config|
       DatabaseCleaner.start
     end
   end
+
+  config.include(ControllerLevelHelpers, type: :view)
+  config.before(:each, type: :view) { initialize_controller_helpers(view) }
 
   config.before(:all, type: :feature) do
     # Assets take a long time to compile. This causes two problems:

@@ -71,6 +71,10 @@ module Hyrax
         audit_results = audit_file(file).collect { |result| result['pass'] }
         # check how many non runs we had
         non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum + 1 : sum }
+        build_audit_stat_message(audit_results, non_runs)
+      end
+
+      def build_audit_stat_message(audit_results, non_runs)
         if non_runs.zero?
           result = audit_results.reduce(true) { |sum, value| sum && value }
           stat_to_string(result)
@@ -81,6 +85,7 @@ module Hyrax
           'Audits have not yet been run on this file.'
         end
       end
+      private :build_audit_stat_message
 
       # Retrieve or generate the audit check for a specific version of a file
       # @param [String] file_id used to find the file within its parent object (usually "original_file")

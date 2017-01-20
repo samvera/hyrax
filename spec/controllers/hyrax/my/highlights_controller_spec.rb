@@ -7,6 +7,8 @@ describe Hyrax::My::HighlightsController, type: :controller do
       before do
         GenericWork.destroy_all
         Collection.destroy_all
+        user.trophies.create(work_id: highlighted_work.id)
+        other_user.trophies.create(work_id: unrelated_highlighted_work.id)
       end
 
       let(:other_user) { create(:user) }
@@ -17,11 +19,6 @@ describe Hyrax::My::HighlightsController, type: :controller do
           r.edit_users += [user.user_key]
           r.save!
         end
-      end
-
-      before do
-        user.trophies.create(work_id: highlighted_work.id)
-        other_user.trophies.create(work_id: unrelated_highlighted_work.id)
       end
 
       it "paginates" do

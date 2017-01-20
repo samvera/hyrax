@@ -17,7 +17,7 @@ RSpec.describe Hyrax::ControlledVocabulary::Importer::Language do
       'languages',
       [rdf_path],
       format: 'rdfxml',
-      predicate: RDF::Vocab::SKOS.prefLabel
+      predicate: RDF::URI('http://www.w3.org/2008/05/skos#prefLabel')
     )
     instance.import
   end

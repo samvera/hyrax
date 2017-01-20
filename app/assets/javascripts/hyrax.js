@@ -26,6 +26,12 @@
 //= require jquery.flot.selection
 //= require clipboard
 
+// I think this is primarily needed for testing with PhantomJS:
+//= require babel/polyfill
+// CustomElements polyfill is a dependency of time-elements
+//= require webcomponentsjs/0.5.4/CustomElements.min
+//= require time-elements
+
 //= require batch_edit
 //
 //= require hyrax/app
@@ -75,6 +81,3 @@
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit
-
-// I think this is primarily needed for testing with PhantomJS:
-//= require babel/polyfill

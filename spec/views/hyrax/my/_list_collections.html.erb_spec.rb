@@ -11,15 +11,9 @@ describe 'hyrax/my/_index_partials/_list_collections.html.erb', type: :view do
 
   let(:doc) { SolrDocument.new(attributes) }
   let(:collection) { mock_model(Collection) }
-  let(:config) { My::WorksController.blacklight_config }
-  let(:blacklight_configuration_context) do
-    Blacklight::Configuration::Context.new(controller)
-  end
 
   before do
     allow(view).to receive(:current_user).and_return(stub_model(User))
-    allow(view).to receive(:blacklight_config) { config }
-    allow(view).to receive(:blacklight_configuration_context).and_return(blacklight_configuration_context)
     allow(doc).to receive(:to_model).and_return(stub_model(Collection, id: id))
     view.lookup_context.prefixes.push 'hyrax/my'
 

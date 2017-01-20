@@ -23,7 +23,7 @@ module Hyrax
             'languages',
             [rdf_path],
             format: 'rdfxml',
-            predicate: RDF::Vocab::SKOS.prefLabel
+            predicate: RDF::URI('http://www.w3.org/2008/05/skos#prefLabel')
           )
           logger.info "Import complete"
         end
@@ -52,7 +52,7 @@ module Hyrax
         end
 
         def download_dir
-          @download_dir ||= File.join(Rails.root, 'tmp')
+          @download_dir ||= Rails.root.join('tmp')
           FileUtils.mkdir_p @download_dir
           @download_dir
         end

@@ -19,9 +19,6 @@ describe Hyrax::Actors::FileSetActor do
 
     before do
       allow(DateTime).to receive(:current).and_return(date_today)
-    end
-
-    before do
       expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata

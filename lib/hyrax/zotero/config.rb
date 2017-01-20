@@ -5,7 +5,7 @@ module Hyrax
     end
 
     def self.reload_config!
-      @config = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'zotero.yml'))).result)['zotero']
+      @config = YAML.safe_load(ERB.new(IO.read(Rails.root.join('config', 'zotero.yml'))).result)['zotero']
     end
 
     def self.publications_url(zotero_userid)
