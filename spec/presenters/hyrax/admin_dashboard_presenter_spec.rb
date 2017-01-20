@@ -4,8 +4,11 @@ RSpec.describe Hyrax::AdminDashboardPresenter do
   let(:instance) { described_class.new }
 
   describe "#user_count" do
-    let!(:user1) { create(:user) }
-    let!(:user2) { create(:user) }
+    before do
+      create(:user)
+      create(:user)
+      create(:user, :guest)
+    end
 
     subject { instance.user_count }
 
