@@ -70,8 +70,9 @@ describe BatchCreateJob do
       let(:resource_types) { { upload1.id.to_s => ['Image', 'Text'], upload2.id.to_s => ['Image', 'Text'] } }
       it "sets them all on the record" do
         subject
-        expect(GenericWork.last.reload.resource_type).to include 'Image'
-        expect(GenericWork.last.reload.resource_type).to include 'Text'
+        resource_types = GenericWork.last.reload.resource_type
+        expect(resource_types).to include 'Image'
+        expect(resource_types).to include 'Text'
       end
     end
   end
