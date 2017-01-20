@@ -44,49 +44,7 @@ Hyrax uses the full power of [Hydra](http://projecthydra.org/) and extends it to
 
 ## Feature list
 
-Hyrax has the following features:
-
-* Multiple file upload, and folder uploads (for Chrome browser only)
-* Flexible user- and group-based access controls
-* Transcoding of audio and video files
-* Generation and validation of identifiers
-* Generation of derivatives (served from the filesystem, not the repository)
-* Fixity checking
-* Version control
-* Characterization of uploaded files
-* Forms for batch editing metadata
-* Faceted search and browse
-* Social media interaction
-* User profiles
-* User dashboard for file management
-* Highlighted files on profile
-* Sharing w/ groups and users
-* User notifications
-* Activity streams
-* Background jobs
-* Single-use links
-* Google Analytics for usage statistics
-* Integration w/ cloud storage providers
-* Google Scholar-specific metadata embedding
-* Schema.org microdata, Open Graph meta tags, and Twitter cards for rich snippets
-* User-managed collections for grouping files
-* Full-text indexing & searching
-* Responsive, fluid, Bootstrap 3-based UI
-* Dynamically configurable featured works and researchers on homepage
-* Proxy deposit and transfers of ownership
-* Integration with Zotero for automatic population of user content
-* Suggested values from controlled vocabularies provided by [Questioning Authority](https://github.com/projecthydra-labs/questioning_authority)
-* [ResourceSync](http://www.openarchives.org/rs/1.0/resourcesync) capability lists and resource lists
-* Administrative sets (curated collections)
-* Administrative dashboard, w/ feature flippers to turn features on and off in the UI
-* Contact form
-* Customizable banner image
-* Flexible object model: upload and manage single-file works, multi-file works, zero-file works, and works-within-works
-* Geonames integration for location-oriented metadata fields
-* Virus detection for uploaded files
-* Citation formatting suggestions
-
-See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn which features listed above are turned on by default and which require configuration.
+Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/projecthydra/sufia/wiki/Feature-matrix). See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn more.
 
 For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyrax.projecthydra.org/).
 

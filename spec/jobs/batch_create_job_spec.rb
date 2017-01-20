@@ -9,7 +9,7 @@ describe BatchCreateJob do
     let(:upload2) { Hyrax::UploadedFile.create(user: user, file: file2) }
     let(:title) { { upload1.id.to_s => 'File One', upload2.id.to_s => 'File Two' } }
     let(:resource_types) { { upload1.id.to_s => 'Article', upload2.id.to_s => 'Image' } }
-    let(:metadata) { { keyword: [] } }
+    let(:metadata) { { keyword: [], model: 'GenericWork' } }
     let(:uploaded_files) { [upload1.id.to_s, upload2.id.to_s] }
 
     subject do

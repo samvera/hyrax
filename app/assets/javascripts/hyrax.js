@@ -63,6 +63,7 @@
 //= require hyrax/autocomplete/subject
 //= require hyrax/autocomplete/language
 //= require hyrax/relationships
+//= require hyrax/select_work_type
 //= require hyrax/collections
 //= require hydra-editor/hydra-editor
 //= require nestable

@@ -11,6 +11,7 @@ feature 'Editing a work', type: :feature do
 
   context 'when the user changes permissions' do
     it 'confirms copying permissions to files using Hyrax layout' do
+      # e.g. /concern/generic_works/jq085k20z/edit
       visit edit_hyrax_generic_work_path(work)
       choose('generic_work_visibility_open')
       check('agreement')

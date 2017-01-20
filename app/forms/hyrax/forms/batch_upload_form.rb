@@ -6,6 +6,8 @@ module Hyrax
 
       self.terms -= [:title, :resource_type]
 
+      attr_accessor :payload_concern # a Class name: what is form creating a batch of?
+
       # The WorkForm delegates `#depositor` to `:model`, but `:model` in the
       # BatchUpload context is a blank work with a `nil` depositor
       # value. This causes the "Sharing With" widget to display the Depositor as
@@ -25,8 +27,7 @@ module Hyrax
       #   super - [:title]
       # end
 
-      # Override of ActiveModel::Model name that allows us to use our
-      # custom name class
+      # Override of ActiveModel::Model name that allows us to use our custom name class
       def self.model_name
         @_model_name ||= begin
           namespace = parents.detect do |n|

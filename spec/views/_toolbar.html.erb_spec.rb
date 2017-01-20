@@ -45,15 +45,20 @@ describe '/_toolbar.html.erb', type: :view do
       let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
       it "has a link to upload" do
         render
-        expect(rendered).to have_selector 'a[data-toggle="modal"][data-target="#worktypes-to-create"]'
+        expect(rendered).to have_selector 'a[data-behavior="select-work"][data-target="#worktypes-to-create"][data-create-type="single"]'
         expect(rendered).to have_link('New Work', href: '#')
+
+        expect(rendered).to have_selector 'a[data-behavior="select-work"][data-target="#worktypes-to-create"][data-create-type="batch"]'
+        expect(rendered).to have_link('Batch Create', href: '#')
       end
     end
 
-    context "when the user can create GenericWorks" do
+    context "when the user can create a single work type" do
+      let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: false, first_model: GenericWork) }
       it "has a link to upload" do
         render
         expect(rendered).to have_link('New Work', href: new_hyrax_generic_work_path)
+        expect(rendered).to have_link('Batch Create', href: hyrax.new_batch_upload_path(payload_concern: 'GenericWork'))
       end
     end
 
