@@ -26,5 +26,10 @@ describe My::CollectionsController, type: :controller do
         expect(assigns[:document_list].map(&:id)).to contain_exactly(first_collection.id)
       end
     end
+
+    describe "#search_facet_path" do
+      subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+      it { is_expected.to eq "/dashboard/collections/facet/keyword_sim" }
+    end
   end
 end
