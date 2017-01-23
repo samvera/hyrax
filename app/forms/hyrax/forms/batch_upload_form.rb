@@ -1,7 +1,7 @@
 module Hyrax
   module Forms
     class BatchUploadForm < Hyrax::Forms::WorkForm
-      self.model_class = BatchUploadItem
+      self.model_class = BatchUpload
       include HydraEditor::Form::Permissions
 
       self.terms -= [:title, :resource_type]
@@ -21,11 +21,6 @@ module Hyrax
       def primary_terms
         super - [:title]
       end
-
-      # # On the batch upload, title is set per-file.
-      # def secondary_terms
-      #   super - [:title]
-      # end
 
       # Override of ActiveModel::Model name that allows us to use our custom name class
       def self.model_name
