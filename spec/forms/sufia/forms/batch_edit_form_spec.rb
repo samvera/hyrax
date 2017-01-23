@@ -42,4 +42,33 @@ describe Sufia::Forms::BatchEditForm do
       expect(form.model.related_url).to match_array ["related_url1", "related_url2"]
     end
   end
+
+  describe ".build_permitted_params" do
+    subject { described_class.build_permitted_params }
+    it do
+      is_expected.to eq [{ creator: [] },
+                         { contributor: [] },
+                         { description: [] },
+                         { keyword: [] },
+                         { resource_type: [] },
+                         { rights: [] },
+                         { publisher: [] },
+                         { date_created: [] },
+                         { subject: [] },
+                         { language: [] },
+                         { identifier: [] },
+                         { based_near: [] },
+                         { related_url: [] },
+                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+                         :on_behalf_of,
+                         { collection_ids: [] },
+                         :visibility_during_embargo,
+                         :embargo_release_date,
+                         :visibility_after_embargo,
+                         :visibility_during_lease,
+                         :lease_expiration_date,
+                         :visibility_after_lease,
+                         :visibility]
+    end
+  end
 end
