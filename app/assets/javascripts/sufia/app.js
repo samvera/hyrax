@@ -66,7 +66,7 @@ Sufia = {
         // On the edit fileset page
         new perm.PermissionsControl($("#permission"), 'tmpl-file-set-grant');
         // On the batch edit page
-        new perm.PermissionsControl($("#form_permissions"), 'tmpl-file-set-grant');
+        new perm.PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
     },
 
     notifications: function () {
