@@ -134,6 +134,7 @@ describe Hydra::AccessControls::Permissions do
             it "removes permissions on existing users" do
               indexed_result = ActiveFedora::SolrService.query("id:#{subject.id}").first['edit_access_person_ssim']
               expect(indexed_result).to eq ['jcoyne']
+              expect(subject.permissions.map(&:to_hash)).to eq [{ name: "jcoyne", type: "person", access: "edit" }]
               expect(reloaded).to eq [{ name: "jcoyne", type: "person", access: "edit" }]
             end
           end
@@ -188,7 +189,7 @@ describe Hydra::AccessControls::Permissions do
               subject.update permissions_attributes: [
                 { id: permissions_id, type: "group", access: "read", name: "group1", _destroy: '1' },
                 { type: "group", access: "edit", name: "group2" },
-                { type: "person", access: "read", name: "joebob" } 
+                { type: "person", access: "read", name: "joebob" }
               ]
             end
 

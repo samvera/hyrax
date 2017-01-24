@@ -415,10 +415,10 @@ module Hydra
 
       # @param [RDF::URI] mode One of the permissions modes, e.g. ACL.Write, ACL.Read, etc.
       # @yieldparam [Array<ActiveFedora::Base>] agent the agent type assertions
-      # @return [Array<Permission>] list of permissions where the mode is as selected, the block evaluates to true and the target is not marked for delete
+      # @return [Array<Permission>] list of permissions where the mode is as selected, the block evaluates to true
       def search_by_mode(mode)
         permissions.to_a.select do |p|
-          yield(p.agent) && !p.marked_for_destruction? && p.mode.first.rdf_subject == mode
+          yield(p.agent) && p.mode.first.rdf_subject == mode
         end
       end
 

@@ -20,11 +20,13 @@ module Hydra
 
     def permissions_attributes=(attribute_list)
       raise ArgumentError unless attribute_list.is_a? Array
+      any_destroyed = false
       attribute_list.each do |attributes|
         if attributes.key?(:id)
           obj = relationship.find(attributes[:id])
           if has_destroy_flag?(attributes)
             obj.destroy
+            any_destroyed = true
           else
             obj.update(attributes.except(:id, '_destroy'))
           end
@@ -32,16 +34,26 @@ module Hydra
           relationship.create(attributes)
         end
       end
+      # Poison the cache
+      relationship.reset if any_destroyed
     end
 
     def relationship
       @relationship ||= CollectionRelationship.new(self, :contains)
     end
 
+    # This is like a has_many :through relationship
     class CollectionRelationship
       def initialize(owner, reflection)
         @owner = owner
         @relationship = @owner.send(reflection)
+      end
+
+      # The graph stored in @owner is now stale, so reload it and clear all caches
+      def reset
+        @owner.reload
+        @relationship.proxy_association.reload
+        self
       end
 
       delegate :to_a, :to_ary, :map, :delete, :first, :last, :size, :count, :[],
@@ -52,7 +64,7 @@ module Hydra
       # delegate find.
       def find(id)
         return to_a.find { |record| record.id == id } if @relationship.loaded?
-        
+
         unless id.start_with?(@owner.id)
           raise ArgumentError, "requested ACL (#{id}) is not a member of #{@owner.id}"
         end
