@@ -18,6 +18,13 @@ describe Sufia::Forms::WorkForm, :no_clean do
     end
   end
 
+  describe "#in_work_members" do
+    it "expects parent work members" do
+      allow(work).to receive(:in_works).and_return(works)
+      expect(form.in_work_members.size).to eq(3)
+    end
+  end
+
   describe ".build_permitted_params" do
     before do
       allow(described_class).to receive(:model_class).and_return(GenericWork)

@@ -62,6 +62,7 @@
 //= require sufia/autocomplete/location
 //= require sufia/autocomplete/subject
 //= require sufia/autocomplete/language
+//= require sufia/autocomplete/work
 //= require sufia/relationships
 //= require sufia/select_work_type
 //= require curation_concerns/collections

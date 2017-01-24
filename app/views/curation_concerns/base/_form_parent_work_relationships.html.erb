@@ -1,0 +1,43 @@
+<div class="form-group multi_value optional managed">
+
+  <table class="table table-striped related-files relationships-ajax-enabled"
+         data-query-url="<%= polymorphic_path([main_app, :curation_concerns, curation_concern.model_name.singular], id: '$id') %>">
+    <thead>
+    <tr>
+      <th>Parent Work</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+    <tbody>
+
+    <% f.object.in_work_members.each do |member| %>
+        <tr>
+          <td>
+            <%= link_to member.title.first, [main_app, member] %>
+            <input class="string multi_value optional form-control related_works_ids form-control multi-text-field hidden" value="<%= member.id %>" id="work_in_works_ids" aria-labelledby="work_in_works_ids_label" name="<%= f.object.model_name.param_key %>[in_works_ids][]" type="text">
+          </td>
+          <td>
+            <div class="child-actions">
+              <%= link_to "Edit", [main_app, :edit, member], target: "_blank", class: 'btn btn-default' %>
+              <a class="btn btn-danger btn-remove-row">Remove</a>
+            </div>
+          </td>
+        </tr>
+    <% end %>
+    <tr class="new-row">
+      <td>
+        <a href="" class="title hidden"></a>
+        <%= render "find_work_widget", f: f, id_name: 'work_parent_members_ids', id_type: 'in_works_ids', user_email: current_user.email, id: f.object.model.id %>
+        <div class="message has-warning hidden"></div>
+      </td>
+      <td>
+        <div class="child-actions">
+          <a href="" class="edit hidden btn btn-default" target="_blank">Edit</a>
+          <a class="btn btn-danger btn-remove-row hidden">Remove</a>
+          <a class="btn btn-primary btn-add-row">Add</a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
