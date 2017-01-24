@@ -9,8 +9,9 @@ module Sufia
 
     # Override CC to ensure our custom 'validate' method is used
     def update(attributes)
-      # Perform same validation/actions as create()
-      create(attributes)
+      @intention = Intention.new(attributes)
+      attributes = @intention.sanitize_params
+      validate(attributes) && apply_visibility(attributes) && next_actor.update(attributes)
     end
 
     private
