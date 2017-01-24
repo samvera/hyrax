@@ -120,7 +120,7 @@ es:
         settings:   "Ajustes"
         statistics: "Estadísticas"
         workflow: "Flujos de trabajo"
-        workflow_review: "Repaso"
+        workflow_review: "Flujos de trabajo"
         workflow_roles: "Roles"
       stats:
         deposited_form:
