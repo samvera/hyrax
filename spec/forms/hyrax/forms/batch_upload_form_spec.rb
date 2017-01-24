@@ -22,7 +22,7 @@ describe Hyrax::Forms::BatchUploadForm do
       expect(subject.route_key).to eq 'batch_uploads'
     end
     it "has a param_key" do
-      expect(subject.param_key).to eq 'batch_upload'
+      expect(subject.param_key).to eq 'batch_upload_item'
     end
   end
 

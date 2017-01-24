@@ -9,7 +9,7 @@ describe Hyrax::BatchUploadsController do
   let(:expected_shared_params) do
     { 'keyword' => [], 'visibility' => 'open', :model => 'GenericWork' }
   end
-  let(:batch_upload) do
+  let(:batch_upload_item) do
     { keyword: [""], visibility: 'open', payload_concern: 'GenericWork' }
   end
   let(:post_params) do
@@ -17,7 +17,7 @@ describe Hyrax::BatchUploadsController do
       title: expected_individual_params,
       resource_type: expected_types,
       uploaded_files: ['1'],
-      batch_upload: batch_upload
+      batch_upload_item: batch_upload_item
     }
   end
 
@@ -52,7 +52,7 @@ describe Hyrax::BatchUploadsController do
     end
 
     describe "when submiting works on behalf of another user" do
-      let(:batch_upload) do
+      let(:batch_upload_item) do
         {
           payload_concern: Atlas,
           permissions_attributes: [

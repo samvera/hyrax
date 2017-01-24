@@ -7,7 +7,7 @@ module Hyrax
     included do
       self.work_form_service = BatchUploadFormService
       self.curation_concern_type = work_form_service.form_class.model_class # includes CanCan side-effects
-      # We use BatchUpload as a null stand-in curation_concern_type.
+      # We use BatchUploadItem as a null stand-in curation_concern_type.
       # The actual permission is checked dynamically during #create.
     end
 
@@ -15,7 +15,7 @@ module Hyrax
     # @note we don't call `authorize!` directly, since `authorized_models` already checks `user.can? :create, ...`
     def create
       authenticate_user!
-      unsafe_pc = params.fetch(:batch_upload, {})[:payload_concern]
+      unsafe_pc = params.fetch(:batch_upload_item, {})[:payload_concern]
       # Calling constantize on user params is disfavored (per brakeman), so we sanitize by matching it against an authorized model.
       safe_pc = Hyrax::SelectTypeListPresenter.new(current_user).authorized_models.map(&:to_s).find { |x| x == unsafe_pc }
       raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
