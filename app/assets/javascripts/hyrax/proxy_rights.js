@@ -14,7 +14,7 @@
         type: "POST",
         url: '/users/'+grantor+'/depositors',
         dataType: 'json',
-        data: {grantee_key: user_key},
+        data: {grantee_id: user_key},
         success: function (data) {
           if (data.name !== undefined) {
             row = rowTemplate(data);

@@ -2,6 +2,22 @@ describe Hyrax::DepositorsController do
   let(:user) { create(:user) }
   let(:grantee) { create(:user) }
 
+  let(:grant_proxy_params) do
+    {
+      user_id: user.user_key,
+      grantee_id: grantee.user_key,
+      format: 'json'
+    }
+  end
+
+  let(:revoke_proxy_params) do
+    {
+      user_id: user.user_key,
+      id: grantee.user_key,
+      format: 'json'
+    }
+  end
+
   context "as a logged in user" do
     before do
       sign_in user
@@ -9,7 +25,7 @@ describe Hyrax::DepositorsController do
 
     describe "#create" do
       context 'when the grantee has not yet been designated as a depositor' do
-        let(:request_to_grant_proxy) { post :create, params: { user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' } }
+        let(:request_to_grant_proxy) { post :create, params: grant_proxy_params }
 
         it 'is successful' do
           expect { request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(1)
@@ -27,7 +43,9 @@ describe Hyrax::DepositorsController do
 
       context 'when the grantee is already an allowed depositor' do
         # For this test we just set the grantor to be eq to grantee.
-        let(:redundant_request_to_grant_proxy) { post :create, params: { user_id: user.user_key, grantee_id: user.user_key, format: 'json' } }
+        let(:redundant_request_to_grant_proxy) do
+          post :create, params: grant_proxy_params.merge(grantee_id: user.user_key)
+        end
 
         it 'does not add the user, and returns a 200, with empty response body' do
           expect { redundant_request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(0)
@@ -45,8 +63,9 @@ describe Hyrax::DepositorsController do
       before do
         user.can_receive_deposits_from << grantee
       end
+
       it "is successful" do
-        expect { delete :destroy, params: { user_id: user.user_key, id: grantee.user_key, format: 'json' } }.to change { ProxyDepositRights.count }.by(-1)
+        expect { delete :destroy, params: revoke_proxy_params }.to change { ProxyDepositRights.count }.by(-1)
       end
     end
   end
@@ -55,16 +74,18 @@ describe Hyrax::DepositorsController do
     before do
       sign_in create(:user)
     end
+
     describe "create" do
       it "is not successful" do
-        post :create, params: { user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' }
+        post :create, params: grant_proxy_params
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
+
     describe "destroy" do
       it "is not successful" do
-        delete :destroy, params: { user_id: user.user_key, id: grantee.user_key, format: 'json' }
+        delete :destroy, params: revoke_proxy_params
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
