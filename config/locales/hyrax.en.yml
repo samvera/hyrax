@@ -94,7 +94,7 @@ en:
         settings:   "Settings"
         statistics: "Statistics"
         workflow: "Workflows"
-        workflow_review: "Review"
+        workflow_review: "Workflows"
         workflow_roles: "Roles"
       stats:
         registered: "Registered"
