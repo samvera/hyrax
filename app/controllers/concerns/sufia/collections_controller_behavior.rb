@@ -14,6 +14,31 @@ module Sufia
 
     protected
 
+      def after_destroy(id)
+        respond_to do |wants|
+          wants.html do
+            redirect_to sufia.dashboard_collections_path,
+                        notice: "Collection #{id} was successfully deleted"
+          end
+          wants.json do
+            render json: { id: id, description: "Collection #{id} was successfully deleted" }
+          end
+        end
+      end
+
+      def after_destroy_error(id)
+        respond_to do |wants|
+          wants.html do
+            flash[:notice] = "Collection #{id} could not be deleted"
+            render :edit, status: :unprocessable_entity
+          end
+          wants.json do
+            render json: { id: id, description: "Collection #{id} could not be deleted" },
+                   status: :unprocessable_entity
+          end
+        end
+      end
+
       def add_breadcrumb_for_controller
         add_breadcrumb I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path
       end
