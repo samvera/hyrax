@@ -124,6 +124,12 @@ module Sufia
       generate "sufia:assets"
     end
 
+    def add_sufia_collection_indexer
+      inject_into_file 'app/models/collection.rb', after: 'include CurationConcerns::BasicMetadata' do
+        "\n  self.indexer = Sufia::CollectionIndexer"
+      end
+    end
+
     def install_batch_edit
       generate "hydra_batch_edit:install"
     end

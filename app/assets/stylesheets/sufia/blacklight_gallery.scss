@@ -1,0 +1,17 @@
+/* These styles are very specific to override the thumbnails from blacklight gallery */
+
+.slideshow-documents {
+  .grid {
+    .document {
+      .thumbnail {
+        padding: 0;
+
+        a > img {
+          left: 0;
+          max-width: 100%;
+          top: 0;
+        }
+      }
+    }
+  }
+}
