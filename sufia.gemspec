@@ -19,8 +19,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'Apache2'
 
   spec.add_dependency 'curation_concerns', '~> 1.7.2'
-  # This is not required, but helps bundler resolve a bundle faster:
-  spec.add_dependency 'hydra-head', '>= 10.1'
+  spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '>= 0.10.3'
   spec.add_dependency 'blacklight', '~> 6.6'
