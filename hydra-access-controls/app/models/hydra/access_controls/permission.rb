@@ -44,6 +44,15 @@ module Hydra::AccessControls
       URI.decode(parsed_agent.last)
     end
 
+    def update(*)
+      super.tap { reset }
+    end
+
+    def reset
+      @access = nil
+      @parsed_agent = nil
+    end
+
     def access
       @access ||= mode.first.rdf_subject.to_s.split('#').last.downcase.sub('write', 'edit')
     end

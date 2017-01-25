@@ -46,10 +46,23 @@ describe Hydra::AccessControls::Permissions do
 
   describe "updating permissions" do
     describe "with nested attributes" do
+      let(:original_permissions) { [{ type: "person", access: "edit", name: "jcoyne" }] }
       before do
         subject.save!
-        subject.permissions_attributes = [{ type: "person", access: "edit", name: "jcoyne" }]
+        subject.permissions_attributes = original_permissions
       end
+
+      context "with ids" do
+        let(:permission_id) { ActiveFedora::Base.uri_to_id(subject.permissions.last.rdf_subject.to_s) }
+        it "clears the cache" do
+          expect {
+            subject.permissions_attributes = [{ id: permission_id, type: "person", access: "read", name: "jcoyne" }]
+          }.to change { subject.permissions.map(&:to_hash) }
+            .from(original_permissions)
+            .to([{ type: "person", access: "read", name: "jcoyne" }])
+        end
+      end
+
       context "when a hash is passed" do
         before do
           subject.permissions_attributes = {'0' => { type: "group", access:"read", name:"group1" },
