@@ -1,21 +1,46 @@
-<div id="search">
-  <%= render 'search_form' %>
-  <h1><%= application_name %> Users</h1>
-</div>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Avatar</th>
-            <th class="sorts"><i id="name" class="<%= params[:sort].blank? ? 'caret up' : params[:sort] == "name desc" ? 'caret' : params[:sort] == "name" ? 'caret up' : '' %>"></i> User Name</th>
-            <th class="sorts"><i id="login" class="<%= params[:sort] == "login desc" ? 'caret' : params[:sort] == "login" ? 'caret up' : '' %>"></i> User Id</th>
-            <th class="sorts"><i id="department" class="<%= params[:sort] == "department desc" ? 'caret' : params[:sort] == "department" ? 'caret up' : ''%>"></i> Department</th>
-            <th>Works Created</th>
-        </tr>
-    </thead>
-    <tbody>
-    <%= render partial: 'user_row', collection: @users, as: :user %>
-    </tbody>
-</table>
-<div class="pager">
-  <%= paginate @users, theme: 'blacklight', route_set: hyrax %>
+<% content_for :page_header do %>
+  <h1><span class="fa fa-user"></span> <%= t('hyrax.users.index.title') %></h1>
+<% end %>
+
+<div class="panel panel-default users-listing">
+  <div class="panel-heading">
+      <%= t('hyrax.users.index.describe_users_html', count: @presenter.user_count) %>
+  </div>
+
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table table-striped datatable">
+        <thead>
+          <tr>
+            <th></th>
+            <th><%= t('.id_label') %></th>
+            <th><%= t('.role_label') %></th>
+            <th><%= t('.access_label') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @presenter.users.each do |user| %>
+            <tr>
+              <td><%= link_to hyrax.profile_path(user) do %>
+                    <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
+                  <% end %>
+              </td>
+              <br>
+              <td><%= link_to user.email, hyrax.profile_path(user) %></td>
+              <td><% roles = @presenter.user_roles(user) %>
+                  <ul><% roles.each do |role| %>
+                    <li><%= role %></li>
+                    <% end %>
+                  </ul>
+              </td>
+              <td>
+                <%# in the case that a user is created who never signs in, this is necessary %>
+                <%= time_ago_in_words(user.last_sign_in_at || user.created_at) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

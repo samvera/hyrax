@@ -34,18 +34,8 @@ describe Hyrax::UsersController, type: :controller do
 
       it "excludes the audit_user and batch_user" do
         get :index
-        expect(assigns[:users].to_a).to match_array [user, u1, u2]
+        expect(assigns[:presenter].users.to_a).to match_array [user, u1, u2]
         expect(response).to be_successful
-      end
-
-      it "sorts by the user key when login is specified" do
-        get :index, params: { sort: 'login' }
-        expect(assigns[:users].to_a).to match_array [user, u1, u2]
-      end
-
-      it "sorts by the user key when login desc is specified" do
-        get :index, params: { sort: 'login desc' }
-        expect(assigns[:users].to_a).to match_array [user, u1, u2]
       end
     end
 
@@ -58,40 +48,6 @@ describe Hyrax::UsersController, type: :controller do
         json = JSON.parse(response.body).fetch('users')
         expect(json.map { |u| u['id'] }).to include(u1.id, u2.id)
         expect(json.map { |u| u['text'] }).to include(u1.email, u2.email)
-      end
-    end
-
-    describe "query users" do
-      it "finds the expected user via email" do
-        get :index, params: { uq: u1.email }
-        expect(assigns[:users]).to include(u1)
-        expect(assigns[:users]).not_to include(u2)
-        expect(response).to be_successful
-      end
-
-      it "finds the expected user via display name" do
-        u1.display_name = "Dr. Curator"
-        u1.save
-        u2.display_name = "Jr. Architect"
-        u2.save
-        allow_any_instance_of(User).to receive(:display_name).and_return("Dr. Curator", "Jr.Archivist")
-        get :index, params: { uq: u1.display_name }
-        expect(assigns[:users]).to include(u1)
-        expect(assigns[:users]).not_to include(u2)
-        expect(response).to be_successful
-        u1.display_name = nil
-        u1.save
-        u2.display_name = nil
-        u2.save
-      end
-
-      it "uses the base query" do
-        u3 = FactoryGirl.create(:user)
-        allow(controller).to receive(:base_query).and_return(["email == \"#{u3.email}\""])
-        get :index
-        expect(assigns[:users]).to include(u3)
-        expect(assigns[:users]).not_to include(u1, u2)
-        u3.destroy
       end
     end
   end

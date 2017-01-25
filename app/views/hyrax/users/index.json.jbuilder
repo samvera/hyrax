@@ -1,4 +1,4 @@
-json.users @users do |user|
+json.users @presenter.users do |user|
   json.id user.id
   json.user_key user.user_key
   json.text user.to_s
