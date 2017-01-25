@@ -13,6 +13,7 @@ module Hyrax
 
     included do
       validates_with HasOneTitleValidator
+      self.indexer = Hyrax::CollectionIndexer
     end
 
     # Add members using the members association.
@@ -39,10 +40,6 @@ module Hyrax
     end
 
     module ClassMethods
-      def indexer
-        Hyrax::CollectionIndexer
-      end
-
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
         @_to_partial_path ||= begin

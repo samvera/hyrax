@@ -38,4 +38,9 @@ describe Hyrax::My::SharesController, type: :controller do
       end
     end
   end
+
+  describe "#search_facet_path" do
+    subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+    it { is_expected.to eq "/dashboard/shares/facet/keyword_sim?locale=en" }
+  end
 end

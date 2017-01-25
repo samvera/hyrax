@@ -3,6 +3,8 @@ module Hyrax
     include Hyrax::IndexesThumbnails
     STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
 
+    self.thumbnail_path_service = Hyrax::CollectionThumbnailPathService
+
     def generate_solr_document
       super.tap do |solr_doc|
         # Makes Collections show under the "Collections" tab

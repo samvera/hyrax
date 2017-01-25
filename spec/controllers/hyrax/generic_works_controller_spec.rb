@@ -331,7 +331,8 @@ describe Hyrax::GenericWorksController do
         it "sets breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.work.browse_view"), Rails.application.routes.url_helpers.hyrax_generic_work_path(work, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(work.to_s, Rails.application.routes.url_helpers.hyrax_generic_work_path(work, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.works.edit.breadcrumb"), String)
           get :edit, params: { id: work }
           expect(response).to be_successful
         end

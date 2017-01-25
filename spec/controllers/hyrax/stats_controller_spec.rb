@@ -59,7 +59,7 @@ describe Hyrax::StatsController do
       expect(Hyrax::WorkUsage).to receive(:new).with(work.id).and_return(usage)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.work.browse_view'), main_app.hyrax_generic_work_path(work, locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Test title', main_app.hyrax_generic_work_path(work, locale: 'en'))
       get :work, params: { id: work }
       expect(response).to be_success
       expect(response).to render_template('stats/work')

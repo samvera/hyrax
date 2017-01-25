@@ -48,5 +48,31 @@ describe BatchCreateJob do
                                                             child_log).and_return(true)
       subject
     end
+
+    context "when multiple resource types are passed for each work." do
+      let(:resource_types) { { upload1.id.to_s => ['Article', 'Text'], upload2.id.to_s => ['Image', 'Text'] } }
+
+      it "spawns CreateWorkJobs for each work" do
+        expect(CreateWorkJob).to receive(:perform_later).with(user,
+                                                              "GenericWork",
+                                                              {
+                                                                keyword: [],
+                                                                title: ['File One'],
+                                                                resource_type: ["Article", 'Text'],
+                                                                uploaded_files: ['1']
+                                                              },
+                                                              child_log).and_return(true)
+        expect(CreateWorkJob).to receive(:perform_later).with(user,
+                                                              "GenericWork",
+                                                              {
+                                                                keyword: [],
+                                                                title: ['File Two'],
+                                                                resource_type: ["Image", 'Text'],
+                                                                uploaded_files: ['2']
+                                                              },
+                                                              child_log).and_return(true)
+        subject
+      end
+    end
   end
 end

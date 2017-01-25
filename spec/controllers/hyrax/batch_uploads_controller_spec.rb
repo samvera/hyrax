@@ -1,10 +1,12 @@
 describe Hyrax::BatchUploadsController do
   let(:user) { create(:user) }
   let(:expected_types) do
-    { '1' => 'Article' }
+    { '1' => 'Article',
+      '2' => ['Article', 'Text'] }
   end
   let(:expected_individual_params) do
-    { '1' => 'foo' }
+    { '1' => 'foo',
+      '2' => 'bar' }
   end
   let(:expected_shared_params) do
     { 'keyword' => [], 'visibility' => 'open', :model => 'GenericWork' }
@@ -16,7 +18,7 @@ describe Hyrax::BatchUploadsController do
     {
       title: expected_individual_params,
       resource_type: expected_types,
-      uploaded_files: ['1'],
+      uploaded_files: ['1', '2'],
       batch_upload_item: batch_upload_item
     }
   end
@@ -42,7 +44,7 @@ describe Hyrax::BatchUploadsController do
           .with(user,
                 expected_individual_params,
                 expected_types,
-                ['1'],
+                ['1', '2'],
                 expected_shared_params,
                 Hyrax::BatchCreateOperation)
         post :create, params: post_params

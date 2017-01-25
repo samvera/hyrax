@@ -18,8 +18,14 @@ describe 'hyrax/batch_edits/edit.html.erb', type: :view do
     render
   end
 
-  it "draws help for description" do
+  it "draws the page" do
     expect(rendered).to have_selector 'form[data-model="generic_work"]'
+    # Help for the description
     expect(rendered).to have_selector ".generic_work_description p.help-block"
+
+    # param key for the permissions javascript
+    expect(rendered).to have_selector 'form#form_permissions[data-param-key="generic_work"]'
+    # batch ids for the permissions update form
+    expect(rendered).to have_selector "input[name=\"batch_document_ids[]\"]", visible: false
   end
 end

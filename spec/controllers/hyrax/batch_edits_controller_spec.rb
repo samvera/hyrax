@@ -38,6 +38,7 @@ describe Hyrax::BatchEditsController, type: :controller do
     end
 
     before do
+      # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
       controller.batch = [one.id, two.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
