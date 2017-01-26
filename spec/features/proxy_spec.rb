@@ -7,7 +7,7 @@ describe 'proxy', type: :feature do
       sign_in user
       visit "/"
       go_to_user_profile
-      click_link "Edit Your Profile"
+      click_link "Edit Profile"
       expect(first("td.depositor-name")).to be_nil
       create_proxy_using_partial(second_user)
       expect(page).to have_css('td.depositor-name', text: second_user.user_key)
