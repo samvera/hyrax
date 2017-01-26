@@ -79,5 +79,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
   spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'i18n-debug'
+  spec.add_development_dependency 'i18n-debug' unless ENV['TRAVIS']
 end
