@@ -164,12 +164,18 @@ module Hyrax
           subject { described_class.scope_processing_agents_for(user: nil) }
           it { is_expected.to eq([]) }
         end
+
         context 'when user is persisted' do
           let(:user) { create(:user) }
+          before do
+            allow(user).to receive(:groups).and_return(['librarians'])
+          end
+
           subject { described_class.scope_processing_agents_for(user: user) }
+
           it 'will equal [kind_of(Sipity::Agent)]' do
             is_expected.to contain_exactly(PowerConverter.convert_to_sipity_agent(user),
-                                           PowerConverter.convert_to_sipity_agent(Group.new('registered')))
+                                           PowerConverter.convert_to_sipity_agent(Group.new('librarians')))
           end
         end
       end
