@@ -610,8 +610,6 @@ es:
       restricted:
         class: "label-danger"
         text: "Privado"
-    work:
-      browse_view: "Navegar Vista"
     workflow:
       default:
         deposit: "Depositar"

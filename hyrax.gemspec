@@ -18,13 +18,12 @@ Gem::Specification.new do |spec|
   spec.version       = Hyrax::VERSION
   spec.license       = 'Apache2'
 
-  # This is not required, but helps bundler resolve a bundle faster:
-  spec.add_dependency 'hydra-head', '~> 10.3'
+  spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.1'
   spec.add_dependency 'hydra-works', '~> 0.15'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
   spec.add_dependency 'blacklight', '~> 6.6'
-  spec.add_dependency 'blacklight-gallery', '~> 0.1'
+  spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.17.beta'
   spec.add_dependency 'daemons', '~> 1.1'

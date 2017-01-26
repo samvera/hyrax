@@ -3,17 +3,17 @@
     <%= render 'hyrax/collections/form_for_select_collection', user_collections: @user_collections %>
   </div>
 
-  <% if on_my_works? %>
-    <div class="batch-toggle">
-      <% session[:batch_edit_state] = "on" %>
-      <div class="button_to-inline">
-        <%= button_to "Edit Selected", edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary hidden submits-batches", data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
-      </div>
+  <div class="batch-toggle">
+    <% session[:batch_edit_state] = "on" %>
+    <div class="button_to-inline">
+      <%= button_to "Edit Selected", hyrax.edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary hidden submits-batches", data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
+    </div>
+    <% if on_my_works? %>
       <%= batch_delete %>
       <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
           data: { toggle: "modal", target: "#collection-list-container" } %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <div class="sort-toggle">
     <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>

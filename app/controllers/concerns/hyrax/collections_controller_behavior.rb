@@ -145,15 +145,21 @@ module Hyrax
 
     def after_destroy(id)
       respond_to do |format|
-        format.html { redirect_to search_catalog_path, notice: 'Collection was successfully deleted.' }
-        format.json { render json: { id: id }, status: :destroyed, location: @collection }
+        format.html do
+          redirect_to dashboard_collections_path,
+                      notice: "Collection #{id} was successfully deleted"
+        end
+        format.json { head :no_content, location: @collection }
       end
     end
 
     def after_destroy_error(id)
       respond_to do |format|
-        format.html { redirect_to search_catalog_path, notice: 'Collection could not be deleted.' }
-        format.json { render json: { id: id }, status: :destroy_error, location: @collection }
+        format.html do
+          flash[:notice] = "Collection #{id} could not be deleted"
+          render :edit, status: :unprocessable_entity
+        end
+        format.json { render json: { id: id }, status: :unprocessable_entity, location: @collection }
       end
     end
 

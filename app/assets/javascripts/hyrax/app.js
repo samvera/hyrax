@@ -61,8 +61,12 @@ Hyrax = {
 
     permissions: function () {
         var perm = require('hyrax/permissions/control');
+        // On the edit work page
         new perm.PermissionsControl($("#share"), 'tmpl-work-grant');
+        // On the edit fileset page
         new perm.PermissionsControl($("#permission"), 'tmpl-file-set-grant');
+        // On the batch edit page
+        new perm.PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
     },
 
     notifications: function () {

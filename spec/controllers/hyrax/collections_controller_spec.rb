@@ -241,6 +241,40 @@ describe Hyrax::CollectionsController do
     end
   end
 
+  describe "#delete" do
+    before { sign_in user }
+    context "when it succeeds" do
+      it "redirects to My Collections" do
+        delete :destroy, params: { id: collection }
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+      end
+
+      it "returns json" do
+        delete :destroy, params: { format: :json, id: collection }
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context "when an error occurs" do
+      before do
+        allow_any_instance_of(Collection).to receive(:destroy).and_return(nil)
+      end
+      it "renders the edit view" do
+        delete :destroy, params: { id: collection }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template(:edit)
+        expect(flash[:notice]).to eq "Collection #{collection.id} could not be deleted"
+      end
+
+      it "returns json" do
+        delete :destroy, params: { format: :json, id: collection }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
   describe "#edit" do
     before { sign_in user }
 

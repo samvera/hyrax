@@ -16,6 +16,11 @@ export class Autocomplete {
             case "based_near":
               this.autocompleteLocation(selector);
               break;
+            case "work":
+              var user = selector.data('user');
+              var id = selector.data('id');
+              this.autocompleteWork(selector, user, id);
+              break;
           }
       });
   }
@@ -47,5 +52,15 @@ export class Autocomplete {
   autocompleteLanguage(field) {
       var lang = require('hyrax/autocomplete/language');
       new lang.Language(field, field.data('autocomplete-url'))
+  }
+
+  autocompleteWork(field, user, id) {
+    var work = require('hyrax/autocomplete/work')
+    new work.Work(
+      field,
+      field.data('autocomplete-url'),
+      user,
+      id
+    )
   }
 }

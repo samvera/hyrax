@@ -34,9 +34,18 @@
 <!-- function used by the following template -->
 <script type="text/javascript">
   function setAllResourceTypes() {
-    var firstResourceType = $(".resource_type_dropdown")[0].value;
+    var firstResourceType = $(".resource_type_dropdown")[0];
+    var selected_options = [];
+    for (var i = 0; i < firstResourceType.length; i++) {
+      if (firstResourceType.options[i].selected) {
+        selected_options.push(firstResourceType.options[i].value);
+      }
+    }
     $(".resource_type_dropdown").each(function(index, element) {
-      element.value = firstResourceType;
+      for(var i=0; i< this.length; i++) {
+        this.options[i].selected =
+          $.inArray(this.options[i].value, selected_options) > -1 ? true : false;
+      }
     });
   }
 </script>
@@ -71,7 +80,7 @@
                 </div>
                 <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
                 <div class="col-sm-7">
-                  <select class="form-control resource_type_dropdown" name="resource_type[{%=file.id%}]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
+                  <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
                   <!-- TODO: Why is the button drawn for all files? -->

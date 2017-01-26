@@ -40,4 +40,9 @@ describe Hyrax::My::WorksController, type: :controller do
       expect(assigns(:add_files_to_collection)).to eql('12345')
     end
   end
+
+  describe "#search_facet_path" do
+    subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+    it { is_expected.to eq "/dashboard/works/facet/keyword_sim?locale=en" }
+  end
 end

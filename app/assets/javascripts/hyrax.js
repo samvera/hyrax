@@ -68,6 +68,7 @@
 //= require hyrax/autocomplete/location
 //= require hyrax/autocomplete/subject
 //= require hyrax/autocomplete/language
+//= require hyrax/autocomplete/work
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections

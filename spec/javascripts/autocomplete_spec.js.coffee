@@ -34,7 +34,7 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
@@ -50,7 +50,7 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
@@ -74,7 +74,7 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
@@ -90,7 +90,7 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
@@ -115,7 +115,7 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
@@ -131,7 +131,47 @@ describe "auto complete", ->
         target.trigger(@typeEvent)
 
         # move time along so that events have a chance to happen
-        jasmine.clock().tick(800);
+        jasmine.clock().tick(800)
+
+        # verify that the ajax call was made
+        expect(@spy_on_json).toHaveBeenCalled()
+
+  describe "works", ->
+    beforeEach ->
+      # setup two inputs for us to attach  auto complete to
+      setFixtures  '<input class="generic_work_work"  value="" id="generic_work_based_near" type="text" data-autocomplete="work" data-autocomplete-url="foo">
+                    <input class="generic_work_work"  value="" type="text" data-autocomplete="work" data-autocomplete-url="foo">'
+
+      # run all Blacklight.onload functions
+      Blacklight.activate()
+
+    describe "first input", ->
+
+      # field triggers auto complete
+      it "auto completes on typing", ->
+        # send a key stroke to the target input to activate the auto complete
+        target = $($("input.generic_work_work")[0])
+        target.val('fre')
+        target.trigger(@typeEvent)
+
+        # move time along so that events have a chance to happen
+        jasmine.clock().tick(800)
+
+        # verify that the ajax call was made
+        expect(@spy_on_json).toHaveBeenCalled()
+
+
+    describe "second input", ->
+
+      # field triggers auto complete
+      it "auto completes on typing", ->
+        # send a key stroke to the target input to activate the auto complete
+        target = $($("input.generic_work_work")[1])
+        target.val('fre')
+        target.trigger(@typeEvent)
+
+        # move time along so that events have a chance to happen
+        jasmine.clock().tick(800)
 
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
