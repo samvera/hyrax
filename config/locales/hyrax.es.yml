@@ -116,12 +116,12 @@ es:
         returning_visitors: "Regresos de visitantes"
         total_visitors:     "Total de visitantes"
       sidebar:
-        admin_sets: "Conjuntos Administrativos"
-        settings:   "Ajustes"
-        statistics: "Estadísticas"
-        workflow: "Flujos de trabajo"
-        workflow_review: "Flujos de trabajo"
-        workflow_roles: "Roles"
+        admin_sets:      "Conjuntos Administrativos"
+        settings:        "Ajustes"
+        statistics:      "Estadísticas"
+        workflow:        "Flujos de Trabajo"
+        workflow_review: "Revise Ofertas"
+        workflow_roles:  "Roles"
       stats:
         deposited_form:
           end_label: "Finalizando [por defecto a ahora]"

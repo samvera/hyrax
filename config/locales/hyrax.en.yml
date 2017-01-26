@@ -90,12 +90,12 @@ en:
         returning_visitors: "Returning Visitors"
         new_visitors:       "New Visitors"
       sidebar:
-        admin_sets: "Administrative Sets"
-        settings:   "Settings"
-        statistics: "Statistics"
-        workflow: "Workflows"
-        workflow_review: "Workflows"
-        workflow_roles: "Roles"
+        admin_sets:      "Administrative Sets"
+        settings:        "Settings"
+        statistics:      "Statistics"
+        workflow:        "Workflows"
+        workflow_review: "Review Submissions"
+        workflow_roles:  "Roles"
       stats:
         registered: "Registered"
         deposited_form:
