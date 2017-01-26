@@ -33,8 +33,8 @@
 
 <!-- function used by the following template -->
 <script type="text/javascript">
-  function setAllResourceTypes() {
-    var firstResourceType = $(".resource_type_dropdown")[0];
+  function setAllResourceTypes(resourceTypeId) {
+    var firstResourceType = $("#resource_type_" + resourceTypeId.toString())[0];
     var selected_options = [];
     for (var i = 0; i < firstResourceType.length; i++) {
       if (firstResourceType.options[i].selected) {
@@ -83,10 +83,7 @@
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <!-- TODO: Why is the button drawn for all files? -->
-                  {% if (i == 0) { %}
-                    <button class="btn pull-right resource_type_button" onClick="setAllResourceTypes(); return false;">Set all to this Resource Type</button>
-                  {% } %}
+                  <button class="btn pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;">Set all to this Resource Type</button>
                 </div>
               </div>
             </div>
