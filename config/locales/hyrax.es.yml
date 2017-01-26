@@ -548,6 +548,7 @@ es:
         highlights: "Aspectos destacados"
         menu: "Panel de Control"
         my: "Mi Panel de Control"
+        operations: 'Operaciónes'
         shares: "Compartido"
         transfers: "Transferencias"
       language_switch: "Cambiar idioma"

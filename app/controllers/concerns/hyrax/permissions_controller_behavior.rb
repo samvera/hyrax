@@ -25,9 +25,11 @@ module Hyrax
       authorize! :edit, curation_concern
       # copy visibility
       VisibilityCopyJob.perform_later(curation_concern)
-
+      depositor = ::User.find_by_user_key(curation_concern.depositor)
       # copy permissions
-      InheritPermissionsJob.perform_later(curation_concern)
+      InheritPermissionsJob.perform_later(curation_concern,
+                                          Hyrax::Operation.create!(user: depositor,
+                                                                   operation_type: 'Inherit Permissions'))
       redirect_to [main_app, curation_concern], notice: I18n.t("hyrax.upload.change_access_flash_message")
     end
 

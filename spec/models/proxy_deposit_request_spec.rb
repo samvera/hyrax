@@ -35,6 +35,20 @@ describe ProxyDepositRequest, type: :model do
   it { is_expected.to delegate_method(:work).to(:work_query_service) }
   it { is_expected.to delegate_method(:deleted_work?).to(:work_query_service) }
 
+  describe "operations" do
+    it 'creates an operation and starts a job' do
+      expect(Hyrax::Operation).to receive(:create!)
+        .with(user: sender,
+              operation_type: 'Change Depositor').and_call_original
+      expect(ContentDepositorChangeEventJob).to receive(:perform_later)
+        .with(work,
+              receiver,
+              an_instance_of(Hyrax::Operation),
+              false)
+      subject.transfer!
+    end
+  end
+
   context '.incoming_for' do
     it 'returns non-deleted requests for the receiving_user' do
       deleted_work_service = double(deleted_work?: true)

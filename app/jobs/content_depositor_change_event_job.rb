@@ -5,14 +5,22 @@ class ContentDepositorChangeEventJob < ContentEventJob
   include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::PolymorphicRoutes
 
+  before_enqueue do |job|
+    log = job.arguments[2]
+    log.pending_job(self)
+  end
+
   attr_accessor :reset
 
   # @param [ActiveFedora::Base] work the work to be transfered
   # @param [User] user the user the work is being transfered to.
+  # @param [Hyrax::Operation] a log storing the status of the job
   # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
-  def perform(work, user, reset = false)
+  def perform(work, user, log, reset = false)
+    log.performing!
     @reset = reset
     super(work, user)
+    log.success!
   end
 
   def action

@@ -3,6 +3,10 @@ require 'spec_helper'
 describe InheritPermissionsJob do
   let(:user) { create(:user) }
   let(:work) { create(:work_with_one_file, user: user) }
+  let(:log) do
+    Hyrax::Operation.create!(user: user,
+                             operation_type: 'Inherit Permissions')
+  end
 
   before do
     work.permissions.build(name: name, type: type, access: access)
@@ -18,7 +22,7 @@ describe InheritPermissionsJob do
       # files have the depositor as the edit user to begin with
       expect(work.file_sets.first.edit_users).to eq [user.to_s]
 
-      described_class.perform_now(work)
+      described_class.perform_now(work, log)
       work.reload.file_sets.each do |file|
         expect(file.edit_users).to match_array [user.to_s, "abc@123.com"]
       end
@@ -35,7 +39,7 @@ describe InheritPermissionsJob do
         # files have the depositor as the edit user to begin with
         expect(work.file_sets.first.edit_users).to eq [user.to_s, "remove_me"]
 
-        described_class.perform_now(work)
+        described_class.perform_now(work, log)
         work.reload.file_sets.each do |file|
           expect(file.edit_users).to match_array [user.to_s, "abc@123.com"]
         end
@@ -52,7 +56,7 @@ describe InheritPermissionsJob do
       # files have the depositor as the edit user to begin with
       expect(work.file_sets.first.read_users).to eq []
 
-      described_class.perform_now(work)
+      described_class.perform_now(work, log)
       work.reload.file_sets.each do |file|
         expect(file.read_users).to match_array ["abc@123.com"]
         expect(file.edit_users).to match_array [user.to_s]
@@ -69,7 +73,7 @@ describe InheritPermissionsJob do
       # files have the depositor as the edit user to begin with
       expect(work.file_sets.first.read_groups).to eq []
 
-      described_class.perform_now(work)
+      described_class.perform_now(work, log)
       work.reload.file_sets.each do |file|
         expect(file.read_groups).to match_array ["my_read_group"]
         expect(file.edit_users).to match_array [user.to_s]
@@ -86,7 +90,7 @@ describe InheritPermissionsJob do
       # files have the depositor as the edit user to begin with
       expect(work.file_sets.first.read_groups).to eq []
 
-      described_class.perform_now(work)
+      described_class.perform_now(work, log)
       work.reload.file_sets.each do |file|
         expect(file.edit_groups).to match_array ["my_edit_group"]
         expect(file.edit_users).to match_array [user.to_s]

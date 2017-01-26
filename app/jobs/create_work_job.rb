@@ -11,7 +11,7 @@ class CreateWorkJob < ActiveJob::Base
   # @param [User] user
   # @param [String] model
   # @param [Hash] attributes
-  # @param [Hyrax::BatchCreateOperation] operation
+  # @param [Hyrax::BatchCreateOperation] operation - a log storing the status of the job
   def perform(user, model, attributes, operation)
     operation.performing!
     work = model.constantize.new

@@ -8,6 +8,8 @@
       <ul class="dropdown-menu">
         <li><%= link_to t("hyrax.toolbar.dashboard.my"), hyrax.dashboard_index_path %></li>
         <li class="divider"></li>
+        <li><%= link_to t('hyrax.toolbar.dashboard.operations'), hyrax.user_operations_path(current_user) %>
+        <li class="divider"></li>
         <li><%= link_to t("hyrax.toolbar.dashboard.transfers"), hyrax.transfers_path %></li>
         <li class="divider"></li>
         <li><%= link_to t("hyrax.toolbar.dashboard.highlights"), hyrax.dashboard_highlights_path %></li>

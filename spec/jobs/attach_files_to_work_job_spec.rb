@@ -5,6 +5,11 @@ describe AttachFilesToWorkJob do
     let(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1) }
     let(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2) }
     let(:generic_work) { create(:public_generic_work) }
+    let(:user) { create(:user) }
+    let(:log) do
+      Hyrax::Operation.create!(user: user,
+                               operation_type: 'Attach File')
+    end
 
     context "with uploaded files on the filesystem" do
       before do
@@ -13,7 +18,7 @@ describe AttachFilesToWorkJob do
       end
       it "attaches files, copies visibility and permissions and updates the uploaded files" do
         expect(CharacterizeJob).to receive(:perform_later).twice
-        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
+        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2], log)
         generic_work.reload
         expect(generic_work.file_sets.count).to eq 2
         expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
@@ -41,7 +46,7 @@ describe AttachFilesToWorkJob do
 
       it 'creates ImportUrlJobs' do
         expect(ImportUrlJob).to receive(:perform_later).twice
-        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
+        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2], log)
         generic_work.reload
         expect(generic_work.file_sets.count).to eq 2
         expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
