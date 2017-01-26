@@ -18,6 +18,7 @@ module Hyrax
           # step through the array by twos to get each pair
           results.map do |key, deposits|
             user = ::User.find_by_user_key(key)
+            raise "Unable to find user '#{key}'\nResults was: #{results.inspect}" unless user
             { key: key, deposits: deposits, user: user }
           end
         end

@@ -35,6 +35,16 @@ describe Hyrax::Statistics::Depositors::Summary do
                                         { key: user2.user_key, deposits: 1, user: user2 }]
       end
     end
+
+    context "when a depositor is not found" do
+      before do
+        allow(service).to receive(:results).and_return('bob' => '')
+      end
+
+      it "raises an error" do
+        expect { subject }.to raise_error "Unable to find user 'bob'\nResults was: {\"bob\"=>\"\"}"
+      end
+    end
   end
 
   describe "#query" do
