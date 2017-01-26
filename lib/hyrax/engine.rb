@@ -20,6 +20,11 @@ module Hyrax
       #{config.root}/app/models/hyrax/pageview.rb
     )
 
+    config.action_dispatch.rescue_responses.merge!(
+      "ActiveFedora::ObjectNotFoundError" =>     :not_found, # We can remove this when we use ActiveFedora 11.2
+      "Blacklight::Exceptions::InvalidSolrID" => :not_found
+    )
+
     config.after_initialize do
       begin
         Hyrax.config.persist_registered_roles!

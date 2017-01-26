@@ -163,15 +163,6 @@ describe Hyrax::GenericWorksController do
         end
       end
     end
-
-    context 'when a ObjectNotFoundError is raised' do
-      let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999') }
-      it 'returns 404 page' do
-        allow(controller).to receive(:show).and_raise(ActiveFedora::ObjectNotFoundError)
-        expect(controller).to receive(:render_404) { controller.render body: nil }
-        get :show, params: { id: 'abc123' }
-      end
-    end
   end
 
   describe '#new' do
