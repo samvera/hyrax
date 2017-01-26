@@ -3,6 +3,7 @@ module Hyrax
     extend ActiveSupport::Concern
     included do
       before_action :build_contact_form
+      layout 'homepage'
     end
 
     def new; end
