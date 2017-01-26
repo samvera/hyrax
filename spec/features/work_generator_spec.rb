@@ -4,7 +4,7 @@ require 'redlock'
 
 feature 'Creating a new Work', :workflow do
   before do
-    Rails::Generators.invoke('hyrax:work', ['Catapult'], destination_root: Rails.root)
+    Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], destination_root: Rails.root)
     load "#{EngineCart.destination}/app/models/catapult.rb"
     load "#{EngineCart.destination}/app/controllers/hyrax/catapults_controller.rb"
     load "#{EngineCart.destination}/app/actors/hyrax/actors/catapult_actor.rb"
@@ -15,7 +15,7 @@ feature 'Creating a new Work', :workflow do
   end
 
   after do
-    Rails::Generators.invoke('hyrax:work', ['Catapult'], behavior: :revoke, destination_root: Rails.root)
+    Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], behavior: :revoke, destination_root: Rails.root)
   end
 
   it 'catapults should behave like generic works' do
