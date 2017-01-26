@@ -5,14 +5,6 @@ describe "User Profile", type: :feature do
   let(:user) { create(:user) }
   let(:profile_path) { Hyrax::Engine.routes.url_helpers.profile_path(user, locale: 'en') }
 
-  context 'when visiting user profile' do
-    it 'renders page properly' do
-      visit profile_path
-      expect(page).to have_content(user.email)
-      expect(page).to have_content('Edit Your Profile')
-    end
-  end
-
   context 'when clicking all users' do
     # TODO: Move this to a view test
     it 'displays all users' do
@@ -25,7 +17,10 @@ describe "User Profile", type: :feature do
   context 'when visiting user profile' do
     it 'page should be editable' do
       visit profile_path
-      click_link 'Edit Your Profile'
+      expect(page).to have_content(user.email)
+      within '.panel-user' do
+        click_link 'Edit Profile'
+      end
       fill_in 'user_twitter_handle', with: 'curatorOfData'
       click_button 'Save Profile'
       expect(page).to have_content 'Your profile has been updated'
