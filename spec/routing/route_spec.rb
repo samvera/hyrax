@@ -160,14 +160,6 @@ describe 'Routes', :no_clean, type: :routing do
     it "routes to mendeley" do
       expect(get: '/mendeley').to route_to(controller: 'hyrax/static', action: 'mendeley')
     end
-
-    it "routes to versions" do
-      expect(get: '/versions').to route_to(controller: 'hyrax/static', action: 'versions')
-    end
-
-    it "*not*s route a bogus static page" do
-      expect(get: '/awesome').not_to route_to(controller: 'hyrax/static', action: 'awesome')
-    end
   end
 
   describe 'main app routes' do
