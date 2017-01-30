@@ -15,6 +15,8 @@ module Hyrax
 
       # include the render_check_all view helper method
       helper ::BatchEditsHelper
+      # include the display_trophy_link view helper method
+      helper Hyrax::TrophyHelper
     end
 
     def index
