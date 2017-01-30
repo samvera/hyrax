@@ -8,6 +8,8 @@ module Hyrax::UsersControllerBehavior
     authorize_resource only: [:edit, :update]
     # Catch permission errors
     rescue_from CanCan::AccessDenied, with: :deny_access
+
+    helper Hyrax::TrophyHelper
   end
 
   def index

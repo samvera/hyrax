@@ -4,12 +4,12 @@
       <% presenter.trophies.each do |t| %>
         <tr id="trophyrow_<%= t.id %>" class='highlighted-works'>
           <td>
-            <%= link_to t do %>
+            <%= link_to [main_app, t] do %>
               <%= image_tag t.thumbnail_path, width: 90 %>
             <% end %>
           </td>
           <td>
-            <%= link_to t.to_s, t %>
+            <%= link_to t.to_s, [main_app, t] %>
             <% if presenter.current_user? %>
               <%= display_trophy_link current_user, t.id, class: 'glyphicon glyphicon-star', data: { removerow: true } do %>
                 <i class='trophy-on glyphicon glyphicon-remove'></i>

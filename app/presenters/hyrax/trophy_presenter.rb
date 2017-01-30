@@ -9,6 +9,8 @@ module Hyrax
 
     delegate :to_s, to: :solr_document
 
+    # @param user [User] the user to find the TrophyPresentes for.
+    # @return [Array<TrophyPresenter>] a list of all the trophy presenters for the user
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
       query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(work_ids)
