@@ -22,6 +22,7 @@ module Hyrax
                   end
     end
 
+    # @return [Array<TrophyPresenter>] list of TrophyPresenters for this profile.
     def trophies
       @trophies ||= Hyrax::TrophyPresenter.find_by_user(user)
     end

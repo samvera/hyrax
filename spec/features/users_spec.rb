@@ -14,10 +14,21 @@ describe "User Profile", type: :feature do
     end
   end
 
-  context 'when visiting user profile' do
+  context 'when visiting user profile with highlighted works' do
+    let(:work) { create(:work, user: user) }
+
+    before do
+      user.trophies.create!(work_id: work.id)
+    end
+
     it 'page should be editable' do
       visit profile_path
       expect(page).to have_content(user.email)
+
+      within '.highlighted-works' do
+        expect(page).to have_link(work.to_s)
+      end
+
       within '.panel-user' do
         click_link 'Edit Profile'
       end
