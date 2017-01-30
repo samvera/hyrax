@@ -6,6 +6,7 @@ describe "Browse Dashboard", type: :feature do
 
   before do
     sign_in user
+    user.trophies.create!(work_id: dissertation.id)
     visit "/dashboard"
   end
 

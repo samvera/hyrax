@@ -1,9 +1,6 @@
 module Hyrax
   module My
     class WorksController < MyController
-      # include the display_trophy_link view helper method
-      helper Hyrax::TrophyHelper
-
       def search_builder_class
         Hyrax::MyWorksSearchBuilder
       end
