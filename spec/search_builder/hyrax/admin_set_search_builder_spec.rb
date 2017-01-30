@@ -5,10 +5,11 @@ describe Hyrax::AdminSetSearchBuilder do
     double(blacklight_config: CatalogController.blacklight_config,
            current_ability: ability)
   end
+  let(:user_groups) { [] }
   let(:ability) do
     instance_double(Ability,
                     admin?: false,
-                    user_groups: [],
+                    user_groups: user_groups,
                     current_user: user)
   end
   let(:user) { create(:user) }
@@ -21,6 +22,46 @@ describe Hyrax::AdminSetSearchBuilder do
 
     it 'adds AdminSet to query' do
       expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}AdminSet')
+    end
+  end
+
+  describe "#gated_discovery_filters" do
+    subject { builder.gated_discovery_filters }
+
+    context "when access is :deposit" do
+      let(:access) { :deposit }
+      let(:admin_set) { create(:admin_set) }
+      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+
+      context "and user has access" do
+        before do
+          create(:permission_template_access,
+                 permission_template: permission_template,
+                 agent_type: 'user',
+                 agent_id: user.user_key,
+                 access: 'deposit')
+        end
+
+        it { is_expected.to eq ["{!terms f=id}#{admin_set.id}"] }
+      end
+
+      context "and group has access" do
+        let(:user_groups) { ['registered'] }
+        before do
+          create(:permission_template_access,
+                 permission_template: permission_template,
+                 agent_type: 'group',
+                 agent_id: 'registered',
+                 access: 'deposit')
+        end
+
+        it { is_expected.to eq ["{!terms f=id}#{admin_set.id}"] }
+      end
+
+      context "and user has no access" do
+        let(:user_groups) { ['registered'] }
+        it { is_expected.to eq ["{!terms f=id}"] }
+      end
     end
   end
 
