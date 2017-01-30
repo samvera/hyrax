@@ -24,8 +24,6 @@ describe Hyrax::BatchUploadsController do
   end
 
   before do
-    # allow(user).to receive(:can?).with(:create, GenericWork).and_return(true)
-    # allow(user).to receive(:can?).with(:create, Atlas).and_return(true)
     sign_in user
   end
 
@@ -38,22 +36,21 @@ describe Hyrax::BatchUploadsController do
   end
 
   describe "#create" do
-    context "enquing a update job" do
-      it "is successful" do
-        expect(BatchCreateJob).to receive(:perform_later)
-          .with(user,
-                expected_individual_params,
-                expected_types,
-                ['1', '2'],
-                expected_shared_params,
-                Hyrax::BatchCreateOperation)
-        post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
-        expect(flash[:notice]).to include("Your files are being processed")
-      end
+    it 'spawns a job, redirects to dashboard, and has an html_safe flash notice' do
+      expect(BatchCreateJob).to receive(:perform_later)
+        .with(user,
+              expected_individual_params,
+              expected_types,
+              ['1', '2'],
+              expected_shared_params,
+              Hyrax::BatchCreateOperation)
+      post :create, params: post_params
+      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+      expect(flash[:notice]).to be_html_safe
+      expect(flash[:notice]).to include("Your files are being processed")
     end
 
-    describe "when submiting works on behalf of another user" do
+    context "when submitting on behalf of other user" do
       let(:batch_upload_item) do
         {
           payload_concern: Atlas,
@@ -63,7 +60,8 @@ describe Hyrax::BatchUploadsController do
           on_behalf_of: 'elrayle'
         }
       end
-      it "redirects to my shares page" do
+
+      it 'redirects to my shares page' do
         allow(BatchCreateJob).to receive(:perform_later)
         post :create, params: post_params
         expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_shares_path(locale: 'en')
@@ -71,7 +69,7 @@ describe Hyrax::BatchUploadsController do
     end
   end
 
-  describe "attributes_for_actor" do
+  describe "#attributes_for_actor" do
     subject { controller.send(:attributes_for_actor) }
     before do
       controller.params = post_params
