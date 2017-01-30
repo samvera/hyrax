@@ -51,6 +51,7 @@ require 'support/speedup'
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
+require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ENV['TRAVIS']
 
 Capybara.default_driver = :rack_test      # This is a faster driver
@@ -79,7 +80,7 @@ ActiveJob::Base.queue_adapter = :inline
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-if ENV['TRAVIS'] == 'true'
+if ENV['TRAVIS']
   # Monkey-patches the FITS runner to return the PDF FITS fixture
   module Hydra::Works
     class CharacterizationService
