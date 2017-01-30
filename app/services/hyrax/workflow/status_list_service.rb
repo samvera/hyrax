@@ -1,12 +1,12 @@
 module Hyrax
   module Workflow
     class StatusListService
-      # @param user [User]
-      def initialize(user)
-        @user = user
+      # @param context [#current_user, #logger]
+      def initialize(context)
+        @context = context
       end
 
-      attr_reader :user
+      attr_reader :context
 
       # TODO: We will want to paginate this
       # @return [Array<StatusRow>] a list of results that the given user can take action on.
@@ -17,7 +17,14 @@ module Hyrax
         end
       end
 
+      # TODO: Make this private for version 1.0
+      def user
+        context.current_user
+      end
+
       private
+
+        delegate :logger, to: :context
 
         # @return [Hash<String,SolrDocument>] a hash of id to solr document
         def solr_documents
@@ -26,6 +33,7 @@ module Hyrax
 
         def search_solr
           actionable_roles = roles_for_user
+          logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
           return [] if actionable_roles.empty?
           WorkRelation.new.search_with_conditions(
             { actionable_workflow_roles_ssim: actionable_roles },

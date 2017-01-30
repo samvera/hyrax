@@ -12,7 +12,7 @@ module Hyrax
     end
 
     def workflows
-      @status_list = Hyrax::Workflow::StatusListService.new(current_user)
+      @status_list = Hyrax::Workflow::StatusListService.new(self)
     end
 
     private
