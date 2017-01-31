@@ -90,7 +90,9 @@ describe Hyrax::TransfersController, type: :controller do
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
         expect(notification.subject).to eq("Ownership Change Request")
-        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{routes.url_helpers.transfers_path}\">transfer requests</a>")
+        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> " \
+                                        "wants to transfer a work to you. Review all " \
+                                        "<a href=\"#{routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
       it "gives an error if the user is not found" do
         expect do

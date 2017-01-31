@@ -111,7 +111,10 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
           it "can not modify the same workflow" do
             expect(workflow2.label).to eq(workflow1.label)
             expect(Sipity::Workflow.count).to eq(1)
-            expect(workflow2_errors).to eq(["The workflow: ulra_submission has not been updated.  You are removing a state: #{workflow_state.name} with 1 entity/ies.  A state may not be removed while it has active entities!"])
+            expect(workflow2_errors).to eq(["The workflow: ulra_submission has not been updated.  " \
+                                            "You are removing a state: #{workflow_state.name} with " \
+                                            "1 entity/ies.  A state may not be removed while it has " \
+                                            "active entities!"])
           end
         end
       end

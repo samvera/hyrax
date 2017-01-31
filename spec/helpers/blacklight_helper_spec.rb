@@ -37,13 +37,19 @@ RSpec.describe BlacklightHelper, type: :helper do
       let(:field_name) { 'description_tesim' }
       it do
         pending 'need a different way to test description'
-        is_expected.to eq '<span itemprop="description">This links to <a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span> http://example.com/</a> What about that?</span>'
+        is_expected.to eq '<span itemprop="description">This links to ' \
+                          '<a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span>' \
+                          ' http://example.com/</a> What about that?</span>'
       end
     end
 
     context "rights_tesim" do
       let(:field_name) { 'rights_tesim' }
-      it { is_expected.to eq "<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, <a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>" }
+      it do
+        is_expected.to eq "<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, " \
+                             "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, " \
+                             "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>"
+      end
     end
 
     context "metadata index links" do
@@ -54,7 +60,11 @@ RSpec.describe BlacklightHelper, type: :helper do
 
       context "keyword_tesim" do
         let(:field_name) { 'keyword_tesim' }
-        it { is_expected.to eq '<span itemprop="keywords"><a href="/catalog?f%5Bkeyword_sim%5D%5B%5D=taco">taco</a></span> and <span itemprop="keywords"><a href="/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache">mustache</a></span>' }
+        it do
+          is_expected.to eq '<span itemprop="keywords">' \
+                               '<a href="/catalog?f%5Bkeyword_sim%5D%5B%5D=taco">taco</a></span> and ' \
+                               '<span itemprop="keywords"><a href="/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache">mustache</a></span>'
+        end
       end
 
       context "subject_tesim" do
@@ -64,7 +74,11 @@ RSpec.describe BlacklightHelper, type: :helper do
 
       context "creator_tesim" do
         let(:field_name) { 'creator_tesim' }
-        it { is_expected.to eq '<span itemprop="creator"><a href="/catalog?f%5Bcreator_sim%5D%5B%5D=Justin">Justin</a></span> and <span itemprop="creator"><a href="/catalog?f%5Bcreator_sim%5D%5B%5D=Joe">Joe</a></span>' }
+        it do
+          is_expected.to eq '<span itemprop="creator">' \
+                               '<a href="/catalog?f%5Bcreator_sim%5D%5B%5D=Justin">Justin</a></span> and ' \
+                               '<span itemprop="creator"><a href="/catalog?f%5Bcreator_sim%5D%5B%5D=Joe">Joe</a></span>'
+        end
       end
 
       context "contributor_tesim" do

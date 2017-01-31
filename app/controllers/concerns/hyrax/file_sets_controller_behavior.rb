@@ -101,7 +101,7 @@ module Hyrax
         if !file
           render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
         elsif empty_file?(file)
-          render_json_response(response_type: :unprocessable_entity, options: { errors: { files: "#{file.original_filename} has no content! (Zero length file)" }, description: t('hyrax.api.unprocessable_entity.empty_file') })
+          empty_file_response(file)
         else
           update_metadata_from_upload_screen
           actor.create_metadata(find_parent_by_id, params[:file_set])
@@ -113,6 +113,16 @@ module Hyrax
             json_error "Error creating file #{file.original_filename}: #{msg}"
           end
         end
+      end
+
+      def empty_file_response(file)
+        render_json_response(response_type: :unprocessable_entity,
+                             options: {
+                               errors: {
+                                 files: "#{file.original_filename} has no content! (Zero length file)"
+                               },
+                               description: t('hyrax.api.unprocessable_entity.empty_file')
+                             })
       end
 
       def response_for_successfully_processed_file

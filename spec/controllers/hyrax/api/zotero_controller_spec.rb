@@ -32,7 +32,8 @@ describe Hyrax::API::ZoteroController, type: :controller do
         allow(Hyrax::Zotero).to receive(:config) { broken_config }
         sign_in user
 
-        stub_request(:get, %r{https://www.zotero.org/oauth/request\?oauth_callback=http://test\.host/api/zotero/callback&oauth_consumer_key=%7B:client_key=%3E%22foo%22,%20:client_secret=%3E%22bar%22%7D})
+        stub_request(:get,
+                     %r{https://www.zotero.org/oauth/request\?oauth_callback=http://test\.host/api/zotero/callback&oauth_consumer_key=%7B:client_key=%3E%22foo%22,%20:client_secret=%3E%22bar%22%7D})
           .to_return(status: 401, body: "oauth_problem=consumer_key_unknown")
         get :initiate
       end
@@ -55,7 +56,10 @@ describe Hyrax::API::ZoteroController, type: :controller do
         get :initiate
       end
 
-      let(:token) { object_double(OAuth::RequestToken.new(client), authorize_url: 'https://www.zotero.org/oauth/authorize?identity=1&oauth_callback=http%3A%2F%2Ftest.host%2Fapi%2Fzotero%2Fcallback&oauth_token=bc2502f2750983c57224') }
+      let(:token) do
+        object_double(OAuth::RequestToken.new(client),
+                      authorize_url: 'https://www.zotero.org/oauth/authorize?identity=1&oauth_callback=http%3A%2F%2Ftest.host%2Fapi%2Fzotero%2Fcallback&oauth_token=bc2502f2750983c57224')
+      end
       let(:client) do
         OAuth::Consumer.new(Hyrax::Zotero.config['client_key'],
                             Hyrax::Zotero.config['client_secret'],

@@ -1,7 +1,36 @@
 describe Hyrax::Forms::BatchEditForm do
   let(:model) { GenericWork.new }
-  let(:work1) { create :generic_work, title: ["title 1"], keyword: ["abc"], creator: ["Wilma"], language: ['en'], contributor: ['contributor1'], description: ['description1'], rights: ['rights1'], subject: ['subject1'], identifier: ['id1'], based_near: ['based_near1'], related_url: ['related_url1'] }
-  let(:work2) { create :generic_work, title: ["title 2"], keyword: ["123"], creator: ["Fred"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar'], contributor: ['contributor2'], description: ['description2'], rights: ['rights2'], subject: ['subject2'], identifier: ['id2'], based_near: ['based_near2'], related_url: ['related_url2'] }
+  let(:work1) do
+    create :generic_work,
+           title: ["title 1"],
+           keyword: ["abc"],
+           creator: ["Wilma"],
+           language: ['en'],
+           contributor: ['contributor1'],
+           description: ['description1'],
+           rights: ['rights1'],
+           subject: ['subject1'],
+           identifier: ['id1'],
+           based_near: ['based_near1'],
+           related_url: ['related_url1']
+  end
+
+  let(:work2) do
+    create :generic_work,
+           title: ["title 2"],
+           keyword: ["123"],
+           creator: ["Fred"],
+           publisher: ['Rand McNally'],
+           language: ['en'],
+           resource_type: ['bar'],
+           contributor: ['contributor2'],
+           description: ['description2'],
+           rights: ['rights2'],
+           subject: ['subject2'],
+           identifier: ['id2'],
+           based_near: ['based_near2'],
+           related_url: ['related_url2']
+  end
   let(:batch) { [work1.id, work2.id] }
   let(:form) { described_class.new(model, ability, batch) }
   let(:ability) { Ability.new(user) }

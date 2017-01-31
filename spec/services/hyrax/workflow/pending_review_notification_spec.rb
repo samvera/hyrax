@@ -11,7 +11,11 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
 
   describe ".send_notification" do
     it 'sends a message to all users except depositor' do
-      expect(depositor).to receive(:send_message).with(anything, "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) was deposited by #{depositor.user_key} and is awaiting approval A pleasant read", anything).once.and_call_original
+      expect(depositor).to receive(:send_message)
+        .with(anything,
+              "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) "\
+              "was deposited by #{depositor.user_key} and is awaiting approval A pleasant read",
+              anything).once.and_call_original
 
       expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }
         .to change { depositor.mailbox.inbox.count }.by(1)

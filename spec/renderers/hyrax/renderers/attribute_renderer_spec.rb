@@ -61,7 +61,9 @@ describe Hyrax::Renderers::AttributeRenderer do
       let(:renderer) { described_class.new(field, ['Foo < Bar http://www.example.com. & More Text']) }
       let(:tr_content) do
         "<tr><th>Description</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute description\"><span itemprop=\"description\">Foo &lt; Bar <a href=\"http://www.example.com\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
+         "<td><ul class='tabular'><li class=\"attribute description\">" \
+         "<span itemprop=\"description\">Foo &lt; Bar " \
+         "<a href=\"http://www.example.com\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
          "</ul></td></tr>"
       end
 

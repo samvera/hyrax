@@ -3,7 +3,12 @@ describe ContentRestoredVersionEventJob do
   let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
   let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
   let(:mock_time) { Time.zone.at(1) }
-  let(:event) { { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has restored a version 'content.0' of <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' } }
+  let(:event) do
+    { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> " \
+                          "has restored a version 'content.0' of " \
+                          "<a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>",
+      timestamp: '1' }
+  end
   before do
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)

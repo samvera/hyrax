@@ -89,7 +89,12 @@ describe Hyrax::Actors::FileSetActor do
 
     context 'when file_set.title is empty and file_set.label is not' do
       let(:file)       { 'world.png' }
-      let(:long_name)  { 'an absurdly long title that goes on way to long and messes up the display of the page which should not need to be this big in order to show this impossibly long, long, long, oh so long string' }
+      let(:long_name)  do
+        'an absurdly long title that goes on way to long and ' \
+                         'messes up the display of the page which should not need ' \
+                         'to be this big in order to show this impossibly long, ' \
+                         'long, long, oh so long string'
+      end
       let(:short_name) { 'Nice Short Name' }
       let(:actor)      { described_class.new(file_set, user) }
 
