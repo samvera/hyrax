@@ -10,10 +10,10 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
 
   context "without admin privleges" do
     describe "update" do
-      let(:permission_template) { create(:permission_template) }
-
+      let(:admin_set) { create(:admin_set) }
+      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
       it "is unauthorized" do
-        put :update, params: { id: permission_template, admin_set_id: 999 }
+        put :update, params: { id: '888', admin_set_id: admin_set }
         expect(response).to be_unauthorized
       end
     end

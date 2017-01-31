@@ -13,9 +13,8 @@ module Hyrax
 
       private
 
-        # This sets the @permission_template so that CanCanCan doesn't have to.
         def load_template_for_admin_set
-          @permission_template = Hyrax::PermissionTemplate.find_by(admin_set_id: params[:admin_set_id])
+          @permission_template = Hyrax::PermissionTemplate.find_by!(admin_set_id: params[:admin_set_id])
         end
 
         def update_params
