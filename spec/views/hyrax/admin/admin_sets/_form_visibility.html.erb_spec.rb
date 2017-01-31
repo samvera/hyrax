@@ -1,12 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe 'hyrax/admin/admin_sets/_form_visibility.html.erb', type: :view do
-  let(:admin_set) { create(:admin_set) }
-  let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by(admin_set_id: admin_set.id) }
+  let(:template) { stub_model(Hyrax::PermissionTemplate) }
+  let(:pt_form) { Hyrax::Forms::PermissionTemplateForm.new(template) }
+
   before do
-    @form = Hyrax::Forms::AdminSetForm.new(admin_set, permission_template)
+    @form = instance_double(Hyrax::Forms::AdminSetForm,
+                            to_model: stub_model(AdminSet),
+                            permission_template: pt_form)
     render
   end
+
   it "has the form" do
     expect(rendered).to have_selector('#visibility input[type=radio][name="permission_template[release_period]"][value=now]')
     expect(rendered).to have_selector('#visibility input[type=radio][name="permission_template[release_period]"][value=fixed]')
