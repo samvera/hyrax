@@ -159,37 +159,44 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with release varies by date selected" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "", release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, release_date: today + 1.month).permit!
+        ActionController::Parameters.new(release_period: "",
+                                         release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+                                         release_date: today + 1.month).permit!
       end
       it "updates params to release_period=before and keeps date" do
-        expect { subject }.to change { input_params[:release_period] }.from("").to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE)
-        expect(input_params[:release_date]).to eq(today + 1.month)
-        expect(input_params[:release_varies]).to be_nil
-        expect(input_params[:release_embargo]).to be_nil
+        expect(subject).to eq ActionController::Parameters.new(
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+          release_date: today + 1.month
+        ).permit!
       end
     end
 
     context "with release varies by embargo selected" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "", release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO, release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR).permit!
+        ActionController::Parameters.new(release_period: "",
+                                         release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
+                                         release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR).permit!
       end
       it "updates params to release_period=1yr" do
-        expect { subject }.to change { input_params[:release_period] }.from("").to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
-        expect(input_params[:release_date]).to be_nil
-        expect(input_params[:release_varies]).to be_nil
-        expect(input_params[:release_embargo]).to be_nil
+        expect(subject).to eq ActionController::Parameters.new(
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR,
+          release_date: nil
+        ).permit!
       end
     end
 
     context "with release no delay (now) selected, after filling out release_date" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY, release_varies: "", release_embargo: "", release_date: today + 1.month).permit!
+        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
+                                         release_varies: "",
+                                         release_embargo: "",
+                                         release_date: today + 1.month).permit!
       end
       it "updates params to release_period=1yr" do
-        expect { subject }.to change { input_params[:release_date] }.from(today + 1.month).to(nil)
-        expect(input_params[:release_period]).to eq(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
-        expect(input_params[:release_varies]).to be_nil
-        expect(input_params[:release_embargo]).to be_nil
+        expect(subject).to eq ActionController::Parameters.new(
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
+          release_date: nil
+        ).permit!
       end
     end
   end
