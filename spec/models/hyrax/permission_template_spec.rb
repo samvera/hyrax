@@ -1,7 +1,14 @@
 describe Hyrax::PermissionTemplate do
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { described_class.new(attributes) }
-  let(:attibutes) { { admin_set_id: admin_set.id } }
+  let(:attributes) { { admin_set_id: admin_set.id } }
+
+  describe "#admin_set" do
+    it 'leverages AdminSet.find for the given permission_template' do
+      expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)
+      expect(permission_template.admin_set).to eq(admin_set)
+    end
+  end
 
   describe "#release_fixed_date?" do
     subject { permission_template.release_fixed_date? }

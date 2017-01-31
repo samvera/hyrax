@@ -96,7 +96,7 @@ module Hyrax
         # Validate against selected AdminSet's PermissionTemplate (if any)
         def validate(attributes)
           # If AdminSet was selected, look for its PermissionTemplate
-          template = PermissionTemplate.find_by(admin_set_id: attributes[:admin_set_id]) if attributes[:admin_set_id].present?
+          template = PermissionTemplate.find_by!(admin_set_id: attributes[:admin_set_id]) if attributes[:admin_set_id].present?
 
           validate_lease(template) && validate_release_type(template) && validate_visibility(attributes, template) && validate_embargo(attributes, template)
         end

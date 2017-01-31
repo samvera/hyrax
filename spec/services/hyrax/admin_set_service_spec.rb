@@ -125,46 +125,22 @@ RSpec.describe Hyrax::AdminSetService do
 
     context "with empty permission_template" do
       let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'Empty Template Set') }
-      let!(:permission_template1) { create(:permission_template, admin_set_id: '567') }
+      let!(:permission_template1) { create(:permission_template, admin_set_id: solr_doc1.id) }
 
       before do
-        allow(service).to receive(:search_results)
-          .with(:read)
-          .and_return([solr_doc1])
+        allow(service).to receive(:search_results).with(:read).and_return([solr_doc1])
       end
 
       it { is_expected.to eq [['Empty Template Set', '123', {}]] }
     end
 
     context "with no permission_template" do
-      context "with default (read) access" do
-        subject { service.select_options }
-        let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'foo') }
-        let(:solr_doc2) { instance_double(SolrDocument, id: '234', to_s: 'bar') }
-        let(:solr_doc3) { instance_double(SolrDocument, id: '345', to_s: 'baz') }
-
-        before do
-          allow(service).to receive(:search_results)
-            .with(:read)
-            .and_return([solr_doc1, solr_doc2, solr_doc3])
-        end
-
-        it do
-          is_expected.to eq [['foo', '123', {}],
-                             ['bar', '234', {}],
-                             ['baz', '345', {}]]
-        end
+      let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'foo') }
+      before do
+        allow(service).to receive(:search_results).with(:read).and_return([solr_doc1])
       end
-
-      context "with explicit edit access" do
-        subject { service.select_options(:edit) }
-        let(:solr_doc) { instance_double(SolrDocument, id: '123', to_s: 'baz') }
-
-        before do
-          allow(service).to receive(:search_results).with(:edit).and_return([solr_doc])
-        end
-
-        it { is_expected.to eq [['baz', '123', {}]] }
+      it 'will an raise exception' do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

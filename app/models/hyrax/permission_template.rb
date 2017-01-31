@@ -13,6 +13,13 @@ module Hyrax
     has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess'
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
+    # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
+    # @return [AdminSet]
+    # @raise [ActiveFedora::ObjectNotFoundError] when the we cannot find the AdminSet
+    def admin_set
+      AdminSet.find(admin_set_id)
+    end
+
     # Valid Release Period values
     RELEASE_TEXT_VALUE_FIXED = 'fixed'.freeze
     RELEASE_TEXT_VALUE_NO_DELAY = 'now'.freeze
