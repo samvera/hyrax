@@ -76,7 +76,10 @@ describe Hyrax::AdminSetSearchBuilder do
     context "when searching for read access" do
       let(:access) { :read }
       it 'is successful' do
-        expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR discover_access_person_ssim:#{user.user_key} OR read_access_person_ssim:#{user.user_key}", "{!terms f=has_model_ssim}AdminSet"]
+        expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR " \
+                                       "discover_access_person_ssim:#{user.user_key} OR " \
+                                       "read_access_person_ssim:#{user.user_key}",
+                                     "{!terms f=has_model_ssim}AdminSet"]
       end
     end
 

@@ -41,8 +41,21 @@ module Hyrax
         end
 
         def validate_params
-          return redirect_to hyrax.edit_profile_path(current_user.to_param), alert: "Malformed request from Zotero" if params[:oauth_token].blank? || params[:oauth_verifier].blank?
-          return redirect_to hyrax.edit_profile_path(current_user.to_param), alert: "You have not yet connected to Zotero" if !current_token || current_token.params[:oauth_token] != params[:oauth_token]
+          if malformed_request?
+            redirect_to hyrax.edit_profile_path(current_user.to_param),
+                        alert: "Malformed request from Zotero"
+          elsif invalid_token?
+            redirect_to hyrax.edit_profile_path(current_user.to_param),
+                        alert: "You have not yet connected to Zotero"
+          end
+        end
+
+        def malformed_request?
+          params[:oauth_token].blank? || params[:oauth_verifier].blank?
+        end
+
+        def invalid_token?
+          !current_token || current_token.params[:oauth_token] != params[:oauth_token]
         end
 
         def client

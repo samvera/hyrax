@@ -103,7 +103,12 @@ describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo with invalid embargo date" do
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: 'ffff' } }
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: 'ffff' }
+        end
 
         it "returns false and logs error on date field" do
           expect(subject.create(attributes)).to be false
@@ -130,7 +135,12 @@ describe Hyrax::Actors::InterpretVisibilityActor do
 
       context "embargo with date = one year from today, and required embargo of 6 months or less" do
         let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS) }
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: one_year_from_today.to_s } }
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: one_year_from_today.to_s }
+        end
 
         it "returns false and logs error on date field" do
           permission_template.reload
@@ -140,8 +150,17 @@ describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo with date = one year from today, and required embargo of 1 year or less" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR) }
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: one_year_from_today.to_s } }
+        let(:permission_template) do
+          create(:permission_template,
+                 admin_set_id: admin_set.id,
+                 release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
+        end
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: one_year_from_today.to_s }
+        end
 
         it "returns true" do
           permission_template.reload
@@ -150,8 +169,18 @@ describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo with date that doesn't match a required, fixed date" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: one_year_from_today.to_s) }
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: two_years_from_today.to_s } }
+        let(:permission_template) do
+          create(:permission_template,
+                 admin_set_id: admin_set.id,
+                 release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+                 release_date: one_year_from_today.to_s)
+        end
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: two_years_from_today.to_s }
+        end
 
         it "returns false and logs error on date field" do
           permission_template.reload
@@ -161,8 +190,18 @@ describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo with date matching the required, fixed date" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: two_years_from_today.to_s) }
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: two_years_from_today.to_s } }
+        let(:permission_template) do
+          create(:permission_template,
+                 admin_set_id: admin_set.id,
+                 release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+                 release_date: two_years_from_today.to_s)
+        end
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: two_years_from_today.to_s }
+        end
 
         it "returns true" do
           permission_template.reload
@@ -255,8 +294,17 @@ describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo when no release delays are allowed" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY) }
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, embargo_release_date: one_year_from_today.to_s } }
+        let(:permission_template) do
+          create(:permission_template,
+                 admin_set_id: admin_set.id,
+                 release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
+        end
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            embargo_release_date: one_year_from_today.to_s }
+        end
 
         it "returns false and logs error on visiblity field" do
           permission_template.reload

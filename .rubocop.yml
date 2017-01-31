@@ -17,7 +17,7 @@ Lint/ImplicitStringConcatenation:
     - 'lib/generators/hyrax/**/*'
 
 Metrics/LineLength:
-  Max: 400
+  Max: 200
 
 Metrics/AbcSize:
   Max: 30

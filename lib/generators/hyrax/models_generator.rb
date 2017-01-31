@@ -26,7 +26,11 @@ This generator makes the following changes to your application:
         "\n  include Hyrax::UserUsageStats\n"
       end
     else
-      puts "     \e[31mFailure\e[0m  Hyrax requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g hyrax:models client"
+      puts "     \e[31mFailure\e[0m  Hyrax requires a user object. This " \
+           "generator assumes that the model is defined in the file " \
+           "#{file_path}, which does not exist.  If you used a different " \
+           "name, please re-run the generator and provide that name as an " \
+           "argument. Such as \b  rails -g hyrax:models client"
     end
   end
 

@@ -13,9 +13,14 @@ describe Hyrax::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together all the goodness' do
-    [::Hyrax::WithFileSets, ::Hyrax::HumanReadableType, Hyrax::Noid, Hyrax::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common, Hyrax::Suppressible].each do |mixin|
-      expect(subject.class.ancestors).to include(mixin)
-    end
+    expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
+                                               ::Hyrax::HumanReadableType,
+                                               Hyrax::Noid,
+                                               Hyrax::Serializers,
+                                               Hydra::WithDepositor,
+                                               Hydra::AccessControls::Embargoable,
+                                               Solrizer::Common,
+                                               Hyrax::Suppressible)
   end
   describe '#to_s' do
     it 'uses the provided titles' do

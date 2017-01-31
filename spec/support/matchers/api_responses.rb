@@ -16,7 +16,11 @@
     end
 
     failure_message do |actual|
-      "expected #{default_response_body[:code]} status code. Got #{actual.code} status code.\nexpected an Authentication Required response like this:\n #{@expected_response_body.to_json} \ngot\n #{actual.body}\nTo override expectations about the response body, provide a Hash of overrides in your call to :respond_#{response_type} "
+      "expected #{default_response_body[:code]} status code. Got #{actual.code} status code.\n" \
+      "expected an Authentication Required response like this:\n" \
+      " #{@expected_response_body.to_json} \ngot\n #{actual.body}\n" \
+      "To override expectations about the response body, provide a Hash of overrides in " \
+      "your call to :respond_#{response_type} "
     end
   end
 end

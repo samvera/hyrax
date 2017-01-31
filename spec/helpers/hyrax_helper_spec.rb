@@ -78,22 +78,38 @@ describe HyraxHelper, :no_clean, type: :helper do
     subject { helper.link_to_each_facet_field(options) }
     context "with helper_facet and default separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym }, value: ["Imaging > Object Photography"] } }
-      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> &gt; <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+      it do
+        is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
+                             "Imaging</a> &gt; " \
+                             "<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>")
+      end
     end
 
     context "with helper_facet and optional separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, separator: " : " }, value: ["Imaging : Object Photography"] } }
-      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> : <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+      it do
+        is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
+                             "Imaging</a> : " \
+                             "<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>")
+      end
     end
 
     context "with :output_separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: ' ~ ', separator: ":" }, value: ["Imaging : Object Photography"] } }
-      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a> ~ <a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+      it do
+        is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
+                             "Imaging</a> ~ " \
+                             "<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>")
+      end
     end
 
     context "with :no_spaces_around_separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: '~', separator: ":" }, value: ["Imaging : Object Photography"] } }
-      it { is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">Imaging</a>~<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>") }
+      it do
+        is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
+                             "Imaging</a>~" \
+                             "<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>")
+      end
     end
   end
 
@@ -267,7 +283,9 @@ describe HyraxHelper, :no_clean, type: :helper do
                value: ["http://creativecommons.org/publicdomain/zero/1.0/",
                        "http://creativecommons.org/publicdomain/mark/1.0/",
                        "http://www.europeana.eu/portal/rights/rr-r.html"]
-      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, <a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
+      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, " \
+               "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, " \
+               "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
     end
   end
 

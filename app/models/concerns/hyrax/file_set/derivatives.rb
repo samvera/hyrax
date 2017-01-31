@@ -6,8 +6,10 @@ module Hyrax
       included do
         # TODO: These should be moved to an initializer. However, there is a timing bug in place.
         #       If the following Hydra::Derivatives configuration is moved to an initializer, then the
-        #       Hydra::Works configuration (https://github.com/projecthydra/hydra-works/blob/d0e87d017c20ffbecbaeda8c09b376747b9cdebc/lib/hydra/works/models/concerns/file_set/derivatives.rb) obliterates
-        #       our new configuration. This manifests as the following errors:
+        #       Hydra::Works configuration obliterates our new configuration.
+        #       https://github.com/projecthydra/hydra-works/blob/d0e87d017c20ffbecbaeda8c09b376747b9cdebc/lib/hydra/works/models/concerns/file_set/derivatives.rb
+        #
+        #       This manifests as the following errors:
         #
         #       The following errors were encountered by moving the following class variables
         #       Failures:
