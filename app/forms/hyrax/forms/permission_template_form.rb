@@ -43,6 +43,7 @@ module Hyrax
       end
 
       def workflows
+        # TODO: Scope the workflows only to admin sets see https://github.com/projecthydra-labs/hyrax/issues/256
         Sipity::Workflow.all
       end
 

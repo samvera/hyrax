@@ -1,4 +1,12 @@
 module Hyrax
+  # Defines behavior that is applied to objects added as members of an AdminSet
+  #
+  #  * access rights to stamp on each object
+  #  * calculate embargo/lease release dates
+  #
+  # There is an interplay between an AdminSet and a PermissionTemplate.
+  #
+  # @see Hyrax::AdminSetBehavior for further discussion
   class PermissionTemplate < ActiveRecord::Base
     self.table_name = 'permission_templates'
 
@@ -53,6 +61,7 @@ module Hyrax
     # Override release_date getter to return a dynamically calculated date of release
     # based one release requirements. Returns embargo date when release_max_embargo?==true.
     # Returns today's date when release_no_delay?==true.
+    # @see Hyrax::AdminSetService for usage
     def release_date
       # If no release delays allowed, return today's date as release date
       return Time.zone.today if release_no_delay?
