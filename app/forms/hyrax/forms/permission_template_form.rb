@@ -38,10 +38,8 @@ module Hyrax
       end
 
       def update(attributes)
-        manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
-        grant_admin_set_access(manage_grants) if manage_grants.present?
-        update_release_attributes(attributes)
-        model.update(attributes)
+        grant_admin_set_access(attributes)
+        model.update(update_release_attributes(attributes))
       end
 
       def workflows
@@ -66,7 +64,9 @@ module Hyrax
           attributes_collection
         end
 
-        def grant_admin_set_access(manage_grants)
+        def grant_admin_set_access(attributes)
+          manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
+          return unless manage_grants.present?
           admin_set = AdminSet.find(model.admin_set_id)
           admin_set.edit_users = manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] }
           admin_set.edit_groups = manage_grants.select { |x| x[:agent_type] == 'group' }.map { |x| x[:agent_id] }
@@ -89,27 +89,28 @@ module Hyrax
           end
         end
 
-        # Update attributes based on release options selected (if any).
-        def update_release_attributes(attributes)
+        # @return [Hash] attributes used to update the model
+        def update_release_attributes(raw_attributes)
+          # Remove release_varies and release_embargo from attributes
+          # These form fields are only used to update release_period
+          attributes = raw_attributes.except(:release_varies, :release_embargo)
           # If 'varies' before date option selected, then set release_period='before' and save release_date as-is
-          if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE
+          if raw_attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE
             attributes[:release_period] = Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE
           # Else if 'varies' + embargo selected, save embargo as the release_period
-          elsif attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO && attributes[:release_embargo]
-            attributes[:release_period] = attributes[:release_embargo]
+          elsif raw_attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO &&
+                raw_attributes[:release_embargo]
+            attributes[:release_period] = raw_attributes[:release_embargo]
             # In an embargo, the release_date should be unspecified as it is based on deposit date
             attributes[:release_date] = nil
           end
 
-          # If release is "no delay", a release_date should never be allowed/specified
           if attributes[:release_period] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
+            # If release is "no delay", a release_date should never be allowed/specified
             attributes[:release_date] = nil
           end
 
-          # Remove release_varies and release_embargo from attributes
-          # These form fields are only used (above) to update release_period
-          attributes.delete(:release_varies)
-          attributes.delete(:release_embargo)
+          attributes
         end
     end
   end
