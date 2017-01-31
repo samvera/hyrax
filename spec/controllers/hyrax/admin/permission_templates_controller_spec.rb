@@ -13,7 +13,11 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
       let(:admin_set) { create(:admin_set) }
       let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
       it "is unauthorized" do
-        put :update, params: { id: '888', admin_set_id: admin_set }
+        # This spec was not firing as expected. It was getting a nil permission template. This mock expectation is a bit
+        # odd, but it needs to go rather deep into CanCan to behave accordingly.
+        allow(controller.current_ability).to receive(:can?).with(:update, permission_template).and_return(false)
+        put :update, params: { id: permission_template, admin_set_id: permission_template.admin_set_id }
+        expect(assigns(:permission_template)).to eq(permission_template)
         expect(response).to be_unauthorized
       end
     end
