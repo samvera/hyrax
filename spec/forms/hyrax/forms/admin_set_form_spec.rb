@@ -1,7 +1,6 @@
 require 'spec_helper'
 RSpec.describe Hyrax::Forms::AdminSetForm do
-  let(:permission_template) { double }
-  let(:form) { described_class.new(model, permission_template) }
+  let(:form) { described_class.new(model) }
 
   describe "[] accessors" do
     let(:model) { AdminSet.new(description: ['one']) }

@@ -2,11 +2,13 @@ require 'spec_helper'
 
 RSpec.describe "The admin sets, through the admin dashboard" do
   let(:user) { create :user }
-
-  before do
+  let(:admin_set) do
     create(:admin_set, title: ["A completely unique name"],
                        description: ["A substantial description"],
                        edit_users: [user.user_key])
+  end
+  before do
+    Hyrax::PermissionTemplate.create!(admin_set_id: admin_set.id)
     allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
   end
 

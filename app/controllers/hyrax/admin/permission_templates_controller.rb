@@ -1,21 +1,21 @@
 module Hyrax
   module Admin
     class PermissionTemplatesController < ApplicationController
-      before_action :load_template_for_admin_set
+      load_and_authorize_resource find_by: 'admin_set_id',
+                                  id_param: 'admin_set_id',
+                                  class: 'Hyrax::PermissionTemplate'
 
       def update
-        authorize! :update, @permission_template
-        Forms::PermissionTemplateForm.new(@permission_template).update(update_params)
+        form.update(update_params)
         # Ensure we redirect to currently active tab with the appropriate notice
-        current_tab = current_tab_selector
-        redirect_to hyrax.edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab), notice: I18n.t(current_tab, scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+        redirect_to edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
+                    notice: translate(current_tab, scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
       end
 
       private
 
-        # This sets the @permission_template so that CanCanCan doesn't have to.
-        def load_template_for_admin_set
-          @permission_template = Hyrax::PermissionTemplate.find_by(admin_set_id: params[:admin_set_id])
+        def form
+          Forms::PermissionTemplateForm.new(@permission_template)
         end
 
         def update_params
@@ -24,10 +24,16 @@ module Hyrax
                         access_grants_attributes: [:access, :agent_id, :agent_type, :id])
         end
 
-        def current_tab_selector
-          return 'participants' if params[:permission_template][:access_grants_attributes].present?
-          return 'workflow' if params[:permission_template][:workflow_name].present?
-          'visibility'
+        # @return [String] the name of the current UI tab to show
+        def current_tab
+          pt = params[:permission_template]
+          @current_tab ||= if pt[:access_grants_attributes].present?
+                             'participants'
+                           elsif pt[:workflow_name].present?
+                             'workflow'
+                           else
+                             'visibility'
+                           end
         end
     end
   end

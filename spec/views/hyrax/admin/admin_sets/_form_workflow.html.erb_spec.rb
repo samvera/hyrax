@@ -1,11 +1,20 @@
 require 'spec_helper'
 
 RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
-  let(:admin_set) { create(:admin_set) }
-  let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by(admin_set_id: admin_set.id) }
+  let(:template) { stub_model(Hyrax::PermissionTemplate) }
+  let(:workflow) { stub_model(Sipity::Workflow, name: "my_name", description: "random workflow", label: "my label") }
+  let(:pt_form) do
+    instance_double(Hyrax::Forms::PermissionTemplateForm,
+                    model_name: template.model_name,
+                    persisted?: template.persisted?,
+                    to_key: template.to_key,
+                    workflows: [workflow],
+                    workflow_name: nil)
+  end
   before do
-    create(:workflow, name: "my_name", description: "random workflow", label: "my label")
-    @form = Hyrax::Forms::AdminSetForm.new(admin_set, permission_template)
+    @form = instance_double(Hyrax::Forms::AdminSetForm,
+                            to_model: stub_model(AdminSet),
+                            permission_template: pt_form)
     render
   end
   it "has the radio button for workflow" do
