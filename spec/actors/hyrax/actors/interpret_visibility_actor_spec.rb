@@ -111,6 +111,7 @@ describe Hyrax::Actors::InterpretVisibilityActor do
         end
 
         it "returns false and logs error on date field" do
+          permission_template # Ensuring permission_template is loaded
           expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
         end
@@ -126,8 +127,8 @@ describe Hyrax::Actors::InterpretVisibilityActor do
 
       context "embargo with missing embargo date" do
         let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
-
         it "returns false and logs error on visibility field" do
+          permission_template # Ensuring permission_template is loaded
           expect(subject.create(attributes)).to be false
           expect(subject.curation_concern.errors[:visibility].first).to eq 'When setting visibility to "embargo" you must also specify embargo release date.'
         end
