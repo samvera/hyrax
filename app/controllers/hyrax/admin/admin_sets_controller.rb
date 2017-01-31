@@ -47,10 +47,8 @@ module Hyrax
       setup_form
     end
 
-    # TODO: consolidate admin set and permission template into a service class.
     def update
       if @admin_set.update(admin_set_params)
-        permission_template.update(permission_template_params)
         redirect_to hyrax.admin_admin_sets_path
       else
         setup_form
@@ -58,12 +56,8 @@ module Hyrax
       end
     end
 
-    # TODO: consolidate admin set and permission template into a service class.
     def create
       if create_admin_set
-        permission_template_holder = permission_template
-        permission_template_holder.attributes = permission_template_params
-        permission_template_holder.save! # to create permission template on create
         redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
@@ -103,12 +97,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
-        @form = form_class.new(@admin_set, permission_template)
-      end
-
-      # Find or create the permission_template object for this admin set
-      def permission_template
-        PermissionTemplate.find_or_initialize_by(admin_set_id: @admin_set.id)
+        @form = form_class.new(@admin_set)
       end
 
       def action_breadcrumb
@@ -126,10 +115,6 @@ module Hyrax
 
       def repository_class
         blacklight_config.repository_class
-      end
-
-      def permission_template_params
-        { "workflow_name" => params[:admin_set][:workflow_name] }
       end
   end
 end

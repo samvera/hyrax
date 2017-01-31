@@ -6,9 +6,8 @@ module Hyrax
 
       # @param model [AdminSet]
       # @param permission_template [PermissionTemplate]
-      def initialize(model, permission_template)
+      def initialize(model)
         super(model)
-        @permission_template = permission_template
       end
 
       # Cast any array values on the model to scalars.
@@ -18,11 +17,10 @@ module Hyrax
       end
 
       def permission_template
-        PermissionTemplateForm.new(@permission_template)
-      end
-
-      def workflow_name
-        @permission_template.workflow_name
+        @permission_template ||= begin
+                                   template_model = PermissionTemplate.find_by!(admin_set_id: model.id)
+                                   PermissionTemplateForm.new(template_model)
+                                 end
       end
 
       class << self
