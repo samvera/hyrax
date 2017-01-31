@@ -1,4 +1,22 @@
 module Hyrax
+  # There is an interplay between an AdminSet and a PermissionTemplate. Given
+  # that AdminSet is an ActiveFedora::Base and PermissionTemplate is ActiveRecord::Base
+  # we don't have the usual :has_many or :belongs_to methods to assist in defining that
+  # relationship. However, from a conceptual standpoint:
+  #
+  # * An AdminSet has_one :permission_tempate
+  # * A PermissionTemplate belongs_to :admin_set
+  #
+  # When an object is added as a member of an AdminSet, the AdminSet's associated
+  # PermissionTemplate is applied to that object (e.g. some of the object's attributes
+  # are updated as per the rules of the permission template)
+  #
+  # @see AdminSet
+  # @see Hyrax::PermissionTemplate
+  # @see Hyrax::AdminSetService
+  # @see Hyrax::Forms::PermissionTemplateForm for validations and creation process
+  # @see Hyrax::DefaultAdminSetActor
+  # @see Hyrax::ApplyPermissionTemplateActor  module AdminSetBehavior
   module AdminSetBehavior
     extend ActiveSupport::Concern
 

@@ -57,6 +57,7 @@ module Hyrax
       def data_attributes(admin_set)
         attrs = {}
         # Get permission template associated with this AdminSet (if any)
+        # TODO: Should this be a `find_by!` as per https://github.com/projecthydra-labs/hyrax/issues/256
         permission_template = PermissionTemplate.find_by(admin_set_id: admin_set.id)
 
         # Only add data attributes if permission template exists

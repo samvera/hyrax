@@ -1,4 +1,6 @@
 module Hyrax
+  # Responsible for "applying" the various edit and read attributes to the given curation concern.
+  # @see Hyrax::AdminSetService for release_date interaction
   class ApplyPermissionTemplateActor < Hyrax::Actors::AbstractActor
     def create(attributes)
       add_edit_users(attributes)
