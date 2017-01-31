@@ -48,5 +48,12 @@ module Hyrax
     def to_s
       title.present? ? title : 'No Title'
     end
+
+    # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
+    # @return [Hyrax::PermissionTemplate]
+    # @raise [ActiveRecord::RecordNotFound]
+    def permission_template
+      Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    end
   end
 end
