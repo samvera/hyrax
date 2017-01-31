@@ -1,10 +1,11 @@
 module Hyrax
   module Admin
     class PermissionTemplatesController < ApplicationController
-      before_action :load_template_for_admin_set
+      load_and_authorize_resource find_by: 'admin_set_id',
+                                  id_param: 'admin_set_id',
+                                  class: 'Hyrax::PermissionTemplate'
 
       def update
-        authorize! :update, @permission_template
         Forms::PermissionTemplateForm.new(@permission_template).update(update_params)
         # Ensure we redirect to currently active tab with the appropriate notice
         current_tab = current_tab_selector
@@ -12,10 +13,6 @@ module Hyrax
       end
 
       private
-
-        def load_template_for_admin_set
-          @permission_template = Hyrax::PermissionTemplate.find_by!(admin_set_id: params[:admin_set_id])
-        end
 
         def update_params
           params.require(:permission_template)
