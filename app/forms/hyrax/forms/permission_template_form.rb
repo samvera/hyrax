@@ -12,24 +12,17 @@ module Hyrax
       # Selected release embargo timeframe (if any) under release "Varies" option
       attr_accessor :release_embargo
 
-      # Visibility options for permission templates
-      def visibility_options
-        i18n_prefix = "hyrax.admin.admin_sets.form_visibility.visibility"
-        # Note: Visibility 'varies' = '' implies no constraints
-        [[Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, I18n.t('.everyone', scope: i18n_prefix)],
-         ['', I18n.t('.varies', scope: i18n_prefix)],
-         [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, I18n.t('.institution', scope: i18n_prefix)],
-         [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, I18n.t('.restricted', scope: i18n_prefix)]]
+      def visibility
+        Widgets::AdminSetVisibility.new
       end
 
-      # Embargo / release period options
-      def embargo_options
-        i18n_prefix = "hyrax.admin.admin_sets.form_visibility.release.varies.embargo"
-        [[Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS, I18n.t('.6mos', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR, I18n.t('.1yr', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS, I18n.t('.2yrs', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_3_YEARS, I18n.t('.3yrs', scope: i18n_prefix)]]
+      delegate :options, to: :visibility, prefix: :visibility
+
+      def embargo
+        Widgets::AdminSetEmbargoPeriod.new
       end
+
+      delegate :options, to: :embargo, prefix: :embargo
 
       def initialize(model)
         super(model)
@@ -57,11 +50,11 @@ module Hyrax
           workflow = Sipity::Workflow.find_by!(name: model.workflow_name)
           model.access_grants.select { |g| g.access == 'manage' }.each do |grant|
             agent = case grant.agent_type
-            when 'user'
-              ::User.find_by_user_key(grant.agent_id)
-            when 'group'
-              Hyrax::Group.new(grant.agent_id)
-            end
+                    when 'user'
+                      ::User.find_by_user_key(grant.agent_id)
+                    when 'group'
+                      Hyrax::Group.new(grant.agent_id)
+                    end
             workflow.workflow_roles.each do |role|
               Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: role, agent: agent.to_sipity_agent)
             end
