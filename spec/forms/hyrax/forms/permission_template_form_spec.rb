@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   describe "#update" do
+    let(:grant_attributes) { [] }
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
@@ -10,6 +11,11 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:form) { described_class.new(permission_template) }
     subject { form.update(input_params) }
     let(:today) { Time.zone.today }
+
+    it "calls grant_workflow_roles" do
+      expect(form).to receive(:grant_workflow_roles)
+      subject
+    end
 
     context "with a user manager" do
       let(:grant_attributes) do
@@ -135,6 +141,47 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
   end
 
+  describe "#grant_workflow_roles" do
+    subject { form.send(:grant_workflow_roles) }
+    let(:workflow) { create(:workflow) }
+    let(:user) { create(:user) }
+    let(:role1) { Sipity::Role.create!(name: 'hello') }
+    let(:role2) { Sipity::Role.create!(name: 'goodbye') }
+
+    let(:permission_template) do
+      create(:permission_template,
+             workflow_name: workflow.name,
+             access_grants_attributes:
+               [{ agent_type: 'user',
+                  agent_id: user.user_key,
+                  access: 'manage' },
+                { agent_type: 'group',
+                  agent_id: 'librarians',
+                  access: 'manage' }])
+    end
+    let(:form) { described_class.new(permission_template) }
+    before do
+      permission_template.clear_changes_information
+      workflow.workflow_roles.create!([{ role: role1 }, { role: role2 }])
+    end
+
+    context "when a new workflow has been chosen" do
+      before do
+        allow(permission_template).to receive(:previous_changes).and_return("workflow_name" => [nil, workflow.name])
+      end
+
+      it "gives the managers workflow roles" do
+        expect { subject }.to change { Sipity::WorkflowResponsibility.count }.by(4)
+      end
+    end
+
+    context "when a new workflow is not changed" do
+      it "does nothing" do
+        expect { subject }.not_to change { Sipity::WorkflowResponsibility.count }
+      end
+    end
+  end
+
   describe "#select_release_varies_option" do
     let(:admin_set) { create(:admin_set) }
     let(:form) { described_class.new(permission_template) }
@@ -179,11 +226,11 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
   end
 
-  describe "#update_release_attributes" do
+  describe "#permission_template_update_params" do
     let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
     let(:form) { described_class.new(permission_template) }
-    subject { form.send(:update_release_attributes, input_params) }
+    subject { form.send(:permission_template_update_params, input_params) }
     let(:today) { Time.zone.today }
 
     context "with release varies by date selected" do
