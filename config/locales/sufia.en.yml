@@ -318,6 +318,8 @@ en:
           header:         "Edit Administrative Set"
         new:
           header:         "Create New Administrative Set"
+        delete:
+          notification:   "Administrative set successfully deleted"
         form:
           tabs:
             description:        "Description"
@@ -377,6 +379,7 @@ en:
         show:
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
+          confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
       collections:
         collection:         "Collection"
         subtitle:           "Recent collection activity"
@@ -510,6 +513,7 @@ en:
       admin_set:
         new: "Create new administrative set"
       cancel: "Cancel"
+      delete: "Delete"
       edit: "Edit"
     submit:
       admin_set:
