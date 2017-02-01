@@ -7,7 +7,6 @@ es:
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
-
   helpers:
     action:
       admin_set:
@@ -34,17 +33,17 @@ es:
         edit:
           header:         "Editar Conjunto Administrativo"
         form:
+          cancel:               "Cancelar"
+          permission_update_notices:
+            new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
+            participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
+            visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
+            workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
           tabs:
             description:        "Descripción"
             participants:       "Participantes"
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
-          cancel:               "Cancelar"
-          permission_update_notices:
-            new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
-            visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
-            workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
-            participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
         form_participant_table:
           depositors:
             action:             "Acción"
@@ -97,9 +96,9 @@ es:
             title:              "Visibilidad"
             varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
         form_workflow:
-          page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
-          no_workflows:   "No hay flujos de trabajo que seleccionar."
           cancel:         "Cancelar"
+          no_workflows:   "No hay flujos de trabajo que seleccionar."
+          page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
         new:
           header:         "Crear nuevo conjunto Administrativo"
         show:
@@ -259,11 +258,11 @@ es:
       email_label: "Tu Correo Electrónico"
       header: "Formulario de Contacto"
       issue_types:
-        depositing: "Depósito contenido"
-        changing: "Hacer cambios en mi contenido"
         browsing: "Navegación y búsqueda"
-        reporting: "Informar de un problema"
+        changing: "Hacer cambios en mi contenido"
+        depositing: "Depósito contenido"
         general: "Consulta general o solicitud"
+        reporting: "Informar de un problema"
       message_label: "Mensaje"
       name_label: "Tu Nombre"
       notice: "Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; Para reportar un problema que está experimentando con el sistema; Solicitar ayuda usando el sistema; O para proporcionar retroalimentación general. Consulte la página de ayuda para obtener información adicional acerca de este sistema."
@@ -589,7 +588,8 @@ es:
     visibility:
       authenticated:
         class: "label-info"
-        label_html: "%{institution}"
+        label_html: <span class="label label-info">%{institution}</span>
+        note_html: Restringir el acceso sólo a usuarios y / o grupos de %{institution}
         text: *INSTITUTION_NAME
       embargo:
         class: "label-warning"
@@ -601,11 +601,14 @@ es:
         text: "Arrendamiento"
       open:
         class: "label-success"
-        label_html: <span class="label label-success">Público</span> Todo el mundo. Consulte <a href="">SHERPA / RoMEO</a> para las políticas de derechos de autor de editores específicos si planea patentar y / o publicar su %{type} en un diario
+        label_html: <span class="label label-success">Público</span>
+        note_html: Todo el mundo. Consulte <a href="">SHERPA / RoMEO</a> para las políticas de derechos de autor de editores específicos si planea patentar y / o publicar su %{type} en un diario
         text: "Acceso abierto"
       open_title_attr: "Cambiar la visibilidad de este recurso"
       private:
-        label_html: <span class="label label-danger">Privado</span> Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
+        label_html: <span class="label label-danger">Privado</span>
+        note_html:  Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
+        text: Privado
       private_title_attr: "Cambiar la visibilidad de este recurso"
       restricted:
         class: "label-danger"
@@ -615,9 +618,11 @@ es:
         deposit: "Depositar"
       load:
         state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
+      unauthorized: "El trabajo no está disponible actualmente porque aún no ha completado el proceso de aprobación"
     works:
       edit:
         additional_fields: "Campos adicionales"
+        breadcrumb: Editar
         header: Editar Trabajo
         in_collections: Este Trabajo en Colecciones
         in_other_works: Este Trabajo en otros Trabajos
