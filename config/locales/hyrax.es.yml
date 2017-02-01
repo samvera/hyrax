@@ -118,6 +118,7 @@ es:
         admin_sets:      "Conjuntos Administrativos"
         settings:        "Ajustes"
         statistics:      "Estadísticas"
+        tasks:           'Tareas'
         workflow:        "Flujos de Trabajo"
         workflow_review: "Revise Ofertas"
         workflow_roles:  "Roles"
@@ -131,6 +132,12 @@ es:
           end_label: "Finalizando [por defecto a ahora]"
           heading: "Ver archivos depositados por los usuarios"
           start_label: "Comenzando"
+      workflows:
+        index:
+          header: "Revise Ofertas"
+        tabs:
+          under_review: "En Revisión"
+          published: "Publica"
       workflow_roles:
         header:     "Funciones del Flujo de Trabajo"
         index:

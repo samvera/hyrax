@@ -188,7 +188,7 @@ Hyrax::Engine.routes.draw do
     resources :features, only: [:index] do
       resources :strategies, only: [:update, :destroy]
     end
-    get :workflows
+    resources :workflows
     resources :workflow_roles
   end
 

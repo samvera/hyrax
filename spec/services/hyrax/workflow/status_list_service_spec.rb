@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
   describe "#each" do
     let(:user) { create(:user) }
     let(:context) { double(current_user: user, logger: double(debug: nil)) }
-    let(:service) { described_class.new(context) }
+    let(:service) { described_class.new(context, "workflow_state_name_ssim:initial") }
     let!(:sipity_entity) { create(:sipity_entity) }
     let(:document) do
       { id: '33333',

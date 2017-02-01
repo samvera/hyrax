@@ -1,7 +1,7 @@
 module Hyrax
   class AdminController < ApplicationController
     include Blacklight::Base
-    before_action :authorize_user
+    before_action :ensure_admin!
     layout 'admin'
 
     def show
@@ -11,13 +11,9 @@ module Hyrax
       @admin_set_rows = Hyrax::AdminSetService.new(self).search_results_with_work_count(:read)
     end
 
-    def workflows
-      @status_list = Hyrax::Workflow::StatusListService.new(self)
-    end
-
     private
 
-      def authorize_user
+      def ensure_admin!
         authorize! :read, :admin_dashboard
       end
   end

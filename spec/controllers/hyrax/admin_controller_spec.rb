@@ -16,15 +16,4 @@ RSpec.describe Hyrax::AdminController do
       expect(assigns[:admin_set_rows]).to eq results
     end
   end
-
-  describe "#workflows" do
-    before do
-      expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
-    end
-    it "is successful" do
-      get :workflows
-      expect(response).to be_successful
-      expect(assigns[:status_list]).to be_kind_of Hyrax::Workflow::StatusListService
-    end
-  end
 end

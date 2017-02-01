@@ -9,7 +9,7 @@ describe 'Admin Routes', type: :routing do
   end
 
   it 'routes the workflows' do
-    expect(get: '/admin/workflows').to route_to(controller: 'hyrax/admin', action: 'workflows')
+    expect(get: '/admin/workflows').to route_to(controller: 'hyrax/admin/workflows', action: 'index')
   end
 
   it 'routes the workflow roles' do

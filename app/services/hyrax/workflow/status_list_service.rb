@@ -1,9 +1,12 @@
 module Hyrax
   module Workflow
+    # Finds a list of works that we can perform a workflow action on
     class StatusListService
       # @param context [#current_user, #logger]
-      def initialize(context)
+      # @param filter_condition [String] a solr filter
+      def initialize(context, filter_condition)
         @context = context
+        @filter_condition = filter_condition
       end
 
       attr_reader :context
@@ -35,11 +38,12 @@ module Hyrax
           actionable_roles = roles_for_user
           logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
           return [] if actionable_roles.empty?
-          WorkRelation.new.search_with_conditions(
-            { actionable_workflow_roles_ssim: actionable_roles },
-            fl: 'id title_tesim has_model_ssim, workflow_state_name_ssim',
-            rows: 1000
-          )
+          WorkRelation.new.search_with_conditions(query(actionable_roles), rows: 1000)
+        end
+
+        def query(actionable_roles)
+          ["{!terms f=actionable_workflow_roles_ssim}#{actionable_roles.join(',')}",
+           @filter_condition]
         end
 
         # @return [Array<String>] the list of workflow-role combinations this user has
