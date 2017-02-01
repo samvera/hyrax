@@ -12,24 +12,17 @@ module Hyrax
       # Selected release embargo timeframe (if any) under release "Varies" option
       attr_accessor :release_embargo
 
-      # Visibility options for permission templates
-      def visibility_options
-        i18n_prefix = "hyrax.admin.admin_sets.form_visibility.visibility"
-        # Note: Visibility 'varies' = '' implies no constraints
-        [[Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, I18n.t('.everyone', scope: i18n_prefix)],
-         ['', I18n.t('.varies', scope: i18n_prefix)],
-         [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, I18n.t('.institution', scope: i18n_prefix)],
-         [Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, I18n.t('.restricted', scope: i18n_prefix)]]
+      def visibility
+        Widgets::AdminSetVisibility.new
       end
 
-      # Embargo / release period options
-      def embargo_options
-        i18n_prefix = "hyrax.admin.admin_sets.form_visibility.release.varies.embargo"
-        [[Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS, I18n.t('.6mos', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR, I18n.t('.1yr', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS, I18n.t('.2yrs', scope: i18n_prefix)],
-         [Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_3_YEARS, I18n.t('.3yrs', scope: i18n_prefix)]]
+      delegate :options, to: :visibility, prefix: :visibility
+
+      def embargo
+        Widgets::AdminSetEmbargoPeriod.new
       end
+
+      delegate :options, to: :embargo, prefix: :embargo
 
       def initialize(model)
         super(model)
@@ -38,8 +31,9 @@ module Hyrax
       end
 
       def update(attributes)
-        grant_admin_set_access(attributes)
-        model.update(update_release_attributes(attributes))
+        update_admin_set(attributes)
+        update_permission_template(attributes)
+        grant_workflow_roles
       end
 
       def workflows
@@ -48,6 +42,52 @@ module Hyrax
       end
 
       private
+
+        # If the workflow has been changed, ensure that all the AdminSet managers
+        # have all the roles for the new workflow
+        def grant_workflow_roles
+          return unless model.previous_changes.include?("workflow_name")
+          workflow = Sipity::Workflow.find_by!(name: model.workflow_name)
+          model.access_grants.select { |g| g.access == 'manage' }.each do |grant|
+            agent = case grant.agent_type
+                    when 'user'
+                      ::User.find_by_user_key(grant.agent_id)
+                    when 'group'
+                      Hyrax::Group.new(grant.agent_id)
+                    end
+            workflow.workflow_roles.each do |role|
+              Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: role, agent: agent.to_sipity_agent)
+            end
+          end
+        end
+
+        def update_admin_set(attributes)
+          update_params = admin_set_update_params(attributes)
+          return unless update_params
+          admin_set.tap do |a|
+            # We're doing this because ActiveFedora 11.1 doesn't have update!
+            # https://github.com/projecthydra/active_fedora/pull/1196
+            a.attributes = update_params
+            a.save!
+          end
+        end
+
+        def admin_set
+          @admin_set ||= AdminSet.find(model.admin_set_id)
+        end
+
+        def update_permission_template(attributes)
+          model.update(permission_template_update_params(attributes))
+        end
+
+        # Maps the raw form attributes into a hash useful for updating the admin set.
+        # @return [Hash] includes :edit_users and :edit_groups
+        def admin_set_update_params(attributes)
+          manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
+          return unless manage_grants.present?
+          { edit_users: manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] },
+            edit_groups: manage_grants.select { |x| x[:agent_type] == 'group' }.map { |x| x[:agent_id] } }
+        end
 
         # This allows the attributes
         def grants_as_collection(attributes)
@@ -63,15 +103,6 @@ module Hyrax
                                     .map { |_, attrs| attrs }
           end
           attributes_collection
-        end
-
-        def grant_admin_set_access(attributes)
-          manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
-          return unless manage_grants.present?
-          admin_set = AdminSet.find(model.admin_set_id)
-          admin_set.edit_users = manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] }
-          admin_set.edit_groups = manage_grants.select { |x| x[:agent_type] == 'group' }.map { |x| x[:agent_id] }
-          admin_set.save!
         end
 
         # In form, select appropriate radio button under Release "Varies" option based on saved permission_template
@@ -91,7 +122,7 @@ module Hyrax
         end
 
         # @return [Hash] attributes used to update the model
-        def update_release_attributes(raw_attributes)
+        def permission_template_update_params(raw_attributes)
           # Remove release_varies and release_embargo from attributes
           # These form fields are only used to update release_period
           attributes = raw_attributes.except(:release_varies, :release_embargo)
