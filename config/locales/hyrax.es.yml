@@ -109,6 +109,7 @@ es:
         subtitle:           "Actividad reciente de la colección"
         title:              "Colleccións"
         works:              "Trabajos"
+        files:              "Archivos"
       show:
         new_visitors:       "Nuevos visitantes"
         registered_users:   "Usuarios registrados"

@@ -56,13 +56,29 @@ RSpec.describe Hyrax::AdminSetService do
     let(:doc3) { SolrDocument.new(id: 'zxy123') }
     let(:connection) { instance_double(RSolr::Client) }
     let(:results) do
-      { 'facet_counts' =>
-        {
-          'facet_fields' =>
-            {
-              'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2]
-            }
-        } }
+      {
+        'response' =>
+          {
+            'docs' =>
+              [
+                {
+                  'isPartOf_ssim' => ['xyz123'],
+                  'file_set_ids_ssim' => ['aaa']
+                },
+                {
+                  'isPartOf_ssim' => ['xyz123', 'yyx123'],
+                  'file_set_ids_ssim' => ['bbb', 'ccc']
+                }
+              ]
+          },
+        'facet_counts' =>
+          {
+            'facet_fields' =>
+              {
+                'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2]
+              }
+          }
+      }
     end
 
     before do
@@ -72,8 +88,8 @@ RSpec.describe Hyrax::AdminSetService do
                                                                   "facet.field" => "isPartOf_ssim" }).and_return(results)
     end
 
-    it "returns rows with document in the first column and integer count value in the second column" do
-      expect(subject).to eq [[doc1, 8], [doc2, 2], [doc3, 0]]
+    it "returns rows with document in the first column and integer count value in the second and third column" do
+      expect(subject).to eq [[doc1, 8, 3], [doc2, 2, 2], [doc3, 0, 0]]
     end
   end
 

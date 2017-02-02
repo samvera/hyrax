@@ -109,6 +109,7 @@ en:
         subtitle:           "Recent collection activity"
         title:              "Collections"
         works:              "Works"
+        files:              "Files"
       show:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"

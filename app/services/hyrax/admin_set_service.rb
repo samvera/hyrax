@@ -18,9 +18,10 @@ module Hyrax
       response.documents
     end
 
-    # This performs a two pass query, first getting the AdminSets and then getting the work counts
+    # This performs a two pass query, first getting the AdminSets
+    # and then getting the work and file counts
     # @param [Symbol] access :read or :edit
-    # @return [Array<Array>] a list with document, then work count
+    # @return [Array<Array>] a list with document, then work and file count
     def search_results_with_work_count(access)
       documents = search_results(access)
       ids = documents.map(&:id).join(',')
@@ -32,8 +33,9 @@ module Hyrax
                   'facet.field' => join_field }
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
+      file_counts = count_files(results)
       documents.map do |doc|
-        [doc, counts[doc.id].to_i]
+        [doc, counts[doc.id].to_i, file_counts[doc.id]]
       end
     end
 
@@ -63,6 +65,19 @@ module Hyrax
         attrs['data-release-before-date'] = true if permission_template.release_before_date?
         attrs['data-visibility'] = permission_template.visibility unless permission_template.visibility.blank?
         attrs
+      end
+
+      # Count number of files from admin set works
+      # @param [Array] results Solr search result
+      # @return [Hash] admin set id keys and file count values
+      def count_files(results)
+        file_counts = Hash.new(0)
+        results['response']['docs'].each do |doc|
+          doc['isPartOf_ssim'].each do |id|
+            file_counts[id] += doc['file_set_ids_ssim'].length
+          end
+        end
+        file_counts
       end
   end
 end
