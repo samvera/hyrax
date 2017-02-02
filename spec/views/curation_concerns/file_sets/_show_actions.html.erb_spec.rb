@@ -33,8 +33,8 @@ describe 'curation_concerns/file_sets/_show_actions.html.erb', type: :view do
     context 'when enabled' do
       let(:citations) { true }
 
-      it 'appears on page' do
-        expect(page).to have_selector('a#citations', count: 1)
+      it 'does not appear on page' do
+        expect(page).to have_no_selector('a#citations')
       end
     end
 
