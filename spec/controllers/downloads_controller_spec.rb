@@ -6,6 +6,7 @@ describe DownloadsController do
     let(:file_set) do
       FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
     end
+    let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
     it 'calls render_404 if the object does not exist' do
       expect(controller).to receive(:render_404) { controller.render body: nil }
       get :show, params: { id: '8675309' }
@@ -15,18 +16,16 @@ describe DownloadsController do
       let(:another_user) { FactoryGirl.create(:user) }
       before { sign_in another_user }
 
-      it 'redirects to root' do
+      it 'redirects to the default image' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to root_path
-        expect(flash['alert']).to eq 'You are not authorized to access this page.'
+        expect(response).to redirect_to default_image
       end
     end
 
     context "when user isn't logged in" do
-      it 'redirects to sign in' do
+      it 'redirects to the default image' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to new_user_session_path
-        expect(flash['alert']).to eq 'You are not authorized to access this page.'
+        expect(response).to redirect_to default_image
       end
 
       it 'authorizes the resource using only the id' do

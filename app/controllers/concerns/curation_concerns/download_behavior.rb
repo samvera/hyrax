@@ -40,6 +40,12 @@ module CurationConcerns
       # that files are in a LDP basic container, and thus, included in the asset's uri.
       def authorize_download!
         authorize! :read, params[asset_param_key]
+      rescue CanCan::AccessDenied
+        redirect_to default_image
+      end
+
+      def default_image
+        ActionController::Base.helpers.image_path 'default.png'
       end
 
       # Overrides Hydra::Controller::DownloadBehavior#load_file, which is hard-coded to assume files are in BasicContainer.
