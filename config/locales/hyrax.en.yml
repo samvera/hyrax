@@ -118,6 +118,7 @@ en:
         admin_sets:      "Administrative Sets"
         settings:        "Settings"
         statistics:      "Statistics"
+        tasks:           "Tasks"
         workflow:        "Workflows"
         workflow_review: "Review Submissions"
         workflow_roles:  "Roles"
@@ -131,6 +132,12 @@ en:
           end_label: "Ending [defaults to now]"
           heading: "Display files deposited by users"
           start_label: "Starting"
+      workflows:
+        index:
+          header: "Review Submissions"
+          tabs:
+            under_review: "Under Review"
+            published: "Published"
       workflow_roles:
         header:     "Workflow Roles"
         index:
