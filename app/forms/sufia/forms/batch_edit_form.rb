@@ -13,12 +13,15 @@ module Sufia
 
       # @param [ActiveFedora::Base] model the model backing the form
       # @param [Ability] current_ability the user authorization model
-      # @param [Array<String>] batch a list of document ids in the batch
-      def initialize(model, current_ability, batch)
+      # @param [Array<String>] batch_document_ids a list of document ids in the batch
+      def initialize(model, current_ability, batch_document_ids)
         super(model, current_ability)
         @names = []
-        initialize_combined_fields(batch)
+        @batch_document_ids = batch_document_ids
+        initialize_combined_fields
       end
+
+      attr_reader :batch_document_ids
 
       # Which parameters can we accept from the form
       def self.build_permitted_params
@@ -30,12 +33,11 @@ module Sufia
       private
 
         # override this method if you need to initialize more complex RDF assertions (b-nodes)
-        # @param [Array<String>] batch a list of document ids in the batch
-        def initialize_combined_fields(batch)
+        def initialize_combined_fields
           combined_attributes = {}
           permissions = []
           # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
-          batch.each do |doc_id|
+          batch_document_ids.each do |doc_id|
             work = model_class.find(doc_id)
             terms.each do |key|
               combined_attributes[key] ||= []
