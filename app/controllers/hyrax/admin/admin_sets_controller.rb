@@ -65,6 +65,11 @@ module Hyrax
       end
     end
 
+    def destroy
+      @admin_set.destroy
+      redirect_to hyrax.admin_admin_sets_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+    end
+
     # for the AdminSetService
     def repository
       repository_class.new(blacklight_config)

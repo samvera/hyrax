@@ -12,6 +12,7 @@ en:
       admin_set:
         new: "Create new administrative set"
       cancel: "Cancel"
+      delete: "Delete"
       edit: "Edit"
     submit:
       admin_set:
@@ -30,6 +31,8 @@ en:
     active_consent_to_agreement:  "I have read and agree to the"
     admin:
       admin_sets:
+        delete:
+          notification:   "Administrative set successfully deleted"
         edit:
           header:         "Edit Administrative Set"
         form:
@@ -102,6 +105,7 @@ en:
         new:
           header:         "Create New Administrative Set"
         show:
+          confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
       collections:

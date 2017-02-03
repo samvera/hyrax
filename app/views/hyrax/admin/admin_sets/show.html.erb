@@ -8,8 +8,11 @@
       <div class="panel-heading">
         <h2 class="panel-title display-page"><%= @presenter.to_s %></h2>
         <div class="pull-right">
-          <%= link_to hyrax.edit_admin_admin_set_path(@presenter), class: 'btn btn-primary' do %>
+          <%= link_to edit_admin_admin_set_path(@presenter), class: 'btn btn-primary' do %>
             <span class="fa fa-edit"></span> <%= t(:'helpers.action.edit') %>
+          <% end %>
+          <%= link_to admin_admin_set_path(@presenter), class: 'btn btn-danger', data: { confirm: t('.confirm_delete'), method: :delete } do %>
+            <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
           <% end %>
         </div>
       </div>
