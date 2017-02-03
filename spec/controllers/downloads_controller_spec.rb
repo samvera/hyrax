@@ -54,6 +54,7 @@ describe DownloadsController, type: :controller do
     end
 
     describe "when not logged in as reader" do
+      let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
       before do
         sign_in create(:user)
       end
@@ -61,8 +62,7 @@ describe DownloadsController, type: :controller do
       describe "show" do
         it "denies access" do
           get :show, params: { id: file }
-          expect(response).to redirect_to root_path
-          expect(flash[:alert]).to eq 'You are not authorized to access this page.'
+          expect(response).to redirect_to default_image
         end
       end
     end
