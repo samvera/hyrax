@@ -37,5 +37,26 @@ describe Hyrax::Actors::AddAsMemberOfCollectionsActor do
       expect(subject.create(attributes)).to be true
       expect(collection.reload.member_objects).to eq [curation_concern]
     end
+
+    describe "when work is in user's own collection" do
+      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+
+      it "removes the work from that collection" do
+        subject.create(attributes)
+        expect(subject.create(member_of_collection_ids: [])).to be true
+        expect(curation_concern.member_of_collections).to eq []
+      end
+    end
+
+    describe "when work is in another user's collection" do
+      let(:other_user) { create(:user) }
+      let(:collection) { create(:collection, user: other_user, title: ['A good title']) }
+
+      it "doesn't remove the work from that collection" do
+        subject.create(attributes)
+        expect(subject.create(member_of_collection_ids: [])).to be true
+        expect(curation_concern.member_of_collections).to eq [collection]
+      end
+    end
   end
 end
