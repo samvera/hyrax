@@ -12,6 +12,7 @@ es:
       admin_set:
         new: "Crear un nuevo conjunto administrativo"
       cancel: "Cancelar"
+      delete: "Borrar"
       edit: "Editar"
     submit:
       admin_set:
@@ -30,6 +31,8 @@ es:
     active_consent_to_agreement:  "He leído y estoy de acuerdo con"
     admin:
       admin_sets:
+        delete:
+          notification:   "Conjunto administrativo eliminado correctamente"
         edit:
           header:         "Editar Conjunto Administrativo"
         form:
@@ -102,6 +105,7 @@ es:
         new:
           header:         "Crear nuevo conjunto Administrativo"
         show:
+          confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header:           "Conjunto Administrativo"
           item_list_header: "Trabajos en este conjunto"
       collections:
