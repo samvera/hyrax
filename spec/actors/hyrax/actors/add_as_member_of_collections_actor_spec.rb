@@ -13,7 +13,7 @@ describe Hyrax::Actors::AddAsMemberOfCollectionsActor do
     let(:root_actor) { double }
     before do
       allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
-      allow(Collection).to receive(:find).with('123')
+      allow(Collection).to receive(:find).with(['123'])
       allow(curation_concern).to receive(:member_of_collections=)
     end
 
