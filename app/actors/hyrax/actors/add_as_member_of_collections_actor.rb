@@ -18,7 +18,7 @@ module Hyrax
           return true unless collection_ids
           # grab/save collections this user has no edit access to
           other_collections = curation_concern.member_of_collections.select { |coll| !coll.edit_users.include?(user.user_key) }
-          curation_concern.member_of_collections = collection_ids.map { |id| ::Collection.find(id) }
+          curation_concern.member_of_collections = ::Collection.find(collection_ids)
           curation_concern.member_of_collections.concat other_collections
         end
     end
