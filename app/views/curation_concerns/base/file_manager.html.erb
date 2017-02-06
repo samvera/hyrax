@@ -1,11 +1,11 @@
 <h1><%= t("file_manager.link_text") %></h1>
 <ul class="breadcrumb">
   <li>
-    Back to <%= link_to @presenter.to_s, [main_app, @presenter] %>
+    Back to <%= link_to @form.to_s, [main_app, @form] %>
   </li>
 </ul>
 
-<% if !@presenter.member_presenters.empty? %>
+<% if !@form.member_presenters.empty? %>
   <div data-action="file-manager">
     <div class="col-md-3" id="file-manager-tools">
       <h2>Toolbar</h2>

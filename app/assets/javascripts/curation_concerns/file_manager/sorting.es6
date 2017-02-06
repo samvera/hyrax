@@ -15,18 +15,14 @@ export default class SortManager {
   }
 
   persist() {
-    let params = {}
-    params[this.singular_class_name] = {
-      "ordered_member_ids": this.order
-    }
-    params["_method"] = "PATCH"
     this.element.addClass("pending")
     this.element.removeClass("success")
     this.element.removeClass("failure")
     let persisting = $.post(
       `/concern/${this.class_name}/${this.id}.json`,
-      params
-    ).done(() => {
+      this.params()
+    ).done((response) => {
+      this.element.data('version', response.version)
       this.element.data("current-order", this.order)
       this.element.addClass("success")
       this.element.removeClass("failure")
@@ -37,6 +33,16 @@ export default class SortManager {
       this.element.removeClass("pending")
     })
     return persisting
+  }
+
+  params() {
+    let params = {}
+    params[this.singular_class_name] = {
+      "version": this.version,
+      "ordered_member_ids": this.order
+    }
+    params["_method"] = "PATCH"
+    return params
   }
 
   get_sort_position(item) {
@@ -86,6 +92,10 @@ export default class SortManager {
         return $(this).data("reorder-id")
       }
     ).toArray()
+  }
+
+  get version() {
+    return this.element.data('version')
   }
 
   get alpha_sort_button() {

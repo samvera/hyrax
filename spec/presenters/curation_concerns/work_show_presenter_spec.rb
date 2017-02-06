@@ -102,34 +102,14 @@ describe CurationConcerns::WorkShowPresenter do
         expect(presenter.file_set_presenters.map(&:id)).not_to include another_work.id
       end
     end
-
-    describe "getting presenters from factory" do
-      let(:attributes) { {} }
-      let(:presenter_class) { double }
-      before do
-        allow(presenter).to receive(:composite_presenter_class).and_return(presenter_class)
-        allow(presenter).to receive(:ordered_ids).and_return(['12', '33'])
-        allow(presenter).to receive(:file_set_ids).and_return(['33', '12'])
-      end
-
-      it "uses the set class" do
-        expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
-          .with(['12', '33'], presenter_class, ability, request)
-        presenter.file_set_presenters
-      end
-    end
   end
 
   describe "#representative_presenter" do
     let(:obj) { create(:work_with_representative_file) }
     let(:attributes) { obj.to_solr }
-    let(:presenter_class) { double }
-    before do
-      allow(presenter).to receive(:composite_presenter_class).and_return(presenter_class)
-    end
     it "has a representative" do
       expect(CurationConcerns::PresenterFactory).to receive(:build_presenters)
-        .with([obj.members[0].id], presenter_class, ability, request).and_return ["abc"]
+        .with([obj.members[0].id], CurationConcerns::CompositePresenterFactory, ability, request).and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end
   end
