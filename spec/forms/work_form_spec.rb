@@ -22,6 +22,14 @@ describe CurationConcerns::Forms::WorkForm do
   let(:ability) { nil }
   let(:form) { PirateShipForm.new(curation_concern, ability) }
 
+  describe "#version" do
+    before do
+      allow(curation_concern).to receive(:etag).and_return('123456')
+    end
+    subject { form.version }
+    it { is_expected.to eq '123456' }
+  end
+
   describe "#select_files" do
     let(:curation_concern) { create(:work_with_one_file) }
     let(:title) { curation_concern.file_sets.first.title.first }

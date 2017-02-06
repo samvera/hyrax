@@ -12,6 +12,9 @@
 
   <div class="row">
     <div class="col-md-12 form-actions">
+      <%# TODO: If we start using ActionCable, we could listen for object updates and
+                alert the user that the object has changed by someone else %>
+      <%= f.input CurationConcerns::OptimisticLockValidator.version_field, as: :hidden unless f.object.new_record? %>
       <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
       <% if curation_concern.new_record? %>
         <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
