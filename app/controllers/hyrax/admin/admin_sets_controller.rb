@@ -66,8 +66,11 @@ module Hyrax
     end
 
     def destroy
-      @admin_set.destroy
-      redirect_to hyrax.admin_admin_sets_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+      if @admin_set.destroy
+        redirect_to hyrax.admin_admin_sets_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+      else
+        redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
+      end
     end
 
     # for the AdminSetService

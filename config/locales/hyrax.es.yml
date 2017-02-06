@@ -43,7 +43,9 @@ es:
     admin:
       admin_sets:
         delete:
-          notification:   "Conjunto administrativo eliminado correctamente"
+          error_default_set: "El conjunto administrativo no se puede eliminar ya que es el conjunto predeterminado"
+          error_not_empty:   "El conjunto administrativo no se puede eliminar ya que no está vacío"
+          notification:      "Conjunto administrativo eliminado correctamente"
         edit:
           header:         "Editar Conjunto Administrativo"
         form:

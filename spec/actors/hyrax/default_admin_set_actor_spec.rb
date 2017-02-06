@@ -23,7 +23,7 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
 
     context "when admin_set_id is blank" do
       let(:attributes) { { admin_set_id: '' } }
-      let(:default_id) { described_class::DEFAULT_ID }
+      let(:default_id) { AdminSet::DEFAULT_ID }
 
       it "creates the default AdminSet with a PermissionTemplate and calls the next actor with the default admin set id" do
         expect(next_actor).to receive(:create).with(admin_set_id: default_id).and_return(true)
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
     let(:actor) { described_class.new(double, double, double) }
     context "when another thread has already created the admin set" do
       before do
-        AdminSet.create!(id: described_class::DEFAULT_ID, title: ['Default Admin Set'])
+        AdminSet.create!(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set'])
       end
       it "doesn't raise an error" do
         expect { actor.send(:create_default_admin_set) }.not_to raise_error
