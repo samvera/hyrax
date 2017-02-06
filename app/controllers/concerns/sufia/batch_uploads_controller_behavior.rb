@@ -21,7 +21,7 @@ module Sufia
       raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
       # authorize! :create, safe_pc
       create_update_job(safe_pc)
-      flash[:notice] = t('sufia.works.new.after_create_html', application_name: view_context.application_name)
+      flash[:notice] = t('sufia.works.create.after_create_html', application_name: view_context.application_name)
       redirect_after_update
     end
 
