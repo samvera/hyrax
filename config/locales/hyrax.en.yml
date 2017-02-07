@@ -248,9 +248,10 @@ en:
         edit: "Edit"
         no_visible_works: "The collection is either empty or does not contain items to which you have access."
       edit:
+        manage_items: "Manage Items in this Collection"
+      form:
         additional_fields: "Additional fields"
         description: "Descriptions"
-        manage_items: "Manage Items in this Collection"
       is_part_of: "Is part of"
       select_form:
         close: "Close"
@@ -631,10 +632,13 @@ en:
         state_error: "The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!"
       unauthorized: "The work is not currently available because it has not yet completed the approval process"
     works:
+      create:
+        after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
+        header: "Add New %{type}"
       edit:
-        additional_fields: "Additional fields"
         breadcrumb: 'Edit'
-        header: Edit Work
+      form:
+        additional_fields: "Additional fields"
         in_collections: This Work in Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
@@ -643,16 +647,12 @@ en:
           metadata:      "Descriptions"
           relationships: "Relationships"
           share:         "Share"
-      new:
-        after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
-        header: "Add New %{type}"
-        in_collections: This Work in Collections
-        in_other_works: This Work in Other Works
-        in_this_work: Other Works in this Work
       progress:
         header: "Save Work"
       show:
         no_preview: No preview available
+      update:
+        header: Edit Work
   simple_form:
     hints:
       collection:

@@ -5,7 +5,7 @@ describe '/_flash_msg.html.erb', type: :view do
   end
 
   let(:flash) { { notice: notice } }
-  let(:i18n_html) { t('hyrax.works.new.after_create_html', application_name: 'Whatever') }
+  let(:i18n_html) { t('hyrax.works.create.after_create_html', application_name: 'Whatever') }
 
   context 'with a single flash notice' do
     let(:notice) { i18n_html }
