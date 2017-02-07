@@ -2,7 +2,7 @@ export class UploadedFiles {
   // Monitors the form and runs the callback if any files are added
   constructor(form, callback) {
     this.form = form
-    $('#fileupload').bind('fileuploadcompleted', callback)
+    $('#fileupload').bind('fileuploadstop', callback)
   }
 
   get hasFileRequirement() {

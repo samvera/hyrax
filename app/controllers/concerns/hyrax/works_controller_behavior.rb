@@ -38,7 +38,7 @@ module Hyrax
         respond_to do |wants|
           wants.html do
             # Calling `#t` in a controller context does not mark _html keys as html_safe
-            flash[:notice] = view_context.t('hyrax.works.new.after_create_html', application_name: view_context.application_name)
+            flash[:notice] = view_context.t('hyrax.works.create.after_create_html', application_name: view_context.application_name)
             redirect_to [main_app, curation_concern]
           end
           wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }

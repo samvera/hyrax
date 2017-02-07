@@ -9,9 +9,9 @@
 <%= render 'form_member_of_collections', f: f %>
 
 <% if params[:id] %>
-  <h3><%= t("hyrax.works.#{action_name}.in_this_work") %></h3>
+  <h3><%= t("hyrax.works.form.in_this_work") %></h3>
   <%= render 'form_child_work_relationships', f: f, id_name: 'work_child_members_ids', id_type: 'ordered_member_ids' %>
 
-  <h3><%= t("hyrax.works.#{action_name}.in_other_works") %></h3>
+  <h3><%= t("hyrax.works.form.in_other_works") %></h3>
   <%= render 'form_parent_work_relationships', f: f, id_name: 'work_parent_members_ids', id_type: 'in_works_ids' %>
 <% end %>
