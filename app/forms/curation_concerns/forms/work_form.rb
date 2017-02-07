@@ -27,6 +27,10 @@ module CurationConcerns
         super(model)
       end
 
+      def version
+        model.etag
+      end
+
       # The value for embargo_relase_date and lease_expiration_date should not
       # be initialized to empty string
       def initialize_field(key)
@@ -58,6 +62,10 @@ module CurationConcerns
           else
             super
           end
+        end
+
+        def build_permitted_params
+          super + [:version]
         end
       end
 

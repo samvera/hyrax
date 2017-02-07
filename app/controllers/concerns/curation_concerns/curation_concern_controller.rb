@@ -22,6 +22,11 @@ module CurationConcerns
     module ClassMethods
       def curation_concern_type=(curation_concern_type)
         load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work]
+
+        # Load the fedora resource to get the etag.
+        # No need to authorize for the file manager, because it does authorization via the presenter.
+        load_resource class: curation_concern_type, instance_name: :curation_concern, only: :file_manager
+
         self._curation_concern_type = curation_concern_type
       end
 
@@ -104,7 +109,7 @@ module CurationConcerns
     end
 
     def file_manager
-      presenter
+      @form = Forms::FileManagerForm.new(curation_concern, current_ability)
     end
 
     def inspect_work

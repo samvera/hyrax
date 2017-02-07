@@ -1,5 +1,13 @@
-<ul id="sortable" data-id="<%= @presenter.id %>" data-class-name="<%= @presenter.model_name.plural %>" data-singular-class-name="<%= @presenter.model_name.singular %>" class="list-unstyled grid clearfix">
- <% @presenter.member_presenters.each do |member| %>
-   <%= render "file_manager_member", node: member %>
- <% end %>
-</ul>
+<%= content_tag :ul,
+                id: "sortable",
+                class: "list-unstyled grid clearfix",
+                data: {
+                  id: @form.id,
+                  "class-name" => @form.model_name.plural,
+                  "singular-class-name" => @form.model_name.singular,
+                  version: @form.version
+                } do %>
+  <% @form.member_presenters.each do |member| %>
+    <%= render "file_manager_member", node: member %>
+  <% end %>
+<% end %>

@@ -1,4 +1,8 @@
 en:
+  activemodel:
+    errors:
+      messages:
+        conflict: "Another user has made a change to that %{model} since you accessed the edit form."
   curation_concerns:
     admin:
       workflow_roles:

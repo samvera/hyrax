@@ -26,19 +26,21 @@ RSpec.describe "curation_concerns/base/file_manager.html.erb" do
   end
   let(:resource) { FactoryGirl.build(:file_set) }
 
-  let(:parent) { FactoryGirl.build(:generic_work) }
-  let(:parent_solr_doc) do
-    SolrDocument.new(parent.to_solr.merge(id: "resource"), nil)
-  end
-  let(:parent_presenter) do
-    CurationConcerns::WorkShowPresenter.new(parent_solr_doc, nil, view)
+  let(:parent) { build(:generic_work) }
+
+  let(:form) do
+    CurationConcerns::Forms::FileManagerForm.new(parent, nil)
   end
 
   let(:blacklight_config) { CatalogController.new.blacklight_config }
 
   before do
-    allow(parent_presenter).to receive(:member_presenters).and_return([file_set, member])
-    assign(:presenter, parent_presenter)
+    allow(parent).to receive(:etag).and_return("123456")
+    allow(parent).to receive(:persisted?).and_return(true)
+    allow(parent).to receive(:id).and_return('resource')
+
+    allow(form).to receive(:member_presenters).and_return([file_set, member])
+    assign(:form, form)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
     allow(view).to receive(:blacklight_config).and_return(blacklight_config)
