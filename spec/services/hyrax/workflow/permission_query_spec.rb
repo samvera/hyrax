@@ -17,13 +17,13 @@ module Hyrax
           }]
         }
       end
-      before { Hyrax::Workflow::WorkflowImporter.new(data: workflow_config).call }
+      before { Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: workflow_config, permission_template: sipity_workflow.permission_template) }
       let(:sipity_entity) do
         Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/1',
                                workflow: sipity_workflow,
                                workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow))
       end
-      let(:sipity_workflow) { Sipity::Workflow.find_by(name: 'testing') }
+      let(:sipity_workflow) { create(:workflow, name: 'testing') }
 
       def expect_actions_for(user:, entity:, actions:)
         actions = Array.wrap(actions).map { |action| PowerConverter.convert_to_sipity_action(action, scope: entity.workflow) }

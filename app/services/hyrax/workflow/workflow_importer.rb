@@ -19,13 +19,16 @@ module Hyrax
 
       # @api public
       #
-      # Load all the workflows in config/workflows/*.json
+      # Load all the workflows in config/workflows/*.json for each of the permission templates
+      # @param permission_templates [#each] An enumerator of permission templates (by default Hyrax::PermissionTemplate.all)
       # @return [TrueClass]
-      def self.load_workflows
+      def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all)
         clear_load_errors!
         Dir.glob(Rails.root.join('config', 'workflows', '*.json')) do |config|
           Rails.logger.info "Loading workflow: #{config}"
-          generate_from_json_file(path: config)
+          Array.wrap(permission_templates).each do |permission_template|
+            generate_from_json_file(path: config, permission_template: permission_template)
+          end
         end
         true
       end
@@ -34,6 +37,8 @@ module Hyrax
       #
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
       #
+      # @param path [#read or String] the location on the file system that can be read
+      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
       # @return [Array<Sipity::Workflow>]
       def self.generate_from_json_file(path:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
@@ -45,6 +50,8 @@ module Hyrax
       #
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
       #
+      # @param data [#deep_symbolize_keys] the configuration information from which we will generate all the data entries
+      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
       # @return [Array<Sipity::Workflow>]
       def self.generate_from_hash(data:, **keywords)
         importer = new(data: data, **keywords)
@@ -55,12 +62,14 @@ module Hyrax
       end
 
       # @param data [#deep_symbolize_keys] the configuration information from which we will generate all the data entries
+      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
       # @param schema [#call] The schema in which you will validate the data
       # @param validator [#call] The validation service for the given data and schema
-      def initialize(data:, schema: default_schema, validator: default_validator)
+      def initialize(data:, permission_template:, schema: default_schema, validator: default_validator)
         self.data = data
         self.schema = schema
         self.validator = validator
+        self.permission_template = permission_template
         validate!
       end
 
@@ -72,7 +81,7 @@ module Hyrax
           @data = input.deep_symbolize_keys
         end
 
-        attr_accessor :validator
+        attr_accessor :validator, :permission_template
 
         def default_validator
           SchemaValidator.method(:call)
@@ -111,7 +120,7 @@ module Hyrax
       private
 
         def find_or_create_from(configuration:)
-          workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name))
+          workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name), permission_template: permission_template)
           generate_state_diagram!(workflow: workflow, actions_configuration: configuration.fetch(:actions))
 
           find_or_create_workflow_permissions!(

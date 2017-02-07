@@ -2,6 +2,7 @@ require "spec_helper"
 
 RSpec.describe Hyrax::Workflow::WorkflowImporter do
   let(:path) { double(read: json) }
+  let(:permission_template) { create(:permission_template) }
   let(:json) do
     doc = <<-HERE
     {
@@ -22,7 +23,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     doc.strip
   end
   let(:validator) { double(call: true) }
-  let(:importer) { described_class.new(data: {}, validator: validator) }
+  let(:importer) { described_class.new(data: {}, permission_template: permission_template, validator: validator) }
   subject { importer }
 
   context '#default_validator' do
@@ -46,12 +47,13 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     end
 
     it 'creates the requisite data from the configuration' do
+      number_of_workflows_created = 1
       expect(Hyrax::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
       expect(Hyrax::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
       result = nil
       expect do
-        result = described_class.generate_from_json_file(path: path)
-      end.to change { Sipity::Workflow.count }.by(1)
+        result = described_class.generate_from_json_file(path: path, permission_template: permission_template)
+      end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.workflows.count }.by(number_of_workflows_created))
       expect(result).to match_array(kind_of(Sipity::Workflow))
       expect(described_class.load_errors).to be_empty
       expect(result.first.label).to eq "This is the label"
@@ -59,8 +61,8 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     end
   end
   context "when I load twice" do
-    let!(:workflow1) { described_class.generate_from_json_file(path: path).first }
-    let(:workflow2) { described_class.generate_from_json_file(path: path).first }
+    let!(:workflow1) { described_class.generate_from_json_file(path: path, permission_template: permission_template).first }
+    let(:workflow2) { described_class.generate_from_json_file(path: path, permission_template: permission_template).first }
     let(:workflow2_errors) { described_class.load_errors }
     it "creates the same results" do
       expect(workflow2).to eq(workflow1)
@@ -71,7 +73,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       let(:action_name)  { "awesome action" }
       let(:state_name)   { "awesome state" }
       let(:second_path) { double(read: json2) }
-      let(:workflow2) { described_class.generate_from_json_file(path: second_path).first }
+      let(:workflow2) { described_class.generate_from_json_file(path: second_path, permission_template: permission_template).first }
       let(:json2) do
         doc = <<-HERE
         {
@@ -159,7 +161,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
           expect do
             expect do
               expect do
-                described_class.generate_from_hash(data: invalid_data)
+                described_class.generate_from_hash(data: invalid_data, permission_template: permission_template)
               end.to raise_error(RuntimeError)
             end.not_to change { Sipity::Workflow.count }
           end.not_to change { Sipity::WorkflowAction.count }
@@ -167,12 +169,12 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       end
 
       it 'will not amend when new data is invalid' do
-        described_class.generate_from_json_file(path: path)
+        described_class.generate_from_json_file(path: path, permission_template: permission_template)
         expect do
           expect do
             expect do
               expect do
-                described_class.generate_from_hash(data: invalid_data)
+                described_class.generate_from_hash(data: invalid_data, permission_template: permission_template)
               end.to raise_error(RuntimeError)
             end.not_to change { Sipity::Workflow.count }
           end.not_to change { Sipity::WorkflowAction.count }

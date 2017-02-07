@@ -33,11 +33,10 @@ RSpec.describe "Manage workflow roles", type: :feature do
       ]
     }
   end
+  let(:permission_template) { create(:permission_template) }
   before do
-    Hyrax::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
-    Hyrax::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
-                                              workflow: Sipity::Workflow.last,
-                                              agents: user)
+    Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: one_step_workflow.as_json, permission_template: permission_template)
+    Hyrax::Workflow::PermissionGenerator.call(roles: Sipity::Role.all, workflow: Sipity::Workflow.last, agents: user)
   end
 
   it "shows the roles" do
