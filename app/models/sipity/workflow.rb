@@ -11,7 +11,7 @@ module Sipity
     has_many :workflow_actions, dependent: :destroy, class_name: 'Sipity::WorkflowAction'
     has_many :workflow_roles, dependent: :destroy, class_name: 'Sipity::WorkflowRole'
     has_many :permission_templates, dependent: :restrict_with_exception, class_name: 'Hyrax::PermissionTemplate'
-    belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate'
+    belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate', required: true
 
     DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
     def initial_workflow_state
