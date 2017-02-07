@@ -19,7 +19,8 @@ describe Hyrax::Forms::CollectionForm do
                          :identifier,
                          :based_near,
                          :related_url,
-                         :visibility]
+                         :visibility,
+                         :depositor]
     end
   end
 
@@ -95,7 +96,9 @@ describe Hyrax::Forms::CollectionForm do
                          { identifier: [] },
                          { based_near: [] },
                          { related_url: [] },
-                         :visibility]
+                         :visibility,
+                         :depositor,
+                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] }]
     end
   end
 

@@ -2,8 +2,9 @@ module Hyrax
   module Forms
     class CollectionForm
       include HydraEditor::Form
+      include HydraEditor::Form::Permissions
 
-      delegate :id, to: :model
+      delegate :id, :depositor, :permissions, to: :model
 
       # TODO: remove this when https://github.com/projecthydra/hydra-editor/pull/115
       # is merged and hydra-editor 3.0.0 is released
@@ -16,7 +17,7 @@ module Hyrax
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
                     :keyword, :rights, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
-                    :related_url, :visibility]
+                    :related_url, :visibility, :depositor]
 
       self.required_fields = [:title]
 

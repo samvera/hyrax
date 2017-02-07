@@ -35,10 +35,16 @@ describe Hyrax::CollectionsController do
     it "creates a Collection" do
       expect do
         post :create, params: {
-          collection: collection_attrs.merge(visibility: 'open')
+          collection: collection_attrs.merge(
+            visibility: 'open',
+            permissions_attributes: [{ type: 'person',
+                                       name: 'archivist1',
+                                       access: 'edit' }]
+          )
         }
       end.to change { Collection.count }.by(1)
       expect(assigns[:collection].visibility).to eq 'open'
+      expect(assigns[:collection].edit_users).to contain_exactly "archivist1", user.email
     end
 
     it "removes blank strings from params before creating Collection" do

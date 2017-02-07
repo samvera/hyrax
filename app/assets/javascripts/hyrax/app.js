@@ -84,6 +84,8 @@ Hyrax = {
         new PermissionsControl($("#permission"), 'tmpl-file-set-grant');
         // On the batch edit page
         new PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
+        // On the edit collection page
+        new PermissionsControl($("#collection_permissions"), 'tmpl-collection-grant');
     },
 
     notifications: function () {
