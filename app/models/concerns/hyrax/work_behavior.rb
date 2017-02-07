@@ -29,6 +29,12 @@ module Hyrax
       self.indexer = WorkIndexer
     end
 
+    # TODO: Move this into ActiveFedora
+    def etag
+      raise "Unable to produce an etag for a unsaved object" unless persisted?
+      ldp_source.head.etag
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:

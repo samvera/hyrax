@@ -34,6 +34,10 @@ module Hyrax
         super(model)
       end
 
+      def version
+        model.etag
+      end
+
       # The value for some fields should not be set to the defaults ([''])
       # because it should be an empty array instead
       def initialize_field(key)
@@ -120,7 +124,7 @@ module Hyrax
       end
 
       def self.build_permitted_params
-        super + [:on_behalf_of]
+        super + [:on_behalf_of, :version]
       end
 
       private

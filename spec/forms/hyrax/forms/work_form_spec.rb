@@ -2,6 +2,14 @@ describe Hyrax::Forms::WorkForm, :no_clean do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil, nil) }
 
+  describe "#version" do
+    before do
+      allow(work).to receive(:etag).and_return('123456')
+    end
+    subject { form.version }
+    it { is_expected.to eq '123456' }
+  end
+
   describe "#select_files" do
     let(:work) { create(:work_with_one_file) }
     let(:title) { work.file_sets.first.title.first }

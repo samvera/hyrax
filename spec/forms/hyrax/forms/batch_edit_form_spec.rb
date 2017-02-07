@@ -90,6 +90,7 @@ describe Hyrax::Forms::BatchEditForm do
                          { related_url: [] },
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
                          :on_behalf_of,
+                         :version,
                          :visibility_during_embargo,
                          :embargo_release_date,
                          :visibility_after_embargo,

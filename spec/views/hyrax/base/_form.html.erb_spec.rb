@@ -9,6 +9,7 @@ describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   before do
+    stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
     allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
@@ -67,13 +68,13 @@ describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   context "for a persisted object" do
+    let(:work) { stub_model(GenericWork, id: '456') }
+
     it "draws the page" do
       expect(page).to have_selector("form[action='/concern/generic_works/456']")
       expect(page).to have_selector("select#generic_work_resource_type", count: 1)
       expect(page).to have_selector("select#generic_work_thumbnail_id", count: 1)
       expect(page).to have_selector("select#generic_work_representative_id", count: 1)
-      expect(page).not_to have_link('Batch upload', href: '/batch_uploads')
-      expect(page).to have_link("Cancel", href: "/dashboard")
     end
   end
 end
