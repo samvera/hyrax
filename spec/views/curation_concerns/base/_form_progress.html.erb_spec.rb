@@ -73,10 +73,11 @@ describe 'curation_concerns/base/_form_progress.html.erb', type: :view do
       assign(:form, form)
     end
 
-    let(:work) { stub_model(GenericWork, id: '456') }
+    let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }
 
-    it "renders the deposit agreement already checked" do
+    it "renders the deposit agreement already checked and version" do
       expect(page).to have_selector("#agreement[checked]")
+      expect(page).to have_selector("input#generic_work_version[value=\"123456\"]", visible: false)
     end
   end
 end
