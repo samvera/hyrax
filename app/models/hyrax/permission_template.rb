@@ -10,8 +10,10 @@ module Hyrax
   class PermissionTemplate < ActiveRecord::Base
     self.table_name = 'permission_templates'
 
-    has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess'
+    has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess', dependent: :destroy
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
+
+    has_many :workflows, class_name: 'Sipity::Workflow', dependent: :destroy
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
     # @return [AdminSet]

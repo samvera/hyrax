@@ -3,6 +3,10 @@ describe Hyrax::PermissionTemplate do
   let(:permission_template) { described_class.new(attributes) }
   let(:attributes) { { admin_set_id: admin_set.id } }
 
+  subject { permission_template }
+  it { is_expected.to have_many(:workflows).dependent(:destroy) }
+  it { is_expected.to have_many(:access_grants).dependent(:destroy) }
+
   describe "#admin_set" do
     it 'leverages AdminSet.find for the given permission_template' do
       expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)
