@@ -2,6 +2,37 @@ describe User, type: :model do
   let(:user) { FactoryGirl.build(:user) }
   let(:another_user) { FactoryGirl.build(:user) }
 
+  describe 'verifying factories' do
+    describe ':user' do
+      let(:user) { FactoryGirl.build(:user) }
+      it 'will, by default, have no groups' do
+        expect(user.groups).to eq([])
+        user.save!
+        # Ensuring that we can refind it and have the correct groups
+        expect(user.class.find(user.id).groups).to eq([])
+      end
+      it 'will allow for override of groups' do
+        user = FactoryGirl.build(:user, groups: 'chicken')
+        expect(user.groups).to eq(['chicken'])
+        user.save!
+        # Ensuring that we can refind it and have the correct groups
+        expect(user.class.find(user.id).groups).to eq(['chicken'])
+      end
+    end
+    describe ':admin' do
+      let(:admin_user) { FactoryGirl.create(:admin) }
+      it 'will have an "admin" group' do
+        expect(admin_user.groups).to eq(['admin'])
+      end
+      context 'when found from the database' do
+        it 'will have the expected "admin" group' do
+          refound_admin_user = described_class.find(admin_user.id)
+          expect(refound_admin_user.groups).to eq(['admin'])
+        end
+      end
+    end
+  end
+
   it "has an email" do
     expect(user.user_key).to be_kind_of String
   end

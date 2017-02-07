@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe "Manage workflow roles", type: :feature do
-  let(:user) { create(:user) }
+  let(:user) { create(:admin) }
   let(:one_step_workflow) do
     {
       workflows: [
@@ -34,7 +34,6 @@ RSpec.describe "Manage workflow roles", type: :feature do
     }
   end
   before do
-    allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
     Hyrax::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
     Hyrax::Workflow::PermissionGenerator.call(roles: Sipity::Role.all,
                                               workflow: Sipity::Workflow.last,

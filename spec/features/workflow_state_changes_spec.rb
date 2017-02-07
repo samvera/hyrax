@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe "Workflow state changes", type: :feature do
   let(:workflow_name) { 'with_comment' }
-  let(:approving_user) { create(:user) }
-  let(:depositing_user) { create(:user) }
+  let(:approving_user) { create(:admin) }
+  let(:depositing_user) { create(:admin) }
   let(:admin_set) { create(:admin_set, edit_users: [depositing_user.user_key]) }
   let(:one_step_workflow) do
     {
@@ -32,7 +32,7 @@ RSpec.describe "Workflow state changes", type: :feature do
   let(:work) { create(:work, user: depositing_user, admin_set: admin_set) }
   let(:workflow_strategy) { double(workflow_name: workflow.name) }
   before do
-    allow(RoleMapper).to receive(:byname).and_return(depositing_user.user_key => ['admin'], approving_user.user_key => ['admin'])
+    allow(::User.group_service).to receive(:byname).and_return(depositing_user.user_key => ['admin'], approving_user.user_key => ['admin'])
     Hyrax::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call
     Hyrax::Workflow::PermissionGenerator.call(roles: 'approving', workflow: workflow, agents: approving_user)
     # Need to instantiate the Sipity::Entity for the given work. This is necessary as I'm not creating the work via the UI.

@@ -63,7 +63,7 @@ describe 'Hyrax::Ability', type: :model do
     end
 
     describe 'as admin' do
-      before { expect(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin']).at_least(1).times }
+      let(:user) { create(:user, groups: ['admin']) }
       it '#admin? is true' do
         expect(ability).to be_admin
       end

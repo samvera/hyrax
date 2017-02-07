@@ -33,7 +33,7 @@ module Hyrax
         # Grant access based on user id & role
         unless @user_key.blank?
           # for roles
-          ::RoleMapper.roles(@user_key).each do |role|
+          ::User.group_service.roles(@user_key).each do |role|
             user_access_filters << "#{solr_access_control_suffix(:group)}:#{escape_slashes(role)}"
           end
           # for individual person access
