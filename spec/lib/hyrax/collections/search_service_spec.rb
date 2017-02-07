@@ -13,7 +13,7 @@ describe Hyrax::Collections::SearchService do
 
   describe 'apply_gated_search' do
     before do
-      allow(RoleMapper).to receive(:roles).with(login).and_return(['umg/test.group.1'])
+      allow(::User.group_service).to receive(:roles).with(login).and_return(['umg/test.group.1'])
     end
 
     let(:params) { service.apply_gated_search({}, {}) }

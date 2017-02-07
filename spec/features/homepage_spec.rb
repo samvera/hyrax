@@ -14,9 +14,8 @@ RSpec.feature "The homepage" do
   end
 
   context "as an admin" do
-    let(:user) { create(:user) }
+    let(:user) { create(:admin) }
     before do
-      allow(RoleMapper).to receive(:byname).and_return(user.user_key => ['admin'])
       sign_in user
       visit root_path
     end
