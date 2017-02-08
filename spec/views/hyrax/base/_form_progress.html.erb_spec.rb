@@ -68,14 +68,17 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   context "when the work has been saved before" do
     before do
+      # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive(:new_record?).and_return(false)
       assign(:form, form)
     end
 
-    let(:work) { stub_model(GenericWork, id: '456') }
+    let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }
 
-    it "renders the deposit agreement already checked" do
+    it "renders the deposit agreement already checked and the version" do
       expect(page).to have_selector("#agreement[checked]")
+      expect(page).to have_selector("input#generic_work_version[value=\"123456\"]", visible: false)
+      expect(page).to have_link("Cancel", href: "/dashboard")
     end
   end
 end

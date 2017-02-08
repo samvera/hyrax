@@ -1,4 +1,8 @@
 es:
+  activemodel:
+    errors:
+      messages:
+        conflict: "Otro usuario ha realizado un cambio en ese %{model} desde que accedió al formulario de edición."
   blacklight:
     search:
       fields:

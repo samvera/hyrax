@@ -507,7 +507,7 @@ describe Hyrax::GenericWorksController do
     it "is successful" do
       get :file_manager, params: { id: work.id }
       expect(response).to be_success
-      expect(assigns(:presenter)).not_to be_blank
+      expect(assigns(:form)).not_to be_blank
     end
   end
 end
