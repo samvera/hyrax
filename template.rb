@@ -1,4 +1,4 @@
-gem 'sufia', '7.2.0'
+gem 'sufia', '7.3.0.rc1'
 gem 'flipflop', github: 'jcoyne/flipflop', branch: 'hydra'
 
 run 'bundle install'

@@ -6,7 +6,7 @@ require 'sufia/version'
 Gem::Specification.new do |spec|
   spec.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt", 'Jeremy Friesen']
   spec.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu', "jeremy.n.friesen@gmail.com"]
-  spec.description   = 'Sufia extends the robust Hydra framework to provide a user interface around common repository features and social features. Sufia offers self-deposit and proxy deposit workflows with plans to develop one or more mediated deposit workflows in 2016. Sufia delivers its rich and growing set of features via a modern, responsive UI'
+  spec.description   = 'Sufia extends the robust Hydra framework to provide a user interface around common repository features and social features. Sufia offers self-deposit, proxy deposit, and configurable mediated deposit workflows. Sufia delivers its rich and growing set of features via a modern, responsive UI'
   spec.summary       = "Sufia was originally extracted from ScholarSphere developed by Penn State University. It's now used and maintained by an active community of adopters."
   spec.homepage      = "http://sufia.io/"
 
