@@ -2,7 +2,7 @@ en:
   activemodel:
     errors:
       messages:
-        conflict: "Another user has made a change to that %{model} since you accessed the edit form."
+        conflict: "Your changes could not be saved because another user (or background job) updated this %{model} after you began editing. Please make sure all file attachments have completed successfully and try again. This form has refreshed with the most recent saved copy of the %{model}."
   curation_concerns:
     admin:
       workflow_roles:
