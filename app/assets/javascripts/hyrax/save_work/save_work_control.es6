@@ -54,7 +54,19 @@ export class SaveWorkControl {
   }
 
   /**
-   * Is the form for a new object (vs edit an exisiting object)
+   * Keep the form from being submitted while uploads are running
+   *
+   */
+  preventSubmitIfUploading() {
+    this.form.on('submit', (evt) => {
+      if (this.uploads.inProgress) {
+        evt.preventDefault()
+      }
+    })
+  }
+
+  /**
+   * Is the form for a new object (vs edit an existing object)
    */
   get isNew() {
     return this.form.attr('id').startsWith('new')
@@ -80,6 +92,7 @@ export class SaveWorkControl {
     new VisibilityComponent(this.element.find('.visibility'))
     this.preventSubmitUnlessValid()
     this.preventSubmitIfAlreadyInProgress()
+    this.preventSubmitIfUploading()
     $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
     $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
     this.formChanged()
@@ -136,4 +149,3 @@ export class SaveWorkControl {
     return this.depositAgreement.isAccepted
   }
 }
-

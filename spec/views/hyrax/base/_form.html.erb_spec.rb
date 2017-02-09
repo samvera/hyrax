@@ -70,11 +70,19 @@ describe 'hyrax/base/_form.html.erb', type: :view do
   context "for a persisted object" do
     let(:work) { stub_model(GenericWork, id: '456') }
 
+    before do
+      # Add an error to the work
+      work.errors.add :base, 'broken'
+    end
+
     it "draws the page" do
       expect(page).to have_selector("form[action='/concern/generic_works/456']")
       expect(page).to have_selector("select#generic_work_resource_type", count: 1)
       expect(page).to have_selector("select#generic_work_thumbnail_id", count: 1)
       expect(page).to have_selector("select#generic_work_representative_id", count: 1)
+
+      # It diplays form errors
+      expect(page).to have_content("broken")
     end
   end
 end
