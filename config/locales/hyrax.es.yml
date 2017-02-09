@@ -2,7 +2,7 @@ es:
   activemodel:
     errors:
       messages:
-        conflict: "Otro usuario ha realizado un cambio en ese %{model} desde que accedió al formulario de edición."
+        conflict: "No se pueden guardar los cambios porque otro usuario (o trabajo de fondo) actualizó esta %{model} después de comenzar a editar. Asegúrese de que todos los archivos adjuntos se hayan completado correctamente y vuelva a intentarlo. Este formulario se actualizó con la copia guardada más reciente de la %{model}."
   blacklight:
     search:
       fields:

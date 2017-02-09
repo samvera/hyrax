@@ -42,7 +42,10 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
 
         it "returns false and sets an error" do
           expect(subject).to be false
-          expect(work.errors[:base]).to include "Another user has made a change to that Generic work since you accessed the edit form."
+          expect(work.errors[:base]).to include "Your changes could not be saved because another " \
+            "user (or background job) updated this Generic work after you began editing. Please " \
+            "make sure all file attachments have completed successfully and try again. This form " \
+            "has refreshed with the most recent saved copy of the Generic work."
         end
       end
     end
