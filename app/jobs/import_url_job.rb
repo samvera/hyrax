@@ -2,6 +2,10 @@ require 'uri'
 require 'tempfile'
 require 'browse_everything/retriever'
 
+# Given a FileSet that has an import_url property,
+# download that file and put it into Fedora
+# Called by AttachFilesToWorkJob (when files are uploaded to s3)
+# and CreateWithRemoteFilesActor when files are located in some other service.
 class ImportUrlJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
@@ -20,8 +24,11 @@ class ImportUrlJob < ActiveJob::Base
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
-      # attach downloaded file to FileSet stubbed out
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f)
+      # We invoke the FileSetActor in a synchronous way so that this tempfile is available
+      # when IngestFileJob is invoked. If it was asynchronous the IngestFileJob may be invoked
+      # on a machine that did not have this temp file on it's file system.
+      # NOTE: The return status may be successful even if the content never attaches.
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, false)
         # send message to user on download success
         Hyrax.config.callback.run(:after_import_url_success, file_set, user)
         log.success!

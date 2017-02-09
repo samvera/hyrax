@@ -19,13 +19,19 @@ module Hyrax
       # TODO: create a job to monitor this directory and prune old files that
       # have made it to the repo
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file to save in the repository
-      def ingest_file(file)
-        IngestFileJob.perform_later(
-          file_set,
-          working_file(file),
-          user,
-          ingest_options(file)
-        )
+      # @param [Boolean] asynchronous set to true if you want to launch a new background job.
+      def ingest_file(file, asynchronous)
+        method = if asynchronous
+                   :perform_later
+                 else
+                   :perform_now
+                 end
+
+        IngestFileJob.send(method,
+                           file_set,
+                           working_file(file),
+                           user,
+                           ingest_options(file))
         true
       end
 
