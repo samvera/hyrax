@@ -55,28 +55,29 @@ RSpec.describe Hyrax::AdminSetService do
     let(:doc2) { SolrDocument.new(id: 'yyx123') }
     let(:doc3) { SolrDocument.new(id: 'zxy123') }
     let(:connection) { instance_double(RSolr::Client) }
+    let(:facets) { { 'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2] } }
+    let(:document_list) do
+      [
+        {
+          'isPartOf_ssim' => ['xyz123'],
+          'file_set_ids_ssim' => ['aaa']
+        },
+        {
+          'isPartOf_ssim' => ['xyz123', 'yyx123'],
+          'file_set_ids_ssim' => ['bbb', 'ccc']
+        }
+      ]
+    end
+
     let(:results) do
       {
         'response' =>
           {
-            'docs' =>
-              [
-                {
-                  'isPartOf_ssim' => ['xyz123'],
-                  'file_set_ids_ssim' => ['aaa']
-                },
-                {
-                  'isPartOf_ssim' => ['xyz123', 'yyx123'],
-                  'file_set_ids_ssim' => ['bbb', 'ccc']
-                }
-              ]
+            'docs' => document_list
           },
         'facet_counts' =>
           {
-            'facet_fields' =>
-              {
-                'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2]
-              }
+            'facet_fields' => facets
           }
       }
     end
@@ -88,8 +89,26 @@ RSpec.describe Hyrax::AdminSetService do
                                                                   "facet.field" => "isPartOf_ssim" }).and_return(results)
     end
 
-    it "returns rows with document in the first column and integer count value in the second and third column" do
-      expect(subject).to eq [[doc1, 8, 3], [doc2, 2, 2], [doc3, 0, 0]]
+    context "when there are works in the admin set" do
+      it "returns rows with document in the first column and integer count value in the second and third column" do
+        expect(subject).to eq [[doc1, 8, 3], [doc2, 2, 2], [doc3, 0, 0]]
+      end
+    end
+
+    context "when there are no files in the admin set" do
+      let(:document_list) do
+        [
+          {
+            'isPartOf_ssim' => ['xyz123']
+          },
+          {
+            'isPartOf_ssim' => ['xyz123', 'yyx123']
+          }
+        ]
+      end
+      it "returns rows with document in the first column and integer count value in the second and third column" do
+        expect(subject).to eq [[doc1, 8, 0], [doc2, 2, 0], [doc3, 0, 0]]
+      end
     end
   end
 
