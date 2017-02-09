@@ -5,7 +5,8 @@ describe Sufia::ActorFactory, :no_clean do
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
     it do
-      is_expected.to eq [Sufia::CreateWithRemoteFilesActor,
+      is_expected.to eq [CurationConcerns::OptimisticLockValidator,
+                         Sufia::CreateWithRemoteFilesActor,
                          Sufia::CreateWithFilesActor,
                          CurationConcerns::Actors::AddToCollectionActor,
                          CurationConcerns::Actors::AddToWorkActor,
@@ -24,6 +25,7 @@ describe Sufia::ActorFactory, :no_clean do
     subject { described_class.build(work, user) }
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
+        Sufia::CreateWithRemoteFilesActor,
         Sufia::CreateWithFilesActor,
         CurationConcerns::Actors::AddToCollectionActor,
         CurationConcerns::Actors::AddToWorkActor,
@@ -36,7 +38,7 @@ describe Sufia::ActorFactory, :no_clean do
         Sufia::ApplyPermissionTemplateActor,
         CurationConcerns::Actors::GenericWorkActor
       ]
-      expect(subject.first_actor_class).to eq Sufia::CreateWithRemoteFilesActor
+      expect(subject.first_actor_class).to eq CurationConcerns::OptimisticLockValidator
     end
   end
 

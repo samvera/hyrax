@@ -43,6 +43,9 @@
     <%= link_to t(:'helpers.action.cancel'),
                 sufia.dashboard_index_path,
                 class: 'btn btn-default' %>
+    <%# TODO: If we start using ActionCable, we could listen for object updates and
+              alert the user that the object has changed by someone else %>
+    <%= f.input CurationConcerns::OptimisticLockValidator.version_field, as: :hidden unless f.object.new_record? %>
     <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
   </div>
 </aside>

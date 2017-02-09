@@ -4,8 +4,6 @@ module Sufia
     delegate :based_near, :related_url, :depositor, :identifier, :resource_type,
              :keyword, :itemtype, :admin_set, to: :solr_document
 
-    self.file_presenter_class = Sufia::FileSetPresenter
-
     def editor?
       current_ability.can?(:edit, solr_document)
     end

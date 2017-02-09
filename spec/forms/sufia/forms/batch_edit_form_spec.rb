@@ -59,6 +59,7 @@ describe Sufia::Forms::BatchEditForm do
                          { identifier: [] },
                          { based_near: [] },
                          { related_url: [] },
+                         :version,
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
                          :on_behalf_of,
                          { collection_ids: [] },
