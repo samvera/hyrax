@@ -32,9 +32,11 @@ module Hyrax
         yield(file_set) if block_given?
       end
 
+      # Called from AttachFilesActor, FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
       # @param [String] relation ('original_file')
-      def create_content(file, relation = 'original_file')
+      # @param [Boolean] asynchronous (true) set to false if you don't want to launch a new background job.
+      def create_content(file, relation = 'original_file', asynchronous = true)
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
         file_set.title = [file_set.label] if file_set.title.blank?
@@ -42,7 +44,7 @@ module Hyrax
         # Need to save the file_set in order to get an id
         return false unless file_set.save
 
-        file_actor_class.new(file_set, relation, user).ingest_file(file)
+        file_actor_class.new(file_set, relation, user).ingest_file(file, asynchronous)
         true
       end
 
