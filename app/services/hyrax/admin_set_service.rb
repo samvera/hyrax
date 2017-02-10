@@ -74,7 +74,7 @@ module Hyrax
         file_counts = Hash.new(0)
         results['response']['docs'].each do |doc|
           doc['isPartOf_ssim'].each do |id|
-            file_counts[id] += doc['file_set_ids_ssim'].length
+            file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
           end
         end
         file_counts
