@@ -4,6 +4,9 @@ FactoryGirl.define do
       user { FactoryGirl.create(:user) }
     end
 
+    # Fundamental assumption that all works are members of an admin_set.
+    admin_set
+
     title ["Test title"]
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 

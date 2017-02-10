@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
   let(:user) { create(:user) }
-  let(:curation_concern) { GenericWork.new }
+  let(:curation_concern) { build(:generic_work) }
   let(:attributes) { { title: ['test'] } }
 
   subject do
