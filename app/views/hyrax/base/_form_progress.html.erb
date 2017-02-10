@@ -11,6 +11,9 @@
           <% if Hyrax.config.work_requires_files? %>
             <li class="incomplete" id="required-files"><%= t('.required_files') %></li>
           <% end %>
+          <% if Flipflop.active_deposit_agreement_acceptance? %>
+            <li class="incomplete" id="required-agreement"><%= t('.required_agreement') %></li>
+          <% end %>
         </ul>
       </fieldset>
     </div>

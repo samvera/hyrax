@@ -11,7 +11,7 @@ describe("SaveWorkControl", function() {
     beforeEach(function() {
       var fixture = setFixtures('<form id="edit_generic_work">' +
         '<select><option></option></select>' +
-        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"><li id="required-agreement"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>');
       admin_set = new AdminSetWidget(fixture.find('select'))
@@ -49,27 +49,39 @@ describe("SaveWorkControl", function() {
   });
 
   describe("validateAgreement", function() {
-    var target;
+    var mockCheckbox = {
+      check: function() { },
+      uncheck: function() { },
+    };
     beforeEach(function() {
       var fixture = setFixtures('<form id="edit_generic_work">' +
-        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"><li id="required-agreement"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>');
       target = new SaveWorkControl(fixture.find('#form-progress'));
+      spyOn(mockCheckbox, 'check').and.stub();
+      spyOn(mockCheckbox, 'uncheck').and.stub();
       target.activate()
+      target.requiredAgreement = mockCheckbox;
     });
     it("forces user to agree if new files are added", function() {
       // Agreement starts as accepted...
       target.uploads = { hasNewFiles: false };
       expect(target.validateAgreement(true)).toEqual(true);
+      expect(mockCheckbox.uncheck.calls.count()).toEqual(0);
+      expect(mockCheckbox.check.calls.count()).toEqual(1);
 
       // ...and becomes not accepted as soon as the user adds new files...
       target.uploads = { hasNewFiles: true };
       expect(target.validateAgreement(true)).toEqual(false);
+      expect(mockCheckbox.uncheck.calls.count()).toEqual(1);
+      expect(mockCheckbox.check.calls.count()).toEqual(1);
 
       // ...but allows the user to manually agree again.
       target.depositAgreement.setAccepted();
       expect(target.validateAgreement(true)).toEqual(true);
+      expect(mockCheckbox.uncheck.calls.count()).toEqual(1);
+      expect(mockCheckbox.check.calls.count()).toEqual(2);
     });
   });
 
@@ -83,7 +95,7 @@ describe("SaveWorkControl", function() {
     var buildTarget = function(form_id) {
       var buildFixture = function(id) {
         return setFixtures('<form id="' + id + '">' +
-        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
+        '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"><li id="required-agreement"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>')
       }
@@ -144,7 +156,7 @@ describe("SaveWorkControl", function() {
   describe("activate", function() {
     var target;
     beforeEach(function() {
-      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
+      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"><li id="required-agreement"></ul><input type="submit"></aside></form>');
       target = new SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
@@ -155,6 +167,7 @@ describe("SaveWorkControl", function() {
       expect(target.depositAgreement).toBeDefined();
       expect(target.requiredMetadata).toBeDefined();
       expect(target.requiredFiles).toBeDefined();
+      expect(target.requiredAgreement).toBeDefined();
       expect(target.saveButton).toBeDisabled();
     });
 
@@ -163,7 +176,7 @@ describe("SaveWorkControl", function() {
   describe("on submit", function() {
     var target;
     beforeEach(function() {
-      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
+      var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"><li id="required-agreement"></ul><input type="submit"></aside></form>');
       target = new SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
