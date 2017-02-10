@@ -28,7 +28,7 @@ class ImportUrlJob < ActiveJob::Base
       # when IngestFileJob is invoked. If it was asynchronous the IngestFileJob may be invoked
       # on a machine that did not have this temp file on it's file system.
       # NOTE: The return status may be successful even if the content never attaches.
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, false)
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, 'original_file', false)
         # send message to user on download success
         Hyrax.config.callback.run(:after_import_url_success, file_set, user)
         log.success!

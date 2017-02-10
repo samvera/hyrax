@@ -34,7 +34,7 @@ describe ImportUrlJob do
 
     it 'creates the content' do
       expect(success_service).to receive(:call)
-      expect(actor).to receive(:create_content).and_return(true)
+      expect(actor).to receive(:create_content).with(Tempfile, 'original_file', false).and_return(true)
       described_class.perform_now(file_set, log)
       expect(log.status).to eq 'success'
     end
