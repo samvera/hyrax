@@ -55,7 +55,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Sufia
-v7.2.0__. If you are looking for instructions on installing a different
+v7.3.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -115,11 +115,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Generate a new Rails application. We recommend the latest Rails 5.0 or 4.2 release.
+Generate a new Rails application. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.0.1
+gem install rails -v 5.0.1
 rails new my_app -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb
 ```
 
