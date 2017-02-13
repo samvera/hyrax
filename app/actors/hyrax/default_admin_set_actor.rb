@@ -33,10 +33,16 @@ module Hyrax
       end
 
       # Creates the default AdminSet and an associated PermissionTemplate with workflow
+      # rubocop:disable Lint/HandleExceptions
       def create_default_admin_set
         AdminSet.create!(id: DEFAULT_ID, title: ['Default Admin Set']).tap do |_as|
           PermissionTemplate.create!(admin_set_id: DEFAULT_ID, workflow_name: 'default')
         end
+      rescue ActiveFedora::IllegalOperation
+        # It is possible that another thread created the AdminSet just before this method
+        # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
+        # ignore the error.
       end
+    # rubocop:enable Lint/HandleExceptions
   end
 end
