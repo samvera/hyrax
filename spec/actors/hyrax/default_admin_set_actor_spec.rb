@@ -40,4 +40,16 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
       end
     end
   end
+
+  describe "#create_default_admin_set" do
+    let(:actor) { described_class.new(double, double, double) }
+    context "when another thread has already created the admin set" do
+      before do
+        AdminSet.create!(id: described_class::DEFAULT_ID, title: ['Default Admin Set'])
+      end
+      it "doesn't raise an error" do
+        expect { actor.send(:create_default_admin_set) }.not_to raise_error
+      end
+    end
+  end
 end
