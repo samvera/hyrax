@@ -115,16 +115,12 @@ module Hyrax
         # Takes an optional block and executes the block if the save was successful.
         # returns false if the save was unsuccessful
         def save
-          save_tries = 0
-          begin
+          on_retry = ->(exception, _, _, _) { ActiveFedora::Base.logger.warn "Hyrax::Actors::FileSetActor#save Caught RSOLR error #{exception.inspect}" }
+          Retriable.retriable on: RSolr::Error::Http,
+                              on_retry: on_retry,
+                              tries: 4,
+                              base_interval: 0.01 do
             return false unless file_set.save
-          rescue RSolr::Error::Http => error
-            ActiveFedora::Base.logger.warn "Hyrax::Actors::FileSetActor#save Caught RSOLR error #{error.inspect}"
-            save_tries += 1
-            # fail for good if the tries is greater than 3
-            raise error if save_tries >= 3
-            sleep 0.01
-            retry
           end
           yield if block_given?
           true
