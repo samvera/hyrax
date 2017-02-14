@@ -8,9 +8,10 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
                          user: depositor)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, depositor, [described_class])
+    Hyrax::Actors::ActorStack.new(work, depositor_ability, [described_class])
   end
   let(:depositor) { create(:user) }
+  let(:depositor_ability) { ::Ability.new(depositor) }
   let(:work) { build(:generic_work) }
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }

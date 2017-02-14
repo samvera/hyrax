@@ -6,7 +6,7 @@ describe Hyrax::CreateWithFilesActor do
                            user: user)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, user, [described_class])
+    Hyrax::Actors::ActorStack.new(work, ::Ability.new(user), [described_class])
   end
   let(:user) { create(:user) }
   let(:uploaded_file1) { Hyrax::UploadedFile.create(user: user) }

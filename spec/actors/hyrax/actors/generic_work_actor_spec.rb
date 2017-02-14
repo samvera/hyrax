@@ -16,7 +16,7 @@ describe Hyrax::Actors::GenericWorkActor do
   end
 
   subject do
-    Hyrax::CurationConcern.actor(curation_concern, user)
+    Hyrax::CurationConcern.actor(curation_concern, ::Ability.new(user))
   end
 
   describe '#create' do

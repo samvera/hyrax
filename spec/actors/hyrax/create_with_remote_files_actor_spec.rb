@@ -5,7 +5,7 @@ describe Hyrax::CreateWithRemoteFilesActor do
                            user: user)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, user, [described_class])
+    Hyrax::Actors::ActorStack.new(work, ::Ability.new(user), [described_class])
   end
   let(:user) { create(:user) }
   let(:work) { create(:generic_work, user: user) }

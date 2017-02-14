@@ -60,6 +60,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'active_attr', '~> 0.9.0'
   spec.add_dependency 'redlock', '~> 0.1.2'
+  spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
 
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'

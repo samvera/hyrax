@@ -1,6 +1,6 @@
 describe Hyrax::ActorFactory, :no_clean do
   let(:work) { GenericWork.new }
-  let(:user) { double }
+  let(:user) { double(current_user: double) }
 
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }

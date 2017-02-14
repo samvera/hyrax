@@ -10,9 +10,9 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
   end
 
   let(:actor_stack) do
-    Hyrax::Actors::ActorStack.new(work, depositor, [described_class,
-                                                    bad_actor,
-                                                    Hyrax::Actors::InitializeWorkflowActor])
+    Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class,
+                                                                   bad_actor,
+                                                                   Hyrax::Actors::InitializeWorkflowActor])
   end
 
   let(:depositor) { create(:user) }

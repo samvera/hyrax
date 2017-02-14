@@ -2,19 +2,20 @@ module Hyrax
   module Actors
     class ActorStack
       attr_reader :curation_concern, :user, :first_actor_class, :more_actors
-      def initialize(curation_concern, user, more_actors)
+      def initialize(curation_concern, user_or_ability, more_actors)
         @curation_concern = curation_concern
-        @user = user
+        self.user = user_or_ability
         @more_actors = more_actors
         @first_actor_class = @more_actors.shift || RootActor
       end
 
       def inner_stack
-        Actors::ActorStack.new(curation_concern, user, more_actors)
+        Actors::ActorStack.new(curation_concern, ability, more_actors)
       end
 
       def actor
-        first_actor_class.new(curation_concern, user, inner_stack)
+        ## Change this to pass in the ability instead of user for next version.
+        first_actor_class.new(curation_concern, user, inner_stack, ability: ability)
       end
 
       # @param [ActionController::Parameters,Hash,NilClass] new_attributes
@@ -36,7 +37,22 @@ module Hyrax
         curation_concern.destroy
       end
 
+      def ability
+        @ability ||= ::Ability.new(user)
+      end
+
       private
+
+        def user=(user_or_ability)
+          if user_or_ability.respond_to?(:current_user)
+            @user = user_or_ability.current_user
+            @ability = user_or_ability
+          else
+            Deprecation.warn(self, "Passing a user as an argument to Hyrax::Actors::ActorStack is deprecated, pass an Ability instead")
+            @user = user_or_ability
+            @ability = ::Ability.new(user)
+          end
+        end
 
         # @param [ActionController::Parameters,Hash,NilClass] new_attributes
         def cast_to_indifferent_hash(new_attributes)
