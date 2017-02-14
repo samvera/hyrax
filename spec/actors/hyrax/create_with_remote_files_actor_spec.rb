@@ -5,9 +5,10 @@ describe Hyrax::CreateWithRemoteFilesActor do
                            user: user)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, user, [described_class])
+    Hyrax::Actors::ActorStack.new(work, ability, [described_class])
   end
   let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
   let(:work) { create(:generic_work, user: user) }
   let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
   let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }

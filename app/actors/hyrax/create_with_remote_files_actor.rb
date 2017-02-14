@@ -28,13 +28,13 @@ module Hyrax
       # Used in to import files using URLs from a file picker like browse_everything
       def create_file_from_url(url, file_name)
         ::FileSet.new(import_url: url, label: file_name) do |fs|
-          actor = Hyrax::Actors::FileSetActor.new(fs, user)
+          actor = Hyrax::Actors::FileSetActor.new(fs, ability.current_user)
           actor.create_metadata(visibility: curation_concern.visibility)
           actor.attach_file_to_work(curation_concern)
           fs.save!
           uri = URI.parse(URI.encode(url))
           if uri.scheme == 'file'
-            IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), user)
+            IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), ability.current_user)
           else
             ImportUrlJob.perform_later(fs, log(actor.user))
           end

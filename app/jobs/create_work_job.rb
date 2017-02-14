@@ -1,3 +1,5 @@
+# Create a single work in the background
+# Used by the BatchCreateJob
 class CreateWorkJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
@@ -24,6 +26,10 @@ class CreateWorkJob < ActiveJob::Base
   private
 
     def work_actor(work, user)
-      Hyrax::CurationConcern.actor(work, user)
+      Hyrax::CurationConcern.actor(work, ability(user))
+    end
+
+    def ability(user)
+      Ability.new(user)
     end
 end

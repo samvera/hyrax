@@ -1,20 +1,20 @@
 module Hyrax
   module Actors
     class ActorStack
-      attr_reader :curation_concern, :user, :first_actor_class, :more_actors
-      def initialize(curation_concern, user, more_actors)
+      attr_reader :curation_concern, :ability, :first_actor_class, :more_actors
+      def initialize(curation_concern, ability, more_actors)
         @curation_concern = curation_concern
-        @user = user
+        @ability = ability
         @more_actors = more_actors
         @first_actor_class = @more_actors.shift || RootActor
       end
 
       def inner_stack
-        Actors::ActorStack.new(curation_concern, user, more_actors)
+        Actors::ActorStack.new(curation_concern, ability, more_actors)
       end
 
       def actor
-        first_actor_class.new(curation_concern, user, inner_stack)
+        first_actor_class.new(curation_concern, ability, inner_stack)
       end
 
       # @param [ActionController::Parameters,Hash,NilClass] new_attributes

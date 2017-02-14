@@ -20,10 +20,10 @@ module Hyrax
 
       # ensure that the files we are given are owned by the depositor of the work
       def validate_files
-        expected_user_id = user.id
+        expected_user_id = ability.current_user.id
         uploaded_files.each do |file|
           if file.user_id != expected_user_id
-            Rails.logger.error "User #{user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
+            Rails.logger.error "User #{ability.current_user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
             return false
           end
         end

@@ -12,7 +12,7 @@ module Hyrax
 
         # @return [TrueClass]
         def create_workflow(attributes)
-          workflow_factory.create(curation_concern, attributes, user)
+          workflow_factory.create(curation_concern, attributes, ability.current_user)
         end
     end
   end

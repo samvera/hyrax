@@ -1,11 +1,12 @@
 require 'spec_helper'
 describe Hyrax::Actors::AddAsMemberOfCollectionsActor do
   let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user,
+                                  ability,
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end

@@ -1,6 +1,7 @@
 require 'spec_helper'
 describe Hyrax::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
+  let(:ability) { instance_double(Ability, current_user: user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set) }
@@ -8,7 +9,7 @@ describe Hyrax::Actors::InterpretVisibilityActor do
 
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user,
+                                  ability,
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end

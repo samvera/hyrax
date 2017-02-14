@@ -28,7 +28,7 @@ module Hyrax
         file_set.date_modified = now
         file_set.creator = [user.user_key]
 
-        Actors::ActorStack.new(file_set, user, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
+        Actors::ActorStack.new(file_set, ability, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
         yield(file_set) if block_given?
       end
 
@@ -91,7 +91,7 @@ module Hyrax
 
       def update_metadata(attributes)
         stack = Actors::ActorStack.new(file_set,
-                                       user,
+                                       ability,
                                        [InterpretVisibilityActor, BaseActor])
         stack.update(attributes)
       end
@@ -107,6 +107,10 @@ module Hyrax
       end
 
       private
+
+        def ability
+          ::Ability.new(user)
+        end
 
         # Takes an optional block and executes the block if the save was successful.
         # returns false if the save was unsuccessful
