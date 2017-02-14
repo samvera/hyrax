@@ -17,7 +17,7 @@ module Hyrax
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
                     :keyword, :rights, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
-                    :related_url, :visibility, :depositor]
+                    :related_url, :visibility]
 
       self.required_fields = [:title]
 
