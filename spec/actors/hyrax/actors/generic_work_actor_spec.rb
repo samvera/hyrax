@@ -1,10 +1,13 @@
 require 'spec_helper'
 require 'redlock'
 
+# TODO: Separate the testing of AttachFilesActor into it's own spec
 describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
+
   let(:file_path) { File.join(fixture_path, 'image.png') }
   let(:file) { Rack::Test::UploadedFile.new(file_path, 'image/png', false) }
   # stub out redis connection
@@ -16,7 +19,7 @@ describe Hyrax::Actors::GenericWorkActor do
   end
 
   subject do
-    Hyrax::CurationConcern.actor(curation_concern, user)
+    Hyrax::CurationConcern.actor(curation_concern, ability)
   end
 
   describe '#create' do

@@ -18,9 +18,8 @@ module Hyrax
 
       def create_work_from_item
         work = Hyrax.primary_work_type.new
-        work_actor = Hyrax::CurationConcern.actor(work, user)
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
-        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(create_attrs)
+        raise "Unable to create work. #{work.errors.messages}" unless work_actor(work).create(create_attrs)
 
         file_set = ::FileSet.new
 
@@ -34,9 +33,8 @@ module Hyrax
       end
 
       def update_work_from_item(work)
-        work_actor = Hyrax::CurationConcern.actor(work, user)
         work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
-        work_actor.update(work_attributes)
+        work_actor(work).update(work_attributes)
         file_set = work.file_sets.first
         file_actor = ::Hyrax::Actors::FileSetActor.new(file_set, user)
         file_actor.update_content(file)
@@ -48,6 +46,10 @@ module Hyrax
       end
 
       private
+
+        def work_actor(work)
+          Hyrax::CurationConcern.actor(work, ::Ability.new(user))
+        end
 
         # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
         def default_attributes

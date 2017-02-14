@@ -19,7 +19,7 @@ module Hyrax
         # Run the after_create_fileset callback for each created FileSet
         def send_create_notifications(file_sets)
           file_sets.each do |file_set|
-            Hyrax.config.callback.run(:after_create_fileset, file_set, user)
+            Hyrax.config.callback.run(:after_create_fileset, file_set, ability.current_user)
           end
         end
 
@@ -33,7 +33,7 @@ module Hyrax
         # @return [FileSet] the FileSet object that was created
         def attach_file(file, visibility_attr)
           ::FileSet.new do |file_set|
-            file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, user)
+            file_set_actor = Hyrax::Actors::FileSetActor.new(file_set, ability.current_user)
             file_set_actor.create_metadata(visibility_attr)
             file_set_actor.create_content(file)
             file_set_actor.attach_file_to_work(curation_concern, visibility_attr)

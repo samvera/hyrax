@@ -1,6 +1,6 @@
 describe Hyrax::ActorFactory, :no_clean do
   let(:work) { GenericWork.new }
-  let(:user) { double }
+  let(:ability) { double }
 
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
@@ -23,7 +23,7 @@ describe Hyrax::ActorFactory, :no_clean do
   end
 
   describe '.build' do
-    subject { described_class.build(work, user) }
+    subject { described_class.build(work, ability) }
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
         Hyrax::Actors::OptimisticLockValidator,
@@ -47,7 +47,7 @@ describe Hyrax::ActorFactory, :no_clean do
   describe 'Hyrax::CurationConcern.actor' do
     it "calls the Hyrax::ActorFactory" do
       expect(described_class).to receive(:build)
-      Hyrax::CurationConcern.actor(work, user)
+      Hyrax::CurationConcern.actor(work, ability)
     end
   end
 end

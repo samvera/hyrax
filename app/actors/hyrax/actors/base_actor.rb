@@ -4,7 +4,7 @@ module Hyrax
     # * #create
     # * #update
     # it must instantiate the next actor in the chain and instantiate it.
-    # it should respond to curation_concern, user and attributes.
+    # it should respond to curation_concern, ability and attributes.
     class BaseActor < AbstractActor
       attr_reader :cloud_resources
 
@@ -24,7 +24,7 @@ module Hyrax
       protected
 
         def run_callbacks(hook)
-          Hyrax.config.callback.run(hook, curation_concern, user)
+          Hyrax.config.callback.run(hook, curation_concern, ability.current_user)
           true
         end
 
@@ -38,7 +38,7 @@ module Hyrax
         end
 
         def apply_depositor_metadata
-          curation_concern.depositor = user.user_key
+          curation_concern.depositor = ability.current_user.user_key
         end
 
         def apply_deposit_date

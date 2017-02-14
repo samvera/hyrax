@@ -1,12 +1,13 @@
 require 'spec_helper'
 describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
   let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { title: ['test'] } }
 
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user,
+                                  ability,
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end
