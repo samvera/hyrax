@@ -1,7 +1,7 @@
 module Hyrax
   class CurationConcern
+    # This attribute is set by Hyrax::Engine
     class_attribute :actor_factory
-    self.actor_factory = Hyrax::Actors::ActorFactory
 
     # A consumer of this method can inject a different factory
     # into this class in order to change the behavior of this method.
