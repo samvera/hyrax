@@ -25,6 +25,10 @@ module Hyrax
       delegate :create, to: :next_actor
 
       delegate :update, to: :next_actor
+
+      def ability
+        ::Ability.new(user)
+      end
     end
   end
 end
