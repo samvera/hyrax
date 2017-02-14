@@ -20,15 +20,12 @@ module Hyrax
         @next_actor = next_actor
       end
 
-      delegate :curation_concern, :user, to: :next_actor
+      delegate :curation_concern, :user, :ability, to: :next_actor
 
       delegate :create, to: :next_actor
 
       delegate :update, to: :next_actor
 
-      def ability
-        ::Ability.new(user)
-      end
     end
   end
 end
