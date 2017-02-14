@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'curation_concerns/base/relationships', type: :view do
   let(:ability) { double }
-  let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
+  let(:solr_doc) { double(id: '123', human_readable_type: 'Work', admin_set: nil) }
   let(:presenter) { Sufia::WorkShowPresenter.new(solr_doc, ability) }
   let(:generic_work) { GenericWork.new(id: '456', title: ['Containing work']) }
   let(:collection) { Collection.new(id: '345', title: ['Containing collection']) }
@@ -84,6 +84,14 @@ describe 'curation_concerns/base/relationships', type: :view do
     it "does not show the empty messages" do
       expect(page).not_to have_content "There are no Collection relationships."
       expect(page).not_to have_content "There are no Generic work relationships."
+    end
+  end
+
+  context 'with admin sets' do
+    it 'renders using attribute_to_html' do
+      allow(solr_doc).to receive(:member_of_collection_ids).and_return([])
+      expect(presenter).to receive(:attribute_to_html).with(:admin_set, render_as: :faceted)
+      render 'curation_concerns/base/relationships', presenter: presenter
     end
   end
 end
