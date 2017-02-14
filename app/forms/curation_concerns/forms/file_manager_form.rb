@@ -20,7 +20,7 @@ module CurationConcerns
       private
 
         def member_presenter_factory
-          MemberPresenterFactory.new(work, ability)
+          MemberPresenterFactory.new(model, current_ability)
         end
     end
   end
