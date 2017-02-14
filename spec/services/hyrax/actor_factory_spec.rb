@@ -5,7 +5,8 @@ describe Hyrax::ActorFactory, :no_clean do
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
     it do
-      is_expected.to eq [Hyrax::Actors::OptimisticLockValidator,
+      is_expected.to eq [Hyrax::Actors::TransactionalRequest,
+                         Hyrax::Actors::OptimisticLockValidator,
                          Hyrax::CreateWithRemoteFilesActor,
                          Hyrax::CreateWithFilesActor,
                          Hyrax::Actors::AddAsMemberOfCollectionsActor,
@@ -25,6 +26,7 @@ describe Hyrax::ActorFactory, :no_clean do
     subject { described_class.build(work, user) }
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
+        Hyrax::Actors::OptimisticLockValidator,
         Hyrax::CreateWithRemoteFilesActor,
         Hyrax::CreateWithFilesActor,
         Hyrax::Actors::AddAsMemberOfCollectionsActor,
@@ -38,7 +40,7 @@ describe Hyrax::ActorFactory, :no_clean do
         Hyrax::Actors::GenericWorkActor,
         Hyrax::Actors::InitializeWorkflowActor
       ]
-      expect(subject.first_actor_class).to eq Hyrax::Actors::OptimisticLockValidator
+      expect(subject.first_actor_class).to eq Hyrax::Actors::TransactionalRequest
     end
   end
 
