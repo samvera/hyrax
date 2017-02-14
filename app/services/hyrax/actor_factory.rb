@@ -1,7 +1,8 @@
 module Hyrax
   class ActorFactory
     def self.stack_actors(curation_concern)
-      [Hyrax::Actors::OptimisticLockValidator,
+      [Hyrax::Actors::TransactionalRequest,
+       Hyrax::Actors::OptimisticLockValidator,
        CreateWithRemoteFilesActor,
        CreateWithFilesActor,
        Hyrax::Actors::AddAsMemberOfCollectionsActor,
