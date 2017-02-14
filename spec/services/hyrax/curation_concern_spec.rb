@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Hyrax::CurationConcern do
   let(:work) { GenericWork.new }
-  let(:user) { double }
+  let(:user) { double(current_user: double) }
 
   describe ".actor" do
     subject { described_class.actor(work, user) }

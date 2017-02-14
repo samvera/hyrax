@@ -6,7 +6,7 @@ describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
 
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user,
+                                  ::Ability.new(user),
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end

@@ -14,8 +14,8 @@ module Hyrax
       end
 
       def actor
-        ## Change this to pass in the ability for the next version.
-        first_actor_class.new(curation_concern, user, inner_stack)
+        ## Change this to pass in the ability instead of user for next version.
+        first_actor_class.new(curation_concern, user, inner_stack, ability: ability)
       end
 
       # @param [ActionController::Parameters,Hash,NilClass] new_attributes

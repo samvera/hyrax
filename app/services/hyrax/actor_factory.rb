@@ -18,9 +18,9 @@ module Hyrax
        Hyrax::Actors::InitializeWorkflowActor]
     end
 
-    def self.build(curation_concern, current_user)
+    def self.build(curation_concern, current_ability)
       Actors::ActorStack.new(curation_concern,
-                             current_user,
+                             current_ability,
                              stack_actors(curation_concern))
     end
 

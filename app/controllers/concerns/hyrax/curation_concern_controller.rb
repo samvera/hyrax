@@ -123,7 +123,7 @@ module Hyrax
       end
 
       def actor
-        @actor ||= Hyrax::CurationConcern.actor(curation_concern, current_user)
+        @actor ||= Hyrax::CurationConcern.actor(curation_concern, current_ability)
       end
 
       def presenter

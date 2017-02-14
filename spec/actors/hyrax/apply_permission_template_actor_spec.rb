@@ -8,7 +8,7 @@ RSpec.describe Hyrax::ApplyPermissionTemplateActor do
                            user: depositor)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, depositor, [described_class])
+    Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class])
   end
   let(:depositor) { create(:user) }
   let(:work) { build(:generic_work) }

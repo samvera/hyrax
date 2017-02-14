@@ -4,9 +4,9 @@ describe Hyrax::Actors::ActorStack do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   subject do
-    Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user_or_ability,
-                                  [])
+    described_class.new(curation_concern,
+                        user_or_ability,
+                        [])
   end
 
   context "when an ability is passed as the second argument" do
@@ -16,6 +16,7 @@ describe Hyrax::Actors::ActorStack do
     end
   end
 
+  ## Remove these specs when user support is removed.
   context "when a user is passed as the second argument" do
     let(:user_or_ability) { create(:user) }
     before do

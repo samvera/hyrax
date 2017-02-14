@@ -8,7 +8,7 @@ describe Hyrax::Actors::InterpretVisibilityActor do
 
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
-                                  user,
+                                  ::Ability.new(user),
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end
