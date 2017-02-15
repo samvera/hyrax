@@ -104,8 +104,7 @@ module Hyrax
           empty_file_response(file)
         else
           update_metadata_from_upload_screen
-          actor.create_metadata(find_parent_by_id, params[:file_set])
-          if actor.create_content(file)
+          if process_file(actor, file)
             response_for_successfully_processed_file
           else
             msg = curation_concern.errors.full_messages.join(', ')
@@ -113,6 +112,12 @@ module Hyrax
             json_error "Error creating file #{file.original_filename}: #{msg}"
           end
         end
+      end
+
+      def process_file(actor, file)
+        actor.create_metadata(params[:file_set])
+        actor.attach_file_to_work(find_parent_by_id)
+        actor.create_content(file)
       end
 
       def empty_file_response(file)
