@@ -14,11 +14,25 @@ Hyrax = {
         this.selectWorkType();
         this.datatable();
         this.admin();
+        this.graphs();
+
     },
 
     admin: function() {
       var AdminSetControls = require('hyrax/admin/admin_set_controls');
       var controls = new AdminSetControls($('#admin-set-controls'));
+    },
+
+    graphs: function() {
+      if (typeof Hyrax.statistics.repository_objects === "undefined")
+        return
+      Morris.Donut({
+          element: 'dashboard-repository-objects',
+          data: Hyrax.statistics.repository_objects,
+          colors: ['#33414E', '#3FBAE4', '#FEA223'],
+          gridTextSize: '9px',
+          resize: true
+      });
     },
 
     datatable: function () {
@@ -100,5 +114,8 @@ Hyrax = {
         var fm = require('hyrax/file_manager');
         var file_manager = new fm
     },
+
+    // Saved so that inline javascript can put data somewhere.
+    statistics: {}
 
 };

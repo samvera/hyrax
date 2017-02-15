@@ -14,4 +14,9 @@ RSpec.describe Hyrax::AdminDashboardPresenter do
 
     it { is_expected.to eq 2 }
   end
+
+  describe "#repository_objects" do
+    subject { instance.repository_objects }
+    it { is_expected.to be_kind_of Hyrax::Admin::RepositoryObjectPresenter }
+  end
 end

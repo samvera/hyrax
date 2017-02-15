@@ -121,6 +121,9 @@ es:
       show:
         new_visitors:       "Nuevos visitantes"
         registered_users:   "Usuarios registrados"
+        repository_objects:
+          title:            Objetos del Repositorio
+          subtitle:         Estado Actual
         returning_visitors: "Regresos de visitantes"
         total_visitors:     "Total de visitantes"
       sidebar:
@@ -137,6 +140,11 @@ es:
           heading: "Ver Archivos depositados:"
           start_label: "Comenzar"
         registered: "Registrado"
+        repository_objects:
+          series:
+            published:   'Publicado'
+            unpublished: 'Inédito'
+            unknown:     'Desconocido'
         user_deposits:
           end_label: "Finalizando [por defecto a ahora]"
           heading: "Ver archivos depositados por los usuarios"

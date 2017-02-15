@@ -21,9 +21,13 @@
 //= require select2
 //= require fixedsticky
 
+// Graphing libraries
 //= require jquery.flot
 //= require jquery.flot.time
 //= require jquery.flot.selection
+//= require morris/raphael-min
+//= require morris/morris.min
+
 //= require clipboard
 
 // I think this is primarily needed for testing with PhantomJS:

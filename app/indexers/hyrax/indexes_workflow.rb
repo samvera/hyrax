@@ -1,6 +1,11 @@
 module Hyrax
   module IndexesWorkflow
     STORED_BOOL = Solrizer::Descriptor.new(:boolean, :stored, :indexed)
+
+    mattr_accessor :suppressed_field, instance_writer: false do
+      Solrizer.solr_name('suppressed', STORED_BOOL)
+    end
+
     # Adds thumbnail indexing to the solr document
     def generate_solr_document
       super.tap do |solr_doc|
@@ -35,10 +40,6 @@ module Hyrax
 
     def workflow_roles(entity)
       Workflow::PermissionQuery.scope_roles_associated_with_the_given_entity(entity: entity)
-    end
-
-    def suppressed_field
-      @suppressed_field ||= Solrizer.solr_name('suppressed', STORED_BOOL)
     end
   end
 end
