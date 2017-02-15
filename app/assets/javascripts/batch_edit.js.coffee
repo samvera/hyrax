@@ -39,7 +39,7 @@ $.fn.batchEdit = (args) ->
     unique_id = form.attr("data-doc-id") || Math.random()
     # if form is currently using method delete to change state, 
     # then checkbox is currently checked
-    checked = (form.find("input[name=_method][value=delete]").size() != 0)
+    checked = (form.find("input[name=_method][value=delete]").length != 0)
         
     checkbox = $('<input type="checkbox">')
       .addClass( options.css_class )

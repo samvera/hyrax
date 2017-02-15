@@ -43,7 +43,7 @@ export class Registry {
   }
 
   nextIndex() {
-      return $('#file_permissions').parent().children().size() - 1;
+      return $('#file_permissions').parent().children().length - 1;
   }
 
   showPermissionNote() {

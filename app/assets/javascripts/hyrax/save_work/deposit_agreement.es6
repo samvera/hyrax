@@ -7,7 +7,7 @@ export class DepositAgreement {
     // Tracks whether the user needs to accept again to the depositor
     // agreement. Once the user has manually agreed once she does not
     // need to agree again regardless on how many files are being added.
-    this.isActiveAgreement = this.agreementCheckbox.size() > 0
+    this.isActiveAgreement = this.agreementCheckbox.length > 0
     if (this.isActiveAgreement) {
       this.setupActiveAgreement(callback)
       this.mustAgreeAgain = this.isAccepted

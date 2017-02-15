@@ -20,7 +20,7 @@ export class SaveWorkControl {
    * @param {jQuery} element the jquery selector for the save panel
    */
   constructor(element) {
-    if (element.size() == 0) {
+    if (element.length == 0) {
       return
     }
     this.element = element
