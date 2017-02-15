@@ -2,11 +2,11 @@ module Hyrax
   module Workflow
     class WorkflowFactory
       class_attribute :workflow_strategy
-      self.workflow_strategy = DefaultWorkflowStrategy
+      self.workflow_strategy = Hyrax::Workflow::WorkflowByAdminSetStrategy
 
       # @param work [#to_global_id]
       # @param attributes [Hash]
-      # @param strategy [#name] strategy for finding which workflow to use. Defaults to an instance of DefaultWorkflowStrategy
+      # @param strategy [#name] strategy for finding which workflow to use. Defaults to an instance of Hyrax::Workflow::WorkflowByAdminSetStrategy
       # @return [TrueClass]
       def self.create(work, attributes, user, strategy = nil)
         strategy ||= workflow_strategy.new(work, attributes)
