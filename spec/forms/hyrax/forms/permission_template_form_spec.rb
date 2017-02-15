@@ -143,6 +143,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
   describe "#grant_workflow_roles" do
     subject { form.send(:grant_workflow_roles) }
+    let(:admin_set) { create(:admin_set) }
     let(:workflow) { create(:workflow) }
     let(:user) { create(:user) }
     let(:role1) { Sipity::Role.create!(name: 'hello') }
@@ -150,7 +151,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     let(:permission_template) do
       create(:permission_template,
-             workflow_name: workflow.name,
+             workflow_id: workflow.id,
+             admin_set_id: admin_set.id,
              access_grants_attributes:
                [{ agent_type: 'user',
                   agent_id: user.user_key,
@@ -167,7 +169,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "when a new workflow has been chosen" do
       before do
-        allow(permission_template).to receive(:previous_changes).and_return("workflow_name" => [nil, workflow.name])
+        allow(permission_template).to receive(:previous_changes).and_return("workflow_id" => [nil, workflow.id])
       end
 
       it "gives the managers workflow roles" do

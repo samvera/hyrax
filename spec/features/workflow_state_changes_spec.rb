@@ -30,7 +30,7 @@ RSpec.describe "Workflow state changes", type: :feature do
 
   let(:workflow) { Sipity::Workflow.find_by_name(workflow_name) }
   let(:work) { create(:work, user: depositing_user, admin_set: admin_set) }
-  let(:workflow_strategy) { double(workflow_name: workflow.name) }
+  let(:workflow_strategy) { double(workflow_id: workflow.id) }
   before do
     allow(::User.group_service).to receive(:byname).and_return(depositing_user.user_key => ['admin'], approving_user.user_key => ['admin'])
     Hyrax::Workflow::WorkflowImporter.new(data: one_step_workflow.as_json).call

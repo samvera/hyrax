@@ -6,7 +6,7 @@
                       <% if f.object.workflows.any? %>
                         <div class="panel-body">
                           <p><%= t('.page_description') %></p>
-                              <%= f.collection_radio_buttons :workflow_name, f.object.workflows, :name, :label, item_wrapper_tag: :div, item_wrapper_class: "radio" do |b| %>
+                              <%= f.collection_radio_buttons :workflow_id, f.object.workflows, :id, :label, item_wrapper_tag: :div, item_wrapper_class: "radio" do |b| %>
                                 <span><%= b.radio_button + b.object.label %></span>
                                 <p><%= b.object.description %></p>
                               <% end %>

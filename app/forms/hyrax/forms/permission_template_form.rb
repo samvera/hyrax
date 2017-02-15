@@ -5,7 +5,7 @@ module Hyrax
 
       self.model_class = PermissionTemplate
       self.terms = []
-      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, :workflow_name, to: :model
+      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, :workflow_id, to: :model
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -46,8 +46,8 @@ module Hyrax
         # If the workflow has been changed, ensure that all the AdminSet managers
         # have all the roles for the new workflow
         def grant_workflow_roles
-          return unless model.previous_changes.include?("workflow_name")
-          workflow = Sipity::Workflow.find_by!(name: model.workflow_name)
+          return unless model.previous_changes.include?("workflow_id")
+          workflow = Sipity::Workflow.find_by!(id: model.workflow_id)
           model.access_grants.select { |g| g.access == 'manage' }.each do |grant|
             agent = case grant.agent_type
                     when 'user'

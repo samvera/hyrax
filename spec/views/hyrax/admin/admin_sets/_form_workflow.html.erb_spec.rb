@@ -9,7 +9,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
                     persisted?: template.persisted?,
                     to_key: template.to_key,
                     workflows: [workflow],
-                    workflow_name: nil)
+                    workflow_id: workflow.id)
   end
   before do
     @form = instance_double(Hyrax::Forms::AdminSetForm,
@@ -18,6 +18,6 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
     render
   end
   it "has the radio button for workflow" do
-    expect(rendered).to have_selector('#workflow label[for="permission_template_workflow_name_my_name"] input[type=radio][name="permission_template[workflow_name]"][value="my_name"]')
+    expect(rendered).to have_selector("#workflow label[for=\"permission_template_workflow_id_#{workflow.id}\"] input[type=radio][name=\"permission_template[workflow_id]\"][value=\"#{workflow.id}\"]")
   end
 end
