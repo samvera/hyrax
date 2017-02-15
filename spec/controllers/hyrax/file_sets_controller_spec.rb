@@ -27,11 +27,12 @@ describe Hyrax::FileSetsController do
         let(:actor) { controller.send(:actor) }
 
         it 'calls the actor to create metadata and content' do
-          expect(actor).to receive(:create_metadata).with(parent, ActionController::Parameters) do |_work, ac_params|
+          expect(actor).to receive(:create_metadata).with(ActionController::Parameters) do |ac_params|
             expect(ac_params['files'].map(&:class)).to eq [ActionDispatch::Http::UploadedFile]
             expect(ac_params['title']).to eq expected_params[:title]
             expect(ac_params['visibility']).to eq expected_params[:visibility]
           end
+          expect(actor).to receive(:attach_file_to_work).with(parent).and_return(true)
           expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
 
           post :create, xhr: true, params: { parent_id: parent,
@@ -77,6 +78,7 @@ describe Hyrax::FileSetsController do
       context 'when solr is down' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
+          allow(controller.send(:actor)).to receive(:attach_file_to_work)
           allow(controller.send(:actor)).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
         end
 
@@ -94,6 +96,7 @@ describe Hyrax::FileSetsController do
       context 'when the file is not created' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
+          allow(controller.send(:actor)).to receive(:attach_file_to_work)
           allow(controller.send(:actor)).to receive(:create_content).and_return(false)
         end
 
