@@ -24,7 +24,7 @@ Hyrax = {
     datatable: function () {
         // This keeps the datatable from being added to a table that already has it.
         // This is a problem when turbolinks is active.
-        if ($('.dataTables_wrapper').size() === 0) {
+        if ($('.dataTables_wrapper').length === 0) {
             $('.datatable').DataTable();
         }
     },

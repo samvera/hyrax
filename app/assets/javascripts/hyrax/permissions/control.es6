@@ -9,7 +9,7 @@ export class PermissionsControl {
    * @param {String} template_id the identifier of the template for the added elements 
    */
   constructor(element, template_id) {
-    if (element.size() == 0) {
+    if (element.length == 0) {
       return
     }
     this.element = element
