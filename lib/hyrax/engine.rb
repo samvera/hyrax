@@ -20,6 +20,10 @@ module Hyrax
       #{config.root}/app/models/hyrax/pageview.rb
     )
 
+    config.to_prepare do
+      AdminSet.create_default!
+    end
+
     initializer 'requires' do
       require 'hydra/derivatives'
       require 'hyrax/name'
@@ -31,6 +35,7 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      require 'hyrax/default_admin_set/railtie' if defined?(Rails)
     end
 
     initializer 'routing' do
