@@ -121,6 +121,9 @@ es:
       show:
         new_visitors:       "Nuevos visitantes"
         registered_users:   "Usuarios registrados"
+        repository_growth:
+          title:            Crecimiento del Repositorio
+          subtitle:         Pasados 90 días
         repository_objects:
           title:            Objetos del Repositorio
           subtitle:         Estado Actual

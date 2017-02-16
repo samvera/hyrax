@@ -14,7 +14,7 @@ Hyrax = {
         this.selectWorkType();
         this.datatable();
         this.admin();
-        this.graphs();
+        this.adminStatisticsGraphs();
 
     },
 
@@ -23,16 +23,9 @@ Hyrax = {
       var controls = new AdminSetControls($('#admin-set-controls'));
     },
 
-    graphs: function() {
-      if (typeof Hyrax.statistics.repository_objects === "undefined")
-        return
-      Morris.Donut({
-          element: 'dashboard-repository-objects',
-          data: Hyrax.statistics.repository_objects,
-          colors: ['#33414E', '#3FBAE4', '#FEA223'],
-          gridTextSize: '9px',
-          resize: true
-      });
+    adminStatisticsGraphs: function() {
+        var AdminGraphs = require('hyrax/admin/graphs');
+        new AdminGraphs(Hyrax.statistics);
     },
 
     datatable: function () {
