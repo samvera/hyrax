@@ -15,7 +15,7 @@
       <a name="skip_to_content"></a>
       
       <% if content_for?(:sidebar) %>
-        <div class="col-xs-12 col-sm-9 col-sm-push-3 main-content">
+        <div class="col-xs-12 col-sm-9 col-sm-push-3 col-lg-10 col-lg-push-2 main-content">
           <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
           <% if content_for?(:page_header) %>
             <div class="row">
@@ -27,7 +27,7 @@
           
           <%= content_for?(:content) ? yield(:content) : yield %>
         </div>
-        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 sidebar"><%= yield :sidebar %></div>
+        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 col-lg-2 col-lg-pull-10 sidebar"><%= yield :sidebar %></div>
       <% else %>
         <div class="col-xs-12">
           <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
