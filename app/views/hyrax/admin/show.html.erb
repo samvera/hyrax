@@ -36,4 +36,20 @@
       </div>
     </div>
 </div>
+
 <%= render 'collections' %>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="h3 panel-title"><%= t('.repository_objects.title') %></div>
+        <div><%= t('.repository_objects.subtitle') %></div>
+      </div>
+      <div class="panel-body text-center">
+
+        <div id="dashboard-repository-objects"><%= javascript_tag "Hyrax.statistics.repository_objects = #{@presenter.repository_objects.to_json}" %></div>
+      </div>
+    </div>
+  </div>
+</div>
