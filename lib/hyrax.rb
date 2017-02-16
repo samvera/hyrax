@@ -18,6 +18,7 @@ require 'hyrax/engine'
 require 'hyrax/version'
 require 'hyrax/inflections'
 require 'kaminari_route_prefix'
+require 'hyrax/default_admin_set/railtie' if defined?(Rails)
 
 module Hyrax
   extend ActiveSupport::Autoload

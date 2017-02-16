@@ -31,6 +31,7 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      require 'hyrax/default_admin_set/railtie' if defined?(Rails)
     end
 
     initializer 'routing' do
