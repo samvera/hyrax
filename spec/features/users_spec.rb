@@ -1,8 +1,8 @@
-describe "User Profile", type: :feature do
+describe "User Profile", type: :feature, js: true do
   before do
     sign_in user
   end
-  let(:user) { create(:user) }
+  let(:user) { create(:user, display_name: 'Fred Flintstone') }
   let(:profile_path) { Hyrax::Engine.routes.url_helpers.profile_path(user, locale: 'en') }
 
   context 'when clicking all users' do
@@ -48,8 +48,7 @@ describe "User Profile", type: :feature do
       click_link 'View Users'
       expect(page).to have_xpath("//td/a[@href='#{profile_path}']")
       expect(page).to have_xpath("//td/a[@href='#{dewey_path}']")
-      fill_in 'user_search', with: 'Dewey'
-      click_button "user_submit"
+      fill_in "Search:", with: dewey.email
       expect(page).not_to have_xpath("//td/a[@href='#{profile_path}']")
       expect(page).to have_xpath("//td/a[@href='#{dewey_path}']")
     end

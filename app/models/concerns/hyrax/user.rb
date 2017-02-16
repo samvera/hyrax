@@ -24,6 +24,7 @@ module Hyrax::User
 
     scope :guests, ->() { where(guest: true) }
     scope :registered, ->() { where(guest: false) }
+    scope :without_system_accounts, -> { where("#{Devise.authentication_keys.first} not in (?)", [::User.batch_user_key, ::User.audit_user_key]) }
 
     # Validate and normalize ORCIDs
     validates_with OrcidValidator

@@ -3,7 +3,7 @@ module Hyrax::UsersControllerBehavior
 
   included do
     include Blacklight::SearchContext
-    prepend_before_action :find_user, except: [:index, :search, :notifications_number]
+    prepend_before_action :find_user, except: [:index, :notifications_number]
     before_action :authenticate_user!, only: [:edit, :update]
     authorize_resource only: [:edit, :update]
     # Catch permission errors
@@ -13,7 +13,11 @@ module Hyrax::UsersControllerBehavior
   end
 
   def index
-    @users = search(params[:uq])
+    add_breadcrumb t(:'hyrax.controls.home'), root_path
+    add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
+    add_breadcrumb t(:'hyrax.users.index.title'), request.path
+    @presenter = Hyrax::UsersPresenter.new(query: params[:uq],
+                                           authentication_key: Devise.authentication_keys.first)
   end
 
   # Display user profile
@@ -59,52 +63,14 @@ module Hyrax::UsersControllerBehavior
 
   protected
 
-    # TODO: this should move to a service.
-    # Returns a list of users excluding the system users and guest_users
-    # @param query [String] the query string
-    def search(query)
-      clause = query.blank? ? nil : "%" + query.downcase + "%"
-      base = User.where(*base_query)
-      unless clause.blank?
-        base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", clause, clause)
-      end
-      base.registered
-          .where("#{Devise.authentication_keys.first} not in (?)",
-                 [User.batch_user_key, User.audit_user_key])
-          .references(:trophies)
-          .order(sort_value)
-          .page(params[:page]).per(10)
-    end
-
     def user_params
       params.require(:user).permit(:avatar, :facebook_handle, :twitter_handle,
                                    :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
     end
 
-    # You can override base_query to return a list of arguments
-    def base_query
-      [nil]
-    end
-
     def find_user
       @user = User.from_url_component(params[:id])
       redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
-    end
-
-    def sort_value
-      sort = params[:sort].blank? ? "name" : params[:sort]
-      case sort
-      when 'name'
-        'display_name'
-      when 'name desc'
-        'display_name DESC'
-      when 'login'
-        Devise.authentication_keys.first
-      when 'login desc'
-        "#{Devise.authentication_keys.first} DESC"
-      else
-        sort
-      end
     end
 
     def deny_access(_exception)
