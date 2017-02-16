@@ -129,6 +129,9 @@ es:
           subtitle:         Estado Actual
         returning_visitors: "Regresos de visitantes"
         total_visitors:     "Total de visitantes"
+        user_activity:
+          title:            Actividad del usuario
+          subtitle:         Nuevas inscripciones de usuarios
       sidebar:
         admin_sets:      "Conjuntos Administrativos"
         settings:        "Ajustes"

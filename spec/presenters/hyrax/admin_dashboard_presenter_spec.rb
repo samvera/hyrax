@@ -24,4 +24,9 @@ RSpec.describe Hyrax::AdminDashboardPresenter do
     subject { instance.repository_growth }
     it { is_expected.to be_kind_of Hyrax::Admin::RepositoryGrowthPresenter }
   end
+
+  describe "#user_activity" do
+    subject { instance.user_activity }
+    it { is_expected.to be_kind_of Hyrax::Admin::UserActivityPresenter }
+  end
 end

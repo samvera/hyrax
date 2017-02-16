@@ -40,14 +40,26 @@
 <%= render 'collections' %>
 
 <div class="row">
-  <div class="col-md-4 col-md-offset-4">
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="h3 panel-title"><%= t('.user_activity.title') %></div>
+        <div><%= t('.user_activity.subtitle') %></div>
+      </div>
+      <div class="panel-body text-center">
+        <div id="user-activity" style="height: 200px"><%= javascript_tag "Hyrax.statistics.userActivity = #{@presenter.user_activity.to_json}" %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="h3 panel-title"><%= t('.repository_growth.title') %></div>
         <div><%= t('.repository_growth.subtitle') %></div>
       </div>
       <div class="panel-body text-center">
-        <div id="dashboard-growth"><%= javascript_tag "Hyrax.statistics.repository_growth = #{@presenter.repository_growth.to_json}" %></div>
+        <div id="dashboard-growth" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryGrowth = #{@presenter.repository_growth.to_json}" %></div>
       </div>
     </div>
   </div>
@@ -59,7 +71,7 @@
         <div><%= t('.repository_objects.subtitle') %></div>
       </div>
       <div class="panel-body text-center">
-        <div id="dashboard-repository-objects"><%= javascript_tag "Hyrax.statistics.repository_objects = #{@presenter.repository_objects.to_json}" %></div>
+        <div id="dashboard-repository-objects" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryObjects = #{@presenter.repository_objects.to_json}" %></div>
       </div>
     </div>
   </div>

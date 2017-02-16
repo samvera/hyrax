@@ -1,8 +1,32 @@
 export default class {
     constructor(data) {
-        this.objectStatus(data.repository_objects);
-        this.repositoryGrowth(data.repository_growth);
+        this.userActivity(data.userActivity);
+        this.repositoryGrowth(data.repositoryGrowth);
+        this.objectStatus(data.repositoryObjects);
+
     }
+
+
+      // Draws a bar chart of new user signups
+      userActivity(data) {
+          if (typeof data === "undefined")
+              return
+          Morris.Bar({
+               element: 'user-activity',
+               data: data,
+               xkey: 'y',
+               // TODO: when we add returning users:
+               // ykeys: ['a', 'b'],
+               // labels: ['New Users', 'Returning'],
+               ykeys: ['a'],
+               labels: ['New Users', 'Returning'],
+               barColors: ['#33414E', '#3FBAE4'],
+               gridTextSize: '10px',
+               hideHover: true,
+               resize: true,
+               gridLineColor: '#E5E5E5'
+           });
+      }
 
     // Draws a donut chart of active/inactive objects
     objectStatus(data) {

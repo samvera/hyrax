@@ -12,5 +12,9 @@ module Hyrax
     def repository_growth
       @repository_growth ||= Admin::RepositoryGrowthPresenter.new
     end
+
+    def user_activity
+      @user_activity ||= Admin::UserActivityPresenter.new
+    end
   end
 end
