@@ -43,7 +43,9 @@ en:
     admin:
       admin_sets:
         delete:
-          notification:   "Administrative set successfully deleted"
+          error_default_set: "Administrative set cannot be deleted as it is the default set"
+          error_not_empty:   "Administrative set cannot be deleted as it is not empty"
+          notification:      "Administrative set successfully deleted"
         edit:
           header:         "Edit Administrative Set"
         form:

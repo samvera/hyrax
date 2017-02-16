@@ -123,26 +123,41 @@ describe Hyrax::Admin::AdminSetsController do
 
     describe "#destroy" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
+
       context "with empty admin set" do
         it "deletes the admin set" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_sets_path)
           expect(flash[:notice]).to eq "Administrative set successfully deleted"
+          expect(AdminSet.exists?(admin_set.id)).to be false
         end
       end
+
       context "with a non-empty admin set" do
         let(:work) { create(:generic_work, user: user) }
         before do
           admin_set.members << work
           admin_set.reload
         end
-        it "detaches the works and deletes the admin set" do
+        it "doesn't delete the admin set (or work)" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(admin_admin_sets_path)
-          expect(flash[:notice]).to eq "Administrative set successfully deleted"
+          expect(response).to redirect_to(admin_admin_set_path(admin_set))
+          expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is not empty"
+          expect(AdminSet.exists?(admin_set.id)).to be true
           expect(GenericWork.exists?(work.id)).to be true
+        end
+      end
+
+      context "with the default admin set" do
+        let(:admin_set) { create(:admin_set, edit_users: [user], id: AdminSet::DEFAULT_ID) }
+        it "doesn't delete the admin set" do
+          delete :destroy, params: { id: admin_set }
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(admin_admin_set_path(admin_set))
+          expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is the default set"
+          expect(AdminSet.exists?(admin_set.id)).to be true
         end
       end
     end

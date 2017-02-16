@@ -11,8 +11,16 @@
           <%= link_to edit_admin_admin_set_path(@presenter), class: 'btn btn-primary' do %>
             <span class="fa fa-edit"></span> <%= t(:'helpers.action.edit') %>
           <% end %>
-          <%= link_to admin_admin_set_path(@presenter), class: 'btn btn-danger', data: { confirm: t('.confirm_delete'), method: :delete } do %>
-            <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
+          <% if @presenter.disable_delete? %>
+            <span title="<%= @presenter.disabled_message %>">
+              <%= link_to admin_admin_set_path(@presenter), class: 'btn btn-danger disabled' do %>
+                <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
+              <% end %>
+            </span>
+          <% else %>
+            <%= link_to admin_admin_set_path(@presenter), class: 'btn btn-danger', data: { confirm: t('.confirm_delete'), method: :delete } do %>
+              <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
+            <% end %>
           <% end %>
         </div>
       </div>
