@@ -6,9 +6,9 @@ module Hyrax
       end
 
       # @return [String] The name of the workflow by admin_set to use
-      def workflow_name
-        return 'default' unless @admin_set_id
-        Hyrax::PermissionTemplate.find_by!(admin_set_id: @admin_set_id).workflow_name
+      def workflow_id
+        return unless @admin_set_id
+        Hyrax::PermissionTemplate.find_by!(admin_set_id: @admin_set_id).workflow_id
       end
     end
   end

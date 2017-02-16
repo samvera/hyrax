@@ -10,10 +10,16 @@ module Sipity
     has_many :workflow_states, dependent: :destroy, class_name: 'Sipity::WorkflowState'
     has_many :workflow_actions, dependent: :destroy, class_name: 'Sipity::WorkflowAction'
     has_many :workflow_roles, dependent: :destroy, class_name: 'Sipity::WorkflowRole'
+    has_many :permission_templates, dependent: :restrict_with_exception, class_name: 'Hyrax::PermissionTemplate'
 
     DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
     def initial_workflow_state
       workflow_states.find_or_create_by!(name: DEFAULT_INITIAL_WORKFLOW_STATE)
+    end
+
+    def self.default_workflow
+      log_and_raise('No workflows found') if Sipity::Workflow.none?
+      Sipity::Workflow.order('id ASC').first!
     end
   end
 end

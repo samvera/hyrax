@@ -44,12 +44,12 @@ module Hyrax
       # then load the workflows in config/workflows/*.json and try again.
       # @return [Sipity::Workflow]
       def workflow
-        @workflow ||= Sipity::Workflow.find_by(name: workflow_name) ||
+        @workflow ||= Sipity::Workflow.find_by(id: workflow_id) ||
                       (Hyrax::Workflow::WorkflowImporter.load_workflows &&
-                       Sipity::Workflow.find_by!(name: workflow_name))
+                       Sipity::Workflow.default_workflow)
       end
 
-      delegate :workflow_name, to: :strategy
+      delegate :workflow_id, to: :strategy
 
       # Find an action that has no starting state. This is the deposit action.
       # # @return [Sipity::WorkflowAction]
