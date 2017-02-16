@@ -52,7 +52,7 @@ Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
 # Found in this thread: https://github.com/teampoltergeist/poltergeist/issues/375
 poltergeist_options = {
   js_errors: true,
-  timeout: 30,
+  timeout: 60,
   logger: nil,
   phantomjs_logger: StringIO.new,
   phantomjs_options: [
