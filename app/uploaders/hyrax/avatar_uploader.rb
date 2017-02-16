@@ -10,7 +10,7 @@ class Hyrax::AvatarUploader < CarrierWave::Uploader::Base
     process resize_to_limit: [100, 100]
   end
 
-  def extension_white_list
+  def extension_whitelist
     %w(jpg jpeg png gif bmp tif tiff)
   end
 end

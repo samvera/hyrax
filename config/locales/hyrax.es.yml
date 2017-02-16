@@ -11,6 +11,13 @@ es:
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+  errors:
+    messages:
+      carrierwave_processing_error: "No se puede cambiar el tamaño de la imagen."
+      carrierwave_integrity_error: "No una imagen."
+      carrierwave_download_error: "No se pudo descargar la imagen."
+      extension_whitelist_error: "No puedes subir %{extension} archivos, tipos permitidos: %{allowed_types}"
+      extension_blacklist_error: "No puedes subir %{extension} archivos, tipos prohibidos: %{prohibited_types}"
   helpers:
     action:
       admin_set:
