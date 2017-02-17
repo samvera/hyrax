@@ -138,6 +138,9 @@ en:
           subtitle:         Current Status
         returning_visitors: "Returning Visitors"
         total_visitors:     "Total Visitors"
+        user_activity:
+          title:            User Activity
+          subtitle:         New user signups
       sidebar:
         admin_sets:      "Administrative Sets"
         settings:        "Settings"
