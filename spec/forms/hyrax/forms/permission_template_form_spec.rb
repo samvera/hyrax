@@ -184,6 +184,71 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
   end
 
+  describe "#valid?" do
+    context "validate all release option attribute combinations" do
+      def self.expect_attributes_to_be_valid(attributes = {})
+        it "will be valid? for #{attributes.inspect}" do
+          expect(described_class.new(valid?(attributes))).to be_true
+        end
+      end
+
+      def self.expect_attributes_not_to_be_valid(attributes = {})
+        it "will not be valid? for #{attributes.inspect}" do
+          expect(described_class.new(attributes)).not_to be_false
+        end
+      end
+
+      # no delay
+      expect_attributes_to_be_valid(
+        release_date: today,
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
+        release_varies: nil)
+        release_embargo: nil)
+      # varies, with date selected
+      expect_attributes_to_be_valid(
+        release_date: today + 2.months
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+        release_embargo: nil)
+      # varies, with embargo selected
+      expect_attributes_to_be_valid(
+        release_date: today + 2.years
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS,
+        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
+        release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS)
+      # fixed, with date selected
+      expect_attributes_to_be_valid(
+        release_date: today + 2.months
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+        release_varies: nil,
+        release_embargo: nil)
+      # varies, but no subsequent options
+      expect_attributes_not_to_be_valid(
+        release_date: nil
+        release_period: '',
+        release_varies: nil,
+        release_embargo: nil)
+      # varies, with date option but no date
+      expect_attributes_not_to_be_valid(
+        release_date: nil
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+        release_embargo: nil)
+      # varies, with embargo option but no period
+      expect_attributes_not_to_be_valid(
+        release_date: nil
+        release_period: '',
+        release_varies: nil,
+        release_embargo: nil)
+      # fixed, with no date selected
+      expect_attributes_not_to_be_valid(
+        release_date: nil
+        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+        release_varies: nil,
+        release_embargo: nil)
+    end
+  end
+
   describe "#select_release_varies_option" do
     let(:admin_set) { create(:admin_set) }
     let(:form) { described_class.new(permission_template) }

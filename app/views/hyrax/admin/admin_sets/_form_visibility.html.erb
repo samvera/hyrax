@@ -6,6 +6,10 @@
                   <p><%= t('.page_description') %></p>
                   <h3><%= t('.release.title') %></h3>
                   <p><%= t('.release.description') %></p>
+<%= debug f.object.release_date %>
+<%= debug f.object.release_period %>
+<%= debug f.object.release_varies %>
+<%= debug f.object.release_embargo %>
                   <div id="release-no-delay" class="radio">
                     <label>
                       <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY %>
@@ -13,6 +17,7 @@
                     </label>
                   </div>
                   <div id="release-varies" class="radio">
+                    <% require 'byebug'; debugger; true %>
                     <label>
                       <%= f.radio_button :release_period, '', checked: !f.object.release_varies.blank? %>
                       <%= t('.release.varies.description') %>
@@ -20,7 +25,7 @@
                     <ul>
                       <li class="radio form-inline">
                         <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, checked: f.object.release_date %>
                           <%= t('.release.varies.between') %>
                         </label>
                         <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control' %>
@@ -53,6 +58,7 @@
                   <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
                   <%= f.button :submit, class: 'btn btn-primary pull-right'%>
                 </div>
+<%= debug f.object %>
               <% end %>
             </div>
           </div>

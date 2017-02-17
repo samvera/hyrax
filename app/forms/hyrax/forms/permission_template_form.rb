@@ -31,9 +31,20 @@ module Hyrax
       end
 
       def update(attributes)
-        update_admin_set(attributes)
-        update_permission_template(attributes)
-        grant_workflow_roles
+        update_tab = update_type(attributes)
+        case update_tab
+        when "participants"
+        require 'byebug'; debugger; true
+          update_admin_set(attributes)
+        when "visibility"
+                  require 'byebug'; debugger; true
+          update_permission_template(attributes)
+        when "workflow"
+                  require 'byebug'; debugger; true
+          grant_workflow_roles
+        end
+        require 'byebug'; debugger; true
+        update_tab
       end
 
       def workflows
@@ -42,6 +53,13 @@ module Hyrax
       end
 
       private
+
+        def update_type(attributes)
+          return "participants" if attributes[:access_grants_attributes].present?
+          return "workflow" if attributes[:workflow_name].present?
+          return "visibility" if attributes.has_key?(:visibility)
+          "error"
+        end
 
         # If the workflow has been changed, ensure that all the AdminSet managers
         # have all the roles for the new workflow
@@ -63,26 +81,36 @@ module Hyrax
 
         def update_admin_set(attributes)
           update_params = admin_set_update_params(attributes)
+          require 'byebug'; debugger; true
           return unless update_params
           admin_set.tap do |a|
             # We're doing this because ActiveFedora 11.1 doesn't have update!
             # https://github.com/projecthydra/active_fedora/pull/1196
             a.attributes = update_params
+            require 'byebug'; debugger; true
             a.save!
+            require 'byebug'; debugger; true
+
           end
         end
 
         def admin_set
+require 'byebug'; debugger; true
           @admin_set ||= AdminSet.find(model.admin_set_id)
+require 'byebug'; debugger; true
         end
 
         def update_permission_template(attributes)
-          model.update(permission_template_update_params(attributes))
+          if valid? attributes
+            require 'byebug'; debugger; true
+            model.update(permission_template_update_params(attributes))
+          end
         end
 
         # Maps the raw form attributes into a hash useful for updating the admin set.
         # @return [Hash] includes :edit_users and :edit_groups
         def admin_set_update_params(attributes)
+          require 'byebug'; debugger; true
           manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
           return unless manage_grants.present?
           { edit_users: manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] },
@@ -91,17 +119,22 @@ module Hyrax
 
         # This allows the attributes
         def grants_as_collection(attributes)
+          require 'byebug'; debugger; true
           return [] unless attributes[:access_grants_attributes]
+          require 'byebug'; debugger; true
           attributes_collection = attributes[:access_grants_attributes]
-
+          require 'byebug'; debugger; true
           if attributes_collection.respond_to?(:permitted?)
+            require 'byebug'; debugger; true
             attributes_collection = attributes_collection.to_h
           end
           if attributes_collection.is_a? Hash
+            require 'byebug'; debugger; true
             attributes_collection = attributes_collection
                                     .sort_by { |i, _| i.to_i }
                                     .map { |_, attrs| attrs }
           end
+          require 'byebug'; debugger; true
           attributes_collection
         end
 
@@ -143,6 +176,20 @@ module Hyrax
           end
 
           attributes
+        end
+
+        # validate the hash of attributes used to update the model
+        def valid?(attributes)
+          # release_error = "varies" # varies, no second option
+          # release_error = "no_date" # no date selected
+          # release_error = "no_embargo" # no embargo period selected
+          # notify_error(release_error)
+          # return false
+          true
+        end
+
+        def notify_error(release_error)
+          flash = { error: I18n.t(release_error, scope: 'hyrax.admin.admin_sets.form.release_error') }
         end
     end
   end

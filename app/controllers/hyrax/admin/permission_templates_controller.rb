@@ -6,10 +6,15 @@ module Hyrax
                                   class: 'Hyrax::PermissionTemplate'
 
       def update
-        form.update(update_params)
+        tab_info_updated = form.update(update_params)
+        require 'byebug'; debugger; true
+        if tab_info_updated.present?
         # Ensure we redirect to currently active tab with the appropriate notice
-        redirect_to edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
-                    notice: translate(current_tab, scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+          redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
+                    notice: translate(tab_info_updated, scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
+        else
+          redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab))
+        end
       end
 
       private

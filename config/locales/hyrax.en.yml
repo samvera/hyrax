@@ -52,13 +52,17 @@ en:
           permission_update_notices:
             new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
             participants:       "The administrative set's participant rights have been updated"
-            visibility:         "The administrative set's visibilty settings have been updated."
+            visibility:         "The administrative set's release & visibilty settings have been updated."
             workflow:           "The administrative set's workflow has been updated."
           tabs:
             description:        "Description"
             participants:       "Participants"
             visibility:         "Release and Visibility"
             workflow:           "Workflow"
+          release_error:
+            varies:             "Release Varies option requires sub-option selection."
+            no_date:            "Date is required for selected release option."
+            no_embargo:         "Embargo period is required for selected release option."
         form_participant_table:
           depositors:
             action:             "Action"
