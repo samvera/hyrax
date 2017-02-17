@@ -17,7 +17,7 @@
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
-        <%= t('hyrax.visibility.authenticated.label_html', institution: t('hyrax.institution_name')) %>
+        <%= t('hyrax.visibility.authenticated.label_html', institution: institution_name) %>
       </label>
       <label class="radio">
         <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>
