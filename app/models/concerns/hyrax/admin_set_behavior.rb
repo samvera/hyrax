@@ -33,6 +33,7 @@ module Hyrax
       end
 
       # Creates the default AdminSet and an associated PermissionTemplate with workflow
+      # rubocop:disable Lint/HandleExceptions
       def self.create_default!
         return if AdminSet.exists?(DEFAULT_ID)
         AdminSet.create!(id: DEFAULT_ID, title: ['Default Admin Set']) do |_as|
