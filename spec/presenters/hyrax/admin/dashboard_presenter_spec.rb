@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::AdminDashboardPresenter do
+RSpec.describe Hyrax::Admin::DashboardPresenter do
   let(:instance) { described_class.new }
 
   describe "#user_count" do
