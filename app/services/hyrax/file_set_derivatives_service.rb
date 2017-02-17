@@ -15,6 +15,10 @@ module Hyrax
       end
     end
 
+    def valid?
+      supported_mime_types.include?(mime_type)
+    end
+
     def create_derivatives(filename)
       case mime_type
       when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
@@ -33,6 +37,14 @@ module Hyrax
     end
 
     private
+
+      def supported_mime_types
+        file_set.class.pdf_mime_types +
+          file_set.class.office_document_mime_types +
+          file_set.class.audio_mime_types +
+          file_set.class.video_mime_types +
+          file_set.class.image_mime_types
+      end
 
       def create_pdf_derivatives(filename)
         Hydra::Derivatives::PdfDerivatives.create(filename,

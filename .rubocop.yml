@@ -11,6 +11,7 @@ AllCops:
     - 'script/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
+    - 'lib/hyrax/specs/**/*'
 
 Lint/ImplicitStringConcatenation:
   Exclude:
@@ -114,6 +115,10 @@ RSpec/MessageSpies:
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
     - 'spec/services/hyrax/workflow/workflow_importer_spec.rb'
+
+RSpec/InstanceVariable:
+  Exclude:
+    - 'spec/services/hyrax/derivative_service_spec.rb'
 
 RSpec/ExpectActual:
   Enabled: false
