@@ -25,6 +25,13 @@ module Hyrax
       end
     end
 
+    # The destination_name parameter has to match up with the file parameter
+    # passed to the DownloadsController
+    def derivative_url(destination_name)
+      path = derivative_path_factory.derivative_path_for_reference(file_set, destination_name)
+      URI("file://#{path}").to_s
+    end
+
     private
 
       def create_pdf_derivatives(filename)
@@ -59,13 +66,6 @@ module Hyrax
       def create_image_derivatives(filename)
         Hydra::Derivatives::ImageDerivatives.create(filename,
                                                     outputs: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: derivative_url('thumbnail') }])
-      end
-
-      # The destination_name parameter has to match up with the file parameter
-      # passed to the DownloadsController
-      def derivative_url(destination_name)
-        path = derivative_path_factory.derivative_path_for_reference(file_set, destination_name)
-        URI("file://#{path}").to_s
       end
 
       def derivative_path_factory
