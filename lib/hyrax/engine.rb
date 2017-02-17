@@ -20,6 +20,10 @@ module Hyrax
       #{config.root}/app/models/hyrax/pageview.rb
     )
 
+    config.to_prepare do
+      AdminSet.create_default!
+    end
+
     initializer 'requires' do
       require 'hydra/derivatives'
       require 'hyrax/name'

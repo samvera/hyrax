@@ -11,6 +11,13 @@ en:
           based_near: Location
           contributor: Contributors
           keyword: Keyword
+  errors:
+    messages:
+      carrierwave_processing_error: "Cannot resize image."
+      carrierwave_integrity_error: "Not an image."
+      carrierwave_download_error: "Couldn't download image."
+      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
   helpers:
     action:
       admin_set:
@@ -36,7 +43,9 @@ en:
     admin:
       admin_sets:
         delete:
-          notification:   "Administrative set successfully deleted"
+          error_default_set: "Administrative set cannot be deleted as it is the default set"
+          error_not_empty:   "Administrative set cannot be deleted as it is not empty"
+          notification:      "Administrative set successfully deleted"
         edit:
           header:         "Edit Administrative Set"
         form:
@@ -121,6 +130,9 @@ en:
       show:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"
+        repository_growth:
+          title:            Repository Growth
+          subtitle:         Past 90 days
         repository_objects:
           title:            Repository Objects
           subtitle:         Current Status
