@@ -20,13 +20,7 @@ module Hyrax
       { 'en' => 'English', 'es' => 'Español' }
     end
 
-    def institution_name
-      t('hyrax.institution_name')
-    end
-
-    def institution_name_full
-      t('hyrax.institution_name_full', default: institution_name)
-    end
+    delegate :name, :name_full, to: :institution, prefix: :institution
 
     def banner_image
       Hyrax.config.banner_image
@@ -288,6 +282,10 @@ module Hyrax
         return state.params if facet.none?
         state.add_facet_params(Solrizer.solr_name(facet.keys.first, :facetable),
                                facet.values.first)
+      end
+
+      def institution
+        Institution
       end
   end
 end

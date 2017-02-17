@@ -50,7 +50,7 @@ module Hyrax
           '%[' => [:date_modified],
           '%9' => [:resource_type],
           '%~' => I18n.t('hyrax.product_name'),
-          '%W' => I18n.t('hyrax.institution_name')
+          '%W' => Institution.name
         }
       end
     end

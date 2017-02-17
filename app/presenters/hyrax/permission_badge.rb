@@ -1,6 +1,7 @@
 module Hyrax
   class PermissionBadge
     include ActionView::Helpers::TagHelper
+    include HyraxHelper
 
     def initialize(solr_document)
       @solr_document = solr_document
@@ -31,7 +32,7 @@ module Hyrax
         elsif open_access?
           'Open Access'
         elsif registered?
-          I18n.translate('hyrax.institution_name')
+          Institution.name
         else
           'Private'
         end
