@@ -644,6 +644,19 @@ es:
         label_html: <span class="label label-success">Público</span>
         note_html: Todo el mundo. Consulte <a href="">SHERPA / RoMEO</a> para las políticas de derechos de autor de editores específicos si planea patentar y / o publicar su %{type} en un diario
         text: "Acceso abierto"
+        warning_html: "<p>
+                        <strong>Tenga en cuenta</strong>, haciendo algo visible para el mundo (es decir,
+ Marcando esto como %{label}) puede ser
+ Como una publicación que podría afectar su capacidad de:
+                      </p>
+                      <ul>
+                        <li>Patente su trabajo</li>
+                        <li>Publica tu trabajo en un diario</li>
+                      </ul>
+                      <p>
+                        Echa un vistazo a <a href=\"http://www.sherpa.ac.uk/romeo/\">SHERPA/RoMEO</a> para más
+                         Información sobre las políticas de copyright del editor.
+                      </p>"
       open_title_attr: "Cambiar la visibilidad de este recurso"
       private:
         label_html: <span class="label label-danger">Privado</span>
