@@ -7,6 +7,17 @@ describe Hyrax::PermissionTemplate do
   it { is_expected.to have_many(:workflows).dependent(:destroy) }
   it { is_expected.to have_many(:access_grants).dependent(:destroy) }
 
+  describe 'factories' do
+    it 'will create an admin_set if with_admin_set: true' do
+      permission_template = create(:permission_template, with_admin_set: true)
+      expect(permission_template.admin_set).to be_persisted
+    end
+    it 'will not create an admin_set if with_admin_set: false' do
+      permission_template = create(:permission_template, with_admin_set: false)
+      expect(permission_template.admin_set).to be_persisted
+    end
+  end
+
   describe "#admin_set" do
     it 'leverages AdminSet.find for the given permission_template' do
       expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)
