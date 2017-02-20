@@ -51,6 +51,7 @@ module Hyrax
                class_name: 'ActiveFedora::Base'
 
       before_destroy :check_if_not_default_set, :check_if_empty
+      after_destroy :destroy_permission_template
     end
 
     def to_s
@@ -65,6 +66,10 @@ module Hyrax
     end
 
     private
+
+      def destroy_permission_template
+        permission_template.destroy
+      end
 
       def check_if_empty
         return true if members.empty?

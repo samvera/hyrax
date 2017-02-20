@@ -20,6 +20,13 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
+  describe '.after_destroy' do
+    it 'will destroy the associated permission template' do
+      admin_set = create(:admin_set)
+      expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1)
+    end
+  end
+
   describe "#to_solr" do
     let(:admin_set) do
       build(:admin_set, title: ['A good title'],
