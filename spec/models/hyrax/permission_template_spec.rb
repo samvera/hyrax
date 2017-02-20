@@ -8,13 +8,24 @@ describe Hyrax::PermissionTemplate do
   it { is_expected.to have_many(:access_grants).dependent(:destroy) }
 
   describe 'factories' do
-    it 'will create an admin_set if with_admin_set: true' do
-      permission_template = create(:permission_template, with_admin_set: true)
-      expect(permission_template.admin_set).to be_persisted
+    context 'with_admin_set parameter' do
+      it 'will create an AdminSet when true' do
+        permission_template = create(:permission_template, with_admin_set: true)
+        expect(permission_template.admin_set).to be_persisted
+      end
+      it 'will not persist an AdminSet when false (or not given)' do
+        permission_template = create(:permission_template, with_admin_set: false)
+        expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      end
     end
-    it 'will not persist an admin_set if with_admin_set: false' do
-      permission_template = create(:permission_template, with_admin_set: false)
-      expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+
+    context 'with_workflow parameter' do
+      it 'will create the workflow when set true' do
+        expect { create(:permission_template, with_workflows: true) }.to change { Sipity::Workflow.count }
+      end
+      it 'will not create the workflow when false (or not given)' do
+        expect { create(:permission_template, with_workflows: false) }.not_to change { Sipity::Workflow.count }
+      end
     end
   end
 

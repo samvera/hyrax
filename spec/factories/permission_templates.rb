@@ -21,8 +21,15 @@ FactoryGirl.define do
       end
     end
 
+    after(:create) do |permission_template, evaluator|
+      if evaluator.with_workflows
+        Hyrax::Workflow::WorkflowImporter.load_workflows(permission_templates: [permission_template])
+      end
+    end
+
     transient do
       with_admin_set false
+      with_workflows false
     end
   end
 end
