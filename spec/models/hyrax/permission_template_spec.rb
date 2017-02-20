@@ -12,9 +12,9 @@ describe Hyrax::PermissionTemplate do
       permission_template = create(:permission_template, with_admin_set: true)
       expect(permission_template.admin_set).to be_persisted
     end
-    it 'will not create an admin_set if with_admin_set: false' do
+    it 'will not persist an admin_set if with_admin_set: false' do
       permission_template = create(:permission_template, with_admin_set: false)
-      expect(permission_template.admin_set).to be_persisted
+      expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
   end
 

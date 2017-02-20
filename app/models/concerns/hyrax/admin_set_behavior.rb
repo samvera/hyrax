@@ -69,6 +69,8 @@ module Hyrax
 
       def destroy_permission_template
         permission_template.destroy
+      rescue ActiveRecord::RecordNotFound
+        true
       end
 
       def check_if_empty

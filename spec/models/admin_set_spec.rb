@@ -20,9 +20,31 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
+  describe 'factories' do
+    it 'will create a permission_template when one is requested' do
+      expect { create(:admin_set, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+    end
+
+    it 'will not create a permission_template by default' do
+      expect { create(:admin_set) }.not_to change { Hyrax::PermissionTemplate.count }
+    end
+
+    it 'will create a permission_template with attributes' do
+      permission_template = create(:admin_set,
+                                   with_permission_template: {
+                                     visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+                                     release_date: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+                                     release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS
+                                   }).permission_template
+      expect(permission_template.visibility).to eq(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      expect(permission_template.release_period).to eq(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS)
+      expect(permission_template.release_date).to eq(6.months.from_now.to_date)
+    end
+  end
+
   describe '.after_destroy' do
     it 'will destroy the associated permission template' do
-      admin_set = create(:admin_set)
+      admin_set = create(:admin_set, with_permission_template: true)
       expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1)
     end
   end

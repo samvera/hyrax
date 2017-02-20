@@ -13,8 +13,8 @@ RSpec.describe Hyrax::ApplyPermissionTemplateActor do
   let(:depositor) { create(:user) }
   let(:work) { build(:generic_work) }
   let(:attributes) { { admin_set_id: admin_set.id } }
-  let(:admin_set) { create(:admin_set) }
-  let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+  let(:admin_set) { create(:admin_set, with_permission_template: true) }
+  let(:permission_template) { admin_set.permission_template }
 
   describe "create" do
     context "when admin_set_id is blank" do

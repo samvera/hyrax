@@ -10,8 +10,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
 
   context "without admin privleges" do
     describe "update" do
-      let(:admin_set) { create(:admin_set) }
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+      let(:permission_template) { create(:permission_template) }
       it "is unauthorized" do
         # This spec was not firing as expected. It was getting a nil permission template. This mock expectation is a bit
         # odd, but it needs to go rather deep into CanCan to behave accordingly.
@@ -27,11 +26,10 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
 
   context "when signed in as an admin" do
     describe "update participants" do
-      let(:admin_set) { create(:admin_set) }
-      let!(:permission_template) { Hyrax::PermissionTemplate.create!(admin_set_id: admin_set.id) }
+      let!(:permission_template) { create(:permission_template) }
       let(:grant_attributes) { [{ "agent_type" => "user", "agent_id" => "bob", "access" => "view" }] }
       let(:input_params) do
-        { admin_set_id: admin_set.id,
+        { admin_set_id: permission_template.admin_set_id,
           permission_template: form_attributes }
       end
       let(:form_attributes) { { visibility: 'open', access_grants_attributes: grant_attributes } }
@@ -40,7 +38,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
         expect(controller).to receive(:authorize!).with(:update, permission_template)
         expect(form).to receive(:update).with(ActionController::Parameters.new(form_attributes).permit!)
         put :update, params: input_params
-        expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(admin_set, locale: 'en', anchor: 'participants'))
+        expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(permission_template.admin_set_id, locale: 'en', anchor: 'participants'))
         expect(flash[:notice]).to eq "The administrative set's participant rights have been updated"
       end
     end
