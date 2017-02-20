@@ -2,6 +2,15 @@ FactoryGirl.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }
+      with_permission_template false
+    end
+
+    before(:create) do |work, evaluator|
+      if evaluator.with_permission_template
+        attributes = { admin_set_id: work.admin_set_id }
+        attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
+        create(:permission_template, attributes)
+      end
     end
 
     # Fundamental assumption that all works are members of an admin_set.
