@@ -39,7 +39,7 @@ module Hyrax
       def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all, workflow_config_filenames: default_workflow_config_filenames)
         clear_load_errors!
         Array.wrap(permission_templates).each do |permission_template|
-          load_workflow_for(path: config, permission_template: permission_template)
+          load_workflow_for(permission_template: permission_template, workflow_config_filenames: workflow_config_filenames)
         end
         true
       end
