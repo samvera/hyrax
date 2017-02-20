@@ -18,19 +18,35 @@ module Hyrax
       end
 
       # @api public
+      # Load all of the workflows for the given permission_template
+      #
+      # @param permission_template [Hyrax::PermissionTemplate]
+      # @return [TrueClass]
+      # @note I'd like to deprecate .load_workflows but for now that is beyond the scope of what I'm after. So I will use its magic instead
+      def self.load_workflow_for(permission_template:, workflow_config_filenames: default_workflow_config_filenames)
+        workflow_config_filenames.each do |config|
+          Rails.logger.info "Loading permission_template ID=#{permission_template.id} with workflow config #{config}"
+          generate_from_json_file(path: config, permission_template: permission_template)
+        end
+        true
+      end
+
+      # @api public
       #
       # Load all the workflows in config/workflows/*.json for each of the permission templates
       # @param permission_templates [#each] An enumerator of permission templates (by default Hyrax::PermissionTemplate.all)
       # @return [TrueClass]
-      def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all)
+      def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all, workflow_config_filenames: default_workflow_config_filenames)
         clear_load_errors!
-        Dir.glob(Rails.root.join('config', 'workflows', '*.json')) do |config|
-          Rails.logger.info "Loading workflow: #{config}"
-          Array.wrap(permission_templates).each do |permission_template|
-            generate_from_json_file(path: config, permission_template: permission_template)
-          end
+        Array.wrap(permission_templates).each do |permission_template|
+          load_workflow_for(path: config, permission_template: permission_template)
         end
         true
+      end
+
+      # @api private
+      def self.default_workflow_config_filenames
+        Dir.glob(Rails.root.join('config', 'workflows', '*.json'))
       end
 
       # @api public

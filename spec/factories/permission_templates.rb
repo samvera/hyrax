@@ -23,7 +23,7 @@ FactoryGirl.define do
 
     after(:create) do |permission_template, evaluator|
       if evaluator.with_workflows
-        Hyrax::Workflow::WorkflowImporter.load_workflows(permission_templates: [permission_template])
+        Hyrax::Workflow::WorkflowImporter.load_workflow_for(permission_templates: [permission_template])
       end
     end
 

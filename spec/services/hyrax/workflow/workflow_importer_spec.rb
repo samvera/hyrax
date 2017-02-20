@@ -41,6 +41,14 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     expect(validator).to have_received(:call).with(data: subject.send(:data), schema: subject.send(:schema))
   end
 
+  context '.load_workflow_for' do
+    it 'will assocate the workflows' do
+      expect do
+        described_class.load_workflow_for(permission_template: permission_template)
+      end.to change { Sipity::Workflow.count }
+    end
+  end
+
   context 'data generation' do
     before do
       described_class.clear_load_errors!
