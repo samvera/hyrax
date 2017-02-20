@@ -7,7 +7,6 @@ FactoryGirl.define do
     end
   end
 
-
   trait :public do
     read_groups ['public']
   end
