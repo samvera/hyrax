@@ -19,7 +19,6 @@ module Sipity
     end
 
     def self.default_workflow
-      log_and_raise('No workflows found') if Sipity::Workflow.none?
       Sipity::Workflow.order('id ASC').first!
     end
   end
