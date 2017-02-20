@@ -3,7 +3,7 @@
   <% unless params[:display_type] == 'list' %>
     <thead>
     <tr>
-      <th><label for="check_all" class="sr-only"><%= t("sufia.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
+      <th class="check-all"><label for="check_all" class="sr-only"><%= t("sufia.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
       <th><%= t("sufia.dashboard.my.heading.title") %></th>
       <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%= params[:sort] == "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort] == "#{CatalogController.uploaded_field} asc" ? 'caret up' : ''%>"></i><%= t("sufia.dashboard.my.heading.date_uploaded") %></th>
       <th><%= t("sufia.dashboard.my.heading.visibility") %></th>
