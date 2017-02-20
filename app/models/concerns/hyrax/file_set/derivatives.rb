@@ -54,7 +54,7 @@ module Hyrax
       private
 
         def file_set_derivatives_service
-          @file_set_derivatives_service ||= Hyrax::FileSetDerivativesService.new(self)
+          Hyrax::DerivativeService.for(self)
         end
     end
   end

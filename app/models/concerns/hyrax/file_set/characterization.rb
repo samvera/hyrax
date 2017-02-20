@@ -19,7 +19,7 @@ module Hyrax
         class_attribute :characterization_terms, :characterization_proxy
         self.characterization_terms = [
           :format_label, :file_size, :height, :width, :filename, :well_formed,
-          :page_count, :file_title, :last_modified, :original_checksum, :mime_type,
+          :page_count, :file_title, :last_modified, :original_checksum,
           :duration, :sample_rate
         ]
         self.characterization_proxy = :original_file
@@ -32,6 +32,10 @@ module Hyrax
 
         def characterization_proxy?
           !characterization_proxy.is_a?(NullCharacterizationProxy)
+        end
+
+        def mime_type
+          @mime_type ||= characterization_proxy.mime_type
         end
       end
 

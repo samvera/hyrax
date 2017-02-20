@@ -15,6 +15,10 @@ module Hyrax
       end
     end
 
+    def valid?
+      supported_mime_types.include?(mime_type)
+    end
+
     def create_derivatives(filename)
       case mime_type
       when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
@@ -25,7 +29,22 @@ module Hyrax
       end
     end
 
+    # The destination_name parameter has to match up with the file parameter
+    # passed to the DownloadsController
+    def derivative_url(destination_name)
+      path = derivative_path_factory.derivative_path_for_reference(file_set, destination_name)
+      URI("file://#{path}").to_s
+    end
+
     private
+
+      def supported_mime_types
+        file_set.class.pdf_mime_types +
+          file_set.class.office_document_mime_types +
+          file_set.class.audio_mime_types +
+          file_set.class.video_mime_types +
+          file_set.class.image_mime_types
+      end
 
       def create_pdf_derivatives(filename)
         Hydra::Derivatives::PdfDerivatives.create(filename,
@@ -59,13 +78,6 @@ module Hyrax
       def create_image_derivatives(filename)
         Hydra::Derivatives::ImageDerivatives.create(filename,
                                                     outputs: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: derivative_url('thumbnail') }])
-      end
-
-      # The destination_name parameter has to match up with the file parameter
-      # passed to the DownloadsController
-      def derivative_url(destination_name)
-        path = derivative_path_factory.derivative_path_for_reference(file_set, destination_name)
-        URI("file://#{path}").to_s
       end
 
       def derivative_path_factory
