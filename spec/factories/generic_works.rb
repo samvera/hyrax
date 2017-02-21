@@ -2,19 +2,21 @@ FactoryGirl.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }
-      with_permission_template false
+      # Set to true (or a hash) if you want to create an admin set
+      with_admin_set false
     end
 
+    # It is reasonable to assume that a work has an admin set; However, we don't want to
+    # go through the entire rigors of creating that admin set.
     before(:create) do |work, evaluator|
-      if evaluator.with_permission_template
-        attributes = { admin_set_id: work.admin_set_id }
-        attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-        create(:permission_template, attributes)
+      if evaluator.with_admin_set
+        attributes = {}
+        attributes[:id] = work.admin_set_id if work.admin_set_id.present?
+        attributes = evaluator.with_admin_set.merge(attributes) if evaluator.with_admin_set.respond_to?(:merge)
+        admin_set = create(:admin_set, attributes)
+        work.admin_set_id = admin_set.id
       end
     end
-
-    # Fundamental assumption that all works are members of an admin_set.
-    admin_set
 
     title ["Test title"]
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
