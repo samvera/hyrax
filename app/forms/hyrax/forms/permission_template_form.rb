@@ -169,7 +169,6 @@ module Hyrax
         # validate the hash of attributes used to update the model
         # @return [String] attributes used for error alert or TRUE if valid
         def valid?(attributes)
-require 'byebug'; debugger; true
           # only the visibility tab has validations
           return true unless attributes.has_key?(:visibility)
 
