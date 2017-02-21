@@ -38,7 +38,6 @@ en:
       update: 'Save'
   hyrax:
     account_label:      "User"
-    account_name:       "My Institution Account Id"
     active_consent_to_agreement:  "I have read and agree to the"
     admin:
       admin_sets:
@@ -410,9 +409,6 @@ en:
           The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that
           you are a member of.  You may select a specific group and assign an access level for a file
           within %{application_name}, similarly to adding user access levels.
-    footer:
-      copyright_html: "<strong>Copyright &copy; 2017 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
-      service_html: A service of <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Project Hydra</a>.
     help:
       header: "User Support"
       override_text: "Use app/views/static/help.html.erb to override this file."
@@ -439,8 +435,6 @@ en:
     icons:
       collection:       'fa fa-cubes'
       default:          'fa fa-cube'
-    institution_name: &INSTITUTION_NAME "Institution Name"
-    institution_name_full: "The Institution Name"
     mailbox:
       date:     'Date'
       delete:   'Delete Message'
@@ -463,8 +457,6 @@ en:
         subject: "Batch upload complete"
         title:  "Files uploaded successfully"
     passive_consent_to_agreement: "By saving this work I agree to the"
-    product_name:       "Hyrax"
-    product_twitter_handle: "@HydraSphere"
     schema_org:
       based_near:
         property: contentLocation
@@ -630,7 +622,6 @@ en:
         class: "label-info"
         label_html: <span class="label label-info">%{institution}</span>
         note_html: Restrict access to only users and/or groups from %{institution}
-        text: *INSTITUTION_NAME
       embargo:
         class: "label-warning"
         label_html: <span class="label label-warning">Embargo</span>
