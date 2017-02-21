@@ -1,11 +1,7 @@
 RSpec.describe Hyrax::Statistics::Works::Count do
-  let(:user1) { create(:user) }
-  let(:service) { described_class.new(start_date, end_date) }
-  let(:start_date) { nil }
-  let(:end_date) { nil }
-
   describe "#by_permission" do
-    subject { service.by_permission }
+    let(:user1) { build(:user, id: 1) }
+    let(:yesterday) { 1.day.ago }
 
     before do
       build(:public_generic_work, user: user1, id: "pdf1223").update_index
@@ -19,24 +15,19 @@ RSpec.describe Hyrax::Statistics::Works::Count do
       end
     end
 
-    it "retrieves all documents by permissions" do
-      expect(subject).to include(public: 3, private: 1, registered: 1, total: 5)
-    end
+    # Consolidated these tests as they are rather slow when run in sequence
+    it "retrieves by no date given, a start date given, and an end date given" do
+      no_date_range_given = described_class.new(nil, nil)
+      expect(no_date_range_given.by_permission).to include(public: 3, private: 1, registered: 1, total: 5)
 
-    context "when passing a start date" do
-      let(:yesterday) { 1.day.ago }
-      let(:start_date) { yesterday.beginning_of_day }
-      it "gets documents after date by permissions" do
-        expect(subject).to include(public: 2, private: 1, registered: 1, total: 4)
-      end
+      start_date = yesterday.beginning_of_day
+      start_date_given = described_class.new(start_date, nil)
+      expect(start_date_given.by_permission).to include(public: 2, private: 1, registered: 1, total: 4)
 
-      context "when passing an end date" do
-        let(:start_date) { 2.days.ago.beginning_of_day }
-        let(:end_date) { yesterday.end_of_day }
-        it "get documents between dates by permissions" do
-          expect(subject).to include(public: 1, private: 0, registered: 0, total: 1)
-        end
-      end
+      start_date = 2.days.ago.beginning_of_day
+      end_date = yesterday.end_of_day
+      start_date_and_end_date_given = described_class.new(start_date, end_date)
+      expect(start_date_and_end_date_given.by_permission).to include(public: 1, private: 0, registered: 0, total: 1)
     end
   end
 end
