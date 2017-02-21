@@ -6,6 +6,7 @@ module Hyrax
       self.model_class = PermissionTemplate
       self.terms = []
       delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, :workflow_id, to: :model
+      delegate :workflows, to: :model
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -34,11 +35,6 @@ module Hyrax
         update_admin_set(attributes)
         update_permission_template(attributes)
         grant_workflow_roles
-      end
-
-      def workflows
-        # TODO: Scope the workflows only to admin sets see https://github.com/projecthydra-labs/hyrax/issues/256
-        Sipity::Workflow.all
       end
 
       private

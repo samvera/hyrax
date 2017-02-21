@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Forms::PermissionTemplateForm do
+  let(:permission_template) { build(:permission_template) }
+  let(:form) { described_class.new(permission_template) }
+  subject { form }
+  it { is_expected.to delegate_method(:workflows).to(:model) }
+
   describe "#update" do
     let(:grant_attributes) { [] }
     let(:input_params) do
@@ -276,17 +281,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
           release_date: nil
         ).permit!
       end
-    end
-  end
-
-  describe "#workflows" do
-    let(:admin_set) { create(:admin_set) }
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
-
-    it "returns all of the workflows" do
-      expect(Sipity::Workflow).to receive(:all).and_return(:the_workflows)
-      expect(form.workflows).to eq(:the_workflows)
     end
   end
 end
