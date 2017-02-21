@@ -31,20 +31,24 @@ module Hyrax
       end
 
       def update(attributes)
-        update_tab = update_type(attributes)
-        case update_tab
+        return_info = { content: update_type(attributes), status: true }
+        case return_info[:content]
         when "participants"
-        require 'byebug'; debugger; true
           update_admin_set(attributes)
-        when "visibility"
-                  require 'byebug'; debugger; true
           update_permission_template(attributes)
+        when "visibility"
+          valid_attributes = valid? attributes
+          if valid_attributes == true
+            update_permission_template(attributes)
+          else
+            return_info[:content] = valid_attributes
+            return_info[:status] = false
+          end
         when "workflow"
-                  require 'byebug'; debugger; true
+          update_permission_template(attributes)
           grant_workflow_roles
         end
-        require 'byebug'; debugger; true
-        update_tab
+        return_info
       end
 
       def workflows
@@ -56,7 +60,7 @@ module Hyrax
 
         def update_type(attributes)
           return "participants" if attributes[:access_grants_attributes].present?
-          return "workflow" if attributes[:workflow_name].present?
+          return "workflow" if attributes[:workflow_id].present?
           return "visibility" if attributes.has_key?(:visibility)
           "error"
         end
@@ -81,36 +85,26 @@ module Hyrax
 
         def update_admin_set(attributes)
           update_params = admin_set_update_params(attributes)
-          require 'byebug'; debugger; true
           return unless update_params
           admin_set.tap do |a|
             # We're doing this because ActiveFedora 11.1 doesn't have update!
             # https://github.com/projecthydra/active_fedora/pull/1196
             a.attributes = update_params
-            require 'byebug'; debugger; true
             a.save!
-            require 'byebug'; debugger; true
-
           end
         end
 
         def admin_set
-require 'byebug'; debugger; true
           @admin_set ||= AdminSet.find(model.admin_set_id)
-require 'byebug'; debugger; true
         end
 
         def update_permission_template(attributes)
-          if valid? attributes
-            require 'byebug'; debugger; true
-            model.update(permission_template_update_params(attributes))
-          end
+          model.update(permission_template_update_params(attributes))
         end
 
         # Maps the raw form attributes into a hash useful for updating the admin set.
         # @return [Hash] includes :edit_users and :edit_groups
         def admin_set_update_params(attributes)
-          require 'byebug'; debugger; true
           manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
           return unless manage_grants.present?
           { edit_users: manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] },
@@ -119,22 +113,16 @@ require 'byebug'; debugger; true
 
         # This allows the attributes
         def grants_as_collection(attributes)
-          require 'byebug'; debugger; true
           return [] unless attributes[:access_grants_attributes]
-          require 'byebug'; debugger; true
           attributes_collection = attributes[:access_grants_attributes]
-          require 'byebug'; debugger; true
           if attributes_collection.respond_to?(:permitted?)
-            require 'byebug'; debugger; true
             attributes_collection = attributes_collection.to_h
           end
           if attributes_collection.is_a? Hash
-            require 'byebug'; debugger; true
             attributes_collection = attributes_collection
                                     .sort_by { |i, _| i.to_i }
                                     .map { |_, attrs| attrs }
           end
-          require 'byebug'; debugger; true
           attributes_collection
         end
 
@@ -179,17 +167,28 @@ require 'byebug'; debugger; true
         end
 
         # validate the hash of attributes used to update the model
+        # @return [String] attributes used for error alert or TRUE if valid
         def valid?(attributes)
-          # release_error = "varies" # varies, no second option
-          # release_error = "no_date" # no date selected
-          # release_error = "no_embargo" # no embargo period selected
-          # notify_error(release_error)
-          # return false
-          true
-        end
+require 'byebug'; debugger; true
+          # only the visibility tab has validations
+          return true unless attributes.has_key?(:visibility)
 
-        def notify_error(release_error)
-          flash = { error: I18n.t(release_error, scope: 'hyrax.admin.admin_sets.form.release_error') }
+          # if "save" without any selections
+          return "nothing" if !attributes[:release_varies].present? && !attributes[:release_period] && !attributes[:release_date] && !attributes[:release_embargo]
+
+          # if "varies" without sub-options (in this case, release_varies will be missing)
+          return "varies" if attributes[:release_period].blank? && attributes[:release_varies].blank?
+
+          # if "varies before" but date not selected
+          return "no_date" if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE && attributes[:release_date].blank?
+
+          # if "varies with embargo" but no embargo period
+          return "no_embargo" if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO && attributes[:release_embargo].blank?
+
+          # if "fixed" but date not selected
+          return "no_date" if attributes[:release_period] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED && attributes[:release_date].blank?
+
+          true
         end
     end
   end

@@ -6,14 +6,15 @@ module Hyrax
                                   class: 'Hyrax::PermissionTemplate'
 
       def update
-        tab_info_updated = form.update(update_params)
-        require 'byebug'; debugger; true
-        if tab_info_updated.present?
+        update_info = form.update(update_params)
+        if update_info[:status] == true
         # Ensure we redirect to currently active tab with the appropriate notice
-          redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
-                    notice: translate(tab_info_updated, scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
+        redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
+                  notice: translate(update_info[:content], scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
+
         else
-          redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab))
+          redirect_to(edit_admin_admin_set_path(params[:admin_set_id], anchor: current_tab),
+                    alert: translate(update_info[:content], scope: 'hyrax.admin.admin_sets.form.permission_update_errors'))
         end
       end
 
@@ -34,7 +35,7 @@ module Hyrax
           pt = params[:permission_template]
           @current_tab ||= if pt[:access_grants_attributes].present?
                              'participants'
-                           elsif pt[:workflow_name].present?
+                           elsif pt[:workflow_id].present?
                              'workflow'
                            else
                              'visibility'
