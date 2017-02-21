@@ -1,29 +1,72 @@
 require 'spec_helper'
 
 describe Hyrax::PermissionBadge do
-  let(:badge) { described_class.new(solr_doc) }
-  let(:solr_doc) { SolrDocument.new(attributes) }
-  let(:attributes) { {} }
+  context "with a SolrDocument" do
+    let(:badge) { described_class.new(solr_doc) }
+    let(:solr_doc) { SolrDocument.new(attributes) }
+    let(:attributes) { {} }
 
-  describe "#render" do
-    subject { badge.render }
-    context "when open-access with embargo" do
-      let(:attributes) { { read_access_group_ssim: ['public'], embargo_release_date_dtsi: '2016-05-04' } }
-      it { is_expected.to eq "<span title=\"Open Access with Embargo\" class=\"label label-warning\">Open Access with Embargo</span>" }
+    describe "#render" do
+      subject { badge.render }
+      before do
+        expect(Deprecation).to receive(:warn)
+      end
+
+      context "when under embargo" do
+        let(:attributes) { { read_access_group_ssim: ['public'], embargo_release_date_dtsi: '2016-05-04' } }
+        it { is_expected.to eq "<span class=\"label label-warning\">Embargo</span>" }
+      end
+
+      context "when under lease" do
+        let(:attributes) { { read_access_group_ssim: ['public'], lease_expiration_date_dtsi: '2016-05-04' } }
+        it { is_expected.to eq "<span class=\"label label-warning\">Lease</span>" }
+      end
+
+      context "when open-access" do
+        let(:attributes) { { read_access_group_ssim: ['public'] } }
+        it { is_expected.to eq "<span class=\"label label-success\">Open Access</span>" }
+      end
+
+      context "when registered" do
+        let(:attributes) { { read_access_group_ssim: ['registered'] } }
+        it { is_expected.to eq "<span class=\"label label-info\">Institution</span>" }
+      end
+
+      context "when private" do
+        it { is_expected.to eq "<span class=\"label label-danger\">Private</span>" }
+      end
     end
+  end
 
-    context "when open-access" do
-      let(:attributes) { { read_access_group_ssim: ['public'] } }
-      it { is_expected.to eq "<span title=\"Open Access\" class=\"label label-success\">Open Access</span>" }
-    end
+  context "with a string" do
+    let(:badge) { described_class.new(value) }
 
-    context "when registered" do
-      let(:attributes) { { read_access_group_ssim: ['registered'] } }
-      it { is_expected.to eq "<span title=\"Institution\" class=\"label label-info\">Institution</span>" }
-    end
+    describe "#render" do
+      subject { badge.render }
+      context "when under embargo" do
+        let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO }
+        it { is_expected.to eq "<span class=\"label label-warning\">Embargo</span>" }
+      end
 
-    context "when private" do
-      it { is_expected.to eq "<span title=\"Private\" class=\"label label-danger\">Private</span>" }
+      context "when under lease" do
+        let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE }
+        it { is_expected.to eq "<span class=\"label label-warning\">Lease</span>" }
+      end
+
+      context "when open-access" do
+        let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+        it { is_expected.to eq "<span class=\"label label-success\">Open Access</span>" }
+      end
+
+      context "when registered" do
+        let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+        it { is_expected.to eq "<span class=\"label label-info\">Institution</span>" }
+      end
+
+      context "when private" do
+        let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+        it { is_expected.to eq "<span class=\"label label-danger\">Private</span>" }
+      end
     end
   end
 end

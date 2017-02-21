@@ -1,62 +1,43 @@
 module Hyrax
   class PermissionBadge
     include ActionView::Helpers::TagHelper
-    include HyraxHelper
 
-    def initialize(solr_document)
-      @solr_document = solr_document
+    # @param visibility_or_document [String,#visibility] the current visibility or an object
+    #                                                    that has a method returning visibility
+    def initialize(visibility_or_document)
+      self.visibility = visibility_or_document
     end
 
     # Draws a span tag with styles for a bootstrap label
     def render
-      content_tag(:span, link_title, title: link_title, class: "label #{dom_label_class}")
+      content_tag(:span, text, class: "label #{dom_label_class}")
     end
 
     private
 
-      def dom_label_class
-        if open_access_with_embargo?
-          'label-warning'
-        elsif open_access?
-          'label-success'
-        elsif registered?
-          'label-info'
-        else
-          'label-danger'
-        end
+      def visibility=(visibility_or_document)
+        @visibility = if visibility_or_document.respond_to?(:visibility)
+                        Deprecation.warn(self, "PermissionBadge#visibility= no longer accepts a document, pass the visibility string instead. This will be removed in Hyrax 2.0")
+                        visibility_or_document.visibility
+                      else
+                        visibility_or_document
+                      end
       end
 
-      def link_title
-        if open_access_with_embargo?
-          'Open Access with Embargo'
-        elsif open_access?
-          'Open Access'
-        elsif registered?
+      def dom_label_class
+        I18n.t("hyrax.visibility.#{@visibility}.class")
+      end
+
+      def text
+        if registered?
           Institution.name
         else
-          'Private'
+          I18n.t("hyrax.visibility.#{@visibility}.text")
         end
-      end
-
-      def open_access_with_embargo?
-        if @open_access_with_embargo.nil?
-          @open_access_with_embargo = open_access? && embargo?
-        end
-        @open_access_with_embargo
-      end
-
-      def open_access?
-        @open_access = @solr_document.visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC if @open_access.nil?
-        @open_access
       end
 
       def registered?
-        @registered = @solr_document.visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED if @registered.nil?
-        @registered
-      end
-
-      def embargo?
-        @solr_document.embargo_release_date.present?
+        @visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
       end
   end
 end
