@@ -10,8 +10,6 @@ describe Hyrax::MySharesSearchBuilder do
   end
   let(:builder) { described_class.new(scope) }
 
-  let(:solr_params) { { q: user_query } }
-
   before do
     allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"])
 
