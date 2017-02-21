@@ -38,7 +38,6 @@ es:
       update: 'Guardar'
   hyrax:
     account_label:      "Usuario"
-    account_name:       "Mi identificador de cuenta institucional"
     active_consent_to_agreement:  "He leído y estoy de acuerdo con"
     admin:
       admin_sets:
@@ -410,9 +409,6 @@ es:
           La lista de grupos en el listado marcados como "Seleccionar un grupo" es una lista de Grupos de Usuarios Administrados de la cual
           Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
           dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
-    footer:
-      copyright_html: "<strong>Copyright &copy; 2017 Proyecto Hydra</strong> bajo licencia de Apache, Version 2.0"
-      service_html: Un servicio de <a href="http://projecthydra.org/" class="navbar-link" target="_blank">Proyecto Hydra</a>.
     help:
       header: "Soporte al Usuario"
       override_text: "Utilice app/views/static/help.html.erb para anular este archivo"
@@ -439,8 +435,6 @@ es:
     icons:
       collection:       'fa fa-cubes'
       default:          'fa fa-cube'
-    institution_name: &INSTITUTION_NAME "Nombre de la institución"
-    institution_name_full: "El nombre de la institución"
     mailbox:
       date:     'Fecha'
       delete:   'Borrar Mensaje'
@@ -463,8 +457,6 @@ es:
         subject: "Carga en lote completa"
         title:  "Archivos cargados satisfactoriamente"
     passive_consent_to_agreement: "Al salvar este trabajo yo acepto a"
-    product_name: "Hyrax"
-    product_twitter_handle: "@HydraSphere"
     schema_org:
       based_near:
         property: contentLocation
@@ -630,7 +622,6 @@ es:
         class: "label-info"
         label_html: <span class="label label-info">%{institution}</span>
         note_html: Restringir el acceso sólo a usuarios y / o grupos de %{institution}
-        text: *INSTITUTION_NAME
       embargo:
         class: "label-warning"
         label_html: <span class="label label-warning">Embargo</span>

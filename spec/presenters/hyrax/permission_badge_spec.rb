@@ -19,7 +19,7 @@ describe Hyrax::PermissionBadge do
 
     context "when registered" do
       let(:attributes) { { read_access_group_ssim: ['registered'] } }
-      it { is_expected.to eq "<span title=\"Institution Name\" class=\"label label-info\">Institution Name</span>" }
+      it { is_expected.to eq "<span title=\"Institution\" class=\"label label-info\">Institution</span>" }
     end
 
     context "when private" do

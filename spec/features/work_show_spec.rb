@@ -50,7 +50,7 @@ describe "display a work as its owner" do
       expect(page).to have_content '%T Magnificent splendor'
       expect(page).to have_content '%R http://localhost/files/'
       expect(page).to have_content '%~ Hyrax'
-      expect(page).to have_content '%W Institution Name'
+      expect(page).to have_content '%W Institution'
     end
   end
 end

@@ -54,5 +54,6 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
 
   def inject_i18n
     copy_file "config/locales/hyrax.en.yml", "config/locales/hyrax.en.yml"
+    copy_file "config/locales/hyrax.es.yml", "config/locales/hyrax.es.yml"
   end
 end
