@@ -58,11 +58,20 @@ module Hyrax
       title.present? ? title : 'No Title'
     end
 
+    # @api public
     # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
     # @return [Hyrax::PermissionTemplate]
     # @raise [ActiveRecord::RecordNotFound]
     def permission_template
       Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    end
+
+    # @api public
+    #
+    # @return [Sipity::Workflow]
+    # @raise [ActiveRecord::RecordNotFound]
+    def active_workflow
+      Sipity::Workflow.find_active_workflow_for_admin_set_id(id)
     end
 
     private

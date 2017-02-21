@@ -4,6 +4,13 @@ describe GenericWork do
     expect(subject.title).to eq ['foo']
   end
 
+  describe '#active_workflow' do
+    it 'leverages "Sipity::Workflow.find_active_workflow_for_admin_set_id"' do
+      expect(Sipity::Workflow).to receive(:find_active_workflow_for_admin_set_id)
+      subject.active_workflow
+    end
+  end
+
   describe '.model_name' do
     subject { described_class.model_name.singular_route_key }
     it { is_expected.to eq 'hyrax_generic_work' }

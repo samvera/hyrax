@@ -24,12 +24,18 @@ FactoryGirl.define do
     after(:create) do |permission_template, evaluator|
       if evaluator.with_workflows
         Hyrax::Workflow::WorkflowImporter.load_workflow_for(permission_template: permission_template)
+        Sipity::Workflow.activate!(permission_template: permission_template, workflow_id: permission_template.workflows.pluck(:id).first)
+      end
+      if evaluator.with_active_workflow
+        workflow = create(:workflow, active: true, permission_template: permission_template)
+        create(:workflow_action, workflow: workflow) # Need to create a single action that can be taken
       end
     end
 
     transient do
       with_admin_set false
       with_workflows false
+      with_active_workflow false
     end
   end
 end

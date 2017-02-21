@@ -5,6 +5,7 @@ describe Hyrax::PermissionTemplate do
 
   subject { permission_template }
   it { is_expected.to have_many(:workflows).dependent(:destroy) }
+  it { is_expected.to have_one(:active_workflow).conditions(active: true).dependent(nil) }
   it { is_expected.to have_many(:access_grants).dependent(:destroy) }
 
   describe 'factories' do
@@ -19,12 +20,21 @@ describe Hyrax::PermissionTemplate do
       end
     end
 
-    context 'with_workflow parameter' do
+    context 'with_workflows parameter' do
       it 'will create the workflow when set true' do
         expect { create(:permission_template, with_workflows: true) }.to change { Sipity::Workflow.count }
       end
       it 'will not create the workflow when false (or not given)' do
         expect { create(:permission_template, with_workflows: false) }.not_to change { Sipity::Workflow.count }
+      end
+    end
+
+    context 'with_active_workflow parameter' do
+      it 'will create the workflow when set true' do
+        expect { create(:permission_template, with_active_workflow: true) }.to change { Sipity::Workflow.count }.by(1)
+      end
+      it 'will not create the workflow when false (or not given)' do
+        expect { create(:permission_template, with_active_workflow: false) }.not_to change { Sipity::Workflow.count }
       end
     end
   end

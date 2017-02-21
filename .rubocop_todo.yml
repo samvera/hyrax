@@ -23,6 +23,7 @@ Metrics/ClassLength:
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/configuration.rb'
+    - 'app/forms/hyrax/forms/permission_template_form.rb'
 
 Metrics/ParameterLists:
   Exclude:

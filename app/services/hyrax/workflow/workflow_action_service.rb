@@ -1,5 +1,6 @@
 module Hyrax
   module Workflow
+    # Responsible for coordinating the behavior of an action taken within a workflow
     class WorkflowActionService
       def self.run(subject:, action:, comment: nil)
         new(subject: subject, action: action, comment: comment).run

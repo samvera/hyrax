@@ -14,6 +14,8 @@ module Hyrax
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
     has_many :workflows, class_name: 'Sipity::Workflow', dependent: :destroy
+    # In a perfect world, there would be a join table that enforced uniqueness on the ID.
+    has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
     # @return [AdminSet]

@@ -11,6 +11,14 @@ RSpec.describe AdminSet, type: :model do
     subject.title = ['Some title']
   end
 
+  describe '#active_workflow' do
+    it 'leverages Sipity::Workflow.find_active_workflow_for_admin_set_id' do
+      admin_set = build(:admin_set, id: 1234)
+      expect(Sipity::Workflow).to receive(:find_active_workflow_for_admin_set_id).with(admin_set.id).and_return(:workflow)
+      expect(admin_set.active_workflow).to eq(:workflow)
+    end
+  end
+
   describe '#permission_template' do
     it 'queries for a Hyrax::PermissionTemplate with a matching admin_set_id' do
       admin_set = build(:admin_set, id: '123')
