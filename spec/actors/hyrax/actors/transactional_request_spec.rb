@@ -9,14 +9,22 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
     end
   end
 
+  let(:good_actor) do
+    Class.new(Hyrax::Actors::AbstractActor) do
+      def create(_attributes)
+        FactoryGirl.create(:user)
+      end
+    end
+  end
+
   let(:actor_stack) do
     Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class,
                                                                    bad_actor,
-                                                                   Hyrax::Actors::InitializeWorkflowActor])
+                                                                   good_actor])
   end
 
-  let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
+  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil) }
+  let(:work) { double(:work) }
 
   describe "create" do
     subject { actor_stack.create({}) }
@@ -24,7 +32,7 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
     it "rolls back any database changes" do
       expect do
         expect { subject }.to raise_error 'boom'
-      end.not_to change { Sipity::Entity.count }
+      end.not_to change { User.count } # Note the above good actor creates a user
     end
   end
 end
