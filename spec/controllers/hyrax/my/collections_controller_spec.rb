@@ -1,29 +1,23 @@
 describe Hyrax::My::CollectionsController, type: :controller do
   describe "logged in user" do
-    let(:user)  { create(:user) }
-    let(:other) { create(:user) }
-
-    let!(:my_file)              { create(:work, user: user) }
-    let!(:first_collection)     { create(:public_collection, user: user) }
-    let!(:unrelated_collection) { create(:public_collection, user: other) }
-
-    before { sign_in user }
-
     describe "#index" do
-      context "with mulitple pages of collections" do
-        before { 2.times { create(:public_collection, user: user) } }
-        it "paginates" do
-          get :index, params: { per_page: 2 }
-          expect(assigns[:document_list].length).to eq 2
-          get :index, params: { per_page: 2, page: 2 }
-          expect(assigns[:document_list].length).to be >= 1
-        end
+      let(:user)  { create(:user) }
+      let(:other) { create(:user) }
+      before do
+        sign_in user
+        build(:public_collection, user: user, id: 1).update_index
+        build(:public_collection, user: user, id: 2).update_index
+        build(:public_collection, user: user, id: 3).update_index
+        unrelated_collection.update_index
       end
+      let(:unrelated_collection) { build(:public_collection, user: other, id: 4) }
 
-      it "shows only collections that I own" do
-        get :index
-        expect(response).to be_successful
-        expect(assigns[:document_list].map(&:id)).to contain_exactly(first_collection.id)
+      it "shows only collections I own and paginates the results" do
+        get :index, params: { per_page: 2 }
+        expect(assigns[:document_list].length).to eq 2
+        expect(assigns[:document_list].map(&:id)).not_to include(unrelated_collection)
+        get :index, params: { per_page: 2, page: 2 }
+        expect(assigns[:document_list].length).to be >= 1
       end
     end
 
