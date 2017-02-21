@@ -257,7 +257,10 @@ module CurationConcerns
             .and(entity_responsibilities[:entity_id].eq(entity.id))
         )
 
-        sub_query_for_user = agent_table.project(agent_table[:proxy_for_id]).where(
+        # PostgreSQL requires an explicit cast from string to integer
+        cast = Arel::Nodes::NamedFunction.new "CAST", [agent_table[:proxy_for_id].as("integer")]
+
+        sub_query_for_user = agent_table.project(cast).where(
           agent_table[:id].in(workflow_agent_id_subquery)
             .or(agent_table[:id].in(entity_agent_id_subquery))
         ).where(
