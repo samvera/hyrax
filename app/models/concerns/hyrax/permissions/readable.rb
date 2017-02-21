@@ -3,11 +3,11 @@ module Hyrax
     module Readable
       extend ActiveSupport::Concern
       def public?
-        read_groups.include?('public')
+        read_groups.include?(Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC)
       end
 
       def registered?
-        read_groups.include?('registered')
+        read_groups.include?(Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED)
       end
 
       def private?
