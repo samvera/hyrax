@@ -18,12 +18,12 @@ Metrics/BlockLength:
 
 Metrics/ClassLength:
   Exclude:
+    - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/configuration.rb'
-    - 'app/forms/hyrax/forms/permission_template_form.rb'
 
 Metrics/ParameterLists:
   Exclude:

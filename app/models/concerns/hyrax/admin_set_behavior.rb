@@ -71,7 +71,7 @@ module Hyrax
     # @return [Sipity::Workflow]
     # @raise [ActiveRecord::RecordNotFound]
     def active_workflow
-      Sipity::Workflow.find_active_workflow_for_admin_set_id(id)
+      Sipity::Workflow.find_active_workflow_for(admin_set_id: id)
     end
 
     private

@@ -6,8 +6,10 @@ module Hyrax
       self.model_class = PermissionTemplate
       self.terms = []
       delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
-      delegate :workflows, :active_workflow, admin_set, to: :model
-      # def admin_set_id
+      delegate :workflows, :active_workflow, :admin_set, to: :model
+
+      # @return [#to_s] the primary key of the associated admin_set
+      # def admin_set_id (because you might come looking for this method)
       delegate :id, to: :admin_set, prefix: :admin_set
 
       # Stores which radio button under release "Varies" option is selected

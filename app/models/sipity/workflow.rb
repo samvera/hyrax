@@ -10,6 +10,9 @@ module Sipity
     has_many :workflow_states, dependent: :destroy, class_name: 'Sipity::WorkflowState'
     has_many :workflow_actions, dependent: :destroy, class_name: 'Sipity::WorkflowAction'
     has_many :workflow_roles, dependent: :destroy, class_name: 'Sipity::WorkflowRole'
+
+    # Each PermissionTemplate has multiple potential workflows. But only one "active" workflow
+    # @see Sipity::Workflow.activate!
     belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate', required: true
 
     DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
@@ -17,9 +20,11 @@ module Sipity
       workflow_states.find_or_create_by!(name: DEFAULT_INITIAL_WORKFLOW_STATE)
     end
 
+    # @api public
+    # @param admin_set_id [#to_s] the admin set to which we will scope our query.
     # @return [Sipity::Workflow] that is active for the given administrative set`
     # @raise [ActiveRecord::RecordNotFound] when we don't have an active admin set for the given administrative set's ID
-    def self.find_active_workflow_for_admin_set_id(admin_set_id)
+    def self.find_active_workflow_for(admin_set_id:)
       templates = Hyrax::PermissionTemplate.arel_table
       workflows = Sipity::Workflow.arel_table
       Sipity::Workflow.where(active: true).where(

@@ -12,9 +12,9 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe '#active_workflow' do
-    it 'leverages Sipity::Workflow.find_active_workflow_for_admin_set_id' do
+    it 'leverages Sipity::Workflow.find_active_workflow_for' do
       admin_set = build(:admin_set, id: 1234)
-      expect(Sipity::Workflow).to receive(:find_active_workflow_for_admin_set_id).with(admin_set.id).and_return(:workflow)
+      expect(Sipity::Workflow).to receive(:find_active_workflow_for).with(admin_set_id: admin_set.id).and_return(:workflow)
       expect(admin_set.active_workflow).to eq(:workflow)
     end
   end

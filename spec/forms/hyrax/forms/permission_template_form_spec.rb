@@ -188,7 +188,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "when a workflow is not changed" do
       it "does nothing" do
-        subject # Need to get things setup
+        subject # Setting up the subject to verify that when we call it again things don't change
         expect { subject }.not_to change { Sipity::WorkflowResponsibility.count }
       end
     end

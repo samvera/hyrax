@@ -53,7 +53,6 @@ describe Hyrax::Actors::GenericWorkActor do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       before do
         redlock_client_stub
-        # create(:workflow_action)
       end
 
       context 'with embargo' do

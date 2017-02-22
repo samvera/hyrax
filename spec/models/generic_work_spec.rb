@@ -5,8 +5,8 @@ describe GenericWork do
   end
 
   describe '#active_workflow' do
-    it 'leverages "Sipity::Workflow.find_active_workflow_for_admin_set_id"' do
-      expect(Sipity::Workflow).to receive(:find_active_workflow_for_admin_set_id)
+    it 'leverages "Sipity::Workflow.find_active_workflow_for"' do
+      expect(Sipity::Workflow).to receive(:find_active_workflow_for)
       subject.active_workflow
     end
   end

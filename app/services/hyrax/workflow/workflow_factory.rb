@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    # Responsible for stitching a work into it's workflow and granting permissions accordingly
+    # Responsible for stitching a work into its workflow and granting permissions accordingly
     class WorkflowFactory
       # @api public
       #
