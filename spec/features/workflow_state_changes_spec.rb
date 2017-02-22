@@ -34,7 +34,7 @@ RSpec.describe "Workflow state changes", type: :feature do
   before do
     allow(::User.group_service).to receive(:byname).and_return(depositing_user.user_key => ['admin'], approving_user.user_key => ['admin'])
     Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: one_step_workflow, permission_template: permission_template)
-    permission_template.workflows.first.update!(active: true)
+    permission_template.available_workflows.first.update!(active: true)
     Hyrax::Workflow::PermissionGenerator.call(roles: 'approving', workflow: workflow, agents: approving_user)
     # Need to instantiate the Sipity::Entity for the given work. This is necessary as I'm not creating the work via the UI.
     Hyrax::Workflow::WorkflowFactory.create(work, {}, depositing_user)

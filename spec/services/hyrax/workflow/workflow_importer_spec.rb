@@ -61,7 +61,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       result = nil
       expect do
         result = described_class.generate_from_json_file(path: path, permission_template: permission_template)
-      end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.workflows.count }.by(number_of_workflows_created))
+      end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.available_workflows.count }.by(number_of_workflows_created))
       expect(result).to match_array(kind_of(Sipity::Workflow))
       expect(described_class.load_errors).to be_empty
       expect(result.first.label).to eq "This is the label"

@@ -13,7 +13,9 @@ module Hyrax
     has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess', dependent: :destroy
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
-    has_many :workflows, class_name: 'Sipity::Workflow', dependent: :destroy
+    # The list of workflows that could be activated; It includes the active workflow
+    has_many :available_workflows, class_name: 'Sipity::Workflow', dependent: :destroy, foreign_key: :permission_template_id
+
     # In a perfect world, there would be a join table that enforced uniqueness on the ID.
     has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 

@@ -4,7 +4,7 @@ describe Hyrax::PermissionTemplate do
   let(:attributes) { { admin_set_id: admin_set.id } }
 
   subject { permission_template }
-  it { is_expected.to have_many(:workflows).dependent(:destroy) }
+  it { is_expected.to have_many(:available_workflows).dependent(:destroy) }
   it { is_expected.to have_one(:active_workflow).conditions(active: true).dependent(nil) }
   it { is_expected.to have_many(:access_grants).dependent(:destroy) }
 
