@@ -20,14 +20,14 @@
                     <ul>
                       <li class="radio form-inline">
                         <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, checked: f.object.release_varies == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
                           <%= t('.release.varies.between') %>
                         </label>
                         <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control' %>
                       </li>
                       <li class="radio form-inline">
                         <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO, checked: f.object.release_varies == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO  %>
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO  %>
                           <%= t('.release.varies.between') %>
                           <%= f.collection_select :release_embargo, f.object.embargo_options, :first, :last, prompt: t('.release.varies.embargo.select') %>
                         </label>
