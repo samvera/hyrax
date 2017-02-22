@@ -10,8 +10,14 @@ module Hyrax
   class PermissionTemplate < ActiveRecord::Base
     self.table_name = 'permission_templates'
 
-    has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess'
+    has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess', dependent: :destroy
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
+
+    # The list of workflows that could be activated; It includes the active workflow
+    has_many :available_workflows, class_name: 'Sipity::Workflow', dependent: :destroy, foreign_key: :permission_template_id
+
+    # In a perfect world, there would be a join table that enforced uniqueness on the ID.
+    has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
     # @return [AdminSet]

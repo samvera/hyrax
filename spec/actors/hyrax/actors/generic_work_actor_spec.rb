@@ -19,34 +19,33 @@ describe Hyrax::Actors::GenericWorkActor do
     Hyrax::CurationConcern.actor(curation_concern, ::Ability.new(user))
   end
 
+  let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
+
   describe '#create' do
     let(:curation_concern) { GenericWork.new }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
 
     context 'failure' do
-      let(:attributes) { {} }
       before do
         allow(subject).to receive(:attach_files).and_return(true)
       end
 
       it 'returns false' do
         expect(curation_concern).to receive(:save).and_return(false)
-        expect(subject.create(attributes)).to be false
+        expect(subject.create({})).to be false
       end
     end
 
     context 'success' do
       before do
         redlock_client_stub
-        create(:workflow_action)
       end
 
       it "invokes the after_create_concern callback" do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
-
-        subject.create(title: ['Foo Bar'])
+        subject.create(title: ['Foo Bar'], admin_set_id: admin_set.id)
       end
     end
 
@@ -54,7 +53,6 @@ describe Hyrax::Actors::GenericWorkActor do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       before do
         redlock_client_stub
-        create(:workflow_action)
       end
 
       context 'with embargo' do
@@ -65,6 +63,7 @@ describe Hyrax::Actors::GenericWorkActor do
               visibility_during_embargo: 'authenticated', embargo_release_date: date.to_s,
               visibility_after_embargo: 'open', visibility_during_lease: 'open',
               lease_expiration_date: '2014-06-12', visibility_after_lease: 'restricted',
+              admin_set_id: admin_set.id,
               files: [
                 file
               ],
@@ -86,7 +85,7 @@ describe Hyrax::Actors::GenericWorkActor do
       context 'with in_work_ids' do
         let(:parent) { FactoryGirl.create(:generic_work) }
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).merge(
+          FactoryGirl.attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
             in_works_ids: [parent.id]
           )
         end
@@ -98,7 +97,7 @@ describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a file' do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
+          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:files] = file
           end
         end
@@ -133,7 +132,7 @@ describe Hyrax::Actors::GenericWorkActor do
       context 'with multiple files' do
         let(:file_actor) { double }
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do |a|
+          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:files] = [file, file]
           end
         end
@@ -163,7 +162,7 @@ describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a present and a blank title' do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, title: ['this is present', ''])
+          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, title: ['this is present', ''])
         end
 
         it 'stamps each link with the access rights' do
@@ -176,7 +175,7 @@ describe Hyrax::Actors::GenericWorkActor do
   end
 
   describe '#update' do
-    let(:curation_concern) { create(:generic_work, user: user) }
+    let(:curation_concern) { create(:generic_work, user: user, admin_set_id: admin_set.id) }
 
     context 'failure' do
       let(:attributes) { {} }
@@ -283,7 +282,7 @@ describe Hyrax::Actors::GenericWorkActor do
     context 'with multiple file sets' do
       let(:file_set1) { create(:file_set) }
       let(:file_set2) { create(:file_set) }
-      let(:curation_concern) { create(:generic_work, user: user, ordered_members: [file_set1, file_set2]) }
+      let(:curation_concern) { create(:generic_work, user: user, ordered_members: [file_set1, file_set2], admin_set_id: admin_set.id) }
       let(:attributes) do
         FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
       end
