@@ -44,12 +44,5 @@ module Hyrax
       content_block = ContentBlock.new(name: name)
       edit_form(content_block, "new_#{name}_text_area")
     end
-
-    def tiny_mce_stuff
-      capture do
-        concat tinymce_assets
-        concat tinymce
-      end
-    end
   end
 end

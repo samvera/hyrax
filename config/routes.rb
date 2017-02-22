@@ -197,9 +197,10 @@ Hyrax::Engine.routes.draw do
   post '/tinymce_assets' => 'tinymce_assets#create'
 
   get 'about' => 'pages#show', id: 'about_page'
+  get 'help' => 'pages#show', id: 'help_page'
 
   # Static page routes
-  %w(help terms zotero mendeley agreement versions).each do |action|
+  %w(terms zotero mendeley agreement versions).each do |action|
     get action, controller: 'static', action: action, as: action
   end
 end
