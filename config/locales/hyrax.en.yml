@@ -65,10 +65,6 @@ en:
             participants:       "Participants"
             visibility:         "Release and Visibility"
             workflow:           "Workflow"
-          release_error:
-            varies:             "Release Varies option requires sub-option selection."
-            no_date:            "Date is required for selected release option."
-            no_embargo:         "Embargo period is required for selected release option."
         form_participant_table:
           depositors:
             action:             "Action"
