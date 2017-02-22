@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Forms::PermissionTemplateForm do
+  let(:permission_template) { build(:permission_template) }
+  let(:form) { described_class.new(permission_template) }
+  subject { form }
+  it { is_expected.to delegate_method(:available_workflows).to(:model) }
+  it { is_expected.to delegate_method(:active_workflow).to(:model) }
+  it { is_expected.to delegate_method(:admin_set).to(:model) }
+
+  it 'is expected to delegate method #active_workflow_id to #active_workflow#id' do
+    workflow = double(:workflow, id: 1234, active: true)
+    expect(permission_template).to receive(:active_workflow).and_return(workflow)
+    expect(form.workflow_id).to eq(workflow.id)
+  end
+
   describe "#update" do
     let(:grant_attributes) { [] }
     let(:input_params) do
@@ -142,16 +155,16 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#grant_workflow_roles" do
-    subject { form.send(:grant_workflow_roles) }
+    subject { form.send(:grant_workflow_roles, attributes) }
+    let(:attributes) { { workflow_id: workflow.id } }
     let(:admin_set) { create(:admin_set) }
-    let(:workflow) { create(:workflow) }
+    let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
     let(:user) { create(:user) }
     let(:role1) { Sipity::Role.create!(name: 'hello') }
     let(:role2) { Sipity::Role.create!(name: 'goodbye') }
 
     let(:permission_template) do
       create(:permission_template,
-             workflow_id: workflow.id,
              admin_set_id: admin_set.id,
              access_grants_attributes:
                [{ agent_type: 'user',
@@ -168,17 +181,14 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
 
     context "when a new workflow has been chosen" do
-      before do
-        allow(permission_template).to receive(:previous_changes).and_return("workflow_id" => [nil, workflow.id])
-      end
-
       it "gives the managers workflow roles" do
         expect { subject }.to change { Sipity::WorkflowResponsibility.count }.by(4)
       end
     end
 
-    context "when a new workflow is not changed" do
+    context "when a workflow is not changed" do
       it "does nothing" do
+        subject # Setting up the subject to verify that when we call it again things don't change
         expect { subject }.not_to change { Sipity::WorkflowResponsibility.count }
       end
     end
@@ -276,17 +286,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
           release_date: nil
         ).permit!
       end
-    end
-  end
-
-  describe "#workflows" do
-    let(:admin_set) { create(:admin_set) }
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
-
-    it "returns all of the workflows" do
-      expect(Sipity::Workflow).to receive(:all).and_return(:the_workflows)
-      expect(form.workflows).to eq(:the_workflows)
     end
   end
 end

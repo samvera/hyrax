@@ -3,6 +3,42 @@ describe Hyrax::PermissionTemplate do
   let(:permission_template) { described_class.new(attributes) }
   let(:attributes) { { admin_set_id: admin_set.id } }
 
+  subject { permission_template }
+  it { is_expected.to have_many(:available_workflows).dependent(:destroy) }
+  it { is_expected.to have_one(:active_workflow).conditions(active: true).dependent(nil) }
+  it { is_expected.to have_many(:access_grants).dependent(:destroy) }
+
+  describe 'factories' do
+    context 'with_admin_set parameter' do
+      it 'will create an AdminSet when true' do
+        permission_template = create(:permission_template, with_admin_set: true)
+        expect(permission_template.admin_set).to be_persisted
+      end
+      it 'will not persist an AdminSet when false (or not given)' do
+        permission_template = create(:permission_template, with_admin_set: false)
+        expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      end
+    end
+
+    context 'with_workflows parameter' do
+      it 'will create the workflow when set true' do
+        expect { create(:permission_template, with_workflows: true) }.to change { Sipity::Workflow.count }
+      end
+      it 'will not create the workflow when false (or not given)' do
+        expect { create(:permission_template, with_workflows: false) }.not_to change { Sipity::Workflow.count }
+      end
+    end
+
+    context 'with_active_workflow parameter' do
+      it 'will create the workflow when set true' do
+        expect { create(:permission_template, with_active_workflow: true) }.to change { Sipity::Workflow.count }.by(1)
+      end
+      it 'will not create the workflow when false (or not given)' do
+        expect { create(:permission_template, with_active_workflow: false) }.not_to change { Sipity::Workflow.count }
+      end
+    end
+  end
+
   describe "#admin_set" do
     it 'leverages AdminSet.find for the given permission_template' do
       expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)

@@ -146,6 +146,8 @@ require 'active_fedora/cleaner'
 RSpec.configure do |config|
   include ActiveFedora::Noid::RSpec
 
+  config.include Shoulda::Matchers::ActiveRecord, type: :model
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end

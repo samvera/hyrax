@@ -8,7 +8,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
                     model_name: template.model_name,
                     persisted?: template.persisted?,
                     to_key: template.to_key,
-                    workflows: [workflow],
+                    available_workflows: [workflow],
                     workflow_id: workflow.id)
   end
   before do

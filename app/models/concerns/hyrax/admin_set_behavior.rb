@@ -51,12 +51,14 @@ module Hyrax
                class_name: 'ActiveFedora::Base'
 
       before_destroy :check_if_not_default_set, :check_if_empty
+      after_destroy :destroy_permission_template
     end
 
     def to_s
       title.present? ? title : 'No Title'
     end
 
+    # @api public
     # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
     # @return [Hyrax::PermissionTemplate]
     # @raise [ActiveRecord::RecordNotFound]
@@ -64,7 +66,21 @@ module Hyrax
       Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
     end
 
+    # @api public
+    #
+    # @return [Sipity::Workflow]
+    # @raise [ActiveRecord::RecordNotFound]
+    def active_workflow
+      Sipity::Workflow.find_active_workflow_for(admin_set_id: id)
+    end
+
     private
+
+      def destroy_permission_template
+        permission_template.destroy
+      rescue ActiveRecord::RecordNotFound
+        true
+      end
 
       def check_if_empty
         return true if members.empty?

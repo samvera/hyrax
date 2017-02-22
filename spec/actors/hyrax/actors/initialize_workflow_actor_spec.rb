@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
   let(:user) { create(:user) }
-  let(:curation_concern) { GenericWork.new }
+  let(:curation_concern) { build(:generic_work) }
   let(:attributes) { { title: ['test'] } }
 
   subject do
@@ -24,6 +24,8 @@ describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
   end
 
   describe 'create' do
+    let(:curation_concern) { build(:generic_work, admin_set: admin_set) }
+    let!(:admin_set) { create(:admin_set, with_permission_template: { with_workflows: true }) }
     it 'creates an entity' do
       expect do
         expect(subject.create(attributes)).to be true

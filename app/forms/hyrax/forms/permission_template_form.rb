@@ -5,12 +5,24 @@ module Hyrax
 
       self.model_class = PermissionTemplate
       self.terms = []
-      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, :workflow_id, to: :model
+      delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
+      delegate :available_workflows, :active_workflow, :admin_set, to: :model
+
+      # @return [#to_s] the primary key of the associated admin_set
+      # def admin_set_id (because you might come looking for this method)
+      delegate :id, to: :admin_set, prefix: :admin_set
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
       # Selected release embargo timeframe (if any) under release "Varies" option
       attr_accessor :release_embargo
+
+      # Stores the selected
+      attr_writer :workflow_id
+
+      def workflow_id
+        @workflow_id || active_workflow.id
+      end
 
       def visibility
         Widgets::AdminSetVisibility.new
@@ -33,21 +45,27 @@ module Hyrax
       def update(attributes)
         update_admin_set(attributes)
         update_permission_template(attributes)
-        grant_workflow_roles
-      end
-
-      def workflows
-        # TODO: Scope the workflows only to admin sets see https://github.com/projecthydra-labs/hyrax/issues/256
-        Sipity::Workflow.all
+        grant_workflow_roles(attributes)
       end
 
       private
 
+        def activate_workflow_from(attributes)
+          new_active_workflow_id = attributes[:workflow_id] || attributes['workflow_id']
+          if active_workflow
+            return active_workflow if new_active_workflow_id.to_s == active_workflow.id.to_s
+            Sipity::Workflow.activate!(permission_template: model, workflow_id: new_active_workflow_id)
+          elsif new_active_workflow_id
+            Sipity::Workflow.activate!(permission_template: model, workflow_id: new_active_workflow_id)
+          end
+        end
+
         # If the workflow has been changed, ensure that all the AdminSet managers
         # have all the roles for the new workflow
-        def grant_workflow_roles
-          return unless model.previous_changes.include?("workflow_id")
-          workflow = Sipity::Workflow.find_by!(id: model.workflow_id)
+        # @todo Instead of granting the manage users all of the roles (which means lots of emails), can we agree on a Managing role that all workflows should have?
+        def grant_workflow_roles(attributes)
+          new_active_workflow = activate_workflow_from(attributes)
+          return unless new_active_workflow
           model.access_grants.select { |g| g.access == 'manage' }.each do |grant|
             agent = case grant.agent_type
                     when 'user'
@@ -55,7 +73,7 @@ module Hyrax
                     when 'group'
                       Hyrax::Group.new(grant.agent_id)
                     end
-            workflow.workflow_roles.each do |role|
+            active_workflow.workflow_roles.each do |role|
               Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: role, agent: agent.to_sipity_agent)
             end
           end
@@ -70,10 +88,6 @@ module Hyrax
             a.attributes = update_params
             a.save!
           end
-        end
-
-        def admin_set
-          @admin_set ||= AdminSet.find(model.admin_set_id)
         end
 
         def update_permission_template(attributes)
