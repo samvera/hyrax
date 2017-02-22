@@ -38,8 +38,8 @@ module Hyrax
     end
 
     initializer 'configure' do
-      # Set the path for the flipflop config:
-      Flipflop::Engine.config_file = Hyrax::Engine.root + "config/features.rb"
+      # Allow flipflop to load config/features.rb from the Hyrax gem:
+      Flipflop::FeatureLoader.current.append(self)
 
       Hyrax.config.tap do |c|
         Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path
