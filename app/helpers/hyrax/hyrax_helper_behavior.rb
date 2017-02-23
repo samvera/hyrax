@@ -220,18 +220,6 @@ module Hyrax
       end
     end
 
-    def render_visibility_link(document)
-      # Anchor must match with a tab in
-      # https://github.com/projecthydra/hyrax/blob/master/app/views/hyrax/base/_guts4form.html.erb#L2
-      path = document.collection? ? hyrax.edit_collection_path(document, anchor: 'share') : edit_polymorphic_path([main_app, document], anchor: 'share')
-      link_to(
-        render_visibility_label(document),
-        path,
-        id: "permission_#{document.id}",
-        class: 'visibility-link'
-      )
-    end
-
     def user_display_name_and_key(user_key)
       user = ::User.find_by_user_key(user_key)
       return user_key if user.nil?
@@ -244,16 +232,6 @@ module Hyrax
     end
 
     private
-
-      def render_visibility_label(document)
-        if document.registered?
-          content_tag(:span, institution_name, class: 'label label-info', title: institution_name)
-        elsif document.public?
-          content_tag(:span, t('hyrax.visibility.open.text'), class: 'label label-success', title: t('hyrax.visibility.open_title_attr'))
-        else
-          content_tag(:span, t('hyrax.visibility.private.text'), class: 'label label-danger', title: t('hyrax.visibility.private_title_attr'))
-        end
-      end
 
       def user_agent
         request.user_agent || ''

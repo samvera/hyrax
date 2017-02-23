@@ -17,15 +17,30 @@ module Hyrax
     end
 
     def visibility_badge(value)
-      klass = t("hyrax.visibility.#{value}.class", default: 'label-info')
-      content_tag :span, visibility_text(value), class: "label #{klass}"
+      PermissionBadge.new(value).render
+    end
+
+    def render_visibility_link(document)
+      # Anchor must match with a tab in
+      # https://github.com/projecthydra/hyrax/blob/master/app/views/hyrax/base/_guts4form.html.erb#L2
+      path = if document.collection?
+               hyrax.edit_collection_path(document, anchor: 'share')
+             else
+               edit_polymorphic_path([main_app, document], anchor: 'share')
+             end
+      link_to(
+        visibility_badge(document.visibility),
+        path,
+        id: "permission_#{document.id}",
+        class: 'visibility-link'
+      )
     end
 
     private
 
       def visibility_text(value)
         return institution_name if value == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        t("hyrax.visibility.#{value}.text", default: value)
+        t("hyrax.visibility.#{value}.text")
       end
   end
 end
