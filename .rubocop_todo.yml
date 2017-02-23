@@ -8,6 +8,7 @@ Metrics/BlockLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'
     - 'app/models/concerns/hyrax/basic_metadata.rb'
+    - 'app/models/concerns/hyrax/admin_set_behavior.rb'
     - 'app/services/hyrax/workflow/workflow_schema.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/routes.rb'
