@@ -20,6 +20,7 @@ module Sipity
   #   work that is being deposited (i.e. co-author on a paper).
   #
   # @see Sipity::Agent
+  # @see Hyrax::Configuration
   class Role < ActiveRecord::Base
     self.table_name = 'sipity_roles'
 
@@ -32,6 +33,8 @@ module Sipity
              foreign_key: :role_id,
              class_name: 'Sipity::NotificationRecipient'
 
+    before_destroy :prevent_registered_roles_from_being_destroyed
+
     def self.[](name)
       find_or_create_by!(name: name.to_s)
     end
@@ -39,5 +42,11 @@ module Sipity
     def to_s
       name
     end
+
+    private
+
+      def prevent_registered_roles_from_being_destroyed
+        throw :abort if Hyrax.config.registered_role?(name: name)
+      end
   end
 end

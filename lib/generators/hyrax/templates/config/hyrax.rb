@@ -1,4 +1,11 @@
 Hyrax.config do |config|
+  # Register roles that are expected by your implementation.
+  # @see Hyrax::RoleRegistry for additional details.
+  # @note there are magical roles as defined in Hyrax::RoleRegistry::MAGIC_ROLES
+  # config.register_roles do |registry|
+  #   registry.add(name: 'captaining', description: 'For those that really like the front lines')
+  # end
+
   # Email recipient of messages sent via the contact form
   # config.contact_email = "repo-admin@example.org"
 
