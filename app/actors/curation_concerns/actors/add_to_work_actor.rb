@@ -22,13 +22,17 @@ module CurationConcerns
             work.save
           end
 
-          # add to new
+          # add to new so long as the depositor for the parent and child matches, otherwise inject an error
           (new_work_ids - curation_concern.in_works_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
-            work.ordered_members << curation_concern
-            work.save
+            if work.depositor != curation_concern.depositor
+              curation_concern.errors[:in_works_ids] << "Works can only be related to each other if they were deposited by the same user."
+            else
+              work.ordered_members << curation_concern
+              work.save
+            end
           end
-          true
+          curation_concern.errors[:in_works_ids].empty?
         end
     end
   end
