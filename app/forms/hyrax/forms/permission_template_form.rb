@@ -64,7 +64,6 @@ module Hyrax
           return "participants" if attributes[:access_grants_attributes].present?
           return "workflow" if attributes[:workflow_id].present?
           return "visibility" if attributes.has_key?(:visibility)
-          "error"
         end
 
         # @return [Hash] { :updated } = true
