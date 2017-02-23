@@ -15,7 +15,15 @@ Hyrax = {
         this.datatable();
         this.admin();
         this.adminStatisticsGraphs();
+        this.tinyMCE();
+    },
 
+    tinyMCE: function() {
+        if (typeof tinyMCE === "undefined")
+            return;
+        tinyMCE.init({
+            selector: 'textarea.tinymce'
+        });
     },
 
     admin: function() {

@@ -3,10 +3,10 @@
     <div class="row">
       <ul class="nav navbar-nav col-sm-5 col-md-6">
         <li <%= 'class=active' if current_page?(hyrax.root_path) %>>
-          <%= link_to t(:'hyrax.controls.home'), hyrax.root_path, :'data-no-turbolink'=>"true" %></li>
+          <%= link_to t(:'hyrax.controls.home'), hyrax.root_path %></li>
         <li <%= 'class=active' if current_page?(hyrax.about_path) %>>
-          <%= link_to t(:'hyrax.controls.about'), hyrax.about_path, :'data-no-turbolink'=>"true" %></li>
-        <li <%= 'class=active' if action_name == "help" %>>
+          <%= link_to t(:'hyrax.controls.about'), hyrax.about_path %></li>
+        <li <%= 'class=active' if current_page?(hyrax.help_path) %>>
           <%= link_to t(:'hyrax.controls.help'), hyrax.help_path %></li>
         <li <%= 'class=active' if current_page?(hyrax.contact_path) %>>
           <%= link_to t(:'hyrax.controls.contact'), hyrax.contact_path %></li>
