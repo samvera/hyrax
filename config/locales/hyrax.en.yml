@@ -52,7 +52,7 @@ en:
           permission_update_notices:
             new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
             participants:       "The administrative set's participant rights have been updated"
-            visibility:         "The administrative set's visibilty settings have been updated."
+            visibility:         "The administrative set's visibility settings have been updated."
             workflow:           "The administrative set's workflow has been updated."
           tabs:
             description:        "Description"
