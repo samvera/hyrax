@@ -191,6 +191,22 @@ The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Ma
 * Setting up administrative users
 * Metadata customization
 
+## Toggling Features
+
+Some features in Hyrax can be flipped on and off from either the Administrative
+Dashboard or via a YAML configuration file at `config/features.yml`. An example
+of the YAML file is below:
+
+```yaml
+assign_admin_set:
+  enabled: "false"
+proxy_deposit:
+  enabled: "false"
+```
+
+If both options exist, whichever option is set from the Administrative Dashboard
+will take precedence.
+
 # License
 
 Hyrax is available under [the Apache 2.0 license](LICENSE.md).

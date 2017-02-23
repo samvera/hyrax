@@ -59,6 +59,11 @@ module Hyrax
       @fits_message_length ||= 5
     end
 
+    attr_writer :feature_config_path
+    def feature_config_path
+      @feature_config_path ||= Rails.root.join('config', 'features.yml')
+    end
+
     attr_accessor :temp_file_base, :enable_local_ingest,
                   :analytics, :analytic_start_date
 

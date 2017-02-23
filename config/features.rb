@@ -2,6 +2,7 @@ Flipflop.configure do
   # Strategies will be used in the order listed here.
   strategy :cookie
   strategy :active_record, class: Hyrax::Feature
+  strategy Hyrax::Strategies::YamlStrategy, config: Hyrax.config.feature_config_path
   strategy :default
 
   feature :proxy_deposit,
