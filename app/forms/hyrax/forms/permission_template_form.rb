@@ -24,17 +24,13 @@ module Hyrax
         @workflow_id || active_workflow.id
       end
 
-      def visibility
-        Widgets::AdminSetVisibility.new
+      def visibility_options
+        Widgets::AdminSetVisibility.new.options
       end
 
-      delegate :options, to: :visibility, prefix: :visibility
-
-      def embargo
-        Widgets::AdminSetEmbargoPeriod.new
+      def embargo_options
+        Widgets::AdminSetEmbargoPeriod.new.options
       end
-
-      delegate :options, to: :embargo, prefix: :embargo
 
       def initialize(model)
         super(model)
