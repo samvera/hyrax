@@ -33,25 +33,16 @@ module Hyrax
       end
 
       # Creates the default AdminSet and an associated PermissionTemplate with workflow and activates the default.
-      #
-      # rubocop:disable Lint/HandleExceptions
       def create_default_admin_set
-        # Wrapping in a transaction, leveraging the fact that database entries can be transactional.
-        # If we first create the admin set then step through the Hyrax::PermissionTemplate
-        Hyrax::PermissionTemplate.transaction do
-          Sipity::Workflow.transaction do
-            Hyrax::PermissionTemplate.create!(admin_set_id: AdminSet::DEFAULT_ID) do |permission_template|
-              Hyrax::Workflow::WorkflowImporter.load_workflow_for(permission_template: permission_template)
-              Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
-            end
-            AdminSet.create!(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set'])
-          end
+        default_admin_set = AdminSet.new(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set'])
+        begin
+          Hyrax::AdminSetCreateService.call(default_admin_set, user)
+        rescue ActiveFedora::IllegalOperation
+          # It is possible that another thread created the AdminSet just before this method
+          # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
+          # ignore the error.
+          Rails.logger.debug("AdminSet ID=#{default_admin_set.id} may or may not have been created due to threading issues.")
         end
-      rescue ActiveFedora::IllegalOperation
-        # It is possible that another thread created the AdminSet just before this method
-        # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
-        # ignore the error.
       end
-    # rubocop:enable Lint/HandleExceptions
   end
 end

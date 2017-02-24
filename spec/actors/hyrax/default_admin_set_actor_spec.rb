@@ -27,9 +27,8 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
 
       it "creates the default AdminSet with a PermissionTemplate and an ActiveWorkflow then calls the next actor with the default admin set id" do
         expect(next_actor).to receive(:create).with(admin_set_id: default_id).and_return(true)
-        expect { actor.create(attributes) }.to change { AdminSet.count }.by(1)
-          .and change { Hyrax::PermissionTemplate.count }.by(1)
-          .and change { Sipity::Workflow.where(active: true).count }.by(1)
+        expect(Hyrax::AdminSetCreateService).to receive(:call).with(kind_of(AdminSet), depositor)
+        actor.create(attributes)
       end
     end
 
@@ -44,12 +43,10 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
   end
 
   describe "#create_default_admin_set" do
-    let(:actor) { described_class.new(double, double, double) }
+    let(:actor) { described_class.new(double, double, next_actor) }
     context "when another thread has already created the admin set" do
-      before do
-        AdminSet.create!(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set'])
-      end
       it "doesn't raise an error" do
+        expect(Hyrax::AdminSetCreateService).to receive(:call).and_raise(ActiveFedora::IllegalOperation)
         expect { actor.send(:create_default_admin_set) }.not_to raise_error
       end
     end
