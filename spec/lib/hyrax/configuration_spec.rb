@@ -11,6 +11,11 @@ describe Hyrax::Configuration do
   it { is_expected.to delegate_method(:registered_role?).to(:role_registry) }
   it { is_expected.to delegate_method(:persist_registered_roles!).to(:role_registry) }
 
+  describe '#default_active_workflow_name' do
+    subject { described_class.new.default_active_workflow_name }
+    it { is_expected.to eq('default') }
+  end
+
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:libreoffice_path) }

@@ -25,10 +25,11 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
       let(:attributes) { { admin_set_id: '' } }
       let(:default_id) { AdminSet::DEFAULT_ID }
 
-      it "creates the default AdminSet with a PermissionTemplate and calls the next actor with the default admin set id" do
+      it "creates the default AdminSet with a PermissionTemplate and an ActiveWorkflow then calls the next actor with the default admin set id" do
         expect(next_actor).to receive(:create).with(admin_set_id: default_id).and_return(true)
         expect { actor.create(attributes) }.to change { AdminSet.count }.by(1)
           .and change { Hyrax::PermissionTemplate.count }.by(1)
+          .and change { Sipity::Workflow.where(active: true).count }.by(1)
       end
     end
 
