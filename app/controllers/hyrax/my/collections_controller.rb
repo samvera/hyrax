@@ -6,6 +6,10 @@ module Hyrax
       end
 
       def index
+        add_breadcrumb t(:'hyrax.controls.home'), root_path
+        add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.dashboard_path
+        add_breadcrumb t(:'hyrax.admin.sidebar.collections'), hyrax.dashboard_collections_path
+
         super
         @selected_tab = 'collections'
       end

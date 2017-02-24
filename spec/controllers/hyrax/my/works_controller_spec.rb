@@ -4,34 +4,34 @@ describe Hyrax::My::WorksController, type: :controller do
 
   before { sign_in user }
 
-  context "with multiple pages of works" do
-    before { 3.times { create(:work, user: user) } }
-    it "paginates" do
+  describe "#index" do
+    let(:response) { instance_double(Blacklight::Solr::Response, response: { 'numFound' => 3 }) }
+    let(:doc_list) { [double(id: 123), double(id: 456)] }
+    let(:my_collection) { instance_double(SolrDocument) }
+    let(:collection_service) { instance_double(Hyrax::CollectionsService) }
+    before do
+      allow(Hyrax::CollectionsService).to receive(:new).and_return(collection_service)
+    end
+    it "shows search results and breadcrumbs" do
+      expect(controller).to receive(:search_results).with(ActionController::Parameters).and_return([response, doc_list])
+      expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Works', dashboard_works_path(locale: 'en'))
+      expect(collection_service).to receive(:search_results).with(:edit).and_return([my_collection])
       get :index, params: { per_page: 2 }
       expect(assigns[:document_list].length).to eq 2
-      get :index, params: { per_page: 2, page: 2 }
-      expect(assigns[:document_list].length).to be >= 1
+      expect(assigns[:user_collections]).to contain_exactly(my_collection)
     end
   end
 
-  context 'with different types of records' do
-    let(:someone_else) { create(:user) }
+  describe "#search_builder_class" do
+    subject { controller.search_builder_class }
+    it { is_expected.to eq Hyrax::MyWorksSearchBuilder }
+  end
 
-    let!(:my_collection)    { create(:public_collection, user: user) }
-    let!(:other_collection) { create(:public_collection) }
-    let!(:my_work)          { create(:work, user: user) }
-    let!(:shared_work)      { create(:work, edit_users: [user.user_key], user: someone_else) }
-    let!(:unrelated_work)   { create(:public_work, user: someone_else) }
-    let!(:my_file)          { create(:file_set, user: user) }
-    let!(:wrong_type)       { ActiveFedora::Base.create! }
-
-    it 'shows only the correct records' do
-      get :index
-      expect(response).to be_successful
-      expect(response).to render_template :index
-      expect(assigns[:document_list].map(&:id)).to contain_exactly(my_work.id)
-      expect(assigns[:user_collections].map(&:id)).to contain_exactly(my_collection.id)
-    end
+  describe "#collections_service" do
+    subject { controller.send(:collections_service) }
+    it { is_expected.to be_an_instance_of Hyrax::CollectionsService }
   end
 
   context "when add_files_to_collection is provided" do
