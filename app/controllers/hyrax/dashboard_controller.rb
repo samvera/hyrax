@@ -1,7 +1,7 @@
 module Hyrax
   class DashboardController < ApplicationController
     include Blacklight::Base
-    layout 'admin'
+    layout 'dashboard'
     before_action :authenticate_user!
 
     def show

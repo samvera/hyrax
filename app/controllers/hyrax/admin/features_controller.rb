@@ -1,7 +1,7 @@
 module Hyrax
   module Admin
     class FeaturesController < Flipflop::FeaturesController
-      layout 'admin'
+      layout 'dashboard'
 
       before_action do
         authorize! :manage, Hyrax::Feature

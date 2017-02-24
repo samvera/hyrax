@@ -3,7 +3,7 @@ module Hyrax
     module StatsBehavior
       extend ActiveSupport::Concern
       included do
-        layout 'admin'
+        layout 'dashboard'
       end
 
       def show

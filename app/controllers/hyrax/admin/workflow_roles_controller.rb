@@ -2,7 +2,7 @@ module Hyrax
   module Admin
     class WorkflowRolesController < ApplicationController
       before_action :require_permissions
-      layout 'admin'
+      layout 'dashboard'
 
       def index
         add_breadcrumb t(:'hyrax.controls.home'), root_path

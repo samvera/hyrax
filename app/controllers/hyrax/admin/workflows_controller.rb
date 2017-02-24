@@ -2,7 +2,7 @@ module Hyrax
   # Presents a list of works in workflow
   class Admin::WorkflowsController < ApplicationController
     before_action :ensure_admin!
-    layout 'admin'
+    layout 'dashboard'
 
     def index
       add_breadcrumb t(:'hyrax.controls.home'), root_path
