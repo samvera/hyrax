@@ -19,19 +19,37 @@ module Sipity
       let!(:permission_template) { create(:permission_template) }
       let!(:other_permission_template) { create(:permission_template) }
       let!(:active_workflow) { create(:workflow, active: true, permission_template_id: permission_template.id) }
+      it 'raises an exception if you do not pass a workflow_id nor workflow_name' do
+        expect do
+          described_class.activate!(permission_template: other_permission_template)
+        end.to raise_error(RuntimeError)
+      end
       it 'raises an exception on a mismatch' do
         expect do
           described_class.activate!(permission_template: other_permission_template, workflow_id: active_workflow.id)
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
-      it 'toggles current active workflows for the permission_template' do
-        active_workflow_wrong_template = create(:workflow, active: true, permission_template_id: other_permission_template.id)
-        inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
+      context 'with :workflow_id keyword' do
+        it 'toggles current active workflows for the permission_template' do
+          active_workflow_wrong_template = create(:workflow, active: true, permission_template_id: other_permission_template.id)
+          inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
 
-        described_class.activate!(permission_template: permission_template, workflow_id: inactive_workflow)
-        expect(inactive_workflow.reload).to be_active
-        expect(active_workflow.reload).not_to be_active
-        expect(active_workflow_wrong_template.reload).to be_active
+          described_class.activate!(permission_template: permission_template, workflow_id: inactive_workflow)
+          expect(inactive_workflow.reload).to be_active
+          expect(active_workflow.reload).not_to be_active
+          expect(active_workflow_wrong_template.reload).to be_active
+        end
+      end
+      context 'with :workflow_name keyword' do
+        it 'toggles current active workflows for the permission_template' do
+          active_workflow_wrong_template = create(:workflow, active: true, permission_template_id: other_permission_template.id)
+          inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
+
+          described_class.activate!(permission_template: permission_template, workflow_name: inactive_workflow.name)
+          expect(inactive_workflow.reload).to be_active
+          expect(active_workflow.reload).not_to be_active
+          expect(active_workflow_wrong_template.reload).to be_active
+        end
       end
     end
 
