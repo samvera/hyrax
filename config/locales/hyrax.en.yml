@@ -551,11 +551,7 @@ en:
         my: "My Collections"
         new: "New Collection"
       dashboard:
-        highlights: "Highlights"
         menu: "Dashboard"
-        my: "My Dashboard"
-        shares: "Shares"
-        transfers: "Transfers"
       language_switch: "Switch language"
       notifications: "Notifications"
       profile:

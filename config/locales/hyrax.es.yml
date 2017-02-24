@@ -550,11 +550,7 @@ es:
         my: "Mis Colecciones"
         new: "Nueva Colección"
       dashboard:
-        highlights: "Aspectos destacados"
         menu: "Panel de Control"
-        my: "Mi Panel de Control"
-        shares: "Compartido"
-        transfers: "Transferencias"
       language_switch: "Cambiar idioma"
       notifications: "Notificaciones"
       profile:
