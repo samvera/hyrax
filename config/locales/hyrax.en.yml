@@ -159,14 +159,19 @@ en:
           subtitle:         New user signups
           title:            User Activity
       sidebar:
-        admin_sets:      "Administrative Sets"
-        settings:        "Settings"
-        statistics:      "Statistics"
-        tasks:           "Tasks"
-        users:           "Manage Users"
-        workflow:        "Workflows"
-        workflow_review: "Review Submissions"
-        workflow_roles:  "Roles"
+        activity:           "Activity"
+        admin_sets:         "Administrative Sets"
+        collections:        "Collections"
+        configuration:      "Configuration"
+        repository_objects: "Repository Objects"
+        settings:           "Settings"
+        statistics:         "Statistics"
+        tasks:              "Tasks"
+        users:              "Manage Users"
+        workflow:           "Workflows"
+        workflow_review:    "Review Submissions"
+        workflow_roles:     "Roles"
+        works:              "Works"
       stats:
         deposited_form:
           end_label: "end [defaults to now]"

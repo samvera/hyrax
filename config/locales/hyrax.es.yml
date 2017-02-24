@@ -158,14 +158,19 @@ es:
           subtitle:         Nuevas inscripciones de usuarios
           title:            Actividad del usuario
       sidebar:
-        admin_sets:      "Conjuntos Administrativos"
-        settings:        "Ajustes"
-        statistics:      "Estadísticas"
-        tasks:           'Tareas'
-        users:           "Usarios"
-        workflow:        "Flujos de Trabajo"
-        workflow_review: "Revise Ofertas"
-        workflow_roles:  "Roles"
+        activity:           "Actividad"
+        admin_sets:         "Conjuntos Administrativos"
+        collections:        "Colecciones"
+        configuration:      "Configuración"
+        repository_objects: "Objetos del repositorio"
+        settings:           "Ajustes"
+        statistics:         "Estadísticas"
+        tasks:              'Tareas'
+        users:              "Usarios"
+        workflow:           "Flujos de Trabajo"
+        workflow_review:    "Revise Ofertas"
+        workflow_roles:     "Roles"
+        works:              "Trabajos"
       stats:
         deposited_form:
           end_label: "Finalizando [por defecto a ahora]"
