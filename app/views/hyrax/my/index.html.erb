@@ -9,30 +9,35 @@
   <%= render partial: 'scripts', formats: [:js] %>
 <% end %>
 
-<h1 class="sr-only">My Works, Collections, Highlights, and <%= t('hyrax.dashboard.my.shares') %></h1>
-<ul class="nav nav-tabs" id="my_nav" role="navigation">
-  <span class="sr-only">You are currently listing your <%= @selected_tab.pluralize %> .  You have <%= @response.docs.count %> <%= @selected_tab.pluralize(@response.docs.count)%> </span>
-  <li class="<%= "active" if @selected_tab == 'works' %>">
-    <%= link_to t('hyrax.dashboard.my.works'), hyrax.dashboard_works_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == 'collections' %>">
-    <%= link_to t('hyrax.dashboard.my.collections'), hyrax.dashboard_collections_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == 'highlighted' %>">
-    <%= link_to t('hyrax.dashboard.my.highlights'), hyrax.dashboard_highlights_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == 'shared' %>">
-    <%= link_to t('hyrax.dashboard.my.shares'), hyrax.dashboard_shares_path %>
-  </li>
-</ul>
-
-<%= render 'search_header' %>
-
-<h2 class="sr-only"><%= @selected_tab.capitalize %> listing</h2>
-<%= render partial: 'document_list' %>
-
-<% content_for :sidebar do %>
-  <%= render 'facets', current_tab: @selected_tab %>
+<% content_for :page_header do %>
+  <h1><span class="fa fa-file"></span> <%= t("hyrax.dashboard.my.#{@selected_tab}") %><h1>
 <% end %>
 
-<%= render 'results_pagination' %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default tabs">
+      <ul class="nav nav-tabs" id="my_nav" role="navigation">
+        <span class="sr-only">You are currently listing your <%= @selected_tab.pluralize %> .  You have <%= @response.docs.count %> <%= @selected_tab.pluralize(@response.docs.count)%> </span>
+        <li class="<%= "active" if @selected_tab == 'works' %>">
+          <%= link_to t('hyrax.dashboard.my.works'), hyrax.dashboard_works_path %>
+        </li>
+        <li class="<%= "active" if @selected_tab == 'collections' %>">
+          <%= link_to t('hyrax.dashboard.my.collections'), hyrax.dashboard_collections_path %>
+        </li>
+        <li class="<%= "active" if @selected_tab == 'highlighted' %>">
+          <%= link_to t('hyrax.dashboard.my.highlighted'), hyrax.dashboard_highlights_path %>
+        </li>
+        <li class="<%= "active" if @selected_tab == 'shared' %>">
+          <%= link_to t('hyrax.dashboard.my.shared'), hyrax.dashboard_shares_path %>
+        </li>
+      </ul>
+      <div class="panel-body">
+        <%= render 'search_header', current_tab: @selected_tab %>
+        <h2 class="sr-only"><%= @selected_tab.capitalize %> listing</h2>
+        <%= render 'document_list' %>
+
+        <%= render 'results_pagination' %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController, :no_clean do
         get :index
         expect(response).to be_success
         expect(assigns[:presenter]).to be_kind_of Hyrax::Admin::WorkflowRolePresenter
-        expect(response).to render_template('admin')
+        expect(response).to render_template('dashboard')
       end
     end
 

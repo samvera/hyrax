@@ -1,9 +1,9 @@
-<ul class="facet-values list-unstyled">
-  <% paginator = facet_paginator(facet_field, display_facet) %>
-  <%= render_facet_limit_list paginator, field_name %>
-
-  <% unless paginator.last_page? || params[:action] == "facet" %>
-    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»',
-       search_facet_path(id: field_name), class: "more_facets_link" %></li>
-  <% end %>
-</ul>
+  <ul class="dropdown-menu facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
+    <% paginator = facet_paginator(facet_field, display_facet) %>
+    <%= render_facet_limit_list paginator, field_name %>
+    <% unless paginator.last_page? || params[:action] == "facet" %>
+      <li role="separator" class="divider"></li>
+      <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + ' »',
+         search_facet_path(id: field_name), class: "more_facets_link" %></li>
+    <% end %>
+  </ul>

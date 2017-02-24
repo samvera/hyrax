@@ -133,38 +133,6 @@ describe 'collection', type: :feature do
     end
   end
 
-  describe 'collection sorting' do
-    before do
-      collection1 # create the collections by referencing them
-      sleep(1) # make sure the timestamps aren't equal
-      collection2
-      sleep(1)
-      collection1.title = ['changed']
-      collection1.save
-      # collection 1 is now earlier when sorting by create date but later
-      # when sorting by modified date
-
-      sign_in user
-      visit '/dashboard/collections'
-    end
-
-    it "allows changing sort order" do
-      find(:xpath, "//select[@id='sort']/option[contains(., 'date modified')][contains(@value, 'asc')]") \
-        .select_option
-      click_button('Refresh')
-      expect(page).to have_css("#document_#{collection1.id}")
-      expect(page).to have_css("#document_#{collection2.id}")
-      expect(page.body.index("id=\"document_#{collection1.id}")).to be > page.body.index("id=\"document_#{collection2.id}")
-
-      find(:xpath, "//select[@id='sort']/option[contains(., 'date modified')][contains(@value, 'desc')]") \
-        .select_option
-      click_button('Refresh')
-      expect(page).to have_css("#document_#{collection1.id}")
-      expect(page).to have_css("#document_#{collection2.id}")
-      expect(page.body.index("id=\"document_#{collection1.id}")).to be < page.body.index("id=\"document_#{collection2.id}")
-    end
-  end
-
   describe 'add works to collection' do
     before do
       collection1 # create collections by referencing them

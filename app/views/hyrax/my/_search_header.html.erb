@@ -1,5 +1,31 @@
 <%= render 'did_you_mean' %>
 
 <%= render 'constraints' %>
+<%= render 'facets', current_tab: current_tab %>
 
-<%= render 'sort_and_per_page' %>
+<div class="row">
+  <div class="col-sm-5 col-md-6">
+    <%= render 'sort_and_per_page' %>
+  </div>
+  <div class="col-sm-7 col-md-6">
+    <%= render 'catalog/search_form' %>
+  </div>
+</div>
+
+<div class="batch-info">
+  <div>
+    <%= render 'hyrax/collections/form_for_select_collection', user_collections: @user_collections %>
+  </div>
+
+  <div class="batch-toggle">
+    <% session[:batch_edit_state] = "on" %>
+    <div class="button_to-inline">
+      <%= button_to "Edit Selected", hyrax.edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary hidden submits-batches", data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
+    </div>
+    <% if on_my_works? %>
+      <%= batch_delete %>
+      <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
+          data: { toggle: "modal", target: "#collection-list-container" } %>
+    <% end %>
+  </div>
+</div>

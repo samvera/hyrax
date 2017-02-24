@@ -14,6 +14,10 @@ es:
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+        facet:
+          admin_set_sim: "Conjunto administrativo"
+          suppressed_bsi: "Estadio"
+          resource_type_sim: "Tipo de recurso"
   errors:
     messages:
       carrierwave_download_error: "No se pudo descargar la imagen."
@@ -364,18 +368,17 @@ es:
           users:          "Users:"
         collections:  "Mis Colecciones"
         facet_label:
-          collections:  "Filtrar tus colecciones"
-          files:        "Filtrar tus archivos"
-          highlighted: "Filtrar tus aspectos destacados"
-          shared:      "Filtrar tus archivos compartidos"
-          works:       "Filtrar tus trabajos"
+          collections:  "Filtrar colecciones:"
+          highlighted: "Filtrar aspectos destacados:"
+          shared:      "Filtrar archivos compartidos:"
+          works:       "Filtrar trabajos:"
         heading:
           action:         "Acción"
           date_uploaded:  "Fecha de carga"
           title:          "Título"
           visibility:     "Visibilidad"
-        highlights:   "Mis aspectos destacados"
-        shares:       "Trabajos compartidos conmigo"
+        highlighted:  "Mis aspectos destacados"
+        shared:       "Trabajos compartidos conmigo"
         sr:
           batch_checkbox:   "Marque para agregar a una colección o editar la lista"
           check_all_label:  "Seleccione todos los archivos para ser agregados o editados  a la colección"

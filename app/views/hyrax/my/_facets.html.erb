@@ -1,18 +1,7 @@
 <% # main container for facets/limits menu -%>
 <% if has_facet_values?  %>
-<div id="facets" class="panel facets sidenav">
-
-  <div class="top-panel-heading panel-heading">
-    <button type="button" class="facets-toggle" data-toggle="collapse" data-target="#facet-panel-collapse">
-      <span class="sr-only">Toggle facets</span>
-      <span class="fa fa-bars"></span>
-    </button>
-
-    <h3><%= t("hyrax.dashboard.my.facet_label.#{current_tab}") %></h3>
-  </div>
-
-  <div id="facet-panel-collapse" class="collapse panel-group">
+  <div class="list-filters" role="group">
+    <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.#{current_tab}") %></span>
     <%= render_facet_partials %>
   </div>
-</div>
 <% end %>

@@ -35,18 +35,15 @@ RSpec.describe "Browse Dashboard", type: :feature do
     expect(page).to have_content("Fake Wav File")
 
     # Browse facets
-    click_link "Subject"
-    click_link "more Subjects"
-    click_link "consectetur"
+    click_button "Status"
+    click_link "Published"
 
     within("#document_#{mp3_work.id}") do
       expect(page).to have_link("Display all details of Test Document MP3",
                                 href: hyrax_generic_work_path(mp3_work, locale: 'en'))
     end
-    click_link("Remove constraint Subject: consectetur")
+    click_link("Remove constraint Status: Published")
 
-    # Refresh the page
-    click_button "Refresh"
     within("#document_#{dissertation.id}") do
       click_button("Select an action")
       expect(page).to have_content("Edit Work")
