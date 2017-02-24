@@ -12,8 +12,8 @@ module Hyrax::Controller
     rescue_from Blacklight::Exceptions::InvalidSolrID, with: :not_found_response
   end
 
-  # Override Devise method to redirect to dashboard after signing in
-  def after_sign_in_path_for(_resource)
+  # Provide a place for Devise to send the user to after signing in
+  def user_root_path
     hyrax.dashboard_index_path
   end
 
