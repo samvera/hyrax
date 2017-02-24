@@ -88,8 +88,14 @@ describe CurationConcerns::Actors::GenericWorkActor do
           )
         end
         it "attaches the parent" do
+          allow(curation_concern).to receive(:depositor).and_return(parent.depositor)
           expect(subject.create(attributes)).to be true
           expect(curation_concern.in_works).to eq [parent]
+        end
+        it "does not attach the parent" do
+          allow(curation_concern).to receive(:depositor).and_return("blahblahblah")
+          expect(subject.create(attributes)).to be false
+          expect(curation_concern.in_works).to eq []
         end
       end
 
@@ -204,6 +210,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
         old_parent.save!
       end
       it "attaches the parent" do
+        allow(curation_concern).to receive(:depositor).and_return(parent.depositor)
         expect(subject.update(attributes)).to be true
         expect(curation_concern.in_works).to eq [parent]
 
@@ -224,6 +231,7 @@ describe CurationConcerns::Actors::GenericWorkActor do
         old_parent.save!
       end
       it "removes the old parent" do
+        allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
         expect(subject.update(attributes)).to be true
         expect(curation_concern.in_works).to eq []
         expect(old_parent.reload.members).to eq []

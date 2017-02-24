@@ -64,5 +64,19 @@ feature 'Creating a new child Work', :workflow do
 
       expect(curation_concern.reload.in_works_ids.length).to eq 2
     end
+
+    context "with a parent that doesn't belong to this user" do
+      let(:new_user) { create(:user) }
+      let(:new_parent) { create(:generic_work, user: new_user) }
+      it "fails to update" do
+        visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
+        first("input#generic_work_in_works_ids", visible: false).set new_parent.id
+        first("input#parent_id", visible: false).set new_parent.id
+        click_on "Update Generic work"
+
+        expect(new_parent.reload.ordered_members.to_a.length).to eq 0
+        expect(page).to have_content "Works can only be related to each other if they were deposited by the same user."
+      end
+    end
   end
 end
