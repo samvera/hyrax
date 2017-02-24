@@ -44,7 +44,7 @@
                   <h3><%= t('.visibility.title') %></h3>
                   <p><%= t('.visibility.description') %></p>
                   <%# List each option in a <div class='radio'> tag %>
-                  <%= f.collection_radio_buttons :visibility, f.object.visibility_options, :first, :last, item_wrapper_tag: :div, item_wrapper_class: 'radio' do |b| %>
+                  <%= f.collection_radio_buttons :visibility, f.object.visibility_options, :first, :last, item_wrapper_tag: :div, item_wrapper_class: 'radio', checked: f.object[:visibility] do |b| %>
                     <%# NOTE: Bug in simple_form causes nested labels: https://github.com/plataformatec/simple_form/issues/1190 This block is a workaround. %>
                     <% b.radio_button + b.text %>
                   <% end %>
