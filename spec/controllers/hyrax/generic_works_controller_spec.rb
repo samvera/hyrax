@@ -51,7 +51,7 @@ describe Hyrax::GenericWorksController do
 
         it "sets breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Your Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
@@ -326,7 +326,7 @@ describe Hyrax::GenericWorksController do
 
         it "sets breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Your Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(work.to_s, Rails.application.routes.url_helpers.hyrax_generic_work_path(work, locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.works.edit.breadcrumb"), String)
           get :edit, params: { id: work }
@@ -442,7 +442,7 @@ describe Hyrax::GenericWorksController do
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
-      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
@@ -454,7 +454,7 @@ describe Hyrax::GenericWorksController do
       it 'deletes the work and updates the parent collection' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(parent_collection.reload.members).to eq []
       end
     end

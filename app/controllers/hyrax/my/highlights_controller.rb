@@ -7,7 +7,6 @@ module Hyrax
 
       def index
         super
-        @selected_tab = 'highlighted'
       end
 
       protected

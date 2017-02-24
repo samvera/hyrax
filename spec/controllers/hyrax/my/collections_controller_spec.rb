@@ -13,7 +13,7 @@ describe Hyrax::My::CollectionsController, type: :controller do
 
         expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Collections', dashboard_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path(locale: 'en'))
 
         get :index, params: { per_page: 2 }
         expect(assigns[:document_list].length).to eq 2
@@ -23,7 +23,7 @@ describe Hyrax::My::CollectionsController, type: :controller do
 
   describe "#search_facet_path" do
     subject { controller.send(:search_facet_path, id: 'keyword_sim') }
-    it { is_expected.to eq "/dashboard/collections/facet/keyword_sim?locale=en" }
+    it { is_expected.to eq "/dashboard/my/collections/facet/keyword_sim?locale=en" }
   end
 
   describe "#search_builder_class" do

@@ -42,7 +42,7 @@ describe 'collection', type: :feature do
     end
 
     it "attaches the works", :js do
-      visit '/dashboard/works'
+      visit '/dashboard/my/works'
       first('input#check_all').click
       click_button "Add to Collection" # opens the modal
       # since there is only one collection, it's not necessary to choose a radio button
@@ -59,7 +59,7 @@ describe 'collection', type: :feature do
     let!(:collection) { create(:public_collection, user: user) }
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "deletes a collection" do
@@ -80,7 +80,7 @@ describe 'collection', type: :feature do
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "has creation date for collections" do
@@ -164,7 +164,7 @@ describe 'collection', type: :feature do
 
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "edits and update collection metadata" do
@@ -240,7 +240,7 @@ describe 'collection', type: :feature do
     let(:collection) { create(:named_collection, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
         click_link("Display all details of collection title")

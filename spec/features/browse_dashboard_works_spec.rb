@@ -20,7 +20,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
 
     sign_in user
     create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore))
-    visit "/dashboard/works"
+    visit "/dashboard/my/works"
   end
 
   it "lets the user search and display their files" do
@@ -37,7 +37,6 @@ RSpec.describe "Browse Dashboard", type: :feature do
     # Browse facets
     click_button "Status"
     click_link "Published"
-
     within("#document_#{mp3_work.id}") do
       expect(page).to have_link("Display all details of Test Document MP3",
                                 href: hyrax_generic_work_path(mp3_work, locale: 'en'))
@@ -47,14 +46,6 @@ RSpec.describe "Browse Dashboard", type: :feature do
     within("#document_#{dissertation.id}") do
       click_button("Select an action")
       expect(page).to have_content("Edit Work")
-    end
-
-    # View other tabs
-    ["My Collections", "My Highlights", "Works Shared with Me"].each do |tab|
-      within("#my_nav") do
-        click_link(tab)
-      end
-      expect(page).to have_content(tab)
     end
   end
 

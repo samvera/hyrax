@@ -335,14 +335,17 @@ es:
       terms:            "Términos de Uso"
     dashboard:
       additional_notifications: "ver todas las notificaciones"
+      all:
+        collections:            "Todos los Colleccións"
+        works:                  "Todos los Trabajos"
       authorize_proxies:        "Autorizar Proxies"
       create_work:              "Crear Trabajo"
       collections:
-        collection:         "Collección"
-        subtitle:           "Actividad reciente de la colección"
-        title:              "Colleccións"
-        works:              "Trabajos"
-        files:              "Archivos"
+        collection:             "Collección"
+        subtitle:               "Actividad reciente de la colección"
+        title:                  "Colleccións"
+        works:                  "Trabajos"
+        files:                  "Archivos"
       current_proxies:          "Proxies actuales"
       heading_actions:
         close:                  "Cerrar"
@@ -366,9 +369,9 @@ es:
           edit_access:    "Editar Acceso:"
           groups:         "Grupos:"
           users:          "Users:"
-        collections:  "Mis Colecciones"
+        collections:  "Tus Colecciones"
         facet_label:
-          collections:  "Filtrar colecciones:"
+          collections: "Filtrar colecciones:"
           highlighted: "Filtrar aspectos destacados:"
           shared:      "Filtrar archivos compartidos:"
           works:       "Filtrar trabajos:"
@@ -386,7 +389,7 @@ es:
           listing:          "Enlistar los items que has depositado"
           press_to:         "Presionar para"
           show_label:       "Ver todos los detalles de "
-        works:        "Mis Trabajos"
+        works:        "Tus Trabajos"
       no_activity:              "El Usuario no tiene actividad reciente"
       no_notifications:         "El Usuario no tiene notificaciones"
       no_transfer_requests:     "No ha recibido ninguna petición de transferencia"

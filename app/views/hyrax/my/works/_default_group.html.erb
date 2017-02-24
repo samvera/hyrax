@@ -1,0 +1,23 @@
+<table class="table table-striped">
+  <caption class="sr-only"><%= t("hyrax.dashboard.my.sr.listing") %> <%= application_name %></caption>
+  <% unless params[:display_type] == 'list' %>
+    <thead>
+    <tr>
+      <th><label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
+      <th><%= t("hyrax.dashboard.my.heading.title") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.action") %></th>
+    </tr>
+    </thead>
+  <% end %>
+  <tbody>
+  <% docs.each_with_index do |document, counter| %>
+    <% if document.collection? %>
+      <%= render 'hyrax/my/_index_partials/list_collections', document: document, counter: counter %>
+    <% else %>
+      <%= render 'hyrax/my/_index_partials/list_works', document: document, counter: counter, presenter: Hyrax::WorkShowPresenter.new(document, current_ability) %>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>

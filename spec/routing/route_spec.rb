@@ -77,12 +77,20 @@ describe 'Routes', :no_clean, type: :routing do
       expect(get: '/dashboard/activity').to route_to(controller: 'hyrax/dashboard', action: 'activity')
     end
 
-    it "routes to my works tab" do
-      expect(get: '/dashboard/works').to route_to(controller: 'hyrax/my/works', action: 'index')
+    it "routes to all works" do
+      expect(get: '/dashboard/works').to route_to(controller: 'hyrax/dashboard/works', action: 'index')
     end
 
-    it "routes to my collections tab" do
-      expect(get: '/dashboard/collections').to route_to(controller: 'hyrax/my/collections', action: 'index')
+    it "routes to all collections" do
+      expect(get: '/dashboard/collections').to route_to(controller: 'hyrax/dashboard/collections', action: 'index')
+    end
+
+    it "routes to my works" do
+      expect(get: '/dashboard/my/works').to route_to(controller: 'hyrax/my/works', action: 'index')
+    end
+
+    it "routes to my collections" do
+      expect(get: '/dashboard/my/collections').to route_to(controller: 'hyrax/my/collections', action: 'index')
     end
 
     it "routes to my highlighted tab" do

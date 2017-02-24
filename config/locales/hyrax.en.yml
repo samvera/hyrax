@@ -336,14 +336,17 @@ en:
       terms:            "Terms of Use"
     dashboard:
       additional_notifications: "See all notifications"
+      all:
+        collections:            "All Collections"
+        works:                  "All Works"
       authorize_proxies:        "Authorize Proxies"
       create_work:              "Create Work"
       collections:
-        collection:         "Collection"
-        subtitle:           "Recent collection activity"
-        title:              "Collections"
-        works:              "Works"
-        files:              "Files"
+        collection:             "Collection"
+        subtitle:               "Recent collection activity"
+        title:                  "Collections"
+        works:                  "Works"
+        files:                  "Files"
       current_proxies:          "Current Proxies"
       heading_actions:
         close:                  "Close"
@@ -367,7 +370,7 @@ en:
           edit_access:    "Edit Access:"
           groups:         "Groups:"
           users:          "Users:"
-        collections:  "My Collections"
+        collections:  "Your Collections"
         facet_label:
           collections: "Filter collections:"
           highlighted: "Filter highlights:"
@@ -387,7 +390,7 @@ en:
           listing:          "Listing of items you have deposited in"
           press_to:         "Press to"
           show_label:       "Display all details of"
-        works:        "My Works"
+        works:        "Your Works"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"

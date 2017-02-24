@@ -46,7 +46,7 @@ describe Hyrax::BatchUploadsController do
                 expected_shared_params,
                 Hyrax::BatchCreateOperation)
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(flash[:notice]).to be_html_safe
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -69,7 +69,7 @@ describe Hyrax::BatchUploadsController do
                 expected_shared_params,
                 a_kind_of(Hyrax::BatchCreateOperation))
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(flash[:notice]).to include("Your files are being processed")
       end
     end

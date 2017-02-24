@@ -119,17 +119,23 @@ Hyrax::Engine.routes.draw do
     end
   end
 
+  namespace :dashboard do
+    resources :works, only: :index
+    resources :collections, only: :index
+  end
+
   # Routes for user's works, collections, highlights and shares
   # Preserves existing behavior by maintaining paths to /dashboard
   # Routes actions to the various My controllers
   scope :dashboard do
-    get '/works',             controller: 'my/works', action: :index, as: 'dashboard_works'
-    get '/works/page/:page',  controller: 'my/works', action: :index
-    get '/works/facet/:id',   controller: 'my/works', action: :facet, as: 'dashboard_works_facet'
-
-    get '/collections',             controller: 'my/collections', action: :index, as: 'dashboard_collections'
-    get '/collections/page/:page',  controller: 'my/collections', action: :index
-    get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_collections_facet'
+    namespace :my do
+      resources :works, only: :index
+      get '/works/page/:page', controller: 'works', action: :index
+      get 'works/facet/:id', controller: 'works', action: :facet, as: 'dashboard_works_facet'
+      resources :collections, only: :index
+      get '/collections/page/:page',  controller: 'collections', action: :index
+      get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_collections_facet'
+    end
 
     get '/highlights',            controller: 'my/highlights', action: :index, as: 'dashboard_highlights'
     get '/highlights/page/:page', controller: 'my/highlights', action: :index

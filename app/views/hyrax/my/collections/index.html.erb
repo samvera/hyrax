@@ -1,4 +1,4 @@
-<% provide :page_title, t("hyrax.admin.sidebar.works") %>
+<% provide :page_title, t("hyrax.admin.sidebar.collections") %>
 
 <% content_for :head do %>
   <%= rss_feed_link_tag route_set: hyrax %>
@@ -10,7 +10,7 @@
 <% end %>
 
 <% content_for :page_header do %>
-  <h1><span class="fa fa-file"></span> <%= t("hyrax.admin.sidebar.works") %><h1>
+  <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %><h1>
 <% end %>
 
 <div class="row">
@@ -19,7 +19,7 @@
       <%= render 'tabs' if can?(:read, :admin_dashboard) %>
       <div class="panel-body">
         <%= render 'search_header' %>
-        <h2 class="sr-only">Works listing</h2>
+        <h2 class="sr-only">Collections listing</h2>
         <%= render 'document_list' %>
 
         <%= render 'results_pagination' %>

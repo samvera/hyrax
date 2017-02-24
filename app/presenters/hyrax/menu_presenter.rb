@@ -16,8 +16,9 @@ module Hyrax
       controller.instance_of? Hyrax::Admin::WorkflowRolesController
     end
 
-    def nav_link(href, **link_options)
-      list_options = current_page?(href) ? { class: 'active' } : {}
+    def nav_link(href, also_active_for: nil, **link_options)
+      active_urls = [href, also_active_for].compact
+      list_options = active_urls.any? { |url| current_page?(url) } ? { class: 'active' } : {}
       content_tag(:li, list_options) do
         link_to(href, link_options) do
           yield

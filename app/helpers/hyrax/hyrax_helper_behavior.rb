@@ -240,15 +240,15 @@ module Hyrax
       def search_action_for_dashboard
         case params[:controller]
         when "hyrax/my/works"
-          hyrax.dashboard_works_path
+          hyrax.my_works_path
         when "hyrax/my/collections"
-          hyrax.dashboard_collections_path
+          hyrax.my_collections_path
         when "hyrax/my/shares"
           hyrax.dashboard_shares_path
         when "hyrax/my/highlights"
           hyrax.dashboard_highlights_path
         else
-          hyrax.dashboard_works_path
+          hyrax.my_works_path
         end
       end
 

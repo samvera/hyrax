@@ -1,4 +1,4 @@
-describe "The Dashboard", type: :feature do
+describe "The dashboard as viewed by a regular user", type: :feature do
   before do
     sign_in
   end
@@ -14,8 +14,6 @@ describe "The Dashboard", type: :feature do
       end
       expect(page).to have_content "My Works"
       expect(page).to have_content "My Collections"
-      expect(page).to have_content "My Highlights"
-      expect(page).to have_content "Works Shared with Me"
     end
   end
 end

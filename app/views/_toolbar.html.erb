@@ -2,11 +2,11 @@
   <ul class="nav navbar-nav">
     <% if current_ability.can_create_any_work? %>
       <li class="dropdown">
-        <%= link_to hyrax.dashboard_works_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+        <%= link_to hyrax.my_works_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
           <span class="fa fa-cube"></span> <%= t("hyrax.toolbar.works.menu") %> <span class="caret"></span>
         <% end %>
         <ul class="dropdown-menu">
-          <li><%= link_to t("hyrax.toolbar.works.my"), hyrax.dashboard_works_path %></li>
+          <li><%= link_to t("hyrax.toolbar.works.my"), hyrax.my_works_path %></li>
           <% if create_work_presenter.many? %>
             <% # launch the type selector modal %>
             <li>
@@ -47,11 +47,11 @@
 
     <% if can?(:create, Collection) %>
       <li class="dropdown">
-        <%= link_to hyrax.dashboard_collections_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
+        <%= link_to hyrax.my_collections_path, role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false } do %>
           <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %>"></span> <%= t("hyrax.toolbar.collections.menu") %> <span class="caret"></span>
         <% end %>
         <ul class="dropdown-menu">
-          <li><%= link_to t("hyrax.toolbar.collections.my"), hyrax.dashboard_collections_path %></li>
+          <li><%= link_to t("hyrax.toolbar.collections.my"), hyrax.my_collections_path %></li>
           <li><%= link_to t("hyrax.toolbar.collections.new"), hyrax.new_collection_path %></li>
         </ul>
       </li>

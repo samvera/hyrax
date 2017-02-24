@@ -24,11 +24,11 @@
         <% if current_user %>
           <li>
             <%= link_to t("hyrax.search.form.option.my_works.label_long"), "#",
-                data: { "search-option" => hyrax.dashboard_works_path, "search-label" => t("hyrax.search.form.option.my_works.label_short") } %>
+                data: { "search-option" => hyrax.my_works_path, "search-label" => t("hyrax.search.form.option.my_works.label_short") } %>
           </li>
           <li>
             <%= link_to t("hyrax.search.form.option.my_collections.label_long"), "#",
-                data: { "search-option" => hyrax.dashboard_collections_path, "search-label" => t("hyrax.search.form.option.my_collections.label_short") } %>
+                data: { "search-option" => hyrax.my_collections_path, "search-label" => t("hyrax.search.form.option.my_collections.label_short") } %>
           </li>
           <li>
             <%= link_to t("hyrax.search.form.option.my_shares.label_long"), "#",

@@ -7,7 +7,7 @@ describe 'Batch management of works', type: :feature do
 
   before do
     sign_in(current_user)
-    visit '/dashboard/works'
+    visit '/dashboard/my/works'
   end
 
   describe 'editing and viewing multiple works' do
@@ -53,7 +53,7 @@ describe 'Batch management of works', type: :feature do
       expect(work2.resource_type).to eq ['Book']
 
       # Reload the form and verify
-      visit '/dashboard/works'
+      visit '/dashboard/my/works'
       check 'check_all'
       click_on 'batch-edit'
       expect(page).to have_content('Batch Edit Descriptions')
@@ -87,7 +87,7 @@ describe 'Batch management of works', type: :feature do
   describe 'Deleting multiple works', js: true do
     context 'Selecting all my works to delete' do
       before do
-        visit '/dashboard/works'
+        visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Delete Selected'
       end

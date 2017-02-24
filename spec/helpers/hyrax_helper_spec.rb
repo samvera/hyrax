@@ -181,21 +181,21 @@ describe HyraxHelper, :no_clean, type: :helper do
     context "when the user is on the dashboard page" do
       it "defaults to My Works" do
         allow(helper).to receive(:params).and_return(controller: "hyrax/dashboard")
-        expect(helper.search_form_action).to eq(hyrax.dashboard_works_path)
+        expect(helper.search_form_action).to eq(hyrax.my_works_path)
       end
     end
 
     context "when the user is on the my works page" do
       it "returns the my dashboard works path" do
         allow(helper).to receive(:params).and_return(controller: "hyrax/my/works")
-        expect(helper.search_form_action).to eq(hyrax.dashboard_works_path)
+        expect(helper.search_form_action).to eq(hyrax.my_works_path)
       end
     end
 
     context "when the user is on the my collections page" do
       it "returns the my dashboard collections path" do
         allow(helper).to receive(:params).and_return(controller: "hyrax/my/collections")
-        expect(helper.search_form_action).to eq(hyrax.dashboard_collections_path)
+        expect(helper.search_form_action).to eq(hyrax.my_collections_path)
       end
     end
 

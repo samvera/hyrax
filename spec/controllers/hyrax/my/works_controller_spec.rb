@@ -16,7 +16,7 @@ describe Hyrax::My::WorksController, type: :controller do
       expect(controller).to receive(:search_results).with(ActionController::Parameters).and_return([response, doc_list])
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with('Works', dashboard_works_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Works', my_works_path(locale: 'en'))
       expect(collection_service).to receive(:search_results).with(:edit).and_return([my_collection])
       get :index, params: { per_page: 2 }
       expect(assigns[:document_list].length).to eq 2
@@ -43,6 +43,6 @@ describe Hyrax::My::WorksController, type: :controller do
 
   describe "#search_facet_path" do
     subject { controller.send(:search_facet_path, id: 'keyword_sim') }
-    it { is_expected.to eq "/dashboard/works/facet/keyword_sim?locale=en" }
+    it { is_expected.to eq "/dashboard/my/works/facet/keyword_sim?locale=en" }
   end
 end

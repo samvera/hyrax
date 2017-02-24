@@ -225,7 +225,7 @@ describe Hyrax::CollectionsController do
 
         it "sets breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -247,7 +247,7 @@ describe Hyrax::CollectionsController do
       it "redirects to My Collections" do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+        expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
       end
 
@@ -300,7 +300,7 @@ describe Hyrax::CollectionsController do
 
       it "sets breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('My Collections', Hyrax::Engine.routes.url_helpers.dashboard_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id, locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful

@@ -86,7 +86,8 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
   end
 
   def transfer_ownership_of_work(work, new_owner)
-    go_to_dashboard_works
+    visit '/dashboard/my/works'
+
     db_item_actions_toggle(work).click
     click_link 'Transfer Ownership of Work'
     expect(page).to have_content "Select a user to transfer #{work.title.first} to, add optional comments and then press transfer."

@@ -30,11 +30,13 @@
     <% end %>
   <% end %>
 
-  <%= menu.nav_link(hyrax.dashboard_collections_path) do %>
+  <%= menu.nav_link(hyrax.my_collections_path,
+                    also_active_for: hyrax.dashboard_collections_path) do %>
     <span class="fa fa-folder-open"></span> <%= t('hyrax.admin.sidebar.collections') %>
   <% end %>
 
-  <%= menu.nav_link(hyrax.dashboard_works_path) do %>
+  <%= menu.nav_link(hyrax.my_works_path,
+                    also_active_for: hyrax.dashboard_works_path) do %>
     <span class="fa fa-file"></span> <%= t('hyrax.admin.sidebar.works') %>
   <% end %>
 
