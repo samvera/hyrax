@@ -52,7 +52,11 @@ en:
           permission_update_notices:
             new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
             participants:       "The administrative set's participant rights have been updated"
+<<<<<<< HEAD
             visibility:         "The administrative set's release & visibilty settings have been updated."
+=======
+            visibility:         "The administrative set's visibility settings have been updated."
+>>>>>>> master
             workflow:           "The administrative set's workflow has been updated."
           permission_update_errors:
             varies:             "Release option 'Varies' requires a date or embargo period."
@@ -626,19 +630,15 @@ en:
     visibility:
       authenticated:
         class: "label-info"
-        label_html: <span class="label label-info">%{institution}</span>
         note_html: Restrict access to only users and/or groups from %{institution}
       embargo:
         class: "label-warning"
-        label_html: <span class="label label-warning">Embargo</span>
         text: "Embargo"
       lease:
         class: "label-warning"
-        label_html: <span class="label label-warning">Lease</span>
         text: "Lease"
       open:
         class: "label-success"
-        label_html: <span class="label label-success">Open Access</span>
         note_html:  Everyone. Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
         text: "Open Access"
         warning_html: "<p>
@@ -656,7 +656,6 @@ en:
                       </p>"
       open_title_attr: "Change the visibility of this resource"
       private:
-        label_html: <span class="label label-danger">Private</span>
         note_html: Only users and/or groups that have been given specific access in the "Share With" section.
         text: "Private"
       private_title_attr: "Change the visibility of this resource"

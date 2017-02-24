@@ -3,6 +3,14 @@ require 'spec_helper'
 describe Hyrax::Configuration do
   subject { described_class.new }
 
+  describe '#register_roles' do
+    it 'yields a RoleRegistry' do
+      expect { |b| subject.register_roles(&b) }.to yield_with_args(kind_of(Hyrax::RoleRegistry))
+    end
+  end
+  it { is_expected.to delegate_method(:registered_role?).to(:role_registry) }
+  it { is_expected.to delegate_method(:persist_registered_roles!).to(:role_registry) }
+
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:libreoffice_path) }
@@ -27,4 +35,5 @@ describe Hyrax::Configuration do
   it { is_expected.to respond_to(:contact_email) }
   it { is_expected.to respond_to(:subject_prefix) }
   it { is_expected.to respond_to(:model_to_create) }
+  it { is_expected.to respond_to(:feature_config_path) }
 end

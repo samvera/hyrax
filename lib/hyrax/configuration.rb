@@ -1,4 +1,5 @@
 require 'hyrax/callbacks'
+require 'hyrax/role_registry'
 
 module Hyrax
   class Configuration
@@ -6,6 +7,28 @@ module Hyrax
 
     def initialize
       @registered_concerns = []
+      @role_registry = Hyrax::RoleRegistry.new
+    end
+
+    # @return [Hyrax::RoleRegistry]
+    attr_reader :role_registry
+    private :role_registry
+    delegate :registered_role?, :persist_registered_roles!, to: :role_registry
+
+    # @api public
+    #
+    # Exposes a means to register application critical roles
+    #
+    # @example
+    #   Hyrax.config.register_roles do |registry|
+    #     registry.add(name: 'captaining', description: 'Grants captain duties')
+    #   end
+    #
+    # @yield [Hyrax::RoleRegistry]
+    # @return [TrueClass]
+    def register_roles
+      yield(@role_registry)
+      true
     end
 
     # Path on the local file system where derivatives will be stored
@@ -34,6 +57,11 @@ module Hyrax
     attr_writer :fits_message_length
     def fits_message_length
       @fits_message_length ||= 5
+    end
+
+    attr_writer :feature_config_path
+    def feature_config_path
+      @feature_config_path ||= Rails.root.join('config', 'features.yml')
     end
 
     attr_accessor :temp_file_base, :enable_local_ingest,

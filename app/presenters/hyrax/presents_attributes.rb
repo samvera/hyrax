@@ -21,7 +21,7 @@ module Hyrax
     end
 
     def permission_badge
-      permission_badge_class.new(solr_document).render
+      permission_badge_class.new(solr_document.visibility).render
     end
 
     def permission_badge_class

@@ -1,5 +1,5 @@
 # Use this file to reference specific commits of gems.
-gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'
+gem 'flipflop', git: 'https://github.com/voormedia/flipflop.git', ref: '590f2ae'
 
 group :development do
   gem 'better_errors'

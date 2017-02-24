@@ -143,13 +143,12 @@ describe 'Routes', :no_clean, type: :routing do
     it "routes to about" do
       expect(get: '/about').to route_to(controller: 'hyrax/pages', action: 'show', id: 'about_page')
     end
+    it "routes to help" do
+      expect(get: '/help').to route_to(controller: 'hyrax/pages', action: 'show', id: 'help_page')
+    end
   end
 
   describe "Static Pages" do
-    it "routes to help" do
-      expect(get: '/help').to route_to(controller: 'hyrax/static', action: 'help')
-    end
-
     it "routes to terms" do
       expect(get: '/terms').to route_to(controller: 'hyrax/static', action: 'terms')
     end

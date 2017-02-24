@@ -17,6 +17,8 @@
 
 <!-- application js -->
 <%= javascript_include_tag 'application' %>
+<%= tinymce_assets if can? :update, ContentBlock %>
+
 
 <!-- Google Analytics -->
 <%= render partial: '/ga', formats: [:html] %>

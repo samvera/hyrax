@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe Hyrax::PermissionsController do
   let(:user) { create(:user) }
-  before { sign_in user }
+  before do
+    sign_in user
+    allow(ActiveFedora::Base).to receive(:find).with(work.id).and_return(work)
+  end
 
   describe '#confirm' do
-    let(:work) { create(:generic_work, user: user) }
+    let(:work) { build(:generic_work, user: user, id: 'abc') }
 
     it 'draws the page' do
       get :confirm, params: { id: work }

@@ -1,5 +1,5 @@
 module Hyrax
-  # Shows the about page
+  # Shows the about and help page
   class PagesController < ApplicationController
     helper Hyrax::ContentBlockHelper
 

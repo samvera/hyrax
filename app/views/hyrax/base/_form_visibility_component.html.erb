@@ -9,24 +9,24 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, data: { 'target': '#collapsePublic' }  %>
-            <%= t('hyrax.visibility.open.label_html') %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
             <%= t('hyrax.visibility.open.note_html', type: f.object.human_readable_type) %>
             <div class="collapse" id="collapsePublic">
-              <%= t('hyrax.visibility.open.warning_html', label: t('hyrax.visibility.open.label_html')) %>
+              <%= t('hyrax.visibility.open.warning_html', label: visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)) %>
             </div>
           </label>
         </li>
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
-            <%= t('hyrax.visibility.authenticated.label_html', institution: institution_name) %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) %>
             <%= t('hyrax.visibility.authenticated.note_html', institution: institution_name) %>
           </label>
         </li>
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, data: { 'target': '#collapseEmbargo' } %>
-            <%= t('hyrax.visibility.embargo.label_html') %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO) %>
             <div class="collapse" id="collapseEmbargo">
               <div class="form-inline">
                 <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
@@ -39,7 +39,7 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, data: { 'target': '#collapseLease' } %>
-            <%= t('hyrax.visibility.lease.label_html') %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE) %>
             <div class="collapse" id="collapseLease">
               <div class="form-inline">
                 <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
@@ -52,7 +52,7 @@
         <li class="radio">
           <label>
             <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
-            <%= t('hyrax.visibility.private.label_html') %>
+            <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
             <%= t('hyrax.visibility.private.note_html') %>
           </label>
         </li>

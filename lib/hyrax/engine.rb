@@ -20,6 +20,18 @@ module Hyrax
       #{config.root}/app/models/hyrax/pageview.rb
     )
 
+    config.after_initialize do
+      begin
+        Hyrax.config.persist_registered_roles!
+        Rails.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
+      rescue
+        message = "Hyrax::Engine.after_initialize - unable to persist registered roles.\n"
+        message += "It is expected during the application installation - during integration tests, rails install.\n"
+        message += "It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'"
+        Rails.logger.info(message)
+      end
+    end
+
     initializer 'requires' do
       require 'hydra/derivatives'
       require 'hyrax/name'
@@ -38,8 +50,8 @@ module Hyrax
     end
 
     initializer 'configure' do
-      # Set the path for the flipflop config:
-      Flipflop::Engine.config_file = Hyrax::Engine.root + "config/features.rb"
+      # Allow flipflop to load config/features.rb from the Hyrax gem:
+      Flipflop::FeatureLoader.current.append(self)
 
       Hyrax.config.tap do |c|
         Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path

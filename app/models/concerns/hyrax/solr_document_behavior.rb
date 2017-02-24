@@ -164,9 +164,13 @@ module Hyrax
     end
 
     def visibility
-      @visibility ||= if read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
+      @visibility ||= if embargo_release_date.present?
+                        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
+                      elsif lease_expiration_date.present?
+                        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
+                      elsif public?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-                      elsif read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
+                      elsif registered?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
                       else
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE

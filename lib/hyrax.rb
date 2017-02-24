@@ -31,6 +31,13 @@ module Hyrax
     autoload :Collections
   end
 
+  # @api public
+  #
+  # Exposes the Hyrax configuration
+  #
+  # @yield [Hyrax::Configuration] if a block is passed
+  # @return [Hyrax::Configuration]
+  # @see Hyrax::Configuration for configuration options
   def self.config(&block)
     @config ||= Hyrax::Configuration.new
 
