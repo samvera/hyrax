@@ -17,10 +17,10 @@ class AddPermissionTemplateToSipityWorkflow < ActiveRecord::Migration
           next unless workflow_id
           Sipity::Workflow.find(workflow_id).update(active: true)
         end
+        remove_column :permission_templates, :workflow_id
       end
     rescue
       # It's okay, we didn't have the column
     end
-    remove_column :permission_templates, :workflow_id
   end
 end
