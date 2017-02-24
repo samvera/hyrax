@@ -42,8 +42,8 @@ module Hyrax
         select_release_varies_option(model)
       end
 
-        # @return [Hash] { :content_tab (for confirmation message) , :updated (true/false), :error_code (for flash error lookup) }
-        def update(attributes)
+      # @return [Hash] { :content_tab (for confirmation message) , :updated (true/false), :error_code (for flash error lookup) }
+      def update(attributes)
         return_info = { content_tab: tab_to_update(attributes) }
         update_status = {}
         case return_info[:content_tab]
@@ -63,7 +63,7 @@ module Hyrax
         def tab_to_update(attributes)
           return "participants" if attributes[:access_grants_attributes].present?
           return "workflow" if attributes[:workflow_id].present?
-          return "visibility" if attributes.has_key?(:visibility)
+          return "visibility" if attributes.key?(:visibility)
         end
 
         # @return [Hash] { :updated } = true
@@ -209,7 +209,7 @@ module Hyrax
         # @return [Hash] { error_code: String, valid: true or false }
         def validate_visibility_combinations(attributes)
           # only the visibility tab has validations
-          return { valid: true } unless attributes.has_key?(:visibility)
+          return { valid: true } unless attributes.key?(:visibility)
 
           # if "save" without any selections
           return { error_code: "nothing", valid: false } if !attributes[:release_varies].present? && !attributes[:release_period] && !attributes[:release_date] && !attributes[:release_embargo]
