@@ -36,10 +36,10 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
 
       it "is successful" do
         expect(controller).to receive(:authorize!).with(:update, permission_template)
-        expect(form).to receive(:update).with(ActionController::Parameters.new(form_attributes).permit!)
+        expect(form).to receive(:update).with(ActionController::Parameters.new(form_attributes).permit!).and_return(updated: true, content_tab: 'participants')
         put :update, params: input_params
         expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(permission_template.admin_set_id, locale: 'en', anchor: 'participants'))
-        expect(flash[:notice]).to eq "The administrative set's participant rights have been updated"
+        expect(flash[:notice]).to eq(I18n.t('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
       end
     end
   end

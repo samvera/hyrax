@@ -38,13 +38,60 @@ module Hyrax
         select_release_varies_option(model)
       end
 
+      # @return [Hash] { :content_tab (for confirmation message) , :updated (true/false), :error_code (for flash error lookup) }
       def update(attributes)
-        update_admin_set(attributes)
-        update_permission_template(attributes)
-        grant_workflow_roles(attributes)
+        return_info = { content_tab: tab_to_update(attributes) }
+        update_status = {}
+        case return_info[:content_tab]
+        when "participants"
+          update_status = update_participants_options(attributes)
+        when "visibility"
+          update_status = update_visibility_options(attributes)
+        when "workflow"
+          update_status = update_workflow_options(attributes)
+        end
+        return_info.merge!(update_status)
       end
 
       private
+
+        # @return [String]
+        def tab_to_update(attributes)
+          return "participants" if attributes[:access_grants_attributes].present?
+          return "workflow" if attributes[:workflow_id].present?
+          return "visibility" if attributes.key?(:visibility)
+        end
+
+        # @return [Hash] { :updated } = true
+        def update_participants_options(attributes)
+          return_info = {}
+          update_admin_set(attributes)
+          update_permission_template(attributes)
+          return_info[:updated] = true
+          return_info
+        end
+
+        # @return [Hash] { :error_code - used for flash notice, :updated - true or false}
+        def update_visibility_options(attributes)
+          return_info = {}
+          validated_attributes = validate_visibility_combinations(attributes)
+          if validated_attributes[:valid] == true
+            update_permission_template(attributes)
+          else
+            return_info[:error_code] = validated_attributes[:error_code]
+          end
+          return_info[:updated] = validated_attributes[:valid]
+          return_info
+        end
+
+        # @return [Hash] { :updated } = true
+        def update_workflow_options(attributes)
+          return_info = {}
+          update_permission_template(attributes)
+          grant_workflow_roles(attributes)
+          return_info[:updated] = true
+          return_info
+        end
 
         def activate_workflow_from(attributes)
           new_active_workflow_id = attributes[:workflow_id] || attributes['workflow_id']
@@ -103,7 +150,6 @@ module Hyrax
         def grants_as_collection(attributes)
           return [] unless attributes[:access_grants_attributes]
           attributes_collection = attributes[:access_grants_attributes]
-
           if attributes_collection.respond_to?(:permitted?)
             attributes_collection = attributes_collection.to_h
           end
@@ -154,6 +200,34 @@ module Hyrax
 
           attributes
         end
+
+        # validate the hash of attributes used to update the visibility tab of the model
+        # @return [Hash] { error_code: String, valid: true or false }
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/PerceivedComplexity
+        def validate_visibility_combinations(attributes)
+          # only the visibility tab has validations
+          return { valid: true } unless attributes.key?(:visibility)
+
+          # if "save" without any selections
+          return { error_code: "nothing", valid: false } if !attributes[:release_varies].present? && !attributes[:release_period] && !attributes[:release_date] && !attributes[:release_embargo]
+
+          # if "varies" without sub-options (in this case, release_varies will be missing)
+          return { error_code: "varies", valid: false } if attributes[:release_period].blank? && attributes[:release_varies].blank?
+
+          # if "varies before" but date not selected
+          return { error_code: "no_date", valid: false } if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE && attributes[:release_date].blank?
+
+          # if "varies with embargo" but no embargo period
+          return { error_code: "no_embargo", valid: false } if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO && attributes[:release_embargo].blank?
+
+          # if "fixed" but date not selected
+          return { error_code: "no_date", valid: false } if attributes[:release_period] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED && attributes[:release_date].blank?
+
+          { valid: true }
+        end
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
     end
   end
 end
