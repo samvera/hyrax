@@ -13,8 +13,7 @@ describe 'collection', type: :feature do
     let(:description) { "Description for collection we are testing." }
 
     it "makes a new collection" do
-      visit '/dashboard'
-      first('#hydra-collection-add').click
+      click_link "New Collection"
       expect(page).to have_content 'Create New Collection'
       click_link('Additional fields')
 

@@ -1,5 +1,5 @@
 module Hyrax
-  class Admin::UsersController < AdminController
+  class Admin::UsersController < ApplicationController
     include Hyrax::Admin::UsersControllerBehavior
   end
 end

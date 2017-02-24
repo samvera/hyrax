@@ -14,30 +14,9 @@ describe '/_toolbar.html.erb', type: :view do
 
     it 'shows no toolbar links' do
       render
-      expect(rendered).not_to have_link 'Admin'
-      expect(rendered).not_to have_link 'Dashboard'
       expect(rendered).not_to have_link 'Works'
       expect(rendered).not_to have_link 'Collections'
     end
-  end
-
-  context 'with an admin user' do
-    before do
-      allow(view).to receive(:can?).with(:read, :admin_dashboard).and_return(true)
-    end
-
-    it 'shows the admin menu' do
-      render
-      expect(rendered).to have_link 'Admin', href: hyrax.admin_path
-    end
-  end
-
-  it 'has dashboard links' do
-    render
-    expect(rendered).to have_link 'My Dashboard', href: hyrax.dashboard_index_path
-    expect(rendered).to have_link 'Transfers', href: hyrax.transfers_path
-    expect(rendered).to have_link 'Highlights', href: hyrax.dashboard_highlights_path
-    expect(rendered).to have_link 'Shares', href: hyrax.dashboard_shares_path
   end
 
   describe "New Work link" do

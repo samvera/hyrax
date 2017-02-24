@@ -1,7 +1,7 @@
 describe Hyrax::DashboardController, type: :controller do
   context "with an unauthenticated user" do
     it "redirects to sign-in page" do
-      get :index
+      get :show
       expect(response).to be_redirect
       expect(flash[:alert]).to eq("You need to sign in or sign up before continuing.")
     end
@@ -15,11 +15,11 @@ describe Hyrax::DashboardController, type: :controller do
     end
 
     it "renders the dashboard with the user's info" do
-      get :index
+      get :show
       expect(response).to be_successful
-      expect(assigns(:user)).to eq(user)
       expect(assigns(:activity)).to be_empty
       expect(assigns(:notifications)).to be_truthy
+      expect(response).to render_template('show_user')
     end
 
     context 'with transfers' do
@@ -34,7 +34,7 @@ describe Hyrax::DashboardController, type: :controller do
         end
 
         it 'assigns an instance variable' do
-          get :index
+          get :show
           expect(response).to be_success
           expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
           expect(assigns[:incoming].first.work_id).to eq(incoming_work.id)
@@ -51,7 +51,7 @@ describe Hyrax::DashboardController, type: :controller do
         end
 
         it 'assigns an instance variable' do
-          get :index
+          get :show
           expect(response).to be_success
           expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
           expect(assigns[:outgoing].first.work_id).to eq(outgoing_work.id)
@@ -68,14 +68,27 @@ describe Hyrax::DashboardController, type: :controller do
       end
 
       it "gathers the user's recent activity within the default amount of time" do
-        get :index
+        get :show
         expect(assigns(:activity)).to eq activity
       end
+    end
+  end
 
-      it "returns results in JSON" do
-        get :activity
-        expect(response).to be_successful
-      end
+  context 'with an admin user' do
+    let(:service) { instance_double(Hyrax::AdminSetService, search_results_with_work_count: results) }
+    let(:results) { instance_double(Array) }
+    let(:user) { create(:admin) }
+
+    before do
+      sign_in user
+      allow(Hyrax::AdminSetService).to receive(:new).and_return(service)
+    end
+
+    it "is successful" do
+      get :show
+      expect(response).to be_success
+      expect(assigns[:admin_set_rows]).to eq results
+      expect(response).to render_template('show_admin')
     end
   end
 end

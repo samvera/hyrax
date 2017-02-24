@@ -138,26 +138,6 @@ en:
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
-      collections:
-        collection:         "Collection"
-        files:              "Files"
-        subtitle:           "Recent collection activity"
-        title:              "Collections"
-        works:              "Works"
-      show:
-        new_visitors:       "New Visitors"
-        registered_users:   "Registered users"
-        repository_growth:
-          subtitle:         Past 90 days
-          title:            Repository Growth
-        repository_objects:
-          subtitle:         Current Status
-          title:            Repository Objects
-        returning_visitors: "Returning Visitors"
-        total_visitors:     "Total Visitors"
-        user_activity:
-          subtitle:         New user signups
-          title:            User Activity
       sidebar:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
@@ -353,8 +333,13 @@ en:
     dashboard:
       additional_notifications: "See all notifications"
       authorize_proxies:        "Authorize Proxies"
-      create_collection:        "Create Collection"
       create_work:              "Create Work"
+      collections:
+        collection:         "Collection"
+        subtitle:           "Recent collection activity"
+        title:              "Collections"
+        works:              "Works"
+        files:              "Files"
       current_proxies:          "Current Proxies"
       heading_actions:
         close:                  "Close"
@@ -406,6 +391,20 @@ en:
       no_transfers:             "You haven't transferred any work"
       proxy_activity:           "Proxy Activity"
       proxy_user:               "Proxy User"
+      show_admin:
+        new_visitors:       "New Visitors"
+        registered_users:   "Registered users"
+        repository_growth:
+          title:            Repository Growth
+          subtitle:         Past 90 days
+        repository_objects:
+          title:            Repository Objects
+          subtitle:         Current Status
+        returning_visitors: "Returning Visitors"
+        total_visitors:     "Total Visitors"
+        user_activity:
+          title:            User Activity
+          subtitle:         New user signups
       stats:
         collections:        "Collections created"
         file_downloads:     "Download"
@@ -420,9 +419,7 @@ en:
       transfers_sent:           "Sent"
       user_activity:            "User Activity"
       user_notifications:       "User Notifications"
-      view_collections:         "View Collections"
       view_files:               "View Files"
-      view_works:               "View Works"
     deposit_agreement:  "Deposit Agreement"
     directory:
       suffix:           "@example.org"

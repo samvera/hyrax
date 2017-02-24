@@ -10,10 +10,11 @@ describe '/_user_util_links.html.erb', type: :view do
 
   let(:can_create_file) { true }
 
-  it 'has link to user profile' do
+  it 'has dropdown list of links' do
     render
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_link 'userX', href: '/users/userX'
+    expect(rendered).to have_link 'Dashboard', href: hyrax.dashboard_path
   end
 
   it 'shows the number of outstanding messages' do

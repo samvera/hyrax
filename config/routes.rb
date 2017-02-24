@@ -106,7 +106,8 @@ Hyrax::Engine.routes.draw do
   end
 
   # Dashboard page
-  resources :dashboard, only: :index do
+  resource :dashboard, controller: 'dashboard', only: [:show]
+  resources :dashboard, only: [] do
     collection do
       get 'activity', action: :activity, as: :dashboard_activity
       resources :transfers, only: [:index, :destroy] do
@@ -178,7 +179,6 @@ Hyrax::Engine.routes.draw do
 
   resources :admin_sets, controller: 'admin_sets'
 
-  resource :admin, controller: 'admin', only: [:show]
   namespace :admin do
     resources :admin_sets do
       resource :permission_template

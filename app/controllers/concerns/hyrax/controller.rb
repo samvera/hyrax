@@ -12,7 +12,7 @@ module Hyrax::Controller
 
   # Provide a place for Devise to send the user to after signing in
   def user_root_path
-    hyrax.dashboard_index_path
+    hyrax.dashboard_path
   end
 
   # A presenter for selecting a work type to create

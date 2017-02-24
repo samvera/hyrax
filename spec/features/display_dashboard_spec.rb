@@ -1,6 +1,6 @@
 describe "The Dashboard", type: :feature do
   before do
-    sign_in :user_with_fixtures
+    sign_in
   end
 
   context "upon sign-in" do
@@ -8,17 +8,10 @@ describe "The Dashboard", type: :feature do
       expect(page).to have_content "My Dashboard"
       expect(page).to have_content "User Activity"
       expect(page).to have_content "User Notifications"
-      expect(page).to have_content "Collections created"
-      expect(page).to have_content "Works created"
-    end
 
-    it "lets the user create collections" do
-      click_link "Create Collection"
-      expect(page).to have_content "Create New Collection"
-    end
-
-    it "lets the user view works" do
-      click_link "View Works"
+      within '.sidebar' do
+        click_link "Works"
+      end
       expect(page).to have_content "My Works"
       expect(page).to have_content "My Collections"
       expect(page).to have_content "My Highlights"

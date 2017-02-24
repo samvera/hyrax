@@ -137,26 +137,6 @@ es:
           confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header:           "Conjunto Administrativo"
           item_list_header: "Trabajos en este conjunto"
-      collections:
-        collection:         "Collección"
-        files:              "Archivos"
-        subtitle:           "Actividad reciente de la colección"
-        title:              "Colleccións"
-        works:              "Trabajos"
-      show:
-        new_visitors:       "Nuevos visitantes"
-        registered_users:   "Usuarios registrados"
-        repository_growth:
-          subtitle:         Pasados 90 días
-          title:            Crecimiento del Repositorio
-        repository_objects:
-          subtitle:         Estado Actual
-          title:            Objetos del Repositorio
-        returning_visitors: "Regresos de visitantes"
-        total_visitors:     "Total de visitantes"
-        user_activity:
-          subtitle:         Nuevas inscripciones de usuarios
-          title:            Actividad del usuario
       sidebar:
         activity:           "Actividad"
         admin_sets:         "Conjuntos Administrativos"
@@ -352,8 +332,13 @@ es:
     dashboard:
       additional_notifications: "ver todas las notificaciones"
       authorize_proxies:        "Autorizar Proxies"
-      create_collection:        "Crear Colección"
       create_work:              "Crear Trabajo"
+      collections:
+        collection:         "Collección"
+        subtitle:           "Actividad reciente de la colección"
+        title:              "Colleccións"
+        works:              "Trabajos"
+        files:              "Archivos"
       current_proxies:          "Proxies actuales"
       heading_actions:
         close:                  "Cerrar"
@@ -405,6 +390,20 @@ es:
       no_transfers:             "No has transferido ningún trabajo"
       proxy_activity:           "Actividad de Proxy"
       proxy_user:               "Usuario de Proxy"
+      show_admin:
+        new_visitors:       "Nuevos visitantes"
+        registered_users:   "Usuarios registrados"
+        repository_growth:
+          title:            Crecimiento del Repositorio
+          subtitle:         Pasados 90 días
+        repository_objects:
+          title:            Objetos del Repositorio
+          subtitle:         Estado Actual
+        returning_visitors: "Regresos de visitantes"
+        total_visitors:     "Total de visitantes"
+        user_activity:
+          title:            Actividad del usuario
+          subtitle:         Nuevas inscripciones de usuarios
       stats:
         collections:        "Colecciones creadas"
         file_downloads:     "Descargar"
@@ -419,9 +418,7 @@ es:
       transfers_sent:           "Enviado"
       user_activity:            "Actividad de usuario"
       user_notifications:       "Notificaciones de Usuario"
-      view_collections:         "Ver Colecciones"
       view_files:               "Ver Archivos"
-      view_works:               "Ver Trabajos"
     deposit_agreement:  "Aceptación del Depósito"
     directory:
       suffix:           "@ejemplo.org"

@@ -77,7 +77,7 @@ module Hyrax
         if params[:return_controller]
           redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
         else
-          redirect_to hyrax.dashboard_index_path
+          redirect_to hyrax.dashboard_path
         end
       end
   end

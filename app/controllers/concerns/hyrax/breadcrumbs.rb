@@ -11,7 +11,7 @@ module Hyrax
     end
 
     def default_trail
-      add_breadcrumb I18n.t('hyrax.dashboard.title'), hyrax.dashboard_index_path if user_signed_in?
+      add_breadcrumb I18n.t('hyrax.dashboard.title'), hyrax.dashboard_path if user_signed_in?
     end
 
     def trail_from_referer

@@ -70,7 +70,7 @@ describe 'Routes', :no_clean, type: :routing do
 
   describe 'Dashboard' do
     it "routes to dashboard" do
-      expect(get: '/dashboard').to route_to(controller: 'hyrax/dashboard', action: 'index')
+      expect(get: '/dashboard').to route_to(controller: 'hyrax/dashboard', action: 'show')
     end
 
     it "routes to dashboard activity" do

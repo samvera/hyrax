@@ -16,7 +16,7 @@ describe Hyrax::BatchEditsController, type: :controller do
     end
 
     it "is successful" do
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
       get :edit
       expect(response).to be_successful
@@ -48,7 +48,7 @@ describe Hyrax::BatchEditsController, type: :controller do
 
     it "is successful" do
       put :update, params: { update_type: "delete_all" }
-      expect(response).to redirect_to(dashboard_index_path(locale: 'en'))
+      expect(response).to redirect_to(dashboard_path(locale: 'en'))
       expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
       expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
     end

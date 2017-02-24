@@ -155,7 +155,7 @@ describe Hyrax::FileSetsController do
       end
 
       it "sets the breadcrumbs and versions presenter" do
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
         get :edit, params: { id: file_set }
@@ -333,7 +333,7 @@ describe Hyrax::FileSetsController do
       end
       context "without a referer" do
         it "shows me the file and set breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: file_set }
           expect(response).to be_successful
           expect(flash).to be_empty
@@ -359,7 +359,7 @@ describe Hyrax::FileSetsController do
         end
 
         it "shows me the breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))

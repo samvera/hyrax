@@ -24,9 +24,10 @@
   <% end %>
 
   <li class="h5"><%= t('hyrax.admin.sidebar.repository_objects') %></li>
-
-  <%= menu.nav_link(hyrax.admin_admin_sets_path) do %>
-    <span class="fa fa-sitemap"></span> <%= t('hyrax.admin.sidebar.admin_sets') %>
+  <% if can? :create, AdminSet %>
+    <%= menu.nav_link(hyrax.admin_admin_sets_path) do %>
+      <span class="fa fa-sitemap"></span> <%= t('hyrax.admin.sidebar.admin_sets') %>
+    <% end %>
   <% end %>
 
   <%= menu.nav_link(hyrax.dashboard_collections_path) do %>

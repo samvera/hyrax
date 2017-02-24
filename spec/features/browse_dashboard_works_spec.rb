@@ -19,20 +19,11 @@ RSpec.describe "Browse Dashboard", type: :feature do
            agent_id: user.user_key)
 
     sign_in user
-    user.trophies.create!(work_id: dissertation.id)
-    visit "/dashboard"
+    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore))
+    visit "/dashboard/works"
   end
 
   it "lets the user search and display their files" do
-    expect(page).to have_link "Create Collection"
-    expect(page).to have_link "Create Work"
-
-    # Search
-    fill_in "q", with: "PDF"
-    click_button "search-submit-header"
-    expect(page).to have_content("Fake PDF Title")
-
-    visit "/dashboard/works"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
     expect(page).to have_content("Fake PDF Title")
@@ -71,7 +62,6 @@ RSpec.describe "Browse Dashboard", type: :feature do
   end
 
   it "allows me to delete works in upload_sets", js: true do
-    visit "/dashboard/works"
     first('input#check_all').click
     expect do
       click_button('Delete Selected')
