@@ -207,6 +207,8 @@ module Hyrax
 
         # validate the hash of attributes used to update the visibility tab of the model
         # @return [Hash] { error_code: String, valid: true or false }
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/PerceivedComplexity
         def validate_visibility_combinations(attributes)
           # only the visibility tab has validations
           return { valid: true } unless attributes.key?(:visibility)
@@ -228,6 +230,8 @@ module Hyrax
 
           { valid: true }
         end
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
     end
   end
 end

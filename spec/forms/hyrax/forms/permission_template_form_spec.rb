@@ -25,11 +25,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     subject { form.update(input_params) }
     let(:today) { Time.zone.today }
 
-    it "calls grant_workflow_roles" do
-      expect(form).to receive(:grant_workflow_roles)
-      subject
-    end
-
     context "with a user manager" do
       let(:grant_attributes) do
         [ActionController::Parameters.new(agent_type: "user",
