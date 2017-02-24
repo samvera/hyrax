@@ -8,7 +8,22 @@ module Hyrax
     def initialize
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
+      @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
     end
+
+    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
+    private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
+
+    # @api public
+    # When an admin set is created, we need to activate a workflow.
+    # The :default_active_workflow_name is the name of the workflow we will activate.
+    #
+    # @return [String]
+    # @see Sipity::Workflow
+    # @see AdminSet
+    # @note The active workflow for an admin set can be changed at a later point.
+    # @note Changing this value after other AdminSet(s) are created does not alter the already created AdminSet(s)
+    attr_accessor :default_active_workflow_name
 
     # @return [Hyrax::RoleRegistry]
     attr_reader :role_registry

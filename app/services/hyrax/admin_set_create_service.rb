@@ -44,6 +44,7 @@ module Hyrax
 
       def create_workflows_for(permission_template:)
         workflow_importer.call(permission_template: permission_template)
+        Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
       end
 
       def default_workflow_importer

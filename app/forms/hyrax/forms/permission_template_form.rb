@@ -21,7 +21,7 @@ module Hyrax
       attr_writer :workflow_id
 
       def workflow_id
-        @workflow_id || active_workflow.id
+        @workflow_id || active_workflow.try(:id)
       end
 
       def visibility
