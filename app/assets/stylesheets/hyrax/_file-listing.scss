@@ -90,22 +90,6 @@ h4 .small {
   text-decoration: none;
 }
 
-.heading-tile {
-  border-right: 1px solid $gray-lighter;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: x-large;
-  font-weight: normal;
-  span {
-    display: block;
-  }
-}
-
-.heading-row {
-  border-bottom: 1px solid $gray-lighter;
-}
-
 input.batch_document_selector {
   margin: 10px 10px 2px 10px;
   padding: 0px;

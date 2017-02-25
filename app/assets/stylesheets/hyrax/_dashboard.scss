@@ -11,55 +11,6 @@
   }
 }
 
-.heading-row {
-  border: 0;
-}
-
-.heading-tile {
-  border: 0;
-  padding-top: .5em;
-  a:link,
-  a:visited {
-    color: $icon-link-color;
-    text-decoration: none;
-    transition-property: background-color, color;
-    transition-duration: .35s;
-    transition-timing-function: ease-out;
-  }
-
-  a:hover,
-  a:focus {
-    color: $icon-link-hover-color;
-    transition-property: background-color, color;
-    transition-duration: .35s;
-    transition-timing-function: ease-out;
-  }
-  .glyphicon {
-    background: $icon-background-color;
-    color: $icon-font-color;
-    display: block;
-    width: 2em;
-    height: 2em;
-    line-height: 1.75em;
-    margin: 0 auto;
-    border-radius: 50%;
-    border: 2px solid $icon-border-color;
-    overflow: hidden;
-    transition-property: background-color, color;
-    transition-duration: .35s;
-    transition-timing-function: ease-out;
-  }
-
-  &:hover .glyphicon {
-    background-color: $icon-background-color-hover;
-    border-color: $icon-border-color-hover;
-    color: $icon-font-color-hover;
-    transition-property: background-color, color;
-    transition-duration: .35s;
-    transition-timing-function: ease-out;
-  }
-}
-
 .panel-body h4 {
   font-size: $font-size-base;
 }

@@ -2,7 +2,6 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
   let(:user) { create(:user, display_name: "Charles Francis Xavier") }
   let(:ability) { instance_double("Ability") }
   before do
-    stub_template('hyrax/dashboard/_create_work_action.html.erb' => "Create Work Stub")
     allow(user).to receive(:title).and_return("Professor, Head")
     allow(user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
     allow(user).to receive(:telephone).and_return("814.865.8399")
