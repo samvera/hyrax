@@ -31,7 +31,7 @@
         </div>
         <% sidebar_class = container_class == 'container-fluid' ? 'col-lg-2 col-lg-pull-10 ' : '' %>
         <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 <%= sidebar_class %>sidebar"><%= yield :sidebar %></div>
-      <% else %>
+      <% else # no sidebar %>
         <div class="col-xs-12">
           <%= render '/flash_msg' %>
           <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
