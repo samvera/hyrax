@@ -6,9 +6,9 @@
 
 .main-header {
   margin-bottom: 30px;
-  margin-top: 20px;
-  padding-bottom: 9px;
-  border-bottom: 1px solid $gray-lighter;
+  h1 {
+    margin-top: 0;
+  }
 }
 
 .representative-media {
