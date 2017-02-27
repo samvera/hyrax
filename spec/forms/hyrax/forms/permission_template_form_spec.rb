@@ -226,86 +226,84 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:form) { described_class.new(permission_template) }
 
     context "validate all release option attribute combinations" do
-      def self.expect_attributes_to_be_valid(attributes = {})
-        it "will be valid? for #{attributes.inspect}" do
-          attributes = ActionController::Parameters.new(**attributes).permit!
-          expect(form.update(attributes)).to eq(content_tab: "visibility", updated: true)
+      let(:visibility) { '' } # default values
+      let(:release_date) { nil }
+      let(:release_period) { '' }
+      let(:release_varies) { nil }
+      let(:release_embargo) { nil }
+      let(:attributes) do
+        {
+          visibility: visibility,
+          release_date: release_date,
+          release_period: release_period,
+          release_varies: release_varies,
+          release_embargo: release_embargo
+        }
+      end
+      let(:ac_params) do
+        ActionController::Parameters.new(**attributes).permit!
+      end
+
+      RSpec.shared_examples 'valid attributes' do
+        it 'are accepted by #update' do
+          expect(form.update(ac_params)).to eq(content_tab: "visibility", updated: true)
         end
       end
 
-      def self.expect_attributes_not_to_be_valid(attributes = {})
-        it "will not be valid? for #{attributes.inspect}" do
-          attributes = ActionController::Parameters.new(**attributes).permit!
-          subject = form.update(attributes)
-          expect(subject).to include(content_tab: "visibility", updated: false)
-          expect(I18n.t(subject[:error_code], scope: 'hyrax.admin.admin_sets.form.permission_update_errors')).not_to include('translation missing')
+      RSpec.shared_examples 'invalid attributes' do
+        let(:response) { form.update(ac_params) }
+        it 'trigger error from #update' do
+          expect(response).to include(content_tab: "visibility", updated: false)
+          expect(I18n.t(response[:error_code], scope: 'hyrax.admin.admin_sets.form.permission_update_errors')).not_to include('translation missing')
         end
       end
 
-      # no delay
-      expect_attributes_to_be_valid(
-        visibility: '',
-        release_date: Time.zone.today,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
-        release_varies: nil,
-        release_embargo: nil
-      )
-      # varies, with date selected
-      expect_attributes_to_be_valid(
-        visibility: '',
-        release_date: Time.zone.today + 2.months,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
-        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
-        release_embargo: nil
-      )
-      # varies, with embargo selected
-      expect_attributes_to_be_valid(
-        visibility: '',
-        release_date: Time.zone.today + 2.years,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS,
-        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
-        release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS
-      )
-      # fixed, with date selected
-      expect_attributes_to_be_valid(
-        visibility: '',
-        release_date: Time.zone.today + 2.months,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
-        release_varies: nil,
-        release_embargo: nil
-      )
-      # varies, but no subsequent options
-      expect_attributes_not_to_be_valid(
-        visibility: '',
-        release_date: nil,
-        release_period: '',
-        release_varies: nil,
-        release_embargo: nil
-      )
-      # varies, with date option but no date
-      expect_attributes_not_to_be_valid(
-        visibility: '',
-        release_date: nil,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
-        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
-        release_embargo: nil
-      )
-      # varies, with embargo option but no period
-      expect_attributes_not_to_be_valid(
-        visibility: '',
-        release_date: nil,
-        release_period: '',
-        release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
-        release_embargo: nil
-      )
-      # fixed, with no date selected
-      expect_attributes_not_to_be_valid(
-        visibility: '',
-        release_date: nil,
-        release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
-        release_varies: nil,
-        release_embargo: nil
-      )
+      describe 'no delay' do
+        let(:release_date) { Time.zone.today }
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, with date selected' do
+        let(:release_date) { Time.zone.today + 2.months }
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, with embargo selected' do
+        let(:release_date) { Time.zone.today + 2.years }
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS }
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO }
+        let(:release_embargo) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'fixed, with date selected' do
+        let(:release_date) { Time.zone.today + 2.months }
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, but no subsequent options' do
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'varies, with date option but no date' do
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'varies, with embargo option but no period' do
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO }
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'fixed, with no date selected' do
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED }
+        it_behaves_like 'invalid attributes'
+      end
     end
   end
 
