@@ -1,6 +1,6 @@
 module Sufia
   module Workflow
-    class CompleteNotification < AbstractNotification
+    class DepositedNotification < AbstractNotification
       protected
 
         def subject

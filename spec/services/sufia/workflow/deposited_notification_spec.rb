@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Sufia::Workflow::CompleteNotification do
+RSpec.describe Sufia::Workflow::DepositedNotification do
   let(:approver) { create(:user) }
   let(:depositor) { create(:user) }
   let(:to_user) { create(:user) }
