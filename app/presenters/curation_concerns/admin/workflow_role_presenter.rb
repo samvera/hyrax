@@ -16,6 +16,10 @@ module CurationConcerns
           @agent = agent
         end
 
+        def responsibilities_present?
+          @agent.workflow_responsibilities.any?
+        end
+
         def responsibilities
           @agent.workflow_responsibilities.each do |responsibility|
             yield ResponsibilityPresenter.new(responsibility)

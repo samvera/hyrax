@@ -11,7 +11,7 @@
           <tr>
             <td><%= user.user_key %></td>
             <% agent_presenter = @presenter.presenter_for(user) %>
-            <% if agent_presenter %>
+            <% if agent_presenter && agent_presenter.responsibilities_present? %>
               <td>
                 <ul>
                   <% agent_presenter.responsibilities do |responsibility_presenter| %>
@@ -42,4 +42,3 @@
     </div>
   </div>
 </div>
-
