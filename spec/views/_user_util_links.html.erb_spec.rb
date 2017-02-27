@@ -13,7 +13,7 @@ describe '/_user_util_links.html.erb', type: :view do
   it 'has dropdown list of links' do
     render
     page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_link 'userX', href: '/users/userX'
+    expect(page).to have_link 'userX', href: hyrax.dashboard_profile_path('userX')
     expect(rendered).to have_link 'Dashboard', href: hyrax.dashboard_path
   end
 

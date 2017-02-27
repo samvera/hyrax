@@ -1,10 +1,10 @@
 <tr>
-  <td><%= link_to hyrax.profile_path(user) do %>
+  <td><%= link_to hyrax.user_path(user) do %>
         <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
       <% end %>
   </td>
-   <td><%= link_to user.name, hyrax.profile_path(user) %></td>
-   <td><%= link_to user.user_key, hyrax.profile_path(user) %></td>
+   <td><%= link_to user.name, hyrax.user_path(user) %></td>
+   <td><%= link_to user.user_key, hyrax.user_path(user) %></td>
    <td><%= user.department %></td>
    <td><%= number_of_works(user) %></td>
 </tr>

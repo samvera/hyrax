@@ -3,7 +3,7 @@ describe "User Profile", type: :feature do
     sign_in user
   end
   let(:user) { create(:user) }
-  let(:profile_path) { Hyrax::Engine.routes.url_helpers.profile_path(user, locale: 'en') }
+  let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user, locale: 'en') }
 
   context 'when clicking all users' do
     # TODO: Move this to a view test
@@ -41,7 +41,7 @@ describe "User Profile", type: :feature do
 
   context 'user profile' do
     let!(:dewey) { create(:user, display_name: 'Melvil Dewey') }
-    let(:dewey_path) { Hyrax::Engine.routes.url_helpers.profile_path(dewey, locale: 'en') }
+    let(:dewey_path) { Hyrax::Engine.routes.url_helpers.user_path(dewey, locale: 'en') }
 
     it 'is searchable' do
       visit profile_path

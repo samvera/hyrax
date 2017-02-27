@@ -85,6 +85,7 @@ module Hyrax
 
       def user_abilities
         can [:edit, :update, :toggle_trophy], ::User, id: current_user.id
+        can :show, ::User
       end
 
       def featured_work_abilities

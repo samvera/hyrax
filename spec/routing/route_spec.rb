@@ -112,13 +112,15 @@ describe 'Routes', :no_clean, type: :routing do
     it 'routes to user profile' do
       expect(get: '/users/bob135').to route_to(controller: 'hyrax/users', action: 'show', id: 'bob135')
     end
+  end
 
+  describe 'Profile' do
     it "routes to edit profile" do
-      expect(get: '/users/bob135/edit').to route_to(controller: 'hyrax/users', action: 'edit', id: 'bob135')
+      expect(get: '/dashboard/profiles/bob135/edit').to route_to(controller: 'hyrax/dashboard/profiles', action: 'edit', id: 'bob135')
     end
 
     it "routes to update profile" do
-      expect(put: '/users/bob135').to route_to(controller: 'hyrax/users', action: 'update', id: 'bob135')
+      expect(put: '/dashboard/profiles/bob135').to route_to(controller: 'hyrax/dashboard/profiles', action: 'update', id: 'bob135')
     end
   end
 

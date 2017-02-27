@@ -1,4 +1,6 @@
-<%= form_for @user, url: hyrax.profile_path(@user.to_param), html: {multipart: true, class: 'form-horizontal' } do |f| %>
+<%= form_for @user,
+             url: hyrax.dashboard_profile_path(@user.to_param),
+             html: { multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="form-group">
     <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> Change picture'.html_safe, class: "col-xs-4 control-label" %>
     <div class="col-xs-8">

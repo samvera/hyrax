@@ -99,9 +99,7 @@ Hyrax::Engine.routes.draw do
   end
 
   # User profile
-  resources :users, only: [:index, :show, :edit, :update], as: :profiles
-
-  resources :users, only: [] do
+  resources :users, only: [:index, :show] do
     resources :operations, only: [:index, :show], controller: 'operations'
   end
 
@@ -122,6 +120,7 @@ Hyrax::Engine.routes.draw do
   namespace :dashboard do
     resources :works, only: :index
     resources :collections, only: :index
+    resources :profiles, only: [:show, :edit, :update]
   end
 
   # Routes for user's works, collections, highlights and shares

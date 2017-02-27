@@ -111,7 +111,7 @@ describe Hyrax::API::ZoteroController, type: :controller do
 
       specify do
         expect(subject).to have_http_status(302)
-        expect(subject).to redirect_to(routes.url_helpers.edit_profile_path(user, locale: 'en'))
+        expect(subject).to redirect_to(routes.url_helpers.edit_dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to eq 'Malformed request from Zotero'
       end
     end
@@ -124,7 +124,7 @@ describe Hyrax::API::ZoteroController, type: :controller do
 
       specify do
         expect(subject).to have_http_status(302)
-        expect(subject).to redirect_to(routes.url_helpers.edit_profile_path(user, locale: 'en'))
+        expect(subject).to redirect_to(routes.url_helpers.edit_dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to eq 'You have not yet connected to Zotero'
       end
     end
@@ -152,7 +152,7 @@ describe Hyrax::API::ZoteroController, type: :controller do
       specify do
         expect(subject).to have_http_status(302)
         expect(Hyrax::Arkivo::CreateSubscriptionJob).to have_received(:perform_later)
-        expect(subject).to redirect_to(routes.url_helpers.profile_path(user, locale: 'en'))
+        expect(subject).to redirect_to(routes.url_helpers.dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to be_nil
         expect(flash[:notice]).to eq 'Successfully connected to Zotero!'
         expect(user.reload.zotero_userid).to eq zuserid

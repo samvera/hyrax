@@ -153,6 +153,7 @@ es:
         collections:        "Colecciones"
         configuration:      "Configuración"
         repository_objects: "Objetos del repositorio"
+        profile:            "Perfil"
         settings:           "Ajustes"
         statistics:         "Estadísticas"
         tasks:              'Tareas'
@@ -603,7 +604,6 @@ es:
         connected: "Conectado!"
         label: "Perfil de Zotero"
         unlinked: "Vincular con Zotero"
-    view_profile:       "Ver Perfil"
     visibility:
       authenticated:
         class: "label-info"

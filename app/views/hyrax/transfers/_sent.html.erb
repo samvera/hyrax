@@ -21,7 +21,7 @@
             <% end %>
           </td>
 
-          <td><%= link_to req.receiving_user.name, hyrax.profile_path(req.receiving_user)  %></td>
+          <td><%= link_to req.receiving_user.name, hyrax.user_path(req.receiving_user)  %></td>
 
           <td>
             <% if req.pending? %>

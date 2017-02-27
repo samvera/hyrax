@@ -153,6 +153,7 @@ en:
         admin_sets:         "Administrative Sets"
         collections:        "Collections"
         configuration:      "Configuration"
+        profile:            "Profile"
         repository_objects: "Repository Objects"
         settings:           "Settings"
         statistics:         "Statistics"
@@ -604,7 +605,6 @@ en:
         connected: "Connected!"
         label: "Zotero Profile"
         unlinked: "Link with Zotero"
-    view_profile:       "View Profile"
     visibility:
       authenticated:
         class: "label-info"

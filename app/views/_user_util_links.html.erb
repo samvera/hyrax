@@ -8,7 +8,7 @@
       <% end %>
     </li>
     <li class="dropdown">
-      <%= link_to hyrax.profile_path(current_user), role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false} do %>
+      <%= link_to hyrax.dashboard_profile_path(current_user), role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false} do %>
         <span class="sr-only"><%= t("hyrax.toolbar.profile.sr_action") %></span>
         <span class="hidden-xs">&nbsp;<%= current_user.name %></span>
         <span class="sr-only"> <%= t("hyrax.toolbar.profile.sr_target") %></span>
@@ -19,8 +19,8 @@
         <li><%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path %></li>
 
         <li class="divider"></li>
-        <li><%= link_to t("hyrax.toolbar.profile.view"), hyrax.profile_path(current_user) %></li>
-        <li><%= link_to t("hyrax.toolbar.profile.edit"), hyrax.edit_profile_path(current_user) %></li>
+        <li><%= link_to t("hyrax.toolbar.profile.view"), hyrax.dashboard_profile_path(current_user) %></li>
+        <li><%= link_to t("hyrax.toolbar.profile.edit"), hyrax.edit_dashboard_profile_path(current_user) %></li>
         <li class="divider"></li>
         <li><%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path %></li>
       </ul>

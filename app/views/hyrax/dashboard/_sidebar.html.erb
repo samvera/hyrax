@@ -11,8 +11,13 @@
       </div>
     </div>
   </li>
+  <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
+  <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                    also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
+    <span class="fa fa-id-card"></span> <%= t('hyrax.admin.sidebar.profile') %>
+  <% end %>
+
   <% if can? :read, :admin_dashboard %>
-    <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
     <%= menu.nav_link(hyrax.admin_stats_path) do %>
       <span class="fa fa-bar-chart"></span> <%= t('hyrax.admin.sidebar.statistics') %>
     <% end %>

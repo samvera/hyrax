@@ -20,7 +20,7 @@
           <%= req.created_at.strftime("%b %d %Y") %>
         <% end %>
       </td>
-      <td><%= link_to req.sending_user.name, hyrax.profile_path(req.sending_user)  %></td>
+      <td><%= link_to req.sending_user.name, hyrax.user_path(req.sending_user)  %></td>
       <td>
         <% if req.pending? %>
             <div class="btn-group">

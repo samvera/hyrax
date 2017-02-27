@@ -19,12 +19,8 @@
 
 
   <div class="panel-footer clearfix">
-    <% unless current_page? hyrax.profile_path(user) %>
-      <%= link_to t("hyrax.view_profile"), hyrax.profile_path(user), class: "btn btn-default" %>
-    <% end %>
-
     <% if can? :edit, user %>
-      <%= link_to hyrax.edit_profile_path(user), class: "btn btn-default pull-right" do %>
+      <%= link_to hyrax.edit_dashboard_profile_path(user), class: "btn btn-default pull-right" do %>
         <i class="glyphicon glyphicon-edit"></i> <%= t("hyrax.edit_profile") %>
       <% end %>
     <% end %>

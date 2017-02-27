@@ -188,7 +188,7 @@ module Hyrax
              end
       return user_or_key if user.nil?
       text = user.respond_to?(:name) ? user.name : user_or_key
-      link_to text, Hyrax::Engine.routes.url_helpers.profile_path(user)
+      link_to text, Hyrax::Engine.routes.url_helpers.user_path(user)
     end
 
     # A Blacklight index field helper_method
