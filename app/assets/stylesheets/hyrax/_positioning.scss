@@ -1,137 +1,14 @@
-#brand-bar {
-  z-index: $zindex-navbar + 1;
-}
-
 .form-actions > form.button_to {
   // make sure a rails button_to form renders inline when it's in a bootstrap .form-actions line.
   display: inline-block;
   margin-bottom:0;
 }
 
-#site-search{
-  form {
-    margin:1em 0;
-    text-align:left;
-  }
-}
-
-#site-actions {
-  padding-top:1em;
-  text-align:right;
-}
-
-#footer {
-  margin-top:2em;
-  margin-bottom:1em;
-
-  .footer-text {
-    margin-top:1em;
-    padding-top:1.5em;
-  }
-}
-
-.page-search {
-  padding-top:2em;
-  text-align:right;
-}
-
-legend .pull-right {
-  margin-top:.2em;
-}
-
-.unpadded {
-  padding:0;
-}
-
-.related_files {
-  max-height: 400px;
-  overflow: auto;
-
-  .thumbnail {
-    display: inline;
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-}
-
-.with-headroom {
-  padding-top:3em;
-}
-
-.with-footroom {
-  padding-bottom:3em;
-}
-
-.with-top-padding {
-  padding-top:2em;
-}
-
-.with-side-padding {
-  padding-left:2em;
-  padding-right:2em;
-}
-
-dl.stacked {
-  dt {
-    clear:both;
-    float:left;
-    width:30%;
-  }
-
-  dd {
-    clear:right;
-    margin:0 0 0 30%;
-    width:40%;
-    word-wrap:break-word;
-  }
-}
-
-.main-header,
-.page-actions {
+.main-header {
   margin-bottom: 30px;
   margin-top: 20px;
   padding-bottom: 9px;
-}
-
-.main-header {
   border-bottom: 1px solid $gray-lighter;
-}
-
-.page-actions {
-  text-align:right;
-}
-
-.search > .row > .main-header {
-  border-bottom: none;
-  margin-bottom: 24px;
-  padding-bottom: 0;
-}
-
-.main-header > .navbar {
-  margin-bottom: 0;
-}
-
-.search .sidebar > h3:first-child {
-  margin-top: -.4em;
-}
-
-.search .welcome-text > h2:first-child {
-  margin-top: -.2em;
-}
-
-.search .call-to-action {
-  text-align: center;
-}
-
-legend + .form-group {
-  margin-top: 0px;
-}
-
-.document-thumbnail {
-  img {
-    width: 100%;
-  }
 }
 
 .representative-media {
