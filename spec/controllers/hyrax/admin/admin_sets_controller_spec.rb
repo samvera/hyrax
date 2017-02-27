@@ -62,7 +62,7 @@ describe Hyrax::Admin::AdminSetsController do
 
       context "when it's successful" do
         let(:service) do
-          lambda do |admin_set, _|
+          lambda do |admin_set:, **_kargs|
             admin_set.id = 123
             true
           end
@@ -77,7 +77,7 @@ describe Hyrax::Admin::AdminSetsController do
       end
 
       context "when it fails" do
-        let(:service) { ->(_, _) { false } }
+        let(:service) { ->(**_kargs) { false } }
         it 'shows the new form' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description' } }

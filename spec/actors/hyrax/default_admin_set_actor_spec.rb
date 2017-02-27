@@ -27,7 +27,7 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
 
       it "creates the default AdminSet with a PermissionTemplate and an ActiveWorkflow then calls the next actor with the default admin set id" do
         expect(next_actor).to receive(:create).with(admin_set_id: default_id).and_return(true)
-        expect(Hyrax::AdminSetCreateService).to receive(:call).with(kind_of(AdminSet), depositor)
+        expect(AdminSet).to receive(:find_or_create_default_admin_set_id).and_return(default_id)
         actor.create(attributes)
       end
     end
@@ -37,17 +37,8 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
 
       it "uses the provided id and returns true" do
         expect(next_actor).to receive(:create).with(attributes).and_return(true)
+        expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)
         expect(actor.create(attributes)).to be true
-      end
-    end
-  end
-
-  describe "#create_default_admin_set" do
-    let(:actor) { described_class.new(double, double, next_actor) }
-    context "when another thread has already created the admin set" do
-      it "doesn't raise an error" do
-        expect(Hyrax::AdminSetCreateService).to receive(:call).and_raise(ActiveFedora::IllegalOperation)
-        expect { actor.send(:create_default_admin_set) }.not_to raise_error
       end
     end
   end

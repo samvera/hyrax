@@ -27,24 +27,19 @@ module Hyrax
 
     included do
       DEFAULT_ID = 'admin_set/default'.freeze
+      DEFAULT_TITLE = ['Default Admin Set'].freeze
 
       def self.default_set?(id)
         id == DEFAULT_ID
       end
 
       # Creates the default AdminSet and an associated PermissionTemplate with workflow
-      # rubocop:disable Lint/HandleExceptions
-      def self.create_default!
-        return if AdminSet.exists?(DEFAULT_ID)
-        AdminSet.create!(id: DEFAULT_ID, title: ['Default Admin Set']) do |_as|
-          PermissionTemplate.create!(admin_set_id: DEFAULT_ID)
+      def self.find_or_create_default_admin_set_id
+        unless exists?(DEFAULT_ID)
+          Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         end
-      rescue ActiveFedora::IllegalOperation
-        # It is possible that another thread created the AdminSet just before this method
-        # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
-        # ignore the error.
+        DEFAULT_ID
       end
-      # rubocop:enable Lint/HandleExceptions
 
       validates_with HasOneTitleValidator
       class_attribute :human_readable_short_description, :indexer

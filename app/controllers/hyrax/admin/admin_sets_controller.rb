@@ -97,7 +97,7 @@ module Hyrax
       end
 
       def create_admin_set
-        admin_set_create_service.call(@admin_set, current_user)
+        admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
       end
 
       def setup_form
