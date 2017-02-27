@@ -11,6 +11,15 @@
 
 <% content_for :page_header do %>
   <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %></h1>
+  <div class="pull-right">
+    <% if can?(:create, Collection) %>
+      <%= link_to(
+            t(:'helpers.action.collection.new'),
+            hyrax.new_collection_path,
+            class: 'btn btn-primary'
+          ) %>
+    <% end %>
+  </div>
 <% end %>
 
 <div class="row">

@@ -7,6 +7,7 @@ describe 'collection', type: :feature do
   describe 'create collection' do
     before do
       sign_in user
+      visit '/dashboard/my/collections'
     end
 
     let(:title) { "Test Collection" }

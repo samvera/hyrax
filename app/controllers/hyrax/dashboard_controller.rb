@@ -6,7 +6,7 @@ module Hyrax
 
     def show
       add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       if can? :read, :admin_dashboard
         @presenter = Hyrax::Admin::DashboardPresenter.new
         @admin_set_rows = Hyrax::AdminSetService.new(self).search_results_with_work_count(:read)

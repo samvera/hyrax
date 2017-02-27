@@ -12,7 +12,7 @@ module Hyrax
         limit = params.fetch(:limit, "5").to_i
         @presenter = AdminStatsPresenter.new(stats_filters, limit)
         add_breadcrumb t(:'hyrax.controls.home'), root_path
-        add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.dashboard_path
+        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.statistics'), hyrax.admin_stats_path
       end
     end

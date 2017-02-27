@@ -29,9 +29,15 @@ es:
     action:
       admin_set:
         new: "Crear un nuevo conjunto administrativo"
+      batch:
+        new: "Crear una nueva obra"
       cancel: "Cancelar"
+      collection:
+        new: "Nueva Colección"
       delete: "Borrar"
       edit: "Editar"
+      work:
+        new: "Crear un lote de obras"
     submit:
       admin_set:
         create: 'Guardar'
@@ -339,6 +345,8 @@ es:
         collections:            "Todos los Colleccións"
         works:                  "Todos los Trabajos"
       authorize_proxies:        "Autorizar Proxies"
+      breadcrumbs:
+        admin:                  "Administración"
       create_work:              "Crear Trabajo"
       collections:
         collection:             "Collección"
@@ -546,12 +554,6 @@ es:
       title: Vínculos de uso único
     sort_label: "Ordenar el listado de items"
     toolbar:
-      admin:
-        menu: "Administración"
-      collections:
-        menu: "Colecciones"
-        my: "Mis Colecciones"
-        new: "Nueva Colección"
       dashboard:
         menu: "Panel de Control"
       language_switch: "Cambiar idioma"
@@ -563,11 +565,6 @@ es:
         sr_action: "Ver"
         sr_target: "perfil"
         view: "Ver Perfil"
-      works:
-        batch: "Crear lote"
-        menu: "Trabajos"
-        my: "Mis Trabajos"
-        new: "Nuevo"
     upload:
       alert:
         contact_href_text: "formulario de contacto"

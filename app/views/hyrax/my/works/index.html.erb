@@ -11,6 +11,33 @@
 
 <% content_for :page_header do %>
   <h1><span class="fa fa-file"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
+  <div class="pull-right">
+    <% if create_work_presenter.many? %>
+      <%= link_to(
+            t(:'helpers.action.batch.new'),
+            '#',
+            data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'batch' },
+            class: 'btn btn-primary'
+          ) %>
+      <%= link_to(
+            t(:'helpers.action.work.new'),
+            '#',
+            data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+            class: 'btn btn-primary'
+          ) %>
+    <% else # simple link to the first work type %>
+    <%= link_to(
+          t(:'helpers.action.batch.new'),
+          hyrax.new_batch_upload_path(payload_concern: create_work_presenter.first_model),
+          class: 'btn btn-primary'
+        ) %>
+      <%= link_to(
+            t(:'helpers.action.work.new'),
+            new_polymorphic_path([main_app, create_work_presenter.first_model]),
+            class: 'btn btn-primary'
+          ) %>
+    <% end %>
+  </div>
 <% end %>
 
 <div class="row">

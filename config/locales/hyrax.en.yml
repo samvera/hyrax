@@ -29,9 +29,15 @@ en:
     action:
       admin_set:
         new: "Create new administrative set"
+      batch:
+        new: "Create batch of works"
       cancel: "Cancel"
+      collection:
+        new: "New Collection"
       delete: "Delete"
       edit: "Edit"
+      work:
+        new: "Add new work"
     submit:
       admin_set:
         create: 'Save'
@@ -340,6 +346,8 @@ en:
         collections:            "All Collections"
         works:                  "All Works"
       authorize_proxies:        "Authorize Proxies"
+      breadcrumbs:
+        admin:                  "Administration"
       create_work:              "Create Work"
       collections:
         collection:             "Collection"
@@ -547,12 +555,6 @@ en:
       title: Single-Use Links
     sort_label: "Sort the listing of items"
     toolbar:
-      admin:
-        menu: "Administration"
-      collections:
-        menu: "Collections"
-        my: "My Collections"
-        new: "New Collection"
       dashboard:
         menu: "Dashboard"
       language_switch: "Switch language"
@@ -564,11 +566,6 @@ en:
         sr_action: "View"
         sr_target: "profile"
         view: "View Profile"
-      works:
-        batch: "Batch Create"
-        menu: "Works"
-        my: "My Works"
-        new: "New Work"
     upload:
       alert:
         contact_href_text: "contact form"
