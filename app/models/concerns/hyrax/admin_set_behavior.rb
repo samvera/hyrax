@@ -27,9 +27,18 @@ module Hyrax
 
     included do
       DEFAULT_ID = 'admin_set/default'.freeze
+      DEFAULT_TITLE = ['Default Admin Set'].freeze
 
       def self.default_set?(id)
         id == DEFAULT_ID
+      end
+
+      # Creates the default AdminSet and an associated PermissionTemplate with workflow
+      def self.find_or_create_default_admin_set_id
+        unless exists?(DEFAULT_ID)
+          Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
+        end
+        DEFAULT_ID
       end
 
       validates_with HasOneTitleValidator
