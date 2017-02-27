@@ -54,6 +54,12 @@ es:
             participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
             visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
             workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
+          permission_update_errors:
+            varies:             "La opción de lanzamiento 'Varía' requiere una fecha o período de embargo."
+            no_date:            "Se requiere una fecha para la opción de lanzamiento seleccionada."
+            no_embargo:         "Se requiere un período de embargo para la opción seleccionada."
+            nothing:            "Seleccionar opciones de lanzamiento antes de guardar."
+            error:              "Opción de actualización no válida para la plantilla de permiso."
           tabs:
             description:        "Descripción"
             participants:       "Participantes"

@@ -52,8 +52,14 @@ en:
           permission_update_notices:
             new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
             participants:       "The administrative set's participant rights have been updated"
-            visibility:         "The administrative set's visibility settings have been updated."
+            visibility:         "The administrative set's release & visibilty settings have been updated."
             workflow:           "The administrative set's workflow has been updated."
+          permission_update_errors:
+            varies:             "Release option 'Varies' requires a date or embargo period."
+            no_date:            "A date is required for the selected release option."
+            no_embargo:         "An embargo period is required for the selected option."
+            nothing:            "Select release options before pressing save."
+            error:              "Invalid update option for permission template."
           tabs:
             description:        "Description"
             participants:       "Participants"
@@ -727,6 +733,7 @@ en:
         keyword:                   "Keyword"
         lease_expiration_date:     'until'
         related_url:               "Related URL"
+        title:                     "Title"
         visibility_after_embargo:  'then open it up to'
         visibility_after_lease:    'then restrict it to'
         visibility_during_embargo: 'Restricted to'
