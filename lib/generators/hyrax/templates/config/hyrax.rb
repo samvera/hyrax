@@ -82,6 +82,11 @@ Hyrax.config do |config|
   # Username for connecting to geonames
   # config.geonames_username = ''
 
+  # By default, the a deposit agreement is shown, with either a passive or active mode
+  # (see following option).  To completely disable displaying the deposit agreement
+  # change this to false.
+  # config.show_deposit_agreement = true
+
   # Should the acceptance of the licence agreement be active (checkbox), or
   # implied when the save button is pressed? Set to true for active
   # The default is true.

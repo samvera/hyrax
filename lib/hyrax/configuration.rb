@@ -319,6 +319,12 @@ module Hyrax
       @active_deposit_agreement_acceptance
     end
 
+    attr_writer :show_deposit_agreement
+    def show_deposit_agreement?
+      return true if @show_deposit_agreement.nil?
+      @show_deposit_agreement
+    end
+
     attr_writer :work_requires_files
     def work_requires_files
       return true if @work_requires_files.nil?
