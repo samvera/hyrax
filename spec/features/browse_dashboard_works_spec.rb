@@ -28,7 +28,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     click_button "search-submit-header"
     expect(page).to have_content("Fake PDF Title")
     within(".constraints-container") do
-      expect(page).to have_content("You searched for:")
+      expect(page).to have_content("Filtering by:")
       expect(page).to have_css("span.glyphicon-remove")
       find(".dropdown-toggle").click
     end

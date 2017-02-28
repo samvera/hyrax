@@ -107,12 +107,12 @@ input#check_all {
   }
 }
 
+// Remove the .well class applied by Blacklight 6
 .constraints-container {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   margin-bottom: 10px;
-}
-
-#appliedParams.constraints-container {
-  margin-bottom: 0;
 }
 
 #collection-list-container {

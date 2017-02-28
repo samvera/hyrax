@@ -18,6 +18,9 @@ en:
           admin_set_sim: "Administrative set"
           suppressed_bsi: "Status"
           resource_type_sim: "Resource type"
+      filters:
+        title:    "Filtering by:"
+      start_over: Clear filters
   errors:
     messages:
       carrierwave_download_error: "Couldn't download image."

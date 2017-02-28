@@ -96,14 +96,24 @@ fieldset {
   }
 }
 
+// the span selector is required because Blacklight is using it.
+.list-filters-label, span.constraints-label {
+  font-weight: bold;
+  margin-right: 2em;
+}
+
+.constraints-container {
+  padding: $panel-heading-padding;
+  
+  .start-over {
+    padding: 4px 6px;
+  }
+}
+
 .list-filters {
   background-color: $panel-default-heading-bg;
   padding: $panel-heading-padding;
-  
-  .list-filters-label {
-    font-weight: bold;
-    margin-right: 2em;
-  }
+
   .btn-group > .facet-values {
     display: none;
   }
