@@ -682,6 +682,9 @@ es:
         header: Editar Trabajo
   simple_form:
     hints:
+      admin_set:
+        title: "Un nombre para ayudar a identificar el conjunto administrativo y distinguirlo de otros conjuntos administrativos en el repositorio."
+        description: 'Una breve descripción general que se aplica a todas las obras recogidas en este conjunto. Por ejemplo, "Tesis y archivos suplementarios creados por los estudiantes graduados de la Escuela de Ciencias de la Tierra".'
       collection:
         based_near: "Nombre de un lugar relacionado con la colección, tal como el sitio de publicación, o ciudad, estado, o país, que esté relacionado con los contenidos de la colección. Llamados a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
         contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación de la colección, pero no el rol principal."
