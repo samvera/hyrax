@@ -26,9 +26,9 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
-  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Redis](#redis)
     * [Rails](#rails)
+  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
   * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
@@ -105,8 +105,6 @@ First, you'll need a working Ruby installation. You can install this via your op
 
 We recommend either Ruby 2.3 or the latest 2.2 version.
 
-# Creating a Sufia-based app
-
 ## Redis
 
 [Redis](http://redis.io/) is a key-value store that Sufia uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
@@ -114,12 +112,18 @@ We recommend either Ruby 2.3 or the latest 2.2 version.
 Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
 
 ## Rails
-
-Generate a new Rails application. We recommend the latest Rails 5.0 release.
+We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
 gem install rails -v 5.0.1
+```
+
+# Creating a Sufia-based app
+
+Generate a new Rails application using the template.
+
+```
 rails new my_app -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb
 ```
 
