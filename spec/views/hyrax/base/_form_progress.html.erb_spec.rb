@@ -64,6 +64,20 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
       end
     end
+
+    context "with no deposit agreement" do
+      before do
+        allow(Flipflop).to receive(:show_deposit_agreement?).and_return(false)
+      end
+      it "does not display active accept text" do
+        expect(page).not_to have_content 'I have read and agree to the'
+        expect(page).not_to have_selector("#agreement[checked]")
+      end
+      it "does not display passive accept text" do
+        expect(page).not_to have_content 'By saving this work I agree to the'
+        expect(page).not_to have_link 'Deposit Agreement', href: '/agreement'
+      end
+    end
   end
 
   context "when the work has been saved before" do

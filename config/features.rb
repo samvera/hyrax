@@ -18,4 +18,8 @@ Flipflop.configure do
   feature :assign_admin_set,
           default: true,
           description: "Ability to assign uploaded items to an admin set"
+
+  feature :show_deposit_agreement,
+          default: true,
+          description: "Show a deposit agreement to users creating works"
 end
