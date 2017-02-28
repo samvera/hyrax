@@ -26,6 +26,7 @@ describe Hyrax::Configuration do
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
   it { is_expected.to respond_to(:arkivo_api) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance) }
+  it { is_expected.to respond_to(:show_deposit_agreement?) }
   it { is_expected.to respond_to(:batch_user_key) }
   it { is_expected.to respond_to(:audit_user_key) }
   it { is_expected.to respond_to(:upload_path) }
