@@ -5,7 +5,7 @@ describe "Notifications page", type: :feature do
   end
 
   it "lists notifications with date, subject and message" do
-    expect(page).to have_content "User Notifications"
+    expect(page).to have_content "Notifications"
     expect(page.find(:xpath, '//thead/tr')).to have_content "Date"
     expect(page.find(:xpath, '//thead/tr')).to have_content "Subject"
     expect(page.find(:xpath, '//thead/tr')).to have_content "Message"

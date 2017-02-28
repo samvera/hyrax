@@ -1,8 +1,12 @@
 module Hyrax
   class NotificationsController < ApplicationController
     before_action :authenticate_user!
+    layout 'dashboard'
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.notifications'), hyrax.notifications_path
       @messages = user_mailbox.inbox
     end
 

@@ -12,6 +12,11 @@
     </div>
   </li>
   <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
+
+  <%= menu.nav_link(hyrax.notifications_path) do %>
+    <span class="fa fa-bell"></span> <%= t('hyrax.admin.sidebar.notifications') %>
+  <% end %>
+
   <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
                     also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
     <span class="fa fa-id-card"></span> <%= t('hyrax.admin.sidebar.profile') %>

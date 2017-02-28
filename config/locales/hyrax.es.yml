@@ -155,8 +155,9 @@ es:
         admin_sets:         "Conjuntos Administrativos"
         collections:        "Colecciones"
         configuration:      "Configuración"
-        repository_objects: "Objetos del repositorio"
+        notifications:      "Notificaciones"
         profile:            "Perfil"
+        repository_objects: "Objetos del repositorio"
         settings:           "Ajustes"
         statistics:         "Estadísticas"
         tasks:              'Tareas'

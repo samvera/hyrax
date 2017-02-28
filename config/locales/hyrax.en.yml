@@ -156,6 +156,7 @@ en:
         admin_sets:         "Administrative Sets"
         collections:        "Collections"
         configuration:      "Configuration"
+        notifications:      "Notifications"
         profile:            "Profile"
         repository_objects: "Repository Objects"
         settings:           "Settings"
