@@ -126,15 +126,15 @@ describe 'Routes', :no_clean, type: :routing do
 
   describe "Notifications" do
     it "has index" do
-      expect(get: '/notifications').to route_to(controller: 'hyrax/mailbox', action: 'index')
+      expect(get: '/notifications').to route_to(controller: 'hyrax/notifications', action: 'index')
       expect(notifications_path).to eq '/notifications'
     end
     it "allows deleting" do
-      expect(delete: '/notifications/123').to route_to(controller: 'hyrax/mailbox', action: 'destroy', id: '123')
+      expect(delete: '/notifications/123').to route_to(controller: 'hyrax/notifications', action: 'destroy', id: '123')
       expect(notification_path(123)).to eq '/notifications/123'
     end
     it "allows deleting all of them" do
-      expect(delete: '/notifications/delete_all').to route_to(controller: 'hyrax/mailbox', action: 'delete_all')
+      expect(delete: '/notifications/delete_all').to route_to(controller: 'hyrax/notifications', action: 'delete_all')
       expect(delete_all_notifications_path).to eq '/notifications/delete_all'
     end
   end

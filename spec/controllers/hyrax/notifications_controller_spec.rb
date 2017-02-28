@@ -1,8 +1,8 @@
-describe Hyrax::MailboxController, type: :controller do
+describe Hyrax::NotificationsController, type: :controller do
   let(:mock_box) { {} }
 
   before do
-    allow_any_instance_of(described_class).to receive(:authenticate_user!).and_return(true)
+    allow(controller).to receive(:authenticate_user!).and_return(true)
     allow(UserMailbox).to receive(:new).and_return(mock_box)
   end
 

@@ -92,7 +92,7 @@ Hyrax::Engine.routes.draw do
   resources :featured_work_lists, path: 'featured_works', only: :create
 
   # Messages
-  resources :notifications, only: [:destroy, :index], controller: :mailbox do
+  resources :notifications, only: [:destroy, :index] do
     collection do
       delete 'delete_all'
     end

@@ -148,7 +148,6 @@ RSpec/AnyInstance:
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
     - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
-    - 'spec/controllers/hyrax/mailbox_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
     - 'spec/controllers/hyrax/transfers_controller_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'

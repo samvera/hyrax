@@ -28,7 +28,7 @@ module Hyrax
       if @notifications.empty?
         t('hyrax.dashboard.no_notifications')
       else
-        render "hyrax/mailbox/notifications", messages: notifications_for_dashboard
+        render "hyrax/notifications/notifications", messages: notifications_for_dashboard
       end
     end
 
