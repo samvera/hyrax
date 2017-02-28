@@ -113,7 +113,14 @@ input.batch_document_selector {
 
 input#check_all {
   padding: 0;
-  margin: 3px 3px 3px 10px;
+  margin: 3px 0 3px 10px;
+}
+
+.check-all {
+  white-space: nowrap;
+  .caret {
+    margin-left: 0;
+  }
 }
 
 .constraints-container {
