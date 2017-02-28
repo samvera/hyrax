@@ -645,30 +645,31 @@ es:
       default:
         deposit: "Depositar"
       load:
-        state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
-      unauthorized: "El trabajo no está disponible actualmente porque aún no ha completado el proceso de aprobación"
+        state_error: "El flujo de obra por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
+      unauthorized: "La obra no está disponible actualmente porque aún no ha completado el proceso de aprobación"
     works:
       create:
         after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Quizás requieras recargar la página para ver las actualizaciones."
-        header: Agregar nuevo Trabajo
+        breadcrumb: 'Agregar nueva obra'
+        header: Agregar nueva obra
       edit:
         breadcrumb: Editar
       form:
         additional_fields: "Campos adicionales"
-        in_collections: Este Trabajo en Colecciones
-        in_other_works: Este Trabajo en otros Trabajos
-        in_this_work: Otros Trabajos en este Trabajo
+        in_collections: Este Obra en Colecciones
+        in_other_works: Este Obra en otras Obras
+        in_this_work: Otras Obras en este Obra
         tab:
           files:         "Archivos"
           metadata:      "Descripciones"
           relationships: "Relaciones"
           share:         "Compartir"
       progress:
-        header: Guardar Trabajo
+        header: Guardar Obra
       show:
         no_preview: No hay vista previa disponible
       update:
-        header: Editar Trabajo
+        header: Editar Obra
   simple_form:
     hints:
       admin_set:

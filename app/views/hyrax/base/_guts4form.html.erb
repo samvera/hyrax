@@ -1,48 +1,49 @@
 <% # we will yield to content_for for each tab, e.g. :files_tab %>
 <% tabs ||= %w[metadata files relationships] # default tab order %>
 <div class="row">
-  <div class="col-xs-12 col-sm-8" role="main">
-
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-      <% tabs.each_with_index do | tab, i | %>
-        <% if i == 0 %>
-          <li role="presentation" class="active">
-        <% else %>
-          <li role="presentation">
+  <div class="col-xs-12 col-sm-8">
+    <div class="panel panel-default tabs" role="main">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <% tabs.each_with_index do | tab, i | %>
+          <% if i == 0 %>
+            <li role="presentation" class="active">
+          <% else %>
+            <li role="presentation">
+          <% end %>
+              <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+                <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
+              </a>
+            </li>
         <% end %>
-            <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
-              <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
-            </a>
-          </li>
-      <% end %>
 
-      <li role="presentation" id="tab-share" class="hidden">
-        <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
-          <i class="fa icon-share"></i> <%= t("hyrax.works.form.tab.share") %>
-        </a>
-      </li>
-    </ul>
+        <li role="presentation" id="tab-share" class="hidden">
+          <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
+            <i class="fa icon-share"></i> <%= t("hyrax.works.form.tab.share") %>
+          </a>
+        </li>
+      </ul>
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <% (tabs - ['share']).each_with_index do | tab, i | %>
-        <% if i == 0 %>
-          <div role="tabpanel" class="tab-pane active" id="<%= tab %>">
-        <% else %>
-          <div role="tabpanel" class="tab-pane" id="<%= tab %>">
-        <% end %>
-          <div class="form-tab-content">
-            <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
-            <%= render "form_#{tab}", f: f %>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <% (tabs - ['share']).each_with_index do | tab, i | %>
+          <% if i == 0 %>
+            <div role="tabpanel" class="tab-pane active" id="<%= tab %>">
+          <% else %>
+            <div role="tabpanel" class="tab-pane" id="<%= tab %>">
+          <% end %>
+            <div class="form-tab-content">
+              <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
+              <%= render "form_#{tab}", f: f %>
+            </div>
           </div>
+        <% end %>
+
+        <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%= f.object.model_name.param_key %>">
+            <div class="form-tab-content">
+              <%= render "form_share", f: f %>
+            </div>
         </div>
-      <% end %>
-
-      <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%= f.object.model_name.param_key %>">
-          <div class="form-tab-content">
-            <%= render "form_share", f: f %>
-          </div>
       </div>
     </div>
   </div>
