@@ -56,7 +56,7 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
     context "with passive deposit agreement" do
       before do
-        allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
+        allow(Flipflop).to receive(:active_deposit_agreement_acceptance?)
           .and_return(false)
       end
       it "shows accept text" do
