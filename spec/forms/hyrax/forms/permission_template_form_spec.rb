@@ -67,20 +67,10 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
           release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
         ).permit!
       end
-      it "updates the visibility" do
-        expect { subject }.to change { permission_template.reload.visibility }.from(nil).to('open')
-      end
-    end
-
-    context "with release 'no delay'" do
-      let(:input_params) do
-        ActionController::Parameters.new(
-          visibility: "open",
-          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
-        ).permit!
-      end
-      it "sets release_period=now, release_date=today" do
-        expect { subject }.to change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
+      it "updates the visibility, release_period=now, release_date=today" do
+        expect { subject }
+          .to change { permission_template.reload.visibility }.from(nil).to('open')
+          .and change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
         expect(permission_template.release_date).to eq(today)
       end
     end
@@ -236,7 +226,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
         }
       end
       let(:ac_params) do
-        ActionController::Parameters.new(**attributes).permit!
+        ActionController::Parameters.new(attributes).permit!
       end
 
       RSpec.shared_examples 'valid attributes' do
