@@ -3,6 +3,9 @@ require 'spec_helper'
 RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   let(:permission_template) { build(:permission_template) }
   let(:form) { described_class.new(permission_template) }
+  let(:today) { Time.zone.today }
+  let(:admin_set) { create(:admin_set) }
+
   subject { form }
   it { is_expected.to delegate_method(:available_workflows).to(:model) }
   it { is_expected.to delegate_method(:active_workflow).to(:model) }
@@ -20,11 +23,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
-    let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.update(input_params) }
-    let(:today) { Time.zone.today }
 
     context "with a user manager" do
       let(:grant_attributes) do
@@ -183,7 +183,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   describe "#grant_workflow_roles" do
     subject { form.send(:grant_workflow_roles, attributes) }
     let(:attributes) { { workflow_id: workflow.id } }
-    let(:admin_set) { create(:admin_set) }
     let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
     let(:user) { create(:user) }
     let(:role1) { Sipity::Role.create!(name: 'hello') }
@@ -200,7 +199,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
                   agent_id: 'librarians',
                   access: 'manage' }])
     end
-    let(:form) { described_class.new(permission_template) }
+
     before do
       permission_template.clear_changes_information
       workflow.workflow_roles.create!([{ role: role1 }, { role: role2 }])
@@ -221,9 +220,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#validate_visibility_combinations" do
-    let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
 
     context "validate all release option attribute combinations" do
       let(:visibility) { '' } # default values
@@ -308,10 +305,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#select_release_varies_option" do
-    let(:admin_set) { create(:admin_set) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.send(:select_release_varies_option, permission_template) }
-    let(:today) { Time.zone.today }
 
     context "with release before date specified" do
       let(:permission_template) do
@@ -355,11 +349,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#permission_template_update_params" do
-    let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.send(:permission_template_update_params, input_params) }
-    let(:today) { Time.zone.today }
 
     context "with release varies by date selected" do
       let(:input_params) do
