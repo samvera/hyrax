@@ -723,6 +723,7 @@ es:
         admin_set_id:     "Agregar como miembro del conjunto administrativo"
         based_near:       "Ubicación"
         collection_ids:   "Agregar como miembro de la colección"
+        creator:          "Creador"
         date_created:     "Fecha de creación"
         description:      "Resumen or Sumario"
         embargo_release_date:      'hasta'
@@ -730,6 +731,8 @@ es:
         keyword:          "Palabra Clave"
         lease_expiration_date:     'hasta'
         related_url:      "URL relacionada"
+        rights:           "Derechos"
+        title:            "Título"
         visibility_after_embargo:  'luego abrirlo a'
         visibility_after_lease:    'luego restringirlo a'
         visibility_during_embargo: 'Restringido a'
