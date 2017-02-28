@@ -44,11 +44,13 @@ module Hyrax
         update_status = {}
         case return_info[:content_tab]
         when "participants"
-          update_status = update_participants_options(attributes)
+          update_participants_options(attributes)
+          update_status = { updated: true }
         when "visibility"
           update_status = update_visibility_options(attributes)
         when "workflow"
-          update_status = update_workflow_options(attributes)
+          update_workflow_options(attributes)
+          update_status = { updated: true }
         end
         return_info.merge!(update_status)
       end
@@ -62,13 +64,9 @@ module Hyrax
           return "visibility" if attributes.key?(:visibility)
         end
 
-        # @return [Hash] { :updated } = true
         def update_participants_options(attributes)
-          return_info = {}
           update_admin_set(attributes)
           update_permission_template(attributes)
-          return_info[:updated] = true
-          return_info
         end
 
         # @return [Hash] { :error_code - used for flash notice, :updated - true or false}
@@ -84,13 +82,9 @@ module Hyrax
           return_info
         end
 
-        # @return [Hash] { :updated } = true
         def update_workflow_options(attributes)
-          return_info = {}
           update_permission_template(attributes)
           grant_workflow_roles(attributes)
-          return_info[:updated] = true
-          return_info
         end
 
         def activate_workflow_from(attributes)
