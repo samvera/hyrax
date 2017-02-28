@@ -5,7 +5,7 @@
     <tr>
       <th class="check-all"><label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
       <th><%= t("hyrax.dashboard.my.heading.title") %></th>
-      <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%= params[:sort] == "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort] == "#{CatalogController.uploaded_field} asc" ? 'caret up' : 'caret'%>"></i> <%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
       <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
       <th><%= t("hyrax.dashboard.my.heading.action") %></th>
     </tr>

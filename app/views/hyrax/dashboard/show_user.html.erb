@@ -1,7 +1,9 @@
-<h1><%= t("hyrax.dashboard.title") %></h1>
+<% content_for :page_header do %>
+  <h1><%= t("hyrax.dashboard.title") %></h1>
+<% end %>
 
-<div class="panel panel-default" id="activity">
-  <div class="panel-heading dashboard-panel">
+<div class="panel panel-default user-activity">
+  <div class="panel-heading">
     <h3 class="panel-title "><%= t("hyrax.dashboard.user_activity") %></h3>
   </div>
   <div class="panel-body">
@@ -10,7 +12,7 @@
 </div>
 
 <div class="panel panel-default" id="notifications">
-  <div class="panel-heading dashboard-panel">
+  <div class="panel-heading">
     <h3 class="panel-title "><%= t("hyrax.dashboard.user_notifications") %></h3>
   </div>
   <div class="panel-body">
@@ -20,7 +22,7 @@
 </div>
 
 <div class="panel panel-default" id="proxy_management">
-  <div class="panel-heading dashboard-panel">
+  <div class="panel-heading">
     <h3 class="panel-title "><%= t("hyrax.dashboard.manage_proxies") %></h3>
   </div>
   <div class="panel-body">
@@ -28,8 +30,8 @@
   </div>
 </div>
 
-<div class="panel panel-default" id="transfers">
-  <div class="panel-heading dashboard-panel">
+<div class="panel panel-default transfers">
+  <div class="panel-heading">
     <h3 class="panel-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h3>
   </div>
   <div class="panel-body">

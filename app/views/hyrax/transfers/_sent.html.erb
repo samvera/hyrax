@@ -13,7 +13,7 @@
       <% unless req.receiving_user.blank? %>
         <tr>
           <td> <%= show_transfer_request_title(req) %> </td>
-          <td class="sorts-dash">
+          <td>
             <% if req.created_at > Time.current.beginning_of_day %>
               <%= "#{time_ago_in_words(req.created_at)} ago"%>
             <% else %>
