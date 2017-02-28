@@ -19,9 +19,6 @@
         <li><%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path %></li>
 
         <li class="divider"></li>
-        <li><%= link_to t("hyrax.toolbar.profile.view"), hyrax.dashboard_profile_path(current_user) %></li>
-        <li><%= link_to t("hyrax.toolbar.profile.edit"), hyrax.edit_dashboard_profile_path(current_user) %></li>
-        <li class="divider"></li>
         <li><%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path %></li>
       </ul>
     </li><!-- /.btn-group -->

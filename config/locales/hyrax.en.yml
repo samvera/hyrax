@@ -564,12 +564,10 @@ en:
       language_switch: "Switch language"
       notifications: "Notifications"
       profile:
-        edit: "Edit Profile"
         login: "Login"
         logout: "Logout"
         sr_action: "View"
         sr_target: "profile"
-        view: "View Profile"
     upload:
       alert:
         contact_href_text: "contact form"

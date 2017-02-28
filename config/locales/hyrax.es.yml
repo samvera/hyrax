@@ -563,12 +563,10 @@ es:
       language_switch: "Cambiar idioma"
       notifications: "Notificaciones"
       profile:
-        edit: "Editar Perfil"
         login: "Iniciar sesión"
         logout: "Cerrar sesión"
         sr_action: "Ver"
         sr_target: "perfil"
-        view: "Ver Perfil"
     upload:
       alert:
         contact_href_text: "formulario de contacto"
