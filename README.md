@@ -26,9 +26,9 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
-  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Redis](#redis)
     * [Rails](#rails)
+  * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
   * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
@@ -104,7 +104,6 @@ Note here that the following commands assume you're setting up Sufia in a develo
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
 We recommend either Ruby 2.3 or the latest 2.2 version.
-
 
 ## Redis
 
