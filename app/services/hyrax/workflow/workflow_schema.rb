@@ -35,20 +35,26 @@ module Hyrax
         optional(:label).filled(:str?) # Sipity::Workflow#label
         optional(:description).filled(:str?) # Sipity::Workflow#description
         required(:actions).each do
-          required(:name).filled(:str?) # Sipity::WorkflowAction#name
-          required(:from_states).each do
-            required(:names) { array? { each(:str?) } } # Sipity::WorkflowState#name
-            required(:roles) { array? { each(:str?) } } # Sipity::Role#name
+          schema do
+            required(:name).filled(:str?) # Sipity::WorkflowAction#name
+            required(:from_states).each do
+              schema do
+                required(:names) { array? { each(:str?) } } # Sipity::WorkflowState#name
+                required(:roles) { array? { each(:str?) } } # Sipity::Role#name
+              end
+            end
+            optional(:transition_to).filled(:str?) # Sipity::WorkflowState#name
+            optional(:notifications).each do
+              schema do
+                required(:name).value(:constant_name?) # Sipity::Notification#name
+                required(:notification_type).value(included_in?: Sipity::Notification.valid_notification_types)
+                required(:to) { array? { each(:str?) } }
+                optional(:cc) { array? { each(:str?) } }
+                optional(:bcc) { array? { each(:str?) } }
+              end
+            end
+            optional(:methods) { array? { each(:str?) } }
           end
-          optional(:transition_to).filled(:str?) # Sipity::WorkflowState#name
-          optional(:notifications).each do
-            required(:name).value(:constant_name?) # Sipity::Notification#name
-            required(:notification_type).value(included_in?: Sipity::Notification.valid_notification_types)
-            required(:to) { array? { each(:str?) } }
-            optional(:cc) { array? { each(:str?) } }
-            optional(:bcc) { array? { each(:str?) } }
-          end
-          optional(:methods) { array? { each(:str?) } }
         end
       end
     end

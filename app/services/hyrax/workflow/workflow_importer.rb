@@ -5,6 +5,11 @@ module Hyrax
     # @see .load_workflows
     # @see .generate_from_json_file
     class WorkflowImporter
+      class_attribute :default_logger
+      self.default_logger = Rails.logger
+      class_attribute :path_to_workflow_files
+      self.path_to_workflow_files = Rails.root.join('config', 'workflows', '*.json')
+
       class << self
         def clear_load_errors!
           self.load_errors = []
@@ -21,12 +26,19 @@ module Hyrax
       # Load all of the workflows for the given permission_template
       #
       # @param permission_template [Hyrax::PermissionTemplate]
-      # @return [TrueClass]
+      # @param logger [#info, #debug, #warning, #fatal] By default this is Hyrax::Workflow::WorkflowImporter.default_logger
+      # @return [TrueClass] if one or more workflows were loaded
+      # @return [FalseClass] if no workflows were loaded
       # @note I'd like to deprecate .load_workflows but for now that is beyond the scope of what I'm after. So I will use its magic instead
-      def self.load_workflow_for(permission_template:, workflow_config_filenames: default_workflow_config_filenames)
+      def self.load_workflow_for(permission_template:, logger: default_logger)
+        workflow_config_filenames = Dir.glob(path_to_workflow_files)
+        if workflow_config_filenames.none?
+          logger.info("Unable to load workflows for #{permission_template.class} ID=#{permission_template.id}. No workflows were found in #{path_to_workflow_files}")
+          return false
+        end
         workflow_config_filenames.each do |config|
-          Rails.logger.info "Loading permission_template ID=#{permission_template.id} with workflow config #{config}"
-          generate_from_json_file(path: config, permission_template: permission_template)
+          logger.info "Loading permission_template ID=#{permission_template.id} with workflow config #{config}"
+          generate_from_json_file(path: config, permission_template: permission_template, logger: default_logger)
         end
         true
       end
@@ -36,17 +48,12 @@ module Hyrax
       # Load all the workflows in config/workflows/*.json for each of the permission templates
       # @param permission_templates [#each] An enumerator of permission templates (by default Hyrax::PermissionTemplate.all)
       # @return [TrueClass]
-      def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all, workflow_config_filenames: default_workflow_config_filenames)
+      def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all, **kwargs)
         clear_load_errors!
         Array.wrap(permission_templates).each do |permission_template|
-          load_workflow_for(permission_template: permission_template, workflow_config_filenames: workflow_config_filenames)
+          load_workflow_for(permission_template: permission_template, **kwargs)
         end
         true
-      end
-
-      # @api private
-      def self.default_workflow_config_filenames
-        Dir.glob(Rails.root.join('config', 'workflows', '*.json'))
       end
 
       # @api public
@@ -81,17 +88,19 @@ module Hyrax
       # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
       # @param schema [#call] The schema in which you will validate the data
       # @param validator [#call] The validation service for the given data and schema
-      def initialize(data:, permission_template:, schema: default_schema, validator: default_validator)
+      # @param logger [#debug, #info, #fatal, #warning] The logger to capture any meaningful output
+      def initialize(data:, permission_template:, schema: default_schema, validator: default_validator, logger: default_logger)
         self.data = data
         self.schema = schema
         self.validator = validator
         self.permission_template = permission_template
+        @logger = logger
         validate!
       end
 
       private
 
-        attr_reader :data
+        attr_reader :data, :logger
 
         def data=(input)
           @data = input.deep_symbolize_keys
@@ -110,7 +119,7 @@ module Hyrax
         end
 
         def validate!
-          validator.call(data: data, schema: schema)
+          validator.call(data: data, schema: schema, logger: logger)
         end
 
       public
@@ -145,6 +154,7 @@ module Hyrax
           workflow.label = configuration.fetch(:label, nil)
           workflow.description = configuration.fetch(:description, nil)
           workflow.save!
+          logger.info(%(Loaded Sipity::Workflow "#{workflow.name}" for #{permission_template.class} ID=#{permission_template.id}))
           workflow
         end
 
@@ -158,10 +168,12 @@ module Hyrax
           #
           # @return true if the data validates from the schema
           # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
-          def self.call(data:, schema:)
-            validation = schema.call(data)
-            return true unless validation.messages.present?
-            raise validation.messages.inspect
+          def self.call(data:, schema:, logger:)
+            result = schema.call(data)
+            return true if result.success?
+            message = result.messages(full: true).inspect
+            logger.error(message)
+            raise message
           end
         end
     end

@@ -38,7 +38,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
 
   it 'validates the data against the schema' do
     subject
-    expect(validator).to have_received(:call).with(data: subject.send(:data), schema: subject.send(:schema))
+    expect(validator).to have_received(:call).with(data: subject.send(:data), schema: subject.send(:schema), logger: subject.send(:logger))
   end
 
   context '.load_workflow_for' do
@@ -49,7 +49,25 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     end
   end
 
-  context 'data generation' do
+  describe 'data generation' do
+    let(:logger) { Logger.new(STDOUT) }
+    let(:data) { { workflows: [{ name: '', actions: [] }] } }
+    let(:importer) { described_class.new(data: data, permission_template: permission_template, logger: logger) }
+
+    describe 'with invalid data' do
+      it 'logs the output' do
+        expect(logger).to receive(:error).with(kind_of(String))
+        expect { importer }.to raise_error(RuntimeError)
+      end
+    end
+
+    describe 'with very invalid schema' do
+      let(:data) { { workflows: [{ name: '' }] } }
+      it 'logs the output' do
+        expect(logger).to receive(:error).with(kind_of(String))
+        expect { importer }.to raise_error(RuntimeError)
+      end
+    end
     before do
       described_class.clear_load_errors!
     end
