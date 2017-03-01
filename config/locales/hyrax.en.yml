@@ -13,11 +13,11 @@ en:
           keyword: Keyword
   errors:
     messages:
-      carrierwave_processing_error: "Cannot resize image."
-      carrierwave_integrity_error: "Not an image."
       carrierwave_download_error: "Couldn't download image."
-      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      carrierwave_integrity_error: "Not an image."
+      carrierwave_processing_error: "Cannot resize image."
       extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
+      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
   helpers:
     action:
       admin_set:
@@ -122,24 +122,24 @@ en:
           item_list_header: "Works in This Set"
       collections:
         collection:         "Collection"
+        files:              "Files"
         subtitle:           "Recent collection activity"
         title:              "Collections"
         works:              "Works"
-        files:              "Files"
       show:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"
         repository_growth:
-          title:            Repository Growth
           subtitle:         Past 90 days
+          title:            Repository Growth
         repository_objects:
-          title:            Repository Objects
           subtitle:         Current Status
+          title:            Repository Objects
         returning_visitors: "Returning Visitors"
         total_visitors:     "Total Visitors"
         user_activity:
-          title:            User Activity
           subtitle:         New user signups
+          title:            User Activity
       sidebar:
         admin_sets:      "Administrative Sets"
         settings:        "Settings"
@@ -157,18 +157,12 @@ en:
         repository_objects:
           series:
             published:   'Published'
-            unpublished: 'Unpublished'
             unknown:     'Unknown'
+            unpublished: 'Unpublished'
         user_deposits:
           end_label: "Ending [defaults to now]"
           heading: "Display files deposited by users"
           start_label: "Starting"
-      workflows:
-        index:
-          header: "Review Submissions"
-          tabs:
-            under_review: "Under Review"
-            published: "Published"
       workflow_roles:
         header:     "Workflow Roles"
         index:
@@ -179,6 +173,12 @@ en:
             user:   User
           new_role: "Grant a role to a user:"
           no_roles: No roles
+      workflows:
+        index:
+          header: "Review Submissions"
+          tabs:
+            published: "Published"
+            under_review: "Under Review"
     admin_sets:
       index:
         header:         "Administrative Collections"
@@ -683,8 +683,8 @@ en:
   simple_form:
     hints:
       admin_set:
-        title: "A name to aid in identifying the Administrative Set and to distinguish it from other Administrative Sets in the repository."
         description: 'A brief overarching description that applies to all works collected in this set. For example, "Theses and supplementary files created by the School of Earth Sciences graduate students."'
+        title: "A name to aid in identifying the Administrative Set and to distinguish it from other Administrative Sets in the repository."
       collection:
         based_near: "A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role."
