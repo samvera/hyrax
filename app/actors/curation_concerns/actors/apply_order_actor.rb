@@ -3,11 +3,18 @@ module CurationConcerns
     class ApplyOrderActor < AbstractActor
       def update(attributes)
         ordered_member_ids = attributes.delete(:ordered_member_ids)
-        sync_members(ordered_member_ids)
-        apply_order(ordered_member_ids) && next_actor.update(attributes)
+        sync_members(ordered_member_ids) && apply_order(ordered_member_ids) && next_actor.update(attributes)
       end
 
       private
+
+        def ability
+          ::Ability.new(user)
+        end
+
+        def can_edit_both_works?(work)
+          ability.can?(:edit, work) && ability.can?(:edit, curation_concern)
+        end
 
         def sync_members(ordered_member_ids)
           return true if ordered_member_ids.nil?
@@ -20,10 +27,14 @@ module CurationConcerns
 
           (ordered_member_ids - existing_members_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
-            curation_concern.ordered_members << work
+            if can_edit_both_works?(work)
+              curation_concern.ordered_members << work
+              curation_concern.save
+            else
+              curation_concern.errors[:ordered_member_ids] << "Works can only be related to each other if user has ability to edit both."
+            end
           end
-          curation_concern.save
-          true
+          curation_concern.errors[:ordered_member_ids].empty?
         end
 
         def apply_order(new_order)
