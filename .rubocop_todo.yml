@@ -50,6 +50,7 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Exclude:
     - 'app/actors/hyrax/actors/add_to_work_actor.rb'
+    - 'app/actors/hyrax/actors/apply_order_actor.rb'
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
@@ -140,6 +141,7 @@ RSpec/ExampleLength:
 
 RSpec/VerifiedDoubles:
   Enabled: false
+
 RSpec/SubjectStub:
   Exclude:
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
@@ -150,6 +152,7 @@ RSpec/SubjectStub:
 
 RSpec/AnyInstance:
   Exclude:
+    - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/hyrax/admin/admin_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
