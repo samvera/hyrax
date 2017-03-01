@@ -208,6 +208,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#validate_visibility_combinations" do
+
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
     context "validate all release option attribute combinations" do

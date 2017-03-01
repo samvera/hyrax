@@ -688,6 +688,9 @@ en:
         header: Edit Work
   simple_form:
     hints:
+      admin_set:
+        title: "A name to aid in identifying the Administrative Set and to distinguish it from other Administrative Sets in the repository."
+        description: 'A brief overarching description that applies to all works collected in this set. For example, "Theses and supplementary files created by the School of Earth Sciences graduate students."'
       collection:
         based_near: "A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role."
@@ -726,6 +729,7 @@ en:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"
         collection_ids:            "Add as member of collection"
+        creator:                   "Creator"
         date_created:              "Date Created"
         description:               "Abstract or Summary"
         embargo_release_date:      'until'
@@ -733,6 +737,7 @@ en:
         keyword:                   "Keyword"
         lease_expiration_date:     'until'
         related_url:               "Related URL"
+        rights:                    "Rights"
         title:                     "Title"
         visibility_after_embargo:  'then open it up to'
         visibility_after_lease:    'then restrict it to'
