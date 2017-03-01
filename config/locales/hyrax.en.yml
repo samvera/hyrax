@@ -333,6 +333,8 @@ en:
           edit_collection:         "Edit Collection"
           edit_work:               "Edit Work"
           select:                  "Select an action"
+          select_all:              "Select Current Page"
+          select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
           work_confirmation:       "Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation"
         collection_list:
@@ -660,7 +662,7 @@ en:
       unauthorized: "The work is not currently available because it has not yet completed the approval process"
     works:
       create:
-        after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. Files will be marked <span class=\"label label-danger\" title=\"Private\">Private</span> until this process is complete (shouldn't take too long, hang in there!). You may need to refresh this page to see these updates."
+        after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. You may need to refresh this page to see these updates."
         header: "Add New %{type}"
       edit:
         breadcrumb: 'Edit'

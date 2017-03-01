@@ -333,6 +333,8 @@ es:
           edit_collection:         "Editar Colección"
           edit_work:               "Editar Trabajo"
           select:                  "Seleccionar una acción"
+          select_all:              "Seleccionar la página actual"
+          select_none:             "Seleccionar ninguno"
           transfer:                "Transferir propiedad del Trabajo"
           work_confirmation:       "Borrar un trabajo de %{application_name} es permanente. Presionar sobre OK para borrar este trabajo de %{application_name}, o sobre Cancelar para cancelar esta operación"
         collection_list:
@@ -660,7 +662,7 @@ es:
       unauthorized: "El trabajo no está disponible actualmente porque aún no ha completado el proceso de aprobación"
     works:
       create:
-        after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Los archivos serán marcados <span class=\"label label-danger\" title=\"Privado\">Privado</span> hasta que el proceso esté completo (no debería de tomar mucho tiempo, por favor espera). Quizás requieras recargar la página para ver las actualizaciones."
+        after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Quizás requieras recargar la página para ver las actualizaciones."
         header: Agregar nuevo Trabajo
       edit:
         breadcrumb: Editar

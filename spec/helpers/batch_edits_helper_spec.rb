@@ -9,21 +9,27 @@ describe BatchEditsHelper, type: :helper do
     context "with my works" do
       let(:controller_path) { "hyrax/my/works" }
       it "shows the check all dropdown" do
-        expect(subject).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.caret")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_all")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_none")
       end
     end
 
     context "with my shares" do
       let(:controller_path) { "hyrax/my/shares" }
       it "shows the check all dropdown" do
-        expect(subject).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.caret")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_all")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_none")
       end
     end
 
     context "with my highlights" do
       let(:controller_path) { "hyrax/my/highlights" }
       it "shows the check all dropdown" do
-        expect(subject).to have_css("span.glyphicon-cog")
+        expect(subject).to have_css("span.caret")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_all")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_none")
       end
     end
 
