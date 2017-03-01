@@ -13,6 +13,14 @@ module CurationConcerns
 
       private
 
+        def ability
+          ::Ability.new(user)
+        end
+
+        def can_edit_both_works?(work)
+          ability.can?(:edit, work) && ability.can?(:edit, curation_concern)
+        end
+
         def add_to_works(new_work_ids)
           return true if new_work_ids.nil?
           (curation_concern.in_works_ids - new_work_ids).each do |old_id|
@@ -25,11 +33,11 @@ module CurationConcerns
           # add to new so long as the depositor for the parent and child matches, otherwise inject an error
           (new_work_ids - curation_concern.in_works_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
-            if work.depositor != curation_concern.depositor
-              curation_concern.errors[:in_works_ids] << "Works can only be related to each other if they were deposited by the same user."
-            else
+            if can_edit_both_works?(work)
               work.ordered_members << curation_concern
               work.save
+            else
+              curation_concern.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
             end
           end
           curation_concern.errors[:in_works_ids].empty?

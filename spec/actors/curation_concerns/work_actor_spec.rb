@@ -81,14 +81,13 @@ describe CurationConcerns::Actors::GenericWorkActor do
       end
 
       context 'with in_work_ids' do
-        let(:parent) { FactoryGirl.create(:generic_work) }
+        let(:parent) { create(:generic_work, user: user) }
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).merge(
             in_works_ids: [parent.id]
           )
         end
         it "attaches the parent" do
-          allow(curation_concern).to receive(:depositor).and_return(parent.depositor)
           expect(subject.create(attributes)).to be true
           expect(curation_concern.in_works).to eq [parent]
         end
@@ -196,24 +195,20 @@ describe CurationConcerns::Actors::GenericWorkActor do
     end
 
     context 'with in_works_ids' do
-      let(:parent) { FactoryGirl.create(:generic_work) }
-      let(:old_parent) { FactoryGirl.create(:generic_work) }
+      let(:parent) { create(:generic_work, user: user) }
+      let(:old_parent) { create(:generic_work, user: user) }
       let(:attributes) do
         FactoryGirl.attributes_for(:generic_work).merge(
           in_works_ids: [parent.id]
         )
       end
       before do
-        curation_concern.apply_depositor_metadata(user.user_key)
-        curation_concern.save!
         old_parent.ordered_members << curation_concern
         old_parent.save!
       end
       it "attaches the parent" do
-        allow(curation_concern).to receive(:depositor).and_return(parent.depositor)
         expect(subject.update(attributes)).to be true
         expect(curation_concern.in_works).to eq [parent]
-
         expect(old_parent.reload.members).to eq []
       end
     end

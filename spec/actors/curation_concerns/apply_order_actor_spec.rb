@@ -78,5 +78,25 @@ describe CurationConcerns::Actors::ApplyOrderActor do
         expect(curation_concern.ordered_member_ids.size).to eq(1)
       end
     end
+
+    context 'with ordered_member_ids that include a work owned by a different user' do
+      # set user not a non-admin for this test to ensure the actor disallows adding the child
+      let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
+      let(:child) { create(:generic_work, user: other_user) }
+      let(:attributes) { { ordered_member_ids: [child.id] } }
+      let(:root_actor) { double }
+
+      before do
+        allow(CurationConcerns::Actors::RootActor).to receive(:new).and_return(root_actor)
+        allow(root_actor).to receive(:update).with({}).and_return(true)
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+      end
+
+      it "does not attach the work" do
+        expect(subject.update(attributes)).to be false
+      end
+    end
   end
 end

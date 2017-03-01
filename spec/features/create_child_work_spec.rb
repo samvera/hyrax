@@ -6,12 +6,12 @@ feature 'Creating a new child Work', :workflow do
   let!(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
   end
-  let(:redlock_client_stub) { # stub out redis connection
+  let(:redlock_client_stub) do # stub out redis connection
     client = double('redlock client')
     allow(client).to receive(:lock).and_yield(true)
     allow(Redlock::Client).to receive(:new).and_return(client)
     client
-  }
+  end
   let!(:parent) { create(:generic_work, user: user, title: ["Parent First"]) }
 
   before do
@@ -75,7 +75,7 @@ feature 'Creating a new child Work', :workflow do
         click_on "Update Generic work"
 
         expect(new_parent.reload.ordered_members.to_a.length).to eq 0
-        expect(page).to have_content "Works can only be related to each other if they were deposited by the same user."
+        expect(page).to have_content "Works can only be related to each other if user has ability to edit both."
       end
     end
   end
