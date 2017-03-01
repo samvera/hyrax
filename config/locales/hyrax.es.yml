@@ -13,11 +13,11 @@ es:
           keyword: "Palabra Clave"
   errors:
     messages:
-      carrierwave_processing_error: "No se puede cambiar el tamaño de la imagen."
-      carrierwave_integrity_error: "No una imagen."
       carrierwave_download_error: "No se pudo descargar la imagen."
-      extension_whitelist_error: "No puedes subir %{extension} archivos, tipos permitidos: %{allowed_types}"
+      carrierwave_integrity_error: "No una imagen."
+      carrierwave_processing_error: "No se puede cambiar el tamaño de la imagen."
       extension_blacklist_error: "No puedes subir %{extension} archivos, tipos prohibidos: %{prohibited_types}"
+      extension_whitelist_error: "No puedes subir %{extension} archivos, tipos permitidos: %{allowed_types}"
   helpers:
     action:
       admin_set:
@@ -122,24 +122,24 @@ es:
           item_list_header: "Trabajos en este conjunto"
       collections:
         collection:         "Collección"
+        files:              "Archivos"
         subtitle:           "Actividad reciente de la colección"
         title:              "Colleccións"
         works:              "Trabajos"
-        files:              "Archivos"
       show:
         new_visitors:       "Nuevos visitantes"
         registered_users:   "Usuarios registrados"
         repository_growth:
-          title:            Crecimiento del Repositorio
           subtitle:         Pasados 90 días
+          title:            Crecimiento del Repositorio
         repository_objects:
-          title:            Objetos del Repositorio
           subtitle:         Estado Actual
+          title:            Objetos del Repositorio
         returning_visitors: "Regresos de visitantes"
         total_visitors:     "Total de visitantes"
         user_activity:
-          title:            Actividad del usuario
           subtitle:         Nuevas inscripciones de usuarios
+          title:            Actividad del usuario
       sidebar:
         admin_sets:      "Conjuntos Administrativos"
         settings:        "Ajustes"
@@ -157,18 +157,12 @@ es:
         repository_objects:
           series:
             published:   'Publicado'
-            unpublished: 'Inédito'
             unknown:     'Desconocido'
+            unpublished: 'Inédito'
         user_deposits:
           end_label: "Finalizando [por defecto a ahora]"
           heading: "Ver archivos depositados por los usuarios"
           start_label: "Comenzando"
-      workflows:
-        index:
-          header: "Revise Ofertas"
-        tabs:
-          under_review: "En Revisión"
-          published: "Publica"
       workflow_roles:
         header:     "Funciones del Flujo de Trabajo"
         index:
@@ -179,6 +173,12 @@ es:
             user: "Usuario"
           new_role: "Asignar un papel a un usuario:"
           no_roles: "Ningunos roles"
+      workflows:
+        index:
+          header: "Revise Ofertas"
+        tabs:
+          published: "Publica"
+          under_review: "En Revisión"
     admin_sets:
       index:
         header: "Colecciones Administrativas"
@@ -683,8 +683,8 @@ es:
   simple_form:
     hints:
       admin_set:
-        title: "Un nombre para ayudar a identificar el conjunto administrativo y distinguirlo de otros conjuntos administrativos en el repositorio."
         description: 'Una breve descripción general que se aplica a todas las obras recogidas en este conjunto. Por ejemplo, "Tesis y archivos suplementarios creados por los estudiantes graduados de la Escuela de Ciencias de la Tierra".'
+        title: "Un nombre para ayudar a identificar el conjunto administrativo y distinguirlo de otros conjuntos administrativos en el repositorio."
       collection:
         based_near: "Nombre de un lugar relacionado con la colección, tal como el sitio de publicación, o ciudad, estado, o país, que esté relacionado con los contenidos de la colección. Llamados a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
         contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación de la colección, pero no el rol principal."
