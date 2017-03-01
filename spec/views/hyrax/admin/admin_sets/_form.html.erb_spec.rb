@@ -18,5 +18,8 @@ RSpec.describe 'hyrax/admin/admin_sets/_form.html.erb', type: :view do
     # metadata fields
     expect(rendered).to have_selector('input[type=text][name="admin_set[title]"]')
     expect(rendered).to have_selector('textarea[name="admin_set[description]"]')
+
+    # hint text
+    expect(rendered).to have_content("A name to aid in identifying the Administrative Set and to distinguish it from other Administrative Sets in the repository.")
   end
 end
