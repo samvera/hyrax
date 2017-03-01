@@ -108,8 +108,8 @@ describe 'hyrax/base/relationships', type: :view do
     end
   end
 
-  context "admin sets" do
-    it "will render through the attribute_to_html" do
+  context "with admin sets" do
+    it "renders using attribute_to_html" do
       allow(solr_doc).to receive(:member_of_collection_ids).and_return([])
       expect(presenter).to receive(:attribute_to_html).with(:admin_set, render_as: :faceted)
       render 'hyrax/base/relationships', presenter: presenter

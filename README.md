@@ -26,13 +26,14 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
       * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
-  * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
     * [Redis](#redis)
     * [Rails](#rails)
+  * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
     * [Message Queue](#message-queue)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
+    * [Toggling Features](#toggling-features)
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
@@ -41,7 +42,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Hyrax?
 
-Hyrax uses the full power of [Hydra](http://projecthydra.org/) and extends it to provide a user interface around common repository features and social features (see below). Hyrax offers self-deposit and proxy deposit workflows, and mediated deposit workflows are being developed in a community sprint running from September-December 2016. Hyrax delivers its rich and growing set of features via a modern, responsive user interface. It is implemented as a Rails engine, so it is meant to be added to existing Rails apps. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
+Hyrax is a front-end based on the robust [Hydra](http://projecthydra.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
 ## Feature list
 
@@ -56,7 +57,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v0.0.1.alpha__. If you are looking for instructions on installing a different
+v1.0.0.alpha__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -106,8 +107,6 @@ First, you'll need a working Ruby installation. You can install this via your op
 
 We recommend either Ruby 2.3 or the latest 2.2 version.
 
-# Creating a Hyrax-based app
-
 ## Redis
 
 [Redis](http://redis.io/) is a key-value store that Hyrax uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
@@ -116,11 +115,18 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Generate a new Rails application. We recommend the latest Rails 5.0 release.
+We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.0.1
+gem install rails -v 5.0.1
+```
+
+# Creating a Hyrax-based app
+
+Generate a new Rails application using the template.
+
+```
 rails new my_app -m https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/template.rb
 ```
 
@@ -133,6 +139,7 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Loading Hyrax's default workflows into your application's database
 
 ## Message Queue
+
 Many of the services performed by Hyrax are resource intensive, and therefore are well suited to running as background jobs that can be managed and executed by a Message Queue system. Examples include:
 * File ingest
 * Derivative generation

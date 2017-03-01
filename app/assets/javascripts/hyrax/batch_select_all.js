@@ -56,7 +56,7 @@
   // state == true for on
   function select_page ( state) {
     // check everything on the current page on or off based on state
-    $("#check_all").attr('checked', state);
+    $("#check_all").prop('checked', state); 
     check_all_page();  
   }
 
