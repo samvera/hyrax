@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe 'curation_concerns/admin/workflow_roles/index.html.erb', type: :view do
+describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
   let!(:user1) { create(:user) }
   let!(:user2) { create(:user) }
   let(:presenter) do
-    CurationConcerns::Admin::WorkflowRolePresenter.new
+    Hyrax::Admin::WorkflowRolePresenter.new
   end
 
   before do
