@@ -1,4 +1,4 @@
-describe 'hyrax/my/_index_partials/_list_works.html.erb', type: :view do
+RSpec.describe 'hyrax/my/works/_list_works.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:work_data) do
     {
@@ -16,8 +16,8 @@ describe 'hyrax/my/_index_partials/_list_works.html.erb', type: :view do
     allow(view).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:render_collection_links).with(doc).and_return("<a href=\"collection/1\">Collection Title</a>".html_safe)
     allow(view).to receive(:render_visibility_link).with(doc).and_return("<a class=\"visibility-link\">Private</a>".html_safe)
-    stub_template 'hyrax/my/_index_partials/_work_action_menu.html.erb' => 'actions'
-    render 'hyrax/my/_index_partials/list_works', document: doc, presenter: presenter
+    stub_template 'hyrax/my/works/_work_action_menu.html.erb' => 'actions'
+    render 'hyrax/my/works/list_works', document: doc, presenter: presenter
   end
 
   it 'the line item displays the work and its actions' do

@@ -5,7 +5,7 @@
 <% else %>
   <% @document_list = documents %>
   <% if params[:action] == "edit" %>
-    <%= render 'hyrax/my/_index_partials/default_group', documents: documents, docs: documents %>
+    <%= render 'default_group', documents: documents, docs: documents %>
   <% else %>
     <%= render 'show_document_list', documents: documents %>
   <% end %>

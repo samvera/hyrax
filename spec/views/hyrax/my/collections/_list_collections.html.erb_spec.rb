@@ -1,4 +1,4 @@
-describe 'hyrax/my/_index_partials/_list_collections.html.erb', type: :view do
+RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:attributes) do
     {
@@ -17,7 +17,7 @@ describe 'hyrax/my/_index_partials/_list_collections.html.erb', type: :view do
     allow(doc).to receive(:to_model).and_return(stub_model(Collection, id: id))
     view.lookup_context.prefixes.push 'hyrax/my'
 
-    render 'hyrax/my/_index_partials/list_collections', document: doc
+    render 'hyrax/my/collections/list_collections', document: doc
   end
 
   it 'the line item displays the work and its actions' do

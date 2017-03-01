@@ -29,10 +29,12 @@
     </div>
   </td>
 
-  <td class='text-center'><%= document.date_uploaded %></td>
-  <td class='text-center'><%= render_visibility_link document %></td>
-
+  <td><%= document.date_uploaded %></td>
   <td class='text-center'>
+    <span class="fa <%= current_user.trophies.where(work_id: document.id).exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>"></span></td>
+  <td><%= render_visibility_link document %></td>
+
+  <td>
     <%= render 'work_action_menu', document: document %>
   </td>
 </tr>

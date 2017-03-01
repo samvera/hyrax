@@ -72,7 +72,7 @@ Rails:
 
 Rails/OutputSafety:
   Exclude:
-    - 'spec/views/hyrax/my/_list_works.html.erb_spec.rb'
+    - 'spec/views/hyrax/my/works/_list_works.html.erb_spec.rb'
     - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
     - 'app/helpers/hyrax/collections_helper.rb'
     - 'app/helpers/hyrax/content_block_helper_behavior.rb'
