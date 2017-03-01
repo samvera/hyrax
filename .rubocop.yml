@@ -41,6 +41,10 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
+Style/CommentIndentation:
+  Exclude:
+    - 'app/actors/hyrax/actors/add_to_work_actor.rb'
+
 Style/MethodMissing:
   Exclude:
     - 'app/models/concerns/hyrax/file_set/characterization.rb'

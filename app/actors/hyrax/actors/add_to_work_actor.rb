@@ -13,6 +13,7 @@ module Hyrax
 
       private
 
+        # rubocop:disable Metrics/AbcSize
         def add_to_works(new_work_ids)
           return true if new_work_ids.nil?
           (curation_concern.in_works_ids - new_work_ids).each do |old_id|
@@ -34,6 +35,7 @@ module Hyrax
           end
           curation_concern.errors[:in_works_ids].empty?
         end
+        # rubocop:enable Metrics/AbcSize
     end
   end
 end
