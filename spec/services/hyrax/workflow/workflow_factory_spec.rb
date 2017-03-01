@@ -10,13 +10,16 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
     let(:deposit_action) { Sipity::WorkflowAction.create!(workflow: workflow, name: 'start') }
     subject { described_class.create(work, attributes, user) }
 
-    it 'creates a Sipity::Entity then runs the WorkflowActionService' do
+    it 'creates a Sipity::Entity, assign entity specific responsibility (but not to the full workflow) then runs the WorkflowActionService' do
       expect(Hyrax::Workflow::WorkflowActionService).to receive(:run).with(
         subject: kind_of(Hyrax::WorkflowActionInfo), action: deposit_action
       )
       expect do
-        subject
-      end.to change { Sipity::Entity.count }.by(1)
+        expect do
+          subject
+        end.to change { Sipity::Entity.count }.by(1)
+          .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
+      end.not_to change { Sipity::WorkflowResponsibility.count }
     end
   end
 end
