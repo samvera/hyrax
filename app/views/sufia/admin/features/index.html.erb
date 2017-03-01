@@ -16,7 +16,18 @@
               </tr>
             </thead>
             <tbody>
-            <% @feature_set.features.each do |feature| -%>
+            <% @feature_set.grouped_features.each do |group, features| -%>
+              <% if @feature_set.grouped? -%>
+                <tr class="group">
+                  <td></td>
+                  <td class="name" colspan="<%= 2 + @feature_set.strategies.size -%>">
+                    <h2>
+                      <%= t(group ? group.name : :default, scope: [:flipflop, :groups], default: group ? group.title : nil) -%>
+                    </h2>
+                  </td>
+                </tr>
+              <% end -%>
+              <% features.each do |feature| %>
               <tr data-feature="<%= feature.name.dasherize.parameterize %>">
                 <td class="status">
                   <span class="<%= @feature_set.status(feature) -%>"><%= @feature_set.status(feature) -%></span>
@@ -47,6 +58,7 @@
                   </td>
                 <% end -%>
               </tr>
+              <% end -%>
             <% end -%>
             </tbody>
           </table>
