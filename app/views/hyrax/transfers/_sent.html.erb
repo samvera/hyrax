@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @outgoing.each do |req| %>
+    <% outgoing_proxy_deposits.each do |req| %>
       <% unless req.receiving_user.blank? %>
         <tr>
           <td> <%= show_transfer_request_title(req) %> </td>

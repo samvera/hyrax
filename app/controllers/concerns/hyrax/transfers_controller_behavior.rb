@@ -32,10 +32,8 @@ module Hyrax
       end
     end
 
-    # @todo Consolidate the incoming/outgoing instance variables into a TransfersIndexPresenter; We should aim to set one instance variable per controller action
     def index
-      @incoming = ProxyDepositRequest.incoming_for(user: current_user)
-      @outgoing = ProxyDepositRequest.outgoing_for(user: current_user)
+      @presenter = TransfersPresenter.new(current_user, view_context)
     end
 
     # Kicks of a job that completes the transfer. If params[:reset] is set, it will revoke

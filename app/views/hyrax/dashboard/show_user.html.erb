@@ -7,7 +7,7 @@
     <h3 class="panel-title "><%= t("hyrax.dashboard.user_activity") %></h3>
   </div>
   <div class="panel-body">
-    <%= render_recent_activity %>
+    <%= @presenter.render_recent_activity %>
   </div>
 </div>
 
@@ -16,8 +16,8 @@
     <h3 class="panel-title "><%= t("hyrax.dashboard.user_notifications") %></h3>
   </div>
   <div class="panel-body">
-    <%= render_recent_notifications %>
-    <%= link_to_additional_notifications %>
+    <%= @presenter.render_recent_notifications %>
+    <%= @presenter.link_to_additional_notifications %>
   </div>
 </div>
 
@@ -35,6 +35,6 @@
     <h3 class="panel-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h3>
   </div>
   <div class="panel-body">
-    <%= render 'hyrax/dashboard/_index_partials/transfers' %>
+    <%= render 'hyrax/dashboard/_index_partials/transfers', presenter: @presenter.transfers %>
   </div>
 </div>

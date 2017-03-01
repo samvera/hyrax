@@ -1,22 +1,4 @@
 describe DashboardHelper, type: :helper do
-  describe "#render_recent_activity" do
-    context "when there is no activity" do
-      it "returns a messages stating the user has no recent activity" do
-        assign(:activity, [])
-        expect(helper.render_recent_activity).to include("no recent activity")
-      end
-    end
-  end
-
-  describe "#render_recent_notifications" do
-    context "when there are no notifications" do
-      it "returns a messages stating the user has no recent notifications" do
-        assign(:notifications, [])
-        expect(helper.render_recent_notifications).to include("no notifications")
-      end
-    end
-  end
-
   describe "#on_the_dashboard?" do
     it "returns false for controllers that aren't a part of the dashboard" do
       allow(helper).to receive(:params).and_return(controller: "foo")
