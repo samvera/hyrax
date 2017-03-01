@@ -1,13 +1,17 @@
 module Hyrax
   class TrophiesController < ApplicationController
+    before_action :authenticate_user!
+
     def toggle_trophy
       work_id = params[:id]
-      authorize! :edit, work_id
       t = current_user.trophies.where(work_id: work_id).first
       if t
+        authorize!(:destroy, t)
         t.destroy
       else
-        t = current_user.trophies.create(work_id: work_id)
+        t = current_user.trophies.build(work_id: work_id)
+        authorize!(:create, t)
+        t.save!
       end
       render json: t
     end

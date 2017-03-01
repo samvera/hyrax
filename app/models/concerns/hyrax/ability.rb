@@ -15,7 +15,8 @@ module Hyrax
                              :proxy_deposit_abilities,
                              :uploaded_file_abilities,
                              :feature_abilities,
-                             :admin_set_abilities]
+                             :admin_set_abilities,
+                             :trophy_abilities]
     end
 
     # Returns true if can create at least one type of work
@@ -111,6 +112,16 @@ module Hyrax
 
       def operation_abilities
         can :read, Hyrax::Operation, user_id: current_user.id
+      end
+
+      # We check based on the depositor, because the depositor may not have edit
+      # access to the work if it went through a mediated deposit workflow that
+      # removes edit access for the depositor.
+      def trophy_abilities
+        can [:create, :destroy], Trophy do |t|
+          doc = ActiveFedora::Base.search_by_id(t.work_id, fl: 'depositor_ssim')
+          current_user.user_key == doc.fetch('depositor_ssim').first
+        end
       end
 
       def curation_concerns_permissions
