@@ -83,10 +83,12 @@ module Hyrax
                   :analytics, :analytic_start_date
 
     attr_writer :display_microdata
-    def display_microdata
+    def display_microdata?
       return @display_microdata unless @display_microdata.nil?
       @display_microdata = true
     end
+    alias display_microdata display_microdata?
+    deprecation_deprecate display_microdata: "use display_microdata? instead"
 
     attr_writer :microdata_default_type
     def microdata_default_type
@@ -99,10 +101,12 @@ module Hyrax
     end
 
     attr_writer :enable_noids
-    def enable_noids
+    def enable_noids?
       return @enable_noids unless @enable_noids.nil?
       @enable_noids = true
     end
+    alias enable_noids enable_noids?
+    deprecation_deprecate enable_noids: "use enable_noids? instead"
 
     attr_writer :noid_template
     def noid_template
@@ -120,10 +124,12 @@ module Hyrax
     end
 
     attr_writer :display_media_download_link
-    def display_media_download_link
+    def display_media_download_link?
       return @display_media_download_link unless @display_media_download_link.nil?
       @display_media_download_link = true
     end
+    alias display_media_download_link display_media_download_link?
+    deprecation_deprecate display_media_download_link: "use display_media_download_link? instead"
 
     attr_writer :fits_path
     def fits_path
@@ -280,19 +286,25 @@ module Hyrax
     end
 
     attr_writer :browse_everything
-    def browse_everything
+    def browse_everything?
       @browse_everything ||= nil
     end
+    alias browse_everything browse_everything?
+    deprecation_deprecate browse_everything: "use browse_everything? instead"
 
     attr_writer :analytics
-    def analytics
+    def analytics?
       @analytics ||= false
     end
+    alias analytics analytics?
+    deprecation_deprecate analytics: "use analytics? instead"
 
     attr_writer :citations
-    def citations
+    def citations?
       @citations ||= false
     end
+    alias citations citations?
+    deprecation_deprecate citations: "use citations? instead"
 
     attr_writer :max_notifications_for_dashboard
     def max_notifications_for_dashboard
@@ -305,25 +317,31 @@ module Hyrax
     end
 
     attr_writer :arkivo_api
-    def arkivo_api
+    def arkivo_api?
       @arkivo_api ||= false
     end
+    alias arkivo_api arkivo_api?
+    deprecation_deprecate arkivo_api: "use arkivo_api? instead"
 
     def geonames_username=(username)
       Qa::Authorities::Geonames.username = username
     end
 
     attr_writer :active_deposit_agreement_acceptance
-    def active_deposit_agreement_acceptance
+    def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?
       @active_deposit_agreement_acceptance
     end
+    alias active_deposit_agreement_acceptance active_deposit_agreement_acceptance?
+    deprecation_deprecate active_deposit_agreement_acceptance: "use active_deposit_agreement_acceptance? instead"
 
     attr_writer :work_requires_files
-    def work_requires_files
+    def work_requires_files?
       return true if @work_requires_files.nil?
       @work_requires_files
     end
+    alias work_requires_files work_requires_files?
+    deprecation_deprecate work_requires_files: "use work_requires_files? instead"
 
     attr_writer :batch_user_key
     def batch_user_key
@@ -343,15 +361,19 @@ module Hyrax
 
     # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
     attr_writer :always_display_share_button
-    def always_display_share_button
+    def always_display_share_button?
       return true if @always_display_share_button.nil?
       @always_display_share_button
     end
+    alias always_display_share_button always_display_share_button?
+    deprecation_deprecate always_display_share_button: "use always_display_share_button? instead"
 
     attr_writer :google_analytics_id
-    def google_analytics_id
+    def google_analytics_id?
       @google_analytics_id ||= nil
     end
+    alias google_analytics_id google_analytics_id?
+    deprecation_deprecate google_analytics_id: "use google_analytics_id? instead"
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
