@@ -50,7 +50,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
-  spec.add_dependency 'active_fedora-noid', '~> 2.0'
+  spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
