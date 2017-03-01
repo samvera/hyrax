@@ -1,0 +1,27 @@
+<%= simple_form_for [main_app, @form],
+                    wrapper_mappings: { multifile: :horizontal_file_input } do |f| %>
+  <% if f.error_notification -%>
+    <div class="alert alert-danger fade in">
+      <strong>Wait don't go!</strong> There was a problem with your submission. Please review the errors below:
+      <a class="close" data-dismiss="alert" href="#">&times;</a>
+      <%= render 'form_in_works_error', f: f %>
+    </div>
+  <% end %>
+
+  <%= render 'form_descriptive_fields', f: f %>
+  <%= render 'form_supplementary_fields', f: f %>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <%# TODO: If we start using ActionCable, we could listen for object updates and
+                alert the user that the object has changed by someone else %>
+      <%= f.input CurationConcerns::OptimisticLockValidator.version_field, as: :hidden unless f.object.new_record? %>
+      <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
+      <% if curation_concern.new_record? %>
+        <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>
+      <% else %>
+        <%= link_to 'Cancel', polymorphic_path([main_app, curation_concern]), class: 'btn btn-link' %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
