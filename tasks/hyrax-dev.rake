@@ -19,6 +19,17 @@ task :spec_with_app_load  do
   end
 end
 
+desc "Sort locales keys in alphabetic order."
+task :i18n_sorter do
+  require 'i18n_yaml_sorter'
+  locales = Dir.glob(File.expand_path('../../config/locales/**/*.yml', __FILE__))
+  locales.each do |locale_path|
+    sorted_contents = File.open(locale_path) { |f| I18nYamlSorter::Sorter.new(f).sort }
+    File.open(locale_path, 'w') { |f|  f << sorted_contents}
+    abort("Bad I18n conversion!") unless Psych.load_file(locale_path).is_a?(Hash)
+  end
+end
+
 desc 'Generate the engine_cart and spin up test servers and run specs'
 task ci: ['rubocop', 'engine_cart:generate'] do
   puts 'running continuous integration'
