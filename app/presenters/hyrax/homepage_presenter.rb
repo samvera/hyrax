@@ -7,7 +7,7 @@ module Hyrax
     end
 
     def display_share_button?
-      Hyrax.config.always_display_share_button || current_ability.can_create_any_work?
+      Hyrax.config.always_display_share_button? || current_ability.can_create_any_work?
     end
   end
 end
