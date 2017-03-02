@@ -8,7 +8,7 @@
         <legend class="legend-save-work"><%= t('.requirements') %></legend>
         <ul class="requirements">
           <li class="incomplete" id="required-metadata"><%= t('.required_descriptions') %></li>
-          <% if Hyrax.config.work_requires_files %>
+          <% if Hyrax.config.work_requires_files? %>
             <li class="incomplete" id="required-files"><%= t('.required_files') %></li>
           <% end %>
         </ul>
