@@ -31,6 +31,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
   * [Creating a Sufia\-based app](#creating-a-sufia-based-app)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
+    * [Add Default Admin Set](#add-default-admin-set)
   * [Managing a Sufia\-based app](#managing-a-sufia-based-app)
   * [License](#license)
   * [Contributing](#contributing)
