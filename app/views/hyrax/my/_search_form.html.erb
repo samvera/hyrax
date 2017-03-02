@@ -1,0 +1,14 @@
+<%= form_tag search_action_url, method: :get, class: "search-query-form", role: "search" do %>
+  <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
+  <div class="input-group">
+
+    <label class="sr-only" for="search-field-header"><%= t("hyrax.search.form.q.label") %></label>
+    <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("hyrax.search.form.q.placeholder") %>
+
+    <div class="input-group-btn">
+      <button type="submit" class="btn btn-primary" id="search-submit-header">
+        <%= t('hyrax.search.button.html') %>
+      </button>
+    </div>
+  </div>
+<% end %>
