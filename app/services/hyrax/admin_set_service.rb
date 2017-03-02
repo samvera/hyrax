@@ -23,11 +23,11 @@ module Hyrax
     # This performs a two pass query, first getting the AdminSets
     # and then getting the work and file counts
     # @param [Symbol] access :read or :edit
+    # @param join_field [String] how are we joining the admin_set ids (by default "isPartOf_ssim")
     # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
-    def search_results_with_work_count(access)
+    def search_results_with_work_count(access, join_field: "isPartOf_ssim")
       admin_sets = search_results(access)
       ids = admin_sets.map(&:id).join(',')
-      join_field = "isPartOf_ssim"
       query = "{!terms f=#{join_field}}#{ids}"
       results = ActiveFedora::SolrService.instance.conn.get(
         ActiveFedora::SolrService.select_path,
