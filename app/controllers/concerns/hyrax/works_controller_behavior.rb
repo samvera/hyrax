@@ -11,7 +11,7 @@ module Hyrax
 
     protected
 
-      # Override the default behavior from curation_concerns in order to add uploaded_files to the parameters received by the actor.
+      # Add uploaded_files to the parameters received by the actor.
       def attributes_for_actor
         attributes = super
         # If they selected a BrowseEverything file, but then clicked the

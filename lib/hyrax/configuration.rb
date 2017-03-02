@@ -279,7 +279,6 @@ module Hyrax
       @redis_namespace ||= "hyrax"
     end
 
-    # TODO: This should move to curation_concerns
     attr_writer :libreoffice_path
     def libreoffice_path
       @libreoffice_path ||= "soffice"
@@ -391,13 +390,11 @@ module Hyrax
       @owner_permission_levels ||= { "Edit Access" => "edit" }
     end
 
-    # TODO: Delegate to curation_concerns when https://github.com/projecthydra/curation_concerns/pull/848 is merged
     attr_writer :translate_uri_to_id
     def translate_uri_to_id
       @translate_uri_to_id ||= ActiveFedora::Noid.config.translate_uri_to_id
     end
 
-    # TODO: Delegate to curation_concerns when https://github.com/projecthydra/curation_concerns/pull/848 is merged
     attr_writer :translate_id_to_uri
     def translate_id_to_uri
       @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
