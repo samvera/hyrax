@@ -3,6 +3,8 @@
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <%= f.object.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
+      <%= render 'form_in_works_error', f: f %>
+      <%= render 'form_ordered_members_error', f: f %>
     </div>
   <% end %>
   <% unless f.object.persisted? %>
