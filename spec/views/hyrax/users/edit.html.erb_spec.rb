@@ -28,7 +28,7 @@ describe 'hyrax/users/edit.html.erb', type: :view do
 
   context 'with Zotero integration enabled' do
     before do
-      allow(Hyrax.config).to receive(:arkivo_api) { true }
+      allow(Hyrax.config).to receive(:arkivo_api?) { true }
     end
 
     it 'shows a Zotero label' do
@@ -69,7 +69,7 @@ describe 'hyrax/users/edit.html.erb', type: :view do
 
   context 'with Zotero integration disabled' do
     before do
-      allow(Hyrax.config).to receive(:arkivo_api) { false }
+      allow(Hyrax.config).to receive(:arkivo_api?) { false }
     end
 
     it 'hides a Zotero OAuth button' do

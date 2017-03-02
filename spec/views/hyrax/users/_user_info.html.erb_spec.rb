@@ -3,7 +3,7 @@ describe 'hyrax/users/_user_info.html.erb', type: :view do
 
   context 'with Zotero disabled' do
     before do
-      allow(Hyrax.config).to receive(:arkivo_api) { false }
+      allow(Hyrax.config).to receive(:arkivo_api?) { false }
       allow(user).to receive(:zotero_userid).and_raise(NoMethodError)
       render "hyrax/users/user_info", user: user
     end
@@ -15,7 +15,7 @@ describe 'hyrax/users/_user_info.html.erb', type: :view do
 
   context 'with Zotero enabled' do
     before do
-      allow(Hyrax.config).to receive(:arkivo_api) { true }
+      allow(Hyrax.config).to receive(:arkivo_api?) { true }
       allow(user).to receive(:zotero_userid) { 'jdoe42zotero' }
       render "hyrax/users/user_info", user: user
     end
