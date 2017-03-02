@@ -18,15 +18,15 @@ module Hyrax
       response.documents
     end
 
-    SearchResultForWorkCount = Struct.new(:document, :work_count, :file_count)
+    SearchResultForWorkCount = Struct.new(:admin_set, :work_count, :file_count)
 
     # This performs a two pass query, first getting the AdminSets
     # and then getting the work and file counts
     # @param [Symbol] access :read or :edit
     # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
     def search_results_with_work_count(access)
-      documents = search_results(access)
-      ids = documents.map(&:id).join(',')
+      admin_sets = search_results(access)
+      ids = admin_sets.map(&:id).join(',')
       join_field = "isPartOf_ssim"
       query = "{!terms f=#{join_field}}#{ids}"
       results = ActiveFedora::SolrService.instance.conn.get(
@@ -36,8 +36,8 @@ module Hyrax
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       file_counts = count_files(results)
-      documents.map do |doc|
-        SearchResultForWorkCount.new(doc, counts[doc.id].to_i, file_counts[doc.id].to_i)
+      admin_sets.map do |admin_set|
+        SearchResultForWorkCount.new(admin_set, counts[admin_set.id].to_i, file_counts[admin_set.id].to_i)
       end
     end
 
