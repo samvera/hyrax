@@ -19,9 +19,9 @@
           <tbody>
             <% @admin_set_rows.each do |row| %>
               <tr>
-                <td><%= row.first %></td>
-                <td><%= row.second %></td>
-                <td><%= row.third %></td>
+                <td><%= row.document %></td>
+                <td><%= row.work_count %></td>
+                <td><%= row.file_count %></td>
               </tr>
             <% end %>
           </tbody>

@@ -89,9 +89,11 @@ RSpec.describe Hyrax::AdminSetService do
                                                                   "facet.field" => "isPartOf_ssim" }).and_return(results)
     end
 
+    let(:struct) { described_class::SearchResultForWorkCount }
+
     context "when there are works in the admin set" do
       it "returns rows with document in the first column and integer count value in the second and third column" do
-        expect(subject).to eq [[doc1, 8, 3], [doc2, 2, 2], [doc3, 0, 0]]
+        expect(subject).to eq [struct.new(doc1, 8, 3), struct.new(doc2, 2, 2), struct.new(doc3, 0, 0)]
       end
     end
 
@@ -107,7 +109,7 @@ RSpec.describe Hyrax::AdminSetService do
         ]
       end
       it "returns rows with document in the first column and integer count value in the second and third column" do
-        expect(subject).to eq [[doc1, 8, 0], [doc2, 2, 0], [doc3, 0, 0]]
+        expect(subject).to eq [struct.new(doc1, 8, 0), struct.new(doc2, 2, 0), struct.new(doc3, 0, 0)]
       end
     end
   end
