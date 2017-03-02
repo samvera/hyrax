@@ -35,8 +35,6 @@ module Hyrax
       generate 'hydra:head -f'
       say_status('warning', '[Hyrax] GENERATING MODELS', :yellow)
       generate "hyrax:models#{options[:force] ? ' -f' : ''}"
-      say_status('warning', '[Hyrax] GENERATING ADMIN DASHBOARD', :yellow)
-      generate "hyrax:admin_dashboard#{options[:force] ? ' -f' : ''}"
     end
 
     def replace_blacklight_layout

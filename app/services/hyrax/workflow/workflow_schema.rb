@@ -13,7 +13,7 @@ module Hyrax
     # @see Sipity::Role
     # @see Sipity::Notification
     # @see Sipity::Method
-    # @see ./lib/generators/curation_concerns/work/templates/workflow.json.erb
+    # @see ./lib/generators/hyrax/templates/workflow.json.erb
     WorkflowSchema = Dry::Validation.Schema do
       configure do
         def self.messages
