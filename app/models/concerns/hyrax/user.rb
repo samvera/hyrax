@@ -34,7 +34,7 @@ module Hyrax::User
     validates_with AvatarValidator
 
     # Add token to authenticate Arkivo API calls
-    after_initialize :set_arkivo_token, unless: :persisted? if Hyrax.config.arkivo_api
+    after_initialize :set_arkivo_token, unless: :persisted? if Hyrax.config.arkivo_api?
 
     has_many :trophies
     has_one :sipity_agent, as: :proxy_for, dependent: :destroy, class_name: 'Sipity::Agent'
