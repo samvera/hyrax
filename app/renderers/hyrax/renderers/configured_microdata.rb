@@ -4,13 +4,13 @@ module Hyrax
       PREFIX = 'hyrax.schema_org'.freeze
 
       def microdata?(field)
-        return false unless Hyrax.config.display_microdata
+        return false unless Hyrax.config.display_microdata?
         key = "#{PREFIX}.#{field}.property"
         t(key, default: false)
       end
 
       def microdata_object?(field)
-        return false unless Hyrax.config.display_microdata
+        return false unless Hyrax.config.display_microdata?
         key = "#{PREFIX}.#{field}.type"
         t(key, default: false)
       end

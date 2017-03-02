@@ -19,7 +19,7 @@ describe Hyrax::Renderers::AttributeRenderer do
 
     context 'without microdata enabled' do
       before do
-        allow(Hyrax.config).to receive(:display_microdata).and_return(false)
+        allow(Hyrax.config).to receive(:display_microdata?).and_return(false)
       end
       let(:tr_content) do
         "<tr><th>Name</th>\n" \
