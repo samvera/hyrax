@@ -5,8 +5,8 @@ namespace :sufia do
       MoveAllWorksToAdminSet.run(AdminSet.find(Sufia::DefaultAdminSetActor::DEFAULT_ID))
     end
 
-    desc "Migrate data from 7.2.x to 7.3.0"
-    task from_7_2_x_to_7_3_0_release: :environment do
+    desc "Migrate workflow data from 7.3.0.rc1"
+    task from_7_3_0rc1_release: :environment do
       logger = Logger.new(STDOUT)
       logger.level = Logger::DEBUG
       logger.info(%(Starting migration to Sufia 7.3.0 in preparation for Hyrax 1.0.0))
