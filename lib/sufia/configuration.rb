@@ -84,10 +84,14 @@ module Sufia
       @audit_user_key ||= 'audituser@example.com'
     end
 
-    # TODO: this is called working_path in curation_concerns
     attr_writer :upload_path
     def upload_path
       @upload_path ||= ->() { Rails.root + 'tmp' + 'uploads' }
+    end
+
+    attr_writer :cache_path
+    def cache_path
+      @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
 
     # Should a button with "Share my work" show on the front page to all users (even those not logged in)?

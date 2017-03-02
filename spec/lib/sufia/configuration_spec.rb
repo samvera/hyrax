@@ -16,6 +16,7 @@ describe Sufia::Configuration do
   it { is_expected.to respond_to(:batch_user_key) }
   it { is_expected.to respond_to(:audit_user_key) }
   it { is_expected.to respond_to(:upload_path) }
+  it { is_expected.to respond_to(:cache_path) }
   it { is_expected.to respond_to(:always_display_share_button) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:analytic_start_date) }
