@@ -39,7 +39,7 @@ describe Hyrax::Configuration do
   it { is_expected.to respond_to(:display_microdata?) }
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:feature_config_path) }
-  it { is_expected.to respond_to(:google_analytics_id?) }
+  it { is_expected.to respond_to(:google_analytics_id=) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
