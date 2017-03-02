@@ -19,8 +19,15 @@ module Hyrax
     private
 
       def ensure_admin_set_attribute!(attributes)
-        return if attributes[:admin_set_id].present?
-        attributes[:admin_set_id] = default_admin_set_id
+        if attributes[:admin_set_id].present?
+          ensure_permission_template!(admin_set_id: attributes[:admin_set_id])
+        else
+          attributes[:admin_set_id] = default_admin_set_id
+        end
+      end
+
+      def ensure_permission_template!(admin_set_id:)
+        Hyrax::PermissionTemplate.find_or_create_by!(admin_set_id: admin_set_id)
       end
 
       def default_admin_set_id

@@ -35,10 +35,12 @@ RSpec.describe Hyrax::DefaultAdminSetActor do
     context "when admin_set_id is provided" do
       let(:attributes) { { admin_set_id: admin_set.id } }
 
-      it "uses the provided id and returns true" do
+      it "uses the provided id, ensures a permission template, and returns true" do
         expect(next_actor).to receive(:create).with(attributes).and_return(true)
         expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)
-        expect(actor.create(attributes)).to be true
+        expect do
+          expect(actor.create(attributes)).to be true
+        end.to change { Hyrax::PermissionTemplate.count }.by(1)
       end
     end
   end
