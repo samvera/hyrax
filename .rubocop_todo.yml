@@ -81,6 +81,7 @@ RSpec/ExampleLength:
     - 'spec/models/generic_work_spec.rb'
     - 'spec/models/featured_work_spec.rb'
     - 'spec/services/sufia/actor_factory_spec.rb'
+    - 'spec/services/sufia/admin_set_create_service_spec.rb'
     - 'spec/services/sufia/user_stat_importer_spec.rb'
     - 'spec/views/catalog/_index_list_default.html.erb_spec.rb'
     - 'spec/views/collections/_form.html.erb_spec.rb'
