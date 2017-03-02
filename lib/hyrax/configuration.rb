@@ -373,11 +373,10 @@ module Hyrax
     deprecation_deprecate always_display_share_button: "use always_display_share_button? instead"
 
     attr_writer :google_analytics_id
-    def google_analytics_id?
+    def google_analytics_id
       @google_analytics_id ||= nil
     end
-    alias google_analytics_id google_analytics_id?
-    deprecation_deprecate google_analytics_id: "use google_analytics_id? instead"
+    alias google_analytics_id? google_analytics_id
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date

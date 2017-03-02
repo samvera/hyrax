@@ -12,7 +12,7 @@ namespace :hyrax do
 
     desc 'Populate user tokens'
     task tokens: :environment do
-      unless Hyrax.config.arkivo_api
+      unless Hyrax.config.arkivo_api?
         puts "Zotero integration is not enabled"
         next
       end

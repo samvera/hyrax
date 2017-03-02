@@ -29,7 +29,7 @@ module Hyrax
     end
 
     def display_microdata?
-      Hyrax.config.display_microdata
+      Hyrax.config.display_microdata?
     end
 
     def microdata_type_to_html
