@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.1'
-  spec.add_dependency 'hydra-works', '~> 0.15'
+  spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
   spec.add_dependency 'blacklight', '~> 6.6'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
