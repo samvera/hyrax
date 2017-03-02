@@ -30,6 +30,7 @@ describe Hyrax::Configuration do
   it { is_expected.to respond_to(:batch_user_key) }
   it { is_expected.to respond_to(:browse_everything?) }
   it { is_expected.to respond_to(:browse_everything) }
+  it { is_expected.to respond_to(:cache_path) }
   it { is_expected.to respond_to(:citations?) }
   it { is_expected.to respond_to(:citations) }
   it { is_expected.to respond_to(:contact_email) }
