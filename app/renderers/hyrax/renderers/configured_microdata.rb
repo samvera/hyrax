@@ -5,14 +5,12 @@ module Hyrax
 
       def microdata?(field)
         return false unless Hyrax.config.display_microdata?
-        key = "#{PREFIX}.#{field}.property"
-        t(key, default: false)
+        translate_microdata(field: field, field_context: 'property', default: false)
       end
 
       def microdata_object?(field)
         return false unless Hyrax.config.display_microdata?
-        key = "#{PREFIX}.#{field}.type"
-        t(key, default: false)
+        translate_microdata(field: field, field_context: 'type', default: false)
       end
 
       def microdata_object_attributes(field)
@@ -24,21 +22,27 @@ module Hyrax
       end
 
       def microdata_property(field)
-        t("#{PREFIX}.#{field}.property")
+        translate_microdata(field: field, field_context: 'property')
       end
 
       def microdata_type(field)
-        t("#{PREFIX}.#{field}.type")
+        translate_microdata(field: field, field_context: 'type')
       end
 
       def microdata_value_attributes(field)
         if microdata?(field)
-          key = microdata_object?(field) ? :value : :property
-          { itemprop: t("#{PREFIX}.#{field}.#{key}") }
+          field_context = microdata_object?(field) ? :value : :property
+          { itemprop: translate_microdata(field: field, field_context: field_context) }
         else
           {}
         end
       end
+
+      private
+
+        def translate_microdata(field:, field_context:, default: true)
+          t("#{PREFIX}.#{field}.#{field_context}", default: default)
+        end
     end
   end
 end
