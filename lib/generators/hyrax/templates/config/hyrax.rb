@@ -104,13 +104,14 @@ Hyrax.config do |config|
   # The banner image. Should be 5000px wide by 1000px tall
   # config.banner_image = 'https://cloud.githubusercontent.com/assets/92044/18370978/88ecac20-75f6-11e6-8399-6536640ef695.jpg'
 
-  # Temporary path to hold uploads before they are ingested into FCrepo
-  # This must be a lambda that returns a Pathname
+  # Temporary paths to hold uploads before they are ingested into FCrepo
+  # These must be lambdas that return a Pathname. Can be configured separately
   #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
+  #  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
 
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
-  # config.derivatives_path = Rails.root.join( 'tmp', 'derivatives')
+  # config.derivatives_path = Rails.root.join('tmp', 'derivatives')
 
   # Should schema.org microdata be displayed?
   # config.display_microdata = true

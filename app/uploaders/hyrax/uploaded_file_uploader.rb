@@ -6,10 +6,18 @@ module Hyrax
       base_path + "#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
     end
 
+    def cache_dir
+      cache_path + "#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    end
+
     private
 
       def base_path
         Hyrax.config.upload_path.call
+      end
+
+      def cache_path
+        Hyrax.config.cache_path.call
       end
   end
 end
