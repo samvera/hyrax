@@ -1,8 +1,9 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   let(:permission_template) { build(:permission_template) }
   let(:form) { described_class.new(permission_template) }
+  let(:today) { Time.zone.today }
+  let(:admin_set) { create(:admin_set) }
+
   subject { form }
   it { is_expected.to delegate_method(:available_workflows).to(:model) }
   it { is_expected.to delegate_method(:active_workflow).to(:model) }
@@ -20,16 +21,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
-    let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.update(input_params) }
-    let(:today) { Time.zone.today }
-
-    it "calls grant_workflow_roles" do
-      expect(form).to receive(:grant_workflow_roles)
-      subject
-    end
 
     context "with a user manager" do
       let(:grant_attributes) do
@@ -69,26 +62,27 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with visibility only" do
       let(:input_params) do
-        ActionController::Parameters.new(visibility: "open").permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
+        ).permit!
       end
-      it "updates the visibility" do
-        expect { subject }.to change { permission_template.reload.visibility }.from(nil).to('open')
-      end
-    end
-
-    context "with release 'no delay'" do
-      let(:input_params) do
-        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY).permit!
-      end
-      it "sets release_period=now, release_date=today" do
-        expect { subject }.to change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
+      it "updates the visibility, release_period=now, release_date=today" do
+        expect { subject }
+          .to change { permission_template.reload.visibility }.from(nil).to('open')
+          .and change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
         expect(permission_template.release_date).to eq(today)
       end
     end
 
     context "with release 'varies', date specified" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "", release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, release_date: today + 1.year).permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: "",
+          release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
+          release_date: today + 1.year
+        ).permit!
       end
       it "sets release_period=before and release_date" do
         expect { subject }.to change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE)
@@ -98,9 +92,12 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with release 'varies', embargo specified" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "",
-                                         release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
-                                         release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS).permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: "",
+          release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
+          release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS
+        ).permit!
       end
       it "sets release_period to embargo period and release_date to 2 years from now" do
         expect { subject }.to change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS)
@@ -110,8 +107,11 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with release 'fixed', date specified" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
-                                         release_date: today + 1.month).permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+          release_date: today + 1.month
+        ).permit!
       end
       it "sets release_period=fixed and release_date" do
         expect { subject }.to change { permission_template.reload.release_period }
@@ -122,9 +122,18 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
 
     context "with modifying release_period from 'fixed' to 'no_delay'" do
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: today + 1.month) }
+      let(:permission_template) do
+        create(:permission_template,
+               admin_set_id: admin_set.id,
+               visibility: "open",
+               release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+               release_date: today + 1.month)
+      end
       let(:input_params) do
-        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY).permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
+        ).permit!
       end
       it "sets release_period=now, release_date=today" do
         expect { subject }.to change { permission_template.reload.release_period }
@@ -138,13 +147,17 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       let(:permission_template) do
         create(:permission_template,
                admin_set_id: admin_set.id,
+               visibility: "open",
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
                release_date: today + 1.month)
       end
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "",
-                                         release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
-                                         release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS).permit!
+        ActionController::Parameters.new(
+          visibility: "open",
+          release_period: "",
+          release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
+          release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS
+        ).permit!
       end
       it "sets release_period to embargo period, release_date to 2 years from now" do
         expect { subject }.to change { permission_template.reload.release_period }
@@ -158,7 +171,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   describe "#grant_workflow_roles" do
     subject { form.send(:grant_workflow_roles, attributes) }
     let(:attributes) { { workflow_id: workflow.id } }
-    let(:admin_set) { create(:admin_set) }
     let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
     let(:user) { create(:user) }
     let(:role1) { Sipity::Role.create!(name: 'hello') }
@@ -175,7 +187,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
                   agent_id: 'librarians',
                   access: 'manage' }])
     end
-    let(:form) { described_class.new(permission_template) }
+
     before do
       permission_template.clear_changes_information
       workflow.workflow_roles.create!([{ role: role1 }, { role: role2 }])
@@ -195,16 +207,103 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
   end
 
+  describe "#validate_visibility_combinations" do
+    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+
+    context "validate all release option attribute combinations" do
+      let(:visibility) { '' } # default values
+      let(:release_date) { nil }
+      let(:release_period) { '' }
+      let(:release_varies) { nil }
+      let(:release_embargo) { nil }
+      let(:error_code) { nil }
+      let(:attributes) do
+        {
+          visibility: visibility,
+          release_date: release_date,
+          release_period: release_period,
+          release_varies: release_varies,
+          release_embargo: release_embargo
+        }
+      end
+      let(:ac_params) do
+        ActionController::Parameters.new(attributes).permit!
+      end
+
+      RSpec.shared_examples 'valid attributes' do
+        it 'are accepted by #update' do
+          expect(form.update(ac_params)).to eq(content_tab: "visibility", updated: true)
+        end
+      end
+
+      RSpec.shared_examples 'invalid attributes' do
+        let(:response) { form.update(ac_params) }
+        it 'trigger error from #update' do
+          expect(response).to eq(content_tab: "visibility", updated: false, error_code: error_code)
+          expect(I18n.t(response[:error_code], scope: 'hyrax.admin.admin_sets.form.permission_update_errors')).not_to include('translation missing')
+        end
+      end
+
+      describe 'no delay' do
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, with date selected' do
+        let(:release_date) { Time.zone.today + 2.months }
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, with embargo selected' do
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO }
+        let(:release_embargo) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_2_YEARS }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'fixed, with date selected' do
+        let(:release_date) { Time.zone.today + 2.months }
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED }
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, but no subsequent options' do
+        let(:release_period) { nil }
+        let(:error_code) { 'nothing' }
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'varies, with date option but no date' do
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
+        let(:release_date) { '' }
+        let(:error_code) { 'no_date' }
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'varies, with embargo option but no period' do
+        let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO }
+        let(:release_embargo) { '' }
+        let(:error_code) { 'no_embargo' }
+        it_behaves_like 'invalid attributes'
+      end
+
+      describe 'fixed, with no date selected' do
+        let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED }
+        let(:release_date) { '' }
+        let(:error_code) { 'no_date' }
+        it_behaves_like 'invalid attributes'
+      end
+    end
+  end
+
   describe "#select_release_varies_option" do
-    let(:admin_set) { create(:admin_set) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.send(:select_release_varies_option, permission_template) }
-    let(:today) { Time.zone.today }
 
     context "with release before date specified" do
       let(:permission_template) do
         create(:permission_template,
                admin_set_id: admin_set.id,
+               visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
                release_date: today + 1.month)
       end
@@ -218,6 +317,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       let(:permission_template) do
         create(:permission_template,
                admin_set_id: admin_set.id,
+               visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
       end
       it "selects release_varies='embargo' and value in embargo selectbox" do
@@ -230,6 +330,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       let(:permission_template) do
         create(:permission_template,
                admin_set_id: admin_set.id,
+               visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
       end
       it "selects neither varies option, nor embargo" do
@@ -240,20 +341,19 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#permission_template_update_params" do
-    let(:admin_set) { create(:admin_set) }
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    let(:form) { described_class.new(permission_template) }
     subject { form.send(:permission_template_update_params, input_params) }
-    let(:today) { Time.zone.today }
 
     context "with release varies by date selected" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "",
+        ActionController::Parameters.new(visibility: '',
+                                         release_period: "",
                                          release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
                                          release_date: today + 1.month).permit!
       end
       it "updates params to release_period=before and keeps date" do
         expect(subject).to eq ActionController::Parameters.new(
+          visibility: '',
           release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
           release_date: today + 1.month
         ).permit!
@@ -262,12 +362,14 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with release varies by embargo selected" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: "",
+        ActionController::Parameters.new(visibility: '',
+                                         release_period: "",
                                          release_varies: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO,
                                          release_embargo: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR).permit!
       end
       it "updates params to release_period=1yr" do
         expect(subject).to eq ActionController::Parameters.new(
+          visibility: '',
           release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR,
           release_date: nil
         ).permit!
@@ -276,13 +378,15 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     context "with release no delay (now) selected, after filling out release_date" do
       let(:input_params) do
-        ActionController::Parameters.new(release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
+        ActionController::Parameters.new(visibility: '',
+                                         release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
                                          release_varies: "",
                                          release_embargo: "",
                                          release_date: today + 1.month).permit!
       end
       it "updates params to release_period=1yr" do
         expect(subject).to eq ActionController::Parameters.new(
+          visibility: '',
           release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
           release_date: nil
         ).permit!
