@@ -161,6 +161,16 @@ rake hydra:server
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
 
+## Add Default Admin Set
+
+After Fedora and Solr are running, create the default administrative set by running the following rake task:
+
+```
+rake sufia:default_admin_set:create
+```
+
+You will want to run this command the first time this code is deployed to a new environment as well.
+
 # Managing a Sufia-based app
 
 The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Sufia application, including guidance specific to:
