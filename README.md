@@ -32,6 +32,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Message Queue](#message-queue)
     * [Generate a primary work type](#generate-a-primary-work-type)
     * [Start servers](#start-servers)
+    * [Add Default Admin Set](#add-default-admin-set)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling Features](#toggling-features)
   * [License](#license)
@@ -70,8 +71,8 @@ After installing the Prerequisites:
 
 Hyrax 0.0.x requires the following software to work:
 
-1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.3.0)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.0)
+1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.4.1)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.1)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
@@ -189,11 +190,13 @@ And now you should be able to browse to [localhost:3000](http://localhost:3000/)
 
 ## Add Default Admin Set
 
-To add the default admin set, before any works are created, run the following rake task:
+After Fedora and Solr are running, create the default administrative set by running the following rake task:
 
 ```
 rake hyrax:default_admin_set:create
 ```
+
+You will want to run this command the first time this code is deployed to a new environment as well.
 
 # Managing a Hyrax-based app
 
