@@ -20,6 +20,14 @@ module Hyrax
       { 'en' => 'English', 'es' => 'Español' }
     end
 
+    # This is a workaround for https://github.com/rails/rails/issues/28253
+    # The signature of current_page? will change in Rails 5.1, we may want to change this too
+    def current_page_except_defaults?(options)
+      return current_page?(options) unless options.is_a? Hash
+      defaults = controller.default_url_options.each_with_object({}) { |(k, _), h| h[k] = nil }
+      current_page?(options.merge(defaults))
+    end
+
     delegate :name, :name_full, to: :institution, prefix: :institution
 
     def banner_image

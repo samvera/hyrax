@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/my/_search_header.html.erb', type: :view do
     stub_template 'hyrax/collections/_form_for_select_collection.html.erb' => ''
     view.extend BatchEditsHelper
     allow(view).to receive(:on_the_dashboard?).and_return(true)
+    allow(view).to receive(:search_action_url).and_return('')
   end
 
   context "on my works page" do

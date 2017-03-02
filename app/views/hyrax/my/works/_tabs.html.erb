@@ -1,9 +1,9 @@
 <ul class="nav nav-tabs" id="my_nav" role="navigation">
   <span class="sr-only">You are currently listing your works.  You have <%= @response.docs.count %> <%= 'work'.pluralize(@response.docs.count)%> </span>
-  <li<%= ' class="active"'.html_safe if current_page?(hyrax.dashboard_works_path) %>>
+  <li<%= ' class="active"'.html_safe if current_page_except_defaults?(controller: 'dashboard/works') %>>
     <%= link_to t('hyrax.dashboard.all.works'), hyrax.dashboard_works_path %>
   </li>
-  <li<%= ' class="active"'.html_safe if current_page?(hyrax.my_works_path) %>>
+  <li<%= ' class="active"'.html_safe if current_page_except_defaults?(controller: 'my/works') %>>
     <%= link_to t('hyrax.dashboard.my.works'), hyrax.my_works_path %>
   </li>
 </ul>

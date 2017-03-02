@@ -40,13 +40,13 @@
     <% end %>
   <% end %>
 
-  <%= menu.nav_link(hyrax.my_collections_path,
-                    also_active_for: hyrax.dashboard_collections_path) do %>
+  <%= menu.nav_link({ controller: 'hyrax/my/collections' },
+                    also_active_for: { controller: 'hyrax/dashboard/collections' }) do %>
     <span class="fa fa-folder-open"></span> <%= t('hyrax.admin.sidebar.collections') %>
   <% end %>
 
-  <%= menu.nav_link(hyrax.my_works_path,
-                    also_active_for: hyrax.dashboard_works_path) do %>
+  <%= menu.nav_link({ controller: 'hyrax/my/works' },
+                    also_active_for: { controller: 'hyrax/dashboard/works' }) do %>
     <span class="fa fa-file"></span> <%= t('hyrax.admin.sidebar.works') %>
   <% end %>
 

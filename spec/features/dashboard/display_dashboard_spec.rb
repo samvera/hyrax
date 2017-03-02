@@ -10,10 +10,9 @@ describe "The dashboard as viewed by a regular user", type: :feature do
       expect(page).to have_content "User Notifications"
 
       within '.sidebar' do
-        click_link "Works"
+        expect(page).to have_link "Works"
+        expect(page).to have_link "Collections"
       end
-      expect(page).to have_content "My Works"
-      expect(page).to have_content "My Collections"
     end
   end
 end
