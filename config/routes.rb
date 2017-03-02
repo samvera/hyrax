@@ -163,7 +163,7 @@ Hyrax::Engine.routes.draw do
   end
 
   # API routes
-  if Hyrax.config.arkivo_api
+  if Hyrax.config.arkivo_api?
     namespace :api do
       if defined?(Hyrax::ArkivoConstraint)
         constraints Hyrax::ArkivoConstraint do
