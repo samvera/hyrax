@@ -14,3 +14,9 @@
 .searchbar-right {
   margin-right: 0;
 }
+
+// We need these ancestor selectors to override Bootstrap and push
+// The bell icon right next to the user util links dropdown.
+.nav > li > .notify-number {
+  padding-right: 0;
+}

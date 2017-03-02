@@ -563,7 +563,7 @@ en:
       dashboard:
         menu: "Dashboard"
       language_switch: "Switch language"
-      notifications: "Notifications"
+      notifications: "You have no unread notifications"
       profile:
         login: "Login"
         logout: "Logout"

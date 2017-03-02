@@ -1,5 +1,4 @@
-# coding: utf-8
-describe '/_user_util_links.html.erb', type: :view do
+RSpec.describe '/_user_util_links.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   before do
     allow(view).to receive(:user_signed_in?).and_return(true)
@@ -19,8 +18,8 @@ describe '/_user_util_links.html.erb', type: :view do
 
   it 'shows the number of outstanding messages' do
     render
-    expect(rendered).to have_link 'Notifications 0 unread notifications', href: hyrax.notifications_path
-    expect(rendered).to have_selector '.label-default', text: '0 unread notifications'
+    expect(rendered).to have_selector "a[aria-label='You have no unread notifications'][href='#{hyrax.notifications_path}']"
+    expect(rendered).to have_selector 'a.notify-number span.label-danger.invisible', text: '0'
   end
 
   describe 'translations' do

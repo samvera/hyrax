@@ -1,4 +1,6 @@
-export default class Notifications {
+import Notification from './notification';
+
+export default class {
   // If URL is not provided, do nothing.
   // If there is a query parameter named "notification_seconds", it will
   // use it's value as the interval in seconds to poll.
@@ -10,6 +12,7 @@ export default class Notifications {
     this.fetchUpdates(url)
     let interval = this.getIntervalSeconds(default_interval) * 1000
     this.poller(interval, url)
+    this.notification_widget = new Notification($('.notify-number'))
   }
 
   poller(interval, url) {
@@ -21,15 +24,7 @@ export default class Notifications {
   }
 
   updatePage(data) {
-      let notification = $('.notify_number')
-      notification.find('.count').html(data.notify_number)
-      if (data.notify_number === 0) {
-          notification.addClass('label-default')
-          notification.removeClass('label-danger')
-      } else {
-          notification.addClass('label-danger')
-          notification.removeClass('label-default')
-      }
+    this.notification_widget.setCount(data.notify_number)
   }
 
   getIntervalSeconds(default_interval) {
