@@ -45,8 +45,8 @@ Hyrax = {
     },
 
     autocomplete: function () {
-        var ac = require('hyrax/autocomplete');
-        var autocomplete = new ac.Autocomplete()
+        var Autocomplete = require('hyrax/autocomplete');
+        var autocomplete = new Autocomplete()
         $('.multi_value.form-group').manage_fields({
           add: function(e, element) {
             autocomplete.fieldAdded(element)
@@ -56,8 +56,8 @@ Hyrax = {
     },
 
     saveWorkControl: function () {
-        var sw = require('hyrax/save_work/save_work_control');
-        var control = new sw.SaveWorkControl($("#form-progress"))
+        var SaveWorkControl = require('hyrax/save_work/save_work_control');
+        var control = new SaveWorkControl($("#form-progress"))
     },
 
     saveWorkFixed: function () {
@@ -75,21 +75,21 @@ Hyrax = {
     },
 
     permissions: function () {
-        var perm = require('hyrax/permissions/control');
+        var PermissionsControl = require('hyrax/permissions/control');
         // On the edit work page
-        new perm.PermissionsControl($("#share"), 'tmpl-work-grant');
+        new PermissionsControl($("#share"), 'tmpl-work-grant');
         // On the edit fileset page
-        new perm.PermissionsControl($("#permission"), 'tmpl-file-set-grant');
+        new PermissionsControl($("#permission"), 'tmpl-file-set-grant');
         // On the batch edit page
-        new perm.PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
+        new PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
     },
 
     notifications: function () {
-        var note = require('hyrax/notifications');
+        var Notifications = require('hyrax/notifications');
         $('[data-update-poll-url]').each(function () {
             var interval = $(this).data('update-poll-interval');
             var url = $(this).data('update-poll-url');
-            new note.Notifications(url, interval);
+            new Notifications(url, interval);
         });
     },
 
@@ -98,22 +98,22 @@ Hyrax = {
     },
 
     relationshipsTable: function () {
-        var rel = require('hyrax/relationships/table');
+        var RelationshipsTable = require('hyrax/relationships/table');
         $('table.relationships-ajax-enabled').each(function () {
-            new rel.RelationshipsTable($(this));
+            new RelationshipsTable($(this));
         });
     },
 
     selectWorkType: function () {
-        var selectWork = require('hyrax/select_work_type');
+        var SelectWorkType = require('hyrax/select_work_type');
         $("[data-behavior=select-work]").each(function () {
-            new selectWork($(this))
+            new SelectWorkType($(this))
         });
     },
 
     fileManager: function () {
-        var fm = require('hyrax/file_manager');
-        var file_manager = new fm
+        var FileManager = require('hyrax/file_manager');
+        new FileManager()
     },
 
     // Saved so that inline javascript can put data somewhere.

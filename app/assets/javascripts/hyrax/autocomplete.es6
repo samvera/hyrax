@@ -1,4 +1,4 @@
-export class Autocomplete {
+export default class Autocomplete {
   constructor() {
   }
 

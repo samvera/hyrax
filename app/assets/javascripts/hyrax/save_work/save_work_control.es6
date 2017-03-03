@@ -14,7 +14,7 @@ if (!String.prototype.startsWith) {
   };
 }
 
-export class SaveWorkControl {
+export default class SaveWorkControl {
   /**
    * Initialize the save controls
    * @param {jQuery} element the jquery selector for the save panel
