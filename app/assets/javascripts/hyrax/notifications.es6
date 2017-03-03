@@ -1,4 +1,4 @@
-export class Notifications {
+export default class Notifications {
   // If URL is not provided, do nothing.
   // If there is a query parameter named "notification_seconds", it will
   // use it's value as the interval in seconds to poll.

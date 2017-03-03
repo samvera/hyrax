@@ -2,11 +2,11 @@ import { Registry } from './registry'
 import { UserControls } from './user_controls'
 import { GroupControls } from './group_controls'
 
-export class PermissionsControl {
+export default class PermissionsControl {
   /**
    * Initialize the save controls
    * @param {jQuery} element the jquery selector for the permissions container
-   * @param {String} template_id the identifier of the template for the added elements 
+   * @param {String} template_id the identifier of the template for the added elements
    */
   constructor(element, template_id) {
     if (element.length == 0) {
@@ -19,7 +19,7 @@ export class PermissionsControl {
     this.group_controls = new GroupControls(this.element, this.registry)
   }
 
-  // retrieve object_name the name of the object to create 
+  // retrieve object_name the name of the object to create
   object_name() {
     return this.element.data('param-key')
   }

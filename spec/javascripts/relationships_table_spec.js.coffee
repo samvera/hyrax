@@ -1,5 +1,5 @@
 describe 'RelationshipsTable', ->
-  control = require('hyrax/relationships/table')
+  RelationshipsTable = require('hyrax/relationships/table')
   form = null
   element = null
   btn_remove = null
@@ -19,7 +19,7 @@ describe 'RelationshipsTable', ->
     btn_edit = element.find('.edit')
     input = element.find('.new-form-control')
     message = element.find('.message')
-    target = new control.RelationshipsTable(element)
+    target = new RelationshipsTable(element)
     jasmine.Ajax.install()
     deferred_ajax = new jQuery.Deferred()
     spyOn($,'ajax').and.returnValue(deferred_ajax)
