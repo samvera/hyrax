@@ -29,12 +29,12 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Redis](#redis)
     * [Rails](#rails)
   * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
-    * [Message Queue](#message-queue)
-    * [Generate a primary work type](#generate-a-primary-work-type)
+    * [Generate a work type](#generate-a-work-type)
     * [Start servers](#start-servers)
-    * [Add Default Admin Set](#add-default-admin-set)
+    * [Start background workers](#start-background-workers)
+    * [Create default administrative set](#create-default-administrative-set)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
-    * [Toggling Features](#toggling-features)
+    * [Toggling features](#toggling-features)
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
@@ -92,7 +92,7 @@ Hyrax 0.0.x requires the following software to work:
 
 ### Derivatives
 
-Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/<your full path to>/LibreOffice.app/Contents/MacOS/"
+Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/path/to/LibreOffice.app/Contents/MacOS/"
 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
 
@@ -139,32 +139,9 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Loading all of Hyrax's database migrations into your application's database
 * Loading Hyrax's default workflows into your application's database
 
-## Message Queue
+## Generate a work type
 
-Many of the services performed by Hyrax are resource intensive, and therefore are well suited to running as background jobs that can be managed and executed by a Message Queue system. Examples include:
-* File ingest
-* Derivative generation
-* Characterization
-* Fixity
-* Solr indexing
-
-Hyrax implements these jobs using [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html), allowing you to choose the message queue system of your choice.
-
-For initial testing and development, it is recommended that you change the default ActiveJob adapter `:async` to `:inline`. This adapter will execute jobs immediately as they are received. This can be accomplished by adding the following to your `config/application.rb`
-
-```
-class Application < Rails::Application
-  # ...
-  config.active_job.queue_adapter = :inline
-  # ...
-end
-```
-
-**For production applications** you will want to setup a 3rd party system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
-
-## Generate a primary work type
-
-Hyrax allows you to specify your work types by using a generator.
+Hyrax allows you to specify your work types by using a generator. You may generate one or more of these work types.
 
 Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
@@ -188,15 +165,39 @@ rake hydra:server
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
 
-## Add Default Admin Set
+## Start background workers
 
-After Fedora and Solr are running, create the default administrative set by running the following rake task:
+Many of the services performed by Hyrax are resource intensive, and therefore are well suited to running as background jobs that can be managed and executed by a message queuing system. Examples include:
+
+* File ingest
+* Derivative generation
+* Characterization
+* Fixity
+* Solr indexing
+
+Hyrax implements these jobs using the Rails [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html) framework, allowing you to choose the message queue system of your choice.
+
+For initial testing and development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/application.rb`
+
+```
+class Application < Rails::Application
+  # ...
+  config.active_job.queue_adapter = :inline
+  # ...
+end
+```
+
+**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
+
+## Create default administrative set
+
+**After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following rake task:
 
 ```
 rake hyrax:default_admin_set:create
 ```
 
-You will want to run this command the first time this code is deployed to a new environment as well.
+**NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
 
 # Managing a Hyrax-based app
 
