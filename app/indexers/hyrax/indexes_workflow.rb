@@ -39,7 +39,7 @@ module Hyrax
     end
 
     def workflow_roles(entity)
-      Workflow::PermissionQuery.scope_roles_associated_with_the_given_entity(entity: entity)
+      Hyrax::Workflow::PermissionQuery.scope_roles_associated_with_the_given_entity(entity: entity)
     end
   end
 end
