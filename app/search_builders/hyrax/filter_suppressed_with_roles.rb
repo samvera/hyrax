@@ -24,7 +24,7 @@ module Hyrax
       end
 
       def user_has_active_workflow_role?
-        Workflow::PermissionQuery.scope_permitted_workflow_actions_available_for_current_state(user: current_ability.current_user, entity: current_work).any?
+        Hyrax::Workflow::PermissionQuery.scope_permitted_workflow_actions_available_for_current_state(user: current_ability.current_user, entity: current_work).any?
       rescue PowerConverter::ConversionError
         # The current_work doesn't have a sipity workflow entity
         false
