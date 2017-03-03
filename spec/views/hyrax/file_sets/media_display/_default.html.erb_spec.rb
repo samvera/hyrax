@@ -6,7 +6,7 @@ describe 'hyrax/file_sets/mdeia_display/_default.html.erb', type: :view do
   let(:link) { true }
 
   before do
-    allow(Hyrax.config).to receive(:display_media_download_link).and_return(link)
+    allow(Hyrax.config).to receive(:display_media_download_link?).and_return(link)
     render 'hyrax/file_sets/media_display/default', file_set: file_set
   end
 
