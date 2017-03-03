@@ -53,7 +53,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
-  spec.add_dependency 'kaminari_route_prefix', '~> 0.0.1'
+  spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
   spec.add_dependency 'dry-validation', '~> 0.9'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
