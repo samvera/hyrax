@@ -70,9 +70,7 @@
 //= require hyrax/permissions
 //= require hyrax/notifications
 //= require hyrax/autocomplete
-//= require hyrax/autocomplete/location
-//= require hyrax/autocomplete/subject
-//= require hyrax/autocomplete/language
+//= require hyrax/autocomplete/default
 //= require hyrax/autocomplete/work
 //= require hyrax/relationships
 //= require hyrax/select_work_type
