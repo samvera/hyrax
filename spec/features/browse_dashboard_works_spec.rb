@@ -6,9 +6,6 @@ RSpec.describe "Browse Dashboard", type: :feature do
   let!(:mp3_work) do
     create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit))
   end
-  let!(:audio_work) do
-    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore))
-  end
 
   before do
     # Grant the user access to deposit into an admin set.
