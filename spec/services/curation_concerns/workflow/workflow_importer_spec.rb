@@ -10,6 +10,7 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
           "name": "ulra_submission",
           "label": "This is the label",
           "description": "This description could get really long",
+          "allows_access_grant": true,
           "actions": [{
             "name": "approve",
             "transition_to": "reviewed",
@@ -42,8 +43,10 @@ RSpec.describe CurationConcerns::Workflow::WorkflowImporter do
         result = described_class.generate_from_json_file(path: path)
       end.to change { Sipity::Workflow.count }.by(1)
       expect(result).to match_array(kind_of(Sipity::Workflow))
-      expect(result.first.label).to eq "This is the label"
-      expect(result.first.description).to eq "This description could get really long"
+      first_workflow = result.first
+      expect(first_workflow.label).to eq "This is the label"
+      expect(first_workflow.description).to eq "This description could get really long"
+      expect(first_workflow.allows_access_grant?).to be true
     end
   end
 end

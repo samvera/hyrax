@@ -8,6 +8,7 @@ module CurationConcerns
           workflows: [
             {
               name: "valid",
+              allows_access_grant: true,
               actions: [
                 {
                   name: "finalize_digitization",
