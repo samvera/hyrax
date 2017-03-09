@@ -72,6 +72,7 @@ module CurationConcerns
           workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name)) do |wf|
             wf.label = configuration.fetch(:label, nil)
             wf.description = configuration.fetch(:description, nil)
+            wf.allows_access_grant = configuration.fetch(:allows_access_grant, nil)
             wf.save!
           end
 
