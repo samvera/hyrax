@@ -16,7 +16,7 @@ layout: default
                             <li><strong><a href="#q1">What is Hydra?</a></strong></li>
                             <li><strong><a href="#q2">What is Hyrax?</a></strong></li>
                             <li><strong><a href="#q3">What does Hyrax do?</a></strong></li>
-                            <li><strong><a href="#q4">Who’s using Hyrax, and for what purposes?</a></strong></li>
+                            <li><strong><a href="#q4">Who's using Hyrax, and for what purposes?</a></strong></li>
                             <li><strong><a href="#q5">How is Hyrax different from ...?</a></strong></li>
                             <li><strong><a href="#q6">What will it cost?</a></strong></li>
                         </ul>
@@ -36,12 +36,12 @@ layout: default
                         </header>
                         <dl>
                             <dt style="margin-top: 25px"><strong><a name="q1">What is Hydra?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hydra is an open-source repository solution built collaboratively to address a broad range of repository needs. Rather than being one-size-fits-all, Hydra leverages an ecosystem of components that lets institutions assemble and deploy robust and durable repository applications that are tailored to their users’ needs and workflows. Hydra’s platform is built atop the Fedora Commons repository for digital asset management and utilizes Apache Solr for search indexing.  The Hydra community has worked together to develop and sustain a number of “solution bundles” &mdash; applications designed to solve a common need in a generalized yet customizable way with minimal development effort required &mdash; including the Avalon Media System, for managing and providing access to large collections of digital audio and video, and Hyrax, a full-featured institutional repository with self-deposit and proxy deposit workflows.</dd>
+                            <dd style="margin-top: 5px">Hydra is an open-source repository solution built collaboratively to address a broad range of repository needs. Rather than being one-size-fits-all, Hydra leverages an ecosystem of components that lets institutions assemble and deploy robust and durable repository applications that are tailored to their users' needs and workflows. Hydra's platform is built atop the <a href="http://fedorarepository.org/">Fedora repository</a> for digital asset management and utilizes Apache Solr for searching &amp; indexing.  The Hydra community has worked together to develop and sustain a number of “solution bundles” &mdash; applications designed to solve a common need in a generalized yet customizable way with minimal development effort required &mdash; including the Avalon Media System, for managing and providing access to large collections of digital audio and video, and Hyrax, a front-end enabling common digital collections management and institutional repository features including creation of repository object types on demand, deposit of content via multiple configurable workflows, and description of content with flexible metadata.</dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q2">What is Hyrax, and what’s the relationship between Hyrax and Hydra?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hydra provides a framework for building web applications on top of a repository back-end and a search index. Hyrax uses the full power of Hydra and extends it to provide a user interface around common repository features and social features (see <a href="#q3">the answer to question 3</a> for more). Hyrax offers self-deposit and proxy deposit workflows with plans to develop one or more mediated deposit workflows in 2016. Hyrax delivers its rich and growing set of features via a modern, responsive user interface.
+                            <dt style="margin-top: 25px"><strong><a name="q2">What is Hyrax, and what's the relationship between Hyrax and Hydra?</a></strong></dt>
+                            <dd style="margin-top: 5px">Hydra provides a framework for building web applications on top of a repository back-end and a search index. Hyrax uses the full power of Hydra and extends it to provide a user interface around common repository features and social features (see <a href="#q3">the answer to question 3</a> for more). Hyrax offers self-deposit, proxy deposit, and mediated deposit workflows. Hyrax delivers its rich and growing set of features via a modern, responsive user interface.
                                 <br/><br/>
-                                Hyrax was originally developed at <a href="http://psu.edu/">Penn State University</a> as a shareable generalization of their Hydra-based research repository application, <a href="https://scholarsphere.psu.edu/">ScholarSphere</a>.   Since Hyrax was contributed to the Hydra community in 2012, Penn State and <a href="http://curationexperts.com/">Data Curation Experts</a> &mdash; along with a growing number of Hydra community developers (from over 30 institutions as of Jan. 2016) &mdash; have helped Hyrax mature and thrive. Hyrax is exemplary of Hydra development that has had wide implementation and code contributions to become a truly community-driven, -supported, and -maintained solution bundle.
+                                Hyrax was created through the consolidation of the Sufia and CurationConcerns gems. (Sufia was originally developed at <a href="http://psu.edu/">Penn State University</a> as a shareable generalization of their Hydra-based research repository application, <a href="https://scholarsphere.psu.edu/">ScholarSphere</a>.) Hyrax, and Sufia and CurationConcerns before it, has been maintained by a growing number of Hydra community developers (with over 80 contributors as of March of 2017. Hyrax is exemplary of Hydra development that has had wide implementation and code contributions to become a truly community-driven, -supported, and -maintained solution bundle.
                             </dd>
 
                             <dt style="margin-top: 25px"><strong><a name="q3">What does Hyrax do?</a></strong></dt>
@@ -51,7 +51,8 @@ layout: default
                                     <li>Flexible user- and group-based access controls, including sharing with groups and individuals:
                                         <ol class="default">
                                             <li>Example: A file can be shared with a User Managed Group for viewing and downloading, or access can be at the editing level (i.e., anyone in the group would have editing rights to the metadata).</li>
-                                            <li>Example: Permissions for visibility are, by default, open access. They can be changed to “Private,” or to the institution level (i.e., Penn State only).</li></ol>
+                                            <li>Example: Permissions for visibility are, by default, open access. They can be changed to "Private," or to the institution level (i.e., Penn State only)</li>
+                                        </ol>
                                     </li>
                                     <li>Admin user privileges:
                                         <ol class="default">
@@ -62,14 +63,12 @@ layout: default
                                     </li>
                                     <li>User profiles, where users can also select files to feature in the profile</li>
                                     <li>User dashboard for managing files, including creation of collections</li>
-                                    <li>Integration with Zotero for automatic population of user content</li>
                                     <li>Proxy deposit and transfer of file ownership</li>
+                                    <li>Configurable, flexible workflows</li>
                                     <li>Forms for batch-editing metadata</li>
-                                    <li>Google-Scholar specific metadata embedding</li>
                                     <li>Google Analytics for usage statistics</li>
                                     <li>Full-text indexing and searching</li>
                                     <li>Faceted search and browse</li>
-                                    <li>Generation and validation of identifiers</li>
                                     <li>Digital preservation functionalities:
                                         <ol class="default">
                                             <li>Fixity checking</li>
@@ -80,14 +79,14 @@ layout: default
                                 </ul>
                             </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q4">Who’s using Hyrax, and for what purposes?</a></strong></dt>
-                            <dd style="margin-top: 5px">There are approximately 30 organizations (as of Nov. 2015) that we know are running instances of Hyrax for a range of purposes including institutional repositories, data repositories, digital collections management, and digital archives. As Hyrax is open-source software that anyone can use freely, there’s no way to tell exactly how many Hyrax users there are. We’ve seen Hyrax used by a diverse group of organizations including research libraries & archives, public media, art museums, academic consortia, scientific foundations, and a repertory theater.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q4">Who's using Hyrax, and for what purposes?</a></strong></dt>
+                            <dd style="margin-top: 5px">There are approximately 45 organizations (as of March of 2017) that we know are running instances of Hyrax (and its progenitors, Sufia and CurationConcerns) for a range of purposes including institutional repositories, data repositories, digital collections management, and digital archives. As Hyrax is open-source software that anyone can use freely, there's no way to tell exactly how many Hyrax users there are. We've seen Hyrax used by a diverse group of organizations including research libraries & archives, public media, art museums, academic consortia, scientific foundations, and a repertory theater.</dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q5">How is Hyrax different from e.g. DSpace, Bepress, etc.?</a></strong></dt>
-                            <dd style="margin-top: 5px">If pressed, one might suggest that Hyrax is more akin to a DSpace-style repository solution than a Bepress-style solution in that it is a locally hosted open repository framework. Hyrax is a repository solution that allows deposit of content and metadata and user-level control over that content (upload, modify, delete content). Hyrax does not yet support multi-step approval workflow for deposit like DSpace and Bepress do, though these functionalities have been identified by the Hydra community as a priority for 2016.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q5">How is Hyrax different from DSpace, Bepress, CONTENTdm, etc.?</a></strong></dt>
+                            <dd style="margin-top: 5px">Hyrax is a repository solution that allows deposit of content via configurable workflows; description with customizable metadata; and user-level control over that content (upload, modify, delete content). Hyrax supports many of the same features provided by each of these systems (see [the feature matrix](https://github.com/projecthydra/sufia/wiki/Feature-matrix)).</dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q6">What will it cost?</a></strong></dt>
-                            <dd style="margin-top: 5px">While it is difficult to put a dollar amount on a particular implementation of Hyrax, we know from the experiences of our community members that Hyrax repository solutions have been implemented with resources ranging from one part-time developer through much larger development environments. As Hyrax and Hydra are open source products, it would be useful for potential users to connect with the community (Hydra-Tech and/or Hydra-Community) about resourcing concerns for a particular implementation scenario.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q6">What does Hyrax cost?</a></strong></dt>
+                            <dd style="margin-top: 5px">While it is difficult to put a dollar amount on a particular implementation of Hyrax, we know from the experiences of our community members that Hyrax repository solutions have been implemented with resources ranging from one part-time developer through much larger development shops. As Hyrax and Hydra are open-source products, it would be useful for potential users to connect with the community ([Hydra-Tech](https://groups.google.com/forum/#!forum/hydra-tech) or [Hydra-Community](https://groups.google.com/forum/#!forum/hydra-community) groups) about resourcing concerns for a particular implementation scenario.</dd>
                         </dl>
                     </article>
                 </div>
