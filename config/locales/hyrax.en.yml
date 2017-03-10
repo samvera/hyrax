@@ -69,6 +69,7 @@ en:
           depositors:
             action:             "Action"
             agent_name:         "Depositors of This Set"
+            empty:              "No depositors have been added to this administrative set."
             help:               "Depositors can add new works to this administrative set."
             remove:             "Remove"
             title:              "Depositors"
@@ -76,6 +77,7 @@ en:
           managers:
             action:             "Action"
             agent_name:         "Managers of This Set"
+            empty:              "No managers have been added to this administrative set."
             help:               "Managers of this administrative set can edit the set metadata, participants, and release and visibility settings. Managers can also edit work metadata, add to or remove files from a work, and add new works to the set."
             remove:             "Remove"
             title:              "Managers"
@@ -83,6 +85,7 @@ en:
           viewers:
             action:             "Action"
             agent_name:         "Viewers of This Set"
+            empty:              "No viewers have been added to this administrative set."
             help:               "Viewers of this administrative set can view works in the set regardless of the visibility settings applied to the work. For example, viewers can view works in this set even if the works are currently embargoed or restricted."
             remove:             "Remove"
             title:              "Viewers"

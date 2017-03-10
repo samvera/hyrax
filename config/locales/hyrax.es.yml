@@ -69,6 +69,7 @@ es:
           depositors:
             action:             "Acción"
             agent_name:         "Depositantes de este Conjunto"
+            empty:              "No se han agregado depositantes a este conjunto administrativo."
             help:               "Los depositantes pueden agregar nuevas obras a este conjunto administrativo."
             remove:             "Quitar"
             title:              "Depositantes"
@@ -76,6 +77,7 @@ es:
           managers:
             action:             "Acción"
             agent_name:         "Administradores de este Conjunto"
+            empty:              "No se han agregado administradores a este conjunto administrativo."
             help:               "Los administradores de este conjunto administrativo pueden editar los metadatos establecidos, los participantes y los valores de liberación y visibilidad. Los administradores también pueden editar metadatos de trabajo, agregar o quitar archivos de un trabajo y agregar nuevos trabajos al conjunto."
             remove:             "Quitar"
             title:              "Administradores"
@@ -83,6 +85,7 @@ es:
           viewers:
             action:             "Acción"
             agent_name:         "Espectadores de este Conjunto"
+            empty:              "No se han agregado espectadores a este conjunto administrativo."
             help:               "Los espectadores de este conjunto administrativo pueden ver los trabajos en el conjunto independientemente de la configuración de visibilidad aplicada a la obra. Por ejemplo, los espectadores pueden ver obras en este conjunto incluso si las obras están actualmente embargadas o restringidas."
             remove:             "Quitar"
             title:              "Espectadores"
