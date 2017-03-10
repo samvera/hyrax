@@ -26,4 +26,8 @@
       <% end %>
     <% end %>
   </li>
+
+  <%= menu.nav_link(hyrax.admin_users_path) do %>
+    <span class="fa fa-user"></span> <%= t('hyrax.admin.sidebar.users') %>
+  <% end %>
 </ul>

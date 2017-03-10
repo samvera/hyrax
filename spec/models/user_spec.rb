@@ -200,4 +200,32 @@ describe User, type: :model do
       end
     end
   end
+  describe "scope Users" do
+    let!(:basic_user) { FactoryGirl.create(:user) }
+    let!(:guest_user) { FactoryGirl.create(:user, :guest) }
+    let!(:audit_user) { User.audit_user }
+    let!(:batch_user) { User.batch_user }
+
+    context "without_system_accounts" do
+      subject { described_class.without_system_accounts }
+      it "omits audit_user and batch_user" do
+        is_expected.to include(basic_user, guest_user)
+        is_expected.not_to include(audit_user, batch_user)
+      end
+    end
+    context "registered" do
+      subject { described_class.registered }
+      it "omits guest_user" do
+        is_expected.to include(basic_user, audit_user, batch_user)
+        is_expected.not_to include(guest_user)
+      end
+    end
+    context "guests" do
+      subject { described_class.guests }
+      it "includes only guest_user" do
+        is_expected.not_to include(basic_user, audit_user, batch_user)
+        is_expected.to include(guest_user)
+      end
+    end
+  end
 end

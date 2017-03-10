@@ -151,6 +151,7 @@ es:
         settings:        "Ajustes"
         statistics:      "Estadísticas"
         tasks:           'Tareas'
+        users:           "Usarios"
         workflow:        "Flujos de Trabajo"
         workflow_review: "Revise Ofertas"
         workflow_roles:  "Roles"
@@ -169,6 +170,15 @@ es:
           end_label: "Finalizando [por defecto a ahora]"
           heading: "Ver archivos depositados por los usuarios"
           start_label: "Comenzando"
+      users:
+        index:
+          access_label: "Ultimo acceso"
+          describe_users_html:
+            one: "Es <b>%{count} usario</b> en este repositorio."
+            other: "Hay <b>%{count} usarios</b> en este repositorio."
+          id_label:   "Nombre de usuario"
+          role_label: "Roles"
+          title: "Administrar usuarios"
       workflow_roles:
         header:     "Funciones del Flujo de Trabajo"
         index:

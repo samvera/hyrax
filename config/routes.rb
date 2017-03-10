@@ -183,6 +183,7 @@ Hyrax::Engine.routes.draw do
     resources :admin_sets do
       resource :permission_template
     end
+    resources :users, only: [:index]
     resources :permission_template_accesses, only: :destroy
     resource 'stats', only: [:show]
     resources :features, only: [:index] do

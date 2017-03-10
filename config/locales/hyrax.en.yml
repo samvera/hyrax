@@ -151,6 +151,7 @@ en:
         settings:        "Settings"
         statistics:      "Statistics"
         tasks:           "Tasks"
+        users:           "Manage Users"
         workflow:        "Workflows"
         workflow_review: "Review Submissions"
         workflow_roles:  "Roles"
@@ -169,6 +170,15 @@ en:
           end_label: "Ending [defaults to now]"
           heading: "Display files deposited by users"
           start_label: "Starting"
+      users:
+        index:
+          access_label: "Last access"
+          describe_users_html:
+            one: "There is <b>%{count} user</b> in this repository."
+            other: "There are <b>%{count} users</b> in this repository."
+          id_label:   "Username"
+          role_label: "Roles"
+          title: "Manage Users"
       workflow_roles:
         header:     "Workflow Roles"
         index:
