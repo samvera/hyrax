@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
           delete :destroy, params: { id: permission_template_access }
         end.to change { Hyrax::PermissionTemplateAccess.count }.by(-1)
         expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(admin_set_id, locale: 'en', anchor: 'participants'))
-        expect(flash[:notice]).to eq 'Permissions updated'
+        expect(flash[:notice]).to eq(I18n.t('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
       end
     end
   end

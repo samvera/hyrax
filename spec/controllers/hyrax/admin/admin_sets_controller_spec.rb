@@ -116,7 +116,7 @@ describe Hyrax::Admin::AdminSetsController do
       it 'updates a record' do
         patch :update, params: { id: admin_set,
                                  admin_set: { title: "Improved title" } }
-        expect(response).to be_redirect
+        expect(response).to redirect_to(edit_admin_admin_set_path)
         expect(assigns[:admin_set].title).to eq ['Improved title']
       end
     end
