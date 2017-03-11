@@ -49,7 +49,7 @@ Hyrax is a front-end based on the robust [Hydra](http://projecthydra.org) framew
 
 Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/projecthydra/sufia/wiki/Feature-matrix). See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn more.
 
-For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyrax.projecthydra.org/).
+For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
 
 # Help
 
@@ -253,4 +253,4 @@ See the [release management process](https://github.com/projecthydra/sufia/wiki/
 This software has been developed by and is brought to you by the Hydra community.  Learn more at the
 [Project Hydra website](http://projecthydra.org/).
 
-![Project Hydra Logo](http://hyrax.projecthydra.org/assets/images/hydra_logo.png)
+![Project Hydra Logo](http://hyr.ax/assets/images/hydra_logo.png)
