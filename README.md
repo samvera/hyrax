@@ -1,10 +1,10 @@
-# hyrax.projecthydra.org
+# hyr.ax
 
 A home for [Hyrax](http://github.com/projecthydra-labs/hyrax) on the world wide web
 
 ## Contributing
 
-We'd love to accept your contributions.  Please see our guide for [contributing to hyrax.projecthydra.org](CONTRIBUTING.md).
+We'd love to accept your contributions.  Please see our guide for [contributing to hyr.ax](CONTRIBUTING.md).
 
 ## Help
 
@@ -15,4 +15,4 @@ If you have questions or need help, please email [the Hydra community tech list]
 This website has been developed by and is brought to you by the Hydra community.  Learn more at the
 [Project Hydra website](http://projecthydra.org)
 
-![Project Hydra Logo](http://hyrax.projecthydra.org/assets/images/hydra_logo.png)
+![Project Hydra Logo](http://hyr.ax/assets/images/hydra_logo.png)
