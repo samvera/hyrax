@@ -21,7 +21,7 @@ export default class SaveWorkControl {
    * @param {AdminSetWidget} adminSetWidget the control for the adminSet dropdown
    */
   constructor(element, adminSetWidget) {
-    if (element.size() == 0) {
+    if (element.length < 1) {
       return
     }
     this.element = element

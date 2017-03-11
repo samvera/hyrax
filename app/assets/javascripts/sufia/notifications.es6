@@ -13,28 +13,28 @@ export class Notifications {
   }
 
   poller(interval, url) {
-    setInterval(() => { this.fetchUpdates(url) }, interval);
+      setInterval(() => { this.fetchUpdates(url) }, interval);
   }
 
   fetchUpdates(url) {
-    $.getJSON( url, (data) => this.updatePage(data))
+      $.getJSON( url, (data) => this.updatePage(data))
   }
 
   updatePage(data) {
-    let notification = $('.notify_number')
-    notification.find('.count').html(data.notify_number)
-    if (data.notify_number == 0) {
-      notification.addClass('label-default')
-      notification.removeClass('label-danger')
-    } else {
-      notification.addClass('label-danger')
-      notification.removeClass('label-default')
-    }
+      let notification = $('.notify_number')
+      notification.find('.count').html(data.notify_number)
+      if (data.notify_number === 0) {
+          notification.addClass('label-default')
+          notification.removeClass('label-danger')
+      } else {
+          notification.addClass('label-danger')
+          notification.removeClass('label-default')
+      }
   }
 
   getIntervalSeconds(default_interval) {
-    var seconds = parseInt(this.queryStringParam("notification_seconds"));
-    return seconds || default_interval;
+      var seconds = parseInt(this.queryStringParam("notification_seconds"), 10);
+      return seconds || default_interval;
   }
 
   // During development allow the frequency of the notifications check to

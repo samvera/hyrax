@@ -1,4 +1,4 @@
-export class Location {
+export default class Location {
   constructor(element, url) {
     this.url = url
     element.autocomplete(this.options());
