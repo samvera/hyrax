@@ -1,5 +1,5 @@
 <% # we will yield to content_for for each tab, e.g. :files_tab %>
-<% tabs ||= %w[metadata files relationships share] # default tab order %>
+<% tabs ||= %w[metadata files relationships] # default tab order %>
 <div class="row">
   <div class="col-xs-12 col-sm-8" role="main">
 
@@ -16,6 +16,12 @@
             </a>
           </li>
       <% end %>
+
+      <li role="presentation" id="tab-share" class="hidden">
+        <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
+          <i class="fa icon-share"></i> <%= t("hyrax.works.form.tab.share") %>
+        </a>
+      </li>
     </ul>
 
     <!-- Tab panes -->

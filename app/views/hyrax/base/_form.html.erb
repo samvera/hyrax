@@ -1,4 +1,8 @@
-<%= simple_form_for [main_app, @form], html: { multipart: true } do |f| %>
+<%= simple_form_for [main_app, @form],
+                    html: {
+                      data: { behavior: 'work-form' },
+                      multipart: true
+                    } do |f| %>
   <% if f.object.errors.include?(:base) %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -1,15 +1,17 @@
-describe 'hyrax/base/_form_relationships.html.erb', type: :view do
+RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { GenericWork.new }
   let(:form) do
     Hyrax::GenericWorkForm.new(work, ability, controller)
   end
-  let(:service) { instance_double Hyrax::AdminSetService, select_options: [] }
+  let(:service) { instance_double Hyrax::AdminSetService }
+  let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
 
   before do
     allow(form).to receive(:collections_for_select).and_return([])
     allow(view).to receive(:action_name).and_return('new')
     allow(Hyrax::AdminSetService).to receive(:new).with(controller).and_return(service)
+    allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).with(service).and_return(presenter)
   end
 
   let(:form_template) do

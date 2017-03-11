@@ -1,7 +1,7 @@
 <% if Flipflop.assign_admin_set? %>
   <%= f.input :admin_set_id, as: :select,
-      collection: Hyrax::AdminSetService.new(controller).select_options(:deposit),
-      include_blank: true,
+      include_blank: false,
+      collection: Hyrax::AdminSetOptionsPresenter.new(Hyrax::AdminSetService.new(controller)).select_options,
       input_html: { class: 'form-control' } %>
 <% end %>
 
