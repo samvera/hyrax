@@ -1,6 +1,6 @@
 import { RelationshipsTableRow } from './table_row'
 
-export class RelationshipsTable {
+export default class RelationshipsTable {
 
   /**
    * Initializes the class in the context of an individual table element
