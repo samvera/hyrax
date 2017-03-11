@@ -28,6 +28,7 @@ engines:
     config:
       extensions:
         - .es6
+      ignore_warnings: true
   fixme:
     enabled: false
   rubocop:

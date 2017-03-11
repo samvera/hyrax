@@ -56,7 +56,7 @@ export class GroupControls {
   }
 
   selectedGroupValid() {
-    return this.selectedGroup().index() != 0
+    return this.selectedGroup().index() !== 0
   }
 
   selectedGroup() {
@@ -64,7 +64,7 @@ export class GroupControls {
   }
 
   permissionValid() {
-    return this.selectedPermission().index() != 0
+    return this.selectedPermission().index() !== 0
   }
 
   selectedPermission() {
