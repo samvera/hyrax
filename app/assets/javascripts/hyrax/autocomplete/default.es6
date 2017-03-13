@@ -1,13 +1,12 @@
-export class Subject {
+export default class Default {
   constructor(element, url) {
-    this.url = url
+    this.url = url;
     element.autocomplete(this.options());
   }
-
   options() {
     return {
       minLength: 2,
-      source: ( request, response ) => {
+      source: (request, response) => {
         $.getJSON(this.url, {
           q: request.term
         }, response );
@@ -22,5 +21,4 @@ export class Subject {
     };
   }
 }
-
 

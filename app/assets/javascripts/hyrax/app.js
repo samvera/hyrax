@@ -46,7 +46,10 @@ Hyrax = {
 
     autocomplete: function () {
         var Autocomplete = require('hyrax/autocomplete');
-        var autocomplete = new Autocomplete()
+        var autocomplete = new Autocomplete({
+	    "autocompleteFields":
+	    ["subject","language","creator","based_near","work"]
+	});
         $('.multi_value.form-group').manage_fields({
           add: function(e, element) {
             autocomplete.fieldAdded(element)

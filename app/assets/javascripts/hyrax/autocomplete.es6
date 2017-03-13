@@ -1,66 +1,47 @@
+import Default from './autocomplete/default';
+import Work from './autocomplete/work';
+
 export default class Autocomplete {
-  constructor() {
-  }
-
-  // This is the initial setup for the form.
-  setup() {
-      $('[data-autocomplete]').each((index, value) => {
-          let selector = $(value)
-          switch (selector.data('autocomplete')) {
-            case "subject":
-              this.autocompleteSubject(selector);
-              break;
-            case "language":
-              this.autocompleteLanguage(selector);
-              break;
-            case "based_near":
-              this.autocompleteLocation(selector);
-              break;
-            case "work":
-              var user = selector.data('user');
-              var id = selector.data('id');
-              this.autocompleteWork(selector, user, id);
-              break;
-          }
-      });
-  }
-
-  // attach an auto complete based on the field
-  fieldAdded(cloneElem) {
-    var $cloneElem = $(cloneElem);
-    // FIXME this code (comparing the id) depends on a bug. Each input has an id and
-    // the id is duplicated when you press the plus button. This is not valid html.
-    if (/_based_near$/.test($cloneElem.attr("id"))) {
-        this.autocompleteLocation($cloneElem);
-    } else if (/_language$/.test($cloneElem.attr("id"))) {
-        this.autocompleteLanguage($cloneElem);
-    } else if (/_subject$/.test($cloneElem.attr("id"))) {
-        this.autocompleteSubject($cloneElem);
+    constructor(options) {
+	this.autocompleteFields = options.autocompleteFields;
     }
-  }
-
-  autocompleteLocation(field) {
-      var loc = require('hyrax/autocomplete/location');
-      new loc.Location(field, field.data('autocomplete-url'))
-  }
-
-  autocompleteSubject(field) {
-      var subj = require('hyrax/autocomplete/subject');
-      new subj.Subject(field, field.data('autocomplete-url'))
-  }
-
-  autocompleteLanguage(field) {
-      var lang = require('hyrax/autocomplete/language');
-      new lang.Language(field, field.data('autocomplete-url'))
-  }
-
-  autocompleteWork(field, user, id) {
-    var work = require('hyrax/autocomplete/work')
-    new work.Work(
-      field,
-      field.data('autocomplete-url'),
-      user,
-      id
-    )
-  }
+    // This is the initial setup for the form.
+    setup() {
+	$('[data-autocomplete]').each((index, value) => {
+            let selector = $(value);
+	    let autocompleteData = selector.data('autocomplete');
+	    this.activateFields(autocompleteData,selector);
+	});
+    }
+    // This activates autocomplete for added fields 
+    fieldAdded(cloneElem) {
+	let selector = $(cloneElem);
+	let autocompleteData = selector.data('autocomplete');
+	this.activateFields(autocompleteData,selector);
+    }
+    autocomplete(field) {
+	let fieldName = field.data('autocomplete');
+	switch (fieldName) {
+	case "work":
+	    let user = field.data('user');
+	    let id = field.data('id');
+	    new Work(
+		field,
+		field.data('autocomplete-url'),
+		user,
+		id
+	    );
+	    break;
+	default:
+	    new Default(field, field.data('autocomplete-url'));
+	    break;
+	}
+    }
+    activateFields(autocompleteData, selector) {
+	for (let field in this.autocompleteFields) {
+	    if (autocompleteData === this.autocompleteFields[field]) {
+		this.autocomplete(selector);
+	    }
+	}
+    }
 }
