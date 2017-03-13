@@ -49,7 +49,7 @@ module Hyrax
 
     def update
       if @admin_set.update(admin_set_params)
-        redirect_to hyrax.admin_admin_sets_path
+        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :edit

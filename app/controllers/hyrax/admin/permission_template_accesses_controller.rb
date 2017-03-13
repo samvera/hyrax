@@ -8,7 +8,7 @@ module Hyrax
 
         redirect_to hyrax.edit_admin_admin_set_path(@permission_template_access.permission_template.admin_set_id,
                                                     anchor: 'participants'),
-                    notice: 'Permissions updated'
+                    notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
       end
     end
   end

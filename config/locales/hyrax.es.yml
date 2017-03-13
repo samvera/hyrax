@@ -51,6 +51,7 @@ es:
           cancel:               "Cancelar"
           permission_update_notices:
             new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
+            updated_admin_set:  "El conjunto administrativo '%{name}' se ha actualizado."
             participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
             visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
             workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
