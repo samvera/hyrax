@@ -45,7 +45,7 @@
      </div>
 
 <%= render 'hyrax/uploads/js_templates' %>
-<% if Hyrax.config.browse_everything %>
+<% if Hyrax.config.browse_everything? %>
   <h2><%= t('hyrax.base.form_files.external_upload') %></h2>
   <%= render 'browse_everything', f: f %>
 <% end %>

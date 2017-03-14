@@ -29,7 +29,7 @@ describe 'hyrax/base/_form.html.erb', type: :view do
     let(:work) { GenericWork.new }
     context 'with browse-everything disabled (default)' do
       before do
-        allow(Hyrax.config).to receive(:browse_everything) { nil }
+        allow(Hyrax.config).to receive(:browse_everything?) { nil }
       end
       it "draws the page" do
         expect(page).to have_selector("form[action='/concern/generic_works']")
@@ -44,7 +44,7 @@ describe 'hyrax/base/_form.html.erb', type: :view do
 
     context 'with browse-everything enabled' do
       before do
-        allow(Hyrax.config).to receive(:browse_everything) { 'not nil' }
+        allow(Hyrax.config).to receive(:browse_everything?) { 'not nil' }
       end
       it 'renders the BE upload widget' do
         expect(page).to have_selector('button#browse-btn')
