@@ -94,7 +94,7 @@ module Hyrax
     end
 
     # Determines whether a given visibility setting is valid based on this template's requirements
-    # @param [String] visibility value to validate
+    # @param [String] value - visibility value to validate
     def valid_visibility?(value)
       # If template doesn't specify a visiblity (i.e. is "varies"), then any visibility is valid
       return true unless visibility.present?

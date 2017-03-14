@@ -21,8 +21,8 @@ module Hyrax
       end
 
       # filter that sets up access-controlled lucene query in order to provide gated search behavior
-      # @param solr_parameters the current solr parameters
-      # @param user_parameters the current user-submitted parameters
+      # @param [Hash] solr_parameters the current solr parameters
+      # @param [Hash] _user_parameters the current user-submitted parameters
       def apply_gated_search(solr_parameters, _user_parameters)
         solr_parameters[:fq] ||= []
 

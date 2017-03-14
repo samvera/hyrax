@@ -13,7 +13,7 @@ module Hyrax
 
     protected
 
-      # @param [HashWithIndifferentAccess]
+      # @param [HashWithIndifferentAccess] remote_files
       # @return [TrueClass]
       def attach_files(remote_files)
         return true unless remote_files

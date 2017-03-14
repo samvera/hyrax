@@ -17,7 +17,7 @@ module Hyrax
     end
 
     # Write the thumbnail paths into the solr_document
-    # @params [Hash] solr_document the solr document to add the field to
+    # @param [Hash] solr_document the solr document to add the field to
     def index_thumbnails(solr_document)
       solr_document[thumbnail_field] = thumbnail_path
     end

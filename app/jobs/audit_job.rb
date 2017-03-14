@@ -4,9 +4,9 @@ class AuditJob < ActiveJob::Base
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1
   # but it could also just be:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content
-  # @param [FileSet] the parent object
-  # @param [String] file_id used to find the file within its parent object (usually "original_file")
-  # @param [String] uri of the specific file/version to be audited
+  # @param [FileSet] file_set - the parent object
+  # @param [String] file_id - used to find the file within its parent object (usually "original_file")
+  # @param [String] uri - of the specific file/version to be audited
   def perform(file_set, file_id, uri)
     log = run_audit(file_set, file_id, uri)
     fixity_ok = log.pass == 1

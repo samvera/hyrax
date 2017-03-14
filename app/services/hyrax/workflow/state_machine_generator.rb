@@ -67,8 +67,8 @@ module Hyrax
         action.save!
       end
 
-      # @params state_names[Array]
-      # @params roles [Array]
+      # @param [Array] state_names
+      # @param [Array] state_roles
       def build_from_state(state_names, state_roles)
         Array.wrap(state_names).each do |state_name|
           workflow_state = Sipity::WorkflowState.find_or_create_by!(workflow: workflow, name: state_name.to_s)

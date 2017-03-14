@@ -56,8 +56,7 @@ module Hyrax
     end
 
     # Finds a solr document matching the id and sets @presenter
-    # @raises CanCan::AccessDenied if the document is not found
-    #   or the user doesn't have access to it.
+    # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
     def show
       respond_to do |wants|
         wants.html { presenter && parent_presenter }

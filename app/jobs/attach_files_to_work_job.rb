@@ -2,8 +2,8 @@
 class AttachFilesToWorkJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
-  # @param [ActiveFedora::Base] the work class
-  # @param [Array<UploadedFile>] an array of files to attach
+  # @param [ActiveFedora::Base] work - the work object
+  # @param [Array<UploadedFile>] uploaded_files - an array of files to attach
   def perform(work, uploaded_files)
     uploaded_files.each do |uploaded_file|
       file_set = FileSet.new

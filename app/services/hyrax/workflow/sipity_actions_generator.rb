@@ -6,12 +6,12 @@ module Hyrax
       #
       # Responsible for creating database entries for the given workflow's actions
       #
-      # @param workflow [Sipity::Workflow]
-      # @param actions_configuration [Hash] as defined in Hyrax::Workflow::WorkflowSchema
+      # @param [Sipity::Workflow] workflow
+      # @param [Hash] actions_configuration as defined in Hyrax::Workflow::WorkflowSchema
       # @return [Sipity::Workflow]
       # @raise [Hyrax::Workflow::InvalidStateRemovalException] Trying to remove a state that is in use
-      def self.call(**keywords, &block)
-        new(**keywords, &block).call
+      def self.call(workflow:, actions_configuration:, &block)
+        new(workflow: workflow, actions_configuration: actions_configuration, &block).call
       end
 
       def initialize(workflow:, actions_configuration:)
