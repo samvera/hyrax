@@ -38,7 +38,7 @@ describe Sufia::BatchUploadsController do
   end
 
   describe "#create" do
-    context "enquing a update job" do
+    context "with expected params" do
       it "is successful" do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
@@ -53,7 +53,29 @@ describe Sufia::BatchUploadsController do
       end
     end
 
-    describe "when submiting works on behalf of another user" do
+    context 'with missing resource_type' do
+      let(:post_params) do
+        {
+          title: expected_individual_params,
+          uploaded_files: ['1', '2'],
+          batch_upload_item: batch_upload_item
+        }
+      end
+      it 'is successful' do
+        expect(BatchCreateJob).to receive(:perform_later)
+          .with(user,
+                expected_individual_params,
+                {},
+                ['1', '2'],
+                expected_shared_params,
+                a_kind_of(Sufia::BatchCreateOperation))
+        post :create, params: post_params
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.dashboard_works_path
+        expect(flash[:notice]).to include("Your files are being processed")
+      end
+    end
+
+    context "when submiting works on behalf of another user" do
       let(:batch_upload_item) do
         {
           payload_concern: Atlas,
