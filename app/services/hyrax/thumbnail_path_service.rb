@@ -1,7 +1,7 @@
 module Hyrax
   class ThumbnailPathService
     class << self
-      # @param [Work, FileSet] the object to get the thumbnail for
+      # @param [Work, FileSet] object - to get the thumbnail for
       # @return [String] a path to the thumbnail
       def call(object)
         return default_image unless object.thumbnail_id
@@ -44,12 +44,12 @@ module Hyrax
         end
 
         # @return true if there a file on disk for this object, otherwise false
-        # @param [FileSet] thumbnail the object that is the thumbnail
+        # @param [FileSet] thumb - the object that is the thumbnail
         def thumbnail?(thumb)
           File.exist?(thumbnail_filepath(thumb))
         end
 
-        # @param [FileSet] thumbnail the object that is the thumbnail
+        # @param [FileSet] thumb - the object that is the thumbnail
         def thumbnail_filepath(thumb)
           Hyrax::DerivativePath.derivative_path_for_reference(thumb, 'thumbnail')
         end
