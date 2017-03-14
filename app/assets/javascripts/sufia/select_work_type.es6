@@ -6,17 +6,17 @@ export default class SelectWorkType {
   constructor(element) {
       this.$element = element;
       this.target = element.data('target')
-      this.modal = $(this.target);
+      this.modal = $(this.target)
       this.form = this.modal.find('form.new-work-select')
 
       // launch the modal.
-      element.on('click', (e) => { 
-          e.preventDefault();
-          this.modal.modal();
+      element.on('click', (e) => {
+          e.preventDefault()
+          this.modal.modal()
           // ensure the type is set for the last clicked element
           this.type = element.data('create-type')
           // add custom routing logic when the modal is shown
-          this.form.on('submit', this.routingLogic.bind(this));
+          this.form.on('submit', this.routingLogic.bind(this))
       });
 
       // remove the routing logic when the modal is hidden
@@ -27,7 +27,9 @@ export default class SelectWorkType {
 
   // when the form is submitted route to the correct location
   routingLogic(e) {
-      e.preventDefault();
+      e.preventDefault()
+      if (this.destination() === undefined)
+        return false
       // get the destination from the data attribute of the selected radio button
       window.location.href = this.destination()
   }
