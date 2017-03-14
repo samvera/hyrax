@@ -15,13 +15,13 @@ module Hyrax
     end
 
     # Write the suppressed status into the solr_document
-    # @params [Hash] solr_document the solr document to add the field to
+    # @param [Hash] solr_document the solr document to add the field to
     def index_suppressed(solr_document)
       solr_document[suppressed_field] = object.suppressed?
     end
 
     # Write the workflow roles and state so one can see where the document moves to next
-    # @params [Hash] solr_document the solr document to add the field to
+    # @param [Hash] solr_document the solr document to add the field to
     def index_workflow_fields(solr_document)
       return unless object.persisted?
       entity = PowerConverter.convert_to_sipity_entity(object)
