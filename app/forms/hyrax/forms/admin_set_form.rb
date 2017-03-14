@@ -4,8 +4,7 @@ module Hyrax
       self.model_class = AdminSet
       self.terms = [:title, :description, :thumbnail_id]
 
-      # @param model [AdminSet]
-      # @param permission_template [PermissionTemplate]
+      # @param [AdminSet] model
       def initialize(model)
         super(model)
       end
