@@ -48,7 +48,7 @@ module Hyrax
         when "visibility"
           error_code = update_visibility_options(attributes)
         when "workflow"
-          update_workflow_options(attributes)
+          grant_workflow_roles(attributes)
         end
         return_info[:error_code] = error_code if error_code
         return_info[:updated] = error_code ? false : true
@@ -77,12 +77,6 @@ module Hyrax
           update_permission_template(attributes)
         end
 
-        # @return [Void]
-        def update_workflow_options(attributes)
-          update_permission_template(attributes)
-          grant_workflow_roles(attributes)
-        end
-
         def activate_workflow_from(attributes)
           new_active_workflow_id = attributes[:workflow_id] || attributes['workflow_id']
           if active_workflow
@@ -95,6 +89,7 @@ module Hyrax
 
         # If the workflow has been changed, ensure that all the AdminSet managers
         # have all the roles for the new workflow
+        # @return [Void]
         # @todo Instead of granting the manage users all of the roles (which means lots of emails), can we agree on a Managing role that all workflows should have?
         def grant_workflow_roles(attributes)
           new_active_workflow = activate_workflow_from(attributes)

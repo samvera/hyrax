@@ -166,6 +166,21 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
         expect(permission_template.release_date).to eq(today + 2.years)
       end
     end
+
+    context "for a workflow change" do
+      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, with_active_workflow: true) }
+      let(:new_workflow) { create(:workflow, permission_template: permission_template, active: false) }
+      let(:input_params) do
+        ActionController::Parameters.new(
+          workflow_id: new_workflow.id
+        ).permit!
+      end
+
+      it "changes the workflow" do
+        expect { subject }.to change { permission_template.reload.active_workflow }.to(new_workflow)
+        expect(new_workflow.reload).to be_active
+      end
+    end
   end
 
   describe "#grant_workflow_roles" do
