@@ -25,8 +25,8 @@ module Hyrax
       # @api public
       # Load all of the workflows for the given permission_template
       #
-      # @param permission_template [Hyrax::PermissionTemplate]
-      # @param logger [#info, #debug, #warning, #fatal] By default this is Hyrax::Workflow::WorkflowImporter.default_logger
+      # @param [Hyrax::PermissionTemplate] permission_template
+      # @param [#info, #debug, #warning, #fatal] logger - By default this is Hyrax::Workflow::WorkflowImporter.default_logger
       # @return [TrueClass] if one or more workflows were loaded
       # @return [FalseClass] if no workflows were loaded
       # @note I'd like to deprecate .load_workflows but for now that is beyond the scope of what I'm after. So I will use its magic instead
@@ -46,7 +46,7 @@ module Hyrax
       # @api public
       #
       # Load all the workflows in config/workflows/*.json for each of the permission templates
-      # @param permission_templates [#each] An enumerator of permission templates (by default Hyrax::PermissionTemplate.all)
+      # @param  [#each] permission_templates - An enumerator of permission templates (by default Hyrax::PermissionTemplate.all)
       # @return [TrueClass]
       def self.load_workflows(permission_templates: Hyrax::PermissionTemplate.all, **kwargs)
         clear_load_errors!
@@ -60,35 +60,35 @@ module Hyrax
       #
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
       #
-      # @param path [#read or String] the location on the file system that can be read
-      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
+      # @param [#read or String] path - the location on the file system that can be read
+      # @param [Hyrax::PermissionTemplate] permission_template - the permission_template that will be associated with each of these entries
       # @return [Array<Sipity::Workflow>]
-      def self.generate_from_json_file(path:, **keywords)
+      def self.generate_from_json_file(path:, permission_template:, **keywords)
         contents = path.respond_to?(:read) ? path.read : File.read(path)
         data = JSON.parse(contents)
-        generate_from_hash(data: data, **keywords)
+        generate_from_hash(data: data, permission_template: permission_template, **keywords)
       end
 
       # @api public
       #
       # Responsible for generating the work type and corresponding processing entries based on given pathname or JSON document.
       #
-      # @param data [#deep_symbolize_keys] the configuration information from which we will generate all the data entries
-      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
+      # @param [#deep_symbolize_keys] data - the configuration information from which we will generate all the data entries
+      # @param [Hyrax::PermissionTemplate] permission_template - the permission_template that will be associated with each of these entries
       # @return [Array<Sipity::Workflow>]
-      def self.generate_from_hash(data:, **keywords)
-        importer = new(data: data, **keywords)
+      def self.generate_from_hash(data:, permission_template:, **keywords)
+        importer = new(data: data, permission_template: permission_template, **keywords)
         workflows = importer.call
         self.load_errors ||= []
         load_errors.concat(importer.errors)
         workflows
       end
 
-      # @param data [#deep_symbolize_keys] the configuration information from which we will generate all the data entries
-      # @param permission_template [Hyrax::PermissionTemplate] the permission_template that will be associated with each of these entries
-      # @param schema [#call] The schema in which you will validate the data
-      # @param validator [#call] The validation service for the given data and schema
-      # @param logger [#debug, #info, #fatal, #warning] The logger to capture any meaningful output
+      # @param [#deep_symbolize_keys] data - the configuration information from which we will generate all the data entries
+      # @param [Hyrax::PermissionTemplate] permission_template - the permission_template that will be associated with each of these entries
+      # @param [#call] schema - The schema in which you will validate the data
+      # @param [#call] validator - The validation service for the given data and schema
+      # @param [#debug, #info, #fatal, #warning] logger - The logger to capture any meaningful output
       def initialize(data:, permission_template:, schema: default_schema, validator: default_validator, logger: default_logger)
         self.data = data
         self.schema = schema
