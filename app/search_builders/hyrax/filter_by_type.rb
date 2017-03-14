@@ -41,7 +41,7 @@ module Hyrax
 
       # Override this method if you want to limit some of the registered
       # types from appearing in search results
-      # @returns [Array<Class>] the list of work types to include in searches
+      # @return [Array<Class>] the list of work types to include in searches
       def work_types
         Hyrax.config.curation_concerns
       end
