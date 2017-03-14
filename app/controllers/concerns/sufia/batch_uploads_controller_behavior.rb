@@ -55,7 +55,7 @@ module Sufia
         # ActionController::Parameters are not serializable, so cast to a hash
         BatchCreateJob.perform_later(current_user,
                                      params[:title].permit!.to_h,
-                                     params[:resource_type].permit!.to_h,
+                                     params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
                                      attributes_for_actor.to_h.merge!(model: klass),
                                      log)
