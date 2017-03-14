@@ -5,7 +5,7 @@ module Hyrax
     class << self
       # Path on file system where derivative file is stored
       # @param [ActiveFedora::Base or String] object either the AF object or its id
-      # @param [String] destintation_name
+      # @param [String] destination_name
       def derivative_path_for_reference(object, destination_name)
         new(object, destination_name).derivative_path
       end
