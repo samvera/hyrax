@@ -28,6 +28,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Ruby](#ruby)
     * [Redis](#redis)
     * [Rails](#rails)
+      * [JavaScript runtime](#javascript-runtime)
   * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
     * [Generate a work type](#generate-a-work-type)
     * [Start servers](#start-servers)
@@ -69,7 +70,7 @@ After installing the Prerequisites:
 
 ## Prerequisites
 
-Hyrax 0.0.x requires the following software to work:
+Hyrax requires the following software to work:
 
 1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.4.1)
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.1)
@@ -123,6 +124,10 @@ We recommend the latest Rails 5.0 release.
 gem install rails -v 5.0.1
 ```
 
+### JavaScript runtime
+
+Rails requires that you have a JavaScript runtime -- for example, nodejs -- installed. Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
+
 # Creating a Hyrax-based app
 
 Generate a new Rails application using the template.
@@ -154,6 +159,8 @@ or
 ```
 rails generate hyrax:work MovingImage
 ```
+
+You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
 
 ## Start servers
 
