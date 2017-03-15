@@ -11,7 +11,7 @@ module Hyrax
           required: true,
           properties: {
             title: { type: 'string', required: true },
-            rights: { type: 'string', required: true },
+            license: { type: 'string', required: true },
             resourceType: { type: 'string' },
             description: { type: 'string' },
             publisher: { type: 'string' },

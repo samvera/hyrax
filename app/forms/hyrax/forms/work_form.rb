@@ -18,7 +18,7 @@ module Hyrax
       attr_reader :agreement_accepted
 
       self.terms = [:title, :creator, :contributor, :description,
-                    :keyword, :rights, :rights_statement, :publisher, :date_created,
+                    :keyword, :license, :rights_statement, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near, :related_url,
                     :representative_id, :thumbnail_id, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
@@ -26,7 +26,7 @@ module Hyrax
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
                     :member_of_collection_ids, :admin_set_id]
 
-      self.required_fields = [:title, :creator, :keyword, :rights_statement, :rights]
+      self.required_fields = [:title, :creator, :keyword, :rights_statement, :license]
 
       def initialize(model, current_ability, controller)
         @current_ability = current_ability

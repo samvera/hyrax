@@ -1,4 +1,4 @@
-describe Hyrax::FileSetPresenter do
+RSpec.describe Hyrax::FileSetPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
@@ -48,7 +48,7 @@ describe Hyrax::FileSetPresenter do
     let(:solr_properties) do
       ["date_uploaded", "title_or_label",
        "contributor", "creator", "title", "description", "publisher",
-       "subject", "language", "rights", "format_label", "file_size",
+       "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
        "duration", "sample_rate"]

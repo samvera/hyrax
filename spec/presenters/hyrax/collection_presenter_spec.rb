@@ -1,9 +1,9 @@
-describe Hyrax::CollectionPresenter do
+RSpec.describe Hyrax::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
     it do
       is_expected.to eq [:total_items, :size, :resource_type, :creator,
-                         :contributor, :keyword, :rights, :publisher,
+                         :contributor, :keyword, :license, :publisher,
                          :date_created, :subject, :language, :identifier,
                          :based_near, :related_url]
     end

@@ -147,8 +147,8 @@ module Hyrax
       self[Hydra.config.permissions.lease.expiration_date]
     end
 
-    def rights
-      fetch(Solrizer.solr_name('rights'), [])
+    def license
+      fetch(Solrizer.solr_name('license'), [])
     end
 
     def mime_type

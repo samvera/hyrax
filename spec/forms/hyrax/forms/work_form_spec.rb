@@ -61,7 +61,7 @@ RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
         keyword: ['derp'],
         source: ['related'],
         rights_statement: 'http://rightsstatements.org/vocab/InC-EDU/1.0/',
-        rights: ['http://creativecommons.org/licenses/by/3.0/us/']
+        license: ['http://creativecommons.org/licenses/by/3.0/us/']
       }
     end
 
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
       expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
       expect(subject['visibility']).to eq 'open'
-      expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
+      expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['rights_statement']).to eq 'http://rightsstatements.org/vocab/InC-EDU/1.0/'
       expect(subject['keyword']).to eq ['derp']
       expect(subject['source']).to eq ['related']
@@ -180,6 +180,6 @@ RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
 
   describe ".required_fields" do
     subject { described_class.required_fields }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :license] }
   end
 end

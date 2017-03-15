@@ -3,7 +3,7 @@ module Hyrax
     class BatchEditForm < Hyrax::Forms::WorkForm
       # Used for drawing the fields that appear on the page
       self.terms = [:creator, :contributor, :description,
-                    :keyword, :resource_type, :rights, :publisher, :date_created,
+                    :keyword, :resource_type, :license, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near,
                     :related_url]
       self.required_fields = []

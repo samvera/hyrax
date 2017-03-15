@@ -30,7 +30,7 @@ module Hyrax
       end
 
       # Used for a license
-      property :rights, predicate: ::RDF::Vocab::DC.rights do |index|
+      property :license, predicate: ::RDF::Vocab::DC.rights do |index|
         index.as :stored_searchable
       end
 

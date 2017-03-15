@@ -1,4 +1,4 @@
-describe 'hyrax/collections/_form.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
   let(:collection) { build(:collection) }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection) }
 
@@ -27,7 +27,7 @@ describe 'hyrax/collections/_form.html.erb', type: :view do
     expect(rendered).to have_selector("input#collection_identifier")
     expect(rendered).to have_selector("input#collection_based_near")
     expect(rendered).to have_selector("input#collection_related_url")
-    expect(rendered).to have_selector("select#collection_rights")
+    expect(rendered).to have_selector("select#collection_license")
     expect(rendered).to have_selector("select#collection_resource_type")
     expect(rendered).not_to have_selector("input#collection_visibility")
   end

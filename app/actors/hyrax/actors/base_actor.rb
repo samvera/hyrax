@@ -58,7 +58,7 @@ module Hyrax
         # also remove any blank assertions
         # TODO this method could move to the work form.
         def clean_attributes(attributes)
-          attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
+          attributes[:license] = Array(attributes[:license]) if attributes.key? :license
           attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement
           remove_blank_attributes!(attributes)
         end

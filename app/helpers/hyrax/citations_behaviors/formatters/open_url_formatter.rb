@@ -29,7 +29,7 @@ module Hyrax
           language: 'language',
           keyword: 'relation',
           based_near: 'coverage',
-          rights: 'rights'
+          license: 'license'
         }.freeze
       end
     end

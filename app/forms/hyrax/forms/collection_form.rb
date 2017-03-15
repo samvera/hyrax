@@ -15,7 +15,7 @@ module Hyrax
       delegate :human_readable_type, :member_ids, to: :model
 
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
-                    :keyword, :rights, :publisher, :date_created, :subject, :language,
+                    :keyword, :license, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
                     :related_url, :visibility]
 
@@ -35,7 +35,7 @@ module Hyrax
          :contributor,
          :description,
          :keyword,
-         :rights,
+         :license,
          :publisher,
          :date_created,
          :subject,

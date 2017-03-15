@@ -1,4 +1,4 @@
-describe Hyrax::FileSetCSVService do
+RSpec.describe Hyrax::FileSetCSVService do
   let(:mock_file) do
     Hydra::PCDM::File.new
   end
@@ -10,7 +10,7 @@ describe Hyrax::FileSetCSVService do
 
   let(:file) do
     FileSet.new(id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
-                resource_type: ['Book', 'Other'], rights: ['Mine']) do |f|
+                resource_type: ['Book', 'Other'], license: ['Mine']) do |f|
       f.apply_depositor_metadata('jilluser@example.com')
     end
   end
@@ -30,7 +30,7 @@ describe Hyrax::FileSetCSVService do
 
     describe "csv_header" do
       subject { csv_service.csv_header }
-      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,rights,file_format\n" }
+      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,license,file_format\n" }
     end
   end
 
@@ -56,7 +56,7 @@ describe Hyrax::FileSetCSVService do
 
     describe "csv_header" do
       subject { csv_service.csv_header }
-      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,rights,file_format\n" }
+      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,license,file_format\n" }
     end
   end
 

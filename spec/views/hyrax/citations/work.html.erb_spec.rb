@@ -1,5 +1,5 @@
 
-describe 'hyrax/citations/work.html.erb', type: :view do
+RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
   let(:object_profile) { ["{\"id\":\"999\"}"] }
   let(:contributor) { ['Gandalf Grey'] }
   let(:creator)     { ['Bilbo Baggins', 'Baggins, Frodo'] }
@@ -11,7 +11,7 @@ describe 'hyrax/citations/work.html.erb', type: :view do
       human_readable_type_tesim: ['Generic Work'],
       contributor_tesim: contributor,
       creator_tesim: creator,
-      rights_tesim: ['http://creativecommons.org/licenses/by/3.0/us/'],
+      license_tesim: ['http://creativecommons.org/licenses/by/3.0/us/'],
       title_tesim: ['the Roared about the Langs'],
       based_near_tesim: ['London'],
       date_created_tesim: ['1969']

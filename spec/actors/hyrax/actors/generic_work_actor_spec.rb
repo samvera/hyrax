@@ -67,7 +67,7 @@ describe Hyrax::Actors::GenericWorkActor do
               files: [
                 file
               ],
-              rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
+              license: ['http://creativecommons.org/licenses/by/3.0/us/'] }
           end
 
           it "applies embargo to attached files" do

@@ -5,18 +5,18 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#required_fields" do
     subject { form.required_fields }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :license] }
   end
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :license] }
   end
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
     it do
-      is_expected.not_to include(:title, :creator, :keyword, :rights,
+      is_expected.not_to include(:title, :creator, :keyword, :license,
                                  :visibilty, :visibility_during_embargo,
                                  :embargo_release_date, :visibility_after_embargo,
                                  :visibility_during_lease, :lease_expiration_date,
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::GenericWorkForm do
         representative_id: '456',
         thumbnail_id: '789',
         keyword: ['derp'],
-        rights: ['http://creativecommons.org/licenses/by/3.0/us/'],
+        license: ['http://creativecommons.org/licenses/by/3.0/us/'],
         member_of_collection_ids: ['123456', 'abcdef']
       )
     end
@@ -64,7 +64,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
       expect(subject['visibility']).to eq 'open'
-      expect(subject['rights']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
+      expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['keyword']).to eq ['derp']
       expect(subject['member_of_collection_ids']).to eq ['123456', 'abcdef']
     end
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::GenericWorkForm do
           title: [''],
           description: [''],
           keyword: [''],
-          rights: [''],
+          license: [''],
           member_of_collection_ids: [''],
           on_behalf_of: 'Melissa'
         )
@@ -84,7 +84,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       it 'removes blank parameters' do
         expect(subject['title']).to be_empty
         expect(subject['description']).to be_empty
-        expect(subject['rights']).to be_empty
+        expect(subject['license']).to be_empty
         expect(subject['keyword']).to be_empty
         expect(subject['member_of_collection_ids']).to be_empty
         expect(subject['on_behalf_of']).to eq 'Melissa'

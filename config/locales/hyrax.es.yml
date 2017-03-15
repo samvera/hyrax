@@ -687,7 +687,7 @@ es:
         publisher: "La persona o grupo que hizo disponible la colección. Generalmente ésta es una institución."
         related_url: "Un vínculo a una página web u otro contenido específico (audio, video, un documento PDF) relacionado a la colección. Un ejemplo es la URL de un proyecto de investigación de la cual proviene la colección"
         resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha cargado, tal como &quot;artículo&quot; or &quot;conjunto de datos.&quot;  Más de un tipo puede ser seleccionado."
-        rights: "Licencias e información de distribución sobre la colección. Seleccionar uno de la lista."
+        license: "Licencias e información de distribución sobre la colección. Seleccionar uno de la lista."
         subject: "Cabeceras o términos de índices que describen de qué trata la colección; éstos no tienen que pertenecer a un vocabulario existente.."
         title: "Un nombre para ayudar a la identificación de una colección."
       defaults:
@@ -702,7 +702,7 @@ es:
         publisher: "La persona o grupo que hizo disponible el trabajo. Generalmente ésta es una institución."
         related_url: "Un vínculo a una página web u otro contenido específico (audio, video, un documento PDF) relacionado a el trabajo. Un ejemplo es la URL de un proyecto de investigación de la cual proviene el trabajo"
         resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha cargado, tal como &quot;artículo&quot; or &quot;conjunto de datos.&quot;  Más de un tipo puede ser seleccionado."
-        rights: "Licencias e información de distribución sobre el trabajo. Seleccionar uno de la lista."
+        license: "Licencias e información de distribución sobre el trabajo. Seleccionar uno de la lista."
         subject: "Cabeceras o términos de índices que describen de qué trata el trabajo; éstos no tienen que pertenecer a un vocabulario existente.."
         title: "Un nombre para ayudar a la identificación de un trabajo."
     labels:
@@ -721,7 +721,7 @@ es:
         keyword:          "Palabra Clave"
         lease_expiration_date:     'hasta'
         related_url:      "URL relacionada"
-        rights:           "Derechos"
+        license:          "Licencia"
         title:            "Título"
         visibility_after_embargo:  'luego abrirlo a'
         visibility_after_lease:    'luego restringirlo a'

@@ -7,7 +7,7 @@ describe Hyrax::Forms::FileSetEditForm do
     it 'returns a list' do
       expect(subject.terms).to eq(
         [:resource_type, :title, :creator, :contributor, :description, :keyword,
-         :rights, :publisher, :date_created, :subject, :language, :identifier,
+         :license, :publisher, :date_created, :subject, :language, :identifier,
          :based_near, :related_url,
          :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,
          :visibility_during_lease, :visibility_after_lease, :lease_expiration_date,

@@ -1,5 +1,5 @@
 describe 'hyrax/batch_edits/edit.html.erb', type: :view do
-  let(:generic_work) { stub_model(GenericWork, id: '999', depositor: 'bob', rights: ['']) }
+  let(:generic_work) { stub_model(GenericWork, id: '999', depositor: 'bob', license: ['']) }
   let(:batch) { ['999'] }
   let(:form) { Hyrax::Forms::BatchEditForm.new(generic_work, nil, batch) }
 
@@ -11,7 +11,7 @@ describe 'hyrax/batch_edits/edit.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(form).to receive(:model).and_return(generic_work)
     allow(form).to receive(:names).and_return(['title 1', 'title 2'])
-    allow(form).to receive(:terms).and_return([:description, :rights])
+    allow(form).to receive(:terms).and_return([:description, :license])
     assign :form, form
     view.extend Hyrax::PermissionsHelper
     view.lookup_context.prefixes.push "hyrax/base"
