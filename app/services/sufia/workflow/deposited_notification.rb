@@ -8,7 +8,7 @@ module Sufia
         end
 
         def message
-          "#{title} (#{work_id}) was approved by #{user.user_key}. #{comment}"
+          "#{title} (#{link_to work_id, document_path}) was approved by #{user.user_key}. #{comment}"
         end
 
       private
