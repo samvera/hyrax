@@ -1,4 +1,4 @@
-export class Work {
+export default class Work {
   // Autocomplete for finding possible related works (child and parent).
   constructor(element, url, user, id) {
     this.url = url;

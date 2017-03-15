@@ -38,7 +38,7 @@
 //= require sufia/batch_select_all
 //= require sufia/browse_everything
 //= require sufia/search
-//= require sufia/editor
+//= require sufia/content_blocks
 //= require sufia/ga_events
 //= require sufia/select_submit
 //= require sufia/tabs
@@ -55,6 +55,8 @@
 //= require sufia/admin/admin_set_controls
 //= require sufia/admin/admin_set/participants
 //= require sufia/admin/admin_set/visibility
+//= require sufia/editor
+//= require sufia/editor/admin_set_widget
 //= require sufia/save_work
 //= require sufia/permissions
 //= require sufia/notifications

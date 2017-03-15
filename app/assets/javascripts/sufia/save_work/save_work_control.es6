@@ -2,7 +2,7 @@ import { RequiredFields } from './required_fields'
 import { ChecklistItem } from './checklist_item'
 import { UploadedFiles } from './uploaded_files'
 import { DepositAgreement } from './deposit_agreement'
-import { VisibilityComponent } from './visibility_component'
+import VisibilityComponent from './visibility_component'
 
 /**
  * Polyfill String.prototype.startsWith()
@@ -14,16 +14,18 @@ if (!String.prototype.startsWith) {
   };
 }
 
-export class SaveWorkControl {
+export default class SaveWorkControl {
   /**
    * Initialize the save controls
    * @param {jQuery} element the jquery selector for the save panel
+   * @param {AdminSetWidget} adminSetWidget the control for the adminSet dropdown
    */
-  constructor(element) {
-    if (element.size() == 0) {
+  constructor(element, adminSetWidget) {
+    if (element.length < 1) {
       return
     }
     this.element = element
+    this.adminSetWidget = adminSetWidget
     this.form = element.closest('form')
     element.data('save_work_control', this)
     this.activate();
@@ -82,20 +84,26 @@ export class SaveWorkControl {
     }
     this.requiredFields = new RequiredFields(this.form, () => this.formStateChanged())
     this.uploads = new UploadedFiles(this.form, () => this.formStateChanged())
-
     this.saveButton = this.element.find(':submit')
-
     this.depositAgreement = new DepositAgreement(this.form, () => this.formStateChanged())
-
     this.requiredMetadata = new ChecklistItem(this.element.find('#required-metadata'))
     this.requiredFiles = new ChecklistItem(this.element.find('#required-files'))
-    new VisibilityComponent(this.element.find('.visibility'))
+    new VisibilityComponent(this.element.find('.visibility'), this.adminSetWidget)
+    this.preventSubmit()
+    this.watchMultivaluedFields()
+    this.formChanged()
+  }
+
+  preventSubmit() {
     this.preventSubmitUnlessValid()
     this.preventSubmitIfAlreadyInProgress()
     this.preventSubmitIfUploading()
-    $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
-    $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
-    this.formChanged()
+  }
+
+  // If someone adds or removes a field on a multivalue input, fire a formChanged event.
+  watchMultivaluedFields() {
+      $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
+      $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
   }
 
   // Called when a file has been uploaded, the deposit agreement is clicked or a form field has had text entered.

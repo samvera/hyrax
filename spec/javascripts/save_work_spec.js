@@ -1,5 +1,6 @@
 describe("SaveWorkControl", function() {
-  var control = require('sufia/save_work/save_work_control');
+  var SaveWorkControl = require('sufia/save_work/save_work_control');
+  var AdminSetWidget = require('sufia/editor/admin_set_widget');
 
   describe("validateMetadata", function() {
     var mockCheckbox = {
@@ -9,10 +10,12 @@ describe("SaveWorkControl", function() {
 
     beforeEach(function() {
       var fixture = setFixtures('<form id="edit_generic_work">' +
+        '<select><option></option></select>' +
         '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>');
-      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      admin_set = new AdminSetWidget(fixture.find('select'))
+      target = new SaveWorkControl(fixture.find('#form-progress'), admin_set);
       target.requiredMetadata = mockCheckbox;
       spyOn(mockCheckbox, 'check').and.stub();
       spyOn(mockCheckbox, 'uncheck').and.stub();
@@ -52,7 +55,7 @@ describe("SaveWorkControl", function() {
         '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>');
-      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      target = new SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
     it("forces user to agree if new files are added", function() {
@@ -84,7 +87,7 @@ describe("SaveWorkControl", function() {
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>')
       }
-      target = new control.SaveWorkControl(buildFixture(form_id).find('#form-progress'));
+      target = new SaveWorkControl(buildFixture(form_id).find('#form-progress'));
       target.requiredFiles = mockCheckbox;
       return target
     }
@@ -142,7 +145,7 @@ describe("SaveWorkControl", function() {
     var target;
     beforeEach(function() {
       var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
-      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      target = new SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
 
@@ -161,7 +164,7 @@ describe("SaveWorkControl", function() {
     var target;
     beforeEach(function() {
       var fixture = setFixtures('<form id="new_generic_work"><aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul><input type="submit"></aside></form>');
-      target = new control.SaveWorkControl(fixture.find('#form-progress'));
+      target = new SaveWorkControl(fixture.find('#form-progress'));
       target.activate()
     });
 

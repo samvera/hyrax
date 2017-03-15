@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'Apache2'
 
   spec.add_dependency 'hydra-works', '~> 0.16'
-  spec.add_dependency 'curation_concerns', '~> 1.7.5'
+  spec.add_dependency 'curation_concerns', '~> 1.7.6'
   spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-batch-edit', '~> 2.0'
   spec.add_dependency 'browse-everything', '>= 0.10.3'

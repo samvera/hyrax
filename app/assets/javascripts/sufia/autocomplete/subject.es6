@@ -1,4 +1,4 @@
-export class Subject {
+export default class Subject {
   constructor(element, url) {
     this.url = url
     element.autocomplete(this.options());
@@ -22,5 +22,3 @@ export class Subject {
     };
   }
 }
-
-

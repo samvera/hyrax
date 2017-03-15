@@ -3,13 +3,11 @@
 Sufia = {
     initialize: function () {
         this.autocomplete();
-        this.saveWorkControl();
-        this.saveWorkFixed();
         this.popovers();
         this.permissions();
         this.notifications();
         this.transfers();
-        this.relationshipsTable();
+        this.editor();
         this.fileManager();
         this.selectWorkType();
         this.datatable();
@@ -40,16 +38,14 @@ Sufia = {
         autocomplete.setup();
     },
 
-    saveWorkControl: function () {
-        var sw = require('sufia/save_work/save_work_control');
-        var control = new sw.SaveWorkControl($("#form-progress"))
+    editor: function () {
+        var element = $("[data-behavior='work-form']")
+        if (element.length > 0) {
+          var Editor = require('sufia/editor');
+          new Editor(element)
+        }
     },
 
-    saveWorkFixed: function () {
-        // Setting test to false to skip native and go right to polyfill
-        FixedSticky.tests.sticky = false;
-        $('#savewidget').fixedsticky();
-    },
 
     // initialize popover helpers
     popovers: function () {
@@ -80,13 +76,6 @@ Sufia = {
 
     transfers: function () {
         $("#proxy_deposit_request_transfer_to").userSearch();
-    },
-
-    relationshipsTable: function () {
-        var rel = require('sufia/relationships/table');
-        $('table.relationships-ajax-enabled').each(function () {
-            new rel.RelationshipsTable($(this));
-        });
     },
 
     selectWorkType: function () {

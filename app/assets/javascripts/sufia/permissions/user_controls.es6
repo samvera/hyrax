@@ -60,7 +60,7 @@ export class UserControls {
   }
 
   selectedUserIsDepositor() {
-    return this.userName() == this.depositor
+    return this.userName() === this.depositor
   }
 
   userValid() {
@@ -68,11 +68,11 @@ export class UserControls {
   }
 
   userNameValid() {
-    return this.userName() != ""
+    return this.userName() !== ""
   }
 
   permissionValid() {
-    return this.selectedPermission().index() != 0
+    return this.selectedPermission().index() !== 0
   }
 
   selectedPermission() {

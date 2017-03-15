@@ -1,4 +1,4 @@
-export class Language {
+export default class Language {
   constructor(element, url) {
     this.url = url
     element.autocomplete(this.options());
@@ -22,4 +22,3 @@ export class Language {
     };
   }
 }
-
