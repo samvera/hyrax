@@ -38,7 +38,9 @@ module Hyrax
         select_release_varies_option(model)
       end
 
-      # @return [Hash{Symbol => String, Boolean}] { :content_tab (for confirmation message), :updated (true/false), :error_code (for flash error lookup) }
+      # @return [Hash{Symbol => String, Boolean}] { :content_tab (for confirmation message),
+      #                                             :updated (true/false),
+      #                                               :error_code (for flash error lookup) }
       def update(attributes)
         return_info = { content_tab: tab_to_update(attributes) }
         error_code = nil
@@ -66,8 +68,8 @@ module Hyrax
 
         # @return [Void]
         def update_participants_options(attributes)
-          update_admin_set(attributes)
           update_permission_template(attributes)
+          update_admin_set(attributes)
         end
 
         # @return [String, Nil] error_code if validation fails, nil otherwise
@@ -124,13 +126,19 @@ module Hyrax
           nil
         end
 
-        # Maps the raw form attributes into a hash useful for updating the admin set.
+        # The attributes[:access_grants_attributes], only submits changes, not
+        # all of the managers, so we need to query the persisted access_grants on
+        # the permission_template to see who should be an edit user.
+        # This can only be used after the permission template has been updated
         # @return [Hash] includes :edit_users and :edit_groups
         def admin_set_update_params(attributes)
-          manage_grants = grants_as_collection(attributes).select { |x| x[:access] == 'manage' }
-          return unless manage_grants.present?
-          { edit_users: manage_grants.select { |x| x[:agent_type] == 'user' }.map { |x| x[:agent_id] },
-            edit_groups: manage_grants.select { |x| x[:agent_type] == 'group' }.map { |x| x[:agent_id] } }
+          return unless managers_updated?(attributes)
+          { edit_users: model.access_grants.where(access: 'manage', agent_type: 'user').pluck(:agent_id),
+            edit_groups: model.access_grants.where(access: 'manage', agent_type: 'group').pluck(:agent_id) }
+        end
+
+        def managers_updated?(attributes)
+          grants_as_collection(attributes).any? { |x| x[:access] == 'manage' }
         end
 
         # This allows the attributes

@@ -17,12 +17,22 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#update" do
+    subject { form.update(input_params) }
+
     let(:grant_attributes) { [] }
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-    subject { form.update(input_params) }
+
+    before do
+      permission_template.access_grants.create([{ agent_type: 'user',
+                                                  agent_id: 'karen',
+                                                  access: 'manage' },
+                                                { agent_type: 'group',
+                                                  agent_id: 'archivists',
+                                                  access: 'manage' }])
+    end
 
     context "with a user manager" do
       let(:grant_attributes) do
@@ -32,7 +42,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       end
       it "also adds edit_access to the AdminSet itself" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_users).to include 'bob'
+        expect(admin_set.reload.edit_users).to match_array ['bob', 'karen']
       end
     end
 
@@ -44,7 +54,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       end
       it "also adds edit_access to the AdminSet itself" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_groups).to include 'bob'
+        expect(admin_set.reload.edit_groups).to match_array ['bob', 'archivists']
       end
     end
 
