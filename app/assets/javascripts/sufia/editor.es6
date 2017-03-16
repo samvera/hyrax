@@ -16,16 +16,14 @@ export default class {
 
   // Display the sharing tab if they select an admin set that permits sharing
   sharingTab() {
-    if(this.adminSetWidget) {
-      console.log("admin set selected")
+    if(this.adminSetWidget && !this.adminSetWidget.isEmpty()) {
       this.adminSetWidget.on('change', (data) => this.sharingTabVisiblity(data))
-      this.sharingTabVisiblity(this.adminSetWidget.data())
+      this.sharingTabVisiblity(this.adminSetWidget.isSharing())
     }
   }
 
-  sharingTabVisiblity(data) {
-      console.log("Data " + data["sharing"])
-      if (data["sharing"])
+  sharingTabVisiblity(visible) {
+      if (visible)
          this.sharingTabElement.removeClass('hidden')
       else
          this.sharingTabElement.addClass('hidden')
