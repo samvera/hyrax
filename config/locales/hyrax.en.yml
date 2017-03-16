@@ -151,9 +151,16 @@ en:
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
+      appearances:
+        show:
+          header:           "Appearance"
+        update:
+          flash:
+            success:        "The appearance was successfully updated"
       sidebar:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
+        appearance:         "Appearance"
         collections:        "Collections"
         configuration:      "Configuration"
         notifications:      "Notifications"

@@ -160,6 +160,8 @@ module Hyrax
         alias_action :show, to: :read
         alias_action :discover, to: :read
 
+        can :update, :appearance
+
         can :manage, curation_concerns_models
         can :manage, Sipity::WorkflowResponsibility
       end

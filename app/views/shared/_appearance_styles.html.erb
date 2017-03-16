@@ -1,0 +1,56 @@
+<% # Dynamic styles added by the admin in the appearances page %>
+<style>
+<% appearance = Hyrax::Forms::Admin::Appearance.new %>
+.navbar-inverse { background-color: <%= appearance.header_background_color %>; }
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus { background-color: <%= appearance.header_background_color %>; }
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-text,
+.navbar-inverse .navbar-brand { color: <%= appearance.header_text_color %>; }
+
+.btn-primary {
+  background-color: <%= appearance.primary_button_background_color %>;
+  border-color: <%= appearance.primary_button_border_color %>;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  background-color: <%= appearance.primary_button_focus_background_color %>;
+  border-color: <%= appearance.primary_button_focus_border_color %>;
+}
+
+.btn-primary:hover {
+  background-color: <%= appearance.primary_button_hover_background_color %>;
+  border-color: <%= appearance.primary_button_hover_border_color %>;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: <%= appearance.primary_button_background_color %>;
+  border-color: <%= appearance.primary_button_border_color %>;
+}
+
+.btn-primary:active:hover,
+.btn-primary:active:focus,
+.btn-primary:active.focus,
+.btn-primary.active:hover,
+.btn-primary.active:focus,
+.btn-primary.active.focus{
+  background-color: <%= appearance.primary_button_background_color %>;
+  border-color: <%= appearance.primary_button_border_color %>;
+}
+
+.btn-primary.disabled:hover,
+.btn-primary.disabled:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled]:hover,
+.btn-primary[disabled]:focus,
+.btn-primary[disabled].focus {
+  background-color: <%= appearance.primary_button_background_color %>;
+  border-color: <%= appearance.primary_button_border_color %>;
+}
+
+</style>

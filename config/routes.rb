@@ -196,6 +196,7 @@ Hyrax::Engine.routes.draw do
     end
     resources :workflows
     resources :workflow_roles
+    resource :appearance
   end
 
   resources :content_blocks, only: ['create', 'update']

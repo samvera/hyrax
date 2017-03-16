@@ -150,9 +150,16 @@ es:
           confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header:           "Conjunto Administrativo"
           item_list_header: "Trabajos en este conjunto"
+      appearances:
+        show:
+          header:           "Apariencia"
+        update:
+          flash:
+            success:        "La apariencia se actualizó correctamente"
       sidebar:
         activity:           "Actividad"
         admin_sets:         "Conjuntos Administrativos"
+        appearance:      "Apariencia"
         collections:        "Colecciones"
         configuration:      "Configuración"
         notifications:      "Notificaciones"

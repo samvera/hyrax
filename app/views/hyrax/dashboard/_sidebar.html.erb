@@ -31,6 +31,12 @@
     <%= menu.nav_link(hyrax.admin_features_path) do %>
       <span class="fa fa-cog"></span> <%= t('hyrax.admin.sidebar.settings') %>
     <% end %>
+
+    <% if can?(:update, :appearance) %>
+      <%= menu.nav_link(hyrax.admin_appearance_path) do %>
+        <span class="fa fa-paint-brush"></span> <%= t('hyrax.admin.sidebar.appearance') %>
+      <% end %>
+    <% end %>
   <% end %>
 
   <li class="h5"><%= t('hyrax.admin.sidebar.repository_objects') %></li>
