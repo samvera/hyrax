@@ -49,8 +49,6 @@ Metrics/ModuleLength:
 
 Metrics/MethodLength:
   Exclude:
-    - 'app/actors/hyrax/actors/add_to_work_actor.rb'
-    - 'app/actors/hyrax/actors/apply_order_actor.rb'
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
@@ -59,9 +57,7 @@ Metrics/MethodLength:
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
-    - 'lib/generators/hyrax/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/hyrax/install_generator.rb'
-    - 'lib/hyrax/configuration.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
 
@@ -78,11 +74,6 @@ Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
 
-Rails/HasAndBelongsToMany:
-  Exclude:
-    - 'app/models/domain_term.rb'
-    - 'app/models/local_authority.rb'
-
 RSpec/NamedSubject:
   Enabled: false
 
@@ -91,7 +82,6 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
-    - 'spec/controllers/authorities_controller_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
     - 'spec/controllers/hyrax/collections_controller_spec.rb'
