@@ -3,11 +3,17 @@ module Hyrax
     # Responsible for determining the appropriate notification(s) to deliver based on the given
     # criteria.
     class NotificationService
+      # @api public
+      #
       # For the given :entity and :action
       # - For each associated notification
       # - - Generate the type of notification
       # - - Expand the notification roles to users
       # - - Deliver the notification to the users
+      # @param [Sipity::Entity] entity - the workflow entity
+      # @param [Sipity::WorkflowAction] action - the action taken on the entity
+      # @param [#comment] comment - the comment associated with the action being taken
+      # @param [User] user - the person taking the action
       def self.deliver_on_action_taken(entity:, action:, comment:, user:)
         new(entity: entity,
             action: action,
