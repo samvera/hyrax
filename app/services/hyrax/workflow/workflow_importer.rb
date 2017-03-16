@@ -106,13 +106,11 @@ module Hyrax
           @data = input.deep_symbolize_keys
         end
 
-        attr_accessor :validator, :permission_template
+        attr_accessor :validator, :permission_template, :schema
 
         def default_validator
           SchemaValidator.method(:call)
         end
-
-        attr_accessor :schema
 
         def default_schema
           Hyrax::Workflow::WorkflowSchema
@@ -153,6 +151,7 @@ module Hyrax
           )
           workflow.label = configuration.fetch(:label, nil)
           workflow.description = configuration.fetch(:description, nil)
+          workflow.allows_access_grant = configuration.fetch(:allows_access_grant, nil)
           workflow.save!
           logger.info(%(Loaded Sipity::Workflow "#{workflow.name}" for #{permission_template.class} ID=#{permission_template.id}))
           workflow

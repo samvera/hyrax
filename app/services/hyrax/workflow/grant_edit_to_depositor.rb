@@ -4,7 +4,7 @@ module Hyrax
     # grants the creator the ability to alter it.
     class GrantEditToDepositor
       def self.call(target:, **)
-        target.edit_users = [target.depositor]
+        target.edit_users += [target.depositor]
       end
     end
   end
