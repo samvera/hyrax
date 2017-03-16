@@ -26,10 +26,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 15
 
-Style/SymbolProc: # https://github.com/bbatsov/rubocop/issues/3071
-  Exclude:
-    - 'app/models/hyrax/uploaded_file.rb'
-
 Style/IndentationConsistency:
   EnforcedStyle: rails
 

@@ -6,8 +6,6 @@ module Hyrax
     mount_uploader :file, UploadedFileUploader
     belongs_to :user, class_name: '::User'
 
-    before_destroy do |obj|
-      obj.remove_file!
-    end
+    before_destroy :remove_file!
   end
 end
