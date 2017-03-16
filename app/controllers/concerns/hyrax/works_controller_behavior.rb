@@ -5,7 +5,14 @@ module Hyrax
     include Hyrax::CurationConcernController
 
     def new
+      # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
+
+      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
+      # however it isn't a required field for someone to submit via json.
+      # Set the first admin_set they have access to.
+      admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
+      curation_concern.admin_set_id = admin_set && admin_set.id
       super
     end
 

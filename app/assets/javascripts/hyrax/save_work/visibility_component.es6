@@ -1,6 +1,12 @@
-export class VisibilityComponent {
-  constructor(element) {
+export default class VisibilityComponent {
+  /**
+   * Initialize the save controls
+   * @param {jQuery} element the jquery selector for the visibility component
+   * @param {AdminSetWidget} adminSetWidget the control for the adminSet dropdown
+   */
+  constructor(element, adminSetWidget) {
     this.element = element
+    this.adminSetWidget = adminSetWidget
     this.form = element.closest('form')
     $('.collapse').collapse({ toggle: false })
     element.find("[type='radio']").on('change', () => { this.showForm() })
@@ -35,21 +41,20 @@ export class VisibilityComponent {
 
   // Limit visibility options based on selected AdminSet (if enabled)
   limitByAdminSet() {
-    let adminSetInput = this.form.find('select[id$="_admin_set_id"]')
-    if(adminSetInput) {
-      $(adminSetInput).on('change', () => { this.restrictToVisibility(adminSetInput.find(":selected")) })
-      this.restrictToVisibility(adminSetInput.find(":selected"))
+    if(this.adminSetWidget) {
+      this.adminSetWidget.on('change', (data) => this.restrictToVisibility(data))
+      this.restrictToVisibility(this.adminSetWidget.data())
     }
   }
 
   // Restrict visibility and/or release date to match the AdminSet requirements (if any)
-  restrictToVisibility(selected) {
+  restrictToVisibility(data) {
     // visibility requirement is in HTML5 'data-visibility' attr
-    let visibility = selected.data('visibility')
+    let visibility = data['visibility']
     // release date requirement is in HTML5 'data-release-date' attr
-    let release_date = selected.data('release-date')
+    let release_date = data['releaseDate']
     // if release_date is flexible (i.e. before date), then 'data-release-before-date' attr will be true
-    let release_before = selected.data('release-before-date')
+    let release_before = data['releaseBeforeDate']
 
     // Restrictions require either a visibility requirement or a release_date requirement (or both)
     if(visibility || release_date) {

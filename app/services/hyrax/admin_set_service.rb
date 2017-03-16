@@ -41,32 +41,11 @@ module Hyrax
       end
     end
 
-    # Return AdminSet selectbox options based on access type
-    # @param [Symbol] access :read or :edit
-    def select_options(access = :read)
-      search_results(access).map do |admin_set|
-        [admin_set.to_s, admin_set.id, data_attributes(admin_set)]
-      end
-    end
-
     private
 
       # @param [Symbol] access :read or :edit
       def builder(access)
         search_builder.new(context, access)
-      end
-
-      # Create a hash of HTML5 'data' attributes. These attributes are added to select_options and
-      # later utilized by Javascript to limit new Work options based on AdminSet selected
-      def data_attributes(admin_set)
-        attrs = {}
-
-        permission_template = PermissionTemplate.find_by!(admin_set_id: admin_set.id)
-        # Leverage all PermissionTemplate release & visibility data attributes (if not blank or false)
-        attrs['data-release-date'] = permission_template.release_date unless permission_template.release_date.blank?
-        attrs['data-release-before-date'] = true if permission_template.release_before_date?
-        attrs['data-visibility'] = permission_template.visibility unless permission_template.visibility.blank?
-        attrs
       end
 
       # Count number of files from admin set works

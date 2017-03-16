@@ -34,7 +34,7 @@ export default class RelationshipsTable {
 
       // Display an error when the input field is empty, or if the work ID is already related,
       // otherwise clone the row and set appropriate styles
-      if ($input.val() == "") {
+      if ($input.val() === "") {
         $this.setWarningMessage($row, "ID cannot be empty.");
       } else if ($.inArray($input.val(), $this.existing_related_works_values) > -1) {
         $this.setWarningMessage($row, "Work is already related.");
@@ -104,7 +104,7 @@ export default class RelationshipsTable {
 
       // ENTER key was pressed, wait for keyup to click the Add button
       if (key_code === 13) {
-        if (event.type == "keyup") {
+        if (event.type === "keyup") {
           $this.clickAddbutton($row);
         }
         event.preventDefault();
@@ -112,7 +112,7 @@ export default class RelationshipsTable {
       }
 
       // ESC key was pressed, clear the input field and hide the error
-      if (key_code === 27 && event.type == "keyup") {
+      if (key_code === 27 && event.type === "keyup") {
         $(this).val("");
         $this.hideWarningMessage($row);
       }
