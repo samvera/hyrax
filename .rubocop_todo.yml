@@ -59,7 +59,6 @@ Metrics/MethodLength:
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'lib/generators/hyrax/templates/migrations/create_local_authorities.rb'
     - 'lib/generators/hyrax/install_generator.rb'
-    - 'lib/hyrax/configuration.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
 

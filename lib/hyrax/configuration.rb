@@ -192,6 +192,7 @@ module Hyrax
     # @!attribute [w] dashboard_configuration
     #   Configuration for dashboard rendering.
     attr_writer :dashboard_configuration
+    # rubocop:disable Metrics/MethodLength
     def dashboard_configuration
       @dashboard_configuration ||= {
         menu: {
@@ -223,6 +224,7 @@ module Hyrax
         }
       }
     end
+    # rubocop:enable Metrics/MethodLength
 
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
