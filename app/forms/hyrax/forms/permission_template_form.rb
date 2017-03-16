@@ -110,12 +110,7 @@ module Hyrax
         def update_admin_set(attributes)
           update_params = admin_set_update_params(attributes)
           return unless update_params
-          admin_set.tap do |a|
-            # We're doing this because ActiveFedora 11.1 doesn't have update!
-            # https://github.com/projecthydra/active_fedora/pull/1196
-            a.attributes = update_params
-            a.save!
-          end
+          admin_set.update!(update_params)
         end
 
         # @return [Nil]
