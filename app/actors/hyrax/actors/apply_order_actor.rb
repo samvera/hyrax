@@ -18,14 +18,23 @@ module Hyrax
 
         def sync_members(ordered_member_ids)
           return true if ordered_member_ids.nil?
-          existing_members_ids = curation_concern.ordered_member_ids
-          (existing_members_ids - ordered_member_ids).each do |old_id|
+          cleanup_ids_to_remove_from_curation_concern(ordered_member_ids)
+          add_new_work_ids_not_already_in_curation_concern(ordered_member_ids)
+          curation_concern.errors[:ordered_member_ids].empty?
+        end
+
+        # @todo Why is this not doing work.save?
+        # @see Hyrax::Actors::AddToWorkActor for duplication
+        def cleanup_ids_to_remove_from_curation_concern(ordered_member_ids)
+          (curation_concern.ordered_member_ids - ordered_member_ids).each do |old_id|
             work = ::ActiveFedora::Base.find(old_id)
             curation_concern.ordered_members.delete(work)
             curation_concern.members.delete(work)
           end
+        end
 
-          (ordered_member_ids - existing_members_ids).each do |work_id|
+        def add_new_work_ids_not_already_in_curation_concern(ordered_member_ids)
+          (ordered_member_ids - curation_concern.ordered_member_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
             if can_edit_both_works?(work)
               curation_concern.ordered_members << work
@@ -34,7 +43,6 @@ module Hyrax
               curation_concern.errors[:ordered_member_ids] << "Works can only be related to each other if user has ability to edit both."
             end
           end
-          curation_concern.errors[:ordered_member_ids].empty?
         end
 
         def apply_order(new_order)

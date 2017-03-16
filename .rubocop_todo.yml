@@ -49,7 +49,6 @@ Metrics/ModuleLength:
 
 Metrics/MethodLength:
   Exclude:
-    - 'app/actors/hyrax/actors/apply_order_actor.rb'
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
