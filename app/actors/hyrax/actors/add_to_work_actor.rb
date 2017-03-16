@@ -21,16 +21,23 @@ module Hyrax
           ability.can?(:edit, work) && ability.can?(:edit, curation_concern)
         end
 
-        # rubocop:disable Metrics/AbcSize
         def add_to_works(new_work_ids)
           return true if new_work_ids.nil?
+          cleanup_ids_to_remove_from_curation_concern(new_work_ids)
+          add_new_work_ids_not_already_in_curation_concern(new_work_ids)
+          curation_concern.errors[:in_works_ids].empty?
+        end
+
+        def cleanup_ids_to_remove_from_curation_concern(new_work_ids)
           (curation_concern.in_works_ids - new_work_ids).each do |old_id|
             work = ::ActiveFedora::Base.find(old_id)
             work.ordered_members.delete(curation_concern)
             work.members.delete(curation_concern)
             work.save
           end
+        end
 
+        def add_new_work_ids_not_already_in_curation_concern(new_work_ids)
           # add to new so long as the depositor for the parent and child matches, otherwise inject an error
           (new_work_ids - curation_concern.in_works_ids).each do |work_id|
             work = ::ActiveFedora::Base.find(work_id)
@@ -41,9 +48,7 @@ module Hyrax
               curation_concern.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
             end
           end
-          curation_concern.errors[:in_works_ids].empty?
         end
-        # rubocop:enable Metrics/AbcSize
     end
   end
 end
