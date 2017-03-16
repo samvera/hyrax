@@ -8,13 +8,13 @@ module Sufia
         end
 
         def message
-          "#{title} (#{work_id}) requires additional changes before approval.\n\n '#{comment}'"
+          "#{title} (#{link_to work_id, document_path}) requires additional changes before approval.\n\n '#{comment}'"
         end
 
       private
 
         def users_to_notify
-          user_key = ActiveFedora::Base.find(work_id).depositor
+          user_key = document.depositor
           super << ::User.find_by(email: user_key)
         end
     end
