@@ -28,21 +28,19 @@ module Sufia
         Sufia::PermissionTemplate.find_or_create_by!(admin_set_id: admin_set_id)
       end
 
-      DEFAULT_ID = 'admin_set/default'.freeze
-
       def default_admin_set_id
         create_default_admin_set unless default_exists?
-        DEFAULT_ID
+        AdminSet::DEFAULT_ID
       end
 
       def default_exists?
-        AdminSet.exists?(DEFAULT_ID)
+        AdminSet.exists?(AdminSet::DEFAULT_ID)
       end
 
       # Creates the default AdminSet and an associated PermissionTemplate with workflow
       def create_default_admin_set
-        AdminSet.create!(id: DEFAULT_ID, title: ['Default Admin Set']).tap do |_as|
-          PermissionTemplate.create!(admin_set_id: DEFAULT_ID, workflow_name: 'default')
+        AdminSet.create!(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set']).tap do |_as|
+          PermissionTemplate.create!(admin_set_id: AdminSet::DEFAULT_ID, workflow_name: 'default')
         end
       end
   end

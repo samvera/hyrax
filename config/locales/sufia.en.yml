@@ -321,6 +321,8 @@ en:
         new:
           header:         "Create New Administrative Set"
         delete:
+          error_default_set: "Administrative set cannot be deleted as it is the default set"
+          error_not_empty:   "Administrative set cannot be deleted as it is not empty"
           notification:   "Administrative set successfully deleted"
         form:
           tabs:

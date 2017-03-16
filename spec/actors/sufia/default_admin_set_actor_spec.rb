@@ -22,7 +22,7 @@ RSpec.describe Sufia::DefaultAdminSetActor do
 
     context "when admin_set_id is blank" do
       let(:attributes) { { admin_set_id: '' } }
-      let(:default_id) { described_class::DEFAULT_ID }
+      let(:default_id) { AdminSet::DEFAULT_ID }
 
       it "creates the default AdminSet with a PermissionTemplate and calls the next actor with the default admin set id" do
         expect(next_actor).to receive(:create).with(admin_set_id: default_id).and_return(true)
