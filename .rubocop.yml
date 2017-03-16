@@ -105,12 +105,7 @@ RSpec/DescribeClass:
 #   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
 # The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
 RSpec/MessageSpies:
-  Enabled: true
-  EnforcedStyle: receive
-  Exclude:
-    - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
-    - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
-    - 'spec/services/hyrax/workflow/workflow_importer_spec.rb'
+  Enabled: false
 
 RSpec/InstanceVariable:
   Exclude:
@@ -132,7 +127,4 @@ RSpec/NestedGroups:
   Enabled: false
 
 RSpec/LeadingSubject:
-  Enabled: false
-
-RSpec/MessageSpies:
   Enabled: false
