@@ -22,8 +22,6 @@ Metrics/ModuleLength:
 
 Metrics/MethodLength:
   Exclude:
-    - 'lib/generators/sufia/templates/migrations/create_local_authorities.rb'
-    - 'app/helpers/sufia/citations_behaviors/formatters/endnote_formatter.rb'
     - 'app/models/concerns/sufia/solr_document/export.rb'
     - 'app/controllers/concerns/sufia/my_controller_behavior.rb'
     - 'lib/generators/sufia/install_generator.rb'
@@ -42,11 +40,6 @@ Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
 
-Rails/HasAndBelongsToMany:
-  Exclude:
-    - 'app/models/domain_term.rb'
-    - 'app/models/local_authority.rb'
-
 RSpec/NamedSubject:
   Enabled: false
 
@@ -54,7 +47,6 @@ RSpec/ExampleLength:
   Max: 7
   Exclude:
     - 'spec/controllers/api/items_controller_spec.rb'
-    - 'spec/controllers/authorities_controller_spec.rb'
     - 'spec/controllers/collections_controller_spec.rb'
     - 'spec/controllers/curation_concerns/file_sets_controller_spec.rb'
     - 'spec/controllers/my/highlights_controller_spec.rb'
