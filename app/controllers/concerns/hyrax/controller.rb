@@ -72,22 +72,30 @@ module Hyrax::Controller
       # just custom Hydra messages such as "This item is under embargo.", etc.
       json_message = exception.message if exception.is_a? Hydra::AccessDenied
       if current_user && current_user.persisted?
-        respond_to do |wants|
-          wants.html do
-            if [:show, :edit, :create, :update, :destroy].include? exception.action
-              render 'hyrax/base/unauthorized', status: :unauthorized
-            else
-              redirect_to main_app.root_url, alert: exception.message
-            end
-          end
-          wants.json { render_json_response(response_type: :forbidden, message: json_message) }
-        end
+        deny_access_for_current_user(exception, json_message)
       else
-        session['user_return_to'.freeze] = request.url
-        respond_to do |wants|
-          wants.html { redirect_to main_app.new_user_session_path, alert: exception.message }
-          wants.json { render_json_response(response_type: :unauthorized, message: json_message) }
+        deny_access_for_anonymous_user(exception, json_message)
+      end
+    end
+
+    def deny_access_for_current_user(exception, json_message)
+      respond_to do |wants|
+        wants.html do
+          if [:show, :edit, :create, :update, :destroy].include? exception.action
+            render 'hyrax/base/unauthorized', status: :unauthorized
+          else
+            redirect_to main_app.root_url, alert: exception.message
+          end
         end
+        wants.json { render_json_response(response_type: :forbidden, message: json_message) }
+      end
+    end
+
+    def deny_access_for_anonymous_user(exception, json_message)
+      session['user_return_to'.freeze] = request.url
+      respond_to do |wants|
+        wants.html { redirect_to main_app.new_user_session_path, alert: exception.message }
+        wants.json { render_json_response(response_type: :unauthorized, message: json_message) }
       end
     end
 end

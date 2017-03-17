@@ -196,6 +196,7 @@ module Hyrax
         # @param [Hash] attributes
         # @return [String, Nil] the error code if invalid, nil if valid
         # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/AbcSize
         # rubocop:disable Metrics/PerceivedComplexity
         def validate_visibility_combinations(attributes)
           return unless attributes.key?(:visibility) # only the visibility tab has validations
@@ -217,6 +218,7 @@ module Hyrax
         end
       # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end
