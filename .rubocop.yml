@@ -26,10 +26,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 15
 
-Style/SymbolProc: # https://github.com/bbatsov/rubocop/issues/3071
-  Exclude:
-    - 'app/models/hyrax/uploaded_file.rb'
-
 Style/IndentationConsistency:
   EnforcedStyle: rails
 
@@ -40,10 +36,6 @@ Style/CollectionMethods:
     inject: 'reduce'
     detect: 'find'
     find_all: 'select'
-
-Style/CommentIndentation:
-  Exclude:
-    - 'app/actors/hyrax/actors/add_to_work_actor.rb'
 
 Style/MethodMissing:
   Exclude:
@@ -113,12 +105,7 @@ RSpec/DescribeClass:
 #   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
 # The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
 RSpec/MessageSpies:
-  Enabled: true
-  EnforcedStyle: receive
-  Exclude:
-    - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
-    - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
-    - 'spec/services/hyrax/workflow/workflow_importer_spec.rb'
+  Enabled: false
 
 RSpec/InstanceVariable:
   Exclude:
@@ -140,7 +127,4 @@ RSpec/NestedGroups:
   Enabled: false
 
 RSpec/LeadingSubject:
-  Enabled: false
-
-RSpec/MessageSpies:
   Enabled: false

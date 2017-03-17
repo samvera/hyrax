@@ -11,6 +11,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
           "name": "ulra_submission",
           "label": "This is the label",
           "description": "This description could get really long",
+          "allows_access_grant": true,
           "actions": [{
             "name": "approve",
             "transition_to": "reviewed",
@@ -82,8 +83,10 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.available_workflows.count }.by(number_of_workflows_created))
       expect(result).to match_array(kind_of(Sipity::Workflow))
       expect(described_class.load_errors).to be_empty
-      expect(result.first.label).to eq "This is the label"
-      expect(result.first.description).to eq "This description could get really long"
+      first_workflow = result.first
+      expect(first_workflow.label).to eq "This is the label"
+      expect(first_workflow.description).to eq "This description could get really long"
+      expect(first_workflow.allows_access_grant?).to be true
     end
   end
   context "when I load twice" do
