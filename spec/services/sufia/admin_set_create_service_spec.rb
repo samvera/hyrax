@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Sufia::AdminSetCreateService do
   let(:admin_set) { AdminSet.new(title: ['test']) }
-  let(:service) { described_class.new(admin_set, user) }
+  let(:workflow_name) { nil }
+  let(:service) { described_class.new(admin_set, user, workflow_name) }
   let(:user) { create(:user) }
 
   describe "#create" do
@@ -39,6 +40,7 @@ RSpec.describe Sufia::AdminSetCreateService do
       admin_set = AdminSet.find(default_admin_set_id)
       expect(admin_set).to be_persisted
       expect(permission_template).to be_persisted
+      expect(permission_template.workflow_name).to eq described_class::DEFAULT_WORKFLOW_NAME
     end
   end
 end

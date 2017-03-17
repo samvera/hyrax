@@ -170,7 +170,11 @@ After Fedora and Solr are running, create the default administrative set by runn
 rake sufia:default_admin_set:create
 ```
 
-You will want to run this command the first time this code is deployed to a new environment as well.
+You will want to run this command the first time this code is deployed to a new environment as well. Note it depends on loading workflows, which is run by the install template but also needs to be run in a new environment:
+
+```
+rake curation_concerns:workflow:load
+```
 
 # Managing a Sufia-based app
 

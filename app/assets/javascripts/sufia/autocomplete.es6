@@ -23,9 +23,7 @@ export class Autocomplete {
                 this.autocompleteLocation(selector);
                 break;
               case "work":
-                var user = selector.data('user');
-                var id = selector.data('id');
-                this.autocompleteWork(selector, user, id);
+                this.autocompleteWork(selector);
                 break;
             }
         });
@@ -57,12 +55,11 @@ export class Autocomplete {
         new Language(field, field.data('autocomplete-url'))
     }
 
-    autocompleteWork(field, user, id) {
+    autocompleteWork(field, excludeWorkId) {
         new Work(
-            field,
-            field.data('autocomplete-url'),
-            user,
-            id
+          field,
+          field.data('autocomplete-url'),
+          field.data('exclude-work')
         )
     }
 }

@@ -37,22 +37,8 @@ module Sufia::Forms
          :collection_ids, :in_works_ids, :admin_set_id]
     end
 
-    # The ordered_members which are FileSet types
-    # @return [Array] All of the file sets in the ordered_members
-    def ordered_fileset_members
-      model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym == :file_set }
-    end
-
-    # The ordered_members which are not FileSet types
-    # @return [Array] All of the non file sets in the ordered_members
-    def ordered_work_members
-      model.ordered_members.to_a.select { |m| m.model_name.singular.to_sym != :file_set }
-    end
-
-    # The in_work items
-    # @return [Array] All of the works that this work is a member of
-    def in_work_members
-      model.in_works.to_a
+    def work_members
+      model.members.to_a.reject { |m| m.is_a? FileSet }
     end
 
     def self.multiple?(term)
@@ -70,7 +56,14 @@ module Sufia::Forms
     end
 
     def self.build_permitted_params
-      super + [:on_behalf_of, { collection_ids: [] }]
+      super + [:on_behalf_of,
+               { collection_ids: [] },
+               { work_members_attributes: [:id, :_destroy] }]
     end
+
+    # This is required so that fields_for will draw a nested form.
+    # See ActionView::Helpers#nested_attributes_association?
+    #   https://github.com/rails/rails/blob/v5.0.2/actionview/lib/action_view/helpers/form_helper.rb#L1890
+    delegate :work_members_attributes=, to: :model
   end
 end
