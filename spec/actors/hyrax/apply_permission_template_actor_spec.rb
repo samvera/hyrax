@@ -29,25 +29,25 @@ RSpec.describe Hyrax::ApplyPermissionTemplateActor do
       let(:attributes) { { admin_set_id: admin_set.id } }
       before do
         create(:permission_template_access,
+               :manage,
                permission_template: permission_template,
                agent_type: 'user',
-               agent_id: 'hannah',
-               access: 'manage')
+               agent_id: 'hannah')
         create(:permission_template_access,
+               :manage,
                permission_template: permission_template,
                agent_type: 'group',
-               agent_id: 'librarians',
-               access: 'manage')
+               agent_id: 'librarians')
         create(:permission_template_access,
+               :view,
                permission_template: permission_template,
                agent_type: 'user',
-               agent_id: 'gary',
-               access: 'view')
+               agent_id: 'gary')
         create(:permission_template_access,
+               :view,
                permission_template: permission_template,
                agent_type: 'group',
-               agent_id: 'readers',
-               access: 'view')
+               agent_id: 'readers')
         allow(Hyrax::Actors::RootActor).to receive(:new).and_return(create_actor)
         allow(create_actor).to receive(:create).and_return(true)
       end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::AdminSetSearchBuilder do
+RSpec.describe Hyrax::AdminSetSearchBuilder do
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,
            current_ability: ability)
@@ -91,20 +91,21 @@ describe Hyrax::AdminSetSearchBuilder do
 
       before do
         create(:permission_template_access,
+               :manage,
                permission_template: permission_template1,
                agent_type: 'user',
                agent_id: user.user_key,
                access: 'deposit')
         create(:permission_template_access,
+               :manage,
                permission_template: permission_template2,
                agent_type: 'user',
-               agent_id: user.user_key,
-               access: 'manage')
+               agent_id: user.user_key)
         create(:permission_template_access,
+               :view,
                permission_template: permission_template3,
                agent_type: 'user',
-               agent_id: user.user_key,
-               access: 'view')
+               agent_id: user.user_key)
       end
 
       it 'is successful' do
