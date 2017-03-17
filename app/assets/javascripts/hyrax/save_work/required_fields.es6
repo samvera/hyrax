@@ -7,7 +7,7 @@ export class RequiredFields {
   }
 
   get areComplete() {
-    return this.requiredFields.filter((n, elem) => { return this.isValuePresent(elem) } ).length == 0
+    return this.requiredFields.filter((n, elem) => { return this.isValuePresent(elem) } ).length === 0
   }
 
   isValuePresent(elem) {

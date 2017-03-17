@@ -3,13 +3,11 @@
 Hyrax = {
     initialize: function () {
         this.autocomplete();
-        this.saveWorkControl();
-        this.saveWorkFixed();
         this.popovers();
         this.permissions();
         this.notifications();
         this.transfers();
-        this.relationshipsTable();
+        this.editor();
         this.fileManager();
         this.selectWorkType();
         this.datatable();
@@ -60,15 +58,12 @@ Hyrax = {
         autocomplete.setup();
     },
 
-    saveWorkControl: function () {
-        var SaveWorkControl = require('hyrax/save_work/save_work_control');
-        var control = new SaveWorkControl($("#form-progress"));
-    },
-
-    saveWorkFixed: function () {
-        // Setting test to false to skip native and go right to polyfill
-        FixedSticky.tests.sticky = false;
-        $('#savewidget').fixedsticky();
+    editor: function () {
+        var element = $("[data-behavior='work-form']")
+        if (element.length > 0) {
+          var Editor = require('hyrax/editor');
+          new Editor(element)
+        }
     },
 
     // initialize popover helpers
@@ -100,13 +95,6 @@ Hyrax = {
 
     transfers: function () {
         $("#proxy_deposit_request_transfer_to").userSearch();
-    },
-
-    relationshipsTable: function () {
-        var RelationshipsTable = require('hyrax/relationships/table');
-        $('table.relationships-ajax-enabled').each(function () {
-            new RelationshipsTable($(this));
-        });
     },
 
     selectWorkType: function () {

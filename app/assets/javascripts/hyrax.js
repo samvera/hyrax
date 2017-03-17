@@ -48,7 +48,7 @@
 //= require hyrax/batch_select_all
 //= require hyrax/browse_everything
 //= require hyrax/search
-//= require hyrax/editor
+//= require hyrax/content_blocks
 //= require hyrax/ga_events
 //= require hyrax/select_submit
 //= require hyrax/tabs
@@ -65,6 +65,8 @@
 //= require hyrax/admin/admin_set_controls
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
+//= require hyrax/editor
+//= require hyrax/editor/admin_set_widget
 //= require hyrax/admin/graphs
 //= require hyrax/save_work
 //= require hyrax/permissions

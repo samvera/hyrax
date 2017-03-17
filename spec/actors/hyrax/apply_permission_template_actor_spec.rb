@@ -11,7 +11,11 @@ RSpec.describe Hyrax::ApplyPermissionTemplateActor do
     Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class])
   end
   let(:depositor) { create(:user) }
-  let(:work) { build(:generic_work) }
+  let(:work) do
+    build(:generic_work,
+          edit_users: ['Kevin'],
+          read_users: ['Taraji'])
+  end
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set, with_permission_template: true) }
   let(:permission_template) { admin_set.permission_template }
@@ -54,9 +58,9 @@ RSpec.describe Hyrax::ApplyPermissionTemplateActor do
 
       it "adds the template users to the work" do
         expect(actor.create(attributes)).to be true
-        expect(work.edit_users).to include 'hannah'
+        expect(work.edit_users).to include('hannah', 'Kevin')
         expect(work.edit_groups).to include 'librarians'
-        expect(work.read_users).to include 'gary'
+        expect(work.read_users).to include('gary', 'Taraji')
         expect(work.read_groups).to include 'readers'
       end
     end
