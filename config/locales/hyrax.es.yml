@@ -44,6 +44,9 @@ es:
     active_consent_to_agreement:  "He leído y estoy de acuerdo con"
     admin:
       admin_sets:
+        document_list:
+          edit: "Editar"
+          no_works: "El conjunto administrativo está vacío."
         delete:
           error_default_set: "El conjunto administrativo no se puede eliminar ya que es el conjunto predeterminado"
           error_not_empty:   "El conjunto administrativo no se puede eliminar ya que no está vacío"
@@ -130,6 +133,7 @@ es:
         new:
           header:         "Crear nuevo conjunto Administrativo"
         show:
+          breadcrumb:       "Ver Conjunto"
           confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header:           "Conjunto Administrativo"
           item_list_header: "Trabajos en este conjunto"

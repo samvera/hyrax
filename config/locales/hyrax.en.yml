@@ -44,6 +44,10 @@ en:
     active_consent_to_agreement:  "I have read and agree to the"
     admin:
       admin_sets:
+        document_list:
+          edit:     "Edit"
+          no_works: "The administrative set does not contain any works."
+          title:    "List of items in this administrative set"
         delete:
           error_default_set: "Administrative set cannot be deleted as it is the default set"
           error_not_empty:   "Administrative set cannot be deleted as it is not empty"
@@ -130,6 +134,7 @@ en:
         new:
           header:         "Create New Administrative Set"
         show:
+          breadcrumb:       "View Set"
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
