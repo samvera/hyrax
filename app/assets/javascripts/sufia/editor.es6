@@ -1,4 +1,4 @@
-import RelationshipsTable from 'sufia/relationships/table'
+import RelationshipsControl from 'sufia/relationships/control'
 import SaveWorkControl from 'sufia/save_work/save_work_control'
 import AdminSetWidget from 'sufia/editor/admin_set_widget'
 
@@ -9,7 +9,7 @@ export default class {
     this.sharingTabElement = $('#tab-share')
 
     this.sharingTab()
-    this.relationshipsTable()
+    this.relationshipsControl()
     this.saveWorkControl()
     this.saveWorkFixed()
   }
@@ -31,8 +31,10 @@ export default class {
          this.sharingTabElement.addClass('hidden')
   }
 
-  relationshipsTable() {
-      new RelationshipsTable(this.element.find('table.relationships-ajax-enabled'))
+  relationshipsControl() {
+      new RelationshipsControl(this.element.find('[data-behavior="child-relationships"]'),
+                               'work_members_attributes',
+                               'tmpl-child-work')
   }
 
   saveWorkControl() {

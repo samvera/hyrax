@@ -5,6 +5,7 @@ class Sufia::FindWorksSearchBuilder < Sufia::SearchBuilder
 
   self.default_processor_chain += [:filter_on_title, :show_only_resources_deposited_by_current_user, :show_only_other_works, :show_only_works_not_child, :show_only_works_not_parent]
 
+  # Excludes the id that is part of the params
   def initialize(context)
     super(context)
     @id = context.params[:id]

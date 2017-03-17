@@ -8,6 +8,7 @@ module Sufia
        CurationConcerns::Actors::AddToWorkActor,
        CurationConcerns::Actors::AssignRepresentativeActor,
        CurationConcerns::Actors::AttachFilesActor,
+       Sufia::Actors::AttachMembersActor,
        CurationConcerns::Actors::ApplyOrderActor,
        InterpretVisibilityActor,
        DefaultAdminSetActor,
