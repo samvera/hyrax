@@ -4,6 +4,7 @@ module Sufia
 
     included do
       DEFAULT_ID = 'admin_set/default'.freeze
+      DEFAULT_WORKFLOW_NAME = 'default'.freeze
 
       def self.default_set?(id)
         id == DEFAULT_ID

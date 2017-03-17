@@ -1,13 +1,11 @@
 module Sufia
   # Creates AdminSets
   class AdminSetCreateService
-    DEFAULT_WORKFLOW_NAME = 'default'.freeze
-
     def self.create_default!
       return if AdminSet.exists?(AdminSet::DEFAULT_ID)
       admin_set = AdminSet.new(id: AdminSet::DEFAULT_ID, title: ['Default Admin Set'])
       begin
-        new(admin_set, nil, DEFAULT_WORKFLOW_NAME).create
+        new(admin_set, nil, AdminSet::DEFAULT_WORKFLOW_NAME).create
       rescue ActiveFedora::IllegalOperation
         # It is possible that another thread created the AdminSet just before this method
         # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
