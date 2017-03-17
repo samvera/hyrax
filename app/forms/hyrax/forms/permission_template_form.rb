@@ -69,7 +69,8 @@ module Hyrax
         # @return [Void]
         def update_participants_options(attributes)
           update_permission_template(attributes)
-          update_admin_set(attributes)
+          # if managers were added, recalculate update the access controls on the AdminSet
+          admin_set.update_access_controls! if managers_updated?(attributes)
         end
 
         # @return [String, Nil] error_code if validation fails, nil otherwise
@@ -109,27 +110,10 @@ module Hyrax
           end
         end
 
-        def update_admin_set(attributes)
-          update_params = admin_set_update_params(attributes)
-          return unless update_params
-          admin_set.update!(update_params)
-        end
-
         # @return [Nil]
         def update_permission_template(attributes)
           model.update(permission_template_update_params(attributes))
           nil
-        end
-
-        # The attributes[:access_grants_attributes], only submits changes, not
-        # all of the managers, so we need to query the persisted access_grants on
-        # the permission_template to see who should be an edit user.
-        # This can only be used after the permission template has been updated
-        # @return [Hash] includes :edit_users and :edit_groups
-        def admin_set_update_params(attributes)
-          return unless managers_updated?(attributes)
-          { edit_users: model.access_grants.where(access: 'manage', agent_type: 'user').pluck(:agent_id),
-            edit_groups: model.access_grants.where(access: 'manage', agent_type: 'group').pluck(:agent_id) }
         end
 
         def managers_updated?(attributes)

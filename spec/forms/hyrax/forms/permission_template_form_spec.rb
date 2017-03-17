@@ -26,12 +26,16 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
     before do
-      permission_template.access_grants.create([{ agent_type: 'user',
-                                                  agent_id: 'karen',
-                                                  access: 'manage' },
-                                                { agent_type: 'group',
-                                                  agent_id: 'archivists',
-                                                  access: 'manage' }])
+      create(:permission_template_access,
+             :manage,
+             permission_template: permission_template,
+             agent_type: 'user',
+             agent_id: 'karen')
+      create(:permission_template_access,
+             :manage,
+             permission_template: permission_template,
+             agent_type: 'group',
+             agent_id: 'archivists')
     end
 
     context "with a user manager" do
