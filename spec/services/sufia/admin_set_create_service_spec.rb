@@ -31,7 +31,7 @@ RSpec.describe Sufia::AdminSetCreateService do
   end
 
   describe '.create_default!' do
-    let(:default_admin_set_id) { 'admin_sets/default' }
+    let(:default_admin_set_id) { 'admin_set/default' }
     let(:permission_template) { Sufia::PermissionTemplate.find_by!(admin_set_id: default_admin_set_id) }
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Sufia >= 7.3
     it 'creates AdminSet, PermissionTemplate' do
