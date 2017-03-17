@@ -1,10 +1,21 @@
+.worktypes {
+  .modal-body {
+    padding: 0;
+  }
+
+  .modal-title {
+    font-size: $font-size-h3;
+  }
+}
+
 .select-worktype:first-child {
   border-top: none;
 }
+
 .select-worktype {
   border-top: 1px solid $table-border-color;
-  padding: 10px;
-  
+  padding: 15px 15px 0;
+
   label {
     margin: 0;
     width: 100%;
@@ -13,31 +24,37 @@
   input[type="radio"] {
     float: left;
     position: relative;
-    width: 10%;
+    width: 30px;
   }
 
   .select-work-icon {
+    color: $gray;
     float: left;
-    font-size: 400%;
+    font-size: 200%;
     line-height: 1;
+    margin-right: 10px;
     position: relative;
     text-align: center;
-    width: 20%;
+    width: 40px;
 
     .fa {
       vertical-align: top
     }
   }
+
   .select-work-description {
     float: left;
+    font-weight: normal;
     position: relative;
-    width: 70%;
-  }
+    width: 80%;
 
-  h3 {
-    margin-top: 0;
+    .work-type-title {
+      font-size: $font-size-h4;
+      margin-top: 0;
+    }
   }
 }
+
 .new-work-select {
   clear: both;
 }
