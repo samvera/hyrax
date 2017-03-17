@@ -1,6 +1,7 @@
-ecmaFeatures:
-  modules: true
-  jsx: true
+parserOptions:
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
 
 env:
   amd: true
@@ -61,7 +62,7 @@ rules:
   no-empty-pattern: 2
   no-eq-null: 2
   no-eval: 2
-  no-extend-native: 2
+  no-extend-native: 1
   no-extra-bind: 2
   no-fallthrough: 2
   no-floating-decimal: 0
@@ -78,7 +79,7 @@ rules:
   no-native-reassign: 2
   no-new-func: 2
   no-new-wrappers: 2
-  no-new: 2
+  no-new: 1
   no-octal-escape: 2
   no-octal: 2
   no-proto: 2

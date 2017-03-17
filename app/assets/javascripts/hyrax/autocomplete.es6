@@ -13,7 +13,7 @@ export default class Autocomplete {
 	    this.activateFields(autocompleteData,selector);
 	});
     }
-    // This activates autocomplete for added fields 
+    // This activates autocomplete for added fields
     fieldAdded(cloneElem) {
 	let selector = $(cloneElem);
 	let autocompleteData = selector.data('autocomplete');

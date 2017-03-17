@@ -127,6 +127,15 @@ module Hyrax
         super + [:on_behalf_of, :version]
       end
 
+      def self.sanitize_params(form_params)
+        admin_set_id = form_params[:admin_set_id]
+        if admin_set_id && Sipity::Workflow.find_by!(name: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).workflow_name).allows_access_grant?
+          return super
+        end
+        params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
+        form_params.permit(*params_without_permissions)
+      end
+
       private
 
         # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids

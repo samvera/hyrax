@@ -1,12 +1,16 @@
 describe("VisibilityComponent", function() {
-  var control = require('hyrax/save_work/visibility_component');
+  var VisibilityComponent = require('hyrax/save_work/visibility_component');
+  var AdminSetWidget = require('hyrax/editor/admin_set_widget');
+
   var target = null;
   var element = null;
+  var admin_set = null;
 
   beforeEach(function() {
     var fixture = setFixtures(visibilityForm(''));
     element = fixture.find('.visibility');
-    target = new control.VisibilityComponent(element);
+    admin_set = new AdminSetWidget(fixture.find('select'))
+    target = new VisibilityComponent(element, admin_set);
   });
 
   //limitByAdminSet() - Also tests restrictToVisibility(selected) which is where much of logic sits
@@ -24,7 +28,7 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option selected="selected">No Restrictions AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'enableAllOptions');
       });
       it("enables all visibility options", function() {
@@ -36,7 +40,8 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option data-visibility="authenticated" selected="selected">Institution-Only AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        admin_set = new AdminSetWidget(fixture.find('select'))
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
       it("calls applyRestrictions with specified visibility", function() {
@@ -48,7 +53,8 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option data-release-date="' + target.getToday() + '" data-release-before-date="false" selected="selected">Release Immediately AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        admin_set = new AdminSetWidget(fixture.find('select'))
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
       it("calls applyRestrictions with specified date requirement", function() {
@@ -60,7 +66,8 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option data-visibility="open" data-release-date="' + target.getToday() + '" data-release-before-date="false" selected="selected">Release Publicly Immediately AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        admin_set = new AdminSetWidget(fixture.find('select'))
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
       it("calls applyRestrictions with specified date and visibility requirement", function() {
@@ -72,7 +79,8 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option data-release-date="' + getOneYearFromToday() + '" data-release-before-date="false" selected="selected">Release in One Year AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        admin_set = new AdminSetWidget(fixture.find('select'))
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
       it("calls applyRestrictions with specified date requirement", function() {
@@ -84,7 +92,8 @@ describe("VisibilityComponent", function() {
       beforeEach(function() {
         var fixture = setFixtures(visibilityForm('<option data-visibility="authenticated" data-release-date="' + getOneYearFromToday() + '" data-release-before-date="true" selected="selected">Release in One Year to Institution AdminSet</option>'));
         element = fixture.find('.visibility');
-        target = new control.VisibilityComponent(element);
+        admin_set = new AdminSetWidget(fixture.find('select'))
+        target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
       it("calls applyRestrictions with specified date and visibility requirement", function() {
@@ -471,7 +480,6 @@ function visibilityForm(admin_set_option) {
         '  </div>' +
         '</form>';
 }
-
 
 // Get the date one year from today in YYYY-MM-DD format
 function getOneYearFromToday() {

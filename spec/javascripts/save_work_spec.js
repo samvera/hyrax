@@ -1,5 +1,6 @@
 describe("SaveWorkControl", function() {
   var SaveWorkControl = require('hyrax/save_work/save_work_control');
+  var AdminSetWidget = require('hyrax/editor/admin_set_widget');
 
   describe("validateMetadata", function() {
     var mockCheckbox = {
@@ -9,10 +10,12 @@ describe("SaveWorkControl", function() {
 
     beforeEach(function() {
       var fixture = setFixtures('<form id="edit_generic_work">' +
+        '<select><option></option></select>' +
         '<aside id="form-progress"><ul><li id="required-metadata"><li id="required-files"></ul>' +
         '<input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />' +
         '<input type="submit"></aside></form>');
-      target = new SaveWorkControl(fixture.find('#form-progress'));
+      admin_set = new AdminSetWidget(fixture.find('select'))
+      target = new SaveWorkControl(fixture.find('#form-progress'), admin_set);
       target.requiredMetadata = mockCheckbox;
       spyOn(mockCheckbox, 'check').and.stub();
       spyOn(mockCheckbox, 'uncheck').and.stub();
