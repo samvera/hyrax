@@ -39,6 +39,17 @@ describe Hyrax::PermissionTemplate do
     end
   end
 
+  describe '#agent_ids_for' do
+    it 'queries the underlying access_grants' do
+      template = create(:permission_template)
+      to_find = template.access_grants.create!(agent_type: 'user', access: 'manage', agent_id: '123')
+      template.access_grants.create!(agent_type: 'user', access: 'read', agent_id: '456')
+      template.access_grants.create!(agent_type: 'group', access: 'manage', agent_id: '789')
+
+      expect(template.agent_ids_for(agent_type: 'user', access: 'manage')).to eq([to_find.agent_id])
+    end
+  end
+
   describe "#admin_set" do
     it 'leverages AdminSet.find for the given permission_template' do
       expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)
