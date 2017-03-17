@@ -50,7 +50,9 @@ Hyrax = {
 	});
         $('.multi_value.form-group').manage_fields({
           add: function(e, element) {
-            autocomplete.fieldAdded(element)
+              autocomplete.fieldAdded(element);
+	      // Don't mark an added element as readonly even if previous element was
+	      $(element).attr('readonly',false);
           }
         });
         autocomplete.setup();
@@ -98,13 +100,19 @@ Hyrax = {
     selectWorkType: function () {
         var SelectWorkType = require('hyrax/select_work_type');
         $("[data-behavior=select-work]").each(function () {
-            new SelectWorkType($(this))
+            new SelectWorkType($(this));
         });
     },
 
     fileManager: function () {
         var FileManager = require('hyrax/file_manager');
-        new FileManager()
+        new FileManager();
+    },
+
+    authoritySelect: function(options) {
+	var AuthoritySelect = require('hyrax/authority_select');
+	var authoritySelect = new AuthoritySelect(options);
+	authoritySelect.initialize();
     },
 
     // Saved so that inline javascript can put data somewhere.

@@ -1,9 +1,9 @@
 export default class Default {
   constructor(element, url) {
     this.url = url;
-    element.autocomplete(this.options());
+    element.autocomplete(this.options(element));
   }
-  options() {
+  options(element) {
     return {
       minLength: 2,
       source: (request, response) => {
@@ -17,7 +17,13 @@ export default class Default {
       },
       complete: function(event) {
         $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
+      },
+      select: function() {
+	  if (element.data('autocomplete-read-only') === true) {
+           element.attr('readonly', true);
+	}
       }
+	
     };
   }
 }
