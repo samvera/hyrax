@@ -425,10 +425,10 @@ module Hyrax
 
     private
 
-      # @param [Symbol] the symbol representing the model
+      # @param [Symbol, #to_s] model_name - symbol representing the model
       # @return [String] the class name for the model
-      def normalize_concern_name(c)
-        c.to_s.camelize
+      def normalize_concern_name(model_name)
+        model_name.to_s.camelize
       end
   end
 end
