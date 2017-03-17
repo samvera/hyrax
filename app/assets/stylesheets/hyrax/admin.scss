@@ -78,6 +78,22 @@ fieldset {
   background-color: $admin-content-background-color;
 }
 
+.main-header {
+  margin-bottom: 0;
+  margin-top: 0;
+
+  h1 {
+    font-size: $font-size-h2;
+    margin-left: $padding-xs-horizontal;
+    margin-top: $padding-base-vertical;
+  }
+
+  .fa {
+    color: $gray;
+    margin-right: $padding-xs-horizontal;
+  }
+}
+
 .sidebar {
   background-color: $admin-sidebar-background-color;
   bottom: 0;
