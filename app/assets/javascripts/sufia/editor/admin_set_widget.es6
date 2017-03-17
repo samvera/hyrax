@@ -13,16 +13,27 @@ export default class {
         return this.element.find(":selected").data()
     }
 
+    isEmpty() {
+        return this.element.children().length === 0
+    }
+
+    /**
+     * returns undefined or true
+     */
+    isSharing() {
+        return this.data()["sharing"]
+    }
+
     on(eventName, handler) {
         switch (eventName) {
             case "change":
-                return this.changeHandlers.push(handler);
+                return this.changeHandlers.push(handler)
         }
     }
 
     change(data) {
         for (let fn of this.changeHandlers) {
-          setTimeout(function() { fn(data) }, 0);
+          setTimeout(function() { fn(data) }, 0)
         }
     }
 }
