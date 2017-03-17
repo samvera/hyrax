@@ -2,12 +2,13 @@ module Sufia
   # Creates AdminSets
   class AdminSetCreateService
     DEFAULT_ID = 'admin_sets/default'.freeze
+    DEFAULT_WORKFLOW_NAME = 'default'.freeze
 
     def self.create_default!
       return if AdminSet.exists?(DEFAULT_ID)
       admin_set = AdminSet.new(id: DEFAULT_ID, title: ['Default Admin Set'])
       begin
-        new(admin_set, nil).create
+        new(admin_set, nil, DEFAULT_WORKFLOW_NAME).create
       rescue ActiveFedora::IllegalOperation
         # It is possible that another thread created the AdminSet just before this method
         # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
@@ -18,12 +19,13 @@ module Sufia
 
     # @param admin_set [AdminSet] the admin set to operate on
     # @param creating_user [User] the user who created the admin set.
-    def initialize(admin_set, creating_user)
+    def initialize(admin_set, creating_user, workflow_name)
       @admin_set = admin_set
       @creating_user = creating_user
+      @workflow_name = workflow_name
     end
 
-    attr_reader :creating_user, :admin_set
+    attr_reader :creating_user, :admin_set, :workflow_name
 
     # Creates an admin set, setting the creator and the default access controls.
     # @return [TrueClass, FalseClass] true if it was successful
@@ -43,7 +45,8 @@ module Sufia
 
     def create_permission_template
       PermissionTemplate.create!(admin_set_id: admin_set.id,
-                                 access_grants_attributes: access_grants_attributes)
+                                 access_grants_attributes: access_grants_attributes,
+                                 workflow_name: workflow_name)
     end
   end
 end
