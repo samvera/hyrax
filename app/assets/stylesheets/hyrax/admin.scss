@@ -7,6 +7,7 @@ $tab-active-accent-color: $brand-primary !default;
 $admin-sidebar-background-color: #686868 !default;
 $admin-sidebar-link-color: #ffffff !default;
 $admin-sidebar-link-hover-color: #000000 !default;
+$admin-sidebar-link-background-color: #505050 !default;
 $admin-content-background-color: #f0f0f0 !default;
 $admin-vertical-padding: 10px !default;
 
@@ -99,6 +100,31 @@ fieldset {
   a:hover {
     color: $admin-sidebar-link-hover-color;
   }
+}
+
+.admin-sidebar {
+  margin-left: 0;
+  margin-right: 0;
+
+  li .fa {
+    margin-right: $padding-base-horizontal;
+  }
+}
+
+.nav-pills > li > a {
+  border-radius: 0;
+  padding: 15px 10px 15px 15px;
+
+  &:focus {
+    background-color: transparent;
+    color: $admin-sidebar-link-color;
+  }
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a:hover {
+  background-color: $admin-sidebar-link-background-color;
 }
 
 .navbar {
