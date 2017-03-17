@@ -41,8 +41,8 @@ RSpec.describe Hyrax::GenericWorkForm do
   end
 
   describe '.model_attributes' do
-    before { create(:permission_template, admin_set_id: admin_set_id, workflow_name: workflow.name) }
-    let(:workflow) { create(:workflow) }
+    let(:permission_template) { create(:permission_template, admin_set_id: admin_set_id) }
+    let!(:workflow) { create(:workflow, active: true, permission_template_id: permission_template.id) }
     let(:admin_set_id) { '123' }
     let(:params) do
       ActionController::Parameters.new(

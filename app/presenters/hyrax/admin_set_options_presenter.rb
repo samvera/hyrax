@@ -44,8 +44,8 @@ module Hyrax
       end
 
       def workflow(permission_template:)
-        return unless permission_template.workflow_name
-        Sipity::Workflow.find_by!(name: permission_template.workflow_name)
+        return unless permission_template.active_workflow
+        Sipity::Workflow.find_by!(id: permission_template.active_workflow.id)
       end
   end
 end
