@@ -36,12 +36,12 @@ module Hyrax
           if uri.scheme == 'file'
             IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), user)
           else
-            ImportUrlJob.perform_later(fs, log(actor.user))
+            ImportUrlJob.perform_later(fs, operation_for(user: actor.user))
           end
         end
       end
 
-      def log(user)
+      def operation_for(user:)
         Hyrax::Operation.create!(user: user,
                                  operation_type: "Attach Remote File")
       end

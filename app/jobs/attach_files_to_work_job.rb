@@ -37,8 +37,8 @@ class AttachFilesToWorkJob < ActiveJob::Base
     # @param [UploadedFileUploader] file
     def import_url(actor, file)
       actor.file_set.update(import_url: file.url)
-      log = Hyrax::Operation.create!(user: actor.user,
-                                     operation_type: "Attach File")
-      ImportUrlJob.perform_later(actor.file_set, log)
+      operation = Hyrax::Operation.create!(user: actor.user,
+                                           operation_type: "Attach File")
+      ImportUrlJob.perform_later(actor.file_set, operation)
     end
 end

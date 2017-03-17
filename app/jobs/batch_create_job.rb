@@ -2,8 +2,8 @@ class BatchCreateJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
-    log = job.arguments.last
-    log.pending_job(self)
+    operation = job.arguments.last
+    operation.pending_job(self)
   end
 
   # This copies metadata from the passed in attribute to all of the works that
@@ -13,17 +13,17 @@ class BatchCreateJob < ActiveJob::Base
   # @param [Hash<String => String>] resource_types
   # @param [Array<String>] uploaded_files Hyrax::UploadedFile IDs
   # @param [Hash] attributes attributes to apply to all works, including :model
-  # @param [BatchCreateOperation] log
-  def perform(user, titles, resource_types, uploaded_files, attributes, log)
-    log.performing!
+  # @param [Hyrax::BatchCreateOperation] operation
+  def perform(user, titles, resource_types, uploaded_files, attributes, operation)
+    operation.performing!
     titles ||= {}
     resource_types ||= {}
-    create(user, titles, resource_types, uploaded_files, attributes, log)
+    create(user, titles, resource_types, uploaded_files, attributes, operation)
   end
 
   private
 
-    def create(user, titles, resource_types, uploaded_files, attributes, log)
+    def create(user, titles, resource_types, uploaded_files, attributes, operation)
       model = attributes.delete(:model) || attributes.delete('model')
       raise ArgumentError, 'attributes must include "model" => ClassName.to_s' unless model
       uploaded_files.each do |upload_id|
@@ -32,10 +32,10 @@ class BatchCreateJob < ActiveJob::Base
         attributes = attributes.merge(uploaded_files: [upload_id],
                                       title: title,
                                       resource_type: resource_type)
-        child_log = Hyrax::Operation.create!(user: user,
-                                             operation_type: "Create Work",
-                                             parent: log)
-        CreateWorkJob.perform_later(user, model, attributes, child_log)
+        child_operation = Hyrax::Operation.create!(user: user,
+                                                   operation_type: "Create Work",
+                                                   parent: operation)
+        CreateWorkJob.perform_later(user, model, attributes, child_operation)
       end
     end
 end

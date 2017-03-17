@@ -51,15 +51,15 @@ module Hyrax
       # @param [String] klass the name of the Hyrax Work Class being created by the batch
       # @note Cannot use a proper Class here because it won't serialize
       def create_update_job(klass)
-        log = BatchCreateOperation.create!(user: current_user,
-                                           operation_type: "Batch Create")
+        operation = BatchCreateOperation.create!(user: current_user,
+                                                 operation_type: "Batch Create")
         # ActionController::Parameters are not serializable, so cast to a hash
         BatchCreateJob.perform_later(current_user,
                                      params[:title].permit!.to_h,
                                      params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
                                      attributes_for_actor.to_h.merge!(model: klass),
-                                     log)
+                                     operation)
       end
 
       def uploading_on_behalf_of?
