@@ -65,7 +65,7 @@
 //= require hyrax/admin/admin_set_controls
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
-//= require hyrax/editor
+//= require hyrax/editor_control
 //= require hyrax/editor/admin_set_widget
 //= require hyrax/admin/graphs
 //= require hyrax/save_work
