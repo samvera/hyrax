@@ -40,7 +40,6 @@ Metrics/ClassLength:
   Exclude:
     - lib/curation_concerns/configuration.rb
     - 'lib/generators/curation_concerns/templates/catalog_controller.rb'
-    - 'app/actors/curation_concerns/file_set_actor.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -119,12 +118,6 @@ Style/GlobalVars:
 Style/SingleLineBlockParams:
   Enabled: false
 
-Style/ClassVars:
-  Exclude:
-    - 'lib/curation_concerns/models.rb'
-    - 'lib/curation_concerns/models/engine.rb'
-    - 'app/models/concerns/curation_concerns/file_set/versions.rb'
-
 Style/SignalException:
   Enabled: false
 
@@ -163,13 +156,8 @@ RSpec/NotToNot:
 RSpec/DescribeClass:
   Exclude:
     - 'spec/javascripts/jasmine_spec.rb'
-    - 'spec/tasks/rake_spec.rb'
     - 'spec/abilities/**/*'
     - 'spec/views/**/*'
     - 'spec/routing/**/*'
     - 'spec/inputs/**/*'
     - 'spec/conversions/**/*'
-
-RSpec/DescribedClass:
-  Exclude:
-    - 'spec/actors/curation_concerns/manages_embargoes_actor_spec.rb'
