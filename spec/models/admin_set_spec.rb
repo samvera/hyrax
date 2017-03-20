@@ -110,7 +110,7 @@ RSpec.describe AdminSet, type: :model do
     expect(subject.reload.description).to eq ["description"]
   end
 
-  describe "#default_set?" do
+  describe ".default_set?" do
     context "with default AdminSet ID" do
       it "returns true" do
         expect(AdminSet.default_set?(described_class::DEFAULT_ID)).to be true
@@ -121,6 +121,18 @@ RSpec.describe AdminSet, type: :model do
       it "returns false" do
         expect(AdminSet.default_set?('different-id')).to be false
       end
+    end
+  end
+
+  describe "#default_set?" do
+    context "with default AdminSet ID" do
+      subject { described_class.new(id: described_class::DEFAULT_ID).default_set? }
+      it { is_expected.to be_truthy }
+    end
+
+    context "with a non-default  ID" do
+      subject { described_class.new(id: 'why-would-you-name-the-default-chupacabra?').default_set? }
+      it { is_expected.to be_falsey }
     end
   end
 

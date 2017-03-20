@@ -33,6 +33,10 @@ module Hyrax
         id == DEFAULT_ID
       end
 
+      def default_set?
+        self.class.default_set?(id)
+      end
+
       # Creates the default AdminSet and an associated PermissionTemplate with workflow
       def self.find_or_create_default_admin_set_id
         unless exists?(DEFAULT_ID)
@@ -105,7 +109,7 @@ module Hyrax
       end
 
       def check_if_not_default_set
-        return true unless AdminSet.default_set?(id)
+        return true unless default_set?
         errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
         throw :abort
       end
