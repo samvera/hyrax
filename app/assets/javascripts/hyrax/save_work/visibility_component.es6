@@ -20,7 +20,7 @@ export default class VisibilityComponent {
 
   // Collapse all Visibility sub-options
   collapseAll() {
-    $('.collapse').collapse('hide');
+    $('.collapse').collapse('hide')
   }
 
   // Open the selected Visibility's sub-options, collapsing all others
@@ -31,8 +31,8 @@ export default class VisibilityComponent {
 
     if(target) {
       // Show the target suboption and hide all others
-      $('.collapse' + target).collapse('show');
-      $('.collapse:not(' + target + ')').collapse('hide');
+      $('.collapse' + target).collapse('show')
+      $('.collapse:not(' + target + ')').collapse('hide')
     }
     else {
       this.collapseAll()
@@ -49,19 +49,21 @@ export default class VisibilityComponent {
 
   // Restrict visibility and/or release date to match the AdminSet requirements (if any)
   restrictToVisibility(data) {
-    // visibility requirement is in HTML5 'data-visibility' attr
-    let visibility = data['visibility']
-    // release date requirement is in HTML5 'data-release-date' attr
-    let release_date = data['releaseDate']
-    // if release_date is flexible (i.e. before date), then 'data-release-before-date' attr will be true
-    let release_before = data['releaseBeforeDate']
+    if (typeof data != 'undefined') {
+      // visibility requirement is in HTML5 'data-visibility' attr
+      let visibility = data['visibility']
+      // release date requirement is in HTML5 'data-release-date' attr
+      let release_date = data['releaseDate']
+      // if release_date is flexible (i.e. before date), then 'data-release-before-date' attr will be true
+      let release_before = data['releaseBeforeDate']
 
-    // Restrictions require either a visibility requirement or a release_date requirement (or both)
-    if(visibility || release_date) {
-      this.applyRestrictions(visibility, release_date, release_before)
-    }
-    else {
-      this.enableAllOptions()
+      // Restrictions require either a visibility requirement or a release_date requirement (or both)
+      if(visibility || release_date) {
+        this.applyRestrictions(visibility, release_date, release_before)
+      }
+      else {
+        this.enableAllOptions()
+      }
     }
   }
 

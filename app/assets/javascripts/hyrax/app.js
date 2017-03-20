@@ -59,13 +59,12 @@ Hyrax = {
     },
 
     editor: function () {
-        var element = $("[data-behavior='work-form']")
+        var element = $("[data-behavior='work-form']");
         if (element.length > 0) {
-          var Editor = require('hyrax/editor');
-          new Editor(element)
+          var Editor = require('hyrax/editor_control')
+            new Editor(element)
         }
     },
-
     // initialize popover helpers
     popovers: function () {
         $("a[data-toggle=popover]").popover({html: true})
