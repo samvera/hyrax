@@ -196,6 +196,13 @@ end
 
 **For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
 
+## Load workflows
+Load workflows from the json files in `config/workflows` by running the following rake task:
+
+```
+rake hyrax:workflow:load
+```
+
 ## Create default administrative set
 
 **After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following rake task:
