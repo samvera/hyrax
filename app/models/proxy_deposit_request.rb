@@ -15,11 +15,17 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   after_save :send_request_transfer_message
 
-  attr_reader :transfer_to
+  # @param [String] user_key - The key of the user that will receive the transfer
+  # @note The HTML form for creating a ProxyDepositRequest requires this method
+  def transfer_to=(user_key)
+    self.receiving_user = User.find_by_user_key(user_key)
+  end
 
-  def transfer_to=(key)
-    @transfer_to = key
-    self.receiving_user = User.find_by_user_key(key)
+  # @return [nil, String] nil if we don't have a receiving user, otherwise it returns the receiving_user's user_key
+  # @note The HTML form for creating a ProxyDepositRequest requires this method
+  # @see User#user_key
+  def transfer_to
+    receiving_user.try(:user_key)
   end
 
   def transfer_to_should_be_a_valid_username
