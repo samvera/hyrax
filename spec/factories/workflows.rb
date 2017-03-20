@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :workflow, class: Sipity::Workflow do
-    name 'generic_work'
+    name 'one_step_mediated_deposit'
   end
 end

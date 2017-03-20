@@ -26,7 +26,7 @@ RSpec.describe Sufia::Admin::PermissionTemplatesController do
   context "when signed in as an admin" do
     describe "update participants" do
       let(:admin_set) { create(:admin_set) }
-      let!(:permission_template) { Sufia::PermissionTemplate.create!(admin_set_id: admin_set.id) }
+      let!(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
       let(:grant_attributes) { [{ "agent_type" => "user", "agent_id" => "bob", "access" => "view" }] }
       let(:input_params) do
         { admin_set_id: admin_set.id,
