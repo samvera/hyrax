@@ -10,12 +10,14 @@ class ImportUrlJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
-    log = job.arguments.last
-    log.pending_job(job)
+    operation = job.arguments.last
+    operation.pending_job(job)
   end
 
-  def perform(file_set, log)
-    log.performing!
+  # @param [FileSet] file_set
+  # @param [Hyrax::BatchCreateOperation] operation
+  def perform(file_set, operation)
+    operation.performing!
     user = User.find_by_user_key(file_set.depositor)
 
     Tempfile.open(file_set.id.tr('/', '_')) do |f|
@@ -31,10 +33,10 @@ class ImportUrlJob < ActiveJob::Base
       if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, 'original_file', false)
         # send message to user on download success
         Hyrax.config.callback.run(:after_import_url_success, file_set, user)
-        log.success!
+        operation.success!
       else
         Hyrax.config.callback.run(:after_import_url_failure, file_set, user)
-        log.fail!(file_set.errors.full_messages.join(' '))
+        operation.fail!(file_set.errors.full_messages.join(' '))
       end
     end
   end

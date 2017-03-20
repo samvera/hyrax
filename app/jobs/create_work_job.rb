@@ -2,8 +2,8 @@ class CreateWorkJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
-    log = job.arguments.last
-    log.pending_job(self)
+    operation = job.arguments.last
+    operation.pending_job(self)
   end
 
   # This copies metadata from the passed in attribute to all of the works that
@@ -11,14 +11,14 @@ class CreateWorkJob < ActiveJob::Base
   # @param [User] user
   # @param [String] model
   # @param [Hash] attributes
-  # @param [BatchCreateOperation] log
-  def perform(user, model, attributes, log)
-    log.performing!
+  # @param [Hyrax::BatchCreateOperation] operation
+  def perform(user, model, attributes, operation)
+    operation.performing!
     work = model.constantize.new
     actor = work_actor(work, user)
     status = actor.create(attributes)
-    return log.success! if status
-    log.fail!(work.errors.full_messages.join(' '))
+    return operation.success! if status
+    operation.fail!(work.errors.full_messages.join(' '))
   end
 
   private

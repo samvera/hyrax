@@ -1,7 +1,7 @@
 describe BatchCreateJob do
   let(:user) { create(:user) }
-  let(:log) { create(:batch_create_operation, user: user) }
-  let(:child_log) { double }
+  let(:operation) { create(:batch_create_operation, user: user) }
+  let(:child_operation) { double }
   describe "#perform" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
@@ -18,13 +18,13 @@ describe BatchCreateJob do
                                     resource_types,
                                     uploaded_files,
                                     metadata,
-                                    log)
+                                    operation)
     end
 
     before do
       allow(Hyrax::Operation).to receive(:create!).with(user: user,
                                                         operation_type: "Create Work",
-                                                        parent: log).and_return(child_log)
+                                                        parent: operation).and_return(child_operation)
     end
 
     it "spawns CreateWorkJobs for each work" do
@@ -36,7 +36,7 @@ describe BatchCreateJob do
                                                               resource_type: ["Article"],
                                                               uploaded_files: ['1']
                                                             },
-                                                            child_log).and_return(true)
+                                                            child_operation).and_return(true)
       expect(CreateWorkJob).to receive(:perform_later).with(user,
                                                             "GenericWork",
                                                             {
@@ -45,7 +45,7 @@ describe BatchCreateJob do
                                                               resource_type: ["Image"],
                                                               uploaded_files: ['2']
                                                             },
-                                                            child_log).and_return(true)
+                                                            child_operation).and_return(true)
       subject
     end
 
@@ -61,7 +61,7 @@ describe BatchCreateJob do
                                                                 resource_type: ["Article", 'Text'],
                                                                 uploaded_files: ['1']
                                                               },
-                                                              child_log).and_return(true)
+                                                              child_operation).and_return(true)
         expect(CreateWorkJob).to receive(:perform_later).with(user,
                                                               "GenericWork",
                                                               {
@@ -70,7 +70,7 @@ describe BatchCreateJob do
                                                                 resource_type: ["Image", 'Text'],
                                                                 uploaded_files: ['2']
                                                               },
-                                                              child_log).and_return(true)
+                                                              child_operation).and_return(true)
         subject
       end
     end

@@ -139,6 +139,7 @@ RSpec/SubjectStub:
     - 'spec/models/file_set_spec.rb'
     - 'spec/models/hyrax/work_behavior_spec.rb'
     - 'spec/search_builder/hyrax/file_set_search_builder_spec.rb'
+    - 'spec/models/hyrax/operation_spec.rb'
 
 RSpec/AnyInstance:
   Exclude:
