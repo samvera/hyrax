@@ -28,6 +28,7 @@ module Hyrax
     included do
       DEFAULT_ID = 'admin_set/default'.freeze
       DEFAULT_TITLE = ['Default Admin Set'].freeze
+      DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
       def self.default_set?(id)
         id == DEFAULT_ID

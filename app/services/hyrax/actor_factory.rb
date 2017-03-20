@@ -9,6 +9,7 @@ module Hyrax
        Hyrax::Actors::AddToWorkActor,
        Hyrax::Actors::AssignRepresentativeActor,
        Hyrax::Actors::AttachFilesActor,
+       Hyrax::Actors::AttachMembersActor,
        Hyrax::Actors::ApplyOrderActor,
        Hyrax::Actors::InterpretVisibilityActor,
        DefaultAdminSetActor,

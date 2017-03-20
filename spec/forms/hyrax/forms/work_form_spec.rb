@@ -1,6 +1,7 @@
 describe Hyrax::Forms::WorkForm, :no_clean do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil, nil) }
+  let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
 
   describe "#version" do
     before do
@@ -25,30 +26,15 @@ describe Hyrax::Forms::WorkForm, :no_clean do
     end
   end
 
-  describe "#ordered_fileset_members" do
-    let(:files) { [FileSet.new, GenericWork.new, FileSet.new] }
+  describe "#work_members" do
+    subject { form.work_members }
 
-    it "expects ordered fileset members" do
-      allow(work).to receive(:ordered_members).and_return(files)
-      expect(form.ordered_fileset_members.size).to eq(2)
+    before do
+      allow(work).to receive(:members).and_return(works)
     end
-  end
 
-  describe "#ordered_work_members" do
-    let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
-
-    it "expects ordered work members" do
-      allow(work).to receive(:ordered_members).and_return(works)
-      expect(form.ordered_work_members.size).to eq(2)
-    end
-  end
-
-  describe "#in_work_members" do
-    let(:works) { [GenericWork.new, GenericWork.new, GenericWork.new] }
-
-    it "expects parent work members" do
-      allow(work).to receive(:in_works).and_return(works)
-      expect(form.in_work_members.size).to eq(3)
+    it "expects members that are works" do
+      expect(form.work_members.size).to eq(2)
     end
   end
 

@@ -1,12 +1,8 @@
 require 'spec_helper'
 
-describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
+RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456', title: ["MyWork"])
-  end
-
-  let(:work_2) do
-    stub_model(GenericWork, id: '567', title: ["Child Work"])
   end
 
   let(:ability) { double }
@@ -15,7 +11,11 @@ describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
     Hyrax::Forms::WorkForm.new(work, ability, controller)
   end
 
-  let(:f) { double }
+  let(:f) do
+    view.simple_form_for(form, url: '/update') do |work_form|
+      return work_form
+    end
+  end
 
   let(:page) do
     render
@@ -28,84 +28,49 @@ describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
     allow(view).to receive(:f).and_return(f)
     allow(f).to receive(:object).and_return(form)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    stub_template '_find_work_widget.html.erb' => "<input value=''/>"
+    stub_template '_find_work_widget.html.erb' => "<input class='finder'/>"
     assign(:form, form)
   end
 
   context "When editing a work" do
     context "and no children works are present" do
       before do
-        allow(work).to receive(:ordered_members).and_return([])
-      end
-      it "has 1 empty child work input" do
-        expect(page).to have_selector("input[value='']", count: 1)
+        allow(form).to receive(:work_members).and_return([])
       end
 
-      it "will not display the remove button in the actions" do
-        expect(page).to have_selector(".btn-remove-row", visible: false)
-      end
+      it "draws the page" do
+        # remove button is not present
+        expect(page).not_to have_selector("[data-behavior='remove-relationship']")
 
-      it "will display the add button in the actions" do
-        expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
+        # input with add button
+        expect(page).to have_selector("input.finder")
+        expect(page).to have_selector("[data-behavior='add-relationship']")
       end
     end
-    context "When 1 child work is present" do
+
+    context "and child works are present" do
       let(:work_2) do
         stub_model(GenericWork, id: '567', title: ["Test Child Work"])
       end
 
       before do
-        allow(work).to receive(:ordered_members).and_return([work_2])
-      end
-      it "has 1 empty child work input with add button" do
-        expect(page).to have_selector("input[value='']", count: 1)
-        expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
+        allow(form).to receive(:work_members).and_return([work_2])
       end
 
-      it "has an input box that is filled in with the child id" do
-        expect(page).to have_selector("input[value='#{work_2.id}']", count: 1)
-      end
+      it "draws the page" do
+        # input with add button
+        expect(page).to have_selector("input.finder")
+        expect(page).to have_selector("[data-behavior='add-relationship']")
 
-      it "generates a link for the childs first title" do
+        # an input box that is filled in with the child id
+        expect(page).to have_selector("input[value='#{work_2.id}']", visible: false)
+
+        # generate a link for the child work's title
         expect(page).to have_link("Test Child Work")
-      end
 
-      it "has an edit and remove button" do
-        within ".old-row" do
-          expect(page).to have_selector(".btn-remove-row", visible: true, count: 1)
-          expect(page).to have_selector(".btn-edit-row", visible: true, count: 1)
-        end
-      end
-    end
-    context "When multiple child works are present" do
-      let(:work_2) do
-        stub_model(GenericWork, id: '567', title: ["Test Child Work"])
-      end
-      let(:work_3) do
-        stub_model(GenericWork, id: '789', title: ["Test Child Work 2"])
-      end
-      before do
-        allow(work).to receive(:ordered_members).and_return([work_2, work_3])
-      end
-      it "has 1 empty child work input with add button" do
-        expect(page).to have_selector("input[value='']", count: 1)
-        expect(page).to have_selector(".btn-add-row", visible: true, count: 1)
-      end
-
-      it "has an input box that is filled in with the child ids" do
-        expect(page).to have_selector("input[value='#{work_2.id}']", count: 1)
-        expect(page).to have_selector("input[value='#{work_3.id}']", count: 1)
-      end
-
-      it "generates a link for the childs first title" do
-        expect(page).to have_link("Test Child Work")
-        expect(page).to have_link("Test Child Work 2")
-      end
-
-      it "has an edit and remove button" do
-        within ".old-row" do
-          expect(page).to have_selector(".btn-remove-row", visible: true, count: 2)
-          expect(page).to have_selector(".btn-edit-row", visible: true, count: 2)
+        # a remove button
+        within "tr" do
+          expect(page).to have_selector("[data-behavior='remove-relationship']")
         end
       end
     end

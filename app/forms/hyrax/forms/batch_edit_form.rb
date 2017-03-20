@@ -29,7 +29,8 @@ module Hyrax
       def self.build_permitted_params
         super + [:visibility_during_embargo, :embargo_release_date,
                  :visibility_after_embargo, :visibility_during_lease,
-                 :lease_expiration_date, :visibility_after_lease, :visibility]
+                 :lease_expiration_date, :visibility_after_lease, :visibility] -
+          [{ work_members_attributes: [:id, :_destroy] }]
       end
 
       private

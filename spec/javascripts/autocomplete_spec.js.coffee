@@ -99,8 +99,8 @@ describe "auto complete", ->
   describe "location", ->
     beforeEach ->
       # setup two inputs for us to attach  auto complete to
-      setFixtures  '<input class="generic_work_based_near"  value="" id="generic_work_based_near" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">
-                    <input class="generic_work_based_near"  value="" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">'
+      setFixtures  '<input class="generic_work_based_near" value="" id="generic_work_based_near" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">
+                    <input class="generic_work_based_near" value="" type="text" data-autocomplete="based_near" data-autocomplete-url="foo">'
 
       # run all Blacklight.onload functions
       Blacklight.activate()
@@ -136,42 +136,21 @@ describe "auto complete", ->
         # verify that the ajax call was made
         expect(@spy_on_json).toHaveBeenCalled()
 
-  describe "works", ->
+  describe "for works", ->
     beforeEach ->
-      # setup two inputs for us to attach  auto complete to
-      setFixtures  '<input class="generic_work_work"  value="" id="generic_work_based_near" type="text" data-autocomplete="work" data-autocomplete-url="foo">
-                    <input class="generic_work_work"  value="" type="text" data-autocomplete="work" data-autocomplete-url="foo">'
+      # setup two inputs for us to attach auto complete to
+      setFixtures  '<input class="generic_work_work" value="" id="generic_work_based_near" type="text" data-autocomplete="work" data-autocomplete-url="foo">
+                    <input class="generic_work_work" value="" type="text" data-autocomplete="work" data-autocomplete-url="foo">'
 
       # run all Blacklight.onload functions
       Blacklight.activate()
 
-    describe "first input", ->
-
-      # field triggers auto complete
-      it "auto completes on typing", ->
-        # send a key stroke to the target input to activate the auto complete
+    describe "the first input", ->
+      it "initializes using select2", ->
         target = $($("input.generic_work_work")[0])
-        target.val('fre')
-        target.trigger(@typeEvent)
+        expect(target.select2('open')).toBe(true)
 
-        # move time along so that events have a chance to happen
-        jasmine.clock().tick(800)
-
-        # verify that the ajax call was made
-        expect(@spy_on_json).toHaveBeenCalled()
-
-
-    describe "second input", ->
-
-      # field triggers auto complete
-      it "auto completes on typing", ->
-        # send a key stroke to the target input to activate the auto complete
+    describe "the second input", ->
+      it "initializes using select2", ->
         target = $($("input.generic_work_work")[1])
-        target.val('fre')
-        target.trigger(@typeEvent)
-
-        # move time along so that events have a chance to happen
-        jasmine.clock().tick(800)
-
-        # verify that the ajax call was made
-        expect(@spy_on_json).toHaveBeenCalled()
+        expect(target.select2('open')).toBe(true)
