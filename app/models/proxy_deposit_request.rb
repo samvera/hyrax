@@ -43,16 +43,26 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   def send_request_transfer_message
     if updated_at == created_at
+      send_request_transfer_message_as_part_of_create
+    else
+      send_request_transfer_message_as_part_of_update
+    end
+  end
+
+  private
+
+    def send_request_transfer_message_as_part_of_create
       user_link = link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.profile_path(sending_user.user_key))
       transfer_link = link_to('transfer requests', Hyrax::Engine.routes.url_helpers.transfers_path)
       message = "#{user_link} wants to transfer a work to you. Review all #{transfer_link}"
       User.batch_user.send_message(receiving_user, message, "Ownership Change Request")
-    else
+    end
+
+    def send_request_transfer_message_as_part_of_update
       message = "Your transfer request was #{status}."
       message += " Comments: #{receiver_comment}" unless receiver_comment.blank?
       User.batch_user.send_message(sending_user, message, "Ownership Change #{status}")
     end
-  end
 
   def pending?
     status == 'pending'
