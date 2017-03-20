@@ -17,7 +17,7 @@ module Hyrax
 
       def permission_template
         @permission_template ||= begin
-                                   template_model = PermissionTemplate.find_by!(admin_set_id: model.id)
+                                   template_model = PermissionTemplate.find_or_create_by(admin_set_id: model.id)
                                    PermissionTemplateForm.new(template_model)
                                  end
       end
