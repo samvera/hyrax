@@ -86,8 +86,8 @@ module Hyrax
     # Calculate and update who should have edit access based on who
     # has "manage" access in the PermissionTemplateAccess
     def update_access_controls!
-      update!(edit_users: permission_template.access_grants.where(access: 'manage', agent_type: 'user').pluck(:agent_id),
-              edit_groups: permission_template.access_grants.where(access: 'manage', agent_type: 'group').pluck(:agent_id))
+      update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
+              edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'))
     end
 
     private

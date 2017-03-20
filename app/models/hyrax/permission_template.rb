@@ -13,6 +13,15 @@ module Hyrax
     has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess', dependent: :destroy
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
+    # @api public
+    # Retrieve the agent_ids associated with the given agent_type and access
+    # @param [String] agent_type
+    # @param [String] access
+    # @return [Array<String>] of agent_ids that match the given parameters
+    def agent_ids_for(agent_type:, access:)
+      access_grants.where(agent_type: agent_type, access: access).pluck(:agent_id)
+    end
+
     # The list of workflows that could be activated; It includes the active workflow
     has_many :available_workflows, class_name: 'Sipity::Workflow', dependent: :destroy, foreign_key: :permission_template_id
 
