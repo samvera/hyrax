@@ -6,6 +6,15 @@ module Hyrax
     FAILURE = 'failure'.freeze
     SUCCESS = 'success'.freeze
 
+    enum(
+      status: {
+        FAILURE => FAILURE,
+        PENDING => PENDING,
+        PERFORMING => PERFORMING,
+        SUCCESS => SUCCESS
+      }
+    )
+
     self.table_name = 'curation_concerns_operations'
     acts_as_nested_set
     define_callbacks :success, :failure

@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe Hyrax::Operation do
+  context '#status' do
+    it 'is protected by enum enforcement' do
+      expect { described_class.new(status: 'not_valid') }.to raise_error(ArgumentError)
+    end
+
+    # Because the Rails documentation says "Declare an enum attribute where the values map to integers in the database, but can be queried by name." but appears to not be the case.
+    it 'is persisted as a string' do
+      create(:operation, :pending)
+      values = described_class.connection.execute("SELECT * FROM #{described_class.quoted_table_name}")
+      expect(values.first.fetch('status')).to eq(described_class::PENDING)
+    end
+  end
+
   describe "#rollup_status" do
     let(:parent) { create(:operation, :pending) }
     describe "with a pending process" do

@@ -13,7 +13,7 @@ describe ImportUrlJob do
     end
   end
 
-  let(:log) { create(:operation) }
+  let(:operation) { create(:operation) }
   let(:success_service) { instance_double(Hyrax::ImportUrlSuccessService) }
   let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
 
@@ -32,11 +32,11 @@ describe ImportUrlJob do
       allow(file_set).to receive(:reload)
     end
 
-    it 'creates the content' do
+    it 'creates the content and updates the associated operation' do
       expect(success_service).to receive(:call)
       expect(actor).to receive(:create_content).with(Tempfile, 'original_file', false).and_return(true)
-      described_class.perform_now(file_set, log)
-      expect(log.status).to eq 'success'
+      described_class.perform_now(file_set, operation)
+      expect(operation).to be_success
     end
   end
 
@@ -58,7 +58,7 @@ describe ImportUrlJob do
       expect(success_service).to receive(:call)
 
       # run the import job
-      described_class.perform_now(file_set, log)
+      described_class.perform_now(file_set, operation)
 
       # import job should not override the title set another process
       file = FileSet.find(file_set_id)
