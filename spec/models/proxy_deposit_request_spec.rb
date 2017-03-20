@@ -13,19 +13,32 @@ describe ProxyDepositRequest, type: :model do
                         receiving_user: receiver, sender_comment: "please take this")
   end
 
-  its(:status) { is_expected.to eq 'pending' }
+  its(:status) { is_expected.to eq described_class::PENDING }
   it { is_expected.to be_pending }
   its(:fulfillment_date) { is_expected.to be_nil }
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
   it { is_expected.to delegate_method(:to_s).to(:solr_doc) }
 
+  context '#status' do
+    it 'is protected by enum enforcement' do
+      expect { described_class.new(status: 'not_valid') }.to raise_error(ArgumentError)
+    end
+
+    # Because the Rails documentation says "Declare an enum attribute where the values map to integers in the database, but can be queried by name." but appears to not be the case.
+    it 'is persisted as a string' do
+      subject.cancel!
+      values = described_class.connection.execute("SELECT * FROM #{described_class.quoted_table_name}")
+      expect(values.first.fetch('status')).to eq(described_class::CANCELED)
+    end
+  end
+
   context "After approval" do
     before do
       subject.transfer!
     end
 
-    its(:status) { is_expected.to eq 'accepted' }
+    its(:status) { is_expected.to eq described_class::ACCEPTED }
     its(:fulfillment_date) { is_expected.not_to be_nil }
     its(:deleted_work?) { is_expected.to be false }
 
@@ -43,7 +56,7 @@ describe ProxyDepositRequest, type: :model do
         subject.cancel!
       end
 
-      its(:status) { is_expected.to eq 'canceled' }
+      its(:status) { is_expected.to eq described_class::CANCELED }
       its(:fulfillment_date) { is_expected.not_to be_nil }
       its(:canceled?) { is_expected.to be true }
     end
@@ -54,7 +67,7 @@ describe ProxyDepositRequest, type: :model do
       subject.reject!('a comment')
     end
 
-    its(:status) { is_expected.to eq 'rejected' }
+    its(:status) { is_expected.to eq described_class::REJECTED }
     its(:fulfillment_date) { is_expected.not_to be_nil }
     its(:receiver_comment) { is_expected.to eq 'a comment' }
   end
@@ -64,7 +77,7 @@ describe ProxyDepositRequest, type: :model do
       subject.cancel!
     end
 
-    its(:status) { is_expected.to eq 'canceled' }
+    its(:status) { is_expected.to eq described_class::CANCELED }
     its(:fulfillment_date) { is_expected.not_to be_nil }
   end
 
@@ -106,7 +119,7 @@ describe ProxyDepositRequest, type: :model do
 
       context 'when the first transfer is closed' do
         before do
-          subject.status = 'accepted'
+          subject.status = described_class::ACCEPTED
         end
 
         it 'does not raise an error' do

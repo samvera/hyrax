@@ -15,11 +15,17 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   after_save :send_request_transfer_message
 
-  attr_reader :transfer_to
+  # @param [String] user_key - The key of the user that will receive the transfer
+  # @note The HTML form for creating a ProxyDepositRequest requires this method
+  def transfer_to=(user_key)
+    self.receiving_user = User.find_by_user_key(user_key)
+  end
 
-  def transfer_to=(key)
-    @transfer_to = key
-    self.receiving_user = User.find_by_user_key(key)
+  # @return [nil, String] nil if we don't have a receiving user, otherwise it returns the receiving_user's user_key
+  # @note The HTML form for creating a ProxyDepositRequest requires this method
+  # @see User#user_key
+  def transfer_to
+    receiving_user.try(:user_key)
   end
 
   def transfer_to_should_be_a_valid_username
@@ -31,55 +37,74 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def should_not_be_already_part_of_a_transfer
-    transfers = ProxyDepositRequest.where(work_id: work_id, status: 'pending')
+    transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
     errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
   end
 
   def send_request_transfer_message
     if updated_at == created_at
+      send_request_transfer_message_as_part_of_create
+    else
+      send_request_transfer_message_as_part_of_update
+    end
+  end
+
+  private
+
+    def send_request_transfer_message_as_part_of_create
       user_link = link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.profile_path(sending_user.user_key))
       transfer_link = link_to('transfer requests', Hyrax::Engine.routes.url_helpers.transfers_path)
       message = "#{user_link} wants to transfer a work to you. Review all #{transfer_link}"
       User.batch_user.send_message(receiving_user, message, "Ownership Change Request")
-    else
+    end
+
+    def send_request_transfer_message_as_part_of_update
       message = "Your transfer request was #{status}."
       message += " Comments: #{receiver_comment}" unless receiver_comment.blank?
       User.batch_user.send_message(sending_user, message, "Ownership Change #{status}")
     end
-  end
 
-  def pending?
-    status == 'pending'
-  end
+  public
 
-  def accepted?
-    status == 'accepted'
-  end
+  ACCEPTED = 'accepted'.freeze
+  PENDING = 'pending'.freeze
+  CANCELED = 'canceled'.freeze
+  REJECTED = 'rejected'.freeze
+
+  enum(
+    status: {
+      ACCEPTED => ACCEPTED,
+      CANCELED => CANCELED,
+      PENDING => PENDING,
+      REJECTED => REJECTED
+    }
+  )
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
     ContentDepositorChangeEventJob.perform_later(work, receiving_user, reset)
-    self.status = 'accepted'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: ACCEPTED)
   end
 
+  # @param [String, nil] comment - A given reason by the rejecting user
   def reject!(comment = nil)
-    self.receiver_comment = comment if comment
-    self.status = 'rejected'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: REJECTED, comment: comment)
   end
 
   def cancel!
-    self.status = 'canceled'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: CANCELED)
   end
 
-  def canceled?
-    status == 'canceled'
-  end
+  private
+
+    def fulfill!(status:, comment: nil)
+      self.receiver_comment = comment if comment
+      self.status = status
+      self.fulfillment_date = Time.current
+      save!
+    end
+
+  public
 
   def deleted_work?
     !work_relation.exists?(work_id)
