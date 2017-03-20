@@ -23,7 +23,7 @@ module Hyrax
         # It is possible that another thread created the AdminSet just before this method
         # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
         # ignore the error.
-        Rails.logger.error("AdminSet ID=#{DEFAULT_ID} may or may not have been created due to threading issues.")
+        Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
       end
     end
 
@@ -35,7 +35,7 @@ module Hyrax
     # @see AdminSet
     # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
     def self.call(admin_set:, creating_user:, **kwargs)
-      raise "Use .create_default_admin_set to create a default admin set" if admin_set.id == AdminSet::DEFAULT_ID
+      raise "Use .create_default_admin_set to create a default admin set" if admin_set.default_set?
       new(admin_set: admin_set, creating_user: creating_user, **kwargs).create
     end
 
