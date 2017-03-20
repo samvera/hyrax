@@ -37,7 +37,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def should_not_be_already_part_of_a_transfer
-    transfers = ProxyDepositRequest.where(work_id: work_id, status: 'pending')
+    transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
     errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
   end
 
@@ -64,38 +64,47 @@ class ProxyDepositRequest < ActiveRecord::Base
       User.batch_user.send_message(sending_user, message, "Ownership Change #{status}")
     end
 
-  def pending?
-    status == 'pending'
-  end
+  public
 
-  def accepted?
-    status == 'accepted'
-  end
+  ACCEPTED = 'accepted'.freeze
+  PENDING = 'pending'.freeze
+  CANCELED = 'canceled'.freeze
+  REJECTED = 'rejected'.freeze
+
+  enum(
+    status: {
+      ACCEPTED => ACCEPTED,
+      CANCELED => CANCELED,
+      PENDING => PENDING,
+      REJECTED => REJECTED
+    }
+  )
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
     ContentDepositorChangeEventJob.perform_later(work, receiving_user, reset)
-    self.status = 'accepted'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: ACCEPTED)
   end
 
+  # @param [String, nil] comment - A given reason by the rejecting user
   def reject!(comment = nil)
-    self.receiver_comment = comment if comment
-    self.status = 'rejected'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: REJECTED, comment: comment)
   end
 
   def cancel!
-    self.status = 'canceled'
-    self.fulfillment_date = Time.current
-    save!
+    fulfill!(status: CANCELED)
   end
 
-  def canceled?
-    status == 'canceled'
-  end
+  private
+
+    def fulfill!(status:, comment: nil)
+      self.receiver_comment = comment if comment
+      self.status = status
+      self.fulfillment_date = Time.current
+      save!
+    end
+
+  public
 
   def deleted_work?
     !work_relation.exists?(work_id)
