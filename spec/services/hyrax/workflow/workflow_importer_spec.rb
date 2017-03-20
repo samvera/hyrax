@@ -1,38 +1,36 @@
 require "spec_helper"
 
 RSpec.describe Hyrax::Workflow::WorkflowImporter do
-  let(:path) { double(read: json) }
   let(:permission_template) { create(:permission_template) }
-  let(:json) do
-    doc = <<-HERE
+  let(:data) do
     {
-      "workflows": [
+      workflows: [
         {
-          "name": "ulra_submission",
-          "label": "This is the label",
-          "description": "This description could get really long",
-          "allows_access_grant": true,
-          "actions": [{
-            "name": "approve",
-            "transition_to": "reviewed",
-            "from_states": [{ "names": ["under_review"], "roles": ["ulra_reviewing"] }]
+          name: "ulra_submission",
+          label: "This is the label",
+          description: "This description could get really long",
+          allows_access_grant: true,
+          actions: [{
+            name: "approve",
+            transition_to: "reviewed",
+            from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
           }]
         }
       ]
     }
-    HERE
-    doc.strip
   end
   let(:validator) { double(call: true) }
   let(:importer) { described_class.new(data: {}, permission_template: permission_template, validator: validator) }
   subject { importer }
 
-  context '#default_validator' do
+  before { described_class.clear_load_errors! }
+
+  describe '#default_validator' do
     subject { importer.send(:default_validator) }
     it { is_expected.to respond_to(:call) }
   end
 
-  context '#default_schema' do
+  describe '#default_schema' do
     subject { importer.send(:default_schema) }
     it { is_expected.to respond_to(:call) }
   end
@@ -42,11 +40,29 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
     expect(validator).to have_received(:call).with(data: subject.send(:data), schema: subject.send(:schema), logger: subject.send(:logger))
   end
 
-  context '.load_workflow_for' do
+  describe '.load_workflow_for' do
     it 'will assocate the workflows' do
       expect do
         described_class.load_workflow_for(permission_template: permission_template)
       end.to change { Sipity::Workflow.count }
+    end
+  end
+
+  describe '.generate_from_hash' do
+    it 'creates the requisite data from the configuration' do
+      number_of_workflows_created = 1
+      expect(Hyrax::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
+      expect(Hyrax::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
+      result = nil
+      expect do
+        result = described_class.generate_from_hash(data: data, permission_template: permission_template)
+      end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.available_workflows.count }.by(number_of_workflows_created))
+      expect(result).to match_array(kind_of(Sipity::Workflow))
+      expect(described_class.load_errors).to be_empty
+      first_workflow = result.first
+      expect(first_workflow.label).to eq "This is the label"
+      expect(first_workflow.description).to eq "This description could get really long"
+      expect(first_workflow.allows_access_grant?).to be true
     end
   end
 
@@ -69,79 +85,101 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
         expect { importer }.to raise_error(RuntimeError)
       end
     end
-    before do
-      described_class.clear_load_errors!
+  end
+
+  context "when I load JSON twice" do
+    let!(:workflow1) { described_class.generate_from_hash(data: data, permission_template: permission_template).first }
+    let(:workflow2) { described_class.generate_from_hash(data: data, permission_template: permission_template).first }
+    let(:workflow2_errors) { described_class.load_errors }
+
+    context 'with the same data' do
+      it "workflow and workflow states do not change" do
+        workflow1
+        # If the Sipity::WorkflowState IDs or Sipity::Workflow IDs change, we are going to have a serious problem upstream
+        expect do
+          expect do
+            workflow2
+          end.not_to change { Sipity::WorkflowState.all.pluck(:id).sort }
+        end.not_to change { Sipity::Workflow.all.pluck(:id).sort }
+        expect(workflow2).to eq(workflow1)
+        expect(workflow2_errors).to be_empty
+      end
     end
 
-    it 'creates the requisite data from the configuration' do
-      number_of_workflows_created = 1
-      expect(Hyrax::Workflow::WorkflowPermissionsGenerator).to receive(:call).and_call_original
-      expect(Hyrax::Workflow::SipityActionsGenerator).to receive(:call).and_call_original
-      result = nil
-      expect do
-        result = described_class.generate_from_json_file(path: path, permission_template: permission_template)
-      end.to change { Sipity::Workflow.count }.by(number_of_workflows_created).and(change { permission_template.available_workflows.count }.by(number_of_workflows_created))
-      expect(result).to match_array(kind_of(Sipity::Workflow))
-      expect(described_class.load_errors).to be_empty
-      first_workflow = result.first
-      expect(first_workflow.label).to eq "This is the label"
-      expect(first_workflow.description).to eq "This description could get really long"
-      expect(first_workflow.allows_access_grant?).to be true
-    end
-  end
-  context "when I load twice" do
-    let!(:workflow1) { described_class.generate_from_json_file(path: path, permission_template: permission_template).first }
-    let(:workflow2) { described_class.generate_from_json_file(path: path, permission_template: permission_template).first }
-    let(:workflow2_errors) { described_class.load_errors }
-    it "creates the same results" do
-      expect(workflow2).to eq(workflow1)
-      expect(workflow2_errors).to be_empty
-    end
-    context "When the json changes" do
-      let(:workflow_name) { "awsome workflow" }
+    context 'with different data' do
       let(:action_name)  { "awesome action" }
       let(:state_name)   { "awesome state" }
-      let(:second_path) { double(read: json2) }
-      let(:workflow2) { described_class.generate_from_json_file(path: second_path, permission_template: permission_template).first }
-      let(:json2) do
-        doc = <<-HERE
+      let(:workflow2) { described_class.generate_from_hash(data: updated_data, permission_template: permission_template).first }
+      let(:updated_data) do
         {
-          "workflows": [
+          workflows: [
             {
-              "name": "#{workflow_name}",
-              "label": "This is the label for the second json",
-              "description": "This description could get really long",
-              "actions": [{
-                "name": "#{action_name}",
-                "transition_to": "#{state_name}",
-                "from_states": [{ "names": ["under_review"], "roles": ["ulra_reviewing"] }]
+              name: workflow_name,
+              label: "This is the label for the second json",
+              description: "This description could get really long",
+              actions: [{
+                name: action_name,
+                transition_to: state_name,
+                from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
               }]
             }
           ]
         }
-        HERE
-        doc.strip
       end
-      it "creates another workflow" do
-        expect(workflow2).not_to eq(workflow1)
-        expect(Sipity::Workflow.count).to eq(2)
-        expect(workflow2_errors).to be_empty
+
+      context 'that includes a workflow_name changes' do
+        let(:workflow_name) { "awsome workflow" }
+        it "creates a new workflow (preserving the old)" do
+          expect(workflow2).not_to eq(workflow1)
+          expect(Sipity::Workflow.count).to eq(2)
+          expect(Sipity::WorkflowState.count).to eq(4)
+          expect(workflow2_errors).to be_empty
+        end
       end
-      context "when the workflow name stays the same" do
+
+      context "that keeps the same workflow_name name" do
         let(:workflow_name) { "ulra_submission" }
-        it "modifies the same workflow" do
+        it "preserves state names identified in actions > transition_to and actions> from_states > names hash key" do
           expect(workflow2.label).not_to eq(workflow1.label)
+          expect(workflow2).to eq(workflow1)
           expect(Sipity::Workflow.count).to eq(1)
           expect(workflow2_errors).to be_empty
           expect(Sipity::WorkflowAction.count).to eq(1)
-          expect(Sipity::WorkflowState.count).to eq(1)
+          expect(Sipity::WorkflowState.count).to eq(2)
         end
-        context "when entities are in the state" do
-          let(:workflow_state) { workflow1.reload.workflow_states.first }
+
+        context "when entities are in a state that is no longer included" do
+          let(:data) do
+            {
+              workflows: [
+                {
+                  name: "ulra_submission",
+                  label: "This is the label",
+                  description: "This description could get really long",
+                  allows_access_grant: true,
+                  actions: [{
+                    name: "approve",
+                    transition_to: "reviewed",
+                    from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
+                  }, {
+                    name: "decline",
+                    transition_to: "declined",
+                    from_states: [{ names: ['under_review'], roles: ['ulra_reviewing'] }]
+                  }]
+                }
+              ]
+            }
+          end
+          let(:workflow_state) { workflow1.reload.workflow_states.find_by(name: 'declined') }
           let!(:entity) { Sipity::Entity.create(workflow_state: workflow_state, proxy_for_global_id: "abc123", workflow_id: workflow1.id) }
-          it "can not modify the same workflow" do
-            expect(workflow2.label).to eq(workflow1.label)
-            expect(Sipity::Workflow.count).to eq(1)
+          it "reports an error and does not update the WorkflowStates" do
+            expect do
+              expect do
+                expect do
+                  workflow2
+                end.not_to change { Sipity::Workflow.count }
+              end.not_to change { Sipity::WorkflowState.count }
+            end.not_to change { Sipity::WorkflowAction.count }
             expect(workflow2_errors).to eq(["The workflow: ulra_submission has not been updated.  " \
                                             "You are removing a state: #{workflow_state.name} with " \
                                             "1 entity/ies.  A state may not be removed while it has " \
@@ -165,24 +203,6 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
         ]
       }
     end
-    let(:amending_with_invalid_data) do
-      {
-        workflows: [
-          {
-            name: "ulra_submission",
-            label: "",
-            description: "",
-            actions: [
-              {
-                name: "approve", transition_to: "reviewed", from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
-              }, {
-                name: "something", transition_to: "somewhere", from_states: [{ names: ["under_review"], roles: ["ulra_reviewing"] }]
-              }
-            ]
-          }
-        ]
-      }
-    end
 
     context 'with incomplete data' do
       it 'will not load any of the data' do
@@ -198,7 +218,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
       end
 
       it 'will not amend when new data is invalid' do
-        described_class.generate_from_json_file(path: path, permission_template: permission_template)
+        described_class.generate_from_hash(data: data, permission_template: permission_template)
         expect do
           expect do
             expect do

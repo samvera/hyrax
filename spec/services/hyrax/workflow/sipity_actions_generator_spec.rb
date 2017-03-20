@@ -10,13 +10,25 @@ module Hyrax
             name: "start_a_submission", transition_to: "new", emails: [
               { name: "confirmation_of_ulra_submission_started", to: "creating_user" }
             ]
-          }, { name: ["start", "potpie"] }
+          }, {
+            name: "submit", transition_to: "done", from_states: [{ names: ["new"], roles: ["submitting"] }]
+          }
         ]
       end
 
-      it 'exposes .call as a convenience method' do
-        expect_any_instance_of(described_class).to receive(:call)
-        described_class.call(workflow: workflow, actions_configuration: actions_configuration)
+      let(:new_actions_configuration) do
+        [
+          {
+            name: "submit", transition_to: "done", from_states: [{ names: ["new"], roles: ["submitting"] }]
+          }
+        ]
+      end
+
+      context '.call' do
+        it 'is a convenience method' do
+          expect_any_instance_of(described_class).to receive(:call)
+          described_class.call(workflow: workflow, actions_configuration: actions_configuration)
+        end
       end
 
       subject { described_class.new(workflow: workflow, actions_configuration: actions_configuration) }
