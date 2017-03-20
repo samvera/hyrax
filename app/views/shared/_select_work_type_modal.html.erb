@@ -1,9 +1,9 @@
-<div class="modal fade" id="worktypes-to-create" tabindex="-1" role="dialog" aria-labelledby="select-worktype-label">
+<div class="modal worktypes fade" id="worktypes-to-create" tabindex="-1" role="dialog" aria-labelledby="select-worktype-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="select-worktype-label"><%= t('hyrax.dashboard.heading_actions.select_type_of_work') %></h4>
+        <h2 class="modal-title" id="select-worktype-label"><%= t('hyrax.dashboard.heading_actions.select_type_of_work') %></h2>
       </div>
       <form class="new-work-select">
         <div class="modal-body">
@@ -17,7 +17,7 @@
                   <span class="<%= row_presenter.icon_class %>"></span>
                 </div>
                 <div class="select-work-description">
-                  <h3><%= row_presenter.name %></h3>
+                  <h3 class="work-type-title"><%= row_presenter.name %></h3>
                   <p><%= row_presenter.description %></p>
                 </div>
               </label>
