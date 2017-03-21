@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-describe 'Hyrax::Ability', type: :model do
+RSpec.describe 'Hyrax::Ability', type: :model do
   let(:ability) { Ability.new(user) }
   subject { ability }
 
@@ -9,6 +9,26 @@ describe 'Hyrax::Ability', type: :model do
     context "with a guest user" do
       let(:user) { create(:user, :guest) }
       it { is_expected.to be false }
+    end
+  end
+
+  describe "#can_create_any_work?" do
+    subject { ability.can_create_any_work? }
+    let(:user) { create(:user) }
+
+    context "when user doesn't have deposit into any admin set" do
+      it { is_expected.to be false }
+    end
+
+    context "when user can deposit into an admin set" do
+      before do
+        # Grant the user access to deposit into an admin set.
+        create(:permission_template_access,
+               :deposit,
+               agent_type: 'user',
+               agent_id: user.user_key)
+      end
+      it { is_expected.to be true }
     end
   end
 

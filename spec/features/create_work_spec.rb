@@ -1,12 +1,18 @@
-feature 'Creating a new Work', :js, :workflow do
+# Skipping because this was failing intermittently on travis
+RSpec.feature 'Creating a new Work', :js, :workflow, skip: true do
   let(:user) { create(:user) }
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }
-  # Don't bother making these, until we unskip tests
-  # let!(:uploaded_file1) { UploadedFile.create(file: file1, user: user) }
-  # let!(:uploaded_file2) { UploadedFile.create(file: file2, user: user) }
+  let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }
+  let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
 
   before do
+    # Grant the user access to deposit into an admin set.
+    create(:permission_template_access,
+           :deposit,
+           permission_template: create(:permission_template, with_admin_set: true),
+           agent_type: 'user',
+           agent_id: user.user_key)
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
   end
@@ -15,10 +21,11 @@ feature 'Creating a new Work', :js, :workflow do
     before do
       sign_in user
       click_link "Create Work"
+      choose "payload_concern", option: "GenericWork"
+      click_button 'Create work'
     end
 
     it 'creates the work' do
-      skip "This was failing intermittently"
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       expect(page).to have_content "Add folder"
@@ -50,10 +57,11 @@ feature 'Creating a new Work', :js, :workflow do
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link "Create Work"
+      choose "payload_concern", option: "GenericWork"
+      click_button 'Create work'
     end
 
     it "allows on-behalf-of deposit" do
-      skip "This was failing intermittently"
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
 

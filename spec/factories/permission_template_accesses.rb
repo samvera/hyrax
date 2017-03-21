@@ -6,6 +6,10 @@ FactoryGirl.define do
       access 'manage'
     end
 
+    trait :deposit do
+      access 'deposit'
+    end
+
     trait :view do
       access 'view'
     end

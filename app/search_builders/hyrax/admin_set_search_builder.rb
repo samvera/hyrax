@@ -30,28 +30,10 @@ module Hyrax
     # @return [Array<String>] a list of filters to apply to the solr query
     def gated_discovery_filters
       return super if @access != :deposit
-      ["{!terms f=id}#{admin_set_ids.join(',')}"]
+      ["{!terms f=id}#{admin_set_ids_for_deposit.join(',')}"]
     end
 
-    private
-
-      # @return [Array<String>] a list of admin set ids for admin sets the current user
-      #   has deposit or manage permissions to.
-      def admin_set_ids
-        PermissionTemplateAccess.joins(:permission_template)
-                                .where(agent_type: 'user',
-                                       agent_id: user,
-                                       access: ['deposit', 'manage'])
-                                .or(
-                                  PermissionTemplateAccess.joins(:permission_template)
-                                                          .where(agent_type: 'group',
-                                                                 agent_id: current_ability.user_groups,
-                                                                 access: ['deposit', 'manage'])
-                                ).pluck('DISTINCT admin_set_id')
-      end
-
-      def user
-        current_ability.current_user.user_key
-      end
+    delegate :admin_set_ids_for_deposit, to: :current_ability
+    private :admin_set_ids_for_deposit
   end
 end

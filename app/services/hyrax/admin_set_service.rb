@@ -12,7 +12,7 @@ module Hyrax
       @search_builder = search_builder
     end
 
-    # @param [Symbol] access :read or :edit
+    # @param [Symbol] access :deposit, :read or :edit
     def search_results(access)
       response = context.repository.search(builder(access))
       response.documents
