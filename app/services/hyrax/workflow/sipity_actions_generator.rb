@@ -60,7 +60,7 @@ module Hyrax
         end
 
         def validate_states_to_be_removed
-          new_state_names = actions_configuration.map { |a| a[:transition_to] }.flatten
+          new_state_names = extract_new_state_names
           states_to_remove = []
           states_that_cannot_be_destroyed = []
           workflow.workflow_states.each do |state|
@@ -73,6 +73,14 @@ module Hyrax
             raise InvalidStateRemovalException.new(exception_message, states_that_cannot_be_destroyed)
           end
           states_to_remove
+        end
+
+        # @note Not all states are things that we tansition_to; They can be transitioned from_states as well.
+        def extract_new_state_names
+          (
+            actions_configuration.map { |a| a.fetch(:transition_to, nil) } +
+            actions_configuration.map { |a| a.fetch(:from_states, []).map { |fs| fs.fetch(:names, nil) } }
+          ).flatten.compact.uniq
         end
 
         def remove_unused_actions!
