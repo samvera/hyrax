@@ -28,12 +28,13 @@ module Hyrax
       # Gathers all the information that we'll display in the user's dashboard.
       # Override this method if you want to exclude or gather additional data elements
       # in your dashboard view.  You'll need to alter dashboard/index.html.erb accordingly.
+      # @todo Consolidate these 5 instance variables into a presenter object for the Dashboard
       def gather_dashboard_information
         @user = current_user
         @activity = current_user.all_user_activity(params[:since].blank? ? DateTime.current.to_i - Hyrax.config.activity_to_show_default_seconds_since_now : params[:since].to_i)
         @notifications = current_user.mailbox.inbox
-        @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject(&:deleted_work?)
-        @outgoing = ProxyDepositRequest.where(sending_user_id: current_user.id)
+        @incoming = ProxyDepositRequest.incoming_for(user: current_user)
+        @outgoing = ProxyDepositRequest.outgoing_for(user: current_user)
       end
 
       # Formats the user's activities into human-readable strings used for rendering JSON

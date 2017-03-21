@@ -2,23 +2,62 @@ describe ProxyDepositRequest, type: :model do
   let(:sender) { create(:user) }
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
-  let(:work) do
-    GenericWork.create(title: ["Test work"]) do |w|
-      w.apply_depositor_metadata(sender.user_key)
-    end
-  end
+  let(:work_id) { '123abc' }
 
   subject do
-    described_class.new(work_id: work.id, sending_user: sender,
+    described_class.new(work_id: work_id, sending_user: sender,
                         receiving_user: receiver, sender_comment: "please take this")
   end
+
+  # Injecting a different work_query_service_class to avoid hitting SOLR and Fedora; I need an
+  # instance variable as mocks are not allowed in the around blocks
+  # rubocop:disable RSpec/InstanceVariable
+  before do
+    @original_work_query_service_class = described_class.work_query_service_class
+    described_class.work_query_service_class = stubbed_work_query_service_class
+  end
+
+  after do
+    described_class.work_query_service_class = @original_work_query_service_class
+  end
+  # rubocop:enable RSpec/InstanceVariable
+
+  let(:stubbed_work_query_service_class) { double(new: work_query_service) }
+  let(:work_query_service) { double(work: work) }
+  let(:work) { double('Work') }
 
   its(:status) { is_expected.to eq described_class::PENDING }
   it { is_expected.to be_pending }
   its(:fulfillment_date) { is_expected.to be_nil }
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
-  it { is_expected.to delegate_method(:to_s).to(:solr_doc) }
+  it { is_expected.to delegate_method(:to_s).to(:work_query_service) }
+  it { is_expected.to delegate_method(:work).to(:work_query_service) }
+  it { is_expected.to delegate_method(:deleted_work?).to(:work_query_service) }
+
+  context '.incoming_for' do
+    it 'returns non-deleted requests for the receiving_user' do
+      deleted_work_service = double(deleted_work?: true)
+      found_work_service = double(deleted_work?: false)
+
+      found = create(:proxy_deposit_request, work_id: 'abc', sending_user: sender, receiving_user: receiver)
+      allow(stubbed_work_query_service_class).to receive(:new).with(id: 'abc').and_return(found_work_service)
+
+      _deleted = create(:proxy_deposit_request, work_id: 'efg', sending_user: sender, receiving_user: receiver)
+      allow(stubbed_work_query_service_class).to receive(:new).with(id: 'efg').and_return(deleted_work_service)
+
+      _not_to_find = create(:proxy_deposit_request, work_id: 'hij', sending_user: receiver, receiving_user: sender)
+      expect(described_class.incoming_for(user: receiver)).to eq([found])
+    end
+  end
+
+  context '.outgoing_for' do
+    it 'returns only requests for the sending_user' do
+      found = create(:proxy_deposit_request, work_id: 'abc', sending_user: sender, receiving_user: receiver)
+      _not_to_find = create(:proxy_deposit_request, work_id: 'hij', sending_user: receiver, receiving_user: sender)
+      expect(described_class.outgoing_for(user: sender)).to eq([found])
+    end
+  end
 
   context '#status' do
     it 'is protected by enum enforcement' do
@@ -33,52 +72,33 @@ describe ProxyDepositRequest, type: :model do
     end
   end
 
-  context "After approval" do
-    before do
+  describe '#transfer!' do
+    it 'will change the status, fulfillment_date, and perform later the ContentDepositorChangeEventJob' do
+      allow(ContentDepositorChangeEventJob).to receive(:perform_later)
       subject.transfer!
-    end
-
-    its(:status) { is_expected.to eq described_class::ACCEPTED }
-    its(:fulfillment_date) { is_expected.not_to be_nil }
-    its(:deleted_work?) { is_expected.to be false }
-
-    describe "and the work is deleted" do
-      before do
-        work.destroy
-      end
-
-      its(:to_s) { is_expected.to eq 'work not found' }
-      its(:deleted_work?) { is_expected.to be true }
-    end
-
-    describe "and the work transfer is canceled" do
-      before do
-        subject.cancel!
-      end
-
-      its(:status) { is_expected.to eq described_class::CANCELED }
-      its(:fulfillment_date) { is_expected.not_to be_nil }
-      its(:canceled?) { is_expected.to be true }
+      expect(subject.status).to eq(described_class::ACCEPTED)
+      expect(subject.fulfillment_date).to be_a(Time)
+      expect(subject).to be_accepted
     end
   end
 
-  context "After rejection" do
-    before do
-      subject.reject!('a comment')
-    end
-
-    its(:status) { is_expected.to eq described_class::REJECTED }
-    its(:fulfillment_date) { is_expected.not_to be_nil }
-    its(:receiver_comment) { is_expected.to eq 'a comment' }
-  end
-
-  context "After cancel" do
-    before do
+  describe '#cancel!' do
+    it 'will change the status, fulfillment_date' do
       subject.cancel!
+      expect(subject.status).to eq(described_class::CANCELED)
+      expect(subject.fulfillment_date).to be_a(Time)
+      expect(subject).to be_canceled
     end
+  end
 
-    its(:status) { is_expected.to eq described_class::CANCELED }
-    its(:fulfillment_date) { is_expected.not_to be_nil }
+  describe '#reject!' do
+    it 'will change the status, fulfillment_date, and receiver comment' do
+      subject.reject!('a comment')
+      expect(subject.status).to eq(described_class::REJECTED)
+      expect(subject.fulfillment_date).to be_a(Time)
+      expect(subject.receiver_comment).to eq('a comment')
+      expect(subject).to be_rejected
+    end
   end
 
   describe 'transfer' do
@@ -95,7 +115,7 @@ describe ProxyDepositRequest, type: :model do
         subject.transfer_to = receiver.user_key
         subject.save!
         proxy_request = receiver.proxy_deposit_requests.first
-        expect(proxy_request.work_id).to eq(work.id)
+        expect(proxy_request.work_id).to eq(work_id)
         expect(proxy_request.sending_user).to eq(sender)
       end
     end
@@ -109,7 +129,7 @@ describe ProxyDepositRequest, type: :model do
     end
 
     context 'when the work is already being transferred' do
-      let(:subject2) { described_class.new(work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this') }
+      let(:subject2) { described_class.new(work_id: work_id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this') }
 
       it 'raises an error' do
         subject.save!
