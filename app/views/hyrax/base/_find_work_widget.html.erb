@@ -1,16 +1,10 @@
-<%= f.input id_type,
-      label: false,
-      type: :text,
-      input_html:{
-        id: id_name,
-        name: f.object.model_name.param_key + '[' + id_type + '][]',
-        :'data-autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/find_works',
-        :'data-autocomplete' => 'work',
-        :'data-user' => current_user.email,
-        :'data-id' => id,
-        autocomplete: 'off',
-        :'aria-labelledby' => id_name + '_label',
-        :class => 'new-form-control string multi_value optional related_works_ids form-control multi-text-field ui-autocomplete-input',
-        value: ''
-      }
- %>
+<%= text_field_tag "find_#{name}",
+                   '',
+                   placeholder: t('.placeholder', default: 'Search for a work'),
+                   autocomplete: 'off',
+                   style: "width: 100%",
+                   data: {
+                     autocomplete: 'work',
+                     'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/find_works',
+                     'exclude-work': id # exclude this item from the result set.
+                   } %>

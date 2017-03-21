@@ -16,6 +16,7 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
       let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'Public Set') }
       let(:solr_doc2) { instance_double(SolrDocument, id: '345', to_s: 'Private Set') }
       before do
+        allow(presenter).to receive(:workflow) { nil }
         create(:permission_template, admin_set_id: '123', visibility: 'open')
         create(:permission_template, admin_set_id: '345', visibility: 'restricted')
       end
@@ -36,6 +37,7 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
       let(:results) { [solr_doc1, solr_doc2, solr_doc3, solr_doc4] }
 
       before do
+        allow(presenter).to receive(:workflow) { nil }
         create(:permission_template, admin_set_id: '123', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: today + 2.days)
         create(:permission_template, admin_set_id: '345', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
         create(:permission_template, admin_set_id: '567', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)

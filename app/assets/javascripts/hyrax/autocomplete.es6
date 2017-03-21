@@ -13,7 +13,7 @@ export default class Autocomplete {
 	    this.activateFields(autocompleteData,selector);
 	});
     }
-    // This activates autocomplete for added fields 
+    // This activates autocomplete for added fields
     fieldAdded(cloneElem) {
 	let selector = $(cloneElem);
 	let autocompleteData = selector.data('autocomplete');
@@ -23,13 +23,10 @@ export default class Autocomplete {
 	let fieldName = field.data('autocomplete');
 	switch (fieldName) {
 	case "work":
-	    let user = field.data('user');
-	    let id = field.data('id');
 	    new Work(
-		field,
-		field.data('autocomplete-url'),
-		user,
-		id
+              field,
+              field.data('autocomplete-url'),
+              field.data('exclude-work')
 	    );
 	    break;
 	default:

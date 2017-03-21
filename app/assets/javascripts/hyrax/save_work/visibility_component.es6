@@ -43,6 +43,10 @@ export default class VisibilityComponent {
   limitByAdminSet() {
     if(this.adminSetWidget) {
       this.adminSetWidget.on('change', (data) => this.restrictToVisibility(data))
+      if (this.adminSetWidget.isEmpty()) {
+          console.error("No data was passed from the admin set. Perhaps there are no selectable options?")
+          return
+      }
       this.restrictToVisibility(this.adminSetWidget.data())
     }
   }

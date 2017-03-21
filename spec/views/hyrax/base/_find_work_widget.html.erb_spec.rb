@@ -11,8 +11,7 @@ RSpec.describe 'hyrax/base/_find_work_widget.html.erb', type: :view do
     allow(view).to receive(:current_user).and_return(stub_model(User))
     render 'hyrax/base/find_work_widget',
            f: form,
-           id_name: 'work_child_members_ids',
-           id_type: 'ordered_member_ids',
+           name: 'child_work',
            user_email: 'foo@bar.com',
            id: '999'
   end

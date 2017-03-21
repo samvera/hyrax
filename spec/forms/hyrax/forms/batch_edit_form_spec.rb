@@ -1,4 +1,4 @@
-describe Hyrax::Forms::BatchEditForm do
+RSpec.describe Hyrax::Forms::BatchEditForm do
   let(:model) { GenericWork.new }
   let(:work1) do
     create :generic_work,

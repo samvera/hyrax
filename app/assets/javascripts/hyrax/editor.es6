@@ -1,4 +1,4 @@
-import RelationshipsTable from 'hyrax/relationships/table'
+import RelationshipsControl from 'hyrax/relationships/control'
 import SaveWorkControl from 'hyrax/save_work/save_work_control'
 import AdminSetWidget from 'hyrax/editor/admin_set_widget'
 
@@ -9,30 +9,30 @@ export default class {
     this.sharingTabElement = $('#tab-share')
 
     this.sharingTab()
-    this.relationshipsTable()
+    this.relationshipsControl()
     this.saveWorkControl()
     this.saveWorkFixed()
   }
 
   // Display the sharing tab if they select an admin set that permits sharing
   sharingTab() {
-    if(this.adminSetWidget) {
-      console.log("admin set selected")
+    if(this.adminSetWidget && !this.adminSetWidget.isEmpty()) {
       this.adminSetWidget.on('change', (data) => this.sharingTabVisiblity(data))
-      this.sharingTabVisiblity(this.adminSetWidget.data())
+      this.sharingTabVisiblity(this.adminSetWidget.isSharing())
     }
   }
 
-  sharingTabVisiblity(data) {
-      console.log("Data " + data["sharing"])
-      if (data["sharing"])
+  sharingTabVisiblity(visible) {
+      if (visible)
          this.sharingTabElement.removeClass('hidden')
       else
          this.sharingTabElement.addClass('hidden')
   }
 
-  relationshipsTable() {
-      new RelationshipsTable(this.element.find('table.relationships-ajax-enabled'))
+  relationshipsControl() {
+      new RelationshipsControl(this.element.find('[data-behavior="child-relationships"]'),
+                               'work_members_attributes',
+                               'tmpl-child-work')
   }
 
   saveWorkControl() {

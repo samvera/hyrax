@@ -38,7 +38,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     context "when the admin_set is valid" do
       let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
       let(:grant) { permission_template.access_grants.first }
-      it "is creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
+      it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
         expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
         expect do
           expect(subject).to be true
@@ -49,6 +49,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
         expect(grant.access).to eq 'manage'
         expect(admin_set.creator).to eq [user.user_key]
         expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
+        expect(permission_template).to be_persisted
       end
     end
 
