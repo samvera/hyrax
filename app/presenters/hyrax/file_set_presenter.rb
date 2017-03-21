@@ -27,7 +27,7 @@ module Hyrax
     delegate :title, :label, :description, :creator, :contributor, :subject,
              :publisher, :language, :date_uploaded, :rights,
              :embargo_release_date, :lease_expiration_date,
-             :depositor, :keyword, :title_or_label, :depositor, :keyword,
+             :depositor, :keyword, :title_or_label, :keyword,
              :date_created, :date_modified, :itemtype,
              to: :solr_document
 
