@@ -271,6 +271,8 @@ en:
     batch_uploads:
       files:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
+        upload_type_instructions: To create a single work for all the files, go to
+        button_label: Add New Work
       new:
         header: Batch Create New Works
         in_collections: These Works in Collections
