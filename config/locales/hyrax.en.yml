@@ -1,4 +1,7 @@
 en:
+  activefedora:
+    models:
+      batch_upload_item: 'Works by Batch'
   activemodel:
     errors:
       messages:

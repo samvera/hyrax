@@ -1,4 +1,7 @@
 es:
+  activefedora:
+    models:
+      batch_upload_item: 'Obras por Lote'
   activemodel:
     errors:
       messages:
