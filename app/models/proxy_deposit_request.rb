@@ -1,9 +1,40 @@
+# Responsible for persisting the ownership transfer requests and the state of each request.
+# @see ProxyDepositRequest.enum(:status)
+# @see ProxyDepositRequest.work_query_service_class for configuration (defaults to Hyrax::WorkQueryService)
+# @see Hyrax::WorkQueryService
 class ProxyDepositRequest < ActiveRecord::Base
-  include Blacklight::SearchHelper
   include ActionView::Helpers::UrlHelper
+
+  class_attribute :work_query_service_class
+  self.work_query_service_class = Hyrax::WorkQueryService
+
+  delegate :deleted_work?, :work, :to_s, to: :work_query_service
+
+  private
+
+    def work_query_service
+      @work_query_service ||= work_query_service_class.new(id: work_id)
+    end
+
+  public
 
   belongs_to :receiving_user, class_name: 'User'
   belongs_to :sending_user, class_name: 'User'
+
+  # @param [User] user - the person who needs to take action on the ownership transfer request
+  # @return [Enumerable] a set of requests that the given user can act upon to claim the ownership transfer
+  # @note We are iterating through the found objects and querying SOLR each time. Assuming we are rendering this result in a view,
+  #       this is reasonable. In the view we will render the #to_s of the associated work. So we may as well preload the SOLR document.
+  def self.incoming_for(user:)
+    where(receiving_user: user).reject(&:deleted_work?)
+  end
+
+  # @param [User] user - the person who requested that a work be transfer to someone else
+  # @return [Enumerable] a set of requests created by the given user
+  # @todo Should I skip deleted works as indicated in the .incoming_for method?
+  def self.outgoing_for(user:)
+    where(sending_user: user)
+  end
 
   # attribute work_id exists as result of renaming in db migrations.
   # See upgrade700_generator.rb
@@ -102,37 +133,5 @@ class ProxyDepositRequest < ActiveRecord::Base
       self.status = status
       self.fulfillment_date = Time.current
       save!
-    end
-
-  public
-
-  def deleted_work?
-    !work_relation.exists?(work_id)
-  end
-
-  def work
-    @work ||= work_relation.find(work_id)
-  end
-
-  # Delegate to the SolrDocument of the work
-  delegate :to_s, to: :solr_doc
-
-  private
-
-    def solr_doc
-      return 'work not found' if deleted_work?
-      @solr_doc ||= SolrDocument.new(solr_response['response']['docs'].first, solr_response)
-    end
-
-    def solr_response
-      @solr_response ||= ActiveFedora::SolrService.get(query)
-    end
-
-    def query
-      ActiveFedora::SolrQueryBuilder.construct_query_for_ids([work_id])
-    end
-
-    def work_relation
-      Hyrax::WorkRelation.new
     end
 end
