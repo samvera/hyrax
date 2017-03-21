@@ -248,7 +248,7 @@ Hyrax is available under [the Apache 2.0 license](LICENSE.md).
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra/hyrax). There are other ways to help, too.
+If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra-labs/hyrax). There are other ways to help, too.
 
 * [Contribute a user story](https://github.com/projecthydra-labs/hyrax/issues/new).
 * Help us improve [Hyrax's test coverage](https://coveralls.io/r/projecthydra-labs/hyrax) or [documentation coverage](https://inch-ci.org/github/projecthydra-labs/hyrax).
