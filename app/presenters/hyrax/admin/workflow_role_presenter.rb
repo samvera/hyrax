@@ -35,9 +35,7 @@ module Hyrax
 
         attr_accessor :responsibility
 
-        def label
-          "#{@wf_role.workflow.name} - #{@wf_role.role.name}"
-        end
+        delegate :label, to: :@wf_role
       end
     end
   end

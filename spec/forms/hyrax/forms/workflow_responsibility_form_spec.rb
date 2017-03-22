@@ -19,11 +19,8 @@ describe Hyrax::Forms::WorkflowResponsibilityForm, :no_clean do
   end
 
   describe "#workflow_role_options" do
-    let(:workflow) { instance_double(Sipity::Workflow, name: 'generic_work') }
-    let(:role1) { instance_double(Sipity::Role, name: 'foo') }
-    let(:role2) { instance_double(Sipity::Role, name: 'bar') }
-    let(:wf_role1) { instance_double(Sipity::WorkflowRole, workflow: workflow, role: role1, id: 1) }
-    let(:wf_role2) { instance_double(Sipity::WorkflowRole, workflow: workflow, role: role2, id: 2) }
+    let(:wf_role1) { instance_double(Sipity::WorkflowRole, id: 1, label: 'generic_work - foo') }
+    let(:wf_role2) { instance_double(Sipity::WorkflowRole, id: 2, label: 'generic_work - bar') }
     before do
       allow(Sipity::WorkflowRole).to receive(:all).and_return([wf_role1, wf_role2])
     end
