@@ -271,6 +271,8 @@ es:
     batch_uploads:
       files:
         instructions: Cada archivo será cargado en un nuevo trabajo separado, resultando en un trabajo por archivo cargado.
+        upload_type_instructions: Para crear una solo obra para todos los archivos, vaya a
+        button_label: Añadir Nuevo Obra
       new:
         header: Crear nuevos Trabajos en lote
         in_collections: Estos Trabajos en Colecciones
