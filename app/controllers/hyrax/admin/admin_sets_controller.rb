@@ -15,7 +15,7 @@ module Hyrax
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
 
     # Used to get the members for the show action
-    self.member_search_builder_class = Hyrax::AdminSetMemberSearchBuilder
+    self.member_search_builder_class = Hyrax::AdminAdminSetMemberSearchBuilder
 
     # Used to get a list of admin sets for the index action
     self.list_search_builder_class = Hyrax::AdminSetSearchBuilder
@@ -28,7 +28,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
       add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
-      add_breadcrumb 'View Set', request.path
+      add_breadcrumb t(:'hyrax.admin.admin_sets.show.breadcrumb'), request.path
       super
     end
 
