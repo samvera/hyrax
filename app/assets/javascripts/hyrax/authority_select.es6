@@ -44,8 +44,6 @@ export default class AuthoritySelect {
 	observer.observe(document.body, config);
     }
 
-    
-
     /**
      * Initialize bindings
      */
@@ -60,16 +58,5 @@ export default class AuthoritySelect {
  * intialize the Hyrax autocomplete with the fields that you are using
  */
 function setupAutocomplete() {
-    var Autocomplete = require('hyrax/autocomplete');
-    var autocomplete = new Autocomplete({
-	"autocompleteFields":
-	["creator","contributor"]
-    });
-
-    $('.multi_value.form-group').manage_fields({
-        add: function(e, element) {
-	    autocomplete.fieldAdded(element);
-        }
-    });
-    autocomplete.setup();
+  Hyrax.autocomplete()
 };
