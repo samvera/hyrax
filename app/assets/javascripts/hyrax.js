@@ -38,6 +38,7 @@
 
 //= require batch_edit
 //
+//= require hyrax/monkey_patch_turbolinks
 //= require hyrax/app
 //= require hyrax/initialize
 //= require hyrax/fileupload
