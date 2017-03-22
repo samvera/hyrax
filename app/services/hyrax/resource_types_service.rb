@@ -16,8 +16,7 @@ module Hyrax
     # @param [String] id identifier of the resource type
     def self.microdata_type(id)
       return Hyrax.config.microdata_default_type if id.nil?
-      I18n.t("#{Hyrax::Renderers::ConfiguredMicrodata::PREFIX}.resource_type.#{id}",
-             default: Hyrax.config.microdata_default_type)
+      Microdata.fetch("resource_type.#{id}", default: Hyrax.config.microdata_default_type)
     end
   end
 end
