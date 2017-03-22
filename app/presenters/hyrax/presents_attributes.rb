@@ -34,7 +34,7 @@ module Hyrax
 
     def microdata_type_to_html
       return "" unless display_microdata?
-      value = I18n.t(microdata_type_key, default: Hyrax.config.microdata_default_type)
+      value = Microdata.fetch(microdata_type_key, default: Hyrax.config.microdata_default_type)
       " itemscope itemtype=\"#{value}\"".html_safe
     end
 
@@ -64,7 +64,7 @@ module Hyrax
       end
 
       def microdata_type_key
-        "hyrax.schema_org.resource_type.#{human_readable_type}"
+        "resource_type.#{human_readable_type}"
       end
   end
 end
