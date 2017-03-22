@@ -1,8 +1,6 @@
 module Hyrax
   module Renderers
     module ConfiguredMicrodata
-      PREFIX = 'hyrax.schema_org'.freeze
-
       def microdata?(field)
         return false unless Hyrax.config.display_microdata?
         translate_microdata(field: field, field_context: 'property', default: false)
@@ -41,7 +39,7 @@ module Hyrax
       private
 
         def translate_microdata(field:, field_context:, default: true)
-          t("#{PREFIX}.#{field}.#{field_context}", default: default)
+          Microdata.fetch("#{field}.#{field_context}", default: default)
         end
     end
   end
