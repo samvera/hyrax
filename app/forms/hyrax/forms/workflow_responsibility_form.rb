@@ -28,14 +28,8 @@ module Hyrax
 
       # The select options for choosing a responsibility
       def workflow_role_options
-        Sipity::WorkflowRole.all.map { |wf_role| [label(wf_role), wf_role.id] }
+        Sipity::WorkflowRole.all.map { |wf_role| [wf_role.label, wf_role.id] }
       end
-
-      private
-
-        def label(wf_role)
-          "#{wf_role.workflow.name} - #{wf_role.role.name}"
-        end
     end
   end
 end
