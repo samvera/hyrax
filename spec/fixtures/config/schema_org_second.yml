@@ -1,0 +1,7 @@
+schema_org:
+  name:
+    type: "http://schema.org/SecondaryPerson"
+    property: secondName
+    value: secondFirstName
+  second_only:
+    value: iAmTheSecondOnly

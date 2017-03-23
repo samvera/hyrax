@@ -5,11 +5,11 @@ describe Hyrax::Renderers::AttributeRenderer do
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }
   let(:yml_path) { File.join(fixture_path, 'config', 'schema_org.{yml}') }
   before do
-    Hyrax::Microdata.load_path += Dir[yml_path]
+    Hyrax::Microdata.load_paths += Dir[yml_path]
     Hyrax::Microdata.reload!
   end
   after do
-    Hyrax::Microdata.load_path -= Dir[yml_path]
+    Hyrax::Microdata.load_paths -= Dir[yml_path]
     Hyrax::Microdata.reload!
   end
 
