@@ -46,6 +46,13 @@ module Hyrax
     # @param [String, Array<String>]
     def self.load_paths=(input)
       @load_paths = Array.wrap(input)
+      reload! # If we are obliterating load paths, we really should clear data
+    end
+
+    # @api private
+    def self.clear_load_paths!
+      @load_paths = nil
+      reload!
     end
 
     # @api public
