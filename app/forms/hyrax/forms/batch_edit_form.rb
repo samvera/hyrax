@@ -38,7 +38,6 @@ module Hyrax
         # override this method if you need to initialize more complex RDF assertions (b-nodes)
         def initialize_combined_fields
           combined_attributes = {}
-          permissions = []
           # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
           batch_document_ids.each do |doc_id|
             work = model_class.find(doc_id)
@@ -47,7 +46,6 @@ module Hyrax
               combined_attributes[key] = (combined_attributes[key] + work[key].to_a).uniq
             end
             names << work.to_s
-            permissions = (permissions + work.permissions).uniq
           end
 
           terms.each do |key|
