@@ -4,12 +4,11 @@ module Hyrax
     let(:yml_path_secondary) { File.join(fixture_path, 'config', 'schema_org_second.yml') }
     before do
       described_class.load_paths = yml_path
-      described_class.reload!
     end
 
     after do
       # Need to reset as this is an instance variable
-      described_class.instance_variable_set("@load_paths", nil)
+      described_class.clear_load_paths!
     end
 
     describe '.load_paths' do
