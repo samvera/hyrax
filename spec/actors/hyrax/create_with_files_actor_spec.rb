@@ -14,6 +14,7 @@ describe Hyrax::CreateWithFilesActor do
   let(:work) { create(:generic_work, user: user) }
   let(:uploaded_file_ids) { [uploaded_file1.id, uploaded_file2.id] }
   let(:attributes) { { uploaded_files: uploaded_file_ids } }
+  let(:log) { Hyrax::Operation.create!(user: user, operation_type: 'Attach File') }
 
   [:create, :update].each do |mode|
     context "on #{mode}" do
@@ -32,7 +33,7 @@ describe Hyrax::CreateWithFilesActor do
 
       context "when uploaded_file_ids belong to me" do
         it "attaches files" do
-          expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2])
+          expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2], an_instance_of(Hyrax::Operation))
           expect(actor.public_send(mode, attributes)).to be true
         end
       end

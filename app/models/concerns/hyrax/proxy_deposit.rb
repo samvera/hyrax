@@ -17,8 +17,12 @@ module Hyrax
 
     def create_transfer_request
       return unless on_behalf_of.present?
+      user = ::User.find_by_user_key(on_behalf_of)
+      log = Hyrax::Operation.create!(user: user,
+                                     operation_type: 'Change Depositor')
       ContentDepositorChangeEventJob.perform_later(self,
-                                                   ::User.find_by_user_key(on_behalf_of))
+                                                   user,
+                                                   log)
     end
 
     def request_transfer_to(target)

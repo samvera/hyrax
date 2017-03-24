@@ -9,13 +9,17 @@ describe ContentDepositorChangeEventJob do
                           "to user <a href=\"/users/#{another_user.to_param}\">#{another_user.user_key}</a>",
       timestamp: '1' }
   end
+  let(:operation) do
+    Hyrax::Operation.create!(user: another_user,
+                             operation_type: 'Change Depositor')
+  end
   before do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
   it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
     expect do
-      described_class.perform_now(generic_work, another_user)
+      described_class.perform_now(generic_work, another_user, operation)
     end.to change { user.profile_events.length }.by(1)
       .and change { another_user.events.length }.by(1)
       .and change { generic_work.events.length }.by(1)

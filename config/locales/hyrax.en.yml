@@ -549,6 +549,7 @@ en:
         highlights: "Highlights"
         menu: "Dashboard"
         my: "My Dashboard"
+        operations: 'Operations'
         shares: "Shares"
         transfers: "Transfers"
       language_switch: "Switch language"

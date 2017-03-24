@@ -41,7 +41,7 @@ describe Hyrax::PermissionsController do
 
     it 'adds a worker to the queue' do
       expect(VisibilityCopyJob).to receive(:perform_later).with(work)
-      expect(InheritPermissionsJob).to receive(:perform_later).with(work)
+      expect(InheritPermissionsJob).to receive(:perform_later).with(work, an_instance_of(Hyrax::Operation))
       post :copy_access, params: { id: work }
       expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. ' \

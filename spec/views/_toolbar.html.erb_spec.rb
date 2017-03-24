@@ -1,9 +1,10 @@
 describe '/_toolbar.html.erb', type: :view do
   let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: false, first_model: GenericWork) }
+  let(:user) { stub_model(User, user_key: 'userX') }
   before do
     allow(view).to receive(:create_work_presenter).and_return(presenter)
     allow(view).to receive(:user_signed_in?).and_return(true)
-    allow(controller).to receive(:current_user).and_return(stub_model(User, user_key: 'userX'))
+    allow(controller).to receive(:current_user).and_return(user)
     allow(view).to receive(:can?).and_call_original
   end
 
@@ -35,6 +36,7 @@ describe '/_toolbar.html.erb', type: :view do
   it 'has dashboard links' do
     render
     expect(rendered).to have_link 'My Dashboard', href: hyrax.dashboard_index_path
+    expect(rendered).to have_link 'Operations', href: hyrax.user_operations_path(user)
     expect(rendered).to have_link 'Transfers', href: hyrax.transfers_path
     expect(rendered).to have_link 'Highlights', href: hyrax.dashboard_highlights_path
     expect(rendered).to have_link 'Shares', href: hyrax.dashboard_shares_path

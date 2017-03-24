@@ -71,6 +71,7 @@ describe GenericWork do
     it "transfers the request" do
       work.on_behalf_of = transfer_to.user_key
       expect(ContentDepositorChangeEventJob).to receive(:perform_later).once
+      expect(Hyrax::Operation).to receive(:create!).with(user: transfer_to, operation_type: 'Change Depositor')
       work.save!
     end
   end
