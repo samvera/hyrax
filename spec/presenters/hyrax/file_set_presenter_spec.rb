@@ -8,6 +8,7 @@ describe Hyrax::FileSetPresenter do
           id: '123abc',
           user: user,
           title: ["File title"],
+          depositor: user.user_key,
           label: "filename.tif")
   end
   let(:user) { double(user_key: 'sarah') }
@@ -91,20 +92,9 @@ describe Hyrax::FileSetPresenter do
 
   describe '#tweeter' do
     subject { presenter.tweeter }
-
-    context "with a user that can be found" do
-      let(:user) { create :user, twitter_handle: 'test' }
-      it { is_expected.to eq '@test' }
-    end
-
-    context "with a user that doesn't have a twitter handle" do
-      let(:user) { create :user, twitter_handle: '' }
-      it { is_expected.to eq '@HydraSphere' }
-    end
-
-    context "with a user that can't be found" do
-      let(:user) { double(user_key: 'sarah') }
-      it { is_expected.to eq '@HydraSphere' }
+    it 'delegates the depositor as the user_key to TwitterPresenter.call' do
+      expect(Hyrax::TwitterPresenter).to receive(:twitter_handle_for).with(user_key: solr_document.depositor)
+      subject
     end
   end
 

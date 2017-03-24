@@ -90,12 +90,7 @@ module Hyrax
     end
 
     def tweeter
-      user = ::User.find_by_user_key(depositor)
-      if user.try(:twitter_handle).present?
-        "@#{user.twitter_handle}"
-      else
-        I18n.translate('hyrax.product_twitter_handle')
-      end
+      TwitterPresenter.twitter_handle_for(user_key: depositor)
     end
 
     def presenter_types

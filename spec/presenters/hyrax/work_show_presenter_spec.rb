@@ -1,13 +1,15 @@
 describe Hyrax::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:request) { double }
+  let(:user_key) { 'a_user_key' }
 
   let(:attributes) do
     { "id" => '888888',
       "title_tesim" => ['foo', 'bar'],
       "human_readable_type_tesim" => ["Generic Work"],
       "has_model_ssim" => ["GenericWork"],
-      "date_created_tesim" => ['an unformatted date'] }
+      "date_created_tesim" => ['an unformatted date'],
+      "depositor_tesim" => user_key }
   end
   let(:ability) { nil }
   let(:presenter) { described_class.new(solr_document, ability, request) }
@@ -94,6 +96,15 @@ describe Hyrax::WorkShowPresenter do
     describe "#editor?" do
       subject { presenter.editor? }
       it { is_expected.to be true }
+    end
+  end
+
+  describe '#tweeter' do
+    let(:user) { instance_double(User, user_key: 'user_key') }
+    subject { presenter.tweeter }
+    it 'delegates the depositor as the user_key to TwitterPresenter.twitter_handle_for' do
+      expect(Hyrax::TwitterPresenter).to receive(:twitter_handle_for).with(user_key: user_key)
+      subject
     end
   end
 
