@@ -63,7 +63,7 @@ h4 .small {
   padding-right: 5px;
 }
 
-.sorts-dash, .sorts, .expandable_new {
+.sorts, .expandable_new {
   cursor: pointer;
 }
 
@@ -90,22 +90,6 @@ h4 .small {
   text-decoration: none;
 }
 
-.heading-tile {
-  border-right: 1px solid $gray-lighter;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: x-large;
-  font-weight: normal;
-  span {
-    display: block;
-  }
-}
-
-.heading-row {
-  border-bottom: 1px solid $gray-lighter;
-}
-
 input.batch_document_selector {
   margin: 10px 10px 2px 10px;
   padding: 0px;
@@ -123,12 +107,12 @@ input#check_all {
   }
 }
 
+// Remove the .well class applied by Blacklight 6
 .constraints-container {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   margin-bottom: 10px;
-}
-
-#appliedParams.constraints-container {
-  margin-bottom: 0;
 }
 
 #collection-list-container {
@@ -155,10 +139,6 @@ input#check_all {
   .table {
     margin-bottom: 0;
   }
-}
-
-#my_nav {
-  margin-bottom: 20px;
 }
 
 #check_all:disabled:hover:before {

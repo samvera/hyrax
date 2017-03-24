@@ -23,7 +23,7 @@ describe 'searching' do
       end
 
       click_link "Gallery"
-      expect(page).to have_content "You searched for: Toothbrush"
+      expect(page).to have_content "Filtering by: Toothbrush"
       within "#documents" do
         expect(page).to have_content "Toothbrush"
       end

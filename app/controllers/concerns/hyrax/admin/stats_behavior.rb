@@ -3,7 +3,7 @@ module Hyrax
     module StatsBehavior
       extend ActiveSupport::Concern
       included do
-        layout 'admin'
+        layout 'dashboard'
       end
 
       def show
@@ -12,7 +12,7 @@ module Hyrax
         limit = params.fetch(:limit, "5").to_i
         @presenter = AdminStatsPresenter.new(stats_filters, limit)
         add_breadcrumb t(:'hyrax.controls.home'), root_path
-        add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
+        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.statistics'), hyrax.admin_stats_path
       end
     end

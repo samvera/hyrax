@@ -7,7 +7,7 @@ module Hyrax
     before_action :ensure_admin!
     load_and_authorize_resource
 
-    layout 'admin'
+    layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
     self.form_class = Hyrax::Forms::AdminSetForm
 
@@ -26,7 +26,7 @@ module Hyrax
 
     def show
       add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
       add_breadcrumb t(:'hyrax.admin.admin_sets.show.breadcrumb'), request.path
       super
@@ -34,7 +34,7 @@ module Hyrax
 
     def index
       add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
       @admin_sets = Hyrax::AdminSetService.new(self).search_results(:read)
     end
@@ -102,7 +102,7 @@ module Hyrax
 
       def setup_form
         add_breadcrumb t(:'hyrax.controls.home'), root_path
-        add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
+        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
         @form = form_class.new(@admin_set)

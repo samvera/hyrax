@@ -40,8 +40,7 @@ export default class {
   }
 
   saveWorkFixed() {
-      // Setting test to false to skip native and go right to polyfill
-      FixedSticky.tests.sticky = false
+      // Fixedsticky will polyfill position:sticky
       this.element.find('#savewidget').fixedsticky()
   }
 }

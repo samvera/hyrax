@@ -5,8 +5,7 @@ describe 'proxy', type: :feature do
   describe 'add proxy in profile', :js do
     it "creates a proxy" do
       sign_in user
-      visit "/"
-      go_to_user_profile
+      click_link "Profile"
       click_link "Edit Profile"
       expect(first("td.depositor-name")).to be_nil
       create_proxy_using_partial(second_user)

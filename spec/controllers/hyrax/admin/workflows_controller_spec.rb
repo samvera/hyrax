@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Admin::WorkflowsController do
     end
     it "is successful" do
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
-      expect(controller).to receive(:add_breadcrumb).with('Administration', admin_path)
+      expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path)
       expect(controller).to receive(:add_breadcrumb).with('Tasks', '#')
       expect(controller).to receive(:add_breadcrumb).with('Review Submissions', "/admin/workflows")
 

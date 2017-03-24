@@ -21,12 +21,12 @@
         <tbody>
           <% @presenter.users.each do |user| %>
             <tr>
-              <td><%= link_to hyrax.profile_path(user) do %>
+              <td><%= link_to hyrax.user_path(user) do %>
                     <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
                   <% end %>
               </td>
               <br>
-              <td><%= link_to user.email, hyrax.profile_path(user) %></td>
+              <td><%= link_to user.email, hyrax.user_path(user) %></td>
               <td><% roles = @presenter.user_roles(user) %>
                   <ul><% roles.each do |role| %>
                     <li><%= role %></li>

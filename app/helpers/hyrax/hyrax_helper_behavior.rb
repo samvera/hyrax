@@ -20,6 +20,14 @@ module Hyrax
       { 'en' => 'English', 'es' => 'Español' }
     end
 
+    # This is a workaround for https://github.com/rails/rails/issues/28253
+    # The signature of current_page? will change in Rails 5.1, we may want to change this too
+    def current_page_except_defaults?(options)
+      return current_page?(options) unless options.is_a? Hash
+      defaults = controller.default_url_options.each_with_object({}) { |(k, _), h| h[k] = nil }
+      current_page?(options.merge(defaults))
+    end
+
     delegate :name, :name_full, to: :institution, prefix: :institution
 
     def banner_image
@@ -188,7 +196,7 @@ module Hyrax
              end
       return user_or_key if user.nil?
       text = user.respond_to?(:name) ? user.name : user_or_key
-      link_to text, Hyrax::Engine.routes.url_helpers.profile_path(user)
+      link_to text, Hyrax::Engine.routes.url_helpers.user_path(user)
     end
 
     # A Blacklight index field helper_method
@@ -240,15 +248,15 @@ module Hyrax
       def search_action_for_dashboard
         case params[:controller]
         when "hyrax/my/works"
-          hyrax.dashboard_works_path
+          hyrax.my_works_path
         when "hyrax/my/collections"
-          hyrax.dashboard_collections_path
+          hyrax.my_collections_path
         when "hyrax/my/shares"
           hyrax.dashboard_shares_path
         when "hyrax/my/highlights"
           hyrax.dashboard_highlights_path
         else
-          hyrax.dashboard_works_path
+          hyrax.my_works_path
         end
       end
 

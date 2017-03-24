@@ -24,9 +24,9 @@ module Hyrax
         current_user.zotero_userid = access_token.params[:userID]
         current_user.save
         Hyrax::Arkivo::CreateSubscriptionJob.perform_later(current_user)
-        redirect_to hyrax.profile_path(current_user), notice: 'Successfully connected to Zotero!'
+        redirect_to hyrax.dashboard_profile_path(current_user), notice: 'Successfully connected to Zotero!'
       rescue OAuth::Unauthorized
-        redirect_to hyrax.edit_profile_path(current_user.to_param), alert: 'Please re-authenticate with Zotero'
+        redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param), alert: 'Please re-authenticate with Zotero'
       ensure
         current_user.zotero_token = nil
         current_user.save
@@ -42,10 +42,10 @@ module Hyrax
 
         def validate_params
           if malformed_request?
-            redirect_to hyrax.edit_profile_path(current_user.to_param),
+            redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
                         alert: "Malformed request from Zotero"
           elsif invalid_token?
-            redirect_to hyrax.edit_profile_path(current_user.to_param),
+            redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
                         alert: "You have not yet connected to Zotero"
           end
         end

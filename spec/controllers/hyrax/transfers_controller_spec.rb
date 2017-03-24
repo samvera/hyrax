@@ -18,39 +18,10 @@ describe Hyrax::TransfersController, type: :controller do
     end
 
     describe "#index" do
-      let!(:incoming_work) do
-        GenericWork.new(title: ['incoming title']) do |w|
-          w.apply_depositor_metadata(another_user.user_key)
-          w.save!
-          w.request_transfer_to(user)
-        end
-      end
-      let!(:outgoing_work) do
-        GenericWork.new(title: ['outgoing title']) do |w|
-          w.apply_depositor_metadata(user.user_key)
-          w.save!
-          w.request_transfer_to(another_user)
-        end
-      end
-
       it "is successful" do
         get :index
         expect(response).to be_success
-        expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:incoming].first.work_id).to eq(incoming_work.id)
-        expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:outgoing].first.work_id).to eq(outgoing_work.id)
-      end
-
-      describe "When the incoming request is for a deleted work" do
-        before do
-          incoming_work.destroy
-        end
-        it "does not show that work" do
-          get :index
-          expect(response).to be_success
-          expect(assigns[:incoming]).to be_empty
-        end
+        expect(assigns[:presenter]).to be_instance_of Hyrax::TransfersPresenter
       end
     end
 

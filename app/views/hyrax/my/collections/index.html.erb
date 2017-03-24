@@ -1,0 +1,38 @@
+<% provide :page_title, t("hyrax.admin.sidebar.collections") %>
+
+<% content_for :head do %>
+  <%= rss_feed_link_tag route_set: hyrax %>
+  <%= atom_feed_link_tag route_set: hyrax %>
+<% end %>
+
+<%= javascript_tag do %>
+  <%= render partial: 'scripts', formats: [:js] %>
+<% end %>
+
+<% content_for :page_header do %>
+  <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %></h1>
+  <div class="pull-right">
+    <% if can?(:create, Collection) %>
+      <%= link_to(
+            t(:'helpers.action.collection.new'),
+            hyrax.new_collection_path,
+            class: 'btn btn-primary'
+          ) %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default<%= ' tabs' if can?(:read, :admin_dashboard) %>">
+      <%= render 'tabs' if can?(:read, :admin_dashboard) %>
+      <div class="panel-body">
+        <%= render 'search_header' %>
+        <h2 class="sr-only">Collections listing</h2>
+        <%= render 'document_list' %>
+
+        <%= render 'results_pagination' %>
+      </div>
+    </div>
+  </div>
+</div>

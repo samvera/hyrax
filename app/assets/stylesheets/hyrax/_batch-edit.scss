@@ -5,12 +5,16 @@
   top: 5px;
 }
 
-#hide_addl_descriptions {
-  margin-bottom: $padding-large-vertical;
+.batch-toggle {
+  padding: 1.5em 0 1.5em 1em;
 }
 
-#additional_title_clone {
-  padding-top: $padding-small-vertical;
+.sort-toggle {
+  padding: 1.5em 0 0 1em;
+}
+
+#hide_addl_descriptions {
+  margin-bottom: $padding-large-vertical;
 }
 
 .glyphicon-chevron-right-helper.collapsed .chevron {

@@ -4,6 +4,8 @@ require 'spec_helper'
 # which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
 describe Hyrax::GenericWorksController do
   routes { Rails.application.routes }
+  let(:main_app) { Rails.application.routes.url_helpers }
+  let(:hyrax) { Hyrax::Engine.routes.url_helpers }
   let(:user) { create(:user) }
   before { sign_in user }
 
@@ -38,7 +40,7 @@ describe Hyrax::GenericWorksController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with("My Dashboard", hyrax.dashboard_path(locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -50,11 +52,12 @@ describe Hyrax::GenericWorksController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax")
         end
       end
 
@@ -174,7 +177,7 @@ describe Hyrax::GenericWorksController do
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
         expect(assigns[:curation_concern].depositor).to eq user.user_key
-        expect(response).to render_template("layouts/hyrax/1_column")
+        expect(response).to render_template("layouts/dashboard")
       end
     end
   end
@@ -304,34 +307,17 @@ describe Hyrax::GenericWorksController do
   describe '#edit' do
     context 'my own private work' do
       let(:work) { create(:private_generic_work, user: user) }
-      it 'shows me the page' do
+      it 'shows me the page and sets breadcrumbs' do
+        expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Administration", hyrax.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Your Works", hyrax.my_works_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(work.title.first, main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Edit', main_app.edit_hyrax_generic_work_path(work.id))
+
         get :edit, params: { id: work }
         expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
-        expect(response).to render_template("layouts/hyrax/1_column")
-      end
-
-      context "without a referer" do
-        it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
-          get :edit, params: { id: work }
-          expect(response).to be_successful
-        end
-      end
-
-      context "with a referer" do
-        before do
-          request.env['HTTP_REFERER'] = 'http://test.host/foo'
-        end
-
-        it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_index_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My Works', Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with(work.to_s, Rails.application.routes.url_helpers.hyrax_generic_work_path(work, locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.works.edit.breadcrumb"), String)
-          get :edit, params: { id: work }
-          expect(response).to be_successful
-        end
+        expect(response).to render_template("layouts/dashboard")
       end
     end
 
@@ -442,7 +428,7 @@ describe Hyrax::GenericWorksController do
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
-      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
@@ -454,7 +440,7 @@ describe Hyrax::GenericWorksController do
       it 'deletes the work and updates the parent collection' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(parent_collection.reload.members).to eq []
       end
     end

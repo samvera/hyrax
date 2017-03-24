@@ -14,6 +14,13 @@ es:
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+        facet:
+          admin_set_sim: "Conjunto administrativo"
+          suppressed_bsi: "Estadio"
+          resource_type_sim: "Tipo de recurso"
+      filters:
+        title:    "Filtrado por:"
+      start_over: Borre filtros
   errors:
     messages:
       carrierwave_download_error: "No se pudo descargar la imagen."
@@ -25,9 +32,15 @@ es:
     action:
       admin_set:
         new: "Crear un nuevo conjunto administrativo"
+      batch:
+        new: "Crear una nueva obra"
       cancel: "Cancelar"
+      collection:
+        new: "Nueva Colección"
       delete: "Borrar"
       edit: "Editar"
+      work:
+        new: "Crear un lote de obras"
     submit:
       admin_set:
         create: 'Guardar'
@@ -137,35 +150,22 @@ es:
           confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header:           "Conjunto Administrativo"
           item_list_header: "Trabajos en este conjunto"
-      collections:
-        collection:         "Collección"
-        files:              "Archivos"
-        subtitle:           "Actividad reciente de la colección"
-        title:              "Colleccións"
-        works:              "Trabajos"
-      show:
-        new_visitors:       "Nuevos visitantes"
-        registered_users:   "Usuarios registrados"
-        repository_growth:
-          subtitle:         Pasados 90 días
-          title:            Crecimiento del Repositorio
-        repository_objects:
-          subtitle:         Estado Actual
-          title:            Objetos del Repositorio
-        returning_visitors: "Regresos de visitantes"
-        total_visitors:     "Total de visitantes"
-        user_activity:
-          subtitle:         Nuevas inscripciones de usuarios
-          title:            Actividad del usuario
       sidebar:
-        admin_sets:      "Conjuntos Administrativos"
-        settings:        "Ajustes"
-        statistics:      "Estadísticas"
-        tasks:           'Tareas'
-        users:           "Usarios"
-        workflow:        "Flujos de Trabajo"
-        workflow_review: "Revise Ofertas"
-        workflow_roles:  "Roles"
+        activity:           "Actividad"
+        admin_sets:         "Conjuntos Administrativos"
+        collections:        "Colecciones"
+        configuration:      "Configuración"
+        notifications:      "Notificaciones"
+        profile:            "Perfil"
+        repository_objects: "Objetos del repositorio"
+        settings:           "Ajustes"
+        statistics:         "Estadísticas"
+        tasks:              'Tareas'
+        users:              "Usarios"
+        workflow:           "Flujos de Trabajo"
+        workflow_review:    "Revise Ofertas"
+        workflow_roles:     "Roles"
+        works:              "Trabajos"
       stats:
         deposited_form:
           end_label: "Finalizando [por defecto a ahora]"
@@ -346,9 +346,19 @@ es:
       terms:            "Términos de Uso"
     dashboard:
       additional_notifications: "ver todas las notificaciones"
+      all:
+        collections:            "Todos los Colleccións"
+        works:                  "Todos los Trabajos"
       authorize_proxies:        "Autorizar Proxies"
-      create_collection:        "Crear Colección"
+      breadcrumbs:
+        admin:                  "Administración"
       create_work:              "Crear Trabajo"
+      collections:
+        collection:             "Collección"
+        subtitle:               "Actividad reciente de la colección"
+        title:                  "Colleccións"
+        works:                  "Trabajos"
+        files:                  "Archivos"
       current_proxies:          "Proxies actuales"
       heading_actions:
         close:                  "Cerrar"
@@ -372,20 +382,19 @@ es:
           edit_access:    "Editar Acceso:"
           groups:         "Grupos:"
           users:          "Users:"
-        collections:  "Mis Colecciones"
+        collections:  "Tus Colecciones"
         facet_label:
-          collections:  "Filtrar tus colecciones"
-          files:        "Filtrar tus archivos"
-          highlighted: "Filtrar tus aspectos destacados"
-          shared:      "Filtrar tus archivos compartidos"
-          works:       "Filtrar tus trabajos"
+          collections: "Filtrar colecciones:"
+          highlighted: "Filtrar aspectos destacados:"
+          shared:      "Filtrar archivos compartidos:"
+          works:       "Filtrar trabajos:"
         heading:
           action:         "Acción"
           date_uploaded:  "Fecha de carga"
           title:          "Título"
           visibility:     "Visibilidad"
-        highlights:   "Mis aspectos destacados"
-        shares:       "Trabajos compartidos conmigo"
+        highlighted:  "Mis aspectos destacados"
+        shared:       "Trabajos compartidos conmigo"
         sr:
           batch_checkbox:   "Marque para agregar a una colección o editar la lista"
           check_all_label:  "Seleccione todos los archivos para ser agregados o editados  a la colección"
@@ -393,13 +402,27 @@ es:
           listing:          "Enlistar los items que has depositado"
           press_to:         "Presionar para"
           show_label:       "Ver todos los detalles de "
-        works:        "Mis Trabajos"
+        works:        "Tus Trabajos"
       no_activity:              "El Usuario no tiene actividad reciente"
       no_notifications:         "El Usuario no tiene notificaciones"
       no_transfer_requests:     "No ha recibido ninguna petición de transferencia"
       no_transfers:             "No has transferido ningún trabajo"
       proxy_activity:           "Actividad de Proxy"
       proxy_user:               "Usuario de Proxy"
+      show_admin:
+        new_visitors:       "Nuevos visitantes"
+        registered_users:   "Usuarios registrados"
+        repository_growth:
+          title:            Crecimiento del Repositorio
+          subtitle:         Pasados 90 días
+        repository_objects:
+          title:            Objetos del Repositorio
+          subtitle:         Estado Actual
+        returning_visitors: "Regresos de visitantes"
+        total_visitors:     "Total de visitantes"
+        user_activity:
+          title:            Actividad del usuario
+          subtitle:         Nuevas inscripciones de usuarios
       stats:
         collections:        "Colecciones creadas"
         file_downloads:     "Descargar"
@@ -414,9 +437,7 @@ es:
       transfers_sent:           "Enviado"
       user_activity:            "Actividad de usuario"
       user_notifications:       "Notificaciones de Usuario"
-      view_collections:         "Ver Colecciones"
       view_files:               "Ver Archivos"
-      view_works:               "Ver Trabajos"
     deposit_agreement:  "Aceptación del Depósito"
     directory:
       suffix:           "@ejemplo.org"
@@ -538,32 +559,15 @@ es:
       title: Vínculos de uso único
     sort_label: "Ordenar el listado de items"
     toolbar:
-      admin:
-        menu: "Administración"
-      collections:
-        menu: "Colecciones"
-        my: "Mis Colecciones"
-        new: "Nueva Colección"
       dashboard:
-        highlights: "Aspectos destacados"
         menu: "Panel de Control"
-        my: "Mi Panel de Control"
-        shares: "Compartido"
-        transfers: "Transferencias"
       language_switch: "Cambiar idioma"
-      notifications: "Notificaciones"
+      notifications: "No tienes notificaciones no leídas."
       profile:
-        edit: "Editar Perfil"
         login: "Iniciar sesión"
         logout: "Cerrar sesión"
         sr_action: "Ver"
         sr_target: "perfil"
-        view: "Ver Perfil"
-      works:
-        batch: "Crear lote"
-        menu: "Trabajos"
-        my: "Mis Trabajos"
-        new: "Nuevo"
     upload:
       alert:
         contact_href_text: "formulario de contacto"
@@ -602,7 +606,6 @@ es:
         connected: "Conectado!"
         label: "Perfil de Zotero"
         unlinked: "Vincular con Zotero"
-    view_profile:       "Ver Perfil"
     visibility:
       authenticated:
         class: "label-info"
@@ -642,30 +645,31 @@ es:
       default:
         deposit: "Depositar"
       load:
-        state_error: "El flujo de trabajo por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
-      unauthorized: "El trabajo no está disponible actualmente porque aún no ha completado el proceso de aprobación"
+        state_error: "El flujo de obra por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
+      unauthorized: "La obra no está disponible actualmente porque aún no ha completado el proceso de aprobación"
     works:
       create:
         after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Quizás requieras recargar la página para ver las actualizaciones."
-        header: Agregar nuevo Trabajo
+        breadcrumb: 'Agregar nueva obra'
+        header: Agregar nueva obra
       edit:
         breadcrumb: Editar
       form:
         additional_fields: "Campos adicionales"
-        in_collections: Este Trabajo en Colecciones
-        in_other_works: Este Trabajo en otros Trabajos
-        in_this_work: Otros Trabajos en este Trabajo
+        in_collections: Este Obra en Colecciones
+        in_other_works: Este Obra en otras Obras
+        in_this_work: Otras Obras en este Obra
         tab:
           files:         "Archivos"
           metadata:      "Descripciones"
           relationships: "Relaciones"
           share:         "Compartir"
       progress:
-        header: Guardar Trabajo
+        header: Guardar Obra
       show:
         no_preview: No hay vista previa disponible
       update:
-        header: Editar Trabajo
+        header: Editar Obra
   simple_form:
     hints:
       admin_set:

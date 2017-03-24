@@ -1,7 +1,7 @@
 <h1><%= t("hyrax.dashboard.transfer_of_ownership") %></h1>
 
 <h2><%= t("hyrax.dashboard.transfers_sent") %></h2>
-<%= render_sent_transfers %>
+<%= @presenter.render_sent_transfers %>
 
 <h2><%= t("hyrax.dashboard.transfers_received") %></h2>
-<%= render_received_transfers %>
+<%= @presenter.render_received_transfers %>

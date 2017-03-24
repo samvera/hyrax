@@ -44,7 +44,7 @@ module Hyrax
         if uploading_on_behalf_of?
           redirect_to hyrax.dashboard_shares_path
         else
-          redirect_to hyrax.dashboard_works_path
+          redirect_to hyrax.my_works_path
         end
       end
 

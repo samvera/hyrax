@@ -1,0 +1,43 @@
+<% id = document.id %>
+<tr id="document_<%= id %>">
+  <td>
+    <div class="media">
+      <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-small pull-left"></span>
+      <div class="media-body">
+        <div class="media-heading">
+          <%= link_to url_for_document(document), id: "src_copy_link#{id}" do %>
+              <span class="sr-only"><%= t("hyrax.dashboard.my.sr.show_label") %> </span>
+              <%= document.title_or_label %>
+          <% end %>
+          <a href="#" class="small" title="Click for more details">
+            <i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
+            <span class="sr-only"> <%= "#{t("hyrax.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td class="text-center"><%= document.create_date %> </td>
+  <td class="text-center">
+    <%= render_visibility_link(document) %>
+  </td>
+  <td class="text-center">
+    <%= render 'hyrax/my/collection_action_menu', id: id %>
+   </td>
+</tr>
+<tr id="detail_<%= id %>"> <!--  collection detail"> -->
+  <td colspan="4">
+    <dl class="expanded-details row">
+      <dt class="col-xs-3 col-lg-2"><%= t("hyrax.dashboard.my.collection_list.description") %></dt>
+      <dd class="col-xs-9 col-lg-10"><%= document.description.first %></dd>
+      <dt class="col-xs-3 col-lg-2"><%= t("hyrax.dashboard.my.collection_list.edit_access") %></dt>
+      <dd class="col-xs-9 col-lg-10">
+      <% if document.edit_groups.present? %>
+        <%= t("hyrax.dashboard.my.collection_list.groups") %> <%= document.edit_groups.join(', ') %>
+        <br/>
+      <% end %>
+        <%= t("hyrax.dashboard.my.collection_list.users") %> <%= document.edit_people.join(', ') %>
+      </dd>
+    </dl>
+  </td>
+</tr>

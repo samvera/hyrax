@@ -13,7 +13,7 @@ RSpec.describe "The admin sets, through the admin dashboard" do
 
   scenario do
     login_as(user, scope: :user)
-    visit '/admin'
+    visit '/dashboard'
     click_link "Administrative Sets"
 
     expect(page).to have_link "Create new administrative set"

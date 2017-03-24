@@ -11,7 +11,7 @@ describe Hyrax::Admin::UsersController, type: :controller do
   describe "#index" do
     it "is successful" do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.controls.home'), root_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.toolbar.admin.menu'), admin_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.breadcrumbs.admin'), dashboard_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.users.index.title'), admin_users_path)
 
       get :index

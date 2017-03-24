@@ -92,21 +92,20 @@ Hyrax::Engine.routes.draw do
   resources :featured_work_lists, path: 'featured_works', only: :create
 
   # Messages
-  resources :notifications, only: [:destroy, :index], controller: :mailbox do
+  resources :notifications, only: [:destroy, :index] do
     collection do
       delete 'delete_all'
     end
   end
 
   # User profile
-  resources :users, only: [:index, :show, :edit, :update], as: :profiles
-
-  resources :users, only: [] do
+  resources :users, only: [:index, :show] do
     resources :operations, only: [:index, :show], controller: 'operations'
   end
 
   # Dashboard page
-  resources :dashboard, only: :index do
+  resource :dashboard, controller: 'dashboard', only: [:show]
+  resources :dashboard, only: [] do
     collection do
       get 'activity', action: :activity, as: :dashboard_activity
       resources :transfers, only: [:index, :destroy] do
@@ -118,17 +117,24 @@ Hyrax::Engine.routes.draw do
     end
   end
 
+  namespace :dashboard do
+    resources :works, only: :index
+    resources :collections, only: :index
+    resources :profiles, only: [:show, :edit, :update]
+  end
+
   # Routes for user's works, collections, highlights and shares
   # Preserves existing behavior by maintaining paths to /dashboard
   # Routes actions to the various My controllers
   scope :dashboard do
-    get '/works',             controller: 'my/works', action: :index, as: 'dashboard_works'
-    get '/works/page/:page',  controller: 'my/works', action: :index
-    get '/works/facet/:id',   controller: 'my/works', action: :facet, as: 'dashboard_works_facet'
-
-    get '/collections',             controller: 'my/collections', action: :index, as: 'dashboard_collections'
-    get '/collections/page/:page',  controller: 'my/collections', action: :index
-    get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_collections_facet'
+    namespace :my do
+      resources :works, only: :index
+      get '/works/page/:page', controller: 'works', action: :index
+      get 'works/facet/:id', controller: 'works', action: :facet, as: 'dashboard_works_facet'
+      resources :collections, only: :index
+      get '/collections/page/:page',  controller: 'collections', action: :index
+      get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_collections_facet'
+    end
 
     get '/highlights',            controller: 'my/highlights', action: :index, as: 'dashboard_highlights'
     get '/highlights/page/:page', controller: 'my/highlights', action: :index
@@ -178,7 +184,6 @@ Hyrax::Engine.routes.draw do
 
   resources :admin_sets, controller: 'admin_sets'
 
-  resource :admin, controller: 'admin', only: [:show]
   namespace :admin do
     resources :admin_sets do
       resource :permission_template

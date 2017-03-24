@@ -70,19 +70,27 @@ describe 'Routes', :no_clean, type: :routing do
 
   describe 'Dashboard' do
     it "routes to dashboard" do
-      expect(get: '/dashboard').to route_to(controller: 'hyrax/dashboard', action: 'index')
+      expect(get: '/dashboard').to route_to(controller: 'hyrax/dashboard', action: 'show')
     end
 
     it "routes to dashboard activity" do
       expect(get: '/dashboard/activity').to route_to(controller: 'hyrax/dashboard', action: 'activity')
     end
 
-    it "routes to my works tab" do
-      expect(get: '/dashboard/works').to route_to(controller: 'hyrax/my/works', action: 'index')
+    it "routes to all works" do
+      expect(get: '/dashboard/works').to route_to(controller: 'hyrax/dashboard/works', action: 'index')
     end
 
-    it "routes to my collections tab" do
-      expect(get: '/dashboard/collections').to route_to(controller: 'hyrax/my/collections', action: 'index')
+    it "routes to all collections" do
+      expect(get: '/dashboard/collections').to route_to(controller: 'hyrax/dashboard/collections', action: 'index')
+    end
+
+    it "routes to my works" do
+      expect(get: '/dashboard/my/works').to route_to(controller: 'hyrax/my/works', action: 'index')
+    end
+
+    it "routes to my collections" do
+      expect(get: '/dashboard/my/collections').to route_to(controller: 'hyrax/my/collections', action: 'index')
     end
 
     it "routes to my highlighted tab" do
@@ -104,27 +112,29 @@ describe 'Routes', :no_clean, type: :routing do
     it 'routes to user profile' do
       expect(get: '/users/bob135').to route_to(controller: 'hyrax/users', action: 'show', id: 'bob135')
     end
+  end
 
+  describe 'Profile' do
     it "routes to edit profile" do
-      expect(get: '/users/bob135/edit').to route_to(controller: 'hyrax/users', action: 'edit', id: 'bob135')
+      expect(get: '/dashboard/profiles/bob135/edit').to route_to(controller: 'hyrax/dashboard/profiles', action: 'edit', id: 'bob135')
     end
 
     it "routes to update profile" do
-      expect(put: '/users/bob135').to route_to(controller: 'hyrax/users', action: 'update', id: 'bob135')
+      expect(put: '/dashboard/profiles/bob135').to route_to(controller: 'hyrax/dashboard/profiles', action: 'update', id: 'bob135')
     end
   end
 
   describe "Notifications" do
     it "has index" do
-      expect(get: '/notifications').to route_to(controller: 'hyrax/mailbox', action: 'index')
+      expect(get: '/notifications').to route_to(controller: 'hyrax/notifications', action: 'index')
       expect(notifications_path).to eq '/notifications'
     end
     it "allows deleting" do
-      expect(delete: '/notifications/123').to route_to(controller: 'hyrax/mailbox', action: 'destroy', id: '123')
+      expect(delete: '/notifications/123').to route_to(controller: 'hyrax/notifications', action: 'destroy', id: '123')
       expect(notification_path(123)).to eq '/notifications/123'
     end
     it "allows deleting all of them" do
-      expect(delete: '/notifications/delete_all').to route_to(controller: 'hyrax/mailbox', action: 'delete_all')
+      expect(delete: '/notifications/delete_all').to route_to(controller: 'hyrax/notifications', action: 'delete_all')
       expect(delete_all_notifications_path).to eq '/notifications/delete_all'
     end
   end

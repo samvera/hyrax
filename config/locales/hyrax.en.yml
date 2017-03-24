@@ -14,6 +14,13 @@ en:
           based_near: Location
           contributor: Contributors
           keyword: Keyword
+        facet:
+          admin_set_sim: "Administrative set"
+          suppressed_bsi: "Status"
+          resource_type_sim: "Resource type"
+      filters:
+        title:    "Filtering by:"
+      start_over: Clear filters
   errors:
     messages:
       carrierwave_download_error: "Couldn't download image."
@@ -25,9 +32,15 @@ en:
     action:
       admin_set:
         new: "Create new administrative set"
+      batch:
+        new: "Create batch of works"
       cancel: "Cancel"
+      collection:
+        new: "New Collection"
       delete: "Delete"
       edit: "Edit"
+      work:
+        new: "Add new work"
     submit:
       admin_set:
         create: 'Save'
@@ -138,35 +151,22 @@ en:
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
-      collections:
-        collection:         "Collection"
-        files:              "Files"
-        subtitle:           "Recent collection activity"
-        title:              "Collections"
-        works:              "Works"
-      show:
-        new_visitors:       "New Visitors"
-        registered_users:   "Registered users"
-        repository_growth:
-          subtitle:         Past 90 days
-          title:            Repository Growth
-        repository_objects:
-          subtitle:         Current Status
-          title:            Repository Objects
-        returning_visitors: "Returning Visitors"
-        total_visitors:     "Total Visitors"
-        user_activity:
-          subtitle:         New user signups
-          title:            User Activity
       sidebar:
-        admin_sets:      "Administrative Sets"
-        settings:        "Settings"
-        statistics:      "Statistics"
-        tasks:           "Tasks"
-        users:           "Manage Users"
-        workflow:        "Workflows"
-        workflow_review: "Review Submissions"
-        workflow_roles:  "Roles"
+        activity:           "Activity"
+        admin_sets:         "Administrative Sets"
+        collections:        "Collections"
+        configuration:      "Configuration"
+        notifications:      "Notifications"
+        profile:            "Profile"
+        repository_objects: "Repository Objects"
+        settings:           "Settings"
+        statistics:         "Statistics"
+        tasks:              "Tasks"
+        users:              "Manage Users"
+        workflow:           "Workflows"
+        workflow_review:    "Review Submissions"
+        workflow_roles:     "Roles"
+        works:              "Works"
       stats:
         deposited_form:
           end_label: "end [defaults to now]"
@@ -347,9 +347,19 @@ en:
       terms:            "Terms of Use"
     dashboard:
       additional_notifications: "See all notifications"
+      all:
+        collections:            "All Collections"
+        works:                  "All Works"
       authorize_proxies:        "Authorize Proxies"
-      create_collection:        "Create Collection"
+      breadcrumbs:
+        admin:                  "Administration"
       create_work:              "Create Work"
+      collections:
+        collection:             "Collection"
+        subtitle:               "Recent collection activity"
+        title:                  "Collections"
+        works:                  "Works"
+        files:                  "Files"
       current_proxies:          "Current Proxies"
       heading_actions:
         close:                  "Close"
@@ -373,20 +383,19 @@ en:
           edit_access:    "Edit Access:"
           groups:         "Groups:"
           users:          "Users:"
-        collections:  "My Collections"
+        collections:  "Your Collections"
         facet_label:
-          collections:  "Filter your collections"
-          files:        "Filter your files"
-          highlighted: "Filter your highlights"
-          shared:      "Filter your shares"
-          works:       "Filter your works"
+          collections: "Filter collections:"
+          highlighted: "Filter highlights:"
+          shared:      "Filter shares:"
+          works:       "Filter works:"
         heading:
           action:         "Action"
           date_uploaded:  "Date Uploaded"
           title:          "Title"
           visibility:     "Visibility"
-        highlights:   "My Highlights"
-        shares:       "Works Shared with Me"
+        highlighted:  "My Highlights"
+        shared:       "Works Shared with Me"
         sr:
           batch_checkbox:   "Check to add to a collection or edit list"
           check_all_label:  "Select all files to be added to a collection or edited"
@@ -394,13 +403,27 @@ en:
           listing:          "Listing of items you have deposited in"
           press_to:         "Press to"
           show_label:       "Display all details of"
-        works:        "My Works"
+        works:        "Your Works"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"
       no_transfers:             "You haven't transferred any work"
       proxy_activity:           "Proxy Activity"
       proxy_user:               "Proxy User"
+      show_admin:
+        new_visitors:       "New Visitors"
+        registered_users:   "Registered users"
+        repository_growth:
+          title:            Repository Growth
+          subtitle:         Past 90 days
+        repository_objects:
+          title:            Repository Objects
+          subtitle:         Current Status
+        returning_visitors: "Returning Visitors"
+        total_visitors:     "Total Visitors"
+        user_activity:
+          title:            User Activity
+          subtitle:         New user signups
       stats:
         collections:        "Collections created"
         file_downloads:     "Download"
@@ -415,9 +438,7 @@ en:
       transfers_sent:           "Sent"
       user_activity:            "User Activity"
       user_notifications:       "User Notifications"
-      view_collections:         "View Collections"
       view_files:               "View Files"
-      view_works:               "View Works"
     deposit_agreement:  "Deposit Agreement"
     directory:
       suffix:           "@example.org"
@@ -539,32 +560,15 @@ en:
       title: Single-Use Links
     sort_label: "Sort the listing of items"
     toolbar:
-      admin:
-        menu: "Administration"
-      collections:
-        menu: "Collections"
-        my: "My Collections"
-        new: "New Collection"
       dashboard:
-        highlights: "Highlights"
         menu: "Dashboard"
-        my: "My Dashboard"
-        shares: "Shares"
-        transfers: "Transfers"
       language_switch: "Switch language"
-      notifications: "Notifications"
+      notifications: "You have no unread notifications"
       profile:
-        edit: "Edit Profile"
         login: "Login"
         logout: "Logout"
         sr_action: "View"
         sr_target: "profile"
-        view: "View Profile"
-      works:
-        batch: "Batch Create"
-        menu: "Works"
-        my: "My Works"
-        new: "New Work"
     upload:
       alert:
         contact_href_text: "contact form"
@@ -603,7 +607,6 @@ en:
         connected: "Connected!"
         label: "Zotero Profile"
         unlinked: "Link with Zotero"
-    view_profile:       "View Profile"
     visibility:
       authenticated:
         class: "label-info"
@@ -648,6 +651,7 @@ en:
     works:
       create:
         after_create_html: "Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. You may need to refresh this page to see these updates."
+        breadcrumb: 'Add New Work'
         header: "Add New %{type}"
       edit:
         breadcrumb: 'Edit'

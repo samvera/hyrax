@@ -11,14 +11,16 @@
   margin-left: 0;
 }
 
-.add,
-.remove {
-  width: 7em;
-  text-align: center;
-}
+.field-controls {
+  .add,
+  .remove {
+    width: 7em;
+    text-align: center;
+  }
 
-.add {
-  @extend .btn-primary;
+  .add {
+    @extend .btn-primary;
+  }
 }
 
 span.appliedFilter .remove {

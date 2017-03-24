@@ -46,7 +46,7 @@ module Hyrax
     protected
 
       def add_breadcrumb_for_controller
-        add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.dashboard_works_path
+        add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path
       end
 
       def _prefixes
@@ -77,7 +77,7 @@ module Hyrax
         if params[:return_controller]
           redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
         else
-          redirect_to hyrax.dashboard_index_path
+          redirect_to hyrax.dashboard_path
         end
       end
   end

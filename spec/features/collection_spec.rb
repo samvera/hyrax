@@ -7,14 +7,14 @@ describe 'collection', type: :feature do
   describe 'create collection' do
     before do
       sign_in user
+      visit '/dashboard/my/collections'
     end
 
     let(:title) { "Test Collection" }
     let(:description) { "Description for collection we are testing." }
 
     it "makes a new collection" do
-      visit '/dashboard'
-      first('#hydra-collection-add').click
+      click_link "New Collection"
       expect(page).to have_content 'Create New Collection'
       click_link('Additional fields')
 
@@ -43,7 +43,7 @@ describe 'collection', type: :feature do
     end
 
     it "attaches the works", :js do
-      visit '/dashboard/works'
+      visit '/dashboard/my/works'
       first('input#check_all').click
       click_button "Add to Collection" # opens the modal
       # since there is only one collection, it's not necessary to choose a radio button
@@ -60,7 +60,7 @@ describe 'collection', type: :feature do
     let!(:collection) { create(:public_collection, user: user) }
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "deletes a collection" do
@@ -81,7 +81,7 @@ describe 'collection', type: :feature do
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "has creation date for collections" do
@@ -134,38 +134,6 @@ describe 'collection', type: :feature do
     end
   end
 
-  describe 'collection sorting' do
-    before do
-      collection1 # create the collections by referencing them
-      sleep(1) # make sure the timestamps aren't equal
-      collection2
-      sleep(1)
-      collection1.title = ['changed']
-      collection1.save
-      # collection 1 is now earlier when sorting by create date but later
-      # when sorting by modified date
-
-      sign_in user
-      visit '/dashboard/collections'
-    end
-
-    it "allows changing sort order" do
-      find(:xpath, "//select[@id='sort']/option[contains(., 'date modified')][contains(@value, 'asc')]") \
-        .select_option
-      click_button('Refresh')
-      expect(page).to have_css("#document_#{collection1.id}")
-      expect(page).to have_css("#document_#{collection2.id}")
-      expect(page.body.index("id=\"document_#{collection1.id}")).to be > page.body.index("id=\"document_#{collection2.id}")
-
-      find(:xpath, "//select[@id='sort']/option[contains(., 'date modified')][contains(@value, 'desc')]") \
-        .select_option
-      click_button('Refresh')
-      expect(page).to have_css("#document_#{collection1.id}")
-      expect(page).to have_css("#document_#{collection2.id}")
-      expect(page.body.index("id=\"document_#{collection1.id}")).to be < page.body.index("id=\"document_#{collection2.id}")
-    end
-  end
-
   describe 'add works to collection' do
     before do
       collection1 # create collections by referencing them
@@ -197,7 +165,7 @@ describe 'collection', type: :feature do
 
     before do
       sign_in user
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
     end
 
     it "edits and update collection metadata" do
@@ -273,7 +241,7 @@ describe 'collection', type: :feature do
     let(:collection) { create(:named_collection, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      visit '/dashboard/collections'
+      visit '/dashboard/my/collections'
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
         click_link("Display all details of collection title")

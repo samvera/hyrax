@@ -16,7 +16,7 @@ function toggleTrophy(url, anchor) {
      }
   });
 }
-// Trophy will be removed
+// Trophy will be removed from the public profile page
 function trophyOff(anchor) {
     if (anchor.data('removerow')) {
         $('#trophyrow_'+gid).fadeOut(1000, function() {

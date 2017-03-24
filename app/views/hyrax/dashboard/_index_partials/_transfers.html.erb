@@ -3,12 +3,12 @@
     <h4><%= t("hyrax.dashboard.transfers_sent") %></h4>
   </div>
   <div class="col-xs-12 col-sm-3 transfer_link">
-    <%= link_to hyrax.dashboard_works_path  do %>
+    <%= link_to hyrax.my_works_path  do %>
         <%= t("hyrax.dashboard.transfer_works_link") %>
     <% end %>
   </div>
 </div>
-<%= render_sent_transfers %>
+<%= presenter.render_sent_transfers %>
 
 <h4><%= t("hyrax.dashboard.transfers_received") %></h4>
-<%= render_received_transfers %>
+<%= presenter.render_received_transfers %>

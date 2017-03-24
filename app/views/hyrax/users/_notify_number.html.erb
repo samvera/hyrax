@@ -1,3 +1,8 @@
-<span class="notify_number label label-default" data-update-poll-url="<%= hyrax.user_notify_path %>" data-update-poll-interval="30">
-  <span class="count">0</span> <span class="sr-only">unread notifications</span>
-</span>
+<%= link_to hyrax.notifications_path,
+            'aria-label' => t("hyrax.toolbar.notifications"),
+            class: "notify-number",
+            data: { 'update-poll-url' => hyrax.user_notify_path,
+                    'update-poll-interval' => 30 } do %>
+    <span class="fa fa-bell"></span>
+    <span class="count invisible label label-danger">0</span>
+<% end %>

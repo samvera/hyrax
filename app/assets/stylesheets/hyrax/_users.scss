@@ -1,0 +1,15 @@
+// Styles for the user index and show page
+
+.views-downloads-dashboard {
+  padding-left: $padding-large-horizontal;
+}
+
+.panel-user {
+  word-break: break-word;
+}
+
+#user_info {
+  dt {
+    margin-top: $padding-small-vertical;
+  }
+}

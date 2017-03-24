@@ -21,7 +21,7 @@ RSpec.describe "The admin dashboard" do
 
   scenario do
     login_as(user, scope: :user)
-    visit '/admin'
+    visit '/dashboard'
 
     expect(find('tr', text: 'First Admin Set').find('td:eq(2)')).to have_content(1)
     expect(find('tr', text: 'First Admin Set').find('td:eq(3)')).to have_content(2)

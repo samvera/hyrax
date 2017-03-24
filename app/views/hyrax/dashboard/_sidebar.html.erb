@@ -1,0 +1,75 @@
+<% menu = Hyrax::MenuPresenter.new(self) %>
+
+<ul class="admin-sidebar nav nav-pills nav-stacked">
+  <li>
+    <div class="profile">
+      <div class="profile-image">
+        <%= image_tag current_user.avatar.url(:thumb), width: 100 if current_user.avatar.present? %>
+      </div>
+      <div class="profile-data">
+        <div class="profile-data-name"><%= current_user.name %></div>
+      </div>
+    </div>
+  </li>
+  <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
+
+  <%= menu.nav_link(hyrax.notifications_path) do %>
+    <span class="fa fa-bell"></span> <%= t('hyrax.admin.sidebar.notifications') %>
+  <% end %>
+
+  <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                    also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
+    <span class="fa fa-id-card"></span> <%= t('hyrax.admin.sidebar.profile') %>
+  <% end %>
+
+  <% if can? :read, :admin_dashboard %>
+    <%= menu.nav_link(hyrax.admin_stats_path) do %>
+      <span class="fa fa-bar-chart"></span> <%= t('hyrax.admin.sidebar.statistics') %>
+    <% end %>
+
+    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
+    <%= menu.nav_link(hyrax.admin_features_path) do %>
+      <span class="fa fa-cog"></span> <%= t('hyrax.admin.sidebar.settings') %>
+    <% end %>
+  <% end %>
+
+  <li class="h5"><%= t('hyrax.admin.sidebar.repository_objects') %></li>
+  <% if can? :create, AdminSet %>
+    <%= menu.nav_link(hyrax.admin_admin_sets_path) do %>
+      <span class="fa fa-sitemap"></span> <%= t('hyrax.admin.sidebar.admin_sets') %>
+    <% end %>
+  <% end %>
+
+  <%= menu.nav_link({ controller: 'hyrax/my/collections' },
+                    also_active_for: { controller: 'hyrax/dashboard/collections' }) do %>
+    <span class="fa fa-folder-open"></span> <%= t('hyrax.admin.sidebar.collections') %>
+  <% end %>
+
+  <%= menu.nav_link({ controller: 'hyrax/my/works' },
+                    also_active_for: { controller: 'hyrax/dashboard/works' }) do %>
+    <span class="fa fa-file"></span> <%= t('hyrax.admin.sidebar.works') %>
+  <% end %>
+
+  <% if can? :read, :admin_dashboard %>
+
+    <li class="h5"><%= t('hyrax.admin.sidebar.tasks') %></li>
+
+    <li>
+      <%= menu.collapsable_section t('hyrax.admin.sidebar.workflow'),
+                                   icon_class: "fa fa-code-fork",
+                                   id: 'collapseWorkflows',
+                                   open: menu.workflows_section? do %>
+        <%= menu.nav_link(hyrax.admin_workflows_path) do %>
+          <span class="fa fa-flag"></span> <%= t('hyrax.admin.sidebar.workflow_review') %>
+        <% end %>
+        <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
+          <span class="fa fa-users"></span> <%= t('hyrax.admin.sidebar.workflow_roles') %>
+        <% end %>
+      <% end %>
+    </li>
+  <% end %>
+
+  <%= menu.nav_link(hyrax.admin_users_path) do %>
+    <span class="fa fa-user"></span> <%= t('hyrax.admin.sidebar.users') %>
+  <% end %>
+</ul>
