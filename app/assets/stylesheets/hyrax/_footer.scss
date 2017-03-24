@@ -6,7 +6,12 @@ html {
 
 body {
   margin-bottom: $footer-height + $footer-top-margin;
+
+  &.dashboard {
+    margin-bottom: $footer-height + $footer-dashboard-top-margin;
+  }
 }
+
 
 .site-footer {
   margin-top: $footer-top-margin;
@@ -17,6 +22,12 @@ body {
   bottom: 0;
   height: $footer-height;
   width: 100%;
+}
+
+.dashboard {
+  .site-footer {
+    margin-top: $footer-dashboard-top-margin;
+  }
 }
 
 @media (max-width: $screen-sm) {

@@ -6,6 +6,4 @@
   <%= render 'hyrax/dashboard/sidebar' %>
 <% end %>
 
-<% content_for(:container_class, 'container-fluid') %>
-
-<%= render template: 'layouts/hyrax' %>
+<%= render template: 'layouts/hyrax', locals: { body_class: 'dashboard' } %>
