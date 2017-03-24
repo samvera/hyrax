@@ -46,13 +46,6 @@ module ActionDispatch::Routing
       end
     end
 
-    # Adds routes for doing paginated searches within a collection's contents
-    # @example in routes.rb:
-    #     curation_concerns_collections
-    def curation_concerns_collections
-      Deprecation.warn(self, "curation_concerns_collections is deprecated and will be removed")
-    end
-
     # kmr added :show to make tests pass
     def curation_concerns_embargo_management
       resources :embargoes, only: [:index, :edit, :destroy] do
