@@ -3,7 +3,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-RSpec.feature 'Create a <%= class_name %>' do
+RSpec.feature 'Create a <%= class_name %>', js: true do
   context 'a logged in user' do
     let(:user_attributes) do
       { <%= Devise.authentication_keys.first %>: 'test@example.com' }
@@ -17,10 +17,11 @@ RSpec.feature 'Create a <%= class_name %>' do
     end
 
     scenario do
-      visit new_curation_concerns_<%= file_name %>_path
-      fill_in 'Title', with: 'Test <%= class_name %>'
-      click_button 'Create <%= class_name %>'
-      expect(page).to have_content 'Test <%= class_name %>'
+      visit '/dashboard'
+      click_link "Works"
+      click_link "Add new work"
+      choose "payload_concern", option: "<%= class_name %>"
+      click_button "Create work"
     end
   end
 end
