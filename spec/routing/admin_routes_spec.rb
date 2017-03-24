@@ -1,6 +1,10 @@
 describe 'Admin Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 
+  it 'routes the appearance' do
+    expect(get: '/admin/appearance').to route_to(controller: 'hyrax/admin/appearances', action: 'show')
+  end
+
   it 'routes the statistics page' do
     expect(get: '/admin/stats').to route_to(controller: 'hyrax/admin/stats', action: 'show')
   end

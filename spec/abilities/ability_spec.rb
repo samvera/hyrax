@@ -53,6 +53,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     it { is_expected.not_to be_able_to(:read, Hyrax::Statistics) }
     it { is_expected.not_to be_able_to(:read, :admin_dashboard) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
+    it { is_expected.not_to be_able_to(:update, :appearance) }
   end
 
   describe "a user in the admin group" do
@@ -66,6 +67,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     it { is_expected.to be_able_to(:read, :admin_dashboard) }
     it { is_expected.to be_able_to(:manage, AdminSet) }
     it { is_expected.to be_able_to(:create, AdminSet) }
+    it { is_expected.to be_able_to(:update, :appearance) }
   end
 
   describe "AdminSets and PermissionTemplates" do
