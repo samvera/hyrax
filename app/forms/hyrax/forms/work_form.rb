@@ -5,9 +5,6 @@ module Hyrax
       include HydraEditor::Form::Permissions
       attr_accessor :current_ability
 
-      # TODO: remove this when https://github.com/projecthydra/hydra-editor/pull/115
-      # is merged and hydra-editor 3.0.0 is released
-      delegate :model_name, to: :model
       # This is required so that fields_for will draw a nested form.
       # See ActionView::Helpers#nested_attributes_association?
       #   https://github.com/rails/rails/blob/v5.0.2/actionview/lib/action_view/helpers/form_helper.rb#L1890
