@@ -2,15 +2,12 @@ require 'spec_helper'
 
 describe Hyrax::PermissionBadge do
   context "with a SolrDocument" do
-    let(:badge) { described_class.new(solr_doc) }
+    let(:badge) { described_class.new(solr_doc.visibility) }
     let(:solr_doc) { SolrDocument.new(attributes) }
     let(:attributes) { {} }
 
     describe "#render" do
       subject { badge.render }
-      before do
-        expect(Deprecation).to receive(:warn)
-      end
 
       context "when under embargo" do
         let(:attributes) { { read_access_group_ssim: ['public'], embargo_release_date_dtsi: '2016-05-04' } }
