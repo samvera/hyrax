@@ -2,8 +2,9 @@ module Hyrax
   module Forms
     class CollectionForm
       include HydraEditor::Form
+      include HydraEditor::Form::Permissions
 
-      delegate :id, to: :model
+      delegate :id, :depositor, :permissions, to: :model
 
       # TODO: remove this when https://github.com/projecthydra/hydra-editor/pull/115
       # is merged and hydra-editor 3.0.0 is released

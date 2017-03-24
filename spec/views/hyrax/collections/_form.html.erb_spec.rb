@@ -8,6 +8,7 @@ describe 'hyrax/collections/_form.html.erb', type: :view do
     assign(:collection, collection)
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:collections_path).and_return("/collections")
+    allow(controller).to receive(:current_user).and_return(stub_model(User))
     render
   end
 

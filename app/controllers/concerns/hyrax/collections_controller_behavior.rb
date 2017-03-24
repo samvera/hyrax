@@ -25,7 +25,7 @@ module Hyrax
 
       # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
       before_action :authenticate_user!, except: [:show, :index]
-      load_and_authorize_resource except: [:index, :show], instance_name: :collection
+      load_and_authorize_resource except: [:index, :show, :create], instance_name: :collection
 
       class_attribute :presenter_class,
                       :form_class,
@@ -73,6 +73,7 @@ module Hyrax
     end
 
     def new
+      @collection.apply_depositor_metadata(current_user.user_key)
       form
     end
 
@@ -106,6 +107,13 @@ module Hyrax
     end
 
     def create
+      # Manual load and authorize necessary because Cancan will pass in all
+      # form attributes. When `permissions_attributes` are present the
+      # collection is saved without a value for `has_model.`
+      @collection = ::Collection.new
+      authorize! :create, @collection
+
+      @collection.attributes = collection_params.except(:members)
       @collection.apply_depositor_metadata(current_user.user_key)
       add_members_to_collection unless batch.empty?
       if @collection.save
