@@ -169,8 +169,17 @@ To test-drive your new Hyrax application in development mode, spin up the server
 ```
 rake hydra:server
 ```
+## Create default administrative set
 
-And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
+**After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following rake task:
+
+```
+rake hyrax:default_admin_set:create
+```
+
+**NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
+
+After starting your servers and creating a default aministrative set you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
 
 ## Start background workers
 
