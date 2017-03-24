@@ -1,5 +1,6 @@
 module Hyrax
   class ActorFactory
+    # rubocop:disable Metrics/MethodLength
     def self.stack_actors(curation_concern)
       [Hyrax::Actors::TransactionalRequest,
        Hyrax::Actors::OptimisticLockValidator,
@@ -18,6 +19,7 @@ module Hyrax
        # Initialize workflow after model is saved
        Hyrax::Actors::InitializeWorkflowActor]
     end
+    # rubocop:enable Metrics/MethodLength
 
     def self.build(curation_concern, current_ability)
       Actors::ActorStack.new(curation_concern,

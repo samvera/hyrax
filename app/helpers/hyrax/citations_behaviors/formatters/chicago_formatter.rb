@@ -26,18 +26,17 @@ module Hyrax
         end
 
         def format_authors(authors_list = [])
-          unless authors_list.blank?
-            text = ''
-            text << surname_first(authors_list.first) if authors_list.first
-            authors_list[1..6].each_with_index do |author, index|
-              text << if index + 2 == authors_list.length # we've skipped the first author
-                        ", and #{given_name_first(author)}."
-                      else
-                        ", #{given_name_first(author)}"
-                      end
-            end
-            text << " et al." if authors_list.length > 7
+          return '' if authors_list.blank?
+          text = ''
+          text << surname_first(authors_list.first) if authors_list.first
+          authors_list[1..6].each_with_index do |author, index|
+            text << if index + 2 == authors_list.length # we've skipped the first author
+                      ", and #{given_name_first(author)}."
+                    else
+                      ", #{given_name_first(author)}"
+                    end
           end
+          text << " et al." if authors_list.length > 7
           # if for some reason the first author ended with a comma
           text.gsub!(',,', ',')
           text << "." unless text =~ /\.$/

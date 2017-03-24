@@ -50,6 +50,7 @@ module Hyrax
       private
 
         # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
+        # rubocop:disable Metrics/MethodLength
         def default_attributes
           {
             "resource_type" => [],
@@ -67,6 +68,7 @@ module Hyrax
             "contributor" => []
           }
         end
+        # rubocop:enable Metrics/MethodLength
 
         def default_visibility
           Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

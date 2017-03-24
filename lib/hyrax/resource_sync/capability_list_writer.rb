@@ -12,6 +12,8 @@ module Hyrax
         builder.to_xml
       end
 
+      # I would like this to be above the builder declaration, but Rubocop can't figure out if it should be indented at the method depth or the private declaration depth
+      # rubocop:disable Metrics/MethodLength
       private
 
         def builder
@@ -33,6 +35,7 @@ module Hyrax
             end
           end
         end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

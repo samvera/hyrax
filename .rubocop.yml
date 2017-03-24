@@ -24,7 +24,7 @@ Metrics/AbcSize:
   Max: 28
 
 Metrics/MethodLength:
-  Max: 15
+  Max: 14
 
 Style/IndentationConsistency:
   EnforcedStyle: rails
