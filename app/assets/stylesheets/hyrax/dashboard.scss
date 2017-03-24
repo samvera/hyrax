@@ -162,18 +162,10 @@ fieldset {
 
 .sidebar {
   background-color: $admin-sidebar-background-color;
-  bottom: 0;
-  left: 0;
   padding-bottom: $admin-vertical-padding;
   padding-left: 0;
   padding-right: 0;
   padding-top: $admin-vertical-padding;
-  position: fixed;
-  top: 51px;
-
-  @media only screen and (max-width : 767px) {
-    position: initial;
-  }
 
   a {
     color: $admin-sidebar-link-color;
