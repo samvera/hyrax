@@ -240,6 +240,7 @@ es:
       form_progress:
         required_descriptions: Describa su trabajo
         required_files:        Agregar archivos
+        required_agreement:    Comprobar el acuerdo de depósito
         requirements:          Requisitos
       items:
         actions: Acciones

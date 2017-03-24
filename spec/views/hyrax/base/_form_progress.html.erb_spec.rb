@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/_form_progress.html.erb', type: :view do
+RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
@@ -47,7 +47,12 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
     end
 
     context "with active deposit agreement" do
+      before do
+        allow(Flipflop).to receive(:active_deposit_agreement_acceptance?)
+          .and_return(true)
+      end
       it "shows accept text" do
+        expect(page).to have_content 'Check deposit agreement'
         expect(page).to have_content 'I have read and agree to the'
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
         expect(page).not_to have_selector("#agreement[checked]")
@@ -60,6 +65,7 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
           .and_return(false)
       end
       it "shows accept text" do
+        expect(page).not_to have_content 'Check deposit agreement'
         expect(page).to have_content 'By saving this work I agree to the'
         expect(page).to have_link 'Deposit Agreement', href: '/agreement'
       end
@@ -85,6 +91,8 @@ describe 'hyrax/base/_form_progress.html.erb', type: :view do
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive(:new_record?).and_return(false)
       assign(:form, form)
+      allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
+        .and_return(true)
     end
 
     let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }

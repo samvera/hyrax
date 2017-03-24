@@ -241,6 +241,7 @@ en:
       form_progress:
         required_descriptions: Describe your work
         required_files:        Add files
+        required_agreement:    Check deposit agreement
         requirements:          Requirements
       items:
         actions: Actions
