@@ -35,7 +35,7 @@ FactoryGirl.define do
         identifier: 'isbn:1234567890',
         url: 'http://example.org/nsf/2013/datasets/',
         language: 'English--New Jerseyan',
-        rights: 'http://creativecommons.org/licenses/by-sa/3.0/us/',
+        license: 'http://creativecommons.org/licenses/by-sa/3.0/us/',
         tags: [
           'datasets',
           'nsf',
@@ -72,7 +72,7 @@ FactoryGirl.define do
             name: 'Babs McGee'
           }
         ],
-        rights: 'http://creativecommons.org/licenses/by-sa/3.0/us/',
+        license: 'http://creativecommons.org/licenses/by-sa/3.0/us/',
         tags: [
           'datasets'
         ]

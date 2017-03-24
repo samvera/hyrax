@@ -1,4 +1,4 @@
-describe Hyrax::Forms::CollectionForm do
+RSpec.describe Hyrax::Forms::CollectionForm do
   describe "#terms" do
     subject { described_class.terms }
 
@@ -9,7 +9,7 @@ describe Hyrax::Forms::CollectionForm do
                          :contributor,
                          :description,
                          :keyword,
-                         :rights,
+                         :license,
                          :publisher,
                          :date_created,
                          :subject,
@@ -40,7 +40,7 @@ describe Hyrax::Forms::CollectionForm do
         :contributor,
         :description,
         :keyword,
-        :rights,
+        :license,
         :publisher,
         :date_created,
         :subject,
@@ -85,7 +85,7 @@ describe Hyrax::Forms::CollectionForm do
                          { contributor: [] },
                          { description: [] },
                          { keyword: [] },
-                         { rights: [] },
+                         { license: [] },
                          { publisher: [] },
                          { date_created: [] },
                          { subject: [] },

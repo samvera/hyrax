@@ -1,4 +1,4 @@
-describe Hyrax::Forms::BatchUploadForm do
+RSpec.describe Hyrax::Forms::BatchUploadForm do
   let(:model) { GenericWork.new }
   let(:controller) { instance_double(Hyrax::BatchUploadsController) }
   let(:form) { described_class.new(model, ability, controller) }
@@ -7,7 +7,7 @@ describe Hyrax::Forms::BatchUploadForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:creator, :keyword, :rights_statement, :rights] }
+    it { is_expected.to eq [:creator, :keyword, :rights_statement, :license] }
     it { is_expected.not_to include(:title) }
   end
 
@@ -40,7 +40,7 @@ describe Hyrax::Forms::BatchUploadForm do
                          :contributor,
                          :description,
                          :keyword,
-                         :rights,
+                         :license,
                          :rights_statement,
                          :publisher,
                          :date_created,

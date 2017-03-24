@@ -3,7 +3,7 @@ require 'spec_helper'
 # This tests the FileSet model that is inserted into the host app by hyrax:models
 # It includes the Hyrax::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
-describe FileSet do
+RSpec.describe FileSet do
   include Hyrax::FactoryHelpers
 
   let(:user) { create(:user) }
@@ -92,7 +92,7 @@ describe FileSet do
       expect(subject).to respond_to(:date_modified)
       expect(subject).to respond_to(:subject)
       expect(subject).to respond_to(:language)
-      expect(subject).to respond_to(:rights)
+      expect(subject).to respond_to(:license)
       expect(subject).to respond_to(:resource_type)
       expect(subject).to respond_to(:identifier)
     end

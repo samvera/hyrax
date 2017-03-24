@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::FileSetIndexer do
+RSpec.describe Hyrax::FileSetIndexer do
   include Hyrax::FactoryHelpers
 
   let(:file_set) do
@@ -17,7 +17,7 @@ describe Hyrax::FileSetIndexer do
       date_modified: Date.parse('2012-01-01'),
       subject: ['Theology'],
       language: ['Arabic'],
-      rights: ['Wide open, buddy.'],
+      license: ['Wide open, buddy.'],
       rights_statement: ['No Known Copyright'],
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
@@ -65,7 +65,7 @@ describe Hyrax::FileSetIndexer do
       expect(subject[Solrizer.solr_name('date_modified')]).to be_nil
       expect(subject[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
       expect(subject[Solrizer.solr_name('date_modified', :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
-      expect(subject[Solrizer.solr_name('rights')]).to eq ['Wide open, buddy.']
+      expect(subject[Solrizer.solr_name('license')]).to eq ['Wide open, buddy.']
       expect(subject[Solrizer.solr_name('rights_statement')]).to eq ['No Known Copyright']
       expect(subject[Solrizer.solr_name('related_url')]).to eq ['http://example.org/TheWork/']
       expect(subject[Solrizer.solr_name('contributor')]).to eq ['Mohammad']

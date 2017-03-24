@@ -143,7 +143,7 @@ describe GenericWork do
       expect(subject).to respond_to(:date_modified)
       expect(subject).to respond_to(:subject)
       expect(subject).to respond_to(:language)
-      expect(subject).to respond_to(:rights)
+      expect(subject).to respond_to(:license)
       expect(subject).to respond_to(:resource_type)
       expect(subject).to respond_to(:identifier)
     end

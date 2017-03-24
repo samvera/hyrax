@@ -16,7 +16,7 @@ module Hyrax
     def initialize(file, terms = nil, multi_value_separator = '|')
       @file_set = file
       @terms = terms
-      @terms ||= [:id, :title, :depositor, :creator, :visibility, :resource_type, :rights, :file_format]
+      @terms ||= [:id, :title, :depositor, :creator, :visibility, :resource_type, :license, :file_format]
       @multi_value_separator = multi_value_separator
     end
 

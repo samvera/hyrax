@@ -36,7 +36,7 @@ module Hyrax
     # Metadata Methods
     delegate :title, :date_created, :date_modified, :date_uploaded, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
-             :lease_expiration_date, :rights, :source, :thumbnail_id, :representative_id,
+             :lease_expiration_date, :license, :source, :thumbnail_id, :representative_id,
              :member_of_collection_ids, to: :solr_document
 
     def workflow

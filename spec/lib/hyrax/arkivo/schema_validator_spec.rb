@@ -28,11 +28,11 @@ describe Hyrax::Arkivo::SchemaValidator do
     end.to raise_error(Hyrax::Arkivo::InvalidItem, /required property of 'title'/)
   end
 
-  it 'ensures the metadata has rights' do
-    item['metadata'].delete('rights')
+  it 'ensures the metadata has license' do
+    item['metadata'].delete('license')
     expect do
       described_class.new(item).call
-    end.to raise_error(Hyrax::Arkivo::InvalidItem, /required property of 'rights'/)
+    end.to raise_error(Hyrax::Arkivo::InvalidItem, /required property of 'license'/)
   end
 
   it 'ensures the file has a b64-encoded content' do
