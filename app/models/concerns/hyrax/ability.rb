@@ -19,17 +19,33 @@ module Hyrax
                              :trophy_abilities]
     end
 
-    # Returns true if can create at least one type of work
+    # Returns true if can create at least one type of work and they can deposit
+    # into at least one AdminSet
     def can_create_any_work?
       Hyrax.config.curation_concerns.any? do |curation_concern_type|
         can?(:create, curation_concern_type)
-      end
+      end && admin_set_ids_for_deposit.any?
     end
 
     # Override this method in your ability model if you use a different group
     # or other logic to designate an administrator.
     def admin?
       user_groups.include? 'admin'
+    end
+
+    # @return [Array<String>] a list of admin set ids for admin sets the user
+    #   has deposit or manage permissions to.
+    def admin_set_ids_for_deposit
+      PermissionTemplateAccess.joins(:permission_template)
+                              .where(agent_type: 'user',
+                                     agent_id: current_user.user_key,
+                                     access: ['deposit', 'manage'])
+                              .or(
+                                PermissionTemplateAccess.joins(:permission_template)
+                                                        .where(agent_type: 'group',
+                                                               agent_id: user_groups,
+                                                               access: ['deposit', 'manage'])
+                              ).pluck('DISTINCT admin_set_id')
     end
 
     private

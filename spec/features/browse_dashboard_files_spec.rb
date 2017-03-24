@@ -1,10 +1,23 @@
-describe "Browse Dashboard", type: :feature do
-  let(:user) { FactoryGirl.create(:user) }
-  let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet)) }
-  let!(:mp3_work) { FactoryGirl.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit)) }
-  let!(:audio_work) { FactoryGirl.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore)) }
+RSpec.describe "Browse Dashboard", type: :feature do
+  let(:user) { create(:user) }
+  let!(:dissertation) do
+    create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet))
+  end
+  let!(:mp3_work) do
+    create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit))
+  end
+  let!(:audio_work) do
+    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore))
+  end
 
   before do
+    # Grant the user access to deposit into an admin set.
+    create(:permission_template_access,
+           :deposit,
+           permission_template: create(:permission_template, with_admin_set: true),
+           agent_type: 'user',
+           agent_id: user.user_key)
+
     sign_in user
     user.trophies.create!(work_id: dissertation.id)
     visit "/dashboard"

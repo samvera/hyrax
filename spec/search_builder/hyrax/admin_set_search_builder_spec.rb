@@ -5,12 +5,8 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
     double(blacklight_config: CatalogController.blacklight_config,
            current_ability: ability)
   end
-  let(:user_groups) { [] }
   let(:ability) do
-    instance_double(Ability,
-                    admin?: false,
-                    user_groups: user_groups,
-                    current_user: user)
+    ::Ability.new(user)
   end
   let(:user) { create(:user) }
   let(:builder) { described_class.new(context, access) }
@@ -46,7 +42,6 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
       end
 
       context "and group has access" do
-        let(:user_groups) { ['registered'] }
         before do
           create(:permission_template_access,
                  permission_template: permission_template,
@@ -59,7 +54,6 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
       end
 
       context "and user has no access" do
-        let(:user_groups) { ['registered'] }
         it { is_expected.to eq ["{!terms f=id}"] }
       end
     end
@@ -74,6 +68,10 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
     subject { builder.to_h }
 
     context "when searching for read access" do
+      before do
+        # we just want to look at the user part of the access filters
+        allow(ability).to receive(:user_groups).and_return([])
+      end
       let(:access) { :read }
       it 'is successful' do
         expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR " \

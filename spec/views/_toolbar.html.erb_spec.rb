@@ -41,6 +41,11 @@ describe '/_toolbar.html.erb', type: :view do
   end
 
   describe "New Work link" do
+    before do
+      allow(view.current_ability).to receive(:can_create_any_work?).and_return(can_create)
+    end
+    let(:can_create) { true }
+
     context "when the user can create multiple work types" do
       let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
       it "has a link to upload" do
@@ -63,9 +68,7 @@ describe '/_toolbar.html.erb', type: :view do
     end
 
     context "when the user can't create any work types" do
-      before do
-        allow(view.current_ability).to receive(:can_create_any_work?).and_return(false)
-      end
+      let(:can_create) { false }
       it "does not have a link to upload" do
         render
         expect(rendered).not_to have_link('New Work')
