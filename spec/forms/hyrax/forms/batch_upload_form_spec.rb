@@ -7,7 +7,7 @@ describe Hyrax::Forms::BatchUploadForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:creator, :keyword, :rights] }
+    it { is_expected.to eq [:creator, :keyword, :rights_statement, :rights] }
     it { is_expected.not_to include(:title) }
   end
 
@@ -41,6 +41,7 @@ describe Hyrax::Forms::BatchUploadForm do
                          :description,
                          :keyword,
                          :rights,
+                         :rights_statement,
                          :publisher,
                          :date_created,
                          :subject,

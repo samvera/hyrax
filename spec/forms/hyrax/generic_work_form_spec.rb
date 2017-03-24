@@ -5,12 +5,12 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#required_fields" do
     subject { form.required_fields }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :rights] }
   end
 
   describe "#primary_terms" do
     subject { form.primary_terms }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights] }
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :rights] }
   end
 
   describe "#secondary_terms" do
