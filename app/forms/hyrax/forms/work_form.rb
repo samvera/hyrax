@@ -81,20 +81,7 @@ module Hyrax
       # Get a list of collection id/title pairs for the select form
       def collections_for_select
         service = Hyrax::CollectionsService.new(@controller)
-        convert_solr_docs_to_select_options(service.search_results(:edit))
-      end
-
-      def convert_solr_docs_to_select_options(results)
-        option_values = results.map do |r|
-          [r.to_s, r.id]
-        end
-        option_values.sort do |a, b|
-          if a.first && b.first
-            a.first <=> b.first
-          else
-            a.first ? -1 : 1
-          end
-        end
+        CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
       # This determines whether the allowed parameters are single or multiple.
