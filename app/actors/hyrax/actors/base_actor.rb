@@ -50,10 +50,17 @@ module Hyrax
         end
 
         def apply_save_data_to_curation_concern(attributes)
-          attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
-          remove_blank_attributes!(attributes)
-          curation_concern.attributes = attributes
+          curation_concern.attributes = clean_attributes(attributes)
           curation_concern.date_modified = TimeService.time_in_utc
+        end
+
+        # Cast any singular values from the form to multiple values for persistence
+        # also remove any blank assertions
+        # TODO this method could move to the work form.
+        def clean_attributes(attributes)
+          attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
+          attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement
+          remove_blank_attributes!(attributes)
         end
 
         # If any attributes are blank remove them

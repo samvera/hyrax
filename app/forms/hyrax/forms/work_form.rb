@@ -18,15 +18,15 @@ module Hyrax
       attr_reader :agreement_accepted
 
       self.terms = [:title, :creator, :contributor, :description,
-                    :keyword, :rights, :publisher, :date_created, :subject, :language,
-                    :identifier, :based_near, :related_url,
+                    :keyword, :rights, :rights_statement, :publisher, :date_created,
+                    :subject, :language, :identifier, :based_near, :related_url,
                     :representative_id, :thumbnail_id, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
                     :member_of_collection_ids, :admin_set_id]
 
-      self.required_fields = [:title, :creator, :keyword, :rights]
+      self.required_fields = [:title, :creator, :keyword, :rights_statement, :rights]
 
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
@@ -86,15 +86,27 @@ module Hyrax
       # which the HydraEditor::FieldMetadataService cannot determine are multiple.
       # The instance variable is used when choosing which UI widget to draw.
       def multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
+        case field.to_s
+        when 'rights_statement'
+          false
+        when 'ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'
+          true
+        else
+          super
+        end
       end
 
       # The class method _multiple?_ is used for building the permitted params
       # for the update action
       def self.multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
+        case field.to_s
+        when 'rights_statement'
+          false
+        when 'ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'
+          true
+        else
+          super
+        end
       end
 
       def self.sanitize_params(form_params)
