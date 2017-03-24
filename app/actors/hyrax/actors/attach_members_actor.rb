@@ -40,10 +40,6 @@ module Hyrax
           end
         end
 
-        def ability
-          @ability ||= ::Ability.new(user)
-        end
-
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(id)
