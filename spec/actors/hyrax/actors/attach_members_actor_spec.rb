@@ -8,8 +8,9 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
                            user: depositor)
   end
   let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, depositor, [described_class])
+    Hyrax::Actors::ActorStack.new(work, ability, [described_class])
   end
+  let(:ability) { ::Ability.new(depositor) }
   let(:depositor) { create(:user) }
   let(:work) { create(:work) }
   let(:attributes) { { work_members_attributes: { '0' => { id: id } } } }
@@ -47,9 +48,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
       let(:another_work) { create(:work) }
       let(:id) { another_work.id }
       context "and I can edit that object" do
-        let(:ability) { instance_double(Ability) }
         before do
-          allow(Ability).to receive(:new).and_return(ability)
           allow(ability).to receive(:can?).with(:edit, GenericWork).and_return(true)
         end
         it "is added to the ordered members" do

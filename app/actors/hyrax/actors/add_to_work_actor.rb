@@ -13,10 +13,6 @@ module Hyrax
 
       private
 
-        def ability
-          ::Ability.new(user)
-        end
-
         def can_edit_both_works?(work)
           ability.can?(:edit, work) && ability.can?(:edit, curation_concern)
         end
