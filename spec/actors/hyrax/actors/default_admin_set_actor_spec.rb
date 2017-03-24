@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::DefaultAdminSetActor do
+RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:next_actor) do
     double('next actor', create: true,
                          curation_concern: work,

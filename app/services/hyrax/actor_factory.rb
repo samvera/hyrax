@@ -4,8 +4,8 @@ module Hyrax
     def self.stack_actors(curation_concern)
       [Hyrax::Actors::TransactionalRequest,
        Hyrax::Actors::OptimisticLockValidator,
-       CreateWithRemoteFilesActor,
-       CreateWithFilesActor,
+       Hyrax::Actors::CreateWithRemoteFilesActor,
+       Hyrax::Actors::CreateWithFilesActor,
        Hyrax::Actors::AddAsMemberOfCollectionsActor,
        Hyrax::Actors::AddToWorkActor,
        Hyrax::Actors::AssignRepresentativeActor,
@@ -13,8 +13,8 @@ module Hyrax
        Hyrax::Actors::AttachMembersActor,
        Hyrax::Actors::ApplyOrderActor,
        Hyrax::Actors::InterpretVisibilityActor,
-       DefaultAdminSetActor,
-       ApplyPermissionTemplateActor,
+       Hyrax::Actors::DefaultAdminSetActor,
+       Hyrax::Actors::ApplyPermissionTemplateActor,
        model_actor(curation_concern),
        # Initialize workflow after model is saved
        Hyrax::Actors::InitializeWorkflowActor]

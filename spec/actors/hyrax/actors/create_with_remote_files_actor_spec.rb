@@ -1,4 +1,4 @@
-describe Hyrax::CreateWithRemoteFilesActor do
+describe Hyrax::Actors::CreateWithRemoteFilesActor do
   let(:create_actor) do
     double('create actor', create: true,
                            curation_concern: work,

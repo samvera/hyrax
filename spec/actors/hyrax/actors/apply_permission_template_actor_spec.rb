@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::ApplyPermissionTemplateActor do
+RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:create_actor) do
     double('create actor', create: true,
                            curation_concern: work,
