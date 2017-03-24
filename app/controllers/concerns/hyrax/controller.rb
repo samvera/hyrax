@@ -8,8 +8,6 @@ module Hyrax::Controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
     before_action :set_locale
-    rescue_from ActiveFedora::ObjectNotFoundError, with: :not_found_response
-    rescue_from Blacklight::Exceptions::InvalidSolrID, with: :not_found_response
   end
 
   # Provide a place for Devise to send the user to after signing in
@@ -39,30 +37,10 @@ module Hyrax::Controller
       I18n.locale = params[:locale] || I18n.default_locale
     end
 
-    def not_found_response(_exception)
-      respond_to do |wants|
-        wants.json { render_json_response(response_type: :not_found) }
-        # default to HTML response, even for other non-HTML formats we don't
-        # neccesarily know about, seems to be consistent with what Rails4 does
-        # by default with uncaught ActiveRecord::RecordNotFound in production
-        wants.any do
-          render_404
-        end
-      end
-    end
-
     # render a json response for +response_type+
     def render_json_response(response_type: :success, message: nil, options: {})
       json_body = Hyrax::API.generate_response_body(response_type: response_type, message: message, options: options)
       render json: json_body, status: response_type
-    end
-
-    # use standard, possibly locally overridden, 404.html file. Even for
-    # possibly non-html formats, this is consistent with what Rails does
-    # on raising an ActiveRecord::RecordNotFound. Rails.root IS needed
-    # for it to work under testing, without worrying about CWD.
-    def render_404
-      render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
     end
 
     # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught

@@ -29,11 +29,6 @@ describe Hyrax::GenericWorksController do
       it { is_expected.to respond_forbidden }
     end
 
-    describe 'not found' do
-      before { get :show, params: { id: "non-existent-pid", format: :json } }
-      it { is_expected.to respond_not_found }
-    end
-
     describe 'created' do
       let(:actor) { double(create: create_status) }
       let(:create_status) { true }

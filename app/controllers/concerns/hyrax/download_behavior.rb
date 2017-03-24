@@ -23,7 +23,7 @@ module Hyrax
         response.headers['Content-Length'] = File.size(file).to_s
         send_file file, derivative_download_options
       else
-        render_404
+        raise ActiveFedora::ObjectNotFoundError
       end
     end
 
