@@ -20,42 +20,8 @@ $admin-vertical-padding: 0 !default;
     padding: 2px;
   }
 }
-.tabs {
-  margin-top: $tab-margin;
-  position: relative;
-}
 
-.nav-tabs {
-  border-bottom: 0;
-  margin-bottom: 0;
-  margin-top: -$tab-margin;
-  padding: 0 5px;
-}
-
-.nav-tabs > li > a {
-  border-top: 2px solid transparent;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover {
-  border-top: 2px solid $tab-active-accent-color;
-}
-
-/* The #masthead selector below could (and ideally, should) be removed if we can
- * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
- */
-#masthead {
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-
-  @media only screen and (max-width : 767px) {
-    position: initial;
-  }
-}
-
-body {
+body.dashboard {
   background-color: $body-background-color;
   padding-top: 51px;
 
@@ -64,220 +30,258 @@ body {
   }
 }
 
-/* This is needed in Chrome for the admin/admin_sets edit view to render the participants tab
- * Without this the contents of that tab flow off the right-hand side of the screen
- * (The other containers on that page have `float: left` except for the fieldset.)
- */
-fieldset {
-  float: left;
-}
-
-#content-wrapper {
-  padding: 0;
-  padding-bottom: 0;
-
-  &.container-fluid {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-.main-content {
-  padding-top: $admin-vertical-padding;
-  padding-bottom: $admin-vertical-padding;
-  background-color: $admin-content-background-color;
-}
-
-.main-header {
-  margin-bottom: 0;
-  margin-top: 0;
-
-  h1 {
-    font-size: $font-size-h2;
-    margin-left: $padding-xs-horizontal;
-    margin-top: $padding-base-vertical;
+.dashboard {
+  .tabs {
+    margin-top: $tab-margin;
+    position: relative;
   }
 
-  .fa {
-    color: $gray;
-    margin-right: $padding-xs-horizontal;
-  }
-}
-
-// the span selector is required because Blacklight is using it.
-.list-filters-label, span.constraints-label {
-  font-weight: bold;
-  margin-right: 2em;
-}
-
-.constraints-container {
-  padding: $panel-heading-padding;
-
-  .start-over {
-    padding: 4px 6px;
-  }
-}
-
-.list-filters {
-  background-color: $panel-default-heading-bg;
-  padding: $panel-heading-padding;
-
-  .btn-group > .facet-values {
-    display: none;
-  }
-  .btn-group.open > .facet-values {
-    display: table;
+  .nav-tabs {
+    border-bottom: 0;
+    margin-bottom: 0;
+    margin-top: -$tab-margin;
+    padding: 0 5px;
   }
 
-  .facet-values {
-    width: 20em; // TODO: make this responsive.
+  .nav-tabs > li > a {
+    border-top: 2px solid transparent;
   }
 
-  .facet-label {
-    padding: 3px 20px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #333;
-    white-space: nowrap;
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover {
+    border-top: 2px solid $tab-active-accent-color;
   }
 
-  .facet-count {
-    padding: 3px 20px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #333;
-    white-space: nowrap;
-  }
-}
 
-.user-activity .panel-body {
-  overflow: scroll;
-  max-height: 20em;
-}
+  /* The #masthead selector below could (and ideally, should) be removed if we can
+   * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
+   */
+  #masthead {
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
 
-.transfer_link {
-  margin-top: 8px;
-}
-
-
-.sidebar {
-  background-color: $admin-sidebar-background-color;
-  padding-bottom: $admin-vertical-padding;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: $admin-vertical-padding;
-
-  a {
-    color: $admin-sidebar-link-color;
+    @media only screen and (max-width : 767px) {
+      position: initial;
+    }
   }
 
-  a:hover {
-    color: $admin-sidebar-link-hover-color;
+  /* This is needed in Chrome for the admin/admin_sets edit view to render the participants tab
+   * Without this the contents of that tab flow off the right-hand side of the screen
+   * (The other containers on that page have `float: left` except for the fieldset.)
+   */
+  fieldset {
+    float: left;
   }
 
-  .h5 {
-    margin: 0;
-    padding: 10px;
+  #content-wrapper {
+    padding: 0;
+    padding-bottom: 0;
+
+    &.container-fluid {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 
-  .profile {
-    background-color: $admin-sidebar-profile-background-color;
-    padding: 15px 10px;
+  .main-content {
+    padding-top: $admin-vertical-padding;
+    padding-bottom: $admin-vertical-padding;
+    background-color: $admin-content-background-color;
+  }
 
-    .profile-image {
-      text-align: center;
+  .main-header {
+    margin-bottom: 0;
+    margin-top: 0;
+
+    h1 {
+      font-size: $font-size-h2;
+      margin-left: $padding-xs-horizontal;
+      margin-top: $padding-base-vertical;
     }
 
-    .profile-data {
-      text-align: center;
-      .profile-data-name {
-        color: $admin-sidebar-link-color;
+    .fa {
+      color: $gray;
+      margin-right: $padding-xs-horizontal;
+    }
+  }
+
+  // the span selector is required because Blacklight is using it.
+  .list-filters-label, span.constraints-label {
+    font-weight: bold;
+    margin-right: 2em;
+  }
+
+  .constraints-container {
+    padding: $panel-heading-padding;
+
+    .start-over {
+      padding: 4px 6px;
+    }
+  }
+
+  .list-filters {
+    background-color: $panel-default-heading-bg;
+    padding: $panel-heading-padding;
+
+    .btn-group > .facet-values {
+      display: none;
+    }
+    .btn-group.open > .facet-values {
+      display: table;
+    }
+
+    .facet-values {
+      width: 20em; // TODO: make this responsive.
+    }
+
+    .facet-label {
+      padding: 3px 20px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+    }
+
+    .facet-count {
+      padding: 3px 20px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+    }
+  }
+
+  .user-activity .panel-body {
+    overflow: scroll;
+    max-height: 20em;
+  }
+
+  .transfer_link {
+    margin-top: 8px;
+  }
+
+
+  .sidebar {
+    background-color: $admin-sidebar-background-color;
+    padding-bottom: $admin-vertical-padding;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: $admin-vertical-padding;
+
+    a {
+      color: $admin-sidebar-link-color;
+    }
+
+    a:hover {
+      color: $admin-sidebar-link-hover-color;
+    }
+
+    .h5 {
+      margin: 0;
+      padding: 10px;
+    }
+
+    .profile {
+      background-color: $admin-sidebar-profile-background-color;
+      padding: 15px 10px;
+
+      .profile-image {
+        text-align: center;
+      }
+
+      .profile-data {
+        text-align: center;
+        .profile-data-name {
+          color: $admin-sidebar-link-color;
+        }
       }
     }
   }
-}
 
-.admin-sidebar {
-  margin-left: 0;
-  margin-right: 0;
+  .admin-sidebar {
+    margin-left: 0;
+    margin-right: 0;
 
-  li .fa {
-    margin-right: $padding-base-horizontal;
-  }
-}
-
-.nav-pills > li > a {
-  border-radius: 0;
-  padding: 15px 10px 15px 15px;
-
-  &:focus {
-    background-color: transparent;
-    color: $admin-sidebar-link-color;
-  }
-}
-
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:focus,
-.nav-pills > li.active > a:hover {
-  background-color: $admin-sidebar-link-background-color;
-}
-
-// submenu items
-ul.collapse > li > a,
-ul.collapsing > li > a {
-  padding-left: 25px;
-}
-
-.sidebar .collapse-toggle {
-  margin-bottom: 0;
-
-  &::after {
-    content: "❯";
-    float: right;
-    transform: rotate(90deg);
-  }
-
-  &.collapsed {
-    border-bottom: 0;
-
-    &::after {
-      transform: rotate(0deg);
-      transition: transform 0.1s ease;
+    li .fa {
+      margin-right: $padding-base-horizontal;
     }
   }
-}
 
-.navbar {
-  margin-bottom: 0;
-}
+  .nav-pills > li > a {
+    border-radius: 0;
+    padding: 15px 10px 15px 15px;
 
-.panel {
-  border: 0;
-  float: left;
-  width: 100%;
+    &:focus {
+      background-color: transparent;
+      color: $admin-sidebar-link-color;
+    }
+  }
 
-  .panel-heading,
-  .panel-footer,
-  .panel-body,
-  .list-group-item {
+  .nav-pills > li.active > a,
+  .nav-pills > li.active > a:focus,
+  .nav-pills > li.active > a:hover {
+    background-color: $admin-sidebar-link-background-color;
+  }
+
+  // submenu items
+  ul.collapse > li > a,
+  ul.collapsing > li > a {
+    padding-left: 25px;
+  }
+
+  .sidebar .collapse-toggle {
+    margin-bottom: 0;
+
+    &::after {
+      content: "❯";
+      float: right;
+      transform: rotate(90deg);
+    }
+
+    &.collapsed {
+      border-bottom: 0;
+
+      &::after {
+        transform: rotate(0deg);
+        transition: transform 0.1s ease;
+      }
+    }
+  }
+
+  .navbar {
+    margin-bottom: 0;
+  }
+
+  .panel {
+    border: 0;
     float: left;
     width: 100%;
+
+    .panel-heading,
+    .panel-footer,
+    .panel-body,
+    .list-group-item {
+      float: left;
+      width: 100%;
+    }
+
+    .panel-title {
+      color: $title-text-color;
+      display: block;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 30px;
+    }
   }
 
-  .panel-title {
-    color: $title-text-color;
-    display: block;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 30px;
+  .panel.panel-default.labels {
+    border-top: 1px solid $panel-default-border;
+    margin-bottom: 0;
   }
-}
 
-.panel.panel-default.labels {
-  border-top: 1px solid $panel-default-border;
-  margin-bottom: 0;
-}
-
-.spacer {
-  margin-bottom: 5px;
+  .spacer {
+    margin-bottom: 5px;
+  }
 }
