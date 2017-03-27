@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Actors::AttachMembersActor do
-  let(:create_actor) do
-    double('create actor', create: true,
-                           curation_concern: work,
-                           update: true,
-                           user: depositor)
-  end
-  let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, ability, [described_class])
-  end
   let(:ability) { ::Ability.new(depositor) }
+  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
+    stack.build(terminator)
+  end
+
   let(:depositor) { create(:user) }
   let(:work) { create(:work) }
-  let(:attributes) { { work_members_attributes: { '0' => { id: id } } } }
+  let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id } }) }
 
   describe "#update" do
-    subject { actor.update(attributes) }
+    subject { middleware.update(env) }
     before do
       work.ordered_members << existing_child_work
     end
@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
       end
 
       context "and the _destroy flag is set" do
-        let(:attributes) { { work_members_attributes: { '0' => { id: id, _destroy: 'true' } } } }
+        let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id, _destroy: 'true' } }) }
 
         it "removes from the member and the ordered members" do
           expect { subject }.to change { work.ordered_members.to_a }

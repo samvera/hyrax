@@ -1,3 +1,4 @@
+# This is a job spawned by the BatchCreateJob
 class CreateWorkJob < ActiveJob::Base
   queue_as Hyrax.config.ingest_queue_name
 
@@ -15,15 +16,16 @@ class CreateWorkJob < ActiveJob::Base
   def perform(user, model, attributes, operation)
     operation.performing!
     work = model.constantize.new
-    actor = work_actor(work, user)
-    status = actor.create(attributes)
+    current_ability = Ability.new(user)
+    env = Hyrax::Actors::Environment.new(work, current_ability, attributes)
+    status = work_actor.create(env)
     return operation.success! if status
     operation.fail!(work.errors.full_messages.join(' '))
   end
 
   private
 
-    def work_actor(work, user)
-      Hyrax::CurationConcern.actor(work, user)
+    def work_actor
+      Hyrax::CurationConcern.actor
     end
 end

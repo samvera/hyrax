@@ -7,17 +7,19 @@ module Hyrax
       class_attribute :version_field
       self.version_field = 'version'
 
-      def update(attributes)
-        validate_lock(version_attribute(attributes)) && next_actor.update(attributes)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if update was successful
+      def update(env)
+        validate_lock(env, version_attribute(env.attributes)) && next_actor.update(env)
       end
 
       private
 
         # @return [Boolean] returns true if the lock is missing or
         #                   if it matches the current object version.
-        def validate_lock(version)
-          return true if version.blank? || version == curation_concern.etag
-          curation_concern.errors.add(:base, :conflict)
+        def validate_lock(env, version)
+          return true if version.blank? || version == env.curation_concern.etag
+          env.curation_concern.errors.add(:base, :conflict)
           false
         end
 

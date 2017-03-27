@@ -22,15 +22,16 @@ RSpec.describe Hyrax::Arkivo::Actor do
     it { is_expected.to respond_to(:content_type=) }
   end
 
-  let(:work_actor) { instance_double(Hyrax::Actors::ActorStack) }
+  let(:work_actor) { instance_double(Hyrax::Actors::TransactionalRequest) }
   let(:file_actor) { double }
 
   describe '#create_work_from_item' do
     it 'creates a work and a file and returns a GenericWork' do
-      expect(work_actor).to receive(:create).with(
-        hash_including(arkivo_checksum: item['file']['md5'],
-                       "title" => [item['metadata']['title']])
-      ).and_return(true)
+      expect(work_actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
+        expect(env.attributes).to include(arkivo_checksum: item['file']['md5'],
+                                          "title" => [item['metadata']['title']])
+      end.and_return(true)
+
       expect(file_actor).to receive(:create_metadata)
       expect(file_actor).to receive(:create_content) do |tmpfile|
         expect(tmpfile).to be_instance_of Tempfile
@@ -55,9 +56,12 @@ RSpec.describe Hyrax::Arkivo::Actor do
     end
 
     it 'changes the title and clears other metadata' do
-      expect(work_actor).to receive(:update).with(hash_including("title" => [item['metadata']['title']],
-                                                                 "description" => [],
-                                                                 arkivo_checksum: item['file']['md5']))
+      expect(work_actor).to receive(:update).with(Hyrax::Actors::Environment) do |env|
+        expect(env.attributes).to include(arkivo_checksum: item['file']['md5'],
+                                          "description" => [],
+                                          "title" => [item['metadata']['title']])
+      end.and_return(true)
+
       expect(file_actor).to receive(:update_content) do |tmpfile|
         expect(tmpfile).to be_instance_of Tempfile
         expect(tmpfile.read).to eq "# HEADER\n\nThis is a paragraph!\n"

@@ -1,15 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
-  let(:create_actor) do
-    double('create actor', create: true,
-                           curation_concern: work,
-                           update: true,
-                           user: depositor)
+  let(:ability) { ::Ability.new(depositor) }
+  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
+    stack.build(terminator)
   end
-  let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class])
-  end
+
   let(:depositor) { create(:user) }
   let(:work) do
     build(:generic_work,
@@ -25,7 +26,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
       let(:attributes) { { admin_set_id: '' } }
 
       it "returns true" do
-        expect(actor.create(attributes)).to be true
+        expect(middleware.create(env)).to be true
       end
     end
 
@@ -52,12 +53,11 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
                permission_template: permission_template,
                agent_type: 'group',
                agent_id: 'readers')
-        allow(Hyrax::Actors::RootActor).to receive(:new).and_return(create_actor)
-        allow(create_actor).to receive(:create).and_return(true)
+        allow(terminator).to receive(:create).and_return(true)
       end
 
       it "adds the template users to the work" do
-        expect(actor.create(attributes)).to be true
+        expect(middleware.create(env)).to be true
         expect(work.edit_users).to include('hannah', 'Kevin')
         expect(work.edit_groups).to include 'librarians'
         expect(work.read_users).to include('gary', 'Taraji')

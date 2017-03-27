@@ -27,7 +27,10 @@ module Hyrax
         file_set.date_modified = now
         file_set.creator = [user.user_key]
 
-        Actors::ActorStack.new(file_set, ability, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
+        if assign_visibility?(file_set_params)
+          env = Actors::Environment.new(file_set, ability, file_set_params)
+          CurationConcern.file_set_create_actor.create(env)
+        end
         yield(file_set) if block_given?
       end
 
@@ -89,10 +92,8 @@ module Hyrax
       end
 
       def update_metadata(attributes)
-        stack = Actors::ActorStack.new(file_set,
-                                       ability,
-                                       [InterpretVisibilityActor, BaseActor])
-        stack.update(attributes)
+        env = Actors::Environment.new(file_set, ability, attributes)
+        CurationConcern.file_set_update_actor.update(env)
       end
 
       def destroy

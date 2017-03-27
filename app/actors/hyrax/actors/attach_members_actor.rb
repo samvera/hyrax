@@ -14,42 +14,44 @@ module Hyrax
     #
     # TODO: Perhaps this can subsume AttachFilesActor
     class AttachMembersActor < Hyrax::Actors::AbstractActor
-      def update(attributes)
-        attributes_collection = attributes.delete(:work_members_attributes)
-        assign_nested_attributes_for_collection(attributes_collection) &&
-          next_actor.update(attributes)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if update was successful
+      def update(env)
+        attributes_collection = env.attributes.delete(:work_members_attributes)
+        assign_nested_attributes_for_collection(env, attributes_collection) &&
+          next_actor.update(env)
       end
 
       private
 
         # Attaches any unattached members.  Deletes those that are marked _delete
         # @param [Hash<Hash>] a collection of members
-        def assign_nested_attributes_for_collection(attributes_collection)
+        def assign_nested_attributes_for_collection(env, attributes_collection)
           return true unless attributes_collection
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are
           # already attached
-          existing_works = curation_concern.member_ids
+          existing_works = env.curation_concern.member_ids
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
             if existing_works.include?(attributes['id'])
-              remove(attributes['id']) if has_destroy_flag?(attributes)
+              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
             else
-              add(attributes['id'])
+              add(env, attributes['id'])
             end
           end
         end
 
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
-        def add(id)
+        def add(env, id)
           member = ActiveFedora::Base.find(id)
-          return unless ability.can?(:edit, member)
-          curation_concern.ordered_members << member
+          return unless env.current_ability.can?(:edit, member)
+          env.curation_concern.ordered_members << member
         end
 
         # Remove the object from the members set and the ordered members list
-        def remove(id)
+        def remove(curation_concern, id)
           member = ActiveFedora::Base.find(id)
           curation_concern.ordered_members.delete(member)
           curation_concern.members.delete(member)

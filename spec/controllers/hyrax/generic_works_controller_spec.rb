@@ -229,8 +229,10 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it "attaches files" do
         expect(actor).to receive(:create)
-          .with(hash_including(:uploaded_files))
-          .and_return(true)
+          .with(Hyrax::Actors::Environment) do |env|
+            expect(env.attributes.keys).to include('uploaded_files')
+          end
+                     .and_return(true)
         post :create, params: {
           generic_work: {
             title: ["First title"],
@@ -283,9 +285,9 @@ RSpec.describe Hyrax::GenericWorksController do
           it "records the work" do
             # TODO: ensure the actor stack, called with these params
             # makes one work, two file sets and calls ImportUrlJob twice.
-            expect(actor).to receive(:create).with(ActionController::Parameters) do |ac_params|
-              expect(ac_params['uploaded_files']).to eq []
-              expect(ac_params['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
+            expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
+              expect(env.attributes['uploaded_files']).to eq []
+              expect(env.attributes['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
             end
 
             post :create, params: {
@@ -368,7 +370,9 @@ RSpec.describe Hyrax::GenericWorksController do
     it "can update file membership" do
       patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
       expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
-      expect(actor).to have_received(:update).with(ActionController::Parameters.new(expected_params).permit!)
+      expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
+        expect(env.attributes).to eq ActionController::Parameters.new(expected_params).permit!
+      end
     end
 
     describe 'changing rights' do

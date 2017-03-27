@@ -55,7 +55,7 @@ module Hyrax
     end
 
     def create
-      if actor.create(attributes_for_actor)
+      if actor.create(actor_environment)
         after_create_response
       else
         respond_to do |wants|
@@ -97,7 +97,7 @@ module Hyrax
     end
 
     def update
-      if actor.update(attributes_for_actor)
+      if actor.update(actor_environment)
         after_update_response
       else
         respond_to do |wants|
@@ -112,7 +112,8 @@ module Hyrax
 
     def destroy
       title = curation_concern.to_s
-      return unless actor.destroy
+      env = Actors::Environment.new(curation_concern, current_ability, {})
+      return unless actor.destroy(env)
       Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user)
       after_destroy_response(title)
     end
@@ -135,7 +136,7 @@ module Hyrax
       end
 
       def actor
-        @actor ||= Hyrax::CurationConcern.actor(curation_concern, current_ability)
+        @actor ||= Hyrax::CurationConcern.actor
       end
 
       def presenter
@@ -155,6 +156,10 @@ module Hyrax
       # our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
         @_prefixes ||= super + ['hyrax/base']
+      end
+
+      def actor_environment
+        Actors::Environment.new(curation_concern, current_ability, attributes_for_actor)
       end
 
       def hash_key_for_curation_concern

@@ -38,7 +38,7 @@ module Hyrax
     end
 
     config.to_prepare do
-      Hyrax::CurationConcern.actor_factory = Hyrax::ActorFactory
+      Hyrax::CurationConcern.actor_factory = Hyrax::DefaultMiddlewareStack.build_stack
     end
 
     initializer 'requires' do

@@ -7,14 +7,18 @@ module Hyrax
     #
     # @note Creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow (with activation)
     class DefaultAdminSetActor < Hyrax::Actors::AbstractActor
-      def create(attributes)
-        ensure_admin_set_attribute!(attributes)
-        next_actor.create(attributes)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if create was successful
+      def create(env)
+        ensure_admin_set_attribute!(env.attributes)
+        next_actor.create(env)
       end
 
-      def update(attributes)
-        ensure_admin_set_attribute!(attributes)
-        next_actor.update(attributes)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if update was successful
+      def update(env)
+        ensure_admin_set_attribute!(env.attributes)
+        next_actor.update(env)
       end
 
       private

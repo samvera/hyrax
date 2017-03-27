@@ -1,29 +1,30 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Actors::ApplyOrderActor do
-  describe '#update' do
-    let(:curation_concern) { create(:work_with_two_children, user: user) }
+  let(:curation_concern) { create(:work_with_two_children, user: user) }
+  let(:ability) { ::Ability.new(user) }
+  let(:user) { create(:admin) }
+  let(:terminator) { Hyrax::Actors::Terminator.new }
 
-    let(:user) { create(:admin) }
-
-    subject do
-      Hyrax::Actors::ActorStack.new(curation_concern,
-                                    ::Ability.new(user),
-                                    [described_class,
-                                     Hyrax::Actors::GenericWorkActor])
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+      middleware.use Hyrax::Actors::GenericWorkActor
     end
+    stack.build(terminator)
+  end
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
 
+  describe '#update' do
     context 'with ordered_member_ids that are already associated with the parent' do
       let(:attributes) { { ordered_member_ids: ["BlahBlah1"] } }
-      let(:root_actor) { double }
       before do
-        allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
-        allow(root_actor).to receive(:update).with({}).and_return(true)
+        allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
       end
       it "attaches the parent" do
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
       end
     end
   end
@@ -33,19 +34,11 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
     let(:curation_concern) { create(:work_with_one_child, user: user) }
     let(:child) { GenericWork.new(id: "blahblah3") }
 
-    subject do
-      Hyrax::Actors::ActorStack.new(curation_concern,
-                                    ::Ability.new(user),
-                                    [described_class,
-                                     Hyrax::Actors::GenericWorkActor])
-    end
-
     context 'with ordered_members_ids that arent associated with the curation concern yet.' do
       let(:attributes) { { ordered_member_ids: [child.id] } }
       let(:root_actor) { double }
       before do
-        allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
-        allow(root_actor).to receive(:update).with({}).and_return(true)
+        allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         # TODO: This can be moved into the Factory
         child.title = ["Generic Title"]
         child.apply_depositor_metadata(user.user_key)
@@ -55,17 +48,15 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
       end
 
       it "attaches the parent" do
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
       end
     end
 
     context 'without an ordered_member_id that was associated with the curation concern' do
       let(:curation_concern) { create(:work_with_two_children, user: user) }
       let(:attributes) { { ordered_member_ids: ["BlahBlah2"] } }
-      let(:root_actor) { double }
       before do
-        allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
-        allow(root_actor).to receive(:update).with({}).and_return(true)
+        allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         child.title = ["Generic Title"]
         child.apply_depositor_metadata(user.user_key)
         child.save!
@@ -73,7 +64,7 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
         curation_concern.save!
       end
       it "removes the first child" do
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
         expect(curation_concern.members.size).to eq(1)
         expect(curation_concern.ordered_member_ids.size).to eq(1)
       end
@@ -85,17 +76,15 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
       let(:other_user) { create(:user) }
       let(:child) { create(:generic_work, user: other_user) }
       let(:attributes) { { ordered_member_ids: [child.id] } }
-      let(:root_actor) { double }
 
       before do
-        allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
-        allow(root_actor).to receive(:update).with({}).and_return(true)
+        allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
       end
 
       it "does not attach the work" do
-        expect(subject.update(attributes)).to be false
+        expect(subject.update(env)).to be false
       end
     end
   end
