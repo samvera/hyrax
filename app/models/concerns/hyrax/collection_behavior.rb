@@ -4,7 +4,7 @@ module Hyrax
     include Hydra::AccessControls::WithAccessRight
     include Hydra::WithDepositor # for access to apply_depositor_metadata
     include Hydra::AccessControls::Permissions
-    include Hyrax::RequiredMetadata
+    include Hyrax::CoreMetadata
     include Hydra::Works::CollectionBehavior
     include Hyrax::Noid
     include Hyrax::HumanReadableType

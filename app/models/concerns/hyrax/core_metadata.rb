@@ -1,5 +1,7 @@
 module Hyrax
-  module RequiredMetadata
+  # These are the metadata elements that Hyrax internally requires of
+  # all managed Collections, Works and FileSets will have.
+  module CoreMetadata
     extend ActiveSupport::Concern
 
     included do
