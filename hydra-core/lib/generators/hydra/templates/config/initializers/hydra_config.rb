@@ -19,4 +19,6 @@ Hydra.configure do |config|
   #
   # Specify the user model
   <%= '# ' if model_name == 'User' %>config.user_model = '<%= model_name %>'
+
+  config.user_key_field = Devise.authentication_keys.first
 end
