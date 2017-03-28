@@ -32,8 +32,17 @@ module Hydra
     end
 
     attr_reader :permissions
-    attr_writer :id_to_resource_uri
+    attr_writer :id_to_resource_uri, :user_key_field
     attr_accessor :user_model
+
+    def user_key_field
+      @user_key_field || default_user_key_field
+    end
+
+    def default_user_key_field
+      Deprecation.warn(self, "You must set 'config.user_key_field = Devise.authentication_keys.first' in your config/initializer/hydra_config.rb file. The default value will be removed in hydra-access-controls 12")
+      Devise.authentication_keys.first
+    end
 
     # This is purely used for translating an ID to user-facing URIs not used for
     # persistence. Useful for storing RDF in Fedora but displaying their

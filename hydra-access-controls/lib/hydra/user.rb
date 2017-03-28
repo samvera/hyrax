@@ -19,7 +19,7 @@ module Hydra::User
     # Devise authentication_keys configuration variable. This method encapsulates
     # whether we use email or username (or something else) as the identifing user attribute.
     def find_by_user_key(key)
-      find_by(Devise.authentication_keys.first.to_sym => key)
+      find_by(Hydra.config.user_key_field => key)
     end
   end
 end

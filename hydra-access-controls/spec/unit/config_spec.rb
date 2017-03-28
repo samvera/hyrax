@@ -42,10 +42,22 @@ describe Hydra::Config do
       expect(config[:permissions][:policy_class]).to be_nil
   end
 
-  it "should have defaults" do
+  it "has defaults" do
     expect(config.permissions.read.individual).to eq 'read_access_person_ssim'
     expect(config.permissions.embargo.release_date).to eq 'embargo_release_date_dtsi'
     expect(config.user_model).to eq 'User'
+    expect(config.user_key_field).to eq :email
   end
 
+  describe "user_key_field" do
+    after do
+      # restore default
+      config.user_key_field = :email
+    end
+    
+    it "is settable" do
+      config.user_key_field = :uid
+      expect(config.user_key_field).to eq :uid
+    end
+  end
 end
