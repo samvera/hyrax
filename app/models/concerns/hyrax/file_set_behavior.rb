@@ -15,7 +15,7 @@ module Hyrax
     include Hyrax::FileSet::BelongsToWorks
     include Hyrax::FileSet::Querying
     include HumanReadableType
-    include RequiredMetadata
+    include CoreMetadata
     include Naming
     include Hydra::AccessControls::Embargoable
     include GlobalID::Identification

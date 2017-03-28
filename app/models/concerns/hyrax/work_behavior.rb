@@ -11,7 +11,7 @@ module Hyrax
     include HasRepresentative
     include WithFileSets
     include Naming
-    include RequiredMetadata
+    include CoreMetadata
     include InAdminSet
     include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
