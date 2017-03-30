@@ -20,8 +20,12 @@ module Hyrax
         flash.now[:error] << @contact_form.errors.full_messages.map(&:to_s).join(", ")
       end
       render :new
-    rescue RuntimeError => e
-      logger.error("Contact form failed to send: #{e.inspect}")
+    rescue RuntimeError => exception
+      handle_create_exception(exception)
+    end
+
+    def handle_create_exception(exception)
+      logger.error("Contact form failed to send: #{exception.inspect}")
       flash.now[:error] = 'Sorry, this message was not delivered.'
       render :new
     end
