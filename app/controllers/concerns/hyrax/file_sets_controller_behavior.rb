@@ -88,7 +88,7 @@ module Hyrax
         return render_json_response(response_type: :bad_request, options: { message: 'Error! No file to save' }) unless params.key?(:file_set) && params.fetch(:file_set).key?(:files)
 
         file = params[:file_set][:files].detect { |f| f.respond_to?(:original_filename) }
-        process_file_for_create_from_upload(file)
+        attempt_process_file_for_create_from_upload(file)
       rescue RSolr::Error::Http => error
         logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
         render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
@@ -97,20 +97,24 @@ module Hyrax
         file.tempfile.delete if file.respond_to?(:tempfile)
       end
 
-      def process_file_for_create_from_upload(file)
+      def attempt_process_file_for_create_from_upload(file)
         if !file
           render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
         elsif empty_file?(file)
           empty_file_response(file)
         else
-          update_metadata_from_upload_screen
-          if process_file(actor, file)
-            response_for_successfully_processed_file
-          else
-            msg = curation_concern.errors.full_messages.join(', ')
-            flash[:error] = msg
-            json_error "Error creating file #{file.original_filename}: #{msg}"
-          end
+          process_non_empty_file(file: file)
+        end
+      end
+
+      def process_non_empty_file(file:)
+        update_metadata_from_upload_screen
+        if process_file(actor, file)
+          response_for_successfully_processed_file
+        else
+          msg = curation_concern.errors.full_messages.join(', ')
+          flash[:error] = msg
+          json_error "Error creating file #{file.original_filename}: #{msg}"
         end
       end
 
