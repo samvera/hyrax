@@ -7,27 +7,28 @@ module Hyrax
 
         def format(work)
           text = ''
-
-          # setup formatted author list
-          authors_list = author_list(work).select { |author| !author.blank? }
-          text << format_authors(authors_list)
-          unless text.blank?
-            text = "<span class=\"citation-author\">#{text}</span> "
-          end
-          # Get Pub Date
-          pub_date = setup_pub_date(work)
-          text << format_date(pub_date)
-
-          # setup title info
-          title_info = setup_title_info(work)
-          text << format_title(title_info)
-
-          # Publisher info
-          pub_info = clean_end_punctuation(setup_pub_info(work))
-          text << pub_info unless pub_info.nil?
+          text << authors_text_for(work)
+          text << pub_date_text_for(work)
+          text << add_title_text_for(work)
+          text << add_publisher_text_for(work)
           text << "." unless text.blank? || text =~ /\.$/
           text.html_safe
         end
+
+        private
+
+          def authors_text_for(work)
+            # setup formatted author list
+            authors_list = author_list(work).select { |author| !author.blank? }
+            author_text = format_authors(authors_list)
+            if author_text.blank?
+              author_text
+            else
+              "<span class=\"citation-author\">#{author_text}</span> "
+            end
+          end
+
+        public
 
         def format_authors(authors_list = [])
           authors_list = Array.wrap(authors_list).collect { |name| abbreviate_name(surname_first(name)).strip }
@@ -43,6 +44,32 @@ module Hyrax
           text << "." unless text =~ /\.$/
           text
         end
+
+        private
+
+          def pub_date_text_for(work)
+            # Get Pub Date
+            pub_date = setup_pub_date(work)
+            format_date(pub_date)
+          end
+
+          def add_title_text_for(work)
+            # setup title info
+            title_info = setup_title_info(work)
+            format_title(title_info)
+          end
+
+          def add_publisher_text_for(work)
+            # Publisher info
+            pub_info = clean_end_punctuation(setup_pub_info(work))
+            if pub_info.nil?
+              ''
+            else
+              pub_info
+            end
+          end
+
+        public
 
         def format_date(pub_date)
           pub_date.blank? ? "" : "(" + pub_date + "). "
