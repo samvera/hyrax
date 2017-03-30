@@ -9,7 +9,6 @@ module Hyrax
       def curation_concern_type=(curation_concern_type)
         super
         before_action :build_breadcrumbs, only: [:edit, :show, :new]
-        before_action :save_permissions, only: :update
       end
     end
 

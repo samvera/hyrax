@@ -28,6 +28,9 @@ module Hyrax
         load_resource class: curation_concern_type, instance_name: :curation_concern, only: :file_manager
 
         self._curation_concern_type = curation_concern_type
+        # We don't want the breadcrumb action to occur until after the concern has
+        # been loaded and authorized
+        before_action :save_permissions, only: :update
       end
 
       def curation_concern_type
