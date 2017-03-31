@@ -23,29 +23,35 @@ module Hyrax
 
       # Process changes from profile form
       def update
-        if params[:user]
-          @user.attributes = user_params
-          @user.populate_attributes if update_directory?
-        end
+        conditionally_set_user_attributes
 
-        unless @user.save
+        if @user.save
+          handle_successful_update
+          redirect_to hyrax.dashboard_profile_path(@user.to_param), notice: "Your profile has been updated"
+        else
           redirect_to hyrax.edit_dashboard_profile_path(@user.to_param), alert: @user.errors.full_messages
-          return
         end
-        # TODO: this should be moved to TrophiesController
-        params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
-          smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
-          current_user.trophies.where(work_id: smash_trophy).destroy_all
-        end
-        UserEditProfileEventJob.perform_later(@user)
-        redirect_to hyrax.dashboard_profile_path(@user.to_param), notice: "Your profile has been updated"
-      end
-
-      def update_directory?
-        ['1', 'true'].include? params[:user][:update_directory]
       end
 
       private
+
+        def conditionally_set_user_attributes
+          return true unless params[:user]
+          @user.attributes = user_params
+          case params[:user][:update_directory]
+          when '1', 'true', true
+            @user.populate_attributes
+          end
+        end
+
+        def handle_successful_update
+          # TODO: this should be moved to TrophiesController
+          params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
+            smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
+            current_user.trophies.where(work_id: smash_trophy).destroy_all
+          end
+          UserEditProfileEventJob.perform_later(@user)
+        end
 
         def user_params
           params.require(:user).permit(:avatar, :facebook_handle, :twitter_handle,
