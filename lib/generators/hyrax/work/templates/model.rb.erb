@@ -3,9 +3,11 @@
 class <%= class_name %> < ActiveFedora::Base
   include ::Hyrax::WorkBehavior
   include ::Hyrax::BasicMetadata
+
+  self.indexer = <%= class_name %>Indexer
   # Change this to restrict which works can be added as a child.
   # self.valid_child_concerns = []
   validates :title, presence: { message: 'Your work must have a title.' }
-  
+
   self.human_readable_type = '<%= name.underscore.titleize %>'
 end

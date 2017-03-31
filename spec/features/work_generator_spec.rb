@@ -5,6 +5,7 @@ require 'redlock'
 feature 'Creating a new Work', :workflow do
   before do
     Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], destination_root: Rails.root)
+    load "#{EngineCart.destination}/app/indexers/catapult_indexer.rb"
     load "#{EngineCart.destination}/app/models/catapult.rb"
     load "#{EngineCart.destination}/app/controllers/hyrax/catapults_controller.rb"
     load "#{EngineCart.destination}/app/actors/hyrax/actors/catapult_actor.rb"
@@ -23,5 +24,6 @@ feature 'Creating a new Work', :workflow do
     expect(defined? Hyrax::Actors::CatapultActor).to eq 'constant'
     expect(defined? Hyrax::CatapultsController).to eq 'constant'
     expect(defined? Hyrax::CatapultForm).to eq 'constant'
+    expect(Catapult.indexer).to eq CatapultIndexer
   end
 end
