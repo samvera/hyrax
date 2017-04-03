@@ -1,44 +1,30 @@
 module Hyrax
   module Admin
+    # Displays a single workflow role
     class WorkflowRolePresenter
-      def users
-        ::User.registered
+      def initialize(workflow_role)
+        @workflow = workflow_role.workflow
+        @role = workflow_role.role
+        @admin_set_id = workflow.permission_template.admin_set_id
       end
 
-      def presenter_for(user)
-        agent = user.sipity_agent
-        return unless agent
-        AgentPresenter.new(agent)
+      # @todo This is a hack; I don't want to include reference to the admin set;
+      #       However based on the current UI, in which we list all workflows (spanning all admin sets) this is required.
+      # @return [String] A meaningful label for the given WorkflowRole
+      def label
+        "#{admin_set_label(admin_set_id)} - #{role.name} (#{workflow.name})"
       end
 
-      class AgentPresenter
-        def initialize(agent)
-          @agent = agent
-        end
+      private
 
-        def responsibilities_present?
-          @agent.workflow_responsibilities.any?
-        end
+        attr_accessor :workflow, :role, :admin_set_id
 
-        def responsibilities
-          @agent.workflow_responsibilities.each do |responsibility|
-            yield ResponsibilityPresenter.new(responsibility)
-          end
+        def admin_set_label(id)
+          result = ActiveFedora::Base.search_by_id(id, fl: 'title_tesim')
+          result['title_tesim'].first
+        rescue ActiveFedora::ObjectNotFoundError
+          "[AdminSet ID=#{id}]"
         end
-      end
-
-      class ResponsibilityPresenter
-        def initialize(responsibility)
-          @responsibility = responsibility
-          @wf_role = responsibility.workflow_role
-        end
-
-        attr_accessor :responsibility
-
-        def label
-          "#{@wf_role.workflow.name} - #{@wf_role.role.name}"
-        end
-      end
     end
   end
 end
