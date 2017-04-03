@@ -347,12 +347,18 @@ module Hyrax
       @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
 
-    # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
-    attr_writer :always_display_share_button
-    def always_display_share_button?
-      return true if @always_display_share_button.nil?
-      @always_display_share_button
+    # Should a button with "Share my work" show on the front page to users who are not logged in?
+    attr_writer :display_share_button_when_not_logged_in
+    def display_share_button_when_not_logged_in?
+      return true if @display_share_button_when_not_logged_in.nil?
+      @display_share_button_when_not_logged_in
     end
+
+    alias always_display_share_button= display_share_button_when_not_logged_in=
+    deprecation_deprecate :always_display_share_button= => "use display_share_button_when_not_logged_in= instead"
+
+    alias always_display_share_button? display_share_button_when_not_logged_in?
+    deprecation_deprecate always_display_share_button?: "use display_share_button_when_not_logged_in? instead"
 
     attr_writer :google_analytics_id
     def google_analytics_id
