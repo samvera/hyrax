@@ -8,7 +8,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.toolbar.admin.menu'), hyrax.admin_path
         add_breadcrumb t(:'hyrax.admin.workflow_roles.header'), hyrax.admin_workflow_roles_path
-        @presenter = WorkflowRolePresenter.new
+        @presenter = WorkflowRolesPresenter.new
       end
 
       def destroy

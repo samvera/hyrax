@@ -42,6 +42,6 @@ RSpec.describe "Manage workflow roles", type: :feature do
   it "shows the roles" do
     login_as(user, scope: :user)
     visit '/admin/workflow_roles'
-    expect(page).to have_content 'one_step - approving'
+    expect(page).to have_content 'approving (one_step)'
   end
 end

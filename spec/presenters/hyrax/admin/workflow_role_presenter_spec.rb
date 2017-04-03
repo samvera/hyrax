@@ -1,16 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Admin::WorkflowRolePresenter do
-  let(:presenter) { described_class.new }
+  let(:presenter) { described_class.new(workflow_role) }
+  let(:role) { Sipity::Role[:depositor] }
+  let(:workflow) { create(:workflow) }
+  let(:workflow_role) { Sipity::WorkflowRole.new(role: role, workflow: workflow) }
 
-  describe "#users" do
-    subject { presenter.users }
-    let!(:user) { create(:user) }
-    before do
-      create(:user, :guest)
-    end
-    it "doesn't include guests" do
-      expect(subject).to eq [user]
-    end
+  describe '#label' do
+    subject { presenter.label }
+
+    it { is_expected.to be_a(String) }
   end
 end

@@ -26,9 +26,12 @@ module Hyrax
         ::User.all
       end
 
-      # The select options for choosing a responsibility
+      # The select options for choosing a responsibility sorted by label
       def workflow_role_options
-        Sipity::WorkflowRole.all.map { |wf_role| [label(wf_role), wf_role.id] }
+        options = Sipity::WorkflowRole.all.map do |wf_role|
+          [Hyrax::Admin::WorkflowRolePresenter.new(wf_role).label, wf_role.id]
+        end
+        options.sort_by(&:first)
       end
 
       private
