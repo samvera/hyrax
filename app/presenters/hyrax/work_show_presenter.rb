@@ -34,7 +34,7 @@ module Hyrax
              to: :solr_document
 
     # Metadata Methods
-    delegate :title, :date_created, :date_modified, :date_uploaded, :description,
+    delegate :title, :date_created, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
              :lease_expiration_date, :rights, :source, :thumbnail_id, :representative_id,
              :member_of_collection_ids, to: :solr_document
@@ -67,6 +67,14 @@ module Hyrax
       PresenterFactory.build_presenters(member_of_collection_ids,
                                         collection_presenter_class,
                                         *presenter_factory_arguments)
+    end
+
+    def date_modified
+      solr_document.date_modified.try(:to_formatted_s, :standard)
+    end
+
+    def date_uploaded
+      solr_document.date_uploaded.try(:to_formatted_s, :standard)
     end
 
     def link_name

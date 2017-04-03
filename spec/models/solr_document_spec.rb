@@ -15,7 +15,7 @@ describe ::SolrDocument, type: :model do
   describe "date_uploaded" do
     let(:attributes) { { 'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.date_uploaded }
-    it { is_expected.to eq '03/14/2013' }
+    it { is_expected.to eq Date.parse('2013-03-14') }
 
     context "when an invalid type is provided" do
       let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
@@ -29,7 +29,7 @@ describe ::SolrDocument, type: :model do
   describe "create_date" do
     let(:attributes) { { 'system_create_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.create_date }
-    it { is_expected.to eq '03/14/2013' }
+    it { is_expected.to eq Date.parse('2013-03-14') }
 
     context "when an invalid type is provided" do
       let(:attributes) { { 'system_create_dtsi' => 'Test' } }

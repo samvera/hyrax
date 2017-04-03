@@ -18,7 +18,7 @@
     </div>
   </td>
   <td>
-    <%= member_document.create_date %>
+    <%= member_document.create_date.to_formatted_s(:standard) %>
   </td>
   <td class="creator">
     <%= member_document.creator.join(', ') %>
