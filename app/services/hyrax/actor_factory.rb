@@ -28,7 +28,7 @@ module Hyrax
     end
 
     def self.model_actor(curation_concern)
-      actor_identifier = curation_concern.class.to_s.split('::').last
+      actor_identifier = curation_concern.class.to_s
       "Hyrax::Actors::#{actor_identifier}Actor".constantize
     end
   end

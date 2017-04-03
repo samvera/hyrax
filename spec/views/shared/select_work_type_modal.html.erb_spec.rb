@@ -12,9 +12,9 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
                     icon_class: 'icon',
                     name: 'Atlas',
                     description: 'Atlas of places',
-                    concern: Atlas)
+                    concern: RareBooks::Atlas)
   end
-  let(:results) { [GenericWork, Atlas] }
+  let(:results) { [GenericWork, RareBooks::Atlas] }
 
   before do
     allow(presenter).to receive(:each).and_yield(row1).and_yield(row2)
@@ -27,6 +27,6 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
     expect(rendered).to have_content 'Generic Work'
     expect(rendered).to have_content 'Atlas'
     expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new"][data-batch="/batch_uploads/new?payload_concern=GenericWork"]'
-    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/atlas/new"][data-batch="/batch_uploads/new?payload_concern=Atlas"]'
+    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/rare_books/atlas/new"][data-batch="/batch_uploads/new?payload_concern=RareBooks%3A%3AAtlas"]'
   end
 end
