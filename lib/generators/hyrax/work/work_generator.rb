@@ -23,6 +23,10 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('controller.rb.erb', "app/controllers/hyrax/#{plural_file_name}_controller.rb")
   end
 
+  def create_indexer
+    template('indexer.rb.erb', "app/indexers/#{file_name}_indexer.rb")
+  end
+
   def create_form
     template('form.rb.erb', "app/forms/hyrax/#{file_name}_form.rb")
   end
