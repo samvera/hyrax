@@ -1,4 +1,4 @@
-describe FileDownloadStat, type: :model do
+RSpec.describe FileDownloadStat, type: :model do
   let(:file_id) { file.id }
   let(:date) { Time.current }
   let(:file_stat) { described_class.create(downloads: "2", date: date, file_id: file_id) }

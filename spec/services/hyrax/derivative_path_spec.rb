@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::DerivativePath do
+RSpec.describe Hyrax::DerivativePath do
   let(:id)     { '123' }
   let(:object) { double(id: id) }
 

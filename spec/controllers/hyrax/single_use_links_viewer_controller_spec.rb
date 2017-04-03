@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::SingleUseLinksViewerController do
+RSpec.describe Hyrax::SingleUseLinksViewerController do
   routes { Hyrax::Engine.routes }
   let(:file) do
     FileSet.create! do |lfile|

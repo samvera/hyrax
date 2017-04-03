@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe VisibilityCopyJob do
+RSpec.describe VisibilityCopyJob do
   describe 'an open access work' do
     let(:work) { create(:work_with_files) }
 

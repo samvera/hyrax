@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::PersistDerivatives do
+RSpec.describe Hyrax::PersistDerivatives do
   before do
     allow(Hyrax.config).to receive(:derivatives_path).and_return('tmp')
   end

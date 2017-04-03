@@ -1,4 +1,4 @@
-describe CreateWorkJob do
+RSpec.describe CreateWorkJob do
   let(:user) { create(:user) }
   let(:log) do
     Hyrax::Operation.create!(user: user,

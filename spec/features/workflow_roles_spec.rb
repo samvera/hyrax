@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "Manage workflow roles", type: :feature do
+RSpec.feature "Manage workflow roles", type: :feature do
   let(:user) { create(:admin) }
   let(:one_step_workflow) do
     {

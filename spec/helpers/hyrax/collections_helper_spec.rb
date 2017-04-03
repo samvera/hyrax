@@ -1,4 +1,4 @@
-describe Hyrax::CollectionsHelper do
+RSpec.describe Hyrax::CollectionsHelper do
   before do
     # Stub route because helper specs don't handle engine routes
     # https://github.com/rspec/rspec-rails/issues/1250

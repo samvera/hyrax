@@ -1,4 +1,4 @@
-describe Hyrax::API::ItemsController, type: :controller do
+RSpec.describe Hyrax::API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Hyrax::Arkivo::Actor }
 
   before do

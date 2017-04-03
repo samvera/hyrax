@@ -1,6 +1,6 @@
 # coding: utf-8
 
-describe "Browse catalog:", type: :feature do
+RSpec.describe "Browse catalog:", type: :feature do
   let!(:jills_work) do
     GenericWork.new do |work|
       work.title = ["Jill's Research"]

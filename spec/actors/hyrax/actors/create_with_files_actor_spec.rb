@@ -1,4 +1,4 @@
-describe Hyrax::Actors::CreateWithFilesActor do
+RSpec.describe Hyrax::Actors::CreateWithFilesActor do
   let(:create_actor) do
     double('create actor', create: true,
                            curation_concern: work,

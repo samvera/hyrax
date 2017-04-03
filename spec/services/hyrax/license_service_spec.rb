@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::LicenseService do
+RSpec.describe Hyrax::LicenseService do
   before do
     # Configure QA to use fixtures
     qa_fixtures = { local_path: File.expand_path('spec/fixtures/authorities') }

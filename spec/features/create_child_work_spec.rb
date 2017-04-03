@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-feature 'Creating a new child Work', :workflow do
+RSpec.feature 'Creating a new child Work', :workflow do
   let(:user) { create(:user) }
   let!(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)

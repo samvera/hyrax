@@ -1,4 +1,4 @@
-describe Hyrax::FeaturedWorksController, type: :controller do
+RSpec.describe Hyrax::FeaturedWorksController, type: :controller do
   describe "#create" do
     before do
       sign_in create(:user)

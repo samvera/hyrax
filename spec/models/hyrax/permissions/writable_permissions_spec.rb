@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Permissions::Writable do
+RSpec.describe Hyrax::Permissions::Writable do
   class SampleModel < ActiveFedora::Base
     include Hyrax::Permissions::Writable
   end

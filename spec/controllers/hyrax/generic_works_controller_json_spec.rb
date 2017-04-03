@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # This tests the Hyrax::CurationConcernController module
 # which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
-describe Hyrax::GenericWorksController do
+RSpec.describe Hyrax::GenericWorksController do
   routes { Rails.application.routes }
 
   let(:user) { create(:user) }

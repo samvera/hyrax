@@ -146,6 +146,7 @@ require 'active_fedora/cleaner'
 RSpec.configure do |config|
   include ActiveFedora::Noid::RSpec
 
+  config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
 
   config.expect_with :rspec do |c|

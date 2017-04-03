@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::DownloadsController do
+RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do

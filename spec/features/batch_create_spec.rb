@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Batch creation of works', type: :feature do
+RSpec.feature 'Batch creation of works', type: :feature do
   let(:user) { create(:user) }
 
   before do

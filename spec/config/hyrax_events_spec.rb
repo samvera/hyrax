@@ -1,4 +1,4 @@
-describe "hyrax_events using Hyrax callbacks" do
+RSpec.describe "hyrax_events using Hyrax callbacks" do
   let(:curation_concern) { create(:work) }
   let(:file_set) { create(:file_set) }
   let(:user) { create(:user) }

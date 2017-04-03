@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/relationships', type: :view do
+RSpec.describe 'hyrax/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { instance_double(SolrDocument, id: '123', human_readable_type: 'Work', admin_set: nil) }
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_doc, ability) }

@@ -1,4 +1,4 @@
-describe "Selecting files to import from cloud providers", type: :feature do
+RSpec.describe "Selecting files to import from cloud providers", type: :feature do
   before do
     sign_in :user
   end

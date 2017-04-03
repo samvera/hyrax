@@ -1,5 +1,5 @@
 
-describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do
     let(:collection_size) { 123_456_678 }
     let(:collection) { build(:collection, date_created: ['2000-01-01']) }

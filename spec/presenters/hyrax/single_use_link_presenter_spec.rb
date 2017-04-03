@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::SingleUseLinkPresenter do
+RSpec.describe Hyrax::SingleUseLinkPresenter do
   subject { described_class.new(link) }
 
   context "with any kind of link" do

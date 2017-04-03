@@ -1,4 +1,4 @@
-describe User, type: :model do
+RSpec.describe User, type: :model do
   let(:user) { FactoryGirl.build(:user) }
   let(:another_user) { FactoryGirl.build(:user) }
 

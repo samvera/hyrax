@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Actors::LeaseActor do
+RSpec.describe Hyrax::Actors::LeaseActor do
   let(:actor) { described_class.new(work) }
 
   let(:work) do

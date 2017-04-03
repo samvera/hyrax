@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::RightsStatements do
+RSpec.describe Hyrax::RightsStatements do
   let(:service) { described_class.new }
 
   describe "#select_active_options" do

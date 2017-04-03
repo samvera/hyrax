@@ -1,4 +1,4 @@
-describe "Notifications page", type: :feature do
+RSpec.feature "Notifications page", type: :feature do
   before do
     sign_in FactoryGirl.create(:user_with_mail)
     visit "/notifications"

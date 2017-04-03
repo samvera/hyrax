@@ -1,4 +1,4 @@
-describe Hyrax::API::ZoteroController, type: :controller do
+RSpec.describe Hyrax::API::ZoteroController, type: :controller do
   let(:user) { create(:user) }
 
   subject { response }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::EmbargoPresenter do
+RSpec.describe Hyrax::EmbargoPresenter do
   let(:document) { SolrDocument.new(attributes) }
   let(:presenter) { described_class.new(document) }
   let(:attributes) { {} }

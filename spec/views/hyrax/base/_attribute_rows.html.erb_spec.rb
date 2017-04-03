@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
+RSpec.describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
   let(:url) { "http://example.com" }
   let(:ability) { double }
   let(:work) { stub_model(GenericWork, related_url: [url]) }

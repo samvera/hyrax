@@ -1,4 +1,4 @@
-describe Hyrax::Zotero do
+RSpec.describe Hyrax::Zotero do
   describe '.publications_url' do
     let(:user_id) { 'foobar' }
     it 'returns a string' do

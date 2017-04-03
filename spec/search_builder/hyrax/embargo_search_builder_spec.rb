@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::EmbargoSearchBuilder do
+RSpec.describe Hyrax::EmbargoSearchBuilder do
   let(:context) { double }
   let(:search_builder) { described_class.new(context) }
 

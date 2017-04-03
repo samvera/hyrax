@@ -1,4 +1,4 @@
-describe "hyrax/homepage/_announcement.html.erb", type: :view do
+RSpec.describe "hyrax/homepage/_announcement.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }
   let(:announcement) { ContentBlock.new(name: ContentBlock::ANNOUNCEMENT, value: announcement_value) }

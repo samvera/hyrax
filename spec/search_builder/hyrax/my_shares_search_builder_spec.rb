@@ -1,4 +1,4 @@
-describe Hyrax::MySharesSearchBuilder do
+RSpec.describe Hyrax::MySharesSearchBuilder do
   let(:me) { create(:user) }
   let(:config) { CatalogController.blacklight_config }
   let(:scope) do

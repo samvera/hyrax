@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/file_sets/_permission_form.html.erb', type: :view do
+RSpec.describe 'hyrax/file_sets/_permission_form.html.erb', type: :view do
   let(:file_set) do
     stub_model(FileSet, id: '123',
                         depositor: 'bob',

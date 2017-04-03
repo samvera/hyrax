@@ -1,4 +1,4 @@
-describe Hyrax::My::SharesController, type: :controller do
+RSpec.describe Hyrax::My::SharesController, type: :controller do
   describe "logged in user" do
     let(:user) { create(:user) }
 

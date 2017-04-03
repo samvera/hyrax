@@ -1,4 +1,4 @@
-describe Hyrax::CollectionsController do
+RSpec.describe Hyrax::CollectionsController do
   routes { Hyrax::Engine.routes }
   before { allow_any_instance_of(User).to receive(:groups).and_return([]) }
 

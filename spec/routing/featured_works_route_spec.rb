@@ -1,4 +1,4 @@
-describe "file routes", type: :routing do
+RSpec.describe "file routes", type: :routing do
   routes { Hyrax::Engine.routes }
 
   it 'creates a featured_work' do

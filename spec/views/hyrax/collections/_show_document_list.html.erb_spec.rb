@@ -1,5 +1,5 @@
 
-describe 'hyrax/collections/_show_document_list.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/_show_document_list.html.erb', type: :view do
   let(:user) { create(:user) }
   let(:collection) { mock_model(Collection) }
 

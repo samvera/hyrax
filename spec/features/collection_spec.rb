@@ -1,4 +1,4 @@
-describe 'collection', type: :feature do
+RSpec.describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
   let(:collection1) { create(:public_collection, user: user) }

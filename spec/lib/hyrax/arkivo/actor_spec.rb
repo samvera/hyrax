@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Arkivo::Actor do
+RSpec.describe Hyrax::Arkivo::Actor do
   before do
     # Don't test characterization on these items; it breaks TravisCI and it's slow
     allow(CharacterizeJob).to receive(:perform_later)

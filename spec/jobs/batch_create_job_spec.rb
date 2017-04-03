@@ -1,4 +1,4 @@
-describe BatchCreateJob do
+RSpec.describe BatchCreateJob do
   let(:user) { create(:user) }
   let(:operation) { create(:batch_create_operation, user: user) }
   let(:child_operation) { double }

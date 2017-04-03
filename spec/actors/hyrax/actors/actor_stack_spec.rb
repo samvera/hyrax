@@ -1,5 +1,6 @@
 require 'spec_helper'
-describe Hyrax::Actors::ActorStack do
+
+RSpec.describe Hyrax::Actors::ActorStack do
   let(:user) { create(:user) }
   let(:ability) { Ability.new(user) }
 

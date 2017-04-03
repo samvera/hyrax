@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::AuditsController do
+RSpec.describe Hyrax::AuditsController do
   routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }
   let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }

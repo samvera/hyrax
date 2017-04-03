@@ -1,4 +1,4 @@
-describe Hyrax::DepositorsController do
+RSpec.describe Hyrax::DepositorsController do
   let(:user) { create(:user) }
   let(:grantee) { create(:user) }
 

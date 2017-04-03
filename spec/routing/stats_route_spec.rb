@@ -1,4 +1,4 @@
-describe "stats routes", type: :routing do
+RSpec.describe "stats routes", type: :routing do
   routes { Hyrax::Engine.routes }
 
   context "for works" do

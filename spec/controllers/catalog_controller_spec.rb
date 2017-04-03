@@ -1,4 +1,4 @@
-describe CatalogController, type: :controller do
+RSpec.describe CatalogController, type: :controller do
   routes { Rails.application.class.routes }
 
   let(:user) { create(:user) }

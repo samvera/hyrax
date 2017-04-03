@@ -1,4 +1,4 @@
-describe 'hyrax/batch_edits/edit.html.erb', type: :view do
+RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
   let(:generic_work) { stub_model(GenericWork, id: '999', depositor: 'bob', license: ['']) }
   let(:batch) { ['999'] }
   let(:form) { Hyrax::Forms::BatchEditForm.new(generic_work, nil, batch) }

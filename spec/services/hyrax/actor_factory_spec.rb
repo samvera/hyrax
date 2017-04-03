@@ -1,4 +1,4 @@
-describe Hyrax::ActorFactory, :no_clean do
+RSpec.describe Hyrax::ActorFactory, :no_clean do
   let(:work) { GenericWork.new }
   let(:user) { double(current_user: double) }
 

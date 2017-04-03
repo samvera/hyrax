@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::LeaseService do
+RSpec.describe Hyrax::LeaseService do
   subject { described_class }
   before { GenericWork.destroy_all }
 

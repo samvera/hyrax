@@ -1,4 +1,4 @@
-describe Hyrax::WorkShowPresenter do
+RSpec.describe Hyrax::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:request) { double }
   let(:user_key) { 'a_user_key' }

@@ -1,4 +1,4 @@
-describe 'hyrax/stats/file.html.erb', type: :view do
+RSpec.describe 'hyrax/stats/file.html.erb', type: :view do
   describe 'usage statistics' do
     before do
       allow_message_expectations_on_nil

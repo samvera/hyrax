@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe IngestLocalFileJob do
+RSpec.describe IngestLocalFileJob do
   let(:user) { create(:user) }
 
   let(:file_set) { FileSet.new }

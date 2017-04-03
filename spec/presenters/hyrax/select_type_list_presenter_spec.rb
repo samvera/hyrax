@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # Note: test app generates multiple work types (concerns) now
-describe Hyrax::SelectTypeListPresenter do
+RSpec.describe Hyrax::SelectTypeListPresenter do
   let(:instance) { described_class.new(user) }
   let(:user) { nil }
 

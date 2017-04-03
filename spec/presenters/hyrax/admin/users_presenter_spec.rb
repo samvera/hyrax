@@ -1,4 +1,4 @@
-describe Hyrax::Admin::UsersPresenter do
+RSpec.describe Hyrax::Admin::UsersPresenter do
   let(:instance) { described_class.new }
   let!(:user) { FactoryGirl.create(:user) }
   let!(:admin_user) { FactoryGirl.create(:user, groups: 'admin') }

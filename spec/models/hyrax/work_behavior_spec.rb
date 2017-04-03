@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::WorkBehavior do
+RSpec.describe Hyrax::WorkBehavior do
   before do
     class EssentialWork < ActiveFedora::Base
       include Hyrax::WorkBehavior

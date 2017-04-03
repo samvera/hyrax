@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Arkivo::SchemaValidator do
+RSpec.describe Hyrax::Arkivo::SchemaValidator do
   let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
 
   it 'ensures a token is included' do

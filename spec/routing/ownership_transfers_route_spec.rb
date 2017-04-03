@@ -1,4 +1,4 @@
-describe "proxy deposit and transfers routing", type: :routing do
+RSpec.describe "proxy deposit and transfers routing", type: :routing do
   routes { Hyrax::Engine.routes }
 
   it "lists transfers" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Qa::Authorities::FindWorks do
+RSpec.describe Qa::Authorities::FindWorks do
   let(:controller) { Qa::TermsController.new }
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }

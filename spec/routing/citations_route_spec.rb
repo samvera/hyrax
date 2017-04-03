@@ -1,4 +1,4 @@
-describe "citations routes", type: :routing do
+RSpec.describe "citations routes", type: :routing do
   routes { Hyrax::Engine.routes }
 
   context "for works" do

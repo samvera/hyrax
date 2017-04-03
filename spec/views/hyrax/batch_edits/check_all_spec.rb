@@ -1,5 +1,5 @@
 
-describe 'hyrax/batch_edits/_check_all.html.erb', type: :view do
+RSpec.describe 'hyrax/batch_edits/_check_all.html.erb', type: :view do
   before do
     allow(controller).to receive(:controller_name).and_return('my')
     view.lookup_context.prefixes.push 'hyrax/my'

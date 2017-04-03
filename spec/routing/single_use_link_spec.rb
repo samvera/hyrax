@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Routes for single use links', type: :routing do
+RSpec.describe 'Routes for single use links', type: :routing do
   routes { Hyrax::Engine.routes }
 
   describe 'Single Use Link Viewer' do

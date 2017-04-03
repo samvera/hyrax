@@ -1,5 +1,5 @@
 
-describe Hyrax::My::WorksController, type: :controller do
+RSpec.describe Hyrax::My::WorksController, type: :controller do
   let(:user) { create(:user) }
 
   before { sign_in user }

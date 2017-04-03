@@ -1,4 +1,4 @@
-describe Collection do
+RSpec.describe Collection do
   let(:collection) { create(:public_collection) }
 
   it "has open visibility" do

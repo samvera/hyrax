@@ -1,4 +1,4 @@
-describe ProxyDepositRequest, type: :model do
+RSpec.describe ProxyDepositRequest, type: :model do
   let(:sender) { create(:user) }
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }

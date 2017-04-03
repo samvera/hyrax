@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'cancan/matchers'
 
-describe "Ability on embargos and leases" do
+RSpec.describe "Ability on embargos and leases" do
   subject { Ability.new(current_user) }
 
   let(:current_user) { create(:user) }

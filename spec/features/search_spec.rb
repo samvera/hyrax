@@ -1,4 +1,4 @@
-describe 'searching' do
+RSpec.feature 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }
   let!(:work) do

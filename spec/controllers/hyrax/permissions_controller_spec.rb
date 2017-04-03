@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::PermissionsController do
+RSpec.describe Hyrax::PermissionsController do
   let(:user) { create(:user) }
   before do
     sign_in user

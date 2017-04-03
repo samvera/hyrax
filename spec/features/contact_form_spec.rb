@@ -1,4 +1,4 @@
-describe "Sending an email via the contact form", type: :feature do
+RSpec.describe "Sending an email via the contact form", type: :feature do
   before { sign_in(:user) }
 
   it "sends mail" do

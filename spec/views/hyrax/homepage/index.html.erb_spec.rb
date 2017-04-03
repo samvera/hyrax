@@ -1,4 +1,4 @@
-describe "hyrax/homepage/index.html.erb", type: :view do
+RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability", can?: false) }
   let(:presenter) { Hyrax::HomepagePresenter.new(ability) }

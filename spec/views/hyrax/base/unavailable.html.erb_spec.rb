@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/unavailable.html.erb', type: :view do
+RSpec.describe 'hyrax/base/unavailable.html.erb', type: :view do
   let(:model) do
     double('model',
            persisted?: true,

@@ -1,6 +1,6 @@
 require 'rake'
 
-describe "Rake tasks" do
+RSpec.describe "Rake tasks" do
   describe "hyrax:user:list_emails" do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Arkivo::MetadataMunger do
+RSpec.describe Hyrax::Arkivo::MetadataMunger do
   subject { described_class.new(metadata) }
 
   let(:metadata) { JSON.parse(FactoryGirl.json(:post_item))['metadata'] }

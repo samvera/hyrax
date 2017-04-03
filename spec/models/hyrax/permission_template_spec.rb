@@ -1,4 +1,4 @@
-describe Hyrax::PermissionTemplate do
+RSpec.describe Hyrax::PermissionTemplate do
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { described_class.new(attributes) }
   let(:attributes) { { admin_set_id: admin_set.id } }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Actors::FileActor do
+RSpec.describe Hyrax::Actors::FileActor do
   include ActionDispatch::TestProcess
   include Hyrax::FactoryHelpers
 

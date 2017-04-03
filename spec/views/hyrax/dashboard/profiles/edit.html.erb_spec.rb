@@ -1,4 +1,4 @@
-describe 'hyrax/dashboard/profiles/edit.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/profiles/edit.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'mjg') }
 
   before do

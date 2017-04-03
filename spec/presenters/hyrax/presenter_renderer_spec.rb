@@ -1,4 +1,4 @@
-describe Hyrax::PresenterRenderer, type: :view do
+RSpec.describe Hyrax::PresenterRenderer, type: :view do
   let(:work) { GenericWork.new }
   let(:ability) { double }
   let(:document) { SolrDocument.new(work.to_solr) }

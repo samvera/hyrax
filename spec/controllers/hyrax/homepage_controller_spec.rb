@@ -1,4 +1,4 @@
-describe Hyrax::HomepageController, type: :controller do
+RSpec.describe Hyrax::HomepageController, type: :controller do
   routes { Hyrax::Engine.routes }
 
   describe "#index" do

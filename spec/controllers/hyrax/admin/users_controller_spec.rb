@@ -1,4 +1,4 @@
-describe Hyrax::Admin::UsersController, type: :controller do
+RSpec.describe Hyrax::Admin::UsersController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   before do
     expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/single_use_links_viewer/show.html.erb' do
+RSpec.describe 'hyrax/single_use_links_viewer/show.html.erb' do
   let(:f) do
     file = FileSet.create do |gf|
       gf.apply_depositor_metadata('jill')

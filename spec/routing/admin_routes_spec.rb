@@ -1,4 +1,4 @@
-describe 'Admin Routes', type: :routing do
+RSpec.describe 'Admin Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 
   it 'routes the appearance' do

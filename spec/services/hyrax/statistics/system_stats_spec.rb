@@ -1,4 +1,4 @@
-describe Hyrax::Statistics::SystemStats do
+RSpec.describe Hyrax::Statistics::SystemStats do
   let(:user1) { create(:user) }
   let(:start_date) { nil }
   let(:end_date) { nil }

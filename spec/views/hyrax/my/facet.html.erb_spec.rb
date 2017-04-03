@@ -2,7 +2,7 @@
 # Note: this is a direct copy of the corresponding test in Blacklight
 # with changes for "views/my" instead of "views/catalog"
 
-describe "hyrax/my/facet.html.erb", type: :view do
+RSpec.describe "hyrax/my/facet.html.erb", type: :view do
   let(:display_facet) { double }
   let(:blacklight_config) { Blacklight::Configuration.new }
   before do

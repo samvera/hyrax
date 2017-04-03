@@ -1,4 +1,4 @@
-describe Hyrax::TransfersController, type: :controller do
+RSpec.describe Hyrax::TransfersController, type: :controller do
   describe "without a signed in user" do
     describe "#index" do
       it "redirects to sign in" do

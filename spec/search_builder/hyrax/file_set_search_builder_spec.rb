@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::FileSetSearchBuilder do
+RSpec.describe Hyrax::FileSetSearchBuilder do
   let(:processor_chain) { [:filter_models] }
   let(:ability) { double('ability') }
   let(:context) { double('context') }

@@ -1,4 +1,4 @@
-describe Hyrax::TinymceAssetsController, type: :controller do
+RSpec.describe Hyrax::TinymceAssetsController, type: :controller do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
   context "when logged in" do

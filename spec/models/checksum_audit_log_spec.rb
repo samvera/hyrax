@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ChecksumAuditLog do
+RSpec.describe ChecksumAuditLog do
   let(:f) do
     file = FileSet.create do |gf|
       gf.apply_depositor_metadata('mjg36')

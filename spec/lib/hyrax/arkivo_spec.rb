@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Arkivo do
+RSpec.describe Hyrax::Arkivo do
   describe '.config' do
     it 'returns a hash with the :url key' do
       expect(described_class.config).to have_key(:url)

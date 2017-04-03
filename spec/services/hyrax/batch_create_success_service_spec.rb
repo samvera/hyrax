@@ -1,4 +1,4 @@
-describe Hyrax::BatchCreateSuccessService do
+RSpec.describe Hyrax::BatchCreateSuccessService do
   let(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
 

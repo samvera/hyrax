@@ -1,4 +1,4 @@
-describe "The dashboard as viewed by a regular user", type: :feature do
+RSpec.describe "The dashboard as viewed by a regular user", type: :feature do
   before do
     sign_in
   end

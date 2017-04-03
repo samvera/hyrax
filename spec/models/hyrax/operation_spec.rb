@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Operation do
+RSpec.describe Hyrax::Operation do
   context '#status' do
     it 'is protected by enum enforcement' do
       expect { described_class.new(status: 'not_valid') }.to raise_error(ArgumentError)

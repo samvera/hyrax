@@ -1,4 +1,4 @@
-describe "User Profile", type: :feature do
+RSpec.feature "User Profile", type: :feature do
   before do
     sign_in user
   end

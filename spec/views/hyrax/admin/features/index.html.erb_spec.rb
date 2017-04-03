@@ -1,4 +1,4 @@
-describe "hyrax/admin/features/index.html.erb", type: :view do
+RSpec.describe "hyrax/admin/features/index.html.erb", type: :view do
   let(:ability) { instance_double("Ability") }
   let(:feature_set) do
     Flipflop::FeaturesController::FeaturesPresenter.new(Flipflop::FeatureSet.current)

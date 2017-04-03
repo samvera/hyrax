@@ -1,4 +1,4 @@
-describe Hyrax::StatsController do
+RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])

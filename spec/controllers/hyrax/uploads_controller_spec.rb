@@ -1,4 +1,4 @@
-describe Hyrax::UploadsController do
+RSpec.describe Hyrax::UploadsController do
   let(:user) { create(:user) }
   describe "#create" do
     let(:file) { fixture_file_upload('/world.png', 'image/png') }

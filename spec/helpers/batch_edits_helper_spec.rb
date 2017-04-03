@@ -1,4 +1,4 @@
-describe BatchEditsHelper, type: :helper do
+RSpec.describe BatchEditsHelper, type: :helper do
   describe "#render_check_all" do
     subject { helper.render_check_all }
     before do

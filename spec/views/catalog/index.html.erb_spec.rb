@@ -1,4 +1,4 @@
-describe 'catalog/index.html.erb', type: :view do
+RSpec.describe 'catalog/index.html.erb', type: :view do
   let(:collection) { build(:collection, id: "abc123") }
   let(:doc) { SolrDocument.new(collection.to_solr) }
 

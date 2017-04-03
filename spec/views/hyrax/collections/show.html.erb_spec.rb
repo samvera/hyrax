@@ -1,4 +1,4 @@
-describe 'hyrax/collections/show.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   let(:document) do
     SolrDocument.new(id: 'xyz123z4',
                      'title_tesim' => ['Make Collections Great Again'],

@@ -1,4 +1,4 @@
-describe Hyrax::AuditFailureService do
+RSpec.describe Hyrax::AuditFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }

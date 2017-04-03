@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Renderers::AttributeRenderer do
+RSpec.describe Hyrax::Renderers::AttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }
   let(:yml_path) { File.join(fixture_path, 'config', 'schema_org.{yml}') }

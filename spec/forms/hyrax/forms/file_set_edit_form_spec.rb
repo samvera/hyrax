@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Forms::FileSetEditForm do
+RSpec.describe Hyrax::Forms::FileSetEditForm do
   subject { described_class.new(FileSet.new) }
 
   describe '#terms' do
