@@ -1,4 +1,4 @@
-<% content_for :page_header do %>
+<% provide :page_header do %>
   <h1><span class="fa fa-bell"></span>  <%= t("hyrax.admin.sidebar.notifications") %></h1>
   <%= link_to hyrax.delete_all_notifications_path,
               method: :delete,

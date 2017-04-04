@@ -1,6 +1,6 @@
 <% provide :page_title, t("hyrax.admin.sidebar.works") %>
 
-<% content_for :head do %>
+<% provide :head do %>
   <%= rss_feed_link_tag route_set: hyrax %>
   <%= atom_feed_link_tag route_set: hyrax %>
 <% end %>
@@ -9,7 +9,7 @@
   <%= render partial: 'scripts', formats: [:js] %>
 <% end %>
 
-<% content_for :page_header do %>
+<% provide :page_header do %>
   <h1><span class="fa fa-file"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
 <% end %>
 
