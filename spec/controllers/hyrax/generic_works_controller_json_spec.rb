@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# This tests the Hyrax::CurationConcernController module
+# This tests the Hyrax::WorksControllerBehavior module
 # which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
 RSpec.describe Hyrax::GenericWorksController do
   routes { Rails.application.routes }

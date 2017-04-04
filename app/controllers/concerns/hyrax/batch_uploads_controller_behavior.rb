@@ -2,7 +2,7 @@ module Hyrax
   module BatchUploadsControllerBehavior
     extend ActiveSupport::Concern
     include Hydra::Controller::ControllerBehavior
-    include Hyrax::CurationConcernController
+    include Hyrax::WorksControllerBehavior
 
     included do
       self.work_form_service = BatchUploadFormService
@@ -64,6 +64,12 @@ module Hyrax
 
       def uploading_on_behalf_of?
         params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
+      end
+
+      def attributes_for_actor
+        raw_params = params[hash_key_for_curation_concern]
+        return {} unless raw_params
+        work_form_service.form_class(curation_concern).model_attributes(raw_params)
       end
   end
 end
