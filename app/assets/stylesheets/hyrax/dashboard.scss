@@ -23,7 +23,7 @@ $admin-vertical-padding: 0 !default;
 
 body.dashboard {
   background-color: $body-background-color;
-  padding-top: 51px;
+  padding-top: $navbar-height;
 
   @media only screen and (max-width : 767px) {
     padding-top: 0;
