@@ -2,7 +2,7 @@
   <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
   <div class="input-group">
 
-    <label class="sr-only" for="search-field-header"><%= t("hyrax.search.form.q.label") %></label>
+    <label class="sr-only" for="search-field-header"><%= t("hyrax.search.form.q.label", application_name: application_name) %></label>
     <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("hyrax.search.form.q.placeholder") %>
 
     <div class="input-group-btn">
