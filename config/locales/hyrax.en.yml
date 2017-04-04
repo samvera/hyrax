@@ -169,6 +169,7 @@ en:
         settings:           "Settings"
         statistics:         "Statistics"
         tasks:              "Tasks"
+        transfers:          "Transfers"
         users:              "Manage Users"
         workflow:           "Workflows"
         workflow_review:    "Review Submissions"

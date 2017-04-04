@@ -167,7 +167,8 @@ es:
         repository_objects: "Objetos del repositorio"
         settings:           "Ajustes"
         statistics:         "Estadísticas"
-        tasks:              'Tareas'
+        tasks:              "Tareas"
+        transfers:          "Transferencias"
         users:              "Usarios"
         workflow:           "Flujos de Trabajo"
         workflow_review:    "Revise Ofertas"
