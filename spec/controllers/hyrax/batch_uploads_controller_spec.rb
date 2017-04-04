@@ -1,4 +1,4 @@
-describe Hyrax::BatchUploadsController do
+RSpec.describe Hyrax::BatchUploadsController do
   let(:user) { create(:user) }
   let(:expected_types) do
     { '1' => 'Article',

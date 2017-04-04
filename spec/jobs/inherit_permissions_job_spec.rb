@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe InheritPermissionsJob do
+RSpec.describe InheritPermissionsJob do
   let(:user) { create(:user) }
   let(:work) { create(:work_with_one_file, user: user) }
 

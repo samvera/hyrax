@@ -1,4 +1,4 @@
-describe ContentUpdateEventJob do
+RSpec.describe ContentUpdateEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
 

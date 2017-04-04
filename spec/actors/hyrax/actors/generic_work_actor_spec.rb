@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-describe Hyrax::Actors::GenericWorkActor do
+RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { create(:user) }

@@ -1,4 +1,4 @@
-describe FeaturedWork, type: :model do
+RSpec.describe FeaturedWork, type: :model do
   let(:feature) { described_class.create(work_id: "99") }
 
   it "has a file" do

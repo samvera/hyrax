@@ -1,4 +1,4 @@
-describe GenericWork do
+RSpec.describe GenericWork do
   it 'has a title' do
     subject.title = ['foo']
     expect(subject.title).to eq ['foo']

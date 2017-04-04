@@ -1,4 +1,4 @@
-describe Hyrax::My::HighlightsController, type: :controller do
+RSpec.describe Hyrax::My::HighlightsController, type: :controller do
   describe "logged in user" do
     let(:user) { create(:user) }
     before { sign_in user }

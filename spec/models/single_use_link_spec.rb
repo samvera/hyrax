@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SingleUseLink do
+RSpec.describe SingleUseLink do
   let(:file) { FileSet.new(id: 'abc123') }
 
   describe "default attributes" do

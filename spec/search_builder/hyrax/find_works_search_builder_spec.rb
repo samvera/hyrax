@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::FindWorksSearchBuilder do
+RSpec.describe Hyrax::FindWorksSearchBuilder do
   let(:controller) { Qa::TermsController.new }
   let(:user) { create(:user) }
   let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user) }

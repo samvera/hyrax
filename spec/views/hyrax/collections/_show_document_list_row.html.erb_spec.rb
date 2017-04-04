@@ -1,5 +1,5 @@
 
-describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view do
   let(:user) { create(:user) }
 
   let(:work) do

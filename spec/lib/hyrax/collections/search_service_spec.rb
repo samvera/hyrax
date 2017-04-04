@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Collections::SearchService do
+RSpec.describe Hyrax::Collections::SearchService do
   let(:login) { 'vanessa' }
   let(:session) { { history: [17, 14, 12, 9] } }
   let(:service) { described_class.new(session, login) }

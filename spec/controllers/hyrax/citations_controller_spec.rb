@@ -1,4 +1,4 @@
-describe Hyrax::CitationsController do
+RSpec.describe Hyrax::CitationsController do
   describe "#work" do
     let(:user) { create(:user) }
     let(:work) { create(:work, user: user) }

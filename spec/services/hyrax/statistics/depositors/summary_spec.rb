@@ -1,4 +1,4 @@
-describe Hyrax::Statistics::Depositors::Summary do
+RSpec.describe Hyrax::Statistics::Depositors::Summary do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let!(:old_work) { create(:work, user: user1) }

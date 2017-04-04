@@ -1,4 +1,4 @@
-describe Hyrax::BatchEditsController, type: :controller do
+RSpec.describe Hyrax::BatchEditsController, type: :controller do
   let(:user) { create(:user) }
   before do
     sign_in user

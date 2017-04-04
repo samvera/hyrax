@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Batch management of works', type: :feature do
+RSpec.describe 'Batch management of works', type: :feature do
   let(:current_user) { create(:user) }
   let!(:work1)       { create(:public_work, user: current_user) }
   let!(:work2)       { create(:public_work, user: current_user) }

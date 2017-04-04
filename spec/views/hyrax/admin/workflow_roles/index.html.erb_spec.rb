@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
+RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
   let!(:user1) { create(:user) }
   let!(:user2) { create(:user) }
   let(:presenter) do

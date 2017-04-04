@@ -2,7 +2,7 @@ require 'rake'
 
 # Run the jasmine tests by running the jasmine:ci rake command and parses the output for failures.
 # The spec will fail if any jasmine tests fails.
-describe "Jasmine" do
+RSpec.describe "Jasmine" do
   it "expects all jasmine tests to pass" do
     load_rake_environment ["#{jasmine_path}/lib/jasmine/tasks/jasmine.rake"]
     # @rake.options.trace = true

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Actors::EmbargoActor do
+RSpec.describe Hyrax::Actors::EmbargoActor do
   let(:actor) { described_class.new(work) }
 
   let(:work) do

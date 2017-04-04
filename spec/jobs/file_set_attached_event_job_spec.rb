@@ -1,4 +1,4 @@
-describe FileSetAttachedEventJob do
+RSpec.describe FileSetAttachedEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
 

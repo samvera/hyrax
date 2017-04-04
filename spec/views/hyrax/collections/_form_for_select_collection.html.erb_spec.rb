@@ -1,4 +1,4 @@
-describe 'hyrax/collections/_form_for_select_collection.html.erb', type: :view do
+RSpec.describe 'hyrax/collections/_form_for_select_collection.html.erb', type: :view do
   let(:collections) do
     [
       build(:collection, id: '1234', create_date: Time.zone.parse('Thu, 13 Aug 2015 14:20:22 +0100')),

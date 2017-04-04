@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CharacterizeJob do
+RSpec.describe CharacterizeJob do
   let(:file_set)    { FileSet.new(id: file_set_id) }
   let(:file_set_id) { 'abc12345' }
   let(:file_path)   { Rails.root + 'tmp' + 'uploads' + 'ab' + 'c1' + '23' + '45' + 'abc12345' + 'picture.png' }

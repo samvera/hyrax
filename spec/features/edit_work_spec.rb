@@ -1,4 +1,4 @@
-feature 'Editing a work', type: :feature do
+RSpec.feature 'Editing a work', type: :feature do
   let(:user) { create(:user) }
   let(:work) { build(:work, user: user) }
 

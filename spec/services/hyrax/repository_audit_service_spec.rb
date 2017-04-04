@@ -1,4 +1,4 @@
-describe Hyrax::RepositoryAuditService do
+RSpec.describe Hyrax::RepositoryAuditService do
   let(:user) { FactoryGirl.create(:user) }
   let!(:file) do
     FileSet.create! do |file|

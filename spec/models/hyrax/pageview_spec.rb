@@ -1,4 +1,4 @@
-describe Hyrax::Pageview, type: :model do
+RSpec.describe Hyrax::Pageview, type: :model do
   it 'has a pageviews metric' do
     expect(described_class.metrics).to be == Legato::ListParameter.new(:metrics, [:pageviews])
   end

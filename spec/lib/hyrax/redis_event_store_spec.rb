@@ -1,4 +1,4 @@
-describe Hyrax::RedisEventStore do
+RSpec.describe Hyrax::RedisEventStore do
   let(:redis_instance) { described_class.instance }
   before do
     redis_instance.keys('events:*').each { |key| redis_instance.del key }

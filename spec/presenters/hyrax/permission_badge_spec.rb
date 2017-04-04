@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::PermissionBadge do
+RSpec.describe Hyrax::PermissionBadge do
   context "with a SolrDocument" do
     let(:badge) { described_class.new(solr_doc.visibility) }
     let(:solr_doc) { SolrDocument.new(attributes) }

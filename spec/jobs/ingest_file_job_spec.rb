@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe IngestFileJob do
+RSpec.describe IngestFileJob do
   let(:file_set) { create(:file_set) }
   let(:filename) { fixture_path + '/world.png' }
   let(:user)     { create(:user) }

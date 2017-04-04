@@ -1,5 +1,5 @@
 
-describe Hyrax::ImportUrlFailureService do
+RSpec.describe Hyrax::ImportUrlFailureService do
   let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do

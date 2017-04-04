@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::AdminSetPresenter do
+RSpec.describe Hyrax::AdminSetPresenter do
   let(:admin_set) do
     build(:admin_set,
           id: '123',

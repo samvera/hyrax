@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Zotero do
+RSpec.describe Hyrax::Zotero do
   it { is_expected.to respond_to(:config) }
 
   describe 'configuration' do

@@ -1,4 +1,4 @@
-describe 'hyrax/users/show.html.erb', type: :view do
+RSpec.describe 'hyrax/users/show.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   let(:ability) { double(current_user: current_user) }
   let(:user) { stub_model(User, user_key: 'cam156', created_at: join_date) }

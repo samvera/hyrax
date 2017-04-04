@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Renderers::LinkedAttributeRenderer do
+RSpec.describe Hyrax::Renderers::LinkedAttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }
 

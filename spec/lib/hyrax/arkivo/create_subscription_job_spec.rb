@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Arkivo::CreateSubscriptionJob do
+RSpec.describe Hyrax::Arkivo::CreateSubscriptionJob do
   let(:user) { create(:user) }
 
   context 'with a bogus user' do

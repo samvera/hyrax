@@ -1,4 +1,4 @@
-describe Hyrax::TrophyHelper, type: :helper do
+RSpec.describe Hyrax::TrophyHelper, type: :helper do
   describe "#display_trophy_link" do
     let(:user) { FactoryGirl.create(:user) }
     let(:id) { '9999' }

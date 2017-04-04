@@ -1,4 +1,4 @@
-describe Hyrax::ImportUrlSuccessService do
+RSpec.describe Hyrax::ImportUrlSuccessService do
   let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:label) { 'foobarbaz' }

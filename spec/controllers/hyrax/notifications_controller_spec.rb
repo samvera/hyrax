@@ -1,4 +1,4 @@
-describe Hyrax::NotificationsController, type: :controller do
+RSpec.describe Hyrax::NotificationsController, type: :controller do
   let(:mock_box) { {} }
 
   before do

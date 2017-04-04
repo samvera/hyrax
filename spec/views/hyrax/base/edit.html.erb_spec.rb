@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/edit.html.erb', type: :view do
+RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
   let(:work) { stub_model(GenericWork, id: '456', title: ["A nice work"]) }
   let(:ability) { double }
 

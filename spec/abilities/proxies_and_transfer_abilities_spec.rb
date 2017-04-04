@@ -1,8 +1,9 @@
 require 'spec_helper'
 require 'cancan/matchers'
 
-describe 'Proxy and Transfer Abilities' do
+RSpec.describe 'Proxy and Transfer Abilities' do
   subject { ability }
+
   let(:ability) { Ability.new(user) }
   let(:user) { create(:user) }
 

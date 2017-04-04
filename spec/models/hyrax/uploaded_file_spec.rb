@@ -1,4 +1,4 @@
-describe Hyrax::UploadedFile do
+RSpec.describe Hyrax::UploadedFile do
   let(:file1) { File.open(fixture_path + '/world.png') }
   subject { described_class.create(file: file1) }
 

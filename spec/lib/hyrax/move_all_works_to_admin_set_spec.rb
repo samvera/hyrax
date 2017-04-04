@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'hyrax/move_all_works_to_admin_set'
 
-describe MoveAllWorksToAdminSet do
+RSpec.describe MoveAllWorksToAdminSet do
   subject { described_class.run(admin_set) }
   let(:admin_set) { create(:admin_set) }
   let!(:work) { create(:work) }

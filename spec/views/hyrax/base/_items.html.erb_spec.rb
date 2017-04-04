@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/items', type: :view do
+RSpec.describe 'hyrax/base/items', type: :view do
   let(:ability) { double }
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_doc, ability) }
   let(:file_set) { Hyrax::FileSetPresenter.new(solr_doc_file, ability) }

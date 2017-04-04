@@ -1,4 +1,4 @@
-describe ::SolrDocument, type: :model do
+RSpec.describe ::SolrDocument, type: :model do
   let(:document) { described_class.new(attributes) }
   let(:attributes) { {} }
 

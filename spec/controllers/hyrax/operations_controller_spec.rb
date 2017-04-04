@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::OperationsController do
+RSpec.describe Hyrax::OperationsController do
   routes { Hyrax::Engine.routes }
   let(:parent) { create(:operation, :pending, user: user) }
   let!(:child1) { create(:operation, :failing, parent: parent, user: user) }

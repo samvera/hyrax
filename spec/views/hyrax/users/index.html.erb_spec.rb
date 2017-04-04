@@ -1,4 +1,4 @@
-describe 'hyrax/users/index.html.erb', type: :view do
+RSpec.describe 'hyrax/users/index.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   before do
     users = []

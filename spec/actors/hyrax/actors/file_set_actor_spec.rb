@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'redlock'
 
-describe Hyrax::Actors::FileSetActor do
+RSpec.describe Hyrax::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
   let(:user)           { create(:user) }

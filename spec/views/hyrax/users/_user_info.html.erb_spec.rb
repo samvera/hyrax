@@ -1,4 +1,4 @@
-describe 'hyrax/users/_user_info.html.erb', type: :view do
+RSpec.describe 'hyrax/users/_user_info.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'jdoe42') }
 
   context 'with Zotero disabled' do

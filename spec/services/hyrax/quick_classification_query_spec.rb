@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::QuickClassificationQuery do
+RSpec.describe Hyrax::QuickClassificationQuery do
   let(:user) { create(:user) }
 
   context "with no options" do

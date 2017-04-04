@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AuditJob do
+RSpec.describe AuditJob do
   let(:user) { create(:user) }
 
   let(:file) do

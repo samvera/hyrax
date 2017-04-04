@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::VersioningService do
+RSpec.describe Hyrax::VersioningService do
   describe '#latest_version_of' do
     let(:file) do
       FileSet.create do |f|

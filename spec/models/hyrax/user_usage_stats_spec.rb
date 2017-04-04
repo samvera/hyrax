@@ -1,4 +1,4 @@
-describe Hyrax::UserUsageStats do
+RSpec.describe Hyrax::UserUsageStats do
   subject { FactoryGirl.create(:user) }
 
   describe 'with cached stats' do

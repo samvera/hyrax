@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::PresenterFactory do
+RSpec.describe Hyrax::PresenterFactory do
   describe "#build_presenters" do
     let(:presenter_class) { Hyrax::FileSetPresenter }
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::ThumbnailPathService do
+RSpec.describe Hyrax::ThumbnailPathService do
   include Hyrax::FactoryHelpers
 
   subject { described_class.call(object) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::LeaseSearchBuilder do
+RSpec.describe Hyrax::LeaseSearchBuilder do
   let(:context) { double }
   let(:search_builder) { described_class.new(context) }
 

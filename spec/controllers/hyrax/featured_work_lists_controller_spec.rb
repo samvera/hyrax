@@ -1,4 +1,4 @@
-describe Hyrax::FeaturedWorkListsController, type: :controller do
+RSpec.describe Hyrax::FeaturedWorkListsController, type: :controller do
   describe "#create" do
     before do
       expect(controller).to receive(:authorize!).with(:update, FeaturedWork)

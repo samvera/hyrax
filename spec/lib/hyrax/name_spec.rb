@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Name do
+RSpec.describe Hyrax::Name do
   let(:name) { described_class.new(GenericWork) }
 
   describe "route_key" do

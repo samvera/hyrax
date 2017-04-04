@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Actors::ApplyOrderActor do
+RSpec.describe Hyrax::Actors::ApplyOrderActor do
   describe '#update' do
     let(:curation_concern) { create(:work_with_two_children, user: user) }
 

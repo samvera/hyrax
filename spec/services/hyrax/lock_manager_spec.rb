@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::LockManager do
+RSpec.describe Hyrax::LockManager do
   subject do
     described_class.new(Hyrax.config.lock_time_to_live,
                         Hyrax.config.lock_retry_count,

@@ -1,4 +1,4 @@
-describe 'routing and paths', type: :routing do
+RSpec.describe 'routing and paths', type: :routing do
   routes { Hyrax::Engine.routes }
 
   let(:item_id) { '123' }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'MultifileInput', type: :input do
+RSpec.describe 'MultifileInput', type: :input do
   class Foo
     extend ActiveModel::Naming
     include ActiveModel::Conversion

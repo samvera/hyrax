@@ -1,4 +1,4 @@
-describe Hyrax::PagesController, type: :controller do
+RSpec.describe Hyrax::PagesController, type: :controller do
   let(:page_name) { "about_page" }
   context "content exists" do
     describe "GET #show" do

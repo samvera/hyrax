@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::CurationConcern do
+RSpec.describe Hyrax::CurationConcern do
   let(:work) { GenericWork.new }
   let(:user) { double(current_user: double) }
 

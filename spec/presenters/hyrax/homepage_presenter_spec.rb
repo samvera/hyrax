@@ -1,4 +1,4 @@
-describe Hyrax::HomepagePresenter do
+RSpec.describe Hyrax::HomepagePresenter do
   let(:presenter) { described_class.new(ability) }
   let(:ability) { instance_double("Ability") }
   subject { presenter }

@@ -1,4 +1,4 @@
-describe ContentNewVersionEventJob do
+RSpec.describe ContentNewVersionEventJob do
   let(:user) { create(:user) }
   let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
   let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }

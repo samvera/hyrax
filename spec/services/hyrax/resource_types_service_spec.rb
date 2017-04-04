@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::ResourceTypesService do
+RSpec.describe Hyrax::ResourceTypesService do
   describe "select_options" do
     subject { described_class.select_options }
 

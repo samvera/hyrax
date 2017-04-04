@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::CollectionIndexer do
+RSpec.describe Hyrax::CollectionIndexer do
   let(:indexer) { described_class.new(collection) }
   let(:collection) { build(:collection) }
   let(:col1id) { 'col1' }

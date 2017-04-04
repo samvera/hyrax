@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::PersistDirectlyContainedOutputFileService do
+RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService do
   let(:object)            { FileSet.create! { |fs| fs.apply_depositor_metadata('justin') } }
   let(:file_path)         { File.join(fixture_path, 'test.tif') }
   let(:file)              { File.new(file_path) }

@@ -1,4 +1,4 @@
-describe Hyrax::ChangeContentDepositorService do
+RSpec.describe Hyrax::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }
   let!(:file) do

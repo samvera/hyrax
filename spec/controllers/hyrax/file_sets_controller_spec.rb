@@ -1,4 +1,4 @@
-describe Hyrax::FileSetsController do
+RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
 

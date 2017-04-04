@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ImportUrlJob do
+RSpec.describe ImportUrlJob do
   let(:user) { create(:user) }
 
   let(:file_path) { fixture_path + '/world.png' }

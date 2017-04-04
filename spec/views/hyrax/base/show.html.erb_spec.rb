@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/show.html.erb', type: :view do
+RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   let(:solr_document) do
     SolrDocument.new(id: '999',
                      date_modified_dtsi: '2011-04-01',

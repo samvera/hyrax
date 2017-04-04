@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'hyrax/base/_member.html.erb' do
+RSpec.describe 'hyrax/base/_member.html.erb' do
   let(:solr_document) do
     SolrDocument.new(id: '999',
                      has_model_ssim: ['FileSet'],

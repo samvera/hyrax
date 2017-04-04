@@ -1,4 +1,4 @@
-describe ContentBlock, type: :model do
+RSpec.describe ContentBlock, type: :model do
   let!(:bilbo) do
     create(:content_block,
            name: ContentBlock::RESEARCHER,

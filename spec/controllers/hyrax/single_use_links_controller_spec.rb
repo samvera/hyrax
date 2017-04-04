@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::SingleUseLinksController, type: :controller do
+RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   routes { Hyrax::Engine.routes }
 
   let(:user) { create(:user) }

@@ -1,4 +1,4 @@
-describe Hyrax::ContentBlocksController, type: :controller do
+RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   describe "#update" do
     let(:content_block) { FactoryGirl.create(:content_block) }
     before { request.env["HTTP_REFERER"] = "whence_i_came" }

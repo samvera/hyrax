@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::Permissions::Readable do
+RSpec.describe Hyrax::Permissions::Readable do
   class SubjectClass
     include Hyrax::Permissions::Readable
     attr_accessor :read_groups

@@ -1,4 +1,4 @@
-describe Hyrax::ContentBlockHelper, type: :helper do
+RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
   let(:content_block) { FactoryGirl.create(:content_block, value: "<p>foo bar</p>") }
 
   subject { helper.editable_content_block(content_block) }

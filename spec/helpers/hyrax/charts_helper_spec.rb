@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hyrax::ChartsHelper do
+RSpec.describe Hyrax::ChartsHelper do
   describe '#hash_to_chart' do
     subject { helper.hash_to_chart(data) }
     let(:data) do

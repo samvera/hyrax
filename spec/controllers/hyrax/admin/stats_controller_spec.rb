@@ -1,4 +1,4 @@
-describe Hyrax::Admin::StatsController, type: :controller do
+RSpec.describe Hyrax::Admin::StatsController, type: :controller do
   let(:user) { create(:user) }
 
   context "a non admin" do

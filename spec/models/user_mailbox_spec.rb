@@ -1,4 +1,4 @@
-describe UserMailbox do
+RSpec.describe UserMailbox do
   let(:user)         { create(:user) }
   let(:another_user) { create(:user) }
   before do
