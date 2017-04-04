@@ -25,7 +25,6 @@
                     <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
                   <% end %>
               </td>
-              <br>
               <td><%= link_to user.email, hyrax.user_path(user) %></td>
               <td><% roles = @presenter.user_roles(user) %>
                   <ul><% roles.each do |role| %>
