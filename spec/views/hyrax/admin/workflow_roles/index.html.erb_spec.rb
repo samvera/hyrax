@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
   let!(:user1) { create(:user) }
   let!(:user2) { create(:user) }
   let(:presenter) do
-    Hyrax::Admin::WorkflowRolePresenter.new
+    Hyrax::Admin::WorkflowRolesPresenter.new
   end
 
   before do

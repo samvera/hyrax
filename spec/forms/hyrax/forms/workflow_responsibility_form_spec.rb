@@ -15,16 +15,27 @@ RSpec.describe Hyrax::Forms::WorkflowResponsibilityForm, :no_clean do
 
   describe "#user_options" do
     subject { instance.user_options }
+
     it { is_expected.to eq User.all }
   end
 
   describe "#workflow_role_options" do
-    let(:wf_role1) { instance_double(Sipity::WorkflowRole, id: 1, label: 'generic_work - foo') }
-    let(:wf_role2) { instance_double(Sipity::WorkflowRole, id: 2, label: 'generic_work - bar') }
+    subject { instance.workflow_role_options }
+
+    let(:wf_role1) { instance_double(Sipity::WorkflowRole, id: 1) }
+    let(:wf_role2) { instance_double(Sipity::WorkflowRole, id: 2) }
+
     before do
       allow(Sipity::WorkflowRole).to receive(:all).and_return([wf_role1, wf_role2])
+      allow(Hyrax::Admin::WorkflowRolePresenter).to receive(:new)
+        .with(wf_role1)
+        .and_return(instance_double(Hyrax::Admin::WorkflowRolePresenter,
+                                    label: 'generic_work - foo'))
+      allow(Hyrax::Admin::WorkflowRolePresenter).to receive(:new)
+        .with(wf_role2)
+        .and_return(instance_double(Hyrax::Admin::WorkflowRolePresenter,
+                                    label: 'generic_work - bar'))
     end
-    subject { instance.workflow_role_options }
-    it { is_expected.to eq [['generic_work - foo', 1], ['generic_work - bar', 2]] }
+    it { is_expected.to eq [['generic_work - bar', 2], ['generic_work - foo', 1]] }
   end
 end
