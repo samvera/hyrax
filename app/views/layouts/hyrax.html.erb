@@ -5,26 +5,16 @@
     <%= content_for(:head) %>
   </head>
 
-  <% body_class ||= '' %>
-  <% if body_class == 'dashboard' %>
-    <% container_class = 'container-fluid'
-       main_class = 'col-lg-10 col-lg-push-2 '
-       sidebar_class = 'col-lg-2 col-lg-pull-10 ' %>
-  <% else %>
-    <% container_class = 'container'; main_class = ''; sidebar_class = '' %>
-  <% end %>
-
-
-  <body class="<%= body_class %>">
+  <body>
     <a href="#skip_to_content" class="sr-only">Skip to Content</a>
-    <%= render partial: '/masthead' %>
+    <%= render '/masthead' %>
     <%= content_for(:navbar) %>
     <%= content_for(:precontainer_content) %>
-    <div id="content-wrapper" class="<%= container_class %>" role="main">
+    <div id="content-wrapper" class="container" role="main">
       <a name="skip_to_content"></a>
 
       <% if content_for?(:sidebar) %>
-        <div class="col-xs-12 col-sm-9 col-sm-push-3 <%= main_class %>main-content">
+        <div class="col-xs-12 col-sm-9 col-sm-push-3 main-content">
           <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
           <%= render '/flash_msg' %>
           <% if content_for?(:page_header) %>
@@ -37,7 +27,7 @@
 
           <%= content_for?(:content) ? yield(:content) : yield %>
         </div>
-        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 <%= sidebar_class %>sidebar"><%= yield :sidebar %></div>
+        <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 sidebar"><%= yield :sidebar %></div>
       <% else # no sidebar %>
         <div class="col-xs-12">
           <%= render '/flash_msg' %>
