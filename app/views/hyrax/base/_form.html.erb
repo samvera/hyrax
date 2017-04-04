@@ -12,7 +12,7 @@
     </div>
   <% end %>
   <% unless f.object.persisted? %>
-    <% content_for :metadata_tab do %>
+    <% provide :metadata_tab do %>
       <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", hyrax.new_batch_upload_path %></p>
     <% end %>
   <% end %>
