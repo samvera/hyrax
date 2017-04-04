@@ -12,7 +12,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
   
   def create_atlas_work
-    generate 'hyrax:work Atlas'
+    generate 'hyrax:work RareBooks/Atlas'
   end
 
   def comment_out_web_console
