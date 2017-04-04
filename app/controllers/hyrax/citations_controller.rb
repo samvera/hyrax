@@ -1,6 +1,6 @@
 module Hyrax
   class CitationsController < ApplicationController
-    include CurationConcernController
+    include WorksControllerBehavior
     include Breadcrumbs
     include SingularSubresourceController
 
@@ -11,7 +11,7 @@ module Hyrax
     end
 
     def file
-      # We set _@presenter_ here so it isn't set in CurationConcernController#presenter
+      # We set _@presenter_ here so it isn't set in WorksControllerBehavior#presenter
       # which is intended to find works (not files)
       solr_file = ::SolrDocument.find(params[:id])
       authorize! :show, solr_file

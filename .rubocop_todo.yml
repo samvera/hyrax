@@ -37,9 +37,9 @@ Metrics/AbcSize:
 
 Metrics/ModuleLength:
   Exclude:
-    - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
     - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
+    - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
     - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
     - 'app/models/concerns/hyrax/ability.rb'
     - 'app/models/concerns/hyrax/solr_document_behavior.rb'
@@ -50,8 +50,8 @@ Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
-    - 'app/controllers/concerns/hyrax/curation_concern_controller.rb'
     - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
+    - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
