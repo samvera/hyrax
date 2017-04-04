@@ -9,6 +9,8 @@ module Hyrax
       self.curation_concern_type = work_form_service.form_class.model_class # includes CanCan side-effects
       # We use BatchUploadItem as a null stand-in curation_concern_type.
       # The actual permission is checked dynamically during #create.
+
+      layout 'dashboard'
     end
 
     # The permissions to create a batch are not as important as the permissions for the concern being batched.
