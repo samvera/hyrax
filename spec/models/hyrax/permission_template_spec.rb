@@ -43,7 +43,7 @@ RSpec.describe Hyrax::PermissionTemplate do
     it 'queries the underlying access_grants' do
       template = create(:permission_template)
       to_find = template.access_grants.create!(agent_type: 'user', access: 'manage', agent_id: '123')
-      template.access_grants.create!(agent_type: 'user', access: 'read', agent_id: '456')
+      template.access_grants.create!(agent_type: 'user', access: 'view', agent_id: '456')
       template.access_grants.create!(agent_type: 'group', access: 'manage', agent_id: '789')
 
       expect(template.agent_ids_for(agent_type: 'user', access: 'manage')).to eq([to_find.agent_id])
