@@ -4,8 +4,10 @@ module Hyrax
       load_and_authorize_resource class: 'Hyrax::PermissionTemplateAccess'
 
       def destroy
-        @permission_template_access.destroy
-        update_admin_set if @permission_template_access.manage?
+        ActiveRecord::Base.transaction do
+          @permission_template_access.destroy
+          update_management if @permission_template_access.manage?
+        end
 
         redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
                                                     anchor: 'participants'),
@@ -19,8 +21,8 @@ module Hyrax
           @admin_set_id ||= @permission_template_access.permission_template.admin_set_id
         end
 
-        def update_admin_set
-          AdminSet.find(admin_set_id).update_access_controls!
+        def update_management
+          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_management
         end
     end
   end
