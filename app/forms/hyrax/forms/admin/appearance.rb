@@ -29,7 +29,7 @@ module Hyrax
         end
 
         def header_text_color
-          block_for('header_text_color', '#9d9d9d')
+          block_for('header_text_color', '#DCDCCE')
         end
 
         def primary_button_background_color

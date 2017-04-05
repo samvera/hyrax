@@ -22,6 +22,11 @@ body {
   bottom: 0;
   height: $footer-height;
   width: 100%;
+
+  a,
+  &.navbar-inverse .navbar-link {
+    color: #e27800;
+  }
 }
 
 @media (max-width: $screen-sm) {
