@@ -11,17 +11,19 @@ RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do
     let(:solr_doc) { SolrDocument.new(admin_set.to_solr) }
     let(:admin_sets) { [solr_doc] }
     let(:presenter_class) { Hyrax::AdminSetPresenter }
+    let(:presenter) { instance_double(presenter_class, total_items: 99) }
     let(:ability) { instance_double("Ability") }
     before do
       allow(controller).to receive(:current_ability).and_return(ability)
       allow(controller).to receive(:presenter_class).and_return(presenter_class)
+      allow(presenter_class).to receive(:new).and_return(presenter)
       assign(:admin_sets, admin_sets)
     end
     it "lists admin set" do
       render
       expect(rendered).to have_content('Example Admin Set')
       expect(rendered).to have_content('jdoe@example.com')
-      expect(rendered).to have_css("td", text: /^0$/)
+      expect(rendered).to have_css("td", text: /^99$/)
     end
   end
 end
