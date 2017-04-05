@@ -58,8 +58,11 @@ module Hyrax
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
         if result
-          permission_template = create_permission_template
-          create_workflows_for(permission_template: permission_template)
+          ActiveRecord::Base.transaction do
+            permission_template = create_permission_template
+            workflow = create_workflows_for(permission_template: permission_template)
+            create_default_access_for(permission_template: permission_template, workflow: workflow) if admin_set.default_set?
+          end
         end
       end
     end
@@ -78,6 +81,13 @@ module Hyrax
       def create_workflows_for(permission_template:)
         workflow_importer.call(permission_template: permission_template)
         Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
+      end
+
+      # Gives deposit access to all registered users
+      def create_default_access_for(permission_template:, workflow:)
+        permission_template.access_grants.create(agent_type: 'group', agent_id: 'registered', access: 'deposit')
+        deposit = Sipity::Role.find_by_name!('depositing')
+        workflow.update_responsibilities(role: deposit, agents: Hyrax::Group.new('registered'))
       end
 
       def default_workflow_importer
