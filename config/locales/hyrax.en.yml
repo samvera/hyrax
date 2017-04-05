@@ -170,9 +170,8 @@ en:
         statistics:         "Statistics"
         tasks:              "Tasks"
         users:              "Manage Users"
-        workflow:           "Workflows"
         workflow_review:    "Review Submissions"
-        workflow_roles:     "Roles"
+        workflow_roles:     "Workflow Roles"
         works:              "Works"
       stats:
         deposited_form:

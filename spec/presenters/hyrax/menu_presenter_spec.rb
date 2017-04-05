@@ -5,19 +5,6 @@ RSpec.describe Hyrax::MenuPresenter do
   let(:context) { ActionView::TestCase::TestController.new.view_context }
   let(:controller_name) { controller.controller_name }
 
-  describe "#workflows_section?" do
-    before do
-      allow(context).to receive(:controller_name).and_return(controller_name)
-      allow(context).to receive(:controller).and_return(controller)
-    end
-    subject { instance.workflows_section? }
-
-    context "for the WorkflowRolesController" do
-      let(:controller) { Hyrax::Admin::WorkflowRolesController.new }
-      it { is_expected.to be true }
-    end
-  end
-
   describe "#collapsable_section" do
     subject do
       instance.collapsable_section('link title',
