@@ -165,7 +165,7 @@ en:
         configuration:      "Configuration"
         notifications:      "Notifications"
         profile:            "Profile"
-        repository_objects: "Repository Objects"
+        repository_objects: "Repository Contents"
         settings:           "Settings"
         statistics:         "Statistics"
         tasks:              "Tasks"
