@@ -12,17 +12,17 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
       long_term: ["x" * 255],
       multi_term: ["1", "2", "3", "4", "5", "6", "7", "8"],
       string_term: 'oops, I used a string instead of an array',
-      logged_audit_status: "Audits have not yet been run on this file"
+      logged_fixity_status: "Fixity checks have not yet been run on this file"
     }
   end
   before do
     view.lookup_context.prefixes.push 'hyrax/base'
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
-    allow(presenter).to receive(:audit_status).and_return(mock_metadata)
+    allow(presenter).to receive(:fixity_status).and_return(mock_metadata)
     assign(:presenter, presenter)
     assign(:document, solr_doc)
-    assign(:audit_status, "none")
+    assign(:fixity_status, "none")
   end
 
   describe 'title heading' do

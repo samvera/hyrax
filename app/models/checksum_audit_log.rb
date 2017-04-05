@@ -1,5 +1,6 @@
 class ChecksumAuditLog < ActiveRecord::Base
-  def self.get_audit_log(id, path, version_uri)
+  # TODO: this method doesn't seem to be used. Remove?
+  def self.fixity_check_log(id, path, version_uri)
     ChecksumAuditLog.find_or_create_by(file_set_id: id, file_id: path, version: version_uri)
   end
 

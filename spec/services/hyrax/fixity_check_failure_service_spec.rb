@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::AuditFailureService do
+RSpec.describe Hyrax::FixityCheckFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
@@ -20,7 +20,7 @@ RSpec.describe Hyrax::AuditFailureService do
     it "sends failing mail" do
       subject.call
       expect(inbox.count).to eq(1)
-      inbox.each { |msg| expect(msg.last_message.subject).to eq('Failing Audit Run') }
+      inbox.each { |msg| expect(msg.last_message.subject).to eq('Failing Fixity Check') }
     end
   end
 end

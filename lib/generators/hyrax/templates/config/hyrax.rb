@@ -20,8 +20,8 @@ Hyrax.config do |config|
   # How many notifications should be displayed on the dashboard
   # config.max_notifications_for_dashboard = 5
 
-  # How frequently should a file be audited
-  # config.max_days_between_audits = 7
+  # How frequently should a file be fixity checked
+  # config.max_days_between_fixity_checks = 7
 
   # Enable displaying usage statistics in the UI
   # Defaults to false
@@ -98,7 +98,7 @@ Hyrax.config do |config|
   # The user who runs batch jobs. Update this if you aren't using emails
   # config.batch_user_key = 'batchuser@example.com'
 
-  # The user who runs audit jobs. Update this if you aren't using emails
+  # The user who runs fixity check jobs. Update this if you aren't using emails
   # config.audit_user_key = 'audituser@example.com'
   #
   # The banner image. Should be 5000px wide by 1000px tall

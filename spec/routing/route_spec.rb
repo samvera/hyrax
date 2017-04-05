@@ -7,9 +7,9 @@ RSpec.describe 'Routes', :no_clean, type: :routing do
     end
   end
 
-  describe "Audit" do
-    it 'routes to audit' do
-      expect(post: '/concern/file_sets/7/audit').to route_to(controller: 'hyrax/audits', action: 'create', file_set_id: '7')
+  describe "Fixity check" do
+    it 'creates a fixity check' do
+      expect(post: '/concern/file_sets/7/fixity_checks').to route_to(controller: 'hyrax/fixity_checks', action: 'create', file_set_id: '7')
     end
   end
 

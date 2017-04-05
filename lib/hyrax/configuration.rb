@@ -95,10 +95,14 @@ module Hyrax
       @microdata_default_type ||= 'http://schema.org/CreativeWork'
     end
 
-    attr_writer :max_days_between_audits
-    def max_days_between_audits
-      @max_days_between_audits ||= 7
+    attr_writer :max_days_between_fixity_checks
+    def max_days_between_fixity_checks
+      @max_days_between_fixity_checks ||= 7
     end
+    alias max_days_between_audits max_days_between_fixity_checks
+    deprecation_deprecate max_days_between_audits: "use max_days_between_fixity_checks instead"
+    alias max_days_between_audits= max_days_between_fixity_checks=
+    deprecation_deprecate :max_days_between_audits= => "use max_days_between_fixity_checks= instead"
 
     attr_writer :enable_noids
     def enable_noids?
@@ -229,7 +233,7 @@ module Hyrax
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,
-                    :after_import_local_file_failure, :after_audit_failure,
+                    :after_import_local_file_failure, :after_fixity_check_failure,
                     :after_destroy, :after_import_url_success,
                     :after_import_url_failure
 
