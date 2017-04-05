@@ -62,7 +62,7 @@ module Hyrax
       # of the active workflow
       def update_management
         admin_set.update_access_controls!
-        update_workflow_responsibilities
+        update_workflow_approving_responsibilities
       end
 
       private
@@ -84,12 +84,11 @@ module Hyrax
 
         # Grant workflow approve roles for any admin set managers
         # and revoke the approving role for non-managers
-        def update_workflow_responsibilities
+        def update_workflow_approving_responsibilities
           return unless active_workflow
           approving_role = Sipity::Role.find_by_name('approving')
           return unless approving_role
-          add_workflow_responsibilities(approving_role, manager_agents)
-          remove_workflow_responsibilities(approving_role, manager_agents)
+          active_workflow.update_responsibilities(role: approving_role, agents: manager_agents)
         end
 
         # @return [Array<Sipity::Agent>] a list of sipity agents corresponding to the manager role of the permission_template
@@ -109,24 +108,6 @@ module Hyrax
         # @return [Array<PermissionTemplateAccess>] a list of grants corresponding to the manager role of the permission_template
         def manager_grants
           model.access_grants.where(access: 'manage'.freeze)
-        end
-
-        # Find any workflow_responsibilities held by agents not in the authorized_agents
-        # and remove them
-        # @param [Sipity::Role] approving_role
-        # @param [Array<Sipity::Agent>] agents
-        def remove_workflow_responsibilities(approving_role, agents)
-          wf_role = Sipity::WorkflowRole.find_by(workflow: active_workflow, role_id: approving_role)
-          wf_role.workflow_responsibilities.where.not(agent: agents).destroy_all
-        end
-
-        # Give workflow responsibilites to the provided agents for the given role
-        # @param [Sipity::Role] approving_role
-        # @param [Array<Sipity::Agent>] authorized_agents
-        def add_workflow_responsibilities(approving_role, authorized_agents)
-          Workflow::PermissionGenerator.call(roles: approving_role,
-                                             workflow: active_workflow,
-                                             agents: authorized_agents)
         end
 
         # @return [String, Nil] error_code if validation fails, nil otherwise
