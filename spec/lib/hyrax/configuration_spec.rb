@@ -17,25 +17,25 @@ RSpec.describe Hyrax::Configuration do
   end
 
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
-  it { is_expected.to respond_to(:active_deposit_agreement_acceptance) }
+  it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
   it { is_expected.to respond_to(:always_display_share_button?) }
-  it { is_expected.to respond_to(:always_display_share_button) }
+  it { is_expected.to respond_to(:always_display_share_button=) }
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
   it { is_expected.to respond_to(:analytics) }
   it { is_expected.to respond_to(:arkivo_api?) }
-  it { is_expected.to respond_to(:arkivo_api) }
+  it { is_expected.to respond_to(:arkivo_api=) }
   it { is_expected.to respond_to(:audit_user_key) }
   it { is_expected.to respond_to(:batch_user_key) }
   it { is_expected.to respond_to(:browse_everything?) }
-  it { is_expected.to respond_to(:browse_everything) }
+  it { is_expected.to respond_to(:browse_everything=) }
   it { is_expected.to respond_to(:cache_path) }
   it { is_expected.to respond_to(:citations?) }
-  it { is_expected.to respond_to(:citations) }
+  it { is_expected.to respond_to(:citations=) }
   it { is_expected.to respond_to(:contact_email) }
   it { is_expected.to respond_to(:display_media_download_link?) }
-  it { is_expected.to respond_to(:display_media_download_link) }
+  it { is_expected.to respond_to(:display_media_download_link=) }
   it { is_expected.to respond_to(:display_microdata?) }
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:feature_config_path) }
