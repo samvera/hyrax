@@ -19,8 +19,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
-  it { is_expected.to respond_to(:always_display_share_button?) }
-  it { is_expected.to respond_to(:always_display_share_button=) }
+  it { is_expected.to respond_to(:always_display_share_button?) } # deprecated
+  it { is_expected.to respond_to(:always_display_share_button=) } # deprecated
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
   it { is_expected.to respond_to(:analytics) }
@@ -37,6 +37,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_media_download_link=) }
   it { is_expected.to respond_to(:display_microdata?) }
+  it { is_expected.to respond_to(:display_share_button_when_not_logged_in?) }
+  it { is_expected.to respond_to(:display_share_button_when_not_logged_in=) }
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:feature_config_path) }
   it { is_expected.to respond_to(:google_analytics_id?) }
