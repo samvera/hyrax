@@ -525,7 +525,7 @@ en:
       form:
         option:
           all:
-            label_long:   "All of Hyrax"
+            label_long:   "All of %{application_name}"
             label_short:  "All"
           my_collections:
             label_long:   "My Collections"
@@ -537,7 +537,7 @@ en:
             label_long:   "My Works"
             label_short:  "My Works"
         q:
-          label:          "Search Hyrax"
+          label:          "Search %{application_name}"
           placeholder:    "Enter search terms"
     select_type:
       description: "General purpose worktype"

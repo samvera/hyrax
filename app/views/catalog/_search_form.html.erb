@@ -3,7 +3,7 @@
   <%= hidden_field_tag :search_field, 'all_fields' %>
   <div class="input-group">
 
-    <label class="sr-only" for="search-field-header"><%= t("hyrax.search.form.q.label") %></label>
+    <label class="sr-only" for="search-field-header"><%= t("hyrax.search.form.q.label", application_name: application_name) %></label>
     <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("hyrax.search.form.q.placeholder") %>
 
     <div class="input-group-btn">
@@ -11,13 +11,13 @@
         <%= t('hyrax.search.button.html') %>
       </button>
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <span data-search-element="label"><%= t("hyrax.search.form.option.all.label_long") %></span>
+        <span data-search-element="label"><%= t("hyrax.search.form.option.all.label_long", application_name: application_name) %></span>
         <span class="caret"></span>
       </button>
 
       <ul class="dropdown-menu pull-right">
         <li>
-          <%= link_to t("hyrax.search.form.option.all.label_long"), "#",
+          <%= link_to t("hyrax.search.form.option.all.label_long", application_name: application_name), "#",
               data: { "search-option" => main_app.search_catalog_path, "search-label" => t("hyrax.search.form.option.all.label_short") } %>
         </li>
 

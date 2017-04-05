@@ -524,7 +524,7 @@ es:
       form:
         option:
           all:
-            label_long:   "Todo Hyrax"
+            label_long:   "Todo %{application_name}"
             label_short:  "Todo"
           my_collections:
             label_long:   "Mis Colecciones"
@@ -536,7 +536,7 @@ es:
             label_long:   "Mis trabajos"
             label_short:  "Mis trabajos"
         q:
-          label:          "Buscar en Hyrax"
+          label:          "Buscar en %{application_name}"
           placeholder:    "Introduce términos de búsqueda"
     select_type:
       description: "Tipo de trabajo de propósito general."
