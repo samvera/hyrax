@@ -159,7 +159,7 @@ es:
       sidebar:
         activity:           "Actividad"
         admin_sets:         "Conjuntos Administrativos"
-        appearance:      "Apariencia"
+        appearance:         "Apariencia"
         collections:        "Colecciones"
         configuration:      "Configuración"
         notifications:      "Notificaciones"
@@ -169,9 +169,8 @@ es:
         statistics:         "Estadísticas"
         tasks:              'Tareas'
         users:              "Usarios"
-        workflow:           "Flujos de Trabajo"
         workflow_review:    "Revise Ofertas"
-        workflow_roles:     "Roles"
+        workflow_roles:     "Funciones del flujo de trabajo"
         works:              "Trabajos"
       stats:
         deposited_form:

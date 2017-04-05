@@ -37,6 +37,10 @@
         <span class="fa fa-paint-brush"></span> <%= t('hyrax.admin.sidebar.appearance') %>
       <% end %>
     <% end %>
+
+    <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
+      <span class="fa fa-users"></span> <%= t('hyrax.admin.sidebar.workflow_roles') %>
+    <% end %>
   <% end %>
 
   <li class="h5"><%= t('hyrax.admin.sidebar.repository_objects') %></li>
@@ -59,20 +63,9 @@
   <% if can? :read, :admin_dashboard %>
 
     <li class="h5"><%= t('hyrax.admin.sidebar.tasks') %></li>
-
-    <li>
-      <%= menu.collapsable_section t('hyrax.admin.sidebar.workflow'),
-                                   icon_class: "fa fa-code-fork",
-                                   id: 'collapseWorkflows',
-                                   open: menu.workflows_section? do %>
-        <%= menu.nav_link(hyrax.admin_workflows_path) do %>
-          <span class="fa fa-flag"></span> <%= t('hyrax.admin.sidebar.workflow_review') %>
-        <% end %>
-        <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
-          <span class="fa fa-users"></span> <%= t('hyrax.admin.sidebar.workflow_roles') %>
-        <% end %>
-      <% end %>
-    </li>
+    <%= menu.nav_link(hyrax.admin_workflows_path) do %>
+      <span class="fa fa-flag"></span> <%= t('hyrax.admin.sidebar.workflow_review') %>
+    <% end %>
   <% end %>
 
   <% if can? :manage, User %>
