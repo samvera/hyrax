@@ -4,8 +4,9 @@ $tab-margin: 44px !default;
 $title-text-color: #4e4a42 !default;
 $body-background-color: #f0f0f0 !default;
 $tab-active-accent-color: $brand-primary !default;
-$admin-sidebar-background-color: #686868 !default;
-$admin-sidebar-profile-background-color: #4b473f !default;
+$admin-sidebar-background-color: #5c5c5c !default;
+$admin-sidebar-profile-background-color: #505050 !default;
+$admin-sidebar-section-heading-color: #dedede !default;
 $admin-sidebar-link-color: #ffffff !default;
 $admin-sidebar-link-hover-color: #000000 !default;
 $admin-sidebar-link-background-color: #505050 !default;
@@ -57,6 +58,7 @@ body.dashboard {
    * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
    */
   #masthead {
+    border: 0;
     left: 0;
     position: fixed;
     right: 0;
@@ -179,8 +181,11 @@ body.dashboard {
     }
 
     .h5 {
-      margin: 0;
-      padding: 10px;
+      color: $admin-sidebar-section-heading-color;
+      font-size: 12px;
+      margin: 15px 0 0 0;
+      padding: 10px 10px 5px 10px;
+      text-transform: uppercase;
     }
 
     .profile {
@@ -211,7 +216,7 @@ body.dashboard {
 
   .nav-pills > li > a {
     border-radius: 0;
-    padding: 15px 10px 15px 15px;
+    padding: 12px 10px 12px 15px;
 
     &:focus {
       background-color: transparent;
