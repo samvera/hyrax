@@ -25,12 +25,16 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
+    let(:user) { create(:user) }
+    let(:user2) { create(:user) }
+    let(:user3) { create(:user) }
+
     before do
       create(:permission_template_access,
              :manage,
              permission_template: permission_template,
              agent_type: 'user',
-             agent_id: 'karen')
+             agent_id: user.user_key)
       create(:permission_template_access,
              :manage,
              permission_template: permission_template,
@@ -41,12 +45,35 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with a user manager" do
       let(:grant_attributes) do
         [ActionController::Parameters.new(agent_type: "user",
-                                          agent_id: "bob",
+                                          agent_id: user2.user_key,
                                           access: "manage").permit!]
       end
-      it "also adds edit_access to the AdminSet itself" do
+      let(:workflow) do
+        create(:workflow, permission_template: permission_template)
+      end
+
+      before do
+        role = Sipity::Role.create(name: 'approving')
+        workflow.workflow_roles.create(role: role)
+        # We are testing that this workflow role is removed
+        Hyrax::Workflow::PermissionGenerator.call(roles: role,
+                                                  workflow: workflow,
+                                                  agents: user3)
+        permission_template.update!(active_workflow: workflow)
+      end
+
+      def count_workflow_roles_for(user)
+        Hyrax::Workflow::PermissionQuery
+          .scope_processing_workflow_roles_for_user_and_workflow(user: user, workflow: workflow)
+          .size
+      end
+
+      it "adds edit_access to the AdminSet itself and grants workflow roles" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_users).to match_array ['bob', 'karen']
+        expect(count_workflow_roles_for(user)).to eq 1
+        expect(count_workflow_roles_for(user2)).to eq 1
+        expect(count_workflow_roles_for(user3)).to eq 0
+        expect(admin_set.reload.edit_users).to match_array [user2.user_key, user.user_key]
       end
     end
 
