@@ -12,6 +12,7 @@ $admin-sidebar-link-hover-color: #000000 !default;
 $admin-sidebar-link-background-color: #505050 !default;
 $admin-content-background-color: #f0f0f0 !default;
 $admin-vertical-padding: 0 !default;
+$admin-panel-border-color: #dedede !default;
 
 .my-works-list {
   .highlighted-work {
@@ -32,6 +33,11 @@ body.dashboard {
 }
 
 .dashboard {
+  .breadcrumb {
+    border: 1px solid $admin-panel-border-color;
+    margin-top: 0.5em;
+  }
+
   .tabs {
     margin-top: $tab-margin;
     position: relative;
@@ -260,7 +266,7 @@ body.dashboard {
   }
 
   .panel {
-    border: 0;
+    border: 1px solid $admin-panel-border-color;
     float: left;
     width: 100%;
 
