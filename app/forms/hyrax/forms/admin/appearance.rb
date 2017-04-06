@@ -29,7 +29,15 @@ module Hyrax
         end
 
         def header_text_color
-          block_for('header_text_color', '#9d9d9d')
+          block_for('header_text_color', '#dcdcce')
+        end
+
+        def link_color
+          block_for('link_color', '#e27800')
+        end
+
+        def footer_link_color
+          block_for('footer_link_color', '#e27800')
         end
 
         def primary_button_background_color
@@ -67,6 +75,7 @@ module Hyrax
         def update!
           update_block('header_background_color', attributes[:header_background_color])
           update_block('header_text_color', attributes[:header_text_color])
+          update_block('footer_link_color', attributes[:footer_link_color])
           update_block('primary_button_background_color', attributes[:primary_button_background_color])
         end
 

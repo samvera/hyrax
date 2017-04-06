@@ -18,6 +18,8 @@ module Hyrax
         def update_params
           params.require(:admin_appearance).permit(:header_background_color,
                                                    :header_text_color,
+                                                   :link_color,
+                                                   :footer_link_color,
                                                    :primary_button_background_color)
         end
 
