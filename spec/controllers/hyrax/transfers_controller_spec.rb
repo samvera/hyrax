@@ -19,6 +19,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
     describe "#index" do
       it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).exactly(3).times
         get :index
         expect(response).to be_success
         expect(assigns[:presenter]).to be_instance_of Hyrax::TransfersPresenter

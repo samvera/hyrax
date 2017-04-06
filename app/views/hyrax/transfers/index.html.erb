@@ -1,7 +1,13 @@
-<h1><%= t("hyrax.dashboard.transfer_of_ownership") %></h1>
+<% provide :page_header do %>
+  <h1><%= t("hyrax.dashboard.transfer_of_ownership") %></h1>
+<% end %>
 
-<h2><%= t("hyrax.dashboard.transfers_sent") %></h2>
-<%= @presenter.render_sent_transfers %>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2><%= t("hyrax.dashboard.transfers_sent") %></h2>
+    <%= @presenter.render_sent_transfers %>
 
-<h2><%= t("hyrax.dashboard.transfers_received") %></h2>
-<%= @presenter.render_received_transfers %>
+    <h2><%= t("hyrax.dashboard.transfers_received") %></h2>
+    <%= @presenter.render_received_transfers %>
+  </div>
+</div>
