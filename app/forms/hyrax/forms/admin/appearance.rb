@@ -75,6 +75,7 @@ module Hyrax
         def update!
           update_block('header_background_color', attributes[:header_background_color])
           update_block('header_text_color', attributes[:header_text_color])
+          update_block('link_color', attributes[:link_color])
           update_block('footer_link_color', attributes[:footer_link_color])
           update_block('primary_button_background_color', attributes[:primary_button_background_color])
         end
