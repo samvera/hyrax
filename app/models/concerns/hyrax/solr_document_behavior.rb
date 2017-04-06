@@ -76,7 +76,11 @@ module Hyrax
     end
 
     def creator
-      descriptor = hydra_model.index_config[:creator].behaviors.first
+      descriptor = if hydra_model == AdminSet
+                     hydra_model.index_config[:creator].behaviors.first
+                   else
+                     :stored_searchable
+                   end
       fetch(Solrizer.solr_name('creator', descriptor), [])
     end
 
