@@ -1,6 +1,9 @@
 <% # Dynamic styles added by the admin in the appearances page %>
 <style>
 <% appearance = Hyrax::Forms::Admin::Appearance.new %>
+a { color: <%= appearance.link_color %>; }
+.navbar-inverse .navbar-link { color: <%= appearance.footer_link_color %>; }
+
 .navbar-inverse { background-color: <%= appearance.header_background_color %>; }
 
 .navbar-inverse .navbar-nav > .open > a,

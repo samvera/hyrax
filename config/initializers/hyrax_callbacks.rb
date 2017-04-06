@@ -23,8 +23,8 @@ Hyrax.config.callback.set(:after_destroy) do |id, user|
   ContentDeleteEventJob.perform_later(id, user)
 end
 
-Hyrax.config.callback.set(:after_audit_failure) do |file_set, user, log_date|
-  Hyrax::AuditFailureService.new(file_set, user, log_date).call
+Hyrax.config.callback.set(:after_fixity_check_failure) do |file_set, user, log_date|
+  Hyrax::FixityCheckFailureService.new(file_set, user, log_date).call
 end
 
 Hyrax.config.callback.set(:after_batch_create_success) do |user|

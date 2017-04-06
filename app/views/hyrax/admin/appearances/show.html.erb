@@ -7,6 +7,8 @@
     <%= simple_form_for @form, url: admin_appearance_path do |f| %>
       <%= f.input :header_background_color, required: false, input_html: { type: 'color' } %>
       <%= f.input :header_text_color, required: false, input_html: { type: 'color' }  %>
+      <%= f.input :link_color, required: false, input_html: { type: 'color' }  %>
+      <%= f.input :footer_link_color, required: false, input_html: { type: 'color' }  %>
       <%= f.input :primary_button_background_color, required: false, input_html: { type: 'color' }  %>
       <%= f.submit class: 'btn btn-primary' %>
     <% end %>

@@ -7,6 +7,9 @@ module Hyrax
       before_action :load_proxy_deposit_request, only: :create
       load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
       before_action :authorize_depositor_by_id, only: [:new, :create]
+
+      layout 'dashboard'
+
       # Catch permission errors
       # TODO: Isn't this already handled?
       rescue_from CanCan::AccessDenied do |exception|
@@ -33,6 +36,9 @@ module Hyrax
     end
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.transfers'), hyrax.transfers_path
       @presenter = TransfersPresenter.new(current_user, view_context)
     end
 

@@ -33,21 +33,30 @@ RSpec.describe Hyrax::Admin::AppearancesController do
       sign_in user
     end
     let(:user) { create(:user) }
+
     context "when authorized" do
       before do
         allow(controller).to receive_messages(current_user: user)
         expect(user).to receive(:groups).and_return(['admin', 'registered'])
       end
 
-      it "is successful" do
-        patch :update, params: {
-          admin_appearance: {
-            "header_background_color" => "#00ff00",
-            "header_text_color" => "#17557b",
-            "primary_button_background_color" => "#00ff00"
-          }
+      let(:form) { instance_double(Hyrax::Forms::Admin::Appearance, update!: true) }
+      let(:attributes) do
+        {
+          "header_background_color" => "#00ff00",
+          "link_color" => "#e02020",
+          "footer_link_color" => "#e02020",
+          "header_text_color" => "#17557b",
+          "primary_button_background_color" => "#00ff00"
         }
-        expect(ContentBlock.find_by(name: 'primary_button_background_color').value).to eq '#00ff00'
+      end
+
+      it "is successful" do
+        expect(Hyrax::Forms::Admin::Appearance).to receive(:new)
+          .with(ActionController::Parameters.new(attributes).permit!)
+          .and_return(form)
+
+        patch :update, params: { admin_appearance: attributes }
         expect(response).to be_redirect
       end
     end

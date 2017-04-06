@@ -159,7 +159,7 @@ RSpec/AnyInstance:
     - 'spec/lib/hyrax/arkivo/actor_spec.rb'
     - 'spec/presenters/hyrax/work_usage_spec.rb'
     - 'spec/presenters/hyrax/file_usage_spec.rb'
-    - 'spec/services/hyrax/repository_audit_service_spec.rb'
+    - 'spec/services/hyrax/repository_fixity_check_service_spec.rb'
     - 'spec/services/hyrax/workflow/permission_generator_spec.rb'
     - 'spec/services/hyrax/workflow/sipity_actions_generator_spec.rb'
     - 'spec/services/hyrax/workflow/state_machine_generator_spec.rb'

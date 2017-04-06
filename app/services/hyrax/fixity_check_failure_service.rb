@@ -1,5 +1,5 @@
 module Hyrax
-  class AuditFailureService < MessageUserService
+  class FixityCheckFailureService < MessageUserService
     attr_reader :log_date
 
     def initialize(file_set, user, log_date)
@@ -10,11 +10,11 @@ module Hyrax
     def message
       uri = file_set.original_file.uri.to_s
       file_title = file_set.title.first
-      "The audit run at #{log_date} for #{file_title} (#{uri}) failed."
+      "The fixity check run at #{log_date} for #{file_title} (#{uri}) failed."
     end
 
     def subject
-      'Failing Audit Run'
+      'Failing Fixity Check'
     end
   end
 end
