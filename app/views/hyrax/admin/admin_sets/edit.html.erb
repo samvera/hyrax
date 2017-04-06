@@ -1,3 +1,6 @@
+<%# Needed for bootstrap tabs use on this page (https://github.com/projecthydra-labs/hyrax/issues/254) %>
+<% provide :body_attributes, 'data-turbolinks="false"'.html_safe  %>
+
 <% provide :page_header do %>
   <h1><span class="fa fa-edit"></span> <%= t('.header') %></h1>
 <% end %>
