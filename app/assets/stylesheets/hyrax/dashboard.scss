@@ -113,6 +113,10 @@ body.dashboard {
       color: $gray;
       margin-right: $padding-xs-horizontal;
     }
+
+    .btn {
+      margin-bottom: $padding-base-vertical;
+    }
   }
 
   // the span selector is required because Blacklight is using it.
