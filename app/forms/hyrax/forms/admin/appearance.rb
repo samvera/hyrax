@@ -33,7 +33,7 @@ module Hyrax
         end
 
         def link_color
-          block_for('link_color', '#e27800')
+          block_for('link_color', '#337ab7')
         end
 
         def footer_link_color
