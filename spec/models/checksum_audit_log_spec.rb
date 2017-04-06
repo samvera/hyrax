@@ -19,14 +19,14 @@ RSpec.describe ChecksumAuditLog do
   let(:old) { described_class.create(file_set_id: f.id, file_id: content_id, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
   let(:new) { described_class.create(file_set_id: f.id, file_id: content_id, version: version_uri, pass: 0, created_at: 1.minute.ago) }
 
-  context 'a file with multiple checksums audits' do
+  context 'a file with multiple checksums' do
     it 'returns a list of logs for this FileSet sorted by date descending' do
       logs = described_class.logs_for(f.id, content_id)
       expect(logs).to eq([new, old])
     end
   end
 
-  context 'after multiple checksum audits where the checksum does not change' do
+  context 'after multiple checksum events where the checksum does not change' do
     specify 'only one of them should be kept' do
       success1 = described_class.create(file_set_id: f.id, file_id: content_id, version: version_uri, pass: 1)
       described_class.prune_history(f.id, content_id)
@@ -43,24 +43,24 @@ RSpec.describe ChecksumAuditLog do
     end
   end
 
-  context 'should have an audit log history' do
+  context 'should have an fixity check log history' do
     before do
       described_class.create(file_set_id: f.id, file_id: content_id, version: 'v2', pass: 1)
       described_class.create(file_set_id: f.id, file_id: 'thumbnail', version: 'v1', pass: 1)
     end
 
-    it "has an audit log history" do
-      audit = described_class.get_audit_log(f.id, content_id, version_uri)
-      expect(audit.file_set_id).to eq(f.id)
-      expect(audit.version).to eq(version_uri)
+    it "has an fixity check log history" do
+      check = described_class.fixity_check_log(f.id, content_id, version_uri)
+      expect(check.file_set_id).to eq(f.id)
+      expect(check.version).to eq(version_uri)
 
-      audit = described_class.get_audit_log(f.id, content_id, 'v2')
-      expect(audit.file_set_id).to eq(f.id)
-      expect(audit.version).to eq('v2')
+      check = described_class.fixity_check_log(f.id, content_id, 'v2')
+      expect(check.file_set_id).to eq(f.id)
+      expect(check.version).to eq('v2')
 
-      audit = described_class.get_audit_log(f.id, 'thumbnail', 'v1')
-      expect(audit.file_set_id).to eq(f.id)
-      expect(audit.version).to eq('v1')
+      check = described_class.fixity_check_log(f.id, 'thumbnail', 'v1')
+      expect(check.file_set_id).to eq(f.id)
+      expect(check.version).to eq('v1')
     end
   end
 end

@@ -76,8 +76,8 @@ module Hyrax
       solr_document.to_model.model_name.name
     end
 
-    def audit_status
-      audit_service.logged_audit_status
+    def fixity_check_status
+      fixity_check_service.logged_fixity_status
     end
 
     def parent
@@ -89,8 +89,8 @@ module Hyrax
                                                                      current_ability).first
     end
 
-    def audit_service
-      @audit_service ||= Hyrax::FileSetAuditService.new(id)
+    def fixity_check_service
+      @fixity_check_service ||= Hyrax::FileSetFixityCheckService.new(id)
     end
 
     private

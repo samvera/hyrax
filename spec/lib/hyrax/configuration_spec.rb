@@ -44,6 +44,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:libreoffice_path) }
+  it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
+  it { is_expected.to respond_to(:max_days_between_fixity_checks) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
   it { is_expected.to respond_to(:model_to_create) }
   it { is_expected.to respond_to(:owner_permission_levels) }

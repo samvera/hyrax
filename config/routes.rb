@@ -60,7 +60,7 @@ Hyrax::Engine.routes.draw do
   # File Set routes
   scope :concern do
     resources :file_sets, only: [] do
-      resource :audit, only: [:create]
+      resource :fixity_checks, only: [:create]
       member do
         get 'stats'
       end

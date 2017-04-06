@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::AuditsController do
+RSpec.describe Hyrax::FixityChecksController do
   routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }
   let(:file_set) { FileSet.create { |fs| fs.apply_depositor_metadata(user) } }
   let(:binary) { File.open(fixture_path + '/world.png') }
   let(:file) { Hydra::Derivatives::IoDecorator.new(binary, 'image/png', 'world.png') }
+
   before { Hydra::Works::UploadFileToFileSet.call(file_set, file) }
 
   context "when signed in" do
@@ -20,8 +21,8 @@ RSpec.describe Hyrax::AuditsController do
         #   { file_id => [{ "version" => "version1", "pass" => 999 },
         #                 { "version" => "version2", "pass" => 0 },
         #                 ...] }
-        audit_results = json.values.flatten.collect { |result| result["pass"] }
-        expect(audit_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
+        fixity_results = json.values.flatten.collect { |result| result["pass"] }
+        expect(fixity_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
       end
     end
   end
