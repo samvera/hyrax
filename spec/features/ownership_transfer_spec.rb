@@ -64,7 +64,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
       # Become the new_owner so we can manage transfers sent to us
       sign_in new_owner
       visit '/dashboard'
-      expect(page).to have_content 'Transfer of Ownership'
+      expect(page).to have_content 'Transfers of Ownership'
     end
 
     it 'I should be able to accept it' do
