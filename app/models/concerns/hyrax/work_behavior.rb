@@ -25,8 +25,7 @@ module Hyrax
 
     included do
       property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
-      class_attribute :human_readable_short_description, :indexer
-      self.indexer = WorkIndexer
+      class_attribute :human_readable_short_description
     end
 
     # TODO: Move this into ActiveFedora

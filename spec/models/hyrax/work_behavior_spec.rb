@@ -49,7 +49,7 @@ RSpec.describe Hyrax::WorkBehavior do
     let(:klass) { Class.new }
     it 'is settable' do
       EssentialWork.indexer = klass
-      expect(subject.indexer).to eq klass
+      expect(EssentialWork.indexer).to eq klass
     end
   end
 end
