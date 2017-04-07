@@ -30,24 +30,25 @@ module Hyrax
 
       def stored_and_facetable_index_config
         stored_and_facetable_fields.each_with_object({}) do |name, hash|
-          hash[name] = ActiveFedora::Indexing::Map::IndexObject.new(name) do |idx|
-            idx.as :stored_searchable, :facetable
-          end
+          hash[name] = index_object_for(name, as: [:stored_searchable, :facetable])
         end
       end
 
       def stored_searchable_index_config
         stored_fields.each_with_object({}) do |name, hash|
-          hash[name] = ActiveFedora::Indexing::Map::IndexObject.new(name) do |idx|
-            idx.as :stored_searchable
-          end
+          hash[name] = index_object_for(name, as: [:stored_searchable])
         end
       end
 
       def symbol_index_config
-        { import_url: ActiveFedora::Indexing::Map::IndexObject.new(:import_url) do |idx|
-          idx.as :symbol
-        end }
+        import_url_value = index_object_for(:import_url, as: [:symbol])
+        { import_url: import_url_value }
+      end
+
+      def index_object_for(attribute_name, as: [])
+        ActiveFedora::Indexing::Map::IndexObject.new(attribute_name) do |idx|
+          idx.as(*as)
+        end
       end
   end
 end
