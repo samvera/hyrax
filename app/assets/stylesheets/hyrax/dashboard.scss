@@ -174,6 +174,9 @@ body.dashboard {
     margin-top: 8px;
   }
 
+  #incoming-transfers .btn {
+    margin-bottom: 6px;
+  }
 
   .sidebar {
     background-color: $admin-sidebar-background-color;
@@ -288,6 +291,10 @@ body.dashboard {
       font-size: 18px;
       font-weight: 600;
       line-height: 30px;
+
+      &.h2 {
+        font-size: 22px;
+      }
     }
   }
 
