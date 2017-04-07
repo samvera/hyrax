@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::PresenterFactory do
-  describe "#build_presenters" do
+  describe "#build_for" do
     let(:presenter_class) { Hyrax::FileSetPresenter }
 
     before do
@@ -10,7 +10,7 @@ RSpec.describe Hyrax::PresenterFactory do
         .and_return('response' => { 'docs' => results })
     end
 
-    subject { described_class.build_presenters(['12', '13'], presenter_class, nil) }
+    subject { described_class.build_for(ids: ['12', '13'], presenter_class: presenter_class, presenter_args: nil) }
 
     context "when some ids are found in solr" do
       let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
@@ -38,10 +38,9 @@ RSpec.describe Hyrax::PresenterFactory do
       end
       let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
       subject do
-        described_class.build_presenters(['12', '13'],
-                                         presenter_class,
-                                         'more',
-                                         'and more')
+        described_class.build_for(ids: ['12', '13'],
+                                  presenter_class: presenter_class,
+                                  presenter_args: ['more', 'and more'])
       end
       it 'passes all the arguments' do
         expect(subject.first.two).to eq 'more'
