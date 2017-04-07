@@ -83,22 +83,6 @@ body.dashboard {
     float: left;
   }
 
-  #content-wrapper {
-    padding: 0;
-    padding-bottom: 0;
-
-    &.container-fluid {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-
-  .main-content {
-    padding-top: $admin-vertical-padding;
-    padding-bottom: $admin-vertical-padding;
-    background-color: $admin-content-background-color;
-  }
-
   .main-header {
     margin-bottom: 0;
     margin-top: 0;
@@ -176,96 +160,6 @@ body.dashboard {
 
   #incoming-transfers .btn {
     margin-bottom: 6px;
-  }
-
-  .sidebar {
-    background-color: $admin-sidebar-background-color;
-    padding-bottom: $admin-vertical-padding;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: $admin-vertical-padding;
-
-    a {
-      color: $admin-sidebar-link-color;
-    }
-
-    a:hover {
-      color: $admin-sidebar-link-hover-color;
-    }
-
-    .h5 {
-      color: $admin-sidebar-section-heading-color;
-      font-size: 12px;
-      margin: 15px 0 0 0;
-      padding: 10px 10px 5px 10px;
-      text-transform: uppercase;
-    }
-
-    .profile {
-      background-color: $admin-sidebar-profile-background-color;
-      padding: 15px 10px;
-
-      .profile-image {
-        text-align: center;
-      }
-
-      .profile-data {
-        text-align: center;
-        .profile-data-name {
-          color: $admin-sidebar-link-color;
-        }
-      }
-    }
-  }
-
-  .admin-sidebar {
-    margin-left: 0;
-    margin-right: 0;
-
-    li .fa {
-      margin-right: $padding-base-horizontal;
-    }
-  }
-
-  .nav-pills > li > a {
-    border-radius: 0;
-    padding: 12px 10px 12px 15px;
-
-    &:focus {
-      background-color: transparent;
-      color: $admin-sidebar-link-color;
-    }
-  }
-
-  .nav-pills > li.active > a,
-  .nav-pills > li.active > a:focus,
-  .nav-pills > li.active > a:hover {
-    background-color: $admin-sidebar-link-background-color;
-  }
-
-  // submenu items
-  ul.collapse > li > a,
-  ul.collapsing > li > a {
-    padding-left: 25px;
-  }
-
-  .sidebar .collapse-toggle {
-    margin-bottom: 0;
-
-    &::after {
-      content: "❯";
-      float: right;
-      transform: rotate(90deg);
-    }
-
-    &.collapsed {
-      border-bottom: 0;
-
-      &::after {
-        transform: rotate(0deg);
-        transition: transform 0.1s ease;
-      }
-    }
   }
 
   .navbar {
