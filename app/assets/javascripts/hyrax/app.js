@@ -14,6 +14,7 @@ Hyrax = {
         this.admin();
         this.adminStatisticsGraphs();
         this.tinyMCE();
+        this.sidebar();
     },
 
     tinyMCE: function() {
@@ -106,6 +107,12 @@ Hyrax = {
         $("[data-behavior=select-work]").each(function () {
             new SelectWorkType($(this));
         });
+    },
+
+    sidebar: function () {
+        $('.sidebar-toggle').on('click', function() {
+            $('.sidebar, .main-content').toggleClass('maximized')
+        })
     },
 
     fileManager: function () {

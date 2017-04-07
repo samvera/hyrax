@@ -1,0 +1,141 @@
+$drawer-small: 40px;
+$drawer-large: 200px;
+$gutter-width: $grid-gutter-width/2;
+
+.main-content {
+  padding-left: $drawer-small + $gutter-width;
+  padding-right: $gutter-width;
+  padding-top: $admin-vertical-padding;
+  // padding-bottom: $admin-vertical-padding;
+  background-color: $admin-content-background-color;
+  position: absolute;
+
+  &.maximized {
+    padding-left: $drawer-large + $gutter-width;
+  }
+}
+
+// .sidebar is a class on the div
+.sidebar {
+  background-color: $admin-sidebar-background-color;
+  padding-top: $admin-vertical-padding;
+  position: absolute;
+  transition: width .1s;
+  width: $drawer-small;
+  z-index: 1000;
+  min-height: 600px;
+  min-height: 100vh;
+
+  &.maximized {
+    .h5, .sidebar-action-text, .profile {
+      opacity: 1;
+    }
+    width: $drawer-large;
+
+    .sidebar-toggle {
+      transform: rotate(-180deg);
+    }
+  }
+
+  .sidebar-toggle {
+    cursor: pointer;
+    background-color: $body-background-color;
+    border-radius: 50%;
+    line-height: 18px;
+    position: absolute;
+    right: -10px;
+    text-align: center;
+    width: 18px;
+    z-index: 1001;
+  }
+  a {
+    color: $admin-sidebar-link-color;
+  }
+
+  a:hover {
+    color: $admin-sidebar-link-hover-color;
+  }
+
+  .sidebar-action-text {
+    opacity: 0;
+  }
+  .h5 {
+    color: $admin-sidebar-section-heading-color;
+    opacity: 0;
+    font-size: 12px;
+    margin: 15px 0 0 0;
+    padding: 10px 10px 5px 10px;
+    text-transform: uppercase;
+  }
+
+  .profile {
+    opacity: 0;
+    background-color: $admin-sidebar-profile-background-color;
+    padding: 15px 10px;
+
+    .profile-image {
+      text-align: center;
+    }
+
+    .profile-data {
+      text-align: center;
+      .profile-data-name {
+        color: $admin-sidebar-link-color;
+      }
+    }
+  }
+
+  // .nav is the ul that holds the sidebar items
+  .nav {
+    margin-left: 0;
+    margin-right: 0;
+    li {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    li .fa {
+      margin-right: $padding-base-horizontal;
+    }
+  }
+
+  .nav-pills > li > a {
+    border-radius: 0;
+    padding: 12px 10px 12px 12px;
+
+    &:focus {
+      background-color: transparent;
+      color: $admin-sidebar-link-color;
+    }
+  }
+
+  .nav-pills > li.active > a,
+  .nav-pills > li.active > a:focus,
+  .nav-pills > li.active > a:hover {
+    background-color: $admin-sidebar-link-background-color;
+  }
+
+  // submenu items
+  ul.collapse > li > a,
+  ul.collapsing > li > a {
+    padding-left: 25px;
+  }
+
+  .collapse-toggle {
+    margin-bottom: 0;
+
+    &::after {
+      content: "❯";
+      float: right;
+      transform: rotate(90deg);
+    }
+
+    &.collapsed {
+      border-bottom: 0;
+
+      &::after {
+        transform: rotate(0deg);
+        transition: transform 0.1s ease;
+      }
+    }
+  }
+}
