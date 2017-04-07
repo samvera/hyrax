@@ -43,7 +43,6 @@ module Hyrax
 
     initializer 'requires' do
       require 'hydra/derivatives'
-      require 'hyrax/name'
       require 'hyrax/controller_resource'
       require 'hyrax/search_state'
       require 'hyrax/single_use_error'

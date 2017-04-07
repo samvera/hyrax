@@ -1,3 +1,4 @@
+require 'hyrax/name'
 module Hyrax
   module Naming
     extend ActiveSupport::Concern
