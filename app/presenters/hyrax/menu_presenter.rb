@@ -23,6 +23,19 @@ module Hyrax
       end
     end
 
+    # @return [Boolean] true if the current controller happens to be one of the controllers that deals
+    # with user activity  This is used to keep the parent section on the sidebar open.
+    def user_activity_section?
+      # we're using a case here because we need to differentiate UsersControllers
+      # in different namespaces (Hyrax & Admin)
+      case controller
+      when Hyrax::UsersController, Hyrax::NotificationsController, Hyrax::TransfersController
+        true
+      else
+        false
+      end
+    end
+
     # Draw a collaspable menu section. The passed block should contain <li> items.
     def collapsable_section(text, id:, icon_class:, open:, &block)
       CollapsableSectionPresenter.new(view_context: view_context,

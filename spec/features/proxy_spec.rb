@@ -5,6 +5,7 @@ RSpec.feature 'proxy', type: :feature do
   describe 'add proxy in profile', :js do
     it "creates a proxy" do
       sign_in user
+      click_link "Your activity"
       click_link "Profile"
       click_link "Edit Profile"
       expect(first("td.depositor-name")).to be_nil

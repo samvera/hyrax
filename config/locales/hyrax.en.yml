@@ -171,6 +171,7 @@ en:
         tasks:              "Tasks"
         transfers:          "Transfers"
         users:              "Manage Users"
+        user_activity:      "Your activity"
         workflow_review:    "Review Submissions"
         workflow_roles:     "Workflow Roles"
         works:              "Works"

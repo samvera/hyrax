@@ -27,7 +27,7 @@ $gutter-width: $grid-gutter-width/2;
   min-height: 100vh;
 
   &.maximized {
-    .h5, .sidebar-action-text, .profile {
+    .h5, .sidebar-action-text, .profile, .collapse-toggle::after {
       opacity: 1;
     }
     width: $drawer-large;
@@ -115,7 +115,10 @@ $gutter-width: $grid-gutter-width/2;
   }
 
   // submenu items
-  ul.collapse > li > a,
+  &.maximized ul.collapse > li > a {
+    // only indent when the drawer is maximized
+    padding-left: 25px;
+  }
   ul.collapsing > li > a {
     padding-left: 25px;
   }
@@ -125,7 +128,9 @@ $gutter-width: $grid-gutter-width/2;
 
     &::after {
       content: "❯";
-      float: right;
+      opacity: 0;
+      position: absolute;
+      right: $gutter-width;
       transform: rotate(90deg);
     }
 
