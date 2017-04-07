@@ -23,7 +23,9 @@ Blacklight.onLoad(function () {
 
   // Change the url when a tab is clicked.
   $('a[data-toggle="tab"]').on('click', function(e) {
-    history.pushState(null, null, $(this).attr('href'));
+    // Set turbolinks: true so that turbolinks can handle the back requests
+    // See https://github.com/turbolinks/turbolinks/blob/master/src/turbolinks/history.coffee#L28
+    history.pushState({turbolinks: true}, null, $(this).attr('href'));
   });
   // navigate to a tab when the history changes (back button)
   window.addEventListener("popstate", tabNavigation);
