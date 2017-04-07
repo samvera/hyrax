@@ -1,8 +1,9 @@
 module Hyrax
   class BasicMetadataIndexer < ActiveFedora::RDF::IndexingService
-    class_attribute :stored_and_facetable_fields, :stored_fields
+    class_attribute :stored_and_facetable_fields, :stored_fields, :symbol_fields
     self.stored_and_facetable_fields = %i(resource_type creator contributor keyword publisher subject language based_near)
     self.stored_fields = %i(description license rights_statement date_created identifier related_url bibliographic_citation source)
+    self.symbol_fields = %i(import_url)
 
     protected
 
@@ -41,8 +42,9 @@ module Hyrax
       end
 
       def symbol_index_config
-        import_url_value = index_object_for(:import_url, as: [:symbol])
-        { import_url: import_url_value }
+        symbol_fields.each_with_object({}) do |name, hash|
+          hash[name] = index_object_for(name, as: [:symbol])
+        end
       end
 
       def index_object_for(attribute_name, as: [])
