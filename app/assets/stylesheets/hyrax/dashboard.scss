@@ -162,6 +162,16 @@ body.dashboard {
     margin-bottom: 6px;
   }
 
+  .workflow-roles {
+    list-style-type: none;
+    margin-bottom: 0;
+    padding-left: 0;
+
+    .fa-remove {
+      color: $brand-danger;
+    }
+  }
+
   .navbar {
     margin-bottom: 0;
   }
@@ -169,6 +179,7 @@ body.dashboard {
   .panel {
     border: 1px solid $admin-panel-border-color;
     float: left;
+    margin-top: $padding-large-vertical;
     width: 100%;
 
     .panel-heading,

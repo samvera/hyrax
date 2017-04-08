@@ -206,8 +206,9 @@ en:
           header:
             roles:  Roles
             user:   User
-          new_role: "Grant a role to a user:"
+          new_role: "Assign Role"
           no_roles: No roles
+          current_roles: "Current Roles"
       workflows:
         index:
           header: "Review Submissions"

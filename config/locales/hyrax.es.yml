@@ -205,8 +205,9 @@ es:
           header:
             roles: "Roles"
             user: "Usuario"
-          new_role: "Asignar un papel a un usuario:"
+          new_role: "Asignar papel"
           no_roles: "Ningunos roles"
+          current_roles: "Presente papeles"
       workflows:
         index:
           header: "Revise Ofertas"
