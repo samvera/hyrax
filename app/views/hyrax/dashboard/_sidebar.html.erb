@@ -13,37 +13,29 @@
   </li>
   <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
 
-  <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
-                    also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
-    <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
-  <% end %>
+  <li>
+    <%= menu.collapsable_section t('hyrax.admin.sidebar.user_activity'),
+                                 icon_class: "fa fa-line-chart",
+                                 id: 'collapseUserActivity',
+                                 open: menu.user_activity_section? do %>
+      <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                        also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
+        <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
+      <% end %>
 
-  <%= menu.nav_link(hyrax.notifications_path) do %>
-    <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
-  <% end %>
+      <%= menu.nav_link(hyrax.notifications_path) do %>
+        <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
+      <% end %>
 
-  <%= menu.nav_link(hyrax.transfers_path) do %>
-    <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
-  <% end %>
+      <%= menu.nav_link(hyrax.transfers_path) do %>
+        <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
+      <% end %>
+    <% end %>
+  </li>
 
   <% if can? :read, :admin_dashboard %>
     <%= menu.nav_link(hyrax.admin_stats_path) do %>
       <span class="fa fa-bar-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
-    <% end %>
-
-    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
-    <%= menu.nav_link(hyrax.admin_features_path) do %>
-      <span class="fa fa-cog"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.settings') %></span>
-    <% end %>
-
-    <% if can?(:update, :appearance) %>
-      <%= menu.nav_link(hyrax.admin_appearance_path) do %>
-        <span class="fa fa-paint-brush"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.appearance') %></span>
-      <% end %>
-    <% end %>
-
-    <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
-      <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
     <% end %>
   <% end %>
 
@@ -75,6 +67,23 @@
   <% if can? :manage, User %>
     <%= menu.nav_link(hyrax.admin_users_path) do %>
       <span class="fa fa-user"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+    <% end %>
+  <% end %>
+
+  <% if can? :read, :admin_dashboard %>
+    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
+    <%= menu.nav_link(hyrax.admin_features_path) do %>
+      <span class="fa fa-cog"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.settings') %></span>
+    <% end %>
+
+    <% if can?(:update, :appearance) %>
+      <%= menu.nav_link(hyrax.admin_appearance_path) do %>
+        <span class="fa fa-paint-brush"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.appearance') %></span>
+      <% end %>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
+      <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
     <% end %>
   <% end %>
 </ul>

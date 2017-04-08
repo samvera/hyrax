@@ -16,8 +16,10 @@ RSpec.describe Hyrax::MenuPresenter do
     end
 
     let(:rendered) { Capybara::Node::Simple.new(subject) }
+
     context "when collapsed" do
       let(:open) { false }
+
       it "draws a collapsable section" do
         expect(rendered).to have_content "Some content"
         expect(rendered).to have_selector "span.fa.fa-cog"
@@ -28,12 +30,33 @@ RSpec.describe Hyrax::MenuPresenter do
 
     context "when open" do
       let(:open) { true }
+
       it "draws a collapsable section" do
         expect(rendered).to have_content "Some content"
         expect(rendered).to have_selector "span.fa.fa-cog"
         expect(rendered).to have_selector "a.collapse-toggle[href='#mySection']"
         expect(rendered).to have_selector "ul#mySection.in"
       end
+    end
+  end
+
+  describe "#user_activity_section?" do
+    before do
+      allow(context).to receive(:controller_name).and_return(controller_name)
+      allow(context).to receive(:controller).and_return(controller)
+    end
+    subject { instance.user_activity_section? }
+
+    context "for the Hyrax::UsersController" do
+      let(:controller) { Hyrax::UsersController.new }
+
+      it { is_expected.to be true }
+    end
+
+    context "for the Admin::UsersController" do
+      let(:controller) { Hyrax::Admin::UsersController.new }
+
+      it { is_expected.to be false }
     end
   end
 end
