@@ -115,7 +115,7 @@ module Hyrax
 
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
-        if admin_set_id && Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow).allows_access_grant?
+        if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
           return super
         end
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
@@ -131,6 +131,13 @@ module Hyrax
           }
         ]
       end
+
+      def self.workflow_for(admin_set_id:)
+        Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow)
+      rescue ActiveRecord::RecordNotFound => e
+        raise Hyrax::MissingWorkflowError, e.message
+      end
+      private_class_method :workflow_for
 
       private
 
