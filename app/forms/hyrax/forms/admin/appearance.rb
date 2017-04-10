@@ -29,7 +29,7 @@ module Hyrax
         end
 
         def header_text_color
-          block_for('header_text_color', '#dcdcce')
+          block_for('header_text_color', '#dcdcdc')
         end
 
         def link_color
