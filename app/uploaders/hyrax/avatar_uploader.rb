@@ -11,6 +11,6 @@ class Hyrax::AvatarUploader < CarrierWave::Uploader::Base
   end
 
   def extension_whitelist
-    %w(jpg jpeg png gif bmp tif tiff)
+    %w[jpg jpeg png gif bmp tif tiff]
   end
 end

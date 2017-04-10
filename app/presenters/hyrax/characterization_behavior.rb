@@ -76,7 +76,7 @@ module Hyrax
       def build_characterization_metadata
         self.class.characterization_terms.each do |term|
           value = send(term)
-          additional_characterization_metadata[term.to_sym] = value unless value.blank?
+          additional_characterization_metadata[term.to_sym] = value if value.present?
         end
         additional_characterization_metadata
       end

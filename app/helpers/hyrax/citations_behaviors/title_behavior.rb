@@ -38,7 +38,7 @@ module Hyrax
       def setup_title_info(work)
         text = ''
         title = work.to_s
-        unless title.blank?
+        if title.present?
           title = CGI.escapeHTML(title)
           title_info = clean_end_punctuation(title.strip)
           text << title_info

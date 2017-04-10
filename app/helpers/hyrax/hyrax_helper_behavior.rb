@@ -1,4 +1,5 @@
 # coding: utf-8
+
 module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior

@@ -9,18 +9,18 @@ RSpec.describe Hyrax::Permissions::Readable do
 
   describe '#public?' do
     it 'returns true for public items' do
-      subject.read_groups = %w(public othergroup)
+      subject.read_groups = %w[public othergroup]
       expect(subject).to be_public
     end
     it 'returns fale for non-public items' do
-      subject.read_groups = %w(notpublic othergroup)
+      subject.read_groups = %w[notpublic othergroup]
       expect(subject).not_to be_public
     end
   end
 
   describe '#registered?' do
     it 'returns true for registered items' do
-      subject.read_groups = %w(registered othergroup)
+      subject.read_groups = %w[registered othergroup]
       expect(subject).to be_registered
     end
     it 'returns fale for non-registered items' do

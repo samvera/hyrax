@@ -27,7 +27,7 @@ module Hyrax
         new yaml.fetch('analytics')
       end
 
-      REQUIRED_KEYS = %w(app_name app_version privkey_path privkey_secret client_email).freeze
+      REQUIRED_KEYS = %w[app_name app_version privkey_path privkey_secret client_email].freeze
 
       def initialize(config)
         @config = config

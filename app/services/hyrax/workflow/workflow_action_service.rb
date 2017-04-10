@@ -25,12 +25,12 @@ module Hyrax
       protected
 
         def update_sipity_workflow_state
-          return true unless action.resulting_workflow_state_id.present?
+          return true if action.resulting_workflow_state_id.blank?
           subject.entity.update!(workflow_state_id: action.resulting_workflow_state_id)
         end
 
         def create_sipity_comment
-          return true unless comment_text.present?
+          return true if comment_text.blank?
           Sipity::Comment.create!(entity: subject.entity, agent: subject.agent, comment: comment_text)
         end
 

@@ -67,7 +67,7 @@ module Hyrax
 
         def create_action_and_permission_for(action_name, workflow_role)
           workflow_action = Sipity::WorkflowAction.find_or_create_by!(workflow: workflow, name: action_name)
-          return unless workflow_state.present?
+          return if workflow_state.blank?
           state_action = Sipity::WorkflowStateAction.find_or_create_by!(
             workflow_action: workflow_action, originating_workflow_state: workflow_state
           )

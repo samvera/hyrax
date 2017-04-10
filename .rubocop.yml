@@ -13,15 +13,33 @@ AllCops:
     - 'vendor/**/*'
     - 'lib/hyrax/specs/**/*'
 
+Bundler/DuplicatedGem:  # This doesn't work with engine_cart
+  Enabled: false
+
 Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/hyrax/**/*'
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
 
 Metrics/LineLength:
   Max: 200
 
 Metrics/AbcSize:
   Max: 28
+
+Metrics/BlockLength:
+  ExcludedMethods: ['included']
+  Exclude:
+    - 'hyrax.gemspec'
+    - 'app/services/hyrax/workflow/workflow_schema.rb'
+    - 'config/initializers/simple_form.rb'
+    - 'config/routes.rb'
+    - 'lib/generators/hyrax/templates/catalog_controller.rb'
+    - 'lib/generators/hyrax/templates/config/initializers/simple_form_bootstrap.rb'
+    - 'lib/hyrax/rails/routes.rb'
+    - 'spec/**/*.rb'
 
 Metrics/MethodLength:
   Max: 14
@@ -37,6 +55,10 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
+Style/FileName: # https://github.com/bbatsov/rubocop/issues/2973
+  Exclude:
+    - 'Gemfile'
+
 Style/MethodMissing:
   Exclude:
     - 'app/models/concerns/hyrax/file_set/characterization.rb'
@@ -44,6 +66,9 @@ Style/MethodMissing:
 Style/NumericPredicate:
   Exclude:
     - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
+
+Style/SymbolArray:
+  Enabled: false
 
 Style/WordArray:
   Enabled: false

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Hyrax
   class PermissionTemplateAccess < ActiveRecord::Base
     self.table_name = 'permission_template_accesses'

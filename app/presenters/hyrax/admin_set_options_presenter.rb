@@ -30,9 +30,9 @@ module Hyrax
       def attributes_for(permission_template:)
         {}.tap do |attrs|
           attrs['data-sharing'] = sharing?(permission_template: permission_template)
-          attrs['data-release-date'] = permission_template.release_date unless permission_template.release_date.blank?
+          attrs['data-release-date'] = permission_template.release_date if permission_template.release_date.present?
           attrs['data-release-before-date'] = true if permission_template.release_before_date?
-          attrs['data-visibility'] = permission_template.visibility unless permission_template.visibility.blank?
+          attrs['data-visibility'] = permission_template.visibility if permission_template.visibility.present?
         end
       end
 

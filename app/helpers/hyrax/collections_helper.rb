@@ -11,7 +11,7 @@ module Hyrax
 
     # @return [Boolean]
     def has_collection_search_parameters?
-      !params[:cq].blank?
+      params[:cq].present?
     end
 
     def button_for_remove_from_collection(collection, document, label = 'Remove From Collection')

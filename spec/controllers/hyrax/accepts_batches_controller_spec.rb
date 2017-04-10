@@ -7,8 +7,8 @@ end
 RSpec.describe AcceptsBatchesController, type: :controller do
   describe 'batch' do
     it 'accepts batch from parameters' do
-      controller.params['batch_document_ids'] = %w(abc xyz)
-      expect(controller.batch).to eq(%w(abc xyz))
+      controller.params['batch_document_ids'] = %w[abc xyz]
+      expect(controller.batch).to eq(%w[abc xyz])
     end
     describe ':all' do
       let(:current_user) { double(user_key: 'vanessa') }
@@ -59,7 +59,7 @@ RSpec.describe AcceptsBatchesController, type: :controller do
   end
 
   it 'checks for empty' do
-    controller.batch = %w(77826928 94120425)
+    controller.batch = %w[77826928 94120425]
     expect(controller.check_for_empty_batch?).to eq(false)
     controller.batch = []
     expect(controller.check_for_empty_batch?).to eq(true)

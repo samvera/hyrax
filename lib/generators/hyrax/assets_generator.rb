@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 require 'rails/generators'
 
 class Hyrax::AssetsGenerator < Rails::Generators::Base

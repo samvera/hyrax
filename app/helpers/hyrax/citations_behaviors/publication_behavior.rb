@@ -4,7 +4,7 @@ module Hyrax
       include Hyrax::CitationsBehaviors::CommonBehavior
       def setup_pub_date(work)
         first_date = work.date_created.first if work.date_created
-        unless first_date.blank?
+        if first_date.present?
           first_date = CGI.escapeHTML(first_date)
           date_value = first_date.gsub(/[^0-9|n\.d\.]/, "")[0, 4]
           return nil if date_value.nil?

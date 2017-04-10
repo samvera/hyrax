@@ -1,4 +1,5 @@
 # coding: utf-8
+
 RSpec.describe '/_flash_msg.html.erb', type: :view do
   before do
     allow(view).to receive(:flash).and_return(flash)

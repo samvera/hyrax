@@ -13,7 +13,7 @@ end
 RSpec::Core::RakeTask.new(:spec)
 
 desc 'Spin up test servers and run specs'
-task :spec_with_app_load  do
+task :spec_with_app_load do
   with_test_server do
     Rake::Task['spec'].invoke
   end
@@ -25,7 +25,7 @@ task :i18n_sorter do
   locales = Dir.glob(File.expand_path('../../config/locales/**/*.yml', __FILE__))
   locales.each do |locale_path|
     sorted_contents = File.open(locale_path) { |f| I18nYamlSorter::Sorter.new(f).sort }
-    File.open(locale_path, 'w') { |f|  f << sorted_contents}
+    File.open(locale_path, 'w') { |f| f << sorted_contents }
     abort("Bad I18n conversion!") unless Psych.load_file(locale_path).is_a?(Hash)
   end
 end

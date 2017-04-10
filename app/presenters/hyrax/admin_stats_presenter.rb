@@ -18,7 +18,7 @@ module Hyrax
     private
 
       def extract_date_from_stats_filters(key:, as_of:)
-        return unless stats_filters[key].present?
+        return if stats_filters[key].blank?
         Time.zone.parse(stats_filters[key]).public_send(as_of)
       end
 

@@ -58,9 +58,9 @@ RSpec.describe FileSet do
 
   describe 'attributes' do
     it 'has a set of permissions' do
-      subject.read_groups = %w(group1 group2)
+      subject.read_groups = %w[group1 group2]
       subject.edit_users = ['user1']
-      subject.read_users = %w(user2 user3)
+      subject.read_users = %w[user2 user3]
       expect(subject.permissions.map(&:to_hash)).to match_array [
         { type: 'group', access: 'read', name: 'group1' },
         { type: 'group', access: 'read', name: 'group2' },
@@ -172,7 +172,7 @@ RSpec.describe FileSet do
   end
 
   it 'supports multi-valued fields in solr' do
-    subject.keyword = %w(keyword1 keyword2)
+    subject.keyword = %w[keyword1 keyword2]
     expect { subject.save }.not_to raise_error
     subject.delete
   end
@@ -281,7 +281,7 @@ RSpec.describe FileSet do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       expect(subject.read_groups).to eq ['umg/up.dlt.staff', 'group-3']
       expect(subject.edit_groups).to eq ['group-8']
-      expect(subject.read_users).to eq %w(person1 person2)
+      expect(subject.read_users).to eq %w[person1 person2]
       expect(subject.edit_users).to eq ['jcoyne']
     end
 
@@ -290,7 +290,7 @@ RSpec.describe FileSet do
       # 'group-7' is not eligible to be revoked
       expect(subject.read_groups).to match_array ['group-2', 'group-3', 'group-7']
       expect(subject.edit_groups).to eq ['group-8']
-      expect(subject.read_users).to match_array %w(person1 person2)
+      expect(subject.read_users).to match_array %w[person1 person2]
       expect(subject.edit_users).to eq ['jcoyne']
     end
   end
@@ -450,7 +450,7 @@ RSpec.describe FileSet do
   describe '#to_s' do
     it 'uses the provided titles' do
       # The title property would return the terms in random order, so stub the behavior:
-      subject.title = %w(Hello World)
+      subject.title = %w[Hello World]
       expect(subject.to_s).to include 'Hello'
       expect(subject.to_s).to include 'World'
     end

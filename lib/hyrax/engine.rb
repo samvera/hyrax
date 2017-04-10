@@ -15,10 +15,10 @@ module Hyrax
     require 'legato'
 
     # Force these models to be added to Legato's registry in development mode
-    config.eager_load_paths += %W(
+    config.eager_load_paths += %W[
       #{config.root}/app/models/hyrax/download.rb
       #{config.root}/app/models/hyrax/pageview.rb
-    )
+    ]
 
     config.action_dispatch.rescue_responses.merge!(
       "ActiveFedora::ObjectNotFoundError" =>     :not_found, # We can remove this when we use ActiveFedora 11.2
@@ -85,7 +85,7 @@ module Hyrax
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
 
       app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
-      app.config.assets.precompile += %w(*.png *.jpg *.ico *.gif *.svg)
+      app.config.assets.precompile += %w[*.png *.jpg *.ico *.gif *.svg]
 
       Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
       # When we upgrade to Sprockets 4, we can ditch sprockets-es6 and config AMD
