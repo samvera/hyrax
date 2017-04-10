@@ -134,15 +134,9 @@ module Hyrax
         def grant_workflow_roles(attributes)
           new_active_workflow = activate_workflow_from(attributes)
           return unless new_active_workflow
-          model.access_grants.select { |g| g.access == 'manage' }.each do |grant|
-            agent = case grant.agent_type
-                    when 'user'
-                      ::User.find_by_user_key(grant.agent_id)
-                    when 'group'
-                      Hyrax::Group.new(grant.agent_id)
-                    end
+          manager_agents.each do |agent|
             active_workflow.workflow_roles.each do |role|
-              Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: role, agent: agent.to_sipity_agent)
+              Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: role, agent: agent)
             end
           end
         end
