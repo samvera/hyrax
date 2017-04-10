@@ -102,15 +102,13 @@ module Hyrax
       # which the HydraEditor::FieldMetadataService cannot determine are multiple.
       # The instance variable is used when choosing which UI widget to draw.
       def multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
+        Hyrax::FormMetadataService.multiple?(model.class, field)
       end
 
       # The class method _multiple?_ is used for building the permitted params
       # for the update action
       def self.multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
+        Hyrax::FormMetadataService.multiple?(model_class, field)
       end
 
       def self.sanitize_params(form_params)
