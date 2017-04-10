@@ -8,7 +8,7 @@ module Hyrax
     attr_reader :view_context
 
     delegate :controller, :controller_name, :action_name, :content_tag,
-             :current_page?, :link_to, to: :view_context
+             :current_page?, :link_to, :can?, to: :view_context
 
     # @param options [Hash, String] a hash or string representing the path. Hash is prefered as it
     #                              allows us to workaround https://github.com/rails/rails/issues/28253
@@ -43,6 +43,13 @@ module Hyrax
                                       id: id,
                                       icon_class: icon_class,
                                       open: open).render(&block)
+    end
+
+    # @return [Boolean] will the configuration section be displayed to the user
+    def show_configuration?
+      can?(:update, :appearance) ||
+        can?(:manage, Sipity::WorkflowResponsibility) ||
+        can?(:read, :admin_dashboard)
     end
   end
 end

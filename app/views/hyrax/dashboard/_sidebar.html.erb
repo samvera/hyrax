@@ -70,7 +70,7 @@
     <% end %>
   <% end %>
 
-  <% if can? :read, :admin_dashboard %>
+  <% if menu.show_configuration? %>
     <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
     <%= menu.nav_link(hyrax.admin_features_path) do %>
       <span class="fa fa-cog"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.settings') %></span>
@@ -85,5 +85,5 @@
     <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
       <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
     <% end %>
-  <% end %>
+  <% end # end of configuration block %>
 </ul>
