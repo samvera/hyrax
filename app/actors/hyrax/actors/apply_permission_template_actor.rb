@@ -11,7 +11,7 @@ module Hyrax
       protected
 
         def add_edit_users(attributes)
-          return unless attributes[:admin_set_id].present?
+          return if attributes[:admin_set_id].blank?
           template = Hyrax::PermissionTemplate.find_by!(admin_set_id: attributes[:admin_set_id])
           curation_concern.edit_users += template.agent_ids_for(agent_type: 'user', access: 'manage')
           curation_concern.edit_groups += template.agent_ids_for(agent_type: 'group', access: 'manage')

@@ -29,7 +29,7 @@ module Hyrax
     protected
 
       def new_or_create?
-        %w(create new).include? action_name
+        %w[create new].include? action_name
       end
   end
 end

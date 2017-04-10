@@ -16,7 +16,7 @@ module Hyrax
     end
 
     def create_transfer_request
-      return unless on_behalf_of.present?
+      return if on_behalf_of.blank?
       ContentDepositorChangeEventJob.perform_later(self,
                                                    ::User.find_by_user_key(on_behalf_of))
     end

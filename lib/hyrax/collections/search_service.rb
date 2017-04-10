@@ -31,7 +31,7 @@ module Hyrax
         user_access_filters << "#{solr_access_control_suffix(:group)}:public"
 
         # Grant access based on user id & role
-        unless @user_key.blank?
+        if @user_key.present?
           # for roles
           ::User.group_service.roles(@user_key).each do |role|
             user_access_filters << "#{solr_access_control_suffix(:group)}:#{escape_slashes(role)}"

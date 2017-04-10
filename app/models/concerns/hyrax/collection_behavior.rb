@@ -18,7 +18,7 @@ module Hyrax
 
     # Add members using the members association.
     def add_members(new_member_ids)
-      return if new_member_ids.nil? || new_member_ids.empty?
+      return if new_member_ids.blank?
       members << ActiveFedora::Base.find(new_member_ids)
     end
 

@@ -106,7 +106,7 @@ module Hyrax
     # @param [String] value - visibility value to validate
     def valid_visibility?(value)
       # If template doesn't specify a visiblity (i.e. is "varies"), then any visibility is valid
-      return true unless visibility.present?
+      return true if visibility.blank?
 
       # Validate that passed in value matches visibility requirement exactly
       visibility == value

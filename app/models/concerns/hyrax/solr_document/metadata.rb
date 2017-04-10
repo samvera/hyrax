@@ -43,7 +43,6 @@ module Hyrax
         end
       end
 
-      # rubocop:disable Metrics/BlockLength
       included do
         attribute :identifier, Solr::Array, solr_name('identifier')
         attribute :based_near, Solr::Array, solr_name('based_near')
@@ -81,7 +80,6 @@ module Hyrax
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
       end
-      # rubocop:enable Metrics/BlockLength
     end
   end
 end

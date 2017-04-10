@@ -29,7 +29,7 @@ FactoryGirl.define do
       initialize_with { new(id: id) }
       read_groups ["public"]
       resource_type ["Dissertation"]
-      subject %w(lorem ipsum dolor sit amet)
+      subject %w[lorem ipsum dolor sit amet]
       title ["fake_document.pdf"]
       before(:create) do |fs|
         fs.title = ["Fake PDF Title"]
@@ -40,7 +40,7 @@ FactoryGirl.define do
         id "fixturemp3"
       end
       initialize_with { new(id: id) }
-      subject %w(consectetur adipisicing elit)
+      subject %w[consectetur adipisicing elit]
       title ["Test Document MP3.mp3"]
       read_groups ["public"]
     end
@@ -52,7 +52,7 @@ FactoryGirl.define do
       resource_type ["Audio", "Dataset"]
       read_groups ["public"]
       title ["Fake Wav File.wav"]
-      subject %w(sed do eiusmod tempor incididunt ut labore)
+      subject %w[sed do eiusmod tempor incididunt ut labore]
     end
 
     factory :file_with_work do

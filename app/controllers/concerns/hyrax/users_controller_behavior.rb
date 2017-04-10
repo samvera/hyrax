@@ -34,7 +34,7 @@ module Hyrax::UsersControllerBehavior
     def search(query)
       clause = query.blank? ? nil : "%" + query.downcase + "%"
       base = User.where(*base_query)
-      unless clause.blank?
+      if clause.present?
         base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", clause, clause)
       end
       base.registered

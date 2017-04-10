@@ -9,7 +9,7 @@ module Hyrax
           text = ''
 
           # setup formatted author list
-          authors = author_list(work).select { |author| !author.blank? }
+          authors = author_list(work).reject(&:blank?)
           text << "<span class=\"citation-author\">#{format_authors(authors)}</span>"
           # setup title
           title_info = setup_title_info(work)
@@ -18,7 +18,7 @@ module Hyrax
           # Publication
           pub_info = clean_end_punctuation(setup_pub_info(work, true))
 
-          text << pub_info unless pub_info.blank?
+          text << pub_info if pub_info.present?
           text << "." unless text.blank? || text =~ /\.$/
           text.html_safe
         end
@@ -27,7 +27,7 @@ module Hyrax
           return "" if authors_list.blank?
           authors_list = Array.wrap(authors_list)
           text = concatenate_authors_from(authors_list)
-          unless text.blank?
+          if text.present?
             text << "." unless text =~ /\.$/
             text << " "
           end

@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hyrax/version'
@@ -7,7 +8,14 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt", 'Jeremy Friesen', 'Trey Pendragon', 'Esmé Cowles']
   spec.email         = ["jcoyne85@stanford.edu", 'mjgiarlo@stanford.edu', 'cam156@psu.edu', 'matt@databindery.com', "jeremy.n.friesen@gmail.com", 'tpendragon@princeton.edu', 'escowles@ticklefish.org']
   spec.description   = 'Hyrax is a featureful Hydra front-end based on the latest and greatest Hydra software components.'
-  spec.summary       = "Hyrax is a front-end based on the robust Hydra framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins."
+  spec.summary       = <<-EOF
+  Hyrax is a front-end based on the robust Hydra framework, providing a user
+  interface for common repository features. Hyrax offers the ability to create
+  repository object types on demand, to deposit content via multiple workflows,
+  and to describe content with flexible metadata. Numerous optional features may
+  be turned on in the administrative dashboard or added through plugins.
+EOF
+
   spec.homepage      = "http://github.com/projecthydra-labs/hyrax"
 
   spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
@@ -77,7 +85,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
-  spec.add_development_dependency 'rubocop', '~> 0.47.0'
+  spec.add_development_dependency 'rubocop', '~> 0.48.1'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.10.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'

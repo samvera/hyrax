@@ -28,8 +28,8 @@ module Hyrax
         parent_objects = parents
         return [] if parent_objects.empty?
         parent_objects.flat_map do |work|
-          work.file_sets.select do |file_set|
-            file_set.id != id
+          work.file_sets.reject do |file_set|
+            file_set.id == id
           end
         end
       end

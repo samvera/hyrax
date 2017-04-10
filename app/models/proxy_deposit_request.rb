@@ -91,7 +91,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
     def send_request_transfer_message_as_part_of_update
       message = "Your transfer request was #{status}."
-      message += " Comments: #{receiver_comment}" unless receiver_comment.blank?
+      message += " Comments: #{receiver_comment}" if receiver_comment.present?
       User.batch_user.send_message(sending_user, message, "Ownership Change #{status}")
     end
 

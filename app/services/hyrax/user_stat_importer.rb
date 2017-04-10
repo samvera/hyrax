@@ -50,10 +50,10 @@ module Hyrax
         file_ids_for_user(user).each do |file_id|
           file = ::FileSet.find(file_id)
           view_stats = extract_stats_for(object: file, from: FileViewStat, start_date: start_date, user: user)
-          stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
+          stats = tally_results(view_stats, :views, stats) if view_stats.present?
           delay
           dl_stats = extract_stats_for(object: file, from: FileDownloadStat, start_date: start_date, user: user)
-          stats = tally_results(dl_stats, :downloads, stats) unless dl_stats.blank?
+          stats = tally_results(dl_stats, :downloads, stats) if dl_stats.present?
           delay
         end
       end
@@ -62,7 +62,7 @@ module Hyrax
         work_ids_for_user(user).each do |work_id|
           work = Hyrax::WorkRelation.new.find(work_id)
           work_stats = extract_stats_for(object: work, from: WorkViewStat, start_date: start_date, user: user)
-          stats = tally_results(work_stats, :work_views, stats) unless work_stats.blank?
+          stats = tally_results(work_stats, :work_views, stats) if work_stats.present?
           delay
         end
       end

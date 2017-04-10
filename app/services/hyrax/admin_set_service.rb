@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Hyrax
   # Returns AdminSets that the current user has permission to use.
   class AdminSetService

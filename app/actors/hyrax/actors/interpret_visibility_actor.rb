@@ -137,7 +137,7 @@ module Hyrax
         # Validate visibility complies with AdminSet template requirements
         def validate_visibility(attributes, template)
           # NOTE: For embargo/lease, attributes[:visibility] will be nil (see sanitize_params), so visibility will be validated as part of embargo/lease
-          return true unless attributes[:visibility].present?
+          return true if attributes[:visibility].blank?
 
           # Validate against template's visibility requirements
           return true if validate_template_visibility(attributes[:visibility], template)
@@ -157,7 +157,7 @@ module Hyrax
                          valid_template_embargo_date?(embargo_release_date, template) &&
                          valid_template_visibility_after_embargo?(attributes, template)
 
-          curation_concern.errors.add(:visibility, 'When setting visibility to "embargo" you must also specify embargo release date.') unless embargo_release_date.present?
+          curation_concern.errors.add(:visibility, 'When setting visibility to "embargo" you must also specify embargo release date.') if embargo_release_date.blank?
           false
         end
 
@@ -171,7 +171,7 @@ module Hyrax
 
         # Validate an embargo date against permission template restrictions
         def valid_template_embargo_date?(date, template)
-          return true unless template.present?
+          return true if template.blank?
 
           # Validate against template's release_date requirements
           return true if template.valid_release_date?(date)
@@ -191,7 +191,7 @@ module Hyrax
 
         # Validate that a given visibility value satisfies template requirements
         def validate_template_visibility(visibility, template)
-          return true unless template.present?
+          return true if template.blank?
 
           template.valid_visibility?(visibility)
         end

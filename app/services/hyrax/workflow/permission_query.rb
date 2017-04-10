@@ -153,7 +153,7 @@ module Hyrax
       # @param user [User]
       # @return [ActiveRecord::Relation<Sipity::Agent>]
       def scope_processing_agents_for(user:)
-        return Sipity::Agent.none unless user.present?
+        return Sipity::Agent.none if user.blank?
         return Sipity::Agent.none unless user.persisted?
         user_agent = PowerConverter.convert_to_sipity_agent(user)
         group_agents = user.groups.map do |g|

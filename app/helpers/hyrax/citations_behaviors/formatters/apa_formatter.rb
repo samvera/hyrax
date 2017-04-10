@@ -19,7 +19,7 @@ module Hyrax
 
           def authors_text_for(work)
             # setup formatted author list
-            authors_list = author_list(work).select { |author| !author.blank? }
+            authors_list = author_list(work).reject(&:blank?)
             author_text = format_authors(authors_list)
             if author_text.blank?
               author_text

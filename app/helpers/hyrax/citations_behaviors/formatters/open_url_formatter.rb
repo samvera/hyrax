@@ -13,7 +13,7 @@ module Hyrax
               export_text << "rft.#{kev}=#{CGI.escape(value.to_s)}"
             end
           end
-          export_text.join('&') unless export_text.blank?
+          export_text.join('&') if export_text.present?
         end
 
         FIELD_MAP = {

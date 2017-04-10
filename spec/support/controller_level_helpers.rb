@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ControllerLevelHelpers
   # This provides some common mock methods for view tests.
   # These are normally provided by the controller.
