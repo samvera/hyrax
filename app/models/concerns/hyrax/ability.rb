@@ -125,6 +125,10 @@ module Hyrax
         can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplateAccess do |access|
           test_edit(access.permission_template.admin_set_id)
         end
+
+        can :review, :submissions do
+          can_review_submissions?
+        end
       end
 
       def operation_abilities
@@ -155,6 +159,7 @@ module Hyrax
 
       def admin_permissions
         return unless admin?
+        # TODO: deprecate this. We no longer have a dashboard just for admins
         can :read, :admin_dashboard
         alias_action :edit, to: :update
         alias_action :show, to: :read
@@ -187,6 +192,16 @@ module Hyrax
 
       def curation_concerns_models
         [::FileSet, ::Collection] + Hyrax.config.curation_concerns
+      end
+
+      def can_review_submissions?
+        # Are there any workflows where this user has the "approving" responsibility
+        approving_role = Sipity::Role.find_by(name: 'approving'.freeze)
+        return false unless approving_role
+        Hyrax::Workflow::PermissionQuery.scope_processing_agents_for(user: current_user).any? do |agent|
+          agent.workflow_responsibilities.joins(:workflow_role)
+               .where('sipity_workflow_roles.role_id' => approving_role.id).any?
+        end
       end
   end
 end

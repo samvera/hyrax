@@ -32,6 +32,39 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     end
   end
 
+  describe "can?(:review, :submissions)" do
+    subject { ability.can?(:review, :submissions) }
+
+    let(:role) { Sipity::Role.create(name: role_name) }
+    let(:user) { create(:user) }
+    let(:permission_template) { create(:permission_template, with_active_workflow: true) }
+    let(:workflow) { permission_template.active_workflow }
+
+    before do
+      workflow.workflow_roles.create(role: role)
+      # We are testing that this workflow role is removed
+      Hyrax::Workflow::PermissionGenerator.call(roles: role,
+                                                workflow: workflow,
+                                                agents: user)
+    end
+
+    context "as a depositor" do
+      let(:role_name) { 'depositing' }
+
+      before do
+        Sipity::Role.create(name: 'approving')
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "as a manager" do
+      let(:role_name) { 'approving' }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe "a user with no roles" do
     let(:user) { nil }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }

@@ -1,7 +1,7 @@
 module Hyrax
   # Presents a list of works in workflow
   class Admin::WorkflowsController < ApplicationController
-    before_action :ensure_admin!
+    before_action :ensure_authorized!
     layout 'dashboard'
 
     def index
@@ -15,10 +15,8 @@ module Hyrax
 
     private
 
-      def ensure_admin!
-        # Even though the user can view this admin set, they may not be able to view
-        # it on the admin page.
-        authorize! :read, :admin_dashboard
+      def ensure_authorized!
+        authorize! :review, :submissions
       end
 
       def deposited_workflow_state_name
