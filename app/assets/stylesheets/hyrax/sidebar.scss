@@ -6,9 +6,9 @@ $gutter-width: $grid-gutter-width/2;
   padding-left: $drawer-small + $gutter-width;
   padding-right: $gutter-width;
   padding-top: $admin-vertical-padding;
-  // padding-bottom: $admin-vertical-padding;
   background-color: $admin-content-background-color;
   position: absolute;
+  width: 100%;
 
   &.maximized {
     padding-left: $drawer-large + $gutter-width;
