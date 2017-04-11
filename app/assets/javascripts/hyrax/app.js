@@ -17,6 +17,7 @@ Hyrax = {
         this.sidebar();
     },
 
+    // Add WYSIWYG editor functionality to editable content blocks
     tinyMCE: function() {
         if (typeof tinyMCE === "undefined")
             return;
@@ -25,16 +26,19 @@ Hyrax = {
         });
     },
 
+    // Add search for user/group to the edit an admin set's participants page
     admin: function() {
       var AdminSetControls = require('hyrax/admin/admin_set_controls');
       var controls = new AdminSetControls($('#admin-set-controls'));
     },
 
+    // Pretty graphs on the dashboard page
     adminStatisticsGraphs: function() {
         var AdminGraphs = require('hyrax/admin/graphs');
         new AdminGraphs(Hyrax.statistics);
     },
 
+    // Sortable/pageable tables
     datatable: function () {
         // This keeps the datatable from being added to a table that already has it.
         // This is a problem when turbolinks is active.
@@ -43,6 +47,8 @@ Hyrax = {
         }
     },
 
+    // Autocomplete fields for the work edit form (based_near, subject, language, child works)
+    // TODO: this could move to editor()
     autocomplete: function () {
         var Autocomplete = require('hyrax/autocomplete')
         var autocomplete = new Autocomplete()
@@ -61,6 +67,7 @@ Hyrax = {
         })
     },
 
+    // Functionality for the work edit page
     editor: function () {
         var element = $("[data-behavior='work-form']")
         if (element.length > 0) {
@@ -69,7 +76,7 @@ Hyrax = {
         }
     },
 
-    // initialize popover helpers
+    // Popover help modals. Used on the user profile page.
     popovers: function () {
         $("a[data-toggle=popover]").popover({html: true})
             .click(function () {
@@ -77,6 +84,8 @@ Hyrax = {
             });
     },
 
+    // Add access grants for a user/group to a work/fileset/collection
+    // TODO: This could get moved to editor() or similar
     permissions: function () {
         var PermissionsControl = require('hyrax/permissions/control');
         // On the edit work page
@@ -89,6 +98,7 @@ Hyrax = {
         new PermissionsControl($("#collection_permissions"), 'tmpl-collection-grant');
     },
 
+    // Polling for user notifications. This is displayed in the navbar.
     notifications: function () {
         var Notifications = require('hyrax/notifications');
         $('[data-update-poll-url]').each(function () {
@@ -98,10 +108,12 @@ Hyrax = {
         });
     },
 
+    // Search for a user to transfer a work to
     transfers: function () {
         $("#proxy_deposit_request_transfer_to").userSearch();
     },
 
+    // Popover menu to select the type of work when starting a deposit
     selectWorkType: function () {
         var SelectWorkType = require('hyrax/select_work_type');
         $("[data-behavior=select-work]").each(function () {
@@ -109,17 +121,22 @@ Hyrax = {
         });
     },
 
+    // Minimize/maximize the dashboard sidebar
     sidebar: function () {
         $('.sidebar-toggle').on('click', function() {
             $('.sidebar, .main-content').toggleClass('maximized')
         })
     },
 
+    // Add and reorder files attached to works
     fileManager: function () {
         var FileManager = require('hyrax/file_manager');
         new FileManager();
     },
 
+    // Used when you have a linked data field that can have terms from multiple
+    // authorities.
+    // TODO: should be moved to the editor()
     authoritySelect: function(options) {
 	var AuthoritySelect = require('hyrax/authority_select');
 	var authoritySelect = new AuthoritySelect(options);
