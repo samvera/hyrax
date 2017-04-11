@@ -75,8 +75,9 @@ module Hydra::RoleMapperBehavior
           raise("#{filename} was found, but was blank or malformed.\n")
         end
 
-        yml.fetch(Rails.env)
-
+        roles = yml.fetch(Rails.env)
+        raise "No roles were found for the #{Rails.env} environment in #{file}" unless roles
+        roles
       end
   end
 end

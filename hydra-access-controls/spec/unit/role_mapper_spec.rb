@@ -1,8 +1,23 @@
 require 'spec_helper'
 
-describe RoleMapper do
+RSpec.describe RoleMapper do
   it "defines the 4 roles" do
     expect(RoleMapper.role_names.sort).to eq %w(admin_policy_object_editor archivist donor patron researcher)
+  end
+
+  describe "map" do
+    subject { described_class.map }
+
+    context "when there are no roles defined for the current environment" do
+      before do
+        described_class.instance_variable_set :@map, nil
+        allow(Rails).to receive(:env).and_return('production')
+      end
+
+      it "raises an error" do
+        expect { subject }.to raise_error RuntimeError, %r{^No roles were found for the production environment in .*config/role_map\.yml$}
+      end
+    end
   end
 
   describe "#whois" do
