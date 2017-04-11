@@ -26,7 +26,7 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
 
   describe "#search_builder_class" do
     subject { controller.search_builder_class }
-    it { is_expected.to eq Hyrax::MyWorksSearchBuilder }
+    it { is_expected.to eq Hyrax::My::WorksSearchBuilder }
   end
 
   describe "#collections_service" do

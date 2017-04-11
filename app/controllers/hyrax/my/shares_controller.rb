@@ -1,8 +1,9 @@
 module Hyrax
   module My
     class SharesController < MyController
+      # Override of Blacklight::RequestBuilders
       def search_builder_class
-        Hyrax::MySharesSearchBuilder
+        Hyrax::My::SharesSearchBuilder
       end
 
       def index

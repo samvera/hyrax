@@ -1,9 +1,8 @@
 # Search for possible works that user can edit and could be a work's child or parent.
-class Hyrax::FindWorksSearchBuilder < Hyrax::SearchBuilder
-  include Hyrax::MySearchBuilderBehavior
+class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   include Hyrax::FilterByType
 
-  self.default_processor_chain += [:filter_on_title, :show_only_resources_deposited_by_current_user, :show_only_other_works, :show_only_works_not_child, :show_only_works_not_parent]
+  self.default_processor_chain += [:filter_on_title, :show_only_other_works, :show_only_works_not_child, :show_only_works_not_parent]
 
   # Excludes the id that is part of the params
   def initialize(context)

@@ -3,7 +3,7 @@ module Hyrax
   # access to the requested work.  If the work is suppressed (due to being in a
   # workflow), then it checks to see if the current_user has any workflow role
   # on the given work.
-  class WorksSearchBuilder < Hyrax::SearchBuilder
+  class WorksSearchBuilder < ::SearchBuilder
     include Hyrax::FilterByType
 
     def only_works?
