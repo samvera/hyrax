@@ -4,6 +4,7 @@ module Hyrax
     class CollectionsController < Hyrax::My::CollectionsController
       before_action :ensure_admin!
 
+      # Override of Blacklight::RequestBuilders
       def search_builder_class
         Hyrax::CollectionSearchBuilder
       end

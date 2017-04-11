@@ -1,6 +1,6 @@
 # Added to allow for the My controller to show only things I have edit access to
-class Hyrax::MyHighlightsSearchBuilder < Hyrax::SearchBuilder
-  include Hyrax::MySearchBuilderBehavior
+class Hyrax::My::HighlightsSearchBuilder < ::SearchBuilder
+  include Hyrax::My::SearchBuilderBehavior
 
   self.default_processor_chain += [:show_only_highlighted_works]
 

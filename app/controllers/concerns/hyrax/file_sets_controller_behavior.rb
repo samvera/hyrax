@@ -204,6 +204,7 @@ module Hyrax
         end
       end
 
+      # Override of Blacklight::RequestBuilders
       def search_builder_class
         Hyrax::FileSetSearchBuilder
       end

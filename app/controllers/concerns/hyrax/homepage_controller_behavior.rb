@@ -7,6 +7,7 @@ module Hyrax::HomepageControllerBehavior
     include Blacklight::SearchHelper
     include Blacklight::AccessControls::Catalog
 
+    # Override of Blacklight::RequestBuilders
     def search_builder_class
       Hyrax::HomepageSearchBuilder
     end

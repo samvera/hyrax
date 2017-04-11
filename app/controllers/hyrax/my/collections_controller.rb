@@ -1,8 +1,9 @@
 module Hyrax
   module My
     class CollectionsController < MyController
+      # Override of Blacklight::RequestBuilders
       def search_builder_class
-        Hyrax::MyCollectionsSearchBuilder
+        Hyrax::My::CollectionsSearchBuilder
       end
 
       def index

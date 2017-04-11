@@ -1,4 +1,4 @@
-class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
+class Hyrax::CatalogSearchBuilder < ::SearchBuilder
   self.default_processor_chain += [
     :add_access_controls_to_solr_params,
     :show_works_or_works_that_contain_files,

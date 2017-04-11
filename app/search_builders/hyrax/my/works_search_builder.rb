@@ -1,7 +1,11 @@
 module Hyrax
-  # Added to allow for the Hyrax::My::WorksController to show only things I have edit access to
-  class MyWorksSearchBuilder < WorksSearchBuilder
-    self.default_processor_chain += [:show_only_resources_deposited_by_current_user]
+  # Allow for the Hyrax::My::WorksController to show only things I have edit access to
+  class My::WorksSearchBuilder < Hyrax::My::SearchBuilder
+    include Hyrax::FilterByType
+
+    def only_works?
+      true
+    end
 
     # We remove the access controls filter, because some of the works a user has
     # deposited may have gone through a workflow which has removed their ability
