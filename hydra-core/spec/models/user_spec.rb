@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'hydra/shared_spec/group_service_interface'
 
 describe User do
 
@@ -23,6 +24,11 @@ describe User do
         expect(subject).to eq 'foo'
       end
     end
+  end
+
+  describe '.group_service' do
+    let(:group_service) { described_class.group_service }
+    it_behaves_like 'a Hydra group_service interface'
   end
 
   describe "#groups" do
