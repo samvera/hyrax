@@ -86,32 +86,18 @@ module Hyrax
       # which the HydraEditor::FieldMetadataService cannot determine are multiple.
       # The instance variable is used when choosing which UI widget to draw.
       def multiple?(field)
-        case field.to_s
-        when 'rights_statement'
-          false
-        when 'ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'
-          true
-        else
-          super
-        end
+        Hyrax::FormMetadataService.multiple?(model.class, field)
       end
 
       # The class method _multiple?_ is used for building the permitted params
       # for the update action
       def self.multiple?(field)
-        case field.to_s
-        when 'rights_statement'
-          false
-        when 'ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'
-          true
-        else
-          super
-        end
+        Hyrax::FormMetadataService.multiple?(model_class, field)
       end
 
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
-        if admin_set_id && Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow).allows_access_grant?
+        if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
           return super
         end
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
@@ -127,6 +113,13 @@ module Hyrax
           }
         ]
       end
+
+      def self.workflow_for(admin_set_id:)
+        Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow)
+      rescue ActiveRecord::RecordNotFound => e
+        raise Hyrax::MissingWorkflowError, e.message
+      end
+      private_class_method :workflow_for
 
       private
 
