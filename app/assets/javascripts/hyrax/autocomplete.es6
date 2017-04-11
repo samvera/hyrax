@@ -11,8 +11,7 @@ export default class Autocomplete {
         new Work(
           element,
           data.autocompleteUrl,
-          data.user,
-          element.data('exclude-work')
+          data.id
         )
         break
       default:
@@ -21,4 +20,3 @@ export default class Autocomplete {
     }
   }
 }
-
