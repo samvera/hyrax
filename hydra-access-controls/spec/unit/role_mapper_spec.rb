@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'hydra/shared_spec/group_service_interface'
 
 RSpec.describe RoleMapper do
   it "defines the 4 roles" do
@@ -20,6 +21,9 @@ RSpec.describe RoleMapper do
     end
   end
 
+  let(:group_service) { described_class }
+  it_behaves_like 'a Hydra group_service interface'
+
   describe "#whois" do
     it "knows who is what" do
       expect(RoleMapper.whois('archivist').sort).to eq %w(archivist1@example.com archivist2@example.com leland_himself@example.com)
@@ -29,7 +33,7 @@ RSpec.describe RoleMapper do
   end
 
   describe "fetch_groups" do
-    let(:user) { instance_double(User, user_key: email, new_record?: false) } 
+    let(:user) { instance_double(User, user_key: email, new_record?: false) }
     subject { RoleMapper.fetch_groups(user: user) }
 
     context "for a user with multiple roles" do
@@ -41,7 +45,7 @@ RSpec.describe RoleMapper do
         expect(RoleMapper.fetch_groups(user: user)).to match_array ['archivist', 'donor', 'patron']
       end
     end
-      
+
     context "for a user with a single role" do
       let(:email) { 'archivist2@example.com' }
       it { is_expected.to match_array ['archivist'] }
