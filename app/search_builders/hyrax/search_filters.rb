@@ -10,11 +10,5 @@ module Hyrax
       return [] if ability.admin?
       super
     end
-
-    # show only files with edit permissions in lib/hydra/access_controls_enforcement.rb apply_gated_discovery
-    def discovery_permissions
-      return ['edit'] if blacklight_params[:works] == 'mine'
-      super
-    end
   end
 end
