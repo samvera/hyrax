@@ -59,4 +59,22 @@ RSpec.describe Hyrax::MenuPresenter do
       it { is_expected.to be false }
     end
   end
+
+  describe "#show_configuration?" do
+    subject { instance.show_configuration? }
+
+    context "for a regular user" do
+      before do
+        allow(instance.view_context).to receive(:can?).and_return(false)
+      end
+      it { is_expected.to be false }
+    end
+
+    context "for a user who can manage users" do
+      before do
+        allow(instance.view_context).to receive(:can?).and_return(true)
+      end
+      it { is_expected.to be true }
+    end
+  end
 end
