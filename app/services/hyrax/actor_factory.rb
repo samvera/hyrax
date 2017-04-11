@@ -6,7 +6,7 @@ module Hyrax
        Hyrax::Actors::OptimisticLockValidator,
        Hyrax::Actors::CreateWithRemoteFilesActor,
        Hyrax::Actors::CreateWithFilesActor,
-       Hyrax::Actors::AddAsMemberOfCollectionsActor,
+       Hyrax::Actors::CollectionsMembershipActor,
        Hyrax::Actors::AddToWorkActor,
        Hyrax::Actors::AssignRepresentativeActor,
        Hyrax::Actors::AttachFilesActor,

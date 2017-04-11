@@ -4,12 +4,13 @@ RSpec.describe Hyrax::ActorFactory, :no_clean do
 
   describe '.stack_actors' do
     subject { described_class.stack_actors(work) }
+
     it do
       is_expected.to eq [Hyrax::Actors::TransactionalRequest,
                          Hyrax::Actors::OptimisticLockValidator,
                          Hyrax::Actors::CreateWithRemoteFilesActor,
                          Hyrax::Actors::CreateWithFilesActor,
-                         Hyrax::Actors::AddAsMemberOfCollectionsActor,
+                         Hyrax::Actors::CollectionsMembershipActor,
                          Hyrax::Actors::AddToWorkActor,
                          Hyrax::Actors::AssignRepresentativeActor,
                          Hyrax::Actors::AttachFilesActor,
@@ -25,12 +26,13 @@ RSpec.describe Hyrax::ActorFactory, :no_clean do
 
   describe '.build' do
     subject { described_class.build(work, user) }
+
     it "has the correct stack frames" do
       expect(subject.more_actors).to eq [
         Hyrax::Actors::OptimisticLockValidator,
         Hyrax::Actors::CreateWithRemoteFilesActor,
         Hyrax::Actors::CreateWithFilesActor,
-        Hyrax::Actors::AddAsMemberOfCollectionsActor,
+        Hyrax::Actors::CollectionsMembershipActor,
         Hyrax::Actors::AddToWorkActor,
         Hyrax::Actors::AssignRepresentativeActor,
         Hyrax::Actors::AttachFilesActor,

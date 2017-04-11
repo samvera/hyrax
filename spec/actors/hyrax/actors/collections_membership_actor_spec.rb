@@ -1,26 +1,28 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::Actors::AddAsMemberOfCollectionsActor do
+RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
+
   subject do
     Hyrax::Actors::ActorStack.new(curation_concern,
                                   ability,
                                   [described_class,
                                    Hyrax::Actors::GenericWorkActor])
   end
+
   describe 'the next actor' do
     let(:root_actor) { double }
+    let(:attributes) do
+      { member_of_collection_ids: ['123'], title: ['test'] }
+    end
+
     before do
       allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
       allow(Collection).to receive(:find).with(['123'])
       allow(curation_concern).to receive(:member_of_collections=)
-    end
-
-    let(:attributes) do
-      { member_of_collection_ids: ['123'], title: ['test'] }
     end
 
     it 'does not receive the member_of_collection_ids' do
