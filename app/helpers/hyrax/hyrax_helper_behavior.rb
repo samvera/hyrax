@@ -6,7 +6,6 @@ module Hyrax
     include ERB::Util # provides html_escape
     include Hyrax::TitleHelper
     include Hyrax::FileSetHelper
-    include Hyrax::SearchPathsHelper
     include Hyrax::AbilityHelper
     include Hyrax::UrlHelper
     include Hyrax::EmbargoHelper
