@@ -21,6 +21,10 @@ RSpec.describe Hyrax::Admin::AppearancesController do
       end
 
       it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Configuration', '#')
+        expect(controller).to receive(:add_breadcrumb).with('Appearance', "/admin/appearance")
         get :show
         expect(assigns[:form]).to be_kind_of Hyrax::Forms::Admin::Appearance
         expect(response).to be_success
