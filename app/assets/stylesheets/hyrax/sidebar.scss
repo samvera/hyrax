@@ -1,5 +1,5 @@
 $drawer-small: 40px;
-$drawer-large: 200px;
+$drawer-large: 260px;
 $gutter-width: $grid-gutter-width/2;
 
 .main-content {
@@ -35,6 +35,10 @@ $gutter-width: $grid-gutter-width/2;
     .sidebar-toggle {
       transform: rotate(-180deg);
     }
+
+    .nav-pills > li > a {
+      padding-left: 24px;
+    }
   }
 
   .sidebar-toggle {
@@ -64,7 +68,7 @@ $gutter-width: $grid-gutter-width/2;
     opacity: 0;
     font-size: 12px;
     margin: 15px 0 0 0;
-    padding: 10px 10px 5px 10px;
+    padding: 10px 10px 5px 20px;
     text-transform: uppercase;
   }
 
@@ -115,14 +119,6 @@ $gutter-width: $grid-gutter-width/2;
   }
 
   // submenu items
-  &.maximized ul.collapse > li > a {
-    // only indent when the drawer is maximized
-    padding-left: 25px;
-  }
-  ul.collapsing > li > a {
-    padding-left: 25px;
-  }
-
   .collapse-toggle {
     margin-bottom: 0;
 
