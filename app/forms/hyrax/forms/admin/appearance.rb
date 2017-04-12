@@ -11,9 +11,17 @@ module Hyrax
         attr_reader :attributes
         private :attributes
 
-        # This allows this object to route to the correct
+        # This allows this object to route to the correct path
         def self.model_name
           ActiveModel::Name.new(self, Hyrax, "Hyrax::Admin::Appearance")
+        end
+
+        def self.permitted_params
+          [:header_background_color,
+           :header_text_color,
+           :link_color,
+           :footer_link_color,
+           :primary_button_background_color]
         end
 
         def to_key
