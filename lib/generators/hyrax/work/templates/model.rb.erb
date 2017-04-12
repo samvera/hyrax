@@ -2,6 +2,8 @@
 #  `rails generate hyrax:work <%= class_name %>`
 class <%= class_name %> < ActiveFedora::Base
   include ::Hyrax::WorkBehavior
+  # This must come after the WorkBehavior because it finalizes the metadata
+  # schema (by adding accepts_nested_attributes)
   include ::Hyrax::BasicMetadata
 
   self.indexer = <%= class_name %>Indexer

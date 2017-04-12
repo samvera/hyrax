@@ -13,7 +13,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       creator_tesim: creator,
       license_tesim: ['http://creativecommons.org/licenses/by/3.0/us/'],
       title_tesim: ['the Roared about the Langs'],
-      based_near_tesim: ['London'],
+      based_near_label_tesim: ['London'],
       date_created_tesim: ['1969']
     )
   end

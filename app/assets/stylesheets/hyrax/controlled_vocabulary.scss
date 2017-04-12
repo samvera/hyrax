@@ -1,0 +1,7 @@
+.controlled_vocabulary {
+  @extend .multi_value;
+
+  .listing li:only-of-type .remove {
+    display: block;
+  }
+}

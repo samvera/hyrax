@@ -1,4 +1,7 @@
 module Hyrax
+  # An optional model mixin to define some simple properties. This must be mixed
+  # after all other properties are defined because no other properties will
+  # be defined once  accepts_nested_attributes_for is called
   module BasicMetadata
     extend ActiveSupport::Concern
 
@@ -25,10 +28,16 @@ module Hyrax
       property :subject, predicate: ::RDF::Vocab::DC11.subject
       property :language, predicate: ::RDF::Vocab::DC11.language
       property :identifier, predicate: ::RDF::Vocab::DC.identifier
-      property :based_near, predicate: ::RDF::Vocab::FOAF.based_near
+      property :based_near, predicate: ::RDF::Vocab::FOAF.based_near, class_name: ControlledVocabularies::Location
       property :related_url, predicate: ::RDF::RDFS.seeAlso
       property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
       property :source, predicate: ::RDF::Vocab::DC.source
+
+      id_blank = proc { |attributes| attributes[:id].blank? }
+
+      class_attribute :controlled_properties
+      self.controlled_properties = [:based_near]
+      accepts_nested_attributes_for :based_near, reject_if: id_blank, allow_destroy: true
     end
   end
 end

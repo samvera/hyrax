@@ -48,7 +48,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         allow(Hyrax.config).to receive(:browse_everything?) { nil }
       end
       it "draws the page" do
-        expect(page).to have_selector("form[action='/concern/generic_works']")
+        expect(page).to have_selector("form[action='/concern/generic_works'][data-param-key='generic_work']")
         expect(page).to have_link('Batch upload')
         # does not render the BE upload widget
         expect(page).not_to have_selector('button#browse-btn')

@@ -1,4 +1,5 @@
 module Hyrax
+  # This class gets called by ActiveFedora::IndexingService#olrize_rdf_assertions
   class BasicMetadataIndexer < ActiveFedora::RDF::IndexingService
     class_attribute :stored_and_facetable_fields, :stored_fields, :symbol_fields
     self.stored_and_facetable_fields = %i[resource_type creator contributor keyword publisher subject language based_near]

@@ -2,7 +2,6 @@
 // code should be called from here.
 Hyrax = {
     initialize: function () {
-        this.autocomplete();
         this.popovers();
         this.permissions();
         this.notifications();
@@ -15,7 +14,6 @@ Hyrax = {
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.sidebar();
-        this.authoritySelect();
     },
 
     // Add WYSIWYG editor functionality to editable content blocks
@@ -46,26 +44,6 @@ Hyrax = {
         if ($('.dataTables_wrapper').length === 0) {
             $('.datatable').DataTable();
         }
-    },
-
-    // Autocomplete fields for the work edit form (based_near, subject, language, child works)
-    // TODO: this could move to editor()
-    autocomplete: function () {
-        var Autocomplete = require('hyrax/autocomplete')
-        var autocomplete = new Autocomplete()
-
-        $('[data-autocomplete]').each((function() {
-          var data = $(this).data()
-          autocomplete.setup({'element' : $(this), 'data': data})
-        }))
-
-        $('.multi_value.form-group').manage_fields({
-          add: function(e, element) {
-              autocomplete.setup({'element':$(element), 'data':$(element).data()})
-	      // Don't mark an added element as readonly even if previous element was
-	      $(element).attr('readonly', false)
-          }
-        })
     },
 
     // Functionality for the work edit page
@@ -133,17 +111,6 @@ Hyrax = {
     fileManager: function () {
         var FileManager = require('hyrax/file_manager');
         new FileManager();
-    },
-    // Used when you have a linked data field that can have terms from multiple
-    // authorities.
-    // TODO: should be moved to the editor()
-    
-    authoritySelect: function() {
-	var AuthoritySelect = require('hyrax/authority_select');
-        $("[data-authority-select]").each(function() {
-            var authoritySelect = $(this).data().authoritySelect
-            new AuthoritySelect({selectBox: 'select.' + authoritySelect, inputField: 'input.' + authoritySelect});
-        })
     },
 
     // Saved so that inline javascript can put data somewhere.

@@ -11,7 +11,7 @@ en:
       fields:
         show:
           admin_set: "In Administrative Set:"
-          based_near: Location
+          based_near_label: Location
           contributor: Contributors
           keyword: Keyword
         facet:

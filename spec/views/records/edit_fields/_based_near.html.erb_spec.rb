@@ -1,6 +1,6 @@
 RSpec.describe 'records/edit_fields/_based_near.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:form) { Hyrax::Forms::WorkForm.new(work, nil, controller) }
+  let(:form) { Hyrax::GenericWorkForm.new(work, nil, controller) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>

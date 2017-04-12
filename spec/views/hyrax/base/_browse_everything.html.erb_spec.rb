@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'hyrax/base/_browse_everything.html.erb', type: :view do
   let(:model) { stub_model(GenericWork) }
-  let(:form) { Hyrax::Forms::WorkForm.new(model, double, controller) }
+  let(:form) { Hyrax::GenericWorkForm.new(model, double, controller) }
   let(:f) { double(object: form) }
 
   it 'shows user timing warning' do

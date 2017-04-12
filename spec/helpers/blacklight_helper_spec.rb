@@ -1,22 +1,22 @@
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do
-    { 'creator_tesim'        => ['Justin', 'Joe'],
-      'depositor_tesim'      => ['jcoyne@justincoyne.com'],
-      'proxy_depositor_ssim' => ['atz@stanford.edu'],
-      'description_tesim'    => ['This links to http://example.com/ What about that?'],
-      'date_uploaded_dtsi'   => '2013-03-14T00:00:00Z',
-      'rights_tesim' => ["http://creativecommons.org/publicdomain/zero/1.0/",
-                         "http://creativecommons.org/publicdomain/mark/1.0/",
-                         "http://www.europeana.eu/portal/rights/rr-r.html"],
-      'identifier_tesim'     => ['65434567654345654'],
-      'keyword_tesim'        => ['taco', 'mustache'],
-      'subject_tesim'        => ['Awesome'],
-      'contributor_tesim'    => ['Bird, Big'],
-      'publisher_tesim'      => ['Penguin Random House'],
-      'based_near_tesim'     => ['Pennsylvania'],
-      'language_tesim'       => ['English'],
-      'resource_type_tesim'  => ['Capstone Project'] }
+    { 'creator_tesim'          => ['Justin', 'Joe'],
+      'depositor_tesim'        => ['jcoyne@justincoyne.com'],
+      'proxy_depositor_ssim'   => ['atz@stanford.edu'],
+      'description_tesim'      => ['This links to http://example.com/ What about that?'],
+      'date_uploaded_dtsi'     => '2013-03-14T00:00:00Z',
+      'rights_tesim'           => ["http://creativecommons.org/publicdomain/zero/1.0/",
+                                   "http://creativecommons.org/publicdomain/mark/1.0/",
+                                   "http://www.europeana.eu/portal/rights/rr-r.html"],
+      'identifier_tesim'       => ['65434567654345654'],
+      'keyword_tesim'          => ['taco', 'mustache'],
+      'subject_tesim'          => ['Awesome'],
+      'contributor_tesim'      => ['Bird, Big'],
+      'publisher_tesim'        => ['Penguin Random House'],
+      'based_near_label_tesim' => ['Pennsylvania'],
+      'language_tesim'         => ['English'],
+      'resource_type_tesim'    => ['Capstone Project'] }
   end
 
   let(:document) { SolrDocument.new(attributes) }
@@ -91,9 +91,9 @@ RSpec.describe BlacklightHelper, type: :helper do
         it { is_expected.to eq '<span itemprop="publisher"><a href="/catalog?f%5Bpublisher_sim%5D%5B%5D=Penguin+Random+House">Penguin Random House</a></span>' }
       end
 
-      context "location_tesim" do
-        let(:field_name) { 'based_near_tesim' }
-        it { is_expected.to eq '<span itemprop="contentLocation"><a href="/catalog?f%5Bbased_near_sim%5D%5B%5D=Pennsylvania">Pennsylvania</a></span>' }
+      context "based_near_label_tesim" do
+        let(:field_name) { 'based_near_label_tesim' }
+        it { is_expected.to eq '<span itemprop="contentLocation"><a href="/catalog?f%5Bbased_near_label_sim%5D%5B%5D=Pennsylvania">Pennsylvania</a></span>' }
       end
 
       context "language_tesim" do

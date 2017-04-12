@@ -1,5 +1,6 @@
 module Hyrax
   module Forms
+    # @abstract
     class WorkForm
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
@@ -46,7 +47,15 @@ module Hyrax
       # The value for some fields should not be set to the defaults ([''])
       # because it should be an empty array instead
       def initialize_field(key)
-        super unless [:embargo_release_date, :lease_expiration_date].include?(key)
+        return if [:embargo_release_date, :lease_expiration_date].include?(key)
+        # rubocop:disable Lint/AssignmentInCondition
+        if class_name = model_class.properties[key.to_s].try(:class_name)
+          # Initialize linked properties such as based_near
+          self[key] += [class_name.new]
+        else
+          super
+        end
+        # rubocop:enable Lint/AssignmentInCondition
       end
 
       # @param [Symbol] key the field to read
@@ -114,7 +123,8 @@ module Hyrax
           :on_behalf_of,
           :version,
           {
-            work_members_attributes: [:id, :_destroy]
+            work_members_attributes: [:id, :_destroy],
+            based_near_attributes: [:id, :_destroy]
           }
         ]
       end

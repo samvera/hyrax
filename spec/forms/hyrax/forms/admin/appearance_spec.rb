@@ -33,4 +33,16 @@ RSpec.describe Hyrax::Forms::Admin::Appearance do
       end
     end
   end
+
+  describe ".permitted_params" do
+    subject { described_class.permitted_params }
+
+    it {
+      is_expected.to eq [:header_background_color,
+                         :header_text_color,
+                         :link_color,
+                         :footer_link_color,
+                         :primary_button_background_color]
+    }
+  end
 end

@@ -46,6 +46,7 @@ module Hyrax
       included do
         attribute :identifier, Solr::Array, solr_name('identifier')
         attribute :based_near, Solr::Array, solr_name('based_near')
+        attribute :based_near_label, Solr::Array, solr_name('based_near_label')
         attribute :related_url, Solr::Array, solr_name('related_url')
         attribute :resource_type, Solr::Array, solr_name('resource_type')
         attribute :edit_groups, Solr::Array, ::Ability.edit_group_field
