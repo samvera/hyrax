@@ -178,11 +178,6 @@ RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
     it { is_expected.to eq work.lease_expiration_date }
   end
 
-  describe ".required_fields" do
-    subject { described_class.required_fields }
-    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement, :license] }
-  end
-
   describe ".workflow_for" do
     subject { described_class.send(:workflow_for, admin_set_id: admin_set.id) }
 
