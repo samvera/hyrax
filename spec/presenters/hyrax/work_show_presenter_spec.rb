@@ -175,8 +175,11 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:obj) { create(:work_with_representative_file) }
     let(:attributes) { obj.to_solr }
     it "has a representative" do
-      expect(Hyrax::PresenterFactory).to receive(:build_presenters)
-        .with([obj.members[0].id], Hyrax::CompositePresenterFactory, ability, request).and_return ["abc"]
+      expect(Hyrax::PresenterFactory).to receive(:build_for)
+        .with(ids: [obj.members[0].id],
+              presenter_class: Hyrax::CompositePresenterFactory,
+              presenter_args: [ability, request])
+        .and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end
   end

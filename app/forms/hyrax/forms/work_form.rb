@@ -126,7 +126,9 @@ module Hyrax
         # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
         def file_presenters
           @file_sets ||=
-            Hyrax::PresenterFactory.build_presenters(model.member_ids, FileSetPresenter, current_ability)
+            Hyrax::PresenterFactory.build_for(ids: model.member_ids,
+                                              presenter_class: FileSetPresenter,
+                                              presenter_args: current_ability)
         end
     end
   end

@@ -64,9 +64,9 @@ module Hyrax
     # Get presenters for the collections this work is a member of via the member_of_collections association.
     # @return [Array<CollectionPresenter>] presenters
     def member_of_collection_presenters
-      PresenterFactory.build_presenters(member_of_collection_ids,
-                                        collection_presenter_class,
-                                        *presenter_factory_arguments)
+      PresenterFactory.build_for(ids: member_of_collection_ids,
+                                 presenter_class: collection_presenter_class,
+                                 presenter_args: presenter_factory_arguments)
     end
 
     def date_modified
