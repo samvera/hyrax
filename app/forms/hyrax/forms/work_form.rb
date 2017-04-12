@@ -26,7 +26,7 @@ module Hyrax
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
                     :member_of_collection_ids, :admin_set_id]
 
-      self.required_fields = [:title, :creator, :keyword, :rights_statement, :license]
+      self.required_fields = [:title, :creator, :keyword, :rights_statement]
 
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
