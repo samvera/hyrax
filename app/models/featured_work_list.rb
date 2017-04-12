@@ -36,9 +36,9 @@ class FeaturedWorkList
 
     def work_presenters
       ability = nil
-      Hyrax::PresenterFactory.build_presenters(ids,
-                                               Hyrax::WorkShowPresenter,
-                                               ability)
+      Hyrax::PresenterFactory.build_for(ids: ids,
+                                        presenter_class: Hyrax::WorkShowPresenter,
+                                        presenter_args: ability)
     end
 
     def work_with_id(id)

@@ -16,8 +16,10 @@ RSpec.describe Hyrax::MemberPresenterFactory do
       end
 
       it "uses the set class" do
-        expect(Hyrax::PresenterFactory).to receive(:build_presenters)
-          .with(['12', '33'], presenter_class, ability, request)
+        expect(Hyrax::PresenterFactory).to receive(:build_for)
+          .with(ids: ['12', '33'],
+                presenter_class: presenter_class,
+                presenter_args: [ability, request])
         factory.file_set_presenters
       end
     end

@@ -21,10 +21,7 @@ module Hyrax
       # @param [Array] args any other arguments to pass to the presenters
       # @return [Array] presenters for the documents in order of the ids
       def build_presenters(ids, klass, *args)
-        Deprecation.warn(to_s,
-                         Deprecation.deprecated_method_warning(to_s,
-                                                               :build_presenters,
-                                                               "use .build_for instead"))
+        Deprecation.warn(self, "build_presenters is deprecated and will be removed from Hyrax 3.0 (use .build_for instead)")
         build_for(ids: ids, presenter_class: klass, presenter_args: args)
       end
     end

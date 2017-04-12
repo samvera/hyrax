@@ -84,9 +84,9 @@ module Hyrax
       ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
                                             fl: ActiveFedora.id_field)
                                      .map { |x| x.fetch(ActiveFedora.id_field) }
-      @parent_presenter ||= Hyrax::PresenterFactory.build_presenters(ids,
-                                                                     WorkShowPresenter,
-                                                                     current_ability).first
+      @parent_presenter ||= Hyrax::PresenterFactory.build_for(ids: ids,
+                                                              presenter_class: WorkShowPresenter,
+                                                              presenter_args: current_ability).first
     end
 
     def fixity_check_service
