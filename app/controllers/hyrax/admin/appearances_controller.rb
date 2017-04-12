@@ -3,6 +3,8 @@ module Hyrax
     class AppearancesController < ApplicationController
       before_action :require_permissions
       layout 'dashboard'
+      class_attribute :form_class
+      self.form_class = Hyrax::Forms::Admin::Appearance
 
       def show
         add_breadcrumb t(:'hyrax.controls.home'), root_path
@@ -20,15 +22,7 @@ module Hyrax
       private
 
         def update_params
-          params.require(:admin_appearance).permit(:header_background_color,
-                                                   :header_text_color,
-                                                   :link_color,
-                                                   :footer_link_color,
-                                                   :primary_button_background_color)
-        end
-
-        def form_class
-          Hyrax::Forms::Admin::Appearance
+          params.require(:admin_appearance).permit(form_class.permitted_params)
         end
 
         def require_permissions
