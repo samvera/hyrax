@@ -51,7 +51,7 @@ EOF
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
   spec.add_dependency 'redis-namespace', '~> 1.5.2'
   spec.add_dependency 'flot-rails', '~> 0.0.6'
-  spec.add_dependency 'almond-rails', '~> 0.0.1'
+  spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'qa', '~> 1.0' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.3'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
