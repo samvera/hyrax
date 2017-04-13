@@ -27,7 +27,7 @@ EOF
   spec.license       = 'Apache2'
 
   spec.add_dependency 'hydra-head', '>= 10.4.0'
-  spec.add_dependency 'hydra-editor', '~> 3.1'
+  spec.add_dependency 'hydra-editor', '~> 3.2'
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
   # Workaround for https://github.com/projecthydra-labs/hyrax/issues/546

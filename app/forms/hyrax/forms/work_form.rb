@@ -28,6 +28,9 @@ module Hyrax
 
       self.required_fields = [:title, :creator, :keyword, :rights_statement]
 
+      # The service that determines the cardinality of each field
+      self.field_metadata_service = Hyrax::FormMetadataService
+
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
         @agreement_accepted = !model.new_record?
@@ -79,20 +82,6 @@ module Hyrax
       def collections_for_select
         service = Hyrax::CollectionsService.new(@controller)
         CollectionOptionsPresenter.new(service).select_options(:edit)
-      end
-
-      # This determines whether the allowed parameters are single or multiple.
-      # We are returning true for properties that are backed by methods, for
-      # which the HydraEditor::FieldMetadataService cannot determine are multiple.
-      # The instance variable is used when choosing which UI widget to draw.
-      def multiple?(field)
-        Hyrax::FormMetadataService.multiple?(model.class, field)
-      end
-
-      # The class method _multiple?_ is used for building the permitted params
-      # for the update action
-      def self.multiple?(field)
-        Hyrax::FormMetadataService.multiple?(model_class, field)
       end
 
       def self.sanitize_params(form_params)
