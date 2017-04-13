@@ -1,8 +1,12 @@
 require 'spec_helper'
+require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
   let(:depositor) { create(:user) }
   let(:user) { User.new }
+
+  let(:workflow_method) { described_class }
+  it_behaves_like 'a Hyrax workflow method'
 
   describe ".call" do
     subject do

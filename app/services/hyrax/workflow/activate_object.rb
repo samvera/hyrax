@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    class ActivateObject
+    module ActivateObject
       ##
       # This is a built in function for workflow, setting the `#state`
       # of the target to the Fedora 'active' status URI

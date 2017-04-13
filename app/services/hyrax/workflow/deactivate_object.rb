@@ -7,7 +7,7 @@ module Hyrax
     # @param target [#state] an instance of a model that includes `Hyrax::Suppressible`
     #
     # @return [RDF::Vocabulary::Term] the Fedora Resource Status 'inactive' term
-    class DeactivateObject
+    module DeactivateObject
       def self.call(target:, **)
         target.state = Vocab::FedoraResourceStatus.inactive
       end

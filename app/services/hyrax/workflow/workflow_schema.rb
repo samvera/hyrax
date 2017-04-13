@@ -54,7 +54,7 @@ module Hyrax
                 optional(:bcc) { array? { each(:str?) } }
               end
             end
-            optional(:methods) { array? { each(:str?) } }
+            optional(:methods) { array? { each(:str?) } } # See it_behaves_like "a Hyrax workflow method"
           end
         end
       end
