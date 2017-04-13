@@ -38,6 +38,7 @@ module Hyrax
         super(model)
       end
 
+      # @return [String] an etag representing the current version of this form
       def version
         model.etag
       end
@@ -48,6 +49,8 @@ module Hyrax
         super unless [:embargo_release_date, :lease_expiration_date].include?(key)
       end
 
+      # @param [Symbol] key the field to read
+      # @return the value of the form field.
       def [](key)
         return model.member_of_collection_ids if key == :member_of_collection_ids
         super
@@ -74,6 +77,7 @@ module Hyrax
            :member_of_collection_ids, :in_works_ids, :admin_set_id]
       end
 
+      # @return [Array] a list of works that are members of the primary work on this form.
       def work_members
         model.works
       end
@@ -84,6 +88,10 @@ module Hyrax
         CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
+      # Sanitize the parameters coming from the form. This ensures that the client
+      # doesn't send us any more parameters than we expect.
+      # In particular we are discarding any access grant parameters for works that
+      # are going into a mediated deposit workflow.
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
         if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
@@ -93,6 +101,8 @@ module Hyrax
         form_params.permit(*params_without_permissions)
       end
 
+      # This describes the parameters we are expecting to receive from the client
+      # @return [Array] a list of parameters used by sanitize_params
       def self.build_permitted_params
         super + [
           :on_behalf_of,
@@ -103,6 +113,9 @@ module Hyrax
         ]
       end
 
+      # TODO: This method should probably move out of this class
+      # @param [String] admin_set_id
+      # @return Sipity::Workflow the current active workflow for the given AdminSet
       def self.workflow_for(admin_set_id:)
         Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow)
       rescue ActiveRecord::RecordNotFound => e
