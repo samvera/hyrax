@@ -17,7 +17,6 @@
 //= require bootstrap/popover
 //= require bootstrap/tab
 
-//= require jquery.validate
 //= require select2
 //= require fixedsticky
 
