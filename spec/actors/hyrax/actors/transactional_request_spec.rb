@@ -17,17 +17,24 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
     end
   end
 
-  let(:actor_stack) do
-    Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class,
-                                                                   bad_actor,
-                                                                   good_actor])
+  let(:ability) { ::Ability.new(depositor) }
+  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+      middleware.use bad_actor
+      middleware.use good_actor
+    end
+    stack.build(terminator)
   end
 
   let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil) }
   let(:work) { double(:work) }
 
   describe "create" do
-    subject { actor_stack.create({}) }
+    let(:attributes) { {} }
+    subject { middleware.create(env) }
 
     it "rolls back any database changes" do
       expect do

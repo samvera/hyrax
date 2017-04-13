@@ -16,16 +16,15 @@ module Hyrax
     class AbstractActor
       attr_reader :next_actor
 
-      def initialize(_curation_concern, _ability, next_actor, ability: nil)
+      def initialize(next_actor)
         @next_actor = next_actor
-        @ability = ability
       end
-
-      delegate :curation_concern, :user, :ability, to: :next_actor
 
       delegate :create, to: :next_actor
 
       delegate :update, to: :next_actor
+
+      delegate :destroy, to: :next_actor
     end
   end
 end

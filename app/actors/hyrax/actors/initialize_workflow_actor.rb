@@ -9,15 +9,17 @@ module Hyrax
       class_attribute :workflow_factory
       self.workflow_factory = ::Hyrax::Workflow::WorkflowFactory
 
-      def create(attributes)
-        next_actor.create(attributes) && create_workflow(attributes)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if create was successful
+      def create(env)
+        next_actor.create(env) && create_workflow(env)
       end
 
       private
 
         # @return [TrueClass]
-        def create_workflow(attributes)
-          workflow_factory.create(curation_concern, attributes, user)
+        def create_workflow(env)
+          workflow_factory.create(env.curation_concern, env.attributes, env.user)
         end
     end
   end

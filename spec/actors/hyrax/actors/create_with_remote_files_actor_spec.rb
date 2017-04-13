@@ -1,13 +1,13 @@
 RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
-  let(:create_actor) do
-    double('create actor', create: true,
-                           curation_concern: work,
-                           user: user)
-  end
-  let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, ::Ability.new(user), [described_class])
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:actor) { stack.build(terminator) }
+  let(:stack) do
+    ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
   end
   let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
   let(:work) { create(:generic_work, user: user) }
   let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
   let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
@@ -22,10 +22,10 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
        file_name: "Getting+Started.pdf" }]
   end
   let(:attributes) { { remote_files: remote_files } }
+  let(:environment) { Hyrax::Actors::Environment.new(work, ability, attributes) }
 
   before do
-    allow(Hyrax::Actors::RootActor).to receive(:new).and_return(create_actor)
-    allow(create_actor).to receive(:create).and_return(true)
+    allow(terminator).to receive(:create).and_return(true)
   end
 
   context "with source uris that are remote" do
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
 
     it "attaches files" do
       expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation).twice
-      expect(actor.create(attributes)).to be true
+      expect(actor.create(environment)).to be true
     end
   end
 
@@ -53,14 +53,14 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
 
     it "attaches files" do
       expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/here.txt", user)
-      expect(actor.create(attributes)).to be true
+      expect(actor.create(environment)).to be true
     end
 
     context "with spaces" do
       let(:file) { "file:///local/file/ pigs .txt" }
       it "attaches files" do
         expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/ pigs .txt", user)
-        expect(actor.create(attributes)).to be true
+        expect(actor.create(environment)).to be true
       end
     end
   end

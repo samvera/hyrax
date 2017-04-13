@@ -1,14 +1,15 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::Actors::OptimisticLockValidator do
-  let(:update_actor) do
-    double('update actor', update: true,
-                           curation_concern: work,
-                           user: depositor)
-  end
+  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:ability) { ::Ability.new(depositor) }
 
-  let(:actor) do
-    Hyrax::Actors::ActorStack.new(work, ::Ability.new(depositor), [described_class])
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
+    stack.build(terminator)
   end
 
   let(:depositor) { create(:user) }
@@ -16,11 +17,10 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
 
   describe "update" do
     before do
-      allow(Hyrax::Actors::RootActor).to receive(:new).and_return(update_actor)
-      allow(update_actor).to receive(:update).and_return(true)
+      allow(terminator).to receive(:update).and_return(true)
     end
 
-    subject { actor.update(attributes) }
+    subject { middleware.update(env) }
 
     context "when version is blank" do
       let(:attributes) { { version: '' } }
@@ -29,16 +29,19 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
 
     context "when version is provided" do
       context "and the version is current" do
-        let(:attributes) { { version: work.etag } }
+        let(:attributes) { { 'version' => work.etag } }
 
         it "returns true and calls the next actor without the version attribute" do
-          expect(update_actor).to receive(:update).with({}).and_return(true)
+          expect(terminator).to receive(:update).with(Hyrax::Actors::Environment) do |k|
+            expect(k.attributes).to eq({})
+            true
+          end
           expect(subject).to be true
         end
       end
 
       context "and the version is not current" do
-        let(:attributes) { { version: "W/\"ab2e8552cb5f7f00f91d2b223eca45849c722301\"" } }
+        let(:attributes) { { 'version' => "W/\"ab2e8552cb5f7f00f91d2b223eca45849c722301\"" } }
 
         it "returns false and sets an error" do
           expect(subject).to be false

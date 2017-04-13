@@ -3,8 +3,9 @@ require 'redlock'
 
 RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
-
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
+  let(:ability) { ::Ability.new(user) }
   let(:file_path) { File.join(fixture_path, 'image.png') }
   let(:file) { Rack::Test::UploadedFile.new(file_path, 'image/png', false) }
   # stub out redis connection
@@ -16,7 +17,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   end
 
   subject do
-    Hyrax::CurationConcern.actor(curation_concern, ::Ability.new(user))
+    Hyrax::CurationConcern.actor
   end
 
   let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
@@ -24,6 +25,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   describe '#create' do
     let(:curation_concern) { GenericWork.new }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
+    let(:attributes) { {} }
+    let(:current_ability) { Ability.new(user) }
+    let(:env) { Hyrax::Actors::Environment.new(curation_concern, current_ability, attributes) }
 
     context 'failure' do
       before do
@@ -32,7 +36,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it 'returns false' do
         expect(curation_concern).to receive(:save).and_return(false)
-        expect(subject.create({})).to be false
+        expect(subject.create(env)).to be false
       end
     end
 
@@ -40,12 +44,13 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       before do
         redlock_client_stub
       end
+      let(:attributes) { { title: ['Foo Bar'], admin_set_id: admin_set.id } }
 
       it "invokes the after_create_concern callback" do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
-        subject.create(title: ['Foo Bar'], admin_set_id: admin_set.id)
+        subject.create(env)
       end
     end
 
@@ -72,7 +77,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
           it "applies embargo to attached files" do
             allow(CharacterizeJob).to receive(:perform_later).and_return(true)
-            subject.create(attributes)
+            subject.create(env)
             file = curation_concern.file_sets.first
             expect(file).to be_persisted
             expect(file.visibility_during_embargo).to eq 'authenticated'
@@ -91,12 +96,12 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
         it "attaches the parent" do
           allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(true)
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
           expect(curation_concern.in_works).to eq [parent]
         end
         it "does not attach the parent" do
           allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(false)
-          expect(subject.create(attributes)).to be false
+          expect(subject.create(env)).to be false
           expect(curation_concern.in_works).to eq []
         end
       end
@@ -120,7 +125,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             expect(Hyrax.config.callback).to receive(:run).with(:after_create_fileset, FileSet, user)
 
             expect(file_actor).to receive(:ingest_file).and_return(true)
-            expect(subject.create(attributes)).to be true
+            expect(subject.create(env)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -152,7 +157,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           it 'stamps each file with the access rights' do
             expect(file_actor).to receive(:ingest_file).and_return(true).twice
 
-            expect(subject.create(attributes)).to be true
+            expect(subject.create(env)).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -172,7 +177,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
 
         it 'stamps each link with the access rights' do
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
           expect(curation_concern).to be_persisted
           expect(curation_concern.title).to eq ['this is present']
         end
@@ -188,15 +193,16 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it 'returns false' do
         expect(curation_concern).to receive(:save).and_return(false)
-        expect(subject.update(attributes)).to be false
+        expect(subject.update(env)).to be false
       end
     end
 
     context 'success' do
+      let(:attributes) { { title: ['Other Title'] } }
       it "invokes the after_update_metadata callback" do
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_update_metadata, curation_concern, user)
-        subject.update(title: ['Other Title'])
+        subject.update(env)
       end
     end
 
@@ -213,7 +219,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         old_parent.save!
       end
       it "attaches the parent" do
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
         expect(curation_concern.in_works).to eq [parent]
         expect(old_parent.reload.members).to eq []
       end
@@ -233,7 +239,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
       it "removes the old parent" do
         allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
         expect(curation_concern.in_works).to eq []
         expect(old_parent.reload.members).to eq []
       end
@@ -252,7 +258,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         parent.save!
       end
       it "does nothing" do
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
         expect(curation_concern.in_works).to eq [parent]
       end
     end
@@ -273,7 +279,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         expect(curation_concern.member_of_collection_ids).to eq [collection1.id]
         # before running actor.update, the work is in collection1
 
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
 
         curation_concern.reload
         expect(curation_concern.identifier).to be_blank
@@ -292,7 +298,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
       it 'updates the order of file sets' do
         expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
-        expect(subject.update(attributes)).to be true
+        expect(subject.update(env)).to be true
 
         curation_concern.reload
         expect(curation_concern.ordered_members.to_a).to eq [file_set2, file_set1]
@@ -305,7 +311,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         it "works" do
           expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
 
-          expect(subject.update(attributes)).to be true
+          expect(subject.update(env)).to be true
 
           curation_concern.reload
           expect(curation_concern.ordered_members.to_a).to eq [file_set2]

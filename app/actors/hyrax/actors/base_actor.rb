@@ -6,52 +6,64 @@ module Hyrax
     # it must instantiate the next actor in the chain and instantiate it.
     # it should respond to curation_concern, user and attributes.
     class BaseActor < AbstractActor
-      attr_reader :cloud_resources
-
-      def create(attributes)
-        @cloud_resources = attributes.delete(:cloud_resources.to_s)
-        apply_creation_data_to_curation_concern
-        apply_save_data_to_curation_concern(attributes)
-        save && next_actor.create(attributes) && run_callbacks(:after_create_concern)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if create was successful
+      def create(env)
+        apply_creation_data_to_curation_concern(env)
+        apply_save_data_to_curation_concern(env)
+        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
       end
 
-      def update(attributes)
-        apply_update_data_to_curation_concern
-        apply_save_data_to_curation_concern(attributes)
-        next_actor.update(attributes) && save && run_callbacks(:after_update_metadata)
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if update was successful
+      def update(env)
+        apply_update_data_to_curation_concern(env)
+        apply_save_data_to_curation_concern(env)
+        next_actor.update(env) && save(env) && run_callbacks(:after_update_metadata, env)
+      end
+
+      # @param [Hyrax::Actors::Environment] env
+      # @return [Boolean] true if destroy was successful
+      def destroy(env)
+        env.curation_concern.in_collection_ids.each do |id|
+          destination_collection = ::Collection.find(id)
+          destination_collection.members.delete(env.curation_concern)
+          destination_collection.update_index
+        end
+        env.curation_concern.destroy
       end
 
       protected
 
-        def run_callbacks(hook)
-          Hyrax.config.callback.run(hook, curation_concern, user)
+        def run_callbacks(hook, env)
+          Hyrax.config.callback.run(hook, env.curation_concern, env.user)
           true
         end
 
-        def apply_creation_data_to_curation_concern
-          apply_depositor_metadata
-          apply_deposit_date
+        def apply_creation_data_to_curation_concern(env)
+          apply_depositor_metadata(env)
+          apply_deposit_date(env)
         end
 
-        def apply_update_data_to_curation_concern
+        def apply_update_data_to_curation_concern(_env)
           true
         end
 
-        def apply_depositor_metadata
-          curation_concern.depositor = user.user_key
+        def apply_depositor_metadata(env)
+          env.curation_concern.depositor = env.user.user_key
         end
 
-        def apply_deposit_date
-          curation_concern.date_uploaded = TimeService.time_in_utc
+        def apply_deposit_date(env)
+          env.curation_concern.date_uploaded = TimeService.time_in_utc
         end
 
-        def save
-          curation_concern.save
+        def save(env)
+          env.curation_concern.save
         end
 
-        def apply_save_data_to_curation_concern(attributes)
-          curation_concern.attributes = clean_attributes(attributes)
-          curation_concern.date_modified = TimeService.time_in_utc
+        def apply_save_data_to_curation_concern(env)
+          env.curation_concern.attributes = clean_attributes(env.attributes)
+          env.curation_concern.date_modified = TimeService.time_in_utc
         end
 
         # Cast any singular values from the form to multiple values for persistence

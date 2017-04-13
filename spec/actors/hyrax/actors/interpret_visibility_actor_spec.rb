@@ -1,25 +1,29 @@
 require 'spec_helper'
 RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
+  let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
-  subject do
-    Hyrax::Actors::ActorStack.new(curation_concern,
-                                  ::Ability.new(user),
-                                  [described_class,
-                                   Hyrax::Actors::GenericWorkActor])
+  let(:terminator) { Hyrax::Actors::Terminator.new }
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+      middleware.use Hyrax::Actors::GenericWorkActor
+    end
+    stack.build(terminator)
   end
+
   let(:one_year_from_today) { Time.zone.today + 1.year }
   let(:two_years_from_today) { Time.zone.today + 2.years }
   let(:date) { Time.zone.today + 2 }
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
 
   describe 'the next actor' do
-    let(:root_actor) { double }
+    let(:terminator) { instance_double(Hyrax::Actors::Terminator) }
     before do
-      allow(Hyrax::Actors::RootActor).to receive(:new).and_return(root_actor)
       allow(curation_concern).to receive(:save).and_return(true)
     end
 
@@ -32,8 +36,11 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       it 'does not receive the embargo attributes' do
-        expect(root_actor).to receive(:create).with(visibility: 'open')
-        subject.create(attributes)
+        expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+          expect(k.attributes).to eq(visibility: 'open')
+          false
+        end
+        subject.create(env)
       end
     end
 
@@ -46,14 +53,17 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       it 'does not receive the visibility attribute' do
-        expect(root_actor).to receive(:create).with(hash_excluding(:visibility))
-        subject.create(attributes)
+        expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+          expect(k.attributes.keys).not_to include(:visibility)
+          false
+        end
+        subject.create(env)
       end
 
       context 'when embargo_release_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
         it 'does not clear the visibility attributes' do
-          expect(subject.create(attributes)).to be false
+          expect(subject.create(env)).to be false
           expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO)
         end
       end
@@ -68,14 +78,17 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       it 'removes lease attributes' do
-        expect(root_actor).to receive(:create).with(hash_excluding(:visibility))
-        subject.create(attributes)
+        expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+          expect(k.attributes.keys).not_to include(:visibility)
+          false
+        end
+        subject.create(env)
       end
 
       context 'when lease_expiration_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE } }
         it 'sets error on curation_concern and return false' do
-          expect(subject.create(attributes)).to be false
+          expect(subject.create(env)).to be false
           expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
         end
       end
@@ -95,7 +108,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context 'with a valid embargo date (and no template requirements)' do
         let(:date) { Time.zone.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create(attributes)
+          subject.create(env)
           expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
           expect(curation_concern.visibility_after_embargo).to eq 'open'
           expect(curation_concern.visibility).to eq 'authenticated'
@@ -112,16 +125,16 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on date field" do
           permission_template # Ensuring permission_template is loaded
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
         end
       end
 
       context 'when embargo_release_date is in the past' do
         let(:date) { Time.zone.today - 2 }
         it 'sets error on curation_concern and return false' do
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
         end
       end
 
@@ -129,8 +142,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
         let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
         it "returns false and logs error on visibility field" do
           permission_template # Ensuring permission_template is loaded
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility].first).to eq 'When setting visibility to "embargo" you must also specify embargo release date.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility].first).to eq 'When setting visibility to "embargo" you must also specify embargo release date.'
         end
       end
 
@@ -145,8 +158,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on date field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Release date specified does not match permission template release requirements for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:embargo_release_date].first).to eq 'Release date specified does not match permission template release requirements for selected AdminSet.'
         end
       end
 
@@ -165,7 +178,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -185,8 +198,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on date field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Release date specified does not match permission template release requirements for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:embargo_release_date].first).to eq 'Release date specified does not match permission template release requirements for selected AdminSet.'
         end
       end
 
@@ -206,7 +219,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -227,8 +240,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on visibility field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility_after_embargo].first).to eq 'Visibility after embargo does not match permission template visibility requirements for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility_after_embargo].first).to eq 'Visibility after embargo does not match permission template visibility requirements for selected AdminSet.'
         end
       end
 
@@ -249,7 +262,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -269,7 +282,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -289,8 +302,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on visibility field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility_after_embargo].first).to eq 'Visibility after embargo does not match permission template visibility requirements for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility_after_embargo].first).to eq 'Visibility after embargo does not match permission template visibility requirements for selected AdminSet.'
         end
       end
 
@@ -309,8 +322,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs error on visiblity field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility].first).to eq 'Visibility specified does not match permission template "no release delay" requirement for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility].first).to eq 'Visibility specified does not match permission template "no release delay" requirement for selected AdminSet.'
         end
       end
 
@@ -320,7 +333,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -335,8 +348,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs an error on visibility field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility].first).to eq 'Visibility specified does not match permission template visibility requirement for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility].first).to eq 'Visibility specified does not match permission template visibility requirement for selected AdminSet.'
         end
       end
 
@@ -351,7 +364,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
 
@@ -372,8 +385,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns false and logs an error on visibility field" do
           permission_template.reload
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:visibility].first).to eq 'Lease option is not allowed by permission template for selected AdminSet.'
+          expect(subject.create(env)).to be false
+          expect(env.curation_concern.errors[:visibility].first).to eq 'Lease option is not allowed by permission template for selected AdminSet.'
         end
       end
 
@@ -389,7 +402,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it "returns true" do
           permission_template.reload
-          expect(subject.create(attributes)).to be true
+          expect(subject.create(env)).to be true
         end
       end
     end
@@ -406,7 +419,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context 'with a valid lease date' do
         let(:date) { Time.zone.today + 2 }
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create(attributes)
+          subject.create(env)
           expect(curation_concern.embargo_release_date).to be_nil
           expect(curation_concern.visibility_during_lease).to eq 'open'
           expect(curation_concern.visibility_after_lease).to eq 'restricted'
@@ -417,8 +430,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context 'when lease_expiration_date is in the past' do
         let(:date) { Time.zone.today - 2 }
         it 'sets error on curation_concern and return false' do
-          expect(subject.create(attributes)).to be false
-          expect(subject.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
         end
       end
     end

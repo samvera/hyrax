@@ -18,9 +18,11 @@ module Hyrax
 
       def create_work_from_item
         work = Hyrax.primary_work_type.new
-        work_actor = Hyrax::CurationConcern.actor(work, user)
+        current_ability = ::Ability.new(user)
+        work_actor = Hyrax::CurationConcern.actor
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
-        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(create_attrs)
+        env = Actors::Environment.new(work, current_ability, create_attrs)
+        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(env)
 
         file_set = ::FileSet.new
 
@@ -34,9 +36,12 @@ module Hyrax
       end
 
       def update_work_from_item(work)
-        work_actor = Hyrax::CurationConcern.actor(work, user)
+        work_actor = Hyrax::CurationConcern.actor
+        current_ability = ::Ability.new(user)
         work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
-        work_actor.update(work_attributes)
+        env = Actors::Environment.new(work, current_ability, work_attributes)
+        work_actor.update(env)
+
         file_set = work.file_sets.first
         file_actor = ::Hyrax::Actors::FileSetActor.new(file_set, user)
         file_actor.update_content(file)
