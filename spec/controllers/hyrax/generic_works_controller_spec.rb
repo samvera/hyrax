@@ -353,56 +353,75 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#update' do
-    let(:work) { create(:private_generic_work, user: user) }
+    let(:work) { stub_model(GenericWork) }
     let(:visibility_changed) { false }
     let(:actor) { double(update: true) }
+
     before do
       allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
       allow(GenericWork).to receive(:find).and_return(work)
       allow(work).to receive(:visibility_changed?).and_return(visibility_changed)
     end
 
-    it 'updates the work' do
-      patch :update, params: { id: work, generic_work: {} }
-      expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
-    end
-
-    it "can update file membership" do
-      patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
-      expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
-      expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
-        expect(env.attributes).to eq ActionController::Parameters.new(expected_params).permit!
+    context "when the user has write access to the file" do
+      before do
+        allow(controller).to receive(:authorize!).with(:update, work).and_return(true)
       end
-    end
-
-    describe 'changing rights' do
-      let(:visibility_changed) { true }
-      let(:actor) { double(update: true) }
-
-      context 'when there are children' do
-        let(:work) { create(:work_with_one_file, user: user) }
-
-        it 'prompts to change the files access' do
-          patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
-        end
-      end
-
-      context 'without children' do
-        it "doesn't prompt to change the files access" do
+      context "when the work has no file sets" do
+        it 'updates the work' do
           patch :update, params: { id: work, generic_work: {} }
           expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
         end
       end
-    end
 
-    describe 'failure' do
-      let(:actor) { double(update: false) }
+      context "when the work has file sets attached" do
+        before do
+          allow(work).to receive(:file_sets).and_return(double(present?: true))
+        end
+        it 'updates the work' do
+          patch :update, params: { id: work, generic_work: {} }
+          expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        end
+      end
 
-      it 'renders the form' do
-        patch :update, params: { id: work, generic_work: {} }
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
-        expect(response).to render_template('edit')
+      it "can update file membership" do
+        patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
+        expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
+        expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
+          expect(env.attributes).to eq ActionController::Parameters.new(expected_params).permit!
+        end
+      end
+
+      describe 'changing rights' do
+        let(:visibility_changed) { true }
+        let(:actor) { double(update: true) }
+
+        context 'when the work has file sets attached' do
+          before do
+            allow(work).to receive(:file_sets).and_return(double(present?: true))
+          end
+          it 'prompts to change the files access' do
+            patch :update, params: { id: work, generic_work: {} }
+            expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
+          end
+        end
+
+        context 'when the work has no file sets' do
+          it "doesn't prompt to change the files access" do
+            patch :update, params: { id: work, generic_work: {} }
+            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+          end
+        end
+      end
+
+      describe 'update failed' do
+        let(:actor) { double(update: false) }
+
+        it 'renders the form' do
+          patch :update, params: { id: work, generic_work: {} }
+          expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+          expect(response).to render_template('edit')
+        end
       end
     end
 
