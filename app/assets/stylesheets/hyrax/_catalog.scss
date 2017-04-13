@@ -9,3 +9,14 @@
     width: 100%;
   }
 }
+
+.document {
+  .list-thumbnail {
+    width: 30%;
+    float: left;
+  }
+  .metadata {
+    width: 70%;
+    display: inline-block;
+  }
+}
