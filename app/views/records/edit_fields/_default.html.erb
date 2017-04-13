@@ -1,6 +1,0 @@
-<% # TODO: I think this file can be removed, because it duplicates what is in hydra-editor %>
-<% if f.object.multiple? key %>
-  <%= f.input key, as: :multi_value, input_html: { class: 'form-control' }, required: f.object.required?(key) %>
-<% else %>
-  <%= f.input key, required: f.object.required?(key) %>
-<% end %>
