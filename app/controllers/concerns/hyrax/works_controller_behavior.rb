@@ -266,16 +266,12 @@ module Hyrax
 
       def after_update_response
         if curation_concern.file_sets.present?
-          if permissions_changed?
-            redirect_to hyrax.confirm_access_permission_path(curation_concern)
-          elsif curation_concern.visibility_changed?
-            redirect_to main_app.confirm_hyrax_permission_path(curation_concern)
-          end
-        else
-          respond_to do |wants|
-            wants.html { redirect_to [main_app, curation_concern] }
-            wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
-          end
+          return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
+          return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
+        end
+        respond_to do |wants|
+          wants.html { redirect_to [main_app, curation_concern] }
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
       end
 
