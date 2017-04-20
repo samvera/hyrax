@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::CollectionsHelper do
   before do
     # Stub route because helper specs don't handle engine routes

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Statistics::FileSets::ByFormat do
   let(:service) { described_class.new }
 

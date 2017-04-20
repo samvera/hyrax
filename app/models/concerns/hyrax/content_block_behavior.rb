@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Hyrax
   module ContentBlockBehavior
     extend ActiveSupport::Concern
 
-    MARKETING  = 'marketing_text'.freeze
-    RESEARCHER = 'featured_researcher'.freeze
-    ANNOUNCEMENT = 'announcement_text'.freeze
+    MARKETING  = 'marketing_text'
+    RESEARCHER = 'featured_researcher'
+    ANNOUNCEMENT = 'announcement_text'
 
     def external_key_name
       self.class.external_keys.fetch(name) { 'External Key' }

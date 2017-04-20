@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A job to apply work permissions to all contained files set
 #
 class InheritPermissionsJob < ActiveJob::Base

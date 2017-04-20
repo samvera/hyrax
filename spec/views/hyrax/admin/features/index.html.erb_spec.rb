@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/admin/features/index.html.erb", type: :view do
   let(:ability) { instance_double("Ability") }
   let(:feature_set) do

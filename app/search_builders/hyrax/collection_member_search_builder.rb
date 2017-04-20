@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class CollectionMemberSearchBuilder < ::SearchBuilder
     include Hyrax::FilterByType

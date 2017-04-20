@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Hyrax.config do |config|
   # Register roles that are expected by your implementation.
   # @see Hyrax::RoleRegistry for additional details.

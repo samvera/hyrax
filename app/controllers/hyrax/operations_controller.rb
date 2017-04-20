@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class OperationsController < ApplicationController
     load_and_authorize_resource

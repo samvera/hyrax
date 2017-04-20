@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature "User Profile", type: :feature do
   before do
     sign_in user

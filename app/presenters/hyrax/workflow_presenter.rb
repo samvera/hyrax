@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class WorkflowPresenter
     def initialize(solr_document, current_ability)
@@ -8,7 +10,7 @@ module Hyrax
     attr_reader :solr_document, :current_ability
 
     def state
-      sipity_entity.workflow_state_name if sipity_entity
+      sipity_entity&.workflow_state_name
     end
 
     # TODO: maybe i18n here?

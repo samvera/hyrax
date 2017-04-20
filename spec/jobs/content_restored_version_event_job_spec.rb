@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ContentRestoredVersionEventJob do
   let(:user) { create(:user) }
   let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }

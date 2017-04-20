@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rake'
 
 RSpec.describe "Rake tasks" do

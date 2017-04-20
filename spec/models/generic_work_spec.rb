@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GenericWork do
   it 'has a title' do
     subject.title = ['foo']

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::WorkUsage, type: :model do
   let!(:work) { create(:work, id: 'abc12345xy') }
 

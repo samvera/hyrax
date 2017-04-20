@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Log file restored version to activity streams
 class ContentRestoredVersionEventJob < ContentEventJob
   attr_accessor :revision_id

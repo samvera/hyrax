@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Actors
     # The Hyrax::AbstractActor responds to two primary actions:

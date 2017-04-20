@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax::FileSetHelper
   def parent_path(parent)
     if parent.is_a?(Collection)

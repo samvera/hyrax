@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { GenericWork.new }

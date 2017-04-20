@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixityCheckJob < ActiveJob::Base
   # URI of the resource to check fixity for.
   # This URI could include the actual resource (e.g. content) and the version to fixity check:

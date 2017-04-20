@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }

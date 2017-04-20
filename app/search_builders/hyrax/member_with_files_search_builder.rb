@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Finds the child objects contained within a collection
   class MemberWithFilesSearchBuilder < ::SearchBuilder

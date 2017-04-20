@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   RSpec.describe Microdata do
     let(:yml_path) { File.join(fixture_path, 'config', 'schema_org.yml') }

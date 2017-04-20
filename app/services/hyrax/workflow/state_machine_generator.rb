@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Workflow
     # Imports a single action for a workflow, including all of the adjacent states,

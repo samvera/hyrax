@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature 'Transferring work ownership:', type: :feature do
   include Selectors::Dashboard
   include Selectors::NewTransfers

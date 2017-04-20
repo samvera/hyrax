@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
   let(:presenter) do
     Hyrax::AdminStatsPresenter.new({}, 5)

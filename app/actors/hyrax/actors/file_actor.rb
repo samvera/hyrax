@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Actors
     # actions for a file identified by file_set and relation (maps to use predicate)

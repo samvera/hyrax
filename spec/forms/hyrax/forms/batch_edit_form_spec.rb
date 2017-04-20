@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Forms::BatchEditForm do
   let(:model) { GenericWork.new }
   let(:work1) do

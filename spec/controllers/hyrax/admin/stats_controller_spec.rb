@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Admin::StatsController, type: :controller do
   let(:user) { create(:user) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe SingleUseLink do
@@ -6,12 +8,15 @@ RSpec.describe SingleUseLink do
   describe "default attributes" do
     let(:hash) { "sha2hash#{DateTime.current.to_f}" }
     let(:path) { '/foo/file/99999' }
+    let(:random) { 576_485_546 }
+    let(:download_key) { "#{hash}#{random}" }
 
     subject { described_class.new itemId: '99999', path: path }
 
     it "creates link" do
-      expect(Digest::SHA2).to receive(:new).and_return(hash)
-      expect(subject.downloadKey).to eq hash
+      allow(Digest::SHA2).to receive(:new).and_return(hash)
+      allow(Kernel).to receive(:rand).and_return(random)
+      expect(subject.downloadKey).to eq download_key
       expect(subject.itemId).to eq '99999'
       expect(subject.path).to eq path
     end

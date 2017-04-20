@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "citations routes", type: :routing do
   routes { Hyrax::Engine.routes }
 

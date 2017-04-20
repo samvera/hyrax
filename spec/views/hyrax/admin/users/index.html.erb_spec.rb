@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/admin/users/index.html.erb', type: :view do
   let(:presenter) { Hyrax::Admin::UsersPresenter.new }
   let(:users) { [] }

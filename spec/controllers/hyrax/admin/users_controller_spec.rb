@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Admin::UsersController, type: :controller do
   let!(:user) { FactoryGirl.create(:user) }
   before do

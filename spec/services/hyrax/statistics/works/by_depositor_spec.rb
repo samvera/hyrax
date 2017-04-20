@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Statistics::Works::ByDepositor do
   let(:service) { described_class.new }
 

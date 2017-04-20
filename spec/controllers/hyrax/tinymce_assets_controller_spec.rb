@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::TinymceAssetsController, type: :controller do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 

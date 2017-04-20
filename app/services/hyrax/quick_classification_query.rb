@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class QuickClassificationQuery
     attr_reader :user

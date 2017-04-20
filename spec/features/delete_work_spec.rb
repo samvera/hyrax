@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature 'Deleting a work', type: :feature do
   let(:user) { create(:user) }
   let(:work) { build(:work, user: user) }

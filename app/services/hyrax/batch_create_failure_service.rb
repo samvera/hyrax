@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class BatchCreateFailureService < MessageUserService
     attr_reader :user

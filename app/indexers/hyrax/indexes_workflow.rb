@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module IndexesWorkflow
     STORED_BOOL = Solrizer::Descriptor.new(:boolean, :stored, :indexed)

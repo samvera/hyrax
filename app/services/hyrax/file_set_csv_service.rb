@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   #
   # Generates CSV from a FileSet

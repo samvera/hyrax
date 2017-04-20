@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Collection do
   let(:collection) { create(:public_collection) }
 

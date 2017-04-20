@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
   let(:user) { build(:user) }
   let(:ability) { instance_double("Ability") }

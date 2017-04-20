@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::BatchEditsController, type: :controller do
   let(:user) { create(:user) }
   before do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hydra
   module BatchEditBehavior
     extend ActiveSupport::Concern

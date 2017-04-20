@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Forms
     class PermissionTemplateForm
@@ -107,7 +109,7 @@ module Hyrax
 
         # @return [Array<PermissionTemplateAccess>] a list of grants corresponding to the manager role of the permission_template
         def manager_grants
-          model.access_grants.where(access: 'manage'.freeze)
+          model.access_grants.where(access: 'manage')
         end
 
         # @return [String, Nil] error_code if validation fails, nil otherwise

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileViewStat < Hyrax::Statistic
   self.cache_column = :views
   self.event_type = :pageviews

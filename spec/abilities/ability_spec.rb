@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cancan/matchers'
 
 RSpec.describe 'Hyrax::Ability', type: :model do

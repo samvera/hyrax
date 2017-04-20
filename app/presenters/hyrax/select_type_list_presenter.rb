@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Presents the list of work type options that a user may choose from when deciding to
   # create a new work

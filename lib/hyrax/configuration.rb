@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hyrax/callbacks'
 require 'hyrax/role_registry'
 
@@ -11,7 +13,7 @@ module Hyrax
       @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
     end
 
-    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
+    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
     private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
 
     # @api public

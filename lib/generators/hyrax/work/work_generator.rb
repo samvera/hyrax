@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails/generators'
 
 class Hyrax::WorkGenerator < Rails::Generators::NamedBase
@@ -48,7 +50,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     lastmatch = nil
     in_root do
       File.open(config).each_line do |line|
-        lastmatch = line if line =~ /config.register_curation_concern :(?!#{file_name})/
+        lastmatch = line if line.match?(/config.register_curation_concern :(?!#{file_name})/)
       end
       content = "  # Injected via `rails g hyrax:work #{class_name}`\n" \
                 "  config.register_curation_concern #{registration_path_symbol}\n"

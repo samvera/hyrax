@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module CitationsBehaviors
     module NameBehavior
@@ -15,7 +17,7 @@ module Hyrax
 
       def given_name_first(name)
         name = clean_end_punctuation(name)
-        return name unless name =~ /,/
+        return name unless name.match?(/,/)
         temp_name = name.split(/,\s*/)
         temp_name.last + " " + temp_name.first
       end
@@ -42,9 +44,10 @@ module Hyrax
         return name unless name.include?(' ') || name.include?(',')
         name = surname_first(name)
         name_segments = name.split(/,\s*/)
-        abbreviated_name << name_segments.first
-        abbreviated_name << ", #{name_segments.last.first}" if name_segments[1]
-        abbreviated_name << "."
+        abbreviated_name = abbreviated_name.dup << name_segments.first
+        abbreviated_name = abbreviated_name.dup << ", #{name_segments.last.first}" if name_segments[1]
+        abbreviated_name = abbreviated_name.dup << "."
+        abbreviated_name
       end
     end
   end

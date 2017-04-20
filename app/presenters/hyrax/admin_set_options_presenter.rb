@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Presents the options for the AdminSet widget on the create/edit form
   class AdminSetOptionsPresenter

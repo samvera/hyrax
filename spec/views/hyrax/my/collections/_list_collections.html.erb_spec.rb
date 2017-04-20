@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:attributes) do

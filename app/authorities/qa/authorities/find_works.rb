@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Qa::Authorities
   class FindWorks < Qa::Authorities::Base
     def search(_q, controller)

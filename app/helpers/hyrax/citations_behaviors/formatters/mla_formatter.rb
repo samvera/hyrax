@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module CitationsBehaviors
     module Formatters
@@ -10,16 +12,16 @@ module Hyrax
 
           # setup formatted author list
           authors = author_list(work).reject(&:blank?)
-          text << "<span class=\"citation-author\">#{format_authors(authors)}</span>"
+          text = text.dup << "<span class=\"citation-author\">#{format_authors(authors)}</span>"
           # setup title
           title_info = setup_title_info(work)
-          text << format_title(title_info)
+          text = text.dup << format_title(title_info)
 
           # Publication
           pub_info = clean_end_punctuation(setup_pub_info(work, true))
 
-          text << pub_info if pub_info.present?
-          text << "." unless text.blank? || text =~ /\.$/
+          text = text.dup << pub_info if pub_info.present?
+          text = text.dup << "." unless text.blank? || text =~ /\.$/
           text.html_safe
         end
 
@@ -28,23 +30,23 @@ module Hyrax
           authors_list = Array.wrap(authors_list)
           text = concatenate_authors_from(authors_list)
           if text.present?
-            text << "." unless text =~ /\.$/
-            text << " "
+            text = text.dup << "." unless text.match?(/\.$/)
+            text = text.dup << " "
           end
           text
         end
 
         def concatenate_authors_from(authors_list)
           text = ''
-          text << surname_first(authors_list.first)
+          text = text.dup << surname_first(authors_list.first)
           if authors_list.length > 1
             if authors_list.length < 4
               authors_list[1...-1].each do |author|
-                text << ", " << given_name_first(author)
+                text = text.dup << ", " << given_name_first(author)
               end
-              text << ", and #{given_name_first(authors_list.last)}"
+              text = text.dup << ", and #{given_name_first(authors_list.last)}"
             else
-              text << ", et al"
+              text = text.dup << ", et al"
             end
           end
           text

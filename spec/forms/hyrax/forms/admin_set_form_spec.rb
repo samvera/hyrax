@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 RSpec.describe Hyrax::Forms::AdminSetForm do
   let(:form) { described_class.new(model) }

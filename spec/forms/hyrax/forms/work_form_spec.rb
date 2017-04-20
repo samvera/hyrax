@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil, nil) }

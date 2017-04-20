@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax::Forms
   class FileSetEditForm
     include HydraEditor::Form

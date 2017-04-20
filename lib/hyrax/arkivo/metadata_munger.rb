@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Arkivo
     CREATOR_TYPES = ['author', 'interviewer', 'director', 'scriptwriter',

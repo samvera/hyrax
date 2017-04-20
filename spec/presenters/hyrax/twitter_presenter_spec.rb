@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   RSpec.describe TwitterPresenter do
     describe '.twitter_handle_for' do

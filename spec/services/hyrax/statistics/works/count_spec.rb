@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Statistics::Works::Count do
   describe "#by_permission" do
     let(:user1) { build(:user, id: 1) }

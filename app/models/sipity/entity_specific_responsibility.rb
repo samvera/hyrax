@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   # In what capacity can an agent act upon the given entity?
   #

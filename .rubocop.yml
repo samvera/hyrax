@@ -1,7 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.4
   DisplayCopNames: true
   Include:
     - '**/Rakefile'
@@ -44,6 +44,10 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Max: 14
 
+Performance/RegexpMatch:
+  Exclude:
+    - 'app/models/hyrax/orcid_validator.rb'
+
 Style/IndentationConsistency:
   EnforcedStyle: rails
 
@@ -66,6 +70,12 @@ Style/MethodMissing:
 Style/NumericPredicate:
   Exclude:
     - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
+    - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
+    - 'app/services/hyrax/workflow/sipity_actions_generator.rb'
+    - 'app/services/hyrax/workflow/permission_query.rb'
+    - 'app/presenters/hyrax/admin_set_presenter.rb'
+    - 'app/presenters/hyrax/admin_set_presenter.rb'
+    - 'app/presenters/hyrax/inspect_work_presenter.rb'
 
 Style/SymbolArray:
   Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   describe "#update" do
     let(:content_block) { FactoryGirl.create(:content_block) }

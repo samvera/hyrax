@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :hyrax do
   namespace :workflow do
     desc "Load workflow configuration into the database"

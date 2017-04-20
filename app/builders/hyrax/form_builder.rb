@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class FormBuilder < SimpleForm::FormBuilder
     def input_label(attribute_name, options = {})

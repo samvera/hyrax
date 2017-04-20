@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Overrides Hydra::Controller::DownloadBehavior to accommodate the fact that PCDM Objects#files uses direct containment instead of basic containment
 module Hyrax
   module DownloadBehavior
@@ -69,7 +71,7 @@ module Hyrax
                                    DownloadsController.default_content_path
                                  end
         association = dereference_file(default_file_reference)
-        association.reader if association
+        association&.reader
       end
 
     private

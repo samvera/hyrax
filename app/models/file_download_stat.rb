@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileDownloadStat < Hyrax::Statistic
   self.cache_column = :downloads
   self.event_type = :totalEvents

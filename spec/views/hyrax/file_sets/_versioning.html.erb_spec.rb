@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/file_sets/_versioning.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
 

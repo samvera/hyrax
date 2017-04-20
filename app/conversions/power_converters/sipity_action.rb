@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PowerConverter.define_conversion_for(:sipity_action) do |input, scope|
   workflow_id = PowerConverter.convert_to_sipity_workflow_id(scope)
   case input

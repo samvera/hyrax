@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'collection', type: :feature do
   let(:user) { create(:user) }
 

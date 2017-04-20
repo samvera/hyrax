@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::FileSetPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }

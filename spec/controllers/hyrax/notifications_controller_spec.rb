@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::NotificationsController, type: :controller do
   let(:mock_box) { {} }
 

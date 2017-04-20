@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature 'proxy', type: :feature do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }

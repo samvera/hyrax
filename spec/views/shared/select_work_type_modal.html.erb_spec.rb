@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
   let(:presenter) { instance_double Hyrax::SelectTypeListPresenter }
   let(:row1) do
@@ -27,6 +29,6 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
     expect(rendered).to have_content 'Generic Work'
     expect(rendered).to have_content 'Atlas'
     expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new"][data-batch="/batch_uploads/new?payload_concern=GenericWork"]'
-    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/rare_books/atlas/new"][data-batch="/batch_uploads/new?payload_concern=RareBooks%3A%3AAtlas"]'
+    expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/rare_books/atlases/new"][data-batch="/batch_uploads/new?payload_concern=RareBooks%3A%3AAtlas"]'
   end
 end

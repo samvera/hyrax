@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   # Throughout the workflow process, a processed entity may have numerous
   # states.

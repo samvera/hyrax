@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Methods used by both WorkUsage and FileUsage
   class StatsUsagePresenter

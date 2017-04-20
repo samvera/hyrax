@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Hyrax::Arkivo::Actor }
 

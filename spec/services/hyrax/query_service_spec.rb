@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::QueryService do
   let(:service) { described_class.new }
 

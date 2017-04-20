@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A generic job for sending events to a user.
 #
 # This class does not implement a usable action, so it must be implemented in a child class

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   # A proxy for the entity that is being processed.
   # By using a proxy, we need not worry about polluting the proxy's concerns
@@ -18,9 +20,7 @@ module Sipity
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 
-    def workflow_state_name
-      workflow_state.name if workflow_state
-    end
+    delegate :name, to: :workflow_state, prefix: true
 
     # Defines the method #workflow_name
     delegate :name, to: :workflow, prefix: :workflow

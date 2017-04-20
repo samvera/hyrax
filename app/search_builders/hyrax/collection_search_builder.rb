@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Our parent class is the generated SearchBuilder descending from Blacklight::SearchBuilder
   # It includes Blacklight::Solr::SearchBuilderBehavior, Hydra::AccessControlsEnforcement, Hyrax::SearchFilters

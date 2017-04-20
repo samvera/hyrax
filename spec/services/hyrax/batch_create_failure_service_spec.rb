@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::BatchCreateFailureService do
   let(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }

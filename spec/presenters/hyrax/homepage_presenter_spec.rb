@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::HomepagePresenter do
   let(:presenter) { described_class.new(ability) }
   let(:ability) { Ability.new(user) }

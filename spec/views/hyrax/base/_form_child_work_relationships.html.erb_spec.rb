@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do

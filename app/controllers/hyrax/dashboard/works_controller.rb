@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Dashboard
     ## Shows a list of all works to the admins
