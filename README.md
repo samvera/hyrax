@@ -200,7 +200,7 @@ class Application < Rails::Application
 end
 ```
 
-**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Using-Resque-with-Sufia). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
+**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/projecthydra/sufia/wiki/Using-Sidekiq-with-Sufia).
 
 ## Load workflows
 Load workflows from the json files in `config/workflows` by running the following rake task:
