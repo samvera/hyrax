@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'hyrax/collections_migration'
 
 RSpec.describe Hyrax::CollectionsMigration do
