@@ -91,12 +91,13 @@ body.dashboard {
       font-size: $font-size-h2;
       margin-left: $padding-xs-horizontal;
       margin-top: $padding-base-vertical;
+
+      .fa {
+        color: $gray;
+        margin-right: $padding-xs-horizontal;
+      }
     }
 
-    .fa {
-      color: $gray;
-      margin-right: $padding-xs-horizontal;
-    }
 
     .btn {
       margin-bottom: $padding-base-vertical;
