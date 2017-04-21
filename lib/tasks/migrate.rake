@@ -7,7 +7,7 @@ namespace :hyrax do
     desc "Move membership from collection#members work#member_of_collections"
     task collections: :environment do
       require 'hyrax/collections_migration'
-      CollectionsMigration.run
+      Hyrax::CollectionsMigration.run
     end
   end
 end
