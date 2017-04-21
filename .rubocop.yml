@@ -128,3 +128,6 @@ RSpec/NestedGroups:
 
 RSpec/LeadingSubject:
   Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
