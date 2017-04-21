@@ -3,7 +3,6 @@ module Hyrax
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
     class FileSetActor
       include Lockable
-
       attr_reader :file_set, :user, :attributes
 
       def initialize(file_set, user)
@@ -12,21 +11,17 @@ module Hyrax
       end
 
       # Adds the appropriate metadata, visibility and relationships to file_set
-      #
-      # *Note*: In past versions of Hyrax this method did not perform a save because it is mainly used in conjunction with
-      # create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
-      # we have to save both the parent work and the file_set in order to record the "metadata" relationship
-      # between them.
+      # @note In past versions of Hyrax this method did not perform a save because it is mainly used in conjunction with
+      #   create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
+      #   we have to save both the parent work and the file_set in order to record the "metadata" relationship between them.
       # @param [Hash] file_set_params specifying the visibility, lease and/or embargo of the file set.
-      #                        If you don't provide at least one of visibility, embargo_release_date or
-      #                        lease_expiration_date, visibility will be copied from the parent.
+      #   Without visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
       def create_metadata(file_set_params = {})
         file_set.apply_depositor_metadata(user)
         now = TimeService.time_in_utc
         file_set.date_uploaded = now
         file_set.date_modified = now
         file_set.creator = [user.user_key]
-
         Actors::ActorStack.new(file_set, ability, [InterpretVisibilityActor]).create(file_set_params) if assign_visibility?(file_set_params)
         yield(file_set) if block_given?
       end
@@ -39,29 +34,21 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-
-        # Need to save the file_set in order to get an id
-        return false unless file_set.save
-
+        return false unless file_set.save # Need to save the file_set in order to get an id
         file_actor_class.new(file_set, relation, user).ingest_file(file, asynchronous)
         true
       end
 
       # Adds a FileSet to the work using ore:Aggregations.
-      # Locks to ensure that only one process is operating on
-      # the list at a time.
+      # Locks to ensure that only one process is operating on the list at a time.
       def attach_file_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
-          # Ensure we have an up-to-date copy of the members association, so
-          # that we append to the end of the list.
+          # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
           work.reload unless work.new_record?
-          unless assign_visibility?(file_set_params)
-            copy_visibility(work, file_set)
-          end
+          copy_visibility(work, file_set) unless assign_visibility?(file_set_params)
           work.ordered_members << file_set
           set_representative(work, file_set)
           set_thumbnail(work, file_set)
-
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
           work.save
@@ -72,12 +59,9 @@ module Hyrax
       # @param [String] relation ('original_file')
       def revert_content(revision_id, relation = 'original_file')
         file_actor = file_actor_class.new(file_set, relation, user)
-        if file_actor.revert_to(revision_id)
-          Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id)
-          true
-        else
-          false
-        end
+        return false unless file_actor.revert_to(revision_id)
+        Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id)
+        true
       end
 
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
@@ -105,6 +89,14 @@ module Hyrax
         Hyrax::Actors::FileActor
       end
 
+      # Spawns async job to attach file to fileset
+      # @param [#to_s] url
+      def import_url(url)
+        file_set.update(import_url: url.to_s)
+        operation = Hyrax::Operation.create!(user: user, operation_type: "Attach File")
+        ImportUrlJob.perform_later(file_set, operation)
+      end
+
       private
 
         def ability
@@ -112,7 +104,7 @@ module Hyrax
         end
 
         # Takes an optional block and executes the block if the save was successful.
-        # returns false if the save was unsuccessful
+        # @return [Boolean] false if the save was unsuccessful
         def save
           on_retry = ->(exception, _, _, _) { ActiveFedora::Base.logger.warn "Hyrax::Actors::FileSetActor#save Caught RSOLR error #{exception.inspect}" }
           Retriable.retriable on: RSolr::Error::Http,
@@ -147,10 +139,8 @@ module Hyrax
         def unlink_from_work
           work = file_set.parent
           return unless work && (work.thumbnail_id == file_set.id || work.representative_id == file_set.id)
-          # This is required to clear the thumbnail_id and representative_id
-          # fields on the work and force it to be re-solrized. Although
-          # ActiveFedora clears the children nodes it leaves the work's
-          # thumbnail_id and representative_id fields in Solr populated.
+          # Must clear the thumbnail_id and representative_id fields on the work and force it to be re-solrized.
+          # Although ActiveFedora clears the children nodes it leaves those fields in Solr populated.
           work.thumbnail = nil if work.thumbnail_id == file_set.id
           work.representative = nil if work.representative_id == file_set.id
           work.save!

@@ -22,21 +22,15 @@ describe AttachFilesToWorkJob do
       end
     end
 
-    context "with uploaded files in fog" do
-      let(:fog_file) { CarrierWave::Storage::Fog::File.new }
-      before do
-        module CarrierWave::Storage
-          module Fog
-            class File
-            end
-          end
-        end
-        allow(uploaded_file1.file).to receive(:file).and_return(fog_file)
-        allow(uploaded_file2.file).to receive(:file).and_return(fog_file)
-      end
+    context "with uploaded files at remote URLs" do
+      let(:url1) { 'https://example.com/my/img.png' }
+      let(:url2) { URI('https://example.com/other/img.png') }
+      let(:fog_file1) { double(CarrierWave::Storage::Abstract, url: url1) }
+      let(:fog_file2) { double(CarrierWave::Storage::Abstract, url: url2) }
 
-      after do
-        CarrierWave::Storage.send(:remove_const, :Fog)
+      before do
+        allow(uploaded_file1.file).to receive(:file).and_return(fog_file1)
+        allow(uploaded_file2.file).to receive(:file).and_return(fog_file2)
       end
 
       it 'creates ImportUrlJobs' do

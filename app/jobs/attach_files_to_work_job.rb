@@ -21,24 +21,14 @@ class AttachFilesToWorkJob < ActiveJob::Base
   private
 
     # @param [Hyrax::Actors::FileSetActor] actor
-    # @param [UploadedFileUploader] file
+    # @param [Hyrax::UploadedFileUploader] file file.file must be a CarrierWave::SanitizedFile or file.url must be present
     def attach_content(actor, file)
-      case file.file
-      when CarrierWave::SanitizedFile
+      if file.file.is_a? CarrierWave::SanitizedFile
         actor.create_content(file.file.to_file)
-      when CarrierWave::Storage::Fog::File
-        import_url(actor, file)
+      elsif file.url.present?
+        actor.import_url(file.url)
       else
-        raise ArgumentError, "Unknown type of file #{file.class}"
+        raise ArgumentError, "#{file.class} received with #{file.file.class} object and no URL"
       end
-    end
-
-    # @param [Hyrax::Actors::FileSetActor] actor
-    # @param [UploadedFileUploader] file
-    def import_url(actor, file)
-      actor.file_set.update(import_url: file.url)
-      operation = Hyrax::Operation.create!(user: actor.user,
-                                           operation_type: "Attach File")
-      ImportUrlJob.perform_later(actor.file_set, operation)
     end
 end
