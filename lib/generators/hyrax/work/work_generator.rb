@@ -1,6 +1,8 @@
 require 'rails/generators'
 
 class Hyrax::WorkGenerator < Rails::Generators::NamedBase
+  include Rails::Generators::ModelHelpers
+
   source_root File.expand_path('../templates', __FILE__)
 
   argument :attributes, type: :array, default: [], banner: 'field:type field:type'
