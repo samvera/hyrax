@@ -55,14 +55,16 @@ export default class VisibilityComponent {
   restrictToVisibility(data) {
     // visibility requirement is in HTML5 'data-visibility' attr
     let visibility = data['visibility']
+    // if immediate release required, then 'data-release-no-delay' attr will be true
+    let release_no_delay = data['releaseNoDelay']
     // release date requirement is in HTML5 'data-release-date' attr
     let release_date = data['releaseDate']
     // if release_date is flexible (i.e. before date), then 'data-release-before-date' attr will be true
     let release_before = data['releaseBeforeDate']
 
-    // Restrictions require either a visibility requirement or a release_date requirement (or both)
-    if(visibility || release_date) {
-      this.applyRestrictions(visibility, release_date, release_before)
+    // Restrictions require either a visibility requirement or a date requirement (or both)
+    if(visibility || release_no_delay || release_date) {
+      this.applyRestrictions(visibility, release_no_delay, release_date, release_before)
     }
     else {
       this.enableAllOptions()
@@ -70,14 +72,14 @@ export default class VisibilityComponent {
   }
 
   // Apply visibility/release restrictions based on selected AdminSet
-  applyRestrictions(visibility, release_date, release_before)
+  applyRestrictions(visibility, release_no_delay, release_date, release_before)
   {
      // If immediate release required and visibility specified
-     if(this.isToday(release_date) && visibility) {
+     if(release_no_delay && visibility) {
        // Select required visibility
        this.selectVisibility(visibility)
      }
-     else if(this.isToday(release_date)) {
+     else if(release_no_delay) {
        // No visibility required, but must be released today. Disable embargo & lease.
        this.disableEmbargoAndLease();
      }
@@ -266,12 +268,5 @@ export default class VisibilityComponent {
       mm = '0' + mm
     }
     return yyyy + '-' + mm + '-' + dd
-  }
-
-  // Return true if datestring represents today's date
-  isToday(dateString) {
-    let today = new Date(this.getToday())
-    let date =  new Date(dateString)
-    return date.getTime() === today.getTime()
   }
 }

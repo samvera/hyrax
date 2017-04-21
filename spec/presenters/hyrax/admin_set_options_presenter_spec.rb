@@ -46,7 +46,7 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
 
       it do
         is_expected.to eq [['Fixed Release Date Set', '123', { 'data-sharing' => false, 'data-release-date' => today + 2.days }],
-                           ['No Delay Set', '345', { 'data-sharing' => false, 'data-release-date' => today }],
+                           ['No Delay Set', '345', { 'data-sharing' => false, 'data-release-no-delay' => true }],
                            ['One Year Max Embargo Set', '567', { 'data-sharing' => false, 'data-release-date' => today + 1.year, 'data-release-before-date' => true }],
                            ['Release Before Date Set', '789', { 'data-sharing' => false, 'data-release-date' => today + 1.month, 'data-release-before-date' => true }]]
       end

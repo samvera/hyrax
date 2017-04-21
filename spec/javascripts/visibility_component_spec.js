@@ -45,33 +45,33 @@ describe("VisibilityComponent", function() {
       });
       it("calls applyRestrictions with specified visibility", function() {
         target.limitByAdminSet();
-        expect(target.applyRestrictions).toHaveBeenCalledWith('authenticated', undefined, undefined);
+        expect(target.applyRestrictions).toHaveBeenCalledWith('authenticated', undefined, undefined, undefined);
       });
     });
     describe("with selected admin set having release immediately restrictions (no visibility)", function() {
       beforeEach(function() {
-        var fixture = setFixtures(visibilityForm('<option data-release-date="' + target.getToday() + '" data-release-before-date="false" selected="selected">Release Immediately AdminSet</option>'));
+        var fixture = setFixtures(visibilityForm('<option data-release-no-delay="true" selected="selected">Release Immediately AdminSet</option>'));
         element = fixture.find('.visibility');
         admin_set = new AdminSetWidget(fixture.find('select'))
         target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
-      it("calls applyRestrictions with specified date requirement", function() {
+      it("calls applyRestrictions with release_no_delay=true", function() {
         target.limitByAdminSet();
-        expect(target.applyRestrictions).toHaveBeenCalledWith(undefined, target.getToday(), false);
+        expect(target.applyRestrictions).toHaveBeenCalledWith(undefined, true, undefined, undefined);
       });
     });
     describe("with selected admin set having release publicly immediately restrictions", function() {
       beforeEach(function() {
-        var fixture = setFixtures(visibilityForm('<option data-visibility="open" data-release-date="' + target.getToday() + '" data-release-before-date="false" selected="selected">Release Publicly Immediately AdminSet</option>'));
+        var fixture = setFixtures(visibilityForm('<option data-visibility="open" data-release-no-delay="true" selected="selected">Release Publicly Immediately AdminSet</option>'));
         element = fixture.find('.visibility');
         admin_set = new AdminSetWidget(fixture.find('select'))
         target = new VisibilityComponent(element, admin_set);
         spyOn(target, 'applyRestrictions');
       });
-      it("calls applyRestrictions with specified date and visibility requirement", function() {
+      it("calls applyRestrictions with release_no_delay=true and visibility requirement", function() {
         target.limitByAdminSet();
-        expect(target.applyRestrictions).toHaveBeenCalledWith("open", target.getToday(), false);
+        expect(target.applyRestrictions).toHaveBeenCalledWith("open", true, undefined, undefined);
       });
     });
     describe("with selected admin set having release on future date set", function() {
@@ -84,7 +84,7 @@ describe("VisibilityComponent", function() {
       });
       it("calls applyRestrictions with specified date requirement", function() {
         target.limitByAdminSet();
-        expect(target.applyRestrictions).toHaveBeenCalledWith(undefined, getOneYearFromToday(), false);
+        expect(target.applyRestrictions).toHaveBeenCalledWith(undefined, undefined, getOneYearFromToday(), false);
       });
     });
     describe("with selected admin set having release to institution before one year set", function() {
@@ -97,7 +97,7 @@ describe("VisibilityComponent", function() {
       });
       it("calls applyRestrictions with specified date and visibility requirement", function() {
         target.limitByAdminSet();
-        expect(target.applyRestrictions).toHaveBeenCalledWith("authenticated", getOneYearFromToday(), true);
+        expect(target.applyRestrictions).toHaveBeenCalledWith("authenticated", undefined, getOneYearFromToday(), true);
       });
     });
   });
@@ -109,7 +109,7 @@ describe("VisibilityComponent", function() {
         spyOn(target, 'enableReleaseNowOrEmbargo');
       });
       it("enable that visibility option OR embargo, and limit embargo to any future date", function() {
-        target.applyRestrictions("authenticated", undefined, undefined);
+        target.applyRestrictions("authenticated", undefined, undefined, undefined);
         expect(target.enableReleaseNowOrEmbargo).toHaveBeenCalledWith("authenticated", undefined, undefined);
       });
     });
@@ -118,7 +118,7 @@ describe("VisibilityComponent", function() {
         spyOn(target, 'disableEmbargoAndLease');
       });
       it("disables embargo and lease options", function() {
-        target.applyRestrictions(undefined, target.getToday(), false);
+        target.applyRestrictions(undefined, true, undefined, undefined);
         expect(target.disableEmbargoAndLease).toHaveBeenCalled();
       });
     });
@@ -127,7 +127,7 @@ describe("VisibilityComponent", function() {
         spyOn(target, 'selectVisibility');
       });
       it("selects that visibility (disabling other options)", function() {
-        target.applyRestrictions("open", target.getToday(), false);
+        target.applyRestrictions("open", true, undefined, undefined);
         expect(target.selectVisibility).toHaveBeenCalledWith("open");
       });
     });
@@ -137,7 +137,7 @@ describe("VisibilityComponent", function() {
       });
       it("allows any date between now and future date", function() {
         var futureDate = getOneYearFromToday();
-        target.applyRestrictions("open", futureDate, true);
+        target.applyRestrictions("open", undefined, futureDate, true);
         expect(target.enableReleaseNowOrEmbargo).toHaveBeenCalledWith("open", futureDate, true);
       });
     });
@@ -147,7 +147,7 @@ describe("VisibilityComponent", function() {
       });
       it("require embargo until release_date and don't restrict visibility", function() {
         var futureDate = getOneYearFromToday();
-        target.applyRestrictions(undefined, futureDate, false);
+        target.applyRestrictions(undefined, undefined, futureDate, false);
         expect(target.requireEmbargo).toHaveBeenCalledWith(undefined, futureDate);
       });
     });
@@ -157,7 +157,7 @@ describe("VisibilityComponent", function() {
       });
       it("require embargo until release_date and require visibility", function() {
         var futureDate = getOneYearFromToday();
-        target.applyRestrictions("authenticated", futureDate, false);
+        target.applyRestrictions("authenticated", undefined, futureDate, false);
         expect(target.requireEmbargo).toHaveBeenCalledWith("authenticated", futureDate);
       });
     });
@@ -406,25 +406,6 @@ describe("VisibilityComponent", function() {
   describe("getVisibilityAfterEmbargoInput", function() {
     it("returns visibility after embargo selectbox", function() {
       expect(target.getVisibilityAfterEmbargoInput()).toHaveProp("name", "generic_work[visibility_after_embargo]");
-    });
-  });
-
-  // isToday(dateString)
-  describe("isToday", function() {
-    describe("with today's date", function() {
-      it("is true", function() {
-        expect(target.isToday(target.getToday())).toEqual(true);
-      });
-    });
-    describe("with past date", function() {
-      it("is false", function() {
-        expect(target.isToday("2016-12-31")).toEqual(false);
-      });
-    });
-    describe("with future date", function() {
-      it("is false", function() {
-        expect(target.isToday(getOneYearFromToday())).toEqual(false);
-      });
     });
   });
 });
