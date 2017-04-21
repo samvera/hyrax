@@ -117,6 +117,10 @@ body.dashboard {
     }
   }
 
+  .table .date {
+    width: 13ch;
+  }
+
   .list-filters {
     background-color: $panel-default-heading-bg;
     margin-bottom: 20px;
