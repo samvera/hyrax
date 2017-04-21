@@ -30,10 +30,11 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Rails](#rails)
       * [JavaScript runtime](#javascript-runtime)
   * [Creating a Hyrax\-based app](#creating-a-hyrax-based-app)
-    * [Generate a work type](#generate-a-work-type)
     * [Start servers](#start-servers)
     * [Start background workers](#start-background-workers)
     * [Create default administrative set](#create-default-administrative-set)
+    * [Load workflows](#load-workflows)
+    * [Generate a work type](#generate-a-work-type)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling features](#toggling-features)
   * [License](#license)
@@ -126,9 +127,14 @@ gem install rails -v 5.0.1
 
 ### JavaScript runtime
 
-Rails requires that you have a JavaScript runtime -- for example, nodejs -- installed. Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
+Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.  
+
+NOTE: nodejs is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
+
 
 # Creating a Hyrax-based app
+
+NOTE:  The steps need to be done in order to create a new Hyrax based app.
 
 Generate a new Rails application using the template.
 
@@ -144,30 +150,6 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Loading all of Hyrax's database migrations into your application's database
 * Loading Hyrax's default workflows into your application's database
 
-## Generate a work type
-
-Hyrax allows you to specify your work types by using a generator. You may generate one or more of these work types.
-
-Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
-
-```
-rails generate hyrax:work Work
-```
-
-or
-
-```
-rails generate hyrax:work MovingImage
-```
-
-Namespaces can be included in the work My::MovingImage by adding the path.
-
-```
-rails generate hyrax:work My/MovingImage
-```
-
-You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
-
 ## Start servers
 
 To test-drive your new Hyrax application in development mode, spin up the servers that Hyrax needs (Solr, Fedora, and Rails):
@@ -176,7 +158,11 @@ To test-drive your new Hyrax application in development mode, spin up the server
 rake hydra:server
 ```
 
-And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. Note that this web server is purely for development purposes; you will want to use a more fully featured [web server](#web-server) for production-like environments.
+And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. 
+
+Notes:
+* This web server is purely for development purposes. You will want to use a more fully featured [web server](#web-server) for production-like environments.
+* You have the option to start each of these services individually.  More information on [solr_wrapper](https://github.com/cbeer/solr_wrapper) and [fcrepo_wrapper](https://github.com/cbeer/fcrepo_wrapper) will help you set this up.  Start rails with `rails s`.
 
 ## Start background workers
 
@@ -202,13 +188,6 @@ end
 
 **For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Using-Resque-with-Sufia). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
 
-## Load workflows
-Load workflows from the json files in `config/workflows` by running the following rake task:
-
-```
-rake hyrax:workflow:load
-```
-
 ## Create default administrative set
 
 **After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following rake task:
@@ -218,6 +197,37 @@ rake hyrax:default_admin_set:create
 ```
 
 **NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
+
+## Load workflows
+Load workflows from the json files in `config/workflows` by running the following rake task:
+
+```
+rake hyrax:workflow:load
+```
+
+## Generate a work type
+
+Hyrax allows you to specify your work types by using a generator. You may generate one or more of these work types.
+
+Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
+
+```
+rails generate hyrax:work Work
+```
+
+or
+
+```
+rails generate hyrax:work MovingImage
+```
+
+Namespaces can be included in the work My::MovingImage by adding the path.
+
+```
+rails generate hyrax:work My/MovingImage
+```
+
+You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
 
 # Managing a Hyrax-based app
 
