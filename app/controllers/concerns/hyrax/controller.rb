@@ -8,6 +8,7 @@ module Hyrax::Controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
     before_action :set_locale
+    respond_to :html, :json
   end
 
   # Provide a place for Devise to send the user to after signing in
