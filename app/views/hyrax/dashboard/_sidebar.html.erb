@@ -71,9 +71,11 @@
   <% end %>
 
   <% if menu.show_configuration? %>
-    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
-    <%= menu.nav_link(hyrax.admin_features_path) do %>
-      <span class="fa fa-cog"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.settings') %></span>
+    <% if can?(:manage, Hyrax::Feature) %>
+      <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
+      <%= menu.nav_link(hyrax.admin_features_path) do %>
+        <span class="fa fa-cog"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.settings') %></span>
+      <% end %>
     <% end %>
 
     <% if can?(:update, :appearance) %>
@@ -82,8 +84,10 @@
       <% end %>
     <% end %>
 
-    <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
-      <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
-    <% end %>
-  <% end # end of configuration block %>
+    <% if can?(:manage, Sipity::WorkflowResponsibility) %>
+      <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
+        <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
+      <% end %>
+    <% end # end of configuration block %>
+  <% end %>
 </ul>

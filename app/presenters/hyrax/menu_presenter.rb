@@ -49,7 +49,7 @@ module Hyrax
     def show_configuration?
       can?(:update, :appearance) ||
         can?(:manage, Sipity::WorkflowResponsibility) ||
-        can?(:read, :admin_dashboard)
+        can?(:manage, Hyrax::Feature)
     end
   end
 end
