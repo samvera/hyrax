@@ -117,8 +117,13 @@ body.dashboard {
     }
   }
 
+  .table .date {
+    width: 13ch;
+  }
+
   .list-filters {
     background-color: $panel-default-heading-bg;
+    margin-bottom: 20px;
     padding: $panel-heading-padding;
 
     .btn-group > .facet-values {
@@ -147,6 +152,10 @@ body.dashboard {
       color: #333;
       white-space: nowrap;
     }
+  }
+
+  .sort-toggle {
+    padding: 0;
   }
 
   .user-activity .panel-body {

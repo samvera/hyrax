@@ -41,7 +41,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     click_link("Remove constraint Status: Published")
 
     within("#document_#{dissertation.id}") do
-      click_button("Select an action")
+      click_button("Select")
       expect(page).to have_content("Edit Work")
     end
   end

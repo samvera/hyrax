@@ -17,7 +17,7 @@
       </div>
     </div>
   </td>
-  <td class="text-center"><%= document.create_date.try(:to_formatted_s, :standard) %> </td>
+  <td class="text-center date"><%= document.create_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
     <%= render_visibility_link(document) %>
   </td>
