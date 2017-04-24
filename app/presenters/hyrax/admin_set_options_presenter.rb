@@ -30,7 +30,12 @@ module Hyrax
       def attributes_for(permission_template:)
         {}.tap do |attrs|
           attrs['data-sharing'] = sharing?(permission_template: permission_template)
-          attrs['data-release-date'] = permission_template.release_date if permission_template.release_date.present?
+          # Either add "no-delay" (if immediate release) or a specific release date, but not both.
+          if permission_template.release_no_delay?
+            attrs['data-release-no-delay'] = true
+          elsif permission_template.release_date.present?
+            attrs['data-release-date'] = permission_template.release_date
+          end
           attrs['data-release-before-date'] = true if permission_template.release_before_date?
           attrs['data-visibility'] = permission_template.visibility if permission_template.visibility.present?
         end
