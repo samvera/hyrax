@@ -1,4 +1,4 @@
-class CreateFeaturedWorks < ActiveRecord::Migration
+class CreateFeaturedWorks < ActiveRecord::Migration[4.2]
   def change
     create_table :featured_works do |t|
       t.integer :order, default: 5

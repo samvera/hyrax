@@ -1,4 +1,4 @@
-class CreateVersionCommitters < ActiveRecord::Migration
+class CreateVersionCommitters < ActiveRecord::Migration[4.2]
   def self.up
     create_table :version_committers do |t|
       t.string :obj_id

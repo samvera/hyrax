@@ -1,4 +1,4 @@
-class CreateProxyDepositRights < ActiveRecord::Migration
+class CreateProxyDepositRights < ActiveRecord::Migration[4.2]
   def change
     create_table :proxy_deposit_rights do |t|
       t.references :grantor
