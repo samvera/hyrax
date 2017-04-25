@@ -1,4 +1,4 @@
-class AddArkivoToUsers < ActiveRecord::Migration
+class AddArkivoToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :arkivo_token, :string
     add_column :users, :arkivo_subscription, :string
