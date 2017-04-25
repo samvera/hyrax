@@ -1,4 +1,4 @@
-class CreatePermissionTemplate < ActiveRecord::Migration
+class CreatePermissionTemplate < ActiveRecord::Migration[4.2]
   def change
     create_table :permission_templates do |t|
       t.belongs_to :workflow
