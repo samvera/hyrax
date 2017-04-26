@@ -160,6 +160,12 @@ or
 rails generate hyrax:work MovingImage
 ```
 
+Namespaces can be included in the work My::MovingImage by adding the path.
+
+```
+rails generate hyrax:work My/MovingImage
+```
+
 You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
 
 ## Start servers

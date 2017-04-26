@@ -8,7 +8,7 @@ This generator makes the following changes to your application:
  3. Generates the clam anti-virus configuration.
        '
   def banner
-    say_status('warning', 'GENERATING HYRAX MODELS', :yellow)
+    say_status('info', 'GENERATING HYRAX MODELS', :blue)
   end
 
   # Setup the database migrations
