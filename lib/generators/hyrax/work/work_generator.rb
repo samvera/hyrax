@@ -1,4 +1,5 @@
 require 'rails/generators'
+require 'rails/generators/model_helpers'
 
 class Hyrax::WorkGenerator < Rails::Generators::NamedBase
   # ActiveSupport can interpret models as plural which causes
