@@ -155,10 +155,10 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 To test-drive your new Hyrax application in development mode, spin up the servers that Hyrax needs (Solr, Fedora, and Rails):
 
 ```
-rake hydra:server
+bin/rails hydra:server
 ```
 
-And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application. 
+And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application.
 
 Notes:
 * This web server is purely for development purposes. You will want to use a more fully featured [web server](#web-server) for production-like environments.
@@ -190,10 +190,10 @@ end
 
 ## Create default administrative set
 
-**After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following rake task:
+**After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following command:
 
 ```
-rake hyrax:default_admin_set:create
+bin/rails hyrax:default_admin_set:create
 ```
 
 **NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
@@ -202,7 +202,7 @@ rake hyrax:default_admin_set:create
 Load workflows from the json files in `config/workflows` by running the following rake task:
 
 ```
-rake hyrax:workflow:load
+bin/rails hyrax:workflow:load
 ```
 
 ## Generate a work type
