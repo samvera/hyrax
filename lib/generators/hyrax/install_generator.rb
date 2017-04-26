@@ -29,11 +29,10 @@ module Hyrax
          """
 
     def run_required_generators
-      say_status('warning', '[Hyrax] GENERATING BLACKLIGHT', :yellow)
+      say_status('info', '[Hyrax] GENERATING BLACKLIGHT', :blue)
       generate 'blacklight:install --devise'
-      say_status('warning', '[Hyrax] GENERATING HYDRA-HEAD', :yellow)
+      say_status('info', '[Hyrax] GENERATING HYDRA-HEAD', :blue)
       generate 'hydra:head -f'
-      say_status('warning', '[Hyrax] GENERATING MODELS', :yellow)
       generate "hyrax:models#{options[:force] ? ' -f' : ''}"
     end
 

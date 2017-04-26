@@ -1,6 +1,13 @@
 require 'rails/generators'
+require 'rails/generators/model_helpers'
 
 class Hyrax::WorkGenerator < Rails::Generators::NamedBase
+  # ActiveSupport can interpret models as plural which causes
+  # counter-intuitive route paths. Pull in ModelHelpers from
+  # Rails which warns users about pluralization when generating
+  # new models or scaffolds.
+  include Rails::Generators::ModelHelpers
+
   source_root File.expand_path('../templates', __FILE__)
 
   argument :attributes, type: :array, default: [], banner: 'field:type field:type'
