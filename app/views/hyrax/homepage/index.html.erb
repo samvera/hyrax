@@ -11,11 +11,10 @@
             <i class="glyphicon glyphicon-upload"></i> <%= t('hyrax.share_button') %>
           <% end %>
         <% else # simple link to the first work type %>
-          <%= link_to(
-                t('hyrax.share_button'),
-                new_polymorphic_path([main_app, create_work_presenter.first_model]),
-                class: 'btn btn-primary'
-              ) %>
+          <%= link_to new_polymorphic_path([main_app, create_work_presenter.first_model]),
+                class: 'btn btn-primary' do %>
+            <i class="glyphicon glyphicon-upload"></i> <%= t('hyrax.share_button') %>
+          <% end %>
         <% end %>
       <% else %>
         <%= link_to hyrax.dashboard_path,
