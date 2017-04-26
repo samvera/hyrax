@@ -10,9 +10,19 @@ class TestAppGenerator < Rails::Generators::Base
   def create_generic_work
     generate 'hyrax:work GenericWork'
   end
-  
+
   def create_atlas_work
     generate 'hyrax:work Atlas'
+    # ActiveSupport interprets "atlas" as plural which causes
+    # counter-intuitive route paths. Add an inflection to correct
+    # these paths
+    append_file 'config/initializers/inflections.rb' do
+      <<~HEREDOC
+        ActiveSupport::Inflector.inflections(:en) do |inflect|
+          inflect.irregular 'atlas', 'atlases'
+        end
+      HEREDOC
+    end
   end
 
   def comment_out_web_console
