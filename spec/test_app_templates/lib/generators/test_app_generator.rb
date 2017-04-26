@@ -12,17 +12,15 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def create_atlas_work
-    generate 'hyrax:work Atlas'
     # ActiveSupport interprets "atlas" as plural which causes
     # counter-intuitive route paths. Add an inflection to correct
     # these paths
     append_file 'config/initializers/inflections.rb' do
-      <<~HEREDOC
-        ActiveSupport::Inflector.inflections(:en) do |inflect|
-          inflect.irregular 'atlas', 'atlases'
-        end
-      HEREDOC
+      "ActiveSupport::Inflector.inflections(:en) do |inflect|\n" \
+      "  inflect.irregular 'atlas', 'atlases'\n" \
+      "end\n"
     end
+    generate 'hyrax:work RareBooks/Atlas'
   end
 
   def comment_out_web_console

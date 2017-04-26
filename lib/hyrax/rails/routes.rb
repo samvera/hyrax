@@ -81,7 +81,7 @@ module ActionDispatch::Routing
         if target.include?('/')
           the_namespace = target[0..target.index('/') - 1]
           new_target = target[target.index('/') + 1..-1]
-          namespace the_namespace, ROUTE_OPTIONS.fetch(the_namespace, nil) do
+          namespace the_namespace, ROUTE_OPTIONS.fetch(the_namespace, {}) do
             namespaced_resources(new_target, opts, &block)
           end
         else
