@@ -14,6 +14,7 @@ export default class SelectWorkType {
           e.preventDefault()
           this.modal.modal()
           // ensure the type is set for the last clicked element
+          // type is either "batch" or "single" (work)
           this.type = element.data('create-type')
           // add custom routing logic when the modal is shown
           this.form.on('submit', this.routingLogic.bind(this))
@@ -34,6 +35,9 @@ export default class SelectWorkType {
       window.location.href = this.destination()
   }
 
+  // Each input has two attributes that contain paths, one for the batch and one
+  // for a single work.  So, given the value of 'this.type', return the appropriate
+  // path.
   destination() {
       return this.form.find('input[type="radio"]:checked').data(this.type)
   }
