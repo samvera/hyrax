@@ -38,6 +38,7 @@ module Hydra
     end
 
     def edit_permissions
+      # Loading an object from Fedora can be slow, so assume that if a string is passed, it's an object id
       can [:edit, :update, :destroy], String do |id|
         test_edit(id)
       end
