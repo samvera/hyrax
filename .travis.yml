@@ -23,6 +23,7 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
   matrix:
     - "RAILS_VERSION=5.0.2"
+    - "RAILS_VERSION=5.1.1"
 services:
   - redis-server
 before_script:
