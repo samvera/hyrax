@@ -27,11 +27,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.17.beta'
-  spec.add_dependency 'daemons', '~> 1.1'
-  spec.add_dependency 'yaml_db', '~> 0.2'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'select2-rails', '~> 3.5.9'
-  spec.add_dependency 'json-schema'
+  spec.add_dependency 'json-schema' # for Arkivio
   spec.add_dependency 'nest', '~> 2.0'
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'carrierwave', '~> 1.0'
@@ -47,7 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'qa', '~> 1.0' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.3'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
-  spec.add_dependency 'rdf-rdfxml'
+  spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
