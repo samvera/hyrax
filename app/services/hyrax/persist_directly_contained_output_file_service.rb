@@ -5,12 +5,12 @@ module Hyrax
     # This method conforms to the signature of the .call method on Hydra::Derivatives::PersistOutputFileService
     # * Persists the file within the DirectContainer specified by :container
     #
-    # @param [#read] stream the data to be persisted
+    # @param [String] the data to be persisted
     # @param [Hash] directives directions which can be used to determine where to persist to.
     # @option directives [String] url URI for the parent object.
     # @option directives [String] container Name of the container association.
-    def self.call(stream, directives)
-      file = Hydra::Derivatives::IoDecorator.new(stream, new_mime_type(directives.fetch(:format)))
+    def self.call(string, directives)
+      file = Hydra::Derivatives::IoDecorator.new(string, new_mime_type(directives.fetch(:format)))
       o_name = determine_original_name(file)
       m_type = determine_mime_type(file)
       uri = URI(directives.fetch(:url))
