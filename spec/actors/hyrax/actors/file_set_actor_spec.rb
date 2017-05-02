@@ -139,6 +139,29 @@ describe Hyrax::Actors::FileSetActor do
     end
   end
 
+  describe "#update_content" do
+    let(:relation) { 'original_file' }
+    let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, relation, user) }
+    before do
+      allow(actor).to receive(:build_file_actor).with(relation).and_return(file_actor)
+    end
+    it 'calls ingest_file' do
+      expect(file_actor).to receive(:ingest_file).with(local_file, true)
+      actor.update_content(local_file)
+    end
+    it 'runs callbacks' do
+      # Do not bother ingesting the file -- test only that the callback is run
+      allow(file_actor).to receive(:ingest_file).with(local_file, true)
+      expect(Hyrax.config.callback).to receive(:run).with(:after_update_content, file_set, user)
+      actor.update_content(local_file)
+    end
+    it "returns true" do
+      # Do not bother ingesting the file -- test only the return value
+      allow(file_actor).to receive(:ingest_file).with(local_file, true)
+      expect(actor.update_content(local_file)).to be true
+    end
+  end
+
   describe "#destroy" do
     it "destroys the object" do
       actor.destroy
