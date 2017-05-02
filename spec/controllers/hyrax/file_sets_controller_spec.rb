@@ -201,7 +201,7 @@ RSpec.describe Hyrax::FileSetsController do
         it "spawns a content new version event job" do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
 
-          expect(actor).to receive(:ingest_file).with(expected_file_type)
+          expect(actor).to receive(:ingest_file).with(expected_file_type, true)
           file = fixture_file_upload('/world.png', 'image/png')
           post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
           post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
