@@ -697,9 +697,10 @@ es:
         breadcrumb: Editar
       form:
         additional_fields: "Campos adicionales"
-        in_collections: Este Trabajo en Colecciones
-        in_other_works: Este Trabajo en otros Trabajos
-        in_this_work: Otros Trabajos en este Trabajo
+        in_collections: Este Obra en Colecciones
+        in_other_works: Este Obra en otras Obras
+        in_this_work: Otras Obras en este Obra
+        visibility_until: 'hasta'
         tab:
           files:         "Archivos"
           metadata:      "Descripciones"
