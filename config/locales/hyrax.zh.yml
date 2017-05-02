@@ -655,6 +655,7 @@ zh:
         in_collections: 在收藏集中的这件作品
         in_other_works: 在其它作品中包括的这件作品
         in_this_work: 这件作品包括的其它作品
+        visibility_until: 直到
         tab:
           files:         "文件"
           metadata:      "描述"
