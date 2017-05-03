@@ -1,18 +1,18 @@
 language: ruby
 sudo: false
-rvm: 2.4.0
+rvm: 2.4.1
 
 matrix:
   include:
-    - rvm: 2.4.0
-      env: "BLACKLIGHT_VERSION=6.6.3"
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: "BLACKLIGHT_VERSION=5.17.2"
 
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - RAILS_VERSION=5.0.2
+    - BLACKLIGHT_VERSION=6.6.3
 before_install:
   - gem update --system
-before_script:
-  - jdk_switcher use oraclejdk8
+
+jdk: oraclejdk8
