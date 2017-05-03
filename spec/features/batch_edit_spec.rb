@@ -84,7 +84,7 @@ RSpec.describe 'Batch management of works', type: :feature do
     end
   end
 
-  describe 'Deleting multiple works', js: true do
+  describe 'Deleting multiple works', :clean_repo, js: true do
     context 'Selecting all my works to delete' do
       before do
         visit '/dashboard/my/works'

@@ -222,7 +222,7 @@ RSpec.describe FileSet do
     end
   end
 
-  describe 'noid integration' do
+  describe 'noid integration', :clean_repo do
     let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
     before do
       allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
@@ -388,7 +388,7 @@ RSpec.describe FileSet do
     end
   end
 
-  describe '#where_digest_is' do
+  describe '#where_digest_is', :clean_repo do
     let(:file) { create(:file_set) }
     let(:file_path) { fixture_path + '/small_file.txt' }
     let(:digest_string) { '88fb4e88c15682c18e8b19b8a7b6eaf8770d33cf' }

@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Statistics::Works::ByDepositor do
   let(:service) { described_class.new }
 
-  describe "#query" do
+  describe "#query", :clean_repo do
     let(:user1) { create(:user) }
     let(:user2) { create(:user) }
     before do

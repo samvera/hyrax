@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Analytics, :no_clean do
+RSpec.describe Hyrax::Analytics do
   before do
     described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end

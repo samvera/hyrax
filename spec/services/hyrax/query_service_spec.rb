@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::QueryService do
+RSpec.describe Hyrax::QueryService, :clean_repo do
   let(:service) { described_class.new }
 
   describe "#count" do

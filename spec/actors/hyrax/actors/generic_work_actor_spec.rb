@@ -34,7 +34,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         allow(subject).to receive(:attach_files).and_return(true)
       end
 
-      it 'returns false' do
+      # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
+      it 'returns false', :clean_repo do
         expect(curation_concern).to receive(:save).and_return(false)
         expect(subject.create(env)).to be false
       end

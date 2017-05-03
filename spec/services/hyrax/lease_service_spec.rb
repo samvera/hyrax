@@ -2,7 +2,6 @@ require 'spec_helper'
 
 RSpec.describe Hyrax::LeaseService do
   subject { described_class }
-  before { GenericWork.destroy_all }
 
   let(:future_date) { 2.days.from_now }
   let(:past_date) { 2.days.ago }

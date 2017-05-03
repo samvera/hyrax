@@ -77,7 +77,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
       end
     end
 
-    context "with admin sets enabled" do
+    context "with admin sets enabled", :clean_repo do
       let(:admin_set_doc) do
         {
           "system_create_dtsi" => "2016-09-12T19:36:51Z",

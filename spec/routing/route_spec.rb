@@ -1,4 +1,4 @@
-RSpec.describe 'Routes', :no_clean, type: :routing do
+RSpec.describe 'Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 
   describe 'Homepage' do

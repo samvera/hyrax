@@ -50,7 +50,7 @@ RSpec.describe CatalogController, type: :controller do
       end
     end
 
-    describe 'term search' do
+    describe 'term search', :clean_repo do
       let(:objects) { [rocks, clouds] }
       it 'finds works with the given search term' do
         get :index, params: { q: 'rocks', owner: 'all' }

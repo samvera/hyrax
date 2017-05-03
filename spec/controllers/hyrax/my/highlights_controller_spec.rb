@@ -5,8 +5,6 @@ RSpec.describe Hyrax::My::HighlightsController, type: :controller do
 
     describe "#index" do
       before do
-        GenericWork.destroy_all
-        Collection.destroy_all
         user.trophies.create(work_id: highlighted_work.id)
         other_user.trophies.create(work_id: unrelated_highlighted_work.id)
       end

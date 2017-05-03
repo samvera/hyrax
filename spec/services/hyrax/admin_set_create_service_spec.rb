@@ -22,7 +22,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
     let(:admin_set) { AdminSet.new(title: ['test']) }
 
-    context "when using the default admin set" do
+    context "when using the default admin set", :clean_repo do
       let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
 
       it 'will raise ActiveFedora::IllegalOperation if you attempt to a default admin set' do

@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Forms::WorkForm, :no_clean do
+RSpec.describe Hyrax::Forms::WorkForm do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil, nil) }
   let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }

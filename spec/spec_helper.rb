@@ -168,9 +168,7 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
-    unless example.metadata[:type] == :view || example.metadata[:no_clean]
-      ActiveFedora::Cleaner.clean!
-    end
+    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
   end
 
   config.before :each do |example|

@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Statistics::Works::ByResourceType do
   let(:service) { described_class.new }
 
-  describe "#query" do
+  describe "#query", :clean_repo do
     before do
       create(:generic_work, resource_type: ['Conference Proceeding'])
       create(:generic_work, resource_type: ['Conference Proceeding'])

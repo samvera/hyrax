@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe 'PowerConverter', :no_clean do
+RSpec.describe 'PowerConverter' do
   let(:workflow_id) { 1 }
   let(:action) { Sipity::WorkflowAction.new(id: 4, name: 'show', workflow_id: workflow_id) }
 

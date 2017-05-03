@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "The admin dashboard" do
+RSpec.describe "The admin dashboard", :clean_repo do
   let(:user) { create :admin }
   let(:admin_set_1) do
     create(:admin_set, title: ["First Admin Set"],

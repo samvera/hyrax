@@ -11,7 +11,7 @@ RSpec.describe Hyrax::CollectionsHelper do
   describe '#render_collection_links' do
     let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork']) }
 
-    context 'when a GenericWork does not belongs to any collections' do
+    context 'when a GenericWork does not belongs to any collections', :clean_repo do
       it 'renders nothing' do
         expect(helper.render_collection_links(work_doc)).to be_nil
       end

@@ -11,7 +11,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
   let(:limit) { 5 }
   let(:service) { described_class.new(filters, limit) }
 
-  describe '#active_users' do
+  describe '#active_users', :clean_repo do
     let!(:old_work) { create(:work, user: user1) }
     let!(:work1) { create(:work, user: user1) }
     let!(:work2) { create(:work, user: user2) }
@@ -30,7 +30,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
     end
   end
 
-  describe "#top_formats" do
+  describe "#top_formats", :clean_repo do
     let!(:file_set1) { create(:file_set, user: user1) }
     let!(:file_set2) { create(:file_set, user: user1) }
     let!(:file_set3) { create(:file_set, user: user2) }
@@ -52,7 +52,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
     end
   end
 
-  describe "#works_count" do
+  describe "#works_count", :clean_repo do
     before do
       build(:generic_work, user: user1, id: "abc1223").update_index
       build(:public_generic_work, user: user1, id: "bbb1223").update_index

@@ -1,4 +1,4 @@
-RSpec.describe 'ResourceSync Routes', :no_clean, type: :routing do
+RSpec.describe 'ResourceSync Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 
   it 'routes the well-known uri' do

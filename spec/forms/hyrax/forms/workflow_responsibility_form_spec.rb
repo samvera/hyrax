@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::Forms::WorkflowResponsibilityForm, :no_clean do
+RSpec.describe Hyrax::Forms::WorkflowResponsibilityForm do
   let(:instance) { described_class.new }
 
   describe "#initialize" do

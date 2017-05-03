@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Statistics::Works::Count do
-  describe "#by_permission" do
+  describe "#by_permission", :clean_repo do
     let(:user1) { build(:user, id: 1) }
     let(:yesterday) { 1.day.ago }
 

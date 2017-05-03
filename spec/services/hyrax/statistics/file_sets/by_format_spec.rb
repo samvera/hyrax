@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Statistics::FileSets::ByFormat do
+RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo do
   let(:service) { described_class.new }
 
   describe "#query" do
