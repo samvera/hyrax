@@ -4,6 +4,8 @@ module Hyrax::Controller
   included do
     class_attribute :create_work_presenter_class
     self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
+    self.search_state_class = Hyrax::SearchState
+
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
@@ -24,11 +26,6 @@ module Hyrax::Controller
   # Ensure that the locale choice is persistent across requests
   def default_url_options
     super.merge(locale: I18n.locale)
-  end
-
-  # Override Blacklight to use the Hyrax::SearchState
-  def search_state
-    @search_state ||= Hyrax::SearchState.new(self)
   end
 
   private

@@ -53,7 +53,7 @@ RSpec.describe BlacklightHelper, type: :helper do
     end
 
     context "metadata index links" do
-      let(:search_state) { Hyrax::SearchState.new(helper) }
+      let(:search_state) { Hyrax::SearchState.new(params, blacklight_config, controller) }
       before do
         allow(controller).to receive(:search_state).and_return(search_state)
       end

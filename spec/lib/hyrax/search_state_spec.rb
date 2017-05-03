@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::SearchState do
-  let(:context) { double(params: {}, blacklight_config: config, url_options: {}) }
+  let(:controller) { CatalogController.new }
   let(:config) { Blacklight::Configuration.new }
-  let(:state) { described_class.new(context) }
+  let(:state) { described_class.new({}, config, controller) }
 
   describe "url_for_document" do
     subject { state.url_for_document(document) }
