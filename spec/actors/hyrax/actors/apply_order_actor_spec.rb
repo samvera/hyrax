@@ -32,7 +32,7 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
   describe '#update' do
     let(:user) { create(:admin) }
     let(:curation_concern) { create(:work_with_one_child, user: user) }
-    let(:child) { GenericWork.new(id: "blahblah3") }
+    let(:child) { GenericWork.new }
 
     context 'with ordered_members_ids that arent associated with the curation concern yet.' do
       let(:attributes) { { ordered_member_ids: [child.id] } }

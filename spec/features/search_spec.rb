@@ -12,7 +12,7 @@ RSpec.feature 'searching' do
     create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
   end
 
-  context "as a public user" do
+  context "as a public user", :clean_repo do
     it "using the gallery view" do
       visit '/'
       fill_in "search-field-header", with: "Toothbrush"

@@ -10,7 +10,7 @@ RSpec.describe Hyrax::AdminSetService do
   let(:service) { described_class.new(context) }
   let(:user) { create(:user) }
 
-  describe "#search_results" do
+  describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
     let!(:as1) { create(:admin_set, :public, title: ['foo']) }
     let!(:as2) { create(:admin_set, :public, title: ['bar']) }

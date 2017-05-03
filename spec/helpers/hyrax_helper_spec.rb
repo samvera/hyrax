@@ -4,7 +4,7 @@ def new_state
   Blacklight::SearchState.new({}, CatalogController.blacklight_config)
 end
 
-RSpec.describe HyraxHelper, :no_clean, type: :helper do
+RSpec.describe HyraxHelper, type: :helper do
   describe "show_transfer_request_title" do
     let(:sender) { create(:user) }
     let(:user) { create(:user) }

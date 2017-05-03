@@ -49,7 +49,8 @@ RSpec.describe Hyrax::GenericWorksController do
       end
     end
 
-    describe 'failed create' do
+    # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
+    describe 'failed create', :clean_repo do
       before { post :create, params: { generic_work: {}, format: :json } }
       it "returns 422 and the errors" do
         created_resource = assigns[:curation_concern]

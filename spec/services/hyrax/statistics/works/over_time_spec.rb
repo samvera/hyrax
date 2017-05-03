@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Statistics::Works::OverTime do
   let(:service) { described_class.new }
 
-  describe "#points" do
+  describe "#points", :clean_repo do
     before do
       create(:generic_work)
     end

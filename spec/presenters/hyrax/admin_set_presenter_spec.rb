@@ -2,10 +2,10 @@ require 'spec_helper'
 
 RSpec.describe Hyrax::AdminSetPresenter do
   let(:admin_set) do
-    build(:admin_set,
-          id: '123',
-          description: ['An example admin set.'],
-          title: ['Example Admin Set Title'])
+    mock_model(AdminSet,
+               id: '123',
+               description: ['An example admin set.'],
+               title: ['Example Admin Set Title'])
   end
 
   let(:work) { build(:work, title: ['Example Work Title']) }
@@ -15,16 +15,14 @@ RSpec.describe Hyrax::AdminSetPresenter do
 
   describe "total_items" do
     subject { presenter.total_items }
+    let(:admin_set) { build(:admin_set) }
 
     context "empty admin set" do
       it { is_expected.to eq 0 }
     end
 
     context "admin set with work" do
-      before do
-        admin_set.members = [work]
-        admin_set.save!
-      end
+      let(:admin_set) { create(:admin_set, members: [work]) }
       it { is_expected.to eq 1 }
     end
   end
@@ -33,18 +31,12 @@ RSpec.describe Hyrax::AdminSetPresenter do
     subject { presenter.disable_delete? }
 
     context "empty admin set" do
-      before do
-        admin_set.members = []
-        admin_set.save!
-      end
+      let(:admin_set) { create(:admin_set) }
       it { is_expected.to be false }
     end
 
     context "non-empty admin set" do
-      before do
-        admin_set.members = [work]
-        admin_set.save!
-      end
+      let(:admin_set) { create(:admin_set, members: [work]) }
       it { is_expected.to be true }
     end
 

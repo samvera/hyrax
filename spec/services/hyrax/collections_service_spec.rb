@@ -12,7 +12,7 @@ RSpec.describe Hyrax::CollectionsService do
   let(:service) { described_class.new(context) }
   let(:user) { create(:user) }
 
-  describe "#search_results" do
+  describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
     let!(:collection1) { create(:collection, :public, title: ['foo']) }
     let!(:collection2) { create(:collection, :public, title: ['bar']) }

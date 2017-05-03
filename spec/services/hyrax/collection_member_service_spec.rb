@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::CollectionMemberService do
+RSpec.describe Hyrax::CollectionMemberService, :clean_repo do
   let(:work_attrs) { { id: '123', title_tesim: ['A generic work'] } }
 
   let(:coll1_attrs) { { id: 'col1', title_tesim: ['A Collection 1'], child_object_ids_ssim: [work.id] } }

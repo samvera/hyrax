@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe 'PowerConverter', :no_clean do
+RSpec.describe 'PowerConverter' do
   context '#convert_to_sipity_action_name' do
     [
       [:show, 'show'],

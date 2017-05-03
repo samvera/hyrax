@@ -84,7 +84,7 @@ RSpec.describe Hyrax::CollectionsController do
     end
   end
 
-  describe '#index' do
+  describe '#index', :clean_repo do
     let!(:collection1) { create(:collection, :public, title: ['Beta']) }
     let!(:collection2) { create(:collection, :public, title: ['Alpha']) }
     let!(:generic_work) { create(:generic_work, :public) }

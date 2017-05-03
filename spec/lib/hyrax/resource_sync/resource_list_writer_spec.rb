@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::ResourceSync::ResourceListWriter do
+RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let!(:private_collection) { create(:private_collection) }
   let!(:public_collection) { create(:public_collection) }

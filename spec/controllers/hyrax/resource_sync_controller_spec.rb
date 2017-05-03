@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::ResourceSyncController, :no_clean do
+RSpec.describe Hyrax::ResourceSyncController do
   before do
     Rails.cache.clear
   end

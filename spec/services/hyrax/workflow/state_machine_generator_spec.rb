@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Hyrax
-  RSpec.describe Workflow::StateMachineGenerator, :no_clean do
+  RSpec.describe Workflow::StateMachineGenerator do
     let(:workflow) { create(:workflow, name: 'hello') }
     let(:action_name) { 'do_it' }
     before do
