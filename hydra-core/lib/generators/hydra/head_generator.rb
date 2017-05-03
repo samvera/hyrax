@@ -57,6 +57,7 @@ module Hydra
     # Add Hydra to the SearchBuilder
     def inject_hydra_search_builder_behavior
       insert_into_file "app/models/search_builder.rb", after: "include Blacklight::Solr::SearchBuilderBehavior\n" do
+        "  # Add a filter query to restrict the search to documents the current user has access to\n" \
         "  include Hydra::AccessControlsEnforcement\n"
       end
     end
