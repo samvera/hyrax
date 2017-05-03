@@ -15,6 +15,7 @@ Hyrax = {
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.sidebar();
+        this.authoritySelect();
     },
 
     // Add WYSIWYG editor functionality to editable content blocks
@@ -133,14 +134,16 @@ Hyrax = {
         var FileManager = require('hyrax/file_manager');
         new FileManager();
     },
-
     // Used when you have a linked data field that can have terms from multiple
     // authorities.
     // TODO: should be moved to the editor()
-    authoritySelect: function(options) {
+    
+    authoritySelect: function() {
 	var AuthoritySelect = require('hyrax/authority_select');
-	var authoritySelect = new AuthoritySelect(options);
-	authoritySelect.initialize();
+        $("[data-authority-select]").each(function() {
+            var authoritySelect = $(this).data().authoritySelect
+            new AuthoritySelect({selectBox: 'select.' + authoritySelect, inputField: 'input.' + authoritySelect});
+        })
     },
 
     // Saved so that inline javascript can put data somewhere.
