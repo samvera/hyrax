@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class BasicMetadataIndexer < ActiveFedora::RDF::IndexingService
     class_attribute :stored_and_facetable_fields, :stored_fields, :symbol_fields

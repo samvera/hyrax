@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: make this a mixin and generate it into ::SearchBuilder
 module Hyrax
   class SearchBuilder < Blacklight::SearchBuilder

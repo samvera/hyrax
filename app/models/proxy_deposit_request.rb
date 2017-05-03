@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Responsible for persisting the ownership transfer requests and the state of each request.
 # @see ProxyDepositRequest.enum(:status)
 # @see ProxyDepositRequest.work_query_service_class for configuration (defaults to Hyrax::WorkQueryService)
@@ -97,10 +99,10 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   public
 
-  ACCEPTED = 'accepted'.freeze
-  PENDING = 'pending'.freeze
-  CANCELED = 'canceled'.freeze
-  REJECTED = 'rejected'.freeze
+  ACCEPTED = 'accepted'
+  PENDING = 'pending'
+  CANCELED = 'canceled'
+  REJECTED = 'rejected'
 
   enum(
     status: {

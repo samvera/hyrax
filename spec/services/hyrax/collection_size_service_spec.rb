@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::CollectionSizeService do
   let(:coll1_attrs) do
     { id: 'col1', title_tesim: ['A Collection 1'], child_object_ids_ssim: works }

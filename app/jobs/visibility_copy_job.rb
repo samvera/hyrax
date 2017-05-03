@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Responsible for copying the following attributes from the work to each file in the file_sets
 #
 # * visibility

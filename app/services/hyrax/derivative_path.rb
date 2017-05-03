@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class DerivativePath
     attr_reader :id, :destination_name

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/admin/admin_sets/show.html.erb", type: :view do
   let(:solr_document) { SolrDocument.new(admin_set.to_solr) }
   let(:ability) { double }

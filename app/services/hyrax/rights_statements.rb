@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Provide select options for the copyright status (edm:rights) field
   class RightsStatements < QaSelectService

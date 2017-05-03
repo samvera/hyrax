@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # validates that the title has at least one title
   class HasOneTitleValidator < ActiveModel::Validator

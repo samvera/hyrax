@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Added to allow for the Hyrax::My::WorksController to show only things I have edit access to
   class MyWorksSearchBuilder < WorksSearchBuilder

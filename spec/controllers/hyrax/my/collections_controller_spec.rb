@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::My::CollectionsController, type: :controller do
   describe "logged in user" do
     describe "#index" do

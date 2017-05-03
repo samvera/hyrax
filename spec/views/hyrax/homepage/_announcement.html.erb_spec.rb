@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/homepage/_announcement.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability") }

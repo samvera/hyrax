@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CatalogController < ApplicationController
   include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class Event
     # Creates an event in Redis

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Statistics::Depositors::Summary do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::RepositoryFixityCheckService do
   let(:user) { FactoryGirl.create(:user) }
   let!(:file) do

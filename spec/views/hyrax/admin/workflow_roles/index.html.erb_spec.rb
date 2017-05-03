@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do

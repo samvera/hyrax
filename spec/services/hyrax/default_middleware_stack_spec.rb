@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::DefaultMiddlewareStack, :no_clean do
   let(:work) { GenericWork.new }
   let(:user) { double(current_user: double) }

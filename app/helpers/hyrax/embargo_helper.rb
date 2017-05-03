@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module EmbargoHelper
     def assets_with_expired_embargoes

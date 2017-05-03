@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Store a file uploaded by a user. Eventually these files get
   # attached to FileSets and pushed into Fedora.

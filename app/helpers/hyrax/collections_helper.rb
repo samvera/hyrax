@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module CollectionsHelper
     def render_collection_links(solr_doc)

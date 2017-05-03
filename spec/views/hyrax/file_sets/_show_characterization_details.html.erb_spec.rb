@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'hyrax/file_sets/_show_characterization_details.html.erb', type: :view do

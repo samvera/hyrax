@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe "Browse catalog:", type: :feature do
   let!(:jills_work) do

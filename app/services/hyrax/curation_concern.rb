@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class CurationConcern
     # The actor middleware stack can be customized like so:

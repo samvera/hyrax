@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Gather information about the depositors who have contributed to the repository
 module Hyrax
   module Statistics

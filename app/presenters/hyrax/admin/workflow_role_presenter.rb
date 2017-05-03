@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Admin
     # Displays a single workflow role

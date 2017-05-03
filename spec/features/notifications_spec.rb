@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.feature "Notifications page", type: :feature do
   before do
     sign_in FactoryGirl.create(:user_with_mail)

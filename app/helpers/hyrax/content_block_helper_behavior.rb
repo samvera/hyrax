@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module ContentBlockHelperBehavior
     def editable_content_block(content_block, show_new = false)

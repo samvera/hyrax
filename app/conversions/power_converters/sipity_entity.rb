@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PowerConverter.define_conversion_for(:sipity_entity) do |input|
   case input
   when URI::GID

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Hyrax::AvatarUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
   include CarrierWave::Compatibility::Paperclip

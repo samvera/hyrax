@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Renders the Help page, terms of use, messages about exporting to Zotero and Mendeley
   class StaticController < ApplicationController

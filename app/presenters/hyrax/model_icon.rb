@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class ModelIcon
     def self.css_class_for(model)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'hyrax/base/_find_work_widget.html.erb', type: :view do

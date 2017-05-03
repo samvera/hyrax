@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   RSpec.describe WorkflowStateAction, type: :model, no_clean: true do
     subject { described_class }

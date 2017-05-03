@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class FeaturedWorkListsController < ApplicationController
     def create

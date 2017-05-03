@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # This stands in for ActiveFedora::CleanConnection. It behaves the same way,
   # but it doesn't clear the has_model assertion

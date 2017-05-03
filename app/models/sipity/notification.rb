@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   # Responsible for defining a notification that is associated with a given
   # context; I believe the context is something that will be triggered via
@@ -16,7 +18,7 @@ module Sipity
              foreign_key: :notification_id,
              class_name: 'Sipity::NotificationRecipient'
 
-    NOTIFICATION_TYPE_EMAIL = 'email'.freeze
+    NOTIFICATION_TYPE_EMAIL = 'email'
 
     # TODO: There are other types, but for now, we are assuming just emails to send.
     enum(notification_type: { NOTIFICATION_TYPE_EMAIL => NOTIFICATION_TYPE_EMAIL })

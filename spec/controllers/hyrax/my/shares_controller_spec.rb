@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::My::SharesController, type: :controller do
   describe "logged in user" do
     let(:user) { create(:user) }

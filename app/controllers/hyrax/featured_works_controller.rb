@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class FeaturedWorksController < ApplicationController
     def create
@@ -16,11 +18,7 @@ module Hyrax
     def destroy
       authorize! :destroy, FeaturedWork
       @featured_work = FeaturedWork.find_by(work_id: params[:id])
-      if @featured_work
-        # Handle the case where a separate request may have already
-        # destroyed this work
-        @featured_work.destroy
-      end
+      @featured_work&.destroy
 
       respond_to do |format|
         format.json { head :no_content }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Generic Hyrax exception class.
   class HyraxError < StandardError; end

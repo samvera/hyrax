@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Overrides of methods defined by the Blacklight gem.
   module BlacklightOverride

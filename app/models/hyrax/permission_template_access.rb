@@ -6,9 +6,9 @@ module Hyrax
 
     belongs_to :permission_template
 
-    VIEW = 'view'.freeze
-    DEPOSIT = 'deposit'.freeze
-    MANAGE = 'manage'.freeze
+    VIEW = 'view'
+    DEPOSIT = 'deposit'
+    MANAGE = 'manage'
 
     enum(
       access: {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do
   context "when no admin sets exists" do
     it "alerts users there are no admin sets" do

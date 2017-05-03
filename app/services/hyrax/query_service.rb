@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class QueryService
     # query to find works created during the time range

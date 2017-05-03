@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 # Note: this is a direct copy of the corresponding test in Blacklight
 # with changes for "views/my" instead of "views/catalog"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # view-model for the admin menu
   class MenuPresenter

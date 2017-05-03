@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class VersioningService
     # Make a version and record the version committer

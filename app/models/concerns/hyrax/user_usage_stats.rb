@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax::UserUsageStats
   def stats
     @stats ||= UserStat.where(user_id: id).order(date: :asc)

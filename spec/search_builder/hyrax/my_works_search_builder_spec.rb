@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::MyWorksSearchBuilder do
   let(:me) { create(:user) }
   let(:config) { CatalogController.blacklight_config }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::RedisEventStore do
   let(:redis_instance) { described_class.instance }
   before do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChecksumAuditLog < ActiveRecord::Base
   # TODO: this method doesn't seem to be used. Remove?
   def self.fixity_check_log(id, path, version_uri)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class ParentService
     # @param [String] id - the id of a child FileSet

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::CollectionMemberService do
   let(:work_attrs) { { id: '123', title_tesim: ['A generic work'] } }
 

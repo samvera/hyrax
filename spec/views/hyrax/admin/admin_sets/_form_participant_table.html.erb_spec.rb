@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: :view do

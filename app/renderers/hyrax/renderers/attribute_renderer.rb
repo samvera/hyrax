@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_autolink/helpers"
 
 module Hyrax
@@ -24,12 +26,12 @@ module Hyrax
         markup = ''
 
         return markup if values.blank? && !options[:include_empty]
-        markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
+        markup = markup.dup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
         Array(values).each do |value|
-          markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
+          markup = markup.dup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end
-        markup << %(</ul></td></tr>)
+        markup = markup.dup << %(</ul></td></tr>)
         markup.html_safe
       end
 
@@ -56,8 +58,8 @@ module Hyrax
         def html_attributes(attributes)
           buffer = ""
           attributes.each do |k, v|
-            buffer << " #{k}"
-            buffer << %(="#{v}") if v.present?
+            buffer = buffer.dup << " #{k}"
+            buffer = buffer.dup << %(="#{v}") if v.present?
           end
           buffer
         end

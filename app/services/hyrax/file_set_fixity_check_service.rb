@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class FileSetFixityCheckService
     attr_reader :file_set, :id

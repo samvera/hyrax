@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class InspectWorkPresenter
     def initialize(solr_document, current_ability)

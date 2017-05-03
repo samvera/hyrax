@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Presents leased objects
   class LeasePresenter

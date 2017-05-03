@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class LocalFileService
     # @param [String] file_name path to the file

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ContentDepositEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }

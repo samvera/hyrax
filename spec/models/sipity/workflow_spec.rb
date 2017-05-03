@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sipity
   RSpec.describe Workflow, type: :model, no_clean: true do
     context 'class configuration' do

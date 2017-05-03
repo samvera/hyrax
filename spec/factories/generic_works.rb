@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do

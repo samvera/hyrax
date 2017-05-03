@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/collections/edit.html.erb', type: :view do
   let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
   let(:form) { Hyrax::Forms::CollectionForm.new(collection) }

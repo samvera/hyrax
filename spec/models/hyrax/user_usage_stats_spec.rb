@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::UserUsageStats do
   subject { FactoryGirl.create(:user) }
 

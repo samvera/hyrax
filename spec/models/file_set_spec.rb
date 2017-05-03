@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 # This tests the FileSet model that is inserted into the host app by hyrax:models

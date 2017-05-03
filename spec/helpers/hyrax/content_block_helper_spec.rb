@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
   let(:content_block) { FactoryGirl.create(:content_block, value: "<p>foo bar</p>") }
 

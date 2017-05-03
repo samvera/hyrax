@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::UploadsController do
   let(:user) { create(:user) }
   describe "#create" do

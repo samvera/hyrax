@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ContentBlock, type: :model do
   let!(:bilbo) do
     create(:content_block,

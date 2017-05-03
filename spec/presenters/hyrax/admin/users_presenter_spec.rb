@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Admin::UsersPresenter do
   let(:instance) { described_class.new }
   let!(:user) { FactoryGirl.create(:user) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
@@ -13,19 +15,22 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
 
   describe "logged in user with edit permission" do
     let(:hash) { "some-dummy-sha2-hash" }
+    let(:random) { 576_485_546 }
+    let(:download_key) { "#{hash}#{random}" }
 
     before { sign_in user }
 
     context "POST create" do
       before do
-        expect(Digest::SHA2).to receive(:new).and_return(hash)
+        allow(Digest::SHA2).to receive(:new).and_return(hash)
+        allow(Kernel).to receive(:rand).and_return(random)
       end
 
       describe "creating a single-use download link" do
         it "returns a link for downloading" do
           post 'create_download', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.download_single_use_link_url(hash, host: request.host, locale: 'en')
+          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.download_single_use_link_url(download_key, host: request.host, locale: 'en')
         end
       end
 
@@ -33,7 +38,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
         it "returns a link for showing" do
           post 'create_show', params: { id: file }
           expect(response).to be_success
-          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.show_single_use_link_url(hash, host: request.host, locale: 'en')
+          expect(response.body).to eq Hyrax::Engine.routes.url_helpers.show_single_use_link_url(download_key, host: request.host, locale: 'en')
         end
       end
     end

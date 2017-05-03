@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SingleUseLink < ActiveRecord::Base
   validate :expiration_date_cannot_be_in_the_past
   validate :cannot_be_destroyed
@@ -29,6 +31,9 @@ class SingleUseLink < ActiveRecord::Base
     def set_defaults
       return unless new_record?
       self.expires ||= DateTime.current.advance(hours: 24)
-      self.downloadKey ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
+      # This change exposed a bug: namely that operator precedence
+      # prevented the random number from being appended to the
+      # persisted value of self.downloadKey
+      self.downloadKey ||= "#{Digest::SHA2.new}#{Kernel.rand(1_000_000_000)}"
     end
 end

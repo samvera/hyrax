@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: true
 
 def new_state
   Blacklight::SearchState.new({}, CatalogController.blacklight_config)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Skipping because this was failing intermittently on travis
 RSpec.feature 'Creating a new Work', :js, :workflow, skip: true do
   let(:user) { create(:user) }

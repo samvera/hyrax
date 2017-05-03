@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
   let(:collection) { build(:collection) }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection) }

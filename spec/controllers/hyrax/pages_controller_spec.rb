@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::PagesController, type: :controller do
   let(:page_name) { "about_page" }
   context "content exists" do

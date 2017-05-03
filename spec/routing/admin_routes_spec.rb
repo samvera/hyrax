@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Admin Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 

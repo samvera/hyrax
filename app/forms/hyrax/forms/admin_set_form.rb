@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Forms
     class AdminSetForm < Hyrax::Forms::CollectionForm

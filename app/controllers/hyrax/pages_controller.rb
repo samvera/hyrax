@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Shows the about and help page
   class PagesController < ApplicationController

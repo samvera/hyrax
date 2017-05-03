@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class RepositoryFixityCheckService
     # TODO: this never seems to be used. Remove?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class WorkFormService
     def self.build(curation_concern, current_ability, *extra)

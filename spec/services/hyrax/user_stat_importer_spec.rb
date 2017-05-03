@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::UserStatImporter do
   before do
     allow(Hyrax.config).to receive(:analytic_start_date) { dates[0] }

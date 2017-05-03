@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # Responsible for registering roles critical for your application.
   # Registering a role is effectively saying "my application logic will not work if this role goes away".
@@ -6,11 +8,11 @@ module Hyrax
   class RoleRegistry
     # @api public
     # You may develop your application assuming that the 'managing' role will always be present and valid
-    MANAGING = 'managing'.freeze
+    MANAGING = 'managing'
 
     # @api public
     # You may develop your application assuming that the 'depositing' role will always be present and valid
-    DEPOSITING = 'depositing'.freeze
+    DEPOSITING = 'depositing'
 
     # @api public
     #
@@ -19,8 +21,8 @@ module Hyrax
     #
     # @see Sipity::Role for data integrity enforcement
     MAGIC_ROLES = {
-      MANAGING => 'Grants access to management tasks'.freeze,
-      DEPOSITING => 'Grants access to depositing tasks'.freeze
+      MANAGING => 'Grants access to management tasks',
+      DEPOSITING => 'Grants access to depositing tasks'
     }.freeze
 
     def initialize

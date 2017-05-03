@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module IndexesBasicMetadata
     # We're overriding a method from ActiveFedora::IndexingService

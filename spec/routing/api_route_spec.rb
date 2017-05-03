@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'routing and paths', type: :routing do
   routes { Hyrax::Engine.routes }
 

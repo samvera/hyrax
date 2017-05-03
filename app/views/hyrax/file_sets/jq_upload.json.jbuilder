@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! [@file_set] do |file_set|
   json.name file_set.title.first
   json.size file_set.file_size.first

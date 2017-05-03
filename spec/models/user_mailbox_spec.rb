@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe UserMailbox do
   let(:user)         { create(:user) }
   let(:another_user) { create(:user) }

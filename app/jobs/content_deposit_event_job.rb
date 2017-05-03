@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Log a concern deposit to activity streams
 class ContentDepositEventJob < ContentEventJob
   def action

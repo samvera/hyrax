@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Actors
     # Wrap the stack in a database transaction.

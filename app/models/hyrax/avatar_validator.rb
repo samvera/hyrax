@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   class AvatarValidator < ActiveModel::Validator
     def validate(record)

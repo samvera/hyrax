@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: this should be merged with work_form_spec.rb
 RSpec.describe Hyrax::GenericWorkForm do
   let(:work) { GenericWork.new }

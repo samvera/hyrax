@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # A model name that provides routes that are namespaced to Hyrax,
   # without changing the param key.
@@ -14,7 +16,7 @@ module Hyrax
       super
       @route_key          = "hyrax_#{ActiveSupport::Inflector.pluralize(@param_key)}"
       @singular_route_key = ActiveSupport::Inflector.singularize(@route_key)
-      @route_key << "_index" if @plural == @singular
+      @route_key = @route_key.dup << "_index" if @plural == @singular
     end
   end
 end

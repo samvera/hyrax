@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::FileUsage, type: :model do
   let(:file) do
     FileSet.create do |file|
