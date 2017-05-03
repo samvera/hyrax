@@ -118,8 +118,11 @@ body.dashboard {
     }
   }
 
-  .table .date {
-    width: 13ch;
+  .table {
+     .date,
+     .action {
+      width: 13ch;
+    }
   }
 
   .list-filters {
