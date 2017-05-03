@@ -1,12 +1,11 @@
 # A generic job for sending events to a user.
 #
-# This class does not implement a usable action, so it must be implemented in a child class
-#
+# @abstract
 class EventJob < ActiveJob::Base
   include Rails.application.routes.url_helpers
+  # For link_to
   include ActionView::Helpers
-  include ActionView::Helpers::DateHelper
-  include Hydra::AccessControlsEnforcement
+  # For link_to_profile
   include HyraxHelper
 
   queue_as Hyrax.config.ingest_queue_name
