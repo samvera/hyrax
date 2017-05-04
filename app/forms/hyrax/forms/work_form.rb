@@ -31,6 +31,9 @@ module Hyrax
 
       self.required_fields = [:title, :creator, :keyword, :rights]
 
+      # The service that determines the cardinality of each field
+      self.field_metadata_service = Hyrax::FormMetadataService
+
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
         @agreement_accepted = !model.new_record?
@@ -81,41 +84,12 @@ module Hyrax
       # Get a list of collection id/title pairs for the select form
       def collections_for_select
         service = Hyrax::CollectionsService.new(@controller)
-        convert_solr_docs_to_select_options(service.search_results(:edit))
-      end
-
-      def convert_solr_docs_to_select_options(results)
-        option_values = results.map do |r|
-          [r.to_s, r.id]
-        end
-        option_values.sort do |a, b|
-          if a.first && b.first
-            a.first <=> b.first
-          else
-            a.first ? -1 : 1
-          end
-        end
-      end
-
-      # This determines whether the allowed parameters are single or multiple.
-      # We are returning true for properties that are backed by methods, for
-      # which the HydraEditor::FieldMetadataService cannot determine are multiple.
-      # The instance variable is used when choosing which UI widget to draw.
-      def multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
-      end
-
-      # The class method _multiple?_ is used for building the permitted params
-      # for the update action
-      def self.multiple?(field)
-        return true if ['ordered_member_ids', 'in_works_ids', 'member_of_collection_ids'].include? field.to_s
-        super
+        CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
-        if admin_set_id && Sipity::Workflow.find_by!(id: Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow).allows_access_grant?
+        if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
           return super
         end
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
@@ -131,6 +105,17 @@ module Hyrax
           }
         ]
       end
+
+      def self.workflow_for(admin_set_id:)
+        begin
+          workflow = Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow
+        rescue ActiveRecord::RecordNotFound
+          raise "Missing permission template for AdminSet(id:#{admin_set_id})"
+        end
+        raise Hyrax::MissingWorkflowError, "PermissionTemplate for AdminSet(id:#{admin_set_id}) does not have an active_workflow" unless workflow
+        workflow
+      end
+      private_class_method :workflow_for
 
       private
 

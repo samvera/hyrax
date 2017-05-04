@@ -180,4 +180,23 @@ describe Hyrax::Forms::WorkForm, :no_clean do
     subject { described_class.required_fields }
     it { is_expected.to eq [:title, :creator, :keyword, :rights] }
   end
+
+  describe ".workflow_for" do
+    subject { described_class.send(:workflow_for, admin_set_id: admin_set.id) }
+
+    context "when a active workflow is not found" do
+      let(:admin_set) { create(:admin_set, with_permission_template: true) }
+
+      it "raises a custom error" do
+        expect { subject }.to raise_error Hyrax::MissingWorkflowError
+      end
+    end
+    context "when a permission_template is not found" do
+      let(:admin_set) { create(:admin_set) }
+
+      it "raises an error" do
+        expect { subject }.to raise_error(/Missing permission template for AdminSet\(id:/)
+      end
+    end
+  end
 end
