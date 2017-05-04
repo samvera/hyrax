@@ -2,8 +2,9 @@ require 'spec_helper'
 
 RSpec.describe "The admin sets, through the admin dashboard" do
   let(:user) { create :admin }
+  let(:title) { "Unique name: #{SecureRandom.hex}" }
   let(:admin_set) do
-    create(:admin_set, title: ["A completely unique name"],
+    create(:admin_set, title: [title],
                        description: ["A substantial description"],
                        edit_users: [user.user_key])
   end
@@ -15,10 +16,7 @@ RSpec.describe "The admin sets, through the admin dashboard" do
     login_as(user, scope: :user)
     visit '/dashboard'
     click_link "Administrative Sets"
-
-    expect(page).to have_link "Create new administrative set"
-
-    click_link "A completely unique name"
+    click_link title
 
     expect(page).to have_content "A substantial description"
     expect(page).to have_content "Works in This Set"
