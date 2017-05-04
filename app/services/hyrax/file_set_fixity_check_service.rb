@@ -95,7 +95,7 @@ module Hyrax
       def fixity_check_file_version(file_id, version_uri)
         latest_fixity_check = ChecksumAuditLog.logs_for(file_set.id, file_id).first
         return latest_fixity_check unless needs_fixity_check?(latest_fixity_check)
-        FixityCheckJob.perform_later(file_set, file_id, version_uri.to_s)
+        FixityCheckJob.perform_later(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
         latest_fixity_check || ChecksumAuditLog.new(pass: NO_RUNS, file_set_id: file_set.id, file_id: file_id, checked_uri: version_uri)
       end
 

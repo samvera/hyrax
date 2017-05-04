@@ -1,20 +1,37 @@
-class FixityCheckJob < Hyrax::ApplicationJob
-  # URI of the resource to check fixity for.
-  # This URI could include the actual resource (e.g. content) and the version to fixity check:
+class FixityCheckJob < ActiveJob::ApplicationJob
+  # A Job class that runs a fixity check (using ActiveFedora::FixityService,
+  # which contacts fedora and requests a fixity check), and stores the results
+  # in an ActiveRecord ChecksumAuditLog row. It also prunes old ChecksumAuditLog
+  # rows after creating a new one, to keep old ones you don't care about from
+  # filling up your db.
+  #
+  # The uri passed in is a fedora URI that fedora can run fixity check on.
+  # It's normally a version URI like:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1
-  # but it could also just be:
+  #
+  # But could theoretically be any URI fedora can fixity check on, like a file uri:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content
-  # @param [FileSet] file_set - the parent object
-  # @param [String] file_id - used to find the file within its parent object (usually "original_file")
-  # @param [String] uri - of the specific file/version to fixity check
-  def perform(file_set, file_id, uri)
-    log = run_check(file_set, file_id, uri)
+  #
+  # The file_set_id and file_id are used only for logging context in the
+  # ChecksumAuditLog, and determining what old ChecksumAuditLogs can
+  # be pruned.
+  #
+  # @param uri [String] uri - of the specific file/version to fixity check
+  # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
+  # @param file_id [String] File#id, used for logging/reporting.
+  def perform(uri, file_set_id:, file_id:)
+    log = run_check(file_set_id, file_id, uri)
     fixity_ok = log.pass == 1
+
     unless fixity_ok
       if Hyrax.config.callback.set?(:after_fixity_check_failure)
+        file_set = ::FileSet.find(file_set_id)
         login = file_set.depositor
         user = User.find_by_user_key(login)
-        Hyrax.config.callback.run(:after_fixity_check_failure, file_set, user, log.created_at)
+        Hyrax.config.callback.run(:after_fixity_check_failure,
+                                  file_set,
+                                  user,
+                                  log.created_at)
       end
     end
     fixity_ok
@@ -22,7 +39,9 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
   protected
 
-    def run_check(file_set, file_id, uri)
+
+
+    def run_check(file_set_id, file_id, uri)
       begin
         fixity_ok = ActiveFedora::FixityService.new(uri).check
       rescue Ldp::NotFound
@@ -31,12 +50,12 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
       if fixity_ok
         passing = 1
-        ChecksumAuditLog.prune_history(file_set.id, file_id)
+        ChecksumAuditLog.prune_history(file_set_id, file_id)
       else
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, file_set_id: file_set.id, checked_uri: uri, file_id: file_id)
+      ChecksumAuditLog.create!(pass: passing, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
     end
 
   private
