@@ -29,7 +29,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     specify 'returns a single ChecksumAuditLog for the given file' do
       expect(subject).to be_kind_of ChecksumAuditLog
       expect(subject.file_set_id).to eq(f.id)
-      expect(subject.version).to eq(f.original_file.uri)
+      expect(subject.checked_uri).to eq(f.original_file.uri)
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       before do
         Hyrax::VersioningService.create(f.original_file)
-        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
+        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.uri, file_id: 'original_file')
       end
 
       it 'reports that fixity checks have not been run' do
@@ -70,7 +70,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
     before do
       Hyrax::VersioningService.create(f.original_file)
-      ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
+      ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.uri, file_id: 'original_file')
     end
     subject { service_by_object.human_readable_fixity_check_status }
     it { is_expected.to eq 'Some fixity checks have not been run, but the ones run were passing.' }
@@ -87,7 +87,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when no fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
         end
 
         it "reports the fixity check result" do
@@ -97,8 +97,8 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when one fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
-          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
         end
 
         it "reports the fixity check result" do
@@ -111,7 +111,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
       subject { service_by_id.logged_fixity_status }
 
       before do
-        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, version: f.original_file.versions.first.label, file_id: 'original_file')
+        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
       end
 
       it "reports the fixity result" do

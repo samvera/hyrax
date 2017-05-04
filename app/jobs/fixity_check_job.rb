@@ -36,7 +36,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, file_set_id: file_set.id, version: uri, file_id: file_id)
+      ChecksumAuditLog.create!(pass: passing, file_set_id: file_set.id, checked_uri: uri, file_id: file_id)
     end
 
   private

@@ -1,7 +1,7 @@
 class ChecksumAuditLog < ActiveRecord::Base
   # TODO: this method doesn't seem to be used. Remove?
-  def self.fixity_check_log(file_set_id, file_id, version_uri)
-    ChecksumAuditLog.find_or_create_by(file_set_id: file_set_id, file_id: file_id, version: version_uri)
+  def self.fixity_check_log(file_set_id, file_id, checked_uri)
+    ChecksumAuditLog.find_or_create_by(file_set_id: file_set_id, file_id: file_id, checked_uri: checked_uri)
   end
 
   # Check to see if there are previous passing logs that we can delete

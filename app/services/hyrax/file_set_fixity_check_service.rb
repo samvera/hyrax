@@ -96,7 +96,7 @@ module Hyrax
         latest_fixity_check = ChecksumAuditLog.logs_for(file_set.id, file_id).first
         return latest_fixity_check unless needs_fixity_check?(latest_fixity_check)
         FixityCheckJob.perform_later(file_set, file_id, version_uri.to_s)
-        latest_fixity_check || ChecksumAuditLog.new(pass: NO_RUNS, file_set_id: file_set.id, file_id: file_id, version: version_uri)
+        latest_fixity_check || ChecksumAuditLog.new(pass: NO_RUNS, file_set_id: file_set.id, file_id: file_id, checked_uri: version_uri)
       end
 
       # Check if time since the last fixity check is greater than the maximum days allowed between fixity checks

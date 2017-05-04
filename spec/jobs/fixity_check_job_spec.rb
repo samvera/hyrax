@@ -36,8 +36,8 @@ RSpec.describe FixityCheckJob do
 
   describe 'run_fixity_check' do
     let(:uri) { Hyrax::VersioningService.latest_version_of(file.original_file).uri }
-    let!(:old) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 1, created_at: 2.minutes.ago) }
-    let!(:new) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, version: uri, pass: 0) }
+    let!(:old) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, checked_uri: uri, pass: 1, created_at: 2.minutes.ago) }
+    let!(:new) { ChecksumAuditLog.create(file_set_id: file.id, file_id: file_id, checked_uri: uri, pass: 0) }
     let(:mock_service) { double('mock fixity check service') }
 
     before do
