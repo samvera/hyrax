@@ -57,6 +57,14 @@ module Hyrax
         return_info
       end
 
+      # If management roles have been granted or removed, then copy this access
+      # to the edit permissions of the AdminSet and to the WorkflowResponsibilities
+      # of the active workflow
+      def update_management
+        admin_set.update_access_controls!
+        update_workflow_approving_responsibilities
+      end
+
       private
 
         # @return [String]
@@ -70,7 +78,36 @@ module Hyrax
         def update_participants_options(attributes)
           update_permission_template(attributes)
           # if managers were added, recalculate update the access controls on the AdminSet
-          admin_set.update_access_controls! if managers_updated?(attributes)
+          return unless managers_updated?(attributes)
+          update_management
+        end
+
+        # Grant workflow approve roles for any admin set managers
+        # and revoke the approving role for non-managers
+        def update_workflow_approving_responsibilities
+          return unless active_workflow
+          approving_role = Sipity::Role.find_by_name('approving')
+          return unless approving_role
+          active_workflow.update_responsibilities(role: approving_role, agents: manager_agents)
+        end
+
+        # @return [Array<Sipity::Agent>] a list of sipity agents corresponding to the manager role of the permission_template
+        def manager_agents
+          @manager_agents ||= begin
+            authorized_agents = manager_grants.map do |access|
+              if access.agent_type == 'user'
+                ::User.find_by_user_key(access.agent_id)
+              else
+                Hyrax::Group.new(access.agent_id)
+              end
+            end
+            authorized_agents.map { |agent| PowerConverter.convert_to_sipity_agent(agent) }
+          end
+        end
+
+        # @return [Array<PermissionTemplateAccess>] a list of grants corresponding to the manager role of the permission_template
+        def manager_grants
+          model.access_grants.where(access: 'manage'.freeze)
         end
 
         # @return [String, Nil] error_code if validation fails, nil otherwise

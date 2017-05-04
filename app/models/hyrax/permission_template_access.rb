@@ -5,16 +5,16 @@ module Hyrax
 
     belongs_to :permission_template
 
-    def view?
-      access == 'view'
-    end
+    VIEW = 'view'.freeze
+    DEPOSIT = 'deposit'.freeze
+    MANAGE = 'manage'.freeze
 
-    def deposit?
-      access == 'deposit'
-    end
-
-    def manage?
-      access == 'manage'
-    end
+    enum(
+      access: {
+        VIEW => VIEW,
+        DEPOSIT => DEPOSIT,
+        MANAGE => MANAGE
+      }
+    )
   end
 end
