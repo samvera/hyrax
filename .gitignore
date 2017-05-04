@@ -1,3 +1,7 @@
 _site/
 .sass-cache/
 .ruby-*
+.byebug_history
+.internal_test_app
+Gemfile.lock
+fcrepo4-test-data
