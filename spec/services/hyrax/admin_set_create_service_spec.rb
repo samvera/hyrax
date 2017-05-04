@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { instance_double(User, user_key: 'user-1234') }
 
-  describe '.create_default_admin_set' do
+  describe '.create_default_admin_set', :clean_repo do
     let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
     let(:responsibilities) { Sipity::WorkflowResponsibility.where(workflow_role: admin_set.active_workflow.workflow_roles) }
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
