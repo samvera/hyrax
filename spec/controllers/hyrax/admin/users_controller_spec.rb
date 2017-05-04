@@ -1,12 +1,7 @@
 RSpec.describe Hyrax::Admin::UsersController, type: :controller do
-  let!(:user) { FactoryGirl.create(:user) }
   before do
     expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
   end
-  let!(:admin_user) { FactoryGirl.create(:user, groups: 'admin') }
-  let!(:audit_user) { User.audit_user }
-  let!(:batch_user) { User.batch_user }
-  let!(:guest_user) { FactoryGirl.create(:user, :guest) }
 
   describe "#index" do
     it "is successful" do
@@ -16,12 +11,7 @@ RSpec.describe Hyrax::Admin::UsersController, type: :controller do
 
       get :index
       expect(response).to be_successful
-    end
-
-    it "excludes audit_user, batch_user, and guest user" do
-      get :index
-      expect(assigns[:presenter].users.to_a).to match_array [user, admin_user]
-      expect(response).to be_successful
+      expect(assigns[:presenter]).to be_kind_of Hyrax::Admin::UsersPresenter
     end
   end
 end
