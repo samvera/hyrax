@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rails/generators'
 require 'redlock'
 
-RSpec.feature 'Creating a new Work', :workflow do
+RSpec.feature 'Creating a new Work' do
   before do
     Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], destination_root: Rails.root)
     load "#{EngineCart.destination}/app/indexers/catapult_indexer.rb"

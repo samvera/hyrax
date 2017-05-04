@@ -168,6 +168,8 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
+    # using :workflow is preferable to :clean_repo, use the former if possible
+    ensure_deposit_available_for(user) if example.metadata[:workflow]
     ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
   end
 
