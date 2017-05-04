@@ -4,7 +4,7 @@ module ControllerLevelHelpers
   # These are normally provided by the controller.
   module ControllerViewHelpers
     def search_state
-      @search_state ||= Hyrax::SearchState.new(self)
+      @search_state ||= CatalogController.search_state_class.new(params, blacklight_config, controller)
     end
 
     # This allows you to set the configuration
