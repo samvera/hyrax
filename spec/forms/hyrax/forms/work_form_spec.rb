@@ -191,5 +191,12 @@ describe Hyrax::Forms::WorkForm, :no_clean do
         expect { subject }.to raise_error Hyrax::MissingWorkflowError
       end
     end
+    context "when a permission_template is not found" do
+      let(:admin_set) { create(:admin_set) }
+
+      it "raises an error" do
+        expect { subject }.to raise_error(/Missing permission template for AdminSet\(id:/)
+      end
+    end
   end
 end
