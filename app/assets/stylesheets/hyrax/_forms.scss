@@ -52,6 +52,14 @@ form {
   label { font-weight: normal; }
   & .form-group { padding: 0 1.75em; }
 
+  #collapseEmbargo .form-group {
+    padding: 0;
+
+    &.generic_work_visibility_after_embargo {
+      margin-top: 6px;
+    }
+  }
+
   .form-inline {
     .control-label, label {
       padding-left: 0;

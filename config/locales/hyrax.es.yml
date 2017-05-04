@@ -669,6 +669,7 @@ es:
         in_collections: Este Obra en Colecciones
         in_other_works: Este Obra en otras Obras
         in_this_work: Otras Obras en este Obra
+        visibility_until: 'hasta'
         tab:
           files:         "Archivos"
           metadata:      "Descripciones"
