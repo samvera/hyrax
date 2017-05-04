@@ -46,7 +46,7 @@ RSpec.describe Hyrax::LeaseService do
     end
     it 'returns an array of assets with deactivated leases' do
       returned_pids = subject.assets_with_deactivated_leases.map(&:id)
-      expect(returned_pids).to eq [work_with_expired_lease1.id, work_with_lease_in_effect.id]
+      expect(returned_pids).to include work_with_expired_lease1.id, work_with_lease_in_effect.id
     end
   end
 end
