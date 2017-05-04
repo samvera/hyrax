@@ -38,7 +38,7 @@ module Hyrax
         file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
         file_set.title = [file_set.label] if file_set.title.blank?
         return false unless file_set.save # Need to save the file_set in order to get an id
-        file_actor_class.new(file_set, relation, user).ingest_file(file, asynchronous)
+        build_file_actor(relation).ingest_file(file, asynchronous)
         true
       end
 
@@ -61,8 +61,7 @@ module Hyrax
       # @param [String] revision_id the revision to revert to
       # @param [String] relation ('original_file')
       def revert_content(revision_id, relation = 'original_file')
-        file_actor = file_actor_class.new(file_set, relation, user)
-        return false unless file_actor.revert_to(revision_id)
+        return false unless build_file_actor(relation).revert_to(revision_id)
         Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id)
         true
       end
@@ -70,7 +69,7 @@ module Hyrax
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
       # @param [String] relation ('original_file')
       def update_content(file, relation = 'original_file')
-        file_actor_class.new(file_set, relation, user).ingest_file(file)
+        build_file_actor(relation).ingest_file(file, true)
         Hyrax.config.callback.run(:after_update_content, file_set, user)
         true
       end
@@ -104,14 +103,15 @@ module Hyrax
           @ability ||= ::Ability.new(user)
         end
 
+        def build_file_actor(relation)
+          file_actor_class.new(file_set, relation, user)
+        end
+
         # Takes an optional block and executes the block if the save was successful.
         # @return [Boolean] false if the save was unsuccessful
         def save
           on_retry = ->(exception, _, _, _) { ActiveFedora::Base.logger.warn "Hyrax::Actors::FileSetActor#save Caught RSOLR error #{exception.inspect}" }
-          Retriable.retriable on: RSolr::Error::Http,
-                              on_retry: on_retry,
-                              tries: 4,
-                              base_interval: 0.01 do
+          Retriable.retriable on: RSolr::Error::Http, on_retry: on_retry, tries: 4, base_interval: 0.01 do
             return false unless file_set.save
           end
           yield if block_given?
