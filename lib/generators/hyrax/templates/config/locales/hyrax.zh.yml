@@ -1,0 +1,12 @@
+zh:
+  hyrax:
+    product_name:           "蹄兔"
+    product_twitter_handle: "@HydraSphere"
+    institution_name:       "机构"
+    institution_name_full:  "机构名称"
+    account_name:           "我的机构帐户标识符"
+    directory:
+      suffix:               "@example.org"
+    footer:
+      copyright_html: "<strong>版权所有 &copy; 2017 Project Hydra</strong> 根据Apache许可证2.0版许可"
+      service_html: 的服务<a href="http://projecthydra.org/" class="navbar-link" target="_blank">Hydra项目</a>.
