@@ -77,6 +77,12 @@ module Hyrax
            :member_of_collection_ids, :in_works_ids, :admin_set_id]
       end
 
+      # Do not display additional fields if there are no secondary terms
+      # @return [Boolean] display additional fields on the form?
+      def display_additional_fields?
+        secondary_terms.any?
+      end
+
       # @return [Array] a list of works that are members of the primary work on this form.
       def work_members
         model.works
