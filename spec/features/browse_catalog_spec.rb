@@ -36,7 +36,7 @@ RSpec.describe "Browse catalog:", type: :feature do
       expect(page).to have_content jacks_work.title.first
 
       click_link "Keyword"
-      click_link "more Keywords»"
+      click_link "more Keywords »"
       within('.bottom') do
         click_link 'Next »'
       end
