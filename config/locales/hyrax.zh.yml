@@ -15,7 +15,7 @@ zh:
           contributor: "贡献者"
           keyword: "关键词"
         facet:
-          admin_set_sim: "管理集"
+          admin_set_sim: "集"
           suppressed_bsi: "状况"
           resource_type_sim: "资源类型"
       filters:
@@ -218,7 +218,9 @@ zh:
             under_review: "在审查中"
     admin_sets:
       index:
-        header: "管理集"
+        header: "所有收藏"
+      show:
+        header: "集"
     api:
       accepted:
         default: "您的请求已被接受，正在处理中。参见？？See job for more info。"
@@ -356,6 +358,12 @@ zh:
       terms:            "使用条款"
     dashboard:
       additional_notifications: "见所有通知"
+      admin_sets:
+        admin_set:              "管理集"
+        files:                  "文件"
+        subtitle:               "近期活动"
+        title:                  "管理集"
+        works:                  "作品"
       all:
         collections:            "所有收藏集"
         works:                  "所有作品"
@@ -363,12 +371,6 @@ zh:
       breadcrumbs:
         admin:                  "管理"
       create_work:              "创建作品"
-      collections:
-        collection:             "收藏集"
-        subtitle:               "近期收藏集操作"
-        title:                  "收藏集"
-        works:                  "作品"
-        files:                  "文件"
       current_proxies:          "目前代理"
       heading_actions:
         close:                  "关闭"
@@ -475,7 +477,7 @@ zh:
       override_text: "用 app/views/static/help.html.erb 覆盖此文件。"
     homepage:
       admin_sets:
-        link:               '阅览所有管理集'
+        link:               '查看所有收藏'
         tab_label:          '探索收藏集'
         title:              '探索收藏集'
       featured_researcher:
