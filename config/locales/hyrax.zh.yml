@@ -8,6 +8,8 @@ zh:
         conflict: "您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}"
   blacklight:
     search:
+      facets:
+        more_html: '更多 <span class="sr-only">%{field_name}</span> »'
       fields:
         show:
           admin_set: "管理集内:"
