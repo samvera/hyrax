@@ -15,7 +15,7 @@ es:
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
         facet:
-          admin_set_sim: "Conjunto administrativo"
+          admin_set_sim: "Collección"
           suppressed_bsi: "Estadio"
           resource_type_sim: "Tipo de recurso"
       filters:
@@ -218,7 +218,9 @@ es:
           under_review: "En Revisión"
     admin_sets:
       index:
-        header: "Colecciones Administrativas"
+        header: "Todas las colecciones"
+      show:
+        header: "Collección"
     api:
       accepted:
         default: "Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver trabajo para más información."
@@ -357,6 +359,12 @@ es:
       terms:            "Términos de Uso"
     dashboard:
       additional_notifications: "ver todas las notificaciones"
+      admin_sets:
+        admin_set:              "Conjunto administrativo"
+        files:                  "Archivos"
+        subtitle:               "Actividad reciente"
+        title:                  "Conjuntos administrativos"
+        works:                  "Obras"
       all:
         collections:            "Todos los Colleccións"
         works:                  "Todos los Trabajos"
@@ -364,12 +372,6 @@ es:
       breadcrumbs:
         admin:                  "Administración"
       create_work:              "Crear Trabajo"
-      collections:
-        collection:             "Collección"
-        subtitle:               "Actividad reciente de la colección"
-        title:                  "Colleccións"
-        works:                  "Trabajos"
-        files:                  "Archivos"
       current_proxies:          "Proxies actuales"
       heading_actions:
         close:                  "Cerrar"
@@ -478,7 +480,7 @@ es:
       override_text: "Utilice app/views/static/help.html.erb para anular este archivo"
     homepage:
       admin_sets:
-        link:               'Ver todas las colecciones administrativas'
+        link:               'Ver todas las colecciones'
         tab_label:          'Explorar Colecciones'
         title:              'Explorar Colecciones'
       featured_researcher:

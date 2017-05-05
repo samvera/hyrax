@@ -10,12 +10,12 @@ en:
     search:
       fields:
         show:
-          admin_set: "In Admin Set:"
+          admin_set: "In Administrative Set:"
           based_near: Location
           contributor: Contributors
           keyword: Keyword
         facet:
-          admin_set_sim: "Administrative set"
+          admin_set_sim: "Collection"
           suppressed_bsi: "Status"
           resource_type_sim: "Resource type"
       filters:
@@ -218,7 +218,9 @@ en:
             under_review: "Under Review"
     admin_sets:
       index:
-        header:         "Administrative Collections"
+        header: "All Collections"
+      show:
+        header: "Collection"
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."
@@ -357,6 +359,12 @@ en:
       terms:            "Terms of Use"
     dashboard:
       additional_notifications: "See all notifications"
+      admin_sets:
+        admin_set:              "Administrative Set"
+        files:                  "Files"
+        subtitle:               "Recent activity"
+        title:                  "Administrative Sets"
+        works:                  "Works"
       all:
         collections:            "All Collections"
         works:                  "All Works"
@@ -364,12 +372,6 @@ en:
       breadcrumbs:
         admin:                  "Administration"
       create_work:              "Create Work"
-      collections:
-        collection:             "Collection"
-        subtitle:               "Recent collection activity"
-        title:                  "Collections"
-        works:                  "Works"
-        files:                  "Files"
       current_proxies:          "Current Proxies"
       heading_actions:
         close:                  "Close"
@@ -478,7 +480,7 @@ en:
       override_text: "Use app/views/static/help.html.erb to override this file."
     homepage:
       admin_sets:
-        link:               'View all administrative collections'
+        link:               'View all collections'
         tab_label:          'Explore Collections'
         title:              'Explore Collections'
       featured_researcher:
