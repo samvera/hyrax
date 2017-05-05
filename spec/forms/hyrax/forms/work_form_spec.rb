@@ -166,6 +166,22 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it { is_expected.to eq work.member_ids }
   end
 
+  describe '#display_additional_fields?' do
+    subject { form.display_additional_fields? }
+    context 'with no secondary terms' do
+      before do
+        allow(form).to receive(:secondary_terms).and_return([])
+      end
+      it { is_expected.to be false }
+    end
+    context 'with secondary terms' do
+      before do
+        allow(form).to receive(:secondary_terms).and_return([:foo, :bar])
+      end
+      it { is_expected.to be true }
+    end
+  end
+
   describe "#embargo_release_date" do
     let(:work) { create(:work, embargo_release_date: 5.days.from_now) }
     subject { form.embargo_release_date }

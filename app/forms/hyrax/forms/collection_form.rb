@@ -42,6 +42,12 @@ module Hyrax
          :resource_type]
       end
 
+      # Do not display additional fields if there are no secondary terms
+      # @return [Boolean] display additional fields on the form?
+      def display_additional_fields?
+        secondary_terms.any?
+      end
+
       private
 
         def all_files

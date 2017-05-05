@@ -53,6 +53,22 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     end
   end
 
+  describe '#display_additional_fields?' do
+    subject { form.display_additional_fields? }
+    context 'with no secondary terms' do
+      before do
+        allow(form).to receive(:secondary_terms).and_return([])
+      end
+      it { is_expected.to be false }
+    end
+    context 'with secondary terms' do
+      before do
+        allow(form).to receive(:secondary_terms).and_return([:foo, :bar])
+      end
+      it { is_expected.to be true }
+    end
+  end
+
   describe "#id" do
     subject { form.id }
     it { is_expected.to be_nil }
