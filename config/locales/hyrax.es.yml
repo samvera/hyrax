@@ -284,6 +284,7 @@ es:
         resource_type: "Puedes seleccionar múltiples tipos para aplicar a todos los archivos"
         title: "El nombre de archivo será el título predeterminado. Por favor introduzca un título con más significado y los archivos aún serán preservados en el sistema."
     batch_uploads:
+      disabled: Función desactivada por el administrador
       files:
         instructions: Cada archivo será cargado en un nuevo trabajo separado, resultando en un trabajo por archivo cargado.
         upload_type_instructions: Para crear una solo obra para todos los archivos, vaya a

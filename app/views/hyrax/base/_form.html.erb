@@ -11,7 +11,7 @@
       <%= render 'form_ordered_members_error', f: f %>
     </div>
   <% end %>
-  <% unless f.object.persisted? %>
+  <% if Flipflop.enable_batch_upload? && f.object.new_record? %>
     <% provide :metadata_tab do %>
       <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", hyrax.new_batch_upload_path %></p>
     <% end %>

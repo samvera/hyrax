@@ -284,6 +284,7 @@ zh:
         resource_type: "您可以选择适用于所有文件的多种类型"
         title: "文件名将作为默认标题。请提供更有意义的标题，文件名将会在系统内保留。"
     batch_uploads:
+      disabled: 功能由管理员禁用
       files:
         instructions: 上传的每份文件都会分别按新作品生成。
         upload_type_instructions: 如果建立一件作品包括所有文件，请去
