@@ -168,16 +168,17 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
-    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
-  end
-
-  config.before :each do |example|
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start
     end
+
+    # using :workflow is preferable to :clean_repo, use the former if possible
+    # It's important that this comes after DatabaseCleaner.start
+    ensure_deposit_available_for(user) if example.metadata[:workflow]
+    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
   end
 
   config.include(ControllerLevelHelpers, type: :view)

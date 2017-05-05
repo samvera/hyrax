@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::Actors::InitializeWorkflowActor, :workflow do
+RSpec.describe Hyrax::Actors::InitializeWorkflowActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { build(:generic_work) }
