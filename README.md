@@ -33,7 +33,6 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Start servers](#start-servers)
     * [Start background workers](#start-background-workers)
     * [Create default administrative set](#create-default-administrative-set)
-    * [Load workflows](#load-workflows)
     * [Generate a work type](#generate-a-work-type)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling features](#toggling-features)
@@ -197,13 +196,6 @@ bin/rails hyrax:default_admin_set:create
 ```
 
 **NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
-
-## Load workflows
-Load workflows from the json files in `config/workflows` by running the following rake task:
-
-```
-bin/rails hyrax:workflow:load
-```
 
 ## Generate a work type
 
