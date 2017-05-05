@@ -17,15 +17,19 @@ module Hyrax
     # @note we don't call `authorize!` directly, since `authorized_models` already checks `user.can? :create, ...`
     def create
       authenticate_user!
-      unsafe_pc = params.fetch(:batch_upload_item, {})[:payload_concern]
-      # Calling constantize on user params is disfavored (per brakeman), so we sanitize by matching it against an authorized model.
-      safe_pc = Hyrax::SelectTypeListPresenter.new(current_user).authorized_models.map(&:to_s).find { |x| x == unsafe_pc }
-      raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
-      # authorize! :create, safe_pc
-      create_update_job(safe_pc)
-      # Calling `#t` in a controller context does not mark _html keys as html_safe
-      flash[:notice] = view_context.t('hyrax.works.create.after_create_html', application_name: view_context.application_name)
-      redirect_after_update
+      unless Flipflop.enable_batch_upload?
+        respond_to do |wants|
+          wants.json do
+            return render_json_response(response_type: :forbidden,
+                                        message: view_context.t('hyrax.batch_uploads.disabled'))
+          end
+          wants.html do
+            return redirect_to hyrax.my_works_path, alert: view_context.t('hyrax.batch_uploads.disabled')
+          end
+        end
+      end
+      handle_payload_concern!
+      redirect_after_update!
     end
 
     # Gives the class of the form.
@@ -42,7 +46,18 @@ module Hyrax
         @form.payload_concern = params[:payload_concern]
       end
 
-      def redirect_after_update
+      def handle_payload_concern!
+        unsafe_pc = params.fetch(:batch_upload_item, {})[:payload_concern]
+        # Calling constantize on user params is disfavored (per brakeman), so we sanitize by matching it against an authorized model.
+        safe_pc = Hyrax::SelectTypeListPresenter.new(current_user).authorized_models.map(&:to_s).find { |x| x == unsafe_pc }
+        raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
+        # authorize! :create, safe_pc
+        create_update_job(safe_pc)
+      end
+
+      def redirect_after_update!
+        # Calling `#t` in a controller context does not mark _html keys as html_safe
+        flash[:notice] = view_context.t('hyrax.works.create.after_create_html', application_name: view_context.application_name)
         if uploading_on_behalf_of?
           redirect_to hyrax.dashboard_shares_path
         else

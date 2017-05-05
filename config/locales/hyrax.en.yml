@@ -284,6 +284,7 @@ en:
         resource_type: "You may select multiple types to apply to all files"
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
     batch_uploads:
+      disabled: Feature disabled by administrator
       files:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
         upload_type_instructions: To create a single work for all the files, go to

@@ -37,6 +37,24 @@ RSpec.describe Hyrax::BatchUploadsController do
   end
 
   describe "#create" do
+    context 'when feature is disabled' do
+      before do
+        allow(Flipflop).to receive(:enable_batch_upload?).and_return(false)
+      end
+      it 'redirects with an error message' do
+        post :create, params: post_params.merge(format: :html)
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
+        expect(flash[:alert]).to include('Feature disabled by administrator')
+      end
+      context 'when json is requested' do
+        it 'returns an HTTP 403' do
+          post :create, params: post_params.merge(format: :json)
+          expect(response).to have_http_status(403)
+          expect(response.body).to include('Feature disabled by administrator')
+        end
+      end
+    end
+
     context "with expected params" do
       it 'spawns a job, redirects to dashboard, and has an html_safe flash notice' do
         expect(BatchCreateJob).to receive(:perform_later)
