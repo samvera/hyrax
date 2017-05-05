@@ -38,11 +38,6 @@ body.dashboard {
     margin-top: 0.5em;
   }
 
-  .tabs {
-    margin-top: $tab-margin;
-    position: relative;
-  }
-
   .nav-tabs {
     border-bottom: 0;
     margin-bottom: 0;
@@ -202,6 +197,16 @@ body.dashboard {
       width: 100%;
     }
 
+    &.tabs {
+      margin-top: $tab-margin;
+      position: relative;
+    }
+
+    &.panel-default.labels {
+      border-top: 1px solid $panel-default-border;
+      margin-bottom: 0;
+    }
+
     .panel-title {
       color: $title-text-color;
       display: block;
@@ -212,12 +217,8 @@ body.dashboard {
       &.h2 {
         font-size: 22px;
       }
-    }
-  }
 
-  .panel.panel-default.labels {
-    border-top: 1px solid $panel-default-border;
-    margin-bottom: 0;
+    }
   }
 
   .spacer {
