@@ -1,4 +1,5 @@
-//= require browse_everything
+//= require jquery.treetable
+//= require browse_everything/behavior
 
 // Show the files in the queue
 Blacklight.onLoad( function() {
