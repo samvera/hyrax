@@ -195,6 +195,8 @@ end
 bin/rails hyrax:default_admin_set:create
 ```
 
+This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
+
 **NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
 
 ## Generate a work type
