@@ -42,4 +42,46 @@ RSpec.describe ChecksumAuditLog do
       expect(logs).to eq([success1, new, old])
     end
   end
+
+  context "multiple versions with multiple checks" do
+    # I don't quite understand how our FileSet already has multiple
+    # versions, but that's great since I couldn't figure out a reasonable
+    # way to create them. Note you need to #all here, or you get
+    # really confusing stuff.
+    let(:verisons_uri) { f.original_file.versions.all.first.uri }
+    let(:version_uri2) { f.original_file.versions.all.second.uri }
+    before do
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1, created_at: 2.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1)
+
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 1, created_at: 2.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 0, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 1)
+    end
+    describe ".latest_checks" do
+      it "returns only latest for each checked_uri" do
+        expected = [
+          described_class.where(checked_uri: version_uri).order("created_at desc").first,
+          described_class.where(checked_uri: version_uri2).order("created_at desc").first
+        ]
+        expect(described_class.latest_checks).to match_array(expected)
+      end
+    end
+    describe ".latest_for_file_set_id" do
+      before do
+        # add some for another file set, doens't matter it doesn't exist
+        described_class.create(file_set_id: "somethingelse", file_id: "whatever", checked_uri: "http://example.org/w")
+      end
+      it "returns only the lastest check for FileSet specified" do
+        expected = [
+          described_class.where(checked_uri: version_uri).order("created_at desc").first,
+          described_class.where(checked_uri: version_uri2).order("created_at desc").first
+        ]
+        expect(described_class.latest_for_file_set_id(f.id)).to match_array(expected)
+      end
+    end
+  end
+
+
 end
