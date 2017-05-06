@@ -42,25 +42,4 @@ RSpec.describe ChecksumAuditLog do
       expect(logs).to eq([success1, new, old])
     end
   end
-
-  context 'should have an fixity check log history' do
-    before do
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: 'v2', pass: 1)
-      described_class.create(file_set_id: f.id, file_id: 'thumbnail', checked_uri: 'v1', pass: 1)
-    end
-
-    it "has an fixity check log history" do
-      check = described_class.fixity_check_log(f.id, content_id, version_uri)
-      expect(check.file_set_id).to eq(f.id)
-      expect(check.checked_uri).to eq(version_uri)
-
-      check = described_class.fixity_check_log(f.id, content_id, 'v2')
-      expect(check.file_set_id).to eq(f.id)
-      expect(check.checked_uri).to eq('v2')
-
-      check = described_class.fixity_check_log(f.id, 'thumbnail', 'v1')
-      expect(check.file_set_id).to eq(f.id)
-      expect(check.checked_uri).to eq('v1')
-    end
-  end
 end
