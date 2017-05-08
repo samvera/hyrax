@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::AdminSetCreateService do
-  let(:user) { instance_double(User, user_key: 'user-1234') }
+  let(:user) { create(:user) }
 
   describe '.create_default_admin_set' do
     let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
@@ -53,12 +53,23 @@ RSpec.describe Hyrax::AdminSetCreateService do
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
         let(:grant) { permission_template.access_grants.first }
+        let!(:role1) { Sipity::Role.create(name: 'testing') }
+        let!(:role2) { Sipity::Role.create(name: 'breaking') }
+        let!(:role3) { Sipity::Role.create(name: 'fixing') }
+        let(:available_workflows) { [create(:workflow), create(:workflow)] }
+
+        # rubocop:disable RSpec/AnyInstance
+        before do
+          allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
+        end
+        # rubocop:enable RSpec/AnyInstance
 
         it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
           expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
           expect do
             expect(subject).to be true
           end.to change { admin_set.persisted? }.from(false).to(true)
+            .and change { Sipity::WorkflowResponsibility.count }.by(6)
           expect(admin_set.read_groups).to eq ['public']
           expect(admin_set.edit_groups).to eq ['admin']
           expect(grant.agent_id).to eq user.user_key
