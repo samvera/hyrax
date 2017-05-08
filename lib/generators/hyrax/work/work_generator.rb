@@ -38,6 +38,10 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('form.rb.erb', File.join('app/forms/hyrax', class_path, "#{file_name}_form.rb"))
   end
 
+  def create_presenter
+    template('presenter.rb.erb', File.join('app/presenters/hyrax', class_path, "#{file_name}_presenter.rb"))
+  end
+
   def create_model
     template('model.rb.erb', File.join('app/models/', class_path, "#{file_name}.rb"))
   end
@@ -89,6 +93,11 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
   def create_form_spec
     return unless rspec_installed?
     template('form_spec.rb.erb', File.join('spec/forms/hyrax/', class_path, "#{file_name}_form_spec.rb"))
+  end
+
+  def presenter_spec
+    return unless rspec_installed?
+    template('presenter_spec.rb.erb', File.join('spec/presenters/hyrax/', class_path, "#{file_name}_presenter_spec.rb"))
   end
 
   def create_model_spec

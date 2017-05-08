@@ -21,7 +21,7 @@ RSpec.describe Hyrax::GenericWorksController do
       get :show, params: { id: work }
       expect(response.code).to eq '401'
       expect(response).to render_template(:unavailable)
-      expect(assigns[:presenter]).to be_instance_of Hyrax::WorkShowPresenter
+      expect(assigns[:presenter]).to be_instance_of Hyrax::GenericWorkPresenter
       expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
     end
   end
@@ -71,7 +71,7 @@ RSpec.describe Hyrax::GenericWorksController do
         it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
           expect(response).to be_success
-          expect(assigns[:parent_presenter]).to be_instance_of Hyrax::WorkShowPresenter
+          expect(assigns[:parent_presenter]).to be_instance_of Hyrax::GenericWorkPresenter
         end
       end
 
