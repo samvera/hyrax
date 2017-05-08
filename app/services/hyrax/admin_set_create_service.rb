@@ -80,7 +80,19 @@ module Hyrax
 
       def create_workflows_for(permission_template:)
         workflow_importer.call(permission_template: permission_template)
+        grant_all_workflow_roles_to_creating_user!(permission_template: permission_template)
         Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
+      end
+
+      def grant_all_workflow_roles_to_creating_user!(permission_template:)
+        # Default admin set has a nil creating_user; guard against that condition
+        return if creating_user.nil?
+        # Grant all workflow roles to the creating_user
+        permission_template.available_workflows.each do |workflow|
+          Sipity::Role.all.each do |role|
+            workflow.update_responsibilities(role: role, agents: creating_user.to_sipity_agent)
+          end
+        end
       end
 
       # Gives deposit access to all registered users
