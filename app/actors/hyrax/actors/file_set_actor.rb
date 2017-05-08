@@ -35,7 +35,7 @@ module Hyrax
       # @param [Boolean] asynchronous (true) set to false if you don't want to launch a new background job.
       def create_content(file, relation = 'original_file', asynchronous = true)
         # If the file set doesn't have a title or label assigned, set a default.
-        file_set.label ||= file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
+        file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
         return false unless file_set.save # Need to save the file_set in order to get an id
         build_file_actor(relation).ingest_file(file, asynchronous)
@@ -55,6 +55,7 @@ module Hyrax
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
           work.save
+          Hyrax.config.callback.run(:after_create_fileset, file_set, user)
         end
       end
 
@@ -105,6 +106,19 @@ module Hyrax
 
         def build_file_actor(relation)
           file_actor_class.new(file_set, relation, user)
+        end
+
+        def label_for(file)
+          # For the label, use the original filename if it's there.
+          # If the file was imported via URL, parse the original filename
+          # If all else fails, use the basename of the file where it sits
+          if file.respond_to?(:original_filename)
+            file.original_filename
+          elsif file_set.import_url.present?
+            File.basename(Addressable::URI.parse(file_set.import_url).path)
+          else
+            File.basename(file)
+          end
         end
 
         # Takes an optional block and executes the block if the save was successful.
