@@ -14,11 +14,9 @@ RSpec.describe ImportUrlJob do
   end
 
   let(:operation) { create(:operation) }
-  let(:success_service) { instance_double(Hyrax::ImportUrlSuccessService) }
   let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
 
   before do
-    allow(Hyrax::ImportUrlSuccessService).to receive(:new).and_return(success_service)
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
 
     stub_request(:get, "http://example.org#{file_hash}").to_return(
@@ -33,7 +31,6 @@ RSpec.describe ImportUrlJob do
     end
 
     it 'creates the content and updates the associated operation' do
-      expect(success_service).to receive(:call)
       expect(actor).to receive(:create_content).with(Tempfile, 'original_file', false).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
@@ -55,11 +52,8 @@ RSpec.describe ImportUrlJob do
     end
 
     it "does not kill all the metadata set by other processes" do
-      expect(success_service).to receive(:call)
-
       # run the import job
       described_class.perform_now(file_set, operation)
-
       # import job should not override the title set another process
       file = FileSet.find(file_set_id)
       expect(file.title).to eq(['File One'])

@@ -6,6 +6,7 @@ Security/MarshalLoad:
 
 Metrics/ClassLength:
   Exclude:
+    - 'app/actors/hyrax/actors/file_set_actor.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'
     - 'app/services/hyrax/user_stat_importer.rb'

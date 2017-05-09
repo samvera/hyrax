@@ -11,8 +11,6 @@ module Hyrax
     # The goal of this actor is to mutate the ordered_members with as few writes
     # as possible, because changing ordered_members is slow. This class only
     # writes changes, not the full ordered list.
-    #
-    # TODO: Perhaps this can subsume AttachFilesActor
     class AttachMembersActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful

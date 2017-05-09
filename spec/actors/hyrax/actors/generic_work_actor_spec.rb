@@ -6,8 +6,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:file_path) { File.join(fixture_path, 'image.png') }
-  let(:file) { Rack::Test::UploadedFile.new(file_path, 'image/png', false) }
+  let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
   # stub out redis connection
   let(:redlock_client_stub) do
     client = double('redlock client')
@@ -20,24 +19,38 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     Hyrax::CurationConcern.actor
   end
 
-  let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
-
   describe '#create' do
-    let(:curation_concern) { GenericWork.new }
+    let(:curation_concern) { create(:generic_work, user: user) }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
     let(:attributes) { {} }
-    let(:current_ability) { Ability.new(user) }
-    let(:env) { Hyrax::Actors::Environment.new(curation_concern, current_ability, attributes) }
+    let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+    let(:file) { fixture_file_upload('/world.png', 'image/png') }
+    let(:uploaded_file) { Hyrax::UploadedFile.create(file: file, user: user) }
+    let(:terminator) { Hyrax::Actors::Terminator.new }
+
+    subject(:middleware) do
+      stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+        middleware.use Hyrax::Actors::CreateWithFilesActor
+        middleware.use Hyrax::Actors::AddToWorkActor
+        middleware.use Hyrax::Actors::InterpretVisibilityActor
+        middleware.use described_class
+      end
+      stack.build(terminator)
+    end
+
+    before do
+      allow(terminator).to receive(:create).and_return(true)
+    end
 
     context 'failure' do
       before do
-        allow(subject).to receive(:attach_files).and_return(true)
+        allow(middleware).to receive(:attach_files).and_return(true)
       end
 
       # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
       it 'returns false', :clean_repo do
         expect(curation_concern).to receive(:save).and_return(false)
-        expect(subject.create(env)).to be false
+        expect(middleware.create(env)).to be false
       end
     end
 
@@ -51,7 +64,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         allow(CharacterizeJob).to receive(:perform_later).and_return(true)
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
-        subject.create(env)
+        middleware.create(env)
       end
     end
 
@@ -64,26 +77,26 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       context 'with embargo' do
         context "with attached files" do
           let(:date) { Time.zone.today + 2 }
+          let(:uploaded_file_ids) { [uploaded_file.id] }
           let(:attributes) do
             { title: ['New embargo'], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
               visibility_during_embargo: 'authenticated', embargo_release_date: date.to_s,
               visibility_after_embargo: 'open', visibility_during_lease: 'open',
               lease_expiration_date: '2014-06-12', visibility_after_lease: 'restricted',
               admin_set_id: admin_set.id,
-              files: [
-                file
-              ],
+              uploaded_files: uploaded_file_ids,
               license: ['http://creativecommons.org/licenses/by/3.0/us/'] }
           end
 
           it "applies embargo to attached files" do
             allow(CharacterizeJob).to receive(:perform_later).and_return(true)
-            subject.create(env)
-            file = curation_concern.file_sets.first
-            expect(file).to be_persisted
-            expect(file.visibility_during_embargo).to eq 'authenticated'
-            expect(file.visibility_after_embargo).to eq 'open'
-            expect(file.visibility).to eq 'authenticated'
+            middleware.create(env)
+            curation_concern.reload
+            file_set = curation_concern.file_sets.first
+            expect(file_set).to be_persisted
+            expect(file_set.visibility_during_embargo).to eq 'authenticated'
+            expect(file_set.visibility_after_embargo).to eq 'open'
+            expect(file_set.visibility).to eq 'authenticated'
           end
         end
       end
@@ -97,20 +110,20 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
         it "attaches the parent" do
           allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(true)
-          expect(subject.create(env)).to be true
-          expect(curation_concern.in_works).to eq [parent]
+          expect(middleware.create(env)).to be true
+          expect(curation_concern.reload.in_works).to eq [parent]
         end
         it "does not attach the parent" do
           allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(false)
-          expect(subject.create(env)).to be false
-          expect(curation_concern.in_works).to eq []
+          expect(middleware.create(env)).to be false
+          expect(curation_concern.reload.in_works).to eq []
         end
       end
 
       context 'with a file' do
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
-            a[:files] = file
+            a[:uploaded_files] = [uploaded_file]
           end
         end
 
@@ -126,7 +139,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             expect(Hyrax.config.callback).to receive(:run).with(:after_create_fileset, FileSet, user)
 
             expect(file_actor).to receive(:ingest_file).and_return(true)
-            expect(subject.create(env)).to be true
+            expect(middleware.create(env)).to be true
+            curation_concern.reload
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -143,9 +157,10 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       context 'with multiple files' do
         let(:file_actor) { double }
+        let(:uploaded_file2) { Hyrax::UploadedFile.create(file: file, user: user) }
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
-            a[:files] = [file, file]
+            a[:uploaded_files] = [uploaded_file.id, uploaded_file2.id]
           end
         end
 
@@ -158,7 +173,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           it 'stamps each file with the access rights' do
             expect(file_actor).to receive(:ingest_file).and_return(true).twice
 
-            expect(subject.create(env)).to be true
+            expect(middleware.create(env)).to be true
+            curation_concern.reload
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
             expect(curation_concern.date_modified).to eq xmas
@@ -178,7 +194,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
 
         it 'stamps each link with the access rights' do
-          expect(subject.create(env)).to be true
+          expect(middleware.create(env)).to be true
           expect(curation_concern).to be_persisted
           expect(curation_concern.title).to eq ['this is present']
         end
@@ -188,6 +204,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
   describe '#update' do
     let(:curation_concern) { create(:generic_work, user: user, admin_set_id: admin_set.id) }
+
+    subject { Hyrax::CurationConcern.actor }
 
     context 'failure' do
       let(:attributes) { {} }
