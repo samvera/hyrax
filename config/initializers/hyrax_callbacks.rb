@@ -36,7 +36,8 @@ Hyrax.config.callback.set(:after_batch_create_failure) do |user|
 end
 
 Hyrax.config.callback.set(:after_import_url_success) do |file_set, user|
-  Hyrax::ImportUrlSuccessService.new(file_set, user).call
+  # ImportUrlSuccessService was removed here since it's duplicative of
+  # the :after_create_fileset notification
 end
 
 Hyrax.config.callback.set(:after_import_url_failure) do |file_set, user|
