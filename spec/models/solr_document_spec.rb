@@ -2,6 +2,18 @@ RSpec.describe ::SolrDocument, type: :model do
   let(:document) { described_class.new(attributes) }
   let(:attributes) { {} }
 
+  describe "#hydra_model" do
+    subject { document.hydra_model }
+    context "when no has_model_ssim exists" do
+      it { is_expected.to be nil }
+    end
+
+    context "when has_model_ssim exists" do
+      let(:attributes) { { "has_model_ssim" => ['GenericWork'] } }
+      it { is_expected.to be GenericWork }
+    end
+  end
+
   describe "#itemtype" do
     let(:attributes) { { resource_type_tesim: ['Article'] } }
     it "delegates to the Hyrax::ResourceTypesService" do
