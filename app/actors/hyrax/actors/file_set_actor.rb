@@ -29,7 +29,7 @@ module Hyrax
         yield(file_set) if block_given?
       end
 
-      # Called from AttachFilesActor, FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
+      # Called from FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
       # @param [String] relation ('original_file')
       # @param [Boolean] asynchronous (true) set to false if you don't want to launch a new background job.

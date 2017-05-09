@@ -10,7 +10,6 @@ module Hyrax
         middleware.use Hyrax::Actors::CollectionsMembershipActor
         middleware.use Hyrax::Actors::AddToWorkActor
         middleware.use Hyrax::Actors::AssignRepresentativeActor
-        middleware.use Hyrax::Actors::AttachFilesActor
         middleware.use Hyrax::Actors::AttachMembersActor
         middleware.use Hyrax::Actors::ApplyOrderActor
         middleware.use Hyrax::Actors::InterpretVisibilityActor
