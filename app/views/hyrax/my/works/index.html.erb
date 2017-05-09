@@ -29,7 +29,7 @@
               class: 'btn btn-primary'
             ) %>
       <% else # simple link to the first work type %>
-        <% if Flipflip.enable_batch_upload? %>
+        <% if Flipflop.enable_batch_upload? %>
           <%= link_to(
               t(:'helpers.action.batch.new'),
               hyrax.new_batch_upload_path(payload_concern: create_work_presenter.first_model),
