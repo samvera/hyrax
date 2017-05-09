@@ -130,7 +130,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     context "without solr" do
       before do
         allow(controller).to receive(:repository).and_return(instance_double(Blacklight::Solr::Repository))
-        allow(controller.repository).to receive(:search).and_raise Blacklight::Exceptions::ECONNREFUSED
+        allow(controller.repository).to receive(:search).and_raise Blacklight::Exceptions::InvalidRequest
       end
 
       it "errors gracefully" do
