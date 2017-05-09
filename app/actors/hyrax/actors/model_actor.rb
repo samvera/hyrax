@@ -23,7 +23,7 @@ module Hyrax
       private
 
         def model_actor(env)
-          actor_identifier = env.curation_concern.class.to_s.split('::').last
+          actor_identifier = env.curation_concern.class
           klass = "Hyrax::Actors::#{actor_identifier}Actor".constantize
           klass.new(next_actor)
         end
