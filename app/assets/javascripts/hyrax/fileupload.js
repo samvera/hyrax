@@ -3,10 +3,5 @@
 // hyraxUploader with other options (like afterSubmit), then override this file.
 Blacklight.onLoad(function() {
   var options = {};
-  <% if Rails.env.development? %>
-  // use sequential uploads in development to avoid database locking problems with sqlite3.
-  options.sequentialUploads = true;
-  options.limitConcurrentUploads = 1;
-  <% end %>
   $('#fileupload').hyraxUploader(options);
 });

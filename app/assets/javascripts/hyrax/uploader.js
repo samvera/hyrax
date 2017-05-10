@@ -22,19 +22,15 @@
   $.fn.extend({
     hyraxUploader: function( options ) {
       // Initialize our jQuery File Upload widget.
-      // TODO: get these values from configuration.
       this.fileupload($.extend({
         // xhrFields: {withCredentials: true},              // to send cross-domain cookies
         // acceptFileTypes: /(\.|\/)(png|mov|jpe?g|pdf)$/i, // not a strong check, just a regex on the filename
         // limitMultiFileUploadSize: 500000000, // bytes
-        limitConcurrentUploads: 6,
-        maxNumberOfFiles: 100,
-        maxFileSize: 500000000, // bytes, i.e. 500 MB
         autoUpload: true,
         url: '/uploads/',
         type: 'POST',
         dropZone: $(this).find('.dropzone')
-      }, options))
+      }, Hyrax.config.uploader, options))
       .bind('fileuploadadded', function (e, data) {
         $(e.currentTarget).find('button.cancel').removeClass('hidden');
       });
