@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
-  let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
-
   before do
     allow(view).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:provide).and_yield
@@ -21,16 +19,47 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
   context "when the user can add works" do
     let(:ability) { instance_double(Ability, can_create_any_work?: true) }
     let(:batch_enabled) { true }
-    it 'the line item displays the work and its actions' do
-      expect(rendered).to have_selector('h1', text: 'Works')
-      expect(rendered).to have_link('Create batch of works')
-      expect(rendered).to have_link('Add new work')
+
+    context 'with many presenters' do
+      let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
+
+      it 'the line item displays the work and its actions' do
+        expect(rendered).to have_selector('h1', text: 'Works')
+        expect(rendered).to have_link('Create batch of works')
+        expect(rendered).to have_link('Add new work')
+      end
+
+      context 'with enable_batch_upload off' do
+        let(:batch_enabled) { false }
+
+        it 'hides batch creation button' do
+          expect(rendered).not_to have_link('Create batch of works')
+        end
+      end
     end
 
-    context 'with enable_batch_upload off' do
-      let(:batch_enabled) { false }
-      it 'hides batch creation button' do
-        expect(rendered).not_to have_link('Create batch of works')
+    # GH-929
+    context 'without many presenters' do
+      let(:presenter) do
+        instance_double(
+          Hyrax::SelectTypeListPresenter,
+          many?: false,
+          first_model: GenericWork
+        )
+      end
+
+      it 'the line item displays the work and its actions' do
+        expect(rendered).to have_selector('h1', text: 'Works')
+        expect(rendered).to have_link('Create batch of works')
+        expect(rendered).to have_link('Add new work')
+      end
+
+      context 'with enable_batch_upload off' do
+        let(:batch_enabled) { false }
+
+        it 'hides batch creation button' do
+          expect(rendered).not_to have_link('Create batch of works')
+        end
       end
     end
   end
