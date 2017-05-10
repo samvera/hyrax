@@ -147,6 +147,8 @@ Hyrax = {
     },
 
     // Saved so that inline javascript can put data somewhere.
-    statistics: {}
+    statistics: {},
 
+    // initialized in hyrax/config.js
+    config: {}
 };
