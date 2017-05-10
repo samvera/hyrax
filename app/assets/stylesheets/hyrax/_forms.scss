@@ -50,7 +50,27 @@ form {
 
 .set-access-controls {
   label { font-weight: normal; }
-  & .form-group { padding: 0 1.75em; }
+  & .form-group {
+    padding: 0 1.75em;
+
+    &.file_set_visibility_during_embargo,
+    &.file_set_visibility_during_lease {
+      padding-right: 0;
+    }
+
+    &.file_set_embargo_release_date,
+    &.file_set_lease_expiration_date,
+    &.file_set_visibility_after_embargo,
+    &.file_set_visibility_after_lease {
+      padding-left: 0;
+    }
+
+    &.file_set_visibility_after_embargo,
+    &.file_set_visibility_after_lease {
+      margin-bottom: 3px;
+      margin-top: 3px;
+    }
+  }
 
   #collapseEmbargo .form-group {
     padding: 0;
