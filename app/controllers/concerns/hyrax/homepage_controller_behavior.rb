@@ -35,14 +35,14 @@ module Hyrax::HomepageControllerBehavior
                                             .rows(5)
       response = repository.search(builder)
       response.documents
-    rescue Blacklight::Exceptions::ECONNREFUSED
+    rescue Blacklight::Exceptions::ECONNREFUSED, Blacklight::Exceptions::InvalidRequest
       []
     end
 
     def recent
       # grab any recent documents
       (_, @recent_documents) = search_results(q: '', sort: sort_field, rows: 4)
-    rescue Blacklight::Exceptions::ECONNREFUSED
+    rescue Blacklight::Exceptions::ECONNREFUSED, Blacklight::Exceptions::InvalidRequest
       @recent_documents = []
     end
 
