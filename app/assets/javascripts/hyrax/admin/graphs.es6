@@ -17,7 +17,7 @@ export default class {
     // Don't attempt to initialize Morris if the selector is not on the page
     // otherwise it raises a "Graph container element not found" error
     hasSelector(selector) {
-      return $(`#${selector}`).size() > 0;
+      return $(`#${selector}`).length > 0;
     }
 
     // Draws a bar chart of new user signups
