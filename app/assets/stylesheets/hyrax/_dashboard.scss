@@ -141,3 +141,13 @@ ul.collapsing > li > a {
     }
   }
 }
+
+.works-list {
+  .workflow-state {
+    white-space: nowrap;
+  }
+
+  .media-body {
+    width: 18vw;
+  }
+}

@@ -8,9 +8,5 @@ module Hyrax
     # deposited may have gone through a workflow which has removed their ability
     # to edit the work.
     self.default_processor_chain -= [:add_access_controls_to_solr_params]
-
-    def only_works?
-      true
-    end
   end
 end
