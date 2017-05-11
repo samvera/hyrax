@@ -11,9 +11,9 @@ module Hyrax
       sipity_entity.workflow_state_name if sipity_entity
     end
 
-    # TODO: maybe i18n here?
     def state_label
-      state
+      return unless state
+      I18n.t("hyrax.workflow.state.#{state}", default: state.humanize)
     end
 
     # Returns an array of tuples (key, label) appropriate for a radio group
