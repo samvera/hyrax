@@ -3,6 +3,11 @@ module Hyrax
   class Admin::WorkflowsController < ApplicationController
     before_action :ensure_admin!
     layout 'dashboard'
+    class_attribute :deposited_workflow_state_name
+
+    # Works that are in this workflow state (see workflow json template) are excluded from the
+    # status list and display in the "Published" tab
+    self.deposited_workflow_state_name = 'deposited'
 
     def index
       add_breadcrumb t(:'hyrax.controls.home'), root_path
@@ -19,10 +24,6 @@ module Hyrax
         # Even though the user can view this admin set, they may not be able to view
         # it on the admin page.
         authorize! :read, :admin_dashboard
-      end
-
-      def deposited_workflow_state_name
-        'deposited'
       end
   end
 end
