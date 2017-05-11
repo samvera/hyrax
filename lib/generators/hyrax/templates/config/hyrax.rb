@@ -46,8 +46,8 @@ Hyrax.config do |config|
   # Hostpath to be used in Endnote exports
   # config.persistent_hostpath = 'http://localhost/files/'
 
-  # If you have ffmpeg installed and want to transcode audio and video uncomment this line
-  # config.enable_ffmpeg = true
+  # If you have ffmpeg installed and want to transcode audio and video set to true
+  # config.enable_ffmpeg = false
 
   # Hyrax uses NOIDs for files and collections instead of Fedora UUIDs
   # where NOID = 10-character string and UUID = 32-character string w/ hyphens
