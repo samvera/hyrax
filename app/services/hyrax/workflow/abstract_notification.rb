@@ -19,7 +19,9 @@ module Hyrax
       end
 
       def call
-        user.send_message(users_to_notify.uniq, message, subject)
+        users_to_notify.uniq.each do |recipient|
+          user.send_message(recipient, message, subject)
+        end
       end
 
       protected
