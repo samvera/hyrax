@@ -1,4 +1,4 @@
-class ResolrizeJob < ActiveJob::Base
+class ResolrizeJob < Hyrax::ApplicationJob
   def perform
     ActiveFedora::Base.reindex_everything
   end

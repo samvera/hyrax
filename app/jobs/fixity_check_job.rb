@@ -1,4 +1,4 @@
-class FixityCheckJob < ActiveJob::Base
+class FixityCheckJob < Hyrax::ApplicationJob
   # URI of the resource to check fixity for.
   # This URI could include the actual resource (e.g. content) and the version to fixity check:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1

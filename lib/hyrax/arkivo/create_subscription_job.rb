@@ -3,7 +3,7 @@ module Hyrax
     class SubscriptionError < RuntimeError
     end
 
-    class CreateSubscriptionJob < ActiveJob::Base
+    class CreateSubscriptionJob < Hyrax::ApplicationJob
       attr_reader :user
 
       def perform(user_key)
