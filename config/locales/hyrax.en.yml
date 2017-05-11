@@ -14,6 +14,10 @@ en:
           based_near: Location
           contributor: Contributors
           keyword: Keyword
+        facet:
+          admin_set_sim: "Administrative set"
+          suppressed_bsi: "Status"
+          resource_type_sim: "Resource type"
   errors:
     messages:
       carrierwave_download_error: "Couldn't download image."

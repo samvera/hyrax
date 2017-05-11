@@ -14,6 +14,10 @@ es:
           based_near: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
+        facet:
+          admin_set_sim: "Conjunto administrativo"
+          suppressed_bsi: "Estadio"
+          resource_type_sim: "Tipo de recurso"
   errors:
     messages:
       carrierwave_download_error: "No se pudo descargar la imagen."
