@@ -5,7 +5,7 @@ module Hyrax
       before_action :ensure_admin!
 
       def search_builder_class
-        Hyrax::ActiveWorksSearchBuilder
+        Hyrax::WorksSearchBuilder
       end
 
       private

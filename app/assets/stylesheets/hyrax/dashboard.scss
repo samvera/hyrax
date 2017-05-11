@@ -14,12 +14,20 @@ $admin-content-background-color: #f0f0f0 !default;
 $admin-vertical-padding: 0 !default;
 $admin-panel-border-color: #dedede !default;
 
-.my-works-list {
+.works-list {
   .highlighted-work {
     color: #ffd700;
     background-color: $gray-light;
     border-radius: 10px;
     padding: 2px;
+  }
+
+  .workflow-state {
+    white-space: nowrap;
+  }
+
+  .media-body {
+    width: 18vw;
   }
 }
 
