@@ -4,7 +4,7 @@ RSpec.describe Hyrax::RoleRegistry do
   let(:role_registry) { described_class.new }
   describe '#role_names (without adding roles)' do
     subject { role_registry.role_names }
-    it { is_expected.to eq(['depositing', 'managing']) }
+    it { is_expected.to eq(['approving', 'depositing', 'managing']) }
   end
 
   describe '#registered_role?' do
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::RoleRegistry do
     subject { role_registry.add(name: 'captaining', description: 'Grants captain duties') }
     it 'includes those added via #add' do
       expect { subject }.to change { role_registry.role_names }
-        .from(['depositing', 'managing']).to(['captaining', 'depositing', 'managing'])
+        .from(['approving', 'depositing', 'managing']).to(['approving', 'captaining', 'depositing', 'managing'])
     end
   end
 

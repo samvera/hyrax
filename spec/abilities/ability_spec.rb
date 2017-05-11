@@ -48,6 +48,19 @@ RSpec.describe 'Hyrax::Ability', type: :model do
                                                 agents: user)
     end
 
+    context "as an administrator" do
+      # Assign a role that should not grant review ability
+      let(:role_name) { 'depositing' }
+
+      before do
+        Sipity::Role.create(name: 'approving')
+        # Admin-ify the user
+        allow(user).to receive_messages(groups: ['admin', 'registered'])
+      end
+
+      it { is_expected.to be true }
+    end
+
     context "as a depositor" do
       let(:role_name) { 'depositing' }
 
@@ -58,7 +71,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
       it { is_expected.to be false }
     end
 
-    context "as a manager" do
+    context "as an approver" do
       let(:role_name) { 'approving' }
 
       it { is_expected.to be true }

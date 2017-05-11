@@ -9,6 +9,10 @@ module Hyrax
     MANAGING = 'managing'.freeze
 
     # @api public
+    # You may develop your application assuming that the 'approving' role will always be present and valid
+    APPROVING = 'approving'.freeze
+
+    # @api public
     # You may develop your application assuming that the 'depositing' role will always be present and valid
     DEPOSITING = 'depositing'.freeze
 
@@ -20,6 +24,7 @@ module Hyrax
     # @see Sipity::Role for data integrity enforcement
     MAGIC_ROLES = {
       MANAGING => 'Grants access to management tasks'.freeze,
+      APPROVING => 'Grants access to approval tasks'.freeze,
       DEPOSITING => 'Grants access to depositing tasks'.freeze
     }.freeze
 

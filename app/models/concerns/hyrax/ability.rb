@@ -195,8 +195,13 @@ module Hyrax
       end
 
       def can_review_submissions?
+        # Short-circuit logic for admins, who should have the ability
+        # to review submissions whether or not they are explicitly
+        # granted the approving role in any workflows
+        return true if admin?
+
         # Are there any workflows where this user has the "approving" responsibility
-        approving_role = Sipity::Role.find_by(name: 'approving'.freeze)
+        approving_role = Sipity::Role.find_by(name: Hyrax::RoleRegistry::APPROVING)
         return false unless approving_role
         Hyrax::Workflow::PermissionQuery.scope_processing_agents_for(user: current_user).any? do |agent|
           agent.workflow_responsibilities.joins(:workflow_role)
