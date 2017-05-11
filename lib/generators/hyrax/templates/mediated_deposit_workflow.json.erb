@@ -32,7 +32,8 @@
                         }
                     ],
                     "methods": [
-                        "Hyrax::Workflow::DeactivateObject"
+                        "Hyrax::Workflow::DeactivateObject",
+                        "Hyrax::Workflow::GrantEditToDepositor"
                     ]
                 }, {
                     "name": "approve",
@@ -46,6 +47,8 @@
                         }
                     ],
                     "methods": [
+                        "Hyrax::Workflow::GrantReadToDepositor",
+                        "Hyrax::Workflow::RevokeEditFromDepositor",
                         "Hyrax::Workflow::ActivateObject"
                     ]
                 }, {
