@@ -1,6 +1,7 @@
 module Hyrax
-  # Added to allow for the Hyrax::My::WorksController to show only things I have edit access to
-  class MyWorksSearchBuilder < WorksSearchBuilder
+  # Added to allow for the Hyrax::My::WorksController to show only things I have deposited
+  # If the work went through mediated deposit, I may no longer have edit access to it.
+  class MyWorksSearchBuilder < ActiveWorksSearchBuilder
     self.default_processor_chain += [:show_only_resources_deposited_by_current_user]
 
     # We remove the access controls filter, because some of the works a user has
