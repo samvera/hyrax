@@ -3,7 +3,7 @@
 # * visibility
 # * lease
 # * embargo
-class VisibilityCopyJob < ActiveJob::Base
+class VisibilityCopyJob < Hyrax::ApplicationJob
   # @api public
   # @param [#file_sets, #visibility, #lease, #embargo] work - a Work model
   def perform(work)

@@ -1,7 +1,7 @@
 # A generic job for sending events to a user.
 #
 # @abstract
-class EventJob < ActiveJob::Base
+class EventJob < Hyrax::ApplicationJob
   include Rails.application.routes.url_helpers
   # For link_to
   include ActionView::Helpers

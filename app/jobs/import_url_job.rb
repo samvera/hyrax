@@ -6,7 +6,7 @@ require 'browse_everything/retriever'
 # download that file and put it into Fedora
 # Called by AttachFilesToWorkJob (when files are uploaded to s3)
 # and CreateWithRemoteFilesActor when files are located in some other service.
-class ImportUrlJob < ActiveJob::Base
+class ImportUrlJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|

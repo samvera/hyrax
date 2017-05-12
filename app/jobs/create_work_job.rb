@@ -1,5 +1,5 @@
 # This is a job spawned by the BatchCreateJob
-class CreateWorkJob < ActiveJob::Base
+class CreateWorkJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|

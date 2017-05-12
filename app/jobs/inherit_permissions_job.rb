@@ -1,6 +1,6 @@
 # A job to apply work permissions to all contained files set
 #
-class InheritPermissionsJob < ActiveJob::Base
+class InheritPermissionsJob < Hyrax::ApplicationJob
   # Perform the copy from the work to the contained filesets
   #
   # @param work containing access level and filesets
