@@ -1,4 +1,4 @@
-gem 'hyrax', '1.0.0.alpha', github: 'projecthydra-labs/hyrax'
+gem 'hyrax', '1.0.0.rc2'
 
 run 'bundle install'
 
