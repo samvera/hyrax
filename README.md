@@ -13,7 +13,7 @@ Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra-labs/hyra
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/projecthydra-labs/hyrax.png?label=ready&milestone=1.0.0&title=Ready)](https://waffle.io/projecthydra-labs/hyrax?milestone=1.0.0)
+[![Ready Tickets](https://badge.waffle.io/projecthydra-labs/hyrax.png?label=ready&milestone=2.0.0&title=Ready)](https://waffle.io/projecthydra-labs/hyrax?milestone=2.0.0)
 
 # Table of Contents
 
@@ -48,7 +48,7 @@ Hyrax is a front-end based on the robust [Hydra](http://projecthydra.org) framew
 
 ## Feature list
 
-Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/projecthydra/sufia/wiki/Feature-matrix). See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn more.
+Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/projecthydra-labs/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/projecthydra-labs/hyrax/wiki/Hyrax-Management-Guide) to learn more.
 
 For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
 
@@ -59,7 +59,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v1.0.0.alpha__. If you are looking for instructions on installing a different
+v2.0.0.alpha__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -80,7 +80,7 @@ Hyrax requires the following software to work:
 1. [FITS](#characterization) version 1.0.x (1.0.5 is known to be good)
 1. [LibreOffice](#derivatives)
 
-**NOTE: The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
+**NOTE: The [Hyrax Development Guide](https://github.com/projecthydra-labs/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
 
@@ -117,7 +117,7 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-We recommend the latest Rails 5.0 release. 
+We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
@@ -126,10 +126,9 @@ gem install rails -v 5.0.2
 
 ### JavaScript runtime
 
-Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.  
+Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
 
 NOTE: nodejs is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
-
 
 # Creating a Hyrax-based app
 
@@ -185,7 +184,7 @@ class Application < Rails::Application
 end
 ```
 
-**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/projecthydra/sufia/wiki/Using-Sidekiq-with-Sufia).
+**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Hyrax Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/projecthydra-labs/hyrax/wiki/Using-Sidekiq-with-Hyrax).
 
 ## Create default administrative set
 
@@ -221,11 +220,11 @@ Namespaces can be included in the work My::MovingImage by adding the path.
 rails generate hyrax:work My/MovingImage
 ```
 
-You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
+You may wish to [customize your work type](https://github.com/projecthydra-labs/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
 
 # Managing a Hyrax-based app
 
-The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
+The [Hyrax Management Guide](https://github.com/projecthydra-labs/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
 * Production implementations
 * Configuration of background workers
@@ -266,11 +265,11 @@ If you'd like to help the development effort and you're not sure where to get st
 
 # Development
 
-The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+The [Hyrax Development Guide](https://github.com/projecthydra-labs/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
 
 # Release process
 
-See the [release management process](https://github.com/projecthydra/sufia/wiki/Release-management-process).
+See the [release management process](https://github.com/projecthydra-labs/hyrax/wiki/Release-management-process).
 
 # Acknowledgments
 
