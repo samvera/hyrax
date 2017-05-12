@@ -40,7 +40,7 @@ module Hyrax
       head :ok
     end
 
-    protected
+    private
 
       def authorize_user!
         authorize! :edit, params[:id]

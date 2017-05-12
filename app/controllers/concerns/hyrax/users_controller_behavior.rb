@@ -26,7 +26,7 @@ module Hyrax::UsersControllerBehavior
     @notify_number = current_user.mailbox.inbox(unread: true).count
   end
 
-  protected
+  private
 
     # TODO: this should move to a service.
     # Returns a list of users excluding the system users and guest_users

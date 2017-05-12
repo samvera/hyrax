@@ -20,7 +20,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       def permitted_params
         params.require(:content_block).permit(:marketing_text,

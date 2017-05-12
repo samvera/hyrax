@@ -26,7 +26,7 @@ module Hyrax
       @parent_id ||= new_or_create? ? params[:parent_id] : lookup_parent_from_child.id
     end
 
-    protected
+    private
 
       def new_or_create?
         %w[create new].include? action_name

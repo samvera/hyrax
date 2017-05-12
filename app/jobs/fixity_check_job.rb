@@ -37,7 +37,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
     log
   end
 
-  protected
+  private
 
     def run_check(file_set_id, file_id, uri)
       service = ActiveFedora::FixityService.new(uri)
@@ -59,8 +59,6 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
       log
     end
-
-  private
 
     def logger
       ActiveFedora::Base.logger

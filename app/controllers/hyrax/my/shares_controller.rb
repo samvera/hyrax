@@ -9,7 +9,7 @@ module Hyrax
         super
       end
 
-      protected
+      private
 
         def search_action_url(*args)
           hyrax.dashboard_shares_url(*args)

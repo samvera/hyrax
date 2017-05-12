@@ -16,7 +16,7 @@ class SingleUseLink < ActiveRecord::Base
     downloadKey
   end
 
-  protected
+  private
 
     def expiration_date_cannot_be_in_the_past
       errors.add(:expires, "can't be in the past") if expired?

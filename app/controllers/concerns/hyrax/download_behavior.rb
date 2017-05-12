@@ -27,7 +27,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       # Override the Hydra::Controller::DownloadBehavior#content_options
       def content_options
@@ -76,8 +76,6 @@ module Hyrax
         association = dereference_file(default_file_reference)
         association.reader if association
       end
-
-    private
 
       def mime_type_for(file)
         MIME::Types.type_for(File.extname(file)).first.content_type

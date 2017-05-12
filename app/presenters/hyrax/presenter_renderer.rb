@@ -21,7 +21,7 @@ module Hyrax
       @view_context.safe_join(terms.map { |term| yield self, term })
     end
 
-    protected
+    private
 
       def render_show_field_partial(field_name, locals)
         partial = find_field_partial(field_name)

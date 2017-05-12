@@ -35,7 +35,7 @@ module Hyrax
     # response to the user.
     def after_deliver; end
 
-    protected
+    private
 
       def build_contact_form
         @contact_form = Hyrax::ContactForm.new(contact_form_params)

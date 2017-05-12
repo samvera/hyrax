@@ -1,7 +1,7 @@
 module Hyrax
   module Workflow
     class ChangesRequiredNotification < AbstractNotification
-      protected
+      private
 
         def subject
           'Your deposit requires changes'
@@ -10,8 +10,6 @@ module Hyrax
         def message
           "#{title} (#{link_to work_id, document_path}) requires additional changes before approval.\n\n '#{comment}'"
         end
-
-      private
 
         def users_to_notify
           user_key = document.depositor

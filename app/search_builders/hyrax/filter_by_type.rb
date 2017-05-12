@@ -12,7 +12,7 @@ module Hyrax
       solr_parameters[:fq] << "{!terms f=has_model_ssim}#{models_to_solr_clause}"
     end
 
-    protected
+    private
 
       def only_collections?
         generic_type_field.include?('Collection')
@@ -27,8 +27,6 @@ module Hyrax
       def models
         work_classes + collection_classes
       end
-
-    private
 
       def models_to_solr_clause
         # to_class_uri is deprecated in AF 11

@@ -33,7 +33,7 @@ module Hyrax
         env.curation_concern.destroy
       end
 
-      protected
+      private
 
         def run_callbacks(hook, env)
           Hyrax.config.callback.run(hook, env.curation_concern, env.user)

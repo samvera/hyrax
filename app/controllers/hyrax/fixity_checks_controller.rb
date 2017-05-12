@@ -18,7 +18,7 @@ module Hyrax
       render json: fixity_check_service.fixity_check
     end
 
-    protected
+    private
 
       def fixity_check_service
         # We are calling `async_jobs: false` to ensure we get a fixity result to

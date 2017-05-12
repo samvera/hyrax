@@ -20,7 +20,7 @@ module Hyrax
         user.last_sign_in_at || user.created_at
       end
 
-      protected
+      private
 
         # Returns a list of users excluding the system users and guest_users
         def search

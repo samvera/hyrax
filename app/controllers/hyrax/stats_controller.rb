@@ -13,7 +13,7 @@ module Hyrax
       @stats = Hyrax::FileUsage.new(params[:id])
     end
 
-    protected
+    private
 
       def add_breadcrumb_for_controller
         add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path

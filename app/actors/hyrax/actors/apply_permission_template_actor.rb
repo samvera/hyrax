@@ -10,7 +10,7 @@ module Hyrax
         next_actor.create(env)
       end
 
-      protected
+      private
 
         def add_edit_users(env)
           return if env.attributes[:admin_set_id].blank?

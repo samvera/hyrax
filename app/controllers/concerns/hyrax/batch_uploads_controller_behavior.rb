@@ -39,7 +39,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       def build_form
         super
