@@ -1,5 +1,7 @@
 module Hyrax
   class WorkflowPresenter
+    include ActionView::Helpers::TagHelper
+
     def initialize(solr_document, current_ability)
       @solr_document = solr_document
       @current_ability = current_ability
@@ -26,6 +28,11 @@ module Hyrax
     def comments
       return [] unless sipity_entity
       sipity_entity.comments
+    end
+
+    def badge
+      return unless state
+      content_tag(:span, state_label, class: "state state-#{state} label label-primary")
     end
 
     private

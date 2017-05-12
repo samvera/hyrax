@@ -1,5 +1,6 @@
-<h1><%= @presenter %> </h1>
-<span class="state state-<%= @presenter.workflow.state %>"><%= @presenter.workflow.state_label %></span>
+<h1>
+    <%= @presenter %> <%= @presenter.workflow.badge %>
+</h1>
 <% if @parent_presenter %>
     <ul class="breadcrumb">
         <li><%= link_to @parent_presenter, polymorphic_path([main_app, @parent_presenter]) %></li>
