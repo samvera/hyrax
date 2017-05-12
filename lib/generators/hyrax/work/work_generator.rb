@@ -73,6 +73,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
   def create_i18n
     template('locale.en.yml.erb', File.join('config/locales/', class_path, "#{file_name}.en.yml"))
     template('locale.es.yml.erb', File.join('config/locales/', class_path, "#{file_name}.es.yml"))
+    template('locale.zh.yml.erb', File.join('config/locales/', class_path, "#{file_name}.zh.yml"))
   end
 
   def create_actor_spec
