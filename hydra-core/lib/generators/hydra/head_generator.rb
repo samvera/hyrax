@@ -33,14 +33,9 @@ module Hydra
       end
     end
 
-    def inject_test_framework
+    def install_rspec
       return if options[:'skip-rspec']
-
-      application("\n" <<
-        "    config.generators do |g|\n" <<
-        "      g.test_framework :rspec, :spec => true\n" <<
-        "    end\n\n"
-      )
+      generate 'rspec:install'
     end
 
     def overwrite_catalog_controller
