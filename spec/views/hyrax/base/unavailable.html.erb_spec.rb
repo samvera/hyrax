@@ -7,13 +7,14 @@ RSpec.describe 'hyrax/base/unavailable.html.erb', type: :view do
            to_param: '123',
            model_name: GenericWork.model_name)
   end
-  let(:workflow) do
-    double('workflow', state: 'deposited', state_label: 'really deposited')
+  let(:workflow_presenter) do
+    double('workflow_presenter',
+           badge: '<span class="label label-primary state state-deposited">really deposited</span>')
   end
   let(:presenter) do
     double('presenter',
            to_s: 'super cool',
-           workflow: workflow,
+           workflow: workflow_presenter,
            human_readable_type: 'Generic Work')
   end
   let(:parent_presenter) do

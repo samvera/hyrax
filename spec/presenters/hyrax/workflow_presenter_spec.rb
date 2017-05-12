@@ -33,6 +33,24 @@ RSpec.describe Hyrax::WorkflowPresenter, no_clean: true do
     end
   end
 
+  describe "#badge" do
+    let(:workflow) { create(:workflow, name: 'testing') }
+    subject { presenter.badge }
+    context 'with a Sipity::Entity' do
+      before do
+        allow(entity).to receive(:workflow_state_name).and_return('complete')
+        allow(presenter).to receive(:sipity_entity).and_return(entity)
+      end
+      it { is_expected.to eq '<span class="state state-complete label label-primary">Complete</span>' }
+    end
+    context 'without a Sipity::Entity' do
+      before do
+        allow(presenter).to receive(:sipity_entity).and_return(nil)
+      end
+      it { is_expected.to be nil }
+    end
+  end
+
   describe "#comments" do
     subject { presenter.comments }
     context 'with a Sipity::Entity' do
