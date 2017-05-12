@@ -705,6 +705,7 @@ en:
         in_collections: This Work in Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
+        visibility_until: 'until'
         tab:
           files:         "Files"
           metadata:      "Descriptions"

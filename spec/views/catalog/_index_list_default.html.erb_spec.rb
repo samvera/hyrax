@@ -1,5 +1,4 @@
-
-describe 'catalog/_index_list_default', type: :view do
+RSpec.describe 'catalog/_index_list_default', type: :view do
   let(:attributes) do
     { 'creator_tesim'        => [''],
       'depositor_tesim'      => [''],
