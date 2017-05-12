@@ -27,7 +27,7 @@ module Hyrax::HomepageControllerBehavior
     recent
   end
 
-  protected
+  private
 
     def fetch_admin_sets
       return [] unless Flipflop.assign_admin_set?

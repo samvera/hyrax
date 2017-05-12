@@ -18,7 +18,7 @@ module Hyrax
         end
       end
 
-      protected
+      private
 
         def fetch_thumbnail(object)
           return object if object.thumbnail_id == object.id

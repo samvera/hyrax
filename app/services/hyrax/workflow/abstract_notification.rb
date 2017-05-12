@@ -24,7 +24,7 @@ module Hyrax
         end
       end
 
-      protected
+      private
 
         def subject
           raise NotImplementedError, "Implement #subject in a child class"
@@ -43,8 +43,6 @@ module Hyrax
           key = document.model_name.singular_route_key
           Rails.application.routes.url_helpers.send(key + "_path", document.id)
         end
-
-      private
 
         def users_to_notify
           recipients.fetch('to', []) + recipients.fetch('cc', [])

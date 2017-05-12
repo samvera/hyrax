@@ -22,7 +22,7 @@ module Hyrax
         subject.work.update_index # So that the new actions and state are written into solr.
       end
 
-      protected
+      private
 
         def update_sipity_workflow_state
           return true if action.resulting_workflow_state_id.blank?

@@ -13,7 +13,7 @@ module Hyrax
         super
       end
 
-      protected
+      private
 
         def search_action_url(*args)
           hyrax.my_works_url(*args)

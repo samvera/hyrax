@@ -9,7 +9,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       def list_params
         params.require(:featured_work_list).permit(featured_works_attributes: [:id, :order])

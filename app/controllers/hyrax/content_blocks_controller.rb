@@ -16,7 +16,7 @@ module Hyrax
       redirect_back fallback_location: hyrax.content_blocks_path
     end
 
-    protected
+    private
 
       def create_params
         params.require(:content_block).permit([:name, :value, :external_key])

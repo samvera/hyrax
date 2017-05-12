@@ -18,7 +18,7 @@ module Hyrax
         validate_files(files, env) && next_actor.update(env) && attach_files(files, env)
       end
 
-      protected
+      private
 
         def filter_file_ids(input)
           Array.wrap(input).select(&:present?)

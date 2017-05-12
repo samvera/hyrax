@@ -27,7 +27,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       # Override this method if you want to change the options sent when downloading
       # a derivative file
@@ -71,8 +71,6 @@ module Hyrax
         association = dereference_file(default_file_reference)
         association.reader if association
       end
-
-    private
 
       def mime_type_for(file)
         MIME::Types.type_for(File.extname(file)).first.content_type

@@ -6,7 +6,7 @@ module Hyrax
     self.stored_fields = %i[description license rights_statement date_created identifier related_url bibliographic_citation source]
     self.symbol_fields = %i[import_url]
 
-    protected
+    private
 
       # This method overrides ActiveFedora::RDF::IndexingService
       # @return [ActiveFedora::Indexing::Map]

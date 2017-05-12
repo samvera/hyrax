@@ -40,7 +40,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     end
   end
 
-  protected
+  private
 
     def copy_remote_file(file_set, f)
       f.binmode

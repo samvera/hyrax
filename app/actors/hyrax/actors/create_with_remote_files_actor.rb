@@ -16,7 +16,7 @@ module Hyrax
         next_actor.update(env) && attach_files(env, remote_files)
       end
 
-      protected
+      private
 
         # @param [HashWithIndifferentAccess] remote_files
         # @return [TrueClass]

@@ -20,7 +20,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
     fixity_ok
   end
 
-  protected
+  private
 
     def run_check(file_set, file_id, uri)
       begin
@@ -38,8 +38,6 @@ class FixityCheckJob < Hyrax::ApplicationJob
       end
       ChecksumAuditLog.create!(pass: passing, file_set_id: file_set.id, version: uri, file_id: file_id)
     end
-
-  private
 
     def logger
       ActiveFedora::Base.logger

@@ -38,7 +38,7 @@ module Hyrax
       @download_link = hyrax.download_single_use_link_path(@su.downloadKey)
     end
 
-    protected
+    private
 
       def search_builder_class
         SingleUseLinkSearchBuilder

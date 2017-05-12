@@ -6,7 +6,7 @@ module Hyrax
       render json: fixity_check_service.fixity_check
     end
 
-    protected
+    private
 
       def fixity_check_service
         file_set = ::FileSet.find(params[:file_set_id])

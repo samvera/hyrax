@@ -81,7 +81,7 @@ module Hyrax
     # routed to /files/:id/citation
     def citation; end
 
-    protected
+    private
 
       def create_from_upload(params)
         # check error condition No files

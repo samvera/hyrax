@@ -14,7 +14,7 @@ module Hyrax
         batch.empty?
       end
 
-      protected
+      private
 
         def batch_ids_from_params
           if params['batch_document_ids'].blank?

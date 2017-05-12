@@ -17,7 +17,7 @@ module Hyrax
       solr_parameters[:fq] << "{!join from=#{from_field} to=id}id:#{collection_id}"
     end
 
-    protected
+    private
 
       def collection_id
         blacklight_params.fetch('id')
