@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::WorkIndexer do
-  let(:indexer) { described_class.new(work) }
-
+RSpec.describe GenericWorkIndexer do
   # TODO: file_set_ids returns an empty set unless you persist the work
   let(:user) { create(:user) }
   let(:service) { described_class.new(work) }
@@ -78,6 +76,30 @@ RSpec.describe Hyrax::WorkIndexer do
     it "indexed the roles and state" do
       expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq ["#{sipity_entity.workflow.name}-approve", "#{sipity_entity.workflow.name}-reject"]
       expect(solr_document.fetch('workflow_state_name_ssim')).to eq "initial"
+    end
+  end
+
+  describe "with a remote resource (based near)" do
+    mpls = <<EOF.strip_heredoc
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+          <gn:Feature rdf:about="http://sws.geonames.org/5037649/">
+          <gn:name>Minneapolis</gn:name>
+          </gn:Feature>
+          </rdf:RDF>
+EOF
+
+    before do
+      allow(service).to receive(:rdf_service).and_return(Hyrax::DeepIndexingService)
+      work.based_near_attributes = [{ id: 'http://sws.geonames.org/5037649/' }]
+      stub_request(:get, "http://sws.geonames.org/5037649/")
+        .to_return(status: 200, body: mpls,
+                   headers: { 'Content-Type' => 'application/rdf+xml;charset=UTF-8' })
+    end
+
+    it "indexes id and label" do
+      expect(solr_document.fetch('based_near_sim')).to eq ["http://sws.geonames.org/5037649/"]
+      expect(solr_document.fetch('based_near_label_sim')).to eq ["Minneapolis"]
     end
   end
 end

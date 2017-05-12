@@ -13,7 +13,7 @@ zh:
       fields:
         show:
           admin_set: "管理集内:"
-          based_near: "地点"
+          based_near_label: "地点"
           contributor: "贡献者"
           keyword: "关键词"
         facet:

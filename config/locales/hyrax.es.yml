@@ -11,7 +11,7 @@ es:
       fields:
         show:
           admin_set: "En Conjunto Administrativo:"
-          based_near: "Ubicación"
+          based_near_label: "Ubicación"
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
         facet:

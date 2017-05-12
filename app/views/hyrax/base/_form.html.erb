@@ -1,6 +1,7 @@
 <%= simple_form_for [main_app, @form],
                     html: {
-                      data: { behavior: 'work-form' },
+                      data: { behavior: 'work-form',
+                              'param-key' => @form.model_name.param_key },
                       multipart: true
                     } do |f| %>
   <% if f.object.errors.include?(:base) %>

@@ -97,7 +97,8 @@ RSpec.describe Hyrax::Forms::BatchEditForm do
                          :visibility_during_lease,
                          :lease_expiration_date,
                          :visibility_after_lease,
-                         :visibility]
+                         :visibility,
+                         { based_near_attributes: [:id, :_destroy] }]
     end
   end
 end

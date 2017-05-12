@@ -12,8 +12,9 @@ module Hyrax
         clean_end_punctuation(date_value) if date_value
       end
 
-      def setup_pub_place(work)
-        work.based_near.first if work.based_near
+      # @param [Hyrax::WorkShowPresenter] work_presenter
+      def setup_pub_place(work_presenter)
+        work_presenter.based_near_label.first if work_presenter.based_near_label
       end
 
       def setup_pub_publisher(work)

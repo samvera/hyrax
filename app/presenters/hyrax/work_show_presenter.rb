@@ -13,12 +13,13 @@ module Hyrax
     delegate :has?, :first, :fetch, :export_formats, :export_as, to: :solr_document
 
     # delegate fields from Hyrax::Works::Metadata to solr_document
-    delegate :based_near, :related_url, :depositor, :identifier, :resource_type,
+    delegate :based_near_label, :related_url, :depositor, :identifier, :resource_type,
              :keyword, :itemtype, :admin_set, to: :solr_document
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
-    # @param [ActionDispatch::Request] request the http request context
+    # @param [ActionDispatch::Request] request the http request context. Used so
+    #                                  the GraphExporter knows what URLs to draw.
     def initialize(solr_document, current_ability, request = nil)
       @solr_document = solr_document
       @current_ability = current_ability

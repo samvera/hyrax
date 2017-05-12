@@ -3,6 +3,13 @@ RSpec.describe Hyrax::Forms::WorkForm do
   let(:form) { described_class.new(work, nil, nil) }
   let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
 
+  # This class is an abstract class, so we have to set model_class
+  # TODO: merge with generic_work_form_spec
+  before do
+    allow(described_class).to receive(:model_class).and_return(GenericWork)
+    allow(form).to receive(:model_class).and_return(GenericWork)
+  end
+
   describe "#version" do
     before do
       allow(work).to receive(:etag).and_return('123456')
@@ -39,12 +46,13 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe ".build_permitted_params" do
-    before do
-      allow(described_class).to receive(:model_class).and_return(GenericWork)
-    end
     subject { described_class.build_permitted_params }
     context "without mediated deposit" do
-      it { is_expected.to include(permissions_attributes: [:type, :name, :access, :id, :_destroy]) }
+      it {
+        is_expected.to include({ permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+                               work_members_attributes: [:id, :_destroy],
+                               based_near_attributes: [:id, :_destroy])
+      }
     end
   end
 
@@ -63,10 +71,6 @@ RSpec.describe Hyrax::Forms::WorkForm do
         rights_statement: 'http://rightsstatements.org/vocab/InC-EDU/1.0/',
         license: ['http://creativecommons.org/licenses/by/3.0/us/']
       }
-    end
-
-    before do
-      allow(described_class).to receive(:model_class).and_return(GenericWork)
     end
 
     subject { described_class.model_attributes(params) }

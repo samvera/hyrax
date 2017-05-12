@@ -8,7 +8,8 @@
         'hyrax/file_manager', 'hyrax/form-progress', 'hyrax/positioning',
         'hyrax/fixedsticky', 'hyrax/file_upload', 'hyrax/representative-media',
         'hyrax/footer', 'hyrax/select_work_type', 'hyrax/users', 'hyrax/dashboard',
-        'hyrax/sidebar';
+        'hyrax/sidebar', 'hyrax/controlled_vocabulary';
+@import 'typeahead';
 @import 'sharing_buttons';
 
 /* This class is to workaround an issue in which Bootstrap requires a div to display a tooltip
@@ -22,4 +23,8 @@
  */
 .visible-all-inline-block {
   display: inline-block;
+}
+
+.controlled_vocabulary {
+  @extend .multi_value;
 }

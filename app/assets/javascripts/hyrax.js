@@ -68,6 +68,7 @@
 //= require hyrax/admin/admin_set/visibility
 //= require hyrax/editor
 //= require hyrax/editor/admin_set_widget
+//= require hyrax/editor/controlled_vocabulary
 //= require hyrax/admin/graphs
 //= require hyrax/save_work
 //= require hyrax/permissions
@@ -76,6 +77,7 @@
 //= require hyrax/autocomplete
 //= require hyrax/autocomplete/default
 //= require hyrax/autocomplete/work
+//= require hyrax/autocomplete/linked_data
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections
