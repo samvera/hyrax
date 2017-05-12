@@ -8,6 +8,8 @@
       <%= link_to hyrax.download_path(file_set),
                   data: { turbolinks: false },
                   target: :_blank,
+                  id: "file_download",
+                  data: { label: file_set.id },
                   class: "btn btn-default" do %>
           <%= t('hyrax.file_set.show.downloadable_content.image_link') %>
       <% end %>
