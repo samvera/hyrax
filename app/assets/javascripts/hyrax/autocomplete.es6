@@ -10,7 +10,6 @@ export default class Autocomplete {
    # @param {string} url - The url for the autocompete search endpoint
    */
   setup (element, fieldName, url) {
-    console.log(`setting up ${fieldName}`)
     switch (fieldName) {
       case 'work':
         new Work(
