@@ -121,7 +121,7 @@ We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.2
+gem install rails -v 5.0.3
 ```
 
 ### JavaScript runtime
@@ -137,7 +137,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.2_ new my_app -m https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/template.rb
+rails _5.0.3_ new my_app -m https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
