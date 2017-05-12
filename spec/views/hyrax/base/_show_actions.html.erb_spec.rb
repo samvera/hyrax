@@ -3,17 +3,11 @@ require 'spec_helper'
 RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:attributes) { work.to_solr }
+  let(:attributes) { { "has_model_ssim" => ["GenericWork"], :id => "0r967372b" } }
   let(:ability) { double }
-  let(:work) { create(:work, title: ["Parent"]) }
   let(:member) { Hyrax::WorkShowPresenter.new(member_document, ability) }
   let(:member_document) { SolrDocument.new(member_attributes) }
-  let(:member_attributes) { member_work.to_solr }
-  let(:member_work) { create(:generic_work, title: ["Child Work"]) }
-  let(:file_member) { Hyrax::FileSetPresenter.new(file_document, ability) }
-  let(:file_document) { SolrDocument.new(file_attributes) }
-  let(:file_attributes) { file.to_solr }
-  let(:file) { create(:file_set) }
+  let(:member_attributes) { { "has_model_ssim" => ["GenericWork"], :id => "8336h190k" } }
 
   before do
     allow(ability).to receive(:can?).with(:create, FeaturedWork).and_return(false)
@@ -56,7 +50,12 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
         expect(rendered).not_to have_link 'File Manager'
       end
     end
+
     context "when the work contains 2 children" do
+      let(:file_member) { Hyrax::FileSetPresenter.new(file_document, ability) }
+      let(:file_document) { SolrDocument.new(file_attributes) }
+      let(:file_attributes) { { id: '1234' } }
+
       before do
         allow(presenter).to receive(:member_presenters).and_return([member, file_member])
         render 'hyrax/base/show_actions.html.erb', presenter: presenter
