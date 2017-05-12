@@ -2,7 +2,7 @@
             'aria-label' => t("hyrax.toolbar.notifications"),
             class: "notify-number",
             data: { 'update-poll-url' => hyrax.user_notify_path,
-                    'update-poll-interval' => 30 } do %>
+                    'update-poll-interval' => Hyrax.config.notifications_update_poll_interval } do %>
     <span class="fa fa-bell"></span>
     <span class="count invisible label label-danger">0</span>
 <% end %>
