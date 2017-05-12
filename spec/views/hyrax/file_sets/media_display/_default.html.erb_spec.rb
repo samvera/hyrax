@@ -15,6 +15,11 @@ RSpec.describe 'hyrax/file_sets/mdeia_display/_default.html.erb', type: :view do
     expect(rendered).to have_css('a', text: 'Download the file')
   end
 
+  it "includes google analytics data in the download link" do
+    expect(rendered).to have_css('a#file_download')
+    expect(rendered).to have_selector("a[data-label=\"#{file_set.id}\"]")
+  end
+
   context "no download links" do
     let(:link) { false }
 
