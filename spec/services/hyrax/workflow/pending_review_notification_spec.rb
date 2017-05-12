@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
         .with(anything,
               "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) "\
               "was deposited by #{depositor.user_key} and is awaiting approval A pleasant read",
-              anything).once.and_call_original
+              anything).exactly(3).times.and_call_original
 
       expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }
         .to change { depositor.mailbox.inbox.count }.by(1)
@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
     context 'without carbon-copied users' do
       let(:recipients) { { 'to' => [to_user] } }
       it 'sends a message to the to user(s)' do
-        expect(depositor).to receive(:send_message).once.and_call_original
+        expect(depositor).to receive(:send_message).exactly(2).times.and_call_original
         expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }
           .to change { depositor.mailbox.inbox.count }.by(1)
           .and change { to_user.mailbox.inbox.count }.by(1)
