@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Hyrax::Admin::WorkflowsController do
   describe "#index" do
     before do
-      expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
+      expect(controller).to receive(:authorize!).with(:review, :submissions).and_return(true)
     end
     it "is successful" do
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
