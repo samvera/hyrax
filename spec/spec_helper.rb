@@ -48,6 +48,7 @@ require 'support/matchers/api_responses'
 require 'support/matchers/response_matchers'
 require 'support/input_support'
 require 'support/speedup'
+require 'support/logging_formatter'
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
@@ -230,6 +231,7 @@ RSpec.configure do |config|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
+  config.formatter = 'LoggingFormatter'
   config.default_formatter = 'doc' if config.files_to_run.one?
 
   config.order = :random
