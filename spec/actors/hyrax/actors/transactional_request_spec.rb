@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
     stack.build(terminator)
   end
 
-  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil) }
+  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
   let(:work) { double(:work) }
 
   describe "create" do

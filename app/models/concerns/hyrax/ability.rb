@@ -45,7 +45,7 @@ module Hyrax
       admin_set_ids_for_roles(['manage'])
     end
 
-    # @param [Array<Symbol>] roles the roles to be used when searching for admin
+    # @param [Array<String>] roles the roles to be used when searching for admin
     #   sets for the user
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   that match the roles
@@ -173,8 +173,6 @@ module Hyrax
       end
 
       def admin_permissions
-
-
         return unless admin?
         # TODO: deprecate this. We no longer have a dashboard just for admins
         can :read, :admin_dashboard

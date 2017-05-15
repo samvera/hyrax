@@ -4,7 +4,7 @@ module Hyrax
 
     # @param [#repository,#blacklight_config,#current_ability] context
     # @param access [Symbol] either :read or :edit access level to filter for
-    def initialize(context, access=:read)
+    def initialize(context, access = :read)
       super(context, access)
     end
   end
