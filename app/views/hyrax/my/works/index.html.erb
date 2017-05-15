@@ -14,7 +14,7 @@
   <% if current_ability.can_create_any_work? %>
     <div class="pull-right">
       <% if create_work_presenter.many? %>
-        <% if Flipflop.enable_batch_upload? %>
+        <% if Flipflop.batch_upload? %>
           <%= link_to(
                 t(:'helpers.action.batch.new'),
                 '#',
@@ -29,7 +29,7 @@
               class: 'btn btn-primary'
             ) %>
       <% else # simple link to the first work type %>
-        <% if Flipflop.enable_batch_upload? %>
+        <% if Flipflop.batch_upload? %>
           <%= link_to(
               t(:'helpers.action.batch.new'),
               hyrax.new_batch_upload_path(payload_concern: create_work_presenter.first_model),

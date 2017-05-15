@@ -27,17 +27,17 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
 
   context "for a new object" do
     let(:work) { GenericWork.new }
-    context 'with enable_batch_upload on' do
+    context 'with batch_upload on' do
       before do
-        allow(Flipflop).to receive(:enable_batch_upload?).and_return(true)
+        allow(Flipflop).to receive(:batch_upload?).and_return(true)
       end
       it 'shows batch uploads' do
         expect(page).to have_link('Batch upload')
       end
     end
-    context 'with enable_batch_upload off' do
+    context 'with batch_upload off' do
       before do
-        allow(Flipflop).to receive(:enable_batch_upload?).and_return(false)
+        allow(Flipflop).to receive(:batch_upload?).and_return(false)
       end
       it 'hides batch uploads' do
         expect(page).not_to have_link('Batch upload')

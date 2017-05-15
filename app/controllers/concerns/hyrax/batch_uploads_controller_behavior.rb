@@ -17,7 +17,7 @@ module Hyrax
     # @note we don't call `authorize!` directly, since `authorized_models` already checks `user.can? :create, ...`
     def create
       authenticate_user!
-      unless Flipflop.enable_batch_upload?
+      unless Flipflop.batch_upload?
         respond_to do |wants|
           wants.json do
             return render_json_response(response_type: :forbidden,
