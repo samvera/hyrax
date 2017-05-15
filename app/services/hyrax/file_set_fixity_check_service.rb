@@ -18,13 +18,22 @@ module Hyrax
   # records created.
   #
   # It will only run fixity checks if there are not recent
-  # ChecksumAuditLogs on record.
+  # ChecksumAuditLogs on record. "recent" is defined by
+  # `max_days_between_fixity_checks` arg, which defaults to config'd
+  # `Hyrax.config.max_days_between_fixity_checks`
   class FileSetFixityCheckService
-    attr_reader :file_set, :id, :async_jobs
+    attr_reader :file_set, :id, :async_jobs, :max_days_between_fixity_checks
 
     # @param file_set [ActiveFedora::Base, String] file_set
     # @param async_jobs [Boolean] Run actual fixity checks in background. Default true.
-    def initialize(file_set, async_jobs: true)
+    # @param max_days_between_fixity_checks [int] if an exisitng fixity check is
+    #   recorded within this window, no new one will be created. Default
+    #   `Hyrax.config.max_days_between_fixity_checks`. Set to -1 to force
+    #    check.
+    def initialize(file_set,
+                   async_jobs: true,
+                   max_days_between_fixity_checks: Hyrax.config.max_days_between_fixity_checks)
+      @max_days_between_fixity_checks = max_days_between_fixity_checks || 0
       @async_jobs = !! async_jobs
       if file_set.is_a?(String)
         @id = file_set
@@ -83,7 +92,7 @@ module Hyrax
           logger.warn "***FIXITY*** problem with fixity check log! Latest Fixity check is not nil, but updated_at is not set #{latest_fixity_check}"
           return true
         end
-        days_since_last_fixity_check(latest_fixity_check) >= Hyrax.config.max_days_between_fixity_checks
+        days_since_last_fixity_check(latest_fixity_check) >= max_days_between_fixity_checks
       end
 
       # Return the number of days since the latest fixity check

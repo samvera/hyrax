@@ -10,13 +10,28 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     let(:service_by_id)     { described_class.new(f.id, async_jobs: false) }
 
     describe '#fixity_check' do
+      subject { service_by_object.fixity_check }
+
       context 'when a file has two versions' do
         before do
           Hyrax::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
         end
-        subject { service_by_object.fixity_check }
         specify 'returns two log results' do
           expect(subject.length).to eq(2)
+        end
+      end
+
+      context "existing check and disabled max_days_between_fixity_checks" do
+        let(:service_by_object) { described_class.new(f, async_jobs: false, max_days_between_fixity_checks: -1) }
+        let(:service_by_id)     { described_class.new(f.id, async_jobs: false, max_days_between_fixity_checks: -1) }
+        let!(:existing_record) do
+          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: f.original_file.id)
+        end
+        it "re-checks" do
+          existing_record
+          expect(subject.length).to eq 1
+          expect(subject.first.id).not_to eq(existing_record.id)
+          expect(subject.first.created_at).to be > existing_record.created_at
         end
       end
     end
