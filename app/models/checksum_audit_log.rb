@@ -1,5 +1,14 @@
 class ChecksumAuditLog < ActiveRecord::Base
 
+  def passed?
+    pass == 1
+  end
+
+  def failed?
+    ! passed?
+  end
+
+
   # Only the latest rows for a given file_set_id/checked_uri pair.
   # Uses a join, so you might have to be careful combining. You would
   # normally combine this with other conditions, this alone will return
