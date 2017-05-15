@@ -1,9 +1,31 @@
 module Hyrax
+  # This class runs fixity checks on a FileSet, potentially on multiple
+  # files each with multiple versions in the FileSet.
+  #
+  # The FixityCheck itself is performed by FixityCheckJob, which
+  # just uses the fedora service to ask for fixity verification.
+  # The outcome will be some created ChecksumAuditLog (ActiveRecord)
+  # objects, recording the checks and their results.
+  #
+  # By default this runs the checks async using ActiveJob, so
+  # returns no useful info -- the checks are still going on. Use
+  # FixityStatusService if you'd like a human-readable status based on
+  # latest recorded checks, or ChecksumAuditLog.latest_for_fileset_id
+  # if you'd like the the machine-readable checks.
+  #
+  # But if you initialize with `async_jobs: false`, checks will be done
+  # blocking in foreground, and you can get back the ChecksumAuditLog
+  # records created.
+  #
+  # It will only run fixity checks if there are not recent
+  # ChecksumAuditLogs on record.
   class FileSetFixityCheckService
-    attr_reader :file_set, :id
+    attr_reader :file_set, :id, :async_jobs
 
     # @param file_set [ActiveFedora::Base, String] file_set
-    def initialize(file_set)
+    # @param async_jobs [Boolean] Run actual fixity checks in background. Default true.
+    def initialize(file_set, async_jobs: true)
+      @async_jobs = !! async_jobs
       if file_set.is_a?(String)
         @id = file_set
       else
@@ -12,7 +34,15 @@ module Hyrax
       end
     end
 
-    NO_RUNS = 999
+    # Fixity checks each version of each file if it hasn't been checked recently
+    # If object async_jobs is false, will returns the set of most recent fixity check
+    # status for each version of the content file(s).
+    #
+    # If async_jobs is true (default), just returns nil, stuff is still going on.
+    def fixity_check
+      results = file_set.files.collect { |f| fixity_check_file(f) }.flatten
+      return (async_jobs ? nil : results)
+    end
 
     # Return current fixity status for this FileSet based on
     # ChecksumAuditLog records on file.
@@ -22,23 +52,13 @@ module Hyrax
       FixityStatusService.new(file_set.id).file_set_status
     end
 
-    # Fixity checks each version of each file if it hasn't been checked recently
-    # Returns the set of most recent fixity check status for each version of the
-    # content file
-    # @param [Hash] log container for messages, mapping file ids to status
-    def fixity_check(log = {})
-      file_set.files.each { |f| log[f.id] = fixity_check_file(f) }
-      log
-    end
-
     private
       # Retrieve or generate the fixity check for a file (all versions are checked for versioned files)
       # @param [ActiveFedora::File] file to fixity check
       # @param [Array] log container for messages
-      def fixity_check_file(file, log = [])
-        versions = file.has_versions? ? file.versions.all : file
-        versions.each { |v| log << fixity_check_file_version(file.id, v.uri) }
-        log
+      def fixity_check_file(file)
+        versions = file.has_versions? ? file.versions.all : [file]
+        versions.collect { |v|  fixity_check_file_version(file.id, v.uri) }.flatten
       end
 
       # Retrieve or generate the fixity check for a specific version of a file
@@ -47,8 +67,12 @@ module Hyrax
       def fixity_check_file_version(file_id, version_uri)
         latest_fixity_check = ChecksumAuditLog.logs_for(file_set.id, file_id).first
         return latest_fixity_check unless needs_fixity_check?(latest_fixity_check)
-        FixityCheckJob.perform_later(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
-        latest_fixity_check || ChecksumAuditLog.new(pass: NO_RUNS, file_set_id: file_set.id, file_id: file_id, checked_uri: version_uri)
+
+        if async_jobs
+          FixityCheckJob.perform_later(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
+        else
+          FixityCheckJob.perform_now(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
+        end
       end
 
       # Check if time since the last fixity check is greater than the maximum days allowed between fixity checks
