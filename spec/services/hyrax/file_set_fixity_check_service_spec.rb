@@ -19,6 +19,13 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         specify 'returns two log results' do
           expect(subject.length).to eq(2)
         end
+
+        context "with latest_version_only" do
+          let(:service_by_object) { described_class.new(f, async_jobs: false, latest_version_only: true) }
+          specify "returns one log result" do
+            expect(subject.length).to eq(1)
+          end
+        end
       end
 
       context "existing check and disabled max_days_between_fixity_checks" do

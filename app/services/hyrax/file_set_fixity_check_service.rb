@@ -22,7 +22,8 @@ module Hyrax
   # `max_days_between_fixity_checks` arg, which defaults to config'd
   # `Hyrax.config.max_days_between_fixity_checks`
   class FileSetFixityCheckService
-    attr_reader :file_set, :id, :async_jobs, :max_days_between_fixity_checks
+    attr_reader :file_set, :id, :latest_version_only,
+                :async_jobs, :max_days_between_fixity_checks
 
     # @param file_set [ActiveFedora::Base, String] file_set
     # @param async_jobs [Boolean] Run actual fixity checks in background. Default true.
@@ -30,11 +31,15 @@ module Hyrax
     #   recorded within this window, no new one will be created. Default
     #   `Hyrax.config.max_days_between_fixity_checks`. Set to -1 to force
     #    check.
+    # @param latest_version_only [Booelan]. Check only latest version instead of all
+    #   versions. Default false.
     def initialize(file_set,
                    async_jobs: true,
-                   max_days_between_fixity_checks: Hyrax.config.max_days_between_fixity_checks)
+                   max_days_between_fixity_checks: Hyrax.config.max_days_between_fixity_checks,
+                   latest_version_only: false)
       @max_days_between_fixity_checks = max_days_between_fixity_checks || 0
       @async_jobs = !! async_jobs
+      @latest_version_only = !! latest_version_only
       if file_set.is_a?(String)
         @id = file_set
       else
@@ -62,12 +67,18 @@ module Hyrax
     end
 
     private
-      # Retrieve or generate the fixity check for a file (all versions are checked for versioned files)
+      # Retrieve or generate the fixity check for a file
+      # (all versions are checked for versioned files unless latest_version_only set)
       # @param [ActiveFedora::File] file to fixity check
       # @param [Array] log container for messages
       def fixity_check_file(file)
         versions = file.has_versions? ? file.versions.all : [file]
-        versions.collect { |v|  fixity_check_file_version(file.id, v.uri) }.flatten
+
+        if latest_version_only
+          versions = [versions.max_by(&:created)]
+        end
+
+        versions.collect { |v| fixity_check_file_version(file.id, v.uri) }.flatten
       end
 
       # Retrieve or generate the fixity check for a specific version of a file
