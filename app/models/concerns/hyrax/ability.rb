@@ -36,15 +36,29 @@ module Hyrax
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   has deposit or manage permissions to.
     def admin_set_ids_for_deposit
+      admin_set_ids_for_roles(['deposit', 'manage'])
+    end
+
+    # @return [Array<String>] a list of admin set ids for admin sets the user
+    #   has manage permissions to.
+    def admin_set_ids_for_management
+      admin_set_ids_for_roles(['manage'])
+    end
+
+    # @param [Array<Symbol>] roles the roles to be used when searching for admin
+    #   sets for the user
+    # @return [Array<String>] a list of admin set ids for admin sets the user
+    #   that match the roles
+    def admin_set_ids_for_roles(roles)
       PermissionTemplateAccess.joins(:permission_template)
                               .where(agent_type: 'user',
                                      agent_id: current_user.user_key,
-                                     access: ['deposit', 'manage'])
+                                     access: roles)
                               .or(
                                 PermissionTemplateAccess.joins(:permission_template)
                                                         .where(agent_type: 'group',
                                                                agent_id: user_groups,
-                                                               access: ['deposit', 'manage'])
+                                                               access: roles)
                               ).pluck('DISTINCT admin_set_id')
     end
 
@@ -117,6 +131,7 @@ module Hyrax
 
       def admin_set_abilities
         can :manage, [AdminSet, Hyrax::PermissionTemplate, Hyrax::PermissionTemplateAccess] if admin?
+        can :manage_any, AdminSet if admin_set_ids_for_management.present?
 
         can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplate do |template|
           test_edit(template.admin_set_id)
@@ -158,13 +173,14 @@ module Hyrax
       end
 
       def admin_permissions
+
+
         return unless admin?
         # TODO: deprecate this. We no longer have a dashboard just for admins
         can :read, :admin_dashboard
         alias_action :edit, to: :update
         alias_action :show, to: :read
         alias_action :discover, to: :read
-
         can :update, :appearance
 
         can :manage, curation_concerns_models
