@@ -39,7 +39,7 @@ RSpec.describe Hyrax::BatchUploadsController do
   describe "#create" do
     context 'when feature is disabled' do
       before do
-        allow(Flipflop).to receive(:enable_batch_upload?).and_return(false)
+        allow(Flipflop).to receive(:batch_upload?).and_return(false)
       end
       it 'redirects with an error message' do
         post :create, params: post_params.merge(format: :html)

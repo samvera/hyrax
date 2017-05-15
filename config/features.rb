@@ -27,7 +27,7 @@ Flipflop.configure do
           default: Hyrax.config.active_deposit_agreement_acceptance?,
           description: "Require an active acceptance of the deposit agreement by checking a checkbox"
 
-  feature :enable_batch_upload,
+  feature :batch_upload,
           default: true,
           description: "Enable uploading batches of works"
 end
