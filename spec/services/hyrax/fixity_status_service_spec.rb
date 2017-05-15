@@ -7,18 +7,24 @@ RSpec.describe Hyrax::FixityStatusService do
       "#{file_set_id}/files/c3e8d90c-e47b-4c3b-9cff-50d20b5b0583"]
   end
   let(:service) { described_class.new(file_set_id)}
-  before do
-    # Create some ChecksumAuditLots representing multiple files with multiple
-    # versions on a single fileset. DANGER that this diverges from what
-    # the FileSetFixityCheckService actually creats, as specs have before.
-    file_ids.each do |file_id|
-      ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version1", created_at: 2.days.ago)
-      ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version2", created_at: 1.days.ago)
-    end
-  end
 
   describe "#file_set_status" do
+    describe "no logs recorded" do
+      it "returns message" do
+        expect(service.file_set_status).to eq "Fixity checks have not yet been run on this object"
+      end
+    end
+
     describe "success" do
+      before do
+        # Create some ChecksumAuditLots representing multiple files with multiple
+        # versions on a single fileset. DANGER that this diverges from what
+        # the FileSetFixityCheckService actually creats, as specs have before.
+        file_ids.each do |file_id|
+          ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version1", created_at: 2.days.ago)
+          ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version2", created_at: 1.days.ago)
+        end
+      end
       it "creates success message with details" do
         result = service.file_set_status
         expect(result).to be_html_safe
@@ -30,6 +36,8 @@ RSpec.describe Hyrax::FixityStatusService do
       let(:failing_file_id) { file_ids.first }
       let(:failing_checked_uri) { "#{failing_file_id}/fcr:versions/version1" }
       before do
+        ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version1", created_at: 2.days.ago)
+        ChecksumAuditLog.create!(pass: 1, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version2", created_at: 1.days.ago)
         ChecksumAuditLog.create!(pass: 0, file_set_id: file_set_id, file_id: failing_file_id, checked_uri: failing_checked_uri, created_at: Time.now)
       end
       it "creates failure message with details" do

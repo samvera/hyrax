@@ -19,7 +19,7 @@ module Hyrax
     def file_set_status
       @file_set_status ||=
         if relevant_log_records.empty?
-          "Fixity checks have not yet been run on this #{FileSet.model_name.to_s}"
+          "Fixity checks have not yet been run on this object"
         elsif failing_checks.empty?
           content_tag("span", "passed", class: "label label-success") + ' ' + render_existing_check_summary
         else

@@ -340,7 +340,7 @@ RSpec.describe Hyrax::FileSetsController do
           expect(assigns[:presenter]).to be_kind_of Hyrax::FileSetPresenter
           expect(assigns[:presenter].id).to eq file_set.id
           expect(assigns[:presenter].events).to be_kind_of Array
-          expect(assigns[:presenter].fixity_check_status).to eq 'Fixity checks have not yet been run on this file.'
+          expect(assigns[:presenter].fixity_check_status).to eq 'Fixity checks have not yet been run on this object'
         end
       end
 

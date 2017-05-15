@@ -33,56 +33,13 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     end
   end
 
-  describe '#fixity_check_stat' do
-    subject { service_by_object.send(:fixity_check_stat, f.original_file) }
-    context 'when no fixity checks have been run' do
-      it 'reports that fixity checks have not been run' do
-        expect(subject).to eq 'Fixity checks have not yet been run on this file.'
-      end
-    end
-
-    context 'when no fixity check is pasing' do
-      around do |example|
-        original_adapter = ActiveJob::Base.queue_adapter
-        ActiveJob::Base.queue_adapter = :inline
-        example.run
-        ActiveJob::Base.queue_adapter = original_adapter
-      end
-
-      before do
-        Hyrax::VersioningService.create(f.original_file)
-        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.uri, file_id: 'original_file')
-      end
-
-      it 'reports that fixity checks have not been run' do
-        expect(subject).to eq 'Some fixity checks have not been run, but the ones run were passing.'
-      end
-    end
-  end
-
-  describe '#human_readable_fixity_check_status' do
-    around do |example|
-      original_adapter = ActiveJob::Base.queue_adapter
-      ActiveJob::Base.queue_adapter = :inline
-      example.run
-      ActiveJob::Base.queue_adapter = original_adapter
-    end
-
-    before do
-      Hyrax::VersioningService.create(f.original_file)
-      ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.uri, file_id: 'original_file')
-    end
-    subject { service_by_object.human_readable_fixity_check_status }
-    it { is_expected.to eq 'Some fixity checks have not been run, but the ones run were passing.' }
-  end
-
   describe '#logged_fixity_status' do
     context "with an object" do
       subject { service_by_object.logged_fixity_status }
 
       it "doesn't trigger fixity checks" do
         expect(service_by_object).not_to receive(:fixity_check_file)
-        expect(subject).to eq "Fixity checks have not yet been run on this file."
+        expect(subject).to eq "Fixity checks have not yet been run on this object"
       end
 
       context "when no fixity check is passing" do
@@ -91,18 +48,18 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         end
 
         it "reports the fixity check result" do
-          expect(subject).to eq 'passing'
+          expect(subject).to include "passed"
         end
       end
 
-      context "when one fixity check is passing" do
+      context "when most recent fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file', created_at: 1.day.ago)
           ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
         end
 
-        it "reports the fixity check result" do
-          expect(subject).to eq 'failing'
+        it "records the fixity check result" do
+          expect(subject).to include "passed"
         end
       end
     end
@@ -114,28 +71,8 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
       end
 
-      it "reports the fixity result" do
-        expect(subject).to eq 'passing'
-      end
-    end
-  end
-
-  describe '#stat_to_string' do
-    subject { service_by_object.send(:stat_to_string, val) }
-    context 'when fixity_stat is 0' do
-      let(:val) { 0 }
-      it { is_expected.to eq 'failing' }
-    end
-
-    context 'when fixity_stat is 1' do
-      let(:val) { 1 }
-      it { is_expected.to eq 'passing' }
-    end
-
-    context 'when fixity_stat is something else' do
-      let(:val) { 'something else' }
-      it "fails" do
-        expect { subject }.to raise_error ArgumentError, "Unknown status `something else'"
+      it "records the fixity result" do
+        expect(subject).to include "passed"
       end
     end
   end
