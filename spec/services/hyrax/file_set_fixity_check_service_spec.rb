@@ -32,7 +32,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         let(:service_by_object) { described_class.new(f, async_jobs: false, max_days_between_fixity_checks: -1) }
         let(:service_by_id)     { described_class.new(f.id, async_jobs: false, max_days_between_fixity_checks: -1) }
         let!(:existing_record) do
-          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: f.original_file.id)
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: f.original_file.id)
         end
         it "re-checks" do
           existing_record
@@ -71,7 +71,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when no fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
         end
 
         it "reports the fixity check result" do
@@ -81,8 +81,8 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when most recent fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(pass: 0, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file', created_at: 1.day.ago)
-          ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(passed: false, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file', created_at: 1.day.ago)
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
         end
 
         it "records the fixity check result" do
@@ -95,7 +95,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
       subject { service_by_id.logged_fixity_status }
 
       before do
-        ChecksumAuditLog.create!(pass: 1, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+        ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
       end
 
       it "records the fixity result" do

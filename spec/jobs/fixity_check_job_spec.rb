@@ -45,8 +45,8 @@ RSpec.describe FixityCheckJob do
 
   describe '#run_fixity_check' do
     let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
-    let!(:old) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, pass: 1, created_at: 2.minutes.ago) }
-    let!(:new) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, pass: 0) }
+    let!(:old) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, passed: true, created_at: 2.minutes.ago) }
+    let!(:new) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, passed: false) }
     let(:mock_service) { double('mock fixity check service') }
 
     before do
@@ -60,7 +60,7 @@ RSpec.describe FixityCheckJob do
 
     it 'does not prune failed fixity checks' do
       5.times { job.send(:run_check, file_set.id, file_id, uri) }
-      expect(ChecksumAuditLog.logs_for(file_set.id, file_id).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
+      expect(ChecksumAuditLog.logs_for(file_set.id, file_id).map(&:passed)).to eq [false, true, false, false, true, false, true]
     end
   end
 

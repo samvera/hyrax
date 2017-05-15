@@ -52,13 +52,11 @@ class FixityCheckJob < ActiveJob::ApplicationJob
       end
 
       if fixity_ok
-        passing = 1
         ChecksumAuditLog.prune_history(file_set_id, file_id)
       else
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
-        passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
+      ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
     end
 
   private

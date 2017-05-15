@@ -1,13 +1,8 @@
 class ChecksumAuditLog < ActiveRecord::Base
 
-  def passed?
-    pass == 1
-  end
-
   def failed?
     ! passed?
   end
-
 
   # Only the latest rows for a given file_set_id/checked_uri pair.
   # Uses a join, so you might have to be careful combining. You would
@@ -39,7 +34,7 @@ class ChecksumAuditLog < ActiveRecord::Base
   # Simple way (a little naive): if the last 2 were passing, delete the first one
   def self.prune_history(file_set_id, file_id)
     list = logs_for(file_set_id, file_id).limit(2)
-    return if list.size <= 1 || list[0].pass != 1 || list[1].pass != 1
+    return if list.size <= 1 || list[0].failed? || list[1].failed?
     list[0].destroy
   end
 
