@@ -16,14 +16,17 @@ class FixityCheckJob < ActiveJob::ApplicationJob
   # ChecksumAuditLog, and determining what old ChecksumAuditLogs can
   # be pruned.
   #
+  # If calling async as a background job, return value is irrelevant, but
+  # if calling sync with `perform_now`, returns the ChecksumAuditLog
+  # record recording the check.
+  #
   # @param uri [String] uri - of the specific file/version to fixity check
   # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
     log = run_check(file_set_id, file_id, uri)
-    fixity_ok = log.pass == 1
 
-    unless fixity_ok
+    unless log.passed?
       if Hyrax.config.callback.set?(:after_fixity_check_failure)
         file_set = ::FileSet.find(file_set_id)
         login = file_set.depositor
@@ -34,7 +37,7 @@ class FixityCheckJob < ActiveJob::ApplicationJob
                                   log.created_at)
       end
     end
-    fixity_ok
+    log
   end
 
   protected

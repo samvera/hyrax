@@ -11,30 +11,39 @@ RSpec.describe FixityCheckJob do
   end
   let(:file_id) { file_set.original_file.id }
 
-  let(:job) { described_class.perform_now(uri, file_set_id: file_set.id, file_id: file_id) }
+  describe "called with perform_now" do
+    let(:log_record) { described_class.perform_now(uri, file_set_id: file_set.id, file_id: file_id) }
 
-  describe 'fixity check the content' do
-    let(:uri) { file_set.original_file.uri }
-    it 'passes' do
-      expect(job).to eq(true)
+
+    describe 'fixity check the content' do
+      let(:uri) { file_set.original_file.uri }
+      it 'passes' do
+        expect(log_record).to be_passed
+      end
+      it "returns a ChecksumAuditLog" do
+        expect(log_record).to be_kind_of ChecksumAuditLog
+        expect(log_record.checked_uri).to eq uri
+        expect(log_record.file_id).to eq file_id
+        expect(log_record.file_set_id).to eq file_set.id
+      end
+    end
+
+    describe 'fixity check a version of the content' do
+      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
+      it 'passes' do
+        expect(log_record).to be_passed
+      end
+    end
+
+    describe 'fixity check an invalid version of the content' do
+      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
+      it 'fails' do
+        expect(log_record).to be_failed
+      end
     end
   end
 
-  describe 'fixity check a version of the content' do
-    let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
-    it 'passes' do
-      expect(job).to eq(true)
-    end
-  end
-
-  describe 'fixity check an invalid version of the content' do
-    let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
-    it 'fails' do
-      expect(job).to eq(false)
-    end
-  end
-
-  describe 'run_fixity_check' do
+  describe '#run_fixity_check' do
     let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
     let!(:old) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, pass: 1, created_at: 2.minutes.ago) }
     let!(:new) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, pass: 0) }
@@ -54,4 +63,5 @@ RSpec.describe FixityCheckJob do
       expect(ChecksumAuditLog.logs_for(file_set.id, file_id).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
     end
   end
+
 end
