@@ -10,7 +10,6 @@ class ChecksumAuditLog < ActiveRecord::Base
   # LOTS of records.
   def self.latest_checks
     # one crazy SQL trick to get the latest for each fileset/checked_uri combo
-    # TODO better index created_at and checked_uri
     joins("LEFT JOIN checksum_audit_logs c2 ON
             (checksum_audit_logs.file_set_id = c2.file_set_id AND
              checksum_audit_logs.checked_uri = c2.checked_uri AND
@@ -23,9 +22,7 @@ class ChecksumAuditLog < ActiveRecord::Base
   # From all ChecksumAuditLogs related to this file set, returns only
   # the LATEST for each file_set_id/checked_uri pair.
   def self.latest_for_file_set_id(file_set_id)
-    # TODO better index created_at and checked_uri
-    latest_checks.
-    where(file_set_id: file_set_id)
+    latest_checks.where(file_set_id: file_set_id)
   end
 
   # Prune old ChecksumAuditLog records. We keep only:
