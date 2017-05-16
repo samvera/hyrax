@@ -23,31 +23,30 @@ module Hyrax
         elsif failing_checks.empty?
           content_tag("span", "passed", class: "label label-success") + ' ' + render_existing_check_summary
         else
-          content_tag("span", "FAIL", class: "label label-danger") + ' ' + render_existing_check_summary + render_failed_table
+          content_tag("span", "FAIL", class: "label label-danger") + ' ' + render_existing_check_summary + render_failed_compact
           # TODO details on failures.
         end
     end
 
     protected
 
-    def render_failed_table
-      safe_join([
-        "<table>".html_safe,
-        "<tr><th>File</td><th>Checked URI</th><th>Expected</th><th>Date</th></tr>".html_safe,
-        *failing_checks.collect do |log|
+    # A weird display, cause we need it to fit in that 180px column on
+    # FileSet show, and have no real UI to link to for files/versions :(
+    def render_failed_compact
+      safe_join(
+        ["<p><strong>Failed checks:</strong></p>".html_safe] +
+        failing_checks.collect do |log|
           safe_join([
-            "<tr>".html_safe,
-              content_tag("td", content_tag("a",
-                                            log.file_id,
-                                            href: "#{Hydra::PCDM::File.translate_id_to_uri.call(log.file_id)}/fcr:metadata")),
-              content_tag("td", content_tag("a", log.checked_uri, href: log.checked_uri)),
-              content_tag("td", log.expected_result),
-              content_tag("td", log.created_at.to_s),
-            "</tr>".html_safe
+            "<p>".html_safe,
+            "ChecksumAuditLog id: #{log.id}; ",
+            content_tag("a", "file", href: "#{Hydra::PCDM::File.translate_id_to_uri.call(log.file_id)}/fcr:metadata") + "; ",
+            content_tag("a", "checked_uri", href: "#{log.checked_uri}/fcr:metadata") + "; ",
+            "date: #{log.created_at.to_s}; ",
+            "expected_result: #{log.expected_result}",
+            "</p>".html_safe
           ])
-        end,
-        "</table>".html_safe
-      ])
+        end
+      )
     end
 
     def render_existing_check_summary
