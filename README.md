@@ -39,6 +39,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
+    * [Workflow Relationship Diagram](#workflow-relationship-diagram)
   * [Release process](#release-process)
   * [Acknowledgments](#acknowledgments)
 
@@ -266,6 +267,10 @@ If you'd like to help the development effort and you're not sure where to get st
 # Development
 
 The [Hyrax Development Guide](https://github.com/projecthydra-labs/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+
+## Entity Relationship Diagram
+
+* [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
 
 # Release process
 
