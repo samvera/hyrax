@@ -1,7 +1,6 @@
 class ChecksumAuditLog < ActiveRecord::Base
-
   def failed?
-    ! passed?
+    !passed?
   end
 
   # Only the latest rows for a given file_set_id/checked_uri pair.
@@ -10,13 +9,13 @@ class ChecksumAuditLog < ActiveRecord::Base
   # LOTS of records.
   def self.latest_checks
     # one crazy SQL trick to get the latest for each fileset/checked_uri combo
+    # where there's no other self-join created_at greater -- only the greatest.
     joins("LEFT JOIN checksum_audit_logs c2 ON
             (checksum_audit_logs.file_set_id = c2.file_set_id AND
              checksum_audit_logs.checked_uri = c2.checked_uri AND
-             checksum_audit_logs.created_at < c2.created_at)").
-    # special trick, where there's no other self-join created_at greater -- only the greatest.
-    where("c2.id is NULL").
-    order("created_at desc, id desc")
+             checksum_audit_logs.created_at < c2.created_at)")
+      .where("c2.id is NULL")
+      .order("created_at desc, id desc")
   end
 
   # From all ChecksumAuditLogs related to this file set, returns only

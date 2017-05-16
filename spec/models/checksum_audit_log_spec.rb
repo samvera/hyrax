@@ -27,18 +27,17 @@ RSpec.describe ChecksumAuditLog do
   end
 
   describe "prune_history" do
-
     context "complex history" do
       let(:file_set_id) { "file_set_id" }
       let(:file_id) { "file_id" }
       let(:version_uri) { "#{file_id}/fcr:versions/version1" }
       before do
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: false)
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: false)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
 
         described_class.prune_history(file_set_id, checked_uri: version_uri)
       end
@@ -46,7 +45,6 @@ RSpec.describe ChecksumAuditLog do
         expect(described_class.logs_for(file_set_id, checked_uri: version_uri).collect(&:passed)).to eq([true, false, true, true])
       end
     end
-
 
     context 'after multiple checksum events where the checksum does not change' do
       specify 'only one of them should be kept' do
@@ -75,11 +73,11 @@ RSpec.describe ChecksumAuditLog do
     let(:version_uri2) { f.original_file.versions.all.second.uri }
     before do
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 1.day.ago)
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
 
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: true, created_at: 2.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: false, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: false, created_at: 1.day.ago)
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: true)
     end
     describe ".latest_checks" do
@@ -105,6 +103,4 @@ RSpec.describe ChecksumAuditLog do
       end
     end
   end
-
-
 end

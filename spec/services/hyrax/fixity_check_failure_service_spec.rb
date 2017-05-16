@@ -3,7 +3,7 @@ RSpec.describe Hyrax::FixityCheckFailureService do
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) { Hydra::PCDM::File.new }
-  let(:version_uri) { "#{file.uri}/fcr:versions/version1"}
+  let(:version_uri) { "#{file.uri}/fcr:versions/version1" }
   let(:file_set) do
     create(:file_set, user: depositor, title: ["World Icon"]).tap { |fs| fs.original_file = file }
   end

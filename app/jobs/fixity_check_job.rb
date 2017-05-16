@@ -39,8 +39,6 @@ class FixityCheckJob < ActiveJob::ApplicationJob
 
   protected
 
-
-
     def run_check(file_set_id, file_id, uri)
       begin
         fixity_ok = ActiveFedora::FixityService.new(uri).check

@@ -14,7 +14,6 @@ RSpec.describe FixityCheckJob do
   describe "called with perform_now" do
     let(:log_record) { described_class.perform_now(uri, file_set_id: file_set.id, file_id: file_id) }
 
-
     describe 'fixity check the content' do
       let(:uri) { file_set.original_file.uri }
       it 'passes' do
@@ -63,5 +62,4 @@ RSpec.describe FixityCheckJob do
       expect(ChecksumAuditLog.logs_for(file_set.id, checked_uri: uri).map(&:passed)).to eq [false, true, false, false, true, false, true]
     end
   end
-
 end

@@ -38,8 +38,8 @@ module Hyrax
                    max_days_between_fixity_checks: Hyrax.config.max_days_between_fixity_checks,
                    latest_version_only: false)
       @max_days_between_fixity_checks = max_days_between_fixity_checks || 0
-      @async_jobs = !! async_jobs
-      @latest_version_only = !! latest_version_only
+      @async_jobs = async_jobs
+      @latest_version_only = latest_version_only
       if file_set.is_a?(String)
         @id = file_set
       else
@@ -57,9 +57,9 @@ module Hyrax
     def fixity_check
       results = file_set.files.collect { |f| fixity_check_file(f) }
 
-      unless async_jobs
-        return results.flatten.group_by(&:file_id)
-      end
+      return if async_jobs
+
+      results.flatten.group_by(&:file_id)
     end
 
     # Return current fixity status for this FileSet based on
@@ -71,6 +71,7 @@ module Hyrax
     end
 
     private
+
       # Retrieve or generate the fixity check for a file
       # (all versions are checked for versioned files unless latest_version_only set)
       # @param [ActiveFedora::File] file to fixity check
@@ -78,9 +79,8 @@ module Hyrax
       def fixity_check_file(file)
         versions = file.has_versions? ? file.versions.all : [file]
 
-        if latest_version_only
-          versions = [versions.max_by(&:created)]
-        end
+        versions = [versions.max_by(&:created)] if latest_version_only
+
         versions.collect { |v| fixity_check_file_version(file.id, v.uri.to_s) }.flatten
       end
 
