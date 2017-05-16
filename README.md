@@ -118,7 +118,7 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-We recommend the latest Rails 5.0 release.
+Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
