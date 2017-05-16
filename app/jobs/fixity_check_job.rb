@@ -26,17 +26,13 @@ class FixityCheckJob < ActiveJob::ApplicationJob
   def perform(uri, file_set_id:, file_id:)
     log = run_check(file_set_id, file_id, uri)
 
-    unless log.passed?
-      if Hyrax.config.callback.set?(:after_fixity_check_failure)
-        file_set = ::FileSet.find(file_set_id)
-        login = file_set.depositor
-        user = User.find_by_user_key(login)
-        Hyrax.config.callback.run(:after_fixity_check_failure,
-                                  file_set,
-                                  user,
-                                  log.created_at)
-      end
+    if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
+      file_set = ::FileSet.find(file_set_id)
+      Hyrax.config.callback.run(:after_fixity_check_failure,
+                                file_set,
+                                checksum_audit_log: log)
     end
+
     log
   end
 

@@ -2,20 +2,23 @@ RSpec.describe Hyrax::FixityCheckFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
-  let(:file) do
-    FileSet.create do |file|
-      file.apply_depositor_metadata(depositor)
-    end
+  let(:file) { Hydra::PCDM::File.new }
+  let(:version_uri) { "#{file.uri}/fcr:versions/version1"}
+  let(:file_set) do
+    create(:file_set, user: depositor, title: ["World Icon"]).tap { |fs| fs.original_file = file }
   end
 
-  before do
-    allow(file).to receive(:log_date).and_return('2015-07-15 03:06:59')
-    allow(file).to receive(:title).and_return('World Icon')
-    allow(file).to receive(:original_file).and_return(double(uri: "http://localhost:8983/fedora/rest/test/nv/93/5x/32/nv935x32f/files/e5b91275-aab7-4720-88d4-c153d7196c23"))
+  let(:checksum_audit_log) do
+    ChecksumAuditLog.new(file_set_id: file_set.id,
+                         file_id: file_set.original_file.id,
+                         checked_uri: version_uri,
+                         created_at: log_date,
+                         updated_at: log_date,
+                         passed: false)
   end
 
   describe "#call" do
-    subject { described_class.new(file, depositor, log_date) }
+    subject { described_class.new(file_set, checksum_audit_log: checksum_audit_log) }
 
     it "sends failing mail" do
       subject.call
