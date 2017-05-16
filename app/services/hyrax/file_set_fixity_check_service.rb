@@ -81,15 +81,14 @@ module Hyrax
         if latest_version_only
           versions = [versions.max_by(&:created)]
         end
-
-        versions.collect { |v| fixity_check_file_version(file.id, v.uri) }.flatten
+        versions.collect { |v| fixity_check_file_version(file.id, v.uri.to_s) }.flatten
       end
 
       # Retrieve or generate the fixity check for a specific version of a file
       # @param [String] file_id used to find the file within its parent object (usually "original_file")
       # @param [String] version_uri the version to be fixity checked (or the file uri for non-versioned files)
       def fixity_check_file_version(file_id, version_uri)
-        latest_fixity_check = ChecksumAuditLog.logs_for(file_set.id, file_id).first
+        latest_fixity_check = ChecksumAuditLog.logs_for(file_set.id, checked_uri: version_uri).first
         return latest_fixity_check unless needs_fixity_check?(latest_fixity_check)
 
         if async_jobs

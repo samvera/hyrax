@@ -28,17 +28,26 @@ class ChecksumAuditLog < ActiveRecord::Base
     where(file_set_id: file_set_id)
   end
 
-  # Check to see if there are previous passing logs that we can delete
-  # we want to keep the first passing event after a failure, the most current passing event,
-  # and all failures so that this table doesn't grow too large
-  # Simple way (a little naive): if the last 2 were passing, delete the first one
-  def self.prune_history(file_set_id, file_id)
-    list = logs_for(file_set_id, file_id).limit(2)
-    return if list.size <= 1 || list[0].failed? || list[1].failed?
-    list[0].destroy
+  # Prune old ChecksumAuditLog records. We keep only:
+  # * Latest check
+  # * failing checks
+  # * any checks immediately before or after a failing check,
+  #   to provide context on known good dates surrounding failing.
+  def self.prune_history(file_set_id, checked_uri:)
+    all_logs = logs_for(file_set_id, checked_uri: checked_uri).to_a
+
+    0.upto(all_logs.length - 2).each do |i|
+      next if all_logs[i].failed?
+      next if i > 0 && all_logs[i - 1].failed?
+      next if all_logs[i + 1].failed?
+
+      all_logs[i].destroy!
+    end
   end
 
-  def self.logs_for(file_set_id, file_id)
-    ChecksumAuditLog.where(file_set_id: file_set_id, file_id: file_id).order('created_at desc, id desc')
+  # All logs for a particular file or version in a give file set, sorted
+  # by date descending.
+  def self.logs_for(file_set_id, checked_uri:)
+    ChecksumAuditLog.where(file_set_id: file_set_id, checked_uri: checked_uri).order('created_at desc, id desc')
   end
 end

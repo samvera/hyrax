@@ -51,7 +51,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     end
 
     describe '#fixity_check_file_version' do
-      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.uri) }
+      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.uri.to_s) }
       specify 'returns a single ChecksumAuditLog for the given file' do
         expect(subject).to be_kind_of ChecksumAuditLog
         expect(subject.file_set_id).to eq(f.id)

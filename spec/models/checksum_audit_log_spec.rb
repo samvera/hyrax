@@ -16,30 +16,53 @@ RSpec.describe ChecksumAuditLog do
     f.original_file.versions.first.uri
   end
   let(:content_id) { f.original_file.id }
-  let(:old) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1, created_at: 2.minutes.ago) }
-  let(:new) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 0, created_at: 1.minute.ago) }
+  let(:old) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.minutes.ago) }
+  let(:new) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: false, created_at: 1.minute.ago) }
 
   context 'a file with multiple checksums' do
     it 'returns a list of logs for this FileSet sorted by date descending' do
-      logs = described_class.logs_for(f.id, content_id)
+      logs = described_class.logs_for(f.id, checked_uri: version_uri)
       expect(logs).to eq([new, old])
     end
   end
 
-  context 'after multiple checksum events where the checksum does not change' do
-    specify 'only one of them should be kept' do
-      success1 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1)
-      described_class.prune_history(f.id, content_id)
-      success2 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1)
-      described_class.prune_history(f.id, content_id)
-      success3 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1)
-      described_class.prune_history(f.id, content_id)
+  describe "prune_history" do
 
-      expect { described_class.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
-      expect { described_class.find(success3.id) }.to raise_exception ActiveRecord::RecordNotFound
-      expect(described_class.find(success1.id)).not_to be_nil
-      logs = described_class.logs_for(f.id, content_id)
-      expect(logs).to eq([success1, new, old])
+    context "complex history" do
+      let(:file_set_id) { "file_set_id" }
+      let(:file_id) { "file_id" }
+      let(:version_uri) { "#{file_id}/fcr:versions/version1" }
+      before do
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: false)
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+        ChecksumAuditLog.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+
+        described_class.prune_history(file_set_id, checked_uri: version_uri)
+      end
+      it "keeps latest, failing, and previous/next of failing" do
+        expect(described_class.logs_for(file_set_id, checked_uri: version_uri).collect(&:passed)).to eq([true, false, true, true])
+      end
+    end
+
+
+    context 'after multiple checksum events where the checksum does not change' do
+      specify 'only one of them should be kept' do
+        success1 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
+        described_class.prune_history(f.id, checked_uri: version_uri)
+        success2 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
+        described_class.prune_history(f.id, checked_uri: version_uri)
+        success3 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
+        described_class.prune_history(f.id, checked_uri: version_uri)
+
+        expect { described_class.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
+        expect { described_class.find(success3.id) }.to raise_exception ActiveRecord::RecordNotFound
+        expect(described_class.find(success1.id)).not_to be_nil
+        logs = described_class.logs_for(f.id, checked_uri: version_uri)
+        expect(logs).to eq([success1, new, old])
+      end
     end
   end
 
@@ -51,13 +74,13 @@ RSpec.describe ChecksumAuditLog do
     let(:verisons_uri) { f.original_file.versions.all.first.uri }
     let(:version_uri2) { f.original_file.versions.all.second.uri }
     before do
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1, created_at: 2.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1, created_at: 1.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, pass: 1)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
 
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 1, created_at: 2.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 0, created_at: 1.days.ago)
-      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, pass: 1)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: true, created_at: 2.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: false, created_at: 1.days.ago)
+      described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri2, passed: true)
     end
     describe ".latest_checks" do
       it "returns only latest for each checked_uri" do

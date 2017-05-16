@@ -60,7 +60,7 @@ RSpec.describe FixityCheckJob do
 
     it 'does not prune failed fixity checks' do
       5.times { job.send(:run_check, file_set.id, file_id, uri) }
-      expect(ChecksumAuditLog.logs_for(file_set.id, file_id).map(&:passed)).to eq [false, true, false, false, true, false, true]
+      expect(ChecksumAuditLog.logs_for(file_set.id, checked_uri: uri).map(&:passed)).to eq [false, true, false, false, true, false, true]
     end
   end
 

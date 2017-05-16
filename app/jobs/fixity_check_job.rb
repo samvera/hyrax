@@ -24,6 +24,7 @@ class FixityCheckJob < ActiveJob::ApplicationJob
   # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
+    uri = uri.to_s # sometimes we get an RDF::URI gah
     log = run_check(file_set_id, file_id, uri)
 
     if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
@@ -47,12 +48,15 @@ class FixityCheckJob < ActiveJob::ApplicationJob
         error_msg = 'resource not found'
       end
 
+      ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
+
       if fixity_ok
-        ChecksumAuditLog.prune_history(file_set_id, file_id)
+        ChecksumAuditLog.prune_history(file_set_id, checked_uri: uri)
       else
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
       end
-      ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
+
+      log
     end
 
   private
