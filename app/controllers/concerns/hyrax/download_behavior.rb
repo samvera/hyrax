@@ -29,6 +29,11 @@ module Hyrax
 
     protected
 
+      # Override the Hydra::Controller::DownloadBehavior#content_options
+      def content_options
+        super.merge(disposition: 'attachment')
+      end
+
       # Override this method if you want to change the options sent when downloading
       # a derivative file
       def derivative_download_options
