@@ -40,13 +40,16 @@ class FixityCheckJob < ActiveJob::ApplicationJob
   protected
 
     def run_check(file_set_id, file_id, uri)
+      service = ActiveFedora::FixityService.new(uri)
       begin
-        fixity_ok = ActiveFedora::FixityService.new(uri).check
+        fixity_ok = service.check
+        # only new versions of activefedora support returning this...
+        expected_result = service.expected_message_digest if service.respond_to?(:expected_message_digest)
       rescue Ldp::NotFound
         error_msg = 'resource not found'
       end
 
-      log = ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id)
+      ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
 
       if fixity_ok
         ChecksumAuditLog.prune_history(file_set_id, checked_uri: uri)
