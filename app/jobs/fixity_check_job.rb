@@ -49,7 +49,7 @@ class FixityCheckJob < ActiveJob::ApplicationJob
         error_msg = 'resource not found'
       end
 
-      ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
+      log = ChecksumAuditLog.create!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
 
       if fixity_ok
         ChecksumAuditLog.prune_history(file_set_id, checked_uri: uri)
