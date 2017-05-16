@@ -50,12 +50,16 @@ module Hyrax
 
     # Fixity checks each version of each file if it hasn't been checked recently
     # If object async_jobs is false, will returns the set of most recent fixity check
-    # status for each version of the content file(s).
+    # status for each version of the content file(s). As a hash keyed by file_id,
+    # values arrays of possibly multiple version checks.
     #
     # If async_jobs is true (default), just returns nil, stuff is still going on.
     def fixity_check
-      results = file_set.files.collect { |f| fixity_check_file(f) }.flatten
-      return (async_jobs ? nil : results)
+      results = file_set.files.collect { |f| fixity_check_file(f) }
+
+      unless async_jobs
+        return results.flatten.group_by(&:file_id)
+      end
     end
 
     # Return current fixity status for this FileSet based on

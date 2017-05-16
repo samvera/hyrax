@@ -17,13 +17,13 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
           Hyrax::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
         end
         specify 'returns two log results' do
-          expect(subject.length).to eq(2)
+          expect(subject.values.flatten.length).to eq(2)
         end
 
         context "with latest_version_only" do
           let(:service_by_object) { described_class.new(f, async_jobs: false, latest_version_only: true) }
           specify "returns one log result" do
-            expect(subject.length).to eq(1)
+            expect(subject.values.length).to eq(1)
           end
         end
       end
@@ -37,8 +37,8 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         it "re-checks" do
           existing_record
           expect(subject.length).to eq 1
-          expect(subject.first.id).not_to eq(existing_record.id)
-          expect(subject.first.created_at).to be > existing_record.created_at
+          expect(subject.values.flatten.first.id).not_to eq(existing_record.id)
+          expect(subject.values.flatten.first.created_at).to be > existing_record.created_at
         end
       end
     end
