@@ -1,4 +1,9 @@
-<%= simple_form_for [hyrax, @form], html: { multipart: true } do |f| %>
+<%= simple_form_for [hyrax, @form],
+                    html: {
+                      data: { behavior: 'work-form',
+                              'param-key' => @form.model_name.param_key },
+                      multipart: true
+                    } do |f| %>
   <% provide :files_tab do %>
     <p class="instructions"><%= t("hyrax.batch_uploads.files.instructions") %></p>
     <p class="switch-upload-type"><%= t("hyrax.batch_uploads.files.upload_type_instructions") %>
