@@ -139,9 +139,18 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     end
 
     describe 'via AdminSet-specific edit_users' do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create(:admin_set, with_permission_template: true, edit_users: [user]) }
       it '#admin? is false' do
         expect(ability).not_to be_admin
+      end
+
+      it 'A user who can manage an AdminSet' do
+        create(:permission_template_access,
+               :manage,
+               permission_template: admin_set.permission_template,
+               agent_type: 'user',
+               agent_id: user.user_key)
+        is_expected.to be_able_to(:manage_any, AdminSet)
       end
       it_behaves_like 'A user with additional access'
     end
