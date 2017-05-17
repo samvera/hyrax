@@ -61,6 +61,14 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
   end
 
   describe '#logged_fixity_status' do
+    around do |example|
+      # Deprecation.silence is supposed to be a thing, but I can't get it to work
+      original = Deprecation.default_deprecation_behavior
+      Deprecation.default_deprecation_behavior = :silence
+      example.run
+      Deprecation.default_deprecation_behavior = original
+    end
+
     context "with an object" do
       subject { service_by_object.logged_fixity_status }
 
@@ -89,17 +97,17 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
           expect(subject).to include "passed"
         end
       end
-    end
 
-    context "with an id" do
-      subject { service_by_id.logged_fixity_status }
+      context "with an id" do
+        subject { service_by_id.logged_fixity_status }
 
-      before do
-        ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
-      end
+        before do
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+        end
 
-      it "records the fixity result" do
-        expect(subject).to include "passed"
+        it "records the fixity result" do
+          expect(subject).to include "passed"
+        end
       end
     end
   end

@@ -64,9 +64,8 @@ module Hyrax
 
     # Return current fixity status for this FileSet based on
     # ChecksumAuditLog records on file.
-    # TODO: This method is on this class for legacy, callers
-    # should just use FixityStatusService directly.
     def logged_fixity_status
+      Deprecation.warn(self, "logged_fixity_status is deprecated, use FixityStatusPresenter instead")
       FixityStatusPresenter.new(file_set.id).render_file_set_status
     end
 

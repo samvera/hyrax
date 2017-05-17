@@ -77,7 +77,7 @@ module Hyrax
     end
 
     def fixity_check_status
-      fixity_check_service.logged_fixity_status
+      Hyrax::FixityStatusPresenter.new(id).render_file_set_status
     end
 
     def parent
