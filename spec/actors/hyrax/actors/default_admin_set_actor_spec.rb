@@ -23,7 +23,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
 
       it "creates the default AdminSet with a PermissionTemplate and an ActiveWorkflow then calls the next actor with the default admin set id" do
         expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
-          expect(k.attributes).to eq(admin_set_id: default_id)
+          expect(k.attributes).to eq("admin_set_id" => default_id)
           true
         end
         expect(AdminSet).to receive(:find_or_create_default_admin_set_id).and_return(default_id)
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
 
       it "uses the provided id, ensures a permission template, and returns true" do
         expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
-          expect(k.attributes).to eq(attributes)
+          expect(k.attributes).to eq("admin_set_id" => admin_set.id)
           true
         end
         expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)

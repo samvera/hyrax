@@ -34,13 +34,13 @@ RSpec.describe CreateWorkJob do
     context "when the update is successful" do
       it "logs the success" do
         expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
-          expect(env.attributes).to eq(keyword: [],
-                                       title: ['File One'],
-                                       resource_type: ["Article"],
+          expect(env.attributes).to eq("keyword" => [],
+                                       "title" => ['File One'],
+                                       "resource_type" => ["Article"],
                                        "permissions_attributes" =>
                                                  [{ "type" => "group", "name" => "public", "access" => "read" }],
                                        "visibility" => "open",
-                                       uploaded_files: [upload1.id])
+                                       "uploaded_files" => [upload1.id])
         end.and_return(true)
         subject
         expect(log.reload.status).to eq 'success'

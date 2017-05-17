@@ -37,7 +37,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       it 'does not receive the embargo attributes' do
         expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
-          expect(k.attributes).to eq(visibility: 'open')
+          expect(k.attributes).to eq("visibility" => 'open')
           false
         end
         subject.create(env)
