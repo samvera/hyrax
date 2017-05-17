@@ -20,14 +20,22 @@ digraph models_diagram {
   }
 
   subgraph 3 {
-    "Sipity::EntitySpecificResponsibility" [label="{ Sipity::EntitySpecificResponsibility | The given Sipity::Agent\n has the given role\n for all works in this workflow }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/entity_specific_responsibility.rb";]
-    "Sipity::WorkflowAction" [label="{ Sipity::WorkflowState | The valid actions\n for the given workflow }"] [URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_action.rb";]
+    "Sipity::EntitySpecificResponsibility" [label="{ Sipity::EntitySpecificResponsibility | The given Sipity::Agent\n has the given role\n for the specific work }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/entity_specific_responsibility.rb";]
+    "Sipity::WorkflowAction" [label="{ Sipity::WorkflowAction | The valid actions\n for the given workflow }"] [URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_action.rb";]
     "Sipity::WorkflowResponsibility" [label="{ Sipity::WorkflowResponsibility | The given Sipity::Agent\n has the given role\n for all works in this workflow }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_responsibility.rb";]
     "Sipity::WorkflowRole" [label="{ Sipity::WorkflowRole | The valid roles \n for the given workflow }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_role.rb";]
     "Sipity::WorkflowState" [label="{ Sipity::WorkflowState | The valid states\n for the given workflow }"] [URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_state.rb";]
     "Sipity::WorkflowStateAction" [label="{ Sipity::WorkflowStateAction | The actions that can\n be taken for the\n given workflow & state }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_state_action.rb";]
     "Sipity::WorkflowStateActionPermission" [label="{ Sipity::WorkflowStateActionPermission | The role required to \n take the action \n for the given workflow }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/workflow_state_action_permission.rb";]
     "Sipity::Role" [label="{ Sipity::Role | All of the named \n roles for the site }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/role.rb";]
+    "Sipity::Method" [label=" { Sipity::Method | Arbitrary lambdas to call\nwhen action is taken}" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/method.rb";]
+  }
+
+  subgraph 4 {
+    node[color=gold penwidth=2]
+    "Sipity::NotifiableContext" [label=" { Sipity::NotifiableContext | Arbitrary lambdas to call\nwhen action is taken}" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/notifiable_context.rb";]
+    "Sipity::Notification" [label=" { Sipity::Notification | A type of notification to send }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/notification.rb";]
+    "Sipity::NotificationRecipient" [label=" { Sipity::NotificationRecipient | Who receives the notification }" URL="http://github.com/projecthydra-labs/hyrax/blob/master/app/models/sipity/notification_recipient.rb";]
   }
 
   subgraph 1 {
@@ -39,7 +47,7 @@ digraph models_diagram {
   "AdminSet" -> "PermissionTemplate" [arrowtail=none, arrowhead=none, dir=both]
   "User" -> "GroupMembership" [arrowtail=none, arrowhead=crow, dir=both]
   "Group" -> "GroupMembership" [arrowtail=none, arrowhead=crow, dir=both]
-  "PermissionTemplate" -> "Sipity::Workflow"  [label="possible" arrowtail=none, arrowhead=crow, dir=both]
+  "PermissionTemplate" -> "Sipity::Workflow"  [label="possible" color=gold fontcolor=gold arrowtail=none, arrowhead=crow, dir=both]
   "PermissionTemplate" -> "Sipity::Workflow"  [label="active" arrowtail=none, arrowhead=none, dir=both]
   "Sipity::Entity" -> "Sipity::Workflow"  [arrowtail=crow, arrowhead=none, dir=both]
   "AbstractWork" -> "AdminSet"  [arrowtail=crow, arrowhead=none, dir=both]
@@ -51,13 +59,18 @@ digraph models_diagram {
   "Sipity::Workflow" -> "Sipity::WorkflowAction" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::Workflow" -> "Sipity::WorkflowRole" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::WorkflowAction" -> "Sipity::WorkflowStateAction" [arrowtail=none, arrowhead=crow, dir=both]
+  "Sipity::WorkflowState" -> "Sipity::WorkflowAction" [label="resulting_workflow_state" color=purple fontcolor=purple arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::WorkflowState" -> "Sipity::WorkflowStateAction" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::WorkflowStateAction" -> "Sipity::WorkflowStateActionPermission" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::WorkflowRole" -> "Sipity::WorkflowStateActionPermission" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::Role" -> "Sipity::WorkflowRole" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::WorkflowRole" -> "Sipity::WorkflowResponsibility" [arrowtail=none, arrowhead=crow, dir=both]
+  "Sipity::WorkflowAction" -> "Sipity::Method" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::Agent" -> "Sipity::WorkflowResponsibility" [arrowtail=none, arrowhead=crow, dir=both]
   "Sipity::Agent" -> "Group" [label="as proxy" arrowtail=none, arrowhead=none, dir=both]
   "Sipity::Agent" -> "User" [label="as proxy" arrowtail=none, arrowhead=none, dir=both]
   "Sipity::WorkflowState" -> "Sipity::Entity" [arrowtail=none, arrowhead=crow, dir=both]
+  "Sipity::WorkflowAction" -> "Sipity::NotifiableContext" [arrowtail=none, arrowhead=crow, dir=both]
+  "Sipity::NotifiableContext" -> "Sipity::Notification" [arrowtail=none, arrowhead=crow, dir=both]
+  "Sipity::Notification" -> "Sipity::NotificationRecipient" [arrowtail=none, arrowhead=crow, dir=both]
 }
