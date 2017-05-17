@@ -88,6 +88,6 @@ EOF
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
   spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'i18n-debug' unless ENV['TRAVIS']
+  spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
 end
