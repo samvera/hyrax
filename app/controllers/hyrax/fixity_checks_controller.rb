@@ -21,6 +21,10 @@ module Hyrax
     protected
 
       def fixity_check_service
+        # We are calling `async_jobs: false` to ensure we get a fixity result to
+        # return even if there are no 'fresh' ones on record. Otherwise, we'd
+        # have to sometimes return a 'in progress' status for some bytestreams,
+        # which is a possible future enhancement.
         @fixity_check_service ||=
           FileSetFixityCheckService.new(::FileSet.find(params[:file_set_id]), async_jobs: false)
       end
