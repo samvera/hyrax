@@ -1,4 +1,4 @@
-class FixityCheckJob < ActiveJob::ApplicationJob
+class FixityCheckJob < Hyrax::ApplicationJob
   # A Job class that runs a fixity check (using ActiveFedora::FixityService,
   # which contacts fedora and requests a fixity check), and stores the results
   # in an ActiveRecord ChecksumAuditLog row. It also prunes old ChecksumAuditLog
