@@ -67,7 +67,7 @@ module Hyrax
     # TODO: This method is on this class for legacy, callers
     # should just use FixityStatusService directly.
     def logged_fixity_status
-      FixityStatusService.new(file_set.id).file_set_status
+      FixityStatusPresenter.new(file_set.id).render_file_set_status
     end
 
     private

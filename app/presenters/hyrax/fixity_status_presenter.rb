@@ -1,22 +1,25 @@
 module Hyrax
-  # Creates fixity status messages to display to user, for a fileset, or
-  # a specific version/file within it. Determines status by looking up
-  # existing ChecksumAuditLog objects, does not actually do a check itself.
+  # Creates fixity status messages to display to user, for a fileset.
+  # Determines status by looking up existing recorded ChecksumAuditLog objects,
+  # does not actually do a check itself.
+  #
   # See FileSetFixityCheckService and ChecksumAuditLog for actually performing
   # checks and recording as ChecksumAuditLog objects.
-  class FixityStatusService
+  class FixityStatusPresenter
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::OutputSafetyHelper
 
     attr_reader :file_set_id, :relevant_log_records
+    # Note this takes a file_set_id NOT a FileSet, easy use from either solr
+    # or AF object.
     def initialize(file_set_id)
       @file_set_id = file_set_id
     end
 
     # Returns a html_safe string communicating fixity status checks,
     # possibly on multiple files/versions.
-    def file_set_status
+    def render_file_set_status
       @file_set_status ||=
         if relevant_log_records.empty?
           "Fixity checks have not yet been run on this object"
