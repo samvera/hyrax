@@ -131,7 +131,7 @@ module Hyrax
 
       def admin_set_abilities
         can :manage, [AdminSet, Hyrax::PermissionTemplate, Hyrax::PermissionTemplateAccess] if admin?
-        can :manage_any, AdminSet if admin_set_ids_for_management.present?
+        can :manage_any, AdminSet if admin? || admin_set_ids_for_management.present?
 
         can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplate do |template|
           test_edit(template.admin_set_id)
