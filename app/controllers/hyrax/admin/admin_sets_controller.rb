@@ -17,9 +17,6 @@ module Hyrax
     # Used to get the members for the show action
     self.member_search_builder_class = Hyrax::AdminAdminSetMemberSearchBuilder
 
-    # Used to get a list of admin sets for the index action
-    # self.list_search_builder_class = Hyrax::AdminSetSearchBuilder
-
     # Used to create the admin set
     class_attribute :admin_set_create_service
     self.admin_set_create_service = AdminSetCreateService
@@ -90,12 +87,6 @@ module Hyrax
         # it on the admin page.
         authorize! :manage_any, AdminSet
       end
-
-      # Overriding the way that the search builder is initialized
-      # def list_search_builder
-      #   Probably not used anymore, commenting out
-      #   list_search_builder_class.new(self, :edit)
-      # end
 
       def create_admin_set
         admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
