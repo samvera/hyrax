@@ -26,7 +26,7 @@ describe Hyrax::UploadsController do
 
   describe "#destroy" do
     let(:file) { File.open(fixture_path + '/world.png') }
-    let(:uploaded_file) { Hyrax::UploadedFile.create(file: file, user: user) }
+    let(:uploaded_file) { create(:uploaded_file, file: file, user: user) }
 
     context "when signed in" do
       before do
@@ -39,9 +39,12 @@ describe Hyrax::UploadsController do
         expect(File.exist?(uploaded_file.file.file.file)).to be false
       end
 
-      it "doesn't destroy files that don't belong to me" do
-        delete :destroy, params: { id: Hyrax::UploadedFile.create(file: file) }
-        expect(response.status).to eq 401
+      context "for a file that doesn't belong to me" do
+        let(:uploaded_file) { create(:uploaded_file, file: file) }
+        it "doesn't destroy" do
+          delete :destroy, params: { id: uploaded_file }
+          expect(response.status).to eq 401
+        end
       end
     end
 
