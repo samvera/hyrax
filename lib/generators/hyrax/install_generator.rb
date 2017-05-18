@@ -23,7 +23,7 @@ module Hyrax
   13. Installs hyrax assets
   14. Updates simple_form to use browser validations
   15. Installs Blacklight gallery (and removes it's scss)
-  16. Runs the jquery-datatables generator
+  16. Install jquery-datatables
   17. Initializes the active-fedora_noid database-backed minter
   18. Adds configuration to config/application.rb to fix tinymce asset compiling
          """
@@ -143,7 +143,16 @@ module Hyrax
     end
 
     def datatables
-      generate 'jquery:datatables:install bootstrap3'
+      # Generator is broken https://github.com/rweng/jquery-datatables-rails/issues/225
+      # generate 'jquery:datatables:install bootstrap3'
+      insert_into_file 'app/assets/javascripts/application.js', after: /jquery.?\n/ do
+        "//= require dataTables/jquery.dataTables\n" \
+        "//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+      end
+
+      insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
+        " *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+      end
     end
 
     def af_noid_database_minter_initialize
