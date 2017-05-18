@@ -4,7 +4,9 @@ module Sipity
   class WorkflowState < ActiveRecord::Base
     self.table_name = 'sipity_workflow_states'
 
-    belongs_to :workflow, class_name: 'Sipity::Workflow'
+    belongs_to :workflow,
+               class_name: 'Sipity::Workflow'
+
     has_many :originating_workflow_state_actions,
              dependent: :destroy,
              class_name: 'Sipity::WorkflowStateAction',
