@@ -163,12 +163,14 @@ es:
         appearance:         "Apariencia"
         collections:        "Colecciones"
         configuration:      "Configuración"
+        content_blocks:     "Bloques de Contenido"
         notifications:      "Notificaciones"
         profile:            "Perfil"
         repository_objects: "Contenido del repositorio"
         settings:           "Ajustes"
         statistics:         "Informes"
         tasks:              "Tareas"
+        technical:          "Técnico"
         transfers:          "Transferencias"
         users:              "Usarios"
         user_activity:      "Su actividad"
@@ -351,6 +353,15 @@ es:
       select_type: "Seleccionar el Tipo de Problema"
       subject_label: "Tema"
       type_label: "Tipo de Problema"
+    content_blocks:
+      cancel:       "Cancelar"
+      tabs:
+        about_page: "Acerca de la Página"
+        announcement_text: "Texto del Anuncio"
+        featured_researcher: "Investigador Destacado"
+        help_page:  "Página de Ayuda"
+        marketing_text: "Texto de Marketing"
+      updated: "Bloques de contenido actualizados."
     controls:
       about:            "Acerca de"
       contact:          "Contacto"
@@ -484,6 +495,7 @@ es:
         tab_label:          'Explorar Colecciones'
         title:              'Explorar Colecciones'
       featured_researcher:
+        missing:            'No se han presentado investigadores.'
         tab_label:          'Investigador destacado'
         title:              'Investigador destacado'
         view_more:          'Ver otros investigadores destacados'

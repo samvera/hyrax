@@ -1,70 +1,86 @@
 RSpec.describe Hyrax::ContentBlocksController, type: :controller do
-  describe "#update" do
-    let(:content_block) { FactoryGirl.create(:content_block) }
-    before { request.env["HTTP_REFERER"] = "whence_i_came" }
+  let!(:announcement_text) do
+    FactoryGirl.create(:content_block, name: 'announcement_text')
+  end
+  let!(:marketing_text) do
+    FactoryGirl.create(:content_block, name: 'marketing_text')
+  end
+  let!(:featured_researcher) do
+    FactoryGirl.create(:content_block, name: 'featured_researcher')
+  end
+  let!(:about_page) do
+    FactoryGirl.create(:content_block, name: 'about_page')
+  end
+  let!(:help_page) do
+    FactoryGirl.create(:content_block, name: 'help_page')
+  end
 
-    context "when not logged in" do
-      it "UPDATE should redirect to sign_in path" do
-        patch :update, params: { id: content_block, content_block: { value: 'foo' } }
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
-      end
+  before do
+    sign_in user
+  end
 
-      it "CREATE should redirect to sign_in path" do
-        post :create, params: { content_block: { name: 'NNN', value: 'VVV' } }
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
-      end
+  context 'with an unprivileged user' do
+    let(:user) { FactoryGirl.create(:user) }
 
-      context "get INDEX" do
-        let!(:current_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: Time.zone.now) }
-        let!(:old_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: 2.hours.ago) }
-        let!(:market_text) { ContentBlock.create(name: ContentBlock::MARKETING) }
-
-        before { get :index }
-
-        it "displays the list of featured researchers" do
-          expect(response).to be_successful
-          expect(response).to render_template(:index)
-          expect(assigns(:content_blocks)).to eq [current_researcher, old_researcher]
-        end
+    describe "GET #edit" do
+      it "denies the request" do
+        get :edit
+        expect(response).to have_http_status(401)
       end
     end
 
-    context "when logged in" do
-      let(:user) { FactoryGirl.create(:user) }
-      before { allow(controller).to receive_messages(current_user: user) }
+    describe "PATCH #update" do
+      it "denies the request" do
+        patch :update, params: { id: 1 }
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
 
-      context "as a user in the admin group" do
-        before { expect(user).to receive(:groups).and_return(['admin', 'registered']) }
+  context 'with an administrator' do
+    let(:user) { FactoryGirl.create(:admin) }
 
-        it "UPDATE should save" do
-          patch :update, params: { id: content_block, content_block: { value: 'foo' } }
-          expect(response).to redirect_to "whence_i_came"
-          expect(assigns[:content_block].value).to eq 'foo'
-        end
+    describe "GET #edit" do
+      it "assigns the requested site as @site" do
+        get :edit
+        expect(response).to have_http_status(200)
+      end
+    end
 
-        it "CREATE should save" do
-          expect do
-            post :create, params: { content_block: { name: 'NNN', value: 'VVV', external_key: 'key' } }
-          end.to change { ContentBlock.count }.by(1)
-          expect(response).to redirect_to "whence_i_came"
-          expect(assigns[:content_block].name).to eq 'NNN'
-          expect(assigns[:content_block].value).to eq 'VVV'
-          expect(assigns[:content_block].external_key).to eq 'key'
-        end
+    describe "PATCH #update" do
+      it "updates the about page" do
+        patch :update, params: { id: about_page.id, content_block: { about_page: 'This is a new page about us!' } }
+        expect(response).to redirect_to(edit_content_blocks_path)
+        expect(flash[:notice]).to include 'Content blocks updated'
+        expect(ContentBlock.about_page.value).to eq "This is a new page about us!"
       end
 
-      context "as a user without permission" do
-        it "UPDATE is unauthorized" do
-          patch :update, params: { id: content_block, content_block: { value: 'foo' } }
-          expect(response.code).to eq '401'
-          expect(response).to render_template(:unauthorized)
-        end
+      it "updates the help page" do
+        patch :update, params: { id: help_page.id, content_block: { help_page: 'This page will provide more of the help you need.' } }
+        expect(response).to redirect_to(edit_content_blocks_path)
+        expect(flash[:notice]).to include 'Content blocks updated'
+        expect(ContentBlock.help_page.value).to eq 'This page will provide more of the help you need.'
+      end
 
-        it "CREATE should redirect to root path" do
-          post :create, params: { content_block: { name: 'NNN', value: 'VVV' } }
-          expect(response.code).to eq '401'
-          expect(response).to render_template(:unauthorized)
-        end
+      it "updates the announcement text" do
+        patch :update, params: { id: announcement_text.id, content_block: { announcement_text: 'Now Hiring!' } }
+        expect(response).to redirect_to(edit_content_blocks_path)
+        expect(flash[:notice]).to include 'Content blocks updated'
+        expect(ContentBlock.announcement_text.value).to eq "Now Hiring!"
+      end
+
+      it "updates the marketing text" do
+        patch :update, params: { id: marketing_text.id, content_block: { marketing_text: '99 days since last crash!' } }
+        expect(response).to redirect_to(edit_content_blocks_path)
+        expect(flash[:notice]).to include 'Content blocks updated'
+        expect(ContentBlock.marketing_text.value).to eq "99 days since last crash!"
+      end
+
+      it "updates the featured researcher" do
+        patch :update, params: { id: featured_researcher.id, content_block: { featured_researcher: 'Jane Doe is unimpeachable' } }
+        expect(response).to redirect_to(edit_content_blocks_path)
+        expect(flash[:notice]).to include 'Content blocks updated'
+        expect(ContentBlock.featured_researcher.value).to eq "Jane Doe is unimpeachable"
       end
     end
   end

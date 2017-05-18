@@ -10,6 +10,12 @@ module Hyrax
     delegate :controller, :controller_name, :action_name, :content_tag,
              :current_page?, :link_to, :can?, to: :view_context
 
+    # Returns true if the current controller happens to be one of the controllers that deals
+    # with settings.  This is used to keep the parent section on the sidebar open.
+    def settings_section?
+      %w[appearances content_blocks features].include?(controller_name)
+    end
+
     # @param options [Hash, String] a hash or string representing the path. Hash is prefered as it
     #                              allows us to workaround https://github.com/rails/rails/issues/28253
     # @param also_active_for [Hash, String] a hash or string with alternative paths that should be 'active'

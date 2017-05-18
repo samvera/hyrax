@@ -36,8 +36,13 @@ $gutter-width: $grid-gutter-width/2;
       transform: rotate(-180deg);
     }
 
-    .nav-pills > li > a {
-      padding-left: 24px;
+    .nav-pills > li {
+      a {
+        padding-left: 24px;
+      }
+      ul > li a {
+        padding-left: 52px;
+      }
     }
   }
 

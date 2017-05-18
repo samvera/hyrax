@@ -199,10 +199,15 @@ Hyrax::Engine.routes.draw do
     resource :appearance
   end
 
-  resources :content_blocks, only: ['create', 'update']
-  get 'featured_researchers' => 'content_blocks#index', as: :featured_researchers
+  resources :content_blocks, only: [] do
+    member do
+      patch :update
+    end
+    collection do
+      get :edit
+    end
+  end
   post '/tinymce_assets' => 'tinymce_assets#create'
-
   get 'about' => 'pages#show', id: 'about_page'
   get 'help' => 'pages#show', id: 'help_page'
 

@@ -5,6 +5,8 @@ module Hyrax
     MARKETING  = 'marketing_text'.freeze
     RESEARCHER = 'featured_researcher'.freeze
     ANNOUNCEMENT = 'announcement_text'.freeze
+    ABOUT = 'about_page'.freeze
+    HELP = 'help_page'.freeze
 
     def external_key_name
       self.class.external_keys.fetch(name) { 'External Key' }
@@ -41,6 +43,22 @@ module Hyrax
 
       def external_keys
         { RESEARCHER => 'User' }
+      end
+
+      def about_page
+        find_or_create_by(name: ABOUT)
+      end
+
+      def about_page=(value)
+        about_page.update(value: value)
+      end
+
+      def help_page
+        find_or_create_by(name: HELP)
+      end
+
+      def help_page=(value)
+        help_page.update(value: value)
       end
     end
   end

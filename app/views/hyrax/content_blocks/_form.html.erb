@@ -1,0 +1,101 @@
+<div class="panel panel-default tabs">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+      <a href="#about_page" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.about_page') %></a>
+    </li>
+    <li>
+      <a href="#help_page" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.help_page') %></a>
+    </li>
+    <li>
+      <a href="#announcement_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
+    </li>
+    <li>
+      <a href="#marketing_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
+    </li>
+    <li>
+      <a href="#featured_researcher" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div id="about_page" class="tab-pane active">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.about_page, url: hyrax.content_block_path(ContentBlock.about_page) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :about_page %><br>
+                <%= f.text_area :about_page, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.content_blocks.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="help_page" class="tab-pane">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.help_page, url: hyrax.content_block_path(ContentBlock.help_page) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :help_page %><br>
+                <%= f.text_area :help_page, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.content_blocks.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="marketing_text" class="tab-pane">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.marketing_text, url: hyrax.content_block_path(ContentBlock.marketing_text) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :marketing_text %><br>
+                <%= f.text_area :marketing_text, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.content_blocks.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="announcement_text" class="tab-pane">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.announcement_text, url: hyrax.content_block_path(ContentBlock.announcement_text) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :announcement_text %><br>
+                <%= f.text_area :announcement_text, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.content_blocks.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="featured_researcher" class="tab-pane">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.featured_researcher, url: hyrax.content_block_path(ContentBlock.featured_researcher) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :featured_researcher %><br>
+                <%= f.text_area :featured_researcher, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.content_blocks.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

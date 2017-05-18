@@ -1,20 +1,12 @@
 module Hyrax
   module ContentBlockHelperBehavior
-    def editable_content_block(content_block, show_new = false)
-      return raw(content_block.value) unless can? :update, content_block
-      capture do
-        concat content_tag(:div, id: dom_id(content_block, 'preview'), class: 'content_block_preview') {
-          concat raw(content_block.value)
-          concat edit_button(content_block)
-          concat new_button(content_block) if show_new
-        }
-        concat edit_form(content_block)
-        concat new_form(content_block.name) if show_new
-      end
+    def displayable_content_block(content_block, **options)
+      return if content_block.value.blank?
+      content_tag :div, raw(content_block.value), options
     end
 
-    def display_editable_content_block?(content_block)
-      content_block.value.present? || can?(:update, content_block)
+    def display_content_block?(content_block)
+      content_block.value.present?
     end
 
     def edit_button(content_block)
