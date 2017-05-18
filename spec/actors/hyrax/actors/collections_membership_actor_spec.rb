@@ -28,7 +28,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     it 'does not receive the member_of_collection_ids' do
       expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
-        expect(k.attributes).to eq(title: ["test"])
+        expect(k.attributes).to eq("title" => ["test"])
       end
       subject.create(env)
     end

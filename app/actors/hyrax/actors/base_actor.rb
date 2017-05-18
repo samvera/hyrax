@@ -82,7 +82,6 @@ module Hyrax
         #   self.attributes
         # => { 'title' => ['first', 'second'] }
         def remove_blank_attributes!(attributes)
-          # TODO: Don't use each_with_object here; Parameters no longer inherits from Hash
           multivalued_form_attributes(attributes).each_with_object(attributes) do |(k, v), h|
             h[k] = v.instance_of?(Array) ? v.select(&:present?) : v
           end

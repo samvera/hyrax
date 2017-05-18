@@ -7,7 +7,7 @@ module Hyrax
       def initialize(curation_concern, current_ability, attributes)
         @curation_concern = curation_concern
         @current_ability = current_ability
-        @attributes = attributes
+        @attributes = attributes.to_h.with_indifferent_access
       end
 
       attr_reader :curation_concern, :current_ability, :attributes
