@@ -18,8 +18,9 @@ module Sipity
 
     describe '#proxy_for' do
       let(:work) { FactoryGirl.create(:generic_work) }
+      let(:entity) { Sipity::Entity.new(proxy_for_global_id: work.to_global_id) }
+
       it 'will retrieve based on a GlobalID of the object' do
-        entity = Sipity::Entity.create!(proxy_for_global_id: work.to_global_id, workflow_state_id: 1, workflow_id: 2)
         expect(entity.proxy_for).to eq(work)
       end
     end
