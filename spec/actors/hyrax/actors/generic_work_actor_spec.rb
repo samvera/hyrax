@@ -123,7 +123,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       context 'with a file' do
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
-            a[:uploaded_files] = [uploaded_file]
+            a[:uploaded_files] = [uploaded_file.id]
           end
         end
 
