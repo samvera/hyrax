@@ -1,4 +1,10 @@
 export class InputTracker {
+  /*
+   * @param element {jQuery} The field to bind to. Typically instantiated for
+   *                         the titles of each member (file_set) object as well
+   *                         the hidden work thumbnail_id and representative_id
+   * @param notifier {FileManagerMember}
+   */
   constructor(element, notifier) {
     this.element = element
     this.notifier = notifier
