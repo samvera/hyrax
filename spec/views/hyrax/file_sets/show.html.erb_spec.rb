@@ -23,6 +23,7 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
     assign(:presenter, presenter)
     assign(:document, solr_doc)
     assign(:fixity_status, "none")
+    allow(FileSet).to receive(:find).with('123').and_return(file_set)
   end
 
   describe 'title heading' do

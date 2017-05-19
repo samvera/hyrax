@@ -1,20 +1,49 @@
 class ChecksumAuditLog < ActiveRecord::Base
-  # TODO: this method doesn't seem to be used. Remove?
-  def self.fixity_check_log(id, path, version_uri)
-    ChecksumAuditLog.find_or_create_by(file_set_id: id, file_id: path, version: version_uri)
+  def failed?
+    !passed?
   end
 
-  # Check to see if there are previous passing logs that we can delete
-  # we want to keep the first passing event after a failure, the most current passing event,
-  # and all failures so that this table doesn't grow too large
-  # Simple way (a little naive): if the last 2 were passing, delete the first one
-  def self.prune_history(id, path)
-    list = logs_for(id, path).limit(2)
-    return if list.size <= 1 || list[0].pass != 1 || list[1].pass != 1
-    list[0].destroy
+  # Only the latest rows for a given file_set_id/checked_uri pair.
+  # Uses a join, so you might have to be careful combining. You would
+  # normally combine this with other conditions, this alone will return
+  # LOTS of records.
+  def self.latest_checks
+    # one crazy SQL trick to get the latest for each fileset/checked_uri combo
+    # where there's no other self-join created_at greater -- only the greatest.
+    joins("LEFT JOIN checksum_audit_logs c2 ON
+            (checksum_audit_logs.file_set_id = c2.file_set_id AND
+             checksum_audit_logs.checked_uri = c2.checked_uri AND
+             checksum_audit_logs.created_at < c2.created_at)")
+      .where("c2.id is NULL")
+      .order("created_at desc, id desc")
   end
 
-  def self.logs_for(id, path)
-    ChecksumAuditLog.where(file_set_id: id, file_id: path).order('created_at desc, id desc')
+  # From all ChecksumAuditLogs related to this file set, returns only
+  # the LATEST for each file_set_id/checked_uri pair.
+  def self.latest_for_file_set_id(file_set_id)
+    latest_checks.where(file_set_id: file_set_id)
+  end
+
+  # Prune old ChecksumAuditLog records. We keep only:
+  # * Latest check
+  # * failing checks
+  # * any checks immediately before or after a failing check,
+  #   to provide context on known good dates surrounding failing.
+  def self.prune_history(file_set_id, checked_uri:)
+    all_logs = logs_for(file_set_id, checked_uri: checked_uri).to_a
+
+    0.upto(all_logs.length - 2).each do |i|
+      next if all_logs[i].failed?
+      next if i > 0 && all_logs[i - 1].failed?
+      next if all_logs[i + 1].failed?
+
+      all_logs[i].destroy!
+    end
+  end
+
+  # All logs for a particular file or version in a give file set, sorted
+  # by date descending.
+  def self.logs_for(file_set_id, checked_uri:)
+    ChecksumAuditLog.where(file_set_id: file_set_id, checked_uri: checked_uri).order('created_at desc, id desc')
   end
 end

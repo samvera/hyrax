@@ -1,9 +1,14 @@
 module Hyrax
   class FixityCheckFailureService < MessageUserService
-    attr_reader :log_date
+    attr_reader :log_date, :checksum_audit_log, :file_set
 
-    def initialize(file_set, user, log_date)
-      @log_date = log_date
+    def initialize(file_set, checksum_audit_log:)
+      @file_set = file_set
+      @checksum_audit_log = checksum_audit_log
+      @log_date = checksum_audit_log.created_at
+
+      user = ::User.find_by_user_key(file_set.depositor)
+
       super(file_set, user)
     end
 

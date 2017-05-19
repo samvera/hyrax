@@ -11,18 +11,25 @@ RSpec.describe Hyrax::FixityChecksController do
 
   context "when signed in" do
     describe "POST create" do
-      before { sign_in user }
-
-      it "returns json with the result" do
+      before do
+        sign_in user
         post :create, params: { file_set_id: file_set }, xhr: true
+      end
+      let(:json_response) { JSON.parse(response.body) }
+      it "returns json with the result" do
         expect(response).to be_success
-        json = JSON.parse(response.body)
         # json is a structure like this:
-        #   { file_id => [{ "version" => "version1", "pass" => 999 },
-        #                 { "version" => "version2", "pass" => 0 },
+        #   { file_id => [{ "checked_uri" => "...4-4d71-83ba-1bc52a5e4300/fcr:versions/version1", "passed" => true },
+        #                 { "checked_uri" => ".../version2", "passed" => false },
         #                 ...] }
-        fixity_results = json.values.flatten.collect { |result| result["pass"] }
-        expect(fixity_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
+        json_response.each do |_file_id, array_of_checks|
+          array_of_checks.each do |check_hash|
+            expect(check_hash.keys).to include("file_set_id", "file_id", "checked_uri", "passed", "expected_result", "created_at")
+            expect(check_hash["passed"]).to be_in([true, false])
+          end
+        end
+        fixity_results = json_response.values.flatten.collect { |result| result["passed"] }
+        expect(fixity_results.all? { |r| r == true }).to be true
       end
     end
   end
