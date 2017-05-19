@@ -25,6 +25,7 @@ module Hyrax
 
     def index
       # The user's collections for the "add to collection" form
+      # TODO: could this be only on the My::WorksController?
       @user_collections = collections_service.search_results(:edit)
 
       @user = current_user
