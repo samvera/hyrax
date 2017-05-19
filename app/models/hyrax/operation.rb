@@ -18,7 +18,9 @@ module Hyrax
     self.table_name = 'curation_concerns_operations'
     acts_as_nested_set
     define_callbacks :success, :failure
-    belongs_to :user, class_name: '::User'
+    belongs_to :user,
+               optional: true,
+               class_name: '::User'
 
     # If this is a batch job (has children), check to see if all the children are complete
     # @see #fail! when none of the children are in a PENDING nor PERFORMING state but at least one is in a FAILURE state

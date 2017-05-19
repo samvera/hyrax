@@ -8,9 +8,9 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
 
   let(:triggered_methods) { [instance_double(Sipity::Method, service_name: 'FooBar')] }
   let(:triggered_methods_rel) do
-    instance_double(Sipity::Method::ActiveRecord_Relation,
-                    order: triggered_methods,
-                    any?: true)
+    double('Sipity::Method::ActiveRecord_Relation',
+           order: triggered_methods,
+           any?: true)
   end
   let(:work) { instance_double(GenericWork, id: '9999') }
   let(:action) { instance_double(Sipity::WorkflowAction, triggered_methods: triggered_methods_rel) }
