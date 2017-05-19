@@ -133,6 +133,33 @@ RSpec.describe 'collection', type: :feature do
     end
   end
 
+  # TODO: this is just like the block above. Merge them.
+  describe 'show pages of a collection' do
+    before do
+      docs = (0..12).map do |n|
+        { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
+          "depositor_ssim" => [user.user_key],
+          "suppressed_bsi" => false,
+          "member_of_collection_ids_ssim" => [collection.id],
+          "edit_access_person_ssim" => [user.user_key] }
+      end
+      ActiveFedora::SolrService.add(docs, commit: true)
+
+      sign_in user
+    end
+    let(:collection) { create(:named_collection, user: user) }
+
+    it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
+      visit '/dashboard/my/collections'
+      expect(page).to have_content(collection.title.first)
+      within('#document_' + collection.id) do
+        # Now go to the collection show page
+        click_link("Display all details of collection title")
+      end
+      expect(page).to have_css(".pager")
+    end
+  end
+
   describe 'add works to collection' do
     before do
       collection1 # create collections by referencing them
@@ -227,25 +254,6 @@ RSpec.describe 'collection', type: :feature do
       expect(page).to have_content(collection.description.first)
       expect(page).not_to have_content(work1.title.first)
       expect(page).not_to have_content(work2.title.first)
-    end
-  end
-
-  describe 'show pages of a collection' do
-    before do
-      (0..12).map do
-        create(:work, member_of_collections: [collection], user: user)
-      end
-      sign_in user
-    end
-    let(:collection) { create(:named_collection, user: user) }
-
-    it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      visit '/dashboard/my/collections'
-      expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
-        click_link("Display all details of collection title")
-      end
-      expect(page).to have_css(".pager")
     end
   end
 end
