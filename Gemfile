@@ -10,7 +10,3 @@ group :development, :test do
   gem "simplecov", require: false
 end
 
-unless File.exist?(file)
-  eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__))
-end
-
