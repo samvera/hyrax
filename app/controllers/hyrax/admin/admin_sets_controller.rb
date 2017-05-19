@@ -4,7 +4,7 @@ module Hyrax
 
     # added skip to allow flash notices. see https://github.com/projecthydra-labs/hyrax/issues/202
     skip_before_action :filter_docs_with_read_access!
-    before_action :ensure_admin!
+    before_action :ensure_manager!
     load_and_authorize_resource
 
     layout 'dashboard'
@@ -16,9 +16,6 @@ module Hyrax
 
     # Used to get the members for the show action
     self.member_search_builder_class = Hyrax::AdminAdminSetMemberSearchBuilder
-
-    # Used to get a list of admin sets for the index action
-    self.list_search_builder_class = Hyrax::AdminSetSearchBuilder
 
     # Used to create the admin set
     class_attribute :admin_set_create_service
@@ -36,7 +33,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
-      @admin_sets = Hyrax::AdminSetService.new(self).search_results(:read)
+      @admin_sets = Hyrax::AdminSetService.new(self).search_results(:edit)
     end
 
     def new
@@ -85,15 +82,10 @@ module Hyrax
 
     private
 
-      def ensure_admin!
+      def ensure_manager!
         # Even though the user can view this admin set, they may not be able to view
         # it on the admin page.
-        authorize! :read, :admin_dashboard
-      end
-
-      # Overriding the way that the search builder is initialized
-      def list_search_builder
-        list_search_builder_class.new(self, :read)
+        authorize! :manage_any, AdminSet
       end
 
       def create_admin_set
@@ -106,6 +98,14 @@ module Hyrax
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
         @form = form_class.new(@admin_set)
+      end
+
+      # Overrides the parent implementation so that the returned search builder
+      #  searches for edit access
+      # Instantiates the search builder that builds a query for a single item
+      # this is useful in the show view.
+      def single_item_search_builder
+        single_item_search_builder_class.new(self, :edit).with(params.except(:q, :page))
       end
 
       def action_breadcrumb

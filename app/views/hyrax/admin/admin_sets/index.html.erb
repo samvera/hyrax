@@ -1,10 +1,12 @@
 <% provide :page_header do %>
   <h1><span class="fa fa-sitemap"></span> Administrative Sets</h1>
-  <div class="pull-right">
-    <%= link_to hyrax.new_admin_admin_set_path, class: 'btn btn-primary' do %>
-      <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
-    <% end %>
-  </div>
+  <%if can? :create, AdminSet %>
+    <div class="pull-right">
+      <%= link_to hyrax.new_admin_admin_set_path, class: 'btn btn-primary' do %>
+        <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
 
 <div class="panel panel-default">
