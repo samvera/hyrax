@@ -20,12 +20,12 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
                     triggered_methods: Sipity::Method.none)
   end
 
-  before do
-    allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
-  end
-
   context 'if the given user cannot perform the given action' do
-    before { expect(Hyrax::Workflow::PermissionQuery).to receive(:authorized_for_processing?).and_return(false) }
+    before do
+      allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
+      expect(Hyrax::Workflow::PermissionQuery).to receive(:authorized_for_processing?).and_return(false)
+    end
+
     describe '#valid?' do
       subject { form.valid? }
       it { is_expected.to be false }
@@ -54,6 +54,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
 
   context 'if the given user can perform the given action' do
     before do
+      allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
       expect(Hyrax::Workflow::PermissionQuery).to receive(:authorized_for_processing?)
         .and_return(true)
     end
@@ -108,6 +109,20 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
         )
         subject
       end
+    end
+  end
+
+  context 'when no option is selected upon initialization' do
+    before do
+      sipity_entity
+    end
+    let(:form) do
+      described_class.new(current_ability: current_ability,
+                          work: work,
+                          attributes: { comment: '' })
+    end
+    it 'will be invalid' do
+      expect(form).not_to be_valid
     end
   end
 end

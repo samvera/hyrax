@@ -38,6 +38,7 @@ module Hyrax
       validate :authorized_for_processing
 
       def authorized_for_processing
+        return false if name.blank? # name is the action which converts to sipity_workflow_action
         return true if Hyrax::Workflow::PermissionQuery.authorized_for_processing?(
           user: subject.user,
           entity: subject.entity,
@@ -51,7 +52,7 @@ module Hyrax
 
         def convert_to_sipity_objects!
           @subject = WorkflowActionInfo.new(work, current_user)
-          @sipity_workflow_action = PowerConverter.convert_to_sipity_action(name, scope: subject.entity.workflow)
+          @sipity_workflow_action = PowerConverter.convert_to_sipity_action(name, scope: subject.entity.workflow) { nil }
         end
 
         attr_reader :subject, :sipity_workflow_action
