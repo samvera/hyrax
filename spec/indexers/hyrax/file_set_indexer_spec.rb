@@ -6,7 +6,6 @@ RSpec.describe Hyrax::FileSetIndexer do
   let(:file_set) do
     FileSet.new(
       id: 'foo123',
-      part_of: ['Arabiana'],
       contributor: ['Mohammad'],
       creator: ['Allah'],
       title: ['The Work'],
@@ -60,7 +59,6 @@ RSpec.describe Hyrax::FileSetIndexer do
     it 'has fields' do
       expect(subject[Solrizer.solr_name('hasRelatedMediaFragment', :symbol)]).to eq 'foo123'
       expect(subject[Solrizer.solr_name('hasRelatedImage', :symbol)]).to eq 'foo123'
-      expect(subject[Solrizer.solr_name('part_of')]).to be_nil
       expect(subject[Solrizer.solr_name('date_uploaded')]).to be_nil
       expect(subject[Solrizer.solr_name('date_modified')]).to be_nil
       expect(subject[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
