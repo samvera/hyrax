@@ -89,6 +89,7 @@ zh:
             visibility:         "发布与公开度"
             workflow:           "工作流程"
         form_participant_table:
+          allow_all_registered: "允许所有注册用户存款"
           depositors:
             action:             "行动"
             agent_name:         "管理集的存储者"
@@ -105,6 +106,7 @@ zh:
             remove:             "移除"
             title:              "管理者"
             type:               "类型"
+          registered_users:     "注册用户"
           viewers:
             action:             "行动"
             agent_name:         "管理集的观众"

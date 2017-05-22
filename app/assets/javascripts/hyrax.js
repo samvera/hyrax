@@ -66,6 +66,8 @@
 // Provide AMD module support
 //= require almond
 //= require hyrax/admin/admin_set_controls
+//= require hyrax/admin/admin_set/group_participants
+//= require hyrax/admin/admin_set/registered_users
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
 //= require hyrax/editor
