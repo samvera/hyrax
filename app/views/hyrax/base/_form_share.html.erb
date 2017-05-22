@@ -27,10 +27,10 @@
         <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
       </td>
       <td>
-	<%= permission_fields.label :agent_name, class: "control-label" do %>
-	  <%= user_display_name_and_key(permission_fields.object.agent_name) %>
-	<% end %>
-	<button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
+        <%= permission_fields.label :agent_name, class: "control-label" do %>
+          <%= user_display_name_and_key(permission_fields.object.agent_name) %>
+        <% end %>
+        <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
       </td>
     </tr>
   <% end %>
