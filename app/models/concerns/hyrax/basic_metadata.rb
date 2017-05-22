@@ -11,8 +11,6 @@ module Hyrax
       property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false
 
       property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'), multiple: false
-
-      property :part_of, predicate: ::RDF::Vocab::DC.isPartOf
       property :resource_type, predicate: ::RDF::Vocab::DC.type
       property :creator, predicate: ::RDF::Vocab::DC11.creator
       property :contributor, predicate: ::RDF::Vocab::DC11.contributor

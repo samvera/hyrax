@@ -81,7 +81,6 @@ RSpec.describe FileSet do
       expect(subject).to respond_to(:depositor)
       expect(subject).to respond_to(:related_url)
       expect(subject).to respond_to(:based_near)
-      expect(subject).to respond_to(:part_of)
       expect(subject).to respond_to(:contributor)
       expect(subject).to respond_to(:creator)
       expect(subject).to respond_to(:title)
