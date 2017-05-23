@@ -111,8 +111,7 @@ module Hyrax
         return unless admin?
 
         can :read, :admin_dashboard
-        can :create, TinymceAsset
-        can [:create, :update], ContentBlock
+        can :update, ContentBlock
         can :edit, ::SolrDocument
       end
 

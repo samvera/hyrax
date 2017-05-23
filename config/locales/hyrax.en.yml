@@ -500,7 +500,6 @@ en:
         missing:            'No researchers have been featured.'
         tab_label:          'Featured Researcher'
         title:              'Featured Researcher'
-        view_more:          'View other featured researchers'
       featured_works:
         drag:               'Drag'
         no_works:           'No works have been featured'

@@ -1,7 +1,6 @@
 module Hyrax
   class ContentBlocksController < ApplicationController
-    load_and_authorize_resource except: :index
-    authorize_resource only: :index
+    load_and_authorize_resource
     layout 'dashboard'
 
     def edit

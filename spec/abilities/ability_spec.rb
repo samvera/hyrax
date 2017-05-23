@@ -80,8 +80,6 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "a user with no roles" do
     let(:user) { nil }
-    it { is_expected.not_to be_able_to(:create, TinymceAsset) }
-    it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
@@ -92,8 +90,6 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "a registered user" do
     let(:user) { create(:user) }
-    it { is_expected.not_to be_able_to(:create, TinymceAsset) }
-    it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.not_to be_able_to(:read, Hyrax::Statistics) }
@@ -105,8 +101,6 @@ RSpec.describe 'Hyrax::Ability', type: :model do
   describe "a user in the admin group" do
     let(:user) { create(:user) }
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
-    it { is_expected.to be_able_to(:create, TinymceAsset) }
-    it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.to be_able_to(:read, Hyrax::Statistics) }

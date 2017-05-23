@@ -500,7 +500,6 @@ es:
         missing:            'No se han presentado investigadores.'
         tab_label:          'Investigador destacado'
         title:              'Investigador destacado'
-        view_more:          'Ver otros investigadores destacados'
       featured_works:
         drag:               'Arrastrar'
         no_works:           'No hay trabajos destacados'

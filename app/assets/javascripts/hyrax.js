@@ -47,7 +47,6 @@
 //= require hyrax/trophy
 //= require hyrax/facets
 //= require hyrax/featured_works
-//= require hyrax/featured_researcher
 //= require hyrax/batch_select_all
 //= require hyrax/browse_everything
 //= require hyrax/search
