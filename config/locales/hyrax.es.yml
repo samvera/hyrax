@@ -87,6 +87,7 @@ es:
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
         form_participant_table:
+          allow_all_registered: "Permitir que todos los usuarios registrados depositen"
           depositors:
             action:             "Acción"
             agent_name:         "Depositantes de este Conjunto"
@@ -103,6 +104,7 @@ es:
             remove:             "Quitar"
             title:              "Administradores"
             type:               "Tipo"
+          registered_users:     "Usuarios Registrados"
           viewers:
             action:             "Acción"
             agent_name:         "Espectadores de este Conjunto"
