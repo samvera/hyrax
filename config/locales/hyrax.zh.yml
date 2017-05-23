@@ -169,6 +169,7 @@ zh:
         configuration:      "配置"
         content_blocks:     "内容块"
         notifications:      "通知"
+        pages:              "网页"
         profile:            "个人资料"
         repository_objects: "储存库内容"
         settings:           "设置"
@@ -360,10 +361,8 @@ zh:
     content_blocks:
       cancel: "取消"
       tabs:
-        about_page: "关于页面"
         announcement_text: "公告文字"
         featured_researcher: "特色研究员"
-        help_page:  "帮助页面"
         marketing_text: "营销文字"
       updated: "内容块已更新。"
     controls:
@@ -535,6 +534,12 @@ zh:
         single: "已保存。"
         subject: "批量上传完成"
         title:  "文件上传成功"
+    pages:
+      cancel: "取消"
+      tabs:
+        about_page: "关于页面"
+        help_page:  "帮助页面"
+      updated: "页面更新。"
     passive_consent_to_agreement: "保存这件作品表明我同意"
     search:
       button:

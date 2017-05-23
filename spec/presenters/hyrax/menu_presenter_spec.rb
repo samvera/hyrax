@@ -12,6 +12,10 @@ RSpec.describe Hyrax::MenuPresenter do
       let(:controller_name) { Hyrax::ContentBlocksController.controller_name }
       it { is_expected.to be true }
     end
+    context "for the PagesController" do
+      let(:controller_name) { Hyrax::PagesController.controller_name }
+      it { is_expected.to be true }
+    end
   end
 
   describe "#collapsable_section" do

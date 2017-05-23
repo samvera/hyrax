@@ -82,8 +82,11 @@
           <% end %>
         <% end %>
         <% if can?(:manage, Hyrax::Feature) %>
+          <%= menu.nav_link(hyrax.edit_pages_path) do %>
+            <span class="fa fa-file-text-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.pages') %></span>
+          <% end %>
           <%= menu.nav_link(hyrax.edit_content_blocks_path) do %>
-            <span class="fa fa-file-text-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.content_blocks') %></span>
+            <span class="fa fa-square-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.content_blocks') %></span>
           <% end %>
           <%= menu.nav_link(hyrax.admin_features_path) do %>
             <span class="fa fa-wrench"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.technical') %></span>

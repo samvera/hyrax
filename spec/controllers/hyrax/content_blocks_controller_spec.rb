@@ -8,12 +8,6 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   let!(:featured_researcher) do
     FactoryGirl.create(:content_block, name: 'featured_researcher')
   end
-  let!(:about_page) do
-    FactoryGirl.create(:content_block, name: 'about_page')
-  end
-  let!(:help_page) do
-    FactoryGirl.create(:content_block, name: 'help_page')
-  end
 
   before do
     sign_in user
@@ -41,27 +35,17 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
     let(:user) { FactoryGirl.create(:admin) }
 
     describe "GET #edit" do
-      it "assigns the requested site as @site" do
+      it "renders breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Configuration', '#')
+        expect(controller).to receive(:add_breadcrumb).with('Content Blocks', edit_content_blocks_path)
         get :edit
         expect(response).to have_http_status(200)
       end
     end
 
     describe "PATCH #update" do
-      it "updates the about page" do
-        patch :update, params: { id: about_page.id, content_block: { about_page: 'This is a new page about us!' } }
-        expect(response).to redirect_to(edit_content_blocks_path)
-        expect(flash[:notice]).to include 'Content blocks updated'
-        expect(ContentBlock.about_page.value).to eq "This is a new page about us!"
-      end
-
-      it "updates the help page" do
-        patch :update, params: { id: help_page.id, content_block: { help_page: 'This page will provide more of the help you need.' } }
-        expect(response).to redirect_to(edit_content_blocks_path)
-        expect(flash[:notice]).to include 'Content blocks updated'
-        expect(ContentBlock.help_page.value).to eq 'This page will provide more of the help you need.'
-      end
-
       it "updates the announcement text" do
         patch :update, params: { id: announcement_text.id, content_block: { announcement_text: 'Now Hiring!' } }
         expect(response).to redirect_to(edit_content_blocks_path)

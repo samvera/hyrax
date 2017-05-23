@@ -1,0 +1,44 @@
+<div class="panel panel-default tabs">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+      <a href="#about_page" role="tab" data-toggle="tab"><%= t(:'hyrax.pages.tabs.about_page') %></a>
+    </li>
+    <li>
+      <a href="#help_page" role="tab" data-toggle="tab"><%= t(:'hyrax.pages.tabs.help_page') %></a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div id="about_page" class="tab-pane active">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.about_page, url: hyrax.page_path(ContentBlock.about_page) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :about_page %><br>
+                <%= f.text_area :about_page, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="help_page" class="tab-pane">
+      <div class="panel panel-default labels">
+        <%= simple_form_for ContentBlock.help_page, url: hyrax.page_path(ContentBlock.help_page) do |f| %>
+          <div class="panel-body">
+            <div class="field form-group">
+                <%= f.label :help_page %><br>
+                <%= f.text_area :help_page, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
+            <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

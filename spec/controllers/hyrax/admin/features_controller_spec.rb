@@ -19,6 +19,10 @@ RSpec.describe Hyrax::Admin::FeaturesController do
       end
 
       it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Configuration', '#')
+        expect(controller).to receive(:add_breadcrumb).with('Technical', admin_features_path)
         get :index
         expect(response).to be_success
       end

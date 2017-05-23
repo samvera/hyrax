@@ -6,6 +6,7 @@ module Hyrax
     def edit
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
       add_breadcrumb t(:'hyrax.admin.sidebar.content_blocks'), hyrax.edit_content_blocks_path
     end
 
@@ -22,9 +23,7 @@ module Hyrax
     protected
 
       def permitted_params
-        params.require(:content_block).permit(:about_page,
-                                              :help_page,
-                                              :marketing_text,
+        params.require(:content_block).permit(:marketing_text,
                                               :announcement_text,
                                               :featured_researcher)
       end
