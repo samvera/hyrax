@@ -165,12 +165,14 @@ en:
         appearance:         "Appearance"
         collections:        "Collections"
         configuration:      "Configuration"
+        content_blocks:     "Content Blocks"
         notifications:      "Notifications"
         profile:            "Profile"
         repository_objects: "Repository Contents"
         settings:           "Settings"
         statistics:         "Reports"
         tasks:              "Tasks"
+        technical:          "Technical"
         transfers:          "Transfers"
         users:              "Manage Users"
         user_activity:      "Your activity"
@@ -353,6 +355,15 @@ en:
       select_type: "Select an Issue Type"
       subject_label: "Subject"
       type_label: "Issue Type"
+    content_blocks:
+      cancel:       "Cancel"
+      tabs:
+        about_page: "About Page"
+        announcement_text: "Announcement Text"
+        featured_researcher: "Featured Researcher"
+        help_page:  "Help Page"
+        marketing_text: "Marketing Text"
+      updated: "Content blocks updated."
     controls:
       about:            "About"
       contact:          "Contact"
@@ -486,6 +497,7 @@ en:
         tab_label:          'Explore Collections'
         title:              'Explore Collections'
       featured_researcher:
+        missing:            'No researchers have been featured.'
         tab_label:          'Featured Researcher'
         title:              'Featured Researcher'
         view_more:          'View other featured researchers'

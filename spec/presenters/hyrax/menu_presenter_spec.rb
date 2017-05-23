@@ -5,6 +5,17 @@ RSpec.describe Hyrax::MenuPresenter do
   let(:context) { ActionView::TestCase::TestController.new.view_context }
   let(:controller_name) { controller.controller_name }
 
+  describe "#settings_section?" do
+    before do
+      allow(context).to receive(:controller_name).and_return(controller_name)
+    end
+    subject { instance.settings_section? }
+    context "for the ContentBlocksController" do
+      let(:controller_name) { Hyrax::ContentBlocksController.controller_name }
+      it { is_expected.to be true }
+    end
+  end
+
   describe "#collapsable_section" do
     subject do
       instance.collapsable_section('link title',

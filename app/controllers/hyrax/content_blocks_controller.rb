@@ -1,33 +1,41 @@
 module Hyrax
   class ContentBlocksController < ApplicationController
     load_and_authorize_resource except: :index
-    before_action :load_featured_researchers, only: :index
     authorize_resource only: :index
+    layout 'dashboard'
 
-    def index; end
-
-    def create
-      @content_block.save
-      redirect_back fallback_location: hyrax.content_blocks_path
+    def edit
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.content_blocks'), hyrax.edit_content_blocks_path
     end
 
     def update
-      @content_block.update(update_params)
-      redirect_back fallback_location: hyrax.content_blocks_path
+      respond_to do |format|
+        if @content_block.update(value: update_value_from_params)
+          format.html { redirect_to hyrax.edit_content_blocks_path, notice: t(:'hyrax.content_blocks.updated') }
+        else
+          format.html { render :edit }
+        end
+      end
     end
 
     protected
 
-      def create_params
-        params.require(:content_block).permit([:name, :value, :external_key])
+      def permitted_params
+        params.require(:content_block).permit(:about_page,
+                                              :help_page,
+                                              :marketing_text,
+                                              :announcement_text,
+                                              :featured_researcher)
       end
 
-      def update_params
-        params.require(:content_block).permit([:value, :external_key])
-      end
-
-      def load_featured_researchers
-        @content_blocks = ContentBlock.recent_researchers.page(params[:page])
+      # When a request comes to the controller, it will be for one and
+      # only one of the content blocks. Params always looks like:
+      #   {'about_page' => 'Here is an awesome about page!'}
+      # So reach into permitted params and pull out the first value.
+      def update_value_from_params
+        permitted_params.values.first
       end
   end
 end

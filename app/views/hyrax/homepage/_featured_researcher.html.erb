@@ -1,7 +1,5 @@
-<%= editable_content_block @featured_researcher, true %>
-
-<ul class="list-inline collection-highlights-list">
-  <li>
-    <%= link_to t('hyrax.homepage.featured_researcher.view_more'), hyrax.featured_researchers_path, class: 'btn btn-default' %>
-  </li>
-</ul>
+<% if @featured_researcher.value.present? %>
+  <%= displayable_content_block @featured_researcher %>
+<% else %>
+  <%= t('hyrax.homepage.featured_researcher.missing') %>
+<% end %>

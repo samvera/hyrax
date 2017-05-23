@@ -167,12 +167,14 @@ zh:
         appearance:         "表面"
         collections:        "收藏"
         configuration:      "配置"
+        content_blocks:     "内容块"
         notifications:      "通知"
         profile:            "个人资料"
         repository_objects: "储存库内容"
         settings:           "设置"
         statistics:         "统计"
         tasks:              "任务"
+        technical:          "技术"
         transfers:          "转让"
         users:              "管理用户"
         user_activity:      "你的操作"
@@ -355,6 +357,15 @@ zh:
       select_type: "选择问题类型"
       subject_label: "主题"
       type_label: "问题类型"
+    content_blocks:
+      cancel: "取消"
+      tabs:
+        about_page: "关于页面"
+        announcement_text: "公告文字"
+        featured_researcher: "特色研究员"
+        help_page:  "帮助页面"
+        marketing_text: "营销文字"
+      updated: "内容块已更新。"
     controls:
       about:            "关于"
       contact:          "联系"
@@ -486,6 +497,7 @@ zh:
         tab_label:          '探索收藏集'
         title:              '探索收藏集'
       featured_researcher:
+        missing:            '没有研究人员被特色。'
         tab_label:          '特色研究者'
         title:              '特色研究者'
         view_more:          '阅览其他特色研究者'

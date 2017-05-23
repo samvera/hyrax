@@ -33,6 +33,7 @@ Metrics/BlockLength:
   ExcludedMethods: ['included']
   Exclude:
     - 'hyrax.gemspec'
+    - 'app/models/concerns/hyrax/content_block_behavior.rb'
     - 'app/services/hyrax/workflow/workflow_schema.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/routes.rb'
