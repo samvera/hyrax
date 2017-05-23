@@ -8,7 +8,7 @@ module Hyrax
         end
 
         def search_path(value)
-          Rails.application.routes.url_helpers.search_catalog_path(:"f[#{search_field}][]" => ERB::Util.h(value))
+          Rails.application.routes.url_helpers.search_catalog_path(:"f[#{search_field}][]" => value)
         end
 
         def search_field
