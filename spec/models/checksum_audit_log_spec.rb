@@ -27,22 +27,51 @@ RSpec.describe ChecksumAuditLog do
   end
 
   describe "prune_history" do
-    context "complex history" do
-      let(:file_set_id) { "file_set_id" }
-      let(:file_id) { "file_id" }
-      let(:version_uri) { "#{file_id}/fcr:versions/version1" }
-      before do
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: false)
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
-        described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true)
+    let(:file_set_id) { "file_set_id" }
+    let(:file_id) { "file_id" }
+    let(:version_uri) { "#{file_id}/fcr:versions/version1" }
 
+    context "one passing record" do
+      let!(:record) { described_class.create(created_at: 1.day.ago, file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+
+      before do
+        described_class.prune_history(file_set_id, checked_uri: version_uri)
+      end
+
+      it "keeps record" do
+        expect(described_class.logs_for(file_set_id, checked_uri: version_uri).count).to eq(1)
+      end
+    end
+
+    context "two passing records" do
+      let!(:older) { described_class.create(created_at: 1.day.ago, file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      let!(:newer) { described_class.create(created_at: 0.days.ago, file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+
+      before do
+        described_class.prune_history(file_set_id, checked_uri: version_uri)
+      end
+
+      it "keeps latest, gets rid of previous" do
+        logs = described_class.logs_for(file_set_id, checked_uri: version_uri).to_a
+        expect(logs.length).to eq 1
+        expect(logs.first.id).to eq newer.id
+      end
+    end
+
+    context "complex history" do
+      let!(:first)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      let!(:second) { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      let!(:third)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: false) }
+      let!(:fourth) { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      let!(:fifth)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      let!(:sixth)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+      before do
         described_class.prune_history(file_set_id, checked_uri: version_uri)
       end
       it "keeps latest, failing, and previous/next of failing" do
-        expect(described_class.logs_for(file_set_id, checked_uri: version_uri).collect(&:passed)).to eq([true, false, true, true])
+        logs = described_class.logs_for(file_set_id, checked_uri: version_uri).reorder("created_at asc")
+        expect(logs.collect(&:id)).to eq([second.id, third.id, fourth.id, sixth.id])
+        expect(logs.collect(&:passed)).to eq([true, false, true, true])
       end
     end
 
@@ -53,13 +82,14 @@ RSpec.describe ChecksumAuditLog do
         success2 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
         described_class.prune_history(f.id, checked_uri: version_uri)
         success3 = described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true)
+
         described_class.prune_history(f.id, checked_uri: version_uri)
 
+        expect { described_class.find(success1.id) }.to raise_exception ActiveRecord::RecordNotFound
         expect { described_class.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
-        expect { described_class.find(success3.id) }.to raise_exception ActiveRecord::RecordNotFound
-        expect(described_class.find(success1.id)).not_to be_nil
+        expect(described_class.find(success3.id)).not_to be_nil
         logs = described_class.logs_for(f.id, checked_uri: version_uri)
-        expect(logs).to eq([success1, new, old])
+        expect(logs.collect(&:id)).to eq([success3.id])
       end
     end
   end

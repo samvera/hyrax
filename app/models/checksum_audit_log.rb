@@ -30,7 +30,7 @@ class ChecksumAuditLog < ActiveRecord::Base
   # * any checks immediately before or after a failing check,
   #   to provide context on known good dates surrounding failing.
   def self.prune_history(file_set_id, checked_uri:)
-    all_logs = logs_for(file_set_id, checked_uri: checked_uri).to_a
+    all_logs = logs_for(file_set_id, checked_uri: checked_uri).reorder("created_at asc").to_a
 
     0.upto(all_logs.length - 2).each do |i|
       next if all_logs[i].failed?
