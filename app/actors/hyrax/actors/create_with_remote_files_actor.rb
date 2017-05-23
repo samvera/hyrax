@@ -35,7 +35,7 @@ module Hyrax
           ::FileSet.new(import_url: url, label: file_name) do |fs|
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
-            actor.attach_file_to_work(env.curation_concern)
+            actor.attach_to_work(env.curation_concern)
             fs.save!
             uri = URI.parse(URI.encode(url))
             if uri.scheme == 'file'

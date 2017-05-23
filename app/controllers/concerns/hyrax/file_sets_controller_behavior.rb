@@ -120,7 +120,7 @@ module Hyrax
 
       def process_file(actor, file)
         actor.create_metadata(params[:file_set])
-        actor.attach_file_to_work(find_parent_by_id)
+        actor.attach_to_work(find_parent_by_id)
         actor.create_content(file)
       end
 

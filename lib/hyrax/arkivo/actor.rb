@@ -30,7 +30,7 @@ module Hyrax
         file_actor.create_metadata
         file_set.label = item['file']['filename']
         file_actor.create_content(file) # item['file']['contentType']
-        file_actor.attach_file_to_work(work)
+        file_actor.attach_to_work(work)
 
         work
       end
