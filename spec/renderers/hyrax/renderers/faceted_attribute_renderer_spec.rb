@@ -20,4 +20,15 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
     it { expect(renderer).not_to be_microdata(field) }
     it { expect(subject).to be_equivalent_to(expected) }
   end
+
+  describe "href generated" do
+    describe "escaping" do
+      let(:renderer) { described_class.new(field, ['John & Bob']) }
+      let(:rendered_link) { Nokogiri::HTML(renderer.render).at_css("a") }
+      let(:rendered_link_query) { URI.parse(rendered_link['href']).query }
+      it "escapes content properly" do
+        expect(rendered_link_query).to eq "#{CGI.escape('f[name_sim][]')}=#{CGI.escape('John & Bob')}"
+      end
+    end
+  end
 end
