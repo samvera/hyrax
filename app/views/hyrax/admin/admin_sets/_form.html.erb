@@ -23,7 +23,9 @@
                 <%= render 'form_metadata', f: f %>
 
                 <% if f.object.persisted? && f.object.member_ids.present? %>
-                  <%= f.input :thumbnail_id, collection: @form.select_files %>
+                  <%# we're loading these values dynamically to speed page load %>
+                  <%= f.input :thumbnail_id,
+                              input_html: { data: { text: f.object.thumbnail_title } } %>
                 <% end %>
 
               </div>

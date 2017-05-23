@@ -13,8 +13,6 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#new" do
-      let!(:admin_set) { create(:admin_set) }
-
       it 'is unauthorized' do
         get :new
         expect(response).to be_redirect
@@ -30,6 +28,14 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           get :show, params: { id: admin_set }
           expect(response).to be_redirect
         end
+      end
+    end
+
+    describe "#files" do
+      let(:admin_set) { create(:admin_set) }
+      it 'is unauthorized' do
+        get :files, params: { id: admin_set }, format: :json
+        expect(response).to be_unauthorized
       end
     end
   end
@@ -108,6 +114,14 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         get :edit, params: { id: admin_set }
         expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
+      end
+    end
+
+    describe "#files" do
+      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      it 'shows a list of member files' do
+        get :files, params: { id: admin_set }, format: :json
+        expect(response).to be_success
       end
     end
 

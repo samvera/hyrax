@@ -44,6 +44,16 @@ module Hyrax
       setup_form
     end
 
+    # Renders a JSON response with a list of files in this admin set.
+    # This is used by the edit form
+    def files
+      form = form_class.new(@admin_set)
+      result = form.select_files.map do |label, id|
+        { id: id, text: label }
+      end
+      render json: result
+    end
+
     def update
       if @admin_set.update(admin_set_params)
         redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
