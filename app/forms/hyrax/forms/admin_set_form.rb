@@ -22,6 +22,11 @@ module Hyrax
                                  end
       end
 
+      def thumbnail_title
+        return unless model.thumbnail
+        model.thumbnail.title.first
+      end
+
       class << self
         # This determines whether the allowed parameters are single or multiple.
         # By default it delegates to the model.

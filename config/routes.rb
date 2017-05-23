@@ -186,6 +186,9 @@ Hyrax::Engine.routes.draw do
 
   namespace :admin do
     resources :admin_sets do
+      member do
+        get :files
+      end
       resource :permission_template
     end
     resources :users, only: [:index]

@@ -9,6 +9,21 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
     end
   end
 
+  describe "#thumbnail_title" do
+    subject { form.thumbnail_title }
+
+    context "when the admin_set has a thumbnail" do
+      let(:thumbnail) { stub_model(FileSet, title: ['Ulysses']) }
+      let(:model) { AdminSet.new(thumbnail: thumbnail) }
+      it { is_expected.to eq "Ulysses" }
+    end
+
+    context "when the admin_set has no thumbnail" do
+      let(:model) { AdminSet.new }
+      it { is_expected.to be nil }
+    end
+  end
+
   describe "#permission_template" do
     subject { form.permission_template }
     context "when the PermissionTemplate doesn't exist" do
