@@ -500,7 +500,6 @@ zh:
         missing:            '没有研究人员被特色。'
         tab_label:          '特色研究者'
         title:              '特色研究者'
-        view_more:          '阅览其他特色研究者'
       featured_works:
         drag:               '拖'
         no_works:           '没有特色作品'

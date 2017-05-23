@@ -33,7 +33,6 @@ EOF
   spec.add_dependency 'blacklight', '~> 6.9'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
-  spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.17.beta'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'select2-rails', '~> 3.5.9'
   spec.add_dependency 'json-schema' # for Arkivio

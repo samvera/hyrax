@@ -210,7 +210,6 @@ Hyrax::Engine.routes.draw do
       get :edit
     end
   end
-  post '/tinymce_assets' => 'tinymce_assets#create'
   get 'about' => 'pages#show', id: 'about_page'
   get 'help' => 'pages#show', id: 'help_page'
 
