@@ -370,7 +370,6 @@ zh:
       contact:          "联系"
       help:             "帮助"
       home:             "首页"
-      terms:            "使用条款"
     dashboard:
       additional_notifications: "见所有通知"
       admin_sets:
@@ -465,7 +464,6 @@ zh:
       user_activity:            "用户活动"
       user_notifications:       "用户通知"
       view_files:               "阅览文件"
-    deposit_agreement:  "存储协议"
     directory:
       suffix:           "@example.org"
     document_language:  "en"
@@ -539,6 +537,8 @@ zh:
       tabs:
         about_page: "关于页面"
         help_page:  "帮助页面"
+        agreement_page: "存储协议"
+        terms_page: "使用条款"
       updated: "页面更新。"
     passive_consent_to_agreement: "保存这件作品表明我同意"
     search:

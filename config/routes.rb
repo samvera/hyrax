@@ -218,11 +218,13 @@ Hyrax::Engine.routes.draw do
       get :edit
     end
   end
-  get 'about' => 'pages#show', id: 'about_page'
-  get 'help' => 'pages#show', id: 'help_page'
+  get 'about' => 'pages#show', key: 'about'
+  get 'help' => 'pages#show', key: 'help'
+  get 'terms' => 'pages#show', key: 'terms'
+  get 'agreement' => 'pages#show', key: 'agreement'
 
   # Static page routes
-  %w[terms zotero mendeley agreement].each do |action|
+  %w[zotero mendeley].each do |action|
     get action, controller: 'static', action: action, as: action
   end
 end

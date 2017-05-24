@@ -5,24 +5,29 @@ RSpec.describe Hyrax::PagesController, type: :controller do
     sign_in user
   end
 
-  context "when content exists" do
-    describe "GET #show" do
-      let(:page) { ContentBlock.create!(name: 'about_page', value: "foo bar") }
-
+  describe "GET #show" do
+    context "when content exists" do
+      let!(:page) do
+        ContentBlock.about_page = "foo bar"
+        ContentBlock.for(:about)
+      end
       it "updates the node and renders homepage layout" do
-        get :show, params: { id: page.name }
+        get :show, params: { key: 'about' }
         expect(response).to render_template('layouts/homepage')
         expect(response).to be_successful
         expect(assigns[:page]).to eq page
       end
     end
-  end
-  context "when content does not exist" do
-    describe "GET #show" do
+    context "when content does not exist" do
       it "creates the node" do
-        get :show, params: { id: "about_page" }
+        get :show, params: { key: 'about' }
         expect(response).to be_successful
         expect(assigns[:page]).not_to be_nil
+      end
+    end
+    context "with an id that lacks a route" do
+      it "raises an ActionController exception" do
+        expect { get :show, params: { key: 'destroy_all' } }.to raise_error(ActionController::UrlGenerationError)
       end
     end
   end
@@ -33,6 +38,13 @@ RSpec.describe Hyrax::PagesController, type: :controller do
     let!(:help_page) do
       FactoryGirl.create(:content_block, name: 'help_page')
     end
+    let!(:agreement_page) do
+      FactoryGirl.create(:content_block, name: 'agreement_page')
+    end
+    let!(:terms_page) do
+      FactoryGirl.create(:content_block, name: 'terms_page')
+    end
+
     context 'with an unprivileged user' do
       describe "GET #edit" do
         it "denies the request" do
@@ -48,6 +60,7 @@ RSpec.describe Hyrax::PagesController, type: :controller do
         end
       end
     end
+
     context 'with an administrator' do
       let(:user) { FactoryGirl.create(:admin) }
 
@@ -65,17 +78,31 @@ RSpec.describe Hyrax::PagesController, type: :controller do
 
       describe "PATCH #update" do
         it "updates the about page" do
-          patch :update, params: { id: about_page.id, content_block: { about_page: 'This is a new page about us!' } }
+          patch :update, params: { id: about_page.id, content_block: { about: 'This is a new page about us!' } }
           expect(response).to redirect_to(edit_pages_path)
           expect(flash[:notice]).to include 'Pages updated'
-          expect(ContentBlock.about_page.value).to eq "This is a new page about us!"
+          expect(ContentBlock.for(:about).value).to eq "This is a new page about us!"
         end
 
         it "updates the help page" do
-          patch :update, params: { id: help_page.id, content_block: { help_page: 'This page will provide more of the help you need.' } }
+          patch :update, params: { id: help_page.id, content_block: { help: 'This page will provide more of the help you need.' } }
           expect(response).to redirect_to(edit_pages_path)
           expect(flash[:notice]).to include 'Pages updated'
-          expect(ContentBlock.help_page.value).to eq 'This page will provide more of the help you need.'
+          expect(ContentBlock.for(:help).value).to eq 'This page will provide more of the help you need.'
+        end
+
+        it "updates the agreement page" do
+          patch :update, params: { id: agreement_page.id, content_block: { agreement: 'Here is the deposit agreement' } }
+          expect(response).to redirect_to(edit_pages_path)
+          expect(flash[:notice]).to include 'Pages updated'
+          expect(ContentBlock.for(:agreement).value).to eq 'Here is the deposit agreement'
+        end
+
+        it "updates the terms page" do
+          patch :update, params: { id: terms_page.id, content_block: { terms: 'Terms of Use are good' } }
+          expect(response).to redirect_to(edit_pages_path)
+          expect(flash[:notice]).to include 'Pages updated'
+          expect(ContentBlock.for(:terms).value).to eq 'Terms of Use are good'
         end
       end
     end
