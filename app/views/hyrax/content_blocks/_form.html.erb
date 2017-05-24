@@ -1,23 +1,23 @@
 <div class="panel panel-default tabs">
   <ul class="nav nav-tabs" role="tablist">
     <li>
-      <a href="#announcement_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
+      <a href="#announcement" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
     </li>
     <li>
-      <a href="#marketing_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
+      <a href="#marketing" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
     </li>
     <li>
-      <a href="#featured_researcher" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
+      <a href="#researcher" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
     </li>
   </ul>
   <div class="tab-content">
-    <div id="announcement_text" class="tab-pane active">
+    <div id="announcement" class="tab-pane active">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.announcement_text, url: hyrax.content_block_path(ContentBlock.announcement_text) do |f| %>
+        <%= simple_form_for ContentBlock.for(:announcement), url: hyrax.content_block_path(ContentBlock.for(:announcement)) do |f| %>
           <div class="panel-body">
             <div class="field form-group">
-                <%= f.label :announcement_text %><br>
-                <%= f.text_area :announcement_text, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+                <%= f.label :announcement %><br>
+                <%= f.text_area :announcement, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
           <div class="panel-footer">
@@ -27,13 +27,13 @@
         <% end %>
       </div>
     </div>
-    <div id="marketing_text" class="tab-pane">
+    <div id="marketing" class="tab-pane">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.marketing_text, url: hyrax.content_block_path(ContentBlock.marketing_text) do |f| %>
+        <%= simple_form_for ContentBlock.for(:marketing), url: hyrax.content_block_path(ContentBlock.for(:marketing)) do |f| %>
           <div class="panel-body">
             <div class="field form-group">
-                <%= f.label :marketing_text %><br>
-                <%= f.text_area :marketing_text, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+                <%= f.label :marketing %><br>
+                <%= f.text_area :marketing, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
           <div class="panel-footer">
@@ -43,13 +43,13 @@
         <% end %>
       </div>
     </div>
-    <div id="featured_researcher" class="tab-pane">
+    <div id="researcher" class="tab-pane">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.featured_researcher, url: hyrax.content_block_path(ContentBlock.featured_researcher) do |f| %>
+        <%= simple_form_for ContentBlock.for(:researcher), url: hyrax.content_block_path(ContentBlock.for(:researcher)) do |f| %>
           <div class="panel-body">
             <div class="field form-group">
-                <%= f.label :featured_researcher %><br>
-                <%= f.text_area :featured_researcher, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
+                <%= f.label :researcher %><br>
+                <%= f.text_area :researcher, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
           <div class="panel-footer">

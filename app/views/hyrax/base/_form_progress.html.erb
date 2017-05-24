@@ -33,13 +33,13 @@
         <label>
           <%= check_box_tag 'agreement', 1, f.object.agreement_accepted, required: true %>
           <%= t('hyrax.active_consent_to_agreement') %><br>
-          <%= link_to t('hyrax.deposit_agreement'),
+          <%= link_to t('hyrax.pages.tabs.agreement_page'),
                       hyrax.agreement_path,
                       target: '_blank' %>
         </label>
       <% else %>
         <%= t('hyrax.passive_consent_to_agreement') %><br>
-        <%= link_to t('hyrax.deposit_agreement'),
+        <%= link_to t('hyrax.pages.tabs.agreement_page'),
                     hyrax.agreement_path,
                     target: '_blank' %>
       <% end %>

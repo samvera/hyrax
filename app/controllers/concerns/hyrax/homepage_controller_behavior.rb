@@ -19,10 +19,10 @@ module Hyrax::HomepageControllerBehavior
 
   def index
     @presenter = presenter_class.new(current_ability)
-    @featured_researcher = ContentBlock.featured_researcher
-    @marketing_text = ContentBlock.marketing_text
+    @featured_researcher = ContentBlock.for(:researcher)
+    @marketing_text = ContentBlock.for(:marketing)
     @featured_work_list = FeaturedWorkList.new
-    @announcement_text = ContentBlock.announcement_text
+    @announcement_text = ContentBlock.for(:announcement)
     @admin_sets = fetch_admin_sets
     recent
   end

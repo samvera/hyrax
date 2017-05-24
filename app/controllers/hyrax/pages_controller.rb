@@ -7,7 +7,7 @@ module Hyrax
     helper Hyrax::ContentBlockHelper
 
     def show
-      @page = ContentBlock.find_or_create_by(name: params[:id])
+      @page = ContentBlock.for(params[:key])
     end
 
     def edit
@@ -30,7 +30,10 @@ module Hyrax
     protected
 
       def permitted_params
-        params.require(:content_block).permit(:about_page, :help_page)
+        params.require(:content_block).permit(:about,
+                                              :agreement,
+                                              :help,
+                                              :terms)
       end
 
       # When a request comes to the controller, it will be for one and

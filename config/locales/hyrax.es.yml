@@ -368,7 +368,6 @@ es:
       contact:          "Contacto"
       help:             "Ayuda"
       home:             "Inicio"
-      terms:            "Términos de Uso"
     dashboard:
       additional_notifications: "ver todas las notificaciones"
       admin_sets:
@@ -463,7 +462,6 @@ es:
       user_activity:            "Actividad de usuario"
       user_notifications:       "Notificaciones de Usuario"
       view_files:               "Ver Archivos"
-    deposit_agreement:  "Aceptación del Depósito"
     directory:
       suffix:           "@ejemplo.org"
     document_language:  "es"
@@ -539,6 +537,8 @@ es:
       tabs:
         about_page: "Acerca de la Página"
         help_page:  "Página de Ayuda"
+        agreement_page:  "Aceptación del Depósito"
+        terms_page:  "Términos de Uso"
       updated: "Páginas actualizadas."
     passive_consent_to_agreement: "Al salvar este trabajo yo acepto a"
     search:

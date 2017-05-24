@@ -368,7 +368,6 @@ en:
       contact:          "Contact"
       help:             "Help"
       home:             "Home"
-      terms:            "Terms of Use"
     dashboard:
       additional_notifications: "See all notifications"
       admin_sets:
@@ -463,7 +462,6 @@ en:
       user_activity:            "User Activity"
       user_notifications:       "User Notifications"
       view_files:               "View Files"
-    deposit_agreement:  "Deposit Agreement"
     directory:
       suffix:           "@example.org"
     document_language:  "en"
@@ -539,6 +537,8 @@ en:
       tabs:
         about_page: "About Page"
         help_page:  "Help Page"
+        agreement_page:  "Deposit Agreement"
+        terms_page:  "Terms of Use"
       updated: "Pages updated."
     passive_consent_to_agreement: "By saving this work I agree to the"
     search:

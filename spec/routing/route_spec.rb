@@ -160,13 +160,19 @@ RSpec.describe 'Routes', type: :routing do
 
   describe "Dynamically edited pages" do
     it "routes to about" do
-      expect(get: '/about').to route_to(controller: 'hyrax/pages', action: 'show', id: 'about_page')
+      expect(get: '/about').to route_to(controller: 'hyrax/pages', action: 'show', key: 'about')
     end
     it "routes to help" do
-      expect(get: '/help').to route_to(controller: 'hyrax/pages', action: 'show', id: 'help_page')
+      expect(get: '/help').to route_to(controller: 'hyrax/pages', action: 'show', key: 'help')
+    end
+    it "routes to terms" do
+      expect(get: '/terms').to route_to(controller: 'hyrax/pages', action: 'show', key: 'terms')
+    end
+    it "routes to agreement" do
+      expect(get: '/agreement').to route_to(controller: 'hyrax/pages', action: 'show', key: 'agreement')
     end
     it 'routes to update' do
-      expect(patch: '/pages/1').to route_to(controller: 'hyrax/pages', action: 'update', id: '1')
+      expect(patch: '/pages/foo').to route_to(controller: 'hyrax/pages', action: 'update', id: 'foo')
     end
     it 'routes to edit' do
       expect(get: '/pages/edit').to route_to(controller: 'hyrax/pages', action: 'edit')
@@ -174,10 +180,6 @@ RSpec.describe 'Routes', type: :routing do
   end
 
   describe "Static Pages" do
-    it "routes to terms" do
-      expect(get: '/terms').to route_to(controller: 'hyrax/static', action: 'terms')
-    end
-
     it "routes to zotero" do
       expect(get: '/zotero').to route_to(controller: 'hyrax/static', action: 'zotero')
     end
