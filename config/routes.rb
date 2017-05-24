@@ -157,6 +157,18 @@ Hyrax::Engine.routes.draw do
   get 'single_use_link/generated/:id' => 'single_use_links#index', as: :generated_single_use_links
   delete 'single_use_link/:id/delete/:link_id' => 'single_use_links#destroy', as: :delete_single_use_link
 
+  resources :embargoes, controller: 'embargoes', only: [:index, :edit, :destroy] do
+    collection do
+      patch :update
+    end
+  end
+
+  resources :leases, controller: 'leases', only: [:index, :edit, :destroy] do
+    collection do
+      patch :update
+    end
+  end
+
   # Permissions routes
   scope :concern do
     resources :permissions, only: [] do

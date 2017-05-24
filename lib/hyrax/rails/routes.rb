@@ -46,18 +46,9 @@ module ActionDispatch::Routing
       end
     end
 
-    # kmr added :show to make tests pass
     def curation_concerns_embargo_management
-      resources :embargoes, only: [:index, :edit, :destroy] do
-        collection do
-          patch :update
-        end
-      end
-      resources :leases, only: [:index, :edit, :destroy] do
-        collection do
-          patch :update
-        end
-      end
+      # routes moved to config/routes.rb
+      Deprecation.warn(self, '#curation_concerns_embargo_management is deprecated and has no effect. It will be removed in Hyrax 3.0')
     end
 
     private

@@ -1,0 +1,10 @@
+<% assets_with_deactivated_embargoes.each do |curation_concern| %>
+  <%= link_to curation_concern, edit_embargo_path(curation_concern) %> <%= visibility_badge(curation_concern.visibility) %>
+  <ul>
+    <% curation_concern.embargo_history.each do |entry| %>
+      <% unless entry.empty? %>
+        <li><%= entry %></li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>
