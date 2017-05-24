@@ -26,6 +26,11 @@ EOF
   spec.version       = Hyrax::VERSION
   spec.license       = 'Apache2'
 
+  # Note: rails does not follow sem-ver conventions, it's
+  # minor version releases can include breaking changes; see
+  # http://guides.rubyonrails.org/maintenance_policy.html
+  spec.add_dependency 'rails', '~> 5.0'
+
   spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.3'
   spec.add_dependency 'hydra-works', '~> 0.16'
@@ -52,7 +57,6 @@ EOF
   spec.add_dependency 'flipflop', '~> 2.3'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
-  spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
