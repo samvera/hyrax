@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Stats::WorkStatusSearchBuilder do
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,

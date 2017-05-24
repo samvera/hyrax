@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::AdminSetOptionsPresenter do
   let(:service) { instance_double(Hyrax::AdminSetService) }
   let(:presenter) { described_class.new(service) }

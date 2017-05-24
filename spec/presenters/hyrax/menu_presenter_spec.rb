@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::MenuPresenter do
   let(:instance) { described_class.new(context) }
   let(:context) { ActionView::TestCase::TestController.new.view_context }

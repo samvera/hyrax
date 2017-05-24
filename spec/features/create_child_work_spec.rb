@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'redlock'
 
 RSpec.feature 'Creating a new child Work', :workflow do

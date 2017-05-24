@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SelectTypePresenter do
   let(:instance) { described_class.new(model) }
   let(:model) { GenericWork }

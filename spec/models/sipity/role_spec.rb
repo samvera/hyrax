@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Sipity
   RSpec.describe Role, type: :model, no_clean: true do
     context 'class methods' do

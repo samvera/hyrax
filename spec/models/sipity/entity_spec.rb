@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Sipity
   RSpec.describe Entity, type: :model do
     describe 'database configuration', no_clean: true do

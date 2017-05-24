@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::CollectionOptionsPresenter do
   let(:instance) { described_class.new(service) }
   let(:doc1) { instance_double(SolrDocument, id: 4, to_s: 'Title 1') }

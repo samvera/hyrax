@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe GenericWorkIndexer do
   # TODO: file_set_ids returns an empty set unless you persist the work
   let(:user) { create(:user) }

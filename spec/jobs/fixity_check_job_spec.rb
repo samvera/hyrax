@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe FixityCheckJob do
   let(:user) { create(:user) }
 

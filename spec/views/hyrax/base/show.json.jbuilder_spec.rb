@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/show.json.jbuilder' do
   let(:curation_concern) { create(:generic_work) }
 

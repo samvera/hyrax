@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Hyrax
   module Workflow
     RSpec.describe NotificationConfigurationParameter, no_clean: true do

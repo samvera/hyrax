@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Dashboard::ProfilesController do
   let(:user) { FactoryGirl.create(:user) }
   before do

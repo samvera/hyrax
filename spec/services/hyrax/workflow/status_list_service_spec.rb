@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::StatusListService do
   describe "#each" do
     let(:user) { create(:user) }

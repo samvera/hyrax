@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService do
   # PersistDirectlyContainedOutputFileService is used by FullTextExtract.output_file_service
   let(:object) { FileSet.create! { |fs| fs.apply_depositor_metadata('justin') } }

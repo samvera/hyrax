@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::AbilityHelper do
   describe "#visibility_badge" do
     subject { helper.visibility_badge visibility }

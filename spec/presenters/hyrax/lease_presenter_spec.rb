@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::LeasePresenter do
   let(:document) { SolrDocument.new(attributes) }
   let(:presenter) { described_class.new(document) }

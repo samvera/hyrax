@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
   subject { Nokogiri::HTML(renderer.render) }
   let(:expected) { Nokogiri::HTML(tr_content) }

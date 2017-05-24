@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'cancan/matchers'
 
 RSpec.describe "Ability on embargos and leases" do

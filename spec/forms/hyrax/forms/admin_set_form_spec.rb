@@ -1,4 +1,3 @@
-require 'spec_helper'
 RSpec.describe Hyrax::Forms::AdminSetForm do
   let(:form) { described_class.new(model) }
 

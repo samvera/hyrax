@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::NotificationService do
   context 'class methods' do
     subject { described_class }

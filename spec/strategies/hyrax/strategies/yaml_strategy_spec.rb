@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Strategies::YamlStrategy do
   subject { described_class.new(config: "test_file") }
   context "when given a YAML file" do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Sipity
   RSpec.describe NotificationRecipient, type: :model, no_clean: true do
     subject { described_class.new }

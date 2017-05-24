@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Forms::FileManagerForm do
   let(:work) { create(:work) }
   let(:ability) { instance_double Ability }

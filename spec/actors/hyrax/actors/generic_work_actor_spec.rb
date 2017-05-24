@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'redlock'
 
 RSpec.describe Hyrax::Actors::GenericWorkActor do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::PermissionsController do
   let(:user) { create(:user) }
   before do

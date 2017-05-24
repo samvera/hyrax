@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/_member.html.erb' do
   let(:solr_document) do
     SolrDocument.new(id: '999',

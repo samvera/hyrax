@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
 

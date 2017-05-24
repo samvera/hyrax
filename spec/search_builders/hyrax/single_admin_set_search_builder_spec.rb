@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SingleAdminSetSearchBuilder do
   let(:ability) { instance_double(Ability, admin?: true) }
   let(:context) do

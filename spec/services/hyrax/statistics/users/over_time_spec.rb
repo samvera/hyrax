@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Statistics::Users::OverTime do
   before do
     create(:user, created_at: 1.week.ago)

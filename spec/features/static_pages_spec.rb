@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "The static pages" do
   scenario do
     visit root_path

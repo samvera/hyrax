@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::StrategiesController do
   describe "#update" do
     before do

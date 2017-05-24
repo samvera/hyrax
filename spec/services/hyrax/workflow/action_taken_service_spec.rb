@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::ActionTakenService do
   context 'class methods' do
     subject { described_class }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Forms::Admin::Appearance do
   let(:form) { described_class.new(arguments) }
 

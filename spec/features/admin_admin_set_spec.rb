@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "The admin sets, through the admin dashboard" do
   let(:user) { create :admin }
   let(:title) { "Unique name: #{SecureRandom.hex}" }

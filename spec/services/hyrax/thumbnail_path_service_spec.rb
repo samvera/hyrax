@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::ThumbnailPathService do
   include Hyrax::FactoryHelpers
 

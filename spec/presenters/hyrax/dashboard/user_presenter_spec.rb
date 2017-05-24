@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Dashboard::UserPresenter do
   let(:since) { nil }
   let(:context) { ActionView::TestCase::TestController.new.view_context }

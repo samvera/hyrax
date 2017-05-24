@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Arkivo::CreateSubscriptionJob do
   let(:user) { create(:user) }
 

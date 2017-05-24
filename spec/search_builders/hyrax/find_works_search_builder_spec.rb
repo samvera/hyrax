@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::FindWorksSearchBuilder do
   let(:controller) { Qa::TermsController.new }
   let(:user) { create(:user) }

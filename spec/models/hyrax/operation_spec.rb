@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Operation do
   context '#status' do
     it 'is protected by enum enforcement' do

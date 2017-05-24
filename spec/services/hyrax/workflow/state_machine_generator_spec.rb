@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Hyrax
   RSpec.describe Workflow::StateMachineGenerator do
     let(:workflow) { create(:workflow, name: 'hello') }

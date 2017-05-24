@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::WorkingDirectory do
   let(:path1) { described_class.send(:full_filename, 'abcdefghijklmnop1', 'foo.tif') }
   let(:path2) { described_class.send(:full_filename, 'abcdefghijklmnop2', 'foo.tif') }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Actors::OptimisticLockValidator do
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:ability) { ::Ability.new(depositor) }

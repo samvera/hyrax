@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::ChartsHelper do
   describe '#hash_to_chart' do
     subject { helper.hash_to_chart(data) }

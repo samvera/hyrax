@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::WorkflowRolesController do
   describe "#get" do
     context "when you have permission" do

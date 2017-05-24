@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::AdminSetService do
   let(:controller) { ::CatalogController.new }
   let(:context) do

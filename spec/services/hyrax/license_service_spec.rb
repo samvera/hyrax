@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::LicenseService do
   before do
     # Configure QA to use fixtures

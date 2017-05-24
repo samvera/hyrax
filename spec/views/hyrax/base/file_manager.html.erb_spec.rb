@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "hyrax/base/file_manager.html.erb" do
   let(:members) { [file_set, member] }
   let(:file_set) { Hyrax::FileSetPresenter.new(solr_doc, nil) }

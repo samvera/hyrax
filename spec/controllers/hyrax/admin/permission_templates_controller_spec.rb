@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::PermissionTemplatesController do
   routes { Hyrax::Engine.routes }
   before do

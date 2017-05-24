@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/_citations.html.erb', type: :view do
   let(:user) { create(:user) }
   let(:object_profile) { ["{\"id\":\"999\"}"] }

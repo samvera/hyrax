@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::WorkflowRolesPresenter do
   let(:presenter) { described_class.new }
 

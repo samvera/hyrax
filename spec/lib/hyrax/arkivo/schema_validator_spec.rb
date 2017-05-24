@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Arkivo::SchemaValidator do
   let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
 

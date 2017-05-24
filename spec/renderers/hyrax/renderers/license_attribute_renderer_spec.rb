@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Renderers::LicenseAttributeRenderer do
   let(:field) { :license }
   let(:renderer) { described_class.new(field, ['http://creativecommons.org/licenses/by/3.0/us/', 'http://creativecommons.org/licenses/by-nd/3.0/us/']) }

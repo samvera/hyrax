@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::MemberPresenterFactory do
   describe "#file_set_presenters" do
     describe "getting presenters from factory" do

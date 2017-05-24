@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::ResourceSync::CapabilityListWriter do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let(:rs) { 'http://www.openarchives.org/rs/terms/' }

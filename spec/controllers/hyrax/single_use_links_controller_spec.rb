@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   routes { Hyrax::Engine.routes }
 

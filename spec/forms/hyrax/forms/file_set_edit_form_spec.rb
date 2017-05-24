@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Forms::FileSetEditForm do
   subject { described_class.new(FileSet.new) }
 

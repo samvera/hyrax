@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe IngestLocalFileJob do
   let(:user) { create(:user) }
 
