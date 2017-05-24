@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
   before do
     allow(view).to receive(:current_ability).and_return(ability)

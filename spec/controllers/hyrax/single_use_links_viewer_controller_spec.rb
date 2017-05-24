@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SingleUseLinksViewerController do
   routes { Hyrax::Engine.routes }
   let(:file) do

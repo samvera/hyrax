@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::ActiveWorksSearchBuilder do
   let(:me) { create(:user) }
   let(:config) { CatalogController.blacklight_config }

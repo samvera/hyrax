@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
   let(:work) { create(:work) }
   let(:sipity_entity) do

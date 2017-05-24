@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Zotero do
   it { is_expected.to respond_to(:config) }
 

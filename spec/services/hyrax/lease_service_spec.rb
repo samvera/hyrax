@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::LeaseService do
   subject { described_class }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::FileSetIndexer do
   include Hyrax::FactoryHelpers
 

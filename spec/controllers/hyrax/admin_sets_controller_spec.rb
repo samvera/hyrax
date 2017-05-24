@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::AdminSetsController do
   describe "#index", :clean_repo do
     let!(:admin_set) { create(:admin_set, :public) }

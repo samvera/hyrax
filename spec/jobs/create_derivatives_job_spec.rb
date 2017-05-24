@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe CreateDerivativesJob do
   around do |example|
     ffmpeg_enabled = Hyrax.config.enable_ffmpeg

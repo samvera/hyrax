@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }

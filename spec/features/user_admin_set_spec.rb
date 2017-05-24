@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "The public view of admin sets" do
   let(:admin_set_doc) do
     {

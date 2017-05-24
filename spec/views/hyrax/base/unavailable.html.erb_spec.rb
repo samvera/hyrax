@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/unavailable.html.erb', type: :view do
   let(:model) do
     double('model',

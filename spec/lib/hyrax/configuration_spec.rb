@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Configuration do
   subject { described_class.new }
 

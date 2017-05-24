@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "As an admin user I should be able to see all works" do
   let!(:work1) { create(:work, title: ['Testing #1']) }
   let!(:work2) { create(:work, title: ['Testing #2']) }

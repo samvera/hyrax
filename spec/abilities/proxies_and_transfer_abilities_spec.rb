@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'cancan/matchers'
 
 RSpec.describe 'Proxy and Transfer Abilities' do

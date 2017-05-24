@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe SingleUseLink do
   let(:file) { FileSet.new(id: 'abc123') }
 

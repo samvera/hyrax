@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::UserActivityPresenter do
   let(:instance) { described_class.new }
 

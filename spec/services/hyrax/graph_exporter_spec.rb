@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::GraphExporter do
   let(:work) { create(:work_with_one_file, visibility: 'open') }
   let(:document) { double(id: work.id) }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/_browse_everything.html.erb', type: :view do
   let(:model) { stub_model(GenericWork) }
   let(:form) { Hyrax::GenericWorkForm.new(model, double, controller) }

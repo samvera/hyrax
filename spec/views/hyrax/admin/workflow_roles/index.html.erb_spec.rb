@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
   let!(:user1) { build(:user) }
   let!(:user2) { build(:user) }

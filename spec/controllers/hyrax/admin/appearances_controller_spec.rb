@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::AppearancesController do
   describe "#show" do
     before do

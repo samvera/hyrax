@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:approver) { create(:user) }
   let(:depositor) { create(:user) }

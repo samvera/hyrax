@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::TransfersPresenter do
   let(:context) { ActionView::TestCase::TestController.new.view_context }
   let(:user) { create(:user) }

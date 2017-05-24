@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/relationships', type: :view do
   let(:ability) { double }
   let(:solr_doc) { instance_double(SolrDocument, id: '123', human_readable_type: 'Work', admin_set: nil) }

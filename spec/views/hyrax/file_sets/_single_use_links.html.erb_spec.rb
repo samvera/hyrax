@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
   let(:user)          { create(:user) }
   let(:file_set)      { build(:file_set, user: user, id: "1234") }

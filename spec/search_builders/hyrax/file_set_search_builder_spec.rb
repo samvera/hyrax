@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::FileSetSearchBuilder do
   let(:processor_chain) { [:filter_models] }
   let(:ability) { double('ability') }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::CollectionIndexer do
   let(:indexer) { described_class.new(collection) }
   let(:collection) { build(:collection) }

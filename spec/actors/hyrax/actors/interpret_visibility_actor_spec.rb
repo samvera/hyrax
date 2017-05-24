@@ -1,4 +1,3 @@
-require 'spec_helper'
 RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }

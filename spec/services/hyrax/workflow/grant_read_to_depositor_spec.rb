@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
   let(:depositor) { create(:user) }
   let(:user) { User.new }

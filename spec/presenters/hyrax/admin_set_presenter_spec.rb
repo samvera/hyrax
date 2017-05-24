@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::AdminSetPresenter do
   let(:admin_set) do
     mock_model(AdminSet,

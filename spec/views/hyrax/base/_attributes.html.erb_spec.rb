@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/_attributes.html.erb' do
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }

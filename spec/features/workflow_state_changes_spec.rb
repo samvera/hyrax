@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.feature "Workflow state changes", type: :feature do
   let(:workflow_name) { 'with_comment' }
   let(:approving_user) { create(:admin) }

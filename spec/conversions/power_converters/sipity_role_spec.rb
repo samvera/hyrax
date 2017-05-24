@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'PowerConverter', no_clean: true do
   context 'role' do
     it "converts Sipity::Role" do

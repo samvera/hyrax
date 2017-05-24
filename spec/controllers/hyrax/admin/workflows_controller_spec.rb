@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::WorkflowsController do
   describe "#index" do
     before do

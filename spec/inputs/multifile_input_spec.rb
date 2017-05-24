@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'MultifileInput', type: :input do
   class Foo
     extend ActiveModel::Naming

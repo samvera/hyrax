@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/file_sets/_permission.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
 

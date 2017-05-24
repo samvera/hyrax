@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
   let(:approver) { create(:user) }
   let(:depositor) { create(:user) }

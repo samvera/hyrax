@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/my/_work_action_menu.html.erb' do
   let(:id) { '123' }
   let(:document) { SolrDocument.new(id: id, has_model_ssim: 'GenericWork') }

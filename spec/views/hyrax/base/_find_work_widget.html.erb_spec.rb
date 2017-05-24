@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/base/_find_work_widget.html.erb', type: :view do
   let(:work) { stub_model(GenericWork) }
   let(:form) do

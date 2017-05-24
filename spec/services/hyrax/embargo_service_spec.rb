@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::EmbargoService do
   subject { described_class }
   let(:future_date) { 2.days.from_now }

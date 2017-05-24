@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe CharacterizeJob do
   let(:file_set)    { FileSet.new(id: file_set_id) }
   let(:file_set_id) { 'abc12345' }

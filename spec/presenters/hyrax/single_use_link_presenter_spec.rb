@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SingleUseLinkPresenter do
   subject { described_class.new(link) }
 

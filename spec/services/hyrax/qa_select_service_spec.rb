@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::QaSelectService, no_clean: true do
   let(:authority) do
     # Implementing an ActiveRecord interface as required for this spec

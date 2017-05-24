@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 class AcceptsBatchesController < ApplicationController
   include Hyrax::Collections::AcceptsBatches
 end

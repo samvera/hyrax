@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::VersioningService do
   describe '#latest_version_of' do
     let(:file) do

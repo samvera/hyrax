@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do

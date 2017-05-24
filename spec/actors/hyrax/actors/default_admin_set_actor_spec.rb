@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:depositor) { create(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }

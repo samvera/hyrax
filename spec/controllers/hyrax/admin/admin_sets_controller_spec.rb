@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Admin::AdminSetsController do
   routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }

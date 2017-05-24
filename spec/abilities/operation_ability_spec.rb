@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'cancan/matchers'
 
 RSpec.describe 'Abilities for Operations', type: :model do

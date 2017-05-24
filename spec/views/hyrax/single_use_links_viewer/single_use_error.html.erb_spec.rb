@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/single_use_links_viewer/single_use_error.html.erb' do
   it 'renders without errors' do
     render

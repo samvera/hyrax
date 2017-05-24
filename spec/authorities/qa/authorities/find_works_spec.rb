@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Qa::Authorities::FindWorks do
   let(:controller) { Qa::TermsController.new }
   let(:user1) { create(:user) }

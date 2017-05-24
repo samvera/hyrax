@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:user) { double(user_key: 'sarah', twitter_handle: 'test') }
   let(:file_set) { build(:file_set, id: '123', depositor: user.user_key, title: ['My Title'], user: user, visibility: 'open') }

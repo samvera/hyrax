@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Renderers::ExternalLinkAttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['http://example.com']) }

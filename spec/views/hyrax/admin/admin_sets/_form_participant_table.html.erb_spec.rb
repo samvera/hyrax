@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: :view do
   let(:template) { stub_model(Hyrax::PermissionTemplate) }
   let(:user) { create(:user) }

@@ -1,4 +1,3 @@
-require 'spec_helper'
 module Hyrax
   module Workflow
     RSpec.describe NotificationGenerator, no_clean: true do

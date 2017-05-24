@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::SearchState do
   let(:controller) { CatalogController.new }
   let(:config) { Blacklight::Configuration.new }

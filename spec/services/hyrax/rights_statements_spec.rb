@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::RightsStatements do
   let(:service) { described_class.new }
 

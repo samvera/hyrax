@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Hyrax::Arkivo::MetadataMunger do
   subject { described_class.new(metadata) }
 

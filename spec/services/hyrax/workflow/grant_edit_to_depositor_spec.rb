@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Workflow::GrantEditToDepositor do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe 'hyrax/permissions/confirm.html.erb', type: :view do
   let(:curation_concern) { stub_model(GenericWork) }
 
