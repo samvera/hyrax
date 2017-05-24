@@ -6,7 +6,7 @@
   </legend>
 
   <div class="alert alert-info hidden" id="save_perm_note">Permissions are
-  <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
+  <strong>not</strong> saved until the &quot;Update Collection&quot; button is pressed at the bottom of the page.</div>
 
   <div class="alert alert-warning hidden" role="alert" id="permissions_error">
     <span id="permissions_error_text"></span>
@@ -52,7 +52,7 @@
     </div>
     <div class="col-sm-4">
       <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
-      <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_levels), class: 'form-control' %>
+      <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
       <button class="btn btn-default" id="add_new_user_skel">
@@ -72,7 +72,7 @@
     </div>
     <div class="col-sm-4">
       <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
-      <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_levels), class: 'form-control' %>
+      <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
       <span class="sr-only">Add this group</span>

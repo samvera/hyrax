@@ -135,8 +135,11 @@ Hyrax.config do |config|
   #   @see Hyrax::LicenseService for implementation details
   # config.license_service_class = Hyrax::LicenseService
 
-  # Labels for permission levels
-  # config.permission_levels = { "Choose Access" => "none", "View/Download" => "read", "Edit" => "edit" }
+  # Labels for display of permission levels
+  # config.permission_levels = { "View/Download" => "read", "Edit access" => "edit" }
+
+  # Labels for permission level options used in dropdown menus
+  # config.permission_options = { "Choose Access" => "none", "View/Download" => "read", "Edit" => "edit" }
 
   # Labels for owner permission levels
   # config.owner_permission_levels = { "Edit Access" => "edit" }
