@@ -7,6 +7,7 @@ Security/MarshalLoad:
 Metrics/ClassLength:
   Exclude:
     - 'app/actors/hyrax/actors/file_set_actor.rb'
+    - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
@@ -26,7 +27,6 @@ Metrics/AbcSize:
 Metrics/ModuleLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'
-    - 'app/controllers/concerns/hyrax/file_sets_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
     - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
     - 'app/models/concerns/hyrax/ability.rb'
@@ -37,7 +37,7 @@ Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
-    - 'app/controllers/concerns/hyrax/my_controller_behavior.rb'
+    - 'app/controllers/hyrax/my_controller.rb'
     - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/inputs/multi_value_select_input.rb'

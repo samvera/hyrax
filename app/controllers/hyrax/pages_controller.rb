@@ -27,7 +27,7 @@ module Hyrax
       end
     end
 
-    protected
+    private
 
       def permitted_params
         params.require(:content_block).permit(:about,
@@ -43,8 +43,6 @@ module Hyrax
       def update_value_from_params
         permitted_params.values.first
       end
-
-    private
 
       def pages_layout
         action_name == 'show' ? 'homepage' : 'dashboard'
