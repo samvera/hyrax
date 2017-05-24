@@ -210,6 +210,14 @@ Hyrax::Engine.routes.draw do
       get :edit
     end
   end
+  resources :pages, only: [] do
+    member do
+      patch :update
+    end
+    collection do
+      get :edit
+    end
+  end
   get 'about' => 'pages#show', id: 'about_page'
   get 'help' => 'pages#show', id: 'help_page'
 

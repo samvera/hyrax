@@ -167,6 +167,7 @@ en:
         configuration:      "Configuration"
         content_blocks:     "Content Blocks"
         notifications:      "Notifications"
+        pages:              "Pages"
         profile:            "Profile"
         repository_objects: "Repository Contents"
         settings:           "Settings"
@@ -358,10 +359,8 @@ en:
     content_blocks:
       cancel:       "Cancel"
       tabs:
-        about_page: "About Page"
         announcement_text: "Announcement Text"
         featured_researcher: "Featured Researcher"
-        help_page:  "Help Page"
         marketing_text: "Marketing Text"
       updated: "Content blocks updated."
     controls:
@@ -535,6 +534,12 @@ en:
         single: "has been saved."
         subject: "Batch upload complete"
         title:  "Files uploaded successfully"
+    pages:
+      cancel:       "Cancel"
+      tabs:
+        about_page: "About Page"
+        help_page:  "Help Page"
+      updated: "Pages updated."
     passive_consent_to_agreement: "By saving this work I agree to the"
     search:
       button:

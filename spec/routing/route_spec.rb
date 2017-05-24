@@ -149,12 +149,27 @@ RSpec.describe 'Routes', type: :routing do
     end
   end
 
+  describe 'Content Blocks' do
+    it 'routes to update' do
+      expect(patch: '/content_blocks/1').to route_to(controller: 'hyrax/content_blocks', action: 'update', id: '1')
+    end
+    it 'routes to edit' do
+      expect(get: '/content_blocks/edit').to route_to(controller: 'hyrax/content_blocks', action: 'edit')
+    end
+  end
+
   describe "Dynamically edited pages" do
     it "routes to about" do
       expect(get: '/about').to route_to(controller: 'hyrax/pages', action: 'show', id: 'about_page')
     end
     it "routes to help" do
       expect(get: '/help').to route_to(controller: 'hyrax/pages', action: 'show', id: 'help_page')
+    end
+    it 'routes to update' do
+      expect(patch: '/pages/1').to route_to(controller: 'hyrax/pages', action: 'update', id: '1')
+    end
+    it 'routes to edit' do
+      expect(get: '/pages/edit').to route_to(controller: 'hyrax/pages', action: 'edit')
     end
   end
 
