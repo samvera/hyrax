@@ -4,7 +4,7 @@ describe 'hyrax/batch_edits/edit.html.erb', type: :view do
   let(:form) { Hyrax::Forms::BatchEditForm.new(generic_work, nil, batch) }
 
   before do
-    allow(GenericWork).to receive(:find).and_return(generic_work)
+    allow(ActiveFedora::Base).to receive(:find).and_return(generic_work)
 
     # this prevents AF from hitting Fedora (permissions is a related object)
     allow(generic_work).to receive(:permissions_attributes=)
