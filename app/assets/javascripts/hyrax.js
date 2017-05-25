@@ -92,6 +92,7 @@
 //= require hyrax/file_manager
 //= require hyrax/workflow_actions_affix
 //= require hyrax/authority_select
+//= require hyrax/per_page
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit

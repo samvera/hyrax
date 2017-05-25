@@ -247,6 +247,8 @@ module Hyrax
           hyrax.dashboard_shares_path
         when "hyrax/my/highlights"
           hyrax.dashboard_highlights_path
+        when "hyrax/dashboard/works"
+          hyrax.dashboard_works_path
         else
           hyrax.my_works_path
         end
