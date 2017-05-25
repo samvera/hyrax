@@ -5,7 +5,11 @@ RSpec.describe Hyrax::ThumbnailPathService do
 
   context "with a FileSet" do
     let(:object) { build(:file_set, id: '999') }
-    before { allow(object).to receive(:original_file).and_return(original_file) }
+    before do
+      allow(object).to receive(:original_file).and_return(original_file)
+      # https://github.com/projecthydra/active_fedora/issues/1251
+      allow(object).to receive(:persisted?).and_return(true)
+    end
     context "that has a thumbnail" do
       let(:original_file) { mock_file_factory(mime_type: 'image/jpeg') }
       before { allow(File).to receive(:exist?).and_return(true) }

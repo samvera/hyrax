@@ -39,6 +39,10 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
     let(:work) { build(:generic_work, id: '123abc') }
+    before do
+      # https://github.com/projecthydra/active_fedora/issues/1251
+      allow(work).to receive(:persisted?).and_return(true)
+    end
     let(:attributes) { work.to_solr }
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
   end

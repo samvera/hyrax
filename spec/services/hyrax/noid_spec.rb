@@ -10,12 +10,6 @@ RSpec.describe Hyrax::Noid do
   end
   let(:object) { class_with_noids.new(id: 1234) }
 
-  describe '#to_param' do
-    it "will be the object's id" do
-      expect(object.to_param).to eq(object.id)
-    end
-  end
-
   describe 'when noids are not enabled' do
     before { expect(Hyrax.config).to receive(:enable_noids?).and_return(false) }
     subject { object.assign_id }

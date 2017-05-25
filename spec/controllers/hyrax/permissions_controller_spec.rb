@@ -8,6 +8,11 @@ RSpec.describe Hyrax::PermissionsController do
   describe '#confirm' do
     let(:work) { build(:generic_work, user: user, id: 'abc') }
 
+    before do
+      # https://github.com/projecthydra/active_fedora/issues/1251
+      allow(work).to receive(:persisted?).and_return(true)
+    end
+
     it 'draws the page' do
       get :confirm, params: { id: work }
       expect(response).to be_success
