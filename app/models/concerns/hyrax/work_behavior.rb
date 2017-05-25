@@ -3,7 +3,7 @@ module Hyrax
     extend ActiveSupport::Concern
     include Hydra::Works::WorkBehavior
     include HumanReadableType
-    include Noid
+    include ActiveFedora::Noid::Model if Hyrax.config.enable_noids?
     include Permissions
     include Serializers
     include Hydra::WithDepositor

@@ -21,7 +21,7 @@ module Hyrax
     extend ActiveSupport::Concern
 
     include Hydra::AccessControls::WithAccessRight
-    include Hyrax::Noid
+    include ActiveFedora::Noid::Model if Hyrax.config.enable_noids?
     include Hyrax::HumanReadableType
     include Hyrax::HasRepresentative
 

@@ -8,6 +8,11 @@ RSpec.describe Hyrax::Noid do
       end
     end
   end
+
+  before do
+    allow(Deprecation).to receive(:warn)
+  end
+
   let(:object) { class_with_noids.new(id: 1234) }
 
   describe 'when noids are not enabled' do

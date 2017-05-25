@@ -52,19 +52,6 @@ Hyrax.config do |config|
   # If you have ffmpeg installed and want to transcode audio and video set to true
   # config.enable_ffmpeg = false
 
-  # Hyrax uses NOIDs for files and collections instead of Fedora UUIDs
-  # where NOID = 10-character string and UUID = 32-character string w/ hyphens
-  # config.enable_noids = true
-
-  # Template for your repository's NOID IDs
-  # config.noid_template = ".reeddeeddk"
-
-  # Use the database-backed minter class
-  # config.noid_minter_class = ActiveFedora::Noid::Minter::Db
-
-  # Store identifier minter's state in a file for later replayability
-  # config.minter_statefile = '/tmp/minter-state'
-
   # Prefix for Redis keys
   # config.redis_namespace = "hyrax"
 

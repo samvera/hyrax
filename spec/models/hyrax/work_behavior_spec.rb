@@ -13,7 +13,7 @@ RSpec.describe Hyrax::WorkBehavior do
   it 'mixes together all the goodness' do
     expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
                                                ::Hyrax::HumanReadableType,
-                                               Hyrax::Noid,
+                                               ActiveFedora::Noid::Model,
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,
                                                Hydra::AccessControls::Embargoable,

@@ -67,4 +67,14 @@ class TestAppGenerator < Rails::Generators::Base
   def relax_routing_constraint
     gsub_file 'config/initializers/arkivo_constraint.rb', 'false', 'true'
   end
+
+  # We've turned off noid by default, but show we can turn it on if we want to.
+  def enable_noids
+    generate 'active_fedora:noid:install'
+    config = 'config/initializers/hyrax.rb'
+    anchor = "Hyrax.config do |config|\n"
+    inject_into_file config, after: anchor do
+      "  config.enable_noids = true\n"
+    end
+  end
 end

@@ -222,6 +222,7 @@ RSpec.describe FileSet do
   describe 'noid integration', :clean_repo do
     let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
     before do
+      Hyrax.config.enable_noids = true
       allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
     end
 
@@ -496,29 +497,6 @@ RSpec.describe FileSet do
       end
       specify 'title is set' do
         expect(terms[title_key]).to eql(title)
-      end
-    end
-  end
-
-  describe 'assign_id' do
-    let(:service) { instance_double(ActiveFedora::Noid::Service) }
-    before do
-      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
-    end
-    context 'with noids enabled (by default)' do
-      it 'uses the noid service' do
-        expect(service).to receive(:mint).once
-        subject.assign_id
-      end
-    end
-
-    context 'with noids disabled' do
-      before { Hyrax.config.enable_noids = false }
-      after { Hyrax.config.enable_noids = true }
-
-      it 'does not use the noid service' do
-        expect(service).not_to receive(:mint)
-        subject.assign_id
       end
     end
   end
