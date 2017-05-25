@@ -1,4 +1,4 @@
-gem 'hyrax', '1.0.0.rc2'
+gem 'hyrax', '1.0.1'
 
 run 'bundle install'
 
