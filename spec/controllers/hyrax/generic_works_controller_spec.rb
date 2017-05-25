@@ -285,7 +285,7 @@ RSpec.describe Hyrax::GenericWorksController do
             # makes one work, two file sets and calls ImportUrlJob twice.
             expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
               expect(env.attributes['uploaded_files']).to eq []
-              expect(env.attributes['remote_files']).to eq browse_everything_params.values.map { |h| ActionController::Parameters.new(h) }
+              expect(env.attributes['remote_files']).to eq browse_everything_params.values
             end
 
             post :create, params: {
@@ -384,9 +384,10 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it "can update file membership" do
         patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
-        expected_params = { ordered_member_ids: ['foo_123'], remote_files: [], uploaded_files: [] }
         expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
-          expect(env.attributes).to eq ActionController::Parameters.new(expected_params).permit!
+          expect(env.attributes).to eq("ordered_member_ids" => ['foo_123'],
+                                       "remote_files" => [],
+                                       "uploaded_files" => [])
         end
       end
 
