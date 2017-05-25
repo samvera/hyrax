@@ -14,6 +14,10 @@ RSpec.describe Hyrax::FileSetPresenter do
   let(:user) { double(user_key: 'sarah') }
 
   describe 'stats_path' do
+    before do
+      # https://github.com/projecthydra/active_fedora/issues/1251
+      allow(file).to receive(:persisted?).and_return(true)
+    end
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file) }
   end
 

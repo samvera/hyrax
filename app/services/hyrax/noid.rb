@@ -10,11 +10,6 @@ module Hyrax
       service.mint if Hyrax.config.enable_noids?
     end
 
-    # @todo Do we need this here? I'm a bit surprised to see it here [JNF]
-    def to_param
-      id
-    end
-
     private
 
       def service

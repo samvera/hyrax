@@ -121,6 +121,8 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before do
         # Mock arkivo actor functions
         allow(arkivo_actor).to receive(:create_work_from_item).and_return(a_work)
+        # https://github.com/projecthydra/active_fedora/issues/1251
+        allow(a_work).to receive(:persisted?).and_return(true)
       end
 
       it "delegates creating the work to the actor" do

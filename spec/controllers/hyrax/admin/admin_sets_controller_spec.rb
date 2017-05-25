@@ -68,6 +68,8 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         let(:service) do
           lambda do |admin_set:, **_kargs|
             admin_set.id = 123
+            # https://github.com/projecthydra/active_fedora/issues/1251
+            allow(admin_set).to receive(:persisted?).and_return(true)
             true
           end
         end
