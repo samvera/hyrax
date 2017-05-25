@@ -1,0 +1,7 @@
+# Place any default configuration for solr_wrapper here
+# port: 8983
+
+instance_dir: tmp/solr-development
+
+download_dir: tmp/solr_wrapper
+
