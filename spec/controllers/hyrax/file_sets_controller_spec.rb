@@ -32,7 +32,7 @@ RSpec.describe Hyrax::FileSetsController do
             expect(ac_params['title']).to eq expected_params[:title]
             expect(ac_params['visibility']).to eq expected_params[:visibility]
           end
-          expect(actor).to receive(:attach_file_to_work).with(parent).and_return(true)
+          expect(actor).to receive(:attach_to_work).with(parent).and_return(true)
           expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
 
           post :create, xhr: true, params: { parent_id: parent,
@@ -78,7 +78,7 @@ RSpec.describe Hyrax::FileSetsController do
       context 'when solr is down' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:attach_file_to_work)
+          allow(controller.send(:actor)).to receive(:attach_to_work)
           allow(controller.send(:actor)).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
         end
 
@@ -96,7 +96,7 @@ RSpec.describe Hyrax::FileSetsController do
       context 'when the file is not created' do
         before do
           allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:attach_file_to_work)
+          allow(controller.send(:actor)).to receive(:attach_to_work)
           allow(controller.send(:actor)).to receive(:create_content).and_return(false)
         end
 

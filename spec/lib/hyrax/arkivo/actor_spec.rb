@@ -35,7 +35,7 @@ RSpec.describe Hyrax::Arkivo::Actor do
         expect(tmpfile).to be_instance_of Tempfile
         expect(tmpfile.read).to eq "arkivo\n"
       end
-      expect(file_actor).to receive(:attach_file_to_work)
+      expect(file_actor).to receive(:attach_to_work)
 
       expect(subject.create_work_from_item).to be_instance_of(GenericWork)
     end

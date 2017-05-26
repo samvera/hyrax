@@ -22,7 +22,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       allow(actor).to receive(:acquire_lock_for).and_yield
       actor.create_metadata
       actor.create_content(uploaded_file)
-      actor.attach_file_to_work(work)
+      actor.attach_to_work(work)
     end
 
     context 'when a work is provided' do
@@ -45,12 +45,12 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe "#attach_file_to_work" do
+  describe "#attach_to_work" do
     let(:work) { create(:public_generic_work) }
 
     it 'copies visibility from the parent' do
       allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.attach_file_to_work(work)
+      actor.attach_to_work(work)
       saved_file = file_set.reload
       expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
@@ -191,7 +191,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe "#attach_file_to_work" do
+  describe "#attach_to_work" do
     before do
       # stub out redis connection
       client = double('redlock client')
@@ -211,7 +211,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     it "writes to the most up to date version" do
-      actor.attach_file_to_work(work_v1, {})
+      actor.attach_to_work(work_v1, {})
       expect(work_v1.members.size).to eq 2
     end
   end
