@@ -186,6 +186,13 @@ RSpec.describe HyraxHelper, type: :helper do
       end
     end
 
+    context "when the user is on the 'all works' tab on the dashboard page" do
+      it "returns the dashboard works path" do
+        allow(helper).to receive(:params).and_return(controller: "hyrax/dashboard/works")
+        expect(helper.search_form_action).to eq(hyrax.dashboard_works_path)
+      end
+    end
+
     context "when the user is on the my works page" do
       it "returns the my dashboard works path" do
         allow(helper).to receive(:params).and_return(controller: "hyrax/my/works")

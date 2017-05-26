@@ -13,6 +13,7 @@ Hyrax = {
         this.admin();
         this.adminStatisticsGraphs();
         this.tinyMCE();
+        this.perPage();
         this.sidebar();
     },
 
@@ -112,6 +113,14 @@ Hyrax = {
         var FileManager = require('hyrax/file_manager');
         new FileManager();
     },
+    
+    // Per Page select will submit its form to change records shown
+    perPage: function () {
+        var PerPage = require('hyrax/per_page');
+        $('#per_page').each(function () {
+            new PerPage($(this));
+        });
+    },                 
 
     // Saved so that inline javascript can put data somewhere.
     statistics: {},
