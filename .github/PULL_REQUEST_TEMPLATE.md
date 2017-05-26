@@ -15,8 +15,8 @@ end
 ```
 
 Changes proposed in this pull request:
-* 
-* 
-* 
+*
+*
+*
 
-@projecthydra-labs/hyrax-code-reviewers
+@samvera-labs/hyrax-code-reviewers
