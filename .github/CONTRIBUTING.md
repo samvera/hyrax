@@ -1,16 +1,20 @@
 # How to Contribute
 
-We want your help to make Project Hydra great.
-There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things.
+We want your help to make Samvera great.  There are a few guidelines
+that we need contributors to follow so that we can have a chance of
+keeping on top of things.
 
-## Hydra Project Intellectual Property Licensing and Ownership
+## Samvera Community Intellectual Property Licensing and Ownership
 
-All code contributors must have an Individual Contributor License Agreement (iCLA) on file with the Hydra Project Steering Group.
-If the contributor works for an institution, the institution must have a Corporate Contributor License Agreement (cCLA) on file.
+All code contributors must have an Individual Contributor License
+Agreement (iCLA) on file with the Samvera Community Steering Group.
+If the contributor works for an institution, the institution must have
+a Corporate Contributor License Agreement (cCLA) on file.
 
-https://wiki.duraspace.org/display/hydra/Hydra+Project+Intellectual+Property+Licensing+and+Ownership
+<https://wiki.duraspace.org/display/hydra/Samvera+Community+Intellectual+Property+Licensing+and+Ownership>
 
-You should also add yourself to the `CONTRIBUTORS.md` file in the root of the project.
+You should also add yourself to the `CONTRIBUTORS.md` file in the root
+of the project.
 
 ## Contribution Tasks
 
@@ -39,7 +43,7 @@ You should also add yourself to the `CONTRIBUTORS.md` file in the root of the pr
   * Please avoid working directly on the `master` branch.
   * You may find the [hub suite of commands](https://github.com/defunkt/hub) helpful
 * Make commits of logical units.
-  * Your commit should include a high level description of your work in HISTORY.textile 
+  * Your commit should include a high level description of your work in HISTORY.textile
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Make sure your commit messages are [well formed](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 * If you created an issue, you can close it by including "Closes #issue" in your commit message. See [Github's blog post for more details](https://github.com/blog/1386-closing-issues-via-commit-messages)
