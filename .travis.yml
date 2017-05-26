@@ -16,14 +16,21 @@ before_install:
   - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://assets.membergetmember.co/software/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2; fi"
   - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xvf $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C $PWD/travis_phantomjs; fi"
   - "phantomjs --version"
+
 rvm:
   - 2.4.1
+
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+  # Travis should check every minor version in a range of supported versions, because
+  # rails does not follow sem-ver conventions, see http://guides.rubyonrails.org/maintenance_policy.html
+  # It should be sufficient to test only the latest of the patch versions for a minor version, they
+  # should be compatible across patch versions (only bug fixes are released in patch versions).
   matrix:
     - "RAILS_VERSION=5.0.3"
     - "RAILS_VERSION=5.1.1"
+
 services:
   - redis-server
 before_script:
