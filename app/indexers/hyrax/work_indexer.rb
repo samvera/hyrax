@@ -15,6 +15,7 @@ module Hyrax
         # the search query.  While at the same time allowing us not to return Collections
         # when a work in the collection matches the query.
         solr_doc['file_set_ids_ssim'] = solr_doc['member_ids_ssim']
+        solr_doc['visibility_ssi'] = object.visibility
 
         admin_set_label = object.admin_set.to_s
         solr_doc['admin_set_sim']   = admin_set_label
