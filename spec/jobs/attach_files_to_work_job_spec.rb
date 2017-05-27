@@ -2,8 +2,8 @@ describe AttachFilesToWorkJob do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
-    let(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1) }
-    let(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2) }
+    let(:uploaded_file1) { build(:uploaded_file, file: file1) }
+    let(:uploaded_file2) { build(:uploaded_file, file: file2) }
     let(:generic_work) { create(:public_generic_work) }
 
     context "with uploaded files on the filesystem" do

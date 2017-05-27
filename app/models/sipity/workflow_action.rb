@@ -12,7 +12,9 @@ module Sipity
     self.table_name = 'sipity_workflow_actions'
 
     belongs_to :workflow, class_name: 'Sipity::Workflow'
-    belongs_to :resulting_workflow_state, class_name: 'Sipity::WorkflowState'
+    belongs_to :resulting_workflow_state,
+               optional: true,
+               class_name: 'Sipity::WorkflowState'
 
     has_many :workflow_state_actions, dependent: :destroy, class_name: 'Sipity::WorkflowStateAction'
     has_many :triggered_methods, dependent: :destroy, class_name: 'Sipity::Method'

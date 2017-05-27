@@ -9,7 +9,9 @@ module Sipity
     self.table_name = 'sipity_entities'
 
     belongs_to :workflow, class_name: 'Sipity::Workflow'
-    belongs_to :workflow_state, class_name: 'Sipity::WorkflowState'
+    belongs_to :workflow_state,
+               optional: true,
+               class_name: 'Sipity::WorkflowState'
 
     has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 

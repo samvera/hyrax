@@ -9,9 +9,9 @@ describe Hyrax::CreateWithFilesActor do
     Hyrax::Actors::ActorStack.new(work, ::Ability.new(user), [described_class])
   end
   let(:user) { create(:user) }
-  let(:uploaded_file1) { Hyrax::UploadedFile.create(user: user) }
-  let(:uploaded_file2) { Hyrax::UploadedFile.create(user: user) }
   let(:work) { create(:generic_work, user: user) }
+  let(:uploaded_file1) { create(:uploaded_file, user: user) }
+  let(:uploaded_file2) { create(:uploaded_file, user: user) }
   let(:uploaded_file_ids) { [uploaded_file1.id, uploaded_file2.id] }
   let(:attributes) { { uploaded_files: uploaded_file_ids } }
 
@@ -38,7 +38,7 @@ describe Hyrax::CreateWithFilesActor do
       end
 
       context "when uploaded_file_ids don't belong to me" do
-        let(:uploaded_file2) { Hyrax::UploadedFile.create }
+        let(:uploaded_file2) { create(:uploaded_file) }
         it "doesn't attach files" do
           expect(AttachFilesToWorkJob).not_to receive(:perform_later)
           expect(actor.public_send(mode, attributes)).to be false

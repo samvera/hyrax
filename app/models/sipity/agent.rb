@@ -9,7 +9,6 @@ module Sipity
     ENTITY_LEVEL_AGENT_RELATIONSHIP = 'entity_level'.freeze
     WORKFLOW_LEVEL_AGENT_RELATIONSHIP = 'workflow_level'.freeze
 
-    belongs_to :proxy_for, polymorphic: true
     has_many :workflow_responsibilities, dependent: :destroy, class_name: 'Sipity::WorkflowResponsibility'
     has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 
@@ -17,5 +16,19 @@ module Sipity
              foreign_key: :agent_id,
              dependent: :destroy,
              class_name: 'Sipity::Comment'
+
+    # Presently Hyrax::Group is a PORO not an ActiveRecord object, so
+    # creating a belongs to causes Rails 5.1 to try to access methods that don't exist.
+    # We do have this relationship, abet only conceptually:
+    # belongs_to :proxy_for, polymorphic: true
+
+    def proxy_for=(target)
+      self.proxy_for_id = target.id
+      self.proxy_for_type = target.class.name
+    end
+
+    def proxy_for
+      @proxy_for ||= proxy_for_type.constantize.find(proxy_for_id)
+    end
   end
 end
