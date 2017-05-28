@@ -87,6 +87,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
       expect(subject['digest_ssim']).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
+      expect(subject['visibility_ssi']).to eq 'restricted'
       expect(subject['page_count_tesim']).to eq ['1']
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
