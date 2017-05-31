@@ -1,6 +1,8 @@
 class CharacterizeJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
+  # Characterizes the file at 'filepath' if available, otherwise, pulls a copy from the repository
+  # and runs characterization on that file.
   # @param [FileSet] file_set
   # @param [String] file_id identifier for a Hydra::PCDM::File
   # @param [String, NilClass] filepath the cached file within the Hyrax.config.working_path

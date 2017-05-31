@@ -1,6 +1,8 @@
 module Hyrax
   class WorkingDirectory
     class << self
+      # Returns the file passed as filepath if that file exists. Otherwise it grabs the file from repository,
+      # puts it on the disk and returns that path.
       # @param [String] repository_file_id identifier for Hydra::PCDM::File
       # @param [String] id the identifier of the FileSet
       # @param [String, NilClass] filepath path to existing cached copy of the file
