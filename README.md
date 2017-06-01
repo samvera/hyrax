@@ -78,7 +78,7 @@ Hyrax requires the following software to work:
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
-1. [FITS](#characterization) version 1.0.x (1.0.5 is known to be good)
+1. [FITS](#characterization) version 1.0.x (1.0.5 is known to be good, 1.1.0 is known to be bad: https://github.com/harvard-lts/fits/issues/140)
 1. [LibreOffice](#derivatives)
 
 **NOTE: The [Hyrax Development Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
