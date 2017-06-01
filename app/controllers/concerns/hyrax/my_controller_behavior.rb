@@ -17,7 +17,7 @@ module Hyrax
       before_action :enforce_viewing_context_for_show_requests, only: :show
 
       # include the render_check_all view helper method
-      helper ::BatchEditsHelper
+      helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
       helper_method :suppressed_to_status

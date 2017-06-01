@@ -11,7 +11,7 @@ module Hyrax
       include Hyrax::Collections::AcceptsBatches
 
       # include the render_check_all view helper method
-      helper ::BatchEditsHelper
+      helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
       # include the present_terms view helper method
