@@ -30,8 +30,7 @@ class IngestFileJob < Hyrax::ApplicationJob
     # Do post file ingest actions
     Hyrax::VersioningService.create(repository_file, user)
 
-    # TODO: this is a problem, the file may not be available at this path on another machine.
-    # It may be local, or it may be in s3
+    # In another worker, characterize the uploaded file.
     CharacterizeJob.perform_later(file_set, repository_file.id, filepath)
   end
 end
