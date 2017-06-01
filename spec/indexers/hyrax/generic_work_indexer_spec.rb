@@ -5,6 +5,19 @@ RSpec.describe GenericWorkIndexer do
   subject(:solr_document) { service.generate_solr_document }
   let(:work) { create(:generic_work) }
 
+  context 'without explicit visibility set' do
+    it 'indexes visibility' do
+      expect(solr_document['visibility_ssi']).to eq 'restricted' # tight default
+    end
+  end
+
+  context 'with explicit visibility set' do
+    before { allow(work).to receive(:visibility).and_return('authenticated') }
+    it 'indexes visibility' do
+      expect(solr_document['visibility_ssi']).to eq 'authenticated'
+    end
+  end
+
   context "with child works" do
     let!(:work) { create(:work_with_one_file, user: user) }
     let!(:child_work) { create(:generic_work, user: user) }

@@ -6,6 +6,8 @@ module Hyrax
 
     self.thumbnail_path_service = Hyrax::CollectionThumbnailPathService
 
+    # @yield [Hash] calls the yielded block with the solr document
+    # @return [Hash] the solr document WITH all changes
     def generate_solr_document
       super.tap do |solr_doc|
         # Makes Collections show under the "Collections" tab
@@ -13,6 +15,7 @@ module Hyrax
         # Index the size of the collection in bytes
         solr_doc[Solrizer.solr_name(:bytes, STORED_LONG)] = object.bytes
         solr_doc['thumbnail_path_ss'] = thumbnail_path
+        solr_doc['visibility_ssi'] = object.visibility
 
         object.in_collections.each do |col|
           (solr_doc['member_of_collection_ids_ssim'] ||= []) << col.id

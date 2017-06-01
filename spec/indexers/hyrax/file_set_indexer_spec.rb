@@ -57,40 +57,41 @@ RSpec.describe Hyrax::FileSetIndexer do
     subject { indexer.generate_solr_document }
 
     it 'has fields' do
-      expect(subject[Solrizer.solr_name('hasRelatedMediaFragment', :symbol)]).to eq 'foo123'
-      expect(subject[Solrizer.solr_name('hasRelatedImage', :symbol)]).to eq 'foo123'
-      expect(subject[Solrizer.solr_name('date_uploaded')]).to be_nil
-      expect(subject[Solrizer.solr_name('date_modified')]).to be_nil
-      expect(subject[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
-      expect(subject[Solrizer.solr_name('date_modified', :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
-      expect(subject[Solrizer.solr_name('license')]).to eq ['Wide open, buddy.']
-      expect(subject[Solrizer.solr_name('rights_statement')]).to eq ['No Known Copyright']
-      expect(subject[Solrizer.solr_name('related_url')]).to eq ['http://example.org/TheWork/']
-      expect(subject[Solrizer.solr_name('contributor')]).to eq ['Mohammad']
-      expect(subject[Solrizer.solr_name('creator')]).to eq ['Allah']
-      expect(subject[Solrizer.solr_name('title')]).to eq ['The Work']
-      expect(subject[Solrizer.solr_name('title', :facetable)]).to eq ['The Work']
-      expect(subject[Solrizer.solr_name('label')]).to eq 'CastoriaAd.tiff'
-      expect(subject[Solrizer.solr_name('label', :stored_sortable)]).to eq 'CastoriaAd.tiff'
-      expect(subject[Solrizer.solr_name('description')]).to eq ['The work by Allah']
-      expect(subject[Solrizer.solr_name('publisher')]).to eq ['Vertigo Comics']
-      expect(subject[Solrizer.solr_name('subject')]).to eq ['Theology']
-      expect(subject[Solrizer.solr_name('language')]).to eq ['Arabic']
-      expect(subject[Solrizer.solr_name('date_created')]).to eq ['1200-01-01']
-      expect(subject[Solrizer.solr_name('resource_type')]).to eq ['Book']
-      expect(subject[Solrizer.solr_name('file_format')]).to eq 'jpeg (JPEG Image)'
-      expect(subject[Solrizer.solr_name('identifier')]).to eq ['urn:isbn:1234567890']
-      expect(subject[Solrizer.solr_name('based_near')]).to eq ['Medina, Saudi Arabia']
-      expect(subject.fetch('mime_type_ssi')).to eq 'image/jpeg'
-      expect(subject.fetch('thumbnail_path_ss')).to eq '/downloads/foo123?file=thumbnail'
+      expect(subject['hasRelatedMediaFragment_ssim']).to eq 'foo123'
+      expect(subject['hasRelatedImage_ssim']).to eq 'foo123'
+      expect(subject['date_uploaded_tesim']).to be_nil
+      expect(subject['date_modified_tesim']).to be_nil
+      expect(subject['date_uploaded_dtsi']).to eq '2011-01-01T00:00:00Z'
+      expect(subject['date_modified_dtsi']).to eq '2012-01-01T00:00:00Z'
+      expect(subject['license_tesim']).to eq ['Wide open, buddy.']
+      expect(subject['rights_statement_tesim']).to eq ['No Known Copyright']
+      expect(subject['related_url_tesim']).to eq ['http://example.org/TheWork/']
+      expect(subject['contributor_tesim']).to eq ['Mohammad']
+      expect(subject['creator_tesim']).to eq ['Allah']
+      expect(subject['title_tesim']).to eq ['The Work']
+      expect(subject['title_sim']).to eq ['The Work']
+      expect(subject['label_tesim']).to eq 'CastoriaAd.tiff'
+      expect(subject['label_ssi']).to eq 'CastoriaAd.tiff'
+      expect(subject['description_tesim']).to eq ['The work by Allah']
+      expect(subject['publisher_tesim']).to eq ['Vertigo Comics']
+      expect(subject['subject_tesim']).to eq ['Theology']
+      expect(subject['language_tesim']).to eq ['Arabic']
+      expect(subject['date_created_tesim']).to eq ['1200-01-01']
+      expect(subject['resource_type_tesim']).to eq ['Book']
+      expect(subject['file_format_tesim']).to eq 'jpeg (JPEG Image)'
+      expect(subject['identifier_tesim']).to eq ['urn:isbn:1234567890']
+      expect(subject['based_near_tesim']).to eq ['Medina, Saudi Arabia']
+      expect(subject['mime_type_ssi']).to eq 'image/jpeg'
+      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo123?file=thumbnail'
       expect(subject['all_text_timv']).to eq('abcxyz')
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
-      expect(subject[Solrizer.solr_name('digest', :symbol)]).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
-      expect(subject[Solrizer.solr_name('page_count')]).to eq ['1']
-      expect(subject[Solrizer.solr_name('file_title')]).to eq ['title']
-      expect(subject[Solrizer.solr_name('duration')]).to eq ['0:1']
-      expect(subject[Solrizer.solr_name('sample_rate')]).to eq ['sample rate']
+      expect(subject['digest_ssim']).to eq 'urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967'
+      expect(subject['visibility_ssi']).to eq 'restricted'
+      expect(subject['page_count_tesim']).to eq ['1']
+      expect(subject['file_title_tesim']).to eq ['title']
+      expect(subject['duration_tesim']).to eq ['0:1']
+      expect(subject['sample_rate_tesim']).to eq ['sample rate']
     end
   end
 
