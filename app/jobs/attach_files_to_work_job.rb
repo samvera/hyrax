@@ -21,14 +21,14 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   private
 
     # @param [Hyrax::Actors::FileSetActor] actor
-    # @param [Hyrax::UploadedFileUploader] file file.file must be a CarrierWave::SanitizedFile or file.url must be present
-    def attach_content(actor, file)
-      if file.file.is_a? CarrierWave::SanitizedFile
-        actor.create_content(file.file.to_file)
-      elsif file.url.present?
-        actor.import_url(file.url)
+    # @param [Hyrax::UploadedFileUploader] file_uploader file_uploader.file must be a CarrierWave::SanitizedFile or file_uploader.url must be present
+    def attach_content(actor, file_uploader)
+      if file_uploader.file.is_a? CarrierWave::SanitizedFile
+        actor.create_content(file_uploader.file.to_file)
+      elsif file_uploader.url.present?
+        actor.import_url(file_uploader.url)
       else
-        raise ArgumentError, "#{file.class} received with #{file.file.class} object and no URL"
+        raise ArgumentError, "#{file_uploader.class} received with #{file_uploader.file.class} object and no URL"
       end
     end
 
