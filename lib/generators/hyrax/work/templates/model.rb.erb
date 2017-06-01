@@ -2,9 +2,6 @@
 #  `rails generate hyrax:work <%= class_name %>`
 class <%= class_name %> < ActiveFedora::Base
   include ::Hyrax::WorkBehavior
-  # This must come after the WorkBehavior because it finalizes the metadata
-  # schema (by adding accepts_nested_attributes)
-  include ::Hyrax::BasicMetadata
 
   self.indexer = <%= class_name %>Indexer
   # Change this to restrict which works can be added as a child.
@@ -12,4 +9,8 @@ class <%= class_name %> < ActiveFedora::Base
   validates :title, presence: { message: 'Your work must have a title.' }
 
   self.human_readable_type = '<%= name.underscore.titleize %>'
+
+  # This must be included at the end, because it finalizes the metadata
+  # schema (by adding accepts_nested_attributes)
+  include ::Hyrax::BasicMetadata
 end
