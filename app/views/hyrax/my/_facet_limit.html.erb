@@ -1,4 +1,4 @@
-  <ul class="<%= 'dropdown-menu ' if request.format.html? %>facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
+  <ul class="<%= 'dropdown-menu ' if action_name == 'index' %>facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
     <% paginator = facet_paginator(facet_field, display_facet) %>
     <%= render_facet_limit_list paginator, facet_field.key %>
 
