@@ -47,21 +47,21 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
 
     describe "PATCH #update" do
       it "updates the announcement text" do
-        patch :update, params: { id: announcement_text.id, content_block: { announcement_text: 'Now Hiring!' } }
+        patch :update, params: { id: announcement_text.id, content_block: { announcement: 'Now Hiring!' } }
         expect(response).to redirect_to(edit_content_blocks_path)
         expect(flash[:notice]).to include 'Content blocks updated'
         expect(ContentBlock.announcement_text.value).to eq "Now Hiring!"
       end
 
       it "updates the marketing text" do
-        patch :update, params: { id: marketing_text.id, content_block: { marketing_text: '99 days since last crash!' } }
+        patch :update, params: { id: marketing_text.id, content_block: { marketing: '99 days since last crash!' } }
         expect(response).to redirect_to(edit_content_blocks_path)
         expect(flash[:notice]).to include 'Content blocks updated'
         expect(ContentBlock.marketing_text.value).to eq "99 days since last crash!"
       end
 
       it "updates the featured researcher" do
-        patch :update, params: { id: featured_researcher.id, content_block: { featured_researcher: 'Jane Doe is unimpeachable' } }
+        patch :update, params: { id: featured_researcher.id, content_block: { researcher: 'Jane Doe is unimpeachable' } }
         expect(response).to redirect_to(edit_content_blocks_path)
         expect(flash[:notice]).to include 'Content blocks updated'
         expect(ContentBlock.featured_researcher.value).to eq "Jane Doe is unimpeachable"

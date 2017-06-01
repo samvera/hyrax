@@ -23,9 +23,9 @@ module Hyrax
     private
 
       def permitted_params
-        params.require(:content_block).permit(:marketing_text,
-                                              :announcement_text,
-                                              :featured_researcher)
+        params.require(:content_block).permit(:marketing,
+                                              :announcement,
+                                              :researcher)
       end
 
       # When a request comes to the controller, it will be for one and
