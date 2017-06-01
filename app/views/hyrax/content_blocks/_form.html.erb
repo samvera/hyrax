@@ -1,7 +1,7 @@
 <div class="panel panel-default tabs">
   <ul class="nav nav-tabs" role="tablist">
-    <li>
-      <a href="#announcement" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
+    <li class="active">
+      <a href="#announcement_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
     </li>
     <li>
       <a href="#marketing" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
@@ -11,7 +11,7 @@
     </li>
   </ul>
   <div class="tab-content">
-    <div id="announcement" class="tab-pane active">
+    <div id="announcement_text" class="tab-pane active">
       <div class="panel panel-default labels">
         <%= simple_form_for ContentBlock.for(:announcement), url: hyrax.content_block_path(ContentBlock.for(:announcement)) do |f| %>
           <div class="panel-body">
