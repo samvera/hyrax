@@ -57,7 +57,7 @@ export default class {
 
   // initialize any controlled vocabulary widgets
   controlledVocabularies() {
-    this.element.find('.controlled_vocabulary.form-group').each((controlled_field) =>
+    this.element.find('.controlled_vocabulary.form-group').each((_idx, controlled_field) =>
       new ControlledVocabulary(controlled_field, this.paramKey)
     )
   }
