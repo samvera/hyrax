@@ -119,6 +119,7 @@ Hyrax::Engine.routes.draw do
 
   namespace :dashboard do
     resources :works, only: :index
+    get 'works/facet/:id',  controller: 'works', action: :facet, as: 'works_facet'
     resources :collections, only: :index
     resources :profiles, only: [:show, :edit, :update]
   end

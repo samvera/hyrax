@@ -1,4 +1,8 @@
-  <ul class="dropdown-menu facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
+  <%# This template is used to render the initial facet list (#index action)
+      and a paginated facet list in a modal (#facet action). The `dropdown-menu`
+      class in only necessary for the former and causes display issues in the latter.
+  -%>
+  <ul class="<%= 'dropdown-menu ' if action_name == 'index' %>facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
     <% paginator = facet_paginator(facet_field, display_facet) %>
     <%= render_facet_limit_list paginator, facet_field.key %>
 
