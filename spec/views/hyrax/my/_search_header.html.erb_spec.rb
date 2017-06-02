@@ -5,7 +5,7 @@ RSpec.describe 'hyrax/my/_search_header.html.erb', type: :view do
     stub_template 'hyrax/my/_facets.html.erb' => ''
     stub_template 'catalog/_search_form.html.erb' => ''
     stub_template 'hyrax/collections/_form_for_select_collection.html.erb' => ''
-    view.extend BatchEditsHelper
+    view.extend Hyrax::BatchEditsHelper
     allow(view).to receive(:on_the_dashboard?).and_return(true)
     allow(view).to receive(:search_action_url).and_return('')
   end
