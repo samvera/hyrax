@@ -36,16 +36,18 @@ export default class LinkedData {
       text: function(object) {
         return object.label;
       },
-      // initSelection: function(element, callback) {
-      //   // Called when Select2 is created to allow the user to initialize the
-      //   // selection based on the value of the element select2 is attached to.
-      //   // Essentially this is an id->object mapping function.
-      //   var data = {
-      //     id: element.val(),
-      //     text: element.val()
-      //   };
-      //   callback(data);
-      // },
+      initSelection: function(element, callback) {
+        // Called when Select2 is created to allow the user to initialize the
+        // selection based on the value of the element select2 is attached to.
+        // Essentially this is an id->object mapping function.
+
+        // TODO: Presently we're just showing a URI, but we should show the label.
+        var data = {
+          id: element.val(),
+          label: element.val()
+        };
+        callback(data);
+      },
       ajax: { // Use the jQuery.ajax wrapper provided by Select2
         url: this.url,
         dataType: "json",
