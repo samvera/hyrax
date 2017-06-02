@@ -4,7 +4,7 @@ module Hyrax
 
     included do
       class_attribute :valid_child_concerns
-      self.valid_child_concerns = Hyrax::ClassifyConcern.new.all_curation_concern_classes
+      self.valid_child_concerns = Hyrax.config.curation_concerns
     end
 
     def in_works_ids
