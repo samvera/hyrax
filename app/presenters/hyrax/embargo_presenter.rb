@@ -12,7 +12,7 @@ module Hyrax
     end
 
     def embargo_release_date
-      Date.parse(solr_document.embargo_release_date).to_formatted_s(:rfc822)
+      solr_document.embargo_release_date.to_formatted_s(:rfc822)
     end
 
     def visibility_after_embargo

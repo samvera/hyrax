@@ -15,7 +15,7 @@ describe ::SolrDocument, type: :model do
   describe "date_uploaded" do
     let(:attributes) { { 'date_uploaded_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.date_uploaded }
-    it { is_expected.to eq '03/14/2013' }
+    it { is_expected.to eq Date.parse('2013-03-14') }
 
     context "when an invalid type is provided" do
       let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
@@ -26,10 +26,21 @@ describe ::SolrDocument, type: :model do
     end
   end
 
+  describe "rights_statement" do
+    let(:attributes) { { 'rights_statement_tesim' => ['A rights statement'] } }
+
+    it "responds to rights_statement" do
+      expect(document).to respond_to(:rights_statement)
+    end
+    it "returns the proper data" do
+      expect(document.rights_statement).to eq ['A rights statement']
+    end
+  end
+
   describe "create_date" do
     let(:attributes) { { 'system_create_dtsi' => '2013-03-14T00:00:00Z' } }
     subject { document.create_date }
-    it { is_expected.to eq '03/14/2013' }
+    it { is_expected.to eq Date.parse('2013-03-14') }
 
     context "when an invalid type is provided" do
       let(:attributes) { { 'system_create_dtsi' => 'Test' } }

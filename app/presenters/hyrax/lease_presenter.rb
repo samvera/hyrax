@@ -13,7 +13,7 @@ module Hyrax
 
     def lease_expiration_date
       if solr_document.lease_expiration_date
-        Date.parse(solr_document.lease_expiration_date).to_formatted_s(:rfc822)
+        solr_document.lease_expiration_date.to_formatted_s(:rfc822)
       else
         solr_document.keys
       end
