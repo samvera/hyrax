@@ -6,6 +6,8 @@ cache:
   bundler: true
   directories:
     - "travis_phantomjs"
+    - tmp/solr_wrapper
+    - tmp/fcrepo_wrapper
 
 before_install:
   - gem update --system
