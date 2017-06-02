@@ -43,8 +43,19 @@ module Hyrax::User
     attr_accessor :update_directory
   end
 
+  # Look for, in order:
+  #   A cached version of the agent
+  #   A non-cached version (direct read of the database)
+  #   A created version.
+  #   A version created in another thread before we were able to create it
   def to_sipity_agent
-    sipity_agent || create_sipity_agent!
+    sipity_agent ||
+      reload_sipity_agent ||
+      begin
+        create_sipity_agent!
+      rescue ActiveRecord::RecordNotUnique
+        reload_sipity_agent
+      end
   end
 
   def profile_events(size = -1)
