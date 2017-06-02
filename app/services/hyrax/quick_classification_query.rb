@@ -4,11 +4,11 @@ module Hyrax
 
     # @param [User] user the current user
     # @param [Hash] options
-    # @option options [#call] :concern_name_normalizer (ClassifyConcern.to_class) a proc that translates names to classes
+    # @option options [#call] :concern_name_normalizer (String#constantize) a proc that translates names to classes
     # @option options [Array<String>] :models the options to display, defaults to everything.
     def initialize(user, options = {})
       @user = user
-      @concern_name_normalizer = options.fetch(:concern_name_normalizer, ClassifyConcern.method(:to_class))
+      @concern_name_normalizer = options.fetch(:concern_name_normalizer, ->(str) { str.constantize })
       @models = options.fetch(:models, Hyrax.config.registered_curation_concern_types)
     end
 

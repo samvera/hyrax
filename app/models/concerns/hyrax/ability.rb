@@ -160,8 +160,6 @@ module Hyrax
       end
 
       def curation_concerns_permissions
-        can :create, Hyrax::ClassifyConcern if registered_user?
-
         # user can version if they can edit
         alias_action :versions, to: :update
         alias_action :file_manager, to: :update
