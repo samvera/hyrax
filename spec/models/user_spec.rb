@@ -124,13 +124,25 @@ RSpec.describe User, type: :model do
   it { is_expected.to delegate_method(:cannot?).to(:ability) }
 
   describe '#to_sipity_agent' do
+    subject { user.to_sipity_agent }
     it 'will find or create a Sipity::Agent' do
       user.save!
-      expect { user.to_sipity_agent }.to change { Sipity::Agent.count }.by(1)
+      expect { subject }.to change { Sipity::Agent.count }.by(1)
     end
 
     it 'will fail if the User is not persisted' do
-      expect { user.to_sipity_agent }.to raise_error(ActiveRecord::StatementInvalid)
+      expect { subject }.to raise_error(ActiveRecord::StatementInvalid)
+    end
+
+    context "when another process makes the agent" do
+      let(:user) { create(:user) }
+      before do
+        user.sipity_agent # load up and cache the association
+        User.find(user.id).create_sipity_agent!
+      end
+      it "returns the existing agent" do
+        expect { subject }.not_to change { Sipity::Agent.count }
+      end
     end
   end
 
