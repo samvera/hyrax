@@ -3,6 +3,8 @@ RSpec.describe IngestFileJob do
   let(:filename) { fixture_path + '/world.png' }
   let(:user)     { create(:user) }
 
+  before { allow(ActiveFedora).to receive(:enable_solr_updates?).and_return(false) }
+
   context 'when given a relationship' do
     before do
       class FileSetWithExtras < FileSet
