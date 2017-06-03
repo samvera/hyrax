@@ -5,6 +5,14 @@ RSpec.describe IngestFileJob do
 
   before { allow(ActiveFedora).to receive(:enable_solr_updates?).and_return(false) }
 
+  # This reflects that a `perform_later` job might be serviced on a totally separate worker box
+  context 'with a file that is not local' do
+    let(:filename) { fixture_path + '/not_local.png' }
+    it 'handles missing file' do
+      expect { described_class.perform_now(file_set, filename, user) }.not_to raise_error
+    end
+  end
+
   context 'when given a relationship' do
     before do
       class FileSetWithExtras < FileSet
