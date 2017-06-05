@@ -3,10 +3,11 @@ engines:
   brakeman:
     enabled: true
     exclude_fingerprints:
-      - 6ad4464dbb2a999591c7be8346dc137c3372b280f4a8b0c024fef91dfebeeb83
-      - c05c1baf940f00a565ffe12f8b8a213fa06cebd734e0dae92057db28dc7c018b
-      - b388847a782f9d55d164f632b892125496082b9cfe5813720327ae6afbaf607b
-      - c7c241833ba150c2e4c72a26e1ac4d674230cb5e5c87322bedfe2b50dd09247d
+      - 23ba0830f304065acab598cd07d285a4e0df786cb64533e04d2e8efa6d7a4a5b
+      - 4e8248816e1ec892a23bec95d9436e09eea45ace7460811086c6c831a439833e
+      - 5496595e01ffb5b2e2d79b371c5af19b9d822561a99b38992537cfa03ff7e38f
+      - a625206570d0bafe8634bdaf900d5f2ee742c61e7e26089a0be4439016de79a9
+      - d34e876702fc1f6c09d3a88d5c55b2c309b0ccfe2c738942934ef90ac2db892a
   duplication:
     enabled: true
     exclude_fingerprints:
