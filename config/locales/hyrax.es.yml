@@ -1,11 +1,11 @@
 es:
   activefedora:
     models:
-      batch_upload_item: 'Obras por Lote'
+      batch_upload_item: 'Trabajos por Lote'
   activemodel:
     errors:
       messages:
-        conflict: "No se pueden guardar los cambios porque otro usuario (o trabajo de fondo) actualizó esta %{model} después de comenzar a editar. Asegúrese de que todos los archivos adjuntos se hayan completado correctamente y vuelva a intentarlo. Este formulario se actualizó con la copia guardada más reciente de la %{model}."
+        conflict: "No se pueden guardar los cambios porque otro usuario (o tarea en segundo plano) actualizó este %{model} después de que comenzase su edición. Asegúrese de que todos los archivos se hayan adjuntado correctamente y vuelva a intentarlo. Este formulario se actualizó con la copia guardada más reciente del %{model}."
   blacklight:
     search:
       fields:
@@ -15,42 +15,42 @@ es:
           contributor: "Colaboradores"
           keyword: "Palabra Clave"
         facet:
-          admin_set_sim: "Collección"
-          suppressed_bsi: "Estadio"
+          admin_set_sim: "Colección"
+          suppressed_bsi: "Estado"
           resource_type_sim: "Tipo de recurso"
       filters:
         title:    "Filtrado por:"
-      start_over: Borre filtros
+      start_over: Borrar filtros
   errors:
     messages:
       carrierwave_download_error: "No se pudo descargar la imagen."
-      carrierwave_integrity_error: "No una imagen."
+      carrierwave_integrity_error: "No es una imagen."
       carrierwave_processing_error: "No se puede cambiar el tamaño de la imagen."
-      extension_blacklist_error: "No puedes subir %{extension} archivos, tipos prohibidos: %{prohibited_types}"
-      extension_whitelist_error: "No puedes subir %{extension} archivos, tipos permitidos: %{allowed_types}"
+      extension_blacklist_error: "La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}"
+      extension_whitelist_error: "La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}"
   helpers:
     action:
       admin_set:
         new: "Crear un nuevo conjunto administrativo"
       batch:
-        new: "Crear una nueva obra"
+        new: "Crear un lote de trabajos"
       cancel: "Cancelar"
       collection:
         new: "Nueva Colección"
       delete: "Borrar"
       edit: "Editar"
       work:
-        new: "Crear un lote de obras"
+        new: "Crear un nuevo trabajo"
     submit:
       admin_set:
         create: 'Guardar'
-        update: 'Actualizar'
+        update: 'Guardar'
       create: 'Guardar'
       hyrax_permission_template:
         create: 'Guardar'
         update: 'Guardar'
       hyrax_permission_template_access:
-        create: 'Agregar'
+        create: 'Añadir'
       update: 'Guardar'
   hyrax:
     account_label:      "Usuario"
@@ -73,13 +73,13 @@ es:
             new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
             updated_admin_set:  "El conjunto administrativo '%{name}' se ha actualizado."
             participants:       "Se han actualizado los derechos de participante del conjunto administrativo"
-            visibility:         "La configuración de visibilidad del conjunto administrativo se ha actualizado."
+            visibility:         "La configuración de visibilidad y lanzamiento del conjunto administrativo se ha actualizado."
             workflow:           "El flujo de trabajo del conjunto administrativo se ha actualizado."
           permission_update_errors:
             varies:             "La opción de lanzamiento 'Varía' requiere una fecha o período de embargo."
             no_date:            "Se requiere una fecha para la opción de lanzamiento seleccionada."
             no_embargo:         "Se requiere un período de embargo para la opción seleccionada."
-            nothing:            "Seleccionar opciones de lanzamiento antes de guardar."
+            nothing:            "Seleccione opciones de lanzamiento antes de guardar."
             error:              "Opción de actualización no válida para la plantilla de permiso."
           tabs:
             description:        "Descripción"
@@ -87,7 +87,7 @@ es:
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
         form_participant_table:
-          allow_all_registered: "Permitir que todos los usuarios registrados depositen"
+          allow_all_registered: "Permitir depositar a todos los usuarios registrados"
           depositors:
             action:             "Acción"
             agent_name:         "Depositantes de este Conjunto"
@@ -100,7 +100,7 @@ es:
             action:             "Acción"
             agent_name:         "Administradores de este Conjunto"
             empty:              "No se han agregado administradores a este conjunto administrativo."
-            help:               "Los administradores de este conjunto administrativo pueden editar los metadatos establecidos, los participantes y los valores de liberación y visibilidad. Los administradores también pueden editar metadatos de trabajo, agregar o quitar archivos de un trabajo y agregar nuevos trabajos al conjunto."
+            help:               "Los administradores de este conjunto administrativo pueden editar los metadatos establecidos, los participantes y los valores de liberación y visibilidad. Los administradores también pueden editar metadatos de un trabajo, agregar o quitar archivos de un trabajo y agregar nuevos trabajos al conjunto."
             remove:             "Quitar"
             title:              "Administradores"
             type:               "Tipo"
@@ -114,17 +114,17 @@ es:
             title:              "Espectadores"
             type:               "Tipo"
         form_participants:
-          add_group:            "Agregar grupo:"
-          add_participants:     "Agregar participantes"
-          add_user:             "Agregar usuario:"
+          add_group:            "Añadir grupo:"
+          add_participants:     "Añadir participantes"
+          add_user:             "Añadir usuario:"
           current_participants: "Participantes actuales"
         form_visibility:
           cancel:               "Cancelar"
-          page_description:     "Los controles de liberación y visibilidad controlan cuando las obras añadidas a este conjunto se ponen a disposición para su detección y descarga y quiénes pueden descubrirlas y descargarlas."
+          page_description:     "Las opciones de liberación y visibilidad controlan cuándo y quiénes pueden descubrir y descargar los trabajos añadidos a este conjunto."
           release:
-            description:        "Puede imponer un retraso (embargo) antes de que las obras de este conjunto administrativo se liberen para su detección y descarga."
+            description:        "Puede imponer un retraso (embargo) antes de que los trabajos de este conjunto administrativo se liberen para su descubrimiento y descarga."
             fixed:              "Fijo -- retrasar la liberación de todos los trabajos hasta"
-            no_delay:           "Sin demora -- liberar todas las obras tan pronto como se depositen"
+            no_delay:           "Sin demora -- liberar todas los trabajos tan pronto como se depositen"
             title:              "Lanzamiento"
             varies:
               between:          "Entre \"ahora\" y"
@@ -136,18 +136,18 @@ es:
                 6mos:           "Seis meses después del depósito"
                 select:         "Seleccione el período de embargo..."
           visibility:
-            description:        "Después de su fecha de lanzamiento, las obras de este conjunto pueden ser descubiertas y descargadas por:"
-            everyone:           "Todos -- todos los trabajos de este conjunto serán públicas."
+            description:        "Después de su fecha de lanzamiento, los trabajos de este conjunto pueden ser descubiertos y descargados por:"
+            everyone:           "Todos -- todos los trabajos de este conjunto serán públicos."
             institution:        "Institución -- todos los trabajos serán visibles sólo para los usuarios autenticados de esta institución"
-            restricted:         "Restringido -- todos los trabajos sólo serán visibles para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
+            restricted:         "Restringido -- todos los trabajos serán visibles sólo para los administradores y gestores de repositorios y los revisores de este conjunto administrativo"
             title:              "Visibilidad"
-            varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de las obras individuales"
+            varies:             "Varía -- por defecto es público, pero los depositantes pueden restringir la visibilidad de los trabajos individuales"
         form_workflow:
           cancel:         "Cancelar"
           no_workflows:   "No hay flujos de trabajo que seleccionar."
           page_description:     "Cada conjunto administrativo tiene un flujo de trabajo asociado con él. Este flujo de trabajo se aplica a todos los trabajos agregados al conjunto administrativo. Seleccione el flujo de trabajo que se utilizará para este conjunto de administración a continuación."
         new:
-          header:         "Crear nuevo conjunto Administrativo"
+          header:         "Crear Nuevo Conjunto Administrativo"
         show:
           breadcrumb:       "Ver Conjunto"
           confirm_delete:   "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
@@ -169,66 +169,66 @@ es:
         notifications:      "Notificaciones"
         pages:              "Páginas"
         profile:            "Perfil"
-        repository_objects: "Contenido del repositorio"
+        repository_objects: "Contenido del Repositorio"
         settings:           "Ajustes"
         statistics:         "Informes"
         tasks:              "Tareas"
         technical:          "Técnico"
         transfers:          "Transferencias"
         users:              "Usarios"
-        user_activity:      "Su actividad"
-        workflow_review:    "Revise Ofertas"
-        workflow_roles:     "Funciones del flujo de trabajo"
+        user_activity:      "Su Actividad"
+        workflow_review:    "Revisar Envíos"
+        workflow_roles:     "Roles del Flujo de trabajo"
         works:              "Trabajos"
       stats:
         deposited_form:
-          end_label: "Finalizando [por defecto a ahora]"
-          heading: "Ver Archivos depositados:"
-          start_label: "Comenzar"
+          end_label: "Finalizando [el momento actual es el valor predeterminado]"
+          heading: "Ver Archivos Depositados:"
+          start_label: "Comenzando"
         registered: "Registrado"
         repository_objects:
           series:
             published:   'Publicado'
             unknown:     'Desconocido'
-            unpublished: 'Inédito'
+            unpublished: 'Sin publicar'
         user_deposits:
-          end_label: "Finalizando [por defecto a ahora]"
+          end_label: "Finalizando [el momento actual es el valor predeterminado]"
           heading: "Ver archivos depositados por los usuarios"
           start_label: "Comenzando"
       users:
         index:
-          access_label: "Ultimo acceso"
+          access_label: "Último acceso"
           describe_users_html:
-            one: "Es <b>%{count} usario</b> en este repositorio."
+            one: "Hay <b>%{count} usario</b> en este repositorio."
             other: "Hay <b>%{count} usarios</b> en este repositorio."
           id_label:   "Nombre de usuario"
           role_label: "Roles"
           title: "Administrar usuarios"
       workflow_roles:
-        header:     "Funciones del Flujo de Trabajo"
+        header:     "Roles del Flujo de Trabajo"
         index:
           delete:
             confirm: "¿Estás seguro?"
           header:
             roles: "Roles"
             user: "Usuario"
-          new_role: "Asignar papel"
-          no_roles: "Ningunos roles"
-          current_roles: "Presente papeles"
+          new_role: "Asignar Rol"
+          no_roles: "Sin roles"
+          current_roles: "Roles actuales"
       workflows:
         index:
-          header: "Revise Ofertas"
+          header: "Revise Envíos"
         tabs:
-          published: "Publica"
+          published: "Publicados"
           under_review: "En Revisión"
     admin_sets:
       index:
         header: "Todas las colecciones"
       show:
-        header: "Collección"
+        header: "Colección"
     api:
       accepted:
-        default: "Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver trabajo para más información."
+        default: "Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver tarea para más información."
       bad_request:
         default: "No se puede procesar su solicitud. Ver errores para más información."
       deleted:
@@ -244,8 +244,8 @@ es:
       unauthorized:
         default: "¡Debe iniciar sesión para hacer eso!"
       unprocessable_entity:
-        default: "El recurso que intentó modificar no se puede modificar de acuerdo con su solicitud."
-        empty_file: "El archivo que subiste no tiene contenido."
+        default: "El recurso que intentó modificar no se puede modificar de acuerdo a su solicitud."
+        empty_file: "El archivo que subió no tiene contenido."
     background_attribution_html: "Imagen de fondo CC by-nc-sa por <a href=\"https://flic.kr/p/eirxaf\" class=\"navbar-link\">f2b1610</a>"
     base:
       citations:
@@ -253,17 +253,17 @@ es:
       form_files:
         dropzone: "Soltar archivos aquí."
         external_upload: Proveedores en la Nube
-        local_upload: Agregar Archivos locales
+        local_upload: Añadir Archivos locales
       form_progress:
         required_descriptions: Describa su trabajo
-        required_files:        Agregar archivos
+        required_files:        Añadir archivos
         required_agreement:    Comprobar el acuerdo de depósito
         requirements:          Requisitos
       items:
         actions: Acciones
-        date_uploaded: "Fecha de carga"
-        empty:  "Este %{type} no tiene archivos asociados con él. Presione \"editar\" para agregar más archivos."
-        header: Items
+        date_uploaded: "Fecha de subida"
+        empty:  "Este %{type} no tiene archivos asociados. Presione \"editar\" para añadir más archivos."
+        header: Elementos
         thumbnail: Miniatura
         title: Título
         visibility: Visibilidad
@@ -277,7 +277,7 @@ es:
       relationships_parent_row:
         label: "En %{type}:"
       relationships_parent_row_empty:
-        empty: "No hay relaciones con %{type}."
+        empty: "No hay relaciones %{type}."
         label: "En %{type}:"
       show:
         last_modified: "Última modificación: %{value}"
@@ -288,16 +288,16 @@ es:
         twitter: 'Twitter'
     batch:
       help:
-        resource_type: "Puedes seleccionar múltiples tipos para aplicar a todos los archivos"
-        title: "El nombre de archivo será el título predeterminado. Por favor introduzca un título con más significado y los archivos aún serán preservados en el sistema."
+        resource_type: "Puede seleccionar múltiples tipos a aplicar a todos los archivos"
+        title: "El nombre de archivo será el título predeterminado. Por favor, introduzca un título con más significado y los archivos aún serán preservados en el sistema."
     batch_uploads:
       disabled: Función desactivada por el administrador
       files:
         instructions: Cada archivo será cargado en un nuevo trabajo separado, resultando en un trabajo por archivo cargado.
-        upload_type_instructions: Para crear una solo obra para todos los archivos, vaya a
-        button_label: Añadir Nuevo Obra
+        upload_type_instructions: Para crear un único trabajo para todos los archivos, vaya a
+        button_label: Añadir Nuevo Trabajo
       new:
-        header: Crear nuevos Trabajos en lote
+        header: Crear Nuevos Trabajos en Lote
         in_collections: Estos Trabajos en Colecciones
         in_other_works: Este Trabajo en otros Trabajos
         in_this_work: Otros Trabajos en este Trabajo
@@ -308,38 +308,38 @@ es:
     collection:
       actions:
         add_works:
-          desc: "Agregar trabajos a esta Colección"
-          label: "Agregar trabajos"
+          desc: "Añadir trabajos a esta Colección"
+          label: "Añadir trabajos"
         delete:
-          confirmation: "Borrar esta colección?"
+          confirmation: "¿Borrar esta colección?"
           desc: "Borrar esta colección"
           label: "Borrar"
         edit:
           desc: "Editar esta colección"
           label: "Editar"
         header: "Acciones"
-      browse_view: "Navegar Vista"
+      browse_view: "Vista Navegación"
       document_list:
         edit: "Editar"
-        no_visible_works: "La colección o está vacía o no contiene items a los cuales tengas acceso."
+        no_visible_works: "La colección está vacía o no contiene elementos a los que tenga acceso."
       edit:
-        manage_items: "Administrar Items in this Colección"
+        manage_items: "Administrar Elementos en esta Colección"
       form:
         additional_fields: "Campos adicionales"
         description: "Descripciones"
-      is_part_of: "Es part de"
+      is_part_of: "Es parte de"
       select_form:
         close: "Cerrar"
         create: "Crear Colección"
-        create_new: "Agregar a una nueva Colección"
-        no_collections: "No tienes acceso a ninguna colección existente. Puedes crear una nueva colección."
-        select_heading: "Seleccionar la colección para agregar tus archivos a:"
-        title: "Agregar a la colección"
+        create_new: "Añadir a una nueva Colección"
+        no_collections: "No tiene acceso a ninguna colección existente. Puede crear una nueva colección."
+        select_heading: "Seleccionar la colección a la que añadir tus archivos:"
+        title: "Añadir a la colección"
         update: "Actualizar Colección"
     collections:
       search_form:
         label: "Buscar Collección %{title}"
-        placeholder: "Buscar Collección"
+        placeholder: "Buscar Colección"
     contact_form:
       button_label: "Enviar"
       email_label: "Tu Correo Electrónico"
@@ -347,12 +347,12 @@ es:
       issue_types:
         browsing: "Navegación y búsqueda"
         changing: "Hacer cambios en mi contenido"
-        depositing: "Depósito contenido"
+        depositing: "Depositando contenido"
         general: "Consulta general o solicitud"
         reporting: "Informar de un problema"
       message_label: "Mensaje"
       name_label: "Tu Nombre"
-      notice: "Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; Para reportar un problema que está experimentando con el sistema; Solicitar ayuda usando el sistema; O para proporcionar retroalimentación general. Consulte la página de ayuda para obtener información adicional acerca de este sistema."
+      notice: "Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; para reportar un problema que está experimentando con el sistema; solicitar ayuda usando el sistema; o para comentarios generales. Consulte la página de ayuda para obtener información adicional acerca de este sistema."
       select_type: "Seleccionar el Tipo de Problema"
       subject_label: "Tema"
       type_label: "Tipo de Problema"
@@ -375,9 +375,9 @@ es:
         files:                  "Archivos"
         subtitle:               "Actividad reciente"
         title:                  "Conjuntos administrativos"
-        works:                  "Obras"
+        works:                  "Trabajos"
       all:
-        collections:            "Todos los Colleccións"
+        collections:            "Todas los Colecciones"
         works:                  "Todos los Trabajos"
       authorize_proxies:        "Autorizar Proxies"
       breadcrumbs:
@@ -391,7 +391,7 @@ es:
       manage_proxies:           "Administrar Proxies"
       my:
         action:
-          collection_confirmation: "Borrar una colección de %{application_name} es permanente. Presionar sobre OK para borrar esta colección de %{application_name}, o sobre Cancelar para cancelar esta operación"
+          collection_confirmation: "El borrado de una colección de %{application_name} es permanente. Presione OK para borrar esta colección de %{application_name}, o Cancelar para cancelar esta operación"
           delete_collection:       "Borrar Colección"
           delete_work:             "Borrar Trabajo"
           edit_collection:         "Editar Colección"
@@ -399,14 +399,14 @@ es:
           select:                  "Seleccionar"
           select_all:              "Seleccionar la página actual"
           select_none:             "Seleccionar ninguno"
-          transfer:                "Transferir propiedad del Trabajo"
-          work_confirmation:       "Borrar un trabajo de %{application_name} es permanente. Presionar sobre OK para borrar este trabajo de %{application_name}, o sobre Cancelar para cancelar esta operación"
+          transfer:                "Cambiar el Propietario del Trabajo"
+          work_confirmation:       "El borrado de un trabajo de %{application_name} es permanente. Presione OK para borrar este trabajo de %{application_name}, o Cancelar para cancelar esta operación"
         collection_list:
           description:    "Descripción:"
           edit_access:    "Editar Acceso:"
           groups:         "Grupos:"
-          users:          "Users:"
-        collections:  "Tus Colecciones"
+          users:          "Usuarios:"
+        collections:  "Mis Colecciones"
         facet_label:
           collections: "Filtrar colecciones:"
           highlighted: "Filtrar aspectos destacados:"
@@ -421,20 +421,20 @@ es:
         shared:       "Trabajos compartidos conmigo"
         sr:
           batch_checkbox:   "Marque para agregar a una colección o editar la lista"
-          check_all_label:  "Seleccione todos los archivos para ser agregados o editados  a la colección"
-          detail_label:     "Ver el resumen de "
+          check_all_label:  "Seleccione todos los archivos a ser editados o agregados a una colección"
+          detail_label:     "Ver el resumen de"
           listing:          "Enlistar los items que has depositado"
           press_to:         "Presionar para"
-          show_label:       "Ver todos los detalles de "
-        works:        "Tus Trabajos"
-      no_activity:              "El Usuario no tiene actividad reciente"
-      no_notifications:         "El Usuario no tiene notificaciones"
+          show_label:       "Ver todos los detalles de"
+        works:        "Mis Trabajos"
+      no_activity:              "El usuario no tiene actividad reciente"
+      no_notifications:         "El usuario no tiene notificaciones"
       no_transfer_requests:     "No ha recibido ninguna petición de transferencia"
-      no_transfers:             "No has transferido ningún trabajo"
+      no_transfers:             "No ha transferido ningún trabajo"
       proxy_activity:           "Actividad de Proxy"
       proxy_user:               "Usuario de Proxy"
       show_admin:
-        new_visitors:       "Nuevos visitantes"
+        new_visitors:       "Visitantes Nuevos"
         registered_users:   "Usuarios registrados"
         repository_growth:
           title:            Crecimiento del Repositorio
@@ -442,17 +442,17 @@ es:
         repository_objects:
           title:            Objetos del Repositorio
           subtitle:         Estado Actual
-        returning_visitors: "Regresos de visitantes"
-        total_visitors:     "Total de visitantes"
+        returning_visitors: "Visitantes Recurrentes"
+        total_visitors:     "Visitantes Totales"
         user_activity:
-          title:            Actividad del usuario
+          title:            Actividad de Usuario
           subtitle:         Nuevas inscripciones de usuarios
       stats:
         collections:        "Colecciones creadas"
         file_downloads:     "Descargar"
         file_views:         "Ver"
         files:              "Archivos depositados"
-        heading:            "Tus Estadísticas"
+        heading:            "Mis Estadísticas"
         works:              "Trabajos creados"
       title:                    "Mi Panel de Control"
       transfer_of_ownership:    "Transferencias de propiedad"
@@ -470,21 +470,21 @@ es:
     file_manager:
       link_text: 'Administrador de archivos'
     file_set:
-      browse_view: "Navegar Vista"
+      browse_view: "Vista de Navegación"
       show:
         download: "Descargar el archivo"
         downloadable_content:
-          default_link: 'Descargar el archivo'
+          default_link: 'Descargar archivo'
           heading: 'Contenido Descargable'
-          image_link: 'Descargar la imagen'
-          office_link: 'Descargar el archivo'
+          image_link: 'Descargar imagen'
+          office_link: 'Descargar archivo'
           pdf_link: 'Descargar PDF'
     file_sets:
       groups_description:
         description_html: >
-          La lista de grupos en el listado marcados como "Seleccionar un grupo" es una lista de Grupos de Usuarios Administrados de la cual
-          Tu eres un miembro de. Puedes seleccionar un grupo específico y asignar un nivel de acceso por archivo
-          dentro de %{application_name}, y del mismo modo también para agregar niveles de acceso de usuarios.
+          La lista de grupos del listado "Seleccionar un grupo" es una lista de Grupos Administrados por el Usuario de la que
+          que es miembro. Puede seleccionar un grupo específico y asignar un nivel de acceso por archivo
+          dentro de %{application_name}, y del mismo modo puede agregar niveles de acceso de usuarios.
     help:
       header: "Soporte al Usuario"
       override_text: "Utilice app/views/static/help.html.erb para anular este archivo"
@@ -494,7 +494,7 @@ es:
         tab_label:          'Explorar Colecciones'
         title:              'Explorar Colecciones'
       featured_researcher:
-        missing:            'No se han presentado investigadores.'
+        missing:            'No hay investigadores destacados'
         tab_label:          'Investigador destacado'
         title:              'Investigador destacado'
       featured_works:
@@ -505,9 +505,9 @@ es:
       recently_uploaded:
         depositor:          'Depositante'
         details:            'Detalles'
-        no_public:          'No se han aportado trabajos públicos.'
-        tab_label:          'Cargados recientemente'
-        title:              'Cargados recientemente'
+        no_public:          'No hay trabajos públicos.'
+        tab_label:          'Subidos recientemente'
+        title:              'Subidos recientemente'
     icons:
       collection:       'fa fa-cubes'
       default:          'fa fa-cube'
@@ -520,27 +520,27 @@ es:
     messages:
       failure:
         multiple:
-          keyword: "no pudieron ser actualizados. No tienes suficientes privilegios para editarlos."
+          keyword: "no pudieron ser actualizados. No tiene suficientes privilegios para editarlos."
           link: "Estos archivos"
         single: "no pudo ser actualizada. No tienes suficientes privilegios para editar."
-        subject: "Carga de permisos denegada"
-        title:  "Archivos fallados"
+        subject: "Permiso denegado para la subida en lote"
+        title:  "Archivos fallidos"
       success:
         multiple:
           keyword: "han sido guardados."
           link: "Estos archivos"
         single: "ha sido guardado."
-        subject: "Carga en lote completa"
+        subject: "Subida en lote completa"
         title:  "Archivos cargados satisfactoriamente"
     pages:
       cancel:       "Cancelar"
       tabs:
-        about_page: "Acerca de la Página"
+        about_page: "Página Acerca de nosotros"
         help_page:  "Página de Ayuda"
-        agreement_page:  "Aceptación del Depósito"
+        agreement_page:  "Acuerdo de Depósito"
         terms_page:  "Términos de Uso"
       updated: "Páginas actualizadas."
-    passive_consent_to_agreement: "Al salvar este trabajo yo acepto a"
+    passive_consent_to_agreement: "Al guardar este trabajo acepto a"
     search:
       button:
         html: '<span class="glyphicon glyphicon-search"></span> Ir'
@@ -548,7 +548,7 @@ es:
       form:
         option:
           all:
-            label_long:   "Todo %{application_name}"
+            label_long:   "Todos los %{application_name}"
             label_short:  "Todo"
           my_collections:
             label_long:   "Mis Colecciones"
@@ -568,32 +568,32 @@ es:
       name:        "Trabajo"
     share_button:       "Comparte tu Trabajo"
     single_use_links:
-      button: "Vínculo a archivo de uso único"
+      button: "Enlace de un sólo uso al archivo"
       copy:
         button: Copiar
-        tooltip: Copiado!
+        tooltip: ¡Copiado!
       delete: Borrar
       download:
         type: Descargar
       expiration:
-        lesser_time: En menos de una hora.
+        lesser_time: en menos de una hora.
         time: "en %{value} horas"
-      expiration_message: "El Vínculo %{link} expira en %{time}"
+      expiration_message: "El enlace %{link} expira en %{time}"
       show:
         type: Mostrar
       table:
-        actions: Acciónes
+        actions: Acciones
         expires: Expira
         key: Clave
-        link: Vínculo
-        no_links: No se han generado vínculos.
+        link: Enlace
+        no_links: No se han generado enlaces.
       title: Vínculos de uso único
-    sort_label: "Ordenar el listado de items"
+    sort_label: "Ordenar el listado de elementos"
     toolbar:
       dashboard:
         menu: "Panel de Control"
       language_switch: "Cambiar idioma"
-      notifications: "No tienes notificaciones no leídas."
+      notifications: "No hay notificaciones sin leer."
       profile:
         login: "Iniciar sesión"
         logout: "Cerrar sesión"
@@ -602,45 +602,45 @@ es:
     upload:
       alert:
         contact_href_text: "formulario de contacto"
-        fail_html: "Hubo un problema durante la carga, ninguno de sus archivos se ha cargado de forma correcta. Por favor %{reload_href}.  Utilizar la %{contact_href} para reportar si el error persiste."
-        fail_restart_href_text: "comenzar nuevamente"
-        partial_fail_html: "Uno o más archivos no se han cargado de forma correcta. Para continuar utilizando los archivos cargados %{metadata_href}. <br /> Utilizar la %{contact_href} para reportar si el error persiste."
+        fail_html: "Hubo un problema durante la subida, ninguno de sus archivos se ha cargado de forma correcta. Por favor %{reload_href}. Utilice la %{contact_href} para informar del error si persiste."
+        fail_restart_href_text: "comenzar de nuevo"
+        partial_fail_html: "Uno o más archivos no se han subido de forma correcta. Para continuar utilizando los archivos cargados %{metadata_href}. <br /> Utilizce la %{contact_href} para informar del error si persiste."
         partial_fail_metadata_href_text: "editar los metadatos"
       browse_everything:
         browse_files_button: "Navegar archivos en la nube"
         files_selected: "archivos seleccionados"
         sr_tab_label: "Acceder a los archivos desde"
         tab_label: "Proveedores en la Nube"
-      change_access_flash_message: "Actualizar los niveles de acceso. Esto puede tomar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los niveles de acceso."
-      change_access_message_html: "<p>Ha cambiado los permisos de acceso en el trabajo <i>%{curation_concern}</i>, haciéndolo accesible a otros usuarios o grupos para ver o editar.</p><p>¿Quisiera cambiar todos los archivos dentro del mismo trabajo para que tengan los mismos usuarios de acceso, grupos y visibilidad también?</p>"
-      change_access_no_message: "No. Yo los actualizaré automáticamente."
-      change_access_yes_message: "Si, por favor."
-      change_permissions_message_html: "<p>Ha cambiado los permisos en  %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, haciéndolo visible para <b>%{visibility_badge}</b>.</p><p>¿Quisiera cambiar todos los archivos dentro de %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> también?</p>"
-      cloud_timeout_message_html: "En caso de subir una gran cantidad de archivos en un corto periodo de tiempo, el proveedor en la nube podría no ser capaz de resolver la petición. Si se experimentan errores durante la carga, favor de comunicarse con nosotros a través de %{contact_href}."
+      change_access_flash_message: "Actualizando los niveles de acceso. Esto puede tomar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los niveles de acceso."
+      change_access_message_html: "<p>Ha cambiado los permisos de acceso en el trabajo <i>%{curation_concern}</i>, haciéndolo accesible a otros usuarios o grupos para ver o editar.</p><p>¿Le gustaría también cambiar todos los archivos dentro del mismo trabajo para que tengan los mismos usuarios de acceso, grupos y visibilidad?</p>"
+      change_access_no_message: "No. Los actualizaré automáticamente."
+      change_access_yes_message: "Sí, por favor."
+      change_permissions_message_html: "<p>Ha cambiado los permisos en %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, haciéndolo visible para <b>%{visibility_badge}</b>.</p><p>¿Le gustaría también cambiar todos los archivos dentro de %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> también?</p>"
+      cloud_timeout_message_html: "En caso de subir una gran cantidad de archivos en un corto periodo de tiempo, el proveedor en la nube podría no ser capaz de resolver la petición. Si se experimentan errores durante la carga, por favor, comuníquese con nosotros a través de %{contact_href}."
       local_ingest:
         tab_label: "Ubicación en Red/Servidor"
       my_computer:
-        sr_instructions: "Acepto a los términos de depósito y después seleccionar los archivos.  Presiona el botón de subir una vez que todos los archivos se hayan seleccionado."
+        sr_instructions: "Acepto los términos de depósito y seleccionar los archivos a continuación. Presiona el botón de subir una vez que todos los archivos se hayan seleccionado."
         sr_tab_label: "Acceder a archivos desde"
-        tab_label: "Mi computadora"
-      permissions_message: "Actualizar permisos de archivo. Esto puede tardar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los permisos actualizados."
+        tab_label: "Mi ordenador"
+      permissions_message: "Actualizando permisos de archivo. Esto puede tardar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los permisos actualizados."
       processing: "El archivo se está procesando; se puede editar en cuanto termine el procesamiento"
     user_profile:
       orcid:
-        alt: "Ícono ORCID"
+        alt: "Icono ORCID"
         label: "Perfil ORCID"
       tab_activity: "Actividad"
       tab_highlighted: "Destacado"
       tab_profile: "Perfil"
       zotero:
-        alt: "Ícono de Zotero"
-        connected: "Conectado!"
+        alt: "Icono de Zotero"
+        connected: "¡Conectado!"
         label: "Perfil de Zotero"
         unlinked: "Vincular con Zotero"
     visibility:
       authenticated:
         class: "label-info"
-        note_html: Restringir el acceso sólo a usuarios y / o grupos de %{institution}
+        note_html: Restringir el acceso sólo a usuarios y/o grupos de %{institution}
       embargo:
         class: "label-warning"
         text: "Embargo"
@@ -649,24 +649,24 @@ es:
         text: "Arrendamiento"
       open:
         class: "label-success"
-        note_html: Todo el mundo. Consulte <a href="">SHERPA / RoMEO</a> para las políticas de derechos de autor de editores específicos si planea patentar y / o publicar su %{type} en un diario
+        note_html: Todo el mundo. Consulte <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> para conocer las políticas de derechos de autor de editores específicos si planea patentar y/o publicar su %{type} en un diario
         text: "Acceso abierto"
         warning_html: "<p>
-                        <strong>Tenga en cuenta</strong>, haciendo algo visible para el mundo (es decir,
- Marcando esto como %{label}) puede ser
- Como una publicación que podría afectar su capacidad de:
+                        <strong>Tenga en cuenta</strong>, hacer algo visible para el mundo (es decir,
+ marcar esto como %{label}) puede ser
+ visto como una publicación, lo que podría afectar su capacidad de:
                       </p>
                       <ul>
-                        <li>Patente su trabajo</li>
-                        <li>Publica tu trabajo en un diario</li>
+                        <li>Patentar su trabajo</li>
+                        <li>Publicar su trabajo en una revista</li>
                       </ul>
                       <p>
-                        Echa un vistazo a <a href=\"http://www.sherpa.ac.uk/romeo/\">SHERPA/RoMEO</a> para más
-                         Información sobre las políticas de copyright del editor.
+                        Eche un vistazo a <a href=\"http://www.sherpa.ac.uk/romeo/\">SHERPA/RoMEO</a> para más
+                        información sobre las políticas de copyright del editor.
                       </p>"
       open_title_attr: "Cambiar la visibilidad de este recurso"
       private:
-        note_html:  Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
+        note_html:  Sólo los usuarios y/o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
         text: Privado
       private_title_attr: "Cambiar la visibilidad de este recurso"
       restricted:
@@ -676,20 +676,20 @@ es:
       default:
         deposit: "Depositar"
       load:
-        state_error: "El flujo de obra por %{workflow_name} no se ha actualizado.  Estás eliminando un estado: %{state_name} con %{entity_count} enidades.  ¡Un estado no puede ser removido mientras tiene enidades activas!"
-      unauthorized: "La obra no está disponible actualmente porque aún no ha completado el proceso de aprobación"
+        state_error: "El flujo de trabajo %{workflow_name} no se ha actualizado. Está eliminando un estado, %{state_name}, con %{entity_count} entidad/es. ¡Un estado no puede ser borrado mientras tiene enidades activas!"
+      unauthorized: "El trabajo no está disponible en este momento porque aún no se ha completado el proceso de aprobación"
     works:
       create:
-        after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que haz especificado han sido aplicados. Quizás requieras recargar la página para ver las actualizaciones."
-        breadcrumb: 'Agregar nueva obra'
-        header: Agregar nueva obra
+        after_create_html: "Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que ha especificado han sido aplicados. Quizás deba recargar la página para ver las actualizaciones."
+        breadcrumb: 'Añadir nuevo trabajo'
+        header: Añadir nuevo trabajo
       edit:
         breadcrumb: Editar
       form:
         additional_fields: "Campos adicionales"
-        in_collections: Este Obra en Colecciones
-        in_other_works: Este Obra en otras Obras
-        in_this_work: Otras Obras en este Obra
+        in_collections: Este Trabajo en Colecciones
+        in_other_works: Este Trabajo en otros Trabajos
+        in_this_work: Otros Trabaos en este Trabajo
         visibility_until: 'hasta'
         tab:
           files:         "Archivos"
@@ -697,59 +697,59 @@ es:
           relationships: "Relaciones"
           share:         "Compartir"
       progress:
-        header: Guardar Obra
+        header: Guardar Trabajo
       show:
         no_preview: No hay vista previa disponible
       update:
-        header: Editar Obra
+        header: Editar Trabajo
   simple_form:
     hints:
       admin_set:
-        description: 'Una breve descripción general que se aplica a todas las obras recogidas en este conjunto. Por ejemplo, "Tesis y archivos suplementarios creados por los estudiantes graduados de la Escuela de Ciencias de la Tierra".'
+        description: 'Una breve descripción general que se aplica a todas los trabajos recogidos en este conjunto. Por ejemplo, "Tesis y archivos suplementarios creados por los estudiantes graduados de la Escuela de Ciencias de la Tierra".'
         title: "Un nombre para ayudar a identificar el conjunto administrativo y distinguirlo de otros conjuntos administrativos en el repositorio."
       collection:
-        based_near: "Nombre de un lugar relacionado con la colección, tal como el sitio de publicación, o ciudad, estado, o país, que esté relacionado con los contenidos de la colección. Llamados a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
+        based_near: "Nombre de un lugar relacionado con la colección, tal como el sitio de publicación, ciudad, estado, o país, que esté relacionado con los contenidos de la colección. Obtenidos a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
         contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación de la colección, pero no el rol principal."
-        creator: "La persona o grupo responsable de la colección. Generalmente es el autor del contenido. Nombres personales deben ser introducidos con el apellidos al principio, ej. &quot;Smith, John.&quot;."
-        date_created: "La fecha en la cual la colección fue generada."
+        creator: "La persona o grupo responsable de la colección. Generalmente es el autor del contenido. Los nombres personales deben llevar los apellidos al principio, ej. &quot;Smith, John.&quot;."
+        date_created: "La fecha en la que se creó la colección."
         description: "Notas de texto libre acerca de la colección. Algunos ejemplos incluyen resúmenes de una publicación o información de citación de un artículo."
         identifier: "Un identificador único de la colección. Un ejemplo podría ser el DOI para un artículo de revista, o un ISBN o número OCLC para un libro."
-        keyword: "Palabras o frases seleccionadas para describir de qué trata la colección. Éstas son usadas para buscar contenido."
+        keyword: "Palabras o frases seleccionadas para describir de qué trata la colección. Serán usadas para buscar contenido."
         language: "El idioma del contenido de la colección."
-        publisher: "La persona o grupo que hizo disponible la colección. Generalmente ésta es una institución."
-        related_url: "Un vínculo a una página web u otro contenido específico (audio, video, un documento PDF) relacionado a la colección. Un ejemplo es la URL de un proyecto de investigación de la cual proviene la colección"
-        resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha cargado, tal como &quot;artículo&quot; or &quot;conjunto de datos.&quot;  Más de un tipo puede ser seleccionado."
+        publisher: "La persona o grupo que facilitó la colección. Generalmente se trata de una institución."
+        related_url: "Un enlace a una página web u otro contenido específico (audio, vídeo, un documento PDF) relacionado a la colección. Un ejemplo es la URL de un proyecto de investigación de la cual proviene la colección"
+        resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha subido, tal como &quot;artículo&quot; o &quot;conjunto de datos&quot;. Se puede seleccionar más de un tipo."
         license: "Licencias e información de distribución sobre la colección. Seleccionar uno de la lista."
-        subject: "Cabeceras o términos de índices que describen de qué trata la colección; éstos no tienen que pertenecer a un vocabulario existente.."
+        subject: "Cabeceras o términos de indexación que describen de qué trata la colección; no tienen por qué pertenecer a un vocabulario existente."
         title: "Un nombre para ayudar a la identificación de una colección."
       defaults:
-        based_near: "Nombre de un lugar relacionado con el trabajo, tal como el sitio de publicación, o ciudad, estado, o país, que esté relacionado con los contenidos de el trabajo. Llamados a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
-        contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación de el trabajo, pero no el rol principal."
-        creator: "La persona o grupo responsable de el trabajo. Generalmente es el autor del contenido. Nombres personales deben ser introducidos con el apellidos al principio, ej. &quot;Smith, John.&quot;."
-        date_created: "La fecha en la cual el trabajo fue generada."
+        based_near: "Nombre de un lugar relacionado con el trabajo, tal como el sitio de publicación, ciudad, estado, o país, que esté relacionado con los contenidos de el trabajo. Obtenidos a través del servicio de <a href='http://www.geonames.org'>GeoNames</a>."
+        contributor: "Una persona o grupo que se quiera reconocer por tener un rol en la creación del trabajo, pero no el rol principal."
+        creator: "La persona o grupo responsable del trabajo. Generalmente es el autor del contenido. Los nombres personales deben llevar los apellidos al principio, ej. &quot;Smith, John&quot;."
+        date_created: "La fecha en la que se creó el trabajo."
         description: "Notas de texto libre acerca de el trabajo. Algunos ejemplos incluyen resúmenes de una publicación o información de citación de un artículo."
         identifier: "Un identificador único de el trabajo. Un ejemplo podría ser el DOI para un artículo de revista, o un ISBN o número OCLC para un libro."
         keyword: "Palabras o frases seleccionadas para describir de qué trata el trabajo. Éstas son usadas para buscar contenido."
         language: "El idioma del contenido de el trabajo."
-        publisher: "La persona o grupo que hizo disponible el trabajo. Generalmente ésta es una institución."
-        related_url: "Un vínculo a una página web u otro contenido específico (audio, video, un documento PDF) relacionado a el trabajo. Un ejemplo es la URL de un proyecto de investigación de la cual proviene el trabajo"
-        resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha cargado, tal como &quot;artículo&quot; or &quot;conjunto de datos.&quot;  Más de un tipo puede ser seleccionado."
+        publisher: "La persona o grupo que facilitó el trabajo. Generalmente se trata de una institución."
+        related_url: "Un enlace a una página web u otro contenido específico (audio, vídeo, un documento PDF) relacionado con el trabajo. Un ejemplo es la URL de un proyecto de investigación de la cual proviene el trabajo"
+        resource_type: "Categorías predefinidas que describen el tipo de contenido que se ha subido, tal como &quot;artículo&quot; o &quot;conjunto de datos&quot;. Se puede seleccionar más de un tipo."
         license: "Licencias e información de distribución sobre el trabajo. Seleccionar uno de la lista."
-        subject: "Cabeceras o términos de índices que describen de qué trata el trabajo; éstos no tienen que pertenecer a un vocabulario existente.."
+        subject: "Cabeceras o términos de indexación que describen de qué trata el trabajo; no tienen por qué pertenecer a un vocabulario existente."
         title: "Un nombre para ayudar a la identificación de un trabajo."
     labels:
       collection:
         size:             "Tamaño"
-        total_items:      "Items totales"
+        total_items:      "Elementos totales"
       defaults:
-        admin_set_id:     "Agregar como miembro del conjunto administrativo"
+        admin_set_id:     "Añadir como miembro del conjunto administrativo"
         based_near:       "Ubicación"
-        collection_ids:   "Agregar como miembro de la colección"
+        collection_ids:   "Añadir como miembro de la colección"
         creator:          "Creador"
         date_created:     "Fecha de creación"
-        description:      "Resumen or Sumario"
+        description:      "Resumen o Sumario"
         embargo_release_date:      'hasta'
-        files:            "Cargar una nueva versión de este archivo desde tu computadora"
+        files:            "Subir una nueva versión de este archivo desde su ordenador"
         keyword:          "Palabra Clave"
         lease_expiration_date:     'hasta'
         related_url:      "URL relacionada"
@@ -758,6 +758,6 @@ es:
         visibility_after_embargo:  'luego abrirlo a'
         visibility_after_lease:    'luego restringirlo a'
         visibility_during_embargo: 'Restringido a'
-        visibility_during_lease:   'Está disponible para'
+        visibility_during_lease:   'Disponible para'
     required:
       html: '<span class="label label-info required-tag">obligatorio</span>'
