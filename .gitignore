@@ -60,6 +60,7 @@ db/schema.rb
 
 /.yardoc
 /doc
+/_site
 
 ## PROJECT::SPECIFIC
 
