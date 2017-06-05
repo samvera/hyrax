@@ -29,10 +29,12 @@ module Hyrax
       with_lock do
         # We don't need all of the status of the children, just need to see
         # if there is at least one PENDING, PERFORMING, or FAILURE.
-        # With this change, it doesn't matter if we have 10_000 children or 1, we will only ever get
-        # back an that is no longer than the total number of possible status values. Is it necessary?
-        # No, but there is no need to instantiate an array of all of those values.
-        stats = children.select(:status).distinct.pluck(:status)
+        # however, we can't use distinct with order by (from acts_as_nested_set)
+        # with postgres or you get the following error:
+        #   ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
+        stats = children.pluck(:status).uniq
+
+        # Don't mark as pass or fail until all jobs are complete
         return if stats.include?(PENDING) || stats.include?(PERFORMING)
         return fail! if stats.include?(FAILURE)
         success!
