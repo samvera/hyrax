@@ -338,8 +338,10 @@ es:
         update: "Actualizar Colección"
     collections:
       search_form:
-        label: "Buscar Collección %{title}"
+        label: "Buscar Colección %{title}"
         placeholder: "Buscar Colección"
+      show:
+        works_in_collection: "Trabajos en esta colección"
     contact_form:
       button_label: "Enviar"
       email_label: "Tu Correo Electrónico"
@@ -740,7 +742,7 @@ es:
     labels:
       collection:
         size:             "Tamaño"
-        total_items:      "Elementos totales"
+        total_items:      "Trabajos totales"
       defaults:
         admin_set_id:     "Añadir como miembro del conjunto administrativo"
         based_near:       "Ubicación"

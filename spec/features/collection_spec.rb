@@ -26,7 +26,7 @@ RSpec.describe 'collection', type: :feature do
       fill_in('Related URL', with: 'http://example.com/')
 
       click_button("Create Collection")
-      expect(page).to have_content 'Items in this Collection'
+      expect(page).to have_content 'Works in this Collection'
       expect(page).to have_content title
       expect(page).to have_content description
     end
@@ -47,7 +47,7 @@ RSpec.describe 'collection', type: :feature do
       click_button "Add to Collection" # opens the modal
       # since there is only one collection, it's not necessary to choose a radio button
       click_button "Update Collection"
-      expect(page).to have_content "Items in this Collection"
+      expect(page).to have_content "Works in this Collection"
       # There are two rows in the table per document (one for the general info, one for the details)
       # Make sure we have at least 2 documents
       expect(page).to have_selector "table.table-zebra-striped tr#document_#{work1.id}"
@@ -123,7 +123,7 @@ RSpec.describe 'collection', type: :feature do
       fill_in('collection_search', with: work1.title.first)
       click_button('collection_submit')
       # Should not have Collection metadata table (only title and description)
-      expect(page).not_to have_content("Total Items")
+      expect(page).not_to have_content("Total works")
       expect(page).to have_content(collection.title.first)
       expect(page).to have_content(collection.description.first)
       # Should have search results / contents listing

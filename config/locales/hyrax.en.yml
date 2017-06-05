@@ -340,6 +340,8 @@ en:
       search_form:
         label: "Search Collection %{title}"
         placeholder: "Search Collection"
+      show:
+        works_in_collection: "Works in this Collection"
     contact_form:
       button_label: "Send"
       email_label: "Your Email"
@@ -740,7 +742,7 @@ en:
     labels:
       collection:
         size:                      "Size"
-        total_items:               "Total Items"
+        total_items:               "Total works"
       defaults:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"
