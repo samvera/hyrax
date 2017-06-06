@@ -338,7 +338,7 @@ es:
         update: "Actualizar Colección"
     collections:
       search_form:
-        label: "Buscar Collección %{title}"
+        label: "Buscar Colección %{title}"
         placeholder: "Buscar Colección"
     contact_form:
       button_label: "Enviar"
