@@ -26,4 +26,11 @@ RSpec.describe Flipflop do
       is_expected.to be true
     end
   end
+
+  describe "account_signup?" do
+    subject { described_class.account_signup? }
+    it "defaults to true" do
+      is_expected.to be true
+    end
+  end
 end

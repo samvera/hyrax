@@ -54,6 +54,7 @@ es:
       update: 'Guardar'
   hyrax:
     account_label:      "Usuario"
+    account_signup:     'El registro de la cuenta está deshabilitado'
     active_consent_to_agreement:  "He leído y estoy de acuerdo con"
     admin:
       admin_sets:

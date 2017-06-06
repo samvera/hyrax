@@ -30,4 +30,8 @@ Flipflop.configure do
   feature :batch_upload,
           default: true,
           description: "Enable uploading batches of works"
+
+  feature :account_signup,
+          default: true,
+          description: 'Enable users to sign up for accounts'
 end

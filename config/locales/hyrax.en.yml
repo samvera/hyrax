@@ -54,6 +54,7 @@ en:
       update: 'Save'
   hyrax:
     account_label:      "User"
+    account_signup:     'Account registration is disabled'
     active_consent_to_agreement:  "I have read and agree to the"
     admin:
       admin_sets:
