@@ -117,6 +117,7 @@ module Hyrax
           if file.respond_to?(:original_filename)
             file.original_filename
           elsif file_set.import_url.present?
+            # This path is taken when file is a Tempfile (e.g. from ImportUrlJob)
             File.basename(Addressable::URI.parse(file_set.import_url).path)
           else
             File.basename(file)
