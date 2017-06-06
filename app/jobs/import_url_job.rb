@@ -1,5 +1,5 @@
 require 'uri'
-require 'tempfile'
+require 'tmpdir'
 require 'browse_everything/retriever'
 
 # Given a FileSet that has an import_url property,
@@ -19,10 +19,8 @@ class ImportUrlJob < Hyrax::ApplicationJob
   def perform(file_set, operation)
     operation.performing!
     user = User.find_by_user_key(file_set.depositor)
-
-    Tempfile.open(file_set.id.tr('/', '_')) do |f|
-      copy_remote_file(file_set, f)
-
+    uri = URI(file_set.import_url)
+    copy_remote_file(uri) do |f|
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
@@ -42,15 +40,23 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
   private
 
-    def copy_remote_file(file_set, f)
-      f.binmode
-      # download file from url
-      uri = URI(file_set.import_url)
-      spec = { 'url' => uri }
-      retriever = BrowseEverything::Retriever.new
-      retriever.retrieve(spec) do |chunk|
-        f.write(chunk)
+    # Download file from uri, yields a block with a file in a temporary directory.
+    # It is important that the file on disk has the same file name as the URL,
+    # because when the file in added into Fedora the file name will get persisted in the
+    # metadata.
+    # @param uri [URI] the uri of the file to download
+    # @yield [IO] the stream to write to
+    def copy_remote_file(uri)
+      filename = File.basename(uri.path)
+      Dir.mktmpdir do |dir|
+        File.open(File.join(dir, filename), 'wb') do |f|
+          retriever = BrowseEverything::Retriever.new
+          retriever.retrieve('url' => uri) do |chunk|
+            f.write(chunk)
+          end
+          f.rewind
+          yield f
+        end
       end
-      f.rewind
     end
 end

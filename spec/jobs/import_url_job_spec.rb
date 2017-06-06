@@ -29,7 +29,7 @@ RSpec.describe ImportUrlJob do
     end
 
     it 'creates the content and updates the associated operation' do
-      expect(actor).to receive(:create_content).with(Tempfile, 'original_file', false).and_return(true)
+      expect(actor).to receive(:create_content).with(File, 'original_file', false).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
     end
