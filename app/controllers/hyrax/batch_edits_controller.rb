@@ -1,16 +1,17 @@
 module Hyrax
   class BatchEditsController < ApplicationController
-    include Hydra::BatchEditBehavior
     include FileSetHelper
     include Hyrax::Breadcrumbs
+    include Hyrax::Collections::AcceptsBatches
 
     before_action :build_breadcrumbs, only: :edit
+    before_action :filter_docs_with_access!, only: [:edit, :update, :destroy_collection]
+    before_action :check_for_empty!, only: [:edit, :update, :destroy_collection]
 
     # provides the help_text view method
     helper PermissionsHelper
 
     def edit
-      super
       work = form_class.model_class.new
       work.depositor = current_user.user_key
       @form = form_class.new(work, current_user, batch)
@@ -27,16 +28,36 @@ module Hyrax
       redirect_to_return_controller unless request.xhr?
     end
 
+    def check_for_empty!
+      return unless check_for_empty_batch?
+      redirect_back fallback_location: hyrax.batch_edits_path
+      false
+    end
+
+    def destroy_collection
+      batch.each do |doc_id|
+        obj = ActiveFedora::Base.find(doc_id, cast: true)
+        obj.destroy
+      end
+      flash[:notice] = "Batch delete complete"
+      after_destroy_collection
+    end
+
     def update_document(obj)
       obj.attributes = work_params
       obj.date_modified = Time.current.ctime
       obj.visibility = params[:visibility]
+      obj.save
     end
 
     def update
       case params["update_type"]
       when "update"
-        super
+        batch.each do |doc_id|
+          update_document(ActiveFedora::Base.find(doc_id))
+        end
+        flash[:notice] = "Batch update complete"
+        after_update
       when "delete_all"
         destroy_batch
       end

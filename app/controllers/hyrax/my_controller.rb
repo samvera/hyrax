@@ -1,7 +1,7 @@
 module Hyrax
   class MyController < ApplicationController
     include Hydra::Catalog
-    include Hydra::BatchEditBehavior
+    include Hyrax::Collections::AcceptsBatches
 
     def self.configure_facets
       # clear facet's copied from the CatalogController
@@ -68,13 +68,9 @@ module Hyrax
         max_batch_size = 80
         count_on_page = @document_list.count { |doc| batch.index(doc.id) }
         @disable_select_all = @document_list.count > max_batch_size
-        batch_size = batch.uniq.size
         @result_set_size = @response.response["numFound"]
         @empty_batch = batch.empty?
         @all_checked = (count_on_page == @document_list.count)
-        batch_size_on_other_page = batch_size - count_on_page
-        @batch_part_on_other_page = batch_size_on_other_page > 0
-
         @add_files_to_collection = params.fetch(:add_files_to_collection, '')
       end
 
