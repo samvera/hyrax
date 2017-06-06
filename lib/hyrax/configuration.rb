@@ -381,14 +381,20 @@ module Hyrax
 
     attr_writer :permission_levels
     def permission_levels
-      @permission_levels ||= { "Choose Access" => "none",
-                               "View/Download" => "read",
-                               "Edit" => "edit" }
+      @permission_levels ||= { "View/Download" => "read",
+                               "Edit access" => "edit" }
     end
 
     attr_writer :owner_permission_levels
     def owner_permission_levels
-      @owner_permission_levels ||= { "Edit Access" => "edit" }
+      @owner_permission_levels ||= { "Edit access" => "edit" }
+    end
+
+    attr_writer :permission_options
+    def permission_options
+      @permission_options ||= { "Choose Access" => "none",
+                                "View/Download" => "read",
+                                "Edit" => "edit" }
     end
 
     attr_writer :translate_uri_to_id

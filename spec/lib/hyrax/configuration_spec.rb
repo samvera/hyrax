@@ -48,6 +48,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:model_to_create) }
   it { is_expected.to respond_to(:owner_permission_levels) }
   it { is_expected.to respond_to(:permission_levels) }
+  it { is_expected.to respond_to(:permission_options) }
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:subject_prefix) }
