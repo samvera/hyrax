@@ -21,7 +21,7 @@ module Hyrax
 
       def list_search_builder(access)
         list_search_builder_class.new(context).tap do |builder|
-          builder.discovery_perms = [access]
+          builder.discovery_permissions = [access]
         end
       end
   end
