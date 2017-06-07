@@ -24,6 +24,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Prerequisites](#prerequisites)
       * [Characterization](#characterization)
       * [Derivatives](#derivatives)
+      * [Transcoding](#transcoding)
     * [Environments](#environments)
     * [Ruby](#ruby)
     * [Redis](#redis)
@@ -80,6 +81,7 @@ Hyrax requires the following software to work:
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
 1. [FITS](#characterization) version 1.0.x (1.0.5 is known to be good, 1.1.0 is known to be bad: https://github.com/harvard-lts/fits/issues/140)
 1. [LibreOffice](#derivatives)
+1. [ffmpeg](#transcoding)
 
 **NOTE: The [Hyrax Development Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
@@ -99,6 +101,16 @@ Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns 
 You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
 
 **NOTE**: Derivatives are served from the filesystem in Hyrax.
+
+### Transcoding
+
+Hyrax includes support for transcoding audio and video files with ffmpeg > 1.0 installed.
+
+On OSX, you can use homebrew:
+
+`brew install ffmpeg --with-fdk-aac --with-libvpx --with-libvorbis`
+
+Otherwise, to compile ffmpeg yourself, see the [ffmpeg compilation guide](https://trac.ffmpeg.org/wiki/CompilationGuide).
 
 ## Environments
 
@@ -201,7 +213,7 @@ This command also makes sure that Hyrax's built-in workflows are loaded for your
 
 ## Generate a work type
 
-Hyrax allows you to specify your work types by using a generator. You may generate one or more of these work types.
+Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
 
 Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
@@ -215,7 +227,7 @@ or
 rails generate hyrax:work MovingImage
 ```
 
-Namespaces can be included in the work My::MovingImage by adding the path.
+If your applications requires your work type to be namespaced, namespaces can be included in the by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
 
 ```
 rails generate hyrax:work My/MovingImage
@@ -233,6 +245,8 @@ The [Hyrax Management Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Ma
 * Audiovisual transcoding with `ffmpeg`
 * Setting up administrative users
 * Metadata customization
+* Virus checking
+* Workflows
 
 ## Toggling Features
 
