@@ -19,12 +19,6 @@ module Hyrax
       Solrizer.solr_name('title', :sortable)
     end
 
-    # @return [Hash{Symbol => Array[Symbol]}] bottom-up map of "what you need" to "what qualifies"
-    # @note i.e., requiring :read access is satisfied by either :read or :edit access
-    def access_levels
-      { read: [:read, :edit], edit: [:edit] }
-    end
-
     # This overrides the models in FilterByType
     def models
       collection_classes
