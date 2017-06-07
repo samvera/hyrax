@@ -20,8 +20,8 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
 
     context 'To myself' do
       before { transfer_ownership_of_work work, original_owner }
-      it 'Displays an appropriate error message' do
-        expect(page).to have_content 'Sending user must specify another user to receive the work'
+      it 'displays an appropriate error message' do
+        expect(page).to have_content 'specify a different user to receive the work'
       end
     end
 
@@ -94,6 +94,6 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
     new_owner_search_field.set new_owner.user_key
     new_owner_search_result.click
     fill_in 'proxy_deposit_request[sender_comment]', with: 'Work transfer comments'
-    submit_button.click
+    click_button "Transfer"
   end
 end
