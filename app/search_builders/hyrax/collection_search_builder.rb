@@ -25,19 +25,6 @@ module Hyrax
       { read: [:read, :edit], edit: [:edit] }
     end
 
-    attr_writer :discovery_perms # TODO: remove this line
-    ## Overrides
-
-    # unprotect lib/blacklight/access_controls/enforcement.rb methods
-    # Remove these when https://github.com/projectblacklight/blacklight-access_controls/pull/23 is merged/released/required
-    def discovery_permissions
-      @discovery_perms || super
-    end
-
-    def discovery_permissions=(*args)
-      super
-    end
-
     # This overrides the models in FilterByType
     def models
       collection_classes
