@@ -1,6 +1,5 @@
 module Hyrax
-  class SingleUseLinksViewerController < ApplicationController
-    include DownloadBehavior
+  class SingleUseLinksViewerController < DownloadsController
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include ActionDispatch::Routing::PolymorphicRoutes
