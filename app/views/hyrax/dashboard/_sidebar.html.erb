@@ -11,93 +11,9 @@
       </div>
     </div>
   </li>
-  <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
-
-  <li>
-    <%= menu.collapsable_section t('hyrax.admin.sidebar.user_activity'),
-                                 icon_class: "fa fa-line-chart",
-                                 id: 'collapseUserActivity',
-                                 open: menu.user_activity_section? do %>
-      <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
-                        also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
-        <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
-      <% end %>
-
-      <%= menu.nav_link(hyrax.notifications_path) do %>
-        <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
-      <% end %>
-
-      <%= menu.nav_link(hyrax.transfers_path) do %>
-        <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
-      <% end %>
-    <% end %>
-  </li>
-
-  <% if can? :read, :admin_dashboard %>
-    <%= menu.nav_link(hyrax.admin_stats_path) do %>
-      <span class="fa fa-bar-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
-    <% end %>
-  <% end %>
-
-  <li class="h5"><%= t('hyrax.admin.sidebar.repository_objects') %></li>
-  <% if can? :manage_any, AdminSet %>
-    <%= menu.nav_link(hyrax.admin_admin_sets_path) do %>
-      <span class="fa fa-sitemap"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.admin_sets') %></span>
-    <% end %>
-  <% end %>
-
-  <%= menu.nav_link(hyrax.my_collections_path,
-                    also_active_for: hyrax.dashboard_collections_path) do %>
-    <span class="fa fa-folder-open"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.collections') %></span>
-  <% end %>
-
-  <%= menu.nav_link(hyrax.my_works_path,
-                    also_active_for: hyrax.dashboard_works_path) do %>
-    <span class="fa fa-file"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works') %></span>
-  <% end %>
-
-  <% if can? :review, :submissions %>
-    <li class="h5"><%= t('hyrax.admin.sidebar.tasks') %></li>
-    <%= menu.nav_link(hyrax.admin_workflows_path) do %>
-      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_review') %></span>
-    <% end %>
-  <% end %>
-
-  <% if can? :manage, User %>
-    <%= menu.nav_link(hyrax.admin_users_path) do %>
-      <span class="fa fa-user"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
-    <% end %>
-  <% end %>
-
-  <% if menu.show_configuration? %>
-    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
-    <li>
-      <%= menu.collapsable_section t('hyrax.admin.sidebar.settings'),
-                                   icon_class: "fa fa-cog",
-                                   id: 'collapseSettings',
-                                   open: menu.settings_section? do %>
-        <% if can?(:update, :appearance) %>
-          <%= menu.nav_link(hyrax.admin_appearance_path) do %>
-            <span class="fa fa-paint-brush"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.appearance') %></span>
-          <% end %>
-        <% end %>
-        <% if can?(:manage, Hyrax::Feature) %>
-          <%= menu.nav_link(hyrax.edit_pages_path) do %>
-            <span class="fa fa-file-text-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.pages') %></span>
-          <% end %>
-          <%= menu.nav_link(hyrax.edit_content_blocks_path) do %>
-            <span class="fa fa-square-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.content_blocks') %></span>
-          <% end %>
-          <%= menu.nav_link(hyrax.admin_features_path) do %>
-            <span class="fa fa-wrench"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.technical') %></span>
-          <% end %>
-        <% end %>
-      <% end %>
-    </li>
-    <% if can?(:manage, Sipity::WorkflowResponsibility) %>
-      <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
-        <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
-      <% end %>
-    <% end # end of configuration block %>
-  <% end %>
+  
+  <%= render 'hyrax/dashboard/sidebar/activity', menu: menu %>
+  <%= render 'hyrax/dashboard/sidebar/repository_content', menu: menu %>
+  <%= render 'hyrax/dashboard/sidebar/tasks', menu: menu %>
+  <%= render 'hyrax/dashboard/sidebar/configuration', menu: menu %>
 </ul>
