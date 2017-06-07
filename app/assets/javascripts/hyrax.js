@@ -37,8 +37,6 @@
 //= require webcomponentsjs/0.5.4/CustomElements.min
 //= require time-elements
 
-//= require batch_edit
-//
 //= require hyrax/monkey_patch_turbolinks
 //= require hyrax/app
 //= require hyrax/config
