@@ -173,18 +173,11 @@ module Hyrax
       @import_export_jar_file_path ||= "tmp/fcrepo-import-export.jar"
     end
 
-    # @!attribute [w] descriptions_directory
-    #   Location where description files are exported
-    attr_writer :descriptions_directory
-    def descriptions_directory
-      @descriptions_directory ||= "tmp/descriptions"
-    end
-
-    # @!attribute [w] binaries_directory
-    #   Location where binary files are exported
-    attr_writer :binaries_directory
-    def binaries_directory
-      @binaries_directory ||= "tmp/binaries"
+    # @!attribute [w] bagit_dir
+    #   Location where BagIt files are exported
+    attr_writer :bagit_dir
+    def bagit_dir
+      @bagit_dir ||= "tmp/descriptions"
     end
 
     # @!attribute [w] dashboard_configuration
