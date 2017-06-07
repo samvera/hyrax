@@ -176,11 +176,8 @@ Hyrax.config do |config|
   # Path to the Fedora import export tool jar file
   # config.import_export_jar_file_path = "tmp/fcrepo-import-export.jar"
   #
-  # Location where descriptive rdf should be exported
-  # config.descriptions_directory = "tmp/descriptions"
-  #
-  # Location where binaries are exported
-  # config.binaries_directory = "tmp/binaries"
+  # Location where BagIt files should be exported
+  # config.bagit_dir = "tmp/descriptions"
 
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
