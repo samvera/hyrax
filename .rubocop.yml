@@ -45,6 +45,9 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Max: 14
 
+Style/AsciiComments:
+  Enabled: false
+
 Style/IndentationConsistency:
   EnforcedStyle: rails
 
