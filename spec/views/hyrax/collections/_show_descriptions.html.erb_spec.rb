@@ -18,7 +18,7 @@ RSpec.describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
       render
       expect(rendered).to have_content 'Date Created'
       expect(rendered).to include('itemprop="dateCreated"')
-      expect(rendered).to have_content 'Total Items'
+      expect(rendered).to have_content 'Total works'
       expect(rendered).to have_content '2'
       expect(rendered).to have_content 'Size'
       expect(rendered).to have_content '118 MB'

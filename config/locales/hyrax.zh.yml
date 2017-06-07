@@ -342,6 +342,8 @@ zh:
       search_form:
         label: "搜索收藏集 %{title}"
         placeholder: "搜索收藏集"
+      show:
+        works_in_collection: "作品在此集合"
     contact_form:
       button_label: "发送"
       email_label: "您的邮件"
@@ -728,7 +730,7 @@ zh:
     labels:
       collection:
         size:                      "大小"
-        total_items:               "总计件"
+        total_items:               "总作品"
       defaults:
         admin_set_id:              "添加管理集成员"
         based_near:                "地点"
