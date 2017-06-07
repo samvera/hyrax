@@ -51,6 +51,8 @@ en:
         update: 'Save'
       hyrax_permission_template_access:
         create: 'Add'
+      proxy_deposit_request:
+        create: 'Transfer'
       update: 'Save'
   hyrax:
     account_label:      "User"
@@ -601,6 +603,9 @@ en:
         logout: "Logout"
         sr_action: "View"
         sr_target: "profile"
+    transfers:
+      new:
+        confirm: "Are you sure you want to transfer ownership of this work to another user? Click Ok to transfer or Cancel to return to the transfer screen"
     upload:
       alert:
         contact_href_text: "contact form"
@@ -761,5 +766,8 @@ en:
         visibility_after_lease:    'then restrict it to'
         visibility_during_embargo: 'Restricted to'
         visibility_during_lease:   'Is available for'
+      proxy_deposit_request:
+        transfer_to:              "User"
+        sender_comment:           "Comments"
     required:
       html: '<span class="label label-info required-tag">required</span>'

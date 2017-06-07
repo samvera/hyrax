@@ -124,7 +124,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.transfer_to = sender.user_key
         expect(subject).not_to be_valid
-        expect(subject.errors[:sending_user]).to eq(['must specify another user to receive the work'])
+        expect(subject.errors[:transfer_to]).to eq(['specify a different user to receive the work'])
       end
     end
 
