@@ -144,10 +144,6 @@ Hyrax.config do |config|
   # Labels for owner permission levels
   # config.owner_permission_levels = { "Edit Access" => "edit" }
 
-  # Returns a lambda that takes a hash of attributes and returns a string of the model
-  # name. This is called by the batch upload process
-  # config.model_to_create = ->(_attributes) { Hyrax.primary_work_type.model_name.name }
-
   # Path to the ffmpeg tool
   # config.ffmpeg_path = 'ffmpeg'
 

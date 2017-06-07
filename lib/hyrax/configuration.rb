@@ -417,13 +417,6 @@ module Hyrax
       @subject_prefix ||= "Contact form:"
     end
 
-    attr_writer :model_to_create
-    # Returns a lambda that takes a hash of attributes and returns a string of the model
-    # name. This is called by the batch upload process
-    def model_to_create
-      @model_to_create ||= ->(_attributes) { Hyrax.primary_work_type.model_name.name }
-    end
-
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
