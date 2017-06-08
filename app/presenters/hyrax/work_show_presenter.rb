@@ -132,7 +132,17 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.stats_work_path(self)
     end
 
-    delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
+    def member_presenters(*args)
+      @member_presenters ||= member_presenter_factory.member_presenter(args)
+    end
+
+    def file_set_presenters(*args)
+      @file_set_presenters ||= member_presenter_factory.file_set_presenters(args)
+    end
+
+    def work_presenters(*args)
+      @work_presenters ||= member_presenter_factory.work_presenters(args)
+    end
 
     private
 
