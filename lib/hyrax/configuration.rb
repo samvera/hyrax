@@ -180,43 +180,6 @@ module Hyrax
       @bagit_dir ||= "tmp/descriptions"
     end
 
-    # @!attribute [w] dashboard_configuration
-    #   Configuration for dashboard rendering.
-    attr_writer :dashboard_configuration
-    # rubocop:disable Metrics/MethodLength
-    def dashboard_configuration
-      @dashboard_configuration ||= {
-        menu: {
-          index: {},
-          resource_details: {},
-          workflow: {},
-          workflow_roles: {}
-        },
-        actions: {
-          index: {
-            partials: [
-              "total_objects_charts",
-              "total_embargo_visibility"
-            ]
-          },
-          resource_details: {
-            partials: [
-              "total_objects"
-            ]
-          },
-          workflow: {
-            partials: [
-              "workflow"
-            ]
-          }
-        },
-        data_sources: {
-          resource_stats: Hyrax::ResourceStatisticsSource
-        }
-      }
-    end
-    # rubocop:enable Metrics/MethodLength
-
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,
