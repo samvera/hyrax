@@ -137,7 +137,6 @@ RSpec/AnyInstance:
     - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
-    - 'spec/controllers/hyrax/transfers_controller_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'
     - 'spec/jobs/content_update_event_job_spec.rb'
     - 'spec/jobs/content_restored_version_event_job_spec.rb'

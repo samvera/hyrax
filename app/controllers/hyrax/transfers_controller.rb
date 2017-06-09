@@ -27,7 +27,8 @@ module Hyrax
       if @proxy_deposit_request.save
         redirect_to hyrax.transfers_path, notice: "Transfer request created"
       else
-        redirect_to root_url, alert: @proxy_deposit_request.errors.full_messages.to_sentence
+        @work = Hyrax::WorkRelation.new.find(params[:id])
+        render :new
       end
     end
 

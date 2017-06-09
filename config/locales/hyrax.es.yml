@@ -51,6 +51,8 @@ es:
         update: 'Guardar'
       hyrax_permission_template_access:
         create: 'Añadir'
+      proxy_deposit_request:
+        create: 'Transferir'
       update: 'Guardar'
   hyrax:
     account_label:      "Usuario"
@@ -601,6 +603,9 @@ es:
         logout: "Cerrar sesión"
         sr_action: "Ver"
         sr_target: "perfil"
+    transfers:
+      new:
+        confirm: "¿Está seguro de que desea transferir la propiedad de este trabajo a otro usuario? Haga clic en Aceptar para transferir o Cancelar para volver a la pantalla de transferencia"
     upload:
       alert:
         contact_href_text: "formulario de contacto"
@@ -761,5 +766,8 @@ es:
         visibility_after_lease:    'luego restringirlo a'
         visibility_during_embargo: 'Restringido a'
         visibility_during_lease:   'Disponible para'
+      proxy_deposit_request:
+        transfer_to:               "Usuario"
+        sender_comment:            "Comentarios"
     required:
       html: '<span class="label label-info required-tag">obligatorio</span>'
