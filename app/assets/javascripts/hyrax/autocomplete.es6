@@ -11,7 +11,7 @@ export default class Autocomplete {
         new Work(
           element,
           data.autocompleteUrl,
-          data.id
+          element.data('exclude-work')
         )
         break
       default:
