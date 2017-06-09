@@ -56,7 +56,8 @@ module Hyrax
           Hyrax::WorkingDirectory.copy_file_to_working_directory(file, file_set.id)
         end
 
-        def ingest_options(file, opts = {})
+        def ingest_options(file)
+          opts = {}
           opts[:mime_type] = file.content_type if file.respond_to?(:content_type)
           opts[:filename] = file.original_filename if file.respond_to?(:original_filename)
           opts.merge!(relation: relation)
