@@ -183,8 +183,6 @@ Hyrax::Engine.routes.draw do
     end
   end
 
-  resources :admin_sets, controller: 'admin_sets'
-
   namespace :admin do
     resources :admin_sets do
       member do

@@ -1,7 +1,13 @@
 RSpec.describe Hyrax::HomepagePresenter do
-  let(:presenter) { described_class.new(ability) }
+  let(:presenter) { described_class.new(ability, collections) }
   let(:ability) { Ability.new(user) }
+  let(:collections) { double }
   let(:user) { build(:user) }
+
+  describe "#collections" do
+    subject { presenter.collections }
+    it { is_expected.to eq collections }
+  end
 
   describe "#display_share_button?" do
     subject { presenter.display_share_button? }

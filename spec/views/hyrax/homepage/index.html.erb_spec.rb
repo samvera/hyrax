@@ -1,7 +1,7 @@
 RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability", can?: false) }
-  let(:presenter) { Hyrax::HomepagePresenter.new(ability) }
+  let(:presenter) { instance_double(Hyrax::HomepagePresenter) }
   let(:type_presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
 
   describe "share your work button" do

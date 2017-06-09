@@ -225,11 +225,6 @@ zh:
           tabs:
             published: "已出版"
             under_review: "在审查中"
-    admin_sets:
-      index:
-        header: "所有收藏"
-      show:
-        header: "集"
     api:
       accepted:
         default: "您的请求已被接受，正在处理中。参见？？See job for more info。"

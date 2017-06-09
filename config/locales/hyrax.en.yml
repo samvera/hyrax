@@ -223,11 +223,6 @@ en:
           tabs:
             published: "Published"
             under_review: "Under Review"
-    admin_sets:
-      index:
-        header: "All Collections"
-      show:
-        header: "Collection"
     api:
       accepted:
         default: "Your request has been accepted for processing, but processing is not complete. See job for more info."

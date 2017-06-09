@@ -4,6 +4,7 @@ class Hyrax::HomepageController < ApplicationController
   include Blacklight::SearchHelper
   include Blacklight::AccessControls::Catalog
 
+  # The search builder for finding recent documents
   def search_builder_class
     Hyrax::HomepageSearchBuilder
   end
@@ -14,21 +15,20 @@ class Hyrax::HomepageController < ApplicationController
   helper Hyrax::ContentBlockHelper
 
   def index
-    @presenter = presenter_class.new(current_ability)
+    @presenter = presenter_class.new(current_ability, collections)
     @featured_researcher = ContentBlock.for(:researcher)
     @marketing_text = ContentBlock.for(:marketing)
     @featured_work_list = FeaturedWorkList.new
     @announcement_text = ContentBlock.for(:announcement)
-    @admin_sets = fetch_admin_sets
     recent
   end
 
   private
 
-    def fetch_admin_sets
-      return [] unless Flipflop.assign_admin_set?
-      builder = Hyrax::AdminSetSearchBuilder.new(self, current_ability)
-                                            .rows(5)
+    # Return 5 collections
+    def collections(rows: 5)
+      builder = Hyrax::CollectionSearchBuilder.new(self)
+                                              .rows(rows)
       response = repository.search(builder)
       response.documents
     rescue Blacklight::Exceptions::ECONNREFUSED, Blacklight::Exceptions::InvalidRequest

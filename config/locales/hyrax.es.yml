@@ -223,11 +223,6 @@ es:
           tabs:
             published: "Publicados"
             under_review: "En Revisión"
-    admin_sets:
-      index:
-        header: "Todas las colecciones"
-      show:
-        header: "Colección"
     api:
       accepted:
         default: "Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver tarea para más información."
