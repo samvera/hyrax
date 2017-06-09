@@ -58,6 +58,7 @@ zh:
       update: '保存'
   hyrax:
     account_label:  "用户"
+    account_signup: '帐户注册被禁用'
     active_consent_to_agreement:  "我已经阅读并同意"
     admin:
       admin_sets:

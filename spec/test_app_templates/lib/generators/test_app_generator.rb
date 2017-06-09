@@ -67,4 +67,8 @@ class TestAppGenerator < Rails::Generators::Base
   def relax_routing_constraint
     gsub_file 'config/initializers/arkivo_constraint.rb', 'false', 'true'
   end
+
+  def override_devise_registrations_controller
+    gsub_file 'config/routes.rb', 'devise_for :users', 'devise_for :users, controllers: { registrations: "hyrax/registrations" }'
+  end
 end

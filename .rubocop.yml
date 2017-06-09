@@ -136,6 +136,7 @@ RSpec/MessageSpies:
 RSpec/InstanceVariable:
   Exclude:
     - 'spec/services/hyrax/derivative_service_spec.rb'
+    - 'spec/controllers/hyrax/registrations_controller_spec.rb'
 
 RSpec/ExpectActual:
   Enabled: false
