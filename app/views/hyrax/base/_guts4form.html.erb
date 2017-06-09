@@ -33,6 +33,7 @@
             <div role="tabpanel" class="tab-pane" id="<%= tab %>">
           <% end %>
             <div class="form-tab-content">
+              <% # metadata_tab is sometimes provided %>
               <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
               <%= render "form_#{tab}", f: f %>
             </div>
