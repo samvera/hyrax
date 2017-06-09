@@ -10,6 +10,7 @@ class IngestFileJob < Hyrax::ApplicationJob
   def perform(file_set, filepath, user, opts = {})
     relation = opts.fetch(:relation, :original_file).to_sym
 
+    logger.debug("Performing ingest of \"#{filepath}\" with options: #{opts.inspect}")
     # Wrap in an IO decorator to attach passed-in options
     local_file = Hydra::Derivatives::IoDecorator.new(File.open(filepath, "rb"))
     local_file.mime_type = opts.fetch(:mime_type, nil)
