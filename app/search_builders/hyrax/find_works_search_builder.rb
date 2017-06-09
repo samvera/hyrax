@@ -8,7 +8,8 @@ class Hyrax::FindWorksSearchBuilder < Hyrax::SearchBuilder
   # Excludes the id that is part of the params
   def initialize(context)
     super(context)
-    @id = context.params[:id]
+    # Without an id this class will produce an invalid query.
+    @id = context.params[:id] || raise("missing required parameter: id")
     @q = context.params[:q]
   end
 

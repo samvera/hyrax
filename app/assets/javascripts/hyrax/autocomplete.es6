@@ -15,7 +15,7 @@ export default class Autocomplete {
         new Work(
           element,
           url,
-          element.data('id')
+          element.data('exclude-work')
         )
         break
       case 'based_near':
