@@ -32,10 +32,10 @@ module Hyrax
         clause = query.blank? ? nil : "%" + query.downcase + "%"
         base = ::User.where(*base_query)
         if clause.present?
-          base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", clause, clause)
+          base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause)
         end
         base.registered
-            .where("#{Devise.authentication_keys.first} not in (?)",
+            .where("#{Hydra.config.user_key_field} not in (?)",
                    [::User.batch_user_key, ::User.audit_user_key])
             .references(:trophies)
             .order(sort_value)
@@ -60,9 +60,9 @@ module Hyrax
         when 'name desc'
           'display_name DESC'
         when 'login'
-          Devise.authentication_keys.first
+          Hydra.config.user_key_field
         when 'login desc'
-          "#{Devise.authentication_keys.first} DESC"
+          "#{Hydra.config.user_key_field} DESC"
         else
           sort
         end

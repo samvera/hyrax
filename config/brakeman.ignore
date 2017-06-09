@@ -3,20 +3,20 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "23ba0830f304065acab598cd07d285a4e0df786cb64533e04d2e8efa6d7a4a5b",
+      "fingerprint": "3becf9f631534695c52fd8f73b52d0106531e4c2d89dce371267efb2f2d69ad2",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/hyrax/users_controller.rb",
-      "line": 38,
+      "line": 35,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "::User.where(*base_query).where(\"#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\"))).registered.where(\"#{Devise.authentication_keys.first} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
+      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\")))",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Hyrax::UsersController",
         "method": "search"
       },
-      "user_input": "Devise.authentication_keys.first",
+      "user_input": "Hydra.config.user_key_field",
       "confidence": "Weak",
       "note": ""
     },
@@ -62,44 +62,44 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "a625206570d0bafe8634bdaf900d5f2ee742c61e7e26089a0be4439016de79a9",
+      "fingerprint": "9f736ca3e9b879bc7059d894fab1328a959b14574b90a991caef19fa8124b2f5",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/hyrax/users_controller.rb",
-      "line": 35,
+      "line": 38,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "::User.where(*base_query).where(\"#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\")))",
+      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\"))).registered.where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Hyrax::UsersController",
         "method": "search"
       },
-      "user_input": "Devise.authentication_keys.first",
+      "user_input": "Hydra.config.user_key_field",
       "confidence": "Weak",
       "note": ""
     },
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "d34e876702fc1f6c09d3a88d5c55b2c309b0ccfe2c738942934ef90ac2db892a",
+      "fingerprint": "fd7b410ad29f31e1a743f3b9fff7fe4bb2a2ae2fb2d5f22336c40c5b93374218",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/hyrax/user.rb",
       "line": 27,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{Devise.authentication_keys.first} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
+      "code": "where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Hyrax::User",
         "method": null
       },
-      "user_input": "Devise.authentication_keys.first",
+      "user_input": "Hydra.config.user_key_field",
       "confidence": "Medium",
       "note": ""
     }
   ],
-  "updated": "2017-06-02 10:13:18 -0500",
+  "updated": "2017-06-09 16:31:04 -0500",
   "brakeman_version": "3.6.2"
 }
