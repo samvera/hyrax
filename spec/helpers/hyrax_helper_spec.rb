@@ -26,6 +26,23 @@ RSpec.describe HyraxHelper, type: :helper do
     it { is_expected.to eq('en' => 'English', 'es' => 'Español', 'zh' => '中文') }
   end
 
+  describe '#registration_available?' do
+    subject { helper.registration_available? }
+    before do
+      allow(Devise).to receive(:mappings) { { user: mapping } }
+      allow(mapping).to receive(:registerable?).and_return(registerable)
+    end
+    let(:mapping) { double('mapping') }
+    context 'with :registerable turned on' do
+      let(:registerable) { true }
+      it { is_expected.to be true }
+    end
+    context 'with :registerable turned off (in e.g. SSO-enabled apps)' do
+      let(:registerable) { false }
+      it { is_expected.to be false }
+    end
+  end
+
   context 'link helpers' do
     before do
       allow(helper).to receive(:search_action_path) do |*args|
