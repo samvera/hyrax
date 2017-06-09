@@ -24,11 +24,10 @@ class ImportUrlJob < Hyrax::ApplicationJob
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
-      # We invoke the FileSetActor in a synchronous way so that this tempfile is available
-      # when IngestFileJob is invoked. If it was asynchronous the IngestFileJob may be invoked
-      # on a machine that did not have this temp file on it's file system.
+      # FileSetActor operates synchronously so that this tempfile is available.
+      # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
       # NOTE: The return status may be successful even if the content never attaches.
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, 'original_file', false)
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f)
         operation.success!
       else
         # send message to user on download failure

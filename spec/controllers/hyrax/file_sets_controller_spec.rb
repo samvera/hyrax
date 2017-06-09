@@ -13,8 +13,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe '#create' do
       let(:parent) do
-        create(:generic_work, :public,
-               edit_users: [user.user_key])
+        create(:generic_work, :public, edit_users: [user.user_key])
       end
       let(:file) { fixture_file_upload('image.png', 'image/png') }
 
@@ -194,14 +193,10 @@ RSpec.describe Hyrax::FileSetsController do
         before do
           allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
         end
-        let(:expected_file_type) do
-          ActionDispatch::Http::UploadedFile
-        end
 
         it "spawns a content new version event job" do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-
-          expect(actor).to receive(:ingest_file).with(expected_file_type, true)
+          expect(actor).to receive(:ingest_file).with(an_instance_of Hydra::Derivatives::IoDecorator)
           file = fixture_file_upload('/world.png', 'image/png')
           post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
           post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
@@ -428,8 +423,7 @@ RSpec.describe Hyrax::FileSetsController do
 
   context 'finds parents' do
     let(:parent) do
-      create(:generic_work, :public,
-             edit_users: [user.user_key])
+      create(:generic_work, :public, edit_users: [user.user_key])
     end
 
     let(:file_set) do
