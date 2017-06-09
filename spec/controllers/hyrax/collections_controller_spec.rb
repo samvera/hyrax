@@ -84,19 +84,6 @@ RSpec.describe Hyrax::CollectionsController do
     end
   end
 
-  describe '#index', :clean_repo do
-    let!(:collection1) { create(:collection, :public, title: ['Beta']) }
-    let!(:collection2) { create(:collection, :public, title: ['Alpha']) }
-    let!(:generic_work) { create(:generic_work, :public) }
-
-    it 'shows a list of collections sorted alphabetically' do
-      get :index
-      expect(response).to be_successful
-      expect(assigns[:document_list].map(&:id)).not_to include generic_work.id
-      expect(assigns[:document_list].map(&:id)).to match_array [collection2.id, collection1.id]
-    end
-  end
-
   describe "#update" do
     before { sign_in user }
 

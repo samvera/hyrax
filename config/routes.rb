@@ -46,7 +46,7 @@ Hyrax::Engine.routes.draw do
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
   resources :batch_uploads, only: [:new, :create], controller: 'batch_uploads'
 
-  resources :collections do
+  resources :collections, except: [:index] do
     member do
       get 'page/:page', action: :index
       get 'facet/:id', action: :facet, as: :dashboard_facet
