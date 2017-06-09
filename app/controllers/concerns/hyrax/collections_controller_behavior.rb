@@ -29,15 +29,11 @@ module Hyrax
 
       class_attribute :presenter_class,
                       :form_class,
-                      :list_search_builder_class,
                       :single_item_search_builder_class,
                       :member_search_builder_class
 
       alias_method :collection_search_builder_class, :single_item_search_builder_class
       deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
-
-      alias_method :collections_search_builder_class, :list_search_builder_class
-      deprecation_deprecate collections_search_builder_class: "use list_search_builder_class instead"
 
       alias_method :collection_member_search_builder_class, :member_search_builder_class
       deprecation_deprecate collection_member_search_builder_class: "use member_search_builder_class instead"
@@ -46,8 +42,6 @@ module Hyrax
 
       self.form_class = Hyrax::Forms::CollectionForm
 
-      # To build a query to find a list of collections
-      self.list_search_builder_class = Hyrax::CollectionSearchBuilder
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
@@ -63,13 +57,6 @@ module Hyrax
         session['user_return_to'] = request.url
         redirect_to main_app.new_user_session_url, alert: exception.message
       end
-    end
-
-    def index
-      # run the solr query to find the collections
-      query = list_search_builder.with(params).query
-      @response = repository.search(query)
-      @document_list = @response.documents
     end
 
     def new
@@ -223,13 +210,6 @@ module Hyrax
 
       alias collection_member_search_builder member_search_builder
       deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
-
-      def list_search_builder
-        list_search_builder_class.new(self)
-      end
-
-      alias collections_search_builder list_search_builder
-      deprecation_deprecate collections_search_builder: "use list_search_builder instead"
 
       def collection_params
         form_class.model_attributes(params[:collection])
