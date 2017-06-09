@@ -7,7 +7,7 @@ include Warden::Test::Helpers
 RSpec.feature 'Create a <%= class_name %>', js: false do
   context 'a logged in user' do
     let(:user_attributes) do
-      { <%= Devise.authentication_keys.first %>: 'test@example.com' }
+      { <%= Hydra.config.user_key_field %>: 'test@example.com' }
     end
     let(:user) do
       User.new(user_attributes) { |u| u.save(validate: false) }
