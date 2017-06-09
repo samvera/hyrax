@@ -12,7 +12,7 @@ export default class Autocomplete {
           element,
           data.autocompleteUrl,
           data.user,
-          data.id
+          element.data('exclude-work')
         )
         break
       default:
