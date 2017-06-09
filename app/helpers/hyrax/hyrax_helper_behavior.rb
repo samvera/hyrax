@@ -22,6 +22,10 @@ module Hyrax
 
     delegate :name, :name_full, to: :institution, prefix: :institution
 
+    def registration_available?
+      Devise.mappings[:user].registerable?
+    end
+
     def banner_image
       Hyrax.config.banner_image
     end

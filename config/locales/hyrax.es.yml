@@ -599,6 +599,7 @@ es:
       language_switch: "Cambiar idioma"
       notifications: "No hay notificaciones sin leer."
       profile:
+        edit_registration: 'Cambia la contraseña'
         login: "Iniciar sesión"
         logout: "Cerrar sesión"
         sr_action: "Ver"
