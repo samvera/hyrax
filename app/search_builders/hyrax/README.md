@@ -27,9 +27,9 @@ As modified by Hyrax' installer, it includes additional modules and overrides.  
 - [Blacklight::Solr::SearchBuilderBehavior](https://github.com/projectblacklight/blacklight/blob/master/lib/blacklight/solr/search_builder_behavior.rb) associated methods
 - [Hydra::AccessControlsEnforcement](https://github.com/projecthydra/hydra-head/blob/master/hydra-access-controls/lib/hydra/access_controls_enforcement.rb) module
   -  [Blacklight::AccessControls::Enforcement](https://github.com/projectblacklight/blacklight-access_controls/blob/master/lib/blacklight/access_controls/enforcement.rb) ancestor of `Hydra::AccessControlsEnforcement`
-- [Hyrax::SearchFilters](https://github.com/projecthydra-labs/hyrax/blob/master/app/search_builders/hyrax/search_filters.rb)  module that itself includes:
+- [Hyrax::SearchFilters](https://github.com/samvera/hyrax/blob/master/app/search_builders/hyrax/search_filters.rb)  module that itself includes:
   - [BlacklightAdvancedSearch::AdvancedSearchBuilder](https://github.com/projectblacklight/blacklight_advanced_search/blob/master/lib/blacklight_advanced_search/advanced_search_builder.rb) more magic for compound Boolean queries
-  - [Hyrax::FilterByType](https://github.com/projecthydra-labs/hyrax/blob/master/app/search_builders/hyrax/filter_by_type.rb) Collection vs. Work filtering, specifically the `filter_models` method
+  - [Hyrax::FilterByType](https://github.com/samvera/hyrax/blob/master/app/search_builders/hyrax/filter_by_type.rb) Collection vs. Work filtering, specifically the `filter_models` method
 
 This is not a comprehensive list, but it is sufficient to trace some of the complexity of interaction between various layers.
 

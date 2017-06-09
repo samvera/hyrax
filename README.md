@@ -1,19 +1,19 @@
-![Logo](https://raw.githubusercontent.com/samvera-labs/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
+![Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
 
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
-[![Build Status](https://travis-ci.org/samvera-labs/hyrax.png?branch=master)](https://travis-ci.org/samvera-labs/hyrax)
-[![Coverage Status](https://coveralls.io/repos/github/samvera-labs/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera-labs/hyrax?branch=master)
-[![Code Climate](https://codeclimate.com/github/samvera-labs/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera-labs/hyrax)
-[![Dependency Update Status](https://gemnasium.com/samvera-labs/hyrax.png)](https://gemnasium.com/samvera-labs/hyrax)
-[![Dependency Maintenance Status](https://dependencyci.com/github/samvera-labs/hyrax/badge)](https://dependencyci.com/github/samvera-labs/hyrax)
+[![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/samvera/hyrax)
+[![Coverage Status](https://coveralls.io/repos/github/samvera/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera/hyrax?branch=master)
+[![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
+[![Dependency Update Status](https://gemnasium.com/samvera/hyrax.png)](https://gemnasium.com/samvera/hyrax)
+[![Dependency Maintenance Status](https://dependencyci.com/github/samvera/hyrax/badge)](https://dependencyci.com/github/samvera/hyrax)
 
-Docs: [![Documentation Status](https://inch-ci.org/github/samvera-labs/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera-labs/hyrax)
+Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera/hyrax)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hyrax)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/samvera-labs/hyrax.png?label=ready&milestone=2.0.0&title=Ready)](https://waffle.io/samvera-labs/hyrax?milestone=2.0.0)
+[![Ready Tickets](https://badge.waffle.io/samvera/hyrax.png?label=ready&milestone=2.0.0&title=Ready)](https://waffle.io/samvera/hyrax?milestone=2.0.0)
 
 # Table of Contents
 
@@ -50,7 +50,7 @@ Hyrax is a front-end based on the robust [Samvera](http://projecthydra.org) fram
 
 ## Feature list
 
-Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera-labs/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Management-Guide) to learn more.
+Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) to learn more.
 
 For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
 
@@ -83,7 +83,7 @@ Hyrax requires the following software to work:
 1. [LibreOffice](#derivatives)
 1. [ffmpeg](#transcoding)
 
-**NOTE: The [Hyrax Development Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
+**NOTE: The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
 
@@ -150,7 +150,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.3_ new my_app -m https://raw.githubusercontent.com/samvera-labs/hyrax/master/template.rb
+rails _5.0.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/master/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -197,7 +197,7 @@ class Application < Rails::Application
 end
 ```
 
-**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Hyrax Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/samvera-labs/hyrax/wiki/Using-Sidekiq-with-Hyrax).
+**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Hyrax Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/samvera/hyrax/wiki/Using-Sidekiq-with-Hyrax).
 
 ## Create default administrative set
 
@@ -233,11 +233,11 @@ If your applications requires your work type to be namespaced, namespaces can be
 rails generate hyrax:work My/MovingImage
 ```
 
-You may wish to [customize your work type](https://github.com/samvera-labs/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
+You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
 
 # Managing a Hyrax-based app
 
-The [Hyrax Management Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
+The [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
 * Production implementations
 * Configuration of background workers
@@ -272,15 +272,15 @@ Hyrax is available under [the Apache 2.0 license](LICENSE.md).
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera-labs/hyrax). There are other ways to help, too.
+If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera/hyrax). There are other ways to help, too.
 
-* [Contribute a user story](https://github.com/samvera-labs/hyrax/issues/new).
-* Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera-labs/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera-labs/hyrax).
-* Refactor away [code smells](https://codeclimate.com/github/samvera-labs/hyrax).
+* [Contribute a user story](https://github.com/samvera/hyrax/issues/new).
+* Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
+* Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
 
 # Development
 
-The [Hyrax Development Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
 
 ## Workflow Relationship Diagram
 
@@ -288,7 +288,7 @@ The [Hyrax Development Guide](https://github.com/samvera-labs/hyrax/wiki/Hyrax-D
 
 # Release process
 
-See the [release management process](https://github.com/samvera-labs/hyrax/wiki/Release-management-process).
+See the [release management process](https://github.com/samvera/hyrax/wiki/Release-management-process).
 
 # Acknowledgments
 
