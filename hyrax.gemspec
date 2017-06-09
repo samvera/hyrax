@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   be turned on in the administrative dashboard or added through plugins.
 EOF
 
-  spec.homepage      = "http://github.com/projecthydra-labs/hyrax"
+  spec.homepage      = "http://github.com/samvera/hyrax"
 
   spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }

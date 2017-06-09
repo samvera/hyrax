@@ -19,4 +19,4 @@ Changes proposed in this pull request:
 *
 *
 
-@samvera-labs/hyrax-code-reviewers
+@samvera/hyrax-code-reviewers

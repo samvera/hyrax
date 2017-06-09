@@ -1,6 +1,6 @@
 # Monkey patch Turbolinks to render 401
 # See https://github.com/turbolinks/turbolinks/issues/179
-#     https://github.com/projecthydra-labs/hyrax/issues/617
+#     https://github.com/samvera/hyrax/issues/617
 if Turbolinks?
   Turbolinks.HttpRequest.prototype.requestLoaded = ->
     @endRequest =>
