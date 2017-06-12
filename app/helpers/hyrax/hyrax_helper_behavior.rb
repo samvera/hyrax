@@ -237,6 +237,8 @@ module Hyrax
           hyrax.dashboard_highlights_path
         when "hyrax/dashboard/works"
           hyrax.dashboard_works_path
+        when "hyrax/dashboard/collections"
+          hyrax.dashboard_collections_path
         else
           hyrax.my_works_path
         end
