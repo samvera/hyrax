@@ -8,26 +8,37 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:local_file)     { File.open(File.join(fixture_path, 'world.png')) }
   let(:file_set)       { create(:file_set, content: local_file) }
   let(:actor)          { described_class.new(file_set, user) }
-  let(:ingest_options) { { mime_type: 'image/png', relation: 'original_file', filename: 'world.png' } }
+  let(:relation)       { :original_file }
+  let(:file_actor)     { Hyrax::Actors::FileActor.new(file_set, relation, user) }
+  let(:io)             { Hydra::Derivatives::IoDecorator.new(uploaded_file, uploaded_file.content_type, uploaded_file.original_filename) }
+
+  before do
+    allow(actor).to receive(:build_file_actor).with(relation).and_return(file_actor)
+  end
 
   describe 'creating metadata, content and attaching to a work' do
-    let(:upload_set_id) { nil }
-    let(:work) { nil }
-    subject { file_set.reload }
+    let(:work) { create(:generic_work) }
     let(:date_today) { DateTime.current }
+    subject { file_set.reload }
 
     before do
       allow(DateTime).to receive(:current).and_return(date_today)
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
       allow(actor).to receive(:acquire_lock_for).and_yield
+      # NOTE: we have to use this unweidly block instead of `.with(io)`
+      # because Hydra::Derivatives::IoDecorator objects cannot be compared
+      # https://github.com/samvera/hydra-derivatives/issues/165
+      # We reuse this pattern throughout this file.
+      # TODO: replace IoDecorator with a regular Hyrax::Io class
+      expect(file_actor).to receive(:ingest_file) do |input|
+        expect(input.mime_type).to eq(uploaded_file.content_type)
+        expect(input.original_name).to eq(uploaded_file.original_filename)
+      end
       actor.create_metadata
       actor.create_content(uploaded_file)
       actor.attach_to_work(work)
     end
 
     context 'when a work is provided' do
-      let(:work) { create(:generic_work) }
-
       it 'adds the FileSet to the parent work' do
         expect(subject.parents).to eq [work]
         expect(work.reload.file_sets).to include(subject)
@@ -57,22 +68,28 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe '#create_content' do
-    it 'calls ingest file job' do
-      expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
+    it 'calls ingest_file' do
+      expect(file_actor).to receive(:ingest_file) do |input|
+        expect(input.mime_type).to eq(uploaded_file.content_type)
+        expect(input.original_name).to eq(uploaded_file.original_filename)
+      end
       actor.create_content(uploaded_file)
     end
 
     context 'when an alternative relationship is specified' do
-      let(:ingest_options) { { mime_type: 'image/png', relation: 'remastered', filename: 'world.png' } }
-      it 'calls ingest file job' do
-        expect(IngestFileJob).to receive(:perform_later).with(file_set, /world\.png/, user, ingest_options)
-        actor.create_content(uploaded_file, 'remastered')
+      let(:relation) { :remastered }
+      it 'calls ingest_file' do
+        expect(file_actor).to receive(:ingest_file) do |input|
+          expect(input.mime_type).to eq(uploaded_file.content_type)
+          expect(input.original_name).to eq(uploaded_file.original_filename)
+        end
+        actor.create_content(uploaded_file, :remastered)
       end
     end
 
     context 'using ::File' do
       before do
-        allow(IngestFileJob).to receive(:perform_later)
+        allow(file_actor).to receive(:ingest_file).with(any_args)
         actor.create_content(local_file)
       end
 
@@ -87,8 +104,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context 'when file_set.title is empty and file_set.label is not' do
-      let(:file)       { 'world.png' }
-      let(:long_name)  do
+      let(:long_name) do
         'an absurdly long title that goes on way to long and ' \
                          'messes up the display of the page which should not need ' \
                          'to be this big in order to show this impossibly long, ' \
@@ -98,20 +114,17 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       let(:actor)      { described_class.new(file_set, user) }
 
       before do
-        allow(IngestFileJob).to receive(:perform_later)
+        allow(file_actor).to receive(:ingest_file).with(any_args)
         allow(file_set).to receive(:label).and_return(short_name)
-        # TODO: we should allow/expect call to IngestJob
-        actor.create_content(fixture_file_upload(file))
+        actor.create_content(uploaded_file)
       end
 
       subject { file_set.title }
-
       it { is_expected.to match_array [short_name] }
     end
 
     context 'when a label is already specified' do
-      let(:file)     { 'world.png' }
-      let(:label)    { 'test_file.png' }
+      let(:label) { 'test_file.png' }
       let(:file_set_with_label) do
         FileSet.new do |f|
           f.apply_depositor_metadata(user.user_key)
@@ -121,8 +134,8 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       let(:actor) { described_class.new(file_set_with_label, user) }
 
       before do
-        allow(IngestFileJob).to receive(:perform_later)
-        actor.create_content(fixture_file_upload(file))
+        allow(file_actor).to receive(:ingest_file).with(any_args)
+        actor.create_content(uploaded_file)
       end
 
       it "retains the object's original label" do
@@ -139,25 +152,19 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#update_content" do
-    let(:relation) { 'original_file' }
-    let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, relation, user) }
-    before do
-      allow(actor).to receive(:build_file_actor).with(relation).and_return(file_actor)
-    end
-    it 'calls ingest_file' do
-      expect(file_actor).to receive(:ingest_file).with(local_file, true)
-      actor.update_content(local_file)
+    let(:io) { Hydra::Derivatives::IoDecorator.new(local_file, uploaded_file.content_type, uploaded_file.original_filename) }
+    it 'calls ingest_file and returns true' do
+      expect(file_actor).to receive(:ingest_file) do |input|
+        expect(input.mime_type).to eq(uploaded_file.content_type)
+        expect(input.original_name).to eq(uploaded_file.original_filename)
+      end.and_return(true)
+      expect(actor.update_content(local_file)).to be true
     end
     it 'runs callbacks' do
       # Do not bother ingesting the file -- test only that the callback is run
-      allow(file_actor).to receive(:ingest_file).with(local_file, true)
+      allow(file_actor).to receive(:ingest_file).with(any_args).and_return(true)
       expect(Hyrax.config.callback).to receive(:run).with(:after_update_content, file_set, user)
       actor.update_content(local_file)
-    end
-    it "returns true" do
-      # Do not bother ingesting the file -- test only the return value
-      allow(file_actor).to receive(:ingest_file).with(local_file, true)
-      expect(actor.update_content(local_file)).to be true
     end
   end
 
@@ -184,7 +191,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         expect(gw.representative_id).to eq(file_set.id)
         expect(gw.thumbnail_id).to eq(file_set.id)
         expect { actor.destroy }.to change { ActiveFedora::Aggregation::Proxy.count }.by(-1)
-        gw = GenericWork.find(work.id)
+        gw.reload
         expect(gw.representative_id).to be_nil
         expect(gw.thumbnail_id).to be_nil
       end
@@ -241,8 +248,8 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#set_representative" do
-    let!(:work) { build(:generic_work, representative: rep) }
-    let!(:file_set) { build(:file_set) }
+    let(:work) { build(:generic_work, representative: rep) }
+    let(:file_set) { build(:file_set) }
 
     before do
       actor.send(:set_representative, work, file_set)
@@ -266,8 +273,8 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#set_thumbnail" do
-    let!(:work) { build(:generic_work, thumbnail: thumb) }
-    let!(:file_set) { build(:file_set) }
+    let(:work) { build(:generic_work, thumbnail: thumb) }
+    let(:file_set) { build(:file_set) }
 
     before do
       actor.send(:set_thumbnail, work, file_set)
@@ -291,40 +298,28 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#file_actor_class" do
-    context "default" do
-      it "is a FileActor" do
-        expect(actor.file_actor_class).to eq(Hyrax::Actors::FileActor)
-      end
-    end
+    subject { actor.file_actor_class }
+    it { is_expected.to eq(Hyrax::Actors::FileActor) }
 
     context "overridden" do
-      let(:actor) { CustomFileSetActor.new(file_set, user) }
-
-      before do
-        class CustomFileActor < Hyrax::Actors::FileActor
+      let(:custom_fs_actor_class) do
+        class ::CustomFileActor < Hyrax::Actors::FileActor
         end
-        class CustomFileSetActor < Hyrax::Actors::FileSetActor
+        Class.new(described_class) do
           def file_actor_class
             CustomFileActor
           end
         end
       end
-
-      after do
-        Object.send(:remove_const, :CustomFileActor)
-        Object.send(:remove_const, :CustomFileSetActor)
-      end
-
-      it "is a custom class" do
-        expect(actor.file_actor_class).to eq(CustomFileActor)
-      end
+      let(:actor) { custom_fs_actor_class.new(file_set, user) }
+      after { Object.send(:remove_const, :CustomFileActor) }
+      it { is_expected.to eq(CustomFileActor) }
     end
   end
 
   describe '#revert_content' do
     let(:file_set) { create(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
-    let(:file2)    { "hyrax_generic_stub.txt" }
     let(:version1) { "version1" }
 
     before do
@@ -332,7 +327,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       ActiveJob::Base.queue_adapter = :inline
       allow(CharacterizeJob).to receive(:perform_later)
       actor.create_content(fixture_file_upload(file1))
-      actor.create_content(fixture_file_upload(file2))
+      actor.create_content(fixture_file_upload('hyrax_generic_stub.txt'))
       ActiveJob::Base.queue_adapter = original_adapter
       actor.file_set.reload
     end
