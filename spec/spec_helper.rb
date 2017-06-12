@@ -28,7 +28,6 @@ EngineCart.load_application!
 require 'devise'
 require 'devise/version'
 require 'mida'
-require 'active_fedora/noid/rspec'
 require 'rails-controller-testing'
 require 'rspec/rails'
 require 'rspec/its'
@@ -145,8 +144,6 @@ end
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
-  include ActiveFedora::Noid::RSpec
-
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
 
@@ -161,11 +158,8 @@ RSpec.configure do |config|
 
   config.before :suite do
     DatabaseCleaner.clean_with(:truncation)
-    disable_production_minter!
-  end
-
-  config.after :suite do
-    enable_production_minter!
+    # Noid minting causes extra LDP requests which slow the test suite.
+    Hyrax.config.enable_noids = false
   end
 
   config.before :each do |example|
