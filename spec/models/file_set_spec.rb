@@ -221,34 +221,50 @@ RSpec.describe FileSet do
 
   describe 'noid integration', :clean_repo do
     let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
+    let(:noid) { 'wd3763094' }
+    let!(:default) { Hyrax.config.enable_noids? }
+
     before do
       allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
     end
 
-    let(:noid) { 'wd3763094' }
+    after { Hyrax.config.enable_noids = default }
 
-    subject do
-      described_class.create { |f| f.apply_depositor_metadata('mjg36') }
+    context 'with noids enabled' do
+      before { Hyrax.config.enable_noids = true }
+
+      it 'uses the noid service' do
+        expect(service).to receive(:mint).once
+        subject.assign_id
+      end
+
+      context "after saving" do
+        before { subject.save! }
+
+        it 'returns the expected identifier' do
+          expect(subject.id).to eq noid
+        end
+
+        it "has a treeified URL" do
+          expect(subject.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
+        end
+      end
+
+      context 'when a url is provided' do
+        let(:url) { "#{ActiveFedora.fedora.host}/test/wd/37/63/09/wd3763094" }
+
+        it 'transforms the url into an id' do
+          expect(described_class.uri_to_id(url)).to eq 'wd3763094'
+        end
+      end
     end
 
-    it 'runs the overridden #assign_id method' do
-      expect(service).to receive(:mint).once
-      described_class.create { |f| f.apply_depositor_metadata('mjg36') }
-    end
+    context 'with noids disabled' do
+      before { Hyrax.config.enable_noids = false }
 
-    it 'returns the expected identifier' do
-      expect(subject.id).to eq noid
-    end
-
-    it "has a treeified URL" do
-      expect(subject.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
-    end
-
-    context 'when a url is provided' do
-      let(:url) { "#{ActiveFedora.fedora.host}/test/wd/37/63/09/wd3763094" }
-
-      it 'transforms the url into an id' do
-        expect(described_class.uri_to_id(url)).to eq 'wd3763094'
+      it 'does not use the noid service' do
+        expect(service).not_to receive(:mint)
+        subject.assign_id
       end
     end
   end
@@ -496,29 +512,6 @@ RSpec.describe FileSet do
       end
       specify 'title is set' do
         expect(terms[title_key]).to eql(title)
-      end
-    end
-  end
-
-  describe 'assign_id' do
-    let(:service) { instance_double(ActiveFedora::Noid::Service) }
-    before do
-      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
-    end
-    context 'with noids enabled (by default)' do
-      it 'uses the noid service' do
-        expect(service).to receive(:mint).once
-        subject.assign_id
-      end
-    end
-
-    context 'with noids disabled' do
-      before { Hyrax.config.enable_noids = false }
-      after { Hyrax.config.enable_noids = true }
-
-      it 'does not use the noid service' do
-        expect(service).not_to receive(:mint)
-        subject.assign_id
       end
     end
   end
