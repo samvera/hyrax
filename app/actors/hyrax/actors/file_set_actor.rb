@@ -117,7 +117,13 @@ module Hyrax
         end
 
         def mime_for(file)
-          file.respond_to?(:content_type) ? file.content_type : nil
+          if file.respond_to?(:content_type)
+            file.content_type
+          elsif file.respond_to?(:mime_type)
+            file.mime_type
+          elsif file.respond_to?(:path)
+            MIME::Types.type_for(File.extname(file.path)).first.content_type
+          end # else nil
         end
 
         # For the label, use the original_filename or original_name if it's there.

@@ -29,7 +29,7 @@ RSpec.describe CharacterizeJob do
   context 'when the characterization proxy content is absent' do
     before { allow(file_set).to receive(:characterization_proxy?).and_return(false) }
     it 'raises an error' do
-      expect { described_class.perform_now(file_set, file.id) }.to raise_error(StandardError, 'original_file was not found')
+      expect { described_class.perform_now(file_set, file.id) }.to raise_error(StandardError, /original_file was not found/)
     end
   end
 

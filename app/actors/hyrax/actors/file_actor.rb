@@ -63,11 +63,7 @@ module Hyrax
 
       # @param [Hydra::Derivatives::IoDecorator] io
       def path_for(io)
-        if io.respond_to?(:path) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile, Tempfile, File
-          io.path
-        else
-          nil
-        end
+        io.path if io.respond_to?(:path) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile, Tempfile, File
       end
     end
   end
