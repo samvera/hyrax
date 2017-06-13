@@ -1,0 +1,10 @@
+---
+it:
+  simple_form:
+    error_notification:
+      default_message: 'Leggi i seguenti problemi:'
+    'no': 'No'
+    required:
+      mark: "*"
+      text: necessario
+    'yes': sì
