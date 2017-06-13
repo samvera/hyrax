@@ -207,6 +207,13 @@ RSpec.describe HyraxHelper, type: :helper do
       end
     end
 
+    context "when the user is on the all collections page" do
+      it "returns the all dashboard collections path" do
+        allow(helper).to receive(:params).and_return(controller: "hyrax/dashboard/collections")
+        expect(helper.search_form_action).to eq(hyrax.dashboard_collections_path)
+      end
+    end
+
     context "when the user is on the my highlights page" do
       it "returns the my dashboard highlights path" do
         allow(helper).to receive(:params).and_return(controller: "hyrax/my/highlights")
