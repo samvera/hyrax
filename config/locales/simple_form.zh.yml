@@ -1,0 +1,10 @@
+---
+zh:
+  simple_form:
+    error_notification:
+      default_message: 请查看以下问题：
+    'no': 没有
+    required:
+      mark: "*"
+      text: 需要
+    'yes': 是
