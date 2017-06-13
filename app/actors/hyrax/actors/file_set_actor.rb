@@ -116,12 +116,13 @@ module Hyrax
           Hydra::Derivatives::IoDecorator.new(file, mime_for(file), label_for(file))
         end
 
+        # @return [String, nil] mime type explicitly set or sniffed
         def mime_for(file)
-          if file.respond_to?(:content_type)
+          if file.respond_to?(:content_type) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile
             file.content_type
-          elsif file.respond_to?(:mime_type)
+          elsif file.respond_to?(:mime_type) # e.g. Hydra::Derivatives::IoDecorator
             file.mime_type
-          elsif file.respond_to?(:path)
+          elsif file.respond_to?(:path) # e.g. File (note: will be meaningless for Tempfile)
             MIME::Types.type_for(File.extname(file.path)).first.content_type
           end # else nil
         end

@@ -13,7 +13,7 @@ module Hyrax
         @user = user
       end
 
-      # Spawns a job to characterize and create derivatives.
+      # Persists file as part of file_set and spawns a job to characterize and create derivatives.
       # @param [Hydra::Derivatives::IoDecorator] io the file to save in the repository, with mime_type and original_name
       # @return [Boolean] true on success (note: does NOT mean spawned job completed), false otherwise
       # @example for File
@@ -40,7 +40,7 @@ module Hyrax
         return false unless file_set.save
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
-        CharacterizeJob.perform_later(file_set, repository_file.id, path_for(io)) # path hint in case next worker is on same box
+        CharacterizeJob.perform_later(file_set, repository_file.id, path_for(io)) # path hint in case next worker is on same filesystem
         true
       end
 
@@ -56,15 +56,18 @@ module Hyrax
         true
       end
 
-      # @return [Hydra::PCDM::File] the file referenced by relation
-      def related_file
-        file_set.send(relation) || raise("No .#{relation} returned for FileSet #{file_set.id}")
-      end
+      private
 
-      # @param [Hydra::Derivatives::IoDecorator] io
-      def path_for(io)
-        io.path if io.respond_to?(:path) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile, Tempfile, File
-      end
+        # @return [Hydra::PCDM::File] the file referenced by relation
+        def related_file
+          file_set.public_send(relation) || raise("No #{relation} returned for FileSet #{file_set.id}")
+        end
+
+        # @param [Hydra::Derivatives::IoDecorator] io
+        # @return [String] path (nil if unavailable)
+        def path_for(io)
+          io.path if io.respond_to?(:path) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile, Tempfile, File
+        end
     end
   end
 end

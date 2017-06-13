@@ -29,7 +29,7 @@ RSpec.describe ImportUrlJob do
     end
 
     it 'creates the content and updates the associated operation' do
-      expect(actor).to receive(:create_content).with(Tempfile).and_return(true)
+      expect(actor).to receive(:create_content).with(File).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
     end
@@ -37,8 +37,6 @@ RSpec.describe ImportUrlJob do
 
   context "when a batch update job is running too" do
     let(:title) { { file_set.id => ['File One'] } }
-    let(:metadata) { {} }
-    let(:visibility) { nil }
     let(:file_set_id) { file_set.id }
 
     before do
