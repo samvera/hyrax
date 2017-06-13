@@ -23,7 +23,15 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe '#available_translations' do
     subject { helper.available_translations }
-    it { is_expected.to eq('en' => 'English', 'es' => 'Español', 'zh' => '中文') }
+    it do
+      is_expected.to eq('de' => 'Deutsch',
+                        'en' => 'English',
+                        'es' => 'Español',
+                        'fr' => 'Français',
+                        'it' => 'Italiano',
+                        'pt-BR' => 'Português do Brasil',
+                        'zh' => '中文')
+    end
   end
 
   context 'link helpers' do
