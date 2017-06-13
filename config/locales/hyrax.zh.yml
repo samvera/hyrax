@@ -73,6 +73,8 @@ zh:
           header:         "编辑管理集"
         form:
           cancel:               "取消"
+          permission_destroy_errors:
+            admin_group:        "无法删除存储库管理员组"
           permission_update_notices:
             new_admin_set:      "管理集 '%{name}' 已建立。 请用附加标签定义管理集中的其他方面。"
             updated_admin_set:  "管理集 '%{name}' 已更新。"
@@ -91,6 +93,7 @@ zh:
             visibility:         "发布与公开度"
             workflow:           "工作流程"
         form_participant_table:
+          admin_users:          "存储库管理员"
           allow_all_registered: "允许所有注册用户存款"
           depositors:
             action:             "行动"

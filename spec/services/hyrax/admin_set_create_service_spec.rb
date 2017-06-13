@@ -9,9 +9,11 @@ RSpec.describe Hyrax::AdminSetCreateService do
       described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)
       expect(admin_set.permission_template).to be_persisted
       expect(admin_set.active_workflow).to be_persisted
-      expect(responsibilities.count).to eq 1
+      expect(responsibilities.count).to eq 2
       expect(responsibilities.first.agent.proxy_for_id).to eq "registered"
       expect(responsibilities.first.agent.proxy_for_type).to eq "Hyrax::Group"
+      expect(responsibilities.last.agent.proxy_for_id).to eq "admin"
+      expect(responsibilities.last.agent.proxy_for_type).to eq "Hyrax::Group"
     end
   end
 
@@ -51,14 +53,13 @@ RSpec.describe Hyrax::AdminSetCreateService do
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
         let(:grant) { permission_template.access_grants.first }
-        let!(:role1) { Sipity::Role.create(name: 'testing') }
-        let!(:role2) { Sipity::Role.create(name: 'breaking') }
-        let!(:role3) { Sipity::Role.create(name: 'fixing') }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
         # rubocop:disable RSpec/AnyInstance
         before do
           allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
+          # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
+          Hyrax.config.persist_registered_roles!
         end
         # rubocop:enable RSpec/AnyInstance
 
@@ -67,7 +68,12 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect do
             expect(subject).to be true
           end.to change { admin_set.persisted? }.from(false).to(true)
-            .and change { Sipity::WorkflowResponsibility.count }.by(6)
+            .and change { Sipity::WorkflowResponsibility.count }.by(12)
+          # 12 responsibilities because:
+          #  * 2 agents (user + admin group), multiplied by
+          #  * 2 available workflows, multiplied by
+          #  * 3 roles (from Hyrax::RoleRegistry), equals
+          #  * 12
           expect(admin_set.read_groups).to eq ['public']
           expect(admin_set.edit_groups).to eq ['admin']
           expect(grant.agent_id).to eq user.user_key
@@ -75,6 +81,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect(admin_set.creator).to eq [user.user_key]
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
           expect(permission_template).to be_persisted
+          expect(permission_template.access_grants.count).to eq 2
+          expect(permission_template.access_grants.last.agent_type).to eq 'group'
+          expect(permission_template.access_grants.last.agent_id).to eq 'admin'
+          expect(permission_template.access_grants.last.access).to eq 'manage'
         end
       end
 

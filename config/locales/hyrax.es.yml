@@ -71,6 +71,8 @@ es:
           header:         "Editar Conjunto Administrativo"
         form:
           cancel:               "Cancelar"
+          permission_destroy_errors:
+            admin_group:        "No se puede eliminar el grupo de administradores del repositorio"
           permission_update_notices:
             new_admin_set:      "Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo."
             updated_admin_set:  "El conjunto administrativo '%{name}' se ha actualizado."
@@ -89,6 +91,7 @@ es:
             visibility:         "Lanzamiento y Visibilidad"
             workflow:           "Flujo de trabajo"
         form_participant_table:
+          admin_users:          "Administradores del Repositorio"
           allow_all_registered: "Permitir depositar a todos los usuarios registrados"
           depositors:
             action:             "Acción"

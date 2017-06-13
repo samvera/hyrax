@@ -3,6 +3,8 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
+      class_attribute :admin_group_name
+      self.admin_group_name = 'admin'
       self.ability_logic += [:admin_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,
@@ -30,7 +32,7 @@ module Hyrax
     # Override this method in your ability model if you use a different group
     # or other logic to designate an administrator.
     def admin?
-      user_groups.include? 'admin'
+      user_groups.include? admin_group_name
     end
 
     # @return [Array<String>] a list of admin set ids for admin sets the user

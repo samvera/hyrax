@@ -9,9 +9,16 @@ module Hyrax
           update_management if @permission_template_access.manage?
         end
 
-        redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
-                                                    anchor: 'participants'),
-                    notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+        if @permission_template_access.destroyed?
+          redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
+                                                      anchor: 'participants'),
+                      notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+        else
+          redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
+                                                      anchor: 'participants'),
+                      alert: @permission_template_access.errors.full_messages.to_sentence
+
+        end
       end
 
       private
