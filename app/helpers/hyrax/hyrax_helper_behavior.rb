@@ -17,7 +17,15 @@ module Hyrax
     # Which translations are available for the user to select
     # @return [Hash<String,String>] locale abbreviations as keys and flags as values
     def available_translations
-      { 'en' => 'English', 'es' => 'Español', 'zh' => '中文' }
+      {
+        'de' => 'Deutsch',
+        'en' => 'English',
+        'es' => 'Español',
+        'fr' => 'Français',
+        'it' => 'Italiano',
+        'pt-BR' => 'Português do Brasil',
+        'zh' => '中文'
+      }
     end
 
     delegate :name, :name_full, to: :institution, prefix: :institution
