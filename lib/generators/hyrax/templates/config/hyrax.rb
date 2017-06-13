@@ -74,6 +74,10 @@ Hyrax.config do |config|
   # Path to the file derivatives creation tool
   # config.libreoffice_path = "soffice"
 
+  # Option to enable/disable full text extraction from PDFs
+  # Default is true, set to false to disable full text extraction
+  # config.extract_full_text = true
+
   # How many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
   # config.activity_to_show_default_seconds_since_now = 24*60*60
 

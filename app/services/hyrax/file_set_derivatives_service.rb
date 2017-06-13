@@ -49,8 +49,7 @@ module Hyrax
       def create_pdf_derivatives(filename)
         Hydra::Derivatives::PdfDerivatives.create(filename,
                                                   outputs: [{ label: :thumbnail, format: 'jpg', size: '338x493', url: derivative_url('thumbnail') }])
-        Hydra::Derivatives::FullTextExtract.create(filename,
-                                                   outputs: [{ url: uri, container: "extracted_text" }])
+        extract_full_text(filename, uri)
       end
 
       def create_office_document_derivatives(filename)
@@ -58,8 +57,7 @@ module Hyrax
                                                        outputs: [{ label: :thumbnail, format: 'jpg',
                                                                    size: '200x150>',
                                                                    url: derivative_url('thumbnail') }])
-        Hydra::Derivatives::FullTextExtract.create(filename,
-                                                   outputs: [{ url: uri, container: "extracted_text" }])
+        extract_full_text(filename, uri)
       end
 
       def create_audio_derivatives(filename)
@@ -82,6 +80,16 @@ module Hyrax
 
       def derivative_path_factory
         Hyrax::DerivativePath
+      end
+
+      # Calls the Hydra::Derivates::FulltextExtraction unless the extract_full_text
+      # configuration option is set to false
+      # @param [String] filename of the object to be used for full text extraction
+      # @param [String] uri to the file set (deligated to file_set)
+      def extract_full_text(filename, uri)
+        return unless Hyrax.config.extract_full_text?
+        Hydra::Derivatives::FullTextExtract.create(filename,
+                                                   outputs: [{ url: uri, container: "extracted_text" }])
       end
   end
 end

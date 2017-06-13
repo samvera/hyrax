@@ -55,4 +55,5 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
   it { is_expected.to respond_to(:work_requires_files?) }
+  it { is_expected.to respond_to(:extract_full_text?) }
 end

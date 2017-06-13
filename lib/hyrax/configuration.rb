@@ -373,6 +373,12 @@ module Hyrax
       @subject_prefix ||= "Contact form:"
     end
 
+    attr_writer :extract_full_text
+    def extract_full_text?
+      return @extract_full_text unless @extract_full_text.nil?
+      @extract_full_text = true
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
