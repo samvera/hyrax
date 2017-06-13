@@ -220,9 +220,9 @@ es:
       workflows:
         index:
           header: "Revise Envíos"
-        tabs:
-          published: "Publicados"
-          under_review: "En Revisión"
+          tabs:
+            published: "Publicados"
+            under_review: "En Revisión"
     admin_sets:
       index:
         header: "Todas las colecciones"
