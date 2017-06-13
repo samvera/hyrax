@@ -71,6 +71,8 @@ en:
           header:         "Edit Administrative Set"
         form:
           cancel:               "Cancel"
+          permission_destroy_errors:
+            admin_group:        "The repository administrators group cannot be removed"
           permission_update_notices:
             new_admin_set:      "The administrative set '%{name}' has been created. Use the additional tabs to define other aspects of the administrative set."
             updated_admin_set:  "The administrative set '%{name}' has been updated."
@@ -89,6 +91,7 @@ en:
             visibility:         "Release and Visibility"
             workflow:           "Workflow"
         form_participant_table:
+          admin_users:          "Repository Administrators"
           allow_all_registered: "Allow all registered users to deposit"
           depositors:
             action:             "Action"

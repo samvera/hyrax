@@ -12,9 +12,15 @@
                       <tbody>
                       <% @form.permission_template.access_grants.select(&filter).each do |g| %>
                         <tr>
-                          <td data-agent="<%= g.agent_id %>"><%= g.agent_id == 'registered' ? t('.registered_users') : g.agent_id %></td>
+                          <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
                           <td><%= g.agent_type.titleize %></td>
-                          <td><%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-danger' %></td>
+                          <td>
+                            <% if g.admin_group? %>
+                              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-danger disabled', disabled: true, title: t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group') %>
+                            <% else %>
+                              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-danger' %>
+                            <% end %>
+                          </td>
                         </tr>
                       <% end %>
                       </tbody>

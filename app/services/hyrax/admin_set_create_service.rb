@@ -54,7 +54,7 @@ module Hyrax
     # @return [TrueClass, FalseClass] true if it was successful
     def create
       admin_set.read_groups = ['public']
-      admin_set.edit_groups = ['admin']
+      admin_set.edit_groups = [admin_group_name]
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
         if result
@@ -71,7 +71,14 @@ module Hyrax
 
       def access_grants_attributes
         return [] unless creating_user
-        [{ agent_type: 'user', agent_id: creating_user.user_key, access: 'manage' }]
+        [
+          { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE },
+          { agent_type: 'group', agent_id: admin_group_name, access: Hyrax::PermissionTemplateAccess::MANAGE }
+        ]
+      end
+
+      def admin_group_name
+        ::Ability.admin_group_name
       end
 
       def create_permission_template
@@ -80,26 +87,32 @@ module Hyrax
 
       def create_workflows_for(permission_template:)
         workflow_importer.call(permission_template: permission_template)
-        grant_all_workflow_roles_to_creating_user!(permission_template: permission_template)
+        grant_all_workflow_roles_to_creating_user_and_admins!(permission_template: permission_template)
         Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
       end
 
-      def grant_all_workflow_roles_to_creating_user!(permission_template:)
+      def grant_all_workflow_roles_to_creating_user_and_admins!(permission_template:)
         # Default admin set has a nil creating_user; guard against that condition
         return if creating_user.nil?
-        # Grant all workflow roles to the creating_user
+        # Grant all workflow roles to the creating_user and the admin group
         permission_template.available_workflows.each do |workflow|
           Sipity::Role.all.each do |role|
-            workflow.update_responsibilities(role: role, agents: creating_user.to_sipity_agent)
+            workflow.update_responsibilities(role: role,
+                                             agents: [
+                                               creating_user,
+                                               Hyrax::Group.new(admin_group_name)
+                                             ])
           end
         end
       end
 
-      # Gives deposit access to all registered users
+      # Gives deposit access to registered users and manage access to admins to default AdminSet
       def create_default_access_for(permission_template:, workflow:)
-        permission_template.access_grants.create(agent_type: 'group', agent_id: 'registered', access: 'deposit')
-        deposit = Sipity::Role.find_by_name!('depositing')
+        permission_template.access_grants.create(agent_type: 'group', agent_id: 'registered', access: Hyrax::PermissionTemplateAccess::DEPOSIT)
+        deposit = Sipity::Role[Hyrax::RoleRegistry::DEPOSITING]
+        manage = Sipity::Role[Hyrax::RoleRegistry::MANAGING]
         workflow.update_responsibilities(role: deposit, agents: Hyrax::Group.new('registered'))
+        workflow.update_responsibilities(role: manage, agents: Hyrax::Group.new(admin_group_name))
       end
 
       def default_workflow_importer

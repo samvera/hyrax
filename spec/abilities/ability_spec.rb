@@ -4,6 +4,13 @@ RSpec.describe 'Hyrax::Ability', type: :model do
   let(:ability) { Ability.new(user) }
   subject { ability }
 
+  describe '.admin_group_name' do
+    let(:user) { create(:user) }
+    it 'returns the admin group name' do
+      expect(subject.admin_group_name).to eq 'admin'
+    end
+  end
+
   describe "#registered_user?" do
     subject { ability.send :registered_user? }
     context "with a guest user" do

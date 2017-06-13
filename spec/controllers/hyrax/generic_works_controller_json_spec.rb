@@ -4,6 +4,7 @@ RSpec.describe Hyrax::GenericWorksController do
   routes { Rails.application.routes }
 
   let(:user) { create(:user) }
+
   before { sign_in user }
 
   context "JSON" do
