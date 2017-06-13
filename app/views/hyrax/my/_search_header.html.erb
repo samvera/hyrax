@@ -13,9 +13,7 @@
 </div>
 
 <div class="batch-info">
-  <div>
-    <%= render 'hyrax/collections/form_for_select_collection', user_collections: @user_collections %>
-  </div>
+  <%= render 'hyrax/collections/form_for_select_collection', user_collections: @user_collections %>
 
   <div class="batch-toggle">
     <% session[:batch_edit_state] = "on" %>
