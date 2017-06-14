@@ -37,6 +37,23 @@ module Hyrax
 
       private
 
+        # @param [#read] stream The stream to copy from
+        # @param  [String] filename The file name to copy to
+        # @param  [Number] chunk_size How many bytes to copy at once
+        def copy_stream_to_file(stream, filename, chunk_size = 4096)
+          File.open(filename, 'wb') do |outfile|
+            loop do
+              begin
+                outfile.write(
+                  stream.readpartial(chunk_size) # throws EOFError when done
+                )
+              rescue EOFError
+                # all done. I hate using error handling for flow control
+              end
+            end
+          end
+        end
+
         # @param [String] id the identifier
         # @param [String] name the file name
         # @param [#read] stream the stream to copy to the working directory
@@ -45,7 +62,7 @@ module Hyrax
           working_path = full_filename(id, name)
           Rails.logger.debug "Writing #{name} to the working directory at #{working_path}"
           FileUtils.mkdir_p(File.dirname(working_path))
-          IO.copy_stream(stream, working_path)
+          copy_stream_to_file(stream, working_path)
           working_path
         end
 
