@@ -40,6 +40,7 @@ RSpec.describe Hyrax::AdminSetService do
     let(:search_builder_instance) { double }
 
     it "calls the injected search builder" do
+      expect(search_builder_instance).to receive(:rows).and_return(search_builder_instance)
       expect(search_builder_instance).to receive(:reverse_merge).and_return({})
       subject
     end
