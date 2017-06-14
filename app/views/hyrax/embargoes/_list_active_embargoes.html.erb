@@ -1,0 +1,16 @@
+<table class="embargoes table">
+  <tbody>
+  <tr>
+    <th>Type of Work</th><th>Title</th><th>Current Visibility</th><th>Embargo Release Date</th><th>Visibility will Change to</th>
+  </tr>
+  <% assets_under_embargo.each do |curation_concern| %>
+    <tr>
+      <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
+      <td class="title"><%= link_to curation_concern, edit_embargo_path(curation_concern) %></td>
+      <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
+      <td class="embargo-release-date"><%= curation_concern.embargo_release_date %></td>
+      <td class="visibility-after-embargo"><%= visibility_badge(curation_concern.visibility_after_embargo) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
