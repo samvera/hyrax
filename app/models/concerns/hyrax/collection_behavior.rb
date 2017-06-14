@@ -69,7 +69,7 @@ module Hyrax
       # Use this query to get the ids of the member objects (since the containment
       # association has been flipped)
       def member_object_ids
-        return [] unless id.present?
+        return [] unless id
         ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
       end
 

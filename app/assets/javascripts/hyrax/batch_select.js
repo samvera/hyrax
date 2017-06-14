@@ -1,6 +1,6 @@
 Blacklight.onLoad(function () {
   $('input.submits-batches').on('click', function() {  
-      var form = $(this).closest("form"); 
+      var form = $(this).closest("form");
       $.map( $(".batch_document_selector:checked"), function(document, i) {
          var id = document.id.substring("batch_document_".length);
          if (form.children("input[value='"+id+"']").length == 0)
