@@ -46,7 +46,7 @@ module Hyrax
 
       # @param [Symbol] access :read or :edit
       def builder(access)
-        search_builder.new(context, access)
+        search_builder.new(context, access).rows(100)
       end
 
       # Count number of files from admin set works
