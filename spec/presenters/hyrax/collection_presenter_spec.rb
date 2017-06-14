@@ -75,12 +75,12 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq ['adc12v'] }
   end
 
-  describe "#size" do
+  describe "#size", :clean_repo do
     subject { presenter.size }
     it { is_expected.to eq '0 Bytes' }
   end
 
-  describe "#total_items" do
+  describe "#total_items", :clean_repo do
     subject { presenter.total_items }
 
     context "empty collection" do
@@ -88,13 +88,19 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with work" do
-      let(:work) { build(:work, title: ['unimaginitive title']) }
-      before { collection.members << work }
+      let(:work) { create(:work, title: ['unimaginitive title']) }
+
+      before do
+        work.member_of_collections << collection
+        work.save!
+      end
+
       it { is_expected.to eq 1 }
     end
 
     context "null members" do
-      let(:presenter) { described_class.new({}, nil) }
+      let(:presenter) { described_class.new(SolrDocument.new(id: '123'), nil) }
+
       it { is_expected.to eq 0 }
     end
   end
