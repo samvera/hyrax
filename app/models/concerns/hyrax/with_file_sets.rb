@@ -7,12 +7,6 @@ module Hyrax
       before_destroy :cleanup_file_sets
     end
 
-    # Stopgap unil ActiveFedora ContainerAssociation includes an *_ids accessor.
-    # At the moment, this is no more efficient than calling file_sets, but hopefully that will change in the future.
-    def file_set_ids
-      file_sets.map(&:id)
-    end
-
     def cleanup_file_sets
       # Destroy the list source first.  This prevents each file_set from attemping to
       # remove itself individually from the work. If hundreds of files are attached,
