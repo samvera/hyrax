@@ -245,7 +245,6 @@ module Hyrax
         when 'add' then add_members_to_collection
         when 'remove' then remove_members_from_collection
         when 'move' then move_members_between_collections
-        when Array then assign_batch_to_collection
         end
       end
 
@@ -260,11 +259,6 @@ module Hyrax
           work.member_of_collections.delete @collection
           work.save!
         end
-      end
-
-      def assign_batch_to_collection
-        @collection.members(true) # Force the members to get cached before (maybe) removing some of them
-        @collection.member_ids = batch
       end
 
       def move_members_between_collections
