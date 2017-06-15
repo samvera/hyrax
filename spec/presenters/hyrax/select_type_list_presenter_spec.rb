@@ -25,4 +25,11 @@ RSpec.describe Hyrax::SelectTypeListPresenter do
       end
     end
   end
+
+  describe "#first_model" do
+    let(:user) { create(:user) }
+    subject { instance.first_model }
+
+    it { is_expected.to be GenericWork }
+  end
 end
