@@ -82,6 +82,21 @@ RSpec.describe Hyrax::CollectionsController do
         expect(doc["id"]).to eq asset1.id
       end
     end
+
+    context "when create fails" do
+      let(:collection) { Collection.new }
+      before do
+        allow(controller).to receive(:authorize!)
+        allow(Collection).to receive(:new).and_return(collection)
+        allow(collection).to receive(:save).and_return(false)
+      end
+
+      it "renders the form again" do
+        post :create, params: { collection: collection_attrs }
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "#update" do
