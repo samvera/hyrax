@@ -8,11 +8,6 @@ module Hyrax
   #
   class CollectionSearchBuilder < ::SearchBuilder
     include FilterByType
-    # Defines which search_params_logic should be used when searching for Collections
-    def initialize(*)
-      @rows = 100
-      super
-    end
 
     # @return [String] Solr field name indicating default sort order
     def sort_field
