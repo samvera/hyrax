@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.2'
   spec.add_dependency 'hydra-works', '~> 0.16'
+  spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
   spec.add_dependency 'blacklight', '~> 6.9'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
@@ -59,7 +60,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'active_attr', '~> 0.9'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'active-fedora', '>= 11.1.3'
+  spec.add_dependency 'active-fedora', '>= 11.3.1'
+  spec.add_dependency 'linkeddata' # Required for getting values from geonames
 
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'
