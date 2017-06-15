@@ -59,7 +59,7 @@ export default class ControlledVocabulary extends FieldManager {
 
   /* This gives the index for the editor */
   _maxIndex() {
-      return $(this.fieldWrapperClass, this.element).size()
+      return $(this.fieldWrapperClass, this.element).length
   }
 
   // Overridden because we always want to permit adding another row
