@@ -82,6 +82,21 @@ RSpec.describe Hyrax::CollectionsController do
         expect(doc["id"]).to eq asset1.id
       end
     end
+
+    context "when create fails" do
+      let(:collection) { Collection.new }
+      before do
+        allow(controller).to receive(:authorize!)
+        allow(Collection).to receive(:new).and_return(collection)
+        allow(collection).to receive(:save).and_return(false)
+      end
+
+      it "renders the form again" do
+        post :create, params: { collection: collection_attrs }
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "#update" do
@@ -162,6 +177,29 @@ RSpec.describe Hyrax::CollectionsController do
         }
         expect(assigns[:collection].title).to eq ["My Next Collection "]
         expect(assigns[:collection].creator).to eq []
+      end
+    end
+
+    context "when update fails" do
+      let(:collection) { Collection.new }
+      let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
+      let(:result) { double(documents: []) }
+
+      before do
+        allow(controller).to receive(:authorize!)
+        allow(Collection).to receive(:find).and_return(collection)
+        allow(collection).to receive(:update).and_return(false)
+        allow(controller).to receive(:repository).and_return(repository)
+      end
+
+      it "renders the form again" do
+        put :update, params: {
+          id: collection,
+          collection: collection_attrs
+        }
+        expect(response).to be_successful
+        expect(response).to render_template(:edit)
+        expect(assigns[:member_docs]).to be_kind_of Array
       end
     end
   end
