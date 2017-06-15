@@ -1,16 +1,18 @@
 RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService do
   # PersistDirectlyContainedOutputFileService is used by FullTextExtract.output_file_service
-  let(:object) { FileSet.create! { |fs| fs.apply_depositor_metadata('justin') } }
-  let(:stream) { "fake file content" }
+  let(:file_set) { FileSet.create! { |fs| fs.apply_depositor_metadata('justin') } }
+  let(:content) { "fake file content" }
   subject(:call) do
-    described_class.call(stream,
+    described_class.call(content,
                          format: 'txt',
-                         url: object.uri,
+                         url: file_set.uri,
                          container: 'extracted_text')
   end
+  let(:resource) { file_set.reload.extracted_text }
 
   it "persists the file to the specified destination on the given object" do
     expect(call).to be true
-    expect(object.reload.extracted_text.content).to eq("fake file content")
+    expect(resource.content).to eq("fake file content")
+    expect(resource.content.encoding).to eq(Encoding::UTF_8)
   end
 end
