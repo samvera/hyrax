@@ -264,6 +264,10 @@ en:
         dropzone: "Drop files here."
         external_upload: Cloud Providers
         local_upload: Add Local Files
+      form_permission_under_embargo:
+        legend_html: Visibility <small>Who should be able to view or download this content?</small>
+        help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{embargo_edit_link} to deactivate it."
+        embargo_management_page: Embargo Management Page
       form_progress:
         required_descriptions: Describe your work
         required_files:        Add files
@@ -485,6 +489,36 @@ en:
       suffix:           "@example.org"
     document_language:  "en"
     edit_profile:       "Edit Profile"
+    embargoes:
+      index:
+        manage_embargoes: Manage Embargoes
+        active: All Active Embargoes
+        expired: Expired Active Embargoes
+        deactivated: Deactivated Embargoes
+      edit:
+        manage_embargoes_html: "Manage Embargoes for %{cc} <span class='human_readable_type'>(%{cc_type})</span>"
+        header:
+          current: Current Embargo
+          past: Past Embargoes
+        embargo_true_html: "<strong>This %{cc} is under embargo.</strong>"
+        embargo_false_html: "<strong>This %{cc} is not currently under embargo.</strong> If you would like to apply an embargo, provide the information here."
+        embargo_update: Update Embargo
+        embargo_deactivate: Deactivate Embargo
+        embargo_apply: Apply Embargo
+        embargo_cancel: Cancel and manage all embargoes
+        embargo_return: "Return to editing this %{cc}"
+        history_empty: "This %{cc} has no previous embargoes applied to it."
+      list_expired_active_embargoes:
+        missing: There are no expired embargoes in effect at this time.
+        change_all: "Change all files within %{cc} to "
+        deactivate_embargoes_for_selected: Deactivate Embargoes for Selected
+        deactivate_embargo: Deactivate Embargo
+      table_headers:
+        type: Type of Work
+        title: Title
+        release_date: Embargo Release Date
+        viz_current: Current Visibility
+        viz_after: Visibility will Change to
     featured_researchers: "Featured Researchers"
     file_manager:
       link_text: 'File Manager'
