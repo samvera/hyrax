@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
+  let(:actor) { controller.send(:actor) }
 
   context "when signed in" do
     before do
@@ -24,7 +25,6 @@ RSpec.describe Hyrax::FileSetsController do
             title: ['test title'],
             visibility: 'restricted' }
         end
-        let(:actor) { controller.send(:actor) }
 
         it 'calls the actor to create metadata and content' do
           expect(actor).to receive(:create_metadata).with(ActionController::Parameters) do |ac_params|
@@ -76,9 +76,9 @@ RSpec.describe Hyrax::FileSetsController do
 
       context 'when solr is down' do
         before do
-          allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:attach_to_work)
-          allow(controller.send(:actor)).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
+          allow(actor).to receive(:create_metadata)
+          allow(actor).to receive(:attach_to_work)
+          allow(actor).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
         end
 
         it 'errors out of create after on continuous rsolr error' do
@@ -198,7 +198,7 @@ RSpec.describe Hyrax::FileSetsController do
 
         it "spawns a ContentNewVersionEventJob" do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-          expect(actor).to receive(:ingest_file).with(an_instance_of(Hydra::Derivatives::IoDecorator)).and_return(true)
+          expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
           file = fixture_file_upload('/world.png', 'image/png')
           post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
           post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
@@ -231,6 +231,7 @@ RSpec.describe Hyrax::FileSetsController do
 
             it "restores the first versions's content and metadata" do
               # expect(restored_content.mime_type).to eq "image/png"
+              expect(restored_content).to be_a(Hydra::PCDM::File)
               expect(restored_content.original_name).to eq file1
               expect(versions.all.count).to eq 3
               expect(versions.last.label).to eq latest_version.label

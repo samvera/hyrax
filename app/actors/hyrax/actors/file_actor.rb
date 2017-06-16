@@ -1,6 +1,7 @@
 module Hyrax
   module Actors
-    # actions for a file identified by file_set and relation (maps to use predicate)
+    # Actions for a file identified by file_set and relation (maps to use predicate)
+    # @note Spawns asynchronous jobs
     class FileActor
       attr_reader :file_set, :relation, :user
 
@@ -13,23 +14,11 @@ module Hyrax
         @user = user
       end
 
-      # Persists file as part of file_set and spawns a job to characterize and create derivatives.
-      # @param [Hydra::Derivatives::IoDecorator] io the file to save in the repository, with mime_type and original_name
-      # @return [Boolean] true on success (note: does NOT mean spawned job completed), false otherwise
-      # @example for File
-      #   file_actor = Hyrax::Actors::FileActor.new(fileset, :original_file, user)
-      #   file = File.open('/tmp/mydir/upload.jpg', 'rb')
-      #   io = Hydra::Derivatives::IoDecorator.new(file, 'image/jpeg', 'spirostomum_2400x1200.jpg')
-      #   file_actor.ingest_file(io)
-      # @example for Tempfile
-      #   tempfile = get_tempfile_from_request # presume you get a Tempfile from Rack, Rails or wherever
-      #   io = Hydra::Derivatives::IoDecorator.new(tempfile, 'image/jpeg', File.basename(tempfile.path))
-      #   file_actor.ingest_file(io)
-      # @example for ActionDispatch::Http::UploadedFile
-      #   file = ActionDispatch::Http::UploadedFile.new(filename: '汉字.jpg', type: 'image/jpeg', tempfile: tempfile)
-      #   io = Hydra::Derivatives::IoDecorator.new(file, file.content_type, file.original_filename)
-      #   file_actor.ingest_file(io)
-      # @note the primary requirement of the file passed to Hydra::Derivatives::IoDecorator is to support #read
+      # Persists file as part of file_set and spawns async job to characterize and create derivatives.
+      # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
+      # @return [CharacterizeJob, FalseClass] spawned job on success, false on failure
+      # @note Instead of calling this method, use IngestJob to avoid synchronous execution cost
+      # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
@@ -40,20 +29,18 @@ module Hyrax
         return false unless file_set.save
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
-        CharacterizeJob.perform_later(file_set, repository_file.id, path_for(io)) # path hint in case next worker is on same filesystem
-        true
+        CharacterizeJob.perform_later(file_set, repository_file.id, io.path) # path hint in case next worker is on same filesystem
       end
 
-      # Reverts file and spawns a job to characterize and create derivatives.
+      # Reverts file and spawns async job to characterize and create derivatives.
       # @param [String] revision_id
-      # @return [Boolean] true on success (note: does NOT mean spawned job completed), false otherwise
+      # @return [CharacterizeJob, FalseClass] spawned job on success, false on failure
       def revert_to(revision_id)
         repository_file = related_file
         repository_file.restore_version(revision_id)
         return false unless file_set.save
         Hyrax::VersioningService.create(repository_file, user)
         CharacterizeJob.perform_later(file_set, repository_file.id)
-        true
       end
 
       def ==(other)
@@ -66,12 +53,6 @@ module Hyrax
         # @return [Hydra::PCDM::File] the file referenced by relation
         def related_file
           file_set.public_send(relation) || raise("No #{relation} returned for FileSet #{file_set.id}")
-        end
-
-        # @param [Hydra::Derivatives::IoDecorator] io
-        # @return [String] path (nil if unavailable)
-        def path_for(io)
-          io.path if io.respond_to?(:path) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile, Tempfile, File
         end
     end
   end

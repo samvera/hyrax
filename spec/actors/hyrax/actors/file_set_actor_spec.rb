@@ -3,17 +3,60 @@ require 'redlock'
 RSpec.describe Hyrax::Actors::FileSetActor do
   include ActionDispatch::TestProcess
 
-  let(:user)           { create(:user) }
-  let(:uploaded_file)  { fixture_file_upload('/world.png', 'image/png') }
-  let(:local_file)     { File.open(File.join(fixture_path, 'world.png')) }
-  let(:file_set)       { create(:file_set, content: local_file) }
-  let(:actor)          { described_class.new(file_set, user) }
-  let(:relation)       { :original_file }
-  let(:file_actor)     { Hyrax::Actors::FileActor.new(file_set, relation, user) }
-  let(:io)             { Hydra::Derivatives::IoDecorator.new(uploaded_file, uploaded_file.content_type, uploaded_file.original_filename) }
+  let(:user)          { create(:user) }
+  let(:file_path)     { File.join(fixture_path, 'world.png') }
+  let(:file)          { fixture_file_upload(file_path, 'image/png') } # we will override for the different types of File objects
+  let(:wrapper_path)  { file.path }                                   # override to match
+  let(:local_file)    { File.open(file_path) }
+  let(:file_set)      { create(:file_set, content: local_file) }
+  let(:actor)         { described_class.new(file_set, user) }
+  let(:relation)      { :original_file }
+  let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
 
-  before do
-    allow(actor).to receive(:build_file_actor).with(relation).and_return(file_actor)
+  before { allow(CharacterizeJob).to receive(:perform_later) } # not testing that
+
+  describe 'private' do
+    let(:file_set) { build(:file_set) } # avoid 130+ LDP requests
+
+    describe '#wrapper_params' do
+      let(:baseline_args) { { user: user, file_set_id: file_set.id, relation: relation.to_s } }
+      let(:wrapper_args)  { baseline_args.merge(path: wrapper_path, original_name: actor.send(:label_for, file)) }
+
+      subject { actor.send(:wrapper_params, file, relation) }
+
+      it 'with Rack::Test::UploadedFile returns expected hash' do
+        expect(subject).to eq(wrapper_args)
+        expect(actor.send(:wrapper_params, file, :remastered)).to eq(wrapper_args.merge(relation: 'remastered'))
+      end
+
+      context 'with ::File' do
+        let(:file) { local_file }
+        it 'returns expected hash' do
+          wrapper_args.delete(:original_name)
+          expect(subject).to eq(wrapper_args)
+        end
+      end
+
+      context 'with Hyrax::UploadedFile' do
+        let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
+        let(:wrapper_path) { file.uploader.path }
+        it 'returns expected hash' do
+          wrapper_args.delete(:original_name)
+          expect(subject).to eq(wrapper_args.merge(uploaded_file: file))
+        end
+      end
+    end
+
+    describe '#assign_visibility?' do
+      let(:viz) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+      it 'without params, returns false' do
+        expect(actor.send(:assign_visibility?)).to eq false
+      end
+      it 'with string-keyed or symbol-keyed visibility, returns true' do
+        expect(actor.send(:assign_visibility?, visibility: viz)).to eq true
+        expect(actor.send(:assign_visibility?, 'visibility' => viz)).to eq true
+      end
+    end
   end
 
   describe 'creating metadata, content and attaching to a work' do
@@ -25,17 +68,9 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     before do
       allow(DateTime).to receive(:current).and_return(date_today)
       allow(actor).to receive(:acquire_lock_for).and_yield
-      # NOTE: we have to use this unweidly block instead of `.with(io)`
-      # because Hydra::Derivatives::IoDecorator objects cannot be compared
-      # https://github.com/samvera/hydra-derivatives/issues/165
-      # We reuse this pattern throughout this file.
-      # TODO: replace IoDecorator with a regular Hyrax::Io class
-      expect(file_actor).to receive(:ingest_file) do |input|
-        expect(input.mime_type).to eq(uploaded_file.content_type)
-        expect(input.original_name).to eq(uploaded_file.original_filename)
-      end
+      # expect(actor).to receive(:wrapper).with(file, relation)
       actor.create_metadata
-      actor.create_content(uploaded_file)
+      actor.create_content(file)
       actor.attach_to_work(work)
     end
 
@@ -69,31 +104,28 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe '#create_content' do
-    it 'calls ingest_file' do
-      expect(file_actor).to receive(:ingest_file) do |input|
-        expect(input.mime_type).to eq(uploaded_file.content_type)
-        expect(input.original_name).to eq(uploaded_file.original_filename)
+    before do
+      expect(JobIoWrapper).to receive(:create!).with(any_args) do |args|
+        JobIoWrapper.new(args) # skip persistence
       end
-      actor.create_content(uploaded_file)
+      expect(IngestJob).to receive(:perform_later).with(JobIoWrapper)
+    end
+
+    it 'calls ingest_file' do
+      actor.create_content(file)
     end
 
     context 'when an alternative relationship is specified' do
       let(:relation) { :remastered }
 
       it 'calls ingest_file' do
-        expect(file_actor).to receive(:ingest_file) do |input|
-          expect(input.mime_type).to eq(uploaded_file.content_type)
-          expect(input.original_name).to eq(uploaded_file.original_filename)
-        end
-        actor.create_content(uploaded_file, :remastered)
+        actor.create_content(file, :remastered)
       end
     end
 
     context 'using ::File' do
-      before do
-        allow(file_actor).to receive(:ingest_file).with(any_args)
-        actor.create_content(local_file)
-      end
+      let(:file) { local_file }
+      before { actor.create_content(local_file) }
 
       it 'sets the label and title' do
         expect(file_set.label).to eq(File.basename(local_file))
@@ -107,18 +139,14 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'when file_set.title is empty and file_set.label is not' do
       let(:long_name) do
-        'an absurdly long title that goes on way to long and ' \
-                         'messes up the display of the page which should not need ' \
-                         'to be this big in order to show this impossibly long, ' \
-                         'long, long, oh so long string'
+        'an absurdly long title that goes on way to long and messes up the display of the page which should not need ' \
+          'to be this big in order to show this impossibly long, long, long, oh so long string'
       end
       let(:short_name) { 'Nice Short Name' }
-      let(:actor)      { described_class.new(file_set, user) }
 
       before do
-        allow(file_actor).to receive(:ingest_file).with(any_args)
         allow(file_set).to receive(:label).and_return(short_name)
-        actor.create_content(uploaded_file)
+        actor.create_content(file)
       end
 
       subject { file_set.title }
@@ -128,21 +156,21 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'when a label is already specified' do
       let(:label) { 'test_file.png' }
-      let(:file_set_with_label) do
+      let(:file_set) do
         FileSet.new do |f|
           f.apply_depositor_metadata(user.user_key)
           f.label = label
         end
       end
-      let(:actor) { described_class.new(file_set_with_label, user) }
+      let(:actor) { described_class.new(file_set, user) }
 
       before do
-        allow(file_actor).to receive(:ingest_file).with(any_args)
-        actor.create_content(uploaded_file)
+        allow(IngestJob).to receive(:perform_later).with(JobIoWrapper)
+        actor.create_content(file)
       end
 
       it "retains the object's original label" do
-        expect(file_set_with_label.label).to eql(label)
+        expect(file_set.label).to eql(label)
       end
     end
   end
@@ -155,19 +183,14 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#update_content" do
-    let(:io) { Hydra::Derivatives::IoDecorator.new(local_file, uploaded_file.content_type, uploaded_file.original_filename) }
-
-    it 'calls ingest_file and returns true' do
-      expect(file_actor).to receive(:ingest_file) do |input|
-        expect(input.mime_type).to eq(uploaded_file.content_type)
-        expect(input.original_name).to eq(uploaded_file.original_filename)
-      end.and_return(true)
-      expect(actor.update_content(local_file)).to be true
+    it 'calls ingest_file and returns queued job' do
+      expect(IngestJob).to receive(:perform_later).with(any_args).and_return(IngestJob.new)
+      expect(actor.update_content(local_file)).to be_a(IngestJob)
     end
     it 'runs callbacks' do
-      # Do not bother ingesting the file -- test only that the callback is run
-      allow(file_actor).to receive(:ingest_file).with(any_args).and_return(true)
-      expect(Hyrax.config.callback).to receive(:run).with(:after_update_content, file_set, user)
+      # Do not bother ingesting the file -- test only the result of callback
+      allow(file_actor).to receive(:ingest_file).with(any_args).and_return(double)
+      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
       actor.update_content(local_file)
     end
   end
@@ -227,80 +250,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe "#assign_visibility?" do
-    context "when no params are specified" do
-      it "does not need to assign visibility" do
-        expect(actor.send(:assign_visibility?)).to eq false
-      end
-    end
-
-    context "when file set params with visibility are specified with symbols as keys" do
-      let(:file_set_params) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
-
-      it "does need to assign visibility" do
-        expect(actor.send(:assign_visibility?, file_set_params)).to eq true
-      end
-    end
-
-    context "when file set params with visibility are specified with strings as keys" do
-      let(:file_set_params) { { "visibility" => Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
-
-      it "does need to assign visibility" do
-        expect(actor.send(:assign_visibility?, file_set_params)).to eq true
-      end
-    end
-  end
-
-  describe "#set_representative" do
-    let(:work) { build(:generic_work, representative: rep) }
-    let(:file_set) { build(:file_set) }
-
-    before do
-      actor.send(:set_representative, work, file_set)
-    end
-
-    context "when the representative isn't set" do
-      let(:rep) { nil }
-
-      it 'sets the representative' do
-        expect(work.representative).to eq file_set
-      end
-    end
-
-    context 'when the representative is already set' do
-      let(:rep) { build(:file_set, id: '123') }
-
-      it 'keeps the existing representative' do
-        expect(work.representative).to eq rep
-      end
-    end
-  end
-
-  describe "#set_thumbnail" do
-    let(:work) { build(:generic_work, thumbnail: thumb) }
-    let(:file_set) { build(:file_set) }
-
-    before do
-      actor.send(:set_thumbnail, work, file_set)
-    end
-
-    context "when the thumbnail isn't set" do
-      let(:thumb) { nil }
-
-      it 'sets the thumbnail' do
-        expect(work.thumbnail).to eq file_set
-      end
-    end
-
-    context 'when the thumbnail is already set' do
-      let(:thumb) { build(:file_set, id: '123') }
-
-      it 'keeps the existing thumbnail' do
-        expect(work.thumbnail).to eq thumb
-      end
-    end
-  end
-
   describe "#file_actor_class" do
     subject { actor.file_actor_class }
 
@@ -332,7 +281,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     before do
       original_adapter = ActiveJob::Base.queue_adapter
       ActiveJob::Base.queue_adapter = :inline
-      allow(CharacterizeJob).to receive(:perform_later)
       actor.create_content(fixture_file_upload(file1))
       actor.create_content(fixture_file_upload('hyrax_generic_stub.txt'))
       ActiveJob::Base.queue_adapter = original_adapter

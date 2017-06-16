@@ -1,4 +1,5 @@
 module Hyrax
+  # @deprecated Use JobIoWrapper instead
   class WorkingDirectory
     class << self
       # Returns the file passed as filepath if that file exists. Otherwise it grabs the file from repository,

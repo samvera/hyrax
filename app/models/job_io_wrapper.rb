@@ -18,11 +18,11 @@
 class JobIoWrapper < ApplicationRecord
   belongs_to :user
   belongs_to :uploaded_file, optional: true, class_name: 'Hyrax::UploadedFile'
-  validates :uploaded_file, presence: true, if: Proc.new { |x| x.path.blank? }
+  validates :uploaded_file, presence: true, if: proc { |x| x.path.blank? }
   validates :file_set_id, presence: true
 
   after_initialize :static_defaults
-  delegate :read, to: :file
+  delegate :read, :size, to: :file
 
   def original_name
     super || extracted_original_name
@@ -40,6 +40,10 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
   end
 
+  def ingest_file
+    file_actor.ingest_file(self)
+  end
+
   private
 
     def extracted_original_name
@@ -50,19 +54,23 @@ class JobIoWrapper < ApplicationRecord
       uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
     end
 
-    # @raise when uploaded_file *becomes* required but is missing
-    def uploaded_file!
-      uploaded_file || raise("path '#{path}' was unusable and uploaded_file empty")
-    end
-
-    # The magic that switches between local filepath and CarrierWave file
+    # The magic that switches *once* between local filepath and CarrierWave file
+    # @return [File] ready to #read
     def file
-      @file ||= (file_from_path || uploaded_file!.uploader.file.to_file)
+      @file ||= (file_from_path || file_from_uploaded_file!)
     end
 
-    # @return [File, nil] nil if the path doesn't exist on this (worker) system
+    # @return [File]
+    # @raise when uploaded_file *becomes* required but is missing
+    def file_from_uploaded_file!
+      raise("path '#{path}' was unusable and uploaded_file empty") unless uploaded_file
+      self.path = uploaded_file.uploader.file.file # old path useless now
+      uploaded_file.uploader.file.to_file
+    end
+
+    # @return [File, nil] nil if the path doesn't exist on this (worker) system or can't be read
     def file_from_path
-      File.open(path, 'rb') if File.exist?(path) && File.readable?(path)
+      File.open(path, 'rb') if path && File.exist?(path) && File.readable?(path)
     end
 
     def static_defaults
