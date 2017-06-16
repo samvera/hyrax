@@ -51,7 +51,7 @@ module Hyrax
     end
 
     def total_items
-      @solr_document.fetch('member_ids_ssim', []).length
+      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
     end
   end
 end
