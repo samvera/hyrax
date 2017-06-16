@@ -21,6 +21,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
     * [Feature list](#feature-list)
   * [Help](#help)
   * [Getting started](#getting-started)
+    * [Quickstart](#quickstart)
     * [Prerequisites](#prerequisites)
       * [Characterization](#characterization)
       * [Derivatives](#derivatives)
@@ -65,12 +66,16 @@ v2.0.0.alpha__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
-Prerequisites are required for both Creating a Hyrax\-based app and Contributing new features to Hyrax.
-After installing the Prerequisites:
- * If you would like to create a new application using Hyrax follow the instructions for [Creating a Hyrax\-based app](#creating-a-hyrax-based-app).
- * If you would like to create new features for Hyrax follow the instructions for [Contributing](#contributing) and [Development](#development).
+## Quickstart 
+
+If you're looking to spin up a vanilla Hyrax application very quickly for demonstration purposes, you may be interested in [the samvera-vagrant project](https://github.com/samvera-labs/samvera-vagrant) which may be used to "kick the tires" of Hyrax and [Hyku](https://github.com/samvera-labs/hyku). It requires VirtualBox and Vagrant.
 
 ## Prerequisites
+
+Prerequisites are required for both creating a Hyrax\-based app and contributing new features to Hyrax. After installing the prerequisites...
+
+ * If you would like to create a new application using Hyrax follow the instructions for [Creating a Hyrax\-based app](#creating-a-hyrax-based-app).
+ * If you would like to create new features for Hyrax follow the instructions for [Contributing](#contributing) and [Development](#development).
 
 Hyrax requires the following software to work:
 
