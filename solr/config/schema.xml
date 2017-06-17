@@ -48,43 +48,46 @@
 <schema name="Hydra Demo Index" version="1.5">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
-       version="1.4" is Solr's version number for the schema syntax and semantics.  It should
+       version="1.5" is Solr's version number for the schema syntax and semantics.  It should
        not normally be changed by applications.
        1.0: multiValued attribute did not exist, all fields are multiValued by nature
        1.1: multiValued attribute introduced, false by default
        1.2: omitTermFreqAndPositions attribute introduced, true by default except for text fields.
        1.3: removed optional field compress feature
        1.4: default auto-phrase (QueryParser feature) to off
+       1.5: omitNorms defaults to true for primitive field types (int, float, boolean, string...)
+# TODO 1.6: useDocValuesAsStored defaults to true.
      -->
 
   <types>
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
-    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>    
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
     <fieldType name="rand" class="solr.RandomSortField" omitNorms="true"/>
-    
+
     <!-- Default numeric field types.  -->
     <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
-    
+
     <!-- trie numeric field types for faster range queries -->
     <fieldType name="tint" class="solr.TrieIntField" precisionStep="8" positionIncrementGap="0"/>
     <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8" positionIncrementGap="0"/>
     <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8" positionIncrementGap="0"/>
     <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0"/>
-    
+
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
       -->
     <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
     <!-- A Trie based date field for faster date range queries and date faceting. -->
     <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
-    
-    
+    <!-- A DateRange based date field for truly faster date range queries. -->
+    <fieldType name="dateRange" class="solr.DateRangeField"/>
+
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
+      definition is created matching *___<typename>.  Alternately, if
       subFieldSuffix is defined, that is used to create the subFields.
       Example: if subFieldType="double", then the coordinates would be
         indexed in fields myloc_0___double,myloc_1___double.
@@ -94,17 +97,17 @@
       users normally should not need to know about them.
      -->
     <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
-    
+
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
-    
+
     <!-- An alternative geospatial field type new to Solr 4.  It supports multiValued and polygon shapes.
       For more information about this and other Spatial fields new to Solr 4, see:
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
       geo="true" distErrPct="0.025" maxDistErr="0.000009" distanceUnits="degrees" />
-    
+
     <fieldType name="text" class="solr.TextField" omitNorms="false">
       <analyzer>
         <tokenizer class="solr.ICUTokenizerFactory"/>
@@ -112,7 +115,7 @@
         <filter class="solr.TrimFilterFactory"/>
       </analyzer>
     </fieldType>
-    
+
     <!-- A text field that only splits on whitespace for exact matching of words -->
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
@@ -120,7 +123,7 @@
         <filter class="solr.TrimFilterFactory"/>
       </analyzer>
     </fieldType>
-        
+
     <!-- single token analyzed text, for sorting.  Punctuation is significant. -->
     <fieldtype name="alphaSort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
       <analyzer>
@@ -129,7 +132,7 @@
         <filter class="solr.TrimFilterFactory" />
       </analyzer>
     </fieldtype>
-    
+
     <!-- A text field with defaults appropriate for English -->
     <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
@@ -144,7 +147,7 @@
         <filter class="solr.TrimFilterFactory"/>
       </analyzer>
     </fieldType>
-        
+
     <!-- queries for paths match documents at that path, or in descendent paths -->
     <fieldType name="descendent_path" class="solr.TextField">
       <analyzer type="index">
@@ -154,7 +157,7 @@
         <tokenizer class="solr.KeywordTokenizerFactory" />
       </analyzer>
     </fieldType>
-    
+
     <!-- queries for paths match documents at that path, or in ancestor paths -->
     <fieldType name="ancestor_path" class="solr.TextField">
       <analyzer type="index">
@@ -179,12 +182,12 @@
   <fields>
     <!-- If you remove this field, you must _also_ disable the update log in solrconfig.xml
     or Solr won't start. _version_ and update log are required for SolrCloud
-    --> 
+    -->
     <field name="_version_" type="long" indexed="true" stored="true"/>
-   
+
     <field name="id" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
     <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
-    
+
     <field name="lat" type="tdouble" stored="true" indexed="true" multiValued="false"/>
     <field name="lng" type="tdouble" stored="true" indexed="true" multiValued="false"/>
 
@@ -201,7 +204,7 @@
     <dynamicField name="*_timv" type="text" stored="false" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tsiv" type="text" stored="true" indexed="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tsimv" type="text" stored="true" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true"/>
-    
+
     <!-- English text (_te...) -->
     <dynamicField name="*_tei" type="text_en" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_teim" type="text_en" stored="false" indexed="true" multiValued="true"/>
@@ -213,7 +216,7 @@
     <dynamicField name="*_teimv" type="text_en" stored="false" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tesiv" type="text_en" stored="true" indexed="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tesimv" type="text_en" stored="true" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true"/>
-    
+
     <!-- string (_s...) -->
     <dynamicField name="*_si" type="string" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_sim" type="string" stored="false" indexed="true" multiValued="true"/>
@@ -222,7 +225,7 @@
     <dynamicField name="*_ssi" type="string" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_ssim" type="string" stored="true" indexed="true" multiValued="true"/>
     <dynamicField name="*_ssort" type="alphaSort" stored="false" indexed="true" multiValued="false"/>
-    
+
     <!-- integer (_i...) -->
     <dynamicField name="*_ii" type="int" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_iim" type="int" stored="false" indexed="true" multiValued="true"/>
@@ -230,7 +233,7 @@
     <dynamicField name="*_ism" type="int" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_isi" type="int" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_isim" type="int" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- trie integer (_it...) (for faster range queries) -->
     <dynamicField name="*_iti" type="tint" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_itim" type="tint" stored="false" indexed="true" multiValued="true"/>
@@ -238,7 +241,7 @@
     <dynamicField name="*_itsm" type="tint" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_itsi" type="tint" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_itsim" type="tint" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- date (_dt...) -->
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z -->
@@ -248,7 +251,7 @@
     <dynamicField name="*_dtsm" type="date" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_dtsi" type="date" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_dtsim" type="date" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- trie date (_dtt...) (for faster range queries) -->
     <dynamicField name="*_dtti" type="tdate" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_dttim" type="tdate" stored="false" indexed="true" multiValued="true"/>
@@ -256,7 +259,15 @@
     <dynamicField name="*_dttsm" type="tdate" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_dttsi" type="tdate" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_dttsim" type="tdate" stored="true" indexed="true" multiValued="true"/>
-    
+
+    <!-- date range (_dr...) (for faster AND better range queries) -->
+    <dynamicField name="*_dri" type="dateRange" stored="false" indexed="true" multiValued="false"/>
+    <dynamicField name="*_drim" type="dateRange" stored="false" indexed="true" multiValued="true"/>
+    <dynamicField name="*_drs" type="dateRange" stored="true" indexed="false" multiValued="false"/>
+    <dynamicField name="*_drsm" type="dateRange" stored="true" indexed="false" multiValued="true"/>
+    <dynamicField name="*_drsi" type="dateRange" stored="true" indexed="true" multiValued="false"/>
+    <dynamicField name="*_drsim" type="dateRange" stored="true" indexed="true" multiValued="true"/>
+
     <!-- long (_l...) -->
     <dynamicField name="*_li" type="long" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_lim" type="long" stored="false" indexed="true" multiValued="true"/>
@@ -264,7 +275,7 @@
     <dynamicField name="*_lsm" type="long" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_lsi" type="long" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_lsim" type="long" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- trie long (_lt...) (for faster range queries) -->
     <dynamicField name="*_lti" type="tlong" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_ltim" type="tlong" stored="false" indexed="true" multiValued="true"/>
@@ -272,7 +283,7 @@
     <dynamicField name="*_ltsm" type="tlong" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_ltsi" type="tlong" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_ltsim" type="tlong" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- double (_db...) -->
     <dynamicField name="*_dbi" type="double" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_dbim" type="double" stored="false" indexed="true" multiValued="true"/>
@@ -280,7 +291,7 @@
     <dynamicField name="*_dbsm" type="double" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_dbsi" type="double" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_dbsim" type="double" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- trie double (_dbt...) (for faster range queries) -->
     <dynamicField name="*_dbti" type="tdouble" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_dbtim" type="tdouble" stored="false" indexed="true" multiValued="true"/>
@@ -288,7 +299,7 @@
     <dynamicField name="*_dbtsm" type="tdouble" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_dbtsi" type="tdouble" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_dbtsim" type="tdouble" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- float (_f...) -->
     <dynamicField name="*_fi" type="float" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_fim" type="float" stored="false" indexed="true" multiValued="true"/>
@@ -296,7 +307,7 @@
     <dynamicField name="*_fsm" type="float" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_fsi" type="float" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_fsim" type="float" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- trie float (_ft...) (for faster range queries) -->
     <dynamicField name="*_fti" type="tfloat" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_ftim" type="tfloat" stored="false" indexed="true" multiValued="true"/>
@@ -304,12 +315,12 @@
     <dynamicField name="*_ftsm" type="tfloat" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_ftsi" type="tfloat" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_ftsim" type="tfloat" stored="true" indexed="true" multiValued="true"/>
-    
+
     <!-- boolean (_b...) -->
     <dynamicField name="*_bi" type="boolean" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_bs" type="boolean" stored="true" indexed="false" multiValued="false"/>
     <dynamicField name="*_bsi" type="boolean" stored="true" indexed="true" multiValued="false"/>
-    
+
     <!-- Type used to index the lat and lon components for the "location" FieldType -->
     <dynamicField name="*_coordinate" type="tdouble" indexed="true"  stored="false" />
 
@@ -329,7 +340,7 @@
 
   </fields>
 
- <!-- Field to use to determine and enforce document uniqueness. 
+ <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
  <uniqueKey>id</uniqueKey>
