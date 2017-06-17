@@ -55,7 +55,7 @@ RSpec.describe Hyrax::FileSetsController do
                                              terms_of_service: '1' }
           expect(response.status).to eq 400
           msg = JSON.parse(response.body)['message']
-          expect(msg).to match(/no file for upload/i)
+          expect(msg).to match(/No file uploaded/i)
         end
       end
 
