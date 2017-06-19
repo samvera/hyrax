@@ -41,7 +41,7 @@ module Hyrax
       # Hydra::Ability#download_permissions can't be used in this case because it assumes
       # that files are in a LDP basic container, and thus, included in the asset's uri.
       def authorize_download!
-        authorize! :read, params[asset_param_key]
+        authorize! :download, params[asset_param_key]
       rescue CanCan::AccessDenied
         redirect_to default_image
       end

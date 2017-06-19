@@ -21,6 +21,25 @@ module Hyrax
                              :trophy_abilities]
     end
 
+    # Samvera doesn't use download user/groups, so make it an alias to read
+    # Grant all groups with read or edit access permission to download
+    def download_groups(id)
+      doc = permissions_doc(id)
+      return [] if doc.nil?
+      groups = Array(doc[self.class.read_group_field]) + Array(doc[self.class.edit_group_field])
+      Rails.logger.debug("[CANCAN] download_groups: #{groups.inspect}")
+      groups
+    end
+
+    # Grant all users with read or edit access permission to download
+    def download_users(id)
+      doc = permissions_doc(id)
+      return [] if doc.nil?
+      users = Array(doc[self.class.read_user_field]) + Array(doc[self.class.edit_user_field])
+      Rails.logger.debug("[CANCAN] download_users: #{users.inspect}")
+      users
+    end
+
     # Returns true if can create at least one type of work and they can deposit
     # into at least one AdminSet
     def can_create_any_work?
@@ -65,6 +84,18 @@ module Hyrax
     end
 
     private
+
+      # This overrides hydra-head, (and restores the method from blacklight-access-controls)
+      def download_permissions
+        can :download, String do |id|
+          test_download(id)
+        end
+
+        can :download, SolrDocument do |obj|
+          cache.put(obj.id, obj)
+          test_download(obj.id)
+        end
+      end
 
       # Add this to your ability_logic if you want all logged in users to be able
       # to submit content
@@ -179,7 +210,7 @@ module Hyrax
         alias_action :show, to: :read
         alias_action :discover, to: :read
         can :update, :appearance
-        can :read, String # The identifier of a work or FileSet
+        can :download, String # The identifier of a work or FileSet
         can :manage, curation_concerns_models
         can :manage, Sipity::WorkflowResponsibility
       end
