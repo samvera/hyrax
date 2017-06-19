@@ -142,7 +142,7 @@ module Hyrax
         alias_action :edit, to: :update
         alias_action :show, to: :read
         alias_action :discover, to: :read
-
+        can :read, String # The identifier of a work or FileSet
         can :manage, curation_concerns_models
         can :manage, Sipity::WorkflowResponsibility
       end
