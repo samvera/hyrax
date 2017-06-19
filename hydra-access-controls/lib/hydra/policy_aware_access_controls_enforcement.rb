@@ -1,27 +1,26 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAccessControlsEnforcement
 
-  # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
-  # appends the result of policy_clauses into the :fq
-  # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
+  # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access.
+  # Appends the result of policy_clauses into the :fq
+  # @param [Hash] solr_parameters the current solr parameters, to be modified herein!
   def apply_gated_discovery(solr_parameters)
     super
     logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
   end
 
-  # returns solr query for finding all objects whose policies grant discover access to current_user
+  # @return [String,nil] solr query for finding all objects whose policies grant discover access to current_user
   def policy_clauses
     policy_ids = policies_with_access
     return nil if policy_ids.empty?
     '(' + policy_ids.map {|id| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(isGovernedBy: id)}.join(' OR '.freeze) + ')'
   end
 
-  # find all the policies that grant discover/read/edit permissions to this user or any of its groups
+  # Find all the policies that grant discover/read/edit permissions to this user or any of its groups.
+  # Grant access based on user id & group
   def policies_with_access
     #### TODO -- Memoize this and put it in the session?
     user_access_filters = []
-    # Grant access based on user id & group
     user_access_filters += apply_policy_group_permissions(discovery_permissions)
     user_access_filters += apply_policy_user_permissions(discovery_permissions)
     result = policy_class.search_with_conditions( user_access_filters.join(" OR "), fl: "id", rows: policy_class.count )
@@ -29,8 +28,9 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     result.map {|h| h['id']}
   end
 
+  # for groups
+  # @param [Array{String,#to_sym}] permission_types symbols (or equivalent) from Hydra.config.permissions.inheritable
   def apply_policy_group_permissions(permission_types = discovery_permissions)
-      # for groups
       user_access_filters = []
       current_ability.user_groups.each_with_index do |group, i|
         permission_types.each do |type|
@@ -40,8 +40,9 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       user_access_filters
   end
 
+  # for individual user access
+  # @param [Array{String,#to_sym}] permission_types
   def apply_policy_user_permissions(permission_types = discovery_permissions)
-    # for individual user access
     user = current_ability.current_user
     return [] unless user && user.user_key.present?
     permission_types.map do |type|
