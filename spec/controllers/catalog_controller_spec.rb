@@ -113,18 +113,18 @@ RSpec.describe CatalogController, type: :controller do
           edit_access_person_ssim: [user.user_key] }
       end
 
-      it "finds work and work that contains file with title" do
-        get :index, params: { q: 'find me' }
+      it "finds a work and a work that contains a file set with a matching title" do
+        get :index, params: { q: 'find me', search_field: 'all_fields' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
-      it "finds work that contains file with title" do
-        get :index, params: { q: 'other file' }
+      it "finds a work that contains a file set with a matching title" do
+        get :index, params: { q: 'other file', search_field: 'all_fields' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
 
-      it "finds work with title" do
-        get :index, params: { q: 'me too' }
+      it "finds a work with a matching title" do
+        get :index, params: { q: 'me too', search_field: 'all_fields' }
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
     end
