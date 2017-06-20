@@ -55,7 +55,6 @@
 //= require hyrax/user_search
 //= require hyrax/proxy_rights
 //= require hyrax/sorting
-//= require hyrax/batch_select
 //= require hyrax/single_use_links_manager
 //= require hyrax/dashboard_actions
 //= require hyrax/batch
@@ -93,6 +92,7 @@
 //= require hyrax/authority_select
 //= require hyrax/per_page
 //= require hyrax/thumbnail_select
+//= require hyrax/batch_select
 
 
 // this needs to be after batch_select so that the form ids get setup correctly

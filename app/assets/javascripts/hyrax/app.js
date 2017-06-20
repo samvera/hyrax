@@ -16,6 +16,7 @@ Hyrax = {
         this.tinyMCE();
         this.perPage();
         this.sidebar();
+        this.batchSelect();
     },
 
     // Add WYSIWYG editor functionality to editable content blocks
@@ -134,5 +135,12 @@ Hyrax = {
     statistics: {},
 
     // initialized in hyrax/config.js
-    config: {}
+    config: {},
+
+    // Adds selected items to the batch before any batch operation is performed
+    batchSelect: function () {
+        var BatchSelect = require('hyrax/batch_select');
+        BatchSelect.initialize_batch_selected();
+    }
+
 };
