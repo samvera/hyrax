@@ -6,7 +6,6 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
     before do
       sign_in user
-      2.times { create(:work, user: user) }
     end
 
     context 'with existing featured researcher' do
@@ -76,31 +75,26 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
       end
     end
 
-    context "with admin sets enabled", :clean_repo do
-      let(:admin_set_doc) do
-        {
-          "system_create_dtsi" => "2016-09-12T19:36:51Z",
-          "has_model_ssim" => ["AdminSet"],
-          "id" => "w3763695z",
-          "title_tesim" => ["A completely unique name"],
-          "description_tesim" => ["A substantial description"],
-          "thumbnail_path_ss" => "/assets/admin-set-thumb.png",
-          "read_access_group_ssim" => ["public"]
-        }
+    context "with collections" do
+      let(:presenter) { double }
+      let(:repository) { double }
+      let(:collection_results) { double(documents: ['collection results']) }
+
+      before do
+        allow(controller).to receive(:repository).and_return(repository)
+        allow(controller).to receive(:search_results).and_return([nil, ['recent document']])
+        allow(controller.repository).to receive(:search).with(an_instance_of(Hyrax::CollectionSearchBuilder))
+          .and_return(collection_results)
       end
 
-      it "sets the admin_sets" do
-        ActiveFedora::SolrService.add(admin_set_doc, commit: true)
+      it "initializes the presenter with ability and a list of collections" do
+        expect(Hyrax::HomepagePresenter).to receive(:new).with(Ability,
+                                                               ["collection results"])
+          .and_return(presenter)
         get :index
         expect(response).to be_success
-        expect(assigns(:admin_sets).map(&:id)).to eq [admin_set_doc["id"]]
+        expect(assigns(:presenter)).to eq presenter
       end
-    end
-
-    it "sets the presenter" do
-      get :index
-      expect(response).to be_success
-      expect(assigns(:presenter)).to be_kind_of Hyrax::HomepagePresenter
     end
 
     context "with featured works" do

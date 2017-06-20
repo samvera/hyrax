@@ -1,16 +1,16 @@
 <table class="table table-striped collection-highlights">
   <tbody>
-    <% @admin_sets.each do |admin_set| %>
+    <% collections.each do |collection| %>
       <tr>
         <td>
           <div class="media">
-            <%= link_to [hyrax, admin_set], class: 'media-left', 'aria-hidden' => true do %>
-              <%= render_thumbnail_tag admin_set, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
+            <%= link_to [hyrax, collection], class: 'media-left', 'aria-hidden' => true do %>
+              <%= render_thumbnail_tag collection, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
             <% end %>
             <div class="media-body">
               <div class="media-heading">
-                <%= link_to [hyrax, admin_set] do %>
-                  <%= admin_set.title_or_label %>
+                <%= link_to [hyrax, collection] do %>
+                  <%= collection.title_or_label %>
                 <% end %>
               </div>
             </div>
@@ -22,7 +22,8 @@
 </table>
 <ul class="list-inline collection-highlights-list">
   <li>
-    <%= link_to t('hyrax.homepage.admin_sets.link'), hyrax.admin_sets_path, class: 'btn btn-default' %>
+    <%= link_to t('hyrax.homepage.admin_sets.link'),
+                main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
+                class: 'btn btn-default' %>
   </li>
 </ul>
-

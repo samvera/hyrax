@@ -1,9 +1,10 @@
 module Hyrax
   class HomepagePresenter
-    attr_reader :current_ability
+    attr_reader :current_ability, :collections
 
-    def initialize(current_ability)
+    def initialize(current_ability, collections)
       @current_ability = current_ability
+      @collections = collections
     end
 
     # @return [Boolean] If the current user is a guest and the display_share_button_when_not_logged_in?
