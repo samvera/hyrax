@@ -111,6 +111,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     it { is_expected.to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.to be_able_to(:read, Hyrax::Statistics) }
+    it { is_expected.to be_able_to(:download, 'abcd123') } # an id for a work/FileSet
     it { is_expected.to be_able_to(:read, :admin_dashboard) }
     it { is_expected.to be_able_to(:manage, AdminSet) }
     it { is_expected.to be_able_to(:create, AdminSet) }

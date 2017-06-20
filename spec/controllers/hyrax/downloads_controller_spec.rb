@@ -30,7 +30,7 @@ RSpec.describe Hyrax::DownloadsController do
       end
 
       it 'authorizes the resource using only the id' do
-        expect(controller).to receive(:authorize!).with(:read, file_set.id)
+        expect(controller).to receive(:authorize!).with(:download, file_set.id)
         get :show, params: { id: file_set.to_param }
       end
     end
@@ -54,6 +54,7 @@ RSpec.describe Hyrax::DownloadsController do
 
           it 'sends requested file content' do
             get :show, params: { id: file_set, file: 'thumbnail' }
+            expect(response).to be_success
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
             expect(response.headers['Accept-Ranges']).to eq "bytes"
