@@ -6,12 +6,12 @@ de:
   activemodel:
     errors:
       messages:
-        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Diese Form hat sich mit der letzten gespeicherten Kopie der %{model} erfrischt.
+        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Diese Form hat sich mit der letzten gespeicherten Kopie der %{model} aktualisiert.
   blacklight:
     search:
       fields:
         facet:
-          admin_set_sim: Sammlung
+          admin_set_sim: Sammlungen
           resource_type_sim: Ressourcentyp
           suppressed_bsi: Status
         show:
@@ -25,10 +25,10 @@ de:
   errors:
     messages:
       carrierwave_download_error: Bild konnte nicht heruntergeladen werden.
-      carrierwave_integrity_error: Kein Bild.
-      carrierwave_processing_error: Bild kann nicht verkleinern.
-      extension_blacklist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, verbotene Typen: %{prohibited_types}'
-      extension_whitelist_error: 'Du darfst keine %{extension}-Dateien hochladen, erlaubt: %{allowed_types}'
+      carrierwave_integrity_error: Keine Bilddate.
+      carrierwave_processing_error: Bildgröße konnte nicht geändert werden.
+      extension_blacklist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, verbotene Dateitypen: %{prohibited_types}'
+      extension_whitelist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, erlaubte Dateitypen: %{allowed_types}'
   helpers:
     action:
       admin_set:
@@ -44,17 +44,17 @@ de:
         new: Neue Arbeit hinzufügen
     submit:
       admin_set:
-        create: sparen
-        update: sparen
-      create: sparen
+        create: Speichern
+        update: Aktualisieren
+      create: Speichern
       hyrax_permission_template:
-        create: sparen
-        update: sparen
+        create: Speichern
+        update: Speichern
       hyrax_permission_template_access:
         create: Hinzufügen
       proxy_deposit_request:
         create: Übertragung
-      update: sparen
+      update: Speichern
   hyrax:
     account_label: Benutzer
     active_consent_to_agreement: Ich habe die ... gelesen und stimme ihnen zu
@@ -71,7 +71,7 @@ de:
         edit:
           header: Verwaltungssatz bearbeiten
         form:
-          cancel: Stornieren
+          cancel: Abbrechen
           permission_update_errors:
             error: Ungültige Update-Option für Berechtigungsvorlage.
             no_date: Für die gewählte Release-Option ist ein Datum erforderlich.
@@ -88,7 +88,7 @@ de:
             description: Beschreibung
             participants: Teilnehmer
             visibility: Freigabe und Sichtbarkeit
-            workflow: Arbeitsablauf
+            workflow: Workflow
         form_participant_table:
           allow_all_registered: Erlauben Sie allen registrierten Benutzern, sich einzuladen
           depositors:
@@ -143,7 +143,7 @@ de:
             everyone: Jeder - alle Arbeiten in diesem Satz werden öffentlich sein
             institution: Institution - alle Arbeiten werden nur für authentifizierte Benutzer dieser Institution sichtbar
             restricted: Eingeschränkt - alle Arbeiten werden nur für Repository-Manager und Manager und Gutachter dieses administrativen Satzes sichtbar
-            title: Sichtweite
+            title: Sichtbarkeit
             varies: Variationen - Standard ist öffentlich, aber Einleger können die Sichtbarkeit einzelner Werke einschränken
         form_workflow:
           cancel: Stornieren
@@ -174,7 +174,7 @@ de:
         profile: Profil
         repository_objects: Repository Inhalt
         settings: Einstellungen
-        statistics: Berichte
+        statistics: Statistiken
         tasks: Aufgaben
         technical: Technisch
         transfers: Transfers
@@ -182,7 +182,7 @@ de:
         users: Benutzer verwalten
         workflow_review: Rückmeldung
         workflow_roles: Workflow-Rollen
-        works: Arbeitet
+        works: Arbeiten
       stats:
         deposited_form:
           end_label: Ende [Voreinstellung]
@@ -269,7 +269,7 @@ de:
         header: Artikel
         thumbnail: Miniaturansicht
         title: Titel
-        visibility: Sichtweite
+        visibility: Sichtbarkeit
       metadata:
         attribute_name_label: Attributname
         attribute_values_label: Werte
@@ -413,19 +413,19 @@ de:
           users: 'Benutzer:'
         collections: Ihre Sammlungen
         facet_label:
-          collections: 'Filtersammlungen:'
-          highlighted: 'Filter-Highlights:'
-          shared: 'Filteranteile:'
-          works: 'Filter funktioniert:'
+          collections: 'Filter Sammlungen:'
+          highlighted: 'Filter Highlights:'
+          shared: 'Filter Freigaben:'
+          works: 'Filter Arbeiten:'
         heading:
           action: Aktionen
           date_uploaded: Datum hinzugefügt
           title: Titel
-          visibility: Sichtweite
+          visibility: Sichtbarkeit
         highlighted: Meine Highlights
-        shared: Arbeiten mit mir geteilt
+        shared: Mit mir geteilte Arbeiten
         sr:
-          batch_checkbox: Überprüfen Sie, um eine Auflistungs- oder Bearbeitungsliste hinzuzufügen
+          batch_checkbox: Auswählen, um eine Auflistungs- oder Bearbeitungsliste hinzuzufügen
           check_all_label: Wählen Sie alle Dateien aus, die einer Sammlung hinzugefügt oder bearbeitet werden sollen
           detail_label: Zusammenfassungsdetails anzeigen
           listing: Auflistung der Artikel, die Sie hinterlegt haben
@@ -545,7 +545,7 @@ de:
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> Gehen
+        html: <span class="glyphicon glyphicon-search"></span> Los
         text: Suche
       form:
         option:
@@ -656,7 +656,12 @@ de:
         class: Etiketten-Erfolg
         note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.
         text: Offener Zugang
-        warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
+        warning_html: "<p>
+                          <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (das heißt das Beschriften als %{label}),
+                          als Publikation angesehen werden kann, was Ihre Möglichkeiten beeinflussen könnte: </p><ul>
+                          <li> Ihre Arbeit zu patentieren </li>
+                          <li> Ihre Arbeit in einem wissenschaftlichen Fachzeitschrift zu veröffentlich </li></ul>
+                          <p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Herausgebers. </p>"
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       private:
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt "Freigeben" einen bestimmten Zugriff gewährt wurde.
@@ -687,7 +692,7 @@ de:
           files: Dateien
           metadata: Beschreibungen
           relationships: Beziehungen
-          share: Aktie
+          share: Freigabe
         visibility_until: bis
       progress:
         header: Arbeit speichern
@@ -749,9 +754,9 @@ de:
         related_url: Zugehörige URL
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu
-        visibility_after_lease: Dann beschränken sie darauf
-        visibility_during_embargo: Beschränkt auf
-        visibility_during_lease: Ist vorhanden für
+        visibility_after_lease: Dann beschränken sie bis zu
+        visibility_during_embargo: Beschränkt bis zu
+        visibility_during_lease: Ist vorhanden während
       proxy_deposit_request:
         sender_comment: Bemerkungen
         transfer_to: Benutzer
