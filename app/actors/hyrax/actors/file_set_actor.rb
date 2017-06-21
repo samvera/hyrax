@@ -31,14 +31,14 @@ module Hyrax
 
       # Called from FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
-      # @param [String] relation ('original_file')
-      # @param [Boolean] asynchronous (true) set to false if you don't want to launch a new background job.
-      def create_content(file, relation = 'original_file', asynchronous = true)
+      # @param [Symbol, #to_sym] relation
+      # @return [Boolean] true on success, false otherwise
+      def create_content(file, relation = :original_file)
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save the file_set in order to get an id
-        build_file_actor(relation).ingest_file(file, asynchronous)
+        return false unless file_set.save # Need to save to get an id
+        build_file_actor(relation).ingest_file(io_decorator(file))
         true
       end
 
@@ -62,17 +62,19 @@ module Hyrax
       deprecation_deprecate attach_file_to_work: "use attach_to_work instead"
 
       # @param [String] revision_id the revision to revert to
-      # @param [String] relation ('original_file')
-      def revert_content(revision_id, relation = 'original_file')
+      # @param [Symbol, #to_sym] relation
+      # @return [Boolean] true on success, false otherwise
+      def revert_content(revision_id, relation = :original_file)
         return false unless build_file_actor(relation).revert_to(revision_id)
         Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id)
         true
       end
 
       # @param [File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user.
-      # @param [String] relation ('original_file')
-      def update_content(file, relation = 'original_file')
-        build_file_actor(relation).ingest_file(file, true)
+      # @param [Symbol, #to_sym] relation
+      # @return [Boolean] true on success, false otherwise
+      def update_content(file, relation = :original_file)
+        return false unless build_file_actor(relation).ingest_file(io_decorator(file))
         Hyrax.config.callback.run(:after_update_content, file_set, user)
         true
       end
@@ -110,12 +112,29 @@ module Hyrax
           file_actor_class.new(file_set, relation, user)
         end
 
+        def io_decorator(file)
+          Hydra::Derivatives::IoDecorator.new(file, mime_for(file), label_for(file))
+        end
+
+        # @return [String, nil] mime type explicitly set or sniffed
+        def mime_for(file)
+          if file.respond_to?(:content_type) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile
+            file.content_type
+          elsif file.respond_to?(:mime_type) # e.g. Hydra::Derivatives::IoDecorator
+            file.mime_type
+          elsif file.respond_to?(:path) # e.g. File (note: will be meaningless for Tempfile)
+            MIME::Types.type_for(File.extname(file.path)).first.content_type
+          end # else nil
+        end
+
+        # For the label, use the original_filename or original_name if it's there.
+        # If the file was imported via URL, parse the original filename.
+        # If all else fails, use the basename of the file where it sits.
         def label_for(file)
-          # For the label, use the original filename if it's there.
-          # If the file was imported via URL, parse the original filename
-          # If all else fails, use the basename of the file where it sits
-          if file.respond_to?(:original_filename)
+          if file.respond_to?(:original_filename) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile
             file.original_filename
+          elsif file.respond_to?(:original_name) # e.g. Hydra::Derivatives::IoDecorator
+            file.original_name
           elsif file_set.import_url.present?
             # This path is taken when file is a Tempfile (e.g. from ImportUrlJob)
             File.basename(Addressable::URI.parse(file_set.import_url).path)
