@@ -2,7 +2,7 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
   let(:context) { double }
   let(:builder) { described_class.new(context).with(blacklight_params) }
   let(:solr_params) { Blacklight::Solr::Request.new }
-  let(:blacklight_params) { { q: user_query } }
+  let(:blacklight_params) { { q: user_query, search_field: 'all_fields' } }
   let(:user_query) { "find me" }
 
   describe "#show_works_or_works_that_contain_files" do
