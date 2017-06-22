@@ -64,30 +64,31 @@ RSpec.describe CreateDerivativesJob do
 
   context "with a pdf file" do
     let(:file_set) { create(:file_set) }
-    let(:params)   { { qt: "search", q: "CutePDF", qf: "all_text_timv" } }
 
     let(:file) do
-      Hydra::PCDM::File.new.tap do |f|
-        f.content = File.open(File.join(fixture_path, "hyrax/hyrax_test4.pdf")).read
+      Hydra::PCDM::File.new do |f|
+        f.content = File.open(File.join(fixture_path, "hyrax/hyrax_test4.pdf"))
         f.original_name = 'test.pdf'
-        f.save!
+        f.mime_type = 'application/pdf'
       end
     end
 
-    let(:search_response) do
-      Blacklight::Solr::Response.new(
-        Blacklight.default_index.connection.get("select", params: params),
-        params
-      )
-    end
-
     before do
-      allow(file_set).to receive(:mime_type).and_return('application/pdf')
-      described_class.perform_now(file_set, file.id)
+      file_set.original_file = file
+      file_set.save!
     end
 
-    it "searches the extracted content" do
-      expect(search_response.documents.count).to eq(1)
+    it "runs a full text extract" do
+      expect(Hydra::Derivatives::PdfDerivatives).to receive(:create)
+        .with(/test\.pdf/, outputs: [{ label: :thumbnail,
+                                       format: 'jpg',
+                                       size: '338x493',
+                                       url: String }])
+      expect(Hydra::Derivatives::FullTextExtract).to receive(:create)
+        .with(/test\.pdf/, outputs: [{ url: RDF::URI,
+                                       container: "extracted_text" }])
+
+      described_class.perform_now(file_set, file.id)
     end
   end
 end
