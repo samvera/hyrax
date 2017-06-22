@@ -116,19 +116,6 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
       end
     end
 
-    context "when update_directory is passed" do
-      before do
-        allow(::User).to receive(:from_url_component).and_return(user)
-      end
-      it "refreshes directory attributes" do
-        expect(UserEditProfileEventJob).to receive(:perform_later).with(user)
-        expect(user).to receive(:populate_attributes).once
-        post :update, params: { id: user.user_key, user: { update_directory: 'true' } }
-        expect(response).to redirect_to(routes.url_helpers.dashboard_profile_path(user.to_param, locale: 'en'))
-        expect(flash[:notice]).to include("Your profile has been updated")
-      end
-    end
-
     it "sets an social handles" do
       post :update, params: { id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle: "link", orcid: '0000-0000-1111-2222' } }
       expect(response).to redirect_to(routes.url_helpers.dashboard_profile_path(user.to_param, locale: 'en'))
