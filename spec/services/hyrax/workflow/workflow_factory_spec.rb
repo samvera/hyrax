@@ -18,7 +18,7 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
         expect do
           subject
         end.to change { Sipity::Entity.count }.by(1)
-          .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
+                                              .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
       end.not_to change { Sipity::WorkflowResponsibility.count }
     end
   end

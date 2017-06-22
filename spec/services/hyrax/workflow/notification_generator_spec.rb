@@ -16,8 +16,8 @@ module Hyrax
             expect do
               described_class.call(workflow: workflow, notification_configuration: notification_configuration)
             end.to change { Sipity::Notification.count }.by(1)
-              .and change { Sipity::NotificationRecipient.count }.by(3)
-              .and change { workflow_action.notifiable_contexts.count }.by(1)
+                                                        .and change { Sipity::NotificationRecipient.count }.by(3)
+                                                                                                           .and change { workflow_action.notifiable_contexts.count }.by(1)
           end
         end
       end

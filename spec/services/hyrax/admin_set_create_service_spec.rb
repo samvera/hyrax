@@ -68,7 +68,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect do
             expect(subject).to be true
           end.to change { admin_set.persisted? }.from(false).to(true)
-            .and change { Sipity::WorkflowResponsibility.count }.by(12)
+                                                .and change { Sipity::WorkflowResponsibility.count }.by(12)
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by

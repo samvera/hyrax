@@ -84,13 +84,13 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
         allow(controller).to receive(:repository).and_return(repository)
         allow(controller).to receive(:search_results).and_return([nil, ['recent document']])
         allow(controller.repository).to receive(:search).with(an_instance_of(Hyrax::CollectionSearchBuilder))
-          .and_return(collection_results)
+                                                        .and_return(collection_results)
       end
 
       it "initializes the presenter with ability and a list of collections" do
         expect(Hyrax::HomepagePresenter).to receive(:new).with(Ability,
                                                                ["collection results"])
-          .and_return(presenter)
+                                                         .and_return(presenter)
         get :index
         expect(response).to be_success
         expect(assigns(:presenter)).to eq presenter

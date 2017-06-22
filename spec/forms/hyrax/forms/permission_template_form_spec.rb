@@ -111,7 +111,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       it "updates the visibility, release_period=now, release_date=today" do
         expect { subject }
           .to change { permission_template.reload.visibility }.from(nil).to('open')
-          .and change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
+                                                              .and change { permission_template.reload.release_period }.from(nil).to(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
         expect(permission_template.release_date).to eq(today)
       end
     end

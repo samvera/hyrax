@@ -1,4 +1,5 @@
-inherit_from: .rubocop_todo.yml
+require: rubocop-rspec
+inherit_from: .rubocop_fixme.yml
 
 AllCops:
   TargetRubyVersion: 2.1
@@ -15,6 +16,9 @@ AllCops:
 
 Bundler/DuplicatedGem:  # This doesn't work with engine_cart
   Enabled: false
+
+Layout/IndentationConsistency:
+  EnforcedStyle: rails
 
 Lint/ImplicitStringConcatenation:
   Exclude:
@@ -47,9 +51,6 @@ Metrics/MethodLength:
 
 Style/AsciiComments:
   Enabled: false
-
-Style/IndentationConsistency:
-  EnforcedStyle: rails
 
 Style/CollectionMethods:
   PreferredMethods:
@@ -99,18 +100,11 @@ Style/ZeroLengthPredicate:
 Rails:
   Enabled: true
 
-Rails/OutputSafety:
-  Exclude:
-    - 'spec/views/hyrax/my/works/_list_works.html.erb_spec.rb'
-    - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
-    - 'app/helpers/hyrax/collections_helper.rb'
-    - 'app/helpers/hyrax/content_block_helper_behavior.rb'
-    - 'app/builders/hyrax/form_builder.rb'
-    - 'app/helpers/hyrax/citations_behaviors/formatters/apa_formatter.rb'
-    - 'app/helpers/hyrax/citations_behaviors/formatters/chicago_formatter.rb'
-    - 'app/helpers/hyrax/citations_behaviors/formatters/mla_formatter.rb'
-    - 'app/presenters/hyrax/presents_attributes.rb'
-    - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
+Rails/ApplicationJob:
+  Enabled: false
+
+Rails/ApplicationRecord:
+  Enabled: false
 
 Rails/DynamicFindBy:
   Enabled: false
@@ -118,6 +112,20 @@ Rails/DynamicFindBy:
 Rails/FilePath:
   Exclude:
     - 'spec/abilities/**/*'
+
+Rails/OutputSafety:
+  Exclude:
+    - 'app/builders/hyrax/form_builder.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/apa_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/chicago_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/mla_formatter.rb'
+    - 'app/helpers/hyrax/collections_helper.rb'
+    - 'app/helpers/hyrax/content_block_helper_behavior.rb'
+    - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
+    - 'app/presenters/hyrax/fixity_status_presenter.rb'
+    - 'app/presenters/hyrax/presents_attributes.rb'
+    - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
+    - 'spec/views/hyrax/my/works/_list_works.html.erb_spec.rb'
 
 RSpec/DescribeClass:
   Exclude:

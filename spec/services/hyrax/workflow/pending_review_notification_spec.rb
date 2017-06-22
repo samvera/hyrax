@@ -17,8 +17,8 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
 
       expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }
         .to change { depositor.mailbox.inbox.count }.by(1)
-        .and change { to_user.mailbox.inbox.count }.by(1)
-        .and change { cc_user.mailbox.inbox.count }.by(1)
+                                                    .and change { to_user.mailbox.inbox.count }.by(1)
+                                                                                               .and change { cc_user.mailbox.inbox.count }.by(1)
     end
     context 'without carbon-copied users' do
       let(:recipients) { { 'to' => [to_user] } }
@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
         expect(depositor).to receive(:send_message).exactly(2).times.and_call_original
         expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }
           .to change { depositor.mailbox.inbox.count }.by(1)
-          .and change { to_user.mailbox.inbox.count }.by(1)
+                                                      .and change { to_user.mailbox.inbox.count }.by(1)
       end
     end
   end
