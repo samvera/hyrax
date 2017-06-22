@@ -1,6 +1,5 @@
 language: ruby
-# Sudo required as workaround for https://github.com/travis-ci/travis-ci/issues/7941
-sudo: true
+sudo: false
 dist: trusty
 
 cache:
