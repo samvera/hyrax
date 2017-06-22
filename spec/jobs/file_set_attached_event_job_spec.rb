@@ -23,8 +23,8 @@ RSpec.describe FileSetAttachedEventJob do
       expect do
         described_class.perform_now(file_set, user)
       end.to change { user.profile_events.length }.by(1)
-        .and change { file_set.events.length }.by(1)
-        .and change { curation_concern.events.length }.by(1)
+                                                  .and change { file_set.events.length }.by(1)
+                                                                                        .and change { curation_concern.events.length }.by(1)
 
       expect(user.profile_events.first).to eq(event)
       expect(curation_concern.events.first).to eq(event)

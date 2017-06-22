@@ -17,8 +17,8 @@ RSpec.describe ContentDepositorChangeEventJob do
     expect do
       described_class.perform_now(generic_work, another_user)
     end.to change { user.profile_events.length }.by(1)
-      .and change { another_user.events.length }.by(1)
-      .and change { generic_work.events.length }.by(1)
+                                                .and change { another_user.events.length }.by(1)
+                                                                                          .and change { generic_work.events.length }.by(1)
 
     expect(user.profile_events.first).to eq(event)
     expect(another_user.events.first).to eq(event)

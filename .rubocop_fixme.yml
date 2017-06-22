@@ -37,8 +37,8 @@ Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/api.rb'
     - 'app/controllers/concerns/hyrax/controller.rb'
-    - 'app/controllers/hyrax/my_controller.rb'
     - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
+    - 'app/controllers/hyrax/my_controller.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
@@ -46,6 +46,11 @@ Metrics/MethodLength:
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
+
+# TODO: remove when https://github.com/bbatsov/rubocop/issues/4539 is fixed
+Style/FormatStringToken:
+  Exclude:
+    - 'config/routes.rb'
 
 Style/LineEndConcatenation:
   Exclude:
@@ -143,10 +148,10 @@ RSpec/AnyInstance:
     - 'spec/jobs/content_new_version_event_job_spec.rb'
     - 'spec/jobs/content_depositor_change_event_job_spec.rb'
     - 'spec/jobs/content_deposit_event_job_spec.rb'
-    - 'spec/lib/hyrax/arkivo/create_subscription_job_spec.rb'
     - 'spec/lib/hyrax/arkivo/actor_spec.rb'
-    - 'spec/presenters/hyrax/work_usage_spec.rb'
+    - 'spec/lib/hyrax/arkivo/create_subscription_job_spec.rb'
     - 'spec/presenters/hyrax/file_usage_spec.rb'
+    - 'spec/presenters/hyrax/work_usage_spec.rb'
     - 'spec/services/hyrax/repository_fixity_check_service_spec.rb'
     - 'spec/services/hyrax/workflow/permission_generator_spec.rb'
     - 'spec/services/hyrax/workflow/sipity_actions_generator_spec.rb'

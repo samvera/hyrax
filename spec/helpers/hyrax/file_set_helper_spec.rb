@@ -5,7 +5,7 @@ RSpec.describe Hyrax::FileSetHelper do
 
     before do
       allow(helper).to receive(:media_display_partial).with(file_set)
-        .and_return('hyrax/file_sets/media_display/image')
+                                                      .and_return('hyrax/file_sets/media_display/image')
     end
 
     it "renders a partial" do

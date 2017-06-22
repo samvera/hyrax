@@ -86,7 +86,7 @@ EOF
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
-  spec.add_development_dependency 'rubocop', '~> 0.48.1'
+  spec.add_development_dependency 'rubocop', '~> 0.49.1'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.10.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'

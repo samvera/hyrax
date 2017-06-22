@@ -17,15 +17,15 @@ module Hyrax
         expect do
           described_class.call(agents: user, roles: role.name, workflow: workflow)
         end.to change { Sipity::WorkflowRole.count }.by(1)
-          .and change { Sipity::WorkflowResponsibility.count }.by(1)
+                                                    .and change { Sipity::WorkflowResponsibility.count }.by(1)
       end
 
       it 'will grant entity responsiblity to agent as the given role' do
         expect do
           described_class.call(agents: user, roles: role.name, workflow: workflow, entity: entity)
         end.to change { Sipity::WorkflowRole.count }.by(1)
-          .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
-          .and change { Sipity::WorkflowResponsibility.count }.by(0)
+                                                    .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
+                                                                                                              .and change { Sipity::WorkflowResponsibility.count }.by(0)
       end
 
       it 'will be idempotent' do
