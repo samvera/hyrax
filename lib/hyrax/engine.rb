@@ -91,16 +91,5 @@ module Hyrax
       # in this way:
       # https://github.com/rails/sprockets/issues/73#issuecomment-139113466
     end
-
-    config.uploader = {
-      limitConcurrentUploads: 6,
-      maxNumberOfFiles: 100,
-      maxFileSize: 500.megabytes
-    }
-
-    if Rails.env.development?
-      # use sequential uploads in development to avoid database locking problems with sqlite3.
-      config.uploader.merge! limitConcurrentUploads: 1, sequentialUploads: true
-    end
   end
 end

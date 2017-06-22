@@ -26,6 +26,13 @@ Hyrax.config do |config|
   # How frequently should a file be fixity checked
   # config.max_days_between_fixity_checks = 7
 
+  # Options to control the file uploader
+  # config.uploader = {
+  #   limitConcurrentUploads: 6,
+  #   maxNumberOfFiles: 100,
+  #   maxFileSize: 500.megabytes
+  # }
+
   # Enable displaying usage statistics in the UI
   # Defaults to false
   # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
