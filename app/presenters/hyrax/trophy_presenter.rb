@@ -7,7 +7,7 @@ module Hyrax
 
     attr_reader :solr_document
 
-    delegate :to_s, to: :solr_document
+    delegate :to_s, :thumbnail_path, to: :solr_document
 
     # @param user [User] the user to find the TrophyPresentes for.
     # @return [Array<TrophyPresenter>] a list of all the trophy presenters for the user
@@ -18,10 +18,6 @@ module Hyrax
       results.map { |result| TrophyPresenter.new(document_model.new(result)) }
     rescue RSolr::Error::ConnectionRefused
       []
-    end
-
-    def thumbnail_path
-      solr_document[CatalogController.blacklight_config.index.thumbnail_field]
     end
 
     def self.document_model

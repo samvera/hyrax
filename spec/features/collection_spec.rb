@@ -213,7 +213,7 @@ RSpec.describe 'collection', type: :feature do
       fill_in('Title', with: new_title)
       fill_in('Abstract or Summary', with: new_description)
       fill_in('Creator', with: creators.first)
-      within('.primary-actions') do
+      within('.panel-footer') do
         click_button('Update Collection')
       end
       # URL: /collections/collection-id

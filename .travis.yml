@@ -2,6 +2,8 @@ language: ruby
 # Sudo required as workaround for https://github.com/travis-ci/travis-ci/issues/7941
 sudo: true
 dist: trusty
+# Use old image to fix redis: https://github.com/travis-ci/travis-ci/issues/7941#issuecomment-310252839
+group: deprecated-2017Q2
 
 cache:
   bundler: true

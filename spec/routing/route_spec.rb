@@ -189,6 +189,12 @@ RSpec.describe 'Routes', type: :routing do
     end
   end
 
+  describe 'Collections' do
+    it 'routes to files' do
+      expect(get: '/collections/6/files').to route_to(controller: 'hyrax/collections', action: 'files', id: '6')
+    end
+  end
+
   describe 'main app routes' do
     routes { Rails.application.routes }
 

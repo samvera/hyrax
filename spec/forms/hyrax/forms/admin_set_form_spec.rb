@@ -1,8 +1,11 @@
 RSpec.describe Hyrax::Forms::AdminSetForm do
-  let(:form) { described_class.new(model) }
+  let(:ability) { Ability.new(create(:user)) }
+  let(:repository) { double }
+  let(:form) { described_class.new(model, ability, repository) }
 
   describe "[] accessors" do
-    let(:model) { AdminSet.new(description: ['one']) }
+    let(:model) { build(:admin_set, description: ['one']) }
+
     it "cast to scalars" do
       expect(form[:description]).to eq 'one'
     end
@@ -49,6 +52,30 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
 
     it "casts to enums" do
       expect(subject[:title]).to eq ['test title']
+    end
+  end
+
+  describe '#select_files' do
+    subject { form.select_files }
+    let(:repository) { Hyrax::CollectionsController.new.repository }
+
+    context 'without any works/files attached' do
+      let(:model) { create(:admin_set) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a work/file attached' do
+      let(:work) { create(:work_with_one_file) }
+      let(:title) { work.file_sets.first.title.first }
+      let(:file_id) { work.file_sets.first.id }
+      let(:model) do
+        create(:admin_set, members: [work])
+      end
+
+      it 'returns a hash of with file title as key and file id as value' do
+        expect(subject).to eq(title => file_id)
+      end
     end
   end
 end

@@ -72,6 +72,7 @@ module Hyrax
         attribute :human_readable_type, Solr::String, solr_name('human_readable_type', :stored_searchable)
         attribute :representative_id, Solr::String, solr_name('hasRelatedMediaFragment', :symbol)
         attribute :thumbnail_id, Solr::String, solr_name('hasRelatedImage', :symbol)
+        attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
         attribute :label, Solr::String, solr_name('label')
         attribute :file_format, Solr::String, solr_name('file_format')
         attribute :suppressed?, Solr::String, solr_name('suppressed', Solrizer::Descriptor.new(:boolean, :stored, :indexed))

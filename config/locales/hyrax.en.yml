@@ -337,6 +337,11 @@ en:
         title: "Add to collection"
         update: "Update Collection"
     collections:
+      form:
+        tabs:
+          description: "Description"
+          sharing:     "Sharing"
+          visibility:  "Visibility"
       search_form:
         label: "Search Collection %{title}"
         placeholder: "Search Collection"

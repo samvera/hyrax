@@ -64,14 +64,14 @@ module Hyrax
       member_object_ids.collect { |work_id| size_for_work(work_id) }.sum
     end
 
-    private
+    # Use this query to get the ids of the member objects (since the containment
+    # association has been flipped)
+    def member_object_ids
+      return [] unless id
+      ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
+    end
 
-      # Use this query to get the ids of the member objects (since the containment
-      # association has been flipped)
-      def member_object_ids
-        return [] unless id
-        ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
-      end
+    private
 
       # Calculate the size of all the files in the work
       # @param work_id [String] identifer for a work

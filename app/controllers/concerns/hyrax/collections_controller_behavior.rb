@@ -25,7 +25,6 @@ module Hyrax
 
       # actions: index, create, new, edit, show, update, destroy, permissions, citation
       before_action :authenticate_user!, except: [:show, :index]
-      load_and_authorize_resource except: [:index, :show, :create], instance_name: :collection
 
       class_attribute :presenter_class,
                       :form_class,
@@ -213,10 +212,6 @@ module Hyrax
 
       def collection_params
         form_class.model_attributes(params[:collection])
-      end
-
-      def form
-        @form ||= form_class.new(@collection)
       end
 
       # Queries Solr for members of the collection.

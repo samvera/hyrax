@@ -57,6 +57,14 @@ RSpec.describe ::SolrDocument, type: :model do
     it { is_expected.to eq ['Image'] }
   end
 
+  describe "thumbnail_path" do
+    let(:attributes) { { 'thumbnail_path_ss' => ['/foo/bar'] } }
+
+    subject { document.thumbnail_path }
+
+    it { is_expected.to eq '/foo/bar' }
+  end
+
   describe '#to_param' do
     let(:id) { '1v53kn56d' }
     let(:attributes) { { id: id } }

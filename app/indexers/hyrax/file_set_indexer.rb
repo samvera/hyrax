@@ -19,7 +19,6 @@ module Hyrax
         solr_doc['width_is']  = Integer(object.width.first) if object.width.present?
         solr_doc['visibility_ssi'] = object.visibility
         solr_doc['mime_type_ssi']  = object.mime_type
-        solr_doc['thumbnail_path_ss'] = thumbnail_path
         # Index the Fedora-generated SHA1 digest to create a linkage between
         # files on disk (in fcrepo.binary-store-path) and objects in the repository.
         solr_doc['digest_ssim'] = digest_from_content

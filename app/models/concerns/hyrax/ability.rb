@@ -217,6 +217,7 @@ module Hyrax
 
       def add_to_collection
         return unless registered_user?
+        alias_action :files, to: :read # members will be filtered separately
         can :collect, :all
       end
 

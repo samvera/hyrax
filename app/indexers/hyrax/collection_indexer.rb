@@ -14,7 +14,6 @@ module Hyrax
         Solrizer.set_field(solr_doc, 'generic_type', 'Collection', :facetable)
         # Index the size of the collection in bytes
         solr_doc[Solrizer.solr_name(:bytes, STORED_LONG)] = object.bytes
-        solr_doc['thumbnail_path_ss'] = thumbnail_path
         solr_doc['visibility_ssi'] = object.visibility
 
         object.in_collections.each do |col|

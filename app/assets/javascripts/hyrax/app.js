@@ -6,11 +6,12 @@ Hyrax = {
         this.permissions();
         this.notifications();
         this.transfers();
-        this.editor();
+        this.workEditor();
         this.fileManager();
         this.selectWorkType();
         this.datatable();
-        this.admin();
+        this.adminSetEditor();
+        this.collectionEditor();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.perPage();
@@ -26,11 +27,18 @@ Hyrax = {
         });
     },
 
-    // Add search for user/group to the edit an admin set's participants page
-    admin: function() {
+    // The AdminSet edit page
+    adminSetEditor: function() {
       var AdminSetControls = require('hyrax/admin/admin_set_controls');
       var controls = new AdminSetControls($('#admin-set-controls'));
     },
+
+    // The Collection edit page
+    collectionEditor: function() {
+      var CollectionControls = require('hyrax/collections/editor');
+      var controls = new CollectionControls($('#collection-controls'));
+    },
+
 
     // Pretty graphs on the dashboard page
     adminStatisticsGraphs: function() {
@@ -47,8 +55,8 @@ Hyrax = {
         }
     },
 
-    // Functionality for the work edit page
-    editor: function () {
+    // The work edit page
+    workEditor: function () {
         var element = $("[data-behavior='work-form']")
         if (element.length > 0) {
           var Editor = require('hyrax/editor');
@@ -65,7 +73,7 @@ Hyrax = {
     },
 
     // Add access grants for a user/group to a work/fileset/collection
-    // TODO: This could get moved to editor() or similar
+    // TODO: This could get moved to workEditor() or similar
     permissions: function () {
         var PermissionsControl = require('hyrax/permissions/control');
         // On the edit work page
@@ -113,14 +121,14 @@ Hyrax = {
         var FileManager = require('hyrax/file_manager');
         new FileManager();
     },
-    
+
     // Per Page select will submit its form to change records shown
     perPage: function () {
         var PerPage = require('hyrax/per_page');
         $('#per_page').each(function () {
             new PerPage($(this));
         });
-    },                 
+    },
 
     // Saved so that inline javascript can put data somewhere.
     statistics: {},

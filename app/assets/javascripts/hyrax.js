@@ -67,6 +67,7 @@
 //= require hyrax/admin/admin_set/registered_users
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
+//= require hyrax/collections/editor
 //= require hyrax/editor
 //= require hyrax/editor/admin_set_widget
 //= require hyrax/editor/controlled_vocabulary
@@ -91,6 +92,8 @@
 //= require hyrax/workflow_actions_affix
 //= require hyrax/authority_select
 //= require hyrax/per_page
+//= require hyrax/thumbnail_select
+
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit
