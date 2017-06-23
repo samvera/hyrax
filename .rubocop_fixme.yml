@@ -1,5 +1,3 @@
-require: rubocop-rspec
-
 Security/MarshalLoad:
   Exclude:
     - 'app/models/concerns/hyrax/user.rb'
