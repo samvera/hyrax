@@ -31,7 +31,7 @@ env:
   # should be compatible across patch versions (only bug fixes are released in patch versions).
   matrix:
     - "RAILS_VERSION=5.0.3"
-    - "RAILS_VERSION=5.1.1"
+    - "RAILS_VERSION=5.1.2.rc1"
 
 services:
   - redis-server
