@@ -7,7 +7,7 @@ module Hyrax
     include Hyrax::FileSet::Characterization
     include Hydra::WithDepositor
     include Serializers
-    include Hyrax::Noid
+    include ActiveFedora::Noid::Model if Hyrax.config.enable_noids?
     include Hyrax::FileSet::Derivatives
     include Permissions
     include Hyrax::FileSet::Indexing

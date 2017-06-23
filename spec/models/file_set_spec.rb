@@ -225,6 +225,7 @@ RSpec.describe FileSet do
     let!(:default) { Hyrax.config.enable_noids? }
 
     before do
+      Hyrax.config.enable_noids = true
       allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
     end
 

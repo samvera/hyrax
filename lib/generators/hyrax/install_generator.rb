@@ -24,7 +24,6 @@ module Hyrax
   14. Updates simple_form to use browser validations
   15. Installs Blacklight gallery (and removes it's scss)
   16. Install jquery-datatables
-  17. Initializes the active-fedora_noid database-backed minter
          """
 
     def run_required_generators
@@ -158,10 +157,6 @@ module Hyrax
       insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
         " *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
       end
-    end
-
-    def af_noid_database_minter_initialize
-      generate 'active_fedora:noid:install'
     end
   end
 end

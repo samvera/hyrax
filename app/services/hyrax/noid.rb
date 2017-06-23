@@ -4,6 +4,11 @@ module Hyrax
   module Noid
     extend ActiveSupport::Concern
 
+    included do
+      Deprecation.warn(self, "Hyrax::Noid is deprecated and will be removed in Hyrax 3.0. " \
+        "Instead add 'include ActiveFedora::Noid::Model' to the classes that you want to use noids on.")
+    end
+
     ## This overrides the default behavior, which is to ask Fedora for an id
     # @see ActiveFedora::Persistence.assign_id
     def assign_id

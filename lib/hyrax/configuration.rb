@@ -103,22 +103,30 @@ module Hyrax
     deprecation_deprecate :max_days_between_audits= => "use max_days_between_fixity_checks= instead"
 
     attr_writer :enable_noids
+    deprecation_deprecate :enable_noids= => "Hyrax's noid integration will be removed in 3.0. Instead " \
+      "add 'include ActiveFedora::Noid::Model' to those models that you want to use NOIDs"
     def enable_noids?
       return @enable_noids unless @enable_noids.nil?
-      @enable_noids = true
+      @enable_noids = false
     end
 
     attr_writer :noid_template
+    deprecation_deprecate :noid_template= => "Hyrax's noid integration will be removed in 3.0. Instead " \
+      "set 'ActiveFedora::Noid.config.template=' directly"
     def noid_template
       @noid_template ||= '.reeddeeddk'
     end
 
     attr_writer :noid_minter_class
+    deprecation_deprecate :noid_minter_class= => "Hyrax's noid integration will be removed in 3.0. Instead " \
+      "set 'ActiveFedora::Noid.config.minter_class=' directly"
     def noid_minter_class
       @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
     end
 
     attr_writer :minter_statefile
+    deprecation_deprecate :minter_statefile= => "Hyrax's noid integration will be removed in 3.0. Instead " \
+      "set 'ActiveFedora::Noid.config.statefile=' directly"
     def minter_statefile
       @minter_statefile ||= '/tmp/minter-state'
     end

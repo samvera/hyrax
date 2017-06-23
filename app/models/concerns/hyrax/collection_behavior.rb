@@ -6,7 +6,7 @@ module Hyrax
     include Hydra::AccessControls::Permissions
     include Hyrax::CoreMetadata
     include Hydra::Works::CollectionBehavior
-    include Hyrax::Noid
+    include ActiveFedora::Noid::Model if Hyrax.config.enable_noids?
     include Hyrax::HumanReadableType
     include Hyrax::HasRepresentative
     include Hyrax::Permissions
