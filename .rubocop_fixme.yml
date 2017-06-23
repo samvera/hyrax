@@ -50,11 +50,6 @@ Style/FormatStringToken:
   Exclude:
     - 'config/routes.rb'
 
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/test_app_templates/lib/generators/**/*'
-    - 'lib/generators/**/*'
-
 Style/PredicateName:
   Exclude:
     - 'app/helpers/hyrax/collections_helper.rb'
