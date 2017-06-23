@@ -1,1 +1,5 @@
-<span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-search"></span>
+<% if presenter.thumbnail_path %>
+  <%= image_tag presenter.thumbnail_path %>
+<% else %>
+  <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-search"></span>
+<% end %>

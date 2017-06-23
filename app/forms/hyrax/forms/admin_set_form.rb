@@ -4,11 +4,6 @@ module Hyrax
       self.model_class = AdminSet
       self.terms = [:title, :description, :thumbnail_id]
 
-      # @param [AdminSet] model
-      def initialize(model)
-        super(model)
-      end
-
       # Cast any array values on the model to scalars.
       def [](key)
         return super if key == :thumbnail_id
@@ -42,6 +37,12 @@ module Hyrax
           end
         end
       end
+
+      private
+
+        def member_work_ids
+          model.member_ids
+        end
     end
   end
 end

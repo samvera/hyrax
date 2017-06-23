@@ -181,7 +181,7 @@ RSpec.describe Hyrax::CollectionsController do
     end
 
     context "when update fails" do
-      let(:collection) { Collection.new }
+      let(:collection) { Collection.new(id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: []) }
 
@@ -336,6 +336,15 @@ RSpec.describe Hyrax::CollectionsController do
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end
+    end
+  end
+
+  describe "#files" do
+    before { sign_in user }
+
+    it 'shows a list of member files' do
+      get :files, params: { id: collection }, format: :json
+      expect(response).to be_success
     end
   end
 end

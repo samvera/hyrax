@@ -45,9 +45,8 @@ module Hyrax
     end
 
     # Renders a JSON response with a list of files in this admin set.
-    # This is used by the edit form
+    # This is used by the edit form to populate the thumbnail_id dropdown
     def files
-      form = form_class.new(@admin_set)
       result = form.select_files.map do |label, id|
         { id: id, text: label }
       end
@@ -107,7 +106,12 @@ module Hyrax
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
-        @form = form_class.new(@admin_set)
+        form
+      end
+
+      # initialize the form object
+      def form
+        @form ||= form_class.new(@admin_set, current_ability, repository)
       end
 
       # Overrides the parent implementation so that the returned search builder

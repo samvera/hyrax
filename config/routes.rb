@@ -50,6 +50,7 @@ Hyrax::Engine.routes.draw do
     member do
       get 'page/:page', action: :index
       get 'facet/:id', action: :facet, as: :dashboard_facet
+      get :files
     end
     collection do
       put '', action: :update

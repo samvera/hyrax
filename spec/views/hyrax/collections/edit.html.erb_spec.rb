@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/collections/edit.html.erb', type: :view do
   let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
-  let(:form) { Hyrax::Forms::CollectionForm.new(collection) }
+  let(:form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
   let(:solr_response) { double(response: { 'numFound' => 0 }) }
 
   before do
