@@ -106,6 +106,8 @@ Rails/ApplicationJob:
 Rails/ApplicationRecord:
   Enabled: false
 
+# We define custom methods like `find_by_user_key`,
+# `find_by_created_date`, etc
 Rails/DynamicFindBy:
   Enabled: false
 
