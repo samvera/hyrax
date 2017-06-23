@@ -4,6 +4,8 @@ module Hyrax
   class UploadedFile < ActiveRecord::Base
     self.table_name = 'uploaded_files'
     mount_uploader :file, UploadedFileUploader
+    alias uploader file
+    has_many :job_io_wrappers, inverse_of: 'uploaded_file', class_name: 'JobIoWrapper'
     belongs_to :user, class_name: '::User'
 
     before_destroy :remove_file!

@@ -56,6 +56,11 @@ module Hyrax
         true
       end
 
+      def ==(other)
+        return false unless other.is_a?(self.class)
+        file_set == other.file_set && relation == other.relation && user == other.user
+      end
+
       private
 
         # @return [Hydra::PCDM::File] the file referenced by relation
