@@ -2,7 +2,7 @@ module Hyrax
   module My
     class CollectionsController < MyController
       def search_builder_class
-        Hyrax::MyCollectionsSearchBuilder
+        Hyrax::My::CollectionsSearchBuilder
       end
 
       def index

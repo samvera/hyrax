@@ -1,10 +1,10 @@
 module Qa::Authorities
   class FindWorks < Qa::Authorities::Base
     class_attribute :search_builder_class
-    self.search_builder_class = Hyrax::FindWorksSearchBuilder
+    self.search_builder_class = Hyrax::My::FindWorksSearchBuilder
 
     def search(_q, controller)
-      # The FindWorksSearchBuilder expects a current_user
+      # The My::FindWorksSearchBuilder expects a current_user
       return [] unless controller.current_user
       repo = CatalogController.new.repository
       builder = search_builder(controller)
