@@ -4,7 +4,7 @@ RSpec.describe JobIoWrapper, type: :model do
   let(:file_set_id) { 'bn999672v' }
   let(:file_set) { instance_double(FileSet, id: file_set_id, uri: 'http://127.0.0.1/rest/fake/bn/99/96/72/bn999672v') }
   let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: File.open(path)) }
-  let(:args) {  { file_set_id: file_set_id, user: user, path: path } }
+  let(:args) { { file_set_id: file_set_id, user: user, path: path } }
   subject { described_class.new(args) }
 
   it 'requires attributes' do
@@ -68,7 +68,7 @@ RSpec.describe JobIoWrapper, type: :model do
   describe '#file_actor' do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
     it 'produces an appropriate FileActor' do
-      allow(subject).to receive(:file_set).and_return(file_set)
+      allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
       expect(subject.file_actor).to eq(file_actor)
     end
   end
