@@ -1,5 +1,11 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAccessControlsEnforcement
+  extend ActiveSupport::Concern
+  included do
+    Deprecation.warn(self, 'Hydra::PolicyAwareAccessControlsEnforcement is deprecated ' \
+      'and will be removed in version 11. Use ' \
+      'Hydra::AccessControls::PolicyAwareSearchBuilder instead.')
+  end
 
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access.
   # Appends the result of policy_clauses into the :fq
