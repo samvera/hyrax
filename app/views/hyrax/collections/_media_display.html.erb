@@ -1,5 +1,8 @@
 <% if presenter.thumbnail_path %>
-  <%= image_tag presenter.thumbnail_path %>
+  <%= image_tag presenter.thumbnail_path,
+                class: "representative-media",
+                alt: "",
+                role: "presentation" %>
 <% else %>
   <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-search"></span>
 <% end %>
