@@ -27,7 +27,7 @@ module Hyrax
     end
 
     def active_elements
-      authority.all.select { |e| active?(e.fetch('id')) }
+      authority.all.select { |e| e.fetch('active') }
     end
   end
 end
