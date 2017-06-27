@@ -5,6 +5,7 @@ class Hyrax::HomepageController < ApplicationController
   include Blacklight::AccessControls::Catalog
 
   # The search builder for finding recent documents
+  # Override of Blacklight::RequestBuilders
   def search_builder_class
     Hyrax::HomepageSearchBuilder
   end

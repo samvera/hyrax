@@ -4,6 +4,8 @@ module Hyrax
     class WorksController < Hyrax::My::WorksController
       before_action :ensure_admin!
 
+      # Search builder for a list of works
+      # Override of Blacklight::RequestBuilders
       def search_builder_class
         Hyrax::WorksSearchBuilder
       end
