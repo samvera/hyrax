@@ -72,6 +72,8 @@ fr:
           header: Modifier l'ensemble administratif
         form:
           cancel: Annuler
+          permission_destroy_errors:
+            admin_group: Le groupe des administrateurs du référentiel ne peut pas être supprimé
           permission_update_errors:
             error: Option de mise à jour non valide pour le modèle d'autorisation.
             no_date: Une date est requise pour l'option de publication sélectionnée.
@@ -90,6 +92,7 @@ fr:
             visibility: Libération et visibilité
             workflow: Workflow
         form_participant_table:
+          admin_users: Administrateurs de référentiel
           allow_all_registered: Permettre à tous les utilisateurs enregistrés de déposer
           depositors:
             action: action
@@ -340,6 +343,11 @@ fr:
         title: Ajouter à la collection
         update: Mise à jour de la collection
     collections:
+      form:
+        tabs:
+          description: La description
+          sharing: Partage
+          visibility: Visibilité
       search_form:
         label: Rechercher Collection %{title}
         placeholder: Rechercher Collection
@@ -655,7 +663,7 @@ fr:
       open:
         class: Label-succès
         note_html: Toutes les personnes. Consultez <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> pour les politiques de copyright des éditeurs spécifiques si vous prévoyez de breveter et / ou de publier votre %{type} dans un journal.
-        text: Accès ouvert
+        text: Public
         warning_html: '<p> <strong>Notez</strong> que faire apparaître une chose visible dans le monde (c.-à-d. Marquer cela comme %{label}) peut être considérée comme une publication qui pourrait avoir une incidence sur votre capacité à: </p><ul><li> Prenez connaissance de votre travail </li><li> Publiez votre travail dans un journal </li></ul><p> Consultez <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> pour plus d''informations sur les politiques de copyright des éditeurs. </p>'
       open_title_attr: Changez la visibilité de cette ressource
       private:

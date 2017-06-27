@@ -72,6 +72,8 @@ de:
           header: Verwaltungssatz bearbeiten
         form:
           cancel: Stornieren
+          permission_destroy_errors:
+            admin_group: Die Gruppe der Repository-Administratoren kann nicht entfernt werden
           permission_update_errors:
             error: Ungültige Update-Option für Berechtigungsvorlage.
             no_date: Für die gewählte Release-Option ist ein Datum erforderlich.
@@ -90,6 +92,7 @@ de:
             visibility: Freigabe und Sichtbarkeit
             workflow: Arbeitsablauf
         form_participant_table:
+          admin_users: Repository-Administratoren
           allow_all_registered: Erlauben Sie allen registrierten Benutzern, sich einzuladen
           depositors:
             action: Aktion
@@ -340,6 +343,11 @@ de:
         title: Zur Sammlung hinzufügen
         update: Update-Sammlung
     collections:
+      form:
+        tabs:
+          description: Beschreibung
+          sharing: Teilen
+          visibility: Sichtweite
       search_form:
         label: Suche Sammlung %{title}
         placeholder: Suche Sammlung
@@ -655,7 +663,7 @@ de:
       open:
         class: Etiketten-Erfolg
         note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.
-        text: Offener Zugang
+        text: Öffentlichkeit
         warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       private:
