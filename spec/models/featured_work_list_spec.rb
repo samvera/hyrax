@@ -14,20 +14,39 @@ RSpec.describe FeaturedWorkList, type: :model do
       expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
       expect(presenter.id).to eq work1.id
     end
+
+    context 'when one of the files is deleted' do
+      before do
+        work1.destroy
+      end
+
+      it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
+        expect(subject.featured_works.size).to eq 1
+        presenter = subject.featured_works.first.presenter
+        expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
+        expect(presenter.id).to eq work2.id
+      end
+    end
   end
 
-  describe 'file deleted' do
-    before do
-      create(:featured_work, work_id: work1.id)
-      create(:featured_work, work_id: work2.id)
-      work1.destroy
-    end
+  describe '#featured_works_attributes=' do
+    let(:featured_work) { create(:featured_work, work_id: work1.id) }
 
-    it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
-      expect(subject.featured_works.size).to eq 1
-      presenter = subject.featured_works.first.presenter
-      expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
-      expect(presenter.id).to eq work2.id
+    let(:attributes) do
+      ActionController::Parameters.new(
+        "0" => {
+          "id" => featured_work.id,
+          "order" => "5"
+        }
+      ).permit!
+    end
+    let(:instance) { described_class.new }
+
+    subject { instance.featured_works_attributes = attributes }
+
+    it "sets order" do
+      subject
+      expect(featured_work.order).to eq 5
     end
   end
 
