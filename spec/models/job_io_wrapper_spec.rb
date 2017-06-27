@@ -3,9 +3,8 @@ RSpec.describe JobIoWrapper, type: :model do
   let(:path) { fixture_path + '/world.png' }
   let(:file_set_id) { 'bn999672v' }
   let(:file_set) { instance_double(FileSet, id: file_set_id, uri: 'http://127.0.0.1/rest/fake/bn/99/96/72/bn999672v') }
-  let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: File.open(path)) }
   let(:args) { { file_set_id: file_set_id, user: user, path: path } }
-  subject { described_class.new(args) }
+  subject(:wrapper) { described_class.new(args) }
 
   it 'requires attributes' do
     expect { described_class.create! }.to raise_error ActiveRecord::RecordInvalid
@@ -14,13 +13,59 @@ RSpec.describe JobIoWrapper, type: :model do
     expect { subject.save! }.not_to raise_error
   end
 
-  context 'with uploaded_file' do
-    let(:args) { { file_set_id: file_set_id, user: user, uploaded_file: uploaded_file } }
-    it 'accepted in leiu of path' do
-      expect { subject.save! }.not_to raise_error
+  describe 'uploaded_file' do
+    let(:other_path) { fixture_path + '/image.jpg' }
+    let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: File.new(other_path)) }
+
+    # context 'path only' is the rest of this file
+
+    context 'in leiu of path' do
+      let(:args) { { file_set_id: file_set_id, user: user, uploaded_file: uploaded_file } }
+
+      it 'validates and persists' do
+        expect { subject.save! }.not_to raise_error
+      end
+      it '#read routes to the uploaded_file' do
+        expect(subject).to receive(:file_from_uploaded_file!).and_call_original
+        subject.read
+      end
+      it '#mime_type and #original_name draw from the uploaded_file' do
+        expect(subject.mime_type).to eq('image/jpeg')
+        expect(subject.original_name).to eq('image.jpg')
+      end
     end
-    it 'accepted along with path' do
-      expect { described_class.create!(args.merge(path: path)) }.not_to raise_error
+
+    context 'along with path (on shared filesystem)' do
+      let(:args) { { file_set_id: file_set_id, user: user, uploaded_file: uploaded_file, path: path } }
+
+      it 'validates and persists' do
+        expect { subject.save! }.not_to raise_error
+      end
+      it '#read routes to the path' do
+        expect(subject).not_to receive(:file_from_uploaded_file!)
+        subject.read
+      end
+      it '#mime_type and #original_name draw from the uploaded_file' do
+        expect(subject.mime_type).to eq('image/jpeg')
+        expect(subject.original_name).to eq('image.jpg')
+      end
+    end
+
+    context 'along with path (independent worker filesystems)' do
+      let(:deadpath) { fixture_path + '/some_file_that_does_not_exist.wav' }
+      let(:args) { { file_set_id: file_set_id, user: user, uploaded_file: uploaded_file, path: deadpath } }
+
+      it 'validates and persists' do
+        expect { subject.save! }.not_to raise_error
+      end
+      it '#read routes to the uploaded_file' do
+        expect(subject).to receive(:file_from_uploaded_file!).and_call_original
+        subject.read
+      end
+      it '#mime_type and #original_name draw from the uploaded_file' do
+        expect(subject.mime_type).to eq('image/jpeg')
+        expect(subject.original_name).to eq('image.jpg')
+      end
     end
   end
 
