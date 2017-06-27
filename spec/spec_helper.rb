@@ -39,15 +39,10 @@ require 'capybara/rails'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
-require 'support/controller_level_helpers'
-require 'support/features'
-require 'support/factory_helpers'
-require 'support/rake'
-require 'support/matchers/api_responses'
-require 'support/matchers/response_matchers'
-require 'support/input_support'
-require 'support/speedup'
-require 'support/logging_formatter'
+
+# Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
+Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
+
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
