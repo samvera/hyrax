@@ -13,7 +13,7 @@ RSpec.feature 'embargo' do
       choose 'Embargo'
       fill_in 'generic_work_embargo_release_date', with: future_date
       select 'Private', from: 'Restricted to'
-      select 'Open Access', from: 'then open it up to'
+      select 'Public', from: 'then open it up to'
       click_button 'Save'
 
       # chosen embargo date is on the show page

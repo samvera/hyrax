@@ -19,7 +19,7 @@ RSpec.describe Hyrax::PermissionBadge do
 
       context "when open-access" do
         let(:attributes) { { read_access_group_ssim: ['public'] } }
-        it { is_expected.to eq "<span class=\"label label-success\">Open Access</span>" }
+        it { is_expected.to eq "<span class=\"label label-success\">Public</span>" }
       end
 
       context "when registered" do
@@ -50,7 +50,7 @@ RSpec.describe Hyrax::PermissionBadge do
 
       context "when open-access" do
         let(:value) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
-        it { is_expected.to eq "<span class=\"label label-success\">Open Access</span>" }
+        it { is_expected.to eq "<span class=\"label label-success\">Public</span>" }
       end
 
       context "when registered" do

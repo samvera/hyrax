@@ -12,7 +12,7 @@ RSpec.feature 'leases' do
       fill_in 'Title', with: 'Lease test'
       choose 'Lease'
       fill_in 'generic_work_lease_expiration_date', with: future_date
-      select 'Open Access', from: 'Is available for'
+      select 'Public', from: 'Is available for'
       select 'Private', from: 'then restrict it to'
       click_button 'Save'
 
