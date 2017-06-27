@@ -3,7 +3,7 @@ RSpec.describe Hyrax::AbilityHelper do
     subject { helper.visibility_badge visibility }
     {
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC =>
-        "<span class=\"label label-success\">Open Access</span>",
+        "<span class=\"label label-success\">Public</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED =>
         "<span class=\"label label-info\">%s</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE =>
@@ -20,7 +20,7 @@ RSpec.describe Hyrax::AbilityHelper do
     end
   end
   describe "#visibility_options" do
-    let(:public_opt) { ['Open Access', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
+    let(:public_opt) { ['Public', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
     let(:authenticated_opt) { [t('hyrax.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
     let(:private_opt) { ['Private', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE] }
     subject { helper.visibility_options(option) }
