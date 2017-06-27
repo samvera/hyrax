@@ -72,6 +72,8 @@ pt-BR:
           header: Editar Conjunto Administrativo
         form:
           cancel: Cancelar
+          permission_destroy_errors:
+            admin_group: O grupo de administradores do repositório não pode ser removido
           permission_update_errors:
             error: Opção de atualização inválida para o modelo de permissão.
             no_date: É necessária uma data para a opção de lançamento selecionada.
@@ -90,6 +92,7 @@ pt-BR:
             visibility: Liberação e Visibilidade
             workflow: Fluxo de trabalho
         form_participant_table:
+          admin_users: Administradores do Repositório
           allow_all_registered: Permitir que todos os usuários cadastrados depositem
           depositors:
             action: Açao
@@ -340,6 +343,11 @@ pt-BR:
         title: Adicionar a coleção
         update: Coleção de Atualizações
     collections:
+      form:
+        tabs:
+          description: Descrição
+          sharing: Compartilhando
+          visibility: Visibilidade
       search_form:
         label: Pesquisar Collection %{title}
         placeholder: Pesquisar Coleção
@@ -655,7 +663,7 @@ pt-BR:
       open:
         class: Sucesso de etiqueta
         note_html: Todos. Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para políticas de direitos autorais de editoras específicas se você planeja patinar e / ou publicar seu %{type} em um diário.
-        text: Acesso livre
+        text: Público
         warning_html: '<p> <strong>Por favor</strong> , <strong>note que</strong> fazer algo visível para o mundo (ou seja, marcar isso como %{label}) pode ser visto como uma publicação que pode afetar sua capacidade de: </p><ul><li> Patente seu trabalho </li><li> Publique seu trabalho em um diário </li></ul><p> Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para obter mais informações sobre políticas de direitos autorais do editor. </p>'
       open_title_attr: Mude a visibilidade desse recurso
       private:

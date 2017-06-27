@@ -72,6 +72,8 @@ it:
           header: Modifica impostazione amministrativa
         form:
           cancel: Annulla
+          permission_destroy_errors:
+            admin_group: Impossibile rimuovere il gruppo amministratori di repository
           permission_update_errors:
             error: Opzione di aggiornamento non valida per il modello di autorizzazione.
             no_date: È necessaria una data per l'opzione di rilascio selezionata.
@@ -90,6 +92,7 @@ it:
             visibility: Rilascio e visibilità
             workflow: Flusso di lavoro
         form_participant_table:
+          admin_users: Amministratori Repository
           allow_all_registered: Consenti a tutti gli utenti registrati di depositare
           depositors:
             action: Azione
@@ -340,6 +343,11 @@ it:
         title: Aggiungere alla collezione
         update: Aggiorna Collezione
     collections:
+      form:
+        tabs:
+          description: Descrizione
+          sharing: compartecipazione
+          visibility: Visibilità
       search_form:
         label: Cerca la raccolta %{title}
         placeholder: Cerca raccolta
@@ -655,7 +663,7 @@ it:
       open:
         class: etichetta-successo
         note_html: Tutti. <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per <a href="http://www.sherpa.ac.uk/romeo/">specifiche politiche</a> di copyright dei publisher se intendi brevettare e / o pubblicare il tuo %{type} in un diario.
-        text: Accesso libero
+        text: Pubblico
         warning_html: '<p> <strong>Si prega di notare</strong> che facendo qualcosa di visibile al mondo (vale a dire marcatura come %{label}) può essere considerata come pubblicazione che potrebbe influenzare la tua capacità di: </p><ul><li> Brevetti il ​​tuo lavoro </li><li> Pubblica il tuo lavoro in un diario </li></ul><p> <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per ulteriori informazioni sulle norme del copyright dei publisher. </p>'
       open_title_attr: Modificare la visibilità di questa risorsa
       private:
