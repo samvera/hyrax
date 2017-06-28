@@ -282,9 +282,6 @@ de:
         header: Beziehungen
       relationships_parent_row:
         label: 'In %{type}:'
-      relationships_parent_row_empty:
-        empty: Es gibt keine %{type}-Beziehungen.
-        label: 'In %{type}:'
       show:
         last_modified: 'Zuletzt geändert: %{value}'
       social_media:

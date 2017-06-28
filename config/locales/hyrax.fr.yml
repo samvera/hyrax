@@ -282,9 +282,6 @@ fr:
         header: Des relations
       relationships_parent_row:
         label: 'Dans %{type}:'
-      relationships_parent_row_empty:
-        empty: Il n'y a pas de relations %{type}.
-        label: 'Dans %{type}:'
       show:
         last_modified: 'Dernière modification: %{value}'
       social_media:

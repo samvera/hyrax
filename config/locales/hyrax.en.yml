@@ -276,9 +276,6 @@ en:
         header: Relationships
       relationships_parent_row:
         label: "In %{type}:"
-      relationships_parent_row_empty:
-        empty: "There are no %{type} relationships."
-        label: "In %{type}:"
       show:
         last_modified: "Last modified: %{value}"
       social_media:

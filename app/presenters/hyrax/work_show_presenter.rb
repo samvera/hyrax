@@ -106,7 +106,7 @@ module Hyrax
       Hyrax.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
     end
 
-    # @return presenters grouped by model name, used to show the parents of this object
+    # @return [Array] presenters grouped by model name, used to show the parents of this object
     def grouped_presenters(filtered_by: nil, except: nil)
       # TODO: we probably need to retain collection_presenters (as parent_presenters)
       #       and join this with member_of_collection_presenters

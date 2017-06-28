@@ -277,9 +277,6 @@ es:
         header: Relaciones
       relationships_parent_row:
         label: 'En %{type}:'
-      relationships_parent_row_empty:
-        empty: No hay relaciones %{type}.
-        label: 'En %{type}:'
       show:
         last_modified: 'Última modificación: %{value}'
       social_media:
