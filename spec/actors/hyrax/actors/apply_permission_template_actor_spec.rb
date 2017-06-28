@@ -2,13 +2,6 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:ability) { ::Ability.new(depositor) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  subject(:middleware) do
-    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
-      middleware.use described_class
-    end
-    stack.build(terminator)
-  end
-
   let(:depositor) { create(:user) }
   let(:work) do
     build(:generic_work,
@@ -18,6 +11,13 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set, with_permission_template: true) }
   let(:permission_template) { admin_set.permission_template }
+
+  subject(:middleware) do
+    stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+      middleware.use described_class
+    end
+    stack.build(terminator)
+  end
 
   describe "create" do
     context "when admin_set_id is blank" do
@@ -30,6 +30,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
 
     context "when admin_set_id is provided" do
       let(:attributes) { { admin_set_id: admin_set.id } }
+
       before do
         create(:permission_template_access,
                :manage,

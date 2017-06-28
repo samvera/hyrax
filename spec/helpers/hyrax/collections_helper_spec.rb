@@ -22,6 +22,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       let(:coll_titles) { ['Collection 111', 'Collection 222'] }
       let(:coll1_attrs) { { id: coll_ids[0], title_tesim: [coll_titles[0]], child_object_ids_ssim: [work_doc.id] } }
       let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]], child_object_ids_ssim: [work_doc.id, 'abc123'] } }
+
       before do
         ActiveFedora::SolrService.add(coll1_attrs)
         ActiveFedora::SolrService.add(coll2_attrs)
@@ -66,7 +67,7 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
 
     describe "for a collection of another name" do
-      before(:all) do
+      before do
         class OtherCollection < ActiveFedora::Base
           include Hyrax::CollectionBehavior
           include Hydra::Works::WorkBehavior
@@ -75,7 +76,7 @@ RSpec.describe Hyrax::CollectionsHelper do
 
       let!(:collection) { OtherCollection.create!(title: ['foo']) }
 
-      after(:all) do
+      after do
         Object.send(:remove_const, :OtherCollection)
       end
 

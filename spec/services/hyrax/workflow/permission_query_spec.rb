@@ -15,13 +15,15 @@ module Hyrax
           }]
         }
       end
-      before { Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: workflow_config, permission_template: sipity_workflow.permission_template) }
+
       let(:sipity_entity) do
         Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/1',
                                workflow: sipity_workflow,
                                workflow_state: PowerConverter.convert_to_sipity_workflow_state('initial', scope: sipity_workflow))
       end
       let(:sipity_workflow) { create(:workflow, name: 'testing') }
+
+      before { Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: workflow_config, permission_template: sipity_workflow.permission_template) }
 
       def expect_actions_for(user:, entity:, actions:)
         actions = Array.wrap(actions).map { |action| PowerConverter.convert_to_sipity_action(action, scope: entity.workflow) }
@@ -58,6 +60,7 @@ module Hyrax
       describe 'permissions assigned at the workflow level' do
         let(:reviewing_group_member) { create(:user) }
         let(:reviewing_group) { Group.new('librarians') }
+
         before do
           allow(reviewing_group_member).to receive(:groups).and_return(['librarians'])
           PermissionGenerator.call(roles: 'reviewing', workflow: sipity_workflow, agents: reviewing_user)
@@ -156,15 +159,18 @@ module Hyrax
       describe '.scope_processing_agents_for', no_clean: true do
         context 'when user is not persisted' do
           subject { described_class.scope_processing_agents_for(user: ::User.new) }
+
           it { is_expected.to eq([]) }
         end
         context 'when user is non-trivial' do
           subject { described_class.scope_processing_agents_for(user: nil) }
+
           it { is_expected.to eq([]) }
         end
 
         context 'when user is persisted' do
           let(:user) { create(:user) }
+
           before do
             allow(user).to receive(:groups).and_return(['librarians'])
           end

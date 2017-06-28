@@ -16,6 +16,7 @@ RSpec.describe Hyrax::FileSetsController do
         create(:generic_work, :public, edit_users: [user.user_key])
       end
       let(:file) { fixture_file_upload('image.png', 'image/png') }
+      let(:file_path) { fixture_path + '/small_file.txt' }
 
       context 'on the happy path' do
         let(:expected_params) do
@@ -59,7 +60,6 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       subject { create(:file_set) }
-      let(:file_path) { fixture_path + '/small_file.txt' }
 
       context 'when the file has a virus' do
         before do
@@ -125,6 +125,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         let(:delete_message) { double('delete message') }
+
         before do
           work.ordered_members << file_set
           work.save!
@@ -190,6 +191,7 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "when updating the attached file" do
         let(:actor) { double }
+
         before do
           allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
         end
@@ -284,6 +286,7 @@ RSpec.describe Hyrax::FileSetsController do
             fs.apply_depositor_metadata(user)
           end
         end
+
         before do
           allow(FileSet).to receive(:find).and_return(file_set)
         end
@@ -326,6 +329,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:file_set) do
         create(:file_set, title: ['test file'], user: user)
       end
+
       context "without a referer" do
         it "shows me the file and set breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
@@ -367,6 +371,7 @@ RSpec.describe Hyrax::FileSetsController do
     context 'someone elses (public) files' do
       let(:creator) { create(:user, email: 'archivist1@example.com') }
       let(:public_file_set) { create(:file_set, user: creator, read_groups: ['public']) }
+
       before { sign_in user }
 
       describe '#edit' do
@@ -414,6 +419,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:parent) do
         create(:generic_work, :public)
       end
+
       it 'does not let the user submit' do
         get :new, params: { parent_id: parent }
         expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You need to sign in or sign up before continuing.')

@@ -11,6 +11,7 @@ RSpec.describe Hyrax::PagesController, type: :controller do
         ContentBlock.about_page = "foo bar"
         ContentBlock.for(:about)
       end
+
       it "updates the node and renders homepage layout" do
         get :show, params: { key: 'about' }
         expect(response).to render_template('layouts/homepage')

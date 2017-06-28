@@ -40,6 +40,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
     let!(:new_sipity_entity) do
       create(:sipity_entity, proxy_for_global_id: new_parent.to_global_id.to_s)
     end
+
     before do
       parent.ordered_members << curation_concern
       parent.save!
@@ -66,6 +67,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
     context "with a parent that doesn't belong to this user" do
       let(:new_user) { create(:user) }
       let(:new_parent) { create(:generic_work, user: new_user) }
+
       it "fails to update" do
         visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
         first("input#generic_work_in_works_ids", visible: false).set new_parent.id

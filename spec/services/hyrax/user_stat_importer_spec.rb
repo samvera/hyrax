@@ -286,6 +286,7 @@ RSpec.describe Hyrax::UserStatImporter do
 
     context "a user is already up to date" do
       let(:importer) { described_class.new }
+
       before do
         allow(importer).to receive(:sorted_users).and_return([gollum, frodo, bilbo])
         UserStat.create!(user_id: bilbo.id, date: dates[3], file_views: 999, file_downloads: 555)

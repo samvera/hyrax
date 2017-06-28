@@ -18,9 +18,11 @@ RSpec.describe FeaturedWork, type: :model do
 
   describe "can_create_another?" do
     subject { described_class }
+
     context "when none exist" do
       describe '#can_create_another?' do
         subject { super().can_create_another? }
+
         it { is_expected.to be true }
       end
     end
@@ -33,6 +35,7 @@ RSpec.describe FeaturedWork, type: :model do
 
       describe '#can_create_another?' do
         subject { super().can_create_another? }
+
         it { is_expected.to be false }
       end
     end
@@ -43,6 +46,7 @@ RSpec.describe FeaturedWork, type: :model do
 
     describe '#order' do
       subject { super().order }
+
       it { is_expected.to eq 5 }
     end
   end

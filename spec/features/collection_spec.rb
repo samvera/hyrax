@@ -57,6 +57,7 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'delete collection' do
     let!(:collection) { create(:public_collection, user: user) }
+
     before do
       sign_in user
       visit '/dashboard/my/collections'
@@ -78,6 +79,7 @@ RSpec.describe 'collection', type: :feature do
     end
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+
     before do
       sign_in user
       visit '/dashboard/my/collections'

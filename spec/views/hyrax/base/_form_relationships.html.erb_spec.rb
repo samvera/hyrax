@@ -6,14 +6,6 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   end
   let(:service) { instance_double Hyrax::AdminSetService }
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
-
-  before do
-    allow(form).to receive(:collections_for_select).and_return([])
-    allow(view).to receive(:action_name).and_return('new')
-    allow(Hyrax::AdminSetService).to receive(:new).with(controller).and_return(service)
-    allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).with(service).and_return(presenter)
-  end
-
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>
@@ -26,6 +18,13 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
     assign(:form, form)
     render inline: form_template
     Capybara::Node::Simple.new(rendered)
+  end
+
+  before do
+    allow(form).to receive(:collections_for_select).and_return([])
+    allow(view).to receive(:action_name).and_return('new')
+    allow(Hyrax::AdminSetService).to receive(:new).with(controller).and_return(service)
+    allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).with(service).and_return(presenter)
   end
 
   context 'with assign_admin_set turned on' do

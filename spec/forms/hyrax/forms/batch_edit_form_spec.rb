@@ -42,6 +42,7 @@ RSpec.describe Hyrax::Forms::BatchEditForm do
 
   describe "#terms" do
     subject { form.terms }
+
     it do
       is_expected.to eq [:creator,
                          :contributor,
@@ -78,6 +79,7 @@ RSpec.describe Hyrax::Forms::BatchEditForm do
 
   describe ".build_permitted_params" do
     subject { described_class.build_permitted_params }
+
     it do
       is_expected.to eq [{ creator: [] },
                          { contributor: [] },

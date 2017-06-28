@@ -4,7 +4,9 @@ RSpec.describe Hyrax::Forms::WorkflowResponsibilityForm do
   describe "#initialize" do
     let(:user) { create(:user) }
     let(:instance) { described_class.new(user_id: user.id, workflow_role_id: 7) }
+
     subject { instance.model_instance }
+
     it "creates an agent and sets the workflow_role_id" do
       expect(subject.agent).to be_kind_of Sipity::Agent
       expect(subject.workflow_role_id).to eq 7

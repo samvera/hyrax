@@ -17,6 +17,7 @@ RSpec.describe Hyrax::Statistics::SystemStats do
     context "without dates" do
       let(:mock_order) { double }
       let(:mock_limit) { double }
+
       it "defaults to latest 5 users" do
         expect(mock_order).to receive(:limit).with(5).and_return(mock_limit)
         expect(User).to receive(:order).with('created_at DESC').and_return(mock_order)
@@ -35,6 +36,7 @@ RSpec.describe Hyrax::Statistics::SystemStats do
     context "with start date and end date" do
       let(:start_date) { two_days_ago_date }
       let(:end_date) { one_day_ago_date }
+
       it "queries" do
         expect(User).to receive(:recent_users).with(two_days_ago_date, one_day_ago_date).and_return([user2])
         is_expected.to eq([user2])

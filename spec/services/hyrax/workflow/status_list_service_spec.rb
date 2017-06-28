@@ -18,11 +18,11 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     end
     let(:workflow_role) { instance_double(Sipity::Role, name: 'approving') }
     let(:workflow_roles) { [instance_double(Sipity::WorkflowRole, role: workflow_role)] }
+    let(:results) { service.each.to_a }
+
     before do
       ActiveFedora::SolrService.add([document, ability], commit: true)
     end
-
-    let(:results) { service.each.to_a }
 
     context "when user has roles" do
       before do

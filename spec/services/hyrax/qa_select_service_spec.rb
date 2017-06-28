@@ -24,14 +24,16 @@ RSpec.describe Hyrax::QaSelectService, no_clean: true do
       HashWithIndifferentAccess.new(label: 'Active No Term', id: 'active-no-term-id', active: true)
     ]
   end
-  before do
-    allow(Qa::Authorities::Local).to receive(:subauthority_for).with(authority_name).and_return(authority.new(authority_map))
-  end
   let(:authority_name) { 'respect_my' }
   let(:qa_select_service) { described_class.new(authority_name) }
 
+  before do
+    allow(Qa::Authorities::Local).to receive(:subauthority_for).with(authority_name).and_return(authority.new(authority_map))
+  end
+
   describe '#select_all_options' do
     subject { qa_select_service.select_all_options }
+
     it 'will be Array of Arrays<label, id>' do
       expect(subject).to eq([['Active Label', 'active-id'], ['Inactive Label', 'inactive-id'], ['Active No Term', 'active-no-term-id']])
     end
@@ -39,6 +41,7 @@ RSpec.describe Hyrax::QaSelectService, no_clean: true do
 
   describe '#select_active_options' do
     subject { qa_select_service.select_active_options }
+
     it 'will be Array of Arrays<label, id>' do
       expect(subject).to eq([['Active Label', 'active-id'], ['Active No Term', 'active-no-term-id']])
     end
@@ -47,6 +50,7 @@ RSpec.describe Hyrax::QaSelectService, no_clean: true do
   describe '#label' do
     context 'for item with a "term" propery' do
       subject { qa_select_service.label('active-id') }
+
       it { is_expected.to be_a(String) }
     end
     context 'for item without a "term" property' do
@@ -59,6 +63,7 @@ RSpec.describe Hyrax::QaSelectService, no_clean: true do
   describe '#active?' do
     context 'for item with an "active" property' do
       subject { qa_select_service.active?('active-id') }
+
       it { is_expected.to be_truthy }
     end
     context 'for item without an "active" property' do
@@ -67,6 +72,7 @@ RSpec.describe Hyrax::QaSelectService, no_clean: true do
           HashWithIndifferentAccess.new(term: 'term', label: 'label', id: 'with-term-no-active-state-id')
         ]
       end
+
       it 'will raise KeyError' do
         expect { qa_select_service.active?('with-term-no-active-state-id') }.to raise_error(KeyError)
       end

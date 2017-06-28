@@ -17,6 +17,7 @@ RSpec.describe VisibilityCopyJob do
 
   describe 'an embargoed work' do
     let(:work) { create(:embargoed_work_with_files) }
+    let(:file) { work.file_sets.first }
 
     before do
       expect(work.visibility).to eq 'restricted'
@@ -25,7 +26,6 @@ RSpec.describe VisibilityCopyJob do
       described_class.perform_now(work)
       work.reload
     end
-    let(:file) { work.file_sets.first }
 
     it 'copies visibility to its contained files and apply a copy of the embargo to the files' do
       expect(file).to be_under_embargo
@@ -35,6 +35,7 @@ RSpec.describe VisibilityCopyJob do
 
   describe 'an leased work' do
     let(:work) { create(:leased_work_with_files) }
+    let(:file) { work.file_sets.first }
 
     before do
       expect(work.visibility).to eq 'open'
@@ -43,7 +44,6 @@ RSpec.describe VisibilityCopyJob do
       described_class.perform_now(work)
       work.reload
     end
-    let(:file) { work.file_sets.first }
 
     it 'copies visibility to its contained files and apply a copy of the lease to the files' do
       expect(file).to be_active_lease

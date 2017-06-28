@@ -1,10 +1,10 @@
 RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
-  let(:user) { build(:user) }
-  let(:ability) { instance_double("Ability") }
   before do
     allow(controller).to receive(:current_user).and_return(user)
     assign(:presenter, presenter)
   end
+  let(:user) { build(:user) }
+  let(:ability) { instance_double("Ability") }
   let(:presenter) do
     instance_double(Hyrax::Dashboard::UserPresenter,
                     render_recent_activity: 'recent activity',

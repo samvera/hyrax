@@ -32,6 +32,7 @@ RSpec.describe DashboardHelper, type: :helper do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
+
     before do
       create_models("GenericWork", user1, user2)
     end
@@ -45,6 +46,7 @@ RSpec.describe DashboardHelper, type: :helper do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
+
     before do
       create_models("FileSet", user1, user2)
     end
@@ -58,6 +60,7 @@ RSpec.describe DashboardHelper, type: :helper do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
+
     before do
       create_models("Collection", user1, user2)
     end

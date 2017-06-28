@@ -2,10 +2,12 @@ require 'cancan/matchers'
 
 RSpec.describe 'Hyrax::Ability', type: :model do
   let(:ability) { Ability.new(user) }
+
   subject { ability }
 
   describe '.admin_group_name' do
     let(:user) { create(:user) }
+
     it 'returns the admin group name' do
       expect(subject.admin_group_name).to eq 'admin'
     end
@@ -13,14 +15,17 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "#registered_user?" do
     subject { ability.send :registered_user? }
+
     context "with a guest user" do
       let(:user) { create(:user, :guest) }
+
       it { is_expected.to be false }
     end
   end
 
   describe "#can_create_any_work?" do
     subject { ability.can_create_any_work? }
+
     let(:user) { create(:user) }
 
     context "when user doesn't have deposit into any admin set" do
@@ -87,6 +92,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "a user with no roles" do
     let(:user) { nil }
+
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
@@ -97,6 +103,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "a registered user" do
     let(:user) { create(:user) }
+
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
     it { is_expected.not_to be_able_to(:read, Hyrax::Statistics) }
@@ -107,6 +114,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
   describe "a user in the admin group" do
     let(:user) { create(:user) }
+
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
@@ -134,6 +142,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
     describe 'as admin' do
       let(:user) { create(:user, groups: ['admin']) }
+
       it '#admin? is true' do
         expect(ability).to be_admin
       end
@@ -142,6 +151,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
 
     describe 'via AdminSet-specific edit_users' do
       let(:admin_set) { create(:admin_set, with_permission_template: true, edit_users: [user]) }
+
       it '#admin? is false' do
         expect(ability).not_to be_admin
       end

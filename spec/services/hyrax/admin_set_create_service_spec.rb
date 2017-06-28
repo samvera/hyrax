@@ -4,6 +4,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
   describe '.create_default_admin_set', :clean_repo do
     let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
     let(:responsibilities) { Sipity::WorkflowResponsibility.where(workflow_role: admin_set.active_workflow.workflow_roles) }
+
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
     it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
       described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)

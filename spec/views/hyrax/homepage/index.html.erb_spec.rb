@@ -18,14 +18,17 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
 
     context "when not signed in" do
       let(:signed_in) { false }
+
       context "when the button always displays" do
         let(:display_share_button) { true }
+
         it "displays" do
           expect(rendered).to have_content t("hyrax.share_button")
         end
       end
       context "when the button displays for users with rights" do
         let(:display_share_button) { false }
+
         it "does not display" do
           expect(rendered).not_to have_content t("hyrax.share_button")
         end

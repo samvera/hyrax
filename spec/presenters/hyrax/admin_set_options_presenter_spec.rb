@@ -4,6 +4,7 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
 
   describe "#select_options" do
     subject { presenter.select_options }
+
     before do
       allow(service).to receive(:search_results)
         .with(:deposit)
@@ -13,12 +14,13 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
     context "with permission_template visibility" do
       let(:solr_doc1) { instance_double(SolrDocument, id: '123', to_s: 'Public Set') }
       let(:solr_doc2) { instance_double(SolrDocument, id: '345', to_s: 'Private Set') }
+      let(:results) { [solr_doc1, solr_doc2] }
+
       before do
         allow(presenter).to receive(:workflow) { nil }
         create(:permission_template, admin_set_id: '123', visibility: 'open')
         create(:permission_template, admin_set_id: '345', visibility: 'restricted')
       end
-      let(:results) { [solr_doc1, solr_doc2] }
 
       it do
         is_expected.to eq [['Public Set', '123', { 'data-sharing' => false, 'data-visibility' => 'open' }],

@@ -27,12 +27,14 @@ RSpec.describe Hyrax::SingleUseLinkPresenter do
 
   context "with a download link" do
     let(:link)        { create(:download_link) }
+
     its(:link_type)   { is_expected.to eq("Download") }
     its(:url_helper)  { is_expected.to eq("download_single_use_link_url") }
   end
 
   context "with a show link" do
     let(:link)        { create(:show_link) }
+
     its(:link_type)   { is_expected.to eq("Show") }
     its(:url_helper)  { is_expected.to eq("show_single_use_link_url") }
   end

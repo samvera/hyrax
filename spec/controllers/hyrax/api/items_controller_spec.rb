@@ -1,19 +1,18 @@
 RSpec.describe Hyrax::API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Hyrax::Arkivo::Actor }
-
-  before do
-    # Mock Arkivo Actor
-    allow(controller).to receive(:actor).and_return(arkivo_actor)
-    # Don't test characterization on these items; it breaks TravisCI and it's slow
-    allow(CharacterizeJob).to receive(:perform_later)
-  end
-
   let!(:user) { create(:user) }
   let!(:default_work) do
     GenericWork.create(title: ['Foo Bar']) do |gf|
       gf.apply_depositor_metadata(user)
       gf.arkivo_checksum = '6872d21557992f6ad1d07375f19fbfaf'
     end
+  end
+
+  before do
+    # Mock Arkivo Actor
+    allow(controller).to receive(:actor).and_return(arkivo_actor)
+    # Don't test characterization on these items; it breaks TravisCI and it's slow
+    allow(CharacterizeJob).to receive(:perform_later)
   end
 
   subject { response }
@@ -69,6 +68,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with a resource not found in the repository' do
       let(:relation) { double }
+
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
@@ -206,6 +206,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
       let(:non_arkivo_gw) { create :generic_work, id: 'abc123xyz', arkivo_checksum: nil }
       let(:relation) { double }
+
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
@@ -228,6 +229,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with a valid item, matching token, missing resource' do
       let(:relation) { double }
+
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(gw.id) do
@@ -279,6 +281,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with an invalid item' do
       let(:invalid_item) { { foo: 'bar' }.to_json }
+
       before do
         request.env['RAW_POST_DATA'] = invalid_item
         put :update, params: { id: gw.id, format: :json }
@@ -347,6 +350,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with a resource not deposited via Arkivo' do
       let(:non_arkivo_gw) { create :generic_work, id: 'xyz789abc', arkivo_checksum: nil }
+
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
@@ -366,6 +370,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with a resource not found in the repository' do
       let(:not_found_id) { '409' }
+
       before do
         # Mock ActiveFedora
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)

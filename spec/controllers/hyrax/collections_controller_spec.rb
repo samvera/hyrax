@@ -83,6 +83,7 @@ RSpec.describe Hyrax::CollectionsController do
 
     context "when create fails" do
       let(:collection) { Collection.new }
+
       before do
         allow(controller).to receive(:authorize!)
         allow(Collection).to receive(:new).and_return(collection)
@@ -138,6 +139,7 @@ RSpec.describe Hyrax::CollectionsController do
           col.apply_depositor_metadata(user.user_key)
         end
       end
+
       before do
         [asset1, asset2, asset3].each do |asset|
           asset.member_of_collections << collection

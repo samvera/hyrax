@@ -11,6 +11,7 @@ module Hyrax
               workflow_action: 'an_action', config: recipients.merge(name: 'the_weasel', notification_type: 'email')
             )
           end
+
           it 'will generate the requisite entries' do
             workflow_action = Sipity::WorkflowAction.create!(workflow_id: workflow.id, name: 'an_action')
             expect do

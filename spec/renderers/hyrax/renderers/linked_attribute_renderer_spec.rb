@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Renderers::LinkedAttributeRenderer do
 
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
+
     let(:expected) { Nokogiri::HTML(tr_content) }
 
     let(:tr_content) do
@@ -13,6 +14,7 @@ RSpec.describe Hyrax::Renderers::LinkedAttributeRenderer do
        "<li class=\"attribute name\"><a href=\"/catalog?q=Jessica&amp;search_field=name\">Jessica</a></li>\n" \
        "</ul></td></tr>"
     end
+
     it { expect(renderer).not_to be_microdata(field) }
     it { expect(subject).to be_equivalent_to(expected) }
   end

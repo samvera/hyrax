@@ -3,19 +3,23 @@ require "spec_helper"
 RSpec.describe 'PowerConverter' do
   context '#convert_to_sipity_entity' do
     subject { PowerConverter.convert_to_sipity_entity(object) }
+
     context "with a Sipity::Entity" do
       let(:object) { Sipity::Entity.new }
+
       it { is_expected.to eq object }
     end
 
     context "with a Sipity::Comment" do
       let(:object) { Sipity::Comment.new(entity: entity) }
       let(:entity) { Sipity::Entity.new }
+
       it { is_expected.to eq entity }
     end
 
     context "with a SolrDocument" do
       subject { PowerConverter.convert(object, to: :sipity_entity) }
+
       let(:object) { SolrDocument.new(id: '9999', has_model_ssim: ["GenericWork"]) }
       let(:workflow_state) { create(:workflow_state) }
       let!(:entity) do
@@ -23,6 +27,7 @@ RSpec.describe 'PowerConverter' do
                               workflow_state: workflow_state,
                               workflow: workflow_state.workflow)
       end
+
       it { is_expected.to eq entity }
     end
 

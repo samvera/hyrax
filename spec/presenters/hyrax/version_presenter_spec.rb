@@ -11,11 +11,13 @@ RSpec.describe Hyrax::VersionPresenter do
 
   describe "#label" do
     subject { presenter.label }
+
     it { is_expected.to eq 'version1' }
   end
 
   describe "#uri" do
     subject { presenter.uri }
+
     it { is_expected.to eq 'http://example.com/version1' }
   end
 
@@ -29,11 +31,13 @@ RSpec.describe Hyrax::VersionPresenter do
     end
 
     subject { presenter.created }
+
     it { is_expected.to eq "December 8th, 2014 18:03" }
   end
 
   describe "#current?" do
     subject { presenter.current? }
+
     it { is_expected.to be false }
 
     context "when current! is set" do
@@ -47,6 +51,7 @@ RSpec.describe Hyrax::VersionPresenter do
       Hyrax::VersionCommitter.create(version_id: resource_version.uri, committer_login: 'jill')
     end
     subject { presenter.committer }
+
     it { is_expected.to eq 'jill' }
   end
 end

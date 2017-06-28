@@ -3,6 +3,7 @@ RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
 
   describe "#to_json" do
     subject { instance.to_json }
+
     let(:works) do
       instance_double(Hyrax::Statistics::Works::OverTime,
                       points: [['2017-02-16', '12']])

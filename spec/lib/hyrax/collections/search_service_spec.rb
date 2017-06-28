@@ -23,6 +23,7 @@ RSpec.describe Hyrax::Collections::SearchService do
 
     context "when Solr's access control suffix is overridden" do
       let(:service) { described_class.new({}, '') }
+
       it "uses the overriden value" do
         allow(service).to receive(:solr_access_control_suffix).and_return("edit_group_customfield")
         params = service.apply_gated_search({}, {})

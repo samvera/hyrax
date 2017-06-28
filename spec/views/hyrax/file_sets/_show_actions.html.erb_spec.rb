@@ -19,6 +19,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
     Hyrax::WorkShowPresenter.new(solr_document, ability)
   end
   let(:page) { Capybara::Node::Simple.new(rendered) }
+
   describe 'citations' do
     before do
       Hyrax.config.citations = citations

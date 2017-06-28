@@ -24,6 +24,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   context 'with any user' do
     before { render }
     subject { rendered }
+
     it { is_expected.to have_content 'Foobar' }
     it { is_expected.to have_content t('hyrax.admin.sidebar.activity') }
     it { is_expected.to have_content t('hyrax.admin.sidebar.user_activity') }
@@ -36,44 +37,56 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
   context 'with a user who can read the admin dash' do
     let(:read_admin_dashboard) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
   end
 
   context 'with a user who can manage any admin set' do
     let(:manage_any_admin_set) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_link t('hyrax.admin.sidebar.admin_sets') }
   end
 
   context 'with a user who can review submissions' do
     let(:review_submissions) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_link t('hyrax.admin.sidebar.workflow_review') }
   end
 
   context 'with a user who can manage users' do
     let(:manage_user) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_link t('hyrax.admin.sidebar.users') }
   end
 
   context 'with a user who can update appearance' do
     let(:update_appearance) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.appearance') }
   end
 
   context 'with a user who can manage features' do
     let(:manage_feature) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.pages') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.content_blocks') }
@@ -82,8 +95,10 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
   context 'with a user who can manage workflow' do
     let(:manage_workflow) { true }
+
     before { render }
     subject { rendered }
+
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.workflow_roles') }
   end

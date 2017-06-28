@@ -28,6 +28,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
     describe "#new" do
       let(:work) { create(:work, user: user) }
+
       context 'when user is the depositor' do
         it "is successful" do
           sign_in user
@@ -42,6 +43,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
     describe "#create" do
       let(:work) { create(:work, user: user) }
+
       it "is successful" do
         expect do
           post :create, params: {
@@ -84,6 +86,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(user)
           end
         end
+
         it "is successful when retaining access rights" do
           put :accept, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
@@ -115,6 +118,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(another_user)
           end
         end
+
         it "does not allow me" do
           put :accept, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path
@@ -132,6 +136,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(user)
           end
         end
+
         it "is successful" do
           put :reject, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
@@ -148,6 +153,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(another_user)
           end
         end
+
         it "does not allow me" do
           put :reject, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path
@@ -165,6 +171,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(another_user)
           end
         end
+
         it "is successful" do
           delete :destroy, params: { id: another_user.proxy_deposit_requests.first }
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
@@ -180,6 +187,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             w.request_transfer_to(user)
           end
         end
+
         it "does not allow me" do
           delete :destroy, params: { id: user.proxy_deposit_requests.first }
           expect(response).to redirect_to root_path

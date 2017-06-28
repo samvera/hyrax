@@ -14,6 +14,7 @@ RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
 
   context 'with secondary terms' do
     let(:additional_fields) { true }
+
     before do
       render
     end
@@ -40,6 +41,7 @@ RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
   end
   context 'with no secondary terms' do
     let(:additional_fields) { false }
+
     before do
       render
     end

@@ -53,6 +53,7 @@ RSpec.feature 'Creating a new Work', :js, :workflow, skip: true do
 
   context 'when the user is a proxy', skip: "This was failing intermittently" do
     let(:second_user) { create(:user) }
+
     before do
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user

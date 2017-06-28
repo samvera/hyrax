@@ -2,6 +2,10 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
   let(:ability) { ::Ability.new(depositor) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:depositor) { create(:user) }
+  let(:work) { create(:work) }
+  let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id } }) }
+
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
@@ -9,12 +13,9 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     stack.build(terminator)
   end
 
-  let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
-  let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id } }) }
-
   describe "#update" do
     subject { middleware.update(env) }
+
     before do
       work.ordered_members << existing_child_work
     end
@@ -23,6 +24,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
 
     context "without useful attributes" do
       let(:attributes) { {} }
+
       it { is_expected.to be true }
     end
 
@@ -45,6 +47,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     context "when the id does not exist in the members" do
       let(:another_work) { create(:work) }
       let(:id) { another_work.id }
+
       context "and I can edit that object" do
         before do
           allow(ability).to receive(:can?).with(:edit, GenericWork).and_return(true)

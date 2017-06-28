@@ -9,17 +9,20 @@ RSpec.describe Hyrax::DerivativePath do
 
     describe '.derivative_path_for_reference' do
       subject { described_class.derivative_path_for_reference(object, destination_name) }
+
       it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
     end
 
     describe '#derivative_path' do
       context "with an object" do
         subject { described_class.new(object, destination_name).derivative_path }
+
         it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
       end
 
       context "with an id" do
         subject { described_class.new(id, destination_name).derivative_path }
+
         it { is_expected.to eq('tmp/12/3-thumbnail.jpeg') }
       end
     end
@@ -41,17 +44,20 @@ RSpec.describe Hyrax::DerivativePath do
 
     describe ".derivatives_for_reference" do
       subject { described_class.derivatives_for_reference(object) }
+
       it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
     end
 
     describe "#all_paths" do
       context "with an object" do
         subject { described_class.new(object, nil).all_paths }
+
         it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
       end
 
       context "with an id" do
         subject { described_class.new(id, nil).all_paths }
+
         it { is_expected.to eq(["tmp/12/3-thumbnail.jpeg"]) }
       end
     end

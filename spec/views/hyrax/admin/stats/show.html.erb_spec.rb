@@ -2,6 +2,7 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
   let(:presenter) do
     Hyrax::AdminStatsPresenter.new({}, 5)
   end
+
   before do
     assign(:presenter, presenter)
     allow(presenter).to receive(:top_formats).and_return([])
@@ -11,6 +12,7 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
     let(:top_5_active_users) do
       (1..5).map { |i| double(label: i.to_s, value: i) }
     end
+
     before do
       allow(presenter).to receive(:active_users).and_return(top_5_active_users)
       render
@@ -25,6 +27,7 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
     let(:top_20_active_users) do
       (1..20).map { |i| double(label: i.to_s, value: i) }
     end
+
     before do
       allow(presenter).to receive(:active_users).and_return(top_20_active_users)
       allow(presenter).to receive(:limit).and_return(20)

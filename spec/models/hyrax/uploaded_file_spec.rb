@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::UploadedFile do
   let(:file1) { File.open(fixture_path + '/world.png') }
+
   subject { described_class.create(file: file1) }
 
   it "is not in the public directory" do

@@ -63,6 +63,7 @@ RSpec.describe ChecksumAuditLog do
       let!(:fourth) { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
       let!(:fifth)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
       let!(:sixth)  { described_class.create(file_set_id: file_set_id, file_id: file_id, checked_uri: version_uri, passed: true) }
+
       before do
         described_class.prune_history(file_set_id, checked_uri: version_uri)
       end
@@ -99,6 +100,7 @@ RSpec.describe ChecksumAuditLog do
     # really confusing stuff.
     let(:verisons_uri) { f.original_file.versions.all.first.uri }
     let(:version_uri2) { f.original_file.versions.all.second.uri }
+
     before do
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.days.ago)
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 1.day.ago)

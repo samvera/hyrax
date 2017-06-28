@@ -8,6 +8,11 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     Hyrax::GenericWorkForm.new(work, ability, controller)
   end
 
+  let(:page) do
+    render
+    Capybara::Node::Simple.new(rendered)
+  end
+
   before do
     stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
     allow(work).to receive(:member_ids).and_return([1, 2])
@@ -20,13 +25,9 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(controller).to receive(:blacklight_config).and_return(Hyrax::GenericWorksController.new.blacklight_config)
   end
 
-  let(:page) do
-    render
-    Capybara::Node::Simple.new(rendered)
-  end
-
   context "for a new object" do
     let(:work) { GenericWork.new }
+
     context 'with batch_upload on' do
       before do
         allow(Flipflop).to receive(:batch_upload?).and_return(true)

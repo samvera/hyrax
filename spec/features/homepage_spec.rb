@@ -1,5 +1,6 @@
 RSpec.feature "The homepage" do
   let(:work1) { create(:work, :public, title: ['Work 1']) }
+
   before do
     create(:featured_work, work_id: work1.id)
   end
@@ -13,6 +14,7 @@ RSpec.feature "The homepage" do
 
   context "as an admin" do
     let(:user) { create(:admin) }
+
     before do
       sign_in user
       visit root_path

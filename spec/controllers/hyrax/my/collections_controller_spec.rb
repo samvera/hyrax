@@ -4,6 +4,7 @@ RSpec.describe Hyrax::My::CollectionsController, type: :controller do
       let(:user) { create(:user) }
       let(:response) { instance_double(Blacklight::Solr::Response, response: { 'numFound' => 3 }) }
       let(:doc_list) { [double(id: 123), double(id: 456)] }
+
       before do
         sign_in user
       end
@@ -23,11 +24,13 @@ RSpec.describe Hyrax::My::CollectionsController, type: :controller do
 
   describe "#search_facet_path" do
     subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+
     it { is_expected.to eq "/dashboard/my/collections/facet/keyword_sim?locale=en" }
   end
 
   describe "#search_builder_class" do
     subject { controller.search_builder_class }
+
     it { is_expected.to eq Hyrax::My::CollectionsSearchBuilder }
   end
 end

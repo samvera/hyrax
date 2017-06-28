@@ -11,6 +11,7 @@ RSpec.describe Hyrax::Configuration do
 
   describe '#default_active_workflow_name' do
     subject { described_class.new.default_active_workflow_name }
+
     it { is_expected.to eq('default') }
   end
 

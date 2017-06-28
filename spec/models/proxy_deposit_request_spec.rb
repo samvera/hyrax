@@ -3,6 +3,9 @@ RSpec.describe ProxyDepositRequest, type: :model do
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
   let(:work_id) { '123abc' }
+  let(:stubbed_work_query_service_class) { double(new: work_query_service) }
+  let(:work_query_service) { double(work: work) }
+  let(:work) { double('Work') }
 
   subject do
     described_class.new(work_id: work_id, sending_user: sender,
@@ -21,10 +24,6 @@ RSpec.describe ProxyDepositRequest, type: :model do
     described_class.work_query_service_class = @original_work_query_service_class
   end
   # rubocop:enable RSpec/InstanceVariable
-
-  let(:stubbed_work_query_service_class) { double(new: work_query_service) }
-  let(:work_query_service) { double(work: work) }
-  let(:work) { double('Work') }
 
   its(:status) { is_expected.to eq described_class::PENDING }
   it { is_expected.to be_pending }

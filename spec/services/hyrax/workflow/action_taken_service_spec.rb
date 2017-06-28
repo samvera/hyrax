@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::Workflow::ActionTakenService do
   context 'class methods' do
     subject { described_class }
+
     it { is_expected.to respond_to(:handle_action_taken) }
   end
 
@@ -22,6 +23,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
 
   describe "#call" do
     subject { instance.call }
+
     context "when the method exists" do
       around do |example|
         class FooBar

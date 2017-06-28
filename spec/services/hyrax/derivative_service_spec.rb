@@ -2,7 +2,9 @@ require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::DerivativeService do
   let(:valid_file_set) { FileSet.new }
+
   subject { described_class.new(file_set) }
+
   it_behaves_like "a Hyrax::DerivativeService"
   before do
     @cached_services = described_class.services
@@ -31,12 +33,14 @@ RSpec.describe Hyrax::DerivativeService do
           allow(f).to receive(:mime_type).and_return(FileSet.image_mime_types.first)
         end
       end
+
       it "returns it" do
         expect(described_class.for(file_set)).to be_instance_of Hyrax::FileSetDerivativesService
       end
     end
     context "when a FileSet matches no services" do
       let(:file_set) { FileSet.new }
+
       it "returns a base DerivativeService" do
         expect(described_class.for(file_set)).to be_instance_of described_class
       end

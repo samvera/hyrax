@@ -6,6 +6,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participants.html.erb', type: :view
                     to_key: template.to_key,
                     access_grants: template.access_grants)
   end
+
   before do
     @form = instance_double(Hyrax::Forms::AdminSetForm,
                             to_model: stub_model(AdminSet),

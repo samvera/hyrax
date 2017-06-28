@@ -6,6 +6,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
 
   describe "::show_presenter" do
     subject { described_class }
+
     its(:show_presenter) { is_expected.to eq(Hyrax::SingleUseLinkPresenter) }
   end
 
@@ -40,12 +41,14 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
       describe "viewing existing links" do
         before { get :index, params: { id: file } }
         subject { response }
+
         it { is_expected.to be_success }
       end
     end
 
     context "DELETE destroy" do
       let!(:link) { create(:download_link) }
+
       it "deletes the link" do
         expect { delete :destroy, params: { id: file, link_id: link } }.to change { SingleUseLink.count }.by(-1)
         expect(response).to be_success

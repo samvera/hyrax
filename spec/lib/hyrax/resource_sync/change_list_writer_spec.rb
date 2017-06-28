@@ -4,8 +4,9 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:public_collection) { create(:public_collection) }
   let(:public_work) { create(:public_generic_work) }
   let(:file_set) { create(:file_set, :public) }
-
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
+  let(:xml) { Nokogiri::XML.parse(subject) }
+
   before do
     # These private items should not show up.
     create(:private_collection)
@@ -20,7 +21,6 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   end
 
   subject { described_class.new(resource_host: 'example.com', capability_list_url: capability_list).write }
-  let(:xml) { Nokogiri::XML.parse(subject) }
 
   it "has a list of resources" do
     capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text

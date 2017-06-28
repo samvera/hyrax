@@ -36,6 +36,7 @@ RSpec.describe Hyrax::Forms::FileSetEditForm do
         "visibility_after_lease" => "restricted"
       )
     end
+
     subject { described_class.model_attributes(params) }
 
     it 'changes only the title' do

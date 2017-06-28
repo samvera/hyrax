@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::Strategies::YamlStrategy do
   subject { described_class.new(config: "test_file") }
+
   context "when given a YAML file" do
     let(:content) do
       {
@@ -8,6 +9,7 @@ RSpec.describe Hyrax::Strategies::YamlStrategy do
         }
       }
     end
+
     before do
       allow(YAML).to receive(:load_file).with("test_file").and_return(content)
       allow(File).to receive(:exist?).with("test_file").and_return(true)

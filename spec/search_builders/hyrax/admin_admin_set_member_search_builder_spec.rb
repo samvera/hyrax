@@ -32,6 +32,7 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
 
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
+
     it { is_expected.to include :in_admin_set }
     it { is_expected.not_to include :only_active_works }
   end

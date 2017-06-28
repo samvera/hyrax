@@ -1,6 +1,8 @@
 RSpec.describe "hyrax/homepage/_featured_works.html.erb", type: :view do
   let(:list) { FeaturedWorkList.new }
+
   subject { rendered }
+
   before { assign(:featured_work_list, list) }
 
   context "without featured works" do
@@ -19,6 +21,7 @@ RSpec.describe "hyrax/homepage/_featured_works.html.erb", type: :view do
     end
     let(:presenter) { Hyrax::WorkShowPresenter.new(doc, nil) }
     let(:featured_work) { FeaturedWork.new }
+
     before do
       allow(view).to receive(:can?).with(:update, FeaturedWork).and_return(false)
       allow(view).to receive(:render_thumbnail_tag).with(presenter, width: 90)

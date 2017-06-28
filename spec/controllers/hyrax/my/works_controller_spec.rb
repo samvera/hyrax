@@ -9,6 +9,7 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
     let(:doc_list) { [double(id: 123), double(id: 456)] }
     let(:my_collection) { instance_double(SolrDocument) }
     let(:collection_service) { instance_double(Hyrax::CollectionsService) }
+
     before do
       allow(Hyrax::CollectionsService).to receive(:new).and_return(collection_service)
     end
@@ -26,11 +27,13 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
 
   describe "#search_builder_class" do
     subject { controller.search_builder_class }
+
     it { is_expected.to eq Hyrax::My::WorksSearchBuilder }
   end
 
   describe "#collections_service" do
     subject { controller.send(:collections_service) }
+
     it { is_expected.to be_an_instance_of Hyrax::CollectionsService }
   end
 
@@ -43,6 +46,7 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
 
   describe "#search_facet_path" do
     subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+
     it { is_expected.to eq "/dashboard/my/works/facet/keyword_sim?locale=en" }
   end
 end

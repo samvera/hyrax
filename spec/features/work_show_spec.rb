@@ -1,5 +1,6 @@
 RSpec.feature "display a work as its owner" do
   let(:work_path) { "/concern/generic_works/#{work.id}" }
+
   before do
     create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
   end
@@ -14,6 +15,7 @@ RSpec.feature "display a work as its owner" do
              user: user)
     end
     let(:user) { create(:user) }
+
     before do
       sign_in user
       visit work_path
@@ -34,6 +36,7 @@ RSpec.feature "display a work as its owner" do
 
   context "as a user who is not logged in" do
     let(:work) { create(:public_generic_work, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
+
     before do
       visit work_path
     end

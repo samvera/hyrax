@@ -12,6 +12,7 @@ RSpec.describe Hyrax::Statistics::Users::OverTime do
 
   describe "#points" do
     subject { instance.points }
+
     it "has the counts" do
       expect(subject.size).to eq 4
       expect(subject.to_a.first.last).to eq 1

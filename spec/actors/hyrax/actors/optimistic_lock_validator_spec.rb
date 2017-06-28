@@ -3,15 +3,15 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
   let(:ability) { ::Ability.new(depositor) }
 
   let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:depositor) { create(:user) }
+  let(:work) { create(:generic_work) }
+
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
     stack.build(terminator)
   end
-
-  let(:depositor) { create(:user) }
-  let(:work) { create(:generic_work) }
 
   describe "update" do
     before do
@@ -22,6 +22,7 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
 
     context "when version is blank" do
       let(:attributes) { { version: '' } }
+
       it { is_expected.to be true }
     end
 

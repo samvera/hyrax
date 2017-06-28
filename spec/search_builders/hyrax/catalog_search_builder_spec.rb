@@ -18,6 +18,7 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
 
     context "without a user query" do
       let(:blacklight_params) { {} }
+
       it "does not modify the query" do
         subject
         expect(solr_params[:user_query]).to be_nil
@@ -30,6 +31,7 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
       # Blacklight sets up these values when we've done a fielded search.
       # Here we're ensuring they aren't wiped out
       let(:solr_params) { Blacklight::Solr::Request.new("q" => "{!qf=depositor_ssim pf=depositor_ssim}\"#{user_query}\"") }
+
       it "does not modify the query" do
         subject
         expect(solr_params[:user_query]).to be_nil
@@ -40,6 +42,7 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
 
   describe "#show_only_active_records" do
     subject { builder.show_only_active_records(solr_params) }
+
     it "includes suppressed switch" do
       subject
       expect(solr_params[:fq]).to eq ["-suppressed_bsi:true"]

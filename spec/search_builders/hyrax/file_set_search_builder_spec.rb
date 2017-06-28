@@ -6,6 +6,7 @@ RSpec.describe Hyrax::FileSetSearchBuilder do
   let(:solr_params) { { fq: [] } }
 
   subject { described_class.new(context) }
+
   describe '#filter_models' do
     before { subject.filter_models(solr_params) }
 

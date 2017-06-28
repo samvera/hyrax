@@ -14,6 +14,7 @@ RSpec.describe Hyrax::LeasesController do
     end
     context 'when I am a repository manager' do
       let(:user) { create(:user, groups: ['admin']) }
+
       it 'shows me the page' do
         get :index
         expect(response).to be_success
@@ -47,6 +48,7 @@ RSpec.describe Hyrax::LeasesController do
 
     context 'when I have permission to edit the object' do
       let(:actor) { double('lease actor') }
+
       before do
         allow(Hyrax::Actors::LeaseActor).to receive(:new).with(a_work).and_return(actor)
       end
@@ -91,6 +93,7 @@ RSpec.describe Hyrax::LeasesController do
 
       context 'with an expired lease' do
         let(:expiration_date) { Time.zone.today - 2 }
+
         it 'deactivates lease, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED

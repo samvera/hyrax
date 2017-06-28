@@ -7,17 +7,20 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
+
     it { is_expected.to eq [:creator, :keyword, :rights_statement] }
     it { is_expected.not_to include(:title) }
   end
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
+
     it { is_expected.not_to include(:title) } # title is per file, not per form
   end
 
   describe ".model_name" do
     subject { described_class.model_name }
+
     it "has a route_key" do
       expect(subject.route_key).to eq 'batch_uploads'
     end
@@ -28,6 +31,7 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
 
   describe "#to_model" do
     subject { form.to_model }
+
     it "returns itself" do
       expect(subject.to_model).to be_kind_of described_class
     end
@@ -35,6 +39,7 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
 
   describe "#terms" do
     subject { form.terms }
+
     it do
       is_expected.to eq [:creator,
                          :contributor,

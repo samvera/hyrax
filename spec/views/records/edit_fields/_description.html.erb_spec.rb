@@ -8,6 +8,7 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
       <% end %>
     )
   end
+
   before do
     assign(:form, form)
   end

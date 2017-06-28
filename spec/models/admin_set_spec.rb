@@ -4,6 +4,7 @@ RSpec.describe AdminSet, type: :model do
   let(:gf3) { create(:generic_work, user: user) }
 
   let(:user) { create(:user) }
+
   subject { described_class.new(title: ['Some title']) }
 
   describe '#active_workflow' do
@@ -126,17 +127,20 @@ RSpec.describe AdminSet, type: :model do
   describe "#default_set?", :clean_repo do
     context "with default AdminSet ID" do
       subject { described_class.new(id: described_class::DEFAULT_ID).default_set? }
+
       it { is_expected.to be_truthy }
     end
 
     context "with a non-default  ID" do
       subject { described_class.new(id: 'why-would-you-name-the-default-chupacabra?').default_set? }
+
       it { is_expected.to be_falsey }
     end
   end
 
   describe ".find_or_create_default_admin_set_id" do
     subject { described_class.find_or_create_default_admin_set_id }
+
     describe 'if it already exists' do
       before { expect(described_class).to receive(:exists?).and_return(true) }
       it 'returns the DEFAULT_ID without creating the admin set' do

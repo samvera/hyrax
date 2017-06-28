@@ -2,6 +2,7 @@ RSpec.describe Hyrax::Workflow::MethodGenerator do
   describe ".call" do
     let(:workflow_action) { create(:workflow_action) }
     let(:method_list) { ['one', 'two'] }
+
     subject { described_class.call(action: workflow_action, list: method_list) }
 
     context "when there are no existing methods" do

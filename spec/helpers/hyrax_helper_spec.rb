@@ -16,13 +16,16 @@ RSpec.describe HyraxHelper, type: :helper do
                         canceled?: true,
                         to_s: 'Test work')
       end
+
       subject { helper.show_transfer_request_title request }
+
       it { expect(subject).to eq 'Test work' }
     end
   end
 
   describe '#available_translations' do
     subject { helper.available_translations }
+
     it do
       is_expected.to eq('de' => 'Deutsch',
                         'en' => 'English',
@@ -45,6 +48,7 @@ RSpec.describe HyraxHelper, type: :helper do
     describe "#link_to_facet_list" do
       context "with values" do
         subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
+
         it "joins the values" do
           expect(helper).to receive(:search_state).exactly(2).times
           car_link   = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
@@ -57,6 +61,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
       context "without values" do
         subject { helper.link_to_facet_list([], 'vehicle_type') }
+
         it "shows the default text" do
           expect(subject).to eq "No value entered"
           expect(subject).to be_a ActiveSupport::SafeBuffer
@@ -85,8 +90,10 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe "#link_to_each_facet_field" do
     subject { helper.link_to_each_facet_field(options) }
+
     context "with helper_facet and default separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym }, value: ["Imaging > Object Photography"] } }
+
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
                              "Imaging</a> &gt; " \
@@ -96,6 +103,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
     context "with helper_facet and optional separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, separator: " : " }, value: ["Imaging : Object Photography"] } }
+
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
                              "Imaging</a> : " \
@@ -105,6 +113,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
     context "with :output_separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: ' ~ ', separator: ":" }, value: ["Imaging : Object Photography"] } }
+
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
                              "Imaging</a> ~ " \
@@ -114,6 +123,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
     context "with :no_spaces_around_separator" do
       let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: '~', separator: ":" }, value: ["Imaging : Object Photography"] } }
+
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
                              "Imaging</a>~" \
@@ -124,6 +134,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe "has_collection_search_parameters?" do
     subject { helper }
+
     context "when cq is set" do
       before { allow(helper).to receive(:params).and_return(cq: 'foo') }
       it { is_expected.to have_collection_search_parameters }
@@ -136,18 +147,23 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe "#collection_thumbnail" do
     let(:document) { SolrDocument.new(has_model_ssim: ['Collection']) }
+
     subject { helper.collection_thumbnail(document) }
+
     it { is_expected.to eq '<span class="fa fa-cubes collection-icon-search"></span>' }
   end
 
   describe "#link_to_telephone" do
     subject { helper.link_to_telephone(user) }
+
     context "when user is set" do
       let(:user) { mock_model(User, telephone: '867-5309') }
+
       it { is_expected.to eq "<a href=\"wtai://wp/mc;867-5309\">867-5309</a>" }
     end
     context "when user is not set" do
       let(:user) { nil }
+
       it { is_expected.to be_nil }
     end
   end
@@ -239,6 +255,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe '#browser_supports_directory_upload?' do
     subject { helper.browser_supports_directory_upload? }
+
     context 'with Chrome' do
       before { controller.request.env['HTTP_USER_AGENT'] = 'Chrome' }
       it { is_expected.to be true }
@@ -251,6 +268,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe '#zotero_label' do
     subject { helper }
+
     it { is_expected.to respond_to(:zotero_label) }
   end
 
@@ -259,6 +277,7 @@ RSpec.describe HyraxHelper, type: :helper do
     let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text' }
     let(:document)          { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
     let(:blacklight_config) { CatalogController.blacklight_config }
+
     before do
       allow(controller).to receive(:action_name).and_return('index')
       allow(helper).to receive(:blacklight_config).and_return(blacklight_config)
@@ -269,6 +288,7 @@ RSpec.describe HyraxHelper, type: :helper do
     end
     context "interesting String argument" do
       subject { helper.iconify_auto_link(text) }
+
       it "escapes input" do
         expect(subject).to start_with('Foo &lt;').and end_with('. &amp; More text')
       end
@@ -282,13 +302,16 @@ RSpec.describe HyraxHelper, type: :helper do
 
     context "when using a hash argument" do
       subject { helper.iconify_auto_link(arg) }
+
       describe "auto-linking in the title" do
         let(:arg) { { document: document, value: [text], config: blacklight_config.index_fields['title_tesim'], field: 'title_tesim' } }
+
         it { is_expected.to eq(linked_text) }
       end
 
       describe "auto-linking in the description" do
         let(:arg) { { document: document, value: [text], config: blacklight_config.index_fields['description_tesim'], field: 'description_tesim' } }
+
         it { is_expected.to eq(linked_text) }
       end
     end

@@ -2,6 +2,7 @@ RSpec.describe 'PowerConverter', no_clean: true do
   context 'sipity_workflow_state' do
     let(:workflow_state) { Sipity::WorkflowState.new(id: 1, name: 'hello') }
     let(:workflow) { create(:workflow) }
+
     it 'will convert a Sipity::WorkflowState' do
       expect(PowerConverter.convert(workflow_state, to: :sipity_workflow_state)).to eq(workflow_state)
     end

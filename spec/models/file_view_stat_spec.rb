@@ -42,6 +42,7 @@ RSpec.describe FileViewStat, type: :model do
         OpenStruct.new(date: date_strs[3], pageviews: 10)
       ]
     end
+
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)

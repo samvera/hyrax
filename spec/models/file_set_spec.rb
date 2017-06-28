@@ -8,6 +8,7 @@ RSpec.describe FileSet do
 
   describe 'rdf type' do
     subject { described_class.new.type }
+
     it { is_expected.to include(Hydra::PCDM::Vocab::PCDMTerms.Object, Hydra::Works::Vocab::WorksTerms.FileSet) }
   end
 
@@ -148,6 +149,7 @@ RSpec.describe FileSet do
 
   describe '#indexer' do
     subject { described_class.indexer }
+
     it { is_expected.to eq Hyrax::FileSetIndexer }
 
     describe "setting" do
@@ -160,7 +162,9 @@ RSpec.describe FileSet do
         Object.send(:remove_const, :AltFile)
       end
       let(:klass) { Class.new }
+
       subject { AltFile.new }
+
       it 'is settable' do
         AltFile.indexer = klass
         expect(subject.indexer).to eq klass
@@ -184,6 +188,7 @@ RSpec.describe FileSet do
         f.apply_depositor_metadata('mjg36')
       end
     end
+
     describe 'with a video', if: Hyrax.config.enable_ffmpeg do
       before do
         allow(file_set).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
@@ -211,7 +216,9 @@ RSpec.describe FileSet do
       let(:parent_work)   { FactoryGirl.create(:work_with_files) }
       let(:f1)            { parent_work.file_sets.first }
       let(:f2)            { parent_work.file_sets.last }
+
       subject { f1.reload.related_files }
+
       it 'returns all files contained in parent work(s) but excludes itself' do
         expect(subject).to include(f2)
         expect(subject).not_to include(f1)
@@ -313,6 +320,7 @@ RSpec.describe FileSet do
 
     describe 'overriding' do
       let(:asset) { SampleKlass.new }
+
       before do
         class SampleKlass < FileSet
           def paranoid_edit_permissions
@@ -375,6 +383,7 @@ RSpec.describe FileSet do
 
   describe 'file content validation' do
     subject { create(:file_set) }
+
     let(:file_path) { fixture_path + '/small_file.txt' }
 
     context 'when file contains a virus' do
@@ -405,6 +414,7 @@ RSpec.describe FileSet do
     let(:file) { create(:file_set) }
     let(:file_path) { fixture_path + '/small_file.txt' }
     let(:digest_string) { '88fb4e88c15682c18e8b19b8a7b6eaf8770d33cf' }
+
     before do
       allow(file).to receive(:warn) # suppress virus warnings
       of = file.build_original_file
@@ -413,11 +423,13 @@ RSpec.describe FileSet do
       file.update_index
     end
     subject { described_class.where_digest_is(digest_string).first }
+
     it { is_expected.to eq(file) }
   end
 
   describe 'to_solr' do
     let(:indexer) { double(generate_solr_document: {}) }
+
     before do
       allow(Hyrax::FileSetIndexer).to receive(:new)
         .with(subject).and_return(indexer)
@@ -454,7 +466,9 @@ RSpec.describe FileSet do
 
   describe 'work associations' do
     let(:work) { create(:work_with_one_file) }
+
     subject { work.file_sets.first.reload }
+
     it 'belongs to works' do
       expect(subject.parents).to eq [work]
     end
@@ -482,13 +496,14 @@ RSpec.describe FileSet do
   end
 
   describe 'to_solr record' do
-    let(:depositor) { 'jcoyne' }
     subject do
       described_class.new.tap do |f|
         f.apply_depositor_metadata(depositor)
         f.save
       end
     end
+
+    let(:depositor) { 'jcoyne' }
     let(:depositor_key) { Solrizer.solr_name('depositor') }
     let(:title_key) { Solrizer.solr_name('title', :stored_searchable, type: :string) }
     let(:title) { ['abc123'] }
@@ -523,7 +538,9 @@ RSpec.describe FileSet do
     describe '#related_files' do
       let(:parent) { create(:work_with_files) }
       let(:sibling) { parent.file_sets.last }
+
       subject { parent.file_sets.first.reload }
+
       it 'returns related files, but not itself' do
         expect(subject.related_files).to eq([sibling])
         expect(sibling.reload.related_files).to eq([subject])
@@ -535,6 +552,7 @@ RSpec.describe FileSet do
 
       context 'it is not the representative' do
         let(:some_other_id) { create(:file_set).id }
+
         before do
           parent.representative_id = some_other_id
           parent.save!
@@ -562,51 +580,62 @@ RSpec.describe FileSet do
 
   describe 'mime type recognition' do
     let(:mock_file) { mock_file_factory(mime_type: mime_type) }
+
     before { allow(subject).to receive(:original_file).and_return(mock_file) }
 
     context '#image?' do
       context 'when image/jp2' do
         let(:mime_type) { 'image/jp2' }
+
         it { is_expected.to be_image }
       end
       context 'when image/jpg' do
         let(:mime_type) { 'image/jpg' }
+
         it { is_expected.to be_image }
       end
       context 'when image/png' do
         let(:mime_type) { 'image/png' }
+
         it { is_expected.to be_image }
       end
       context 'when image/tiff' do
         let(:mime_type) { 'image/tiff' }
+
         it { is_expected.to be_image }
       end
     end
 
     describe '#pdf?' do
       let(:mime_type) { 'application/pdf' }
+
       it { is_expected.to be_pdf }
     end
 
     describe '#audio?' do
       context 'when x-wave' do
         let(:mime_type) { 'audio/x-wave' }
+
         it { is_expected.to be_audio }
       end
       context 'when x-wav' do
         let(:mime_type) { 'audio/x-wav' }
+
         it { is_expected.to be_audio }
       end
       context 'when mpeg' do
         let(:mime_type) { 'audio/mpeg' }
+
         it { is_expected.to be_audio }
       end
       context 'when mp3' do
         let(:mime_type) { 'audio/mp3' }
+
         it { is_expected.to be_audio }
       end
       context 'when ogg' do
         let(:mime_type) { 'audio/ogg' }
+
         it { is_expected.to be_audio }
       end
     end
@@ -614,27 +643,33 @@ RSpec.describe FileSet do
     describe '#video?' do
       context 'should be true for avi' do
         let(:mime_type) { 'video/avi' }
+
         it { is_expected.to be_video }
       end
 
       context 'should be true for webm' do
         let(:mime_type) { 'video/webm' }
+
         it { is_expected.to be_video }
       end
       context 'should be true for mp4' do
         let(:mime_type) { 'video/mp4' }
+
         it { is_expected.to be_video }
       end
       context 'should be true for mpeg' do
         let(:mime_type) { 'video/mpeg' }
+
         it { is_expected.to be_video }
       end
       context 'should be true for quicktime' do
         let(:mime_type) { 'video/quicktime' }
+
         it { is_expected.to be_video }
       end
       context 'should be true for mxf' do
         let(:mime_type) { 'application/mxf' }
+
         it { is_expected.to be_video }
       end
     end
@@ -642,7 +677,9 @@ RSpec.describe FileSet do
 
   describe "#to_global_id" do
     let(:file_set) { described_class.new(id: '123') }
+
     subject { file_set.to_global_id }
+
     it { is_expected.to be_kind_of GlobalID }
   end
 end

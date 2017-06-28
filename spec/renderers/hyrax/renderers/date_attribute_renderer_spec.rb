@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
   subject { Nokogiri::HTML(renderer.render) }
+
   let(:expected) { Nokogiri::HTML(tr_content) }
 
   describe "#attribute_to_html" do
@@ -14,6 +15,7 @@ RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
       </ul></td></tr>
       )
       end
+
       it { expect(renderer).not_to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end
@@ -29,6 +31,7 @@ RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
       </ul></td></tr>
       )
       end
+
       it { expect(renderer).not_to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end

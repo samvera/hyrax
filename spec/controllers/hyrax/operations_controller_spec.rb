@@ -4,6 +4,7 @@ RSpec.describe Hyrax::OperationsController do
   let!(:child1) { create(:operation, :failing, parent: parent, user: user) }
   let!(:child2) { create(:operation, :pending, parent: parent, user: user) }
   let(:user) { create(:user) }
+
   before do
     sign_in user
   end

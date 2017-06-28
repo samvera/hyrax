@@ -18,6 +18,9 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
   let(:ability) { ::Ability.new(depositor) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
+  let(:work) { double(:work) }
+
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
@@ -27,11 +30,9 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
     stack.build(terminator)
   end
 
-  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
-  let(:work) { double(:work) }
-
   describe "create" do
     let(:attributes) { {} }
+
     subject { middleware.create(env) }
 
     it "rolls back any database changes" do

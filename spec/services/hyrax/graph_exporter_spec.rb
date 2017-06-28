@@ -6,7 +6,9 @@ RSpec.describe Hyrax::GraphExporter do
 
   describe "fetch" do
     subject { service.fetch }
+
     let(:ttl) { subject.dump(:ntriples) }
+
     it "transforms suburis to hashcodes" do
       expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://projecthydra.org/works/models#Work>}
       expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title"}
@@ -25,6 +27,7 @@ RSpec.describe Hyrax::GraphExporter do
 
     context "when a Ldp::NotFound is raised" do
       let(:mock_service) { instance_double(Hydra::ContentNegotiation::CleanGraphRepository) }
+
       before do
         allow(service).to receive(:clean_graph_repository).and_return(mock_service)
         allow(mock_service).to receive(:find).and_raise(Ldp::NotFound)

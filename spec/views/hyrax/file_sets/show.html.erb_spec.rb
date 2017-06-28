@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
       logged_fixity_status: "Fixity checks have not yet been run on this file"
     }
   end
+
   before do
     view.lookup_context.prefixes.push 'hyrax/base'
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)

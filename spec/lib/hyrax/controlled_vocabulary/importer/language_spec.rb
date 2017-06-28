@@ -11,6 +11,7 @@ RSpec.describe Hyrax::ControlledVocabulary::Importer::Language do
 
   let(:instance) { described_class.new }
   let(:rdf_path) { Gem.loaded_specs['hyrax'].full_gem_path + "/.internal_test_app/tmp/lexvo_2013-02-09.rdf" }
+
   it "imports stuff" do
     expect(Qa::Services::RDFAuthorityParser).to receive(:import_rdf).with(
       'languages',

@@ -10,6 +10,7 @@ module Hyrax
           { role: "etd_reviewing" }
         ]
       end
+
       before do
         workflow_permissions_configuration.each do |config|
           Sipity::Role.find_or_create_by!(name: config.fetch(:role))
@@ -22,6 +23,7 @@ module Hyrax
       end
 
       subject { described_class.new(workflow: workflow, workflow_permissions_configuration: workflow_permissions_configuration) }
+
       it 'will create groups and assign permissions accordingly' do
         allow_any_instance_of(PermissionGenerator).to receive(:call)
         subject.call

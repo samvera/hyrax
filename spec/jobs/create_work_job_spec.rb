@@ -26,6 +26,7 @@ RSpec.describe CreateWorkJob do
                                     metadata,
                                     log)
     end
+
     before do
       allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
       allow(GenericWork).to receive(:new).and_return(work)

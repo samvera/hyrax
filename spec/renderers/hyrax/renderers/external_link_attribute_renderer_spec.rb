@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Renderers::ExternalLinkAttributeRenderer do
 
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
+
     let(:expected) { Nokogiri::HTML(tr_content) }
 
     let(:tr_content) do
@@ -15,6 +16,7 @@ RSpec.describe Hyrax::Renderers::ExternalLinkAttributeRenderer do
        "http://example.com</a></li>\n" \
        "</ul></td></tr>"
     end
+
     it { expect(subject).to be_equivalent_to(expected) }
   end
 end

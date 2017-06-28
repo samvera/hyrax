@@ -5,10 +5,12 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
     allow(Hyrax::Forms::PermissionTemplateForm).to receive(:new).with(permission_template).and_return(form)
   end
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }
+  let(:form) { instance_double(Hyrax::Forms::PermissionTemplateForm) }
 
   context "without admin privleges" do
     describe "update" do
       let(:permission_template) { create(:permission_template) }
+
       it "is unauthorized" do
         # This spec was not firing as expected. It was getting a nil permission template. This mock expectation is a bit
         # odd, but it needs to go rather deep into CanCan to behave accordingly.
@@ -19,8 +21,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
       end
     end
   end
-
-  let(:form) { instance_double(Hyrax::Forms::PermissionTemplateForm) }
 
   context "when signed in as an admin" do
     describe "update participants" do

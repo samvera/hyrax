@@ -5,8 +5,10 @@ RSpec.describe Hyrax::Forms::FileManagerForm do
 
   describe "#member_presenters" do
     subject { form.member_presenters }
+
     let(:factory) { instance_double(Hyrax::MemberPresenterFactory, member_presenters: result) }
     let(:result) { double }
+
     before do
       allow(Hyrax::MemberPresenterFactory).to receive(:new).with(work, ability).and_return(factory)
     end

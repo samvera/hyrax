@@ -22,6 +22,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         # Even though the user can view this admin set, the should not be able to view
         # it on the admin page.
         let(:admin_set) { create(:admin_set, :public) }
+
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
           expect(response).to be_redirect
@@ -31,6 +32,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#files" do
       let(:admin_set) { create(:admin_set) }
+
       it 'is unauthorized' do
         get :files, params: { id: admin_set }, format: :json
         expect(response).to be_unauthorized
@@ -73,6 +75,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
             true
           end
         end
+
         it 'creates file sets' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description',
@@ -84,6 +87,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       context "when it fails" do
         let(:service) { ->(**_kargs) { false } }
+
         it 'shows the new form' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description' } }
@@ -95,6 +99,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     describe "#show" do
       context "when it's successful" do
         let(:admin_set) { create(:admin_set, edit_users: [user]) }
+
         before do
           create(:work, :public, admin_set: admin_set)
         end
@@ -110,6 +115,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#edit" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
+
       it 'defines a form' do
         get :edit, params: { id: admin_set }
         expect(response).to be_success
@@ -119,6 +125,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#files" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
+
       it 'shows a list of member files' do
         get :files, params: { id: admin_set }, format: :json
         expect(response).to be_success
@@ -127,6 +134,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#update" do
       let(:admin_set) { create(:admin_set, edit_users: [user]) }
+
       it 'updates a record' do
         patch :update, params: { id: admin_set,
                                  admin_set: { title: "Improved title" } }
@@ -150,6 +158,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       context "with a non-empty admin set" do
         let(:work) { create(:generic_work, user: user) }
+
         before do
           admin_set.members << work
           admin_set.reload
@@ -166,6 +175,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       context "with the default admin set" do
         let(:admin_set) { create(:admin_set, edit_users: [user], id: AdminSet::DEFAULT_ID) }
+
         it "doesn't delete the admin set" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)

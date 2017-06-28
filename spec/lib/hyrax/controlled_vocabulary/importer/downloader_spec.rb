@@ -4,9 +4,11 @@ RSpec.describe Hyrax::ControlledVocabulary::Importer::Downloader do
   describe '.fetch' do
     let(:url) { 'http://example.org/' }
     let(:output) { double('output') }
+
     context 'when connection is successful' do
       let(:io) { double('io') }
       let(:stream) { 'foo' }
+
       before do
         allow(IO).to receive(:copy_stream).with(io, output).and_return(stream)
         allow(described_class).to receive(:open).with(url).and_yield(io)
@@ -17,6 +19,7 @@ RSpec.describe Hyrax::ControlledVocabulary::Importer::Downloader do
     end
     context 'when connection is unsuccessful' do
       let(:exception_io) { double('io', read: '') }
+
       before do
         allow(described_class).to receive(:open).with(url) do
           raise OpenURI::HTTPError.new('', exception_io)

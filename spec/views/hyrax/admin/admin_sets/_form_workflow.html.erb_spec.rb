@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
                     available_workflows: [workflow],
                     workflow_id: workflow.id)
   end
+
   before do
     @form = instance_double(Hyrax::Forms::AdminSetForm,
                             to_model: stub_model(AdminSet),

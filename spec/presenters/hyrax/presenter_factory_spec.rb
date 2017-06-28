@@ -12,6 +12,7 @@ RSpec.describe Hyrax::PresenterFactory do
 
     context "when some ids are found in solr" do
       let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
+
       it "has two results" do
         expect(subject.size).to eq 2
       end
@@ -19,6 +20,7 @@ RSpec.describe Hyrax::PresenterFactory do
 
     context "when some ids are not found in solr" do
       let(:results) { [{ "id" => "13" }] }
+
       it "has one result" do
         expect(subject.size).to eq 1
       end
@@ -35,11 +37,13 @@ RSpec.describe Hyrax::PresenterFactory do
         end
       end
       let(:results) { [{ "id" => "12" }, { "id" => "13" }] }
+
       subject do
         described_class.build_for(ids: ['12', '13'],
                                   presenter_class: presenter_class,
                                   presenter_args: ['more', 'and more'])
       end
+
       it 'passes all the arguments' do
         expect(subject.first.two).to eq 'more'
         expect(subject.first.three).to eq 'and more'

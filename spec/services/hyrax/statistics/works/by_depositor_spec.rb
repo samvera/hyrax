@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Statistics::Works::ByDepositor do
   describe "#query", :clean_repo do
     let(:user1) { create(:user) }
     let(:user2) { create(:user) }
+
     before do
       gf = build(:generic_work, user: user1, id: '1234567')
       gf.update_index

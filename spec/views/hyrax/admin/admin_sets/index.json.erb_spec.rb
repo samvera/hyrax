@@ -14,6 +14,7 @@ RSpec.describe "hyrax/admin/admin_sets/index.json.jbuilder" do
     let(:presenter_class) { Hyrax::AdminSetPresenter }
     let(:presenter) { instance_double(presenter_class, total_items: 99) }
     let(:ability) { instance_double("Ability") }
+
     before do
       allow(controller).to receive(:current_ability).and_return(ability)
       allow(controller).to receive(:presenter_class).and_return(presenter_class)

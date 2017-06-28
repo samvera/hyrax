@@ -19,16 +19,19 @@ RSpec.describe Hyrax::ResourceTypesService do
 
     context "when the id is in the i18n" do
       let(:id) { "Map or Cartographic Material" }
+
       it { is_expected.to eq 'http://schema.org/Map' }
     end
 
     context "when the id is not in the i18n" do
       let(:id) { "missing" }
+
       it { is_expected.to eq 'http://schema.org/CreativeWork' }
     end
 
     context "when the id is nil" do
       let(:id) { nil }
+
       it { is_expected.to eq 'http://schema.org/CreativeWork' }
     end
   end

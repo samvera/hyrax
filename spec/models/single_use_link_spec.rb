@@ -24,11 +24,13 @@ RSpec.describe SingleUseLink do
 
     context "when not expired" do
       let(:expires) { DateTime.current.advance(hours: 1) }
+
       it { is_expected.to be false }
     end
 
     context "when not expired" do
       let(:expires) { DateTime.current.advance(hours: -1) }
+
       it { is_expected.to be true }
     end
   end

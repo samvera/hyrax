@@ -4,6 +4,7 @@ RSpec.describe 'hyrax/collections/_show_document_list_menu.html.erb', type: :vie
     let(:user) { create :user }
     let(:ability) { instance_double("Ability") }
     let(:document) { SolrDocument.new(id: '1234') }
+
     before do
       view.extend Hyrax::TrophyHelper
       allow(document).to receive(:to_model).and_return(stub_model(GenericWork))

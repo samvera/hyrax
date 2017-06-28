@@ -22,6 +22,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
     end
     context 'without carbon-copied users' do
       let(:recipients) { { 'to' => [to_user] } }
+
       it 'sends a message to the to user(s)' do
         expect(depositor).to receive(:send_message).exactly(2).times.and_call_original
         expect { described_class.send_notification(entity: entity, user: depositor, comment: comment, recipients: recipients) }

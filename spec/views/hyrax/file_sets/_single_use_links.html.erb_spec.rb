@@ -18,6 +18,7 @@ RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
   context "with single use links" do
     let(:link)           { SingleUseLink.create(itemId: "1234", downloadKey: "sha2hashb") }
     let(:link_presenter) { Hyrax::SingleUseLinkPresenter.new(link) }
+
     before do
       controller.params = { id: "1234" }
       allow(presenter).to receive(:single_use_links).and_return([link_presenter])

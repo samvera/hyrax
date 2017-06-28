@@ -10,6 +10,7 @@ RSpec.describe Hyrax::GenericWorksController do
   context "JSON" do
     let(:resource) { create(:private_generic_work, user: user) }
     let(:resource_request) { get :show, params: { id: resource, format: :json } }
+
     subject { response }
 
     describe "unauthorized" do

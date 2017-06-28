@@ -3,6 +3,7 @@ RSpec.describe Hyrax::Admin::RepositoryObjectPresenter do
 
   describe "#as_json" do
     subject { instance.as_json }
+
     let(:stub_repo) { double(search: response) }
     let(:response) { Blacklight::Solr::Response.new(solr_data, {}) }
     let(:solr_data) do
@@ -10,6 +11,7 @@ RSpec.describe Hyrax::Admin::RepositoryObjectPresenter do
         "facet_fields" => { "suppressed_bsi" => ["false", 1, "true", 2, nil, 3] }
       } }
     end
+
     before do
       allow(instance).to receive(:repository).and_return(stub_repo)
     end

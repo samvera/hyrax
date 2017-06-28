@@ -50,12 +50,15 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
   describe "#to_s" do
     let(:work) { create(:work, title: ['Butter sculpture']) }
+
     subject { usage.to_s }
+
     it { is_expected.to eq 'Butter sculpture' }
   end
 
   describe "#to_flot" do
     let(:flots) { usage.to_flot }
+
     it "returns an array of hashes for use with JQuery Flot" do
       expect(flots[0][:label]).to eq("Pageviews")
       expect(flots[0][:data]).to include(*view_output)
@@ -70,6 +73,8 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
   describe "#created" do
     let!(:system_timezone) { ENV['TZ'] }
+    let(:create_date) { Time.zone.parse('2014-01-02 12:00:00').iso8601 }
+
     before do
       ENV['TZ'] = 'UTC'
     end
@@ -77,8 +82,6 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
     after do
       ENV['TZ'] = system_timezone
     end
-
-    let(:create_date) { Time.zone.parse('2014-01-02 12:00:00').iso8601 }
 
     describe "analytics start date set" do
       let(:earliest) { Time.zone.parse('2014-01-02 12:00:00').iso8601 }
@@ -92,6 +95,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
           allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
           described_class.new(work.id)
         end
+
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
         end
@@ -103,6 +107,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
           Hyrax.config.analytic_start_date = earliest
           described_class.new(work.id)
         end
+
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(work.create_date)
         end
@@ -117,6 +122,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
         allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
         described_class.new(work.id)
       end
+
       it "sets the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)
       end

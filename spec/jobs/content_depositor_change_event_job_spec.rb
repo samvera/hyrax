@@ -9,6 +9,7 @@ RSpec.describe ContentDepositorChangeEventJob do
                           "to user <a href=\"/users/#{another_user.to_param}\">#{another_user.user_key}</a>",
       timestamp: '1' }
   end
+
   before do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
