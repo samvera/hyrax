@@ -279,9 +279,6 @@ zh:
         header: 关联
       relationships_parent_row:
         label: '属于 %{type}:'
-      relationships_parent_row_empty:
-        empty: 和 %{type} 没有关联。
-        label: '属于 %{type}:'
       show:
         last_modified: '最新修改: %{value}'
       social_media:

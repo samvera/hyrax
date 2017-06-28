@@ -282,9 +282,6 @@ pt-BR:
         header: Relacionamentos
       relationships_parent_row:
         label: 'Em %{type}:'
-      relationships_parent_row_empty:
-        empty: Não há relações %{type}.
-        label: 'Em %{type}:'
       show:
         last_modified: 'Última modificação: %{value}'
       social_media:
