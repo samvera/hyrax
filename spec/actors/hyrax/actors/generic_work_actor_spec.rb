@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:admin_set) { create(:admin_set, with_permission_template: { with_active_workflow: true }) }
+  let(:admin_set) { build(:admin_set, with_permission_template: { with_active_workflow: true }) }
   # stub out redis connection
   let(:redlock_client_stub) do
     client = double('redlock client')
@@ -14,15 +14,12 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     client
   end
 
-  subject do
-    Hyrax::CurationConcern.actor
-  end
+  subject { Hyrax::CurationConcern.actor }
 
   describe '#create' do
     let(:curation_concern) { create(:generic_work, user: user) }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
     let(:attributes) { {} }
-    let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
     let(:uploaded_file) { Hyrax::UploadedFile.create(file: file, user: user) }
     let(:terminator) { Hyrax::Actors::Terminator.new }
@@ -204,11 +201,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   describe '#update' do
     let(:curation_concern) { create(:generic_work, user: user, admin_set_id: admin_set.id) }
 
-    subject { Hyrax::CurationConcern.actor }
-
     context 'failure' do
       let(:attributes) { {} }
-
       it 'returns false' do
         expect(curation_concern).to receive(:save).and_return(false)
         expect(subject.update(env)).to be false
@@ -242,6 +236,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         expect(old_parent.reload.members).to eq []
       end
     end
+
     context 'without in_works_ids' do
       let(:old_parent) { FactoryGirl.create(:generic_work) }
       let(:attributes) do
@@ -262,6 +257,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         expect(old_parent.reload.members).to eq []
       end
     end
+
     context 'with nil in_works_ids' do
       let(:parent) { FactoryGirl.create(:generic_work) }
       let(:attributes) do
@@ -280,6 +276,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         expect(curation_concern.in_works).to eq [parent]
       end
     end
+
     context 'adding to collections' do
       let!(:collection1) { create(:collection, user: user) }
       let!(:collection2) { create(:collection, user: user) }

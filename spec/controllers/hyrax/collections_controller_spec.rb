@@ -1,9 +1,7 @@
 RSpec.describe Hyrax::CollectionsController do
   routes { Hyrax::Engine.routes }
-  before { allow_any_instance_of(User).to receive(:groups).and_return([]) }
-
   let(:user)  { create(:user) }
-  let(:other) { create(:user) }
+  let(:other) { build(:user) }
 
   let(:collection) do
     create(:public_collection, title: ["My collection"],
