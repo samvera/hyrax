@@ -31,6 +31,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
       context 'with ::File' do
         let(:file) { local_file }
+
         it 'returns expected hash' do
           wrapper_args.delete(:original_name)
           expect(subject).to eq(wrapper_args)
@@ -40,6 +41,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       context 'with Hyrax::UploadedFile' do
         let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
         let(:wrapper_path) { file.uploader.path }
+
         it 'returns expected hash' do
           wrapper_args.delete(:original_name)
           expect(subject).to eq(wrapper_args.merge(uploaded_file: file))
@@ -49,6 +51,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     describe '#assign_visibility?' do
       let(:viz) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+
       it 'without params, returns false' do
         expect(actor.send(:assign_visibility?)).to eq false
       end
@@ -125,6 +128,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'using ::File' do
       let(:file) { local_file }
+
       before { actor.create_content(local_file) }
 
       it 'sets the label and title' do
