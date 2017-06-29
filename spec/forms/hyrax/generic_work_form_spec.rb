@@ -5,16 +5,19 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#required_fields" do
     subject { form.required_fields }
+
     it { is_expected.to eq [:title, :creator, :keyword, :rights_statement] }
   end
 
   describe "#primary_terms" do
     subject { form.primary_terms }
+
     it { is_expected.to eq [:title, :creator, :keyword, :rights_statement] }
   end
 
   describe "#secondary_terms" do
     subject { form.secondary_terms }
+
     it do
       is_expected.not_to include(:title, :creator, :keyword,
                                  :visibilty, :visibility_during_embargo,
@@ -26,8 +29,10 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#[]" do
     subject { form[term] }
+
     context "for member_of_collection_ids" do
       let(:term) { :member_of_collection_ids }
+
       it { is_expected.to eq [] }
 
       context "when the model has collection ids" do
@@ -94,6 +99,7 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#visibility" do
     subject { form.visibility }
+
     it { is_expected.to eq 'restricted' }
   end
 
@@ -105,6 +111,7 @@ RSpec.describe Hyrax::GenericWorkForm do
 
   describe "#agreement_accepted" do
     subject { form.agreement_accepted }
+
     it { is_expected.to eq false }
   end
 

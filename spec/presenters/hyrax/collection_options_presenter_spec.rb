@@ -7,6 +7,7 @@ RSpec.describe Hyrax::CollectionOptionsPresenter do
 
   describe "#select_options" do
     subject { instance.select_options }
+
     it { is_expected.to eq [["Other Title 1", 2], ["Title 1", 4]] }
   end
 end

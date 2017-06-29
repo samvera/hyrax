@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::WorksSearchBuilder do
   describe "::default_processor_chain" do
     subject { described_class.default_processor_chain }
+
     let(:blacklight_filters) do
       # These filters are in Blacklight::Solr::SearchBuilderBehavior
       [

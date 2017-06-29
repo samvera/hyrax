@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::Workflow::NotificationService do
   context 'class methods' do
     subject { described_class }
+
     it { is_expected.to respond_to(:deliver_on_action_taken) }
   end
 
@@ -32,6 +33,7 @@ RSpec.describe Hyrax::Workflow::NotificationService do
 
   describe "#call" do
     subject { instance.call }
+
     context "when the notification exists" do
       around do |example|
         class ConfirmationOfSubmittedToUlraCommittee

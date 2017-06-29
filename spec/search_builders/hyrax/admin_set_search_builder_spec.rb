@@ -59,6 +59,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
+
     it { is_expected.to include :filter_models }
   end
 
@@ -71,6 +72,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
         allow(ability).to receive(:user_groups).and_return([])
       end
       let(:access) { :read }
+
       it 'is successful' do
         expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR " \
                                        "discover_access_person_ssim:#{user.user_key} OR " \

@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::Dashboard::ProfilesController do
   let(:user) { FactoryGirl.create(:user) }
+
   before do
     sign_in user
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
@@ -30,7 +31,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
       let(:another_user) { create(:user) }
 
       context 'with default abilities' do
-        it "it is unauthorized" do
+        it "is unauthorized" do
           expect(controller.current_ability).to receive(:can?).with(:edit, another_user).and_return(false)
           get :edit, params: { id: another_user.to_param }
           expect(response).to render_template(:unauthorized)
@@ -71,6 +72,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
   describe "#update" do
     context "the profile of another user" do
       let(:another_user) { FactoryGirl.create(:user) }
+
       it "does not allow other users to update" do
         post :update, params: { id: another_user.user_key, user: { avatar: nil } }
         expect(response).to render_template(:unauthorized)
@@ -150,6 +152,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
 
     context "when removing a trophy" do
       let(:work) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
+
       before do
         user.trophies.create!(work_id: work.id)
       end

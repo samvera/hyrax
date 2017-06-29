@@ -79,6 +79,7 @@ RSpec.describe Hyrax::BatchUploadsController do
           batch_upload_item: batch_upload_item
         }
       end
+
       it 'is successful' do
         expect(BatchCreateJob).to receive(:perform_later)
           .with(user,
@@ -114,12 +115,14 @@ RSpec.describe Hyrax::BatchUploadsController do
 
   describe "#attributes_for_actor" do
     subject { controller.send(:attributes_for_actor) }
+
     before do
       controller.params = post_params
     end
     let(:expected_shared_params) do
       ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
     end
+
     it "excludes uploaded_files and title" do
       expect(subject).not_to include('title', :title, 'uploaded_files', :uploaded_files)
       expect(subject).to eq expected_shared_params

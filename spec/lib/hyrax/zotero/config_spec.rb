@@ -13,7 +13,7 @@ RSpec.describe Hyrax::Zotero do
     end
 
     # Reload the config so other tests don't see the stub_const values
-    after(:context) { described_class.reload_config! }
+    after { described_class.reload_config! }
 
     it 'has a client key' do
       expect(subject['client_key']).to eq(client_key)

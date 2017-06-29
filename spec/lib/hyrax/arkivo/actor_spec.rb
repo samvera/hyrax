@@ -10,6 +10,8 @@ RSpec.describe Hyrax::Arkivo::Actor do
 
   let(:user) { create(:user) }
   let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
+  let(:work_actor) { instance_double(Hyrax::Actors::TransactionalRequest) }
+  let(:file_actor) { double }
 
   describe 'Tempfile monkey-patches' do
     subject { Tempfile.new('foo') }
@@ -19,9 +21,6 @@ RSpec.describe Hyrax::Arkivo::Actor do
     it { is_expected.to respond_to(:content_type) }
     it { is_expected.to respond_to(:content_type=) }
   end
-
-  let(:work_actor) { instance_double(Hyrax::Actors::TransactionalRequest) }
-  let(:file_actor) { double }
 
   describe '#create_work_from_item' do
     it 'creates a work and a file and returns a GenericWork' do
@@ -70,6 +69,7 @@ RSpec.describe Hyrax::Arkivo::Actor do
 
   describe '#destroy_work' do
     let(:work) { mock_model(GenericWork) }
+
     it 'deletes the file' do
       expect(work).to receive(:destroy)
       subject.destroy_work(work)

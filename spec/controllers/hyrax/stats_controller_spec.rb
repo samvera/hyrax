@@ -1,13 +1,14 @@
 RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
+  let(:usage) { double }
+
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])
   end
   routes { Hyrax::Engine.routes }
-  let(:usage) { double }
-
   describe '#file' do
     let(:file_set) { create(:file_set, user: user) }
+
     context 'when user has access to file' do
       before do
         sign_in user
@@ -37,6 +38,7 @@ RSpec.describe Hyrax::StatsController do
 
     context 'when user lacks access to file' do
       let(:file_set) { create(:file_set) }
+
       before do
         sign_in user
       end
@@ -50,6 +52,7 @@ RSpec.describe Hyrax::StatsController do
 
   describe 'work' do
     let(:work) { create(:generic_work, user: user) }
+
     before do
       sign_in user
       request.env['HTTP_REFERER'] = 'http://test.host/foo'

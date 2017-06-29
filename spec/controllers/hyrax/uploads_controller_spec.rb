@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::UploadsController do
   let(:user) { create(:user) }
+
   describe "#create" do
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
@@ -41,6 +42,7 @@ RSpec.describe Hyrax::UploadsController do
 
       context "for a file that doesn't belong to me" do
         let(:uploaded_file) { create(:uploaded_file, file: file) }
+
         it "doesn't destroy" do
           delete :destroy, params: { id: uploaded_file }
           expect(response.status).to eq 401

@@ -2,6 +2,7 @@ module Sipity
   RSpec.describe Entity, type: :model do
     describe 'database configuration', no_clean: true do
       subject { described_class }
+
       its(:column_names) { is_expected.to include("proxy_for_global_id") }
       its(:column_names) { is_expected.to include("workflow_id") }
       its(:column_names) { is_expected.to include("workflow_state_id") }

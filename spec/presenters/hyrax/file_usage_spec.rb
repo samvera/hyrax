@@ -65,6 +65,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
 
   describe "#to_flot" do
     let(:flots) { usage.to_flot }
+
     it "returns an array of hashes for use with JQuery Flot" do
       expect(flots[0][:label]).to eq("Pageviews")
       expect(flots[1][:label]).to eq("Downloads")
@@ -75,6 +76,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
 
   describe "#created" do
     let!(:system_timezone) { ENV['TZ'] }
+
     before do
       ENV['TZ'] = 'UTC'
     end
@@ -108,6 +110,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
           allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
           described_class.new(file.id)
         end
+
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
         end
@@ -119,6 +122,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
           Hyrax.config.analytic_start_date = earliest
           described_class.new(file.id)
         end
+
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(file.create_date)
         end

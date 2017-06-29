@@ -14,6 +14,7 @@ RSpec.describe Hyrax::EmbargoesController do
     end
     context 'when I am a repository manager' do
       let(:user) { create(:user, groups: ['admin']) }
+
       it 'shows me the page' do
         get :index
         expect(response).to be_success
@@ -79,6 +80,7 @@ RSpec.describe Hyrax::EmbargoesController do
     context 'when I have permission to edit the object' do
       let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       let(:release_date) { Time.zone.today + 2 }
+
       before do
         a_work.members << file_set
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
@@ -91,6 +93,7 @@ RSpec.describe Hyrax::EmbargoesController do
 
       context 'with an expired embargo' do
         let(:release_date) { Time.zone.today - 2 }
+
         it 'deactivates embargo, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], embargoes: { '0' => { copy_visibility: a_work.id } } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

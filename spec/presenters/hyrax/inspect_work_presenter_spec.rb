@@ -17,6 +17,7 @@ RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
     let(:roles) do
       { id: '1', name: 'reviewing', users: ['user1', 'user2'] }
     end
+
     before do
       allow(entity).to receive(:id).and_return('1')
       allow(entity).to receive(:workflow_name).and_return('generic_workflow')
@@ -32,6 +33,7 @@ RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
 
     context "when a valid sipity_entity with workflow exists" do
       subject { presenter.workflow }
+
       it 'returns a hash of workflow related values for ispection' do
         expect(subject[:entity_id]).to eq '1'
         expect(subject[:workflow_name]).to eq 'generic_workflow'
@@ -48,6 +50,7 @@ RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
 
     context "when no sipity_entity with workflow exists" do
       let(:invalid) { described_class.new('no_solr_document', ability) }
+
       it "raises PowerConverter::ConversionError" do
         expect { invalid.workflow }.to raise_exception(PowerConverter::ConversionError)
       end

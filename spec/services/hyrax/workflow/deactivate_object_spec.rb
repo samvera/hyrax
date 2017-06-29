@@ -5,6 +5,7 @@ RSpec.describe Hyrax::Workflow::DeactivateObject do
   let(:user) { create(:user) }
 
   let(:workflow_method) { described_class }
+
   it_behaves_like "a Hyrax workflow method"
 
   describe ".call" do

@@ -45,11 +45,12 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     describe "when work is in user's own collection" do
       let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:attributes) { { member_of_collection_ids: [] } }
+
       before do
         subject.create(Hyrax::Actors::Environment.new(curation_concern, ability,
                                                       member_of_collection_ids: [collection.id], title: ['test']))
       end
-      let(:attributes) { { member_of_collection_ids: [] } }
 
       it "removes the work from that collection" do
         expect(subject.create(env)).to be true

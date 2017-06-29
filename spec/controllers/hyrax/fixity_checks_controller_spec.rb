@@ -14,6 +14,7 @@ RSpec.describe Hyrax::FixityChecksController do
         post :create, params: { file_set_id: file_set }, xhr: true
       end
       let(:json_response) { JSON.parse(response.body) }
+
       it "returns json with the result" do
         expect(response).to be_success
         # json is a structure like this:

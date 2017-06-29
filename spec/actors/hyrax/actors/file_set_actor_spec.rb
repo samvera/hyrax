@@ -19,6 +19,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   describe 'creating metadata, content and attaching to a work' do
     let(:work) { create(:generic_work) }
     let(:date_today) { DateTime.current }
+
     subject { file_set.reload }
 
     before do
@@ -78,6 +79,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'when an alternative relationship is specified' do
       let(:relation) { :remastered }
+
       it 'calls ingest_file' do
         expect(file_actor).to receive(:ingest_file) do |input|
           expect(input.mime_type).to eq(uploaded_file.content_type)
@@ -120,6 +122,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       end
 
       subject { file_set.title }
+
       it { is_expected.to match_array [short_name] }
     end
 
@@ -153,6 +156,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   describe "#update_content" do
     let(:io) { Hydra::Derivatives::IoDecorator.new(local_file, uploaded_file.content_type, uploaded_file.original_filename) }
+
     it 'calls ingest_file and returns true' do
       expect(file_actor).to receive(:ingest_file) do |input|
         expect(input.mime_type).to eq(uploaded_file.content_type)
@@ -299,6 +303,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   describe "#file_actor_class" do
     subject { actor.file_actor_class }
+
     it { is_expected.to eq(Hyrax::Actors::FileActor) }
 
     context "overridden" do
@@ -312,6 +317,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         end
       end
       let(:actor) { custom_fs_actor_class.new(file_set, user) }
+
       after { Object.send(:remove_const, :CustomFileActor) }
       it { is_expected.to eq(CustomFileActor) }
     end
@@ -321,6 +327,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     let(:file_set) { create(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
     let(:version1) { "version1" }
+    let(:restored_content) { file_set.reload.original_file }
 
     before do
       original_adapter = ActiveJob::Base.queue_adapter
@@ -331,8 +338,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       ActiveJob::Base.queue_adapter = original_adapter
       actor.file_set.reload
     end
-
-    let(:restored_content) { file_set.reload.original_file }
 
     it "restores the first versions's content and metadata" do
       actor.revert_content(version1)

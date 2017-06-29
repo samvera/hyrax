@@ -17,6 +17,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#filter_on_title" do
     subject { builder.filter_on_title(solr_params) }
+
     it "is successful" do
       subject
       expect(solr_params[:fq]).to eq [ActiveFedora::SolrQueryBuilder.construct_query(title_tesim: q)]
@@ -25,6 +26,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#show_only_other_works" do
     subject { builder.show_only_other_works(solr_params) }
+
     it "is successful" do
       subject
       expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids([work.id])]
@@ -33,6 +35,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#show_only_works_not_child" do
     subject { builder.show_only_works_not_child(solr_params) }
+
     it "is successful" do
       subject
       ids = ActiveFedora::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
@@ -42,6 +45,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#show_only_works_not_parent" do
     subject { builder.show_only_works_not_parent(solr_params) }
+
     it "is successful" do
       subject
       expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: work.id)]
@@ -50,6 +54,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#only_works?" do
     subject { builder.only_works? }
+
     it "is successful" do
       subject
       expect(subject). to eq true

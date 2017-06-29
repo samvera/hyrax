@@ -2,6 +2,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }
   let(:yml_path) { File.join(fixture_path, 'config', 'schema_org.{yml}') }
+
   before do
     Hyrax::Microdata.load_paths += Dir[yml_path]
     Hyrax::Microdata.reload!
@@ -13,6 +14,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
 
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
+
     let(:expected) { Nokogiri::HTML(tr_content) }
 
     context 'without microdata enabled' do
@@ -25,6 +27,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
          "<li class=\"attribute name\">Jessica</li>\n" \
          "</ul></td></tr>"
       end
+
       it { expect(renderer).not_to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end
@@ -50,6 +53,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
          "<span itemprop=\"firstName\">Jessica</span></li>\n" \
          "</ul></td></tr>"
       end
+
       it { expect(renderer).to be_microdata(field) }
       it { expect(subject).to be_equivalent_to(expected) }
     end

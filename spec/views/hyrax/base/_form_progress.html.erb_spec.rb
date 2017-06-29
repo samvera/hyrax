@@ -4,16 +4,15 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:form) do
     Hyrax::GenericWorkForm.new(work, ability, controller)
   end
-
-  before do
-    allow(controller).to receive(:current_user).and_return(user)
-  end
-
   let(:page) do
     view.simple_form_for form do |f|
       render 'hyrax/base/form_progress', f: f
     end
     Capybara::Node::Simple.new(rendered)
+  end
+
+  before do
+    allow(controller).to receive(:current_user).and_return(user)
   end
 
   context "for a new object" do
@@ -23,6 +22,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
     context "with options for proxy" do
       let(:proxies) { [stub_model(User, email: 'bob@example.com')] }
+
       before do
         allow(user).to receive(:can_make_deposits_for).and_return(proxies)
       end
@@ -35,6 +35,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
     context "without options for proxy" do
       let(:proxies) { [] }
+
       before do
         allow(user).to receive(:can_make_deposits_for).and_return(proxies)
       end

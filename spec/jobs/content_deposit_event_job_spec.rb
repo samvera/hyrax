@@ -1,17 +1,16 @@
 RSpec.describe ContentDepositEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
-
-  before do
-    allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
-  end
-
   let(:curation_concern) { create(:work, title: ['MacBeth'], user: user) }
   let(:event) do
     {
       action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has deposited <a href=\"/concern/generic_works/#{curation_concern.id}\">MacBeth</a>",
       timestamp: '1'
     }
+  end
+
+  before do
+    allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
   it "logs the event to the depositor's profile and the Work" do

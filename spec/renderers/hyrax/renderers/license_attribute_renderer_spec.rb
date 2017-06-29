@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Renderers::LicenseAttributeRenderer do
 
   describe "#attribute_to_html" do
     subject { Nokogiri::HTML(renderer.render) }
+
     let(:expected) { Nokogiri::HTML(tr_content) }
 
     let(:tr_content) do
@@ -13,6 +14,7 @@ RSpec.describe Hyrax::Renderers::LicenseAttributeRenderer do
        "<li class=\"attribute license\"><a href=\"http://creativecommons.org/licenses/by-nd/3.0/us/\" target=\"_blank\">Attribution-NoDerivs 3.0 United States</a></li>\n" \
        "</ul></td></tr>"
     end
+
     it { expect(renderer).not_to be_microdata(field) }
     it { expect(subject).to be_equivalent_to(expected) }
   end

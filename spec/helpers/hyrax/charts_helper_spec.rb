@@ -1,12 +1,14 @@
 RSpec.describe Hyrax::ChartsHelper do
   describe '#hash_to_chart' do
     subject { helper.hash_to_chart(data) }
+
     let(:data) do
       {
         'Foo' => 5,
         'Bar' => 10
       }
     end
+
     it do
       is_expected.to eq(
         drilldown: {
@@ -34,6 +36,7 @@ RSpec.describe Hyrax::ChartsHelper do
           }
         }
       end
+
       it do
         is_expected.to eq(
           drilldown: {

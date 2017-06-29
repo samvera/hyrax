@@ -21,17 +21,20 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
   end
   let(:validator) { double(call: true) }
   let(:importer) { described_class.new(data: {}, permission_template: permission_template, validator: validator) }
+
   subject { importer }
 
   before { described_class.clear_load_errors! }
 
   describe '#default_validator' do
     subject { importer.send(:default_validator) }
+
     it { is_expected.to respond_to(:call) }
   end
 
   describe '#default_schema' do
     subject { importer.send(:default_schema) }
+
     it { is_expected.to respond_to(:call) }
   end
 
@@ -80,6 +83,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
 
     describe 'with very invalid schema' do
       let(:data) { { workflows: [{ name: '' }] } }
+
       it 'logs the output' do
         expect(logger).to receive(:error).with(kind_of(String))
         expect { importer }.to raise_error(RuntimeError)
@@ -129,6 +133,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
 
       context 'that includes a workflow_name changes' do
         let(:workflow_name) { "awsome workflow" }
+
         it "creates a new workflow (preserving the old)" do
           expect(workflow2).not_to eq(workflow1)
           expect(Sipity::Workflow.count).to eq(2)
@@ -139,6 +144,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
 
       context "that keeps the same workflow_name name" do
         let(:workflow_name) { "ulra_submission" }
+
         it "preserves state names identified in actions > transition_to and actions> from_states > names hash key" do
           expect(workflow2.label).not_to eq(workflow1.label)
           expect(workflow2).to eq(workflow1)
@@ -172,6 +178,7 @@ RSpec.describe Hyrax::Workflow::WorkflowImporter do
           end
           let(:workflow_state) { workflow1.reload.workflow_states.find_by(name: 'declined') }
           let!(:entity) { Sipity::Entity.create(workflow_state: workflow_state, proxy_for_global_id: "abc123", workflow_id: workflow1.id) }
+
           it "reports an error and does not update the WorkflowStates" do
             expect do
               expect do

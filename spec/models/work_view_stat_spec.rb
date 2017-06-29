@@ -18,12 +18,14 @@ RSpec.describe WorkViewStat, type: :model do
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
     let(:expected_path) { Rails.application.routes.url_helpers.hyrax_generic_work_path(work) }
+
     before do
       allow(Hyrax::Analytics).to receive(:profile).and_return(profile)
     end
     context "when a profile is available" do
       let(:views) { double }
       let(:profile) { double(hyrax__pageview: views) }
+
       it "calls the Legato method with the correct path" do
         expect(views).to receive(:for_path).with(expected_path)
         described_class.ga_statistics(start_date, work)
@@ -32,6 +34,7 @@ RSpec.describe WorkViewStat, type: :model do
 
     context "when a profile not available" do
       let(:profile) { nil }
+
       it "calls the Legato method with the correct path" do
         expect(described_class.ga_statistics(start_date, work)).to be_empty
       end
@@ -65,6 +68,7 @@ RSpec.describe WorkViewStat, type: :model do
         OpenStruct.new(date: date_strs[3], pageviews: 10)
       ]
     end
+
     describe "cache empty" do
       let(:stats) do
         expect(described_class).to receive(:ga_statistics).and_return(sample_work_pageview_statistics)

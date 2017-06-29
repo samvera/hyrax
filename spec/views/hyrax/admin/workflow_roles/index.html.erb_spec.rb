@@ -19,6 +19,7 @@ RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
 
   context 'with no users having workflow roles' do
     let(:responsibilities_exist) { false }
+
     before { render }
     it 'displays "No Roles" for each user' do
       expect(rendered).to have_content('No roles', count: 2)
@@ -27,6 +28,7 @@ RSpec.describe 'hyrax/admin/workflow_roles/index.html.erb', type: :view do
 
   context 'with some users having workflow roles' do
     let(:responsibilities_exist) { true }
+
     before do
       allow(agent_presenter).to receive(:responsibilities).and_return(["stuuf"])
       render

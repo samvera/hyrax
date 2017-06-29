@@ -9,6 +9,7 @@ RSpec.describe ContentRestoredVersionEventJob do
                           "<a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>",
       timestamp: '1' }
   end
+
   before do
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)

@@ -11,14 +11,13 @@ RSpec.describe 'hyrax/file_sets/_show_characterization_details.html.erb', type: 
       string_term: 'oops, I used a string instead of an array'
     }
   end
+  let(:page) { Capybara::Node::Simple.new(rendered) }
 
   before do
     allow(presenter).to receive(:characterization_metadata).and_return(mock_metadata)
     assign(:presenter, presenter)
     render
   end
-
-  let(:page) { Capybara::Node::Simple.new(rendered) }
 
   it 'displays characterization terms' do
     expect(page).to have_content("oops, I used a string instead of an array")

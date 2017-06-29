@@ -1,8 +1,9 @@
 RSpec.describe GenericWorkIndexer do
+  subject(:solr_document) { service.generate_solr_document }
+
   # TODO: file_set_ids returns an empty set unless you persist the work
   let(:user) { create(:user) }
   let(:service) { described_class.new(work) }
-  subject(:solr_document) { service.generate_solr_document }
   let(:work) { create(:generic_work) }
 
   context 'without explicit visibility set' do
@@ -62,6 +63,7 @@ RSpec.describe GenericWorkIndexer do
     before { allow(work).to receive(:suppressed?).and_return(suppressed) }
     context "when suppressed" do
       let(:suppressed) { true }
+
       it "indexes the suppressed field with a true value" do
         expect(solr_document.fetch('suppressed_bsi')).to be true
       end
@@ -69,6 +71,7 @@ RSpec.describe GenericWorkIndexer do
 
     context "when not suppressed" do
       let(:suppressed) { false }
+
       it "indexes the suppressed field with a false value" do
         expect(solr_document.fetch('suppressed_bsi')).to be false
       end
@@ -79,6 +82,7 @@ RSpec.describe GenericWorkIndexer do
     let(:sipity_entity) do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
     end
+
     before do
       allow(PowerConverter).to receive(:convert_to_sipity_entity).with(work).and_return(sipity_entity)
       allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_roles_associated_with_the_given_entity)

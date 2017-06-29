@@ -23,6 +23,7 @@ RSpec.describe Hyrax::Actors::CreateWithFilesActor do
       end
       context "when uploaded_file_ids include nil" do
         let(:uploaded_file_ids) { [nil, uploaded_file1.id, nil] }
+
         it "will discard those nil values when attempting to find the associated UploadedFile" do
           expect(AttachFilesToWorkJob).to receive(:perform_later)
           expect(Hyrax::UploadedFile).to receive(:find).with([uploaded_file1.id]).and_return([uploaded_file1])
@@ -39,6 +40,7 @@ RSpec.describe Hyrax::Actors::CreateWithFilesActor do
 
       context "when uploaded_file_ids don't belong to me" do
         let(:uploaded_file2) { create(:uploaded_file) }
+
         it "doesn't attach files" do
           expect(AttachFilesToWorkJob).not_to receive(:perform_later)
           expect(middleware.public_send(mode, env)).to be false

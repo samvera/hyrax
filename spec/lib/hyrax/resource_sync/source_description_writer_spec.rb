@@ -1,11 +1,10 @@
 RSpec.describe Hyrax::ResourceSync::SourceDescriptionWriter do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let(:rs) { 'http://www.openarchives.org/rs/terms/' }
-
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
+  let(:xml) { Nokogiri::XML.parse(subject) }
 
   subject { described_class.new(capability_list_url: capability_list).write }
-  let(:xml) { Nokogiri::XML.parse(subject) }
 
   it "has url to the capability list" do
     capability = xml.xpath('/x:urlset/rs:md/@capability', 'x' => sitemap, 'rs' => rs).map(&:value)

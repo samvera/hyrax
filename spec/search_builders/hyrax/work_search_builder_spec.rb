@@ -19,7 +19,9 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
   describe "#query" do
     subject { builder.query }
+
     let(:doc) { instance_double(SolrDocument) }
+
     before do
       allow(SolrDocument).to receive(:find).and_return(doc)
     end
@@ -32,6 +34,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       end
       context "and the current user has a role" do
         let(:roles) { [double] }
+
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
                                       "{!terms f=has_model_ssim}GenericWork,Collection",
@@ -40,6 +43,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       end
       context "and the current user doesn't have a role" do
         let(:roles) { [] }
+
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
                                       "{!terms f=has_model_ssim}GenericWork,Collection",

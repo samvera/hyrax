@@ -52,6 +52,7 @@ RSpec.describe CatalogController, type: :controller do
 
     describe 'term search', :clean_repo do
       let(:objects) { [rocks, clouds] }
+
       it 'finds works with the given search term' do
         get :index, params: { q: 'rocks', owner: 'all' }
         expect(response).to be_success
@@ -62,6 +63,7 @@ RSpec.describe CatalogController, type: :controller do
 
     describe 'facet search' do
       let(:objects) { [rocks, clouds] }
+
       before do
         get :index, params: { 'f' => { 'contributor_tesim' => ['frodo'] } }
       end
@@ -75,6 +77,7 @@ RSpec.describe CatalogController, type: :controller do
 
     describe 'full-text search', skip: 'Will GenericWorks have a full_text search?' do
       let(:objects) { [rocks, clouds] }
+
       it 'finds matching records' do
         get :index, params: { q: 'full_textfull_text' }
         expect(response).to be_success

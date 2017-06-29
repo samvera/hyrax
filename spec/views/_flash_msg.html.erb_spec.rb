@@ -10,6 +10,7 @@ RSpec.describe '/_flash_msg.html.erb', type: :view do
 
   context 'with a single flash notice' do
     let(:notice) { i18n_html }
+
     it 'renders with HTML unescaped' do
       render
       expect(rendered).not_to have_content '</span>'
@@ -23,6 +24,7 @@ RSpec.describe '/_flash_msg.html.erb', type: :view do
         'Lorem ipsum!'
       ]
     end
+
     it 'renders the notice joined with unescaped line break' do
       render
       expect(rendered).not_to have_content '<br/>'

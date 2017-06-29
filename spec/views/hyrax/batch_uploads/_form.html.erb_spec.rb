@@ -3,15 +3,14 @@ RSpec.describe 'hyrax/batch_uploads/_form.html.erb', type: :view do
   let(:ability) { double('ability', current_user: user) }
   let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
   let(:user) { stub_model(User) }
+  let(:page) do
+    render
+    Capybara::Node::Simple.new(rendered)
+  end
 
   before do
     stub_template "hyrax/base/_guts4form.html.erb" => "Form guts"
     assign(:form, form)
-  end
-
-  let(:page) do
-    render
-    Capybara::Node::Simple.new(rendered)
   end
 
   it "draws the page" do

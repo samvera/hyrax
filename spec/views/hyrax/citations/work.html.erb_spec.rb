@@ -27,6 +27,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
     let(:citation) { page.find(citation_selector) }
     let(:title_selector) { "#{citation_selector} > i.citation-title" }
     let(:author_selector) { "#{citation_selector} > .citation-author" }
+
     before do
       assign(:presenter, presenter)
       render
@@ -37,6 +38,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       let(:formatted_title) { 'the Roared about the Langs.' }
       # entities will be unescaped
       let(:authors) { 'Baggins, B., & Baggins, F.' }
+
       it 'exports title' do
         expect(page).to have_selector(title_selector, count: 1)
         expect(page.find(title_selector)).to have_content(formatted_title)
@@ -53,6 +55,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       let(:citation_selector) { 'span.chicago-citation' }
       let(:formatted_title) { 'The Roared about the Langs.' }
       let(:authors) { 'Baggins, Bilbo, and Frodo Baggins.' }
+
       it 'exports title' do
         expect(page).to have_selector(title_selector, count: 1)
         expect(page.find(title_selector)).to have_content(formatted_title)
@@ -69,6 +72,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       let(:citation_selector) { 'span.mla-citation' }
       let(:formatted_title) { 'the Roared About the Langs.' }
       let(:authors) { 'Baggins, Bilbo, and Frodo Baggins.' }
+
       it 'exports title' do
         expect(page).to have_selector(title_selector, count: 1)
         expect(page.find(title_selector)).to have_content(formatted_title)

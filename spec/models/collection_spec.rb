@@ -32,6 +32,7 @@ RSpec.describe Collection do
 
   describe "#depositor" do
     let(:user) { build(:user) }
+
     before do
       subject.apply_depositor_metadata(user)
     end
@@ -43,6 +44,7 @@ RSpec.describe Collection do
 
   describe "#members_objects" do
     let(:collection) { create(:collection) }
+
     it "is empty by default" do
       expect(collection.member_objects).to match_array []
     end
@@ -77,6 +79,7 @@ RSpec.describe Collection do
     let(:collection) { build(:collection) }
     let(:work1) { create(:work) }
     let(:work2) { create(:work) }
+
     before do
       collection.add_member_objects [work1.id, work2.id]
       collection.save!

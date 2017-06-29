@@ -29,6 +29,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
                    agent_id: user.user_key,
                    access: 'manage')
       end
+
       it "lists the managers in the table" do
         expect(rendered).to have_selector("h3", text: "Managers")
         expect(rendered).to have_selector("table tbody", text: user.user_key)
@@ -36,6 +37,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
     end
     context "no managers exist" do
       let(:access_grant) { stub_model(Hyrax::PermissionTemplateAccess) }
+
       it "displays a message and no table" do
         expect(rendered).to have_selector("h3", text: "Managers")
         expect(rendered).not_to have_selector("table")
@@ -56,6 +58,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
                    agent_id: user.user_key,
                    access: 'view')
       end
+
       it "lists the viewers in the table" do
         expect(rendered).to have_selector("h3", text: "Viewers")
         expect(rendered).to have_selector("table tbody", text: user.user_key)
@@ -63,6 +66,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
     end
     context "no viewers exist" do
       let(:access_grant) { stub_model(Hyrax::PermissionTemplateAccess) }
+
       it "displays a message and no table" do
         expect(rendered).to have_selector("h3", text: "Viewers")
         expect(rendered).not_to have_selector("table")
@@ -83,6 +87,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
                    agent_id: user.user_key,
                    access: 'deposit')
       end
+
       it "lists the depositors in the table" do
         expect(rendered).to have_selector("h3", text: "Depositors")
         expect(rendered).to have_selector("table tbody", text: user.user_key)
@@ -90,6 +95,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
     end
     context "no depositors exist" do
       let(:access_grant) { stub_model(Hyrax::PermissionTemplateAccess) }
+
       it "displays a message and no table" do
         expect(rendered).to have_selector("h3", text: "Depositors")
         expect(rendered).not_to have_selector("table")

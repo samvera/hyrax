@@ -23,6 +23,7 @@ RSpec.describe Hyrax::Actors::FileActor do
         file.apply_depositor_metadata(user.user_key)
       end
     end
+
     before do
       class FileSetWithExtras < FileSet
         directly_contains_one :remastered, through: :files, type: ::RDF::URI('http://pcdm.org/use#IntermediateFile'), class_name: 'Hydra::PCDM::File'
@@ -40,6 +41,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
   context 'when given a mime_type' do
     let(:uploaded_file) { fixture_file_upload('/world.png', 'image/gif') }
+
     it 'uses the provided mime_type' do
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
       expect(actor.ingest_file(io)).to be_truthy
@@ -107,6 +109,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
   describe '#revert_to' do
     let(:revision_id) { 'asdf1234' }
+
     before do
       allow(pcdmfile).to receive(:restore_version).with(revision_id)
       allow(file_set).to receive(relation).and_return(pcdmfile)
@@ -122,6 +125,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
     describe 'for a different relation' do
       let(:relation) { :remastered }
+
       it 'reverts to a previous version of a file' do
         expect(actor.relation).to eq(:remastered)
         expect(actor.revert_to(revision_id)).to be_truthy

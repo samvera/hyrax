@@ -16,6 +16,7 @@ RSpec.describe Hyrax::SelectTypeListPresenter do
 
     context 'with a logged in user' do
       let(:user) { create(:user) }
+
       it { is_expected.to be true }
       context "if authorized_models returns only one" do
         before do
@@ -28,6 +29,7 @@ RSpec.describe Hyrax::SelectTypeListPresenter do
 
   describe "#first_model" do
     let(:user) { create(:user) }
+
     subject { instance.first_model }
 
     it { is_expected.to be GenericWork }

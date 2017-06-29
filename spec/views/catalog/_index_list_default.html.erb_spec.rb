@@ -12,6 +12,7 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:presenter) { double }
+
   before do
     allow(view).to receive(:index_presenter).and_return(presenter)
     allow(presenter).to receive(:field_value) { |field| "Test #{field}" }

@@ -1,5 +1,6 @@
 RSpec.describe 'hyrax/users/index.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
+
   before do
     users = []
     (1..25).each { |i| users << stub_model(User, name: "name#{i}", user_key: "user#{i}", created_at: join_date) }

@@ -23,6 +23,7 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
     end
     context 'without carbon-copied users' do
       let(:recipients) { { 'to' => [to_user] } }
+
       it 'sends a message to the to user(s)' do
         expect(approver).to receive(:send_message).exactly(2).times.and_call_original
         expect { described_class.send_notification(entity: entity, user: approver, comment: comment, recipients: recipients) }

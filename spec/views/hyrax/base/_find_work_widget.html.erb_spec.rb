@@ -5,6 +5,7 @@ RSpec.describe 'hyrax/base/_find_work_widget.html.erb', type: :view do
       return work_form
     end
   end
+
   before do
     allow(view).to receive(:current_user).and_return(stub_model(User))
     render 'hyrax/base/find_work_widget',

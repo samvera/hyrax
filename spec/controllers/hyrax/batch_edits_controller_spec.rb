@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::BatchEditsController, type: :controller do
   let(:user) { create(:user) }
+
   before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
@@ -9,6 +10,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "#edit" do
     let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
     let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+
     before do
       controller.batch = [one.id, two.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
@@ -36,6 +38,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         gw.apply_depositor_metadata('mjg36')
       end
     end
+    let(:mycontroller) { "hyrax/my/works" }
 
     before do
       # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
@@ -43,8 +46,6 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
     end
-
-    let(:mycontroller) { "hyrax/my/works" }
 
     it "is successful" do
       put :update, params: { update_type: "delete_all" }

@@ -5,6 +5,7 @@ RSpec.describe User, type: :model do
   describe 'verifying factories' do
     describe ':user' do
       let(:user) { FactoryGirl.build(:user) }
+
       it 'will, by default, have no groups' do
         expect(user.groups).to eq([])
         user.save!
@@ -21,6 +22,7 @@ RSpec.describe User, type: :model do
     end
     describe ':admin' do
       let(:admin_user) { FactoryGirl.create(:admin) }
+
       it 'will have an "admin" group' do
         expect(admin_user.groups).to eq(['admin'])
       end
@@ -120,11 +122,13 @@ RSpec.describe User, type: :model do
   end
 
   subject { user }
+
   it { is_expected.to delegate_method(:can?).to(:ability) }
   it { is_expected.to delegate_method(:cannot?).to(:ability) }
 
   describe '#to_sipity_agent' do
     subject { user.to_sipity_agent }
+
     it 'will find or create a Sipity::Agent' do
       user.save!
       expect { subject }.to change { Sipity::Agent.count }.by(1)
@@ -136,6 +140,7 @@ RSpec.describe User, type: :model do
 
     context "when another process makes the agent" do
       let(:user) { create(:user) }
+
       before do
         user.sipity_agent # load up and cache the association
         User.find(user.id).create_sipity_agent!
@@ -171,6 +176,7 @@ RSpec.describe User, type: :model do
   end
   describe "proxy_deposit_rights" do
     subject { create :user }
+
     before do
       subject.can_receive_deposits_from << user
       subject.can_make_deposits_for << another_user
@@ -195,6 +201,7 @@ RSpec.describe User, type: :model do
 
       context "when has a start date" do
         subject { described_class.recent_users(Time.zone.today - 2.days) }
+
         it "returns valid data" do
           expect(subject.count).to eq 2
           is_expected.to include(new_users[0], new_users[1])
@@ -204,6 +211,7 @@ RSpec.describe User, type: :model do
 
       context "when has start and end date" do
         subject { described_class.recent_users(Time.zone.today - 2.days, Time.zone.today - 1.day) }
+
         it "returns valid data" do
           expect(subject.count).to eq 1
           is_expected.to include(new_users[1])
@@ -220,6 +228,7 @@ RSpec.describe User, type: :model do
 
     context "without_system_accounts" do
       subject { described_class.without_system_accounts }
+
       it "omits audit_user and batch_user" do
         is_expected.to include(basic_user, guest_user)
         is_expected.not_to include(audit_user, batch_user)
@@ -227,6 +236,7 @@ RSpec.describe User, type: :model do
     end
     context "registered" do
       subject { described_class.registered }
+
       it "omits guest_user" do
         is_expected.to include(basic_user, audit_user, batch_user)
         is_expected.not_to include(guest_user)
@@ -234,6 +244,7 @@ RSpec.describe User, type: :model do
     end
     context "guests" do
       subject { described_class.guests }
+
       it "includes only guest_user" do
         is_expected.not_to include(basic_user, audit_user, batch_user)
         is_expected.to include(guest_user)

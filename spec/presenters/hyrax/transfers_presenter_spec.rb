@@ -5,6 +5,7 @@ RSpec.describe Hyrax::TransfersPresenter do
 
   describe "#incoming_proxy_deposits" do
     subject(:incoming_proxy_deposits) { instance.send(:incoming_proxy_deposits) }
+
     let(:another_user) { create(:user) }
     let!(:incoming_work) do
       create(:work, user: another_user).tap do |w|
@@ -27,6 +28,7 @@ RSpec.describe Hyrax::TransfersPresenter do
 
   describe "#outgoing_proxy_deposits" do
     subject { instance.send(:outgoing_proxy_deposits) }
+
     let(:another_user) { create(:user) }
     let!(:outgoing_work) do
       create(:work, user: user).tap do |w|

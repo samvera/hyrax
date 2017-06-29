@@ -6,9 +6,9 @@ RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :clean_repo do
   let!(:private_work) { create(:work) }
   let!(:file_set) { create(:file_set, :public) }
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
+  let(:xml) { Nokogiri::XML.parse(subject) }
 
   subject { described_class.new(resource_host: 'example.com', capability_list_url: capability_list).write }
-  let(:xml) { Nokogiri::XML.parse(subject) }
 
   it "has a list of resources" do
     capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text

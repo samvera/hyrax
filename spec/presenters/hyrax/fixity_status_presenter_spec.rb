@@ -36,6 +36,7 @@ RSpec.describe Hyrax::FixityStatusPresenter do
       let(:file_id) { file_ids.second }
       let(:failing_file_id) { file_ids.first }
       let(:failing_checked_uri) { "#{failing_file_id}/fcr:versions/version1" }
+
       before do
         ChecksumAuditLog.create!(passed: true, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version1", created_at: 2.days.ago)
         ChecksumAuditLog.create!(passed: true, file_set_id: file_set_id, file_id: file_id, checked_uri: "#{file_id}/fcr:versions/version2", created_at: 1.day.ago)

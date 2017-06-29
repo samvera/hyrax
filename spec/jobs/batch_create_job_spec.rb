@@ -2,6 +2,7 @@ RSpec.describe BatchCreateJob do
   let(:user) { create(:user) }
   let(:operation) { create(:batch_create_operation, user: user) }
   let(:child_operation) { double }
+
   describe "#perform" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }

@@ -26,6 +26,7 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
 
     context 'with an expired embargo' do
       let(:release_date) { Time.zone.today - 2 }
+
       it "removes the embargo" do
         actor.destroy
         expect(work.reload.embargo_release_date).to be_nil

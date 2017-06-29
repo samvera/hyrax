@@ -3,6 +3,7 @@ RSpec.describe Hyrax::Admin::UserActivityPresenter do
 
   describe "#to_json" do
     subject { instance.to_json }
+
     let(:users) do
       instance_double(Hyrax::Statistics::Users::OverTime,
                       points: [['2017-02-16', '12']])

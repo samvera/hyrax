@@ -1,6 +1,7 @@
 RSpec.describe UserMailbox do
   let(:user)         { create(:user) }
   let(:another_user) { create(:user) }
+
   before do
     another_user.send_message(user, "Test Message", "Test Subject")
     user.send_message(another_user, "Test Message", "Test Subject")
@@ -10,6 +11,7 @@ RSpec.describe UserMailbox do
 
   describe "#inbox" do
     subject { described_class.new(user).inbox.first.last_message }
+
     it "has mail" do
       expect(subject.body).to eq('Test Message')
       expect(subject.subject).to eq('Test Subject')
@@ -40,6 +42,7 @@ RSpec.describe UserMailbox do
 
     context "non-existing conversation" do
       let!(:message_id) { -99 }
+
       it "raises an error" do
         expect { subject.destroy message_id }.to raise_error(ActiveRecord::RecordNotFound)
       end

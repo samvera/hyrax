@@ -62,6 +62,7 @@ module Hyrax
       describe 'notification names' do
         context 'with an uninitialized constant' do
           let(:notification_name) { 'FooBar' }
+
           it 'is invalid' do
             expect(WorkflowSchema.call(valid_data).messages).not_to be_empty
           end
@@ -74,6 +75,7 @@ module Hyrax
           end
           after { Hyrax::Workflow.send(:remove_const, :DoTheThing) }
           let(:notification_name) { 'Hyrax::Workflow::DoTheThing' }
+
           it 'returns an empty message because valid' do
             expect(WorkflowSchema.call(valid_data).messages).to be_empty
           end

@@ -6,6 +6,7 @@ RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo do
     let(:fs2) { build(:file_set, id: '2345678') }
     let(:fs3) { build(:file_set, id: '3456789') }
     let(:fs4) { build(:file_set, id: '4567890') }
+
     before do
       allow(fs1).to receive_messages(mime_type: 'text/plain', format_label: ["plain text"])
       fs1.update_index

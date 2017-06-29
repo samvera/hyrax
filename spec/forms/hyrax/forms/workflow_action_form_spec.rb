@@ -26,6 +26,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
 
     describe '#valid?' do
       subject { form.valid? }
+
       it { is_expected.to be false }
     end
 
@@ -59,6 +60,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
 
     describe '#valid?' do
       subject { form.valid? }
+
       it { is_expected.to eq(true) }
     end
 
@@ -119,6 +121,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
                           work: work,
                           attributes: { comment: '' })
     end
+
     it 'will be invalid' do
       expect(form).not_to be_valid
     end

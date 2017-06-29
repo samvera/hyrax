@@ -3,13 +3,16 @@ RSpec.describe Hyrax::QuickClassificationQuery do
 
   context "with no options" do
     let(:query) { described_class.new(user) }
+
     describe "#all?" do
       subject { query.all? }
+
       it { is_expected.to be true }
     end
 
     describe '#each' do
       let(:thing) { double }
+
       before do
         # Ensure that no other test has altered the configuration:
         allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['GenericWork'])
@@ -25,8 +28,10 @@ RSpec.describe Hyrax::QuickClassificationQuery do
 
   context "with models" do
     let(:query) { described_class.new(user, models: ['dataset']) }
+
     describe "#all?" do
       subject { query.all? }
+
       it { is_expected.to be false }
     end
   end

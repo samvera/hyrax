@@ -5,8 +5,12 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-
   let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:one_year_from_today) { Time.zone.today + 1.year }
+  let(:two_years_from_today) { Time.zone.today + 2.years }
+  let(:date) { Time.zone.today + 2 }
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
@@ -15,13 +19,9 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
     stack.build(terminator)
   end
 
-  let(:one_year_from_today) { Time.zone.today + 1.year }
-  let(:two_years_from_today) { Time.zone.today + 2.years }
-  let(:date) { Time.zone.today + 2 }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
-
   describe 'the next actor' do
     let(:terminator) { instance_double(Hyrax::Actors::Terminator) }
+
     before do
       allow(curation_concern).to receive(:save).and_return(true)
     end
@@ -61,6 +61,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'when embargo_release_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
+
         it 'does not clear the visibility attributes' do
           expect(subject.create(env)).to be false
           expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO)
@@ -86,6 +87,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'when lease_expiration_date is not set' do
         let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE } }
+
         it 'sets error on curation_concern and return false' do
           expect(subject.create(env)).to be false
           expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
@@ -106,6 +108,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'with a valid embargo date (and no template requirements)' do
         let(:date) { Time.zone.today + 2 }
+
         it 'interprets and apply embargo and lease visibility settings' do
           subject.create(env)
           expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
@@ -131,6 +134,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'when embargo_release_date is in the past' do
         let(:date) { Time.zone.today - 2 }
+
         it 'sets error on curation_concern and return false' do
           expect(subject.create(env)).to be false
           expect(curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date.'
@@ -139,6 +143,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context "embargo with missing embargo date" do
         let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
+
         it "returns false and logs error on visibility field" do
           permission_template # Ensuring permission_template is loaded
           expect(subject.create(env)).to be false
@@ -417,6 +422,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'with a valid lease date' do
         let(:date) { Time.zone.today + 2 }
+
         it 'interprets and apply embargo and lease visibility settings' do
           subject.create(env)
           expect(curation_concern.embargo_release_date).to be_nil
@@ -428,6 +434,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'when lease_expiration_date is in the past' do
         let(:date) { Time.zone.today - 2 }
+
         it 'sets error on curation_concern and return false' do
           expect(subject.create(env)).to be false
           expect(curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'

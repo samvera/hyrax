@@ -7,6 +7,7 @@ RSpec.describe Hyrax::DownloadsController do
       FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
     end
     let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
+
     it 'raises an error if the object does not exist' do
       expect do
         get :show, params: { id: '8675309' }
@@ -15,6 +16,7 @@ RSpec.describe Hyrax::DownloadsController do
 
     context "when user doesn't have access" do
       let(:another_user) { FactoryGirl.create(:user) }
+
       before { sign_in another_user }
 
       it 'redirects to the default image' do
@@ -88,6 +90,7 @@ RSpec.describe Hyrax::DownloadsController do
       allow(controller).to receive(:default_file).and_return 'world.png'
     end
     subject { controller.send(:derivative_download_options) }
+
     it { is_expected.to eq(disposition: 'inline', type: 'image/png') }
   end
 end

@@ -12,7 +12,9 @@ RSpec.describe Hyrax::WorkflowPresenter, no_clean: true do
 
   describe "#actions" do
     let(:workflow) { create(:workflow, name: 'testing') }
+
     subject { presenter.actions }
+
     context 'with a Sipity::Entity' do
       before do
         allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state).and_return([Sipity::WorkflowAction.new(name: "complete", workflow: workflow)])
@@ -33,7 +35,9 @@ RSpec.describe Hyrax::WorkflowPresenter, no_clean: true do
 
   describe "#badge" do
     let(:workflow) { create(:workflow, name: 'testing') }
+
     subject { presenter.badge }
+
     context 'with a Sipity::Entity' do
       before do
         allow(entity).to receive(:workflow_state_name).and_return('complete')
@@ -51,8 +55,10 @@ RSpec.describe Hyrax::WorkflowPresenter, no_clean: true do
 
   describe "#comments" do
     subject { presenter.comments }
+
     context 'with a Sipity::Entity' do
       let(:comment) { instance_double(Sipity::Comment) }
+
       before do
         allow(entity).to receive(:comments).and_return([comment])
         allow(presenter).to receive(:sipity_entity).and_return(entity)

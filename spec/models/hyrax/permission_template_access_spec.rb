@@ -13,6 +13,7 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
   context 'with the admin users group' do
     let(:agent_type) { 'group' }
     let(:agent_id) { 'admin' }
+
     describe '#label' do
       it 'returns the repo admins label' do
         expect(subject.label).to eq 'Repository Administrators'
@@ -34,6 +35,7 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
   context 'with an agent that is not the admin users group' do
     let(:agent_type) { 'user' }
     let(:agent_id) { 'foobar' }
+
     describe '#label' do
       it 'returns the repo admins label' do
         expect(subject.label).to eq agent_id

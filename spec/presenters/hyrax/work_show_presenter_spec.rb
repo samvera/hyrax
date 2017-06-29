@@ -15,6 +15,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   let(:presenter) { described_class.new(solr_document, ability, request) }
 
   subject { described_class.new(double, double) }
+
   it { is_expected.to delegate_method(:to_s).to(:solr_document) }
   it { is_expected.to delegate_method(:human_readable_type).to(:solr_document) }
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
@@ -32,6 +33,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe "#model_name" do
     subject { presenter.model_name }
+
     it { is_expected.to be_kind_of ActiveModel::Name }
   end
 
@@ -39,11 +41,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
     let(:work) { build(:generic_work, id: '123abc') }
+    let(:attributes) { work.to_solr }
+
     before do
       # https://github.com/projecthydra/active_fedora/issues/1251
       allow(work).to receive(:persisted?).and_return(true)
     end
-    let(:attributes) { work.to_solr }
+
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
   end
 
@@ -78,6 +82,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
         'id' => '99999'
       }
     end
+
     before { allow(user).to receive_messages(groups: ['admin', 'registered']) }
 
     context 'with a new public work' do
@@ -100,13 +105,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     describe "#editor?" do
       subject { presenter.editor? }
+
       it { is_expected.to be true }
     end
   end
 
   describe '#tweeter' do
     let(:user) { instance_double(User, user_key: 'user_key') }
+
     subject { presenter.tweeter }
+
     it 'delegates the depositor as the user_key to TwitterPresenter.twitter_handle_for' do
       expect(Hyrax::TwitterPresenter).to receive(:twitter_handle_for).with(user_key: user_key)
       subject
@@ -115,6 +123,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe "#permission_badge" do
     let(:badge) { instance_double(Hyrax::PermissionBadge) }
+
     before do
       allow(Hyrax::PermissionBadge).to receive(:new).and_return(badge)
     end
@@ -165,6 +174,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     context "when some of the members are not file sets" do
       let(:another_work) { create(:work) }
+
       before do
         obj.ordered_members << another_work
         obj.save!
@@ -179,6 +189,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe "#representative_presenter" do
     let(:obj) { create(:work_with_representative_file) }
     let(:attributes) { obj.to_solr }
+
     it "has a representative" do
       expect(Hyrax::PresenterFactory).to receive(:build_for)
         .with(ids: [obj.members[0].id],
@@ -191,11 +202,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe '#page_title' do
     subject { presenter.page_title }
+
     it { is_expected.to eq 'foo' }
   end
 
   describe "#valid_child_concerns" do
     subject { presenter }
+
     it "delegates to the class attribute of the model" do
       allow(GenericWork).to receive(:valid_child_concerns).and_return([GenericWork])
 
@@ -231,8 +244,10 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:user) { create(:user) }
     let(:ability) { Ability.new(user) }
     let(:entity) { instance_double(Sipity::Entity) }
+
     describe "#workflow" do
       subject { presenter.workflow }
+
       it { is_expected.to be_kind_of Hyrax::WorkflowPresenter }
     end
   end
@@ -240,8 +255,10 @@ RSpec.describe Hyrax::WorkShowPresenter do
   context "with inspect_work" do
     let(:user) { create(:user) }
     let(:ability) { Ability.new(user) }
+
     describe "#inspect_work" do
       subject { presenter.inspect_work }
+
       it { is_expected.to be_kind_of Hyrax::InspectWorkPresenter }
     end
   end
@@ -262,16 +279,19 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     describe "#export_as_nt" do
       subject { presenter.export_as_nt }
+
       it { is_expected.to eq "<http://example.com/1> <http://purl.org/dc/terms/title> \"Test title\" .\n" }
     end
 
     describe "#export_as_ttl" do
       subject { presenter.export_as_ttl }
+
       it { is_expected.to eq "\n<http://example.com/1> <http://purl.org/dc/terms/title> \"Test title\" .\n" }
     end
 
     describe "#export_as_jsonld" do
       subject { presenter.export_as_jsonld }
+
       it do
         is_expected.to eq '{
   "@context": {

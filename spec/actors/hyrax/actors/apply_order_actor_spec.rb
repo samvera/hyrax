@@ -3,6 +3,7 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
   let(:ability) { ::Ability.new(user) }
   let(:user) { create(:admin) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -11,11 +12,11 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
     end
     stack.build(terminator)
   end
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
 
   describe '#update' do
     context 'with ordered_member_ids that are already associated with the parent' do
       let(:attributes) { { ordered_member_ids: ["BlahBlah1"] } }
+
       before do
         allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         curation_concern.apply_depositor_metadata(user.user_key)
@@ -35,6 +36,7 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
     context 'with ordered_members_ids that arent associated with the curation concern yet.' do
       let(:attributes) { { ordered_member_ids: [child.id] } }
       let(:root_actor) { double }
+
       before do
         allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         # TODO: This can be moved into the Factory
@@ -53,6 +55,7 @@ RSpec.describe Hyrax::Actors::ApplyOrderActor do
     context 'without an ordered_member_id that was associated with the curation concern' do
       let(:curation_concern) { create(:work_with_two_children, user: user) }
       let(:attributes) { { ordered_member_ids: ["BlahBlah2"] } }
+
       before do
         allow(terminator).to receive(:update).with(Hyrax::Actors::Environment).and_return(true)
         child.title = ["Generic Title"]

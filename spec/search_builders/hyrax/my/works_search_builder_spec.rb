@@ -31,6 +31,7 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
 
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
+
     let(:expected_filters) do
       [
         :default_solr_parameters,
@@ -47,6 +48,7 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
         :show_only_resources_deposited_by_current_user
       ]
     end
+
     it { is_expected.to eq expected_filters }
   end
 end

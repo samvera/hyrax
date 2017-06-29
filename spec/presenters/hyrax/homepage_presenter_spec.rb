@@ -6,6 +6,7 @@ RSpec.describe Hyrax::HomepagePresenter do
 
   describe "#collections" do
     subject { presenter.collections }
+
     it { is_expected.to eq collections }
   end
 

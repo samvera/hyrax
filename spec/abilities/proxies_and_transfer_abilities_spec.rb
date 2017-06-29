@@ -18,11 +18,13 @@ RSpec.describe 'Proxy and Transfer Abilities' do
 
       context "a work belonging to someone else" do
         let(:mine) { false }
+
         it { is_expected.not_to be_able_to(:transfer, work_id) }
       end
 
       context "my own work" do
         let(:mine) { true }
+
         it { is_expected.to be_able_to(:transfer, work_id) }
       end
     end
@@ -31,13 +33,16 @@ RSpec.describe 'Proxy and Transfer Abilities' do
       let(:enabled) { false }
 
       let(:mine) { true }
+
       it { is_expected.not_to be_able_to(:transfer, work_id) }
     end
   end
 
   describe "#user_is_depositor?" do
     let(:work) { create(:work) }
+
     subject { ability.send(:user_is_depositor?, work.id) }
+
     it { is_expected.to be false }
   end
 
@@ -57,24 +62,28 @@ RSpec.describe 'Proxy and Transfer Abilities' do
         end
         context "for a guest user" do
           let(:user) { create(:user, :guest) }
+
           it { is_expected.not_to be_able_to(:create, ProxyDepositRequest) }
         end
       end
 
       context "when disabled" do
         let(:enabled) { false }
+
         it { is_expected.not_to be_able_to(:create, ProxyDepositRequest) }
       end
     end
 
     context "with a ProxyDepositRequest that they receive" do
       let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender) }
+
       it { is_expected.to be_able_to(:accept, request) }
       it { is_expected.to be_able_to(:reject, request) }
       it { is_expected.not_to be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
         let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: user, sending_user: sender, status: 'accepted') }
+
         it { is_expected.not_to be_able_to(:accept, request) }
         it { is_expected.not_to be_able_to(:reject, request) }
         it { is_expected.not_to be_able_to(:destroy, request) }
@@ -83,12 +92,14 @@ RSpec.describe 'Proxy and Transfer Abilities' do
 
     context "with a ProxyDepositRequest they are the sender of" do
       let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user) }
+
       it { is_expected.not_to be_able_to(:accept, request) }
       it { is_expected.not_to be_able_to(:reject, request) }
       it { is_expected.to be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
         let(:request) { ProxyDepositRequest.create!(work_id: work.id, receiving_user: sender, sending_user: user, status: 'accepted') }
+
         it { is_expected.not_to be_able_to(:accept, request) }
         it { is_expected.not_to be_able_to(:reject, request) }
         it { is_expected.not_to be_able_to(:destroy, request) }

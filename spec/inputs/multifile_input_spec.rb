@@ -18,6 +18,7 @@ RSpec.describe 'MultifileInput', type: :input do
 
   let(:foo) { Foo.new }
   let(:bar) { ["bar1", "bar2"] }
+
   subject do
     foo.bar = bar
     input_for(foo, :files, as: :multifile)

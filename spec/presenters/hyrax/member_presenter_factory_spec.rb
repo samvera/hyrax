@@ -7,6 +7,7 @@ RSpec.describe Hyrax::MemberPresenterFactory do
       let(:request) { double }
       let(:factory) { described_class.new(solr_document, ability, request) }
       let(:presenter_class) { double }
+
       before do
         allow(factory).to receive(:composite_presenter_class).and_return(presenter_class)
         allow(factory).to receive(:ordered_ids).and_return(['12', '33'])

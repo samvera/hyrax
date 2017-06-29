@@ -20,6 +20,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
         context "with latest_version_only" do
           let(:service_by_object) { described_class.new(f, async_jobs: false, latest_version_only: true) }
+
           specify "returns one log result" do
             expect(subject.values.length).to eq(1)
           end
@@ -32,6 +33,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         let!(:existing_record) do
           ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: f.original_file.id)
         end
+
         it "re-checks" do
           existing_record
           expect(subject.length).to eq 1
@@ -43,6 +45,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
     describe '#fixity_check_file' do
       subject { service_by_object.send(:fixity_check_file, f.original_file) }
+
       specify 'returns a single result' do
         expect(subject.length).to eq(1)
       end
@@ -50,6 +53,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
     describe '#fixity_check_file_version' do
       subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.uri.to_s) }
+
       specify 'returns a single ChecksumAuditLog for the given file' do
         expect(subject).to be_kind_of ChecksumAuditLog
         expect(subject.file_set_id).to eq(f.id)

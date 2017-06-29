@@ -17,12 +17,15 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
 
   describe '#collection' do
     let(:work) { GenericWork.new(based_near: [::RDF::URI('http://example.org/1')]) }
+
     subject { input.send(:collection) }
+
     it { is_expected.to all(be_an(Hyrax::ControlledVocabularies::Location)) }
   end
 
   describe '#build_field' do
     subject { input.send(:build_field, value, 0) }
+
     context 'for a resource' do
       let(:value) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', node?: false) }
 

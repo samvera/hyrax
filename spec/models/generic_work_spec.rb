@@ -13,37 +13,45 @@ RSpec.describe GenericWork do
 
   describe '.model_name' do
     subject { described_class.model_name.singular_route_key }
+
     it { is_expected.to eq 'hyrax_generic_work' }
   end
 
   describe ".properties" do
     subject { described_class.properties.keys }
+
     it { is_expected.to include("has_model", "create_date", "modified_date") }
   end
 
   describe "to_sipity_entity" do
     let(:state) { FactoryGirl.create(:workflow_state) }
     let(:work) { create(:work) }
+
     before do
       Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
                              workflow_state: state,
                              workflow: state.workflow)
     end
     subject { work.to_sipity_entity }
+
     it { is_expected.to be_kind_of Sipity::Entity }
   end
 
   describe '#state' do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
+
     subject { work.state.rdf_subject }
+
     it { is_expected.to eq inactive }
   end
 
   describe '#suppressed?' do
     let(:work) { described_class.new(state: state) }
+
     context "when state is inactive" do
       let(:state) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
+
       it 'is suppressed' do
         expect(work).to be_suppressed
       end
@@ -51,6 +59,7 @@ RSpec.describe GenericWork do
 
     context "when the state is active" do
       let(:state) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active') }
+
       it 'is not suppressed' do
         expect(work).not_to be_suppressed
       end
@@ -58,6 +67,7 @@ RSpec.describe GenericWork do
 
     context "when the state is nil" do
       let(:state) { nil }
+
       it 'is not suppressed' do
         expect(work).not_to be_suppressed
       end
@@ -78,6 +88,7 @@ RSpec.describe GenericWork do
   describe "delegations" do
     let(:work) { described_class.new { |gw| gw.apply_depositor_metadata("user") } }
     let(:proxy_depositor) { create(:user) }
+
     before do
       work.proxy_depositor = proxy_depositor.user_key
     end
@@ -104,9 +115,11 @@ RSpec.describe GenericWork do
 
   describe "featured works" do
     let(:work) { create(:public_work) }
+
     before { FeaturedWork.create(work_id: work.id) }
 
     subject { work }
+
     it { is_expected.to be_featured }
 
     context "when a previously featured work is deleted" do

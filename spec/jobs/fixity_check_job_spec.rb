@@ -14,6 +14,7 @@ RSpec.describe FixityCheckJob do
 
     describe 'fixity check the content' do
       let(:uri) { file_set.original_file.uri }
+
       it 'passes' do
         expect(log_record).to be_passed
       end
@@ -27,6 +28,7 @@ RSpec.describe FixityCheckJob do
 
     describe 'fixity check a version of the content' do
       let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
+
       it 'passes' do
         expect(log_record).to be_passed
       end
@@ -34,6 +36,7 @@ RSpec.describe FixityCheckJob do
 
     describe 'fixity check an invalid version of the content' do
       let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
+
       it 'fails' do
         expect(log_record).to be_failed
       end
@@ -45,14 +48,13 @@ RSpec.describe FixityCheckJob do
     let!(:old) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, passed: true, created_at: 2.minutes.ago) }
     let!(:new) { ChecksumAuditLog.create(file_set_id: file_set.id, file_id: file_id, checked_uri: uri, passed: false) }
     let(:mock_service) { double('mock fixity check service') }
+    let(:job) do
+      described_class.new
+    end
 
     before do
       allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
       allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
-    end
-
-    let(:job) do
-      described_class.new
     end
 
     it 'does not prune failed fixity checks' do

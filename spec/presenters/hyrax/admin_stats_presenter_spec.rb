@@ -25,6 +25,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
     end
 
     subject { service.active_users }
+
     it "returns statistics" do
       expect(subject).to eq [{ label: user1.user_key, data: 3 }, { label: user2.user_key, data: 1 }]
     end
@@ -88,6 +89,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
     context "when start date is provided" do
       let(:start_date) { one_day_ago }
       let(:system_stats) { double(by_permission: {}) }
+
       it "queries by start date" do
         expect(Hyrax::Statistics::Works::Count).to receive(:new)
           .with(one_day_ago_date.beginning_of_day,
@@ -101,6 +103,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
       let(:start_date) { two_days_ago }
       let(:end_date) { one_day_ago }
       let(:system_stats) { double(by_permission: {}) }
+
       it "queries by start and date" do
         expect(Hyrax::Statistics::Works::Count).to receive(:new)
           .with(two_days_ago_date.beginning_of_day,
@@ -114,6 +117,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
   describe "recent_users" do
     let(:one_day_ago)  { one_day_ago_date.strftime("%Y-%m-%d") }
     let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
+
     subject { service.recent_users }
 
     context "default range" do
@@ -124,6 +128,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
 
     context "with a start and no end date" do
       let(:start_date) { one_day_ago }
+
       it "allows queries against stats_filters" do
         expect(User).to receive(:recent_users).with(one_day_ago_date.beginning_of_day, nil).and_return([user2])
         expect(subject).to eq [user2]
@@ -151,6 +156,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
     context "with a start and no end date" do
       let(:start_date) { '2015-12-14' }
       let(:today) { Time.zone.today.to_date.to_s(:standard) }
+
       it { is_expected.to eq "12/14/2015 to #{today}" }
     end
 

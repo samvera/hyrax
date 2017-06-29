@@ -58,6 +58,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
 
     context "with spaces" do
       let(:file) { "file:///local/file/ pigs .txt" }
+
       it "attaches files" do
         expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/ pigs .txt", user)
         expect(actor.create(environment)).to be true

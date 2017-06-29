@@ -5,13 +5,13 @@ RSpec.describe Hyrax::ResourceSync::CapabilityListWriter do
   let(:resource_list) { 'http://example.com/resourcelist.xml' }
   let(:change_list) { 'http://example.com/changelist.xml' }
   let(:description) { 'http://example.com/resourcesync_description.xml' }
+  let(:xml) { Nokogiri::XML.parse(subject) }
 
   subject do
     described_class.new(resource_list_url: resource_list,
                         change_list_url: change_list,
                         description_url: description).write
   end
-  let(:xml) { Nokogiri::XML.parse(subject) }
 
   it "has url to the capability list" do
     description_href = xml.xpath('/x:urlset/rs:ln[@rel="up"]/@href', 'x' => sitemap, 'rs' => rs).map(&:value)

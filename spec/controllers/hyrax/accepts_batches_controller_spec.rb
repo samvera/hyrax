@@ -11,6 +11,7 @@ RSpec.describe AcceptsBatchesController, type: :controller do
     describe ':all' do
       let(:current_user) { double(user_key: 'vanessa') }
       let(:mock_service) { instance_double(Hyrax::Collections::SearchService) }
+
       before do
         doc1 = double(id: 123)
         doc2 = double(id: 456)
@@ -28,6 +29,7 @@ RSpec.describe AcceptsBatchesController, type: :controller do
   describe 'should allow filtering for access' do
     let(:allowed) { [1, 2, 3] }
     let(:disallowed) { [5, 6, 7] }
+
     before do
       subject.batch = allowed + disallowed
     end

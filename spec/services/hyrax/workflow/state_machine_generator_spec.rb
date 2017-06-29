@@ -2,16 +2,6 @@ module Hyrax
   RSpec.describe Workflow::StateMachineGenerator do
     let(:workflow) { create(:workflow, name: 'hello') }
     let(:action_name) { 'do_it' }
-    before do
-      class ConfirmSubmission
-      end
-    end
-    after { Hyrax.send(:remove_const, :ConfirmSubmission) }
-    it 'exposes .generate_from_schema as a convenience method' do
-      expect_any_instance_of(described_class).to receive(:call)
-      described_class.generate_from_schema(workflow: workflow, name: action_name, config: {})
-    end
-
     let(:config) do
       {
         from_states: [
@@ -25,8 +15,19 @@ module Hyrax
       }
     end
 
+    before do
+      class ConfirmSubmission
+      end
+    end
+    after { Hyrax.send(:remove_const, :ConfirmSubmission) }
+    it 'exposes .generate_from_schema as a convenience method' do
+      expect_any_instance_of(described_class).to receive(:call)
+      described_class.generate_from_schema(workflow: workflow, name: action_name, config: {})
+    end
+
     context '#call' do
       subject { described_class.new(workflow: workflow, action_name: action_name, config: config) }
+
       it 'will generate the various data entries (but only once)' do
         expect do
           subject.call

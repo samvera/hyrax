@@ -28,6 +28,7 @@ RSpec.describe Hyrax::Actors::LeaseActor do
 
     context 'with an expired lease' do
       let(:release_date) { Time.zone.today - 2 }
+
       it "removes the lease" do
         expect(work.reload.lease_expiration_date).to be_nil
         expect(work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE

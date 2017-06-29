@@ -12,11 +12,13 @@ RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
 
     context 'when a block has a nil value' do
       let(:content_block) { double(value: nil) }
+
       it { is_expected.to be_nil }
     end
 
     context 'when a block has an empty string value' do
       let(:content_block) { double(value: '') }
+
       it { is_expected.to be_nil }
     end
 

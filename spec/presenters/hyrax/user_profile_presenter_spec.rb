@@ -5,6 +5,7 @@ RSpec.describe Hyrax::UserProfilePresenter do
 
   describe "current_user?" do
     subject { presenter.current_user? }
+
     it { is_expected.to be true }
   end
 
@@ -16,6 +17,7 @@ RSpec.describe Hyrax::UserProfilePresenter do
     let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
     let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
     let!(:badtrophy) { user.trophies.create!(work_id: 'not_a_generic_work') }
+
     subject { presenter.trophies }
 
     it "has an array of presenters" do

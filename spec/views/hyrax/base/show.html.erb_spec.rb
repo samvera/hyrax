@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     double('workflow_presenter', badge: 'Foobar')
   end
   let(:page) { Capybara::Node::Simple.new(rendered) }
+
   before do
     allow(presenter).to receive(:workflow).and_return(workflow_presenter)
     stub_template 'hyrax/base/_metadata.html.erb' => ''

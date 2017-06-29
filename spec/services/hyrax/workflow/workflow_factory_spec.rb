@@ -8,6 +8,7 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
     let(:attributes) { {} }
     let(:user) { create(:user) }
     let(:deposit_action) { Sipity::WorkflowAction.create!(workflow: workflow, name: 'start') }
+
     subject { described_class.create(work, attributes, user) }
 
     it 'creates a Sipity::Entity, assign entity specific responsibility (but not to the full workflow) then runs the WorkflowActionService' do

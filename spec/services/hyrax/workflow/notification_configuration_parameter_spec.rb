@@ -8,6 +8,7 @@ module Hyrax
             to: ['role_name_to'], cc: ['role_name_cc'], bcc: ['role_name_bcc']
           }
         end
+
         it 'will build based on the given action' do
           expected = described_class.new scope: 'name_of_action',
                                          reason: Sipity::NotifiableContext::REASON_ACTION_IS_TAKEN,

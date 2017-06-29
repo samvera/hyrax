@@ -30,6 +30,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
 
   describe "#primary_terms" do
     subject { form.primary_terms }
+
     it { is_expected.to eq([:title]) }
   end
 
@@ -57,6 +58,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
 
   describe '#display_additional_fields?' do
     subject { form.display_additional_fields? }
+
     context 'with no secondary terms' do
       before do
         allow(form).to receive(:secondary_terms).and_return([])
@@ -73,16 +75,19 @@ RSpec.describe Hyrax::Forms::CollectionForm do
 
   describe "#id" do
     subject { form.id }
+
     it { is_expected.to be_nil }
   end
 
   describe "#required?" do
     subject { form.required?(:title) }
+
     it { is_expected.to be true }
   end
 
   describe "#human_readable_type" do
     subject { form.human_readable_type }
+
     it { is_expected.to eq 'Collection' }
   end
 
@@ -91,11 +96,13 @@ RSpec.describe Hyrax::Forms::CollectionForm do
       allow(collection).to receive(:member_ids).and_return(['9999'])
     end
     subject { form.member_ids }
+
     it { is_expected.to eq ['9999'] }
   end
 
   describe ".build_permitted_params" do
     subject { described_class.build_permitted_params }
+
     it do
       is_expected.to eq [{ resource_type: [] },
                          { title: [] },

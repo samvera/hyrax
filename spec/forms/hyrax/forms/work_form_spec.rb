@@ -15,6 +15,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
       allow(work).to receive(:etag).and_return('123456')
     end
     subject { form.version }
+
     it { is_expected.to eq '123456' }
   end
 
@@ -24,6 +25,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
     let(:file_id) { work.file_sets.first.id }
 
     subject { form.select_files }
+
     it { is_expected.to eq(title => file_id) }
   end
 
@@ -47,6 +49,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
   describe ".build_permitted_params" do
     subject { described_class.build_permitted_params }
+
     context "without mediated deposit" do
       it {
         is_expected.to include({ permissions_attributes: [:type, :name, :access, :id, :_destroy] },
@@ -105,6 +108,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
       context "and no admin_set has been selected" do
         let(:attributes) { { permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
+
         it { is_expected.to eq ActionController::Parameters.new.permit! }
       end
 
@@ -119,6 +123,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
     context "without permissions being set" do
       let(:attributes) { {} }
+
       it { is_expected.to eq ActionController::Parameters.new.permit! }
     end
   end
@@ -126,52 +131,62 @@ RSpec.describe Hyrax::Forms::WorkForm do
   describe "initialized fields" do
     context "for :description" do
       subject { form[:description] }
+
       it { is_expected.to eq [''] }
     end
 
     context "for :embargo_release_date" do
       subject { form[:embargo_release_date] }
+
       it { is_expected.to be nil }
     end
   end
 
   describe '#visibility' do
     subject { form.visibility }
+
     it { is_expected.to eq 'restricted' }
   end
 
   describe '#human_readable_type' do
     subject { form.human_readable_type }
+
     it { is_expected.to eq 'Generic Work' }
   end
 
   describe "#open_access?" do
     subject { form.open_access? }
+
     it { is_expected.to be false }
   end
 
   describe "#authenticated_only_access?" do
     subject { form.authenticated_only_access? }
+
     it { is_expected.to be false }
   end
 
   describe "#open_access_with_embargo_release_date?" do
     subject { form.open_access_with_embargo_release_date? }
+
     it { is_expected.to be false }
   end
 
   describe "#private_access?" do
     subject { form.private_access? }
+
     it { is_expected.to be true }
   end
 
   describe "#member_ids" do
     subject { form.member_ids }
+
     it { is_expected.to eq work.member_ids }
   end
 
   describe '#display_additional_fields?' do
     subject { form.display_additional_fields? }
+
     context 'with no secondary terms' do
       before do
         allow(form).to receive(:secondary_terms).and_return([])
@@ -188,13 +203,17 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
   describe "#embargo_release_date" do
     let(:work) { create(:work, embargo_release_date: 5.days.from_now) }
+
     subject { form.embargo_release_date }
+
     it { is_expected.to eq work.embargo_release_date }
   end
 
   describe "#lease_expiration_date" do
     let(:work) { create(:work, lease_expiration_date: 2.days.from_now) }
+
     subject { form.lease_expiration_date }
+
     it { is_expected.to eq work.lease_expiration_date }
   end
 

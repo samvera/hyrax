@@ -21,6 +21,7 @@ RSpec.describe 'hyrax/base/unavailable.html.erb', type: :view do
            to_model: model,
            human_readable_type: 'Foo Bar')
   end
+
   before do
     assign(:presenter, presenter)
     assign(:parent_presenter, parent_presenter)

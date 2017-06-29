@@ -8,6 +8,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
 
   describe "create" do
     let(:terminator) { Hyrax::Actors::Terminator.new }
+
     subject(:middleware) do
       stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
         middleware.use described_class

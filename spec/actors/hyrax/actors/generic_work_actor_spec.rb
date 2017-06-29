@@ -66,6 +66,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
     context 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+
       before do
         redlock_client_stub
       end
@@ -104,6 +105,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             in_works_ids: [parent.id]
           )
         end
+
         it "attaches the parent" do
           allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(true)
           expect(middleware.create(env)).to be true
@@ -125,6 +127,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
         context 'authenticated visibility' do
           let(:file_actor) { double }
+
           before do
             allow(Hyrax::TimeService).to receive(:time_in_utc) { xmas }
             allow(Hyrax::Actors::FileActor).to receive(:new).and_return(file_actor)
@@ -203,6 +206,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
     context 'failure' do
       let(:attributes) { {} }
+
       it 'returns false' do
         expect(curation_concern).to receive(:save).and_return(false)
         expect(subject.update(env)).to be false
@@ -211,6 +215,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
     context 'success' do
       let(:attributes) { { title: ['Other Title'] } }
+
       it "invokes the after_update_metadata callback" do
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_update_metadata, curation_concern, user)
@@ -226,6 +231,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           in_works_ids: [parent.id]
         )
       end
+
       before do
         old_parent.ordered_members << curation_concern
         old_parent.save!
@@ -244,6 +250,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           in_works_ids: []
         )
       end
+
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
@@ -265,6 +272,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           in_works_ids: nil
         )
       end
+
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
@@ -283,6 +291,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:attributes) do
         FactoryGirl.attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
       end
+
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.member_of_collections = [collection1]
@@ -311,6 +320,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:attributes) do
         FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
       end
+
       it 'updates the order of file sets' do
         expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
         expect(subject.update(env)).to be true
@@ -323,6 +333,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id])
         end
+
         it "works" do
           expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
 

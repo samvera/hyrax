@@ -1,5 +1,6 @@
 RSpec.describe Hyrax::PermissionsController do
   let(:user) { create(:user) }
+
   before do
     sign_in user
     allow(ActiveFedora::Base).to receive(:find).with(work.id).and_return(work)

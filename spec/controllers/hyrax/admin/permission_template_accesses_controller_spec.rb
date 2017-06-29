@@ -32,6 +32,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       context 'when deleting the admin users group' do
         let(:agent_type) { 'group' }
         let(:agent_id) { 'admin' }
+
         it "fails" do
           expect(controller).to receive(:authorize!).with(:destroy, permission_template_access)
           expect do
@@ -45,6 +46,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       context 'with deleting any agent other than the admin users group' do
         let(:agent_type) { 'user' }
         let(:agent_id) { 'Liz' }
+
         it "is successful" do
           expect(controller).to receive(:authorize!).with(:destroy, permission_template_access)
           expect do

@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::AbilityHelper do
   describe "#visibility_badge" do
     subject { helper.visibility_badge visibility }
+
     {
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC =>
         "<span class=\"label label-success\">Public</span>",
@@ -15,6 +16,7 @@ RSpec.describe Hyrax::AbilityHelper do
     }.each do |value, output|
       context value do
         let(:visibility) { value }
+
         it { expect(subject).to eql(output % t('hyrax.institution_name')) }
       end
     end
@@ -23,20 +25,25 @@ RSpec.describe Hyrax::AbilityHelper do
     let(:public_opt) { ['Public', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
     let(:authenticated_opt) { [t('hyrax.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
     let(:private_opt) { ['Private', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE] }
+
     subject { helper.visibility_options(option) }
+
     context 'all options' do
       let(:options) { [public_opt, authenticated_opt, private_opt] }
       let(:option) { nil }
+
       it { is_expected.to eql(options) }
     end
     context 'restricting options' do
       let(:options) { [private_opt, authenticated_opt] }
       let(:option) { :restrict }
+
       it { is_expected.to eql(options) }
     end
     context 'loosening options' do
       let(:options) { [public_opt, authenticated_opt] }
       let(:option) { :loosen }
+
       it { is_expected.to eql(options) }
     end
   end
