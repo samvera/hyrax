@@ -92,6 +92,7 @@ Hyrax requires the following software to work:
 
 ### Characterization
 
+1. FITS can be installed using Homebrew by running the command `brew install fits` **OR**
 1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS (see above to pick a known working version) & unpack it somewhere on your machine.
 1. Mark fits.sh as executable: `chmod a+x fits.sh`
 1. Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
