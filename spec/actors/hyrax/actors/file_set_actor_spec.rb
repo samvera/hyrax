@@ -71,7 +71,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     before do
       allow(DateTime).to receive(:current).and_return(date_today)
       allow(actor).to receive(:acquire_lock_for).and_yield
-      # expect(actor).to receive(:wrapper).with(file, relation)
       actor.create_metadata
       actor.create_content(file)
       actor.attach_to_work(work)
@@ -92,17 +91,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         expect(subject).not_to be_active_lease
         expect(subject.visibility).to eq 'restricted'
       end
-    end
-  end
-
-  describe "#attach_to_work" do
-    let(:work) { create(:public_generic_work) }
-
-    it 'copies visibility from the parent' do
-      allow(actor).to receive(:acquire_lock_for).and_yield
-      actor.attach_to_work(work)
-      saved_file = file_set.reload
-      expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
   end
 
@@ -230,27 +218,49 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#attach_to_work" do
+    let(:work) { build(:public_generic_work) }
+
     before do
-      # stub out redis connection
-      client = double('redlock client')
-      allow(client).to receive(:lock).and_yield(true)
-      allow(Redlock::Client).to receive(:new).and_return(client)
+      allow(actor).to receive(:acquire_lock_for).and_yield
     end
 
-    # The first version of the work has no members.
-    let!(:work_v1) { create(:generic_work) }
-
-    # Create another version of the same work with a member.
-    let!(:work_v2) do
-      work = ActiveFedora::Base.find(work_v1.id)
-      work.ordered_members << create(:file_set)
-      work.save
-      work
+    it 'copies file_set visibility from the parent' do
+      actor.attach_to_work(work)
+      expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
-    it "writes to the most up to date version" do
-      actor.attach_to_work(work_v1, {})
-      expect(work_v1.members.size).to eq 2
+    context 'without representative and thumbnail' do
+      it 'assigns them (with persistence)' do
+        actor.attach_to_work(work)
+        expect(work.representative).to eq(file_set)
+        expect(work.thumbnail).to eq(file_set)
+        expect { work.reload }.not_to change { [work.representative, work.thumbnail] }
+      end
+    end
+
+    context 'with representative and thumbnail' do
+      it 'does not (re)assign them' do
+        allow(work).to receive(:thumbnail_id).and_return('ab123c78h')
+        allow(work).to receive(:representative_id).and_return('zz365c78h')
+        expect(work).not_to receive(:representative=)
+        expect(work).not_to receive(:thumbnail=)
+        actor.attach_to_work(work)
+      end
+    end
+
+    context 'with multiple versions' do
+      let(:work_v1) { create(:generic_work) } # this version of the work has no members
+
+      before do # another version of the same work is saved with a member
+        work_v2 = ActiveFedora::Base.find(work_v1.id)
+        work_v2.ordered_members << create(:file_set)
+        work_v2.save!
+      end
+
+      it "writes to the most up to date version" do
+        actor.attach_to_work(work_v1)
+        expect(work_v1.members.size).to eq 2
+      end
     end
   end
 
