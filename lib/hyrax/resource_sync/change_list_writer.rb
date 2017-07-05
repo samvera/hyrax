@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module ResourceSync
     # TODO: the big assumption I'm making here is that the repository has fewer
@@ -6,6 +8,8 @@ module Hyrax
     # lists and add a Change List Index to point to all of them.
     class ChangeListWriter
       attr_reader :resource_host, :capability_list_url
+      MODIFIED_DATE_FIELD = 'system_modified_dtsi'.freeze
+      BEGINNING_OF_TIME = '1970-01-01T00:00:00Z'.freeze
 
       def initialize(resource_host:, capability_list_url:)
         @resource_host = resource_host
@@ -29,12 +33,20 @@ module Hyrax
           end
         end
 
+        # return the earliest change. Otherwise BEGINNING_OF_TIME
         def from
-          @from ||= relation.search_with_conditions(public_access, rows: 1, sort: 'system_modified_dtsi asc').first.fetch('system_modified_dtsi')
+          @from ||= begin
+                      results = relation.search_with_conditions(public_access, rows: 1, sort: MODIFIED_DATE_FIELD + ' asc')
+                      if results.present?
+                        results.first.fetch(MODIFIED_DATE_FIELD)
+                      else
+                        BEGINNING_OF_TIME
+                      end
+                    end
         end
 
         def sort
-          { sort: 'system_modified_dtsi desc' }
+          { sort: MODIFIED_DATE_FIELD + ' desc' }
         end
 
         def relation

@@ -6,36 +6,49 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:file_set) { create(:file_set, :public) }
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
   let(:xml) { Nokogiri::XML.parse(subject) }
-
-  before do
-    # These private items should not show up.
-    create(:private_collection)
-    create(:work)
-
-    # Sleep in between to ensure modified dates are different
-    public_collection
-    sleep(1)
-    public_work
-    sleep(1)
-    file_set
+  let(:url_list) { xml.xpath('//x:url', 'x' => sitemap) }
+  let(:instance) do
+    described_class.new(resource_host: 'example.com',
+                        capability_list_url: capability_list)
   end
 
-  subject { described_class.new(resource_host: 'example.com', capability_list_url: capability_list).write }
+  subject { instance.write }
 
-  it "has a list of resources" do
-    capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text
-    expect(capability).to eq capability_list
+  context "without resources" do
+    it "has a list of resources" do
+      expect(url_list).to be_empty
+    end
+  end
 
-    expect(location(1)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
-    expect(change(1)).to eq "created"
+  context "when resources exist" do
+    before do
+      # These private items should not show up.
+      create(:private_collection)
+      create(:work)
 
-    expect(location(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
-    expect(change(2)).to eq "created"
+      # Sleep in between to ensure modified dates are different
+      public_collection
+      sleep(1)
+      public_work
+      sleep(1)
+      file_set
+    end
 
-    expect(location(3)).to eq "http://example.com/collections/#{public_collection.id}"
-    expect(change(3)).to eq "created"
+    it "has a list of resources" do
+      capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text
+      expect(capability).to eq capability_list
 
-    expect(xml.xpath('//x:url', 'x' => sitemap).count).to eq 3
+      expect(location(1)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
+      expect(change(1)).to eq "created"
+
+      expect(location(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
+      expect(change(2)).to eq "created"
+
+      expect(location(3)).to eq "http://example.com/collections/#{public_collection.id}"
+      expect(change(3)).to eq "created"
+
+      expect(url_list.count).to eq 3
+    end
   end
 
   def change(n)
