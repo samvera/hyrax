@@ -165,6 +165,12 @@ pt-BR:
         update:
           flash:
             success: A aparência foi atualizada com sucesso
+      features:
+        index:
+          header:           Características
+          feature:          Característica
+          description:      Descrição
+          action:           Açao
       sidebar:
         activity: Atividade
         admin_sets: Conjuntos Administrativos
@@ -179,7 +185,7 @@ pt-BR:
         settings: Configurações
         statistics: Relatórios
         tasks: Tarefas
-        technical: Técnico
+        technical: Características
         transfers: Transferências
         user_activity: Sua atividade
         users: Gerenciar Usuários

@@ -167,6 +167,12 @@ zh:
         update:
           flash:
             success: 表面已更新
+      features:
+        index:
+          header:  特征
+          feature:          特征
+          description:      描述
+          action:           行动
       sidebar:
         activity: 活动
         admin_sets: 管理集
@@ -181,7 +187,7 @@ zh:
         settings: 设置
         statistics: 统计
         tasks: 任务
-        technical: 技术
+        technical: 特征
         transfers: 转让
         user_activity: 你的操作
         users: 管理用户
