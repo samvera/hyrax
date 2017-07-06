@@ -69,7 +69,6 @@ EOF
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'redlock', '>= 0.1.2'
-  spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
   spec.add_dependency 'active-fedora', '>= 11.3.1'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
 
