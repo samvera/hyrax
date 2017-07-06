@@ -201,6 +201,11 @@ es:
           end_label: Finalizando [el momento actual es el valor predeterminado]
           heading: Ver archivos depositados por los usuarios
           start_label: Comenzando
+        works:
+          headers:
+            main: Estadísticas de trabajo
+            total: 'Total de Obras:'
+            visibility: Totales por visibilidad
       users:
         index:
           access_label: Último acceso
@@ -648,6 +653,7 @@ es:
       authenticated:
         class: label-info
         note_html: Restringir el acceso sólo a usuarios y/o grupos de %{institution}
+        text: "%{institution}"
       embargo:
         class: label-warning
         text: Embargo
@@ -666,7 +672,9 @@ es:
       private_title_attr: Cambiar la visibilidad de este recurso
       restricted:
         class: label-danger
+        note_html: Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
         text: Privado
+      restricted_title_attr: Cambiar la visibilidad de este recurso
     workflow:
       default:
         deposit: Depositar

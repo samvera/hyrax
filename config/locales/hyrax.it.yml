@@ -201,6 +201,11 @@ it:
           end_label: Fine [impostazione predefinita]
           heading: Visualizza file depositati dagli utenti
           start_label: Di partenza
+        works:
+          headers:
+            main: Statistiche di lavoro
+            total: 'Totale opere:'
+            visibility: Totale per visibilità
       users:
         index:
           access_label: Ultimo accesso
@@ -651,6 +656,7 @@ it:
       authenticated:
         class: Etichetta-info
         note_html: Limitare l'accesso a soli utenti e / o gruppi da %{institution}
+        text: "%{institution}"
       embargo:
         class: label-warning
         text: Embargo
@@ -669,7 +675,9 @@ it:
       private_title_attr: Modificare la visibilità di questa risorsa
       restricted:
         class: label-pericolo
+        note_html: Solo utenti e / o gruppi che hanno ricevuto l'accesso specifico nella sezione "Condividi con".
         text: Privato
+      restricted_title_attr: Cambiare la visibilità di questa risorsa
     workflow:
       default:
         deposit: Depositare

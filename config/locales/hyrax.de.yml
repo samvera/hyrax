@@ -201,6 +201,11 @@ de:
           end_label: Endung [Voreinstellung]
           heading: Anzeigen von Dateien, die von Benutzern hinterlegt sind
           start_label: Beginnend
+        works:
+          headers:
+            main: Arbeitsstatistik
+            total: 'Gesamtarbeiten:'
+            visibility: Summen durch Sichtbarkeit
       users:
         index:
           access_label: Letzter Zugriff
@@ -651,6 +656,7 @@ de:
       authenticated:
         class: Etiketten-Info
         note_html: Beschränkung des Zugriffs auf Benutzer und / oder Gruppen von %{institution}
+        text: "%{institution}"
       embargo:
         class: Etikettenwarnung
         text: Embargo
@@ -669,7 +675,9 @@ de:
       private_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
         class: Etikett-Gefahr
+        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt "Freigeben" einen bestimmten Zugriff gewährt wurde.
         text: Privatgelände
+      restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
     workflow:
       default:
         deposit: Anzahlung
