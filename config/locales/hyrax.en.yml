@@ -522,6 +522,7 @@ en:
     mailbox:
       date:     'Date'
       delete:   'Delete Message'
+      empty:   'No notifications found'
       message:  'Message'
       notifications_deleted: "Notifications have been deleted"
       subject:  'Subject'

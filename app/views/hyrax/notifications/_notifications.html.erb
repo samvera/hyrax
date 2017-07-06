@@ -1,27 +1,33 @@
-<table class="table table-striped"> 
-  <thead> 
-    <tr>
-      <th><%= t('hyrax.mailbox.date') %></th>
-      <th><%= t('hyrax.mailbox.subject') %></th>
-      <th><%= t('hyrax.mailbox.message') %></th>
-      <th><span class="sr-only"><%= t('hyrax.mailbox.delete') %></span></th>
-    </tr>
-  </thead> 
-  <tbody> 
-    <% messages.each do |msg| %> 
-      <tr>
-        <td><%= (time_ago_in_words(msg.last_message.created_at) + " ago") %></td>
-        <td><%= msg.last_message.subject.html_safe %></td> 
-        <td><%= msg.last_message.body.html_safe %></td> 
-        <td>
-          <%= link_to hyrax.notification_path(msg.id),
+<% if messages.present? %>
+  <div class="table-responsive">
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th><%= t('hyrax.mailbox.date') %></th>
+          <th><%= t('hyrax.mailbox.subject') %></th>
+          <th><%= t('hyrax.mailbox.message') %></th>
+          <th><span class="sr-only"><%= t('hyrax.mailbox.delete') %></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.each do |msg| %>
+          <tr>
+            <td><%= (time_ago_in_words(msg.last_message.created_at) + " ago") %></td>
+            <td><%= msg.last_message.subject.html_safe %></td>
+            <td><%= msg.last_message.body.html_safe %></td>
+            <td>
+              <%= link_to hyrax.notification_path(msg.id),
                       class: "itemicon itemtrash",
-                      title: "Delete Message",
+                      title: t('hyrax.mailbox.delete'),
                       method: :delete do %>
-            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                <% end %>
+            </td>
+          </tr>
           <% end %>
-        </td>
-      </tr>
-    <% end %> 
-  </tbody> 
-</table>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p><%= t('hyrax.mailbox.empty') %></p>
+<% end %>
