@@ -651,8 +651,8 @@ en:
     visibility:
       authenticated:
         class: "label-info"
-        note_html: Restrict access to only users and/or groups from %{institution}
-        text: "Registered"
+        note_html: "Restrict access to only users and/or groups from %{institution}"
+        text: "%{institution}"
       embargo:
         class: "label-warning"
         text: "Embargo"
