@@ -26,13 +26,6 @@ RSpec.describe "hyrax_events using Hyrax callbacks" do
     end
   end
 
-  describe "after_update_content" do
-    it "queues a ContentNewVersionEventJob" do
-      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-      Hyrax.config.callback.run(:after_update_content, file_set, user)
-    end
-  end
-
   describe "after_update_metadata" do
     it "queues a ContentUpdateEventJob" do
       expect(ContentUpdateEventJob).to receive(:perform_later).with(curation_concern, user)

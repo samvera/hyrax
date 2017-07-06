@@ -22,6 +22,8 @@ module Hyrax::User
     has_many :deposit_rights_received, foreign_key: 'grantee_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_make_deposits_for, through: :deposit_rights_received, source: :grantor
 
+    has_many :job_io_wrappers, inverse_of: 'user'
+
     scope :guests, ->() { where(guest: true) }
     scope :registered, ->() { where(guest: false) }
     scope :without_system_accounts, -> { where("#{Hydra.config.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key]) }

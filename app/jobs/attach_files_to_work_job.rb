@@ -3,7 +3,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   # @param [ActiveFedora::Base] work - the work object
-  # @param [Array<UploadedFile>] uploaded_files - an array of files to attach
+  # @param [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
   def perform(work, uploaded_files, **work_attributes)
     user = User.find_by_user_key(work.depositor)
     work_permissions = work.permissions.map(&:to_hash)
@@ -11,7 +11,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       file_set = FileSet.new
       actor = Hyrax::Actors::FileSetActor.new(file_set, user)
       actor.create_metadata(visibility_attributes(work_attributes))
-      attach_content(actor, uploaded_file.file)
+      attach_content(actor, uploaded_file)
       actor.attach_to_work(work)
       actor.file_set.permissions_attributes = work_permissions
       uploaded_file.update(file_set_uri: file_set.uri)
@@ -21,8 +21,9 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   private
 
     # @param [Hyrax::Actors::FileSetActor] actor
-    # @param [Hyrax::UploadedFileUploader] file_uploader file_uploader.file must be a CarrierWave::SanitizedFile or file_uploader.url must be present
-    def attach_content(actor, file_uploader)
+    # @param [Hyrax::UploadedFile] uploaded_file .uploader.file must be a CarrierWave::SanitizedFile or .uploader.url must be present
+    def attach_content(actor, uploaded_file)
+      file_uploader = uploaded_file.uploader
       if file_uploader.file.is_a? CarrierWave::SanitizedFile
         actor.create_content(file_uploader.file.to_file)
       elsif file_uploader.url.present?

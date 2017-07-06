@@ -39,7 +39,15 @@ module Hyrax
 
     # routed to /files (POST)
     def create
-      create_from_upload(params)
+      file = params.fetch(:file_set, {}).fetch(:files, []).detect { |f| f.respond_to?(:original_filename) }
+      return render_json_response(response_type: :bad_request, options: { message: 'Error! No file uploaded', description: 'missing file' }) unless file
+      return empty_file_response(file) if empty_file?(file)
+      process_non_empty_file(file: file)
+    rescue RSolr::Error::Http => error
+      logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
+      render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
+    ensure
+      file.tempfile.delete if file.respond_to?(:tempfile) # remove tempfile (only if it is a temp file)
     end
 
     # routed to /files/:id
@@ -80,33 +88,12 @@ module Hyrax
 
     private
 
-      def create_from_upload(params)
-        # check error condition No files
-        return render_json_response(response_type: :bad_request, options: { message: 'Error! No file to save' }) unless params.key?(:file_set) && params.fetch(:file_set).key?(:files)
-
-        file = params[:file_set][:files].detect { |f| f.respond_to?(:original_filename) }
-        attempt_process_file_for_create_from_upload(file)
-      rescue RSolr::Error::Http => error
-        logger.error "FileSetController::create rescued #{error.class}\n\t#{error}\n #{error.backtrace.join("\n")}\n\n"
-        render_json_response(response_type: :internal_error, options: { message: 'Error occurred while creating a FileSet.' })
-      ensure
-        # remove the tempfile (only if it is a temp file)
-        file.tempfile.delete if file.respond_to?(:tempfile)
-      end
-
-      def attempt_process_file_for_create_from_upload(file)
-        if !file
-          render_json_response(response_type: :bad_request, options: { message: 'Error! No file for upload', description: 'unknown file' })
-        elsif empty_file?(file)
-          empty_file_response(file)
-        else
-          process_non_empty_file(file: file)
-        end
-      end
-
       def process_non_empty_file(file:)
-        update_metadata_from_upload_screen
-        if process_file(actor, file)
+        # Relative path is set by the jquery uploader when uploading a directory
+        curation_concern.relative_path = params[:relative_path] if params[:relative_path]
+        actor.create_metadata(params[:file_set])
+        actor.attach_to_work(find_parent_by_id)
+        if actor.create_content(file)
           response_for_successfully_processed_file
         else
           msg = curation_concern.errors.full_messages.join(', ')
@@ -115,20 +102,12 @@ module Hyrax
         end
       end
 
-      def process_file(actor, file)
-        actor.create_metadata(params[:file_set])
-        actor.attach_to_work(find_parent_by_id)
-        actor.create_content(file)
-      end
-
       def empty_file_response(file)
-        render_json_response(response_type: :unprocessable_entity,
-                             options: {
-                               errors: {
-                                 files: "#{file.original_filename} has no content! (Zero length file)"
-                               },
-                               description: t('hyrax.api.unprocessable_entity.empty_file')
-                             })
+        options = {
+          errors: { files: "#{file.original_filename} has no content! (Zero length file)" },
+          description: t('hyrax.api.unprocessable_entity.empty_file')
+        }
+        render_json_response(response_type: :unprocessable_entity, options: options)
       end
 
       def response_for_successfully_processed_file
@@ -207,14 +186,9 @@ module Hyrax
       end
 
       def initialize_edit_form
-        @version_list = version_list
-        @groups = current_user.groups
-      end
-
-      def version_list
         original = @file_set.original_file
-        versions = original ? original.versions.all : []
-        Hyrax::VersionListPresenter.new(versions)
+        @version_list = Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
+        @groups = current_user.groups
       end
 
       def actor
@@ -238,11 +212,8 @@ module Hyrax
         params.key?(:revision) && params[:revision] != curation_concern.latest_content_version.label
       end
 
-      # Override this method to add additional response
-      # formats to your local app
-      def additional_response_formats(_)
-        # nop
-      end
+      # Override this method to add additional response formats to your local app
+      def additional_response_formats(_); end
 
       def file_set_params
         params.require(:file_set).permit(
@@ -252,12 +223,6 @@ module Hyrax
 
       def empty_file?(file)
         (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
-      end
-
-      # this is provided so that implementing application can override this behavior and map params to different attributes
-      def update_metadata_from_upload_screen
-        # Relative path is set by the jquery uploader when uploading a directory
-        curation_concern.relative_path = params[:relative_path] if params[:relative_path]
       end
 
       # This allows us to use the unauthorized and form_permission template in hyrax/base,

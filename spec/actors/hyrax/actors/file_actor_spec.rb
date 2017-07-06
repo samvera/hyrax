@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     end
     it 'uses the relation from the actor' do
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
-      expect(actor.ingest_file(io)).to be_truthy
+      actor.ingest_file(io)
       expect(file_set.reload.remastered.mime_type).to eq 'image/png'
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
     it 'uses the provided mime_type' do
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
-      expect(actor.ingest_file(io)).to be_truthy
+      actor.ingest_file(io)
       expect(file_set.reload.original_file.mime_type).to eq 'image/gif'
     end
   end
@@ -60,7 +60,7 @@ RSpec.describe Hyrax::Actors::FileActor do
         versioning: false
       ).and_call_original
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
-      expect(actor.ingest_file(io)).to be_truthy
+      actor.ingest_file(io)
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       allow(file_set).to receive(:save).and_return(true)
       allow(file_set).to receive(:original_file).and_return(pcdmfile)
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, pcdmfile.id, io.tempfile.path)
-      expect(actor.ingest_file(io)).to be_truthy
+      actor.ingest_file(io)
     end
     it 'returns false when save fails' do
       allow(file_set).to receive(:save).and_return(false)
@@ -120,7 +120,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'reverts to a previous version of a file' do
       expect(file_set).not_to receive(:remastered)
       expect(actor.relation).to eq(:original_file)
-      expect(actor.revert_to(revision_id)).to be_truthy
+      actor.revert_to(revision_id)
     end
 
     describe 'for a different relation' do
@@ -128,7 +128,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
       it 'reverts to a previous version of a file' do
         expect(actor.relation).to eq(:remastered)
-        expect(actor.revert_to(revision_id)).to be_truthy
+        actor.revert_to(revision_id)
       end
       it 'does not rely on the default relation' do
         pending "Hydra::Works::VirusCheck must support other relations: https://github.com/samvera/hyrax/issues/1187"
