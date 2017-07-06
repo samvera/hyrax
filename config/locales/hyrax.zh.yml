@@ -203,6 +203,11 @@ zh:
           end_label: 结束 [默认到此刻]
           heading: 展示用户存储的文件
           start_label: 开始
+        works:
+          headers:
+            main: 工作统计
+            total: 总作品：
+            visibility: 总计可见度
       users:
         index:
           access_label: 上次访问
@@ -650,6 +655,7 @@ zh:
       authenticated:
         class: '信息标签 '
         note_html: 访问仅限于%{institution} 的用户
+        text: "%{institution}"
       embargo:
         class: 警告提示标签
         text: 时滞期限
@@ -668,7 +674,9 @@ zh:
       private_title_attr: 修改此资源的公开度
       restricted:
         class: 危险标签
+        note_html: 只有在“分享到”部分中被赋予特定访问权限的用户和/或组。
         text: 非公开
+      restricted_title_attr: 更改此资源的可见性
     workflow:
       default:
         deposit: 存储

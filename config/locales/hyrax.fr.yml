@@ -201,6 +201,11 @@ fr:
           end_label: Terminer [par défaut pour le moment]
           heading: Afficher les fichiers déposés par les utilisateurs
           start_label: Départ
+        works:
+          headers:
+            main: Statistiques du travail
+            total: 'Total des travaux:'
+            visibility: Totaux par visibilité
       users:
         index:
           access_label: Dernier accès
@@ -651,6 +656,7 @@ fr:
       authenticated:
         class: Info-étiquette
         note_html: Limiter l'accès aux utilisateurs et / ou groupes exclus de %{institution}
+        text: "%{institution}"
       embargo:
         class: Étiquette-avertissement
         text: Embargo
@@ -669,7 +675,9 @@ fr:
       private_title_attr: Changez la visibilité de cette ressource
       restricted:
         class: Label-danger
+        note_html: Seuls les utilisateurs et / ou les groupes ayant reçu un accès spécifique dans la section "Partager avec".
         text: Privé
+      restricted_title_attr: Modifier la visibilité de cette ressource
     workflow:
       default:
         deposit: Dépôt
