@@ -190,7 +190,6 @@ en:
           end_label: "end [defaults to now]"
           heading: "Display Files Deposited:"
           start_label: "Start"
-        registered: "Registered"
         repository_objects:
           series:
             published:   'Published'
@@ -200,6 +199,11 @@ en:
           end_label: "Ending [defaults to now]"
           heading: "Display files deposited by users"
           start_label: "Starting"
+        works:
+          headers:
+            main: Work Statistics
+            total: "Total Works:"
+            visibility: Totals by Visibility
       users:
         index:
           access_label: "Last access"
@@ -648,6 +652,7 @@ en:
       authenticated:
         class: "label-info"
         note_html: Restrict access to only users and/or groups from %{institution}
+        text: "Registered"
       embargo:
         class: "label-warning"
         text: "Embargo"
