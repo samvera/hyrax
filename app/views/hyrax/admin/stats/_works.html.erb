@@ -2,7 +2,7 @@
 <h4>Total Works: <%= @presenter.works_count[:total] %> </h4>
 <h4>Totals by Visibility</h4>
 <ul>
-  <li>Open Access <span class="count">(<%= @presenter.works_count[:public] %>)</span></li>
+  <li><%= t('hyrax.visibility.open.text') %> <span class="count">(<%= @presenter.works_count[:public] %>)</span></li>
   <li><%= t("hyrax.admin.stats.registered") %> <span class="count">(<%= @presenter.works_count[:registered] %>)</span></li>
-  <li>Private <span class="count">(<%= @presenter.works_count[:private] %>)</span></li>
+  <li><%= t('hyrax.visibility.private.text') %> <span class="count">(<%= @presenter.works_count[:private] %>)</span></li>
 </ul>

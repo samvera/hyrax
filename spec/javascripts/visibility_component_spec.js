@@ -8,7 +8,7 @@ describe("VisibilityComponent", function() {
   beforeEach(function() {
     var fixture = setFixtures(visibilityForm(''));
     element = fixture.find('.visibility');
-    admin_set = new AdminSetWidget(fixture.find('select'))
+    admin_set = new AdminSetWidget(fixture.find('select'));
     target = new VisibilityComponent(element, admin_set);
   });
 
@@ -440,7 +440,7 @@ function visibilityForm(admin_set_option) {
         '          <div class="collapse in" id="collapseEmbargo">' +
         '            <input type="date" id="generic_work_embargo_release_date" name="generic_work[embargo_release_date]"/>' +
         '            <select id="generic_work_visibility_after_embargo" name="generic_work[visibility_after_embargo]">' +
-        '              <option value="open">Open Access</option>' +
+        '              <option value="open">Public</option>' +
         '              <option value="authenticated">Institution Name</option>' +
         '            </select>' +
         '          </div>' +
