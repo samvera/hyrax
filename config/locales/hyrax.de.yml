@@ -165,6 +165,12 @@ de:
         update:
           flash:
             success: Das Aussehen wurde erfolgreich aktualisiert
+      features:
+        index:
+          header:           Charakteristik
+          feature:          Charakteristisch
+          description:      Beschreibung
+          action:           Aktion
       sidebar:
         activity: Aktivität
         admin_sets: Verwaltungssets
@@ -179,7 +185,7 @@ de:
         settings: Einstellungen
         statistics: Berichte
         tasks: Aufgaben
-        technical: Technisch
+        technical: Charakteristik
         transfers: Transfers
         user_activity: Ihre Tätigkeit
         users: Benutzer verwalten

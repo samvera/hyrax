@@ -164,6 +164,12 @@ en:
         update:
           flash:
             success:        "The appearance was successfully updated"
+      features:
+        index:
+          header:           Features
+          feature:          Feature
+          description:      Description
+          action:           Action
       sidebar:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
@@ -178,7 +184,7 @@ en:
         settings:           "Settings"
         statistics:         "Reports"
         tasks:              "Tasks"
-        technical:          "Technical"
+        technical:          "Features"
         transfers:          "Transfers"
         users:              "Manage Users"
         user_activity:      "Your activity"

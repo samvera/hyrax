@@ -165,6 +165,12 @@ fr:
         update:
           flash:
             success: L'apparence a été mise à jour avec succès
+      features:
+        index:
+          header:   Caractéristiques
+          feature:          Caractéristique
+          description:      Description
+          action:           Action
       sidebar:
         activity: Activité
         admin_sets: Ensembles administratifs
@@ -179,7 +185,7 @@ fr:
         settings: Paramètres
         statistics: Rapports
         tasks: les tâches
-        technical: Technique
+        technical: Caractéristiques
         transfers: Transferts
         user_activity: Votre activité
         users: gérer les utilisateurs
