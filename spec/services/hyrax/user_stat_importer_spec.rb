@@ -199,7 +199,12 @@ RSpec.describe Hyrax::UserStatImporter do
     end
 
     context "when Google analytics throws an error" do
-      let(:importer) { described_class.new(number_of_retries: 4) }
+      let(:importer) { described_class.new }
+
+      before do
+        # Specify retry_options to make test run faster.
+        allow(importer).to receive(:retry_options).and_return(tries: 4, base_interval: 0.2, multiplier: 1.0, rand_factor: 0.0)
+      end
 
       context "both error out completely" do
         before do
