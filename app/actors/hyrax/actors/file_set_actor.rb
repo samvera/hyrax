@@ -14,7 +14,7 @@ module Hyrax
 
       # Spawns asynchronous IngestJob
       # Called from FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
-      # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user
+      # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
       def create_content(file, relation = :original_file)
@@ -26,7 +26,7 @@ module Hyrax
       end
 
       # Spawns asynchronous IngestJob with user notification afterward
-      # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile, Tempfile] file the file uploaded by the user
+      # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob] the queued job
       def update_content(file, relation = :original_file)
