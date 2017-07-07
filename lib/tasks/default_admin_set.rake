@@ -11,7 +11,7 @@ namespace :hyrax do
           " (non-destructive):\n\n" \
           "    Hyrax::PermissionTemplate.create!(admin_set_id: AdminSet::DEFAULT_ID)\n\n" \
           "OR you could start fresh by clearing Fedora and Solr (destructive):\n\n" \
-          "    require 'active-fedora/cleaner'\n" \
+          "    require 'active_fedora/cleaner'\n" \
           "    ActiveFedora::Cleaner.clean!\n\n"
       end
     end
