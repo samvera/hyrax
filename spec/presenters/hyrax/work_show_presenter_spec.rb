@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:request) { double }
+  let(:request) { double(host: 'example.org') }
   let(:user_key) { 'a_user_key' }
 
   let(:attributes) do
@@ -197,6 +197,24 @@ RSpec.describe Hyrax::WorkShowPresenter do
               presenter_args: [ability, request])
         .and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
+    end
+  end
+
+  describe "#download_url" do
+    subject { presenter.download_url }
+
+    let(:solr_document) { SolrDocument.new(work.to_solr) }
+
+    context "with a representative" do
+      let(:work) { create(:work_with_representative_file) }
+
+      it { is_expected.to eq "http://#{request.host}/downloads/#{work.representative_id}" }
+    end
+
+    context "without a representative" do
+      let(:work) { create(:work) }
+
+      it { is_expected.to eq '' }
     end
   end
 

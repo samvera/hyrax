@@ -48,6 +48,12 @@ module Hyrax
       @inspect_workflow ||= InspectWorkPresenter.new(solr_document, current_ability)
     end
 
+    # @return [String] a download URL, if work has representative media, or a blank string
+    def download_url
+      return '' if representative_presenter.nil?
+      Hyrax::Engine.routes.url_helpers.download_url(representative_presenter, host: request.host)
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
