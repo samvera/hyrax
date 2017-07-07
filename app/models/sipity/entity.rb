@@ -5,6 +5,13 @@ module Sipity
   #
   # The goal is to keep this behavior separate, so that we can possibly
   # extract the information.
+  # @example To get the Sipity::Entity for a work
+  #   work = GenericWork.first
+  #   work_global_id = work.to_global_id.to_s
+  #   => "gid://whatever/GenericWork/3x816m604"
+  #   Sipity::Entity.where(proxy_for_global_id: work_global_id).first
+  #   => #<Sipity::Entity id: 1, proxy_for_global_id: "gid://whatever/GenericWork/3x816m604",
+  # workflow_id: 8, workflow_state_id: 20, created_at: "2017-07-07 13:39:42", updated_at: "2017-07-07 13:39:42">
   class Entity < ActiveRecord::Base
     self.table_name = 'sipity_entities'
 
