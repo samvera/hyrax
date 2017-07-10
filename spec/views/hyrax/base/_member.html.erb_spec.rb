@@ -17,13 +17,17 @@ RSpec.describe 'hyrax/base/_member.html.erb' do
     allow(view).to receive(:current_search_session).and_return nil
     allow(view).to receive(:search_session).and_return({})
     # abilities called in _actions.html.erb
-    allow(view).to receive(:can?).with(:read, kind_of(String)).and_return(true)
+    allow(view).to receive(:can?).with(:download, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:edit, kind_of(String)).and_return(true)
     allow(view).to receive(:can?).with(:destroy, String).and_return(true)
     allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
       Hyrax::ContextualPath.new(x, y).show
     end
     render 'hyrax/base/member.html.erb', member: presenter
+  end
+
+  it 'checks the :download ability' do
+    expect(view).to have_received(:can?).with(:download, kind_of(String)).once
   end
 
   it 'renders the view' do
