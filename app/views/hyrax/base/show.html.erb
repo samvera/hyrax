@@ -1,4 +1,7 @@
 <% provide :page_title, @presenter.page_title %>
+
+<%= render 'shared/citations' %>
+
 <div itemscope itemtype="http://schema.org/CreativeWork" class="row">
   <div class="col-xs-12">
     <header>
@@ -12,7 +15,8 @@
   </div>
   <div class="col-sm-4">
     <%= render "show_actions", presenter: @presenter %>
-    <%= t('.last_modified', value: @presenter.date_modified) %>
+    <%# Use the fully qualified path to avoid RSpec error: translation missing: en.hyrax.base.show.html.erb.last_modified %>
+    <%= t('hyrax.base.show.last_modified', value: @presenter.date_modified) %>
     <%= render 'representative_media', presenter: @presenter %>
     <%= render 'social_media' %>
     <%= render 'citations', presenter: @presenter %>

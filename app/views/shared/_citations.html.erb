@@ -6,12 +6,12 @@
   <meta property="og:type" content="object"/>
   <meta property="og:title" content="<%= @presenter.title.first %>"/>
   <meta property="og:description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>"/>
-  <meta property="og:image" content="<%= hyrax.download_url(@presenter, file: 'thumbnail') %>"/>
-  <meta property="og:url" content="<%= polymorphic_path([main_app, @presenter]) %>"/>
+  <meta property="og:image" content="<%= @presenter.download_url %>"/>
+  <meta property="og:url" content="<%= polymorphic_url([main_app, @presenter]) %>"/>
   <meta name="twitter:data1" content="<%= @presenter.keyword.join(', ') %>"/>
   <meta name="twitter:label1" content="Keywords"/>
-  <meta name="twitter:data2" content="<%= @presenter.license %>"/>
-  <meta name="twitter:label2" content="License"/>
+  <meta name="twitter:data2" content="<%= @presenter.rights_statement.first %>"/>
+  <meta name="twitter:label2" content="Rights Statement"/>
 <% end %>
 
 <% content_for(:gscholar_meta) do %>
@@ -20,7 +20,7 @@
   <meta name="citation_author" content="<%= creator %>"/>
   <% end %>
   <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>"/>
-  <meta name="citation_pdf_url" content="<%= hyrax.download_url(@presenter) %>"/>
+  <meta name="citation_pdf_url" content="<%= @presenter.download_url %>"/>
   <!-- Hyrax does not yet support these metadata -->
   <!--
     <meta name="citation_journal_title" content=""/>
