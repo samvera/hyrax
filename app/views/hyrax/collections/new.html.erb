@@ -1,3 +1,11 @@
-<h1>Create New Collection</h1>
+<% provide :page_title, construct_page_title( t('.header') ) %>
 
-<%= render 'form' %>
+<% provide :page_header do %>
+  <h1><span class="fa fa-edit"></span> <%= t('.header') %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= render 'hyrax/collections/form' %>
+  </div>
+</div>

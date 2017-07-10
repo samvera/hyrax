@@ -351,12 +351,17 @@ fr:
         title: Ajouter à la collection
         update: Mise à jour de la collection
     collections:
+      edit:
+        header: "Modifier la Collection: %{title}"
       form:
         tabs:
           description: La description
           sharing: Partage
           visibility: Visibilité
+      new:
+        header: Nouvelle Collection
       search_form:
+        button_label: Aller
         label: Rechercher Collection %{title}
         placeholder: Rechercher Collection
       show:

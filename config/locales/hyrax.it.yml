@@ -351,12 +351,17 @@ it:
         title: Aggiungere alla collezione
         update: Aggiorna Collezione
     collections:
+      edit:
+        header: "Modifica Collezione: %{title}"
       form:
         tabs:
           description: Descrizione
           sharing: compartecipazione
           visibility: Visibilità
+      new:
+        header: Nuova Collezione
       search_form:
+        button_label: Partire
         label: Cerca la raccolta %{title}
         placeholder: Cerca raccolta
       show:

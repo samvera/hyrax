@@ -344,12 +344,17 @@ en:
         title: "Add to collection"
         update: "Update Collection"
     collections:
+      edit:
+        header: "Edit Collection: %{title}"
       form:
         tabs:
           description: "Description"
           sharing:     "Sharing"
           visibility:  "Visibility"
+      new:
+        header: Create New Collection
       search_form:
+        button_label: Go
         label: "Search Collection %{title}"
         placeholder: "Search Collection"
       show:
