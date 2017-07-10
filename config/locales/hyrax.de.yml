@@ -351,12 +351,17 @@ de:
         title: Zur Sammlung hinzufügen
         update: Update-Sammlung
     collections:
+      edit:
+        header: "Sammlung Bearbeiten: %{title}"
       form:
         tabs:
           description: Beschreibung
           sharing: Teilen
           visibility: Sichtweite
+      new:
+        header: Neue Sammlung
       search_form:
+        button_label: Gehen
         label: Suche Sammlung %{title}
         placeholder: Suche Sammlung
       show:

@@ -59,6 +59,9 @@ module Hyrax
     end
 
     def new
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.collections.new.header'), hyrax.new_collection_path
       @collection.apply_depositor_metadata(current_user.user_key)
       form
     end

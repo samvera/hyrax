@@ -351,12 +351,17 @@ pt-BR:
         title: Adicionar a coleção
         update: Coleção de Atualizações
     collections:
+      edit:
+        header: "Editar Coleção: %{title}"
       form:
         tabs:
           description: Descrição
           sharing: Compartilhando
           visibility: Visibilidade
+      new:
+        header: Nova Coleção
       search_form:
+        button_label: Ir
         label: Pesquisar Collection %{title}
         placeholder: Pesquisar Coleção
       show:

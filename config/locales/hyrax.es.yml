@@ -346,12 +346,17 @@ es:
         title: Añadir a la colección
         update: Actualizar Colección
     collections:
+      edit:
+        header: "Editar Colección: %{title}"
       form:
         tabs:
           description: Descripción
           sharing: Compartir
           visibility: Visibilidad
+      new:
+        header: Nueva Colección
       search_form:
+        button_label: Ir
         label: Buscar Colección %{title}
         placeholder: Buscar Colección
       show:

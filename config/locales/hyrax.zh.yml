@@ -348,12 +348,17 @@ zh:
         title: 添加到新收藏集
         update: 更新收藏集
     collections:
+      edit:
+        header: "编辑收藏: %{title}"
       form:
         tabs:
           description: 描述
           sharing: 分享
           visibility: 能见度
+      new:
+        header: 新系列
       search_form:
+        button_label: 走
         label: 搜索收藏集 %{title}
         placeholder: 搜索收藏集
       show:

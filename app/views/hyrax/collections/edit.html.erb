@@ -1,7 +1,7 @@
-<% provide :page_title, construct_page_title("Edit Collection #{@form.title.first}") %>
+<% provide :page_title, construct_page_title( t('.header', title: @form.title.first) ) %>
 
 <%= provide :page_header do %>
-  <h1>Edit Collection: <%= @form.title.first %></h1>
+  <h1><span class="fa fa-edit"></span><%= t('.header', title: @form.title.first) %></h1>
 <% end %>
 
 <% unless has_collection_search_parameters? %>
@@ -10,7 +10,6 @@
       <%= render 'hyrax/collections/form' %>
     </div>
   </div>
-
 
   <div class="row">
     <div class="col-md-12">
