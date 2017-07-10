@@ -3,18 +3,28 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
   describe '.create_default_admin_set', :clean_repo do
     let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
-    let(:responsibilities) { Sipity::WorkflowResponsibility.where(workflow_role: admin_set.active_workflow.workflow_roles) }
 
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
     it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
       described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)
       expect(admin_set.permission_template).to be_persisted
       expect(admin_set.active_workflow).to be_persisted
-      expect(responsibilities.count).to eq 2
-      expect(responsibilities.first.agent.proxy_for_id).to eq "registered"
-      expect(responsibilities.first.agent.proxy_for_type).to eq "Hyrax::Group"
-      expect(responsibilities.last.agent.proxy_for_id).to eq "admin"
-      expect(responsibilities.last.agent.proxy_for_type).to eq "Hyrax::Group"
+      # 7 responsibilities because:
+      #  * 1 agent (admin group), multiplied by
+      #  * 2 available workflows, multiplied by
+      #  * 3 roles (from Hyrax::RoleRegistry), plus
+      #  * 1 depositing role for the registered group in the default workflow, equals
+      #  * 7
+      expect(Sipity::WorkflowResponsibility.count).to eq 7
+      expect(admin_set.read_groups).to eq ['public']
+      expect(admin_set.edit_groups).to eq ['admin']
+      # 2 access grants because:
+      #  * 1 providing deposit access to registered group
+      #  * 1 providing manage access to admin group
+      expect(admin_set.permission_template.access_grants.count).to eq 2
+      # Agents should be created for both the 'admin' and 'registered' groups
+      expect(Sipity::Agent.distinct.pluck(:proxy_for_id)).to include('admin', 'registered')
+      expect(Sipity::Agent.distinct.pluck(:proxy_for_type)).to include('Hyrax::Group')
     end
   end
 
@@ -53,7 +63,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
-        let(:grant) { permission_template.access_grants.first }
+        let(:grants) { permission_template.access_grants }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
         # rubocop:disable RSpec/AnyInstance
@@ -77,15 +87,13 @@ RSpec.describe Hyrax::AdminSetCreateService do
           #  * 12
           expect(admin_set.read_groups).to eq ['public']
           expect(admin_set.edit_groups).to eq ['admin']
-          expect(grant.agent_id).to eq user.user_key
-          expect(grant.access).to eq 'manage'
           expect(admin_set.creator).to eq [user.user_key]
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
           expect(permission_template).to be_persisted
-          expect(permission_template.access_grants.count).to eq 2
-          expect(permission_template.access_grants.last.agent_type).to eq 'group'
-          expect(permission_template.access_grants.last.agent_id).to eq 'admin'
-          expect(permission_template.access_grants.last.access).to eq 'manage'
+          expect(grants.count).to eq 2
+          expect(grants.pluck(:agent_type)).to include('group', 'user')
+          expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
+          expect(grants.pluck(:access)).to include('manage')
         end
       end
 

@@ -70,11 +70,14 @@ module Hyrax
     private
 
       def access_grants_attributes
-        return [] unless creating_user
         [
-          { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE },
           { agent_type: 'group', agent_id: admin_group_name, access: Hyrax::PermissionTemplateAccess::MANAGE }
-        ]
+        ].tap do |attribute_list|
+          # Grant manage access to the creating_user if it exists. Should exist for all but default Admin Set
+          if creating_user
+            attribute_list << { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE }
+          end
+        end
       end
 
       def admin_group_name
@@ -91,28 +94,37 @@ module Hyrax
         Sipity::Workflow.activate!(permission_template: permission_template, workflow_name: Hyrax.config.default_active_workflow_name)
       end
 
+      # Force creation of registered MANAGING role if it doesn't exist
+      def register_managing_role!
+        Sipity::Role[Hyrax::RoleRegistry::MANAGING]
+      end
+
       def grant_all_workflow_roles_to_creating_user_and_admins!(permission_template:)
-        # Default admin set has a nil creating_user; guard against that condition
-        return if creating_user.nil?
+        # This code must be invoked before calling `Sipity::Role.all` or the managing role won't be there
+        register_managing_role!
         # Grant all workflow roles to the creating_user and the admin group
         permission_template.available_workflows.each do |workflow|
           Sipity::Role.all.each do |role|
             workflow.update_responsibilities(role: role,
-                                             agents: [
-                                               creating_user,
-                                               Hyrax::Group.new(admin_group_name)
-                                             ])
+                                             agents: workflow_agents)
           end
         end
       end
 
-      # Gives deposit access to registered users and manage access to admins to default AdminSet
+      def workflow_agents
+        [
+          Hyrax::Group.new(admin_group_name)
+        ].tap do |agent_list|
+          # The default admin set does not have a creating user
+          agent_list << creating_user if creating_user
+        end
+      end
+
+      # Gives deposit access to registered users to default AdminSet
       def create_default_access_for(permission_template:, workflow:)
         permission_template.access_grants.create(agent_type: 'group', agent_id: 'registered', access: Hyrax::PermissionTemplateAccess::DEPOSIT)
         deposit = Sipity::Role[Hyrax::RoleRegistry::DEPOSITING]
-        manage = Sipity::Role[Hyrax::RoleRegistry::MANAGING]
         workflow.update_responsibilities(role: deposit, agents: Hyrax::Group.new('registered'))
-        workflow.update_responsibilities(role: manage, agents: Hyrax::Group.new(admin_group_name))
       end
 
       def default_workflow_importer
