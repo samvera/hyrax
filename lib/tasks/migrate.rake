@@ -6,6 +6,10 @@ namespace :hyrax do
     end
 
     task add_admin_group_to_admin_sets: :environment do
+      # Force creation of registered MANAGING role if it doesn't exist
+      # This code must be invoked before calling `Sipity::Role.all` or the managing role won't be there
+      Sipity::Role[Hyrax::RoleRegistry::MANAGING]
+
       AdminSet.all.each do |admin_set|
         permission_template = admin_set.permission_template
         if permission_template.access_grants.where(agent_type: 'group', agent_id: ::Ability.admin_group_name).none?
