@@ -23,7 +23,7 @@ RSpec.feature 'embargo' do
       click_link 'Edit'
       click_link 'Embargo Management Page'
 
-      expect(page).to have_content('This work is under embargo.')
+      expect(page).to have_content('This Generic Work is under embargo.')
       expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
 
       fill_in 'until', with: later_future_date.to_s
