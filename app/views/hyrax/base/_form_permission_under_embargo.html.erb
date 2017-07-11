@@ -5,11 +5,13 @@
 
   <section class="help-block">
     <p>
-      <%= t('.help_html', embargo_edit_link: link_to( t('.embargo_management_page'), edit_embargo_path(f.object)) ) %>
+      <%= t('.help_html', edit_link: link_to( t('.management_page'), edit_embargo_path(f.object)) ) %>
     </p>
   </section>
 
+  <div class="form-group">
     <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" />
-    <%= render "form_permission_embargo", f: f %>
+    <%= render 'form_permission_embargo', f: f %>
+  </div>
 
 </fieldset>

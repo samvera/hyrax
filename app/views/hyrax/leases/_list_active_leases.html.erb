@@ -1,8 +1,10 @@
 <table class="leases table">
+  <thead>
+    <tr>
+      <%= render partial: 'table_headers' %>
+    </tr>
+  </thead>
   <tbody>
-  <tr>
-    <th>Type of Work</th><th>Title</th><th>Current Visibility</th><th>Lease Release Date</th><th>Visibility will Change to</th>
-  </tr>
   <% assets_under_lease.each do |curation_concern| %>
     <tr>
       <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>

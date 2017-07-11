@@ -1,20 +1,17 @@
 <fieldset class="set-access-controls">
   <legend>
-    Visibility
-    <small>Who should be able to view or download this content?</small>
+    <%= t('.legend_html') %>
   </legend>
 
   <section class="help-block">
     <p>
-      <strong>This work is under lease.</strong>
-      You can change the settings of the lease here, or you can
-      visit the <%= link_to 'Lease Management Page', edit_lease_path(f.object) %> to deactivate it.
+      <%= t('.help_html', edit_link: link_to( t('.management_page'), edit_lease_path(f.object)) ) %>
     </p>
   </section>
 
   <div class="form-group">
     <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>" />
-    <%= render "form_permission_lease", f: f %>
+    <%= render 'form_permission_lease', f: f %>
   </div>
 
 </fieldset>

@@ -266,8 +266,12 @@ en:
         local_upload: Add Local Files
       form_permission_under_embargo:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
-        help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{embargo_edit_link} to deactivate it."
-        embargo_management_page: Embargo Management Page
+        help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
+        management_page: Embargo Management Page
+      form_permission_under_lease:
+        legend_html: Visibility <small>Who should be able to view or download this content?</small>
+        help_html: "<strong>This work is under lease.</strong> You can change the settings of the lease here, or you can visit the %{edit_link} to deactivate it."
+        management_page: Lease Management Page
       form_progress:
         required_descriptions: Describe your work
         required_files:        Add files
@@ -511,8 +515,8 @@ en:
       list_expired_active_embargoes:
         missing: There are no expired embargoes in effect at this time.
         change_all: "Change all files within %{cc} to "
-        deactivate_embargoes_for_selected: Deactivate Embargoes for Selected
-        deactivate_embargo: Deactivate Embargo
+        deactivate_selected: Deactivate Embargoes for Selected
+        deactivate: Deactivate Embargo
       table_headers:
         type: Type of Work
         title: Title
@@ -564,6 +568,36 @@ en:
     icons:
       collection:       'fa fa-cubes'
       default:          'fa fa-cube'
+    leases:
+      index:
+        manage_leases: Manage Leases
+        active: All Active Leases
+        expired: Expired Active Leases
+        deactivated: Deactivated Leases
+      edit:
+        manage_leases_html: "Manage Leases for %{cc} <span class='human_readable_type'>(%{cc_type})</span>"
+        header:
+          current: Current Lease
+          past: Past Leases
+        lease_true_html: "<strong>This %{cc} is under lease.</strong>"
+        lease_false_html: "<strong>This %{cc} is not currently under lease.</strong> If you would like to apply a lease, provide the information here."
+        lease_update: Update Lease
+        lease_deactivate: Deactivate Lease
+        lease_apply: Apply Lease
+        lease_cancel: Cancel and manage all leases
+        lease_return: "Return to editing this %{cc}"
+        history_empty: "This %{cc} has no previous leases applied to it."
+      list_expired_active_leases:
+        missing: There are no expired leases in effect at this time.
+        change_all: "Change all files within %{cc} to "
+        deactivate_selected: Deactivate Leases for Selected
+        deactivate: Deactivate Lease
+      table_headers:
+        type: Type of Work
+        title: Title
+        release_date: Lease Release Date
+        viz_current: Current Visibility
+        viz_after: Visibility will Change to
     mailbox:
       date:     'Date'
       delete:   'Delete Message'

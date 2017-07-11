@@ -23,7 +23,7 @@ RSpec.feature 'leases' do
       click_link 'Edit'
       click_link 'Lease Management Page'
 
-      expect(page).to have_content('This work is under lease.')
+      expect(page).to have_content('This Generic Work is under lease.')
       expect(page).to have_xpath("//input[@name='generic_work[lease_expiration_date]' and @value='#{future_date.to_datetime.iso8601}']") # current lease date is pre-populated in edit field
 
       fill_in 'until', with: later_future_date.to_s
