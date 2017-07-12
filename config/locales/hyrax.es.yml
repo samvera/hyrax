@@ -167,10 +167,10 @@ es:
             success: La apariencia se actualizó correctamente
       features:
         index:
-          header:           Caracteristicas
-          feature:          Característica
-          description:      Descripción
-          action:           Acción
+          action: Acción
+          description: Descripción
+          feature: Característica
+          header: Caracteristicas
       sidebar:
         activity: Actividad
         admin_sets: Conjuntos Administrativos
@@ -266,6 +266,14 @@ es:
         dropzone: Soltar archivos aquí.
         external_upload: Proveedores en la Nube
         local_upload: Añadir Archivos locales
+      form_permission_under_embargo:
+        help_html: "<strong>Esta obra está bajo embargo.</strong> Puede cambiar la configuración del embargo aquí, o puede visitar el %{edit_link} para desactivarlo."
+        legend_html: Visibilidad <small>¿Quién debería ser capaz de ver o descargar este contenido?</small>
+        management_page: Página de Administración de Embargo
+      form_permission_under_lease:
+        help_html: "<strong>Este trabajo está en arrendamiento.</strong> Puede cambiar los ajustes del contrato de arrendamiento aquí, o puede visitar el %{edit_link} para desactivarlo."
+        legend_html: Visibilidad <small>¿Quién debería ser capaz de ver o descargar este contenido?</small>
+        management_page: Página de Gestión de Arrendamiento
       form_progress:
         required_agreement: Comprobar el acuerdo de depósito
         required_descriptions: Describa su trabajo
@@ -347,7 +355,7 @@ es:
         update: Actualizar Colección
     collections:
       edit:
-        header: "Editar Colección: %{title}"
+        header: 'Editar Colección: %{title}'
       form:
         tabs:
           description: Descripción
@@ -483,10 +491,38 @@ es:
       user_activity: Actividad de usuario
       user_notifications: Notificaciones de Usuario
       view_files: Ver Archivos
-    directory:
-      suffix: "@ejemplo.org"
     document_language: es
     edit_profile: Editar Perfil
+    embargoes:
+      edit:
+        embargo_apply: Aplicar Embargo
+        embargo_cancel: Cancelar y gestionar todos los embargos
+        embargo_deactivate: Desactivar Embargo
+        embargo_false_html: "<strong>Este %{cc} no está actualmente bajo embargo.</strong> Si desea aplicar un embargo, proporcione la información aquí."
+        embargo_return: Volver a la edición de este %{cc}
+        embargo_true_html: "<strong>Este %{cc} está bajo embargo.</strong>"
+        embargo_update: Actualizar Embargo
+        header:
+          current: Embargo actual
+          past: Embargos pasados
+        history_empty: Este %{cc} no tiene embargos previos aplicados a él.
+        manage_embargoes_html: Administrar embargos para %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Todos los embargos activos
+        deactivated: Desactivado Embargoes
+        expired: Embargos activos caducados
+        manage_embargoes: Gestionar embargos
+      list_expired_active_embargoes:
+        change_all: Cambiar todos los archivos de %{cc} a
+        deactivate: Desactivar Embargo
+        deactivate_selected: Desactivar Embargos para Seleccionados
+        missing: No hay embargos caducados en vigencia en este momento.
+      table_headers:
+        release_date: Embargo Fecha de lanzamiento
+        title: Título
+        type: Tipo de trabajo
+        viz_after: La visibilidad cambiará a
+        viz_current: Visibilidad actual
     featured_researchers: Investigadores Destacados
     file_manager:
       link_text: Administrador de archivos
@@ -531,9 +567,40 @@ es:
     icons:
       collection: fa fa-cubes
       default: fa fa-cube
+    leases:
+      edit:
+        header:
+          current: Arrendamiento actual
+          past: Alquileres pasados
+        history_empty: Este %{cc} no tiene ningún arrendamiento anterior aplicado a él.
+        lease_apply: Solicitar arrendamiento
+        lease_cancel: Cancelar y administrar todos los contratos de arrendamiento
+        lease_deactivate: Desactivar Arrendamiento
+        lease_false_html: "<strong>Este %{cc} no está actualmente bajo contrato de arrendamiento.</strong> Si desea aplicar un contrato de arrendamiento, proporcione la información aquí."
+        lease_return: Volver a la edición de este %{cc}
+        lease_true_html: "<strong>Este %{cc} está bajo contrato de arrendamiento.</strong>"
+        lease_update: Actualizar arrendamiento
+        manage_leases_html: Administrar concesiones para %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Todos los arrendamientos activos
+        deactivated: Desactivado Arrendamientos
+        expired: Arrendamientos activos caducados
+        manage_leases: Gestionar Arrendamientos
+      list_expired_active_leases:
+        change_all: Cambiar todos los archivos de %{cc} a
+        deactivate: Desactivar Arrendamiento
+        deactivate_selected: Desactivar Arrendamientos para Seleccionados
+        missing: No existen contratos de arrendamiento vencidos vigentes en este momento.
+      table_headers:
+        release_date: Fecha de lanzamiento del arrendamiento
+        title: Título
+        type: Tipo de trabajo
+        viz_after: La visibilidad cambiará a
+        viz_current: Visibilidad actual
     mailbox:
       date: Fecha
       delete: Borrar Mensaje
+      empty: No se han encontrado notificaciones
       message: Mensaje
       notifications_deleted: Las notificaciones han sido borradas
       subject: Asunto

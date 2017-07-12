@@ -167,10 +167,10 @@ de:
             success: Das Aussehen wurde erfolgreich aktualisiert
       features:
         index:
-          header:           Charakteristik
-          feature:          Charakteristisch
-          description:      Beschreibung
-          action:           Aktion
+          action: Aktion
+          description: Beschreibung
+          feature: Charakteristisch
+          header: Charakteristik
       sidebar:
         activity: Aktivität
         admin_sets: Verwaltungssets
@@ -271,6 +271,14 @@ de:
         dropzone: Dateien hier ablegen.
         external_upload: Cloud-Provider
         local_upload: Lokale Dateien hinzufügen
+      form_permission_under_embargo:
+        help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
+        legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
+        management_page: Embargo Management Seite
+      form_permission_under_lease:
+        help_html: "<strong>Diese Arbeit ist vermietet.</strong> Hier können Sie die Einstellungen des Mietvertrages ändern oder den %{edit_link} besuchen, um ihn zu deaktivieren."
+        legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
+        management_page: Leasing-Management-Seite
       form_progress:
         required_agreement: Kaution vereinbaren
         required_descriptions: Beschreiben Sie Ihre Arbeit
@@ -352,7 +360,7 @@ de:
         update: Update-Sammlung
     collections:
       edit:
-        header: "Sammlung Bearbeiten: %{title}"
+        header: 'Sammlung Bearbeiten: %{title}'
       form:
         tabs:
           description: Beschreibung
@@ -488,10 +496,38 @@ de:
       user_activity: Benutzeraktivität
       user_notifications: Benutzerbenachrichtigungen
       view_files: Dateien ansehen
-    directory:
-      suffix: "@ Example.org"
     document_language: En
     edit_profile: Profil bearbeiten
+    embargoes:
+      edit:
+        embargo_apply: Embargo anwenden
+        embargo_cancel: Alle Embargos abbrechen und verwalten
+        embargo_deactivate: Embargo deaktivieren
+        embargo_false_html: "<strong>Diese %{cc} ist derzeit nicht unter Embargo.</strong> Wenn Sie ein Embargo anwenden möchten, geben Sie hier die Informationen an."
+        embargo_return: Zurück zur Bearbeitung dieses %{cc}
+        embargo_true_html: "<strong>Dieser %{cc} ist unter Embargo.</strong>"
+        embargo_update: Embargo aktualisieren
+        header:
+          current: Aktuelles Embargo
+          past: Vergangene Embargos
+        history_empty: Diese %{cc} hat keine vorherigen Embargos angewendet.
+        manage_embargoes_html: Embargos für %{cc} <span class='human_readable_type'>(%{cc_type}) verwalten</span>
+      index:
+        active: Alle aktiven Embargos
+        deactivated: Deaktivierte Embargos
+        expired: Abgelaufene aktive Embargos
+        manage_embargoes: Embargos verwalten
+      list_expired_active_embargoes:
+        change_all: Ändern Sie alle Dateien in %{cc} zu
+        deactivate: Embargo deaktivieren
+        deactivate_selected: Embargos für Selected deaktivieren
+        missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Embargos vorhanden.
+      table_headers:
+        release_date: Embargo Erscheinungsdatum
+        title: Titel
+        type: Art von Arbeit
+        viz_after: Sichtbarkeit wird geändert
+        viz_current: Aktuelle Sichtbarkeit
     featured_researchers: Ausgewählte Forscher
     file_manager:
       link_text: Dateimanager
@@ -534,9 +570,40 @@ de:
     icons:
       collection: Fa-cubes
       default: Fa fa-würfel
+    leases:
+      edit:
+        header:
+          current: Aktuelle Leasing
+          past: Vergangene Mietverträge
+        history_empty: Diese %{cc} hat keine vorherigen Mietverträge angewendet.
+        lease_apply: Bewerben Lease
+        lease_cancel: Abbrechen und verwalten alle Leasingverhältnisse
+        lease_deactivate: Lease deaktivieren
+        lease_false_html: "<strong>Diese %{cc} ist derzeit nicht unter Leasing.</strong> Wenn Sie einen Mietvertrag anwenden möchten, geben Sie hier die Informationen an."
+        lease_return: Zurück zur Bearbeitung dieses %{cc}
+        lease_true_html: "<strong>Dieser %{cc} ist unter Leasing.</strong>"
+        lease_update: Update Lease
+        manage_leases_html: Lease für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Alle aktiven Leasingverhältnisse
+        deactivated: Deaktivierte Leasingverhältnisse
+        expired: Abgelaufene aktive Leasingverhältnisse
+        manage_leases: Leasing verwalten
+      list_expired_active_leases:
+        change_all: Ändern Sie alle Dateien in %{cc} zu
+        deactivate: Lease deaktivieren
+        deactivate_selected: Deaktivieren Sie Leases für Selected
+        missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Leasingverhältnisse vorhanden.
+      table_headers:
+        release_date: Lease Release Datum
+        title: Titel
+        type: Art von Arbeit
+        viz_after: Sichtbarkeit wird geändert
+        viz_current: Aktuelle Sichtbarkeit
     mailbox:
       date: Datum
       delete: Nachricht löschen
+      empty: Keine Benachrichtigungen gefunden
       message: Nachricht
       notifications_deleted: Benachrichtigungen wurden gelöscht
       subject: Fach

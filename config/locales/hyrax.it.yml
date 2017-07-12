@@ -167,10 +167,10 @@ it:
             success: L'aspetto è stato aggiornato con successo
       features:
         index:
-          header:           Caratteristiche
-          feature:          Caratteristica
-          description:      Descrizione
-          action:           Azione
+          action: Azione
+          description: Descrizione
+          feature: Caratteristica
+          header: Caratteristiche
       sidebar:
         activity: Attività
         admin_sets: Set amministrativi
@@ -271,6 +271,14 @@ it:
         dropzone: Drop file qui.
         external_upload: Fornitori di nubi
         local_upload: Aggiungere file locali
+      form_permission_under_embargo:
+        help_html: "<strong>Questo lavoro è sotto embargo.</strong> È possibile modificare le impostazioni dell'embargo qui oppure è possibile visitare lo %{edit_link} per disattivarlo."
+        legend_html: Visibilità <small>Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto?</small>
+        management_page: Gestione embargo
+      form_permission_under_lease:
+        help_html: "<strong>Questo lavoro è in affitto.</strong> È possibile modificare le impostazioni del contratto di locazione qui, oppure è possibile visitare lo %{edit_link} per disattivarlo."
+        legend_html: Visibilità <small>Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto?</small>
+        management_page: Gestione delle locazioni
       form_progress:
         required_agreement: Controllare l'accordo di deposito
         required_descriptions: Descrivi il tuo lavoro
@@ -352,7 +360,7 @@ it:
         update: Aggiorna Collezione
     collections:
       edit:
-        header: "Modifica Collezione: %{title}"
+        header: 'Modifica Collezione: %{title}'
       form:
         tabs:
           description: Descrizione
@@ -488,10 +496,38 @@ it:
       user_activity: Attività utente
       user_notifications: Notifiche utente
       view_files: Vedi files
-    directory:
-      suffix: "@ example.org"
     document_language: it
     edit_profile: Modifica Profilo
+    embargoes:
+      edit:
+        embargo_apply: Applicare Embargo
+        embargo_cancel: Annullare e gestire tutti gli embarghi
+        embargo_deactivate: Disattiva Embargo
+        embargo_false_html: "<strong>Questo %{cc} non è attualmente sotto embargo.</strong> Se desideri applicare un embargo, fornisci le informazioni qui."
+        embargo_return: Ritorna alla modifica di questo %{cc}
+        embargo_true_html: "<strong>Questo %{cc} è sotto embargo.</strong>"
+        embargo_update: Aggiorna Embargo
+        header:
+          current: Embargo attuale
+          past: Ultimi embarghi
+        history_empty: Questo %{cc} non ha applicato embarghi precedenti.
+        manage_embargoes_html: Gestisci embarghi per %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tutti gli embarghi attivi
+        deactivated: Disattivato Embargoes
+        expired: Embargo attivo scaduto
+        manage_embargoes: Gestisci embarghi
+      list_expired_active_embargoes:
+        change_all: Cambiare tutti i file all'interno di %{cc}
+        deactivate: Disattiva Embargo
+        deactivate_selected: Disattiva gli embarghi per la selezione
+        missing: Attualmente non esistono embarghi scaduti.
+      table_headers:
+        release_date: Data di rilascio embargo
+        title: Titolo
+        type: Tipo di lavoro
+        viz_after: La visibilità cambierà
+        viz_current: Visibilità attuale
     featured_researchers: Ricercatori in primo piano
     file_manager:
       link_text: File Manager
@@ -534,9 +570,40 @@ it:
     icons:
       collection: Fa fa-cubetti
       default: Fa fa-cubo
+    leases:
+      edit:
+        header:
+          current: Leasing corrente
+          past: Leasing precedenti
+        history_empty: Questo %{cc} non dispone di locazioni precedenti.
+        lease_apply: Applica locazione
+        lease_cancel: Annulla e gestisci tutti i contratti di locazione
+        lease_deactivate: Disattiva leasing
+        lease_false_html: "<strong>Questo %{cc} non è attualmente in locazione.</strong> Se vuoi applicare un contratto di locazione, fornisci le informazioni qui."
+        lease_return: Ritorna alla modifica di questo %{cc}
+        lease_true_html: "<strong>Questo %{cc} è in affitto.</strong>"
+        lease_update: Aggiorna leasing
+        manage_leases_html: Gestione dei contratti di locazione per %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tutti gli affitti attivi
+        deactivated: Disattivato Leases
+        expired: Leasing attivi scaduti
+        manage_leases: Gestione dei contratti di locazione
+      list_expired_active_leases:
+        change_all: Cambiare tutti i file all'interno di %{cc}
+        deactivate: Disattiva leasing
+        deactivate_selected: Disattiva i contratti di locazione selezionati
+        missing: In questo momento non sono in vigore leasing scadute.
+      table_headers:
+        release_date: Data di rilascio del leasing
+        title: Titolo
+        type: Tipo di lavoro
+        viz_after: La visibilità cambierà
+        viz_current: Visibilità attuale
     mailbox:
       date: Data
       delete: Elimina messaggio
+      empty: Nessuna notifica trovata
       message: Messaggio
       notifications_deleted: Le notifiche sono state eliminate
       subject: Soggetto

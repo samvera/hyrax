@@ -1,3 +1,4 @@
+---
 es:
   blacklight:
     search:
@@ -43,13 +44,13 @@ es:
           subject_tesim: Tema
           title_tesim: Título
   hyrax:
-    product_name:           "Hyrax"
-    product_twitter_handle: "@HydraSphere"
-    institution_name:       "institución"
-    institution_name_full:  "El nombre de la institución"
-    account_name:           "Mi identificador de cuenta institucional"
+    account_name: Mi identificador de cuenta institucional
     directory:
-      suffix:               "@example.org"
+      suffix: "@example.org"
     footer:
       copyright_html: "<strong>Copyright &copy; 2017 Samvera</strong> bajo licencia de Apache, Version 2.0"
       service_html: Un servicio de <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera/a>.
+    institution_name: institución
+    institution_name_full: El nombre de la institución
+    product_name: Hyrax
+    product_twitter_handle: "@HydraSphere"

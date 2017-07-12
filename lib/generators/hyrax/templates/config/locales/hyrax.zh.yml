@@ -1,3 +1,4 @@
+---
 zh:
   blacklight:
     search:
@@ -43,13 +44,13 @@ zh:
           subject_tesim: 学科
           title_tesim: 标题
   hyrax:
-    product_name:           "蹄兔"
-    product_twitter_handle: "@HydraSphere"
-    institution_name:       "机构"
-    institution_name_full:  "机构名称"
-    account_name:           "我的机构帐户标识符"
+    account_name: 我的机构帐户标识符
     directory:
-      suffix:               "@example.org"
+      suffix: "@example.org"
     footer:
       copyright_html: "<strong>版权所有 &copy; 2017 Samvera</strong> 根据Apache许可证2.0版许可"
       service_html: 的服务<a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a>.
+    institution_name: 机构
+    institution_name_full: 机构名称
+    product_name: 蹄兔
+    product_twitter_handle: "@HydraSphere"

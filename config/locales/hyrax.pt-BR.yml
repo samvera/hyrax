@@ -167,10 +167,10 @@ pt-BR:
             success: A aparência foi atualizada com sucesso
       features:
         index:
-          header:           Características
-          feature:          Característica
-          description:      Descrição
-          action:           Açao
+          action: Açao
+          description: Descrição
+          feature: Característica
+          header: Características
       sidebar:
         activity: Atividade
         admin_sets: Conjuntos Administrativos
@@ -271,6 +271,14 @@ pt-BR:
         dropzone: Largue os arquivos aqui.
         external_upload: Provedores de nuvem
         local_upload: Adicionar arquivos locais
+      form_permission_under_embargo:
+        help_html: "<strong>Este trabalho está sob embargo.</strong> Você pode alterar as configurações do embargo aqui, ou você pode visitar o %{edit_link} para desativá-lo."
+        legend_html: Visibilidade <small>Quem deve poder visualizar ou fazer o download desse conteúdo?</small>
+        management_page: Página de Gerenciamento de Embargo
+      form_permission_under_lease:
+        help_html: "<strong>Este trabalho está sob contrato de arrendamento.</strong> Você pode alterar as configurações da locação aqui, ou você pode visitar o %{edit_link} para desativá-lo."
+        legend_html: Visibilidade <small>Quem deve poder visualizar ou fazer o download desse conteúdo?</small>
+        management_page: Página de Gerenciamento de Arrendamento
       form_progress:
         required_agreement: Contrato de depósito de cheques
         required_descriptions: Descreva seu trabalho
@@ -352,7 +360,7 @@ pt-BR:
         update: Coleção de Atualizações
     collections:
       edit:
-        header: "Editar Coleção: %{title}"
+        header: 'Editar Coleção: %{title}'
       form:
         tabs:
           description: Descrição
@@ -488,10 +496,38 @@ pt-BR:
       user_activity: Atividade do usuário
       user_notifications: Notificações do usuário
       view_files: Ver arquivos
-    directory:
-      suffix: "@ Example.org"
     document_language: En
     edit_profile: Editar Perfil
+    embargoes:
+      edit:
+        embargo_apply: Aplicar Embargo
+        embargo_cancel: Cancelar e gerenciar todos os embargos
+        embargo_deactivate: Desativar Embargo
+        embargo_false_html: "<strong>Este %{cc} não está atualmente sob embargo.</strong> Se você quiser aplicar um embargo, forneça as informações aqui."
+        embargo_return: Retorne para editar este %{cc}
+        embargo_true_html: "<strong>Este %{cc} está sob embargo.</strong>"
+        embargo_update: Update Embargo
+        header:
+          current: Embargo atual
+          past: Embargos passados
+        history_empty: Este %{cc} não tem nenhum embargado anterior aplicado a ele.
+        manage_embargoes_html: Gerenciar Embargos para %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Todos os Embargos Ativos
+        deactivated: Embargos Desativados
+        expired: Embargos ativos expirados
+        manage_embargoes: Gerenciar Embargo
+      list_expired_active_embargoes:
+        change_all: Altere todos os arquivos no %{cc} para
+        deactivate: Desativar Embargo
+        deactivate_selected: Desativar Embargos para Selecionados
+        missing: Não há embargos expirados vigentes neste momento.
+      table_headers:
+        release_date: Data de lançamento do embargo
+        title: Título
+        type: Tipo de trabalho
+        viz_after: A visibilidade mudará para
+        viz_current: Visibilidade atual
     featured_researchers: Pesquisadores em destaque
     file_manager:
       link_text: Gerenciador de arquivos
@@ -534,9 +570,40 @@ pt-BR:
     icons:
       collection: Fa faucos
       default: Fa fa-cube
+    leases:
+      edit:
+        header:
+          current: Locação atual
+          past: Locações passadas
+        history_empty: Este %{cc} não possui concessões anteriores aplicadas a ele.
+        lease_apply: Aplicar arrendamento
+        lease_cancel: Cancelar e gerenciar todos os contratos de arrendamento
+        lease_deactivate: Desativar Arrendamento
+        lease_false_html: "<strong>Este %{cc} não está atualmente em locação.</strong> Se você deseja aplicar um contrato de arrendamento, forneça as informações aqui."
+        lease_return: Retorne para editar este %{cc}
+        lease_true_html: "<strong>Este %{cc} está em locação.</strong>"
+        lease_update: Atualização de locação
+        manage_leases_html: Gerenciar Arrendamentos para %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Todos os arrendamentos ativos
+        deactivated: Arrendamentos desativados
+        expired: Locações ativas expiradas
+        manage_leases: Gerenciar Locações
+      list_expired_active_leases:
+        change_all: Altere todos os arquivos no %{cc} para
+        deactivate: Desativar Arrendamento
+        deactivate_selected: Desativar aluguéis para seleção
+        missing: Não há contratos de arrendamento vencidos vigentes neste momento.
+      table_headers:
+        release_date: Data de lançamento da locação
+        title: Título
+        type: Tipo de trabalho
+        viz_after: A visibilidade mudará para
+        viz_current: Visibilidade atual
     mailbox:
       date: Encontro
       delete: Apagar mensagem
+      empty: Nenhuma notificação encontrada
       message: mensagem
       notifications_deleted: As notificações foram excluídas
       subject: Sujeito
