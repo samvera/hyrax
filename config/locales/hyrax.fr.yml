@@ -167,10 +167,10 @@ fr:
             success: L'apparence a été mise à jour avec succès
       features:
         index:
-          header:   Caractéristiques
-          feature:          Caractéristique
-          description:      Description
-          action:           Action
+          action: Action
+          description: Description
+          feature: Caractéristique
+          header: Caractéristiques
       sidebar:
         activity: Activité
         admin_sets: Ensembles administratifs
@@ -271,6 +271,14 @@ fr:
         dropzone: Déposez les fichiers ici.
         external_upload: Cloud Providers
         local_upload: Ajouter des fichiers locaux
+      form_permission_under_embargo:
+        help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
+        legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
+        management_page: Page de gestion de l'embargo
+      form_permission_under_lease:
+        help_html: "<strong>Ce travail est en location.</strong> Vous pouvez modifier les paramètres du bail ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
+        legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
+        management_page: Page de gestion du bail
       form_progress:
         required_agreement: Contrôler l'accord de dépôt
         required_descriptions: Décrivez votre travail
@@ -352,7 +360,7 @@ fr:
         update: Mise à jour de la collection
     collections:
       edit:
-        header: "Modifier la Collection: %{title}"
+        header: 'Modifier la Collection: %{title}'
       form:
         tabs:
           description: La description
@@ -488,10 +496,38 @@ fr:
       user_activity: Activité de l'utilisateur
       user_notifications: Notifications de l'utilisateur
       view_files: Afficher les fichiers
-    directory:
-      suffix: "@ Example.org"
     document_language: En
     edit_profile: Editer le profil
+    embargoes:
+      edit:
+        embargo_apply: Embargo d'application
+        embargo_cancel: Annuler et gérer tous les embargos
+        embargo_deactivate: Désactiver Embargo
+        embargo_false_html: "<strong>Ce %{cc} n'est actuellement pas sous embargo.</strong> Si vous souhaitez appliquer un embargo, fournissez les informations ici."
+        embargo_return: Retourner à l'édition de ce %{cc}
+        embargo_true_html: "<strong>Ce %{cc} est sous embargo.</strong>"
+        embargo_update: Mise à jour Embargo
+        header:
+          current: Embargement actuel
+          past: Embargos passés
+        history_empty: Ce %{cc} n'a pas d'embargos antérieurs.
+        manage_embargoes_html: Gérer les embargos pour %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tous les embargos actifs
+        deactivated: Embargés désactivés
+        expired: Embargos actifs périmés
+        manage_embargoes: Gérer les embargos
+      list_expired_active_embargoes:
+        change_all: Changer tous les fichiers dans %{cc} à
+        deactivate: Désactiver Embargo
+        deactivate_selected: Désactiver les embargos pour la sélection
+        missing: Il n'y a pas d'embargos expirés en vigueur en ce moment.
+      table_headers:
+        release_date: Date de sortie de l'embargo
+        title: Titre
+        type: Type de travail
+        viz_after: La visibilité changera en
+        viz_current: Visibilité actuelle
     featured_researchers: Les chercheurs en vedette
     file_manager:
       link_text: Gestionnaire de fichiers
@@ -534,9 +570,40 @@ fr:
     icons:
       collection: Fa fa-cubes
       default: Fa fa-cube
+    leases:
+      edit:
+        header:
+          current: Bail actuel
+          past: Baux passés
+        history_empty: Ce %{cc} n'a pas de bail antérieur.
+        lease_apply: Appliquer le bail
+        lease_cancel: Annuler et gérer tous les baux
+        lease_deactivate: Désactiver le bail
+        lease_false_html: "<strong>Ce %{cc} n'est actuellement pas sous bail.</strong> Si vous souhaitez déposer un bail, fournissez les informations ici."
+        lease_return: Retourner à l'édition de ce %{cc}
+        lease_true_html: "<strong>Ce %{cc} est en location.</strong>"
+        lease_update: Mise à jour du bail
+        manage_leases_html: Gérer les baux pour %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tous les baux actifs
+        deactivated: Bailleurs désactivés
+        expired: Baux actifs expirés
+        manage_leases: Gérer les baux
+      list_expired_active_leases:
+        change_all: Changer tous les fichiers dans %{cc} à
+        deactivate: Désactiver le bail
+        deactivate_selected: Désactiver les baux pour la sélection
+        missing: Il n'y a pas de location à bail en ce moment.
+      table_headers:
+        release_date: Date de sortie du bail
+        title: Titre
+        type: Type de travail
+        viz_after: La visibilité changera en
+        viz_current: Visibilité actuelle
     mailbox:
       date: Rendez-vous amoureux
       delete: Supprimer le message
+      empty: Aucune notification trouvée
       message: Message
       notifications_deleted: Les notifications ont été supprimées
       subject: Assujettir

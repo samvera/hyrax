@@ -169,10 +169,10 @@ zh:
             success: 表面已更新
       features:
         index:
-          header:  特征
-          feature:          特征
-          description:      描述
-          action:           行动
+          action: 行动
+          description: 描述
+          feature: 特征
+          header: 特征
       sidebar:
         activity: 活动
         admin_sets: 管理集
@@ -268,6 +268,14 @@ zh:
         dropzone: 请将文件拖放此处。
         external_upload: 云供应商
         local_upload: 添加本地文件
+      form_permission_under_embargo:
+        help_html: "<strong>这项工作受到禁运。</strong>您可以在此更改禁令的设置，也可以访问%{edit_link}以停用它。"
+        legend_html: 可见性<small>谁可以查看或下载此内容？</small>
+        management_page: 禁运管理页面
+      form_permission_under_lease:
+        help_html: "<strong>这项工作正在进行中。</strong>您可以在此处更改租约的设置，也可以访问%{edit_link}以停用该租约。"
+        legend_html: 可见性<small>谁可以查看或下载此内容？</small>
+        management_page: 租赁管理页面
       form_progress:
         required_agreement: 核对存储协议
         required_descriptions: 描述您的作品
@@ -349,7 +357,7 @@ zh:
         update: 更新收藏集
     collections:
       edit:
-        header: "编辑收藏: %{title}"
+        header: '编辑收藏: %{title}'
       form:
         tabs:
           description: 描述
@@ -485,10 +493,38 @@ zh:
       user_activity: 用户活动
       user_notifications: 用户通知
       view_files: 阅览文件
-    directory:
-      suffix: "@example.org"
     document_language: en
     edit_profile: 编辑个人资料
+    embargoes:
+      edit:
+        embargo_apply: 申请禁运
+        embargo_cancel: 取消并管理所有禁运
+        embargo_deactivate: 停用禁运
+        embargo_false_html: "<strong>这个%{cc}目前没有受到禁运。</strong>如果您想申请禁运，请在此处提供信息。"
+        embargo_return: 返回编辑这个%{cc}
+        embargo_true_html: "<strong>这个%{cc}受到禁运。</strong>"
+        embargo_update: 更新禁运
+        header:
+          current: 当前禁运
+          past: 过去的禁运
+        history_empty: 这个%{cc}没有应用先前的禁运。
+        manage_embargoes_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>禁运
+      index:
+        active: 所有主动禁运
+        deactivated: 停用的禁运
+        expired: 过期主动禁运
+        manage_embargoes: 管理禁运
+      list_expired_active_embargoes:
+        change_all: 将%{cc}中的所有文件更改为
+        deactivate: 停用禁运
+        deactivate_selected: 停用选定的禁运
+        missing: 目前没有有效的禁运。
+      table_headers:
+        release_date: 禁运发布日期
+        title: 标题
+        type: 什么样的工作
+        viz_after: 可见度将更改为
+        viz_current: 当前可见度
     featured_researchers: 特色研究者
     file_manager:
       link_text: 文件管理员
@@ -533,9 +569,40 @@ zh:
     icons:
       collection: fa fa-cubes
       default: fa fa-cube
+    leases:
+      edit:
+        header:
+          current: 目前租赁
+          past: 过去租赁
+        history_empty: 这个%{cc}没有应用之前的租约。
+        lease_apply: 申请租赁
+        lease_cancel: 取消并管理所有租赁
+        lease_deactivate: 停用租赁
+        lease_false_html: "<strong>这个%{cc}目前不在租赁中。</strong>如果您想申请租赁，请在此处提供信息。"
+        lease_return: 返回编辑这个%{cc}
+        lease_true_html: "<strong>这个%{cc}是租赁的。</strong>"
+        lease_update: 更新租赁
+        manage_leases_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>租赁
+      index:
+        active: 所有活跃租赁
+        deactivated: 停用租赁
+        expired: 过期活跃租赁
+        manage_leases: 管理租赁
+      list_expired_active_leases:
+        change_all: 将%{cc}中的所有文件更改为
+        deactivate: 停用租赁
+        deactivate_selected: 停用选定的租赁
+        missing: 目前没有到期的租赁期限。
+      table_headers:
+        release_date: 租赁发布日期
+        title: 标题
+        type: 什么样的工作
+        viz_after: 可见度将更改为
+        viz_current: 当前可见度
     mailbox:
       date: 日期
       delete: 删除讯息
+      empty: 找不到通知
       message: 讯息
       notifications_deleted: 通知已被删除
       subject: 主题
