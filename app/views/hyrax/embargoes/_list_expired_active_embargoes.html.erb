@@ -18,7 +18,7 @@
 <% else %>
 
   <%= form_tag embargoes_path, method: :patch do %>
-    <%= submit_tag t('.deactivate_embargoes_for_selected'), class: 'btn btn-primary' %>
+    <%= submit_tag t('.deactivate_selected'), class: 'btn btn-primary' %>
     <table class="embargoes table">
       <thead>
         <tr>
@@ -35,7 +35,7 @@
           <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
           <td class="embargo-release-date"><%= curation_concern.embargo_release_date %></td>
           <td class="visibility-after-embargo"><%= visibility_badge(curation_concern.visibility_after_embargo) %></td>
-          <td class="actions"><%= link_to t('.deactivate_embargo'), embargo_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
+          <td class="actions"><%= link_to t('.deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
         </tr>
         <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-embargo-info">
           <td></td>
