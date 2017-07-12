@@ -6,7 +6,7 @@ module Hyrax
   #
   # There is an interplay between an AdminSet and a PermissionTemplate.
   #
-  # @see Hyrax::AdminSetBehavior for further discussion
+  # @see Hyrax::AdminSet for further discussion
   class PermissionTemplate < ActiveRecord::Base
     self.table_name = 'permission_templates'
 
