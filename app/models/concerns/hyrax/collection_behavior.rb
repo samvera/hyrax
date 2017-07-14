@@ -56,22 +56,32 @@ module Hyrax
     # @return [Fixnum] size of collection in bytes
     # @raise [RuntimeError] unsaved record does not exist in solr
     def bytes
-      return 0 if member_ids.empty?
+      return 0 if member_object_ids.empty?
 
       raise "Collection must be saved to query for bytes" if new_record?
 
       # One query per member_id because Solr is not a relational database
-      sizes = member_ids.collect do |work_id|
+      member_object_ids.collect { |work_id| size_for_work(work_id) }.sum
+    end
+
+    private
+
+      # Use this query to get the ids of the member objects (since the containment
+      # association has been flipped)
+      def member_object_ids
+        return [] unless id
+        ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
+      end
+
+      # Calculate the size of all the files in the work
+      # @param work_id [String] identifer for a work
+      # @return [Integer] the size in bytes
+      def size_for_work(work_id)
         argz = { fl: "id, #{file_size_field}",
                  fq: "{!join from=#{member_ids_field} to=id}id:#{work_id}" }
         files = ::FileSet.search_with_conditions({}, argz)
         files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
       end
-
-      sizes.reduce(0, :+)
-    end
-
-    private
 
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
@@ -79,7 +89,7 @@ module Hyrax
         Solrizer.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
       end
 
-      # Solr field name collections and works use to index member ids
+      # Solr field name works use to index member ids
       def member_ids_field
         Solrizer.solr_name('member_ids', :symbol)
       end
