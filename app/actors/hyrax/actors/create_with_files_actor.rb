@@ -38,7 +38,7 @@ module Hyrax
 
         # @return [TrueClass]
         def attach_files(files, env)
-          return true unless files
+          return true if files.blank?
           AttachFilesToWorkJob.perform_later(env.curation_concern, files, env.attributes.to_h.symbolize_keys)
           true
         end
