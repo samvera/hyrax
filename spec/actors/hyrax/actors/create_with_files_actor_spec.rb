@@ -49,6 +49,7 @@ RSpec.describe Hyrax::Actors::CreateWithFilesActor do
 
       context "when no uploaded_file" do
         let(:attributes) { {} }
+
         it "doesn't invoke job" do
           expect(AttachFilesToWorkJob).not_to receive(:perform_later)
           expect(middleware.public_send(mode, env)).to be true
