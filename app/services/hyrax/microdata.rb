@@ -1,7 +1,7 @@
 module Hyrax
   class Microdata
     include Singleton
-    FILENAME = 'config/schema_org.yml'.freeze
+    FILENAME = Hyrax::Engine.root + 'config/schema_org.yml'
     TOP_KEY = 'schema_org'.freeze
 
     def self.fetch(key, options = {})

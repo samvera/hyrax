@@ -5,7 +5,14 @@ describe "display a work as its owner" do
   end
 
   context "as the work owner" do
-    let(:work) { create(:work_with_one_file, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"], user: user) }
+    let(:work) do
+      create(:work_with_one_file,
+             with_admin_set: true,
+             title: ["Magnificent splendor"],
+             source: ["The Internet"],
+             based_near: ["USA"],
+             user: user)
+    end
     let(:user) { create(:user) }
     before do
       sign_in user
