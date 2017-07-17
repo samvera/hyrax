@@ -41,7 +41,7 @@ module Hyrax
           permissions = []
           # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
           batch_document_ids.each do |doc_id|
-            work = model_class.find(doc_id)
+            work = ActiveFedora::Base.find(doc_id)
             terms.each do |key|
               combined_attributes[key] ||= []
               combined_attributes[key] = (combined_attributes[key] + work[key].to_a).uniq
