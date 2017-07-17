@@ -257,8 +257,11 @@ module Hyrax
             .and(entity_responsibilities[:entity_id].eq(entity.id))
         )
 
-        # PostgreSQL requires an explicit cast from string to integer
-        cast = Arel::Nodes::NamedFunction.new "CAST", [agent_table[:proxy_for_id].as("integer")]
+        # Default to "integer" for adapters like Postgres and Sqlite, but cast
+        # to "signed" for Mysql. The type CAST causes a SQL syntax error for an
+        # unsupported type depending on which adapter is being used.
+        type = ActiveRecord::Base.connection.adapter_name.casecmp("mysql2").zero? ? "signed" : "integer"
+        cast = Arel::Nodes::NamedFunction.new "CAST", [agent_table[:proxy_for_id].as(type)]
 
         sub_query_for_user = agent_table.project(cast).where(
           agent_table[:id].in(workflow_agent_id_subquery)
