@@ -23,12 +23,6 @@ module Selectors
         find '.select2-result-selectable'
       end
     end
-
-    def submit_button
-      within '#new_transfer' do
-        find 'input[type=submit]'
-      end
-    end
   end
 
   module Transfers

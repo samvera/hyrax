@@ -71,7 +71,6 @@ describe Hyrax::TransfersController, type: :controller do
     describe "#create" do
       let(:work) { create(:work, user: user) }
       it "is successful" do
-        allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect do
           post :create, params: {
             id: work.id,
@@ -99,7 +98,8 @@ describe Hyrax::TransfersController, type: :controller do
           post :create, params: { id: work.id, proxy_deposit_request: { transfer_to: 'foo' } }
         end.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
-        expect(response).to redirect_to(root_path)
+        expect(assigns[:work]).to be_instance_of GenericWork
+        expect(response).to be_success
       end
     end
 

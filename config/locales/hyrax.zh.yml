@@ -53,6 +53,8 @@ zh:
         update: '保存'
       hyrax_permission_template_access:
         create: '添加'
+      proxy_deposit_request:
+        create: '转让'
       update: '保存'
   hyrax:
     account_label:  "用户"
@@ -578,6 +580,9 @@ zh:
         logout: "退出登录"
         sr_action: "阅览"
         sr_target: "个人资料"
+    transfers:
+      new:
+        confirm: "您确定要将此作品的所有权转让给其他使用者吗？ 单击确定转移或取消返回到传输屏幕"
     upload:
       alert:
         contact_href_text: "联系表格"
@@ -726,5 +731,8 @@ zh:
         visibility_after_lease:    '仅限'
         visibility_during_embargo: '仅限'
         visibility_during_lease:   '可使用'
+      proxy_deposit_request:
+        transfer_to:               "用户"
+        sender_comment:            "注释"
     required:
       html: '<span class="label label-info required-tag">需要的</span>'

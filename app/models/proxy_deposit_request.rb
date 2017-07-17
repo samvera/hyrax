@@ -64,7 +64,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def sending_user_should_not_be_receiving_user
-    errors.add(:sending_user, 'must specify another user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
+    errors.add(:transfer_to, 'specify a different user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
   end
 
   def should_not_be_already_part_of_a_transfer
