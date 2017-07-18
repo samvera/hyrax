@@ -12,7 +12,7 @@ module Hyrax
       end
       @logging = options[:logging]
       @delay_secs = options[:delay_secs].to_f
-      @number_of_retries = options[:number_of_retries].to_i
+      @number_of_tries = options[:number_of_retries].to_i + 1
     end
 
     delegate :depositor_field, to: DepositSearchBuilder
@@ -75,20 +75,14 @@ module Hyrax
         sleep @delay_secs
       end
 
+      # This method never fails. It tries multiple times and finally logs the exception
       def rescue_and_retry(fail_message)
-        retry_count = 0
-        begin
+        Retriable.retriable(retry_options) do
           return yield
-        rescue StandardError => e
-          retry_count += 1
-          if retry_count < @number_of_retries
-            delay
-            retry
-          else
-            log_message fail_message
-            log_message "Last exception #{e}"
-          end
         end
+      rescue StandardError => exception
+        log_message fail_message
+        log_message "Last exception #{exception}"
       end
 
       def date_since_last_cache(user)
@@ -151,6 +145,10 @@ module Hyrax
 
       def log_message(message)
         Rails.logger.info "#{self.class}: #{message}" if @logging
+      end
+
+      def retry_options
+        { tries: @number_of_tries }
       end
   end
 end
