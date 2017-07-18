@@ -23,9 +23,7 @@ module Hyrax
 
       # Process changes from profile form
       def update
-        conditionally_set_user_attributes
-
-        if @user.save
+        if conditionally_update
           handle_successful_update
           redirect_to hyrax.dashboard_profile_path(@user.to_param), notice: "Your profile has been updated"
         else
@@ -35,22 +33,26 @@ module Hyrax
 
       private
 
-        def conditionally_set_user_attributes
+        # Update user if they sent user params, otherwise return true.
+        # This is important because this controller is also handling removing trophies.
+        # (but we should move that to a different controller)
+        def conditionally_update
           return true unless params[:user]
-          @user.attributes = user_params
-          case params[:user][:update_directory]
-          when '1', 'true', true
-            @user.populate_attributes
-          end
+          @user.update(user_params)
         end
 
         def handle_successful_update
           # TODO: this should be moved to TrophiesController
+          process_trophy_removal
+          UserEditProfileEventJob.perform_later(@user)
+        end
+
+        # if the user wants to remove any trophies, do that here.
+        def process_trophy_removal
           params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
             smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
             current_user.trophies.where(work_id: smash_trophy).destroy_all
           end
-          UserEditProfileEventJob.perform_later(@user)
         end
 
         def user_params
