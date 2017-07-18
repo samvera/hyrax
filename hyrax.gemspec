@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.name          = "hyrax"
   spec.require_paths = ["lib"]
   spec.version       = Hyrax::VERSION
-  spec.license       = 'Apache2'
+  spec.license       = 'Apache-2.0'
 
   spec.add_dependency 'hydra-head', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.2'
