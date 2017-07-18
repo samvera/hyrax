@@ -7,9 +7,9 @@ require 'hyrax/version'
 Gem::Specification.new do |spec|
   spec.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt", 'Jeremy Friesen', 'Trey Pendragon', 'Esmé Cowles']
   spec.email         = ["jcoyne85@stanford.edu", 'mjgiarlo@stanford.edu', 'cam156@psu.edu', 'matt@databindery.com', "jeremy.n.friesen@gmail.com", 'tpendragon@princeton.edu', 'escowles@ticklefish.org']
-  spec.description   = 'Hyrax is a featureful Hydra front-end based on the latest and greatest Hydra software components.'
+  spec.description   = 'Hyrax is a featureful Samvera front-end based on the latest and greatest Samvera software components.'
   spec.summary       = <<-EOF
-  Hyrax is a front-end based on the robust Hydra framework, providing a user
+  Hyrax is a front-end based on the robust Samvera framework, providing a user
   interface for common repository features. Hyrax offers the ability to create
   repository object types on demand, to deposit content via multiple workflows,
   and to describe content with flexible metadata. Numerous optional features may
