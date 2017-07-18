@@ -59,7 +59,7 @@ If you have questions or need help, please email [the Hydra community tech list]
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v1.0.2__. If you are looking for instructions on installing a different
+v1.0.3__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -133,7 +133,7 @@ Rails requires that you have a JavaScript runtime -- for example, nodejs -- inst
 Generate a new Rails application using the template.
 
 ```
-rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.0.2/template.rb
+rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.0.3/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
