@@ -24,7 +24,7 @@ EOF
   spec.name          = "hyrax"
   spec.require_paths = ["lib"]
   spec.version       = Hyrax::VERSION
-  spec.license       = 'Apache2'
+  spec.license       = 'Apache-2.0'
 
   # Note: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
