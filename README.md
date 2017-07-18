@@ -66,7 +66,7 @@ v2.0.0.alpha__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
-## Quickstart 
+## Quickstart
 
 If you're looking to spin up a vanilla Hyrax application very quickly for demonstration purposes, you may be interested in [the samvera-vagrant project](https://github.com/samvera-labs/samvera-vagrant) which may be used to "kick the tires" of Hyrax and [Hyku](https://github.com/samvera-labs/hyku). It requires VirtualBox and Vagrant.
 
@@ -92,6 +92,10 @@ Hyrax requires the following software to work:
 
 ### Characterization
 
+FITS can be installed on OSX using Homebrew by running the command: `brew install fits`
+
+**OR**
+
 1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS (see above to pick a known working version) & unpack it somewhere on your machine.
 1. Mark fits.sh as executable: `chmod a+x fits.sh`
 1. Run `fits.sh -h` from the command line and see a help message to ensure FITS is properly installed
@@ -103,7 +107,7 @@ Hyrax requires the following software to work:
 
 Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/path/to/LibreOffice.app/Contents/MacOS/"
 
-You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on a mac.
+You may also require [ghostscript](http://www.ghostscript.com/) if it does not come with your compiled version LibreOffice. `brew install ghostscript` should resolve the dependency on an OSX-based machine with Homebrew installed.
 
 **NOTE**: Derivatives are served from the filesystem in Hyrax.
 
@@ -111,7 +115,7 @@ You may also require [ghostscript](http://www.ghostscript.com/) if it does not c
 
 Hyrax includes support for transcoding audio and video files with ffmpeg > 1.0 installed.
 
-On OSX, you can use homebrew:
+On OSX, you can use Homebrew to install ffmpeg:
 
 `brew install ffmpeg --with-fdk-aac --with-libvpx --with-libvorbis`
 
