@@ -35,7 +35,7 @@ EOF
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.17.beta'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
-  spec.add_dependency 'select2-rails', '~> 3.5', '~> 3.5.9'
+  spec.add_dependency 'select2-rails', '~> 3.5', '>= 3.5.9'
   spec.add_dependency 'json-schema', '~> 0' # for Arkivio
   spec.add_dependency 'nest', '~> 2.0'
   spec.add_dependency 'mailboxer', '~> 0.12'
@@ -46,12 +46,12 @@ EOF
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'posix-spawn', '~> 0'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
-  spec.add_dependency 'redis-namespace', '~> 1.5', '~> 1.5.2'
+  spec.add_dependency 'redis-namespace', '~> 1.5', '>= 1.5.2'
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'qa', '~> 1.0' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.3'
-  spec.add_dependency 'jquery-datatables-rails', '~> 3.4', '~> 3.4.0'
+  spec.add_dependency 'jquery-datatables-rails', '~> 3.4', '>= 3.4.0'
   spec.add_dependency 'rdf-rdfxml', '~> 0' # controlled vocabulary importer
   spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
@@ -84,7 +84,7 @@ EOF
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   spec.add_development_dependency 'rubocop', '~> 0.47.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.10', '~> 1.10.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.10', '>= 1.10.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
   spec.add_development_dependency 'webmock', '~> 0'
