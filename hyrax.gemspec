@@ -25,34 +25,34 @@ EOF
   spec.version       = Hyrax::VERSION
   spec.license       = 'Apache-2.0'
 
-  spec.add_dependency 'hydra-head', '>= 10.4.0'
+  spec.add_dependency 'hydra-head', '~> 10.4', '>= 10.4.0'
   spec.add_dependency 'hydra-editor', '~> 3.2'
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
-  spec.add_dependency 'browse-everything', '>= 0.10.5'
+  spec.add_dependency 'browse-everything', '~> 0.10', '>= 0.10.5'
   spec.add_dependency 'blacklight', '~> 6.9'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'tinymce-rails-imageupload', '~> 4.0.17.beta'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
-  spec.add_dependency 'select2-rails', '~> 3.5.9'
-  spec.add_dependency 'json-schema' # for Arkivio
+  spec.add_dependency 'select2-rails', '~> 3.5', '~> 3.5.9'
+  spec.add_dependency 'json-schema', '~> 0' # for Arkivio
   spec.add_dependency 'nest', '~> 2.0'
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'carrierwave', '~> 1.0'
-  spec.add_dependency 'oauth'
+  spec.add_dependency 'oauth', '~> 0'
   spec.add_dependency 'oauth2', '~> 1.2'
-  spec.add_dependency 'signet'
+  spec.add_dependency 'signet', '~> 0'
   spec.add_dependency 'legato', '~> 0.3'
-  spec.add_dependency 'posix-spawn'
+  spec.add_dependency 'posix-spawn', '~> 0'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
-  spec.add_dependency 'redis-namespace', '~> 1.5.2'
+  spec.add_dependency 'redis-namespace', '~> 1.5', '~> 1.5.2'
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'qa', '~> 1.0' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.3'
-  spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
-  spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
+  spec.add_dependency 'jquery-datatables-rails', '~> 3.4', '~> 3.4.0'
+  spec.add_dependency 'rdf-rdfxml', '~> 0' # controlled vocabulary importer
   spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
@@ -67,8 +67,8 @@ EOF
   spec.add_dependency 'active_attr', '~> 0.9'
   spec.add_dependency 'redlock', '~> 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'active-fedora', '>= 11.3.1'
-  spec.add_dependency 'linkeddata' # Required for getting values from geonames
+  spec.add_dependency 'active-fedora', '~> 11.3', '>= 11.3.1'
+  spec.add_dependency 'linkeddata', '~> 0' # Required for getting values from geonames
 
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'
@@ -84,10 +84,10 @@ EOF
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   spec.add_development_dependency 'rubocop', '~> 0.47.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.10.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.10', '~> 1.10.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
-  spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'i18n-debug' unless ENV['TRAVIS']
-  spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+  spec.add_development_dependency 'webmock', '~> 0'
+  spec.add_development_dependency 'i18n-debug', '~> 0' unless ENV['TRAVIS']
+  spec.add_development_dependency 'i18n_yaml_sorter', '~> 0' unless ENV['TRAVIS']
 end
