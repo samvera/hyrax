@@ -59,18 +59,22 @@ class ProxyDepositRequest < ActiveRecord::Base
     receiving_user.try(:user_key)
   end
 
-  def transfer_to_should_be_a_valid_username
-    errors.add(:transfer_to, "must be an existing user") unless receiving_user
-  end
+  private
 
-  def sending_user_should_not_be_receiving_user
-    errors.add(:transfer_to, 'specify a different user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
-  end
+    def transfer_to_should_be_a_valid_username
+      errors.add(:transfer_to, "must be an existing user") unless receiving_user
+    end
 
-  def should_not_be_already_part_of_a_transfer
-    transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
-    errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
-  end
+    def sending_user_should_not_be_receiving_user
+      errors.add(:transfer_to, 'specify a different user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
+    end
+
+    def should_not_be_already_part_of_a_transfer
+      transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
+      errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
+    end
+
+  public
 
   def send_request_transfer_message
     if updated_at == created_at
