@@ -84,10 +84,10 @@ EOF
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   spec.add_development_dependency 'rubocop', '~> 0.47.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.10', '>= 1.10.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.10.0' # intentionally pessimistic
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
-  spec.add_development_dependency 'webmock', '~> 0'
-  spec.add_development_dependency 'i18n-debug', '~> 0' unless ENV['TRAVIS']
+  spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'i18n-debug' unless ENV['TRAVIS']
   spec.add_development_dependency 'i18n_yaml_sorter', '~> 0' unless ENV['TRAVIS']
 end
