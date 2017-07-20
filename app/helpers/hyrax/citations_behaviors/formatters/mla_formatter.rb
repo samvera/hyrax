@@ -18,8 +18,7 @@ module Hyrax
           # Publication
           pub_info = clean_end_punctuation(setup_pub_info(work, true))
 
-          text << pub_info if pub_info.present?
-          text << "." unless text.blank? || text =~ /\.$/
+          text << pub_info + "." if pub_info.present?
           text.html_safe
         end
 
