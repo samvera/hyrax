@@ -17,7 +17,6 @@ module Hyrax
           # Get Pub Date
           pub_date = setup_pub_date(work)
           text << " #{pub_date}." unless pub_date.nil?
-          text << "." unless text.blank? || text =~ /\.$/
 
           text << format_title(work.to_s)
           pub_info = setup_pub_info(work, false)
