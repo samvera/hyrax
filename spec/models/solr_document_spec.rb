@@ -12,6 +12,12 @@ RSpec.describe ::SolrDocument, type: :model do
     subject { document.itemtype }
 
     it { is_expected.to eq 'http://schema.org/Article' }
+
+    context 'with no resource_type' do
+      let(:attributes) { {} }
+
+      it { is_expected.to eq 'http://schema.org/CreativeWork' }
+    end
   end
 
   describe "date_uploaded" do

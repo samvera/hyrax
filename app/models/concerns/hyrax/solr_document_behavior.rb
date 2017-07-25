@@ -11,7 +11,8 @@ module Hyrax
 
     # Add a schema.org itemtype
     def itemtype
-      ResourceTypesService.microdata_type(resource_type.first)
+      types = resource_type || []
+      ResourceTypesService.microdata_type(types.first)
     end
 
     def title_or_label

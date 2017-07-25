@@ -13,7 +13,10 @@ module Hyrax
       authority.find(id).fetch('term')
     end
 
-    # @param [String] id identifier of the resource type
+    ##
+    # @param [String, nil] id identifier of the resource type
+    #
+    # @return [String] a schema.org type. Gives the default type if `id` is nil.
     def self.microdata_type(id)
       return Hyrax.config.microdata_default_type if id.nil?
       Microdata.fetch("resource_type.#{id}", default: Hyrax.config.microdata_default_type)
