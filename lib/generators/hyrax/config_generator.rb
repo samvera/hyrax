@@ -61,5 +61,6 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file "config/locales/hyrax.fr.yml", "config/locales/hyrax.fr.yml"
     copy_file "config/locales/hyrax.it.yml", "config/locales/hyrax.it.yml"
     copy_file "config/locales/hyrax.pt-BR.yml", "config/locales/hyrax.pt-BR.yml"
+    copy_file "config/locales/hyrax.ca.yml", "config/locales/hyrax.ca.yml"
   end
 end

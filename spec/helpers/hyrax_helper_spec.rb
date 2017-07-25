@@ -27,7 +27,8 @@ RSpec.describe HyraxHelper, type: :helper do
     subject { helper.available_translations }
 
     it do
-      is_expected.to eq('de' => 'Deutsch',
+      is_expected.to eq('ca' => 'Català',
+                        'de' => 'Deutsch',
                         'en' => 'English',
                         'es' => 'Español',
                         'fr' => 'Français',

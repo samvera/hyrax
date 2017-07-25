@@ -1,0 +1,56 @@
+---
+ca:
+  blacklight:
+    search:
+      fields:
+        facet:
+          based_near_sim: Ubicació
+          creator_sim: Creador
+          file_format_sim: Format
+          generic_type_sim: Escriviu
+          keyword_sim: Paraula clau
+          language_sim: Llenguatge
+          publisher_sim: Editorial
+          subject_sim: Assignatura
+        index:
+          based_near_tesim: Ubicació
+          contributor_tesim: Col·laborador
+          creator_tesim: Creador
+          date_created_tesim: Data de creació
+          date_modified_dtsi: Data modificada
+          date_uploaded_dtsi: Data de càrrega
+          description_tesim: Descripció
+          file_format_tesim: Format d'arxiu
+          identifier_tesim: Identificador
+          keyword_tesim: Paraula clau
+          language_tesim: Llenguatge
+          publisher_tesim: Editorial
+          rights_tesim: Drets
+          subject_tesim: Assignatura
+        show:
+          based_near_tesim: Ubicació
+          contributor_tesim: Col·laborador
+          creator_tesim: Creador
+          date_created_tesim: Data de creació
+          date_modified_dtsi: Data modificada
+          date_uploaded_dtsi: Data de càrrega
+          description_tesim: Descripció
+          file_format_tesim: Format d'arxiu
+          identifier_tesim: Identificador
+          keyword_tesim: Paraula clau
+          language_tesim: Llenguatge
+          publisher_tesim: Editorial
+          rights_tesim: Drets
+          subject_tesim: Assignatura
+          title_tesim: Títol
+  hyrax:
+    account_name: Identificador del compte de la meva institució
+    directory:
+      suffix: "@ Example.org"
+    footer:
+      copyright_html: "<strong>Copyright © 2017 Samvera</strong> llicenciat sota la llicència Apache, versió 2.0"
+      service_html: Un servei de <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a> .
+    institution_name: Institució
+    institution_name_full: Nom de la institució
+    product_name: Hyrax
+    product_twitter_handle: "@SamveraRepo"
