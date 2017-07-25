@@ -11,7 +11,6 @@ module Hyrax
           text << pub_date_text_for(work)
           text << add_title_text_for(work)
           text << add_publisher_text_for(work)
-          text << "." unless text.blank? || text =~ /\.$/
           text.html_safe
         end
 
@@ -65,7 +64,7 @@ module Hyrax
             if pub_info.nil?
               ''
             else
-              pub_info
+              pub_info + "."
             end
           end
 
