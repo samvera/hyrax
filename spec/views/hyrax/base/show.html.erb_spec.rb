@@ -112,7 +112,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
 
     it 'displays twitter:site' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:site']")
-      expect(tag.attribute('content').value).to eq('@HydraSphere')
+      expect(tag.attribute('content').value).to eq('@SamveraRepo')
     end
 
     it 'displays twitter:creator' do

@@ -21,7 +21,7 @@ module Hyrax
       end
 
       # This can be replaced by a simple merge once
-      # https://github.com/projecthydra/active_fedora/pull/1227
+      # https://github.com/samvera/active_fedora/pull/1227
       # is available to us
       # @param [ActiveFedora::Indexing::Map] first
       # @param [Hash] second

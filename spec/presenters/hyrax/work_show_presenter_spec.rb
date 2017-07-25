@@ -44,7 +44,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:attributes) { work.to_solr }
 
     before do
-      # https://github.com/projecthydra/active_fedora/issues/1251
+      # https://github.com/samvera/active_fedora/issues/1251
       allow(work).to receive(:persisted?).and_return(true)
     end
 

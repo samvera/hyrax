@@ -47,7 +47,7 @@ RSpec.describe Hyrax::FileSetIndexer do
 
   describe '#generate_solr_document' do
     before do
-      # https://github.com/projecthydra/active_fedora/issues/1251
+      # https://github.com/samvera/active_fedora/issues/1251
       allow(file_set).to receive(:persisted?).and_return(true)
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
       allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
