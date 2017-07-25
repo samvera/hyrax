@@ -219,7 +219,7 @@ module Hyrax
           return true unless intention.wants_lease?
           env.curation_concern.apply_lease(*intention.lease_params)
           return unless env.curation_concern.lease
-          env.curation_concern.lease.save # see https://github.com/projecthydra/hydra-head/issues/226
+          env.curation_concern.lease.save # see https://github.com/samvera/hydra-head/issues/226
         end
 
         # If they want an embargo, we can assume it's valid
@@ -227,7 +227,7 @@ module Hyrax
           return true unless intention.wants_embargo?
           env.curation_concern.apply_embargo(*intention.embargo_params)
           return unless env.curation_concern.embargo
-          env.curation_concern.embargo.save # see https://github.com/projecthydra/hydra-head/issues/226
+          env.curation_concern.embargo.save # see https://github.com/samvera/hydra-head/issues/226
         end
     end
   end

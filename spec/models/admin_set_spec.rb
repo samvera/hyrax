@@ -69,7 +69,7 @@ RSpec.describe AdminSet, type: :model do
 
   describe "#members" do
     it "is empty by default" do
-      skip 'This test is plagued by this bug https://github.com/projecthydra/active_fedora/issues/1238'
+      skip 'This test is plagued by this bug https://github.com/samvera/active_fedora/issues/1238'
       expect(subject.members).to be_empty
     end
 

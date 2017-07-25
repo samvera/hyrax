@@ -47,7 +47,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Hyrax?
 
-Hyrax is a front-end based on the robust [Samvera](http://projecthydra.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
+Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
 ## Feature list
 
@@ -57,7 +57,7 @@ For non-technical documentation about Hyrax, see the Hyrax [documentation site](
 
 # Help
 
-If you have questions or need help, please email [the Samvera community tech list](mailto:hydra-tech@googlegroups.com) or stop by the #dev channel in [the Samvera community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
+If you have questions or need help, please email [the Samvera community tech list](mailto:samvera-tech@googlegroups.com) or stop by the #dev channel in [the Samvera community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
 
 # Getting started
 
@@ -302,6 +302,6 @@ See the [release management process](https://github.com/samvera/hyrax/wiki/Relea
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Samvera community.  Learn more at the
-[Samvera website](http://projecthydra.org/).
+[Samvera website](http://samvera.org/).
 
-![Samvera Logo](http://hyr.ax/assets/images/hydra_logo.png)
+![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)

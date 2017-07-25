@@ -10,7 +10,7 @@ RSpec.describe Hyrax::PermissionsController do
     let(:work) { build(:generic_work, user: user, id: 'abc') }
 
     before do
-      # https://github.com/projecthydra/active_fedora/issues/1251
+      # https://github.com/samvera/active_fedora/issues/1251
       allow(work).to receive(:persisted?).and_return(true)
     end
 

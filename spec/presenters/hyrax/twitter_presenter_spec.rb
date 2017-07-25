@@ -16,11 +16,11 @@ module Hyrax
         before { allow(::User).to receive(:find_by_user_key).with(user_key).and_return(user) }
         let(:user) { instance_double(::User, twitter_handle: '', user_key: user_key) }
 
-        it { is_expected.to eq '@HydraSphere' }
+        it { is_expected.to eq '@SamveraRepo' }
       end
 
       context "with a user that can't be found" do
-        it { is_expected.to eq '@HydraSphere' }
+        it { is_expected.to eq '@SamveraRepo' }
       end
     end
   end

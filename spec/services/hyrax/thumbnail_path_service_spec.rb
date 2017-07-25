@@ -8,7 +8,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
 
     before do
       allow(object).to receive(:original_file).and_return(original_file)
-      # https://github.com/projecthydra/active_fedora/issues/1251
+      # https://github.com/samvera/active_fedora/issues/1251
       allow(object).to receive(:persisted?).and_return(true)
     end
     context "that has a thumbnail" do
