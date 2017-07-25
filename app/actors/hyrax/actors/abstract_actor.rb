@@ -1,18 +1,15 @@
 module Hyrax
   module Actors
-    # The Hyrax::AbstractActor responds to two primary actions:
+    # The Hyrax::AbstractActor responds to three primary actions:
     # * #create
     # * #update
+    # * #destroy
     #
-    # and the following attributes
+    # and the next_actor attribute
     #
-    # * next_actor
-    # * curation_concern
-    # * user
     #
-    # it must instantiate the next actor in the chain and instantiate it.
-    # it should respond to curation_concern, user and attributes.
-    # it ha to next_actor
+    # In order to continue the stack it must instantiate the next actor in the chain and call it
+    #   OR to exit from the stack, return a truthy or falsey value.
     class AbstractActor
       attr_reader :next_actor
 
