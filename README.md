@@ -283,6 +283,8 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 
 If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera/hyrax). There are other ways to help, too.
 
+* The Hyrax user interface is translated into a number of languages, and many of these translations come from Google Translate. If you are a native or fluent speaker of a non-English language, your help improving these translations are most welcome. (Hyrax currently supports English, Spanish, Chinese, Italian, German, French, and Portuguese.)
+  * Do you see English in the application where you would expect to see one of the languages above? If so, [file an issue](https://github.com/samvera/hyrax/issues/new) and suggest a translation, please.
 * [Contribute a user story](https://github.com/samvera/hyrax/issues/new).
 * Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
 * Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
