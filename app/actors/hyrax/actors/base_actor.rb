@@ -1,10 +1,17 @@
 module Hyrax
   module Actors
-    # The Hyrax::BaseActor responds to two primary actions:
-    # * #create
-    # * #update
-    # it must instantiate the next actor in the chain and instantiate it.
-    # it should respond to curation_concern, user and attributes.
+    ##
+    # Defines the basic save/destroy and callback behavior, intended to run
+    # near the bottom of the actor stack.
+    #
+    # @example Defining a base actor for a custom work type
+    #   module Hyrax
+    #     module Actors
+    #       class MyWorkActor < Hyrax::Actors::BaseActor; end
+    #     end
+    #   end
+    #
+    # @see Hyrax::Actor::AbstractActor
     class BaseActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
