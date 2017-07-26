@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/homepage/_sortable_featured.html.erb', type: :view do
   let(:page)          { rendered }
 
   before do
-    # https://github.com/projecthydra/active_fedora/issues/1251
+    # https://github.com/samvera/active_fedora/issues/1251
     allow(work).to receive(:persisted?).and_return(true)
     allow(view).to receive(:f).and_return(form_builder)
     allow(form_builder).to receive(:object).and_return(featured_work)

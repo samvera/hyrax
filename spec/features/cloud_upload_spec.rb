@@ -4,7 +4,7 @@ RSpec.describe "Selecting files to import from cloud providers", type: :feature 
   end
 
   it "has a Cloud file picker using browse-everything" do
-    skip "TBD in https://github.com/projecthydra/hyrax/issues/1699"
+    skip "TBD in https://github.com/samvera/hyrax/issues/1699"
     click_link "Create Work"
     click_link "Cloud Providers"
     expect(page).to have_content "Browse cloud files"

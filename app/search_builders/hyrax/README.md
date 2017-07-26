@@ -25,7 +25,7 @@ The generated parent class `SearchBuilder` descends from `Blacklight::SearchBuil
 As modified by Hyrax' installer, it includes additional modules and overrides.  So if your SearchBuilder has `::SearchBuilder` as a parent class, you are getting:
 - [Blacklight::SearchBuilder](https://github.com/projectblacklight/blacklight/blob/master/lib/blacklight/search_builder.rb) grandparent class
 - [Blacklight::Solr::SearchBuilderBehavior](https://github.com/projectblacklight/blacklight/blob/master/lib/blacklight/solr/search_builder_behavior.rb) associated methods
-- [Hydra::AccessControlsEnforcement](https://github.com/projecthydra/hydra-head/blob/master/hydra-access-controls/lib/hydra/access_controls_enforcement.rb) module
+- [Hydra::AccessControlsEnforcement](https://github.com/samvera/hydra-head/blob/master/hydra-access-controls/lib/hydra/access_controls_enforcement.rb) module
   -  [Blacklight::AccessControls::Enforcement](https://github.com/projectblacklight/blacklight-access_controls/blob/master/lib/blacklight/access_controls/enforcement.rb) ancestor of `Hydra::AccessControlsEnforcement`
 - [Hyrax::SearchFilters](https://github.com/samvera/hyrax/blob/master/app/search_builders/hyrax/search_filters.rb)  module that itself includes:
   - [BlacklightAdvancedSearch::AdvancedSearchBuilder](https://github.com/projectblacklight/blacklight_advanced_search/blob/master/lib/blacklight_advanced_search/advanced_search_builder.rb) more magic for compound Boolean queries

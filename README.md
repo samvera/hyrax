@@ -47,7 +47,7 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Hyrax?
 
-Hyrax is a front-end based on the robust [Samvera](http://projecthydra.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
+Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
 ## Feature list
 
@@ -283,6 +283,8 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 
 If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera/hyrax). There are other ways to help, too.
 
+* The Hyrax user interface is translated into a number of languages, and many of these translations come from Google Translate. If you are a native or fluent speaker of a non-English language, your help improving these translations are most welcome. (Hyrax currently supports English, Spanish, Chinese, Italian, German, French, and Portuguese.)
+  * Do you see English in the application where you would expect to see one of the languages above? If so, [file an issue](https://github.com/samvera/hyrax/issues/new) and suggest a translation, please.
 * [Contribute a user story](https://github.com/samvera/hyrax/issues/new).
 * Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
 * Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
@@ -302,6 +304,6 @@ See the [release management process](https://github.com/samvera/hyrax/wiki/Relea
 # Acknowledgments
 
 This software has been developed by and is brought to you by the Samvera community.  Learn more at the
-[Samvera website](http://projecthydra.org/).
+[Samvera website](http://samvera.org/).
 
-![Samvera Logo](http://hyr.ax/assets/images/hydra_logo.png)
+![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
