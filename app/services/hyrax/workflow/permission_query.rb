@@ -24,6 +24,10 @@ module Hyrax
         @entity_responsibilities ||= Sipity::EntitySpecificResponsibility.arel_table
       end
 
+      def workflow_responsibilities
+        @workflow_responsibilities ||= Sipity::WorkflowResponsibility.arel_table
+      end
+
       # @api public
       #
       # For the given :user and :entity return only workflow actions that meet all of the following:
@@ -61,7 +65,6 @@ module Hyrax
         entity = PowerConverter.convert_to_sipity_entity(entity)
         role = PowerConverter.convert_to_sipity_role(role)
         workflow_roles = Sipity::WorkflowRole.arel_table
-        workflow_responsibilities = Sipity::WorkflowResponsibility.arel_table
 
         agents = Sipity::Agent.arel_table
 
@@ -186,7 +189,6 @@ module Hyrax
         workflow_state_actions = Sipity::WorkflowStateAction.arel_table
         workflow_states = Sipity::WorkflowState.arel_table
         workflow_state_action_permissions = Sipity::WorkflowStateActionPermission.arel_table
-        workflow_responsibilities = Sipity::WorkflowResponsibility.arel_table
 
         user_agent_scope = scope_processing_agents_for(user: user)
         user_agent_contraints = user_agent_scope.arel_table.project(
@@ -241,7 +243,6 @@ module Hyrax
         user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
 
         workflow_roles = Sipity::WorkflowRole.arel_table
-        workflow_responsibilities = Sipity::WorkflowResponsibility.arel_table
         user_table = ::User.arel_table
         agent_table = Sipity::Agent.arel_table
 
@@ -307,14 +308,13 @@ module Hyrax
       # @param workflow [Sipity::Workflow]
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def scope_processing_workflow_roles_for_user_and_workflow(user:, workflow:)
-        responsibility_table = Sipity::WorkflowResponsibility.arel_table
         workflow_role_table = Sipity::WorkflowRole.arel_table
 
         agent_constraints = scope_processing_agents_for(user: user)
         workflow_role_subquery = workflow_role_table[:id].in(
-          responsibility_table.project(responsibility_table[:workflow_role_id])
+          workflow_responsibilities.project(workflow_responsibilities[:workflow_role_id])
           .where(
-            responsibility_table[:agent_id].in(
+            workflow_responsibilities[:agent_id].in(
               agent_constraints.arel_table.project(
                 agent_constraints.arel_table[:id]
               ).where(agent_constraints.arel.constraints)
