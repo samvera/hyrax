@@ -69,6 +69,12 @@ module Hyrax
         end
       end
 
+      describe 'workflow_roles' do
+        it 'is a Sipity::WorkflowRole.arel_table' do
+          expect(described_class.workflow_roles).to be_an_instance_of Arel::Table
+        end
+      end
+
       describe 'permissions assigned at the workflow level' do
         let(:reviewing_group_member) { create(:user) }
         let(:reviewing_group) { Group.new('librarians') }

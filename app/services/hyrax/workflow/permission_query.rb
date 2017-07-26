@@ -28,6 +28,10 @@ module Hyrax
         @workflow_responsibilities ||= Sipity::WorkflowResponsibility.arel_table
       end
 
+      def workflow_roles
+        @workflow_roles ||= Sipity::WorkflowRole.arel_table
+      end
+
       # @api public
       #
       # For the given :user and :entity return only workflow actions that meet all of the following:
@@ -64,7 +68,6 @@ module Hyrax
       def scope_agents_associated_with_entity_and_role(entity:, role:)
         entity = PowerConverter.convert_to_sipity_entity(entity)
         role = PowerConverter.convert_to_sipity_role(role)
-        workflow_roles = Sipity::WorkflowRole.arel_table
 
         agents = Sipity::Agent.arel_table
 
@@ -125,7 +128,6 @@ module Hyrax
       def scope_roles_associated_with_the_given_entity(entity:)
         entity = PowerConverter.convert_to_sipity_entity(entity)
         return Sipity::Role.none unless entity
-        workflow_roles = Sipity::WorkflowRole.arel_table
         Sipity::Role.where(
           Sipity::Role.arel_table[:id].in(
             workflow_roles.project(workflow_roles[:role_id]).where(
@@ -242,7 +244,6 @@ module Hyrax
         role_ids = Array.wrap(roles).map { |role| PowerConverter.convert_to_sipity_role(role).id }
         user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
 
-        workflow_roles = Sipity::WorkflowRole.arel_table
         user_table = ::User.arel_table
         agent_table = Sipity::Agent.arel_table
 
@@ -308,10 +309,8 @@ module Hyrax
       # @param workflow [Sipity::Workflow]
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def scope_processing_workflow_roles_for_user_and_workflow(user:, workflow:)
-        workflow_role_table = Sipity::WorkflowRole.arel_table
-
         agent_constraints = scope_processing_agents_for(user: user)
-        workflow_role_subquery = workflow_role_table[:id].in(
+        workflow_role_subquery = workflow_roles[:id].in(
           workflow_responsibilities.project(workflow_responsibilities[:workflow_role_id])
           .where(
             workflow_responsibilities[:agent_id].in(
@@ -321,9 +320,8 @@ module Hyrax
             )
           )
         )
-
         Sipity::WorkflowRole.where(
-          workflow_role_table[:workflow_id].eq(workflow.id).and(workflow_role_subquery)
+          workflow_roles[:workflow_id].eq(workflow.id).and(workflow_role_subquery)
         )
       end
 
@@ -339,10 +337,9 @@ module Hyrax
       def scope_processing_workflow_roles_for_user_and_entity_specific(user:, entity:)
         entity = PowerConverter.convert_to_sipity_entity(entity)
         agent_scope = scope_processing_agents_for(user: user)
-        workflow_role_table = Sipity::WorkflowRole.arel_table
 
         Sipity::WorkflowRole.where(
-          workflow_role_table[:id].in(
+          workflow_roles[:id].in(
             entity_responsibilities.project(entity_responsibilities[:workflow_role_id])
             .where(
               entity_responsibilities[:agent_id].in(
