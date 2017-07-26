@@ -57,7 +57,7 @@ For non-technical documentation about Hyrax, see the Hyrax [documentation site](
 
 # Help
 
-If you have questions or need help, please email [the Samvera community tech list](mailto:samvera-tech@googlegroups.com) or stop by the #dev channel in [the Samvera community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
+The Samvera community is here to help. Please see our [support guide](./.github/SUPPORT.md).
 
 # Getting started
 
