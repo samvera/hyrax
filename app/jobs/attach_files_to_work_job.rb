@@ -10,7 +10,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
     work_permissions = work.permissions.map(&:to_hash)
     metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|
-      actor = Hyrax::Actors::FileSetActor.new(FileSet.new, user)
+      actor = Hyrax::Actors::FileSetActor.new(FileSet.create, user)
       actor.create_metadata(metadata)
       actor.create_content(uploaded_file)
       actor.attach_to_work(work)
