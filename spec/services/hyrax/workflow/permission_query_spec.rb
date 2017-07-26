@@ -57,6 +57,12 @@ module Hyrax
         expect(described_class.scope_entities_for_the_user(user: user)).to eq(entities)
       end
 
+      describe 'entity_responsibilities' do
+        it 'is a Sipity::EntitySpecificResponsibility.arel_table' do
+          expect(described_class.entity_responsibilities).to be_an_instance_of Arel::Table
+        end
+      end
+
       describe 'permissions assigned at the workflow level' do
         let(:reviewing_group_member) { create(:user) }
         let(:reviewing_group) { Group.new('librarians') }
