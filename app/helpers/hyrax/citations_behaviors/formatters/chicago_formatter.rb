@@ -11,17 +11,16 @@ module Hyrax
           # setup formatted author list
           authors_list = all_authors(work)
           text << format_authors(authors_list)
-          unless text.blank?
+          if text.present?
             text = "<span class=\"citation-author\">#{text}</span>"
           end
           # Get Pub Date
           pub_date = setup_pub_date(work)
           text << " #{pub_date}." unless pub_date.nil?
-          text << "." unless text.blank? || text =~ /\.$/
 
           text << format_title(work.to_s)
           pub_info = setup_pub_info(work, false)
-          text << " #{pub_info}." unless pub_info.blank?
+          text << " #{pub_info}." if pub_info.present?
           text.html_safe
         end
 
