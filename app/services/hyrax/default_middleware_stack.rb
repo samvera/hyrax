@@ -15,6 +15,7 @@ module Hyrax
         middleware.use Hyrax::Actors::InterpretVisibilityActor
         middleware.use Hyrax::Actors::DefaultAdminSetActor
         middleware.use Hyrax::Actors::ApplyPermissionTemplateActor
+        middleware.use Hyrax::Actors::CleanupTrophiesActor
         middleware.use Hyrax::Actors::ModelActor
         middleware.use Hyrax::Actors::InitializeWorkflowActor
       end

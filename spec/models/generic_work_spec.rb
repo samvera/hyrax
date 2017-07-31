@@ -99,20 +99,6 @@ RSpec.describe GenericWork do
     end
   end
 
-  describe "trophies" do
-    let(:user) { create(:user) }
-    let(:w) { create(:work, user: user) }
-    let!(:t) { Trophy.create(user_id: user.id, work_id: w.id) }
-
-    it "has a trophy" do
-      expect(Trophy.where(work_id: w.id).count).to eq 1
-    end
-    it "removes all trophies when work is deleted" do
-      w.destroy
-      expect(Trophy.where(work_id: w.id).count).to eq 0
-    end
-  end
-
   describe "featured works" do
     let(:work) { create(:public_work) }
 

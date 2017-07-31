@@ -19,6 +19,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
         Hyrax::Actors::InterpretVisibilityActor,
         Hyrax::Actors::DefaultAdminSetActor,
         Hyrax::Actors::ApplyPermissionTemplateActor,
+        Hyrax::Actors::CleanupTrophiesActor,
         Hyrax::Actors::ModelActor,
         Hyrax::Actors::InitializeWorkflowActor
       ]
