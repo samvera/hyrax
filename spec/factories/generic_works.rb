@@ -1,5 +1,9 @@
 FactoryBot.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
+    to_create do |instance|
+      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+    end
+
     transient do
       user { create(:user) }
       # Set to true (or a hash) if you want to create an admin set
