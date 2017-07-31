@@ -2,22 +2,22 @@ module Hyrax
   module FileSetBehavior
     extend ActiveSupport::Concern
     include Hyrax::WithEvents
-    include Hydra::Works::FileSetBehavior
-    include Hydra::Works::VirusCheck
+    # include Hydra::Works::FileSetBehavior
+    # include Hydra::Works::VirusCheck
     include Hyrax::FileSet::Characterization
     include Hydra::WithDepositor
     include Serializers
     include Hyrax::Noid
     include Hyrax::FileSet::Derivatives
-    include Permissions
-    include Hyrax::FileSet::Indexing
-    include Hyrax::FileSet::BelongsToWorks
-    include Hyrax::FileSet::Querying
+    # include Permissions
+    # include Hyrax::FileSet::Indexing
+    # include Hyrax::FileSet::BelongsToWorks
+    # include Hyrax::FileSet::Querying
     include HumanReadableType
     include CoreMetadata
     include Hyrax::BasicMetadata
     include Naming
-    include Hydra::AccessControls::Embargoable
+    # include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
 
     included do

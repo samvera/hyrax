@@ -1,19 +1,19 @@
 module Hyrax
   module CollectionBehavior
     extend ActiveSupport::Concern
-    include Hydra::AccessControls::WithAccessRight
+    # include Hydra::AccessControls::WithAccessRight
     include Hydra::WithDepositor # for access to apply_depositor_metadata
-    include Hydra::AccessControls::Permissions
+    # include Hydra::AccessControls::Permissions
     include Hyrax::CoreMetadata
-    include Hydra::Works::CollectionBehavior
+    # include Hydra::Works::CollectionBehavior
     include Hyrax::Noid
     include Hyrax::HumanReadableType
-    include Hyrax::HasRepresentative
-    include Hyrax::Permissions
+    # include Hyrax::HasRepresentative
+    # include Hyrax::Permissions
 
     included do
-      validates_with HasOneTitleValidator
-      self.indexer = Hyrax::CollectionIndexer
+    #  validates_with HasOneTitleValidator
+    #  self.indexer = Hyrax::CollectionIndexer
     end
 
     # Add members using the members association.
