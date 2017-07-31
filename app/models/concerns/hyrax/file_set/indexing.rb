@@ -4,7 +4,6 @@ module Hyrax
       extend ActiveSupport::Concern
 
       included do
-        class_attribute :indexer
         # the default indexing service
         self.indexer = Hyrax::FileSetIndexer
       end
