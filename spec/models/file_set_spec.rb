@@ -167,7 +167,7 @@ RSpec.describe FileSet do
 
       it 'is settable' do
         AltFile.indexer = klass
-        expect(subject.indexer).to eq klass
+        expect(AltFile.indexer).to eq klass
       end
     end
   end
