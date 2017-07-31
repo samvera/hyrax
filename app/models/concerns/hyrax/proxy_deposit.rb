@@ -3,16 +3,18 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      property :proxy_depositor, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#proxyDepositor'), multiple: false do |index|
-        index.as :symbol
-      end
+      attribute :proxy_depositor, Valkyrie::Types::String
+      # property :proxy_depositor, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#proxyDepositor'), multiple: false do |index|
+      #   index.as :symbol
+      # end
 
-      # This value is set when a user indicates they are depositing this for someone else
-      property :on_behalf_of, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf'), multiple: false do |index|
-        index.as :symbol
-      end
+      attribute :on_behalf_of, Valkyrie::Types::String
+      # # This value is set when a user indicates they are depositing this for someone else
+      # property :on_behalf_of, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf'), multiple: false do |index|
+      #   index.as :symbol
+      # end
 
-      after_create :create_transfer_request
+      # after_create :create_transfer_request
     end
 
     def create_transfer_request

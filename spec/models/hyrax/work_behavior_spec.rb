@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::WorkBehavior do
   before do
-    class EssentialWork < ActiveFedora::Base
+    class EssentialWork < Valkyrie::Resource
       include Hyrax::WorkBehavior
     end
   end
