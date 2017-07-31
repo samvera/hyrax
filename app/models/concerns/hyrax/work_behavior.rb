@@ -19,7 +19,6 @@ module Hyrax
     include Suppressible
     include ProxyDeposit
     include Works::Metadata
-    include Works::Featured
     include WithEvents
 
     included do
