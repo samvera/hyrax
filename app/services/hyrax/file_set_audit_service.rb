@@ -60,7 +60,7 @@ module Hyrax
       # @param [ActiveFedora::File] file to audit
       # @param [Array] log container for messages
       def audit_file(file, log = [])
-        versions = file.has_versions? ? file.versions.all : file
+        versions = file.has_versions? ? file.versions.all : Array.wrap(file)
         versions.each { |v| log << audit_file_version(file.id, v.uri) }
         log
       end

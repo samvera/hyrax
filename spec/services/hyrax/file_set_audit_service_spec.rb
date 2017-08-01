@@ -22,6 +22,20 @@ describe Hyrax::FileSetAuditService do
     specify 'returns a single result' do
       expect(subject.length).to eq(1)
     end
+    context 'when a file has two versions' do
+      before do
+        Hyrax::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
+      end
+      specify 'returns two log results' do
+        expect(subject.count).to eq(2)
+      end
+    end
+    context "when a file has no versions (i.e. has_versions? == false)" do
+      subject { service_by_object.send(:audit_file, Hydra::PCDM::File.new) }
+      specify "returns one log result" do
+        expect(subject.count).to eq(1)
+      end
+    end
   end
 
   describe '#audit_file_version' do
