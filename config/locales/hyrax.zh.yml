@@ -691,6 +691,10 @@ zh:
     transfers:
       new:
         confirm: 您确定要将此作品的所有权转让给其他使用者吗？ 单击确定转移或取消返回到传输屏幕
+        header: "所有权转让"
+        placeholder: "搜索用户"
+        sr_only_description: '选择要传输 “％{work_title}” 的用户，添加可选注释，然后按传输。'
+        title: '转让所有权 "%{work_title}"'
     upload:
       alert:
         contact_href_text: 联系表格

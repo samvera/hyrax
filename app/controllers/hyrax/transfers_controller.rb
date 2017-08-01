@@ -19,6 +19,9 @@ module Hyrax
     end
 
     def new
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.transfers.new.header'), hyrax.new_work_transfer_path
       @work = Hyrax::WorkRelation.new.find(params[:id])
     end
 

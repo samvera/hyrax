@@ -690,6 +690,10 @@ en:
     transfers:
       new:
         confirm: "Are you sure you want to transfer ownership of this work to another user? Click Ok to transfer or Cancel to return to the transfer screen"
+        header: "Transfer Ownership"
+        placeholder: "Search for a user"
+        sr_only_description: 'Select a user to transfer "%{work_title}" to, add optional comments and then press transfer.'
+        title: 'Transfer Ownership of "%{work_title}"'
     upload:
       alert:
         contact_href_text: "contact form"
