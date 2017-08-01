@@ -15,8 +15,10 @@ module Hyrax
     #
     # You can customize the actor stack, so long as you do so before the actor
     # is used.  Once it is used, it becomes immutable.
-    # This attribute is set by Hyrax::Engine
-    class_attribute :actor_factory
+    # @return [ActionDispatch::MiddlewareStack]
+    def self.actor_factory
+      Hyrax::DefaultMiddlewareStack.build_stack
+    end
 
     # A consumer of this method can inject a different factory
     # into this class in order to change the behavior of this method.
