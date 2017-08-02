@@ -18,9 +18,7 @@ module Hyrax
     include NestedWorks
     include Suppressible
     include ProxyDeposit
-    include Works::Trophies
     include Works::Metadata
-    include Works::Featured
     include WithEvents
 
     included do
