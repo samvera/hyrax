@@ -1,6 +1,6 @@
 RSpec.describe CharacterizeJob do
   let(:file_set_id) { 'abc12345' }
-  let(:filename)    { Rails.root.join('tmp', 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png') }
+  let(:filename)    { Rails.root.join('tmp', 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }
   let(:file_set) do
     FileSet.new(id: file_set_id).tap do |fs|
       allow(fs).to receive(:original_file).and_return(file)

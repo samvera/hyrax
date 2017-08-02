@@ -57,18 +57,17 @@ class JobIoWrapper < ApplicationRecord
     end
 
     # The magic that switches *once* between local filepath and CarrierWave file
-    # @return [#read] File-like object ready to #read
+    # @return [File, StringIO, #read] File-like object ready to #read
     def file
       @file ||= (file_from_path || file_from_uploaded_file!)
     end
 
-    # @return [File]
+    # @return [File, StringIO] depending on CarrierWave configuration
     # @raise when uploaded_file *becomes* required but is missing
     def file_from_uploaded_file!
       raise("path '#{path}' was unusable and uploaded_file empty") unless uploaded_file
-      self.path = uploaded_file.uploader.file.file # old path useless now
-      # uploaded_file.uploader.file.to_file
-      uploaded_file.uploader
+      self.path = uploaded_file.uploader.file.path # old path useless now
+      uploaded_file.uploader.sanitized_file.file
     end
 
     # @return [File, nil] nil if the path doesn't exist on this (worker) system or can't be read
