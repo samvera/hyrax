@@ -53,6 +53,18 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
+  describe '#to_global_id' do
+    it 'returns a GlobalID URI' do
+      as = create(:admin_set)
+      expect(as.to_global_id).to be_an GlobalID
+    end
+
+    it 'fails unless the AdminSet is saved' do
+      as = build(:admin_set)
+      expect { as.to_global_id }.to raise_error URI::GID::MissingModelIdError
+    end
+  end
+
   describe "#to_solr" do
     let(:admin_set) do
       build(:admin_set, title: ['A good title'],
