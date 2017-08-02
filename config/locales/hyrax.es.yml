@@ -689,6 +689,10 @@ es:
     transfers:
       new:
         confirm: "¿Está seguro de que desea transferir la propiedad de este trabajo a otro usuario? Haga clic en Aceptar para transferir o Cancelar para volver a la pantalla de transferencia"
+        header: "Transferencia de propiedad"
+        placeholder: "Buscar un usuario"
+        sr_only_description: 'Seleccione un usuario para transferir "% {work_title}" a, agregue comentarios opcionales y luego presione transferir.'
+        title: 'Transferencia de propiedad de "%{work_title}"'
     upload:
       alert:
         contact_href_text: formulario de contacto

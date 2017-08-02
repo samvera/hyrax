@@ -90,7 +90,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
 
     db_item_actions_toggle(work).click
     click_link 'Transfer Ownership of Work'
-    expect(page).to have_content "Select a user to transfer #{work.title.first} to, add optional comments and then press transfer."
+    expect(page).to have_content I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
     new_owner_dropdown.click
     new_owner_search_field.set new_owner.user_key
     new_owner_search_result.click

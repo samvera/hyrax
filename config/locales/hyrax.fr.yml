@@ -692,6 +692,10 @@ fr:
     transfers:
       new:
         confirm: Êtes-vous sûr de vouloir transférer la propriété de ce travail vers un autre utilisateur? Cliquez sur OK pour transférer ou Annuler pour revenir à l'écran de transfert
+        header: "Propriété de transfert"
+        placeholder: "Rechercher un utilisateur"
+        sr_only_description: 'Sélectionnez un utilisateur pour transférer "% {work_title}" à, ajoutez des commentaires facultatifs, puis appuyez sur transférer.'
+        title: 'Propriété de transfert de "%{work_title}"'
     upload:
       alert:
         contact_href_text: Formulaire de contact

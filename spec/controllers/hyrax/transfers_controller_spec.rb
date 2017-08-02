@@ -31,6 +31,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
       context 'when user is the depositor' do
         it "is successful" do
+          expect(controller).to receive(:add_breadcrumb).exactly(3).times
           sign_in user
           get :new, params: { id: work.id }
           expect(response).to be_success

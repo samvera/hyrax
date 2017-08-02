@@ -692,6 +692,10 @@ de:
     transfers:
       new:
         confirm: Sind Sie sicher, dass Sie das Eigentum an dieser Arbeit an einen anderen Benutzer übertragen möchten? Klicken Sie auf OK, um zu übertragen oder auf Abbrechen, um zum Übertragungsbildschirm zurückzukehren
+        header: "Eigentum übertragen"
+        placeholder: "Suche nach einem Benutzer"
+        sr_only_description: 'Wählen Sie einen Benutzer aus, um "%{work_title}" zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.'
+        title: 'Übertragung des Eigentums von "%{work_title}"'
     upload:
       alert:
         contact_href_text: Kontakt Formular
