@@ -1,5 +1,13 @@
 module Hyrax
   module CollectionsHelper
+    # TODO: we could move this to CollectionPresenter if it had a view_context
+    # @param presenter [Hyrax::CollectionPresenter]
+    # @param terms [Array<Symbol>,:all] the list of terms to draw
+    def present_terms(presenter, terms = :all, &block)
+      terms = presenter.terms if terms == :all
+      Hyrax::PresenterRenderer.new(presenter, self).fields(terms, &block)
+    end
+
     def render_collection_links(solr_doc)
       collection_list = Hyrax::CollectionMemberService.run(solr_doc)
       return if collection_list.empty?
