@@ -10,7 +10,12 @@
     <% next if event[:action].blank? or event[:timestamp].blank? %>
     <tr>
       <td><%= event[:action].html_safe %></td>
-      <td><%= time_ago_in_words(Time.zone.at(event[:timestamp].to_i)) %> ago</td>
+      <td>
+        <% time = Time.zone.at(event[:timestamp].to_i) %>
+        <relative-time datetime="<%= time.getutc.iso8601 %>" title="<%= time.to_formatted_s(:standard) %>">
+          <%= time.to_formatted_s(:long_ordinal) %>
+        </relative-time>
+      </td>
     </tr>
   <% end %>
   </tbody>

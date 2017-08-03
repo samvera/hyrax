@@ -12,7 +12,11 @@
       <tbody>
         <% messages.each do |msg| %>
           <tr>
-            <td><%= (time_ago_in_words(msg.last_message.created_at) + " ago") %></td>
+            <td>
+              <relative-time datetime="<%= msg.last_message.created_at.getutc.iso8601 %>" title="<%= msg.last_message.created_at.to_formatted_s(:standard) %>">
+                <%= msg.last_message.created_at.to_formatted_s(:long_ordinal) %>
+              </relative-time>
+            </td>
             <td><%= msg.last_message.subject.html_safe %></td>
             <td><%= msg.last_message.body.html_safe %></td>
             <td>
