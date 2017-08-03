@@ -1,8 +1,14 @@
 RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:user) { double(user_key: 'sarah', twitter_handle: 'test') }
-  let(:file_set) { build(:file_set, id: '123', depositor: user.user_key, title: ['My Title'], user: user, visibility: 'open') }
   let(:ability) { double }
-  let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
+  let(:doc) do
+    {
+      "has_model_ssim" => ["FileSet"],
+      :id => "123",
+      "title_tesim" => ["My Title"]
+    }
+  end
+  let(:solr_doc) { SolrDocument.new(doc) }
   let(:presenter) { Hyrax::FileSetPresenter.new(solr_doc, ability) }
   let(:mock_metadata) do
     {
@@ -22,7 +28,6 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
     assign(:presenter, presenter)
     assign(:document, solr_doc)
     assign(:fixity_status, "none")
-    allow(FileSet).to receive(:find).with('123').and_return(file_set)
   end
 
   describe 'title heading' do
