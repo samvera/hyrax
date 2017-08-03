@@ -20,6 +20,10 @@ module Hyrax
       #{config.root}/app/models/hyrax/pageview.rb
     )
 
+    config.to_prepare do
+      Hyrax::CurationConcern.actor_factory = Hyrax::ActorFactory
+    end
+
     config.after_initialize do
       begin
         Hyrax.config.persist_registered_roles!
@@ -67,7 +71,6 @@ module Hyrax
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
 
-      Hyrax::CurationConcern.actor_factory = Hyrax::ActorFactory
     end
 
     initializer 'hyrax.assets.precompile' do |app|
