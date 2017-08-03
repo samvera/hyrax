@@ -120,12 +120,18 @@ module Hydra
 
       private
 
+      # Previous implementation looped and used response.stream.write, but we
+      # found that had a problem with delay in HTTP response headers being
+      # sent, which this implementation fixed while still streaming.
+      # https://github.com/samvera/hydra-head/pull/421
       def stream_body(iostream)
-        iostream.each do |in_buff|
-          response.stream.write in_buff
+        # see https://github.com/rails/rails/issues/18714#issuecomment-96204444
+        unless response.headers["Last-Modified"] || response.headers["ETag"]
+          Rails.logger.warn("Response may be buffered instead of streaming, best to set a Last-Modified or ETag header")
         end
-      ensure
-        response.stream.close
+
+        render nothing: true
+        response.body = iostream
       end
 
       def default_file
