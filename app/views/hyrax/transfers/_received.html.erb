@@ -14,11 +14,9 @@
     <tr>
       <td> <%= show_transfer_request_title(req) %> </td>
       <td>
-        <% if req.created_at > Time.current.beginning_of_day %>
-          <%= "#{time_ago_in_words(req.created_at)} ago"%>
-        <% else %>
-          <%= req.created_at.strftime("%b %d %Y") %>
-        <% end %>
+        <relative-time datetime="<%= req.created_at.getutc.iso8601 %>" title="<%= req.created_at.to_formatted_s(:standard) %>">
+          <%= req.created_at.to_formatted_s(:long_ordinal) %>
+        </relative-time>
       </td>
       <td><%= link_to req.sending_user.name, hyrax.user_path(req.sending_user)  %></td>
       <td>
