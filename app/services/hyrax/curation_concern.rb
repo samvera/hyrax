@@ -1,18 +1,5 @@
 module Hyrax
   class CurationConcern
-    # The actor middleware stack can be customized like so:
-    #   # Adding a new middleware
-    #   Hyrax::CurationConcern.actor_factory.use MyCustomActor
-    #
-    #   # Inserting a new middleware at a specific position
-    #   Hyrax::CurationConcern.actor_factory.insert_after Hyrax::Actors::CreateWithRemoteFilesActor, MyCustomActor
-    #
-    #   # Removing a middleware
-    #   Hyrax::CurationConcern.actor_factory.delete Hyrax::Actors::CreateWithRemoteFilesActor
-    #
-    #   # Replace one middleware with another
-    #   Hyrax::CurationConcern.actor_factory.swap Hyrax::Actors::CreateWithRemoteFilesActor, MyCustomActor
-    #
     # You can customize the actor stack, so long as you do so before the actor
     # is used.  Once it is used, it becomes immutable.
     # @return [Hyrax::ActorFactory]

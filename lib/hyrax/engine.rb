@@ -66,8 +66,6 @@ module Hyrax
         ActiveFedora::Noid.config.minter_class = c.noid_minter_class
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
-
-      Hyrax::CurationConcern.actor_factory = Hyrax::ActorFactory
     end
 
     initializer 'hyrax.assets.precompile' do |app|
