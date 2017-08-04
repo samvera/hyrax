@@ -29,7 +29,8 @@ module Hyrax
         return false unless file_set.save
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
-        CharacterizeJob.perform_later(file_set, repository_file.id, io.path) # path hint in case next worker is on same filesystem
+        pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
+        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint || io.path)
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.
@@ -43,9 +44,11 @@ module Hyrax
         CharacterizeJob.perform_later(file_set, repository_file.id)
       end
 
+      # @note FileSet comparison is limited to IDs, but this should be sufficient, given that
+      #   most operations here are on the other side of async retrieval in Jobs (based solely on ID).
       def ==(other)
         return false unless other.is_a?(self.class)
-        file_set == other.file_set && relation == other.relation && user == other.user
+        file_set.id == other.file_set.id && relation == other.relation && user == other.user
       end
 
       private

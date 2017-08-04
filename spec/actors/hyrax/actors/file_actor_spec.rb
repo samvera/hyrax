@@ -6,12 +6,13 @@ RSpec.describe Hyrax::Actors::FileActor do
   let(:file_set) { create(:file_set) }
   let(:relation) { :original_file }
   let(:actor)    { described_class.new(file_set, relation, user) }
-  let(:uploaded_file) { fixture_file_upload('/world.png', 'image/png') }
-  let(:io) { Hydra::Derivatives::IoDecorator.new(uploaded_file, uploaded_file.content_type, uploaded_file.original_filename) }
+  let(:fixture)  { fixture_file_upload('/world.png', 'image/png') }
+  let(:huf) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: fixture) }
+  let(:io) { JobIoWrapper.new(file_set_id: file_set.id, user: user, uploaded_file: huf) }
   let(:pcdmfile) do
     Hydra::PCDM::File.new.tap do |f|
-      f.content = File.open(uploaded_file.path).read
-      f.original_name = uploaded_file.original_filename
+      f.content = File.open(fixture.path).read
+      f.original_name = fixture.original_filename
       f.save!
     end
   end
@@ -33,40 +34,23 @@ RSpec.describe Hyrax::Actors::FileActor do
       Object.send(:remove_const, :FileSetWithExtras)
     end
     it 'uses the relation from the actor' do
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
+      expect(CharacterizeJob).to receive(:perform_later).with(FileSetWithExtras, String, huf.uploader.path)
       actor.ingest_file(io)
       expect(file_set.reload.remastered.mime_type).to eq 'image/png'
     end
   end
 
-  context 'when given a mime_type' do
-    let(:uploaded_file) { fixture_file_upload('/world.png', 'image/gif') }
-
-    it 'uses the provided mime_type' do
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
-      actor.ingest_file(io)
-      expect(file_set.reload.original_file.mime_type).to eq 'image/gif'
-    end
-  end
-
-  context 'when not given a mime_type' do
-    before { allow(Hyrax::VersioningService).to receive(:create) }
-    it 'passes a decorated instance of the file with a nil mime_type' do
-      # The parameter versioning: false instructs the machinery in Hydra::Works to defer versioning
-      expect(Hydra::Works::AddFileToFileSet).to receive(:call).with(
-        file_set,
-        io,
-        relation,
-        versioning: false
-      ).and_call_original
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, String, io.tempfile.path)
-      actor.ingest_file(io)
-    end
+  it 'uses the provided mime_type' do
+    allow(fixture).to receive(:content_type).and_return('image/gif')
+    expect(CharacterizeJob).to receive(:perform_later).with(FileSet, String, huf.uploader.path)
+    actor.ingest_file(io)
+    expect(file_set.reload.original_file.mime_type).to eq 'image/gif'
   end
 
   context 'with two existing versions from different users' do
-    let(:uploaded_file2) { fixture_file_upload('/small_file.txt', 'text/plain') }
-    let(:io2) { Hydra::Derivatives::IoDecorator.new(uploaded_file2, uploaded_file2.content_type, uploaded_file2.original_filename) }
+    let(:fixture2) { fixture_file_upload('/small_file.txt', 'text/plain') }
+    let(:huf2) { Hyrax::UploadedFile.new(user: user2, file_set_uri: file_set.uri, file: fixture2) }
+    let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: user2, uploaded_file: huf2) }
     let(:user2) { create(:user) }
     let(:actor2) { described_class.new(file_set, relation, user2) }
     let(:versions) { file_set.reload.original_file.versions }
@@ -81,9 +65,9 @@ RSpec.describe Hyrax::Actors::FileActor do
       expect(versions.all.count).to eq 2
       # the current version
       expect(Hyrax::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
-      expect(file_set.original_file.content).to eq uploaded_file2.open.read
       expect(file_set.original_file.mime_type).to eq 'text/plain'
       expect(file_set.original_file.original_name).to eq 'small_file.txt'
+      expect(file_set.original_file.content).to eq fixture2.open.read
       # the user for each version
       expect(Hyrax::VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
       expect(Hyrax::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user2.user_key]
@@ -97,8 +81,9 @@ RSpec.describe Hyrax::Actors::FileActor do
     end
     it 'when the file is available' do
       allow(file_set).to receive(:save).and_return(true)
-      allow(file_set).to receive(:original_file).and_return(pcdmfile)
-      expect(CharacterizeJob).to receive(:perform_later).with(file_set, pcdmfile.id, io.tempfile.path)
+      allow(file_set).to receive(relation).and_return(pcdmfile)
+      expect(Hyrax::VersioningService).to receive(:create).with(pcdmfile, user)
+      expect(CharacterizeJob).to receive(:perform_later).with(FileSet, pcdmfile.id, huf.uploader.path)
       actor.ingest_file(io)
     end
     it 'returns false when save fails' do
