@@ -6,8 +6,8 @@ module Hyrax
       trophy = user.trophies.where(work_id: id).exists?
       trophyclass = trophy ? "trophy-on" : "trophy-off"
 
-      args[:add_text] ||= "Highlight Work on Profile"
-      args[:remove_text] ||= "Unhighlight Work"
+      args[:add_text] ||= t("hyrax.dashboard.my.action.highlight")
+      args[:remove_text] ||= t("hyrax.dashboard.my.action.unhighlight")
       text = trophy ? args[:remove_text] : args[:add_text]
       args[:class] = [args[:class], "trophy-class #{trophyclass}"].compact.join(' ')
       args[:data] ||= {}

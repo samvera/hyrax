@@ -423,10 +423,12 @@ en:
           delete_work:             "Delete Work"
           edit_collection:         "Edit Collection"
           edit_work:               "Edit Work"
+          highlight:               "Highlight Work on Profile"
           select:                  "Select"
           select_all:              "Select Current Page"
           select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
+          unhighlight:             "Unhighlight Work"
           work_confirmation:       "Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation"
         collection_list:
           description:    "Description:"
@@ -442,6 +444,7 @@ en:
         heading:
           action:         "Actions"
           date_uploaded:  "Date Added"
+          highlighted:    "Highlighted"
           title:          "Title"
           visibility:     "Visibility"
         highlighted:  "My Highlights"
@@ -652,7 +655,6 @@ en:
           placeholder:    "Enter search terms"
     select_type:
       description: "General purpose worktype"
-      icon_class : 'fa fa-file-text-o'
       name:        "Work"
     share_button:       "Share Your Work"
     single_use_links:
@@ -734,17 +736,13 @@ en:
         unlinked: "Link with Zotero"
     visibility:
       authenticated:
-        class: "label-info"
         note_html: "Restrict access to only users and/or groups from %{institution}"
         text: "%{institution}"
       embargo:
-        class: "label-warning"
         text: "Embargo"
       lease:
-        class: "label-warning"
         text: "Lease"
       open:
-        class: "label-success"
         note_html: Everyone. Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
         text: Public
         warning_html: "<p>
@@ -764,7 +762,6 @@ en:
       restricted:
         note_html: Only users and/or groups that have been given specific access in the "Share With" section.
         text: "Private"
-        class: "label-danger"
       restricted_title_attr: "Change the visibility of this resource"
     workflow:
       default:

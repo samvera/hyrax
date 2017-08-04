@@ -430,10 +430,12 @@ it:
           delete_work: Elimina lavoro
           edit_collection: Modifica raccolta
           edit_work: Modifica lavoro
+          highlight: Evidenziare il Savoro sul Profilo
           select: Selezionare
           select_all: Seleziona pagina corrente
           select_none: Non selezionare niente
           transfer: Trasferimento di proprietà del lavoro
+          unhighlight: Rimuovi l'evidenziazione dal lavoro
           work_confirmation: La cancellazione di un lavoro da %{application_name} è permanente. Fare clic su OK per eliminare questo lavoro da %{application_name} oppure Annulla per annullare questa operazione
         collection_list:
           description: 'Descrizione:'
@@ -449,6 +451,7 @@ it:
         heading:
           action: Azioni
           date_uploaded: Data aggiunta
+          highlighted: Evidenziato
           title: Titolo
           visibility: Visibilità
         highlighted: I miei punti salienti
@@ -654,7 +657,6 @@ it:
           placeholder: Inserisci i termini di ricerca
     select_type:
       description: Tipo di lavoro generale
-      icon_class: Fa fa-file-testo-o
       name: Lavoro
     share_button: Condividi il tuo lavoro
     single_use_links:
@@ -736,17 +738,13 @@ it:
         unlinked: Link con Zotero
     visibility:
       authenticated:
-        class: Etichetta-info
         note_html: Limitare l'accesso a soli utenti e / o gruppi da %{institution}
         text: "%{institution}"
       embargo:
-        class: label-warning
         text: Embargo
       lease:
-        class: label-warning
         text: Contratto di locazione
       open:
-        class: etichetta-successo
         note_html: Tutti. <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per <a href="http://www.sherpa.ac.uk/romeo/">specifiche politiche</a> di copyright dei publisher se intendi brevettare e / o pubblicare il tuo %{type} in un diario.
         text: Pubblico
         warning_html: '<p> <strong>Si prega di notare</strong> che facendo qualcosa di visibile al mondo (vale a dire marcatura come %{label}) può essere considerata come pubblicazione che potrebbe influenzare la tua capacità di: </p><ul><li> Brevetti il ​​tuo lavoro </li><li> Pubblica il tuo lavoro in un diario </li></ul><p> <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per ulteriori informazioni sulle norme del copyright dei publisher. </p>'
@@ -756,7 +754,6 @@ it:
         text: Privato
       private_title_attr: Modificare la visibilità di questa risorsa
       restricted:
-        class: label-pericolo
         note_html: Solo utenti e / o gruppi che hanno ricevuto l'accesso specifico nella sezione "Condividi con".
         text: Privato
       restricted_title_attr: Cambiare la visibilità di questa risorsa

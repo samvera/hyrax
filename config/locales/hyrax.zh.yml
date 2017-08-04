@@ -8,8 +8,12 @@ zh:
       messages:
         conflict: 您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}
   blacklight:
+    application_name: Blacklight # needed until blacklight adds chinese translation
     search:
+      rss_feed: RSS Feed # needed until blacklight adds chinese translation
+      atom_feed: Atom Feed # needed until blacklight adds chinese translation
       facets:
+        count: Count
         more_html: 更多 <span class="sr-only">%{field_name}</span> »
       fields:
         facet:
@@ -427,10 +431,12 @@ zh:
           delete_work: 删除作品
           edit_collection: 编辑收藏集
           edit_work: 编辑作品
+          highlight: 突出工作在配置文件
           select: 选择行动
           select_all: 选择当前页面
           select_none: 选择无
           transfer: 转让作品所有权
+          unhighlight: 从工作中删除高亮
           work_confirmation: 从%{application_name}删除作品是永久性的。点击 OK 从%{application_name}删除此作品，或取消删除。
         collection_list:
           description: 描述：
@@ -446,6 +452,7 @@ zh:
         heading:
           action: 行动
           date_uploaded: 上传日期
+          highlighted: 突出
           title: 标题
           visibility: 公开度
         highlighted: 我的重点
@@ -653,7 +660,6 @@ zh:
           placeholder: 输入搜索词
     select_type:
       description: 普通目的作品类型
-      icon_class: fa fa-file-text-o
       name: 作品
     share_button: 分享您的作品
     single_use_links:
@@ -735,17 +741,13 @@ zh:
         unlinked: 与Zotero链接
     visibility:
       authenticated:
-        class: '信息标签 '
         note_html: 访问仅限于%{institution} 的用户
         text: "%{institution}"
       embargo:
-        class: 警告提示标签
         text: 时滞期限
       lease:
-        class: 警告提示标签
         text: 租约
       open:
-        class: 成功标签
         note_html: 各位请注意， 如果您计划申请专利或在期刊上发表您的%{type}，请在<a href='http://www.sherpa.ac.uk/romeo/'>SHERPA/RoMEO</a> 查看相关出版社的版权政策
         text: 上市
         warning_html: <p><strong>请注意</strong>, 在此公开(例如，加上%{label}标记)会被视作已出版，从而影响:</p><ul><li>为您的作品申请专利</li><li>在期刊上发表您的作品</li></ul><p>请在<a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a>查看相关出版社的版权政策。</p>
@@ -755,7 +757,6 @@ zh:
         text: 私人的
       private_title_attr: 修改此资源的公开度
       restricted:
-        class: 危险标签
         note_html: 只有在“分享到”部分中被赋予特定访问权限的用户和/或组。
         text: 非公开
       restricted_title_attr: 更改此资源的可见性
