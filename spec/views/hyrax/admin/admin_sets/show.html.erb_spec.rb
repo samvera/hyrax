@@ -4,6 +4,7 @@ RSpec.describe "hyrax/admin/admin_sets/show.html.erb", type: :view do
   let(:presenter) { Hyrax::AdminSetPresenter.new(solr_document, ability) }
 
   before do
+    allow(presenter).to receive(:total_items).and_return(0)
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:edit_admin_admin_set_path).and_return("/admin/admin_sets/123/edit")
     allow(view).to receive(:admin_admin_set_path).and_return("/admin/admin_sets/123")

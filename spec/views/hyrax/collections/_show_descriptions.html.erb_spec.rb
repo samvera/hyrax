@@ -2,9 +2,16 @@
 RSpec.describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do
     let(:collection_size) { 123_456_678 }
-    let(:collection) { build(:collection, date_created: ['2000-01-01']) }
+    let(:collection) do
+      {
+        id: '999',
+        "has_model_ssim" => ["Collection"],
+        "title_tesim" => ["Title 1"],
+        'date_created_tesim' => '2000-01-01'
+      }
+    end
     let(:ability) { double }
-    let(:solr_document) { SolrDocument.new(collection.to_solr) }
+    let(:solr_document) { SolrDocument.new(collection) }
     let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }
 
     before do

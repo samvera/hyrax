@@ -4,6 +4,8 @@ RSpec.describe 'hyrax/permissions/confirm.html.erb', type: :view do
 
   before do
     allow(view).to receive(:curation_concern).and_return(curation_concern)
+    # Stub visibility, or it will hit fedora
+    allow(curation_concern).to receive(:visibility).and_return('open')
     render
   end
 

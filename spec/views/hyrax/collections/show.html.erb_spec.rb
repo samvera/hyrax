@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:can?).with(:edit, document).and_return(true)
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
+    allow(presenter).to receive(:total_items).and_return(0)
     assign(:presenter, presenter)
 
     # Stub route because view specs don't handle engine routes

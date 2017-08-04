@@ -13,6 +13,8 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   before do
     allow(controller).to receive(:current_user).and_return(user)
+    # Stub visibility, or it will hit fedora
+    allow(work).to receive(:visibility).and_return('open')
   end
 
   context "for a new object" do

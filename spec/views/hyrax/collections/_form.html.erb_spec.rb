@@ -1,8 +1,11 @@
 RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
-  let(:collection) { build(:collection) }
+  let(:collection) { Collection.new }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
 
   before do
+    allow(collection).to receive(:open_access?).and_return(true)
+    allow(collection).to receive(:authenticated_only_access?).and_return(false)
+    allow(collection).to receive(:private_access?).and_return(false)
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
     assign(:collection, collection)
@@ -10,6 +13,7 @@ RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
     allow(view).to receive(:collections_path).and_return("/collections")
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(collection_form).to receive(:display_additional_fields?).and_return(additional_fields)
+    allow(collection_form).to receive(:permissions).and_return([])
   end
 
   context 'with secondary terms' do
