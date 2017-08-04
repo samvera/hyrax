@@ -37,10 +37,6 @@ module Hyrax
       end
     end
 
-    config.to_prepare do
-      Hyrax::CurationConcern.actor_factory = Hyrax::DefaultMiddlewareStack.build_stack
-    end
-
     initializer 'requires' do
       require 'hydra/derivatives'
       require 'hyrax/controller_resource'
