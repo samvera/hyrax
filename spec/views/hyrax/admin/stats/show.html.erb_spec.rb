@@ -6,6 +6,8 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
   before do
     assign(:presenter, presenter)
     allow(presenter).to receive(:top_formats).and_return([])
+    allow(presenter).to receive(:works_count).and_return(total: 0)
+    allow(presenter).to receive(:depositors).and_return([])
   end
 
   context "default depositors" do

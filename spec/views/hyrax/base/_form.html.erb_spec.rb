@@ -7,14 +7,17 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   let(:form) do
     Hyrax::GenericWorkForm.new(work, ability, controller)
   end
-
+  let(:options_presenter) { double(select_options: []) }
   let(:page) do
     render
     Capybara::Node::Simple.new(rendered)
   end
 
   before do
+    allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).and_return(options_presenter)
     stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
+    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
+    allow(work).to receive(:new_record?).and_return(true)
     allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
@@ -23,6 +26,8 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(controller).to receive(:action_name).and_return('new')
     allow(controller).to receive(:repository).and_return(Hyrax::GenericWorksController.new.repository)
     allow(controller).to receive(:blacklight_config).and_return(Hyrax::GenericWorksController.new.blacklight_config)
+    allow(form).to receive(:collections_for_select).and_return([])
+    allow(form).to receive(:permissions).and_return([])
   end
 
   context "for a new object" do
@@ -90,6 +95,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     before do
       # Add an error to the work
       work.errors.add :base, 'broken'
+      allow(form).to receive(:select_files).and_return([])
     end
 
     it "draws the page" do
