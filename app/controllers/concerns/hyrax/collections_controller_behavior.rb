@@ -14,8 +14,6 @@ module Hyrax
       helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
-      # include the present_terms view helper method
-      helper ::FileSetHelper
 
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)

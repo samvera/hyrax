@@ -8,7 +8,6 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
 
   before do
-    view.extend FileSetHelper
     allow(document).to receive(:hydra_model).and_return(::Collection)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:can?).with(:edit, document).and_return(true)

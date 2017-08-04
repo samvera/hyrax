@@ -8,7 +8,6 @@ RSpec.describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
     let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }
 
     before do
-      view.extend FileSetHelper
       allow(presenter).to receive(:total_items).and_return(2)
       allow(presenter).to receive(:size).and_return("118 MB")
       assign(:presenter, presenter)
