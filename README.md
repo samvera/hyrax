@@ -12,7 +12,7 @@ Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?bran
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
-Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
+Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
 [![Ready Tickets](https://badge.waffle.io/samvera/hyrax.png?label=ready&milestone=2.0.0&title=Ready)](https://waffle.io/samvera/hyrax?milestone=2.0.0)
 
 # Table of Contents
