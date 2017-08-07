@@ -41,14 +41,13 @@ module Hyrax
 
       # Terms that appear above the accordion
       def primary_terms
-        [:title]
+        [:title, :description]
       end
 
       # Terms that appear within the accordion
       def secondary_terms
         [:creator,
          :contributor,
-         :description,
          :keyword,
          :license,
          :publisher,
