@@ -19,7 +19,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     expect(collection_type.assigns_workflow?).to be_falsey
     expect(collection_type.assigns_visibility?).to be_falsey
   end
-  
+
   describe '#gid' do
     it 'returns the gid when id is not nil' do
       collection_type.id = 5
