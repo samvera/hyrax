@@ -24,7 +24,33 @@ RSpec.describe ChecksumAuditLog do
     end
   end
 
-  describe "prune_history" do
+  describe ".create_and_prune!" do
+    let(:file_set_id) { 'file_set_id' }
+    let(:checked_uri) { "file_id/fcr:versions/version1" }
+
+    subject { described_class.create_and_prune!(passed: passed, file_set_id: 'file_set_id', file_id: 'file_id', checked_uri: checked_uri, expected_result: '1234') }
+
+    describe 'when check passed' do
+      let(:passed) { true }
+
+      it { is_expected.to be_a(described_class) }
+      it 'will prune history' do
+        expect(described_class).to receive(:prune_history).with(file_set_id, checked_uri: checked_uri)
+        subject
+      end
+    end
+    describe 'when check failed' do
+      let(:passed) { false }
+
+      it { is_expected.to be_a(described_class) }
+      it 'will not prune history' do
+        expect(described_class).not_to receive(:prune_history).with(file_set_id, checked_uri: checked_uri)
+        subject
+      end
+    end
+  end
+
+  describe ".prune_history" do
     let(:file_set_id) { "file_set_id" }
     let(:file_id) { "file_id" }
     let(:version_uri) { "#{file_id}/fcr:versions/version1" }
