@@ -21,22 +21,26 @@ module Hyrax
     # @note we don't call `authorize!` directly, since `authorized_models` already checks `user.can? :create, ...`
     def create
       authenticate_user!
-      unless Flipflop.batch_upload?
+      if Flipflop.batch_upload?
+        handle_payload_concern!
+        redirect_after_update!
+      else
+        respond_with_batch_upload_disabled
+      end
+    end
+
+    private
+
+      def respond_with_batch_upload_disabled
         respond_to do |wants|
           wants.json do
-            return render_json_response(response_type: :forbidden,
-                                        message: view_context.t('hyrax.batch_uploads.disabled'))
+            return render_json_response(response_type: :forbidden, message: view_context.t('hyrax.batch_uploads.disabled'))
           end
           wants.html do
             return redirect_to hyrax.my_works_path, alert: view_context.t('hyrax.batch_uploads.disabled')
           end
         end
       end
-      handle_payload_concern!
-      redirect_after_update!
-    end
-
-    private
 
       def build_form
         super
