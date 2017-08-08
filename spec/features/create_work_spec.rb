@@ -29,7 +29,7 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       expect(page).to have_content "Add folder"
-      within('span#fileupload') do
+      within('span#addfiles') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
       end
@@ -70,7 +70,7 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
     it "allows on-behalf-of deposit" do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
-      within('span#fileupload') do
+      within('span#addfiles') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
       end
