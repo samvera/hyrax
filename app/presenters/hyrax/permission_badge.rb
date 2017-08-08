@@ -2,6 +2,14 @@ module Hyrax
   class PermissionBadge
     include ActionView::Helpers::TagHelper
 
+    VISIBILITY_LABEL_CLASS = {
+      authenticated: "label-info",
+      embargo: "label-warning",
+      lease: "label-warning",
+      open: "label-success",
+      restricted: "label-danger"
+    }.freeze
+
     # @param visibility [String] the current visibility
     def initialize(visibility)
       @visibility = visibility
@@ -15,7 +23,7 @@ module Hyrax
     private
 
       def dom_label_class
-        I18n.t("hyrax.visibility.#{@visibility}.class")
+        VISIBILITY_LABEL_CLASS.fetch(@visibility.to_sym)
       end
 
       def text

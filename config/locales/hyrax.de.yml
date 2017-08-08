@@ -430,10 +430,12 @@ de:
           delete_work: Arbeit löschen
           edit_collection: Sammlung bearbeiten
           edit_work: Arbeit bearbeiten
+          highlight: Markieren Sie die Arbeit am Profil
           select: Wählen
           select_all: Wählen Sie Aktuelle Seite aus
           select_none: Nichts ausgewählt
           transfer: Übertragung des Besitzes der Arbeit
+          unhighlight: Hervorhebung von der Arbeit entfernen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
         collection_list:
           description: 'Beschreibung:'
@@ -449,6 +451,7 @@ de:
         heading:
           action: Aktionen
           date_uploaded: Datum hinzugefügt
+          highlighted: Hervorgehoben
           title: Titel
           visibility: Sichtweite
         highlighted: Meine Highlights
@@ -654,7 +657,6 @@ de:
           placeholder: Suchbegriffe eingeben
     select_type:
       description: Allzweckarbeitstyp
-      icon_class: Fa-Datei-Text-o
       name: Arbeit
     share_button: Teilen Sie Ihre Arbeit
     single_use_links:
@@ -736,17 +738,13 @@ de:
         unlinked: Link mit Zotero
     visibility:
       authenticated:
-        class: Etiketten-Info
         note_html: Beschränkung des Zugriffs auf Benutzer und / oder Gruppen von %{institution}
         text: "%{institution}"
       embargo:
-        class: Etikettenwarnung
         text: Embargo
       lease:
-        class: Etikettenwarnung
         text: Mieten
       open:
-        class: Etiketten-Erfolg
         note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.
         text: Öffentlichkeit
         warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
@@ -756,7 +754,6 @@ de:
         text: Privatgelände
       private_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
-        class: Etikett-Gefahr
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt "Freigeben" einen bestimmten Zugriff gewährt wurde.
         text: Privatgelände
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource

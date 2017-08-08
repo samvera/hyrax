@@ -430,10 +430,12 @@ pt-BR:
           delete_work: Excluir o trabalho
           edit_collection: Editar coleção
           edit_work: Editar trabalho
+          highlight: Destaque trabalho em perfil
           select: Selecione
           select_all: Selecione a página atual
           select_none: Selecione nenhum
           transfer: Transferência de propriedade do trabalho
+          unhighlight: Remova o destaque do trabalho
           work_confirmation: Excluir um trabalho do %{application_name} é permanente. Clique em OK para excluir este trabalho de %{application_name} ou Cancelar para cancelar esta operação
         collection_list:
           description: 'Descrição:'
@@ -449,6 +451,7 @@ pt-BR:
         heading:
           action: Ações
           date_uploaded: data adicionada
+          highlighted: Meus destaques
           title: Título
           visibility: Visibilidade
         highlighted: Meus destaques
@@ -654,7 +657,6 @@ pt-BR:
           placeholder: Digite os termos de pesquisa
     select_type:
       description: Tipo de trabalho de propósito geral
-      icon_class: Fa fa-file-text-o
       name: Trabalhos
     share_button: Compartilhe seu trabalho
     single_use_links:
@@ -736,17 +738,13 @@ pt-BR:
         unlinked: Link com Zotero
     visibility:
       authenticated:
-        class: Etiqueta-info
         note_html: Restringir acesso a apenas usuários e / ou grupos de %{institution}
         text: "%{institution}"
       embargo:
-        class: Rotulagem
         text: Embargo
       lease:
-        class: Rotulagem
         text: De concessão
       open:
-        class: Sucesso de etiqueta
         note_html: Todos. Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para políticas de direitos autorais de editoras específicas se você planeja patinar e / ou publicar seu %{type} em um diário.
         text: Público
         warning_html: '<p> <strong>Por favor</strong> , <strong>note que</strong> fazer algo visível para o mundo (ou seja, marcar isso como %{label}) pode ser visto como uma publicação que pode afetar sua capacidade de: </p><ul><li> Patente seu trabalho </li><li> Publique seu trabalho em um diário </li></ul><p> Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para obter mais informações sobre políticas de direitos autorais do editor. </p>'
@@ -756,7 +754,6 @@ pt-BR:
         text: Privado
       private_title_attr: Mude a visibilidade desse recurso
       restricted:
-        class: Label-danger
         note_html: Apenas usuários e / ou grupos que receberam acesso específico na seção "Compartilhar com".
         text: Privado
       restricted_title_attr: Altere a visibilidade deste recurso
