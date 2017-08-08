@@ -24,6 +24,30 @@ class JobIoWrapper < ApplicationRecord
   after_initialize :static_defaults
   delegate :read, :size, to: :file
 
+  # Responsible for creating a JobIoWrapper from the given parameters, with a
+  # focus on sniffing out attributes from the given :file.
+  #
+  # @param [User] user - The user requesting to create this instance
+  # @param [#path, Hyrax::UploadedFile] file - The file that is to be uploaded
+  # @param [String] relation
+  # @param [FileSet] file_set - The associated file set
+  # @return [JobIoWrapper]
+  # @raise ActiveRecord::RecordInvalid - if the instance is not valid
+  def self.create_with_varied_file_handling!(user:, file:, relation:, file_set:)
+    args = { user: user, relation: relation.to_s, file_set_id: file_set.id }
+    if file.is_a?(Hyrax::UploadedFile)
+      args[:uploaded_file] = file
+      args[:path] = file.uploader.path
+    elsif file.respond_to?(:path)
+      args[:path] = file.path
+      args[:original_name] = file.original_filename if file.respond_to?(:original_filename)
+      args[:original_name] ||= file.original_name if file.respond_to?(:original_name)
+    else
+      raise "Require Hyrax::UploadedFile or File-like object, received #{file.class} object: #{file}"
+    end
+    create!(args)
+  end
+
   def original_name
     super || extracted_original_name
   end

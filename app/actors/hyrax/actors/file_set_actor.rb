@@ -22,7 +22,7 @@ module Hyrax
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
         return false unless file_set.save # Need to save to get an id
-        IngestJob.perform_later(wrapper!(file, relation))
+        IngestJob.perform_later(wrapper!(file: file, relation: relation))
       end
 
       # Spawns asynchronous IngestJob with user notification afterward
@@ -30,17 +30,19 @@ module Hyrax
       # @param [Symbol, #to_s] relation
       # @return [IngestJob] the queued job
       def update_content(file, relation = :original_file)
-        IngestJob.perform_later(wrapper!(file, relation), notification: true)
+        IngestJob.perform_later(wrapper!(file: file, relation: relation), notification: true)
       end
 
       # Spawns async ImportUrlJob to attach remote file to fileset
       # @param [#to_s] url
       # @return [IngestUrlJob] the queued job
+      # @todo Remove as it appears to be untested and not called
       def import_url(url)
         file_set.update(import_url: url.to_s)
         operation = Hyrax::Operation.create!(user: user, operation_type: "Attach File")
         ImportUrlJob.perform_later(file_set, operation)
       end
+      deprecation_deprecate import_url: "appears to be untested and not used, and will be removed unless an issue/PR is submitted verifying otherwise"
 
       # @!endgroup
 
@@ -102,9 +104,8 @@ module Hyrax
         Hyrax.config.callback.run(:after_destroy, file_set.id, user)
       end
 
-      def file_actor_class
-        Hyrax::Actors::FileActor
-      end
+      class_attribute :file_actor_class
+      self.file_actor_class = Hyrax::Actors::FileActor
 
       private
 
@@ -117,25 +118,8 @@ module Hyrax
         end
 
         # uses create! because object must be persisted to serialize for jobs
-        def wrapper!(file, relation)
-          JobIoWrapper.create!(wrapper_params(file, relation))
-        end
-
-        # helps testing
-        # @return [Hash] params for JobIoWrapper (new or create)
-        def wrapper_params(file, relation)
-          args = { user: user, relation: relation.to_s, file_set_id: file_set.id }
-          if file.is_a?(Hyrax::UploadedFile)
-            args[:uploaded_file] = file
-            args[:path] = file.uploader.path
-          elsif file.respond_to?(:path)
-            args[:path] = file.path
-            args[:original_name] = file.original_filename if file.respond_to?(:original_filename)
-            args[:original_name] ||= file.original_name if file.respond_to?(:original_name)
-          else
-            raise "Require Hyrax::UploadedFile or File-like object, received #{file.class} object: #{file}"
-          end
-          args
+        def wrapper!(file:, relation:)
+          JobIoWrapper.create_with_varied_file_handling!(user: user, file: file, relation: relation, file_set: file_set)
         end
 
         # For the label, use the original_filename or original_name if it's there.

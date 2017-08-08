@@ -14,6 +14,43 @@ RSpec.describe JobIoWrapper, type: :model do
     expect { subject.save! }.not_to raise_error
   end
 
+  describe '.create_with_wrapped_params!' do
+    let(:local_file) { File.open(path) }
+    let(:relation) { :remastered }
+
+    subject { described_class.create_with_varied_file_handling!(user: user, file_set: file_set, file: file, relation: relation) }
+
+    context 'with Rack::Test::UploadedFile' do
+      let(:file) { Rack::Test::UploadedFile.new(path, 'image/png') }
+
+      it 'creates a JobIoWrapper' do
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path, original_name: 'world.png' }
+        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        subject
+      end
+    end
+
+    context 'with ::File' do
+      let(:file) { local_file }
+
+      it 'creates a JobIoWrapper' do
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path }
+        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        subject
+      end
+    end
+
+    context 'with Hyrax::UploadedFile' do
+      let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
+
+      it 'creates a JobIoWrapper' do
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, uploaded_file: file, path: file.uploader.path }
+        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        subject
+      end
+    end
+  end
+
   describe 'uploaded_file' do
     let(:other_path) { fixture_path + '/image.jpg' }
     let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: File.new(other_path)) }
