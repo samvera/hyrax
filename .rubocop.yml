@@ -47,7 +47,7 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
 
 Metrics/MethodLength:
-  Max: 14
+  Max: 13
 
 Style/AsciiComments:
   Enabled: false
