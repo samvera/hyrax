@@ -213,6 +213,7 @@ module Hyrax
         can :manage, String # The identifier of a work or FileSet
         can :manage, curation_concerns_models
         can :manage, Sipity::WorkflowResponsibility
+        can :manage, :collection_types
       end
 
       def add_to_collection

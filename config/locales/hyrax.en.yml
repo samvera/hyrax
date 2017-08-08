@@ -196,13 +196,19 @@ en:
               label:         "VISIBILITY"
               description:   "Allow collections of this type to assign initial visibility settings to a new work"
           participants:
-
       appearances:
         show:
           header:           "Appearance"
         update:
           flash:
             success:        "The appearance was successfully updated"
+      collection_types:
+        edit:
+          header:           "Edit Collection Type"
+        index:
+          breadcrumb:       "Collection Types"
+        new:
+          header:           "Create New Collection Type"
       features:
         index:
           header:           Features
@@ -213,6 +219,7 @@ en:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
         appearance:         "Appearance"
+        collection_types:   "Collection types"
         collections:        "Collections"
         configuration:      "Configuration"
         content_blocks:     "Content Blocks"
