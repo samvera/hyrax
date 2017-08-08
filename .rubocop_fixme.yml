@@ -34,9 +34,7 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/hyrax/api.rb'
-    - 'app/controllers/concerns/hyrax/controller.rb'
     - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
-    - 'app/controllers/hyrax/my_controller.rb'
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
