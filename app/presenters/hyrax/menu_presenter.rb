@@ -54,6 +54,7 @@ module Hyrax
     # @return [Boolean] will the configuration section be displayed to the user
     def show_configuration?
       can?(:update, :appearance) ||
+        can?(:manage, :collection_types) ||
         can?(:manage, Sipity::WorkflowResponsibility) ||
         can?(:manage, Hyrax::Feature)
     end
