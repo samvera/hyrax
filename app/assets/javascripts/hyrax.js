@@ -28,6 +28,14 @@
 //= require morris/raphael-min
 //= require morris/morris.min
 
+// Moved from app/assets/javascripts/hyrax/uploader.js
+//= require fileupload/tmpl
+//= require fileupload/jquery.iframe-transport
+//= require fileupload/jquery.fileupload.js
+//= require fileupload/jquery.fileupload-process.js
+//= require fileupload/jquery.fileupload-validate.js
+//= require fileupload/jquery.fileupload-ui.js
+
 //= require clipboard
 
 // I think this is primarily needed for testing with PhantomJS:
