@@ -5,6 +5,7 @@ module Hyrax
         include Hyrax::CitationsBehaviors::PublicationBehavior
         include Hyrax::CitationsBehaviors::TitleBehavior
 
+        # rubocop:disable Metrics/MethodLength
         def format(work)
           text = ""
 
@@ -41,6 +42,7 @@ module Hyrax
           text << "." unless text =~ /\.$/
           text
         end
+        # rubocop:enable Metrics/MethodLength
 
         def format_date(pub_date); end
 
