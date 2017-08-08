@@ -158,6 +158,45 @@ en:
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
           item_list_header: "Works in This Set"
+      collection_type:
+        form:
+          tab:
+            metadata:        "Description"
+            settings:        "Settings"
+            participants:    "Participants"
+          metadata:
+            name:
+              label:         "Type name"
+              description:   ""
+            description:
+              label:         "Type description"
+              description:   "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
+          settings:
+            instructions:    "These settings determine how collections of this type can be managed and discovered."
+            warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
+            nestable:
+              label:         "NESTABLE"
+              description:   "Allow collections of this type to be nested (a collection can contain other collections)"
+            discovery:
+              label:         "DISCOVERY"
+              description:   "Allow collections of this type to be discoverable"
+            sharing:
+              label:         "SHARING"
+              description:   "Allow users to assign collection managers, depositors, and viewers for collections they manage"
+            multi-membership:
+              label:         "MULTIPLE MEMBERSHIP"
+              description:   "Allow works to belong to multiple collections of this type"
+            require-membership:
+              label:         "REQUIRE MEMBERSHIP"
+              description:   "A work must belong to at least one collection of this type"
+            workflow:
+              label:         "WORKFLOW"
+              description:   "Allow collections of this type to assign workflow to a new work"
+            visibility:
+              label:         "VISIBILITY"
+              description:   "Allow collections of this type to assign initial visibility settings to a new work"
+          participants:
+
       appearances:
         show:
           header:           "Appearance"
