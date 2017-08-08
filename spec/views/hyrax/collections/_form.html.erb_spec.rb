@@ -13,7 +13,7 @@ RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
     allow(view).to receive(:collections_path).and_return("/collections")
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(collection_form).to receive(:display_additional_fields?).and_return(additional_fields)
-    allow(collection_form).to receive(:permissions).and_return([])
+    allow(collection_form).to receive(:discovery).and_return([])
   end
 
   context 'with secondary terms' do
