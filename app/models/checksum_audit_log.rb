@@ -24,6 +24,23 @@ class ChecksumAuditLog < ActiveRecord::Base
     latest_checks.where(file_set_id: file_set_id)
   end
 
+  # Responsible for coordinating the creation (and possible pruning) of checksum log entries
+  #
+  # @param [Boolean] passed - Did the fixity test pass?
+  # @param [#to_s] checked_uri - Which URI did we check?
+  # @param [String] file_set_id - The file set ID of the file we are checking
+  # @param [String] file_id - The file ID that was checked
+  # @param [String] expected_result - The expected checksum
+  # @return [ChecksumAuditLog]
+  # @see .prune_history
+  def self.create_and_prune!(passed:, checked_uri:, file_set_id:, file_id:, expected_result:)
+    log = create!(passed: passed, checked_uri: checked_uri, file_set_id: file_set_id, file_id: file_id, expected_result: expected_result)
+    # A short-circuit. Given that .prune_history keeps all failing logs, there is no need to call prune history
+    # unless the check passed.
+    prune_history(file_set_id, checked_uri: checked_uri) if log.passed?
+    log
+  end
+
   # Prune old ChecksumAuditLog records. We keep only:
   # * Latest check
   # * failing checks
