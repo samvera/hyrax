@@ -6,7 +6,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:user)          { create(:user) }
   let(:file_path)     { File.join(fixture_path, 'world.png') }
   let(:file)          { fixture_file_upload(file_path, 'image/png') } # we will override for the different types of File objects
-  let(:wrapper_path)  { file.path }                                   # override to match
   let(:local_file)    { File.open(file_path) }
   let(:file_set)      { create(:file_set, content: local_file) }
   let(:actor)         { described_class.new(file_set, user) }
@@ -17,37 +16,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   describe 'private' do
     let(:file_set) { build(:file_set) } # avoid 130+ LDP requests
-
-    describe '#wrapper_params' do
-      let(:baseline_args) { { user: user, file_set_id: file_set.id, relation: relation.to_s } }
-      let(:wrapper_args)  { baseline_args.merge(path: wrapper_path, original_name: actor.send(:label_for, file)) }
-
-      subject { actor.send(:wrapper_params, file, relation) }
-
-      it 'with Rack::Test::UploadedFile returns expected hash' do
-        expect(subject).to eq(wrapper_args)
-        expect(actor.send(:wrapper_params, file, :remastered)).to eq(wrapper_args.merge(relation: 'remastered'))
-      end
-
-      context 'with ::File' do
-        let(:file) { local_file }
-
-        it 'returns expected hash' do
-          wrapper_args.delete(:original_name)
-          expect(subject).to eq(wrapper_args)
-        end
-      end
-
-      context 'with Hyrax::UploadedFile' do
-        let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
-        let(:wrapper_path) { file.uploader.path }
-
-        it 'returns expected hash' do
-          wrapper_args.delete(:original_name)
-          expect(subject).to eq(wrapper_args.merge(uploaded_file: file))
-        end
-      end
-    end
 
     describe '#assign_visibility?' do
       let(:viz) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
@@ -96,9 +64,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   describe '#create_content' do
     before do
-      expect(JobIoWrapper).to receive(:create!).with(any_args) do |args|
-        JobIoWrapper.new(args) # skip persistence
-      end
+      expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).and_return(JobIoWrapper.new)
       expect(IngestJob).to receive(:perform_later).with(JobIoWrapper)
     end
 
