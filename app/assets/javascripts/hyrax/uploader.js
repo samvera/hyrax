@@ -1,10 +1,3 @@
-//= require fileupload/tmpl
-//= require fileupload/jquery.iframe-transport
-//= require fileupload/jquery.fileupload.js
-//= require fileupload/jquery.fileupload-process.js
-//= require fileupload/jquery.fileupload-validate.js
-//= require fileupload/jquery.fileupload-ui.js
-//
 /*
  * jQuery File Upload Plugin JS Example
  * https://github.com/blueimp/jQuery-File-Upload

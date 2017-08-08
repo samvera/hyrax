@@ -37,6 +37,14 @@
 //= require webcomponentsjs/0.5.4/CustomElements.min
 //= require time-elements
 
+// Moved from app/assets/javascripts/hyrax/uploader.js
+//= require fileupload/tmpl
+//= require fileupload/jquery.iframe-transport
+//= require fileupload/jquery.fileupload.js
+//= require fileupload/jquery.fileupload-process.js
+//= require fileupload/jquery.fileupload-validate.js
+//= require fileupload/jquery.fileupload-ui.js
+
 //= require hyrax/monkey_patch_turbolinks
 //= require hyrax/app
 //= require hyrax/config
