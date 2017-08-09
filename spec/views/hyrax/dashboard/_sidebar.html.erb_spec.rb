@@ -7,6 +7,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   let(:update_appearance) { false }
   let(:manage_feature) { false }
   let(:manage_workflow) { false }
+  let(:manage_collection_types) { false }
 
   before do
     allow(view).to receive(:signed_in?).and_return(true)
@@ -19,6 +20,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     allow(view).to receive(:can?).with(:update, :appearance).and_return(update_appearance)
     allow(view).to receive(:can?).with(:manage, Hyrax::Feature).and_return(manage_feature)
     allow(view).to receive(:can?).with(:manage, Sipity::WorkflowResponsibility).and_return(manage_workflow)
+    allow(view).to receive(:can?).with(:manage, :collection_types).and_return(manage_collection_types)
   end
 
   context 'with any user' do
@@ -101,5 +103,15 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.workflow_roles') }
+  end
+
+  context 'with a user who can manage collection types' do
+    let(:manage_collection_types) { true }
+
+    before { render }
+    subject { rendered }
+
+    it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
+    it { is_expected.to have_link t('hyrax.admin.sidebar.collection_types') }
   end
 end
