@@ -10,6 +10,11 @@
             <span class="fa fa-paint-brush"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.appearance') %></span>
           <% end %>
         <% end %>
+        <% if can?(:manage, :collection_types) %>
+          <%= menu.nav_link(hyrax.admin_collection_types_path) do %>
+            <span class="fa fa-folder-open"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.collection_types') %></span>
+          <% end %>
+        <% end %>
         <% if can?(:manage, Hyrax::Feature) %>
           <%= menu.nav_link(hyrax.edit_pages_path) do %>
             <span class="fa fa-file-text-o"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.pages') %></span>
