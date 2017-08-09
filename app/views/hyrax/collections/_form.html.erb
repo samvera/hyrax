@@ -5,7 +5,7 @@
     </li>
     <% if @form.persisted? %>
       <li>
-        <a href="#visibility" role="tab" data-toggle="tab"><%= t('.tabs.visibility') %></a>
+        <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
       </li>
       <li>
         <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
@@ -55,10 +55,10 @@
         </div>
       </div>
 
-      <div id="visibility" class="tab-pane">
+      <div id="discovery" class="tab-pane">
         <div class="panel panel-default labels">
           <div class="panel-body">
-            <%= render 'form_permission', f: f %>
+            <%= render 'form_discovery', f: f %>
           </div>
         </div>
       </div>
