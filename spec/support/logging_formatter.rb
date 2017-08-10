@@ -17,6 +17,7 @@ class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
     super
     @profile << { description: passed.example.full_description,
                   count: @request_count,
+                  location: passed.example.location,
                   count_by_name: @request_count_by_name }
   end
 
@@ -49,6 +50,7 @@ class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
         result = hash[:count_by_name].select { |_, v| v > 0 }
         next if result.empty?
         output.puts "  #{hash[:description]}"
+        output.puts "    #{hash[:location]}"
         output.puts "    Total LDP: #{hash[:count]} #{result}"
       end
     end
