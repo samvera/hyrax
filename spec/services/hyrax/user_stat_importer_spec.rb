@@ -80,92 +80,92 @@ RSpec.describe Hyrax::UserStatImporter do
   # This is what the data looks like that's returned from Google Analytics via the Legato gem.
   let(:bilbo_file_1_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 1),
-      OpenStruct.new(date: date_strs[1], pageviews: 2),
-      OpenStruct.new(date: date_strs[2], pageviews: 3),
-      OpenStruct.new(date: date_strs[3], pageviews: 4),
-      OpenStruct.new(date: date_strs[4], pageviews: 5)
+      SpecStatistic.new(date: date_strs[0], pageviews: 1),
+      SpecStatistic.new(date: date_strs[1], pageviews: 2),
+      SpecStatistic.new(date: date_strs[2], pageviews: 3),
+      SpecStatistic.new(date: date_strs[3], pageviews: 4),
+      SpecStatistic.new(date: date_strs[4], pageviews: 5)
     ]
   end
 
   let(:bilbo_file_2_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 11),
-      OpenStruct.new(date: date_strs[1], pageviews: 12),
-      OpenStruct.new(date: date_strs[2], pageviews: 13),
-      OpenStruct.new(date: date_strs[3], pageviews: 14),
-      OpenStruct.new(date: date_strs[4], pageviews: 15)
+      SpecStatistic.new(date: date_strs[0], pageviews: 11),
+      SpecStatistic.new(date: date_strs[1], pageviews: 12),
+      SpecStatistic.new(date: date_strs[2], pageviews: 13),
+      SpecStatistic.new(date: date_strs[3], pageviews: 14),
+      SpecStatistic.new(date: date_strs[4], pageviews: 15)
     ]
   end
 
   let(:frodo_file_1_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 2),
-      OpenStruct.new(date: date_strs[1], pageviews: 4),
-      OpenStruct.new(date: date_strs[2], pageviews: 1),
-      OpenStruct.new(date: date_strs[3], pageviews: 1),
-      OpenStruct.new(date: date_strs[4], pageviews: 9)
+      SpecStatistic.new(date: date_strs[0], pageviews: 2),
+      SpecStatistic.new(date: date_strs[1], pageviews: 4),
+      SpecStatistic.new(date: date_strs[2], pageviews: 1),
+      SpecStatistic.new(date: date_strs[3], pageviews: 1),
+      SpecStatistic.new(date: date_strs[4], pageviews: 9)
     ]
   end
 
   # work
   let(:bilbo_work_1_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 1),
-      OpenStruct.new(date: date_strs[1], pageviews: 2),
-      OpenStruct.new(date: date_strs[2], pageviews: 3),
-      OpenStruct.new(date: date_strs[3], pageviews: 4),
-      OpenStruct.new(date: date_strs[4], pageviews: 5)
+      SpecStatistic.new(date: date_strs[0], pageviews: 1),
+      SpecStatistic.new(date: date_strs[1], pageviews: 2),
+      SpecStatistic.new(date: date_strs[2], pageviews: 3),
+      SpecStatistic.new(date: date_strs[3], pageviews: 4),
+      SpecStatistic.new(date: date_strs[4], pageviews: 5)
     ]
   end
 
   let(:bilbo_work_2_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 11),
-      OpenStruct.new(date: date_strs[1], pageviews: 12),
-      OpenStruct.new(date: date_strs[2], pageviews: 13),
-      OpenStruct.new(date: date_strs[3], pageviews: 14),
-      OpenStruct.new(date: date_strs[4], pageviews: 15)
+      SpecStatistic.new(date: date_strs[0], pageviews: 11),
+      SpecStatistic.new(date: date_strs[1], pageviews: 12),
+      SpecStatistic.new(date: date_strs[2], pageviews: 13),
+      SpecStatistic.new(date: date_strs[3], pageviews: 14),
+      SpecStatistic.new(date: date_strs[4], pageviews: 15)
     ]
   end
 
   let(:frodo_work_1_pageview_stats) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 2),
-      OpenStruct.new(date: date_strs[1], pageviews: 4),
-      OpenStruct.new(date: date_strs[2], pageviews: 1),
-      OpenStruct.new(date: date_strs[3], pageviews: 1),
-      OpenStruct.new(date: date_strs[4], pageviews: 9)
+      SpecStatistic.new(date: date_strs[0], pageviews: 2),
+      SpecStatistic.new(date: date_strs[1], pageviews: 4),
+      SpecStatistic.new(date: date_strs[2], pageviews: 1),
+      SpecStatistic.new(date: date_strs[3], pageviews: 1),
+      SpecStatistic.new(date: date_strs[4], pageviews: 9)
     ]
   end
 
   let(:bilbo_file_1_download_stats) do
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[0], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[1], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[2], totalEvents: "5"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[3], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7")
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[0], totalEvents: "2"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[1], totalEvents: "3"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[2], totalEvents: "5"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[3], totalEvents: "3"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7")
     ]
   end
 
   let(:bilbo_file_2_download_stats) do
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[0], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[1], totalEvents: "4"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[2], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[3], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3")
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[0], totalEvents: "1"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[1], totalEvents: "4"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[2], totalEvents: "3"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[3], totalEvents: "2"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3")
     ]
   end
 
   let(:frodo_file_1_download_stats) do
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[0], totalEvents: "5"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[1], totalEvents: "4"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[2], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[3], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6")
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[0], totalEvents: "5"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[1], totalEvents: "4"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[2], totalEvents: "2"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[3], totalEvents: "1"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6")
     ]
   end
 
