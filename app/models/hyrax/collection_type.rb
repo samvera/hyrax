@@ -18,5 +18,9 @@ module Hyrax
     deprecation_deprecate workflow: "prefer #assigns_workflow instead"
     alias_attribute :visibility, :assigns_visibility
     deprecation_deprecate visibility: "prefer #assigns_visibility instead"
+
+    def gid
+      URI::GID.build app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id unless id.nil?
+    end
   end
 end
