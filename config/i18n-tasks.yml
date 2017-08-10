@@ -20,7 +20,8 @@ data:
     ## More files:
     - config/locales/*.%{locale}.yml
     - lib/generators/hyrax/templates/config/locales/hyrax.%{locale}.yml
-    - lib/generators/hyrax/work/templates/locale.%{locale}.yml.erb
+    # ERB is not supported by i18n-tasks. Keep this line here to remind peeps to update these manually
+    # - lib/generators/hyrax/work/templates/locale.%{locale}.yml.erb
     ## Another gem (replace %#= with %=):
     # - "<%#= %x[bundle show vagrant].chomp %>/templates/locales/%{locale}.yml"
 
@@ -32,7 +33,8 @@ data:
     ## Catch-all default:
     # - config/locales/%{locale}.yml
     - lib/generators/hyrax/templates/config/locales/hyrax.%{locale}.yml
-    - lib/generators/hyrax/work/templates/locale.%{locale}.yml.erb
+    # ERB is not supported by i18n-tasks. Keep this line here to remind peeps to update these manually
+    # - lib/generators/hyrax/work/templates/locale.%{locale}.yml.erb
 
   ## Specify the router (see Readme for details). Valid values: conservative_router, pattern_router, or a custom class.
   # router: conservative_router
