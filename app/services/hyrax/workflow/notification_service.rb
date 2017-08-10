@@ -48,18 +48,9 @@ module Hyrax
       # @return [Hash<String, Array>] a hash with keys being the strategy (e.g. "to", "cc") and
       #                               the values are a list of users.
       def recipients(notification)
-        case entity.workflow_state.name
-        when 'pending_review'
-          # notify the managers to review the deposit (CC depositors)
-          {
-            to: entity.workflow.permission_template.agent_ids_for(access: 'manage',  agent_type: 'user'),
-            cc: entity.workflow.permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')
-          }
-        else
-          notification.recipients.each_with_object({}) do |r, h|
-            h[r.recipient_strategy] ||= []
-            h[r.recipient_strategy] += PermissionQuery.scope_users_for_entity_and_roles(entity: entity, roles: r.role)
-          end
+        notification.recipients.each_with_object({}) do |r, h|
+          h[r.recipient_strategy] ||= []
+          h[r.recipient_strategy] += PermissionQuery.scope_users_for_entity_and_roles(entity: entity, roles: r.role)
         end
       end
 

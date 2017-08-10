@@ -6,7 +6,7 @@ module Hyrax
       def destroy
         ActiveRecord::Base.transaction do
           @permission_template_access.destroy
-          update_management if @permission_template_access.manage?
+          remove_access!
         end
 
         if @permission_template_access.destroyed?
@@ -28,8 +28,9 @@ module Hyrax
           @admin_set_id ||= @permission_template_access.permission_template.admin_set_id
         end
 
-        def update_management
-          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_management
+        def remove_access!
+          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template)
+                                       .remove_access!(@permission_template_access)
         end
     end
   end
