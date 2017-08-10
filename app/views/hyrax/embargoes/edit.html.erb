@@ -41,5 +41,5 @@
 <% if curation_concern.embargo_history.empty? %>
   <%= t('.history_empty', cc: cc_type) %>
 <% else %>
-  <%= render partial: "embargo_history" %>
+  <%= render partial: "embargo_history", object: curation_concern.embargo_history %>
 <% end %>
