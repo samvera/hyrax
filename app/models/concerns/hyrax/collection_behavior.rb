@@ -14,7 +14,14 @@ module Hyrax
     included do
       validates_with HasOneTitleValidator
       self.indexer = Hyrax::CollectionIndexer
+
+      property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
+        index.as :symbol, :stored_searchable
+      end
     end
+
+    attr_accessor :collection_type
+    delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
 
     # Add members using the members association.
     def add_members(new_member_ids)
