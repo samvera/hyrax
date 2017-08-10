@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 module Hyrax
   module TrophyHelper
+    # rubocop:disable Metrics/MethodLength
     def display_trophy_link(user, id, args = {}, &_block)
       return unless user
       trophy = user.trophies.where(work_id: id).exists?
@@ -19,5 +20,6 @@ module Hyrax
         yield(text)
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

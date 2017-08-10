@@ -233,6 +233,7 @@ module Hyrax
         request.user_agent || ''
       end
 
+      # rubocop:disable Metrics/MethodLength
       def search_action_for_dashboard
         case params[:controller]
         when "hyrax/my/collections"
@@ -250,6 +251,7 @@ module Hyrax
           hyrax.my_works_path
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
       # @param [Hash] facet

@@ -1,42 +1,35 @@
-RSpec.describe 'hyrax/base/items', type: :view do
+RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
   let(:ability) { double }
-  let(:presenter) { Hyrax::WorkShowPresenter.new(solr_doc, ability) }
-  let(:file_set) { Hyrax::FileSetPresenter.new(solr_doc_file, ability) }
-  let(:member) { Hyrax::WorkShowPresenter.new(solr_doc_work, ability) }
-  let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
-  let(:solr_doc_file) do
-    SolrDocument.new(
-      FactoryGirl.build(:file_set).to_solr.merge(
-        id: "file",
-        title_tesim: ["Child File"],
-        label_tesim: ["ChildFile.pdf"]
-      )
-    )
-  end
-  let(:solr_doc_work) do
-    SolrDocument.new(
-      FactoryGirl.build(:generic_work).to_solr.merge(
-        id: "work",
-        title_tesim: ["Child Work"]
-      )
-    )
+  let(:presenter) { double(:presenter, member_presenters: member_presenters, id: 'the-id', human_readable_type: 'Thing') }
+
+  context 'when children are not present' do
+    let(:member_presenters) { [] }
+
+    context 'and the current user edit the presenter' do
+      it 'renders an alert' do
+        expect(view).to receive(:can?).with(:edit, presenter.id).and_return(true)
+        render 'hyrax/base/items', presenter: presenter
+        expect(rendered).to have_css('.alert-warning[role=alert]')
+      end
+    end
+    context 'and the current user cannot edit the presenter' do
+      it 'does not render an alert' do
+        expect(view).to receive(:can?).with(:edit, presenter.id).and_return(false)
+        render 'hyrax/base/items', presenter: presenter
+        expect(rendered).not_to have_css('.alert-warning[role=alert]')
+      end
+    end
   end
 
   context "when children are present" do
+    let(:member_presenters) { ['Thing One', 'Thing Two'] }
+
     before do
-      stub_template 'hyrax/base/_actions.html.erb' => 'Actions'
-      allow(presenter).to receive(:member_presenters).and_return([file_set, member])
-      view.blacklight_config = Blacklight::Configuration.new
-      allow(view).to receive(:contextual_path).and_return("/whocares")
-      allow(ability).to receive(:can?).and_return(true)
-      render 'hyrax/base/items', presenter: presenter
+      stub_template 'hyrax/base/_member.html.erb' => '<%= member %>'
     end
     it "links to child work" do
-      expect(rendered).to have_link 'Child Work'
-    end
-    it "links to child file, using title as link text" do
-      expect(rendered).not_to have_link 'ChildFile.pdf'
-      expect(rendered).to have_link 'Child File'
+      render 'hyrax/base/items', presenter: presenter
+      expect(rendered).to have_css('tbody', text: member_presenters.join)
     end
   end
 end

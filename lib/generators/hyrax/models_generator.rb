@@ -17,6 +17,7 @@ This generator makes the following changes to your application:
   end
 
   # Add behaviors to the user model
+  # rubocop:disable Metrics/MethodLength
   def inject_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exist?(file_path)
@@ -33,6 +34,7 @@ This generator makes the following changes to your application:
            "argument. Such as \b  rails -g hyrax:models client"
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def create_collection
     copy_file 'app/models/collection.rb', 'app/models/collection.rb'
