@@ -19,4 +19,18 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     expect(collection_type.assigns_workflow?).to be_falsey
     expect(collection_type.assigns_visibility?).to be_falsey
   end
+
+  describe "validations" do
+    it "ensures the required fields have values" do
+      collection_type.title = nil
+      collection_type.machine_id = nil
+      expect(collection_type).not_to be_valid
+      expect(collection_type.errors.messages[:title]).not_to be_empty
+      expect(collection_type.errors.messages[:machine_id]).not_to be_empty
+    end
+    it "ensures uniqueness" do
+      is_expected.to validate_uniqueness_of(:title)
+      is_expected.to validate_uniqueness_of(:machine_id)
+    end
+  end
 end
