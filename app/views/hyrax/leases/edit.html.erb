@@ -41,5 +41,5 @@
 <% if curation_concern.lease_history.empty? %>
   <%= t('.history_empty', cc: cc_type) %>
 <% else %>
-  <%= render partial: 'lease_history' %>
+  <%= render partial: 'lease_history', object: curation_concern.lease_history %>
 <% end %>
