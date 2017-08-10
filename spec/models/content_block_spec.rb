@@ -1,23 +1,4 @@
 RSpec.describe ContentBlock, type: :model do
-  let!(:bilbo) do
-    create(:content_block,
-           name: ContentBlock::NAME_REGISTRY[:researcher],
-           value: '<h1>Bilbo Baggins</h1>',
-           created_at: Time.zone.now)
-  end
-
-  let!(:marketing) do
-    create(:content_block,
-           name: ContentBlock::NAME_REGISTRY[:marketing],
-           value: '<h1>Marketing Text</h1>')
-  end
-
-  let!(:announcement) do
-    create(:content_block,
-           name: ContentBlock::NAME_REGISTRY[:announcement],
-           value: '<h1>Announcement Text</h1>')
-  end
-
   describe '.for' do
     context 'with a nil' do
       it 'raises an ArgumentError' do
@@ -50,6 +31,12 @@ RSpec.describe ContentBlock, type: :model do
   end
 
   describe '.announcement_text' do
+    let!(:announcement) do
+      create(:content_block,
+             name: ContentBlock::NAME_REGISTRY[:announcement],
+             value: '<h1>Announcement Text</h1>')
+    end
+
     subject { described_class.for(:announcement).value }
 
     it { is_expected.to eq '<h1>Announcement Text</h1>' }
@@ -65,6 +52,12 @@ RSpec.describe ContentBlock, type: :model do
   end
 
   describe '.marketing_text' do
+    let!(:marketing) do
+      create(:content_block,
+             name: ContentBlock::NAME_REGISTRY[:marketing],
+             value: '<h1>Marketing Text</h1>')
+    end
+
     subject { described_class.for(:marketing).value }
 
     it { is_expected.to eq '<h1>Marketing Text</h1>' }
@@ -80,6 +73,13 @@ RSpec.describe ContentBlock, type: :model do
   end
 
   describe '.featured_researcher' do
+    let!(:bilbo) do
+      create(:content_block,
+             name: ContentBlock::NAME_REGISTRY[:researcher],
+             value: '<h1>Bilbo Baggins</h1>',
+             created_at: Time.zone.now)
+    end
+
     subject { described_class.for(:researcher) }
 
     it 'returns entry for featured_researcher' do
