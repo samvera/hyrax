@@ -110,6 +110,22 @@ FactoryGirl.define do
     end
   end
 
+  trait :with_complete_metadata do
+    title            ['titletitle']
+    keyword          ['tagtag']
+    based_near       ['based_nearbased_near']
+    language         ['languagelanguage']
+    creator          ['creatorcreator']
+    contributor      ['contributorcontributor']
+    publisher        ['publisherpublisher']
+    subject          ['subjectsubject']
+    resource_type    ['resource_typeresource_type']
+    description      ['descriptiondescription']
+    related_url      ['http://example.org/TheRelatedURLLink/']
+    rights_statement ['http://creativecommons.org/licenses/by/3.0/us/']
+    date_created     ['two days after the day before yesterday']
+  end
+
   # Doesn't set up any edit_users
   factory :work_without_access, class: GenericWork do
     title ['Test title']
