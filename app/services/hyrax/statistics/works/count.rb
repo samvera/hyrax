@@ -4,6 +4,17 @@ module Hyrax
       class Count
         attr_reader :start_date, :end_date
 
+        # @api public
+        # Retrieves the count of works in the system filtered by the start_date and end_date if present
+        #
+        # @param [Time] start_date Filters the statistics returned by the class to after this date. nil means no filter
+        # @param [Time] end_date Filters the statistics returned by the class to before this date. nil means today
+        # @return [Hash] A hash with the total files by permission for the system
+        # @see #by_permission
+        def self.by_permission(start_date: nil, end_date: nil)
+          new(start_date, end_date).by_permission
+        end
+
         # @param [Time] start_date Filters the statistics returned by the class to after this date. nil means no filter
         # @param [Time] end_date Filters the statistics returned by the class to before this date. nil means today
         def initialize(start_date = nil, end_date = nil)

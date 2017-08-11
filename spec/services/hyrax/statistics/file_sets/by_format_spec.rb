@@ -1,7 +1,5 @@
 RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo do
-  let(:service) { described_class.new }
-
-  describe "#query" do
+  describe ".query" do
     let(:fs1) { build(:file_set, id: '1234567') }
     let(:fs2) { build(:file_set, id: '2345678') }
     let(:fs3) { build(:file_set, id: '3456789') }
@@ -18,7 +16,7 @@ RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo do
       fs4.update_index
     end
 
-    subject { service.query }
+    subject { described_class.query }
 
     it "is a list of categories" do
       expect(subject).to eq [{ label: 'jpg (JPEG image)', data: 2 },

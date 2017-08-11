@@ -24,24 +24,29 @@ module Hyrax
 
     public
 
+    # @see Hyrax::Statistics::Depositors::Summary
     def depositors
-      @depositors ||= Hyrax::Statistics::Depositors::Summary.new(start_date, end_date).depositors
+      @depositors ||= Hyrax::Statistics::Depositors::Summary.depositors(start_date: start_date, end_date: end_date)
     end
 
+    # @see Hyrax::Statistics::SystemStats.recent_users
     def recent_users
-      @recent_users ||= stats.recent_users
+      @recent_users ||= Hyrax::Statistics::SystemStats.recent_users(limit: limit, start_date: start_date, end_date: end_date)
     end
 
+    # @see Hyrax::Statistics::Works::ByDepositor
     def active_users
-      @active_users ||= Hyrax::Statistics::Works::ByDepositor.new(limit).query
+      @active_users ||= Hyrax::Statistics::Works::ByDepositor.query(limit: limit)
     end
 
+    # @see Hyrax::Statistics::FileSets::ByFormat
     def top_formats
-      @top_formats ||= Hyrax::Statistics::FileSets::ByFormat.new(limit).query
+      @top_formats ||= Hyrax::Statistics::FileSets::ByFormat.query(limit: limit)
     end
 
+    # @see Hyrax::Statistics::Works::Count
     def works_count
-      @works_count ||= Hyrax::Statistics::Works::Count.new(start_date, end_date).by_permission
+      @works_count ||= Hyrax::Statistics::Works::Count.by_permission(start_date: start_date, end_date: end_date)
     end
 
     def date_filter_string
@@ -53,11 +58,5 @@ module Hyrax
         "#{start_date.to_date.to_formatted_s(:standard)} to #{end_date.to_date.to_formatted_s(:standard)}"
       end
     end
-
-    private
-
-      def stats
-        @stats ||= Hyrax::Statistics::SystemStats.new(limit, start_date, end_date)
-      end
   end
 end
