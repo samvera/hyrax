@@ -103,6 +103,8 @@ module Hyrax
       @collection.attributes = collection_params.except(:members)
       @collection.apply_depositor_metadata(current_user.user_key)
       add_members_to_collection unless batch.empty?
+      @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+
       if @collection.save
         after_create
       else

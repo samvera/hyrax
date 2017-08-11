@@ -4,9 +4,11 @@
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
-      <li>
-        <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
-      </li>
+      <% if @collection.discoverable? %>
+        <li>
+          <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
+        </li>
+      <% end %>
       <li>
         <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
       </li>
