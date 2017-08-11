@@ -20,6 +20,17 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     expect(collection_type.assigns_visibility?).to be_falsey
   end
 
+  describe '#gid' do
+    it 'returns the gid when id is not nil' do
+      collection_type.id = 5
+      expect(collection_type.gid.to_s).to eq 'gid://internal/hyrax-collectiontype/5'
+    end
+
+    it 'returns the gid when id is nil' do
+      collection_type.id = nil
+      expect(collection_type.gid).to be_nil
+    end
+  end
   describe "validations" do
     it "ensures the required fields have values" do
       collection_type.title = nil

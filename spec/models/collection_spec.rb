@@ -1,5 +1,5 @@
 RSpec.describe Collection do
-  let(:collection) { create(:public_collection) }
+  let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']
@@ -114,6 +114,107 @@ RSpec.describe Collection do
     it "have members that know about the collection" do
       member.reload
       expect(member.member_of_collections).to eq [collection]
+    end
+  end
+
+  describe '#collection_type_gid' do
+    it 'has a collection_type_gid' do
+      subject.title = ['title']
+      subject.collection_type_gid = 'gid://internal/CollectionType/5'
+      subject.save!
+      expect(subject.reload.collection_type_gid).to eq 'gid://internal/CollectionType/5'
+    end
+  end
+
+  describe 'collection type delegated methods' do
+    let(:collection_type) { build(:collection_type) }
+
+    before do
+      allow(collection).to receive(:collection_type).and_return(collection_type)
+    end
+
+    describe '#nestable' do
+      it "returns false if collection_type's nestable property is false" do
+        collection_type.nestable = false
+        expect(collection.nestable?).to be_falsey
+      end
+
+      it "returns true if collection_type's nestable property is true" do
+        collection_type.nestable = true
+        expect(collection.nestable?).to be_truthy
+      end
+    end
+
+    describe '#discoverable' do
+      it "returns false if collection_type's discoverable property is false" do
+        collection_type.discoverable = false
+        expect(collection.discoverable?).to be_falsey
+      end
+
+      it "returns true if collection_type's discoverable property is true" do
+        collection_type.discoverable = true
+        expect(collection.discoverable?).to be_truthy
+      end
+    end
+
+    describe '#sharable' do
+      it "returns false if collection_type's sharable property is false" do
+        collection_type.sharable = false
+        expect(collection.sharable?).to be_falsey
+      end
+
+      it "returns true if collection_type's sharable property is true" do
+        collection_type.sharable = true
+        expect(collection.sharable?).to be_truthy
+      end
+    end
+
+    describe '#allow_multiple_membership' do
+      it "returns false if collection_type's allow_multiple_membership property is false" do
+        collection_type.allow_multiple_membership = false
+        expect(collection.allow_multiple_membership?).to be_falsey
+      end
+
+      it "returns true if collection_type's allow_multiple_membership property is true" do
+        collection_type.allow_multiple_membership = true
+        expect(collection.allow_multiple_membership?).to be_truthy
+      end
+    end
+
+    describe '#require_membership' do
+      it "returns false if collection_type's require_membership property is false" do
+        collection_type.require_membership = false
+        expect(collection.require_membership?).to be_falsey
+      end
+
+      it "returns true if collection_type's require_membership property is true" do
+        collection_type.require_membership = true
+        expect(collection.require_membership?).to be_truthy
+      end
+    end
+
+    describe '#assigns_workflow' do
+      it "returns false if collection_type's assigns_workflow property is false" do
+        collection_type.assigns_workflow = false
+        expect(collection.assigns_workflow?).to be_falsey
+      end
+
+      it "returns true if collection_type's assigns_workflow property is true" do
+        collection_type.assigns_workflow = true
+        expect(collection.assigns_workflow?).to be_truthy
+      end
+    end
+
+    describe '#assigns_visibility' do
+      it "returns false if collection_type's assigns_visibility property is false" do
+        collection_type.assigns_visibility = false
+        expect(collection.assigns_visibility?).to be_falsey
+      end
+
+      it "returns true if collection_type's assigns_visibility property is true" do
+        collection_type.assigns_visibility = true
+        expect(collection.assigns_visibility?).to be_truthy
+      end
     end
   end
 end
