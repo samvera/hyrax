@@ -16,6 +16,14 @@ RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo do
     old_work.update_index
   end
 
+  describe '.depositors' do
+    it 'is a convenience method' do
+      summary_object = double(depositors: :the_depositors)
+      expect(described_class).to receive(:new).with('a_start_date', 'an_end_date').and_return(summary_object)
+      expect(described_class.depositors(start_date: 'a_start_date', end_date: 'an_end_date')).to eq(:the_depositors)
+    end
+  end
+
   describe "#depositors" do
     subject { service.depositors }
 

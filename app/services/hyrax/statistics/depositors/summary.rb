@@ -5,6 +5,14 @@ module Hyrax
       class Summary
         include Blacklight::SearchHelper
 
+        # @api public
+        # @param [Time] start_date optionally specify the start date to gather the stats from
+        # @param [Time] end_date optionally specify the end date to gather the stats from
+        # @return [Array<Hash>] With keys of: :key, :deposits, and :user
+        def self.depositors(start_date:, end_date:)
+          new(start_date, end_date).depositors
+        end
+
         # @param [Time] start_date optionally specify the start date to gather the stats from
         # @param [Time] end_date optionally specify the end date to gather the stats from
         def initialize(start_date, end_date)
