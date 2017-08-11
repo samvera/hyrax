@@ -1,0 +1,7 @@
+<h2 class="sr-only">Descriptions</h2>
+<dl class="dl-horizontal metadata-collections">
+  <% present_terms(@presenter, @presenter.terms_with_values) do |r, term| %>
+      <dt><%= r.label(term) %></dt>
+      <dd><%= r.value(term) %></dd>
+  <% end %>
+</dl>

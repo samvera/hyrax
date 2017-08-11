@@ -24,7 +24,7 @@ module Hyrax
       # Anchor must match with a tab in
       # https://github.com/samvera/hyrax/blob/master/app/views/hyrax/base/_guts4form.html.erb#L2
       path = if document.collection?
-               hyrax.edit_collection_path(document, anchor: 'share')
+               hyrax.edit_dashboard_collection_path(document, anchor: 'share')
              else
                edit_polymorphic_path([main_app, document], anchor: 'share')
              end
