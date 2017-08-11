@@ -5,10 +5,8 @@ RSpec.feature "The homepage" do
     create(:featured_work, work_id: work1.id)
   end
 
-  scenario do
+  scenario 'it shows featured works' do
     visit root_path
-
-    # It shows featured works
     expect(page).to have_link "Work 1"
   end
 
@@ -17,11 +15,10 @@ RSpec.feature "The homepage" do
 
     before do
       sign_in user
-      visit root_path
     end
 
-    scenario do
-      # It shows featured works that I can sort
+    scenario 'it shows featured works that I can sort' do
+      visit root_path
       within '.dd-item' do
         expect(page).to have_link "Work 1"
       end
