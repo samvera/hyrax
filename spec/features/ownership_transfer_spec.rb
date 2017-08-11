@@ -45,7 +45,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
 
       context 'If I cancel it' do
         before do
-          first_sent_cancel_button.click
+          accept_confirm { first_sent_cancel_button.click }
         end
         it 'I should see it was cancelled' do
           expect(page).to have_content 'Transfer canceled'
@@ -80,7 +80,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
       within('#notifications') do
         expect(page).to have_content "#{original_owner.name} wants to transfer a work to you"
       end
-      first_received_reject_button.click
+      accept_confirm { first_received_reject_button.click }
       expect(page).to have_content 'Transfer rejected'
     end
   end
@@ -89,7 +89,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
     visit '/dashboard/my/works'
 
     db_item_actions_toggle(work).click
-    click_link 'Transfer Ownership of Work'
+    accept_confirm { click_link 'Transfer Ownership of Work' }
     expect(page).to have_content I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
     new_owner_dropdown.click
     new_owner_search_field.set new_owner.user_key

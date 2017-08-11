@@ -49,7 +49,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
   it "allows me to delete works in upload_sets", js: true do
     first('input#check_all').click
     expect do
-      click_button('Delete Selected')
+      accept_confirm { click_button('Delete Selected') }
     end.to change { GenericWork.count }.by(-3)
   end
 end
