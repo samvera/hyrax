@@ -5,13 +5,13 @@
 
     <div class="form-group">
       <label class="radio">
-        <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if @collection.open_access? %> checked="true"<% end %>/><%= t('.open') %>
+        <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if @collection.open_access? %> checked="true"<% end %>/><strong><%= t('.open.label') %></strong> - <%= t('.open.description') %>
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if @collection.authenticated_only_access? %> checked="true"<% end %> /><%= t('.institution') %>
+        <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if @collection.authenticated_only_access? %> checked="true"<% end %> /><strong><%= t('.institution.label') %></strong> - <%= t('.institution.description') %>
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if @collection.private_access? %> checked="true"<% end %>/><%= t('.private') %>
+        <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if @collection.private_access? %> checked="true"<% end %>/><strong><%= t('.private.label') %></strong>- <%= t('.institution.description') %>
       </label>
     </div>
 

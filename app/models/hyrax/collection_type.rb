@@ -1,6 +1,8 @@
 module Hyrax
   class CollectionType < ActiveRecord::Base
     self.table_name = 'hyrax_collection_types'
+    validates :title, presence: true, uniqueness: true
+    validates :machine_id, presence: true, uniqueness: true
 
     # These are provided as a convenience method based on prior design discussions.
     # The deprecations are added to allow upstream developers to continue with what
