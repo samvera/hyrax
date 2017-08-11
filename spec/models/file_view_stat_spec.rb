@@ -36,10 +36,10 @@ RSpec.describe FileViewStat, type: :model do
     # results from the Legato gem.
     let(:sample_pageview_statistics) do
       [
-        OpenStruct.new(date: date_strs[0], pageviews: 4),
-        OpenStruct.new(date: date_strs[1], pageviews: 8),
-        OpenStruct.new(date: date_strs[2], pageviews: 6),
-        OpenStruct.new(date: date_strs[3], pageviews: 10)
+        SpecStatistic.new(date: date_strs[0], pageviews: 4),
+        SpecStatistic.new(date: date_strs[1], pageviews: 8),
+        SpecStatistic.new(date: date_strs[2], pageviews: 6),
+        SpecStatistic.new(date: date_strs[3], pageviews: 10)
       ]
     end
 

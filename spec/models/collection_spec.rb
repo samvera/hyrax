@@ -1,5 +1,5 @@
 RSpec.describe Collection do
-  let(:collection) { create(:public_collection) }
+  let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']
