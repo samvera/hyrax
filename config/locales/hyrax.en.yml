@@ -168,6 +168,7 @@ en:
         edit:
           header:           "Edit Collection Type"
         form:
+          submit:            "Save"
           tab:
             metadata:        "Description"
             settings:        "Settings"
