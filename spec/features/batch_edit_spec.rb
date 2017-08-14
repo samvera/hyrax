@@ -11,7 +11,7 @@ RSpec.describe 'Batch management of works', type: :feature do
   end
 
   describe 'editing and viewing multiple works' do
-    before do
+    it 'edits each field and displays the changes', clean_repo: true, js: true do
       check 'check_all'
       click_on 'batch-edit'
       fields.each do |f|
@@ -21,12 +21,11 @@ RSpec.describe 'Batch management of works', type: :feature do
           fill_in_field_fill(f)
         end
       end
-      fields.each { |f| fill_in_field_save(f) }
-      fields.each { |f| fill_in_field_wait(f) }
+      fields.each do |f|
+        fill_in_field_save_and_verify(f)
+      end
       work1.reload
       work2.reload
-    end
-    it 'edits each field and displays the changes', js: true do
       expect(work1.creator).to eq ['NEW creator']
       expect(work1.contributor).to eq ['NEW contributor']
       expect(work1.description).to eq ['NEW description']
@@ -112,16 +111,13 @@ RSpec.describe 'Batch management of works', type: :feature do
     end
   end
 
-  def fill_in_field_save(id)
+  def fill_in_field_save_and_verify(id)
     within "#form_#{id}" do
       click_button "#{id}_save"
-      sleep 0.1
-    end
-  end
-
-  def fill_in_field_wait(id)
-    within "#form_#{id}" do
-      expect(page).to have_content 'Changes Saved', wait: Capybara.default_max_wait_time * 5
+      # Incrementing from 5 to 15 to see if we can prevent erratic failures in Travis. These
+      # failures result in a broken build and require a restart of the specs. This restart
+      # and waiting for feedback slows the overall trajectory of iterating on Hyrax.
+      expect(page).to have_content 'Changes Saved', wait: Capybara.default_max_wait_time * 15
     end
   end
 
