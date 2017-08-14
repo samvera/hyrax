@@ -1,0 +1,13 @@
+<% @all_checked = false %>
+<% @user = current_user %>
+<% if documents.nil? || documents.empty? %>
+  <div class="alert alert-warning" role="alert"><%= t('hyrax.collection.document_list.no_visible_works') %></div>
+<% else %>
+  <% @document_list = documents %>
+  <% @disable_select_all = (@document_list.count <= 1) %>
+  <% if params[:action] == "edit" %>
+    <%= render 'form_default_group', documents: documents, docs: documents %>
+  <% else %>
+    <%= render 'show_document_list', documents: documents %>
+  <% end %>
+<% end %>

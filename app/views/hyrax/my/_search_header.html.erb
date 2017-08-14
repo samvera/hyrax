@@ -5,7 +5,7 @@
 
 <div class="row">
   <div class="col-sm-5 col-md-6">
-    <%= render 'sort_and_per_page' %>
+    <%= render 'hyrax/my/sort_and_per_page' %>
   </div>
   <div class="col-sm-7 col-md-6">
     <%= render 'search_form' %>
@@ -13,7 +13,7 @@
 </div>
 
 <div class="batch-info">
-  <%= render 'hyrax/collections/form_for_select_collection', user_collections: @user_collections %>
+  <%= render 'hyrax/dashboard/collections/form_for_select_collection', user_collections: @user_collections %>
 
   <div class="batch-toggle">
     <% session[:batch_edit_state] = "on" %>

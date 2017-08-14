@@ -23,6 +23,11 @@
   <td class="text-center">
     <%= render_visibility_link(document) %>
   </td>
+  <% if current_user %>
+    <td class="text-center">
+      <%= render 'show_document_list_menu', document: document %>
+    </td>
+  <% end %>
 </tr>
 <tr id="detail_<%= id %>"> <!--  document detail"> -->
   <td colspan="6">

@@ -1,7 +1,7 @@
 <%# button for updating a collections %>
 <%# collection_id -- collection to be updated (use 'collection_replace_id' if you wish the form to be updated by a form value) %>
 <%# label -- button label %>
-<%= button_to label, collection_path(collection_id),
+<%= button_to label, hyrax.dashboard_collection_path(collection_id),
               method: :put,
               class: "btn btn-primary submits-batches",
               data: { behavior: 'updates-collection' } %>

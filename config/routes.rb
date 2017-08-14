@@ -46,15 +46,11 @@ Hyrax::Engine.routes.draw do
   get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
   resources :batch_uploads, only: [:new, :create], controller: 'batch_uploads'
 
-  resources :collections, except: [:index] do
+  resources :collections, only: :show do # public landing show page
     member do
       get 'page/:page', action: :index
       get 'facet/:id', action: :facet, as: :dashboard_facet
       get :files
-    end
-    collection do
-      put '', action: :update
-      put :remove_member
     end
   end
 
@@ -121,7 +117,17 @@ Hyrax::Engine.routes.draw do
   namespace :dashboard do
     resources :works, only: :index
     get 'works/facet/:id',  controller: 'works', action: :facet, as: 'works_facet'
-    resources :collections, only: :index
+    resources :collections do # Dashboard -> All Collections and CRUD
+      member do
+        get 'page/:page', action: :index
+        get 'facet/:id', action: :facet, as: :dashboard_facet
+        get :files
+      end
+      collection do
+        put '', action: :update
+        put :remove_member
+      end
+    end
     resources :profiles, only: [:show, :edit, :update]
   end
 
@@ -133,7 +139,7 @@ Hyrax::Engine.routes.draw do
       resources :works, only: :index
       get '/works/page/:page', controller: 'works', action: :index
       get 'works/facet/:id', controller: 'works', action: :facet, as: 'dashboard_works_facet'
-      resources :collections, only: :index
+      resources :collections, only: :index # Dashboard -> My Collections only
       get '/collections/page/:page',  controller: 'collections', action: :index
       get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_collections_facet'
     end

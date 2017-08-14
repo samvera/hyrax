@@ -15,7 +15,7 @@
     <% if can?(:create, Collection) %>
       <%= link_to(
             t(:'helpers.action.collection.new'),
-            hyrax.new_collection_path,
+            hyrax.new_dashboard_collection_path,
             class: 'btn btn-primary'
           ) %>
     <% end %>
@@ -29,7 +29,7 @@
       <div class="panel-body">
         <%= render 'search_header' %>
         <h2 class="sr-only">Collections listing</h2>
-        <%= render 'document_list' %>
+        <%= render 'hyrax/my/document_list' %>
 
         <%= render 'results_pagination' %>
       </div>

@@ -27,9 +27,9 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
 
       # Sleep in between to ensure modified dates are different
       public_collection
-      sleep(0.5)
+      sleep(1)
       public_work
-      sleep(0.5)
+      sleep(1)
       file_set
     end
 

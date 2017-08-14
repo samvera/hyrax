@@ -6,7 +6,7 @@
       <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-small pull-left"></span>
       <div class="media-body">
         <div class="media-heading">
-          <%= link_to url_for_document(document), id: "src_copy_link#{id}" do %>
+          <%= link_to hyrax.dashboard_collection_path(id) do %>
               <span class="sr-only"><%= t("hyrax.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
           <% end %>

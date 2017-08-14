@@ -7,7 +7,7 @@
 <% unless has_collection_search_parameters? %>
   <div class="row">
     <div class="col-md-12">
-      <%= render 'hyrax/collections/form' %>
+      <%= render 'form' %>
     </div>
   </div>
 
@@ -15,19 +15,19 @@
     <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-body">
-          <%= render 'hyrax/collections/edit_actions' %>
+          <%= render 'edit_actions' %>
 
           <div class="row m-t-3">
             <h2 class="col-xs-12 col-sm-6"><%= t('hyrax.collection.edit.manage_items') %></h2>
             <div class="col-xs-12 col-sm-6">
-              <%= render 'search_form', presenter: @collection %>
+              <%= render 'hyrax/collections/search_form', presenter: @collection %>
             </div>
           </div>
           <%= render 'hyrax/my/did_you_mean' %>
           <%= render 'hyrax/my/facet_selected' %>
-          <%= render 'hyrax/collections/sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
+          <%= render 'sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
           <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
-          <%= render 'paginate' %>
+          <%= render 'hyrax/collections/paginate' %>
         </div>
       </div>
     </div>
