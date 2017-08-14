@@ -23,7 +23,6 @@ module Hyrax
 
     before_action :authenticate_user!
     before_action :enforce_show_permissions, only: :show
-    before_action :enforce_viewing_context_for_show_requests, only: :show
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper
