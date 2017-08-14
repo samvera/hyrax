@@ -1,7 +1,5 @@
-
-
   <div class="sort-toggle">
-    <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
+    <% if @response.response['numFound'] > 1 %>
       <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
             <div class="form-group">
               <fieldset class="col-xs-12">
