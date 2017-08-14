@@ -12,7 +12,7 @@
         </li>
     <% end %>
   </ul>
-  <%= simple_form_for @form, url: hyrax.admin_collection_types_path do |f| %>
+  <%= simple_form_for @form, url: hyrax.admin_collection_types_path, as: :collection_type do |f| %>
   <div class="tab-content">
       <div id="metadata" class="tab-pane active">
         <div class="panel panel-default labels">

@@ -1,0 +1,16 @@
+<p><%= t('.instructions') %></p>
+
+<p><strong><%= t('.warning') %></strong></p>
+
+<%# TODO: make these settings READ ONLY if at least one collection of this collection type already exists %>
+<div class="collection-types-settings">
+  <div class="form-inline">
+    <p><%= f.input :nestable, as: :boolean %></p>
+    <p><%= f.input :discoverable, as: :boolean %></p>
+    <p><%= f.input :sharable, as: :boolean %></p>
+    <p><%= f.input :require_membership, as: :boolean, disabled: true %></p>
+    <p><%= f.input :allow_multiple_membership, as: :boolean %></p>
+    <p><%= f.input :assigns_workflow, as: :boolean, disabled: true %></p>
+    <p><%= f.input :assigns_visibility, as: :boolean, disabled: true %></p>
+  </div>
+</div>
