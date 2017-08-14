@@ -173,38 +173,9 @@ en:
             metadata:        "Description"
             settings:        "Settings"
             participants:    "Participants"
-          metadata:
-            name:
-              label:         "Type name"
-              description:   ""
-            description:
-              label:         "Type description"
-              description:   "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
-          settings:
-            instructions:    "These settings determine how collections of this type can be managed and discovered."
-            warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
-            nestable:
-              label:         "NESTABLE"
-              description:   "Allow collections of this type to be nested (a collection can contain other collections)"
-            discovery:
-              label:         "DISCOVERY"
-              description:   "Allow collections of this type to be discoverable"
-            sharing:
-              label:         "SHARING"
-              description:   "Allow users to assign collection managers, depositors, and viewers for collections they manage"
-            multi-membership:
-              label:         "MULTIPLE MEMBERSHIP"
-              description:   "Allow works to belong to multiple collections of this type"
-            require-membership:
-              label:         "REQUIRE MEMBERSHIP"
-              description:   "A work must belong to at least one collection of this type"
-            workflow:
-              label:         "WORKFLOW"
-              description:   "Allow collections of this type to assign workflow to a new work"
-            visibility:
-              label:         "VISIBILITY"
-              description:   "Allow collections of this type to assign initial visibility settings to a new work"
-          participants:
+        form_settings:
+          instructions:    "These settings determine how collections of this type can be managed and discovered."
+          warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
         index:
           breadcrumb:       "Collection Types"
           create_new_button: "Create new collection type"
@@ -893,6 +864,16 @@ en:
         license: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
         subject: "Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary."
         title: "A name to aid in identifying a collection."
+      collection_type:
+        allow_multiple_membership: "Allow works to belong to multiple collections of this type"
+        assigns_workflow:   "Allow collections of this type to assign workflow to a new work"
+        assigns_visibility:   "Allow collections of this type to assign initial visibility settings to a new work"
+        title: ""
+        description: "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
+        discoverable: "Allow collections of this type to be discoverable"
+        nestable: "Allow collections of this type to be nested (a collection can contain other collections)"
+        require_membership: "A work must belong to at least one collection of this type"
+        sharable: "Allow users to assign collection managers, depositors, and viewers for collections they manage"
       defaults:
         based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
@@ -912,6 +893,16 @@ en:
       collection:
         size:                      "Size"
         total_items:               "Total works"
+      collection_type:
+        allow_multiple_membership: "MULTIPLE MEMBERSHIP"
+        assigns_workflow: "WORKFLOW"
+        assigns_visibility: "VISIBILITY"
+        description: "Type description"
+        discoverable: "DISCOVERY"
+        nestable: "NESTABLE"
+        require_membership: "REQUIRE MEMBERSHIP"
+        sharable: "SHARING"
+        title: "Type name"
       defaults:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"
