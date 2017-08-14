@@ -8,7 +8,16 @@ module Hyrax
     class_attribute :form_class
     self.form_class = Hyrax::Forms::Admin::CollectionTypeForm
 
-    def index; end
+    def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
+      add_breadcrumb t(:'hyrax.admin.sidebar.collection_types'), request.path
+
+      # TODO: How do we know if a collection_type has existing collections?
+      # Will that be a property on @collection_types here?
+      @collection_types = Hyrax::CollectionType.all
+    end
 
     def new
       add_breadcrumb t(:'hyrax.controls.home'), root_path
