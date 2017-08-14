@@ -22,5 +22,13 @@ module Hyrax
     def gid
       URI::GID.build app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id unless id.nil?
     end
+
+    def collections?
+      # TODO: this is a stub method to check whether there are any collections with this
+      # collection type.  We should think about best way to retrieve this information.
+      # For testing, return 'true' to display the "Cannot delete" modal.
+      # And return 'false' to display the delete confirmation modal.
+      true
+    end
   end
 end
