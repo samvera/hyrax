@@ -1,7 +1,11 @@
 module Hyrax
   class CurationConcern
-    # This attribute is set by Hyrax::Engine
-    class_attribute :actor_factory
+    # You can customize the actor stack, so long as you do so before the actor
+    # is used.  Once it is used, it becomes immutable.
+    # @return [Hyrax::ActorFactory]
+    def self.actor_factory
+      Hyrax::ActorFactory
+    end
 
     # A consumer of this method can inject a different factory
     # into this class in order to change the behavior of this method.
