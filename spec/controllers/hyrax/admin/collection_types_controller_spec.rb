@@ -96,6 +96,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
 
   context "authorized user" do
     let(:user) { create(:user) }
+    let(:collection_type) { create(:user_collection_type) }
 
     before do
       allow(controller.current_ability).to receive(:can?).with(any_args).and_return(true)
@@ -142,21 +143,21 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
 
     describe "#edit" do
       it "returns http success" do
-        get :edit, params: { id: :id }
+        get :edit, params: { id: collection_type.id }
         expect(response).to have_http_status(:success)
       end
     end
 
     describe "#update" do
       it "returns http success" do
-        put :update, params: { id: :id }
+        put :update, params: { id: collection_type.id }
         expect(response).to have_http_status(:success)
       end
     end
 
     describe "#destroy" do
       it "returns success" do
-        delete :destroy, params: { id: :id }
+        delete :destroy, params: { id: collection_type.id }
         expect(response).to have_http_status(:success)
       end
 
@@ -165,14 +166,14 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.breadcrumbs.admin'), dashboard_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.sidebar.configuration'), '#')
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.index.breadcrumb'), admin_collection_types_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(1))
-        get :edit, params: { id: 1 }
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(collection_type.id))
+        get :edit, params: { id: collection_type.id }
         expect(response).to be_success
         expect(response).to render_template "layouts/dashboard"
       end
 
       it 'defines a form' do
-        get :edit, params: { id: 1 }
+        get :edit, params: { id: collection_type.id }
         expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Hyrax::Forms::Admin::CollectionTypeForm
       end
