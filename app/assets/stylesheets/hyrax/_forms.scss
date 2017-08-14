@@ -101,6 +101,37 @@ form {
   }
 }
 
+.collection-types-settings {
+
+  .form-inline {
+    label {
+      font-weight: bold;
+
+      input {
+        margin-right: 0.25em;
+      }
+    }
+
+    .control-label,
+    label {
+      display: inline;
+      padding-left: 0;
+
+      &::after {
+        content: ' ';
+      }
+    }
+
+    .help-block {
+      display: inline;
+
+      &::before {
+        content: ' ';
+      }
+    }
+  }
+}
+
 .control-label.required {
   abbr {
     font-weight: bold;
