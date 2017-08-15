@@ -1,7 +1,9 @@
 require 'rails/generators'
 
 class TestAppGenerator < Rails::Generators::Base
-  source_root "./spec/test_app_templates"
+  # Generator is executed from /path/to/hyrax/.internal_test_app/lib/generators/test_app_generator/
+  # so the following path gets us to /path/to/hyrax/spec/test_app_templates/
+  source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
   def install_engine
     generate 'hyrax:install', '-f'
@@ -66,5 +68,12 @@ class TestAppGenerator < Rails::Generators::Base
 
   def relax_routing_constraint
     gsub_file 'config/initializers/arkivo_constraint.rb', 'false', 'true'
+  end
+
+  def disable_animations_for_more_reliable_feature_specs
+    inject_into_file 'config/environments/test.rb', after: "Rails.application.configure do\n" do
+      "  config.middleware.use DisableAnimationsInTestEnvironment\n"
+    end
+    copy_file 'disable_animations_in_test_environment.rb', 'app/middleware/disable_animations_in_test_environment.rb'
   end
 end

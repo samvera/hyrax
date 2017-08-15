@@ -59,20 +59,6 @@ ActiveJob::Base.queue_adapter = :inline
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-if ENV['TRAVIS']
-  # Monkey-patches the FITS runner to return the PDF FITS fixture
-  module Hydra::Works
-    class CharacterizationService
-      def self.run(_, _)
-        raise "FITS!!!"
-        # return unless file_set.original_file.has_content?
-        # filename = ::File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
-        # file_set.characterization.ng_xml = ::File.read(filename)
-      end
-    end
-  end
-end
-
 if defined?(ClamAV)
   ClamAV.instance.loaddb
 else
