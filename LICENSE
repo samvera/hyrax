@@ -186,7 +186,11 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright {yyyy} {name of copyright owner}
+   Copyright 2012 Penn State University
+   Copyright 2013 University of Notre Dame, Northwestern University, and Data Curation Experts
+   Copyright 2014 Data Curation Experts
+   Additional copyright may be held by others, as reflected in the commit log
+
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
