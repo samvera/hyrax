@@ -1,6 +1,5 @@
 RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
-
   let(:public_collection) { create(:public_collection) }
   let(:public_work) { create(:public_generic_work) }
   let(:file_set) { create(:file_set, :public) }
@@ -28,9 +27,9 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
 
       # Sleep in between to ensure modified dates are different
       public_collection
-      sleep(1)
+      sleep(0.5)
       public_work
-      sleep(1)
+      sleep(0.5)
       file_set
     end
 
