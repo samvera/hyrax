@@ -7,7 +7,7 @@ module Hyrax
         target.edit_users -= [target.depositor]
         # If there are a lot of members, revoking access from each could take a
         # long time. Do this work in the background.
-        RevokeEditFromMembersJob.perform_now(target, target.depositor)
+        RevokeEditFromMembersJob.perform_later(target, target.depositor)
       end
     end
   end
