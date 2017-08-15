@@ -29,6 +29,21 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it { is_expected.to eq(title => file_id) }
   end
 
+  describe '#member_of_collections' do
+    subject { form.member_of_collections(args) }
+
+    context 'when passed nil' do
+      let(:args) { nil }
+
+      it { is_expected.to be_empty }
+    end
+    context 'when passed a string' do
+      let(:args) { 'foobar' }
+
+      it { is_expected.to match_array([args]) }
+    end
+  end
+
   describe "#[]" do
     it 'has one element' do
       expect(form['description']).to eq ['']
@@ -52,7 +67,10 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
     context "without mediated deposit" do
       it {
-        is_expected.to include({ permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+        is_expected.to include(:add_works_to_collection,
+                               :version,
+                               :on_behalf_of,
+                               { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
                                work_members_attributes: [:id, :_destroy],
                                based_near_attributes: [:id, :_destroy])
       }

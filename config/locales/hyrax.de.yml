@@ -829,7 +829,6 @@ de:
       defaults:
         admin_set_id: Als Mitglied des Verwaltungssatzes hinzufügen
         based_near: Ort
-        collection_ids: Als Mitglied der Sammlung hinzufügen
         creator: Schöpfer
         date_created: Datum erstellt
         description: Zusammenfassung oder Zusammenfassung
@@ -838,6 +837,7 @@ de:
         keyword: Stichwort
         lease_expiration_date: bis
         license: Lizenz
+        member_of_collection_ids: Als Mitglied der Sammlung hinzufügen
         related_url: Zugehörige URL
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu

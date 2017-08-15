@@ -1,24 +1,17 @@
 RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
   let(:presenter) { instance_double Hyrax::SelectTypeListPresenter }
   let(:row1) do
-    instance_double(Hyrax::SelectTypePresenter,
-                    icon_class: 'icon',
-                    name: 'Generic Work',
-                    description: 'Workhorse',
-                    concern: GenericWork)
+    Hyrax::SelectTypePresenter.new(GenericWork)
   end
   let(:row2) do
-    instance_double(Hyrax::SelectTypePresenter,
-                    icon_class: 'icon',
-                    name: 'Atlas',
-                    description: 'Atlas of places',
-                    concern: RareBooks::Atlas)
+    Hyrax::SelectTypePresenter.new(RareBooks::Atlas)
   end
-  let(:results) { [GenericWork, RareBooks::Atlas] }
 
   before do
     allow(presenter).to receive(:each).and_yield(row1).and_yield(row2)
     allow(view).to receive(:create_work_presenter).and_return(presenter)
+    # Because there is no i18n set up for this work type
+    allow(row2).to receive(:name).and_return('Atlas')
     render
   end
 

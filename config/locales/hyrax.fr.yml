@@ -829,7 +829,6 @@ fr:
       defaults:
         admin_set_id: Ajouter en tant que membre de l'ensemble administratif
         based_near: Emplacement
-        collection_ids: Ajouter en tant que membre de la collection
         creator: Créateur
         date_created: date créée
         description: Résumé ou résumé
@@ -838,6 +837,7 @@ fr:
         keyword: Mot-clé
         lease_expiration_date: jusqu'à
         license: Licence
+        member_of_collection_ids: Ajouter en tant que membre de la collection
         related_url: URL associée
         title: Titre
         visibility_after_embargo: Puis ouvrez-le jusqu'à

@@ -6,7 +6,7 @@ module Hyrax
       @service = service
     end
 
-    # Return AdminSet selectbox options based on access type
+    # Return Collection selectbox options based on access type
     # @param [Symbol] access :read or :edit
     def select_options(access = :edit)
       option_values = results(access).map do |solr_doc|
