@@ -201,6 +201,12 @@ en:
             actions:        "Actions"
         new:
           header:           "Create New Collection Type"
+        create:
+          notification:     "The collection type %{name} has been created."
+        update:
+          notification:     "The collection type %{name} has been updated."
+        destroy:
+          notification:     "The collection type %{name} has been deleted."
       features:
         index:
           header:           Features
