@@ -1,0 +1,122 @@
+<div class="set-access-controls">
+
+<strong><%= t('.branding.label') %></strong>
+
+<p><%= t('.branding.description') %></p>
+
+<strong><%= t('.banner.label') %></strong>
+
+<p><%= t('.banner.description') %>.</p>
+
+<div id="fileupload">
+  <!-- Redirect browsers with JavaScript disabled to the origin page -->
+  <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
+  <!-- The table listing the files available for upload/download -->
+        
+  <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+  <div class="row fileupload-buttonbar">
+    <div class="col-xs-7">
+      <!-- The fileinput-button span is used to style the file input field as button -->
+      <span class="btn btn-success fileinput-button">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span>Choose File</span>
+        <input type="file" name="files[]" single>
+      </span>
+
+      <% if @banner_file %>
+        <p class="banner" ><%= @banner_file %></p>
+        <div role="presentation" class="table table-striped"><span class="files"></span></div>
+      <% else %>
+        <div role="presentation" class="table table-striped"><span class="files"></span></div>
+      <% end %>
+             
+      <% if @banner_file_for_display %>
+        <div class="banner" >
+          <%= image_tag( @banner_file_for_display, size: "800x100", alt: "Edit Entry") %> 
+        </div>
+      <% end %>
+                            
+      <!-- The global file processing state -->
+      <span class="fileupload-process"></span>
+    </div>
+    <!-- The global progress state -->
+    <div class="col-xs-5 fileupload-progress fade">
+      <!-- The global progress bar -->
+      <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+      </div>
+      <!-- The extended global progress state -->
+      <div class="progress-extended">&nbsp;</div>
+    </div>
+  </div>
+</div>
+
+<%= render 'hyrax/uploads/js_templates_branding' %>
+
+<strong><%= t('.logo.label') %></strong>
+<p><%= t('.logo.description') %></p>
+
+<div id="fileuploadlogo">
+  <!-- Redirect browsers with JavaScript disabled to the origin page -->
+  <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
+  <!-- The table listing the files available for upload/download -->
+        
+  <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+  <div class="row fileupload-buttonbar">
+    <div class="col-xs-7">
+      <!-- The fileinput-button span is used to style the file input field as button -->
+      <span class="btn btn-success fileinput-button">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span>Choose File</span>
+        <input type="file" name="files[]" single>
+      </span>
+
+      <% if @logo_info %>
+        <br></br>
+        <div class="container">
+        <% i = 0 %>
+        <% @logo_info.each { | li |  %>
+          <% i += 1 %>
+          <div class="row" id="logorow<%=i%>">
+          <div class="col-sm-3">
+            <span class="name">
+              <span><%=li[:file]%></span>
+            <input type="hidden" name="logo_files[]" value="<%=li[:file_location]%>">
+            </span>
+          </div>
+          <div class="col-sm-3">
+            <label for="linkurl">Link URL:   
+              <input id="linkurl" type="text" name="linkurl[]" value="<%= li[:linkurl] %>"></input>
+            </label>            
+            <label for="alttext">Alt Text:<br>
+              <input id="alttext" type="text" name="alttext[]" value="<%= li[:alttext] %>"></input>
+            </label>  
+          </div>
+          <div class="col-sm-3">
+            <button class="btn btn-danger delete" data-type="DELETE" data-url="/" onclick=$("#logorow<%=i%>").remove(); >
+              <i class="glyphicon glyphicon-trash"></i>
+              <span>Remove image</span>
+            </button> 
+          </div>
+        </div>  
+      <% } %>
+      <span class="files"></span>
+    <% else %>
+      <span class="files"></span>
+    <% end %>
+  </div>       
+  <!-- The global file processing state -->
+  <span class="fileupload-process"></span>
+  </div>
+    <!-- The global progress state -->
+    <div class="col-xs-5 fileupload-progress fade">
+        <!-- The global progress bar -->
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        </div>
+        <!-- The extended global progress state -->
+        <div class="progress-extended">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+</div>

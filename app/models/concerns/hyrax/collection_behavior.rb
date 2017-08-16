@@ -35,9 +35,6 @@ module Hyrax
       @collection_type = Hyrax::CollectionType.find_by_gid!(collection_type_gid)
     end
 
-    attr_accessor :collection_type
-    delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
-
     # Add members using the members association.
     def add_members(new_member_ids)
       return if new_member_ids.blank?

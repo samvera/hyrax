@@ -6,6 +6,9 @@
     <% if @form.persisted? %>
       <% if @collection.discoverable? %>
       <li>
+        <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
+      </li>
+      <li>
         <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
       </li>
       <% end %>
@@ -55,6 +58,14 @@
                 <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
               <% end %>
             <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div id="branding" class="tab-pane">
+        <div class="panel panel-default labels">
+          <div class="panel-body">
+            <%= render 'form_branding', f: f %>
           </div>
         </div>
       </div>

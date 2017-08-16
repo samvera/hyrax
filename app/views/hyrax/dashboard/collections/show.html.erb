@@ -11,7 +11,11 @@
     <% end %>
   </div>
   <div class="col-sm-2">
-    <%= render 'hyrax/collections/media_display', presenter: @presenter %>
+    <% if @banner_file %>
+      <%= image_tag( @banner_file, size: "1600x100", alt: "Edit Entry") %> 
+    <% else %>
+      <%= render 'hyrax/collections/media_display', presenter: @presenter %>
+    <% end %>
     <% unless has_collection_search_parameters? %>
       <%= render 'show_actions', presenter: @presenter %>
     <% end %>
