@@ -12,7 +12,8 @@
         </li>
     <% end %>
   </ul>
-  <%= simple_form_for @form, url: hyrax.admin_collection_types_path, as: :collection_type do |f| %>
+  <% form_url = @form.id.nil? ? hyrax.admin_collection_types_path : hyrax.admin_collection_type_path(@form.id) %>
+  <%= simple_form_for @form, url: form_url, as: :collection_type do |f| %>
   <div class="tab-content">
       <div id="metadata" class="tab-pane active">
         <div class="panel panel-default labels">
@@ -44,7 +45,7 @@
         <% else %>
           <%= f.submit t(:'hyrax.admin.collection_types.form.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type" %>
         <% end %>
-        <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
+        <%= link_to t(:'helpers.action.cancel'), hyrax.admin_collection_types_path, class: 'btn btn-link' %>
       </div>
 
   <% end %>
