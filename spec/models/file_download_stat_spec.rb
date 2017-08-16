@@ -1,7 +1,7 @@
 RSpec.describe FileDownloadStat, type: :model do
   let(:file_id) { file.id }
   let(:date) { Time.current }
-  let(:file_stat) { described_class.create(downloads: "2", date: date, file_id: file_id) }
+  let(:file_stat) { described_class.new(downloads: "2", date: date, file_id: file_id) }
   let(:file) { mock_model(FileSet, id: 99) }
 
   it "has attributes" do
@@ -60,10 +60,10 @@ RSpec.describe FileDownloadStat, type: :model do
     # results from the Legato gem.
     let(:sample_download_statistics) do
       [
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[0], totalEvents: "1"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[1], totalEvents: "1"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[2], totalEvents: "2"),
-        OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[3], totalEvents: "3")
+        SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[0], totalEvents: "1"),
+        SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[1], totalEvents: "1"),
+        SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[2], totalEvents: "2"),
+        SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[3], totalEvents: "3")
       ]
     end
 

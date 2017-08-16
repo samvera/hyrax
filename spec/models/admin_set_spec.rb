@@ -97,17 +97,28 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
-  it "has a title" do
-    subject.title = ["title"]
-    subject.save
-    expect(subject.reload.title).to eq ["title"]
+  it "has a title that is an ActiveTriples::Relation" do
+    subject.title = ['Hello World']
+    expect(subject.title).to eq(['Hello World'])
+    expect(subject.title).to be_a(ActiveTriples::Relation)
   end
 
-  it "has a description" do
-    subject.title = ["title"]
-    subject.description = ["description"]
-    subject.save
-    expect(subject.reload.description).to eq ["description"]
+  it "has a description that is an ActiveTriples::Relation" do
+    subject.description = ['My description']
+    expect(subject.description).to eq(['My description'])
+    expect(subject.description).to be_a(ActiveTriples::Relation)
+  end
+
+  describe '#title=' do
+    it 'raises an error if set with a String' do
+      expect { subject.title = 'New Title' }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '#description=' do
+    it 'raises an error if set with a String' do
+      expect { subject.description = 'New Description' }.to raise_error(ArgumentError)
+    end
   end
 
   describe ".default_set?" do

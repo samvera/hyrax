@@ -89,7 +89,7 @@ RSpec.describe 'Batch management of works', type: :feature do
       before do
         visit '/dashboard/my/works'
         check 'check_all'
-        click_button 'Delete Selected'
+        accept_confirm { click_button 'Delete Selected' }
       end
       it 'Removes the works from the system' do
         expect(GenericWork.count).to be_zero

@@ -1,7 +1,5 @@
 RSpec.describe Hyrax::Statistics::Works::ByDepositor do
-  let(:service) { described_class.new }
-
-  describe "#query", :clean_repo do
+  describe ".query", :clean_repo do
     let(:user1) { create(:user) }
     let(:user2) { create(:user) }
 
@@ -16,7 +14,7 @@ RSpec.describe Hyrax::Statistics::Works::ByDepositor do
       gf.update_index
     end
 
-    subject { service.query }
+    subject { described_class.query }
 
     it "is a list of categories" do
       expect(subject).to eq [{ label: user1.user_key, data: 3 },

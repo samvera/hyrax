@@ -2,9 +2,8 @@ RSpec.describe Hyrax::Statistics::SystemStats do
   let(:user1) { create(:user) }
   let(:start_date) { nil }
   let(:end_date) { nil }
-  let(:stats) { described_class.new(depositor_count, start_date, end_date) }
 
-  describe "#recent_users" do
+  describe ".recent_users" do
     let!(:user2) { create(:user) }
 
     let(:two_days_ago_date) { 2.days.ago.beginning_of_day }
@@ -12,7 +11,7 @@ RSpec.describe Hyrax::Statistics::SystemStats do
 
     let(:depositor_count) { nil }
 
-    subject { stats.recent_users }
+    subject { described_class.recent_users(limit: depositor_count, start_date: start_date, end_date: end_date) }
 
     context "without dates" do
       let(:mock_order) { double }

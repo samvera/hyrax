@@ -12,6 +12,7 @@ Hyrax = {
         this.datatable();
         this.adminSetEditor();
         this.collectionEditor();
+        this.collectionTypes();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.perPage();
@@ -40,6 +41,11 @@ Hyrax = {
       var controls = new CollectionControls($('#collection-controls'));
     },
 
+    // Collection types
+    collectionTypes: function() {
+      var CollectionTypes = require('hyrax/collection_types');
+      var collection_types = new CollectionTypes($('.collection-types-wrapper'))
+    },
 
     // Pretty graphs on the dashboard page
     adminStatisticsGraphs: function() {

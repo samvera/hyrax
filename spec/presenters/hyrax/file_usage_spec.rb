@@ -32,21 +32,21 @@ RSpec.describe Hyrax::FileUsage, type: :model do
 
   let(:sample_download_statistics) do
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[0], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[1], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[2], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[3], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[4], totalEvents: "5")
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[0], totalEvents: "1"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[1], totalEvents: "1"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[2], totalEvents: "2"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[3], totalEvents: "3"),
+      SpecStatistic.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "hyrax:x920fw85p", date: date_strs[4], totalEvents: "5")
     ]
   end
 
   let(:sample_pageview_statistics) do
     [
-      OpenStruct.new(date: date_strs[0], pageviews: 4),
-      OpenStruct.new(date: date_strs[1], pageviews: 8),
-      OpenStruct.new(date: date_strs[2], pageviews: 6),
-      OpenStruct.new(date: date_strs[3], pageviews: 10),
-      OpenStruct.new(date: date_strs[4], pageviews: 2)
+      SpecStatistic.new(date: date_strs[0], pageviews: 4),
+      SpecStatistic.new(date: date_strs[1], pageviews: 8),
+      SpecStatistic.new(date: date_strs[2], pageviews: 6),
+      SpecStatistic.new(date: date_strs[3], pageviews: 10),
+      SpecStatistic.new(date: date_strs[4], pageviews: 2)
     ]
   end
 

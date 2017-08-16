@@ -32,13 +32,4 @@ RSpec.feature 'embargo' do
       expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
     end
   end
-
-  describe 'managing embargoes' do
-    let(:user) { create(:user, groups: ['admin']) }
-
-    it 'shows lists of objects under lease' do
-      visit '/embargoes'
-      expect(page).to have_content 'Manage Embargoes'
-    end
-  end
 end

@@ -31,6 +31,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
       expect(collection_type.gid).to be_nil
     end
   end
+
   describe "validations" do
     it "ensures the required fields have values" do
       collection_type.title = nil

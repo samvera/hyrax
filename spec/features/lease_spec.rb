@@ -32,13 +32,4 @@ RSpec.feature 'leases' do
       expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard)) # new lease date is displayed in message
     end
   end
-
-  describe 'managing leases' do
-    let(:user) { create(:user, groups: ['admin']) }
-
-    it 'shows lists of objects under lease' do
-      visit '/leases'
-      expect(page).to have_content 'Manage Leases'
-    end
-  end
 end

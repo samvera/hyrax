@@ -12,6 +12,15 @@ module Hyrax
     class SystemStats
       attr_reader :limit, :start_date, :end_date
 
+      # @api public
+      # @param [Fixnum] limit_records limits the results returned from top_depositors and top_formats. Maximum is 20, minimum is 5
+      # @param [Time] start_date Filters the statistics returned by the class to after this date. nil means no filter
+      # @param [Time] end_date Filters the statistics returned by the class to before this date. nil means today
+      # @return [Array<User>]
+      def self.recent_users(limit: 5, start_date: nil, end_date: nil)
+        new(limit, start_date, end_date).recent_users
+      end
+
       # @param [Fixnum] limit_records limits the results returned from top_depositors and top_formats. Maximum is 20, minimum is 5
       # @param [Time] start_date Filters the statistics returned by the class to after this date. nil means no filter
       # @param [Time] end_date Filters the statistics returned by the class to before this date. nil means today

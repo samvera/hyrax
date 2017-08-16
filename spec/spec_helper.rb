@@ -33,9 +33,9 @@ require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/matchers'
 require 'rspec/active_model/mocks'
-require 'capybara/poltergeist'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'selenium-webdriver'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
@@ -49,24 +49,16 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ENV['TRAVIS']
 
-Capybara.default_driver = :rack_test      # This is a faster driver
-Capybara.javascript_driver = :poltergeist # This is slower
-Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
-# Adding the below to deal with random Capybara-related timeouts in CI.
-# Found in this thread: https://github.com/teampoltergeist/poltergeist/issues/375
-poltergeist_options = {
-  js_errors: true,
-  timeout: 60,
-  logger: nil,
-  phantomjs_logger: StringIO.new,
-  phantomjs_options: [
-    '--load-images=no',
-    '--ignore-ssl-errors=yes'
-  ]
-}
-Capybara.register_driver(:poltergeist) do |app|
-  Capybara::Poltergeist::Driver.new(app, poltergeist_options)
+Capybara.register_driver(:chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: ['headless', 'disable-gpu'] }
+  )
+  Capybara::Selenium::Driver.new(app,
+                                 browser: :chrome,
+                                 desired_capabilities: capabilities)
 end
+Capybara.default_driver = :rack_test # This is a faster driver
+Capybara.javascript_driver = :chrome # This is slower
 
 ActiveJob::Base.queue_adapter = :inline
 

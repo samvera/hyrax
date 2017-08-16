@@ -5,6 +5,13 @@ module Hyrax
     #
     # WARNING: you must use a term that isn't parsed (i.e. use _sim instead of _tesim)
     class TermQuery
+      # @api public
+      # @param [Integer] limit - Limit the number of responses
+      # @return [Array<Hyrax::Statistics::TermQuery::Result>]
+      def self.query(limit: 5)
+        new(limit).query
+      end
+
       def initialize(limit = 5)
         @limit = limit
       end

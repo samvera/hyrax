@@ -30,7 +30,9 @@ RSpec.describe FeaturedWorkList, type: :model do
   end
 
   describe '#featured_works_attributes=' do
-    let(:featured_work) { create(:featured_work, work_id: work1.id) }
+    # We don't need to persist the given work. This saves a few LDP calls.
+    let(:work_id) { 'no-need-to-persist' }
+    let(:featured_work) { create(:featured_work, work_id: work_id) }
 
     let(:attributes) do
       ActionController::Parameters.new(
