@@ -72,11 +72,18 @@ module Hyrax
       end
 
       def show
+        banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+        @banner_file = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+
         presenter
         query_collection_members
       end
 
       def edit
+        # Get banner and logo data ready for display
+        determine_banner_data
+        determine_logo_data
+
         query_collection_members
         # this is used to populate the "add to a collection" action for the members
         @user_collections = find_collections_for_form
@@ -147,6 +154,9 @@ module Hyrax
       end
 
       def update
+        process_banner_input
+        process_logo_input
+
         process_member_changes
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.update(collection_params.except(:members))
@@ -202,6 +212,125 @@ module Hyrax
       end
 
       private
+
+        def uploaded_files(uploaded_file_ids)
+          return [] if uploaded_file_ids.empty?
+          UploadedFile.find(uploaded_file_ids)
+        end
+
+        def determine_banner_data
+          # Find Banner filename
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          banner_file = File.split(banner_info.first.local_path).last unless banner_info.empty?
+          file_location = banner_info.first.local_path unless banner_info.empty?
+          relative_path = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+          alttext = banner_info.first.alt_text unless banner_info.empty?
+          @banner_info = { file: banner_file, full_path: file_location, relative_path: relative_path, alttext: alttext }
+        end
+
+        def determine_logo_data
+          @logo_info = []
+          # Find Logo filename, alttext, linktext
+          logos_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo")
+          return if logos_info.empty?
+          logos_info.each do |logo_info|
+            logo_file = File.split(logo_info.local_path).last
+            relative_path = "/" + logo_info.local_path.split("/")[-4..-1].join("/")
+            alttext = logo_info.alt_text
+            linkurl = logo_info.target_url
+            @logo_info << { file: logo_file, full_path: logo_info.local_path, relative_path: relative_path, alttext: alttext, linkurl: linkurl }
+          end
+        end
+
+        def process_banner_input
+          return update_existing_banner if params["banner_unchanged"] == "true"
+          remove_banner
+          uploaded_file_ids = params["banner_files"]
+          add_new_banner(uploaded_file_ids) if uploaded_file_ids
+        end
+
+        def update_existing_banner
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          current_alttext = banner_info.first.alt_text
+          new_alttext = params["banner_alttext"]
+          return if current_alttext == new_alttext
+          banner_info.first.alt_text = new_alttext
+          banner_info.first.save(banner_info.first.local_path, false)
+        end
+
+        def add_new_banner(uploaded_file_ids)
+          f = uploaded_files(uploaded_file_ids).first
+          banner_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.split(f.file_url).last,
+            role: "banner",
+            alt_txt: params["banner_alttext"],
+            target_url: ""
+          )
+          banner_info.save f.file_url
+        end
+
+        def remove_banner
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          banner_info.delete_all unless banner_info.nil?
+        end
+
+        def update_logo_info(uploaded_file_id, alttext, linkurl)
+          logo_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo").where(local_path: uploaded_file_id.to_s)
+          logo_info.first.alt_text = alttext
+          logo_info.first.target_url = linkurl
+          logo_info.first.local_path = uploaded_file_id
+          logo_info.first.save(uploaded_file_id, false)
+        end
+
+        def create_logo_info(uploaded_file_id, alttext, linkurl)
+          file = uploaded_files(uploaded_file_id)
+          logo_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.split(file.file_url).last,
+            role: "logo",
+            alt_txt: alttext,
+            target_url: linkurl
+          )
+          logo_info.save file.file_url
+          logo_info
+        end
+
+        def remove_redundant_files(public_files)
+          # remove any public ones that were not included in the selection.
+          logos_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo")
+          logos_info.each do |logo_info|
+            logo_info.delete(logo_info.local_path) unless public_files.include? logo_info.local_path
+            logo_info.destroy unless public_files.include? logo_info.local_path
+          end
+        end
+
+        def process_logo_records(uploaded_file_ids)
+          public_files = []
+          uploaded_file_ids.each_with_index do |ufi, i|
+            if ufi.include?('public')
+              update_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              public_files << ufi
+            else # brand new one, insert in the database
+              logo_info = create_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              public_files << logo_info.local_path
+            end
+          end
+          public_files
+        end
+
+        def process_logo_input
+          uploaded_file_ids = params["logo_files"]
+          public_files = []
+
+          if uploaded_file_ids.nil?
+            remove_redundant_files public_files
+            return
+          end
+
+          public_files = process_logo_records uploaded_file_ids
+          remove_redundant_files public_files
+        end
 
         # run a solr query to get the collections the user has access to edit
         # @return [Array] a list of the user's collections

@@ -4,7 +4,8 @@
     <%= link_to t('hyrax.collection.actions.add_works.label'),
                 hyrax.my_works_path(add_works_to_collection: presenter.id),
                 title: t('hyrax.collection.actions.add_works.desc'),
-                class: 'btn btn-default pull-right' %>
+                class: 'btn btn-default pull-right',
+                data: { turbolinks: false } %>
     <% if presenter.collection_type_is_nestable? %>
         <%= link_to t('hyrax.collection.actions.nest_collections.label'),
                     hyrax.dashboard_new_nest_collection_within_path(child_id: presenter.id),
