@@ -7,6 +7,7 @@ module Hyrax
     layout 'dashboard'
     class_attribute :form_class
     self.form_class = Hyrax::Forms::Admin::CollectionTypeForm
+    load_resource class: Hyrax::CollectionType, except: [:index, :show, :create], instance_name: :collection_type
 
     def index
       add_breadcrumb t(:'hyrax.controls.home'), root_path
@@ -25,7 +26,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
       add_breadcrumb t(:'hyrax.admin.collection_types.index.breadcrumb'), hyrax.admin_collection_types_path
       add_breadcrumb t(:'hyrax.admin.collection_types.new.header'), hyrax.new_admin_collection_type_path
-      @form = form_class.new
+      @form = form_class.new(collection_type: @collection_type)
     end
 
     def create; end
@@ -36,7 +37,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
       add_breadcrumb t(:'hyrax.admin.collection_types.index.breadcrumb'), hyrax.admin_collection_types_path
       add_breadcrumb t(:'hyrax.admin.collection_types.edit.header'), hyrax.edit_admin_collection_type_path
-      @form = form_class.new
+      @form = form_class.new(collection_type: @collection_type)
     end
 
     def update; end
