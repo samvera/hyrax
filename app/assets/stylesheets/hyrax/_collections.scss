@@ -262,3 +262,62 @@ button.branding-banner-remove:hover {
 .delete-admin-set-collection-form {
   text-align: left;
 }
+
+// From coll-landing branch -- TODO: Confirm these are still needed.
+.parent{
+  width:200px;
+  height:200px;
+  position:absolute;
+  z-index:0;
+}
+
+.inner{
+  position:absolute;
+  z-index:1;
+  bottom:0;
+  right:0;
+}
+
+.banner {
+  margin-bottom: 40px;
+  background-image: inherit;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 120px;
+  min-width: 1200px;
+  position: relative;
+  width: 1200px;
+  height: 120px;
+}
+
+.banner .title {
+  padding: 20px;
+  width: 70%;
+  color: black;
+
+  h2 {
+    margin: 0;
+    display: inline-block;
+  }
+}
+
+.banner .logos {
+  padding: 20px;
+  padding-top: 0;
+  padding-bottom: 80px;
+  a {
+    display: inline-block;
+    max-width: 150px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.banner .byline {
+  padding-left: 20px;
+  position: absolute;
+  bottom: 0;
+}

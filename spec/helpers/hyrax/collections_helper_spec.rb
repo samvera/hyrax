@@ -130,4 +130,48 @@ RSpec.describe Hyrax::CollectionsHelper do
       end
     end
   end
+
+  describe "banner_file" do
+    let(:banner_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "banner.gif",
+        role: "banner",
+        alt_txt: "banner alt txt",
+        target_url: ""
+      )
+    end
+
+    let(:logo_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "logo.gif",
+        role: "logo",
+        alt_txt: "This is the logo",
+        target_url: "http://logo.com"
+      )
+    end
+
+    it "banner check" do
+      expect(FileUtils).to receive(:mkdir_p).with(banner_info.find_local_dir_name('123', 'banner')).and_return("/abc/public/banner/banner.gif")
+      expect(FileUtils).to receive(:cp).with('/tmp/12/34/56', banner_info.find_local_dir_name('123', 'banner') + "/banner.gif")
+      expect(FileUtils).to receive(:remove_file).with('/tmp/12/34/56')
+      expect(File).to receive(:exist?).and_return(true)
+      banner_info.save("/tmp/12/34/56")
+
+      allow(banner_info).to receive(:local_path).and_return("/temp/branding/public/123/banner/banner.gif")
+      expect(helper.banner_file("123")).to eq("/branding/123/banner/banner.gif")
+    end
+
+    it "logo check" do
+      expect(FileUtils).to receive(:mkdir_p).with(logo_info.find_local_dir_name('123', 'logo')).and_return("/public/123/logo/")
+      expect(FileUtils).to receive(:cp).with('/tmp/12/34/56', logo_info.find_local_dir_name('123', 'logo') + "/logo.gif")
+      expect(FileUtils).to receive(:remove_file).with('/tmp/12/34/56')
+      expect(File).to receive(:exist?).and_return(true)
+      logo_info.save("/tmp/12/34/56")
+
+      allow(banner_info).to receive(:local_path).and_return("/temp/branding/public/123/logo/logo.gif")
+      expect(helper.logo_record("123")).to eq([{ file: "logo.gif", file_location: "/branding/123/logo/logo.gif", alttext: "This is the logo", linkurl: "http://logo.com" }])
+    end
+  end
 end
