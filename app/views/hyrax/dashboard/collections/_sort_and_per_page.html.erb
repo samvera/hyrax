@@ -1,4 +1,12 @@
 <div class="batch-info">
+  <%= render 'form_for_select_collection', user_collections: @user_collections %>
+
+  <% if params[:action] == "edit" && @response.response['numFound'] > 1 %>
+  <div class="batch-toggle">
+    <% session[:batch_edit_state] = "on" %>
+    <%= button_for_remove_selected_from_collection collection %>
+  </div>
+  <% end %>
    <div class="sort-toggle">
      <%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
      <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>

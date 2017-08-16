@@ -352,15 +352,6 @@ en:
         title: "Add to collection"
         update: "Update Collection"
     collections:
-      edit:
-        header: "Edit Collection: %{title}"
-      form:
-        tabs:
-          description: "Description"
-          sharing:     "Sharing"
-          visibility:  "Visibility"
-      new:
-        header: Create New Collection
       search_form:
         button_label: Go
         label: "Search Collection %{title}"
@@ -409,6 +400,18 @@ en:
       authorize_proxies:        "Authorize Proxies"
       breadcrumbs:
         admin:                  "Administration"
+      collections:
+        edit:
+          header: "Edit Collection: %{title}"
+        form:
+          tabs:
+            description: "Description"
+            sharing:     "Sharing"
+            visibility:  "Visibility"
+        new:
+          header: Create New Collection
+        show:
+          works_in_collection: "Works in this Collection"
       create_work:              "Create Work"
       current_proxies:          "Current Proxies"
       heading_actions:

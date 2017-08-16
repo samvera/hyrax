@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/collections/_form_for_select_collection.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb', type: :view do
   let(:collections) do
     [
       { id: 1234, create_date: Time.zone.parse('Thu, 13 Aug 2015 14:20:22 +0100') },
@@ -22,7 +22,7 @@ RSpec.describe 'hyrax/collections/_form_for_select_collection.html.erb', type: :
   before do
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:collection_path).and_return("/collection/123")
-    allow(view).to receive(:new_collection_path).and_return("/collection/new")
+    allow(view).to receive(:new_dashboard_collection_path).and_return("/collection/new")
 
     allow(view).to receive(:user_collections).and_return(solr_collections)
   end

@@ -1,5 +1,4 @@
-
-RSpec.describe 'hyrax/collections/_show_document_list_menu.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', type: :view do
   context 'when user is viewing a collection' do
     let(:user) { create :user }
     let(:ability) { instance_double("Ability") }
@@ -13,7 +12,7 @@ RSpec.describe 'hyrax/collections/_show_document_list_menu.html.erb', type: :vie
 
     it "displays the action list in a drop down for an individual work the user can edit" do
       allow(ability).to receive(:can?).with(:edit, document).and_return(true)
-      render('hyrax/collections/show_document_list_menu.html.erb', document: document, current_user: user)
+      render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).to have_content 'Edit'
       expect(rendered).not_to have_content 'Download File'
@@ -22,7 +21,7 @@ RSpec.describe 'hyrax/collections/_show_document_list_menu.html.erb', type: :vie
 
     it "displays the action list in a drop down for an individual work the user cannot edit" do
       allow(ability).to receive(:can?).with(:edit, document).and_return(false)
-      render('hyrax/collections/show_document_list_menu', document: document, current_user: user)
+      render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).not_to have_content 'Edit'
       expect(rendered).not_to have_content 'Download File'

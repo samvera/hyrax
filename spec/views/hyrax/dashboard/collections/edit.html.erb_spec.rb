@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/collections/edit.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
   let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
   let(:form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
   let(:solr_response) { double(response: { 'numFound' => 0 }) }
@@ -12,9 +12,9 @@ RSpec.describe 'hyrax/collections/edit.html.erb', type: :view do
     stub_template 'hyrax/collections/_search_form.html.erb' => 'search form'
     stub_template 'hyrax/my/_did_you_mean.html.erb' => 'did you mean'
     stub_template 'hyrax/collections/_sort_and_per_page.html.erb' => 'sort and per page'
-    stub_template 'hyrax/collections/_document_list.html.erb' => 'document list'
+    stub_template '_document_list.html.erb' => 'document list'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
-    stub_template 'hyrax/collections/_form.html.erb' => 'form'
+    stub_template '_form.html.erb' => 'form'
 
     render
   end

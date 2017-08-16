@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/_show_document_list_row.html.erb', type: :view do
   let(:user) { create(:user) }
 
   let(:work) do
@@ -19,12 +19,12 @@ RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view
     end
 
     it "renders collections links" do
-      render('hyrax/collections/show_document_list_row.html.erb', document: work)
+      render('show_document_list_row', document: work)
       expect(rendered).to have_content 'My awesome collection'
     end
 
     it "renders works" do
-      render('hyrax/collections/show_document_list_row.html.erb', document: work)
+      render('show_document_list_row', document: work)
       expect(rendered).to have_content 'One Hundred Years of Solitude'
     end
   end

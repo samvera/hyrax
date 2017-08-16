@@ -1,7 +1,7 @@
 <%# button for removing a batch from a collection %>
 <%# collection -- collection to be updated  %>
 <%# label -- button label %>
-<%= form_for collection, url:collection_path(collection.id), :method=>:put do |f| %>
+<%= form_for collection, url: hyrax.dashboard_collection_path(collection.id), method: :put do |f| %>
     <%= f.hidden_field :members, :value => "remove" %>
     <%= f.submit label, :class => "btn btn-primary collection-remove-selected submits-batches" %>
 <% end %>

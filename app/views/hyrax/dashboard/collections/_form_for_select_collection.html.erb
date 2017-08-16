@@ -28,11 +28,11 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("hyrax.collection.select_form.close")%></button>
           <% if user_collections.blank? %>
-            <%= render 'hyrax/collections/button_create_collection', label: t("hyrax.collection.select_form.create") %>
+            <%= render 'hyrax/dashboard/collections/button_create_collection', label: t("hyrax.collection.select_form.create") %>
 
           <% else %>
-            <%= render 'hyrax/collections/button_for_update_collection', label: t("hyrax.collection.select_form.update"), collection_id: 'collection_replace_id' %>
-            <%= render 'hyrax/collections/button_create_collection', label: t("hyrax.collection.select_form.create_new") %>
+            <%= render 'hyrax/dashboard/collections/button_for_update_collection', label: t("hyrax.collection.select_form.update"), collection_id: 'collection_replace_id' %>
+            <%= render 'hyrax/dashboard/collections/button_create_collection', label: t("hyrax.collection.select_form.create_new") %>
           <% end %>
         </div>
       </div><!-- /.modal-content -->

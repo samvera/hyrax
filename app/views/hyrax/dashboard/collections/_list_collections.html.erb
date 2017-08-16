@@ -1,10 +1,12 @@
 <% id = document.id %>
 <tr id="document_<%= id %>">
+  <td></td>
   <td>
     <div class="media">
       <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-small pull-left"></span>
       <div class="media-body">
         <div class="media-heading">
+          <%#= link_to url_for_document(document), id: "src_copy_link#{id}" do %>
           <%= link_to hyrax.dashboard_collection_path(id) do %>
               <span class="sr-only"><%= t("hyrax.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
@@ -17,16 +19,16 @@
       </div>
     </div>
   </td>
-  <td class="text-center date"><%= document.create_date.try(:to_formatted_s, :standard) %> </td>
+  <td class="text-center"><%= document.create_date %> </td>
   <td class="text-center">
     <%= render_visibility_link(document) %>
   </td>
   <td class="text-center">
-    <%= render 'hyrax/my/collection_action_menu', id: id %>
+    <%= render 'collection_action_menu', id: id %>
    </td>
 </tr>
 <tr id="detail_<%= id %>"> <!--  collection detail"> -->
-  <td colspan="4">
+  <td colspan="6">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2"><%= t("hyrax.dashboard.my.collection_list.description") %></dt>
       <dd class="col-xs-9 col-lg-10"><%= document.description.first %></dd>

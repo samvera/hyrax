@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/collections/_form.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
   let(:collection) { Collection.new }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
 

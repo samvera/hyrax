@@ -61,7 +61,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       str = button_for_remove_from_collection collection, item
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq hyrax.collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
       expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
       expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
     end
@@ -84,7 +84,7 @@ RSpec.describe Hyrax::CollectionsHelper do
         str = button_for_remove_from_collection collection, item
         doc = Nokogiri::HTML(str)
         form = doc.xpath('//form').first
-        expect(form.attr('action')).to eq hyrax.collection_path(collection)
+        expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
         expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
         expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
       end
@@ -98,7 +98,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       str = button_for_remove_selected_from_collection collection
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq hyrax.collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
       i = form.xpath('.//input')[2]
       expect(i.attr('value')).to eq("remove")
       expect(i.attr('name')).to eq("collection[members]")
@@ -108,7 +108,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       str = button_for_remove_selected_from_collection collection, "Remove My Button"
       doc = Nokogiri::HTML(str)
       form = doc.css('form').first
-      expect(form.attr('action')).to eq hyrax.collection_path(collection)
+      expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
       expect(form.css('input[type="submit"]').attr('value').value).to eq "Remove My Button"
     end
   end
