@@ -13,6 +13,8 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
     allow(view).to receive(:can?).with(:edit, document).and_return(true)
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
     allow(presenter).to receive(:total_items).and_return(0)
+    allow(controller).to receive(:banner_file).with("xyz123z4").and_return("banner.gif")
+    allow(controller).to receive(:logo_record).with("xyz123z4").and_return([{ linkurl: "logo link url", alttext: "logo alt text", file_location: "logo.gif" }])
     assign(:presenter, presenter)
 
     # Stub route because view specs don't handle engine routes

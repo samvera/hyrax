@@ -10,6 +10,13 @@ Blacklight.onLoad(function () {
       form.append('<input type="hidden" value="add" name="collection[members]"></input>');
   });
 
+  // background banner image uploaded for branding  
+  $(".banner[data-background]").each(function() {
+    var $banner = $(this);
+    var url = 'url(' + $banner.data('background') + ')';
+    $banner.css({ "backgroundImage": url });
+  })
+
   // Show add collection to collection modal window
   $('#documents').find('.add-collection-to-collection').on('click', function(e) {
       e.preventDefault();
