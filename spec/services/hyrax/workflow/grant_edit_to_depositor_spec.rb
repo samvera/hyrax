@@ -33,5 +33,21 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
         expect(work).to be_valid
       end
     end
+
+    context "with attached FileSets" do
+      let(:work) { create(:work_with_one_file, user: depositor) }
+      let(:file_set) do
+        work.members.first.tap do |file_set|
+          # Manually remove edit_users to satisfy the pre-condition
+          file_set.update(edit_users: [])
+        end
+      end
+
+      it "grants edit access" do
+        # We need to reload, because this work happens in a background job
+        expect { subject }.to change { file_set.reload.edit_users }.from([]).to([depositor.user_key])
+        expect(work).to be_valid
+      end
+    end
   end
 end

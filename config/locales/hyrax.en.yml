@@ -173,38 +173,9 @@ en:
             metadata:        "Description"
             settings:        "Settings"
             participants:    "Participants"
-          metadata:
-            name:
-              label:         "Type name"
-              description:   ""
-            description:
-              label:         "Type description"
-              description:   "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
-          settings:
-            instructions:    "These settings determine how collections of this type can be managed and discovered."
-            warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
-            nestable:
-              label:         "NESTABLE"
-              description:   "Allow collections of this type to be nested (a collection can contain other collections)"
-            discovery:
-              label:         "DISCOVERY"
-              description:   "Allow collections of this type to be discoverable"
-            sharing:
-              label:         "SHARING"
-              description:   "Allow users to assign collection managers, depositors, and viewers for collections they manage"
-            multi-membership:
-              label:         "MULTIPLE MEMBERSHIP"
-              description:   "Allow works to belong to multiple collections of this type"
-            require-membership:
-              label:         "REQUIRE MEMBERSHIP"
-              description:   "A work must belong to at least one collection of this type"
-            workflow:
-              label:         "WORKFLOW"
-              description:   "Allow collections of this type to assign workflow to a new work"
-            visibility:
-              label:         "VISIBILITY"
-              description:   "Allow collections of this type to assign initial visibility settings to a new work"
-          participants:
+        form_settings:
+          instructions:    "These settings determine how collections of this type can be managed and discovered."
+          warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
         index:
           breadcrumb:       "Collection Types"
           create_new_button: "Create new collection type"
@@ -230,6 +201,12 @@ en:
             actions:        "Actions"
         new:
           header:           "Create New Collection Type"
+        create:
+          notification:     "The collection type %{name} has been created."
+        update:
+          notification:     "The collection type %{name} has been updated."
+        destroy:
+          notification:     "The collection type %{name} has been deleted."
       features:
         index:
           header:           Features
@@ -420,27 +397,6 @@ en:
         title: "Add to collection"
         update: "Update Collection"
     collections:
-      edit:
-        header: "Edit Collection: %{title}"
-      form:
-        tabs:
-          description: "Description"
-          sharing:     "Sharing"
-          discovery:   "Discovery"
-      form_discovery:
-          open:
-            label:         "Open Access"
-            description:   "Visible to all"
-          institution:
-            label:         "Institution"
-            description:   "Restricted visibility to institution"
-          private:
-            label:         "Private"
-            description:   "Keep to myself with an option to share"
-          para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
-          para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
-      new:
-        header: Create New Collection
       search_form:
         button_label: Go
         label: "Search Collection %{title}"
@@ -489,6 +445,30 @@ en:
       authorize_proxies:        "Authorize Proxies"
       breadcrumbs:
         admin:                  "Administration"
+      collections:
+        edit:
+          header: "Edit Collection: %{title}"
+        form:
+          tabs:
+            description: "Description"
+            sharing:     "Sharing"
+            discovery:   "Discovery"
+        form_discovery:
+            open:
+              label:         "Open Access"
+              description:   "Visible to all"
+            institution:
+              label:         "Institution"
+              description:   "Restricted visibility to institution"
+            private:
+              label:         "Private"
+              description:   "Keep to myself with an option to share"
+            para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
+            para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
+        new:
+          header: Create New Collection
+        show:
+          works_in_collection: "Works in this Collection"
       create_work:              "Create Work"
       current_proxies:          "Current Proxies"
       heading_actions:
@@ -816,14 +796,16 @@ en:
         unlinked: "Link with Zotero"
     visibility:
       authenticated:
-        note_html: "Restrict access to only users and/or groups from %{institution}"
+        note_html: "Restrict access to %{institution}."
         text: "%{institution}"
       embargo:
+        note_html: "Set date for future release."
         text: "Embargo"
       lease:
+        note_html: "Set date for future reduced access."
         text: "Lease"
       open:
-        note_html: Everyone. Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for specific publishers' copyright policies if you plan to patent and/or publish your %{type} in a journal.
+        note_html: "Make available to all."
         text: Public
         warning_html: "<p>
                         <strong>Please note</strong>, making something visible to the world (i.e.
@@ -840,7 +822,7 @@ en:
                       </p>"
       open_title_attr: "Change the visibility of this resource"
       restricted:
-        note_html: Only users and/or groups that have been given specific access in the "Share With" section.
+        note_html: "Keep to myself with option to share."
         text: "Private"
       restricted_title_attr: "Change the visibility of this resource"
     workflow:
@@ -893,6 +875,16 @@ en:
         license: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
         subject: "Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary."
         title: "A name to aid in identifying a collection."
+      collection_type:
+        allow_multiple_membership: "Allow works to belong to multiple collections of this type"
+        assigns_workflow:   "Allow collections of this type to assign workflow to a new work"
+        assigns_visibility:   "Allow collections of this type to assign initial visibility settings to a new work"
+        title: ""
+        description: "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
+        discoverable: "Allow collections of this type to be discoverable"
+        nestable: "Allow collections of this type to be nested (a collection can contain other collections)"
+        require_membership: "A work must belong to at least one collection of this type"
+        sharable: "Allow users to assign collection managers, depositors, and viewers for collections they manage"
       defaults:
         based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
@@ -912,6 +904,16 @@ en:
       collection:
         size:                      "Size"
         total_items:               "Total works"
+      collection_type:
+        allow_multiple_membership: "MULTIPLE MEMBERSHIP"
+        assigns_workflow: "WORKFLOW"
+        assigns_visibility: "VISIBILITY"
+        description: "Type description"
+        discoverable: "DISCOVERY"
+        nestable: "NESTABLE"
+        require_membership: "REQUIRE MEMBERSHIP"
+        sharable: "SHARING"
+        title: "Type name"
       defaults:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"
@@ -929,7 +931,7 @@ en:
         visibility_after_embargo:  'then open it up to'
         visibility_after_lease:    'then restrict it to'
         visibility_during_embargo: 'Restricted to'
-        visibility_during_lease:   'Is available for'
+        visibility_during_lease:   'Is available to'
       proxy_deposit_request:
         transfer_to:              "User"
         sender_comment:           "Comments"

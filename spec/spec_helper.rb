@@ -49,16 +49,8 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ENV['TRAVIS']
 
-Capybara.register_driver(:chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['headless', 'disable-gpu'] }
-  )
-  Capybara::Selenium::Driver.new(app,
-                                 browser: :chrome,
-                                 desired_capabilities: capabilities)
-end
 Capybara.default_driver = :rack_test # This is a faster driver
-Capybara.javascript_driver = :chrome # This is slower
+Capybara.javascript_driver = :selenium_chrome_headless # This is slower
 
 ActiveJob::Base.queue_adapter = :inline
 
@@ -66,20 +58,6 @@ ActiveJob::Base.queue_adapter = :inline
 # HttpLogger.logger = Logger.new(STDOUT)
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
-
-if ENV['TRAVIS']
-  # Monkey-patches the FITS runner to return the PDF FITS fixture
-  module Hydra::Works
-    class CharacterizationService
-      def self.run(_, _)
-        raise "FITS!!!"
-        # return unless file_set.original_file.has_content?
-        # filename = ::File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
-        # file_set.characterization.ng_xml = ::File.read(filename)
-      end
-    end
-  end
-end
 
 if defined?(ClamAV)
   ClamAV.instance.loaddb

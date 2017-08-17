@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/collections/_form_share.html.erb', type: :view do
+RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view do
   let(:collection) do
     stub_model(Collection, id: '123', depositor: 'bob')
   end

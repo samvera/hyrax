@@ -16,7 +16,6 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
     assign(:presenter, presenter)
 
     # Stub route because view specs don't handle engine routes
-    allow(view).to receive(:edit_collection_path).and_return("/collection/123/edit")
     allow(view).to receive(:collection_path).and_return("/collection/123")
 
     stub_template '_search_form.html.erb' => 'search form'
@@ -28,10 +27,6 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   end
 
   it 'draws the page' do
-    expect(rendered).to have_selector 'h2', text: 'Actions'
-    expect(rendered).to have_link 'Edit'
-    expect(rendered).to have_link 'Delete'
-    expect(rendered).to have_link 'Add works'
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end

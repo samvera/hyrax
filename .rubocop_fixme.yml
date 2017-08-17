@@ -4,6 +4,7 @@ Security/MarshalLoad:
 
 Metrics/ClassLength:
   Exclude:
+    - 'app/controllers/hyrax/dashboard/collections_controller.rb'
     - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'
@@ -23,7 +24,6 @@ Metrics/AbcSize:
 
 Metrics/ModuleLength:
   Exclude:
-    - 'app/controllers/concerns/hyrax/collections_controller_behavior.rb'
     - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
     - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
     - 'app/models/concerns/hyrax/ability.rb'
@@ -65,7 +65,6 @@ RSpec/ExampleLength:
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
-    - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
     - 'spec/controllers/hyrax/my/highlights_controller_spec.rb'
@@ -129,7 +128,6 @@ RSpec/AnyInstance:
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
-    - 'spec/controllers/hyrax/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'
@@ -138,6 +136,9 @@ RSpec/AnyInstance:
     - 'spec/jobs/content_new_version_event_job_spec.rb'
     - 'spec/jobs/content_depositor_change_event_job_spec.rb'
     - 'spec/jobs/content_deposit_event_job_spec.rb'
+    - 'spec/jobs/hyrax/grant_edit_to_members_job_spec.rb'
+    - 'spec/jobs/hyrax/grant_read_to_members_job_spec.rb'
+    - 'spec/jobs/hyrax/revoke_edit_from_members_job_spec.rb'
     - 'spec/lib/hyrax/arkivo/actor_spec.rb'
     - 'spec/lib/hyrax/arkivo/create_subscription_job_spec.rb'
     - 'spec/presenters/hyrax/file_usage_spec.rb'

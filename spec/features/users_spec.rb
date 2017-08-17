@@ -5,15 +5,6 @@ RSpec.feature "User Profile", type: :feature do
   let(:user) { create(:user) }
   let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user, locale: 'en') }
 
-  context 'when clicking all users' do
-    # TODO: Move this to a view test
-    it 'displays all users' do
-      visit profile_path
-      click_link 'View Users'
-      expect(page).to have_xpath("//td/a[@href='#{profile_path}']")
-    end
-  end
-
   context 'when visiting user profile with highlighted works' do
     let(:work) { create(:work, user: user) }
 
