@@ -146,17 +146,13 @@ RSpec.describe Collection do
     end
 
     context 'when gid in collection object is nil' do
-      let(:collection) { described_class.new(title: ['title']) }
+      let(:collection) { create(:collection, title: ['title']) }
 
-      before do
-        allow(collection).to receive(:collection_type_gid).and_return(nil)
-      end
+      subject { described_class.find(collection.id) }
 
       it 'loads default collection type' do
-        collection.save!
-        col = described_class.find(collection.id)
-        expect(col.collection_type).to be_a Hyrax::CollectionType
-        expect(col.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+        expect(subject.collection_type).to be_a Hyrax::CollectionType
+        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
       end
     end
   end
