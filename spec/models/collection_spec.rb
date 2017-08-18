@@ -116,4 +116,183 @@ RSpec.describe Collection do
       expect(member.member_of_collections).to eq [collection]
     end
   end
+
+  describe '#collection_type_gid' do
+    it 'has a collection_type_gid' do
+      subject.title = ['title']
+      subject.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
+      subject.save!
+      expect(subject.reload.collection_type_gid).to eq 'gid://internal/hyrax-collectiontype/5'
+    end
+  end
+
+  describe '#load_collection_type_instance' do
+    context 'when gid exists in collection object' do
+      let(:collection) { described_class.new(title: ['title']) }
+
+      before do
+        allow(Hyrax::CollectionType).to receive(:find_by_gid).with('gid://internal/hyrax-collectiontype/5').and_return(Hyrax::CollectionType.new(id: 5))
+      end
+
+      it 'loads instance of collection type based on gid' do
+        collection.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
+        collection.save!
+        col = described_class.find(collection.id)
+        expect(col.collection_type).to be_a Hyrax::CollectionType
+        expect(col.collection_type.id).to eq 5
+      end
+    end
+
+    context 'when gid in collection object is nil' do
+      let(:collection) { described_class.new(title: ['title']) }
+
+      before do
+        allow(collection).to receive(:collection_type_gid).and_return(nil)
+      end
+
+      it 'loads default collection type' do
+        collection.save!
+        col = described_class.find(collection.id)
+        expect(col.collection_type).to be_a Hyrax::CollectionType
+        expect(col.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+      end
+    end
+  end
+
+  describe '#collection_type_gid=' do
+    let(:collection) { described_class.new }
+
+    it 'sets gid' do
+      gid = 'gid://internal/hyrax-collectiontype/10'
+      collection.collection_type_gid = gid
+      expect(collection.collection_type_gid).to eq gid
+    end
+  end
+
+  describe '#collection_type' do
+    let(:collection) { described_class.new }
+
+    it 'returns nil if gid is nil' do
+      collection.collection_type_gid = nil
+      expect(collection.collection_type).to be_nil
+    end
+
+    it 'returns collection_type if already set' do
+      gid89 = 'gid://internal/hyrax-collectiontype/89'
+      allow(Hyrax::CollectionType).to receive(:find_by_gid).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
+      collection.collection_type_gid = gid89
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type.gid).to eq gid89
+    end
+
+    it 'will not change value' do
+      gid89 = 'gid://internal/hyrax-collectiontype/89'
+      gid99 = 'gid://internal/hyrax-collectiontype/99'
+      allow(Hyrax::CollectionType).to receive(:find_by_gid).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
+      collection.collection_type_gid = gid89
+      collection.collection_type
+      collection.collection_type_gid = gid99
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type.gid).to eq gid89
+    end
+
+    it 'throws StandardError if cannot find collection type for the gid' do
+      gid = 'gid://internal/hyrax-collectiontype/999'
+      collection.collection_type_gid = gid
+      # TODO: Should we capture the ActiveRecord error and produce something nicer?
+      expect { collection.collection_type }.to raise_error(StandardError, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+    end
+  end
+
+  describe 'collection type delegated methods' do
+    let(:collection_type) { build(:collection_type) }
+
+    before do
+      allow(collection).to receive(:collection_type).and_return(collection_type)
+    end
+
+    describe '#nestable' do
+      it "returns false if collection_type's nestable property is false" do
+        collection_type.nestable = false
+        expect(collection.nestable?).to be_falsey
+      end
+
+      it "returns true if collection_type's nestable property is true" do
+        collection_type.nestable = true
+        expect(collection.nestable?).to be_truthy
+      end
+    end
+
+    describe '#discoverable' do
+      it "returns false if collection_type's discoverable property is false" do
+        collection_type.discoverable = false
+        expect(collection.discoverable?).to be_falsey
+      end
+
+      it "returns true if collection_type's discoverable property is true" do
+        collection_type.discoverable = true
+        expect(collection.discoverable?).to be_truthy
+      end
+    end
+
+    describe '#sharable' do
+      it "returns false if collection_type's sharable property is false" do
+        collection_type.sharable = false
+        expect(collection.sharable?).to be_falsey
+      end
+
+      it "returns true if collection_type's sharable property is true" do
+        collection_type.sharable = true
+        expect(collection.sharable?).to be_truthy
+      end
+    end
+
+    describe '#allow_multiple_membership' do
+      it "returns false if collection_type's allow_multiple_membership property is false" do
+        collection_type.allow_multiple_membership = false
+        expect(collection.allow_multiple_membership?).to be_falsey
+      end
+
+      it "returns true if collection_type's allow_multiple_membership property is true" do
+        collection_type.allow_multiple_membership = true
+        expect(collection.allow_multiple_membership?).to be_truthy
+      end
+    end
+
+    describe '#require_membership' do
+      it "returns false if collection_type's require_membership property is false" do
+        collection_type.require_membership = false
+        expect(collection.require_membership?).to be_falsey
+      end
+
+      it "returns true if collection_type's require_membership property is true" do
+        collection_type.require_membership = true
+        expect(collection.require_membership?).to be_truthy
+      end
+    end
+
+    describe '#assigns_workflow' do
+      it "returns false if collection_type's assigns_workflow property is false" do
+        collection_type.assigns_workflow = false
+        expect(collection.assigns_workflow?).to be_falsey
+      end
+
+      it "returns true if collection_type's assigns_workflow property is true" do
+        collection_type.assigns_workflow = true
+        expect(collection.assigns_workflow?).to be_truthy
+      end
+    end
+
+    describe '#assigns_visibility' do
+      it "returns false if collection_type's assigns_visibility property is false" do
+        collection_type.assigns_visibility = false
+        expect(collection.assigns_visibility?).to be_falsey
+      end
+
+      it "returns true if collection_type's assigns_visibility property is true" do
+        collection_type.assigns_visibility = true
+        expect(collection.assigns_visibility?).to be_truthy
+      end
+    end
+  end
 end

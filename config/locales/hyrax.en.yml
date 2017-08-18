@@ -157,13 +157,56 @@ en:
           breadcrumb:       "View Set"
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
-          item_list_header: "Works in This Set"
+          item_list_header: "Works in This Set"  
       appearances:
         show:
           header:           "Appearance"
         update:
           flash:
             success:        "The appearance was successfully updated"
+      collection_types:
+        edit:
+          header:           "Edit Collection Type"
+        form:
+          submit:            "Save"
+          tab:
+            metadata:        "Description"
+            settings:        "Settings"
+            participants:    "Participants"
+        form_settings:
+          instructions:    "These settings determine how collections of this type can be managed and discovered."
+          warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
+        index:
+          breadcrumb:       "Collection Types"
+          create_new_button: "Create new collection type"
+          description:      "Collection types enable you to define settings that govern collections that serve different purposes in your repository.  You can define as many collection types as you need."
+          header:           "Collection Types"
+          modal:
+            can_delete_body_html: "<p>Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?</p>"
+            cannot_delete_body_html: "<p>You cannot delete this collection type because one or more collections of this type have already been created.</p>
+            <p>To delete this collection type, first ensure that all collections of this type have been deleted.</p>"
+            header_can_delete:  "Delete Collection Type?"
+            header_cannot_delete:  "Cannot Delete Collection Type"
+            view_collections: "View collections of this type"
+          more_toggle_content_html: "<p>Typical scenarios for collection types include:</p>
+          <ul>
+            <li><strong>User Collections</strong> that any registered user can create to organize items they deposit.</li>
+            <li><strong>Exhibits</strong> that staff create and curate for public display, where items can be included in any number of exhibits.</li>
+            <li><strong>Controlled Collections</strong> created and managed by staff and not intended for public display, such as collections associated with organizational units or departments.</li>
+            <li><strong>Community Collections</strong> that are intended for public display, similar to how DSpace communities and collections are sometimes used.</li>
+          </ul>"
+          more_toggle_header_html: "<span>More</span> about collection types"
+          table:
+            name:           "Name"
+            actions:        "Actions"
+        new:
+          header:           "Create New Collection Type"
+        create:
+          notification:     "The collection type %{name} has been created."
+        update:
+          notification:     "The collection type %{name} has been updated."
+        destroy:
+          notification:     "The collection type %{name} has been deleted."
       features:
         index:
           header:           Features
@@ -174,7 +217,9 @@ en:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
         appearance:         "Appearance"
+        collection_types:   "Collection types"
         collections:        "Collections"
+        collection_types:   "Collection Types"
         configuration:      "Configuration"
         content_blocks:     "Content Blocks"
         notifications:      "Notifications"
@@ -407,7 +452,19 @@ en:
           tabs:
             description: "Description"
             sharing:     "Sharing"
-            visibility:  "Visibility"
+            discovery:   "Discovery"
+        form_discovery:
+            open:
+              label:         "Open Access"
+              description:   "Visible to all"
+            institution:
+              label:         "Institution"
+              description:   "Restricted visibility to institution"
+            private:
+              label:         "Private"
+              description:   "Keep to myself with an option to share"
+            para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
+            para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
         new:
           header: Create New Collection
         show:
@@ -818,6 +875,16 @@ en:
         license: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
         subject: "Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary."
         title: "A name to aid in identifying a collection."
+      collection_type:
+        allow_multiple_membership: "Allow works to belong to multiple collections of this type"
+        assigns_workflow:   "Allow collections of this type to assign workflow to a new work"
+        assigns_visibility:   "Allow collections of this type to assign initial visibility settings to a new work"
+        title: ""
+        description: "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
+        discoverable: "Allow collections of this type to be discoverable"
+        nestable: "Allow collections of this type to be nested (a collection can contain other collections)"
+        require_membership: "A work must belong to at least one collection of this type"
+        sharable: "Allow users to assign collection managers, depositors, and viewers for collections they manage"
       defaults:
         based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
@@ -837,6 +904,16 @@ en:
       collection:
         size:                      "Size"
         total_items:               "Total works"
+      collection_type:
+        allow_multiple_membership: "MULTIPLE MEMBERSHIP"
+        assigns_workflow: "WORKFLOW"
+        assigns_visibility: "VISIBILITY"
+        description: "Type description"
+        discoverable: "DISCOVERY"
+        nestable: "NESTABLE"
+        require_membership: "REQUIRE MEMBERSHIP"
+        sharable: "SHARING"
+        title: "Type name"
       defaults:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"
