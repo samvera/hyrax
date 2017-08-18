@@ -97,7 +97,7 @@ RSpec.describe Hyrax::BatchUploadsController do
     context "when submitting works on behalf of other user" do
       let(:batch_upload_item) do
         {
-          payload_concern: RareBooks::Atlas,
+          payload_concern: NamespacedWorks::NestedWork,
           permissions_attributes: [
             { type: "group", name: "public", access: "read" }
           ],

@@ -18,7 +18,7 @@ RSpec.describe Hyrax::Forms::BatchEditForm do
   # Using a different work type in order to show that the form supports
   # batches containing multiple types of works
   let(:work2) do
-    RareBooks::Atlas.create!(
+    NamespacedWorks::NestedWork.create!(
       title: ["title 2"],
       keyword: ["123"],
       creator: ["Fred"],
