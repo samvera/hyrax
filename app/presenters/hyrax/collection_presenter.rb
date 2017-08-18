@@ -57,10 +57,6 @@ module Hyrax
       ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
     end
 
-    def collection_type
-      @collection_type ||= Hyrax::CollectionType.find_by_gid(solr_document["collection_type_gid_ssim"].first)
-    end
-
     def collection_type_badge
       collection_type.title
     end
