@@ -3,9 +3,16 @@ module Hyrax
     self.table_name = 'hyrax_collection_types'
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
+    before_save :ensure_no_collections
+    before_destroy :ensure_no_collections
 
     DEFAULT_ID = 'user_collection'.freeze
     DEFAULT_TITLE = 'User Collection'.freeze
+
+    def title=(value)
+      super
+      assign_machine_id
+    end
 
     # These are provided as a convenience method based on prior design discussions.
     # The deprecations are added to allow upstream developers to continue with what
@@ -52,20 +59,20 @@ module Hyrax
       uri_gid.to_s # ActiveTriples treats this string version as a literal <object_value>
     end
 
+    def collections
+      return [] unless gid
+      ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
+    end
+
     def collections?
-      # TODO: this is a stub method to check whether there are any collections with this
-      # collection type.  We should think about best way to retrieve this information.
-      # For testing, return 'true' to display the "Cannot delete" modal.
-      # And return 'false' to display the delete confirmation modal.
-      true
+      collections.count > 0
     end
 
     def self.find_or_create_default_collection_type
-      return find_by(machine_id: DEFAULT_ID) if exists?(machine_id: DEFAULT_ID)
-      create_default_collection_type(machine_id: DEFAULT_ID, title: DEFAULT_TITLE)
+      find_by(machine_id: DEFAULT_ID) || create_default_collection_type
     end
 
-    def self.create_default_collection_type(machine_id:, title:)
+    def self.create_default_collection_type(machine_id: DEFAULT_ID, title: DEFAULT_TITLE)
       create(machine_id: machine_id, title: title) do |c|
         c.description = 'A User Collection can be created by any user to organize their works.'
         c.nestable = false
@@ -77,5 +84,18 @@ module Hyrax
         c.assigns_visibility = false
       end
     end
+
+    private
+
+      def assign_machine_id
+        # FIXME: This method allows for the possibility of collisions
+        self.machine_id ||= title.parameterize.underscore.to_sym if title.present?
+      end
+
+      def ensure_no_collections
+        return true unless collections?
+        errors[:base] << I18n.t('hyrax.admin.collection_types.error_not_empty')
+        throw :abort
+      end
   end
 end

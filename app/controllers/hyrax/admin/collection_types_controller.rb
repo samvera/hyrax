@@ -25,7 +25,6 @@ module Hyrax
 
     def create
       @collection_type = Hyrax::CollectionType.new(collection_type_params)
-      @collection_type.machine_id = @collection_type.title.parameterize.underscore.to_sym
       if @collection_type.save
         redirect_to hyrax.edit_admin_collection_type_path(@collection_type), notice: t(:'hyrax.admin.collection_types.create.notification', name: @collection_type.title)
       else
@@ -81,7 +80,7 @@ module Hyrax
       end
 
       def collection_type_params
-        params.require(:collection_type).permit(:title, :machine_id, :description, :nestable, :discoverable, :sharable,
+        params.require(:collection_type).permit(:title, :description, :nestable, :discoverable, :sharable,
                                                 :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility)
       end
   end

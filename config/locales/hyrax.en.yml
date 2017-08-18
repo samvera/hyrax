@@ -207,6 +207,7 @@ en:
           notification:     "The collection type %{name} has been updated."
         destroy:
           notification:     "The collection type %{name} has been deleted."
+        error_not_empty:    "Collection type cannot be altered as it has collections"
       features:
         index:
           header:           Features
