@@ -4,6 +4,9 @@ module Hyrax
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
 
+    DEFAULT_ID = 'user_collection'.freeze
+    DEFAULT_TITLE = 'User Collection'.freeze
+
     # These are provided as a convenience method based on prior design discussions.
     # The deprecations are added to allow upstream developers to continue with what
     # they had already been doing. These can be removed as part of merging
@@ -29,6 +32,24 @@ module Hyrax
       # For testing, return 'true' to display the "Cannot delete" modal.
       # And return 'false' to display the delete confirmation modal.
       true
+    end
+
+    def self.find_or_create_default_collection_type
+      return find_by(machine_id: DEFAULT_ID) if exists?(machine_id: DEFAULT_ID)
+      create_default_collection_type(machine_id: DEFAULT_ID, title: DEFAULT_TITLE)
+    end
+
+    def self.create_default_collection_type(machine_id:, title:)
+      create(machine_id: machine_id, title: title) do |c|
+        c.description = 'A User Collection can be created by any user to organize their works.'
+        c.nestable = false
+        c.discoverable = true
+        c.sharable = true
+        c.allow_multiple_membership = true
+        c.require_membership = false
+        c.assigns_workflow = false
+        c.assigns_visibility = false
+      end
     end
   end
 end

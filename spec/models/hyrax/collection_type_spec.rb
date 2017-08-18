@@ -32,6 +32,15 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
   end
 
+  describe ".find_or_create_default_collection_type" do
+    subject { described_class.find_or_create_default_collection_type }
+
+    it 'creates a default collection type' do
+      subject
+      expect(described_class.exists?(machine_id: described_class::DEFAULT_ID)).to be_truthy
+    end
+  end
+
   describe "validations" do
     it "ensures the required fields have values" do
       collection_type.title = nil
