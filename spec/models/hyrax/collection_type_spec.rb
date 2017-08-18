@@ -21,18 +21,18 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   describe '#gid' do
-    it 'returns the gid when id is not nil' do
+    it 'returns the gid when id exists' do
       collection_type.id = 5
       expect(collection_type.gid.to_s).to eq 'gid://internal/hyrax-collectiontype/5'
     end
 
-    it 'returns the gid when id is nil' do
+    it 'returns nil when id is nil' do
       collection_type.id = nil
       expect(collection_type.gid).to be_nil
     end
   end
 
-  describe ".find_or_create_default_collection_type" do
+  describe "#find_or_create_default_collection_type" do
     subject { described_class.find_or_create_default_collection_type }
 
     it 'creates a default collection type' do
@@ -52,6 +52,19 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     it "ensures uniqueness" do
       is_expected.to validate_uniqueness_of(:title)
       is_expected.to validate_uniqueness_of(:machine_id)
+    end
+  end
+
+  describe '#find_by_gid' do
+    it 'returns instance of collection type when one with the gid exists' do
+      machine_id = collection_type.machine_id
+      requested_collection_type = Hyrax::CollectionType.find_by_gid('gid://internal/hyrax-collectiontype/1')
+      expect(requested_collection_type.machine_id).to eq machine_id
+    end
+
+    it 'returns nil if collection type with gid does NOT exist' do
+      requested_collection_type = Hyrax::CollectionType.find_by_gid('gid://internal/hyrax-collectiontype/NO_EXIST')
+      expect(requested_collection_type).to be_nil
     end
   end
 end
