@@ -17,7 +17,8 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:edit_dashboard_collection_path).and_return("/dashboard/collection/123/edit")
-    allow(view).to receive(:collection_path).and_return("/dashboard/collection/123")
+    allow(view).to receive(:dashboard_collection_path).and_return("/dashboard/collection/123")
+    allow(view).to receive(:collection_path).and_return("/collection/123")
 
     stub_template 'hyrax/collections/_search_form.html.erb' => 'search form'
     stub_template 'hyrax/dashboard/collections/_sort_and_per_page.html.erb' => 'sort and per page'
@@ -28,10 +29,10 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   end
 
   it 'draws the page' do
-    expect(rendered).to have_selector 'h2', text: 'Actions'
     expect(rendered).to have_link 'Edit'
     expect(rendered).to have_link 'Delete'
     expect(rendered).to have_link 'Add works'
+    expect(rendered).to have_link 'Public view of Collection'
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end
