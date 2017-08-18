@@ -22,8 +22,34 @@ module Hyrax
     alias_attribute :visibility, :assigns_visibility
     deprecation_deprecate visibility: "prefer #assigns_visibility instead"
 
+    # Find the collection type associated with the Global Identifier (gid)
+    # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @return [Hyrax::CollectionType] if record matching gid is found, an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
+    # @return [False] if record matching gid is not found
+    def self.find_by_gid(gid)
+      find(GlobalID.new(gid).model_id)
+    rescue ActiveRecord::RecordNotFound
+      false
+    end
+
+    # Find the collection type associated with the Global Identifier (gid)
+    # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
+    # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
+    def self.find_by_gid!(gid)
+      find(GlobalID.new(gid).model_id)
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'"
+    end
+
+    # Return the Global Identifier for this collection type.
+    # @return [String] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
     def gid
-      URI::GID.build app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id unless id.nil?
+      return nil if id.nil?
+      # TODO: From a modeling perspective, I'm not sure which of these we should make the <object_value>.  For now, we will store in Fedora object as string, but might want to revisit.
+      # rdf_uri = RDF::URI.new(uri_gid) # TODO: Decide if this should return RDF::URI - ActiveTriples converts this to an ActiveTriples relationship that is a new triple with <subject> = gid uri
+      uri_gid = URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id) unless id.nil? # ActiveTriples won't accept this as an <object_value>
+      uri_gid.to_s # ActiveTriples treats this string version as a literal <object_value>
     end
 
     def collections?
