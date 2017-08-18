@@ -15,7 +15,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: 
     allow(work).to receive(:edit_groups).and_return([user])
     allow(work).to receive(:edit_people).and_return([user])
     allow(work).to receive(:workflow_state).and_return('deposited')
-    stub_template '_show_document_list_menu.erb' => 'edit menu'
+    stub_template 'hyrax/dashboard/collections/_show_document_list_menu.erb' => 'edit menu'
   end
 
   it "renders works" do
