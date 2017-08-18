@@ -54,5 +54,9 @@ module Hyrax
     def total_items
       ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
     end
+
+    def collection_type_badge
+      'User Collection'
+    end
   end
 end
