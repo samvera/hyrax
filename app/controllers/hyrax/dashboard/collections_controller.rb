@@ -46,7 +46,6 @@ module Hyrax
       # The search builder to find the collections' members
       self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
 
-      # load_and_authorize_resource except: [:index, :show, :create], instance_name: :collection
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
       before_action :ensure_admin!, only: :index # index for All Collections; see also Hyrax::My::CollectionsController #index for My Collections
