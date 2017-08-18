@@ -26,7 +26,7 @@ RSpec.describe 'collection', type: :feature do
       fill_in('Related URL', with: 'http://example.com/')
 
       click_button("Create Collection")
-      expect(page).to have_content 'Works in this Collection'
+      expect(page).to have_content 'Items'
       expect(page).to have_content title
       expect(page).to have_content description
     end

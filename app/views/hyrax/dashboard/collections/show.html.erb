@@ -1,36 +1,51 @@
 <% provide :page_title, construct_page_title(@presenter.title) %>
-<div itemscope itemtype="http://schema.org/CollectionPage" class="row collection">
-  <div class="col-sm-10 pull-right">
-    <header>
-      <%= render 'hyrax/collections/collection_title', presenter: @presenter %>
-    </header>
-    <%= render 'hyrax/collections/collection_description', presenter: @presenter %>
 
+<% provide :page_header do %>
+  <h1><span class="fa fa-file"></span> <%= t('.header') %></h1>
+<% end %>
+
+<div itemscope itemtype="http://schema.org/CollectionPage" class="row collection">
+  <header>
+    <div class="col-md-12">
+      <%= render 'collection_title', presenter: @presenter %>
+    </div>
+  </header>
+
+  <div class="col-xs-3">
+      <%= render 'hyrax/collections/media_display', presenter: @presenter %>
+      <%= link_to t('.public_view_label'), collection_path(id: @presenter.id) %>
+  </div>
+  <div>
+      <%= render 'hyrax/collections/collection_description', presenter: @presenter %>
+  </div>
+
+  <div class="col-md-12">
     <% unless has_collection_search_parameters? %>
       <%= render 'show_descriptions' %>
-    <% end %>
-  </div>
-  <div class="col-sm-2">
-    <%= render 'hyrax/collections/media_display', presenter: @presenter %>
-    <% unless has_collection_search_parameters? %>
-      <%= render 'show_actions', presenter: @presenter %>
     <% end %>
   </div>
 </div>
 
 <div class="row">
-  <h2 class="col-xs-6 col-md-7 col-lg-6">
+  <div class="col-md-12 h2">
     <% if has_collection_search_parameters? %>
-        Search Results within this Collection
+        <%= t('hyrax.collections.search_results') %>
     <% else %>
-        <%= t('.works_in_collection') %>
+        <%= t('.item_count') %> (<%= @presenter.total_items %>)
     <% end %>
+    <%= link_to t('hyrax.collection.actions.add_works.label'),
+                hyrax.my_works_path(add_files_to_collection: @presenter.id),
+                title: t('hyrax.collection.actions.add_works.desc'),
+                class: 'btn btn-default pull-right' %>
   </h2>
-  <div class="col-xs-6 col-md-5 col-lg-6"><%= render 'hyrax/collections/search_form', presenter: @presenter %></div>
 </div>
 
-<%= render 'sort_and_per_page', collection: @presenter %>
+<div class="col-xs-6 col-md-5 col-lg-6 pull-right">
+  <%= render 'hyrax/collections/search_form', presenter: @presenter %>
+</div>
 
-<%= render_document_index @member_docs %>
-
-<%= render 'hyrax/collections/paginate' %>
+<div class="col-md-12">
+  <%= render 'sort_and_per_page', collection: @presenter %>
+  <%= render_document_index @member_docs %>
+  <%= render 'hyrax/collections/paginate' %>
+</div>

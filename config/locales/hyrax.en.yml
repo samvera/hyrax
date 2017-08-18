@@ -157,7 +157,7 @@ en:
           breadcrumb:       "View Set"
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
-          item_list_header: "Works in This Set"  
+          item_list_header: "Works in This Set"
       appearances:
         show:
           header:           "Appearance"
@@ -468,7 +468,10 @@ en:
         new:
           header: Create New Collection
         show:
-          works_in_collection: "Works in this Collection"
+          header: "Collection"
+          item_count: "Items"
+          public_view_label: "Public view of Collection"
+          search_results: "Search Results within this Collection"
       create_work:              "Create Work"
       current_proxies:          "Current Proxies"
       heading_actions:
