@@ -26,7 +26,15 @@ class DisableAnimationsInTestEnvironment
     # rubocop:disable Layout/IndentHeredoc
     def inject(fragment)
       disable_animations = <<-EOF
-<script type="text/javascript">(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);</script>
+<script type="text/javascript">
+(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
+
+window.onload = function() {
+  // opens all the collapsed divs in the batch edit form
+  $('div.scrolly').addClass('collapse');
+  $('div.scrolly').addClass('in');
+};
+</script>
 <style>
   * {
      -o-transition: none !important;
