@@ -13,7 +13,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
 
   describe 'editing' do
     it 'changes the value of each field for all selected works' do
-      click_on 'batch-edit'
+      find('#batch-edit').click
       fill_in_batch_edit_fields_and_verify!
       work1.reload
       work2.reload
@@ -27,38 +27,17 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
       check 'check_all'
       find('#batch-edit').click
       expect(page).to have_content('Batch Edit Descriptions')
-      batch_edit_expand("creator") do
-        page.find("input#generic_work_creator[value='NEW creator']")
-      end
-      batch_edit_expand("contributor") do
-        page.find("input#generic_work_contributor[value='NEW contributor']")
-      end
-      batch_edit_expand("description") do
-        page.find("textarea#generic_work_description", text: 'NEW description')
-      end
-      batch_edit_expand("keyword") do
-        page.find("input#generic_work_keyword[value='NEW keyword']")
-      end
-      batch_edit_expand("publisher") do
-        page.find "input#generic_work_publisher[value='NEW publisher']"
-      end
-      batch_edit_expand("date_created") do
-        page.find("input#generic_work_date_created[value='NEW date_created']")
-      end
-      batch_edit_expand("subject") do
-        page.find("input#generic_work_subject[value='NEW subject']")
-      end
-      batch_edit_expand("language") do
-        page.find("input#generic_work_language[value='NEW language']")
-      end
-      batch_edit_expand("identifier") do
-        page.find("input#generic_work_identifier[value='NEW identifier']")
-      end
-      # batch_edit_expand("based_near")
-      # expect(page).to have_css "input#generic_work_based_near[value*='NEW based_near']"
-      batch_edit_expand("related_url") do
-        page.find("input#generic_work_related_url[value='NEW related_url']")
-      end
+      expect(page).to have_css("input#generic_work_creator[value='NEW creator']")
+      expect(page).to have_css("input#generic_work_contributor[value='NEW contributor']")
+      expect(page).to have_css("textarea#generic_work_description", text: 'NEW description')
+      expect(page).to have_css("input#generic_work_keyword[value='NEW keyword']")
+      expect(page).to have_css("input#generic_work_publisher[value='NEW publisher']")
+      expect(page).to have_css("input#generic_work_date_created[value='NEW date_created']")
+      expect(page).to have_css("input#generic_work_subject[value='NEW subject']")
+      expect(page).to have_css("input#generic_work_language[value='NEW language']")
+      expect(page).to have_css("input#generic_work_identifier[value='NEW identifier']")
+      # expect(page).to have_css("input#generic_work_based_near[value*='NEW based_near']")
+      expect(page).to have_css("input#generic_work_related_url[value='NEW related_url']")
     end
   end
 
