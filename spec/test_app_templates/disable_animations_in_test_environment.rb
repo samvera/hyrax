@@ -27,7 +27,7 @@ class DisableAnimationsInTestEnvironment
     def inject(fragment)
       disable_animations = <<-EOF
 <script type="text/javascript">
-(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
+(typeof jQuery !== 'undefined') && (jQuery.fx.off = true; jQuery.support.transition = false);
 
 window.onload = function() {
   // opens all the collapsed divs in the batch edit form
