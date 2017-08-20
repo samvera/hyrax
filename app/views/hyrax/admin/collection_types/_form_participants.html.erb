@@ -1,0 +1,62 @@
+<h2><%= t('.add_participants') %></h2>
+<p><%= t('.instructions') %></p>
+<% access_options = options_for_select([['Manager', 'manager'], ['Creator', 'creator']]) %>
+<% unless @collection_type_participant.nil? %>
+  <%= simple_form_for @collection_type_participant,
+                      url: hyrax.admin_collection_type_participants_path,
+                      html: { id: 'group-participants-form' },
+                      as: :collection_type_participant do |f| %>
+      <div class="clearfix spacer">
+        <div class="form-inline">
+          <label class="col-md-2 col-xs-4 control-label">Add Group</label>
+
+          <div class="col-md-10 col-xs-8 form-group">
+            <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
+            <%= f.hidden_field :agent_type, value: 'group' %>
+            <%= f.text_field :agent_id,
+                             placeholder: "Search for a group...",
+                             class: 'form-control' %>
+            as
+            <%= f.select :access,
+                         access_options,
+                         { prompt: "Select a role..." },
+                         class: 'form-control' %>
+
+                       <%= f.submit t('.submit'), class: 'btn btn-info' %>
+          </div>
+        </div>
+      </div>
+  <% end %>
+  <%= simple_form_for @collection_type_participant,
+                      url: hyrax.admin_collection_type_participants_path,
+                      html: { id: 'user-participants-form' },
+                      as: :collection_type_participant do |f| %>
+      <div class="clearfix spacer">
+        <div class="form-inline">
+          <label class="col-md-2 col-xs-4 control-label">Add User</label>
+
+          <div class="col-md-10 col-xs-8 form-group">
+            <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
+            <%= f.hidden_field :agent_type, value: 'user' %>
+            <%= f.text_field :agent_id,
+                             placeholder: "Search for a user...",
+                             class: 'form-control' %>
+            as
+            <%= f.select :access,
+                         access_options,
+                         { prompt: "Select a role..." },
+                         class: 'form-control' %>
+
+                       <%= f.submit t('.submit'), class: 'btn btn-info' %>
+          </div>
+        </div>
+      </div>
+  <% end %>
+<% end %>
+<div>
+  <fieldset>
+    <legend><%= t('.current_participants') %></legend>
+    <%= render 'form_participant_table', access: 'managers', filter: :manager? %>
+    <%= render 'form_participant_table', access: 'creators', filter: :creator? %>
+  </fieldset>
+</div>

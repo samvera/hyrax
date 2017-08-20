@@ -38,6 +38,7 @@ module Hyrax
 
     def edit
       setup_form
+      setup_participants_form
       add_common_breadcrumbs
       add_breadcrumb t(:'hyrax.admin.collection_types.edit.header'), hyrax.edit_admin_collection_type_path
     end
@@ -75,6 +76,10 @@ module Hyrax
         @form ||= form_class.new(collection_type: @collection_type)
       end
       alias setup_form form
+
+      def setup_participants_form
+        @collection_type_participant = Hyrax::Forms::Admin::CollectionTypeParticipantForm.new(collection_type_participant: @collection_type.collection_type_participants.build)
+      end
 
       def set_collection_type
         @collection_type = Hyrax::CollectionType.find(params[:id])

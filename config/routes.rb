@@ -219,6 +219,7 @@ Hyrax::Engine.routes.draw do
     resources :workflow_roles
     resource :appearance
     resources :collection_types, except: :show
+    resources :collection_type_participants, only: [:create, :destroy]
   end
 
   resources :content_blocks, only: [] do
