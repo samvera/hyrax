@@ -5,6 +5,7 @@ FactoryGirl.define do
     transient do
       user { FactoryGirl.create(:user) }
       collection_type_settings [:nestable, :discoverable, :sharable, :allow_multiple_membership]
+      with_permission_template false
     end
     sequence(:title) { |n| ["Title #{n}"] }
 
@@ -13,6 +14,14 @@ FactoryGirl.define do
       if collection.collection_type_gid.nil?
         collection_type = FactoryGirl.create(:collection_type, *evaluator.collection_type_settings)
         collection.collection_type_gid = collection_type.gid
+      end
+    end
+
+    after(:create) do |collection, evaluator|
+      if evaluator.with_permission_template
+        attributes = { source_id: collection.id }
+        attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
+        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
     end
 

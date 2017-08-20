@@ -1,90 +1,68 @@
-<% depositor = f.object.depositor %>
+          <div id="participants" class="tab-pane">
+            <div class="panel panel-default labels">
+              <div class="panel-body">
+                <p><%= t('.note') %></p>
+                <h2><%= t('.add_sharing') %></h2>
+                <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
+                <%= simple_form_for @form.permission_template,
+                                    url: [hyrax, :dashboard, @form, :permission_template],
+                                    html: { id: 'group-participants-form' } do |f| %>
+                  <div class="clearfix spacer">
+                  <%= f.fields_for 'access_grants_attributes',
+                                   f.object.access_grants.build(agent_type: 'group'),
+                                   index: 0 do |builder| %>
+                    <div class="form-inline">
+                      <label class="col-md-2 col-xs-4 control-label"><%= t('.add_group') %></label>
 
-<fieldset>
-  <legend>
-    Share With <small>(optional)</small>
-  </legend>
+                      <div class="col-md-10 col-xs-8 form-group">
+                        <%= builder.hidden_field :agent_type %>
+                        <%= builder.text_field :agent_id,
+                                         placeholder: "Search for a group...",
+                                         class: 'form-control' %>
+                        as
+                        <%= builder.select :access,
+                                     access_options,
+                                     { prompt: "Select a role..." },
+                                     class: 'form-control' %>
 
-  <div class="alert alert-info hidden" id="save_perm_note">Permissions are
-  <strong>not</strong> saved until the &quot;Update Collection&quot; button is pressed at the bottom of the page.</div>
+                                   <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
+                      </div>
+                    </div>
+                  <% end %>
+                  </div>
+                <% end %>
 
-  <div class="alert alert-warning hidden" role="alert" id="permissions_error">
-    <span id="permissions_error_text"></span>
-  </div>
+                <%= simple_form_for @form.permission_template,
+                                    url: [hyrax, :dashboard, @form, :permission_template],
+                                    html: { id: 'user-participants-form' } do |f| %>
+                  <%= f.fields_for 'access_grants_attributes',
+                                   f.object.access_grants.build(agent_type: 'user'),
+                                   index: 0 do |builder| %>
+                    <div class="form-inline add-users">
+                      <label class="col-md-2 col-xs-4 control-label"><%= t('.add_user') %></label>
 
-  <table class="table">
-    <tr id="file_permissions">
-      <td width="20%">
-        <%= Hyrax.config.owner_permission_levels.keys[0] %>
-      </td>
-      <td width="60%">
-        <%= label_tag :owner_access, class: "control-label" do %>
-          Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
-        <% end %>
-      </td>
-    </tr>
-    <%= f.fields_for :permissions do |permission_fields| %>
-      <%# skip the public, registered, and depositor perms as they are displayed first at the top %>
-      <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
-      <tr>
-        <td>
-          <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
-        </td>
-        <td>
-          <%= permission_fields.label :agent_name, class: "control-label" do %>
-            <%= user_display_name_and_key(permission_fields.object.agent_name) %>
-          <% end %>
-          <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
-        </td>
-      </tr>
-    <% end %>
-  </table>
+                      <div class="col-md-10 col-xs-8 form-group">
+                        <%= builder.hidden_field :agent_type %>
+                        <%= builder.text_field :agent_id,
+                                         placeholder: "Search for a user..." %>
+                        as
+                        <%= builder.select :access,
+                                     access_options,
+                                     { prompt: "Select a role..." },
+                                     class: 'form-control' %>
 
-  <h4>Share work with other users</h4>
-  <p class="sr-only">Use the add button to give access to one <%=t('hyrax.account_label') %> at a time (it will be added to the list below).
-    Select the user, by name or <%= t('hyrax.account_label') %>. Then select the access level you wish to grant and click on Add this
-    <%= t('hyrax.account_label') %> to complete adding the permission.
-  </p>
-  <div class="form-group row">
-    <div class="col-sm-5">
-      <label for="new_user_name_skel" class="sr-only"><%= t('hyrax.account_label') %> (without the <%= t('hyrax.directory.suffix') %> part)</label>
-      <%= text_field_tag 'new_user_name_skel', nil %>
-    </div>
-    <div class="col-sm-4">
-      <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
-      <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
-    </div>
-    <div class="col-sm-3">
-      <button class="btn btn-default" id="add_new_user_skel">
-        <span class="sr-only">Add this <%= t('hyrax.account_label') %></span>
-        <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
-      </button>
-      <br /> <span id="directory_user_result"></span>
-    </div>
-  </div>
+                        <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
+                      </div>
+                    </div>
+                  <% end %>
+                <% end %>
 
-  <h4>Share work with groups of users</h4>
-  <p class="sr-only">Use the add button to give access to one group at a time (it will be added to the list below).</p>
-  <div class="form-group row">
-    <div class="col-sm-5">
-      <label for="new_group_name_skel" class="sr-only">Group</label>
-      <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
-    </div>
-    <div class="col-sm-4">
-      <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
-      <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
-    </div>
-    <div class="col-sm-3">
-      <span class="sr-only">Add this group</span>
-      <button class="btn btn-default" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
-      <br /><span id="directory_group_result"></span>
-    </div>
-  </div>
-
-  <script type="text/x-tmpl" id="tmpl-collection-grant">
-  <tr>
-    <td>{%= o.accessLabel %}</td>
-    <td><label class="control-label">{%= o.name %}</label> <button class="btn close">&times;</button></td>
-  </tr>
-  </script>
-</fieldset>
+                <fieldset>
+                  <legend><%= t(".current_shared") %></legend>
+                  <%= render 'form_share_table', access: 'managers', filter: :manage? %>
+                  <%= render 'form_share_table', access: 'depositors', filter: :deposit? %>
+                  <%= render 'form_share_table', access: 'viewers', filter: :view? %>
+                </fieldset>
+              </div>
+            </div>
+          </div>
