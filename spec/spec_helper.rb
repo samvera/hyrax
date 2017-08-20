@@ -39,6 +39,9 @@ require 'selenium-webdriver'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
+# See https://github.com/jeremyf/capybara-rumplestiltskin
+# Wrap Capybara matchers with sleep intervals to reduce fragility of specs.
+require 'capybara/rumplestiltskin/spindle'
 
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
