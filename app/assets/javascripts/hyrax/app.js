@@ -13,6 +13,7 @@ Hyrax = {
         this.adminSetEditor();
         this.collectionEditor();
         this.collectionTypes();
+        this.collectionTypeEditor();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.perPage();
@@ -33,6 +34,12 @@ Hyrax = {
     adminSetEditor: function() {
       var AdminSetControls = require('hyrax/admin/admin_set_controls');
       var controls = new AdminSetControls($('#admin-set-controls'));
+    },
+
+    // The collectionType edit page
+    collectionTypeEditor: function() {
+      var CollectionTypeControls = require('hyrax/admin/collection_type_controls');
+      var controls = new CollectionTypeControls($('#collection-types-controls'));
     },
 
     // The Collection edit page

@@ -5,6 +5,7 @@ module Hyrax
     validates :machine_id, presence: true, uniqueness: true
     before_save :ensure_no_collections
     before_destroy :ensure_no_collections
+    has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
     DEFAULT_ID = 'user_collection'.freeze
     DEFAULT_TITLE = 'User Collection'.freeze
