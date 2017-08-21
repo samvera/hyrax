@@ -222,124 +222,15 @@ RSpec.describe Collection, :clean_repo do
     end
   end
 
-  describe 'type properties' do
-    subject { collection }
+  describe 'collection type delegated methods' do
+    subject { build(:collection) }
 
-    let(:collection_type) { build(:collection_type) }
-
-    before do
-      allow(collection).to receive(:collection_type).and_return(collection_type)
-    end
-
-    describe '#nestable' do
-      before { collection_type.nestable = property_value }
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to be_nestable }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to be_nestable }
-      end
-    end
-
-    describe '#discoverable' do
-      before { collection_type.discoverable = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to be_discoverable }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to be_discoverable }
-      end
-    end
-
-    describe '#sharable' do
-      before { collection_type.sharable = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to be_sharable }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to be_sharable }
-      end
-    end
-
-    describe '#allow_multiple_membership' do
-      before { collection_type.allow_multiple_membership = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to allow_multiple_membership }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to allow_multiple_membership }
-      end
-    end
-
-    describe '#require_membership' do
-      before { collection_type.require_membership = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to require_membership }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to require_membership }
-      end
-    end
-
-    describe '#assigns_workflow' do
-      before { collection_type.assigns_workflow = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to assign_workflow }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to assign_workflow }
-      end
-    end
-
-    describe '#assigns_visibility' do
-      before { collection_type.assigns_visibility = property_value }
-
-      context 'when false' do
-        let(:property_value) { false }
-
-        it { is_expected.not_to assign_visibility }
-      end
-
-      context 'when true' do
-        let(:property_value) { true }
-
-        it { is_expected.to assign_visibility }
-      end
-    end
+    it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:sharable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:allow_multiple_membership?).to(:collection_type) }
+    it { is_expected.to delegate_method(:require_membership?).to(:collection_type) }
+    it { is_expected.to delegate_method(:assigns_workflow?).to(:collection_type) }
+    it { is_expected.to delegate_method(:assigns_visibility?).to(:collection_type) }
   end
 end

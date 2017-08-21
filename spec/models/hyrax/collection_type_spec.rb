@@ -1,6 +1,18 @@
 RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
   let(:collection_type) { build(:collection_type) }
 
+  describe '.collection_type_predicate_methods' do
+    subject { described_class.collection_type_predicate_methods }
+
+    it { is_expected.to be_a(Array) }
+  end
+
+  describe '#collection_type_predicate_methods' do
+    subject { described_class.new.collection_type_predicate_methods }
+
+    it { is_expected.to be_a(Array) }
+  end
+
   it "has basic metadata" do
     expect(collection_type).to respond_to(:title)
     expect(collection_type.title).not_to be_empty
