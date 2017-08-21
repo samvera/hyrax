@@ -404,6 +404,9 @@ en:
           desc: "Edit this collection"
           label: "Edit"
         header: "Actions"
+        nest_collections:
+          desc: "Nest other collections within this Collection"
+          label: "Nest collections"
       browse_view: "Browse View"
       document_list:
         edit: "Edit"
