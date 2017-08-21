@@ -9,7 +9,14 @@ RSpec.feature 'proxy', type: :feature do
       click_link "Profile"
       click_link "Edit Profile"
       expect(first("td.depositor-name")).to be_nil
-      create_proxy_using_partial(second_user)
+
+      # BEGIN create_proxy_using_partial
+      find('a.select2-choice').click
+      find(".select2-input").set(second_user.user_key)
+      expect(page).to have_css("div.select2-result-label")
+      find("div.select2-result-label").click
+      # END create_proxy_using_partial
+
       expect(page).to have_css('td.depositor-name', text: second_user.user_key)
     end
   end
