@@ -12,7 +12,11 @@ def fill_in_batch_edit_fields_and_verify!
       batch_edit_expand(field_id)
       fill_in "generic_work_#{field_id}", with: "NEW #{field_id}"
       click_button "#{field_id}_save"
-      expect(page).to have_content 'Changes Saved'
+
+      # This was `expect(page).to have_content 'Changes Saved'`, however in debugging,
+      # the `have_content` check was ignoring the `within` scoping and finding
+      # "Changes Saved" for other field areas
+      find('.status', text: 'Changes Saved')
     end
   end
 end
