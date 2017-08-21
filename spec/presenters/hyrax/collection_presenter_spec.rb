@@ -28,6 +28,18 @@ RSpec.describe Hyrax::CollectionPresenter do
   # Mock bytes so collection does not have to be saved.
   before { allow(collection).to receive(:bytes).and_return(0) }
 
+  describe "collection type methods" do
+    subject { presenter }
+
+    it { is_expected.to delegate_method(:collection_type_is_nestable?).to(:solr_document).as(:nestable?) }
+    it { is_expected.to delegate_method(:collection_type_is_discoverable?).to(:solr_document).as(:discoverable?) }
+    it { is_expected.to delegate_method(:collection_type_is_sharable?).to(:solr_document).as(:sharable?) }
+    it { is_expected.to delegate_method(:collection_type_is_allow_multiple_membership?).to(:solr_document).as(:allow_multiple_membership?) }
+    it { is_expected.to delegate_method(:collection_type_is_require_membership?).to(:solr_document).as(:require_membership?) }
+    it { is_expected.to delegate_method(:collection_type_is_assigns_workflow?).to(:solr_document).as(:assigns_workflow?) }
+    it { is_expected.to delegate_method(:collection_type_is_assigns_visibility?).to(:solr_document).as(:assigns_visibility?) }
+  end
+
   describe "#resource_type" do
     subject { presenter.resource_type }
 
