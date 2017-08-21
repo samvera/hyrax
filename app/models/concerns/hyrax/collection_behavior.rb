@@ -26,7 +26,7 @@ module Hyrax
       # before_update { |col| validate_collection_type_gid(col) }
     end
 
-    delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
+    delegate(*Hyrax::CollectionType.collection_type_predicate_methods, to: :collection_type)
 
     # Get (and set) the collection_type when accessed
     def collection_type
