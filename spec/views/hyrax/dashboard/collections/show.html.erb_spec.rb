@@ -36,11 +36,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   end
 
   it 'draws the page' do
-    # TODO: elr - Should these be checked here?  _show_actions spec tests this in more detail
-    expect(rendered).to have_link 'Edit'
-    expect(rendered).to have_link 'Delete'
-    expect(rendered).to have_link 'Add works'
-    expect(rendered).to have_link 'Public view of Collection'
     expect(rendered).to have_css('.stubbed-actions', text: 'THE ACTIONS')
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end

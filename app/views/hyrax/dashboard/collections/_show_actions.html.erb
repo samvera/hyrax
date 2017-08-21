@@ -9,8 +9,6 @@
                   hyrax.my_works_path(add_works_to_collection: presenter.id),
                   title: t('hyrax.collection.actions.add_works.desc'),
                   class: 'btn btn-default' %>
-      <%# TODO - The presenter's solr document does not have any collection_type information.
-          I am stuck on how to fix this. %>
       <% if presenter.collection_type_is_nestable? %>
         <%= link_to t('hyrax.collection.actions.nest_collections.label'),
                     hyrax.dashboard_new_nest_collection_within_path(child_id: presenter.id),
