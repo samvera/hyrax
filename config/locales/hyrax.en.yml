@@ -157,7 +157,7 @@ en:
           breadcrumb:       "View Set"
           confirm_delete:   "Are you sure you wish to delete this Administrative Set? This action cannot be undone."
           header:           "Administrative Set"
-          item_list_header: "Works in This Set"  
+          item_list_header: "Works in This Set"
       appearances:
         show:
           header:           "Appearance"
@@ -176,6 +176,29 @@ en:
         form_settings:
           instructions:    "These settings determine how collections of this type can be managed and discovered."
           warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
+        form_participants:
+          header:             "Collection Participants"
+          instructions:       "You can designate both groups and users as creators and managers of collections of this type"
+          add_participants:     "Add Participants"
+          submit:               "Add"
+          update_notice:        "Participants Updated"
+          remove_success:       "Participant Removed"
+          current_participants: "Current Participants"
+        form_participant_table:
+          managers:
+            action:             "Action"
+            agent_name:         "Collection Managers"
+            type:               "Type"
+            title:              "Managers"
+            help:               "Managers of collections of this type can edit collections other users have created, including adding to and removing works from a collection, modifying collection metadata, and deleting collections."
+            empty:              "No managers have been added to this collection type."
+          creators:
+            action:             "Action"
+            agent_name:         "Collection Creators"
+            type:               "Type"
+            title:              "Creators"
+            help:               "Creators of collections of this type can create and manage their own collections."
+            empty:              "No creators have been added to this collection type."
         index:
           breadcrumb:       "Collection Types"
           create_new_button: "Create new collection type"

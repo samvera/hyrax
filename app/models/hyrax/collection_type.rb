@@ -3,6 +3,7 @@ module Hyrax
     self.table_name = 'hyrax_collection_types'
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
+    has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
     DEFAULT_ID = 'user_collection'.freeze
     DEFAULT_TITLE = 'User Collection'.freeze
