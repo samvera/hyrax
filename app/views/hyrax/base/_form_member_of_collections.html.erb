@@ -3,5 +3,6 @@
   <%= f.input :member_of_collection_ids,
               as: :select,
               collection: f.object.collections_for_select,
+              selected: f.object.member_of_collections(params[:add_works_to_collection]),
               input_html: { class: 'form-control', multiple: true } %>
 </div>

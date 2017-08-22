@@ -826,7 +826,6 @@ es:
       defaults:
         admin_set_id: Añadir como miembro del conjunto administrativo
         based_near: Ubicación
-        collection_ids: Añadir como miembro de la colección
         creator: Creador
         date_created: Fecha de creación
         description: Resumen o Sumario
@@ -835,6 +834,7 @@ es:
         keyword: Palabra Clave
         lease_expiration_date: hasta
         license: Licencia
+        member_of_collection_ids: Añadir como miembro de la colección
         related_url: URL relacionada
         title: Título
         visibility_after_embargo: luego abrirlo a

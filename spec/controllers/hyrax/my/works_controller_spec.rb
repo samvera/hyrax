@@ -1,4 +1,3 @@
-
 RSpec.describe Hyrax::My::WorksController, type: :controller do
   let(:user) { create(:user) }
 
@@ -37,10 +36,10 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
     it { is_expected.to be_an_instance_of Hyrax::CollectionsService }
   end
 
-  context "when add_files_to_collection is provided" do
-    it "sets add_files_to_collection ivar" do
-      get :index, params: { add_files_to_collection: '12345' }
-      expect(assigns(:add_files_to_collection)).to eql('12345')
+  context "when add_works_to_collection is provided" do
+    it "sets add_works_to_collection ivar" do
+      get :index, params: { add_works_to_collection: '12345' }
+      expect(assigns(:add_works_to_collection)).to eql('12345')
     end
   end
 

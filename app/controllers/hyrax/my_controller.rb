@@ -70,7 +70,7 @@ module Hyrax
         @result_set_size = @response.response["numFound"]
         @empty_batch = batch.empty?
         @all_checked = (count_on_page == @document_list.count)
-        @add_files_to_collection = params.fetch(:add_files_to_collection, '')
+        @add_works_to_collection = params.fetch(:add_works_to_collection, '')
       end
 
       def query_solr

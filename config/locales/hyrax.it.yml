@@ -829,7 +829,6 @@ it:
       defaults:
         admin_set_id: Aggiungi come membro del set amministrativo
         based_near: luogo
-        collection_ids: Aggiungi come membro della collezione
         creator: Creatore
         date_created: data di creazione
         description: Riepilogo o Riepilogo
@@ -838,6 +837,7 @@ it:
         keyword: Parola chiave
         lease_expiration_date: fino a
         license: Licenza
+        member_of_collection_ids: Aggiungi come membro della collezione
         related_url: URL correlato
         title: Titolo
         visibility_after_embargo: Poi aprila fino a

@@ -97,6 +97,7 @@ RSpec.describe Hyrax::Forms::BatchEditForm do
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
                          :on_behalf_of,
                          :version,
+                         :add_works_to_collection,
                          :visibility_during_embargo,
                          :embargo_release_date,
                          :visibility_after_embargo,

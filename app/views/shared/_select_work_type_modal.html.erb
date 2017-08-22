@@ -11,8 +11,8 @@
             <div class="select-worktype">
               <label>
                 <input type="radio" name="payload_concern" value="<%= row_presenter.concern %>"
-                                                             data-single="<%= new_polymorphic_path([main_app, row_presenter.concern]) %>"
-                                                             data-batch="<%= hyrax.new_batch_upload_path(payload_concern: row_presenter.concern) %>">
+                                                             data-single="<%= row_presenter.switch_to_new_work_path(route_set: main_app, params: params) %>"
+                                                             data-batch="<%= row_presenter.switch_to_batch_upload_path(route_set: hyrax, params: params) %>">
                 <div class="select-work-icon">
                   <span class="<%= row_presenter.icon_class %>"></span>
                 </div>

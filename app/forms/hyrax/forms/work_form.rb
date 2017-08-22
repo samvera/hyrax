@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module Hyrax
   module Forms
     # @abstract
@@ -103,6 +104,12 @@ module Hyrax
         CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
+      # Select collection(s) based on passed-in params
+      # @return [Array] a list of collection identifiers
+      def member_of_collections(collection_ids)
+        Array.wrap(collection_ids)
+      end
+
       # Sanitize the parameters coming from the form. This ensures that the client
       # doesn't send us any more parameters than we expect.
       # In particular we are discarding any access grant parameters for works that
@@ -122,6 +129,7 @@ module Hyrax
         super + [
           :on_behalf_of,
           :version,
+          :add_works_to_collection,
           {
             work_members_attributes: [:id, :_destroy],
             based_near_attributes: [:id, :_destroy]
@@ -155,3 +163,4 @@ module Hyrax
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
