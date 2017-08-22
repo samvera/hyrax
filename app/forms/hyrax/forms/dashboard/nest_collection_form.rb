@@ -48,7 +48,21 @@ module Hyrax
           attr_accessor :query_service
 
           def default_query_service
-            raise 'TODO'
+            QueryService.new
+          end
+
+          class QueryService
+            def available_child_collections(parent:)
+              raise NotImplementedError
+            end
+
+            def available_parent_collections(child:)
+              raise NotImplementedError
+            end
+
+            def parent_and_child_can_nest?(parent:, child:)
+              raise NotImplementedError
+            end
           end
 
           def parent_and_child_can_be_nested

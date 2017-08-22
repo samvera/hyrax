@@ -9,6 +9,13 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   it { is_expected.to validate_presence_of(:parent) }
   it { is_expected.to validate_presence_of(:child) }
 
+  describe '#default_query_service' do
+    subject { described_class.new.send(:default_query_service) }
+    it { is_expected.to respond_to(:available_parent_collections) }
+    it { is_expected.to respond_to(:available_child_collections) }
+    it { is_expected.to respond_to(:parent_and_child_can_nest?) }
+  end
+
   it 'is invalid if child cannot be nested within the parent' do
     expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child).and_return(false)
     subject.valid?
