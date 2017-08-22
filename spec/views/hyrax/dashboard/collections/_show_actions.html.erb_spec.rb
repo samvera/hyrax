@@ -28,7 +28,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
     describe 'when the collection_type is nestable' do
       it 'renders a link to add_collections to this collection' do
         render
-        expect(rendered).to have_css(".actions-controls-collections .btn[href='/TODO/NEST_COLLECTION']")
+        expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.dashboard_new_nest_collection_within(child_id: presenter.id)}']")
       end
     end
     describe 'when the collection_type is not nestable' do

@@ -552,6 +552,8 @@ en:
           press_to:         "Press to"
           show_label:       "Display all details of"
         works:        "Your Works"
+      nest_collections_form:
+        create_within:          "%{child_title} has been added to %{parent_title}"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"

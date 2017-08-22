@@ -11,7 +11,7 @@
                   class: 'btn btn-default' %>
       <% if presenter.collection_type_is_nestable? %>
         <%= link_to t('hyrax.collection.actions.nest_collections.label'),
-                    '/TODO/NEST_COLLECTION',
+                    hyrax.dashboard_new_nest_collection_within(child_id: presenter.id),
                     title: t('hyrax.collection.actions.nest_collections.desc'),
                     class: 'btn btn-default' %>
       <% end %>
