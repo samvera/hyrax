@@ -1,8 +1,15 @@
 RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
-  let(:ability) { double('Ability', can?: true) }
+  let(:blacklight_config) { CatalogController.blacklight_config }
+  let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
+
+  # The admin spec short circuits much of the query
+  let(:current_ability) { instance_double(Ability, admin?: true) }
+  let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+  let(:collection_type) { create(:collection_type) }
+  let(:another_collection_type) { create(:collection_type) }
 
   describe '.available_child_collections' do
-    subject { described_class.available_child_collections(parent: parent, ability: ability) }
+    subject { described_class.available_child_collections(parent: parent, scope: scope) }
 
     describe 'given parent is not nestable?' do
       let(:parent) { double(nestable?: false) }
@@ -10,12 +17,22 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
       it { is_expected.to eq([]) }
     end
 
-    describe 'given parent is nestable?' do
-      it 'returns an array of collections of the same collection type'
+    describe 'given parent is nestable?', clean_repo: true do
+      let!(:parent) { create(:public_collection, collection_type_gid: collection_type.gid) }
+      let!(:another) { create(:public_collection, collection_type_gid: collection_type.gid) }
+      let!(:wrong_type) { create(:public_collection, collection_type_gid: another_collection_type.gid) }
+
+      before do
+        allow(parent).to receive(:nestable?).and_return(true)
+      end
+
+      it 'returns an array of collections of the same collection type excluding the given collection' do
+        expect(subject.map(&:id)).to eq([another.id])
+      end
     end
   end
   describe '.available_parent_collections' do
-    subject { described_class.available_parent_collections(child: child, ability: ability) }
+    subject { described_class.available_parent_collections(child: child, scope: scope) }
 
     describe 'given child is not nestable?' do
       let(:child) { double(nestable?: false) }
@@ -23,8 +40,18 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
       it { is_expected.to eq([]) }
     end
 
-    describe 'given child is nestable?' do
-      it 'returns an array of collections of the same collection type'
+    describe 'given child is nestable?', clean_repo: true do
+      let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid) }
+      let!(:another) { create(:public_collection, collection_type_gid: collection_type.gid) }
+      let!(:wrong_type) { create(:public_collection, collection_type_gid: another_collection_type.gid) }
+
+      before do
+        allow(child).to receive(:nestable?).and_return(true)
+      end
+
+      it 'returns an array of collections of the same collection type excluding the given collection' do
+        expect(subject.map(&:id)).to eq([another.id])
+      end
     end
   end
   describe '.parent_and_child_can_nest?' do

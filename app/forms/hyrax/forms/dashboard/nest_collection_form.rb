@@ -9,15 +9,15 @@ module Hyrax
         self.default_query_service = Hyrax::Collections::NestedCollectionQueryService
         self.default_persistence_service = Hyrax::Collections::NestedCollectionPersistenceService
 
-        # @param parent [Hyrax::Colection, NilClass]
-        # @param child [Hyrax::Colection, NilClass]
-        # @param ability [Ability]
+        # @param parent [Collection, NilClass]
+        # @param child [Collection, NilClass]
+        # @param context [#can?,#repository,#blacklight_config]
         # @param query_service [Hyrax::Collections::NestedCollectionQueryService]
         # @param persistence_service [Hyrax::Collections::NestedCollectionPersistenceService] responsible for persisting the parent/child relationship
-        def initialize(parent: nil, child: nil, ability:, query_service: default_query_service, persistence_service: default_persistence_service)
+        def initialize(parent: nil, child: nil, context:, query_service: default_query_service, persistence_service: default_persistence_service)
           self.parent = parent
           self.child = child
-          self.ability = ability
+          self.context = context
           self.query_service = query_service
           self.persistence_service = persistence_service
         end
@@ -36,18 +36,18 @@ module Hyrax
         # For the given parent, what are all of the available collections that
         # can be added as sub-collection of the parent.
         def available_child_collections
-          query_service.available_child_collections(parent: parent, ability: ability)
+          query_service.available_child_collections(parent: parent, context: context)
         end
 
         # For the given child, what are all of the available collections to
         # which the child can be added as a sub-collection.
         def available_parent_collections
-          query_service.available_parent_collections(child: child, ability: ability)
+          query_service.available_parent_collections(child: child, context: context)
         end
 
         private
 
-          attr_accessor :query_service, :persistence_service, :ability
+          attr_accessor :query_service, :persistence_service, :context
 
           def parent_and_child_can_be_nested
             if parent.try(:nestable?) && child.try(:nestable?)

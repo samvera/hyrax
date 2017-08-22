@@ -5,6 +5,18 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   let(:child) { instance_double(Collection, title: "Awesome Child") }
   let(:parent) { instance_double(Collection, title: "Uncool Parent") }
 
+  describe '#blacklight_config' do
+    subject { controller.blacklight_config }
+
+    it { is_expected.to be_a(Blacklight::Configuration) }
+  end
+
+  describe '#repository' do
+    subject { controller.repository }
+
+    it { is_expected.to be_a(Blacklight::Solr::Repository) }
+  end
+
   describe 'GET #new_within' do
     subject { get 'new_within', params: { child_id: child_id } }
 
@@ -33,10 +45,10 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       let(:form_class_with_failed_save) do
         Class.new do
           attr_reader :child, :parent
-          def initialize(parent:, child:, ability:)
+          def initialize(parent:, child:, context:)
             @parent = parent
             @child = child
-            @ability = ability
+            @context = context
           end
 
           def save
@@ -59,10 +71,10 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       let(:form_class_with_successful_save) do
         Class.new do
           attr_reader :child, :parent
-          def initialize(parent:, child:, ability:)
+          def initialize(parent:, child:, context:)
             @parent = parent
             @child = child
-            @ability = ability
+            @context = context
           end
 
           def save
