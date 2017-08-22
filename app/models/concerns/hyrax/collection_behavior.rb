@@ -15,8 +15,11 @@ module Hyrax
       validates_with HasOneTitleValidator
       self.indexer = Hyrax::CollectionIndexer
 
+      class_attribute :index_collection_type_gid_as, writer: false
+      self.index_collection_type_gid_as = [:symbol]
+
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
-        index.as :symbol
+        index.as(*index_collection_type_gid_as)
       end
 
       after_find { |col| load_collection_type_instance(col) }
@@ -72,6 +75,10 @@ module Hyrax
           collection = ActiveSupport::Inflector.tableize(name)
           "hyrax/#{collection}/#{element}".freeze
         end
+      end
+
+      def collection_type_gid_document_field_name
+        Solrizer.solr_name('collection_type_gid', *index_collection_type_gid_as)
       end
     end
 

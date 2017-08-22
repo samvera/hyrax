@@ -1,10 +1,10 @@
 RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   let(:parent) { double(nestable?: true) }
   let(:child) { double(nestable?: true) }
-  let(:ability) { double('Ability') }
+  let(:context) { double('Context') }
   let(:query_service) { double('Query Service') }
   let(:persistence_service) { double('Persistence Service', persist_nested_collection: true) }
-  let(:form) { described_class.new(parent: parent, child: child, ability: ability, query_service: query_service, persistence_service: persistence_service) }
+  let(:form) { described_class.new(parent: parent, child: child, context: context, query_service: query_service, persistence_service: persistence_service) }
 
   subject { form }
 
@@ -78,7 +78,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     subject { form.available_child_collections }
 
     it 'delegates to the underlying query_service' do
-      expect(query_service).to receive(:available_child_collections).with(parent: parent, ability: ability).and_return(:results)
+      expect(query_service).to receive(:available_child_collections).with(parent: parent, context: context).and_return(:results)
       expect(subject).to eq(:results)
     end
   end
@@ -86,7 +86,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     subject { form.available_parent_collections }
 
     it 'delegates to the underlying query_service' do
-      expect(query_service).to receive(:available_parent_collections).with(child: child, ability: ability).and_return(:results)
+      expect(query_service).to receive(:available_parent_collections).with(child: child, context: context).and_return(:results)
       expect(subject).to eq(:results)
     end
   end

@@ -2,30 +2,44 @@ module Hyrax
   module Collections
     module NestedCollectionQueryService
       # @api public
+      #
+      # What possible collections can nested within the given parent collection?
+      #
       # @param parent [Collection]
-      # @param ability [Ability]
-      def self.available_child_collections(parent:, ability:)
+      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @return [Array<SolrDocument>]
+      def self.available_child_collections(parent:, scope:)
         return [] unless parent.try(:nestable?)
-        return [] unless ability.can?(:read, parent)
-        # Query SOLR for Collections:
-        # * Of the same collection_type_gid as the given parent
-        # * That the given ability can :edit
-        # * Is not the given parent
+        return [] unless scope.can?(:read, parent)
+        query_solr(collection: parent, access: :edit, scope: scope)
       end
 
       # @api public
+      #
+      # What possible collections can the given child be nested within?
+      #
       # @param child [Collection]
-      # @param ability [Ability]
-      def self.available_parent_collections(child:, ability:)
+      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @return [Array<SolrDocument>]
+      def self.available_parent_collections(child:, scope:)
         return [] unless child.try(:nestable?)
-        return [] unless ability.can?(:edit, child)
-        # Query SOLR for Collections:
-        # * Of the same collection_type_gid as the given child
-        # * That the given ability can :read
-        # * Is not the given child
+        return [] unless scope.can?(:edit, child)
+        query_solr(collection: child, access: :read, scope: scope)
       end
 
+      # @api private
+      def self.query_solr(collection:, access:, scope:)
+        query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(access: access, collection: collection, scope: scope)
+        scope.repository.search(query_builder.query).documents
+      end
+      private_class_method :query_solr
+
       # @api public
+      #
+      # @note There is a short-circuit of logic; To be robust, we should ensure that the child and parent are in the corresponding available collections
+      #
+      # Is it valid to nest the given child within the given parent?
+      #
       # @param parent [Collection]
       # @param child [Collection]
       # @return [Boolean] true if the parent can nest the child; false otherwise
