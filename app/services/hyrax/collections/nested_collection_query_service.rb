@@ -3,16 +3,26 @@ module Hyrax
     module NestedCollectionQueryService
       # @api public
       # @param parent [Collection]
-      def self.available_child_collections(parent:)
+      # @param ability [Ability]
+      def self.available_child_collections(parent:, ability:)
         return [] unless parent.try(:nestable?)
-        # Query SOLR for Collections with the same collection_type_gid AND are not the given parent
+        return [] unless ability.can?(:read, parent)
+        # Query SOLR for Collections:
+        # * Of the same collection_type_gid as the given parent
+        # * That the given ability can :edit
+        # * Is not the given parent
       end
 
       # @api public
       # @param child [Collection]
-      def self.available_parent_collections(child:)
+      # @param ability [Ability]
+      def self.available_parent_collections(child:, ability:)
         return [] unless child.try(:nestable?)
-        # Query SOLR for Collections with the same collection_type_gid AND are not the given child
+        return [] unless ability.can?(:edit, child)
+        # Query SOLR for Collections:
+        # * Of the same collection_type_gid as the given child
+        # * That the given ability can :read
+        # * Is not the given child
       end
 
       # @api public

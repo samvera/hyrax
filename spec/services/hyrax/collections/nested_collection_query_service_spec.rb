@@ -1,6 +1,8 @@
 RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
+  let(:ability) { double('Ability', can?: true) }
+
   describe '.available_child_collections' do
-    subject { described_class.available_child_collections(parent: parent) }
+    subject { described_class.available_child_collections(parent: parent, ability: ability) }
 
     describe 'given parent is not nestable?' do
       let(:parent) { double(nestable?: false) }
@@ -13,7 +15,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
     end
   end
   describe '.available_parent_collections' do
-    subject { described_class.available_parent_collections(child: child) }
+    subject { described_class.available_parent_collections(child: child, ability: ability) }
 
     describe 'given child is not nestable?' do
       let(:child) { double(nestable?: false) }

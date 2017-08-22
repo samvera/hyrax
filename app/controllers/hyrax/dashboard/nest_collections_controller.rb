@@ -23,7 +23,7 @@ module Hyrax
           child = Collection.find(params.fetch(:child_id))
           authorize! :edit, child
           parent = params.key?(:parent_id) ? Collection.find(params[:parent_id]) : nil
-          form_class.new(child: child, parent: parent)
+          form_class.new(child: child, parent: parent, ability: current_ability)
         end
     end
   end
