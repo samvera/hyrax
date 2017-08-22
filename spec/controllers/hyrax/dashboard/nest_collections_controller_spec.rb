@@ -33,9 +33,10 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       let(:form_class_with_failed_save) do
         Class.new do
           attr_reader :child, :parent
-          def initialize(parent:, child:)
+          def initialize(parent:, child:, ability:)
             @parent = parent
             @child = child
+            @ability = ability
           end
 
           def save
@@ -58,9 +59,10 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       let(:form_class_with_successful_save) do
         Class.new do
           attr_reader :child, :parent
-          def initialize(parent:, child:)
+          def initialize(parent:, child:, ability:)
             @parent = parent
             @child = child
+            @ability = ability
           end
 
           def save
