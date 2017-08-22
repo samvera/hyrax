@@ -12,6 +12,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
   describe '.default_query_service' do
     subject { described_class.default_query_service }
+
     it { is_expected.to respond_to(:available_parent_collections) }
     it { is_expected.to respond_to(:available_child_collections) }
     it { is_expected.to respond_to(:parent_and_child_can_nest?) }
@@ -19,6 +20,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
   describe '#default_query_service' do
     subject { described_class.default_persistence_service }
+
     it { is_expected.to respond_to(:persist_nested_collection_for) }
   end
 
