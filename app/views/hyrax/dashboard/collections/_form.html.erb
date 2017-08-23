@@ -4,12 +4,16 @@
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
+      <% if @collection.discoverable? %>
       <li>
         <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
       </li>
+      <% end %>
+      <% if @collection.sharable? %>
       <li>
         <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
       </li>
+      <% end %>
     <% end %>
   </ul>
   <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
