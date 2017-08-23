@@ -51,7 +51,7 @@ module Hyrax
 
           def parent_and_child_can_be_nested
             if parent.try(:nestable?) && child.try(:nestable?)
-              return true if query_service.parent_and_child_can_nest?(parent: parent, child: child)
+              return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, context: context)
               errors.add(:parent, :cannot_have_child_nested)
               errors.add(:child, :cannot_nest_in_parent)
             else

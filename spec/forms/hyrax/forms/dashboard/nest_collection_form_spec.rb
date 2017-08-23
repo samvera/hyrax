@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   end
 
   it 'is invalid if child cannot be nested within the parent' do
-    expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child).and_return(false)
+    expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, context: context).and_return(false)
     subject.valid?
     expect(subject.errors[:parent]).to eq(["cannot have child nested within it"])
     expect(subject.errors[:child]).to eq(["cannot nest within parent"])
