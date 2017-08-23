@@ -26,7 +26,17 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
         allow(parent).to receive(:nestable?).and_return(true)
       end
 
+      describe 'and cannot edit the parent' do
+        it 'returns an empty array' do
+          expect(scope).to receive(:can?).with(:edit, parent).and_return(false)
+          expect(described_class).not_to receive(:query_solr)
+          expect(subject).to eq([])
+        end
+      end
+
       it 'returns an array of collections of the same collection type excluding the given collection' do
+        expect(scope).to receive(:can?).with(:edit, parent).and_return(true)
+        expect(described_class).to receive(:query_solr).with(collection: parent, access: :read, scope: scope).and_call_original
         expect(subject.map(&:id)).to eq([another.id])
       end
     end
@@ -49,8 +59,20 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
         allow(child).to receive(:nestable?).and_return(true)
       end
 
-      it 'returns an array of collections of the same collection type excluding the given collection' do
-        expect(subject.map(&:id)).to eq([another.id])
+      describe 'and cannot edit the child' do
+        it 'returns an empty array' do
+          expect(scope).to receive(:can?).with(:read, child).and_return(false)
+          expect(described_class).not_to receive(:query_solr)
+          expect(subject).to eq([])
+        end
+      end
+
+      describe 'and can read the child' do
+        it 'returns an array of collections of the same collection type excluding the given collection' do
+          expect(scope).to receive(:can?).with(:read, child).and_return(true)
+          expect(described_class).to receive(:query_solr).with(collection: child, access: :edit, scope: scope).and_call_original
+          expect(subject.map(&:id)).to eq([another.id])
+        end
       end
     end
   end
