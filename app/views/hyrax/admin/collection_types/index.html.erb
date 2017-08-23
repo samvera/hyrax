@@ -36,7 +36,7 @@
                  <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm' do %>
                   <%= t('helpers.action.edit') %>
                  <% end %>
-                 <% if collection_type.machine_id != 'admin_set' %>
+                 <% if !collection_type.admin_set? %>
                   <button class="btn btn-danger btn-sm delete-collection-type" data-collection-type="<%= collection_type.to_json %>" data-has-collections="<%= collection_type.collections? %>"><%= t('helpers.action.delete') %></button>
                   <% end %>
                </td>

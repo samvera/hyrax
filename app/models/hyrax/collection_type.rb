@@ -7,8 +7,14 @@ module Hyrax
     before_destroy :ensure_no_collections
     has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
-    DEFAULT_ID = 'user_collection'.freeze
-    DEFAULT_TITLE = 'User Collection'.freeze
+    USER_COLLECTION_MACHINE_ID    = 'user_collection'.freeze
+    USER_COLLECTION_DEFAULT_TITLE = 'User Collection'.freeze
+
+    ADMIN_SET_MACHINE_ID = 'admin_set'.freeze
+    ADMIN_SET_DEFAULT_TITLE = 'Admin Set'.freeze
+
+
+
 
     def title=(value)
       super
@@ -69,11 +75,19 @@ module Hyrax
       collections.count > 0
     end
 
-    def self.find_or_create_default_collection_type
-      find_by(machine_id: DEFAULT_ID) || create_default_collection_type
+    def admin_set?
+      machine_id == ADMIN_SET_MACHINE_ID
     end
 
-    def self.create_default_collection_type(machine_id: DEFAULT_ID, title: DEFAULT_TITLE)
+    def user_collection?
+      machine_id == USER_COLLECTION_MACHINE_ID
+    end
+
+    def self.find_or_create_default_collection_type
+      find_by(machine_id: USER_COLLECTION_MACHINE_ID) || create_default_collection_type
+    end
+
+    def self.create_default_collection_type(machine_id: USER_COLLECTION_MACHINE_ID, title: USER_COLLECTION_DEFAULT_TITLE)
       create(machine_id: machine_id, title: title) do |c|
         c.description = 'A User Collection can be created by any user to organize their works.'
         c.nestable = false
