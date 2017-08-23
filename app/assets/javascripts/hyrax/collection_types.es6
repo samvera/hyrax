@@ -30,6 +30,8 @@ export default class CollectionTypes {
       let dataset = event.target.dataset
       let collectionType = JSON.parse(dataset.collectionType) || null
       let hasCollections = dataset.hasCollections === 'true'
+      this.handleDelete_event_target = event.target;
+      this.collectionType_id = collectionType.id;
 
       if (hasCollections === true) {
         $('#deleteDenyModal').modal()
@@ -40,8 +42,24 @@ export default class CollectionTypes {
 
     // Confirm delete collection type
     $('.confirm-delete-collection-type').on('click', (event) => {
-      // TODO: Handle the delete functionality here
+        event.preventDefault();
+        $.ajax({
+            url: window.location.pathname + '/' + this.collectionType_id,
+            type: 'DELETE',
+            done: function(e) {
+                $(this.handleDelete_event_target).parent('td').parent('tr').remove();
+                let defaultButton = $(event.target).parent('div').find('.btn-default');
+                defaultButton.trigger( 'click' );
+            }
+        })
     })
+
+    // Confirm delete collection type
+    $('.view-collections-of-this-type').on('click', (event) => {
+        // TODO: pass filter parameter based on this.collectionType_id to collections search
+        window.location.href = '/dashboard/collections';
+    })
+
   }
 
 }
