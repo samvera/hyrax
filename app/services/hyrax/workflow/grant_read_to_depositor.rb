@@ -7,6 +7,9 @@ module Hyrax
       # @return void
       def self.call(target:, **)
         target.read_users += [target.depositor]
+        # If there are a lot of members, granting access to each could take a
+        # long time. Do this work in the background.
+        GrantReadToMembersJob.perform_later(target, target.depositor)
       end
     end
   end

@@ -66,6 +66,8 @@
 //= require hyrax/admin/admin_set/registered_users
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
+//= require hyrax/admin/collection_type_controls
+//= require hyrax/admin/collection_type/participants
 //= require hyrax/collections/editor
 //= require hyrax/editor
 //= require hyrax/editor/admin_set_widget

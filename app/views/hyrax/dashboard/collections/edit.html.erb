@@ -1,0 +1,35 @@
+<% provide :page_title, construct_page_title( t('.header', title: @form.title.first) ) %>
+
+<%= provide :page_header do %>
+  <h1><span class="fa fa-edit"></span><%= t('.header', title: @form.title.first) %></h1>
+<% end %>
+
+<% unless has_collection_search_parameters? %>
+  <div class="row">
+    <div class="col-md-12">
+      <%= render 'form' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <%= render 'edit_actions' %>
+
+          <div class="row m-t-3">
+            <h2 class="col-xs-12 col-sm-6"><%= t('hyrax.collection.edit.manage_items') %></h2>
+            <div class="col-xs-12 col-sm-6">
+              <%= render 'hyrax/collections/search_form', presenter: @collection %>
+            </div>
+          </div>
+          <%= render 'hyrax/my/did_you_mean' %>
+          <%= render 'hyrax/my/facet_selected' %>
+          <%= render 'sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
+          <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
+          <%= render 'hyrax/collections/paginate' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

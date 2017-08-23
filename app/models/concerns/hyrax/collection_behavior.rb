@@ -16,8 +16,20 @@ module Hyrax
       self.indexer = Hyrax::CollectionIndexer
 
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
-        index.as :symbol, :stored_searchable
+        index.as :symbol
       end
+
+      after_find { |col| load_collection_type_instance(col) }
+      # before_update { |col| validate_collection_type_gid(col) } # TODO: check that gid is not nil AND check that gid has not changed since it was read in (It is ok to go from nil to a value.)
+    end
+
+    delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
+
+    # Get (and set) the collection_type when accessed
+    def collection_type
+      return @collection_type if @collection_type
+      return nil if collection_type_gid.nil?
+      @collection_type = Hyrax::CollectionType.find_by_gid!(collection_type_gid)
     end
 
     attr_accessor :collection_type
@@ -78,7 +90,30 @@ module Hyrax
       ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
     end
 
+    protected
+
+      def collection_type=(collection_type)
+        unless collection_type && collection_type.is_a?(Hyrax::CollectionType) && collection_type.persisted?
+          raise ActiveRecord::AssociationTypeMismatch, 'Collection type must be a valid Hyrax::CollectionType'
+        end
+        @collection_type = collection_type
+      end
+
     private
+
+      # Load the collection_type attribute with an instance of the collection type of this collection based on the gid stored in the
+      # collection object model.  Defaults to the default collection type (i.e. user_collection) so that all collections existing
+      # before the addition of collection types do not need to be migrated.  They are assumed to be the default.
+      # @param collection [Collection] an instance of the Collection model
+      def load_collection_type_instance(collection)
+        if collection.collection_type_gid.nil?
+          collection.collection_type = Hyrax::CollectionType.find_or_create_default_collection_type
+          collection.collection_type_gid = collection.collection_type.gid
+          collection.save # do this one time on the first read by saving the gid in the collection object
+        else
+          collection.collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
+        end
+      end
 
       # Calculate the size of all the files in the work
       # @param work_id [String] identifer for a work

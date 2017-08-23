@@ -1,140 +1,71 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Batch management of works', type: :feature do
+RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   let(:current_user) { create(:user) }
   let!(:work1)       { create(:public_work, user: current_user) }
   let!(:work2)       { create(:public_work, user: current_user) }
 
   before do
-    sign_in(current_user)
+    sign_in current_user
     visit '/dashboard/my/works'
+    check 'check_all'
   end
 
-  describe 'editing and viewing multiple works' do
-    before do
-      check 'check_all'
+  describe 'editing' do
+    it 'changes the value of each field for all selected works' do
       click_on 'batch-edit'
-      fields.each do |f|
-        if f == "resource_type"
-          select_field(f, 'Book')
-        else
-          fill_in_field_fill(f)
-        end
-      end
-      fields.each { |f| fill_in_field_save(f) }
-      fields.each { |f| fill_in_field_wait(f) }
+      fill_in_batch_edit_fields_and_verify!
       work1.reload
       work2.reload
-    end
-    it 'edits each field and displays the changes', js: true do
-      expect(work1.creator).to eq ['NEW creator']
-      expect(work1.contributor).to eq ['NEW contributor']
-      expect(work1.description).to eq ['NEW description']
-      expect(work1.keyword).to eq ['NEW keyword']
-      expect(work1.publisher).to eq ['NEW publisher']
-      expect(work1.date_created).to eq ['NEW date_created']
-      expect(work1.subject).to eq ['NEW subject']
-      expect(work1.language).to eq ['NEW language']
-      expect(work1.identifier).to eq ['NEW identifier']
-      # expect(work1.based_near).to eq ['NEW based_near']
-      expect(work1.related_url).to eq ['NEW related_url']
-      expect(work1.resource_type).to eq ['Book']
-      expect(work2.creator).to eq ['NEW creator']
-      expect(work2.contributor).to eq ['NEW contributor']
-      expect(work2.description).to eq ['NEW description']
-      expect(work2.keyword).to eq ['NEW keyword']
-      expect(work2.publisher).to eq ['NEW publisher']
-      expect(work2.date_created).to eq ['NEW date_created']
-      expect(work2.subject).to eq ['NEW subject']
-      expect(work2.language).to eq ['NEW language']
-      expect(work2.identifier).to eq ['NEW identifier']
-      # expect(work2.based_near).to eq ['NEW based_near']
-      expect(work2.related_url).to eq ['NEW related_url']
-      expect(work2.resource_type).to eq ['Book']
+      batch_edit_fields.each do |field|
+        expect(work1.send(field)).to match_array("NEW #{field}")
+        expect(work2.send(field)).to match_array("NEW #{field}")
+      end
 
       # Reload the form and verify
       visit '/dashboard/my/works'
       check 'check_all'
-      click_on 'batch-edit'
+      find('#batch-edit').click
       expect(page).to have_content('Batch Edit Descriptions')
-      expand("creator")
-      expect(page).to have_css "input#generic_work_creator[value*='NEW creator']"
-      expand("contributor")
-      expect(page).to have_css "input#generic_work_contributor[value*='NEW contributor']"
-      expand("description")
-      expect(page).to have_css "textarea#generic_work_description", text: 'NEW description'
-      expand("keyword")
-      expect(page).to have_css "input#generic_work_keyword[value*='NEW keyword']"
-      expand("publisher")
-      expect(page).to have_css "input#generic_work_publisher[value*='NEW publisher']"
-      expand("date_created")
-      expect(page).to have_css "input#generic_work_date_created[value*='NEW date_created']"
-      expand("subject")
-      expect(page).to have_css "input#generic_work_subject[value*='NEW subject']"
-      expand("language")
-      expect(page).to have_css "input#generic_work_language[value*='NEW language']"
-      expand("identifier")
-      expect(page).to have_css "input#generic_work_identifier[value*='NEW identifier']"
-      # expand("based_near")
+      batch_edit_expand("creator") do
+        page.find("input#generic_work_creator[value='NEW creator']")
+      end
+      batch_edit_expand("contributor") do
+        page.find("input#generic_work_contributor[value='NEW contributor']")
+      end
+      batch_edit_expand("description") do
+        page.find("textarea#generic_work_description", text: 'NEW description')
+      end
+      batch_edit_expand("keyword") do
+        page.find("input#generic_work_keyword[value='NEW keyword']")
+      end
+      batch_edit_expand("publisher") do
+        page.find "input#generic_work_publisher[value='NEW publisher']"
+      end
+      batch_edit_expand("date_created") do
+        page.find("input#generic_work_date_created[value='NEW date_created']")
+      end
+      batch_edit_expand("subject") do
+        page.find("input#generic_work_subject[value='NEW subject']")
+      end
+      batch_edit_expand("language") do
+        page.find("input#generic_work_language[value='NEW language']")
+      end
+      batch_edit_expand("identifier") do
+        page.find("input#generic_work_identifier[value='NEW identifier']")
+      end
+      # batch_edit_expand("based_near")
       # expect(page).to have_css "input#generic_work_based_near[value*='NEW based_near']"
-      expand("related_url")
-      expect(page).to have_css "input#generic_work_related_url[value*='NEW related_url']"
-      expand("resource_type")
-      expect(page).to have_select "generic_work_resource_type", selected: 'Book'
-    end
-  end
-
-  describe 'Deleting multiple works', :clean_repo, js: true do
-    context 'Selecting all my works to delete' do
-      before do
-        visit '/dashboard/my/works'
-        check 'check_all'
-        accept_confirm { click_button 'Delete Selected' }
-      end
-      it 'Removes the works from the system' do
-        expect(GenericWork.count).to be_zero
+      batch_edit_expand("related_url") do
+        page.find("input#generic_work_related_url[value='NEW related_url']")
       end
     end
   end
 
-  def fields
-    # skipping based_near because it's a select2 field, which is hard to test via capybara
-    [
-      "creator", "contributor", "description", "keyword", "publisher", "date_created",
-      "subject", "language", "identifier", "related_url", "resource_type"
-    ]
-  end
-
-  def fill_in_field_fill(id)
-    expand(id)
-    within "#form_#{id}" do
-      fill_in "generic_work_#{id}", with: "NEW #{id}"
+  describe 'deleting' do
+    it 'destroys the selected works' do
+      accept_confirm { click_button 'Delete Selected' }
+      expect(GenericWork.count).to be_zero
     end
-  end
-
-  def fill_in_field_save(id)
-    within "#form_#{id}" do
-      click_button "#{id}_save"
-      sleep 0.1
-    end
-  end
-
-  def fill_in_field_wait(id)
-    within "#form_#{id}" do
-      expect(page).to have_content 'Changes Saved', wait: Capybara.default_max_wait_time * 5
-    end
-  end
-
-  def expand(field)
-    link = find("#expand_link_#{field}")
-    while link["class"].include?("collapsed")
-      sleep 0.1
-      link.click if link["class"].include?("collapsed")
-    end
-  end
-
-  def select_field(id, option)
-    expand(id)
-    select(option, from: "generic_work_#{id}")
   end
 end

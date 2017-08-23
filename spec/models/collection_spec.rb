@@ -120,6 +120,7 @@ RSpec.describe Collection do
   describe '#collection_type_gid' do
     it 'has a collection_type_gid' do
       subject.title = ['title']
+<<<<<<< HEAD
       subject.collection_type_gid = 'gid://internal/CollectionType/5'
       subject.save!
       expect(subject.reload.collection_type_gid).to eq 'gid://internal/CollectionType/5'
@@ -127,6 +128,93 @@ RSpec.describe Collection do
   end
 
   describe 'collection type delegated methods' do
+=======
+      subject.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
+      subject.save!
+      expect(subject.reload.collection_type_gid).to eq 'gid://internal/hyrax-collectiontype/5'
+    end
+  end
+
+  describe '#load_collection_type_instance' do
+    context 'when gid exists in collection object' do
+      let(:collection) { described_class.new(title: ['title']) }
+      let(:collection_type) { Hyrax::CollectionType.new(id: 5) }
+
+      before do
+        allow(Hyrax::CollectionType).to receive(:find_by_gid!).with('gid://internal/hyrax-collectiontype/5').and_return(collection_type)
+        allow(collection_type).to receive(:persisted?).and_return(true)
+      end
+
+      it 'loads instance of collection type based on gid' do
+        collection.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
+        collection.save!
+        col = described_class.find(collection.id)
+        expect(col.collection_type).to be_a Hyrax::CollectionType
+        expect(col.collection_type.id).to eq 5
+      end
+    end
+
+    context 'when gid in collection object is nil' do
+      let(:collection) { create(:collection, title: ['title']) }
+
+      subject { described_class.find(collection.id) }
+
+      it 'loads default collection type' do
+        expect(subject.collection_type).to be_a Hyrax::CollectionType
+        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+      end
+    end
+  end
+
+  describe '#collection_type_gid=' do
+    let(:collection) { described_class.new }
+
+    it 'sets gid' do
+      gid = 'gid://internal/hyrax-collectiontype/10'
+      collection.collection_type_gid = gid
+      expect(collection.collection_type_gid).to eq gid
+    end
+  end
+
+  describe '#collection_type' do
+    let(:collection) { described_class.new }
+
+    it 'returns nil if gid is nil' do
+      collection.collection_type_gid = nil
+      expect(collection.collection_type).to be_nil
+    end
+
+    it 'returns collection_type if already set' do
+      gid89 = 'gid://internal/hyrax-collectiontype/89'
+      allow(Hyrax::CollectionType).to receive(:find_by_gid!).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
+      collection.collection_type_gid = gid89
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type.gid).to eq gid89
+    end
+
+    it 'will not change value' do
+      gid89 = 'gid://internal/hyrax-collectiontype/89'
+      gid99 = 'gid://internal/hyrax-collectiontype/99'
+      allow(Hyrax::CollectionType).to receive(:find_by_gid!).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
+      collection.collection_type_gid = gid89
+      collection.collection_type
+      collection.collection_type_gid = gid99
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type.gid).to eq gid89
+    end
+
+    it 'throws ActiveRecord::RecordNotFound if cannot find collection type for the gid' do
+      gid = 'gid://internal/hyrax-collectiontype/999'
+      collection.collection_type_gid = gid
+      # TODO: Should we capture the ActiveRecord error and produce something nicer?
+      expect { collection.collection_type }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+    end
+  end
+
+  describe 'type properties' do
+    subject { collection }
+
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
     let(:collection_type) { build(:collection_type) }
 
     before do
@@ -134,6 +222,7 @@ RSpec.describe Collection do
     end
 
     describe '#nestable' do
+<<<<<<< HEAD
       it "returns false if collection_type's nestable property is false" do
         collection_type.nestable = false
         expect(collection.nestable?).to be_falsey
@@ -142,10 +231,24 @@ RSpec.describe Collection do
       it "returns true if collection_type's nestable property is true" do
         collection_type.nestable = true
         expect(collection.nestable?).to be_truthy
+=======
+      before { collection_type.nestable = property_value }
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_nestable }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_nestable }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#discoverable' do
+<<<<<<< HEAD
       it "returns false if collection_type's discoverable property is false" do
         collection_type.discoverable = false
         expect(collection.discoverable?).to be_falsey
@@ -154,10 +257,25 @@ RSpec.describe Collection do
       it "returns true if collection_type's discoverable property is true" do
         collection_type.discoverable = true
         expect(collection.discoverable?).to be_truthy
+=======
+      before { collection_type.discoverable = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_discoverable }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_discoverable }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#sharable' do
+<<<<<<< HEAD
       it "returns false if collection_type's sharable property is false" do
         collection_type.sharable = false
         expect(collection.sharable?).to be_falsey
@@ -166,10 +284,25 @@ RSpec.describe Collection do
       it "returns true if collection_type's sharable property is true" do
         collection_type.sharable = true
         expect(collection.sharable?).to be_truthy
+=======
+      before { collection_type.sharable = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_sharable }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_sharable }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#allow_multiple_membership' do
+<<<<<<< HEAD
       it "returns false if collection_type's allow_multiple_membership property is false" do
         collection_type.allow_multiple_membership = false
         expect(collection.allow_multiple_membership?).to be_falsey
@@ -178,10 +311,25 @@ RSpec.describe Collection do
       it "returns true if collection_type's allow_multiple_membership property is true" do
         collection_type.allow_multiple_membership = true
         expect(collection.allow_multiple_membership?).to be_truthy
+=======
+      before { collection_type.allow_multiple_membership = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to allow_multiple_membership }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to allow_multiple_membership }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#require_membership' do
+<<<<<<< HEAD
       it "returns false if collection_type's require_membership property is false" do
         collection_type.require_membership = false
         expect(collection.require_membership?).to be_falsey
@@ -190,10 +338,25 @@ RSpec.describe Collection do
       it "returns true if collection_type's require_membership property is true" do
         collection_type.require_membership = true
         expect(collection.require_membership?).to be_truthy
+=======
+      before { collection_type.require_membership = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to require_membership }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to require_membership }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#assigns_workflow' do
+<<<<<<< HEAD
       it "returns false if collection_type's assigns_workflow property is false" do
         collection_type.assigns_workflow = false
         expect(collection.assigns_workflow?).to be_falsey
@@ -202,10 +365,25 @@ RSpec.describe Collection do
       it "returns true if collection_type's assigns_workflow property is true" do
         collection_type.assigns_workflow = true
         expect(collection.assigns_workflow?).to be_truthy
+=======
+      before { collection_type.assigns_workflow = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to assign_workflow }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to assign_workflow }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
 
     describe '#assigns_visibility' do
+<<<<<<< HEAD
       it "returns false if collection_type's assigns_visibility property is false" do
         collection_type.assigns_visibility = false
         expect(collection.assigns_visibility?).to be_falsey
@@ -214,6 +392,20 @@ RSpec.describe Collection do
       it "returns true if collection_type's assigns_visibility property is true" do
         collection_type.assigns_visibility = true
         expect(collection.assigns_visibility?).to be_truthy
+=======
+      before { collection_type.assigns_visibility = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to assign_visibility }
+      end
+
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to assign_visibility }
+>>>>>>> d12ade881334676075d4495cbbb6c22b39c665ec
       end
     end
   end

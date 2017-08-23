@@ -89,12 +89,12 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
     visit '/dashboard/my/works'
 
     db_item_actions_toggle(work).click
-    accept_confirm { click_link 'Transfer Ownership of Work' }
+    click_link 'Transfer Ownership of Work'
     expect(page).to have_content I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
     new_owner_dropdown.click
     new_owner_search_field.set new_owner.user_key
     new_owner_search_result.click
     fill_in 'proxy_deposit_request[sender_comment]', with: 'Work transfer comments'
-    click_button "Transfer"
+    accept_confirm { click_button "Transfer" }
   end
 end

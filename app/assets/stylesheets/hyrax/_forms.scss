@@ -72,6 +72,10 @@ form {
     }
   }
 
+  #collapseLease .form-group {
+    padding: 0;
+  }
+
   #collapseEmbargo .form-group {
     padding: 0;
 
@@ -91,6 +95,37 @@ form {
     .help-block {
       display: inline;
       &:before {
+        content: ' ';
+      }
+    }
+  }
+}
+
+.collection-types-settings {
+
+  .form-inline {
+    label {
+      font-weight: bold;
+
+      input {
+        margin-right: 0.25em;
+      }
+    }
+
+    .control-label,
+    label {
+      display: inline;
+      padding-left: 0;
+
+      &::after {
+        content: ' ';
+      }
+    }
+
+    .help-block {
+      display: inline;
+
+      &::before {
         content: ' ';
       }
     }
