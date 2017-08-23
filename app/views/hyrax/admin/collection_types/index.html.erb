@@ -1,4 +1,5 @@
 <div class="collection-types-wrapper">
+  <% # for modal dialogue setup and interaction see app/assets/javascripts/collection_types.es6 %>
   <% provide :page_header do %>
     <h1><span class="fa fa-folder-open"></span> <%= t('.header') %></h1>
   <% end %>
@@ -36,7 +37,7 @@
                  <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm' do %>
                   <%= t('helpers.action.edit') %>
                  <% end %>
-                 <% if !collection_type.admin_set? %>
+                 <% unless collection_type.admin_set? || collection_type.user_collection? %>
                   <button class="btn btn-danger btn-sm delete-collection-type" data-collection-type="<%= collection_type.to_json %>" data-has-collections="<%= collection_type.collections? %>"><%= t('helpers.action.delete') %></button>
                   <% end %>
                </td>
@@ -73,7 +74,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
-          <button type="button" class="btn btn-primary"><%= t('.modal.view_collections') %></button>
+          <button type="button" class="btn btn-primary view-collections-of-this-type"><%= t('.modal.view_collections') %></button>
         </div>
       </div>
     </div>
