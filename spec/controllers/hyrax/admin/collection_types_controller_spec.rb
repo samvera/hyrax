@@ -99,7 +99,6 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
       {
         title: 'Collection type title',
         description: 'Description of collection type',
-        machine_id: 'collection_type_title',
         nestable: true,
         discoverable: true,
         sharable: true,
@@ -136,7 +135,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
       end
     end
 
-    describe "#create" do
+    describe "#create", :clean_repo do
       context "with valid params" do
         it "creates a new CollectionType" do
           expect do
@@ -215,7 +214,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.breadcrumbs.admin'), dashboard_path)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.sidebar.configuration'), '#')
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.index.breadcrumb'), admin_collection_types_path)
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(1))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(collection_type.to_param))
         get :edit, params: { id: collection_type.to_param }
         expect(response).to be_success
         expect(response).to render_template "layouts/dashboard"
@@ -228,11 +227,10 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
       end
     end
 
-    describe "#update" do
+    describe "#update", :clean_repo do
       let(:new_attributes) do
         {
           title: 'Improved title',
-          machine_id: 'improved-title',
           nestable: false,
           discoverable: false,
           sharable: false,
@@ -257,7 +255,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
       end
 
       context "with invalid params" do
-        let(:existing_collection_type) { create(:collection_type, title: 'Existing', machine_id: 'existing') }
+        let(:existing_collection_type) { create(:collection_type) }
         let(:invalid_attributes) { { title: existing_collection_type.title } }
 
         it "returns a success response (i.e. to display the 'edit' template)" do
@@ -270,7 +268,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller do
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.breadcrumbs.admin'), dashboard_path)
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.sidebar.configuration'), '#')
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.index.breadcrumb'), admin_collection_types_path)
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(1))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(collection_type.to_param))
           put :update, params: { id: collection_type.to_param, collection_type: invalid_attributes }, session: valid_session
           expect(response).to be_success
           expect(response).to render_template "layouts/dashboard"

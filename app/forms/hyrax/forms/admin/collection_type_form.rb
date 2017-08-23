@@ -8,7 +8,7 @@ module Hyrax
 
         delegate :title, :description, :discoverable, :nestable, :sharable,
                  :require_membership, :allow_multiple_membership, :assigns_workflow,
-                 :assigns_visibility, :id, :persisted?, to: :collection_type
+                 :assigns_visibility, :id, :collection_type_participants, :persisted?, to: :collection_type
       end
     end
   end
