@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
+RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: true do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
 
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
 
       it 'returns an array of collections of the same collection type excluding the given collection' do
         expect(scope).to receive(:can?).with(:edit, parent).and_return(true)
-        expect(described_class).to receive(:query_solr).with(collection: parent, access: :read, scope: scope).and_call_original
+        expect(described_class).to receive(:query_solr).with(collection: parent, access: :read, scope: scope, limit_to_id: nil).and_call_original
         expect(subject.map(&:id)).to eq([another.id])
       end
     end
@@ -70,17 +70,17 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
       describe 'and can read the child' do
         it 'returns an array of collections of the same collection type excluding the given collection' do
           expect(scope).to receive(:can?).with(:read, child).and_return(true)
-          expect(described_class).to receive(:query_solr).with(collection: child, access: :edit, scope: scope).and_call_original
+          expect(described_class).to receive(:query_solr).with(collection: child, access: :edit, scope: scope, limit_to_id: nil).and_call_original
           expect(subject.map(&:id)).to eq([another.id])
         end
       end
     end
   end
   describe '.parent_and_child_can_nest?' do
-    let(:child) { double(nestable?: true, collection_type_gid: 'same') }
-    let(:parent) { double(nestable?: true, collection_type_gid: 'same') }
+    let(:child) { double('Child', nestable?: true, collection_type_gid: 'same', id: 'child') }
+    let(:parent) { double('Parent', nestable?: true, collection_type_gid: 'same', id: 'parent') }
 
-    subject { described_class.parent_and_child_can_nest?(parent: parent, child: child) }
+    subject { described_class.parent_and_child_can_nest?(parent: parent, child: child, scope: scope) }
 
     describe 'given parent and child are nestable' do
       describe 'and are the same object' do
@@ -89,7 +89,17 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
         it { is_expected.to eq(false) }
       end
       describe 'and are of the same collection type' do
+        let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid) }
+        let!(:parent) { create(:public_collection, collection_type_gid: collection_type.gid) }
+
         it { is_expected.to eq(true) }
+      end
+      describe 'and the ability does not permit the actions' do
+        before do
+          expect(scope).to receive(:can?).and_return(false)
+        end
+
+        it { is_expected.to eq(false) }
       end
       describe 'and are of different collection types' do
         let(:parent) { double(nestable?: true, collection_type_gid: 'another') }
@@ -99,12 +109,12 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService do
     end
 
     describe 'given parent is not nestable?' do
-      let(:parent) { double(nestable?: false) }
+      let(:parent) { double(nestable?: false, collection_type_gid: 'same', id: 'parent') }
 
       it { is_expected.to eq(false) }
     end
     describe 'given child is not nestable?' do
-      let(:child) { double(nestable?: false) }
+      let(:child) { double(nestable?: false, collection_type_gid: 'same', id: 'child') }
 
       it { is_expected.to eq(false) }
     end
