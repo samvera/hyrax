@@ -45,7 +45,7 @@ module Hyrax
     def can_create_any_work?
       Hyrax.config.curation_concerns.any? do |curation_concern_type|
         can?(:create, curation_concern_type)
-      end && admin_set_ids_for_deposit.any?
+      end && source_ids_for_deposit.any?
     end
 
     # Override this method in your ability model if you use a different group
@@ -56,21 +56,21 @@ module Hyrax
 
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   has deposit or manage permissions to.
-    def admin_set_ids_for_deposit
-      admin_set_ids_for_roles(['deposit', 'manage'])
+    def source_ids_for_deposit
+      source_ids_for_roles(['deposit', 'manage'])
     end
 
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   has manage permissions to.
-    def admin_set_ids_for_management
-      admin_set_ids_for_roles(['manage'])
+    def source_ids_for_management
+      source_ids_for_roles(['manage'])
     end
 
     # @param [Array<String>] roles the roles to be used when searching for admin
     #   sets for the user
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   that match the roles
-    def admin_set_ids_for_roles(roles)
+    def source_ids_for_roles(roles)
       PermissionTemplateAccess.joins(:permission_template)
                               .where(agent_type: 'user',
                                      agent_id: current_user.user_key,
@@ -80,7 +80,7 @@ module Hyrax
                                                         .where(agent_type: 'group',
                                                                agent_id: user_groups,
                                                                access: roles)
-                              ).pluck('DISTINCT admin_set_id')
+                              ).pluck('DISTINCT source_id')
     end
 
     private
@@ -163,14 +163,14 @@ module Hyrax
 
       def admin_set_abilities
         can :manage, [AdminSet, Hyrax::PermissionTemplate, Hyrax::PermissionTemplateAccess] if admin?
-        can :manage_any, AdminSet if admin? || admin_set_ids_for_management.present?
+        can :manage_any, AdminSet if admin? || source_ids_for_management.present?
 
         can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplate do |template|
-          test_edit(template.admin_set_id)
+          test_edit(template.source_id)
         end
 
         can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplateAccess do |access|
-          test_edit(access.permission_template.admin_set_id)
+          test_edit(access.permission_template.source_id)
         end
 
         can :review, :submissions do

@@ -1,7 +1,7 @@
 module Hyrax
   module Admin
     class PermissionTemplatesController < ApplicationController
-      load_and_authorize_resource find_by: 'admin_set_id',
+      load_and_authorize_resource find_by: 'source_id',
                                   id_param: 'admin_set_id',
                                   class: 'Hyrax::PermissionTemplate'
 

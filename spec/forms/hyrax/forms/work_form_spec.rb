@@ -115,7 +115,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
       context "and a admin_set that allows grants has been selected" do
         let(:attributes) { { admin_set_id: admin_set.id, permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
         let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
 
         it do
@@ -132,7 +132,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
       context "and an admin_set that doesn't allow grants has been selected" do
         let(:attributes) { { admin_set_id: admin_set.id, permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
         let!(:workflow) { create(:workflow, allows_access_grant: false, active: true, permission_template_id: permission_template.id) }
 
         it { is_expected.to eq ActionController::Parameters.new(admin_set_id: admin_set.id).permit! }
