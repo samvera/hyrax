@@ -21,3 +21,9 @@ RSpec::Matchers.define :assign_workflow do
     actual && actual.assigns_workflow?
   end
 end
+
+RSpec::Matchers.define :have_collections do
+  match do |actual|
+    actual && actual.collections?
+  end
+end
