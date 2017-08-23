@@ -13,9 +13,6 @@ module Hyrax
     ADMIN_SET_MACHINE_ID = 'admin_set'.freeze
     ADMIN_SET_DEFAULT_TITLE = 'Admin Set'.freeze
 
-
-
-
     def title=(value)
       super
       assign_machine_id
