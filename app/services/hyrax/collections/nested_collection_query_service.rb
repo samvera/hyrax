@@ -32,7 +32,7 @@ module Hyrax
       # @api private
       #
       # @param collection [Collection]
-      # @param access [Symbol]
+      # @param access [Symbol] I need this kind of permission on the queried objects.
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
       def self.query_solr(collection:, access:, scope:, limit_to_id:)
