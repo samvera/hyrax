@@ -152,7 +152,7 @@ RSpec.describe Collection do
 
       it 'loads default collection type' do
         expect(subject.collection_type).to be_a Hyrax::CollectionType
-        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       end
     end
   end
