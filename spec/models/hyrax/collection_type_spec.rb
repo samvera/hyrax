@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::CollectionType, type: :model do
+RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
   let(:collection_type) { build(:collection_type) }
 
   it "has basic metadata" do
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
     it 'creates a default collection type' do
       subject
-      expect(described_class).to exist(machine_id: described_class::DEFAULT_ID)
+      expect(described_class).to exist(machine_id: described_class::USER_COLLECTION_MACHINE_ID)
     end
   end
 

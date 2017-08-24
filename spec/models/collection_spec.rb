@@ -1,4 +1,4 @@
-RSpec.describe Collection do
+RSpec.describe Collection, :clean_repo do
   let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
@@ -146,13 +146,13 @@ RSpec.describe Collection do
     end
 
     context 'when gid in collection object is nil' do
-      let(:collection) { create(:collection, title: ['title']) }
+      let(:collection) { create(:typeless_collection, title: ['title']) }
 
       subject { described_class.find(collection.id) }
 
       it 'loads default collection type' do
         expect(subject.collection_type).to be_a Hyrax::CollectionType
-        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       end
     end
   end
