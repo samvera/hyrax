@@ -10,13 +10,13 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   it "has configuration properties with defaults" do
-    expect(collection_type.nestable?).to be_truthy
-    expect(collection_type.discoverable?).to be_truthy
-    expect(collection_type.sharable?).to be_truthy
-    expect(collection_type.allow_multiple_membership?).to be_truthy
-    expect(collection_type.require_membership?).to be_falsey
-    expect(collection_type.assigns_workflow?).to be_falsey
-    expect(collection_type.assigns_visibility?).to be_falsey
+    expect(collection_type).to be_nestable
+    expect(collection_type).to be_discoverable
+    expect(collection_type).to be_sharable
+    expect(collection_type).to allow_multiple_membership
+    expect(collection_type).not_to require_membership
+    expect(collection_type).not_to assign_workflow
+    expect(collection_type).not_to assign_visibility
   end
 
   describe '#gid' do
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
     it 'creates a default collection type' do
       subject
-      expect(described_class.exists?(machine_id: described_class::USER_COLLECTION_MACHINE_ID)).to be_truthy
+      expect(described_class).to exist(machine_id: described_class::USER_COLLECTION_MACHINE_ID)
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
 
     it 'returns false if collection type with gid does NOT exist' do
-      expect(Hyrax::CollectionType.find_by_gid(nonexistent_gid)).to be_falsey
+      expect(Hyrax::CollectionType.find_by_gid(nonexistent_gid)).to eq false
     end
   end
 
@@ -91,7 +91,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
 
     it 'returns empty array if gid is nil' do
-      expect(Collection.count > 0).to be_truthy
+      expect(Collection.count).not_to be_zero
       expect(build(:collection_type).collections).to eq []
     end
   end
@@ -101,10 +101,10 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
     it 'returns true if there are any collections of this collection type' do
       create(:collection, collection_type_gid: collection_type.gid.to_s)
-      expect(collection_type.collections?).to be_truthy
+      expect(collection_type).to have_collections
     end
     it 'returns false if there are not any collections of this collection type' do
-      expect(collection_type.collections?).to be_falsey
+      expect(collection_type).not_to have_collections
     end
   end
 
@@ -124,7 +124,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
 
     it "fails if collections exist of this type" do
-      expect(collection_type.destroy).to be_falsey
+      expect(collection_type.destroy).to eq false
       expect(collection_type.errors).not_to be_empty
     end
   end
@@ -135,7 +135,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
 
     it "fails if collections exist of this type" do
-      expect(collection_type.save).to be_falsey
+      expect(collection_type.save).to eq false
       expect(collection_type.errors).not_to be_empty
     end
   end

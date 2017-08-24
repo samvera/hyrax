@@ -202,7 +202,9 @@ RSpec.describe Collection do
     end
   end
 
-  describe 'collection type delegated methods' do
+  describe 'type properties' do
+    subject { collection }
+
     let(:collection_type) { build(:collection_type) }
 
     before do
@@ -210,86 +212,113 @@ RSpec.describe Collection do
     end
 
     describe '#nestable' do
-      it "returns false if collection_type's nestable property is false" do
-        collection_type.nestable = false
-        expect(collection.nestable?).to be_falsey
+      before { collection_type.nestable = property_value }
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_nestable }
       end
 
-      it "returns true if collection_type's nestable property is true" do
-        collection_type.nestable = true
-        expect(collection.nestable?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_nestable }
       end
     end
 
     describe '#discoverable' do
-      it "returns false if collection_type's discoverable property is false" do
-        collection_type.discoverable = false
-        expect(collection.discoverable?).to be_falsey
+      before { collection_type.discoverable = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_discoverable }
       end
 
-      it "returns true if collection_type's discoverable property is true" do
-        collection_type.discoverable = true
-        expect(collection.discoverable?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_discoverable }
       end
     end
 
     describe '#sharable' do
-      it "returns false if collection_type's sharable property is false" do
-        collection_type.sharable = false
-        expect(collection.sharable?).to be_falsey
+      before { collection_type.sharable = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to be_sharable }
       end
 
-      it "returns true if collection_type's sharable property is true" do
-        collection_type.sharable = true
-        expect(collection.sharable?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to be_sharable }
       end
     end
 
     describe '#allow_multiple_membership' do
-      it "returns false if collection_type's allow_multiple_membership property is false" do
-        collection_type.allow_multiple_membership = false
-        expect(collection.allow_multiple_membership?).to be_falsey
+      before { collection_type.allow_multiple_membership = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to allow_multiple_membership }
       end
 
-      it "returns true if collection_type's allow_multiple_membership property is true" do
-        collection_type.allow_multiple_membership = true
-        expect(collection.allow_multiple_membership?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to allow_multiple_membership }
       end
     end
 
     describe '#require_membership' do
-      it "returns false if collection_type's require_membership property is false" do
-        collection_type.require_membership = false
-        expect(collection.require_membership?).to be_falsey
+      before { collection_type.require_membership = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to require_membership }
       end
 
-      it "returns true if collection_type's require_membership property is true" do
-        collection_type.require_membership = true
-        expect(collection.require_membership?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to require_membership }
       end
     end
 
     describe '#assigns_workflow' do
-      it "returns false if collection_type's assigns_workflow property is false" do
-        collection_type.assigns_workflow = false
-        expect(collection.assigns_workflow?).to be_falsey
+      before { collection_type.assigns_workflow = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to assign_workflow }
       end
 
-      it "returns true if collection_type's assigns_workflow property is true" do
-        collection_type.assigns_workflow = true
-        expect(collection.assigns_workflow?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to assign_workflow }
       end
     end
 
     describe '#assigns_visibility' do
-      it "returns false if collection_type's assigns_visibility property is false" do
-        collection_type.assigns_visibility = false
-        expect(collection.assigns_visibility?).to be_falsey
+      before { collection_type.assigns_visibility = property_value }
+
+      context 'when false' do
+        let(:property_value) { false }
+
+        it { is_expected.not_to assign_visibility }
       end
 
-      it "returns true if collection_type's assigns_visibility property is true" do
-        collection_type.assigns_visibility = true
-        expect(collection.assigns_visibility?).to be_truthy
+      context 'when true' do
+        let(:property_value) { true }
+
+        it { is_expected.to assign_visibility }
       end
     end
   end
