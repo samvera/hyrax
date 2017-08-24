@@ -203,7 +203,7 @@ RSpec.describe 'collection', type: :feature do
         find('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
-      # URL: /collections/collection-id/edit
+      # URL: /dashboard/collections/collection-id/edit
       expect(page).to have_field('collection_title', with: collection.title.first)
       expect(page).to have_field('collection_description', with: collection.description.first)
       expect(page).to have_content(work1.title.first)
@@ -225,6 +225,36 @@ RSpec.describe 'collection', type: :feature do
       expect(header).to have_content(new_title)
       expect(page).to have_content(new_description)
       expect(page).to have_content(creators.first)
+    end
+
+    context 'with discoverable set' do
+      let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable]).id }
+      let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable]).id }
+
+      it 'to true, it shows Discovery tab' do
+        visit "/dashboard/collections/#{discoverable_collection_id}"
+        expect(page).to have_link('Discovery', href: '#discovery')
+      end
+
+      it 'to false, it hides Discovery tab' do
+        visit "/dashboard/collections/#{not_discoverable_collection_id}"
+        expect(page).not_to have_link('Discovery', href: '#discovery')
+      end
+    end
+
+    context 'with sharable set' do
+      let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable]).id }
+      let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable]).id }
+
+      it 'to true, it shows Sharable tab' do
+        visit "/dashboard/collections/#{sharable_collection_id}"
+        expect(page).to have_link('Sharable', href: '#sharable')
+      end
+
+      it 'to false, it hides Sharable tab' do
+        visit "/dashboard/collections/#{not_sharable_collection_id}"
+        expect(page).not_to have_link('Sharable', href: '#sharable')
+      end
     end
   end
 

@@ -1,4 +1,4 @@
-RSpec.describe Collection do
+RSpec.describe Collection, :clean_repo do
   let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
@@ -49,7 +49,7 @@ RSpec.describe Collection do
       expect(collection.member_objects).to match_array []
     end
 
-    context "adding members" do
+    context "when adding members" do
       let(:work1) { create(:work) }
       let(:work2) { create(:work) }
       let(:work3) { create(:work) }
@@ -58,6 +58,26 @@ RSpec.describe Collection do
         collection.add_member_objects [work1.id, work2.id, work3.id]
         collection.save!
         expect(collection.reload.member_objects).to match_array [work1, work2, work3]
+      end
+
+      context 'when multiple membership checker returns a non-nil value' do
+        before do
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work1).and_return(nil_checker)
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work2).and_return(checker)
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work3).and_return(nil_checker)
+          allow(nil_checker).to receive(:check).and_return(nil)
+          allow(checker).to receive(:check).and_return(error_message)
+        end
+
+        let(:checker) { double }
+        let(:nil_checker) { double }
+        let(:error_message) { 'Error: foo bar' }
+
+        it 'fails to add the member' do
+          collection.add_member_objects [work1.id, work2.id, work3.id]
+          collection.save!
+          expect(collection.reload.member_objects).to match_array [work1, work3]
+        end
       end
     end
   end
@@ -146,13 +166,13 @@ RSpec.describe Collection do
     end
 
     context 'when gid in collection object is nil' do
-      let(:collection) { create(:collection, title: ['title']) }
+      let(:collection) { create(:typeless_collection, title: ['title']) }
 
       subject { described_class.find(collection.id) }
 
       it 'loads default collection type' do
         expect(subject.collection_type).to be_a Hyrax::CollectionType
-        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::DEFAULT_ID
+        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       end
     end
   end
