@@ -18,7 +18,7 @@ module Hyrax
     delegate :stringify_keys, :human_readable_type, :collection?, :representative_id,
              :to_s, to: :solr_document
 
-    delegate(*Hyrax::CollectionType.collection_type_predicate_methods, to: :collection_type, prefix: :collection_type_is)
+    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
 
     # @note This is an ugly hack. In working with Lynette, we discovered that the collection_type_gid
     #       was in the solr_document if the Collection was created via the UI. If the collection

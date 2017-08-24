@@ -1,14 +1,14 @@
 RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
   let(:collection_type) { build(:collection_type) }
 
-  describe '.collection_type_predicate_methods' do
-    subject { described_class.collection_type_predicate_methods }
+  describe '.collection_type_settings_methods' do
+    subject { described_class.collection_type_settings_methods }
 
     it { is_expected.to be_a(Array) }
   end
 
-  describe '#collection_type_predicate_methods' do
-    subject { described_class.new.collection_type_predicate_methods }
+  describe '#collection_type_settings_methods' do
+    subject { described_class.new.collection_type_settings_methods }
 
     it { is_expected.to be_a(Array) }
   end
