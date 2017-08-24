@@ -6,13 +6,18 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   end
   let(:ability) { double }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
+  let(:collection_type) { double }
 
   before do
     allow(document).to receive(:hydra_model).and_return(::Collection)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:can?).with(:edit, document).and_return(true)
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
+
     allow(presenter).to receive(:total_items).and_return(0)
+    allow(presenter).to receive(:collection_type).and_return(collection_type)
+    allow(collection_type).to receive(:title).and_return("User Collection")
+
     assign(:presenter, presenter)
 
     # Stub route because view specs don't handle engine routes
@@ -31,12 +36,10 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   end
 
   it 'draws the page' do
-    # TODO: elr - Should these be checked here?  _show_actions spec tests this in more detail
     expect(rendered).to have_link 'Edit'
     expect(rendered).to have_link 'Delete'
     expect(rendered).to have_link 'Add works'
     expect(rendered).to have_link 'Public view of Collection'
-    expect(rendered).to have_css('.stubbed-actions', text: 'THE ACTIONS') #
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end

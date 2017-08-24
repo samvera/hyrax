@@ -42,6 +42,8 @@ module Hyrax
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language,
              :embargo_release_date, :lease_expiration_date, :license, :date_created,
              :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
+             :title_or_label, :collection_type_gid_ssim, :create_date, :visibility, :edit_groups,
+             :edit_people,
              to: :solr_document
 
     # Terms is the list of fields displayed by
@@ -76,8 +78,7 @@ module Hyrax
     end
 
     def collection_type_badge
-      # TODO: Get from collection_type via collection_type_gid in collection document
-      'User Collection'
+      collection_type.title
     end
   end
 end
