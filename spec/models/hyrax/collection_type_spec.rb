@@ -141,13 +141,25 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
     end
   end
 
-  describe "save" do
+  describe "save (no settings changes)" do
     before do
       allow(collection_type).to receive(:collections?).and_return(true)
     end
 
-    it "fails if collections exist of this type" do
-      expect(collection_type.save).to eq false
+    it "succeeds no changes to settings are being made" do
+      expect(collection_type.save).to be true
+      expect(collection_type.errors).to be_empty
+    end
+  end
+
+  describe "save" do
+    before do
+      allow(collection_type).to receive(:collections?).and_return(true)
+      allow(collection_type).to receive(:changes).and_return('nestable' => false)
+    end
+
+    it "fails if collections exist of this type and settings are changed" do
+      expect(collection_type.save).to be false
       expect(collection_type.errors).not_to be_empty
     end
   end

@@ -3,7 +3,7 @@ module Hyrax
     self.table_name = 'hyrax_collection_types'
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
-    before_save :ensure_no_collections
+    before_save :ensure_no_settings_changes
     before_destroy :ensure_no_collections
     has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
@@ -117,6 +117,19 @@ module Hyrax
         return true unless collections?
         errors[:base] << I18n.t('hyrax.admin.collection_types.error_not_empty')
         throw :abort
+      end
+
+      def ensure_no_settings_changes
+        return true unless collections?
+        return true unless collection_type_properties_changed?
+        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        throw :abort
+      end
+
+      def collection_type_properties_changed?
+        ['nestable', 'discoverable', 'sharable', 'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility'].any? do |key|
+          key.in?(changes)
+        end
       end
   end
 end

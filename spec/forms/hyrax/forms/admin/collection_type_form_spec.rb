@@ -14,4 +14,5 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:assigns_visibility).to(:collection_type) }
   it { is_expected.to delegate_method(:id).to(:collection_type) }
   it { is_expected.to delegate_method(:persisted?).to(:collection_type) }
+  it { is_expected.to delegate_method(:collections?).to(:collection_type) }
 end
