@@ -20,12 +20,12 @@ module Hyrax
 
     class_attribute :collection_type_settings_methods, instance_writer: false
     self.collection_type_settings_methods = [:nestable?,
-                                              :discoverable?,
-                                              :sharable?,
-                                              :allow_multiple_membership?,
-                                              :require_membership?,
-                                              :assigns_workflow?,
-                                              :assigns_visibility?]
+                                             :discoverable?,
+                                             :sharable?,
+                                             :allow_multiple_membership?,
+                                             :require_membership?,
+                                             :assigns_workflow?,
+                                             :assigns_visibility?]
 
     # These are provided as a convenience method based on prior design discussions.
     # The deprecations are added to allow upstream developers to continue with what
