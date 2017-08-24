@@ -1,5 +1,5 @@
-<% id = document.id %>
-<tr id="document_<%= id %>">
+<% id = collection_presenter.id %>
+<tr id="collection_<%= id %>">
   <td>
     <div class="media">
       <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-small pull-left"></span>
@@ -7,19 +7,22 @@
         <div class="media-heading">
           <%= link_to hyrax.dashboard_collection_path(id) do %>
               <span class="sr-only"><%= t("hyrax.dashboard.my.sr.show_label") %> </span>
-              <%= document.title_or_label %>
+              <%= collection_presenter.title_or_label %>
           <% end %>
           <a href="#" class="small" title="Click for more details">
             <i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
-            <span class="sr-only"> <%= "#{t("hyrax.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
+            <span class="sr-only"> <%= "#{t("hyrax.dashboard.my.sr.detail_label")} #{collection_presenter.title_or_label}" %></span>
           </a>
         </div>
       </div>
     </div>
   </td>
-  <td class="text-center date"><%= document.create_date.try(:to_formatted_s, :standard) %> </td>
+
+  <td><%= collection_presenter.collection_type_badge %></td>
+
+  <td class="text-center date"><%=collection_presenter.create_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
-    <%= render_visibility_link(document) %>
+    <%= render_visibility_link(collection_presenter.solr_document) %>
   </td>
   <td class="text-center">
     <%= render 'hyrax/my/collection_action_menu', id: id %>
@@ -29,14 +32,14 @@
   <td colspan="4">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2"><%= t("hyrax.dashboard.my.collection_list.description") %></dt>
-      <dd class="col-xs-9 col-lg-10"><%= document.description.first %></dd>
+      <dd class="col-xs-9 col-lg-10"><%= collection_presenter.description.first %></dd>
       <dt class="col-xs-3 col-lg-2"><%= t("hyrax.dashboard.my.collection_list.edit_access") %></dt>
       <dd class="col-xs-9 col-lg-10">
-      <% if document.edit_groups.present? %>
-        <%= t("hyrax.dashboard.my.collection_list.groups") %> <%= document.edit_groups.join(', ') %>
+      <% if collection_presenter.edit_groups.present? %>
+        <%= t("hyrax.dashboard.my.collection_list.groups") %> <%= collection_presenter.edit_groups.join(', ') %>
         <br/>
       <% end %>
-        <%= t("hyrax.dashboard.my.collection_list.users") %> <%= document.edit_people.join(', ') %>
+        <%= t("hyrax.dashboard.my.collection_list.users") %> <%= collection_presenter.edit_people.join(', ') %>
       </dd>
     </dl>
   </td>

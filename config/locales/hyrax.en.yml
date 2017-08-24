@@ -529,6 +529,7 @@ en:
           works:       "Filter works:"
         heading:
           action:         "Actions"
+          collection_type: "Collection Type"
           date_uploaded:  "Date Added"
           highlighted:    "Highlighted"
           title:          "Title"
