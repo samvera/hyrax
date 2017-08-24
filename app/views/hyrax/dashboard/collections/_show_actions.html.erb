@@ -5,10 +5,15 @@
                   edit_dashboard_collection_path(presenter),
                   title: t('hyrax.collection.actions.edit.desc'),
                   class: 'btn btn-default' %>
-      <%= link_to t('hyrax.collection.actions.add_works.label'),
+      <%= link_to t('hyrax.collection.actions.add_existing_works.label'),
                   hyrax.my_works_path(add_files_to_collection: presenter.id),
-                  title: t('hyrax.collection.actions.add_works.desc'),
+                  title: t('hyrax.collection.actions.add_existing_works.desc'),
                   class: 'btn btn-default' %>
+      <%= link_to( t(:'helpers.action.work.new'),
+                  '#',
+                  data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+                  class: 'btn btn-default'
+                  ) %>
     <%end %>
 
     <% if can? :destroy, presenter.solr_document %>
