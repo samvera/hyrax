@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::CollectionType, type: :model do
+RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
   let(:collection_type) { build(:collection_type) }
 
   it "has basic metadata" do

@@ -19,7 +19,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          :identifier,
                          :based_near,
                          :related_url,
-                         :visibility]
+                         :visibility,
+                         :collection_type_gid]
     end
   end
 
@@ -120,6 +121,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          { based_near: [] },
                          { related_url: [] },
                          :visibility,
+                         :collection_type_gid,
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] }]
     end
   end

@@ -108,11 +108,20 @@ module Hyrax
         @collection.attributes = collection_params.except(:members)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
+        # TODO: There has to be a better way to handle a missing gid than setting to User Collection.
+        # TODO: Via UI, there should always be one defined.  It is missing right now because the modal isn't implemented yet
+        # TODO: But perhaps this is needed for the case when it gets called outside the context of the UI?
+        @collection.collection_type_gid ||= default_collection_type_gid
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
         else
           after_create_error
         end
+      end
+
+      def default_collection_type_gid
+        Hyrax::CollectionType.find_or_create_default_collection_type.gid
       end
 
       def after_update
@@ -136,6 +145,7 @@ module Hyrax
 
       def update
         process_member_changes
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.update(collection_params.except(:members))
           after_update
         else
