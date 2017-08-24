@@ -11,6 +11,7 @@ module Hyrax
         @discovery_permissions = extract_discovery_permissions(access)
       end
 
+      # Override for Hydra::AccessControlsEnforcement
       attr_reader :discovery_permissions
 
       self.default_processor_chain += [:with_pagination, :show_only_other_collections_of_the_same_collection_type]
@@ -29,15 +30,13 @@ module Hyrax
 
       private
 
+        ALLOWED_ACCESS_TYPES = {
+          edit: ["edit", "discover", "read"],
+          read: ["discover", "read"],
+          discover: ["discover", "read"]
+        }.freeze
         def extract_discovery_permissions(access)
-          case access
-          when :edit
-            ["edit", "discover", "read"]
-          when :read, :discover
-            ["discover", "read"]
-          else
-            []
-          end
+          ALLOWED_ACCESS_TYPES.fetch(access)
         end
     end
   end
