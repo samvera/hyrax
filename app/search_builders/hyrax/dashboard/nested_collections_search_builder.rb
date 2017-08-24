@@ -2,7 +2,7 @@ module Hyrax
   module Dashboard
     # Responsible for searching for collections of the same type that are not the given collection
     class NestedCollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
-      # @param access [Symbol] :edit, :read, :discover
+      # @param access [Symbol] :edit, :read, :discover - With the given :access what all can
       # @param collection [Collection]
       # @param scope [Object] Typically a controller that responds to #current_ability, #blackligh_config
       def initialize(access:, collection:, scope:)
@@ -30,13 +30,15 @@ module Hyrax
 
       private
 
-        ALLOWED_ACCESS_TYPES = {
-          edit: ["edit", "discover", "read"],
-          read: ["discover", "read"],
-          discover: ["discover", "read"]
+        # My intention in this implementation is that if I need at least edit access on the queried document,
+        # then I must have one of the following access-levels
+        ACCESS_LEVELS_FOR_LEVEL = {
+          edit: ["edit"],
+          read: ["edit", "read"],
+          discover: ["edit", "discover", "read"]
         }.freeze
         def extract_discovery_permissions(access)
-          ALLOWED_ACCESS_TYPES.fetch(access)
+          ACCESS_LEVELS_FOR_LEVEL.fetch(access)
         end
     end
   end
