@@ -222,6 +222,8 @@ en:
           table:
             name:           "Name"
             actions:        "Actions"
+        multiple_membership_checker:
+          error_preamble: 'Error: You have specified more than one of the same single-membership collection types'
         new:
           header:           "Create New Collection Type"
         create:

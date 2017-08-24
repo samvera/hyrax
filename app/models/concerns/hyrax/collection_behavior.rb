@@ -20,7 +20,10 @@ module Hyrax
       end
 
       after_find { |col| load_collection_type_instance(col) }
-      # before_update { |col| validate_collection_type_gid(col) } # TODO: check that gid is not nil AND check that gid has not changed since it was read in (It is ok to go from nil to a value.)
+      # @todo check that gid is not nil AND check that gid has not changed since
+      #       it was read in (It is ok to go from nil to a value.)
+      #
+      # before_update { |col| validate_collection_type_gid(col) }
     end
 
     delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
@@ -42,6 +45,12 @@ module Hyrax
     def add_member_objects(new_member_ids)
       Array(new_member_ids).each do |member_id|
         member = ActiveFedora::Base.find(member_id)
+        # @note Ideally, this would be surfaced as a warning in a flash
+        #       message. Because the member is found and saved in this model
+        #       method, I am not sure it's worth the effort to rejigger things
+        #       such that this information bubbles up to the controller and
+        #       view.
+        next if Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         member.member_of_collections << self
         member.save!
       end
