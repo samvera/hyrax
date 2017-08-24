@@ -18,8 +18,8 @@ module Hyrax
       assign_machine_id
     end
 
-    class_attribute :collection_type_predicate_methods, instance_writer: false
-    self.collection_type_predicate_methods = [:nestable?,
+    class_attribute :collection_type_settings_methods, instance_writer: false
+    self.collection_type_settings_methods = [:nestable?,
                                               :discoverable?,
                                               :sharable?,
                                               :allow_multiple_membership?,
