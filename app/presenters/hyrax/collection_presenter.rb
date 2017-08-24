@@ -24,6 +24,7 @@ module Hyrax
     #       was in the solr_document if the Collection was created via the UI. If the collection
     #       was created by factory girl then collection_type_gid was not in the solr_document.
     #       The long-term solution is to ensure that the SOLR document has some key for the collection_type.
+    # @todo Change behavior when https://github.com/samvera/hyrax/pull/1556 is integrated
     def collection_type
       @collection_type ||= begin
         collection_type_gid =

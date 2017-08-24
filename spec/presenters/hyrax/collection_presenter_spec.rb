@@ -40,6 +40,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to delegate_method(:collection_type_is_assigns_visibility?).to(:collection_type).as(:assigns_visibility?) }
   end
 
+  # NOTE: The #collection_type specs will change when we go to integrate PR 1556 (https://github.com/samvera/hyrax/pull/1556)
   describe '#collection_type', clean_repo: true do
     let(:collection_type) { create(:collection_type) }
 
