@@ -151,6 +151,15 @@ Hyrax::Engine.routes.draw do
     get '/shares',            controller: 'my/shares', action: :index, as: 'dashboard_shares'
     get '/shares/page/:page', controller: 'my/shares', action: :index
     get '/shares/facet/:id',  controller: 'my/shares', action: :facet, as: 'dashboard_shares_facet'
+    scope :collections do
+      get '/permission_template/new' => 'admin/permission_templates#new', as: :new_dashboard_collection_permission_template
+      get '/:collection_id/permission_template/edit' => 'admin/permission_templates#edit', as: :edit_dashboard_collection_permission_template
+      get '/:collection_id/permission_template' => 'admin/permission_templates#show', as: :dashboard_collection_permission_template
+      patch '/:collection_id/permission_template' => 'admin/permission_templates#update'
+      put '/:collection_id/permission_template' => 'admin/permission_templates#update'
+      delete '/:collection_id/permission_template' => 'admin/permission_templates#destroy'
+      post '/:collection_id/permission_template' => 'admin/permission_templates#create'
+    end
   end
 
   # Contact form routes
