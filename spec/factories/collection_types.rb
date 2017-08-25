@@ -17,6 +17,18 @@ FactoryGirl.define do
       description 'A user oriented collection type'
     end
 
+    factory :admin_set_collection_type do
+      title 'Admin Set'
+      description 'An administrative set collection type'
+      nestable false
+      discoverable false
+      sharable true
+      allow_multiple_membership false
+      require_membership true
+      assigns_workflow true
+      assigns_visibility true
+    end
+
     trait :nestable do
       nestable true
     end
