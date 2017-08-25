@@ -34,7 +34,11 @@ module Hyrax
           else
             solr_document.hydra_model.find(solr_document.id).collection_type_gid
           end
-        CollectionType.find_by_gid!(collection_type_gid)
+        if collection_type_gid
+          Hyrax::CollectionType.find_by_gid!(collection_type_gid)
+        else
+          Hyrax::CollectionType.find_or_create_default_collection_type
+        end
       end
     end
 
