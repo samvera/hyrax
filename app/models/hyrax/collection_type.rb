@@ -21,28 +21,18 @@ module Hyrax
     end
 
     class_attribute :collection_type_settings_methods, instance_writer: false
-    self.collection_type_settings_methods = [:nestable?,
-                                             :discoverable?,
-                                             :sharable?,
-                                             :allow_multiple_membership?,
-                                             :require_membership?,
-                                             :assigns_workflow?,
-                                             :assigns_visibility?]
+    self.collection_type_settings_methods = [:nestable?, :discoverable?, :sharable?, :allow_multiple_membership?,
+                                             :require_membership?, :assigns_workflow?, :assigns_visibility?]
 
     # These are provided as a convenience method based on prior design discussions.
     # The deprecations are added to allow upstream developers to continue with what
     # they had already been doing. These can be removed as part of merging
     # the collections-sprint branch into master (or before hand if coordinated)
     alias_attribute :discovery, :discoverable
-    deprecation_deprecate discovery: "prefer #discoverable instead"
     alias_attribute :sharing, :sharable
-    deprecation_deprecate sharing: "prefer #sharable instead"
     alias_attribute :multiple_membership, :allow_multiple_membership
-    deprecation_deprecate multiple_membership: "prefer #allow_multiple_membership instead"
     alias_attribute :workflow, :assigns_workflow
-    deprecation_deprecate workflow: "prefer #assigns_workflow instead"
     alias_attribute :visibility, :assigns_visibility
-    deprecation_deprecate visibility: "prefer #assigns_visibility instead"
 
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
@@ -143,7 +133,7 @@ module Hyrax
       end
 
       def exists_for_machine_id?(machine_id)
-        Hyrax::CollectionType.where(machine_id: machine_id).exists?
+        Hyrax::CollectionType.exists?(machine_id: machine_id)
       end
   end
 end
