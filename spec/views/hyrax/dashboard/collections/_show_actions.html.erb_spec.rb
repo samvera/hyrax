@@ -21,9 +21,9 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
       render
       expect(rendered).to have_css('.actions-controls-collections .btn[href="/path/to/edit"]')
     end
-    it 'renders add_files_to_collection link' do
+    it 'renders add_works_to_collection link' do
       render
-      expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_files_to_collection: presenter.id)}']")
+      expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
     end
     describe 'when the collection_type is nestable' do
       it 'renders a link to add_collections to this collection' do
@@ -48,9 +48,9 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
       expect(rendered).not_to have_css('.actions-controls-collections .btn[href="/path/to/edit"]')
     end
 
-    it 'does not render add_files_to_collection link' do
+    it 'does not render add_works_to_collection link' do
       render
-      expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_files_to_collection: presenter.id)}']")
+      expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
     end
 
     describe 'when the collection_type is not nestable' do

@@ -34,7 +34,7 @@
         <%= t('.item_count') %> (<%= @presenter.total_items %>)
     <% end %>
     <%= link_to t('hyrax.collection.actions.add_works.label'),
-                hyrax.my_works_path(add_files_to_collection: @presenter.id),
+                hyrax.my_works_path(add_works_to_collection: @presenter.id),
                 title: t('hyrax.collection.actions.add_works.desc'),
                 class: 'btn btn-default pull-right' %>
   </h2>
