@@ -58,6 +58,12 @@ module Hyrax
       @working_path ||= Rails.root.join('tmp', 'uploads')
     end
 
+    # Path on the local file system where where log and banners will be stored.
+    attr_writer :branding_path
+    def branding_path
+      @working_path ||= Rails.root.join('public', 'branding')
+    end
+
     attr_writer :enable_ffmpeg
     def enable_ffmpeg
       return @enable_ffmpeg unless @enable_ffmpeg.nil?

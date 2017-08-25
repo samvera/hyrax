@@ -479,6 +479,7 @@ en:
             description: "Description"
             sharing:     "Sharing"
             discovery:   "Discovery"
+            branding:    "Branding"
         form_discovery:
             open:
               label:         "Open Access"
@@ -491,6 +492,16 @@ en:
               description:   "Keep to myself with an option to share"
             para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
             para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
+        form_branding:
+            branding:
+               label: "Branding"
+               description: "Optionally, you can upload a banner image and/ro logo images to associate with this collection.  If uploaded, these images will be displayed at the top of the collection page to provide unique branding for the collection."
+            banner:
+              label: "Banner"
+              description: "An image to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is at least 120 pixels tall and 1200 pixels wide."
+            logo:
+              label: "Logo"
+              description: "One or more images to be displayed at the top of the collection pate.  For best results, upload an image (JPG, GIF orPNG) taht is 40 pixels in height.  Larger images will be resized to 40 pixels in height."
         new:
           header: Create New Collection
         show:

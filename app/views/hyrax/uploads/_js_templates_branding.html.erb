@@ -1,0 +1,113 @@
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        
+    </tr>
+{% } %}
+</script>
+
+<!-- function used by the following template -->
+<script type="text/javascript">
+  function setAllResourceTypes(resourceTypeId) {
+    var firstResourceType = $("#resource_type_" + resourceTypeId.toString())[0];
+    var selected_options = [];
+    for (var i = 0; i < firstResourceType.length; i++) {
+      if (firstResourceType.options[i].selected) {
+        selected_options.push(firstResourceType.options[i].value);
+      }
+    }
+    $(".resource_type_dropdown").each(function(index, element) {
+      for(var i=0; i< this.length; i++) {
+        this.options[i].selected =
+          $.inArray(this.options[i].value, selected_options) > -1 ? true : false;
+      }
+    });
+  }
+</script>
+
+<!-- Simpler display of files available for download. Originally from hyrax/base/_form_files -->
+<!-- TODO: further consolidate with template-download above -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+   <span class="template-download fade">
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+
+            <span class="name banner">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+                <input type="hidden" name="banner_files[]" value="{%=file.id%}">
+            </span>
+            {% if (file.error) { %}
+                <span><span class="label label-danger">Error</span> {%=file.error%}</span>
+            {% } %}
+
+            <button class="btn btn-danger delete banner" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>Remove image</span>
+            </button>            
+
+   </span>
+
+{% }  $( "p.banner" ).remove(); $( "span.banner" ).remove();  $( "button.banner" ).remove(); $("div.banner").remove(); %}
+</script>
+
+<script id="logo-template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<span class="template-download fade">
+<div class="row">
+           <div class="col-sm-3"> 
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+
+            <span class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+                <input type="hidden" name="logo_files[]" value="{%=file.id%}">
+            </span>
+
+            {% if (file.error) { %}
+                <span><span class="label label-danger">Error</span> {%=file.error%}</span>
+            {% } %}
+
+            </div>
+              <div class="col-sm-3">
+                <label for="linkurl">Link URL:   
+                  <input id="linkurl" type="text" name="linkurl[]"></input>
+                </label>            
+                <label for="alttext">Alt Text:<br>
+                  <input id="alttext" type="text" name="alttext[]"></input>
+                </label> 
+              </div>
+
+             <div class="col-sm-3">
+            <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>Remove image</span>
+            </button> 
+            </div>
+        </div>
+        </span>
+{% } %}
+</script>
+
