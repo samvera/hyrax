@@ -3,7 +3,9 @@ module Hyrax
     self.table_name = 'hyrax_collection_types'
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
-    before_save :ensure_no_settings_changes
+    before_save :ensure_no_settings_changes_for_admin_set_type
+    before_save :ensure_no_settings_changes_for_user_collection_type
+    before_save :ensure_no_settings_changes_if_collections_exist
     before_destroy :ensure_no_collections
     has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
@@ -65,11 +67,7 @@ module Hyrax
     # Return the Global Identifier for this collection type.
     # @return [String] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
     def gid
-      return nil if id.nil?
-      # TODO: From a modeling perspective, I'm not sure which of these we should make the <object_value>.  For now, we will store in Fedora object as string, but might want to revisit.
-      # rdf_uri = RDF::URI.new(uri_gid) # TODO: Decide if this should return RDF::URI - ActiveTriples converts this to an ActiveTriples relationship that is a new triple with <subject> = gid uri
-      uri_gid = URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id) unless id.nil? # ActiveTriples won't accept this as an <object_value>
-      uri_gid.to_s # ActiveTriples treats this string version as a literal <object_value>
+      URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id).to_s if id
     end
 
     def collections
@@ -119,17 +117,33 @@ module Hyrax
         throw :abort
       end
 
-      def ensure_no_settings_changes
-        return true unless collections?
-        return true unless collection_type_properties_changed?
+      def ensure_no_settings_changes_for_admin_set_type
+        return true unless admin_set? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
+        return true unless collection_type_settings_changed?
         errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
         throw :abort
       end
 
-      def collection_type_properties_changed?
-        ['nestable', 'discoverable', 'sharable', 'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility'].any? do |key|
-          key.in?(changes)
-        end
+      def ensure_no_settings_changes_for_user_collection_type
+        return true unless user_collection? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
+        return true unless collection_type_settings_changed?
+        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        throw :abort
+      end
+
+      def ensure_no_settings_changes_if_collections_exist
+        return true unless collections?
+        return true unless collection_type_settings_changed?
+        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        throw :abort
+      end
+
+      def collection_type_settings_changed?
+        (changes.keys & ['nestable', 'discoverable', 'sharable', 'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
+      end
+
+      def exists_for_machine_id?(machine_id)
+        Hyrax::CollectionType.where(machine_id: machine_id).exists?
       end
   end
 end

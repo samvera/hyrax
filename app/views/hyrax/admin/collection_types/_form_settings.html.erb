@@ -2,7 +2,7 @@
 
 <p><strong><%= t('.warning') %></strong></p>
 
-<% disabled = f.object.collections? %>
+<% disabled = (f.object.collections? || f.object.admin_set? || f.object.user_collection?) %>
 <div class="collection-types-settings">
   <div class="form-inline">
     <p><%= f.input :nestable, as: :boolean, disabled: disabled %></p>
