@@ -832,7 +832,6 @@ zh:
       defaults:
         admin_set_id: 添加管理集成员
         based_near: 地点
-        collection_ids: 添加收藏集成员
         creator: 创建者
         date_created: 创建日期
         description: 摘要
@@ -841,6 +840,7 @@ zh:
         keyword: 关键词
         lease_expiration_date: until
         license: 许可
+        member_of_collection_ids: 添加收藏集成员
         related_url: 相关链接
         title: 标题
         visibility_after_embargo: 开放

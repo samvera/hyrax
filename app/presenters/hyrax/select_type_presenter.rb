@@ -18,6 +18,22 @@ module Hyrax
       translate('name')
     end
 
+    def switch_to_new_work_path(route_set:, params:)
+      if params.key?(:add_works_to_collection)
+        route_set.new_polymorphic_path(concern, add_works_to_collection: params[:add_works_to_collection])
+      else
+        route_set.new_polymorphic_path(concern)
+      end
+    end
+
+    def switch_to_batch_upload_path(route_set:, params:)
+      if params.key?(:add_works_to_collection)
+        route_set.new_batch_upload_path(payload_concern: concern, add_works_to_collection: params[:add_works_to_collection])
+      else
+        route_set.new_batch_upload_path(payload_concern: concern)
+      end
+    end
+
     private
 
       def object_name

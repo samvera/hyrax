@@ -36,7 +36,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb
   end
 
   it "selects the right collection when instructed to do so" do
-    assign(:add_files_to_collection, collections[2][:id])
+    assign(:add_works_to_collection, collections[2][:id])
     render
     expect(rendered).not_to have_selector "#id_#{collections[0][:id]}[checked='checked']"
     expect(rendered).not_to have_selector "#id_#{collections[1][:id]}[checked='checked']"

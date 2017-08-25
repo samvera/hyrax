@@ -15,7 +15,7 @@
               <ul>
                 <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index|  %>
                   <li>
-                    <% selected = (collection.id == @add_files_to_collection) || (@add_files_to_collection.blank? && index == 0) %>
+                    <% selected = (collection.id == @add_works_to_collection) || (@add_works_to_collection.blank? && index == 0) %>
                     <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
                     <%= label_tag(:collection, collection.title_or_label, for: "id_#{collection.id}") %>
                   </li>
