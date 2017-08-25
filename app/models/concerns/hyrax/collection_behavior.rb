@@ -15,8 +15,11 @@ module Hyrax
       validates_with HasOneTitleValidator
       self.indexer = Hyrax::CollectionIndexer
 
+      class_attribute :index_collection_type_gid_as, writer: false
+      self.index_collection_type_gid_as = [:symbol]
+
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
-        index.as :symbol
+        index.as(*index_collection_type_gid_as)
       end
 
       after_find { |col| load_collection_type_instance(col) }
@@ -26,7 +29,7 @@ module Hyrax
       # before_update { |col| validate_collection_type_gid(col) }
     end
 
-    delegate :nestable?, :discoverable?, :sharable?, :allow_multiple_membership?, :require_membership?, :assigns_workflow?, :assigns_visibility?, to: :collection_type
+    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type)
 
     # Get (and set) the collection_type when accessed
     def collection_type
@@ -72,6 +75,10 @@ module Hyrax
           collection = ActiveSupport::Inflector.tableize(name)
           "hyrax/#{collection}/#{element}".freeze
         end
+      end
+
+      def collection_type_gid_document_field_name
+        Solrizer.solr_name('collection_type_gid', *index_collection_type_gid_as)
       end
     end
 

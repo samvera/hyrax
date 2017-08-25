@@ -5,6 +5,9 @@ en:
   activemodel:
     errors:
       messages:
+        is_not_nestable: "is not nestable"
+        cannot_have_child_nested: "cannot have child nested within it"
+        cannot_nest_in_parent: "cannot nest within parent"
         conflict: "Your changes could not be saved because another user (or background job) updated this %{model} after you began editing. Please make sure all file attachments have completed successfully and try again. This form has refreshed with the most recent saved copy of the %{model}."
   blacklight:
     search:
@@ -404,6 +407,9 @@ en:
           desc: "Edit this collection"
           label: "Edit"
         header: "Actions"
+        nest_collections:
+          desc: "Nest other collections within this Collection"
+          label: "Nest collections"
       browse_view: "Browse View"
       document_list:
         edit: "Edit"
@@ -546,6 +552,8 @@ en:
           press_to:         "Press to"
           show_label:       "Display all details of"
         works:        "Your Works"
+      nest_collections_form:
+        create_within:          "%{child_title} has been added to %{parent_title}"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"

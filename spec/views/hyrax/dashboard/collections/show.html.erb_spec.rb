@@ -23,16 +23,20 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     stub_template 'hyrax/collections/_search_form.html.erb' => 'search form'
     stub_template 'hyrax/dashboard/collections/_sort_and_per_page.html.erb' => 'sort and per page'
     stub_template '_document_list.html.erb' => 'document list'
+    # This is tested ./spec/views/hyrax/dashboard/collections/_show_actions.html.erb_spec.rb
+    stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE ACTIONS</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
     stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     render
   end
 
   it 'draws the page' do
+    # TODO: elr - Should these be checked here?  _show_actions spec tests this in more detail
     expect(rendered).to have_link 'Edit'
     expect(rendered).to have_link 'Delete'
     expect(rendered).to have_link 'Add works'
     expect(rendered).to have_link 'Public view of Collection'
+    expect(rendered).to have_css('.stubbed-actions', text: 'THE ACTIONS') #
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end

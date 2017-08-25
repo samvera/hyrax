@@ -1,8 +1,9 @@
-RSpec.describe 'collection', type: :feature do
+RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:user) { create(:user) }
+  let(:collection_type) { create(:collection_type) }
 
-  let(:collection1) { create(:public_collection, user: user) }
-  let(:collection2) { create(:public_collection, user: user) }
+  let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
+  let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
 
   describe 'create collection' do
     before do
