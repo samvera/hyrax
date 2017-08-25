@@ -1,5 +1,5 @@
 <% id = collection_presenter.id %>
-<tr id="collection_<%= id %>">
+<tr id="document_<%= id %>">
   <td>
     <div class="media">
       <span class="<%= Hyrax::ModelIcon.css_class_for(Collection) %> collection-icon-small pull-left"></span>
@@ -18,7 +18,7 @@
     </div>
   </td>
 
-  <td><%= collection_presenter.collection_type_badge %></td>
+  <td class="collection_type"><%= collection_presenter.collection_type_badge %></td>
 
   <td class="text-center date"><%=collection_presenter.create_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
