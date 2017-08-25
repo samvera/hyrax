@@ -164,7 +164,7 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
 
       it "fails if collections exist of this type and settings are changed" do
         expect(collection_type.save).to be false
-        expect(collection_type.errors).not_to be_empty
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for a type that has collections"
       end
     end
 
@@ -177,11 +177,11 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
 
       it 'fails if settings are changed' do
         expect(collection_type.save).to be false
-        expect(collection_type.errors).not_to be_empty
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for the Administrative Set type"
       end
     end
 
-    context 'for admin set collection type' do
+    context 'for user collection type' do
       let(:collection_type) { create(:user_collection_type) }
 
       before do
@@ -190,7 +190,7 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
 
       it 'fails if settings are changed' do
         expect(collection_type.save).to be false
-        expect(collection_type.errors).not_to be_empty
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for the User Collection type"
       end
     end
   end

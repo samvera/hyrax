@@ -113,28 +113,28 @@ module Hyrax
 
       def ensure_no_collections
         return true unless collections?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.error_not_empty')
+        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.not_empty')
         throw :abort
       end
 
       def ensure_no_settings_changes_for_admin_set_type
         return true unless admin_set? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
         return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_admin_sets')
         throw :abort
       end
 
       def ensure_no_settings_changes_for_user_collection_type
         return true unless user_collection? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
         return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_user_collections')
         throw :abort
       end
 
       def ensure_no_settings_changes_if_collections_exist
         return true unless collections?
         return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.error_settings_changes')
+        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_if_not_empty')
         throw :abort
       end
 
