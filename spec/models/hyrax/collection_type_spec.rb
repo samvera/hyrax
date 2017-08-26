@@ -141,14 +141,57 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
     end
   end
 
-  describe "save" do
+  describe "save (no settings changes)" do
     before do
       allow(collection_type).to receive(:collections?).and_return(true)
     end
 
-    it "fails if collections exist of this type" do
-      expect(collection_type.save).to eq false
-      expect(collection_type.errors).not_to be_empty
+    it "succeeds no changes to settings are being made" do
+      expect(collection_type.save).to be true
+      expect(collection_type.errors).to be_empty
+    end
+  end
+
+  describe "save" do
+    before do
+      allow(collection_type).to receive(:changes).and_return('nestable' => false)
+    end
+
+    context 'for non-special collection type' do
+      before do
+        allow(collection_type).to receive(:collections?).and_return(true)
+      end
+
+      it "fails if collections exist of this type and settings are changed" do
+        expect(collection_type.save).to be false
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for a type that has collections"
+      end
+    end
+
+    context 'for admin set collection type' do
+      let(:collection_type) { create(:admin_set_collection_type) }
+
+      before do
+        allow(collection_type).to receive(:collections?).and_return(false)
+      end
+
+      it 'fails if settings are changed' do
+        expect(collection_type.save).to be false
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for the Administrative Set type"
+      end
+    end
+
+    context 'for user collection type' do
+      let(:collection_type) { create(:user_collection_type) }
+
+      before do
+        allow(collection_type).to receive(:collections?).and_return(false)
+      end
+
+      it 'fails if settings are changed' do
+        expect(collection_type.save).to be false
+        expect(collection_type.errors.messages[:base].first).to eq "Collection type settings cannot be altered for the User Collection type"
+      end
     end
   end
 end

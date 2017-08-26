@@ -235,7 +235,11 @@ en:
           notification:     "The collection type %{name} has been updated."
         destroy:
           notification:     "The collection type %{name} has been deleted."
-        error_not_empty:    "Collection type cannot be altered as it has collections"
+        errors:
+          no_settings_change_for_admin_sets: "Collection type settings cannot be altered for the Administrative Set type"
+          no_settings_change_for_user_collections: "Collection type settings cannot be altered for the User Collection type"
+          no_settings_change_if_not_empty: "Collection type settings cannot be altered for a type that has collections"
+          not_empty: "Collection type cannot be altered as it has collections"
       features:
         index:
           header:           Features
