@@ -142,7 +142,7 @@ module Hyrax
       # @return Sipity::Workflow the current active workflow for the given AdminSet
       def self.workflow_for(admin_set_id:)
         begin
-          workflow = Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow
+          workflow = Hyrax::PermissionTemplate.find_by!(source_id: admin_set_id).active_workflow
         rescue ActiveRecord::RecordNotFound
           raise "Missing permission template for AdminSet(id:#{admin_set_id})"
         end

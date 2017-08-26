@@ -28,7 +28,7 @@ RSpec.feature "Workflow state changes", type: :feature do
 
   let(:workflow) { Sipity::Workflow.find_by!(name: workflow_name, permission_template: permission_template) }
   let(:work) { create(:work, user: depositing_user, admin_set: admin_set) }
-  let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+  let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
   before do
     allow(::User.group_service).to receive(:byname).and_return(depositing_user.user_key => ['admin'], approving_user.user_key => ['admin'])

@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
@@ -172,7 +172,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with modifying release_period from 'fixed' to 'no_delay'" do
       let(:permission_template) do
         create(:permission_template,
-               admin_set_id: admin_set.id,
+               source_id: admin_set.id,
                visibility: "open",
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
                release_date: today + 1.month)
@@ -195,7 +195,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with modifying release 'varies' from date specified to embargo specified" do
       let(:permission_template) do
         create(:permission_template,
-               admin_set_id: admin_set.id,
+               source_id: admin_set.id,
                visibility: "open",
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
                release_date: today + 1.month)
@@ -218,7 +218,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
 
     context "for a workflow change" do
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, with_active_workflow: true) }
+      let(:permission_template) { create(:permission_template, source_id: admin_set.id, with_active_workflow: true) }
       let(:new_workflow) { create(:workflow, permission_template: permission_template, active: false) }
       let(:input_params) do
         ActionController::Parameters.new(
@@ -244,7 +244,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
     let(:permission_template) do
       create(:permission_template,
-             admin_set_id: admin_set.id,
+             source_id: admin_set.id,
              access_grants_attributes:
                [{ agent_type: 'user',
                   agent_id: user.user_key,
@@ -274,7 +274,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#validate_visibility_combinations" do
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
     context "validate all release option attribute combinations" do
       let(:visibility) { '' } # default values
@@ -377,7 +377,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with release before date specified" do
       let(:permission_template) do
         create(:permission_template,
-               admin_set_id: admin_set.id,
+               source_id: admin_set.id,
                visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE,
                release_date: today + 1.month)
@@ -392,7 +392,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with release embargo specified" do
       let(:permission_template) do
         create(:permission_template,
-               admin_set_id: admin_set.id,
+               source_id: admin_set.id,
                visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
       end
@@ -406,7 +406,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     context "with release no-delay (now) selected" do
       let(:permission_template) do
         create(:permission_template,
-               admin_set_id: admin_set.id,
+               source_id: admin_set.id,
                visibility: '',
                release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
       end
@@ -419,7 +419,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#permission_template_update_params" do
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
     subject { form.send(:permission_template_update_params, input_params) }
 

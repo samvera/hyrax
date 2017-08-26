@@ -62,7 +62,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       subject { service.create }
 
       context "when the admin_set is valid" do
-        let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
+        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
         let(:grants) { permission_template.access_grants }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
