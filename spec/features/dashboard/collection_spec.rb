@@ -2,6 +2,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type) }
+  let(:user_collection_type) { create(:user_collection_type) }
 
   let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
@@ -73,6 +74,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'create collection' do
     before do
+      collection_type
+      user_collection_type
+
       sign_in user
       visit '/dashboard/my/collections'
     end
@@ -80,13 +84,18 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let(:title) { "Test Collection" }
     let(:description) { "Description for collection we are testing." }
 
-    it "makes a new collection" do
-      click_link "New Collection"
-      expect(page).to have_content 'Create New Collection'
-      click_link('Additional fields')
+    it "makes a new collection", :js do
+      click_button "New Collection"
+      expect(page).to have_content 'Select type of collection'
 
-      expect(page).to have_selector "input.collection_creator.multi_value"
+      choose('User Collection')
+      click_on('Create collection')
+
+      expect(page).to have_content 'Create New Collection'
       expect(page).to have_selector "input.collection_title.multi_value"
+
+      click_link('Additional fields')
+      expect(page).to have_selector "input.collection_creator.multi_value"
 
       fill_in('Title', with: title)
       fill_in('Abstract or Summary', with: description)

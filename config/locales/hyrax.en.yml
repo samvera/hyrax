@@ -540,6 +540,10 @@ en:
           item_count: "Items"
           public_view_label: "Public view of Collection"
           search_results: "Search Results within this Collection"
+      collection_type_actions:
+        close:                        "Close"
+        create_collection:            "Create collection"
+        select_type_of_collection:    "Select type of collection"
       create_work:              "Create Work"
       current_proxies:          "Current Proxies"
       heading_actions:

@@ -9,6 +9,7 @@ Hyrax = {
         this.workEditor();
         this.fileManager();
         this.selectWorkType();
+        this.selectCollectionType();
         this.datatable();
         this.adminSetEditor();
         this.collectionEditor();
@@ -120,6 +121,14 @@ Hyrax = {
         var SelectWorkType = require('hyrax/select_work_type');
         $("[data-behavior=select-work]").each(function () {
             new SelectWorkType($(this));
+        });
+    },
+
+    // Popover menu to select the type when creating a new collection
+    selectCollectionType: function () {
+        var SelectCollectionType = require('hyrax/select_collection_type');
+        $("[data-behavior=select-collection]").each(function () {
+            new SelectCollectionType($(this)); // eslint-disable-line no-new
         });
     },
 
