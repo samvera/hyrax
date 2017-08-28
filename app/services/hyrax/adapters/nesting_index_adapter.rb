@@ -9,14 +9,22 @@ module Hyrax
       def self.find_preservation_document_by(id:)
         # Not everything is guaranteed to have library_collection_ids
         # If it doesn't have it, what do we do?
-        fedora_object = ActiveFedora::Base.find(id)
-        parent_ids =
-          if fedora_object.respond_to?(:member_of_collection_ids)
-            fedora_object.member_of_collection_ids
-          else
-            []
-          end
+        parent_ids = find_preservation_parent_ids_for(id: id)
         Samvera::NestingIndexer::Documents::PreservationDocument.new(id: id, parent_ids: parent_ids)
+      end
+
+      # @api public
+      # @param id [String]
+      # @return Samvera::NestingIndexer::Document::PreservationDocument
+      def self.find_preservation_parent_ids_for(id:)
+        # Not everything is guaranteed to have library_collection_ids
+        # If it doesn't have it, what do we do?
+        fedora_object = ActiveFedora::Base.find(id)
+        if fedora_object.respond_to?(:member_of_collection_ids)
+          fedora_object.member_of_collection_ids
+        else
+          []
+        end
       end
 
       # @api public
@@ -28,9 +36,20 @@ module Hyrax
       end
 
       # @api public
+      # @deprecated
       # @yield Samvera::NestingIndexer::Document::PreservationDocument
       # rubocop:disable Lint/UnusedMethodArgument
       def self.each_preservation_document(&block)
+        # TODO: Enable Lint/UnusedMethodArgument once implemented
+        raise NotImplementedError
+      end
+      # rubocop:enable Lint/UnusedMethodArgument
+
+      # @api public
+      # @yieldparam id [String]
+      # @yieldparam parent_id [Array<String>]
+      # rubocop:disable Lint/UnusedMethodArgument
+      def self.each_perservation_document_id_and_parent_ids(&block)
         # TODO: Enable Lint/UnusedMethodArgument once implemented
         raise NotImplementedError
       end
