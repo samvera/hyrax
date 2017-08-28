@@ -7,15 +7,13 @@ module Hyrax
     validates :access, presence: true
     validates :hyrax_collection_type_id, presence: true
 
-    CREATOR = 'creator'.freeze
-    MANAGER = 'manager'.freeze
+    def manager?
+      access == 'manage'
+    end
 
-    enum(
-      access: {
-        CREATOR => CREATOR,
-        MANAGER => MANAGER
-      }
-    )
+    def creator?
+      access == 'create'
+    end
 
     def label
       return agent_id unless agent_type == 'group'

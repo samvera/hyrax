@@ -1,6 +1,6 @@
 <h2><%= t('.add_participants') %></h2>
 <p><%= t('.instructions') %></p>
-<% access_options = options_for_select([['Manager', 'manager'], ['Creator', 'creator']]) %>
+<% access_options = options_for_select([['Manager', 'manage'], ['Creator', 'create']]) %>
 <% unless @collection_type_participant.nil? %>
   <%= simple_form_for @collection_type_participant,
                       url: hyrax.admin_collection_type_participants_path,
