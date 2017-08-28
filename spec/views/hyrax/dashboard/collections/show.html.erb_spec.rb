@@ -36,6 +36,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   end
 
   it 'draws the page' do
+    # Making sure that we are verifying that the _show_actions.html.erb is rendering
     expect(rendered).to have_css('.stubbed-actions', text: 'THE ACTIONS')
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
