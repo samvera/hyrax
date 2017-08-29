@@ -46,7 +46,7 @@ module Hyrax
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language,
              :embargo_release_date, :lease_expiration_date, :license, :date_created,
              :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
-             :title_or_label, :collection_type_gid_ssim, :create_date, :visibility, :edit_groups,
+             :title_or_label, :collection_type_gid_ssim, :create_date, :modified_date, :visibility, :edit_groups,
              :edit_people,
              to: :solr_document
 

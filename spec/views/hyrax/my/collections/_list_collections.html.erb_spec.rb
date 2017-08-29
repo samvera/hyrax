@@ -1,11 +1,14 @@
 RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:id) { "3197z511f" }
+  let(:modified_date) {  DateTime.new(2014, 1, 1).iso8601 }
+
   let(:attributes) do
     {
       id: id,
       "has_model_ssim" => ["Collection"],
       "title_tesim" => ["Collection Title"],
-      "description_tesim" => ["Collection Description"]
+      "description_tesim" => ["Collection Description"],
+      "system_modified_dtsi" => modified_date
     }
   end
 
@@ -31,5 +34,6 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
     expect(rendered).to have_css '.collection_type', text: 'User Collection'
     expect(rendered).to have_selector '.expanded-details dd', text: 'Collection Description'
     expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small pull-left"></span></a>'
+    expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
   end
 end

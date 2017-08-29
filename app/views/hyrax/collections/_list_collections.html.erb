@@ -21,7 +21,7 @@
 
   <td class="collection_type"><%= collection_presenter.collection_type_badge %></td>
 
-  <td class="text-center date"><%=collection_presenter.create_date.try(:to_formatted_s, :standard) %> </td>
+  <td class="text-center date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
     <%= render_visibility_link(collection_presenter.solr_document) %>
   </td>
