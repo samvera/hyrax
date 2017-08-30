@@ -1,9 +1,72 @@
 RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:user) { create(:user) }
+  let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type) }
 
   let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
+  let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid) }
+
+  describe 'Your Collections tab' do
+    context 'when non-admin user' do
+      before do
+        sign_in user
+        visit '/dashboard/my/collections'
+      end
+
+      it 'has page title' do
+        expect(page).to have_content 'Collections'
+      end
+
+      it 'does not have tabs' do
+        expect(page).not_to have_link 'All Collections'
+        expect(page).not_to have_link 'Your Collections'
+      end
+
+      it "lists only user's collections" do
+        expect(page).to have_link(collection1.title)
+        expect(page).to have_link(collection2.title)
+        expect(page).not_to have_link(collection3.title)
+      end
+    end
+
+    context 'when admin user' do
+      before do
+        sign_in admin_user
+        visit '/dashboard/my/collections'
+      end
+
+      it 'has page title' do
+        expect(page).to have_content 'Collections'
+      end
+
+      it 'has tabs for All and Your Collections' do
+        expect(page).to have_link 'All Collections'
+        expect(page).to have_link 'Your Collections'
+      end
+
+      it "lists only admin_user's collections" do
+        expect(page).not_to have_link(collection1.title)
+        expect(page).not_to have_link(collection2.title)
+        expect(page).to have_link(collection3.title)
+      end
+    end
+  end
+
+  describe 'All Collections tab (for admin users only)' do
+    before do
+      sign_in admin_user
+      visit '/dashboard/my/collections'
+    end
+
+    it 'lists all collections for all users' do
+      expect(page).to have_link 'All Collection'
+      click_link 'All Collections'
+      expect(page).to have_link(collection1.title)
+      expect(page).to have_link(collection2.title)
+      expect(page).to have_link(collection3.title)
+    end
+  end
 
   describe 'create collection' do
     before do
