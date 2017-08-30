@@ -59,21 +59,23 @@
         </div>
       </div>
 
-      <div id="discovery" class="tab-pane">
-        <div class="panel panel-default labels">
-          <div class="panel-body">
-            <%= render 'form_discovery', f: f %>
+      <% if @form.persisted? %>
+        <div id="discovery" class="tab-pane">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_discovery', f: f %>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="sharing" class="tab-pane">
-        <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
-          <div class="panel-body">
-            <%= render 'form_share', f: f %>
+        <div id="sharing" class="tab-pane">
+          <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
+            <div class="panel-body">
+              <%= render 'form_share', f: f %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
 
       <div class="panel-footer">
         <% if params[:action] == "new" %>

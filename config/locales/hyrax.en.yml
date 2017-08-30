@@ -501,6 +501,38 @@ en:
               description:   "Keep to myself with an option to share"
             para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
             para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
+        form_share_table:
+          allow_all_registered: "Allow all registered"
+          depositors:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No depositors have been added to this collection."
+            help: "Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collecton otherwise would not permit them to view it."
+            remove: "Remove"
+            title: "Depositors"
+            type: "Type"
+          managers:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No managers have been added to this collection."
+            help: "Managers of this collection can add to and remove works from the collection, modify collection metadata, and delete the collection."
+            remove: "Remove"
+            title: "Managers"
+            type: "Type"
+          viewers:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No viewers have been added to this collection."
+            help: "Viewers of this collection can view it even if the visibility permissions of the collection otherwise would not permit them to view it."
+            remove: "Remove"
+            title: "Viewers"
+            type: "Type"
+        form_share:
+          add_group: "Add group"
+          add_sharing: "Add Sharing"
+          add_user: "Add user"
+          current_shared: "Currently Shared With"
+          note: "Regardless of the visibility settings of this collection, you can share this collection with specific groups and users."
         new:
           header: Create New Collection
         show:

@@ -146,4 +146,28 @@ RSpec.describe Hyrax::Forms::CollectionForm do
       end
     end
   end
+
+  describe "#permission_template" do
+    subject { form.permission_template }
+
+    context "when the PermissionTemplate doesn't exist" do
+      let(:model) { create(:collection) }
+
+      it "gets created" do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+
+    context "when the PermissionTemplate exists" do
+      let(:form) { described_class.new(model, ability, repository) }
+      let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: model.id) }
+      let(:model) { create(:collection, with_permission_template: true) }
+
+      it "uses the existing template" do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to eq permission_template
+      end
+    end
+  end
 end
