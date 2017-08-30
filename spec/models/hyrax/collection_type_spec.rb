@@ -47,8 +47,19 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
     subject { described_class.find_or_create_default_collection_type }
 
     it 'creates a default collection type' do
+      expect(Hyrax::CollectionTypes::CreateService).to receive(:create_collection_type)
       subject
-      expect(described_class).to exist(machine_id: described_class::USER_COLLECTION_MACHINE_ID)
+    end
+  end
+
+  describe ".find_or_create_admin_set_type" do
+    subject { described_class.find_or_create_admin_set_type }
+
+    it 'creates admin set collection type' do
+      machine_id = described_class::ADMIN_SET_MACHINE_ID
+      title = described_class::ADMIN_SET_DEFAULT_TITLE
+      expect(Hyrax::CollectionTypes::CreateService).to receive(:create_collection_type).with(machine_id: machine_id, title: title, options: anything)
+      subject
     end
   end
 

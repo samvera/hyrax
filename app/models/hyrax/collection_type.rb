@@ -78,20 +78,22 @@ module Hyrax
     end
 
     def self.find_or_create_default_collection_type
-      find_by(machine_id: USER_COLLECTION_MACHINE_ID) || create_default_collection_type
+      find_by(machine_id: USER_COLLECTION_MACHINE_ID) || Hyrax::CollectionTypes::CreateService.create_collection_type
     end
 
-    def self.create_default_collection_type(machine_id: USER_COLLECTION_MACHINE_ID, title: USER_COLLECTION_DEFAULT_TITLE)
-      create(machine_id: machine_id, title: title) do |c|
-        c.description = 'A User Collection can be created by any user to organize their works.'
-        c.nestable = false
-        c.discoverable = true
-        c.sharable = true
-        c.allow_multiple_membership = true
-        c.require_membership = false
-        c.assigns_workflow = false
-        c.assigns_visibility = false
-      end
+    def self.find_or_create_admin_set_type
+      return find_by_machine_id(ADMIN_SET_MACHINE_ID) if exists?(machine_id: ADMIN_SET_MACHINE_ID)
+      options = {
+        description: 'A collection type that provides Admin Set functionality.',
+        nestable: false,
+        discoverable: true,
+        sharable: true,
+        allow_multiple_membership: false,
+        require_membership: true,
+        assigns_workflow: true,
+        assigns_visibility: true
+      }
+      Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: ADMIN_SET_MACHINE_ID, title: ADMIN_SET_DEFAULT_TITLE, options: options)
     end
 
     private
