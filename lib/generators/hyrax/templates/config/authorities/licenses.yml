@@ -25,4 +25,4 @@ terms:
       active: true
     - id: http://www.europeana.eu/portal/rights/rr-r.html
       term: All rights reserved
-      active: true
+      active: false
