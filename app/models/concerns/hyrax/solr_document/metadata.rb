@@ -80,6 +80,7 @@ module Hyrax
         attribute :date_modified, Solr::Date, solr_name('date_modified', :stored_sortable, type: :date)
         attribute :date_uploaded, Solr::Date, solr_name('date_uploaded', :stored_sortable, type: :date)
         attribute :create_date, Solr::Date, solr_name('system_create', :stored_sortable, type: :date)
+        attribute :modified_date, Solr::Date, solr_name('system_modified', :stored_sortable, type: :date)
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
       end

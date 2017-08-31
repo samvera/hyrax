@@ -576,6 +576,7 @@ en:
           action:         "Actions"
           collection_type: "Collection Type"
           date_uploaded:  "Date Added"
+          date_modified:  "Last Modified"
           highlighted:    "Highlighted"
           title:          "Title"
           visibility:     "Visibility"
