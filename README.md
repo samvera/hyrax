@@ -143,7 +143,7 @@ Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.3
+gem install rails -v 5.0.5
 ```
 
 ### JavaScript runtime
