@@ -17,38 +17,29 @@ terms:
     - id: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
       term: Attribution-NonCommercial-ShareAlike 3.0 United States
       active: false
-    - id: http://creativecommons.org/publicdomain/mark/1.0/
-      term: Public Domain Mark 1.0
-      active: false
-    - id: http://creativecommons.org/publicdomain/zero/1.0/
-      term: CC0 1.0 Universal
-      active: false
     - id: http://www.europeana.eu/portal/rights/rr-r.html
       term: All rights reserved
-      active: true
-    - id: http://rightsstatements.org/vocab/InC/1.0/
-      term: In Copyright
-      active: true
+      active: false
     - id: https://creativecommons.org/licenses/by/4.0/
-      term: CC BY Attribution 4.0 International
+      term: Creative Commons BY Attribution 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-sa/4.0/
-      term: CC SA ShareAlike 4.0 International
+      term: Creative Commons SA ShareAlike 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nd/4.0/
-      term: CC ND NoDerivatives 4.0 International
+      term: Creative Commons ND NoDerivatives 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nc/4.0/
-      term: CC NC NonCommercial 4.0 International
+      term: Creative Commons NC NonCommercial 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nc-nd/4.0/
-      term: CC BY NC ND NonCommercial-NoDerivs 4.0 International
+      term: Creative Commons BY-NC-ND NonCommercial-NoDerivs 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nc-sa/4.0/
-      term: CC BY NC SA NonCommercial-ShareAlike 4.0 International
+      term: Creative Commons BY-NC-SA NonCommercial-ShareAlike 4.0 International
       active: true
     - id: http://creativecommons.org/publicdomain/zero/1.0/
-      term: CC0 1.0 Universal
+      term: Creative Commons0 1.0 Universal
       active: true
     - id: http://creativecommons.org/publicdomain/mark/1.0/
       term: Public Domain Mark 1.0
