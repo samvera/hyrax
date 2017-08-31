@@ -83,7 +83,7 @@ EOF
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.4'
-  spec.add_development_dependency 'capybara-maleficent', '~> 0.1'
+  spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
   spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
