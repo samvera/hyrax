@@ -21,7 +21,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
     context 'To myself' do
       before { transfer_ownership_of_work work, original_owner }
       it 'displays an appropriate error message' do
-        expect(page).to have_content 'specify a different user to receive the work'
+        page.assert_text 'specify a different user to receive the work'
       end
     end
 
@@ -29,17 +29,18 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
       before { transfer_ownership_of_work work, new_owner }
 
       it 'Creates a transfer request' do
-        expect(page).to have_content 'Transfer request created'
+        page.assert_text 'Transfer request created'
       end
 
       context 'If the new owner accepts it' do
         before do
+          sleep(10)
           new_owner.proxy_deposit_requests.last.transfer!
           # refresh the page
           visit '/dashboard'
         end
         it 'I should see it was accepted' do
-          expect(page.find('#outgoing-transfers')).to have_content 'Accepted'
+          page.find('#outgoing-transfers').assert_text 'Accepted'
         end
       end
 
@@ -48,7 +49,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
           accept_confirm { first_sent_cancel_button.click }
         end
         it 'I should see it was cancelled' do
-          expect(page).to have_content 'Transfer canceled'
+          page.assert_text 'Transfer canceled'
         end
       end
     end
@@ -64,24 +65,24 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
       # Become the new_owner so we can manage transfers sent to us
       sign_in new_owner
       visit '/dashboard'
-      expect(page).to have_content 'Transfers of Ownership'
+      page.assert_text 'Transfers of Ownership'
     end
 
     it 'I should be able to accept it' do
       within('#notifications') do
-        expect(page).to have_content "#{original_owner.name} wants to transfer a work to you"
+        page.assert_text "#{original_owner.name} wants to transfer a work to you"
       end
       first_received_accept_dropdown.click
       click_link 'Allow depositor to retain edit access'
-      expect(page).to have_content 'Transfer complete'
+      page.assert_text 'Transfer complete'
     end
 
     it 'I should be able to reject it' do
       within('#notifications') do
-        expect(page).to have_content "#{original_owner.name} wants to transfer a work to you"
+        page.assert_text "#{original_owner.name} wants to transfer a work to you"
       end
       accept_confirm { first_received_reject_button.click }
-      expect(page).to have_content 'Transfer rejected'
+      page.assert_text 'Transfer rejected'
     end
   end
 
@@ -90,7 +91,7 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
 
     db_item_actions_toggle(work).click
     click_link 'Transfer Ownership of Work'
-    expect(page).to have_content I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
+    page.assert_text I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
     new_owner_dropdown.click
     new_owner_search_field.set new_owner.user_key
     new_owner_search_result.click

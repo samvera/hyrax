@@ -31,9 +31,9 @@ RSpec.describe "Browse catalog:", type: :feature do
     it 'using facet pagination to browse by keywords' do
       click_button "search-submit-header"
 
-      expect(page).to have_content 'Search Results'
-      expect(page).to have_content jills_work.title.first
-      expect(page).to have_content jacks_work.title.first
+      page.assert_text 'Search Results'
+      page.assert_text jills_work.title.first
+      page.assert_text jacks_work.title.first
 
       click_link "Keyword"
       click_link "more Keywords »"
@@ -42,20 +42,20 @@ RSpec.describe "Browse catalog:", type: :feature do
       end
 
       within(".modal-body") do
-        expect(page).not_to have_content 'keyword05'
-        expect(page).to have_content 'keyword21'
+        page.assert_no_text 'keyword05'
+        page.assert_text 'keyword21'
 
         click_link 'keyword21'
       end
 
-      expect(page).to have_content jills_work.title.first
-      expect(page).not_to have_content jacks_work.title.first
+      page.assert_text jills_work.title.first
+      page.assert_no_text jacks_work.title.first
 
       # TODO:  After the _generic_work.html.erb view is finished
       #
       #      click_link jills_work.title.first
       #      expect(page).to     have_content "Download"
-      #      expect(page).not_to have_content "Edit"
+      #      expect(page).not_assert_text "Edit"
     end
   end
 end

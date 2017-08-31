@@ -5,9 +5,9 @@ RSpec.describe "The dashboard as viewed by a regular user", type: :feature do
 
   context "upon sign-in" do
     it "shows the user's information" do
-      expect(page).to have_content "My Dashboard"
-      expect(page).to have_content "User Activity"
-      expect(page).to have_content "User Notifications"
+      page.assert_text "My Dashboard"
+      page.assert_text "User Activity"
+      page.assert_text "User Notifications"
 
       within '.sidebar' do
         expect(page).to have_link "Works"

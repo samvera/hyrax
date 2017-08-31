@@ -26,7 +26,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
       visit '/dashboard/my/works'
       check 'check_all'
       find('#batch-edit').click
-      expect(page).to have_content('Batch Edit Descriptions')
+      page.assert_text('Batch Edit Descriptions')
       batch_edit_expand("creator") do
         page.find("input#generic_work_creator[value='NEW creator']")
       end
@@ -65,6 +65,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   describe 'deleting' do
     it 'destroys the selected works' do
       accept_confirm { click_button 'Delete Selected' }
+      sleep(10)
       expect(GenericWork.count).to be_zero
     end
   end

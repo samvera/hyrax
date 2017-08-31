@@ -17,7 +17,7 @@ RSpec.feature "Editing a file:", type: :feature do
       visit edit_hyrax_file_set_path(file_set)
       click_link 'Versions'
       click_button 'Upload New Version'
-      expect(page).to have_content "Edit #{file_title}"
+      page.assert_text "Edit #{file_title}"
     end
   end
 end

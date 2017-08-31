@@ -56,11 +56,11 @@ RSpec.feature "display a work as its owner" do
       # exports EndNote
       expect(page).to have_link 'EndNote'
       click_link 'EndNote'
-      expect(page).to have_content '%0 Generic Work'
-      expect(page).to have_content '%T Magnificent splendor'
-      expect(page).to have_content '%R http://localhost/files/'
-      expect(page).to have_content '%~ Hyrax'
-      expect(page).to have_content '%W Institution'
+      page.assert_text '%0 Generic Work'
+      page.assert_text '%T Magnificent splendor'
+      page.assert_text '%R http://localhost/files/'
+      page.assert_text '%~ Hyrax'
+      page.assert_text '%W Institution'
     end
   end
 end

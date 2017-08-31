@@ -7,8 +7,8 @@ RSpec.describe "As an admin user I should be able to see all works" do
   end
   scenario do
     visit '/dashboard/works'
-    expect(page).to have_content 'Works'
-    expect(page).to have_content 'Testing #1'
-    expect(page).to have_content 'Testing #2'
+    page.assert_text 'Works'
+    page.assert_text 'Testing #1'
+    page.assert_text 'Testing #2'
   end
 end

@@ -27,8 +27,8 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
 
     it 'creates the work' do
       click_link "Files" # switch tab
-      expect(page).to have_content "Add files"
-      expect(page).to have_content "Add folder"
+      page.assert_text "Add files"
+      page.assert_text "Add folder"
       within('span#addfiles') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
@@ -43,15 +43,15 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
       # its element
       find('body').click
       choose('generic_work_visibility_open')
-      expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
+      page.assert_text('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
       check('agreement')
       # These lines are for debugging, should this test fail
       # puts "Required metadata: #{page.evaluate_script(%{$('#form-progress').data('save_work_control').requiredFields.areComplete})}"
       # puts "Required files: #{page.evaluate_script(%{$('#form-progress').data('save_work_control').uploads.hasFiles})}"
       # puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
-      expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Hyrax in the background."
+      page.assert_text('My Test Work')
+      page.assert_text "Your files are being processed by Hyrax in the background."
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
 
     it "allows on-behalf-of deposit" do
       click_link "Files" # switch tab
-      expect(page).to have_content "Add files"
+      page.assert_text "Add files"
       within('span#addfiles') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
@@ -84,7 +84,7 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
       # its element
       find('body').click
       choose('generic_work_visibility_open')
-      expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
+      page.assert_text('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
       select(second_user.user_key, from: 'On behalf of')
       check('agreement')
       # These lines are for debugging, should this test fail
@@ -92,12 +92,12 @@ RSpec.feature 'Creating a new Work', :js, :workflow do
       # puts "Required files: #{page.evaluate_script(%{$('#form-progress').data('save_work_control').uploads.hasFiles})}"
       # puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
-      expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Hyrax in the background."
+      page.assert_text('My Test Work')
+      page.assert_text "Your files are being processed by Hyrax in the background."
 
       sign_in second_user
       click_link 'Works'
-      expect(page).to have_content "My Test Work"
+      page.assert_text "My Test Work"
     end
   end
 end

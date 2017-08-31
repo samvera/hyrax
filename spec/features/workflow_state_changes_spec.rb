@@ -52,7 +52,7 @@ RSpec.feature "Workflow state changes", type: :feature do
           page.fill_in('workflow_action_comment', with: the_comment)
           page.click_on('Submit')
         end
-        expect(page).to have_content(the_comment)
+        page.assert_text(the_comment)
       end.not_to change { work.to_sipity_entity.reload.workflow_state_name }
     end
   end

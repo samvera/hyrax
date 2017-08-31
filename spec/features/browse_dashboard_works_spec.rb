@@ -23,13 +23,13 @@ RSpec.describe "Browse Dashboard", type: :feature do
   it "lets the user search and display their files" do
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
-    expect(page).to have_content("Fake PDF Title")
+    page.assert_text("Fake PDF Title")
     within(".constraints-container") do
-      expect(page).to have_content("Filtering by:")
+      page.assert_text("Filtering by:")
       expect(page).to have_css("span.glyphicon-remove")
       find(".dropdown-toggle").click
     end
-    expect(page).to have_content("Fake Wav File")
+    page.assert_text("Fake Wav File")
 
     # Browse facets
     click_button "Status"
@@ -42,14 +42,15 @@ RSpec.describe "Browse Dashboard", type: :feature do
 
     within("#document_#{dissertation.id}") do
       click_button("Select")
-      expect(page).to have_content("Edit Work")
+      page.assert_text("Edit Work")
     end
   end
 
   it "allows me to delete works in upload_sets", js: true do
     first('input#check_all').click
-    expect do
-      accept_confirm { click_button('Delete Selected') }
-    end.to change { GenericWork.count }.by(-3)
+    number_of_works = GenericWork.count
+    accept_confirm { click_button('Delete Selected') }
+    sleep(10)
+    expect(GenericWork.count).to eq(number_of_works - 3)
   end
 end
