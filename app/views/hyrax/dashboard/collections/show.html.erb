@@ -33,10 +33,16 @@
     <% else %>
         <%= t('.item_count') %> (<%= @presenter.total_items %>)
     <% end %>
-    <%= link_to t('hyrax.collection.actions.add_works.label'),
+    <%= link_to t('hyrax.collection.actions.add_existing_works.label'),
                 hyrax.my_works_path(add_works_to_collection: @presenter.id),
-                title: t('hyrax.collection.actions.add_works.desc'),
+                title: t('hyrax.collection.actions.add_existing_works.desc'),
                 class: 'btn btn-default pull-right' %>
+    <%= link_to( t('hyrax.collection.actions.add_new_work.label'),
+                '#',
+                title: t('hyrax.collection.actions.add_new_work.desc'),
+                data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+                class: 'btn btn-default  pull-right'
+                ) %>          
   </h2>
 </div>
 
