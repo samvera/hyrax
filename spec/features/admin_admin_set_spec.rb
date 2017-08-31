@@ -17,14 +17,14 @@ RSpec.describe "The admin sets, through the admin dashboard" do
     click_link "Administrative Sets"
     click_link title
 
-    expect(page).to have_content "A substantial description"
-    expect(page).to have_content "Works in This Set"
+    page.assert_text "A substantial description"
+    page.assert_text "Works in This Set"
 
     click_link "Edit"
     within('#description') do
       fill_in "Title", with: 'A better unique name'
       click_button 'Save'
     end
-    expect(page).to have_content "A better unique name"
+    page.assert_text "A better unique name"
   end
 end

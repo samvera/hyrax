@@ -14,7 +14,7 @@ RSpec.feature "User Profile", type: :feature do
 
     it 'page should be editable' do
       visit profile_path
-      expect(page).to have_content(user.email)
+      page.assert_text(user.email)
 
       within '.highlighted-works' do
         expect(page).to have_link(work.to_s)
@@ -25,7 +25,7 @@ RSpec.feature "User Profile", type: :feature do
       end
       fill_in 'user_twitter_handle', with: 'curatorOfData'
       click_button 'Save Profile'
-      expect(page).to have_content 'Your profile has been updated'
+      page.assert_text 'Your profile has been updated'
       expect(page).to have_link('curatorOfData', href: 'http://twitter.com/curatorOfData')
     end
   end

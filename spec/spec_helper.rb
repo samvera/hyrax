@@ -53,7 +53,12 @@ require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ENV['TRAVIS']
 
 Capybara.default_driver = :rack_test # This is a faster driver
-Capybara.javascript_driver = :selenium_chrome_headless # This is slower
+
+Capybara.register_driver :selenium do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+# Capybara.javascript_driver = :selenium_chrome_headless # This is slower
 
 ActiveJob::Base.queue_adapter = :inline
 

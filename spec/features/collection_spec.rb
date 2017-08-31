@@ -17,38 +17,38 @@ RSpec.describe 'collection', type: :feature do
     end
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      expect(page).to have_content(collection.title.first)
-      expect(page).to have_content(collection.description.first)
+      page.assert_text(collection.title.first)
+      page.assert_text(collection.description.first)
       # Should not show title and description a second time
       expect(page).not_to have_css('.metadata-collections', text: collection.title.first)
       expect(page).not_to have_css('.metadata-collections', text: collection.description.first)
       # Should not have Collection Descriptive metadata table
-      expect(page).to have_content("Descriptions")
+      page.assert_text("Descriptions")
       # Should have search results / contents listing
-      expect(page).to have_content(work1.title.first)
-      expect(page).to have_content(work2.title.first)
+      page.assert_text(work1.title.first)
+      page.assert_text(work2.title.first)
       expect(page).not_to have_css(".pager")
 
       click_link "Gallery"
-      expect(page).to have_content(work1.title.first)
-      expect(page).to have_content(work2.title.first)
+      page.assert_text(work1.title.first)
+      page.assert_text(work2.title.first)
     end
 
     it "hides collection descriptive metadata when searching a collection" do
-      expect(page).to have_content(collection.title.first)
-      expect(page).to have_content(collection.description.first)
-      expect(page).to have_content(work1.title.first)
-      expect(page).to have_content(work2.title.first)
+      page.assert_text(collection.title.first)
+      page.assert_text(collection.description.first)
+      page.assert_text(work1.title.first)
+      page.assert_text(work2.title.first)
       fill_in('collection_search', with: work1.title.first)
       click_button('collection_submit')
       # Should not have Collection metadata table (only title and description)
-      expect(page).not_to have_content("Total works")
-      expect(page).to have_content(collection.title.first)
-      expect(page).to have_content(collection.description.first)
+      page.assert_no_text("Total works")
+      page.assert_text(collection.title.first)
+      page.assert_text(collection.description.first)
       # Should have search results / contents listing
-      expect(page).to have_content("Search Results")
-      expect(page).to have_content(work1.title.first)
-      expect(page).not_to have_content(work2.title.first)
+      page.assert_text("Search Results")
+      page.assert_text(work1.title.first)
+      page.assert_no_text(work2.title.first)
     end
   end
 

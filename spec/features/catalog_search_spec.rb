@@ -22,10 +22,10 @@ RSpec.describe 'catalog searching', type: :feature do
         click_button('Go')
       end
 
-      expect(page).to have_content('Search Results')
-      expect(page).to have_content(jills_work.title.first)
-      expect(page).to have_content(jacks_work.title.first)
-      expect(page).to have_content(collection.title.first)
+      page.assert_text('Search Results')
+      page.assert_text(jills_work.title.first)
+      page.assert_text(jacks_work.title.first)
+      page.assert_text(collection.title.first)
     end
   end
 end

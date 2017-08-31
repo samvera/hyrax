@@ -28,7 +28,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
       click_on('Save')
     end
     visit "/concern/generic_works/#{parent.id}"
-    expect(page).to have_content work_title
+    page.assert_text work_title
   end
 
   context "when it's being updated" do
@@ -75,7 +75,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
         click_on "Save"
 
         expect(new_parent.reload.ordered_members.to_a.length).to eq 0
-        expect(page).to have_content "Works can only be related to each other if user has ability to edit both."
+        page.assert_text "Works can only be related to each other if user has ability to edit both."
       end
     end
   end

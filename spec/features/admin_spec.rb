@@ -21,10 +21,10 @@ RSpec.describe "The admin dashboard", :clean_repo do
     login_as(user, scope: :user)
     visit '/dashboard'
 
-    expect(find('tr', text: 'First Admin Set').find('td:eq(2)')).to have_content(1)
-    expect(find('tr', text: 'First Admin Set').find('td:eq(3)')).to have_content(2)
+    find('tr', text: 'First Admin Set').find('td:eq(2)').assert_text(1)
+    find('tr', text: 'First Admin Set').find('td:eq(3)').assert_text(2)
 
-    expect(find('tr', text: 'Second Admin Set').find('td:eq(2)')).to have_content(2)
-    expect(find('tr', text: 'Second Admin Set').find('td:eq(3)')).to have_content(3)
+    find('tr', text: 'Second Admin Set').find('td:eq(2)').assert_text(2)
+    find('tr', text: 'Second Admin Set').find('td:eq(3)').assert_text(3)
   end
 end

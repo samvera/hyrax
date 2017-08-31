@@ -17,7 +17,7 @@ RSpec.feature 'Deleting a work', type: :feature do
       visit hyrax_generic_work_path(work)
       click_on('Delete', match: :first)
       expect(page).to have_current_path(hyrax.my_works_path, only_path: true)
-      expect(page).to have_content 'Deleted Test title'
+      page.assert_text 'Deleted Test title'
     end
   end
 end

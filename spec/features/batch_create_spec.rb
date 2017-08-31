@@ -9,10 +9,10 @@ RSpec.feature 'Batch creation of works', type: :feature do
 
   it "renders the batch create form" do
     visit hyrax.new_batch_upload_path
-    expect(page).to have_content "Add New Works by Batch"
+    page.assert_text "Add New Works by Batch"
     within("li.active") do
-      expect(page).to have_content("Files")
+      page.assert_text("Files")
     end
-    expect(page).to have_content("Each file will be uploaded to a separate new work resulting in one work per uploaded file.")
+    page.assert_text("Each file will be uploaded to a separate new work resulting in one work per uploaded file.")
   end
 end

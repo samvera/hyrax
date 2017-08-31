@@ -17,21 +17,21 @@ RSpec.feature 'searching' do
       visit '/'
       fill_in "search-field-header", with: "Toothbrush"
       click_button "search-submit-header"
-      expect(page).to have_content "1 entry found"
+      page.assert_text "1 entry found"
       within "#search-results" do
-        expect(page).to have_content "Toothbrush"
+        page.assert_text "Toothbrush"
       end
 
       click_link "Gallery"
-      expect(page).to have_content "Filtering by: Toothbrush"
+      page.assert_text "Filtering by: Toothbrush"
       within "#documents" do
-        expect(page).to have_content "Toothbrush"
+        page.assert_text "Toothbrush"
       end
     end
 
     it "only searches all" do
       visit '/'
-      expect(page).to have_content("All")
+      page.assert_text("All")
       expect(page).to have_css("a[data-search-label*=All]", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Works']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Collections']", visible: false)
@@ -39,13 +39,13 @@ RSpec.feature 'searching' do
       expect(page).not_to have_css("a[data-search-label*='My Shares']", visible: false)
 
       click_button("All")
-      expect(page).to have_content("All of Hyrax")
+      page.assert_text("All of Hyrax")
       fill_in "search-field-header", with: subject_value
       click_button("Go")
 
-      expect(page).to have_content('Search Results')
-      expect(page).to have_content "Toothbrush"
-      expect(page).to have_content('collection title abc')
+      page.assert_text('Search Results')
+      page.assert_text "Toothbrush"
+      page.assert_text('collection title abc')
       expect(page).to have_css("span.collection-icon-search")
 
       expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
@@ -55,9 +55,9 @@ RSpec.feature 'searching' do
     it "does not display search options for dashboard files" do
       visit "/"
       within(".input-group-btn") do
-        expect(page).not_to have_content("My Works")
-        expect(page).not_to have_content("My Collections")
-        expect(page).not_to have_content("My Shares")
+        page.assert_no_text("My Works")
+        page.assert_no_text("My Collections")
+        page.assert_no_text("My Shares")
       end
     end
   end

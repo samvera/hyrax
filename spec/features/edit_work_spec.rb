@@ -16,8 +16,8 @@ RSpec.feature 'Editing a work', type: :feature do
       choose('generic_work_visibility_open')
       check('agreement')
       click_on('Save')
-      expect(page).to have_content 'Apply changes to contents?'
-      expect(page).not_to have_content "Powered by Hyrax"
+      page.assert_text 'Apply changes to contents?'
+      page.assert_no_text "Powered by Hyrax"
     end
   end
 end
