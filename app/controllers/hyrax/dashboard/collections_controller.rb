@@ -85,6 +85,7 @@ module Hyrax
 
       def after_create
         form
+        PermissionTemplate.create!(source_id: @collection.id, source_type: 'collection')
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
           format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
