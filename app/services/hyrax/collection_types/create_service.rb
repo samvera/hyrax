@@ -1,5 +1,15 @@
 module Hyrax
   module CollectionTypes
+    # @api public
+    #
+    # Responsible for creating a CollectionType. If no params are given,the default user collection is assumed as defined by:
+    #
+    # * Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+    # * Hyrax::CollectionType::USER_COLLECTION_DEFAULT_TITLE
+    # * DEFAULT_OPTIONS
+    #
+    # @see Hyrax:CollectionType
+    #
     class CreateService
       DEFAULT_MACHINE_ID = Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       DEFAULT_TITLE = Hyrax::CollectionType::USER_COLLECTION_DEFAULT_TITLE
@@ -14,6 +24,10 @@ module Hyrax
         assigns_visibility: false
       }.freeze
 
+      # @param machine_id [String]
+      # @param title [String]
+      # @param options [Hash] options to override DEFAULT_OPTIONS
+      # @return [Hyrax::CollectionType]
       def self.create_collection_type(machine_id: DEFAULT_MACHINE_ID, title: DEFAULT_TITLE, options: {})
         opts = DEFAULT_OPTIONS.merge(options)
         Hyrax::CollectionType.create(machine_id: machine_id, title: title) do |c|
