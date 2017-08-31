@@ -24,13 +24,13 @@ terms:
       term: Creative Commons BY Attribution 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-sa/4.0/
-      term: Creative Commons SA ShareAlike 4.0 International
+      term: Creative Commons BY-SA ShareAlike 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nd/4.0/
-      term: Creative Commons ND NoDerivatives 4.0 International
+      term: Creative Commons BY-ND NoDerivatives 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nc/4.0/
-      term: Creative Commons NC NonCommercial 4.0 International
+      term: Creative Commons BY-NC NonCommercial 4.0 International
       active: true
     - id: https://creativecommons.org/licenses/by-nc-nd/4.0/
       term: Creative Commons BY-NC-ND NonCommercial-NoDerivs 4.0 International
@@ -39,7 +39,7 @@ terms:
       term: Creative Commons BY-NC-SA NonCommercial-ShareAlike 4.0 International
       active: true
     - id: http://creativecommons.org/publicdomain/zero/1.0/
-      term: Creative Commons0 1.0 Universal
+      term: Creative Common CC0 1.0 Universal
       active: true
     - id: http://creativecommons.org/publicdomain/mark/1.0/
       term: Public Domain Mark 1.0
