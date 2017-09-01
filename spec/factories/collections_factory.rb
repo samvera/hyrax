@@ -4,16 +4,16 @@ FactoryGirl.define do
 
     transient do
       user { FactoryGirl.create(:user) }
-      collection_type_settings [:nestable, :discoverable, :sharable, :allow_multiple_membership]
+      # allow defaulting to default user collection
+      collection_type_settings nil
       with_permission_template false
     end
     sequence(:title) { |n| ["Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
-      if collection.collection_type_gid.nil?
-        collection_type = FactoryGirl.create(:collection_type, *evaluator.collection_type_settings)
-        collection.collection_type_gid = collection_type.gid
+      if evaluator.collection_type_settings.present?
+        collection.collection_type = FactoryGirl.create(:collection_type, *evaluator.collection_type_settings)
       end
     end
 

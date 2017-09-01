@@ -1,4 +1,4 @@
-RSpec.describe Collection, :clean_repo do
+RSpec.describe Collection, type: :model do
   let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
@@ -137,88 +137,70 @@ RSpec.describe Collection, :clean_repo do
     end
   end
 
-  describe '#collection_type_gid' do
-    it 'has a collection_type_gid' do
-      subject.title = ['title']
-      subject.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
-      subject.save!
-      expect(subject.reload.collection_type_gid).to eq 'gid://internal/hyrax-collectiontype/5'
+  describe 'after_initialize' do
+    let(:collection_type) { create(:collection_type) }
+
+    it 'sets collection_type_gid to default collection type if not already set' do
+      expect(described_class.new.collection_type_gid).to eq Hyrax::CollectionType.find_or_create_default_collection_type.gid
+    end
+
+    it 'does not set collection_type_gid if passed in to initializer' do
+      expect(described_class.new(collection_type_gid: collection_type.gid).collection_type_gid).to eq collection_type.gid
+    end
+
+    it 'does not override preexisting collection_type_gid' do
+      collection = create(:collection, collection_type_gid: collection_type.gid)
+      expect(described_class.find(collection.id).collection_type_gid).to eq collection_type.gid
     end
   end
 
-  describe '#load_collection_type_instance' do
-    context 'when gid exists in collection object' do
-      let(:collection) { described_class.new(title: ['title']) }
-      let(:collection_type) { Hyrax::CollectionType.new(id: 5) }
+  describe '#collection_type_gid', :clean_repo do
+    subject(:collection) { described_class.new(collection_type_gid: collection_type.gid) }
 
-      before do
-        allow(Hyrax::CollectionType).to receive(:find_by_gid!).with('gid://internal/hyrax-collectiontype/5').and_return(collection_type)
-        allow(collection_type).to receive(:persisted?).and_return(true)
-      end
+    let(:collection_type) { create(:collection_type) }
 
-      it 'loads instance of collection type based on gid' do
-        collection.collection_type_gid = 'gid://internal/hyrax-collectiontype/5'
-        collection.save!
-        col = described_class.find(collection.id)
-        expect(col.collection_type).to be_a Hyrax::CollectionType
-        expect(col.collection_type.id).to eq 5
-      end
-    end
-
-    context 'when gid in collection object is nil' do
-      let(:collection) { create(:typeless_collection, title: ['title']) }
-
-      subject { described_class.find(collection.id) }
-
-      it 'loads default collection type' do
-        expect(subject.collection_type).to be_a Hyrax::CollectionType
-        expect(subject.collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
-      end
+    it 'has a collection_type_gid' do
+      expect(collection.collection_type_gid).to eq collection_type.gid
     end
   end
 
   describe '#collection_type_gid=' do
-    let(:collection) { described_class.new }
+    let(:collection) { build(:collection) }
+    let(:collection_type) { create(:collection_type) }
 
     it 'sets gid' do
-      gid = 'gid://internal/hyrax-collectiontype/10'
-      collection.collection_type_gid = gid
-      expect(collection.collection_type_gid).to eq gid
-    end
-  end
-
-  describe '#collection_type' do
-    let(:collection) { described_class.new }
-
-    it 'returns nil if gid is nil' do
-      collection.collection_type_gid = nil
-      expect(collection.collection_type).to be_nil
-    end
-
-    it 'returns collection_type if already set' do
-      gid89 = 'gid://internal/hyrax-collectiontype/89'
-      allow(Hyrax::CollectionType).to receive(:find_by_gid!).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
-      collection.collection_type_gid = gid89
-      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
-      expect(collection.collection_type.gid).to eq gid89
-    end
-
-    it 'will not change value' do
-      gid89 = 'gid://internal/hyrax-collectiontype/89'
-      gid99 = 'gid://internal/hyrax-collectiontype/99'
-      allow(Hyrax::CollectionType).to receive(:find_by_gid!).with(gid89).and_return(Hyrax::CollectionType.new(id: 89))
-      collection.collection_type_gid = gid89
-      collection.collection_type
-      collection.collection_type_gid = gid99
-      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
-      expect(collection.collection_type.gid).to eq gid89
+      collection.collection_type_gid = collection_type.gid
+      expect(collection.collection_type_gid).to eq collection_type.gid
     end
 
     it 'throws ActiveRecord::RecordNotFound if cannot find collection type for the gid' do
       gid = 'gid://internal/hyrax-collectiontype/999'
-      collection.collection_type_gid = gid
-      # TODO: Should we capture the ActiveRecord error and produce something nicer?
-      expect { collection.collection_type }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+      expect { collection.collection_type_gid = gid }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+    end
+
+    it 'throws ActiveRecord::RecordNotFound if set to nil' do
+      expect { collection.collection_type_gid = nil }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
+    end
+
+    it 'updates the collection_type instance variable' do
+      expect { collection.collection_type_gid = collection_type.gid }.to change { collection.collection_type }.from(Hyrax::CollectionType.find_or_create_default_collection_type).to(collection_type)
+    end
+
+    it 'throws ArgumentError if collection has already been persisted with a collection type' do
+      collection.save!
+      expect(collection.collection_type_gid).not_to be_nil
+      expect { collection.collection_type_gid = create(:collection_type).gid }.to raise_error(RuntimeError, "Can't modify collection type of this collection")
+    end
+  end
+
+  describe '#collection_type' do
+    let(:collection) { described_class.new(collection_type: collection_type) }
+    let(:collection_type) { create(:collection_type) }
+
+    it 'returns a collection_type instance from the collection_type_gid' do
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type).to eq collection_type
+      expect(collection.collection_type.gid).to eq collection_type.gid
     end
   end
 

@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
+RSpec.describe Hyrax::CollectionType, type: :model do
   let(:collection_type) { build(:collection_type) }
 
   describe '.collection_type_settings_methods' do
@@ -90,6 +90,10 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
     it 'returns false if collection type with gid does NOT exist' do
       expect(Hyrax::CollectionType.find_by_gid(nonexistent_gid)).to eq false
     end
+
+    it 'returns false if gid is nil' do
+      expect(Hyrax::CollectionType.find_by_gid(nil)).to eq false
+    end
   end
 
   describe '.find_by_gid!' do
@@ -102,6 +106,10 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
 
     it 'raises error if collection type with gid does NOT exist' do
       expect { Hyrax::CollectionType.find_by_gid!(nonexistent_gid) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{nonexistent_gid}'")
+    end
+
+    it 'raises error if passed nil' do
+      expect { Hyrax::CollectionType.find_by_gid!(nil) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
     end
   end
 
@@ -119,7 +127,7 @@ RSpec.describe Hyrax::CollectionType, clean_repo: true, type: :model do
     end
   end
 
-  describe "collections?" do
+  describe "collections?", :clean_repo do
     let(:collection_type) { create(:collection_type) }
 
     it 'returns true if there are any collections of this collection type' do

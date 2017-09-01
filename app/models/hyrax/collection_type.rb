@@ -40,7 +40,7 @@ module Hyrax
     # @return [False] if record matching gid is not found
     def self.find_by_gid(gid)
       find(GlobalID.new(gid).model_id)
-    rescue ActiveRecord::RecordNotFound
+    rescue ActiveRecord::RecordNotFound, URI::InvalidURIError
       false
     end
 
@@ -49,9 +49,9 @@ module Hyrax
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.find_by_gid!(gid)
-      find(GlobalID.new(gid).model_id)
-    rescue ActiveRecord::RecordNotFound
-      raise ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'"
+      result = find_by_gid(gid)
+      raise ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'" unless result
+      result
     end
 
     # Return the Global Identifier for this collection type.

@@ -109,7 +109,7 @@ module Hyrax
         @collection.attributes = collection_params.except(:members)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
-        @collection.collection_type_gid = params[:collection_type_gid]
+        @collection.collection_type_gid = params[:collection_type_gid] if params[:collection_type_gid]
         # TODO: There has to be a better way to handle a missing gid than setting to User Collection.
         # TODO: Via UI, there should always be one defined.  It is missing right now because the modal isn't implemented yet
         # TODO: But perhaps this is needed for the case when it gets called outside the context of the UI?

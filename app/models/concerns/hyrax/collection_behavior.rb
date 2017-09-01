@@ -22,20 +22,31 @@ module Hyrax
         index.as(*index_collection_type_gid_as)
       end
 
-      after_find { |col| load_collection_type_instance(col) }
-      # @todo check that gid is not nil AND check that gid has not changed since
-      #       it was read in (It is ok to go from nil to a value.)
-      #
-      # before_update { |col| validate_collection_type_gid(col) }
+      # validates that collection_type_gid is present
+      validates :collection_type_gid, presence: true
+      after_initialize :ensure_collection_type_gid
+
+      # Need to define here in order to override setter defined by ActiveTriples
+      def collection_type_gid=(new_collection_type_gid)
+        if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
+          raise "Can't modify collection type of this collection"
+        end
+        new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
+        super
+        @collection_type = new_collection_type
+        collection_type_gid
+      end
     end
 
     delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type)
 
-    # Get (and set) the collection_type when accessed
+    # Get the collection_type when accessed
     def collection_type
-      return @collection_type if @collection_type
-      return nil if collection_type_gid.nil?
-      @collection_type = Hyrax::CollectionType.find_by_gid!(collection_type_gid)
+      @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
+    end
+
+    def collection_type=(new_collection_type)
+      self.collection_type_gid = new_collection_type.gid
     end
 
     # Add members using the members association.
@@ -103,29 +114,11 @@ module Hyrax
       ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
     end
 
-    protected
-
-      def collection_type=(collection_type)
-        unless collection_type && collection_type.is_a?(Hyrax::CollectionType) && collection_type.persisted?
-          raise ActiveRecord::AssociationTypeMismatch, 'Collection type must be a valid Hyrax::CollectionType'
-        end
-        @collection_type = collection_type
-      end
-
     private
 
-      # Load the collection_type attribute with an instance of the collection type of this collection based on the gid stored in the
-      # collection object model.  Defaults to the default collection type (i.e. user_collection) so that all collections existing
-      # before the addition of collection types do not need to be migrated.  They are assumed to be the default.
-      # @param collection [Collection] an instance of the Collection model
-      def load_collection_type_instance(collection)
-        if collection.collection_type_gid.nil?
-          collection.collection_type = Hyrax::CollectionType.find_or_create_default_collection_type
-          collection.collection_type_gid = collection.collection_type.gid
-          collection.save # do this one time on the first read by saving the gid in the collection object
-        else
-          collection.collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
-        end
+      # act like the default collection type until persisted
+      def ensure_collection_type_gid
+        self.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid if collection_type_gid.blank?
       end
 
       # Calculate the size of all the files in the work
