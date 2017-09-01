@@ -77,10 +77,24 @@ module Hyrax
       machine_id == USER_COLLECTION_MACHINE_ID
     end
 
+    # Find or create the default collection type as defined by:
+    #
+    # * USER_COLLECTION_MACHINE_ID
+    # * USER_COLLECTION_DEFAULT_TITLE
+    # * Hyrax::CollectionTypes::CreateService::DEFAULT_OPTIONS
+    #
+    # @return [Hyrax::CollectionType] where machine_id = USER_COLLECTION_MACHINE_ID
     def self.find_or_create_default_collection_type
       find_by(machine_id: USER_COLLECTION_MACHINE_ID) || Hyrax::CollectionTypes::CreateService.create_collection_type
     end
 
+    # Find or create the Admin Set collection type as defined by:
+    #
+    # * ADMIN_SET_MACHINE_ID
+    # * ADMIN_SET_DEFAULT_TITLE
+    # * Options to override Hyrax::CollectionTypes::CreateService::DEFAULT_OPTIONS
+    #
+    # @return [Hyrax::CollectionType] where machine_id = ADMIN_SET_MACHINE_ID
     def self.find_or_create_admin_set_type
       return find_by_machine_id(ADMIN_SET_MACHINE_ID) if exists?(machine_id: ADMIN_SET_MACHINE_ID)
       options = {
