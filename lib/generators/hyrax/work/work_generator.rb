@@ -70,14 +70,12 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     end
   end
 
+  LOCALES = %w[en es zh de fr it pt-BR].freeze
+
   def create_i18n
-    template('locale.en.yml.erb', File.join('config/locales/', class_path, "#{file_name}.en.yml"))
-    template('locale.es.yml.erb', File.join('config/locales/', class_path, "#{file_name}.es.yml"))
-    template('locale.zh.yml.erb', File.join('config/locales/', class_path, "#{file_name}.zh.yml"))
-    template('locale.de.yml.erb', File.join('config/locales/', class_path, "#{file_name}.de.yml"))
-    template('locale.fr.yml.erb', File.join('config/locales/', class_path, "#{file_name}.fr.yml"))
-    template('locale.it.yml.erb', File.join('config/locales/', class_path, "#{file_name}.it.yml"))
-    template('locale.pt-BR.yml.erb', File.join('config/locales/', class_path, "#{file_name}.pt-BR.yml"))
+    LOCALES.each do |locale|
+      template("locale.#{locale}.yml.erb", File.join('config/locales/', class_path, "#{file_name}.#{locale}.yml"))
+    end
   end
 
   def create_actor_spec
