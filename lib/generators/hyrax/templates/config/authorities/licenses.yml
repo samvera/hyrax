@@ -39,7 +39,7 @@ terms:
       term: Creative Commons BY-NC-SA NonCommercial-ShareAlike 4.0 International
       active: true
     - id: http://creativecommons.org/publicdomain/zero/1.0/
-      term: Creative Commons CC0 1.0 Universal
+      term: CC0 1.0 Universal
       active: true
     - id: http://creativecommons.org/publicdomain/mark/1.0/
       term: Public Domain Mark 1.0
