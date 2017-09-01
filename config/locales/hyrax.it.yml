@@ -416,6 +416,18 @@ it:
       authorize_proxies: Autorizzare i Proxy
       breadcrumbs:
         admin: Amministrazione
+      collections:
+        edit:
+          header: 'Modifica collezione: %{title}'
+        form:
+          tabs:
+            description: Descrizione
+            sharing: compartecipazione
+            visibility: Visibilità
+        new:
+          header: Crea nuova collezione
+        show:
+          works_in_collection: Funziona in questa collezione
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       heading_actions:
@@ -694,10 +706,10 @@ it:
     transfers:
       new:
         confirm: Sei sicuro di voler trasferire la proprietà di questo lavoro ad un altro utente? Fai clic su OK per trasferire o Annulla per tornare alla schermata di trasferimento
-        header: "Trasferimento di proprietà"
-        placeholder: "Cerca un utente"
-        sr_only_description: 'Seleziona un utente per trasferire "%{work_title}", aggiungere commenti opzionali e quindi premere il trasferimento.'
-        title: 'Trasferimento di proprietà di "%{work_title}"'
+        header: Trasferimento di proprietà
+        placeholder: Cerca un utente
+        sr_only_description: Seleziona un utente per trasferire "%{work_title}", aggiungere commenti opzionali e quindi premere il trasferimento.
+        title: Trasferimento di proprietà di "%{work_title}"
     upload:
       alert:
         contact_href_text: Modulo di Contatto
@@ -741,8 +753,10 @@ it:
         note_html: Limitare l'accesso a soli utenti e / o gruppi da %{institution}
         text: "%{institution}"
       embargo:
+        note_html: Imposta la data per il rilascio futuro.
         text: Embargo
       lease:
+        note_html: Imposta la data per un futuro accesso ridotto.
         text: Contratto di locazione
       open:
         note_html: Tutti. <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per <a href="http://www.sherpa.ac.uk/romeo/">specifiche politiche</a> di copyright dei publisher se intendi brevettare e / o pubblicare il tuo %{type} in un diario.

@@ -129,7 +129,7 @@ Note here that the following commands assume you're setting up Hyrax in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-We recommend either Ruby 2.3 or the latest 2.2 version.
+We recommend either Ruby 2.4 or the latest 2.3 version.
 
 ## Redis
 
@@ -159,7 +159,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.5_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/master/template.rb
+rails _5.0.5_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.0.0.beta1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:

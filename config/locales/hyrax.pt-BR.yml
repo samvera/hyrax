@@ -416,6 +416,18 @@ pt-BR:
       authorize_proxies: Autorizar Proxies
       breadcrumbs:
         admin: Administração
+      collections:
+        edit:
+          header: 'Editar coleção: %{title}'
+        form:
+          tabs:
+            description: Descrição
+            sharing: Compartilhando
+            visibility: Visibilidade
+        new:
+          header: Criar nova coleção
+        show:
+          works_in_collection: Funciona nesta coleção
       create_work: Criar trabalho
       current_proxies: Proxies atuais
       heading_actions:
@@ -694,10 +706,10 @@ pt-BR:
     transfers:
       new:
         confirm: Tem certeza de que deseja transferir a propriedade deste trabalho para outro usuário? Clique em OK para transferir ou Cancelar para retornar à tela de transferência
-        header: 'Transferência de propriedade'
-        placeholder: "Procure um usuário"
-        sr_only_description: 'Selecione um usuário para transferir "%{work_title}" para, adicionar comentários opcionais e, em seguida, pressione transferência.'
-        title: 'Transferência de propriedade de "%{work_title}"'
+        header: Transferência de propriedade
+        placeholder: Procure um usuário
+        sr_only_description: Selecione um usuário para transferir "%{work_title}" para, adicionar comentários opcionais e, em seguida, pressione transferência.
+        title: Transferência de propriedade de "%{work_title}"
     upload:
       alert:
         contact_href_text: Formulário de Contato
@@ -741,8 +753,10 @@ pt-BR:
         note_html: Restringir acesso a apenas usuários e / ou grupos de %{institution}
         text: "%{institution}"
       embargo:
+        note_html: Definir data para lançamento futuro.
         text: Embargo
       lease:
+        note_html: Definir data para acesso futuro reduzido.
         text: De concessão
       open:
         note_html: Todos. Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para políticas de direitos autorais de editoras específicas se você planeja patinar e / ou publicar seu %{type} em um diário.

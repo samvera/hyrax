@@ -411,6 +411,18 @@ es:
       authorize_proxies: Autorizar Proxies
       breadcrumbs:
         admin: Administración
+      collections:
+        edit:
+          header: 'Editar colección: %{title}'
+        form:
+          tabs:
+            description: Descripción
+            sharing: Compartiendo
+            visibility: Visibilidad
+        new:
+          header: Crear una nueva colección
+        show:
+          works_in_collection: Trabajos en esta colección
       create_work: Crear Trabajo
       current_proxies: Proxies actuales
       heading_actions:
@@ -691,10 +703,10 @@ es:
     transfers:
       new:
         confirm: "¿Está seguro de que desea transferir la propiedad de este trabajo a otro usuario? Haga clic en Aceptar para transferir o Cancelar para volver a la pantalla de transferencia"
-        header: "Transferencia de propiedad"
-        placeholder: "Buscar un usuario"
-        sr_only_description: 'Seleccione un usuario para transferir "% {work_title}" a, agregue comentarios opcionales y luego presione transferir.'
-        title: 'Transferencia de propiedad de "%{work_title}"'
+        header: Transferencia de propiedad
+        placeholder: Buscar un usuario
+        sr_only_description: Seleccione un usuario para transferir "% {work_title}" a, agregue comentarios opcionales y luego presione transferir.
+        title: Transferencia de propiedad de "%{work_title}"
     upload:
       alert:
         contact_href_text: formulario de contacto
@@ -738,8 +750,10 @@ es:
         note_html: Restringir el acceso sólo a usuarios y/o grupos de %{institution}
         text: "%{institution}"
       embargo:
+        note_html: Establezca la fecha para el lanzamiento futuro.
         text: Embargo
       lease:
+        note_html: Establezca la fecha para el acceso reducido futuro.
         text: Arrendamiento
       open:
         note_html: Todo el mundo. Consulte <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> para conocer las políticas de derechos de autor de editores específicos si planea patentar y/o publicar su %{type} en un diario

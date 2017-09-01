@@ -416,6 +416,18 @@ fr:
       authorize_proxies: Autoriser les procurations
       breadcrumbs:
         admin: Administration
+      collections:
+        edit:
+          header: 'Modifier la collection: %{title}'
+        form:
+          tabs:
+            description: La description
+            sharing: Partage
+            visibility: Visibilité
+        new:
+          header: Créer une nouvelle collection
+        show:
+          works_in_collection: Fonctionne dans cette collection
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       heading_actions:
@@ -694,10 +706,10 @@ fr:
     transfers:
       new:
         confirm: Êtes-vous sûr de vouloir transférer la propriété de ce travail vers un autre utilisateur? Cliquez sur OK pour transférer ou Annuler pour revenir à l'écran de transfert
-        header: "Propriété de transfert"
-        placeholder: "Rechercher un utilisateur"
-        sr_only_description: 'Sélectionnez un utilisateur pour transférer "% {work_title}" à, ajoutez des commentaires facultatifs, puis appuyez sur transférer.'
-        title: 'Propriété de transfert de "%{work_title}"'
+        header: Propriété de transfert
+        placeholder: Rechercher un utilisateur
+        sr_only_description: Sélectionnez un utilisateur pour transférer "% {work_title}" à, ajoutez des commentaires facultatifs, puis appuyez sur transférer.
+        title: Propriété de transfert de "%{work_title}"
     upload:
       alert:
         contact_href_text: Formulaire de contact
@@ -741,8 +753,10 @@ fr:
         note_html: Limiter l'accès aux utilisateurs et / ou groupes exclus de %{institution}
         text: "%{institution}"
       embargo:
+        note_html: Date prévue pour la version ultérieure.
         text: Embargo
       lease:
+        note_html: Définir la date pour un accès réduit à venir.
         text: Bail
       open:
         note_html: Toutes les personnes. Consultez <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> pour les politiques de copyright des éditeurs spécifiques si vous prévoyez de breveter et / ou de publier votre %{type} dans un journal.
