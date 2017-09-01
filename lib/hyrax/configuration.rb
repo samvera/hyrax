@@ -222,6 +222,7 @@ module Hyrax
 
     attr_writer :banner_image
     def banner_image
+      # This image can be used for free and without attribution. See here for source and license: https://github.com/samvera/hyrax/issues/1551#issuecomment-326624909
       @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
