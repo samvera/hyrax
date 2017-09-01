@@ -22,11 +22,12 @@ RSpec.describe 'hyrax/admin/collection_types/index.html.erb', type: :view, clean
     expect(rendered).to have_content '4 collection types in this repository'
   end
 
-  it 'has edit buttons for all' do
-    expect(rendered).to have_button('Edit', count: 4)
+  it 'has edit buttons for custom and predefined collection types' do
+    expect(rendered).to have_link('Edit', count: 4)
   end
 
-  it 'has delete buttons for non-special collection types' do
-    expect(rendered).to have_button('Delete', count: 2)
+  it 'has delete buttons for custom collection types' do
+    # 2 delete buttons for the custom collection types and 1 for the delete modal
+    expect(rendered).to have_button('Delete', count: 3)
   end
 end

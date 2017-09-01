@@ -29,7 +29,8 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     stub_template 'hyrax/dashboard/collections/_sort_and_per_page.html.erb' => 'sort and per page'
     stub_template '_document_list.html.erb' => 'document list'
     # This is tested ./spec/views/hyrax/dashboard/collections/_show_actions.html.erb_spec.rb
-    stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE ACTIONS</div>'
+    stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE COLLECTION ACTIONS</div>'
+    stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
     stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     render
@@ -37,7 +38,8 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
   it 'draws the page' do
     # Making sure that we are verifying that the _show_actions.html.erb is rendering
-    expect(rendered).to have_css('.stubbed-actions', text: 'THE ACTIONS')
+    expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
+    expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
   end
 end
