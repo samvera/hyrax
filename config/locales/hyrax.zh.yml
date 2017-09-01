@@ -264,7 +264,7 @@ zh:
       unprocessable_entity:
         default: 您试着要修改的资源按照您的请求是不能被修改。
         empty_file: 您上传的文件无内容。
-    background_attribution_html: 背景图片的CC by-nc-sa 来自 <a href="https://flic.kr/p/eirxaf">f2b1610</a>
+    background_attribution_html: ''
     base:
       citations:
         header: '引文:'
