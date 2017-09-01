@@ -57,6 +57,22 @@ module Hyrax
                                                                                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS).pluck('DISTINCT agent_id')
         groups | ['admin']
       end
+
+      # @param collection_type_id [Integer]
+      # @param participants [Array]
+      def self.add_participants(collection_type_id, participants)
+        return unless collection_type_id && participants.count > 0
+        participants.each do |p|
+          begin
+            agent_type = p.fetch(:agent_type)
+            agent_id = p.fetch(:agent_id)
+            access = p.fetch(:access)
+            Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: agent_type, agent_id: agent_id, access: access)
+          rescue
+            Rails.logger.error "Participant not created for collection type #{collection_type_id}: #{agent_type}, #{agent_id}, #{access}\n"
+          end
+        end
+      end
     end
   end
 end

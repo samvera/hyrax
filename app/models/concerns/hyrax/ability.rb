@@ -3,8 +3,9 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :admin_group_name
+      class_attribute :admin_group_name, :registered_group_name
       self.admin_group_name = 'admin'
+      self.registered_group_name = 'registered'
       self.ability_logic += [:admin_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,
@@ -224,7 +225,7 @@ module Hyrax
 
       def registered_user?
         return false if current_user.guest?
-        user_groups.include? 'registered'
+        user_groups.include? registered_group_name
       end
 
       # Returns true if the current user is the depositor of the specified work

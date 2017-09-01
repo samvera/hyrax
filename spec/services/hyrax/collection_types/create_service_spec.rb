@@ -15,5 +15,11 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.description).to include('with options')
       expect(ct.discoverable?).to be_falsey
     end
+
+    it "creates collection participants defined in options" do
+      expect do
+        described_class.create_collection_type
+      end.to change(Hyrax::CollectionTypeParticipant, :count).by(described_class::DEFAULT_OPTIONS[:participants].count)
+    end
   end
 end

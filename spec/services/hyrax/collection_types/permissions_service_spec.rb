@@ -201,4 +201,14 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
       it { is_expected.to match_array ['manage_group', 'admin'] }
     end
   end
+
+  describe ".add_participants" do
+    let(:participants) { [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: 'test_group', access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }] }
+    let(:coltype) { create(:collection_type) }
+
+    it 'adds the participants to a collection type' do
+      expect(Hyrax::CollectionTypeParticipant).to receive(:create!)
+      described_class.add_participants(coltype.id, participants)
+    end
+  end
 end
