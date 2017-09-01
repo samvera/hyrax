@@ -1,4 +1,5 @@
 # coding: utf-8
+
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do
