@@ -222,7 +222,7 @@ module Hyrax
 
     attr_writer :banner_image
     def banner_image
-      @banner_image ||= "https://cloud.githubusercontent.com/assets/92044/18370978/88ecac20-75f6-11e6-8399-6536640ef695.jpg"
+      @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
     attr_writer :persistent_hostpath

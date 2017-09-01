@@ -263,7 +263,7 @@ it:
       unprocessable_entity:
         default: La risorsa che hai tentato di modificare non può essere modificata in base alla tua richiesta.
         empty_file: Il file che hai caricato non ha alcun contenuto.
-    background_attribution_html: Immagine di sfondo CC by-nc-sa di <a href="https://flic.kr/p/eirxaf" class="navbar-link">f2b1610</a>
+    background_attribution_html: ''
     base:
       citations:
         header: 'citazioni:'
