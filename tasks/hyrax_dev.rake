@@ -30,6 +30,27 @@ task :i18n_sorter do
   end
 end
 
+if Gem.loaded_specs.key? :engine_cart
+  namespace :engine_cart do
+    # This generate task should only add its action to an existing engine_cart:generate task
+    raise 'engine_cart:generate task should already be defined' unless Rake::Task.task_defined?('engine_cart:generate')
+    task :generate do |_task|
+      puts 'Running post-generation operations...'
+      Rake::Task['engine_cart:after_generate'].invoke
+    end
+
+    desc 'Operations that need to run after the test_app migrations have run'
+    task :after_generate do
+      puts 'Creating default collection type...'
+      EngineCart.within_test_app do
+        unless system "bundle exec rake hyrax:default_collection_types:create"
+          raise "EngineCart failed on with: #{$?}"
+        end
+      end
+    end
+  end
+end
+
 desc 'Generate the engine_cart and spin up test servers and run specs'
 task ci: ['rubocop', 'engine_cart:generate'] do
   puts 'running continuous integration'
