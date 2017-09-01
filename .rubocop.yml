@@ -31,7 +31,7 @@ Metrics/LineLength:
   Max: 200
 
 Metrics/AbcSize:
-  Max: 27
+  Max: 26
 
 Metrics/BlockLength:
   ExcludedMethods: ['included']
