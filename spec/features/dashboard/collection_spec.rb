@@ -10,6 +10,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   describe 'Your Collections tab' do
     context 'when non-admin user' do
       before do
+        user
+        admin_user
+        collection1
+        collection2
+        collection3
         sign_in user
         visit '/dashboard/my/collections'
       end
@@ -24,14 +29,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "lists only user's collections" do
-        expect(page).to have_link(collection1.title)
-        expect(page).to have_link(collection2.title)
-        expect(page).not_to have_link(collection3.title)
+        expect(page).to have_link(collection1.title.first)
+        expect(page).to have_link(collection2.title.first)
+        expect(page).not_to have_link(collection3.title.first)
       end
     end
 
     context 'when admin user' do
       before do
+        user
+        admin_user
+        collection1
+        collection2
+        collection3
         sign_in admin_user
         visit '/dashboard/my/collections'
       end
@@ -46,15 +56,20 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "lists only admin_user's collections" do
-        expect(page).not_to have_link(collection1.title)
-        expect(page).not_to have_link(collection2.title)
-        expect(page).to have_link(collection3.title)
+        expect(page).not_to have_link(collection1.title.first)
+        expect(page).not_to have_link(collection2.title.first)
+        expect(page).to have_link(collection3.title.first)
       end
     end
   end
 
   describe 'All Collections tab (for admin users only)' do
     before do
+      user
+      admin_user
+      collection1
+      collection2
+      collection3
       sign_in admin_user
       visit '/dashboard/my/collections'
     end
@@ -62,9 +77,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     it 'lists all collections for all users' do
       expect(page).to have_link 'All Collection'
       click_link 'All Collections'
-      expect(page).to have_link(collection1.title)
-      expect(page).to have_link(collection2.title)
-      expect(page).to have_link(collection3.title)
+      expect(page).to have_link(collection1.title.first)
+      expect(page).to have_link(collection2.title.first)
+      expect(page).to have_link(collection3.title.first)
     end
   end
 
@@ -255,69 +270,83 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
-    before do
-      sign_in user
-      visit '/dashboard/my/collections'
-    end
-
-    it "edits and update collection metadata" do
-      # URL: /dashboard/collections
-      expect(page).to have_content(collection.title.first)
-      within("#document_#{collection.id}") do
-        find('button.dropdown-toggle').click
-        click_link('Edit Collection')
-      end
-      # URL: /dashboard/collections/collection-id/edit
-      expect(page).to have_field('collection_title', with: collection.title.first)
-      expect(page).to have_field('collection_description', with: collection.description.first)
-      expect(page).to have_content(work1.title.first)
-      expect(page).to have_content(work2.title.first)
-
-      new_title = "Altered Title"
-      new_description = "Completely new Description text."
-      creators = ["Dorje Trollo", "Vajrayogini"]
-      fill_in('Title', with: new_title)
-      fill_in('Abstract or Summary', with: new_description)
-      fill_in('Creator', with: creators.first)
-      within('.panel-footer') do
-        click_button('Update Collection')
-      end
-      # URL: /dashboard/collections/collection-id
-      header = find('header')
-      expect(header).not_to have_content(collection.title.first)
-      expect(header).not_to have_content(collection.description.first)
-      expect(header).to have_content(new_title)
-      expect(page).to have_content(new_description)
-      expect(page).to have_content(creators.first)
-    end
-
-    context 'with discoverable set' do
-      let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable]).id }
-      let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable]).id }
-
-      it 'to true, it shows Discovery tab' do
-        visit "/dashboard/collections/#{discoverable_collection_id}"
-        expect(page).to have_link('Discovery', href: '#discovery')
+    context 'from dashboard -> collections action menu' do
+      before do
+        sign_in user
+        visit '/dashboard/my/collections'
       end
 
-      it 'to false, it hides Discovery tab' do
-        visit "/dashboard/collections/#{not_discoverable_collection_id}"
-        expect(page).not_to have_link('Discovery', href: '#discovery')
+      it "edits and update collection metadata" do
+        # URL: /dashboard/collections
+        expect(page).to have_content(collection.title.first)
+        within("#document_#{collection.id}") do
+          find('button.dropdown-toggle').click
+          click_link('Edit Collection')
+        end
+        # URL: /dashboard/collections/collection-id/edit
+        expect(page).to have_field('collection_title', with: collection.title.first)
+        expect(page).to have_field('collection_description', with: collection.description.first)
+        expect(page).to have_content(work1.title.first)
+        expect(page).to have_content(work2.title.first)
+
+        new_title = "Altered Title"
+        new_description = "Completely new Description text."
+        creators = ["Dorje Trollo", "Vajrayogini"]
+        fill_in('Title', with: new_title)
+        fill_in('Abstract or Summary', with: new_description)
+        fill_in('Creator', with: creators.first)
+        within('.panel-footer') do
+          click_button('Update Collection')
+        end
+        # URL: /dashboard/collections/collection-id
+        header = find('header')
+        expect(header).not_to have_content(collection.title.first)
+        expect(header).not_to have_content(collection.description.first)
+        expect(header).to have_content(new_title)
+        expect(page).to have_content(new_description)
+        expect(page).to have_content(creators.first)
       end
     end
 
-    context 'with sharable set' do
-      let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable]).id }
-      let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable]).id }
-
-      it 'to true, it shows Sharable tab' do
-        visit "/dashboard/collections/#{sharable_collection_id}"
-        expect(page).to have_link('Sharable', href: '#sharable')
+    context "tabs" do
+      before do
+        sign_in user
       end
 
-      it 'to false, it hides Sharable tab' do
-        visit "/dashboard/collections/#{not_sharable_collection_id}"
-        expect(page).not_to have_link('Sharable', href: '#sharable')
+      xit 'always includes branding' do # TODO: Pending PR for branding
+        visit "/dashboard/collections/#{collection.id}/edit"
+        expect(page).to have_content('Edit Collection')
+        expect(page).to have_link('Branding', href: '#branding')
+      end
+
+      context 'with discoverable set' do
+        let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable]).id }
+        let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable]).id }
+
+        it 'to true, it shows Discovery tab' do
+          visit "/dashboard/collections/#{discoverable_collection_id}/edit"
+          expect(page).to have_link('Discovery', href: '#discovery')
+        end
+
+        it 'to false, it hides Discovery tab' do
+          visit "/dashboard/collections/#{not_discoverable_collection_id}/edit"
+          expect(page).not_to have_link('Discovery', href: '#discovery')
+        end
+      end
+
+      context 'with sharable set' do
+        let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable]).id }
+        let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable]).id }
+
+        it 'to true, it shows Sharable tab' do
+          visit "/dashboard/collections/#{sharable_collection_id}/edit"
+          expect(page).to have_link('Sharing', href: '#sharing')
+        end
+
+        it 'to false, it hides Sharable tab' do
+          visit "/dashboard/collections/#{not_sharable_collection_id}/edit"
+          expect(page).not_to have_link('Sharing', href: '#sharing')
+        end
       end
     end
   end

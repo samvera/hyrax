@@ -5,21 +5,7 @@
     <%= presenter.permission_badge %>
     <%= presenter.collection_type_badge %>
 
-    <span class="sr-only h2"><%= t('hyrax.collection.actions.header') %></span>
-    <% if can? :destroy, presenter.solr_document %>
-      <%= link_to t('hyrax.collection.actions.delete.label'),
-                  dashboard_collection_path(presenter),
-                  title: t('hyrax.collection.actions.delete.desc'),
-                  class: 'btn btn-danger pull-right',
-                  data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
-                          method: :delete } %>
-    <% end %>
-    <% if can? :edit, presenter.solr_document %>
-      <%= link_to t('hyrax.collection.actions.edit.label'),
-                  edit_dashboard_collection_path(presenter),
-                  title: t('hyrax.collection.actions.edit.desc'),
-                  class: 'btn btn-default pull-right' %>
-    <% end %>
+    <%= render 'show_actions', presenter: presenter %>
   <% else %>
     <span class="h2"><%= title %></span>
   <% end %>
