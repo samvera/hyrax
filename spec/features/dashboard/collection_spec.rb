@@ -19,16 +19,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it 'has page title' do
+      it "has page title, does not have tabs, and lists only user's collections" do
         expect(page).to have_content 'Collections'
-      end
-
-      it 'does not have tabs' do
         expect(page).not_to have_link 'All Collections'
         expect(page).not_to have_link 'Your Collections'
-      end
-
-      it "lists only user's collections" do
         expect(page).to have_link(collection1.title.first)
         expect(page).to have_link(collection2.title.first)
         expect(page).not_to have_link(collection3.title.first)
@@ -46,16 +40,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it 'has page title' do
+      it "has page title, has tabs for All and Your Collections, and lists only admin_user's collections" do
         expect(page).to have_content 'Collections'
-      end
-
-      it 'has tabs for All and Your Collections' do
         expect(page).to have_link 'All Collections'
         expect(page).to have_link 'Your Collections'
-      end
-
-      it "lists only admin_user's collections" do
         expect(page).not_to have_link(collection1.title.first)
         expect(page).not_to have_link(collection2.title.first)
         expect(page).to have_link(collection3.title.first)
@@ -164,11 +152,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       visit '/dashboard/my/collections'
     end
 
-    it "has creation date for collections" do
+    it "has creation date for collections and shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection1.create_date.to_date.to_formatted_s(:standard))
-    end
 
-    it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
         click_link("Display all details of #{collection.title.first}")
