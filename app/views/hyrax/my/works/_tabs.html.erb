@@ -4,6 +4,6 @@
     <%= link_to t('hyrax.dashboard.all.works'), hyrax.dashboard_works_path %>
   </li>
   <li<%= ' class="active"'.html_safe if current_page?(hyrax.my_works_path(locale: nil)) %>>
-    <%= link_to t('hyrax.dashboard.my.works'), hyrax.my_works_path %>
+    <%= link_to t('hyrax.dashboard.my.works'), hyrax.my_works_path, data: { turbolinks: false } %>
   </li>
 </ul>
