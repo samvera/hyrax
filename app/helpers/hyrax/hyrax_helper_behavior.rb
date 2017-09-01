@@ -18,6 +18,7 @@ module Hyrax
     # @return [Hash<String,String>] locale abbreviations as keys and flags as values
     def available_translations
       {
+        'ca' => 'Català',
         'de' => 'Deutsch',
         'en' => 'English',
         'es' => 'Español',

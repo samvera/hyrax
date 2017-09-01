@@ -1,0 +1,840 @@
+---
+ca:
+  activefedora:
+    models:
+      batch_upload_item: Funciona per lots
+  activemodel:
+    errors:
+      messages:
+        conflict: Els vostres canvis no es poden desar perquè un altre usuari (o treball de fons) va actualitzar aquest %{model} després de començar a editar. Assegureu-vos que tots els fitxers adjunts s'hagin realitzat correctament i torneu-ho a provar Aquest formulari s'ha actualitzat amb la còpia guardada més recent del %{model}.
+  blacklight:
+    search:
+      fields:
+        facet:
+          admin_set_sim: Col·lecció
+          resource_type_sim: Tipus de recurs
+          suppressed_bsi: Estat
+        show:
+          admin_set: 'En el conjunt administratiu:'
+          based_near_label: Ubicació
+          contributor: Col·laboradors
+          keyword: Paraula clau
+      filters:
+        title: 'Filtrat per:'
+      start_over: Esborra els filtres
+  errors:
+    messages:
+      carrierwave_download_error: No s'ha pogut descarregar la imatge.
+      carrierwave_integrity_error: No una imatge.
+      carrierwave_processing_error: No es pot canviar la mida de la imatge.
+      extension_blacklist_error: 'No tens permís per penjar fitxers %{extension}, tipus prohibits: %{prohibited_types}'
+      extension_whitelist_error: 'No tens permís per penjar fitxers %{extension}, tipus permesos: %{allowed_types}'
+  helpers:
+    action:
+      admin_set:
+        new: Crea un conjunt administratiu nou
+      batch:
+        new: Crea un lot d'obres
+      cancel: Cancel·lar
+      collection:
+        new: Nova col·lecció
+      delete: Suprimeix
+      edit: Edita
+      work:
+        new: Afegeix un treball nou
+    submit:
+      admin_set:
+        create: Desa
+        update: Desa
+      create: Desa
+      hyrax_permission_template:
+        create: Desa
+        update: Desa
+      hyrax_permission_template_access:
+        create: Afegeix
+      proxy_deposit_request:
+        create: Transferència
+      update: Desa
+  hyrax:
+    account_label: Usuari
+    active_consent_to_agreement: He llegit i accepto el
+    admin:
+      admin_sets:
+        delete:
+          error_default_set: El conjunt administratiu no es pot esborrar ja que és el conjunt predeterminat
+          error_not_empty: El conjunt administratiu no es pot eliminar ja que no està buit
+          notification: El conjunt administratiu s'ha suprimit correctament
+        document_list:
+          edit: Edita
+          no_works: El conjunt administratiu no conté cap obra.
+          title: Llista d'elements d'aquest conjunt administratiu
+        edit:
+          header: Edita el conjunt administratiu
+        form:
+          cancel: Cancel·lar
+          permission_destroy_errors:
+            admin_group: El grup d'administradors del dipòsit no es pot eliminar
+          permission_update_errors:
+            error: L'opció d'actualització no vàlida per a la plantilla de permisos.
+            no_date: Cal una data per a l'opció d'alliberació seleccionada.
+            no_embargo: Es requereix un període d'embargament per a l'opció seleccionada.
+            nothing: Seleccioneu les opcions d'alliberament abans de prémer guardar.
+            varies: L'opció d'alliberament "Varia" requereix un període de data o embargament.
+          permission_update_notices:
+            new_admin_set: S'ha creat el conjunt administratiu '%{name}'. Utilitzeu les pestanyes addicionals per definir altres aspectes del conjunt administratiu.
+            participants: S'han actualitzat els drets de participació del conjunt administratiu
+            updated_admin_set: El conjunt administratiu '%{name}' s'ha actualitzat.
+            visibility: S'ha actualitzat la configuració de publicació i visibilitat del conjunt administratiu.
+            workflow: S'ha actualitzat el flux de treball del conjunt administratiu.
+          tabs:
+            description: Descripció
+            participants: Participants
+            visibility: Versió i visibilitat
+            workflow: Flux de treball
+        form_participant_table:
+          admin_users: Administradors del dipòsit
+          allow_all_registered: Permet que tots els usuaris registrats dipositen
+          depositors:
+            action: Acció
+            agent_name: Dipositants d'aquest conjunt
+            empty: No s'ha afegit cap dipòsit a aquest conjunt administratiu.
+            help: Els dipositants poden afegir nous treballs a aquest conjunt administratiu.
+            remove: Elimina
+            title: Dipositants
+            type: Escriviu
+          managers:
+            action: Acció
+            agent_name: Responsables d'aquest conjunt
+            empty: No s'han afegit cap administrador a aquest conjunt administratiu.
+            help: Els administradors d'aquest conjunt administratiu poden editar les metadades establertes, els participants i la configuració de publicació i visibilitat. Els administradors també poden editar metadades de treball, afegir o treure fitxers d'un treball i afegir noves obres al conjunt.
+            remove: Elimina
+            title: Gerents
+            type: Escriviu
+          registered_users: Usuaris registrats
+          viewers:
+            action: Acció
+            agent_name: Espectadors d'aquest conjunt
+            empty: No s'ha afegit cap espectador a aquest conjunt administratiu.
+            help: Els espectadors d'aquest conjunt administratiu poden veure les obres del conjunt independentment de la configuració de visibilitat aplicada al treball. Per exemple, els espectadors poden veure les obres d'aquest conjunt, fins i tot si les obres estan actualment bloquejades o restringides.
+            remove: Elimina
+            title: Espectadors
+            type: Escriviu
+        form_participants:
+          add_group: 'Afegeix grup:'
+          add_participants: Afegeix participants
+          add_user: 'Afegeix usuari:'
+          current_participants: Participants actuals
+        form_visibility:
+          cancel: Cancel·lar
+          page_description: El control de configuració de la versió i la visibilitat quan s'afegeixen a aquest conjunt estan disponibles per descobrir-los i descarregar-los i qui els pot descobrir i descarregar.
+          release:
+            description: Podeu imposar un retard (embargament) abans que els treballs d'aquest conjunt administratiu estiguin disponibles per a la seva descàrrega i descàrrega.
+            fixed: S'ha solucionat el llançament de demora de totes les obres fins a
+            no_delay: 'Sense demora: alliberi totes les obres tan bon punt es dipositen'
+            title: Publicació
+            varies:
+              between: Entre "ara" i
+              description: 'Varia - els dipositants poden establir la data de llançament d''un treball individual:'
+              embargo:
+                1yr: 1 any després del dipòsit
+                2yrs: 2 anys després del dipòsit
+                3yrs: 3 anys després del dipòsit
+                6mos: 6 mesos després del dipòsit
+                select: Selecciona el període de bloqueig ...
+          visibility:
+            description: 'Després de la seva data de llançament, les obres d''aquest conjunt es poden descobrir i descarregar:'
+            everyone: 'Tothom: tots els treballs d''aquest conjunt seran públics'
+            institution: 'Institució: tots els treballs seran visibles només per als usuaris autenticats d''aquesta institució'
+            restricted: 'Restringit: tots els treballs seran visibles només per als administradors i gestors de repositoris i revisors d''aquest conjunt administratiu'
+            title: Visibilitat
+            varies: 'Varies: el valor predeterminat és públic, però els depositants poden restringir la visibilitat de les obres individuals'
+        form_workflow:
+          cancel: Cancel·lar
+          no_workflows: No hi ha fluxos de treball per seleccionar.
+          page_description: Cada conjunt administratiu té un flux de treball associat. Aquest flux de treball s'aplica a totes les obres afegides al conjunt administratiu. Seleccioneu el flux de treball que s'utilitzarà per a aquest conjunt administratiu a continuació.
+        new:
+          header: Crea un nou conjunt administratiu
+        show:
+          breadcrumb: Veure conjunt
+          confirm_delete: Estàs segur que vols eliminar aquest conjunt administratiu? Aquesta acció no es pot desfer.
+          header: Conjunt administratiu
+          item_list_header: Funciona en aquest conjunt
+      appearances:
+        show:
+          header: Aparença
+        update:
+          flash:
+            success: L'aparició s'ha actualitzat correctament
+      features:
+        index:
+          action: Acció
+          description: Descripció
+          feature: Característica
+          header: Característiques
+      sidebar:
+        activity: Activitat
+        admin_sets: Conjunts administratius
+        appearance: Aparença
+        collections: Col·leccions
+        configuration: Configuració
+        content_blocks: Blocs de contingut
+        notifications: Notificacions
+        pages: Pàgines
+        profile: Perfil
+        repository_objects: Contenido del repositori
+        settings: Configuració
+        statistics: Informes
+        tasks: Tasques
+        technical: Característiques
+        transfers: Trasllats
+        user_activity: La vostra activitat
+        users: Gestiona els usuaris
+        workflow_review: Revisa els enviaments
+        workflow_roles: Rols del flux de treball
+        works: Obres
+      stats:
+        deposited_form:
+          end_label: Final [actualitzat per defecte]
+          heading: 'Fitxers de visualització dipositats:'
+          start_label: Començar
+        repository_objects:
+          series:
+            published: Publicat
+            unknown: Desconegut
+            unpublished: No publicat
+        user_deposits:
+          end_label: S'ha finalitzat [per defecte fins ara]
+          heading: Mostra fitxers dipositats pels usuaris
+          start_label: Començant
+        works:
+          headers:
+            main: Estadístiques de treball
+            total: 'Total d''obres:'
+            visibility: Totals per visibilitat
+      users:
+        index:
+          access_label: Últim accés
+          describe_users_html:
+            one: Hi ha l' <b>usuari %{count}</b> en aquest repositori.
+            other: Hi ha <b>usuaris %{count}</b> en aquest repositori.
+          id_label: Nom d'usuari
+          role_label: Rols
+          title: Gestiona els usuaris
+      workflow_roles:
+        header: Rols del flux de treball
+        index:
+          current_roles: Funcions actuals
+          delete:
+            confirm: Estàs segur?
+          header:
+            roles: Rols
+            user: Usuari
+          new_role: Assigna funcions
+          no_roles: Sense papers
+      workflows:
+        index:
+          header: Revisa els enviaments
+          tabs:
+            published: Publicat
+            under_review: Sota revisió
+    api:
+      accepted:
+        default: S'ha acceptat la vostra sol·licitud per al processament, però el procés no s'ha completat. Vegeu treball per obtenir més informació.
+      bad_request:
+        default: No es pot processar la vostra sol·licitud. Vegeu els errors per obtenir més informació.
+      deleted:
+        default: S'ha suprimit el recurs
+      forbidden:
+        default: No tens autorització per accedir a aquest contingut.
+      internal_error:
+        default: El servidor ha trobat un error.
+      not_found:
+        default: No s'ha pogut trobar un recurs que coincideixi amb la vostra sol·licitud.
+      success:
+        default: La vostra sol·licitud s'ha processat correctament.
+      unauthorized:
+        default: Ha d'iniciar la sessió per fer això!
+      unprocessable_entity:
+        default: El recurs que heu intentat modificar no es pot modificar segons la vostra sol·licitud.
+        empty_file: El fitxer que has penjat no té cap contingut.
+    background_attribution_html: Imatge de fons CC by-nc-sa per <a href="https://flic.kr/p/eirxaf" class="navbar-link">f2b1610</a>
+    base:
+      citations:
+        header: 'Cites:'
+      form_files:
+        dropzone: Arrossegueu els fitxers aquí.
+        external_upload: Proveïdors de núvols
+        local_upload: Afegeix fitxers locals
+      form_permission_under_embargo:
+        help_html: "<strong>Aquest treball està sota embargament.</strong> Podeu canviar la configuració del canvi aquí, o podeu visitar el %{edit_link} per desactivar-lo."
+        legend_html: Visibilitat <small>Qui hauria de poder veure o descarregar aquest contingut?</small>
+        management_page: Pàgina d'administració d'embargament
+      form_permission_under_lease:
+        help_html: "<strong>Aquest treball està sota arrendament.</strong> Podeu canviar la configuració de l'arrendament aquí, o podeu visitar el %{edit_link} per desactivar-lo."
+        legend_html: Visibilitat <small>Qui hauria de poder veure o descarregar aquest contingut?</small>
+        management_page: Pàgina de gestió de l'arrendament
+      form_progress:
+        required_agreement: Consulta el dipòsit
+        required_descriptions: Descriu el vostre treball
+        required_files: Afegeix arxius
+        requirements: Requisits
+      items:
+        actions: Accions
+        date_uploaded: Data de càrrega
+        empty: Aquest %{type} no té fitxers associats. Feu clic a "Edita" per afegir més fitxers.
+        header: Articles
+        thumbnail: Miniatura
+        title: Títol
+        visibility: Visibilitat
+      metadata:
+        attribute_name_label: Nom de l'atribut
+        attribute_values_label: Valors
+        header: Descripcions
+      relationships:
+        empty: Aquest %{type} no està actualment en cap col·lecció.
+        header: Relacions
+      relationships_parent_row:
+        label: 'En %{type}:'
+      show:
+        last_modified: 'Darrera modificació: %{value}'
+      social_media:
+        facebook: Facebook
+        google: Google+
+        tumblr: Tumblr
+        twitter: Twitter
+    batch:
+      help:
+        resource_type: Podeu seleccionar diversos tipus per aplicar a tots els fitxers
+        title: Nom del fitxer serà el títol predeterminat. Proporcioneu un títol més significatiu i el sistema mantindrà els noms dels fitxers.
+    batch_uploads:
+      disabled: Característica desactivada per l'administrador
+      files:
+        button_label: Afegeix un treball nou
+        instructions: Cada fitxer es carregarà a un treball nou per separat, resultant en un treball per fitxer carregat.
+        upload_type_instructions: Per crear un treball únic per a tots els fitxers, aneu a
+      new:
+        header: Lote Crear noves obres
+        in_collections: Aquestes obres en col·leccions
+        in_other_works: Aquest treball en altres treballs
+        in_this_work: Altres treballs d'aquest treball
+      progress:
+        header: Desar obres
+    bread_crumb:
+      search_results: Torna als resultats de la cerca
+    collection:
+      actions:
+        add_works:
+          desc: Afegiu treballs a aquesta col·lecció
+          label: Afegeix treballs
+        delete:
+          confirmation: Voleu eliminar aquesta col·lecció?
+          desc: Suprimeix aquesta col·lecció
+          label: Suprimeix
+        edit:
+          desc: Editeu aquesta col·lecció
+          label: Edita
+        header: Accions
+      browse_view: Visualitza la vista
+      document_list:
+        edit: Edita
+        no_visible_works: La col·lecció està buida o no conté elements als quals teniu accés.
+      edit:
+        manage_items: Gestiona els elements d'aquesta col·lecció
+      form:
+        additional_fields: Camps addicionals
+        description: Descripcions
+      is_part_of: És part de
+      select_form:
+        close: Tanca
+        create: Crea una col·lecció
+        create_new: Afegeix a la nova col·lecció
+        no_collections: No teniu accés a cap col·lecció existent. Podeu crear una nova col·lecció.
+        select_heading: 'Seleccioneu la col·lecció per afegir els vostres fitxers a:'
+        title: Afegeix a la col·lecció
+        update: Actualitza la col·lecció
+    collections:
+      edit:
+        header: 'Edita la col·lecció: %{title}'
+      form:
+        tabs:
+          description: Descripció
+          sharing: Compartir
+          visibility: Visibilitat
+      new:
+        header: Crea una nova col·lecció
+      search_form:
+        button_label: Anar
+        label: Recerca Col·lecció %{title}
+        placeholder: Recerca de col·lecció
+      show:
+        works_in_collection: Funciona en aquesta col·lecció
+    contact_form:
+      button_label: Enviar
+      email_label: El teu email
+      header: Formulari de contacte
+      issue_types:
+        browsing: Navegació i cerca
+        changing: Fer canvis al meu contingut
+        depositing: Dipòsit de contingut
+        general: Sol·licitud o consulta general
+        reporting: S'ha informat d'un problema
+      message_label: Missatge
+      name_label: El teu nom
+      notice: Utilitzeu el formulari de contacte per enviar consultes sobre aquest sistema; Informar d'un problema amb el qual esteu experimentant; Demanar assistència mitjançant el sistema; O per proporcionar comentaris generals. Consulteu la pàgina d'ajuda per obtenir informació addicional sobre aquest sistema.
+      select_type: Seleccioneu un tipus d'emissió
+      subject_label: Assignatura
+      type_label: Tipus d'emissió
+    content_blocks:
+      cancel: Cancel·lar
+      tabs:
+        announcement_text: Text d'anunci
+        featured_researcher: Investigador destacat
+        marketing_text: Text de màrqueting
+      updated: S'han actualitzat blocs de contingut.
+    controls:
+      about: Quant a
+      contact: Contacte
+      help: Ajuda
+      home: Inici
+    dashboard:
+      additional_notifications: Veure totes les notificacions
+      admin_sets:
+        admin_set: Conjunt administratiu
+        files: Arxius
+        subtitle: Activitat recent
+        title: Conjunts administratius
+        works: Obres
+      all:
+        collections: Totes les col·leccions
+        works: Totes les obres
+      authorize_proxies: Autoritza Proxies
+      breadcrumbs:
+        admin: Administració
+      create_work: Crea treball
+      current_proxies: Proxies actuals
+      heading_actions:
+        close: Tanca
+        create_work: Crea treball
+        select_type_of_work: Seleccioneu el tipus de feina
+      manage_proxies: Gestioneu els proxies
+      my:
+        action:
+          collection_confirmation: Esborrar una col·lecció de %{application_name} és permanent. Feu clic a D'acord per eliminar aquesta col·lecció de %{application_name} o Cancel·lar per cancel·lar aquesta operació
+          delete_collection: Suprimeix la col·lecció
+          delete_work: Suprimeix el treball
+          edit_collection: Edita la col·lecció
+          edit_work: Edita el treball
+          select: Selecciona
+          select_all: Selecciona la pàgina actual
+          select_none: Seleccioneu Cap
+          transfer: Transferència de propietat del treball
+          work_confirmation: Esborrar una obra de %{application_name} és permanent. Feu clic a Accepta per eliminar aquesta obra de %{application_name} o Cancel·la per cancel·lar aquesta operació
+        collection_list:
+          description: 'Descripció:'
+          edit_access: 'Edita l''accés:'
+          groups: 'Grups:'
+          users: 'Usuaris:'
+        collections: Les vostres col·leccions
+        facet_label:
+          collections: 'Col·leccions de filtres:'
+          highlighted: 'Filtrat destaca:'
+          shared: 'Accions de filtre:'
+          works: 'El filtre funciona:'
+        heading:
+          action: Accions
+          date_uploaded: Data Afegida
+          title: Títol
+          visibility: Visibilitat
+        highlighted: Els meus punts destacats
+        shared: Obres compartides amb mi
+        sr:
+          batch_checkbox: Marqueu per afegir a una col·lecció o una llista d'edició
+          check_all_label: Seleccioneu tots els fitxers que vulgueu afegir a una col·lecció o editar
+          detail_label: Mostra els detalls de resum de
+          listing: Llistat d'elements que heu dipositat
+          press_to: Premeu per a
+          show_label: Mostra tots els detalls de
+        works: Les vostres obres
+      no_activity: L'usuari no té cap activitat recent
+      no_notifications: L'usuari no té cap notificació
+      no_transfer_requests: No heu rebut cap sol·licitud de transferència de feina
+      no_transfers: No heu transferit cap obra
+      proxy_activity: Activitat proxy
+      proxy_user: Usuari proxy
+      show_admin:
+        new_visitors: Visitants nous
+        registered_users: Usuaris registrats
+        repository_growth:
+          subtitle: Passats 90 dies
+          title: Creixement de repositori
+        repository_objects:
+          subtitle: Estat actual
+          title: Objectes de dipòsit
+        returning_visitors: Visitants que tornen
+        total_visitors: Total de visitants
+        user_activity:
+          subtitle: Registre de nous usuaris
+          title: Activitat de l'usuari
+      stats:
+        collections: S'han creat col·leccions
+        file_downloads: descarregar
+        file_views: Veure
+        files: Fitxers dipositats
+        heading: Les vostres estadístiques
+        works: Obres creades
+      title: El meu Tauler d'instruments
+      transfer_of_ownership: Transferències de propietat
+      transfer_works_link: Seleccioneu les obres per transferir
+      transfers_received: Transferències rebudes
+      transfers_sent: Transfers enviats
+      user_activity: Activitat de l'usuari
+      user_notifications: Notificacions d'usuaris
+      view_files: Mostra fitxers
+    document_language: En
+    edit_profile: Editar el perfil
+    embargoes:
+      edit:
+        embargo_apply: Apliqui l'embargament
+        embargo_cancel: Cancel·lar i gestionar tots els embargaments
+        embargo_deactivate: Desactiva l'embargament
+        embargo_false_html: "<strong>Aquest %{cc} no està actualment sota embargament.</strong> Si voleu aplicar un embargament, proporcioneu la informació aquí."
+        embargo_return: Torna a editar aquest %{cc}
+        embargo_true_html: "<strong>Aquest %{cc} està sota embargament.</strong>"
+        embargo_update: Actualització Embargo
+        header:
+          current: Embargament actual
+          past: Embargaments passats
+        history_empty: Aquest %{cc} no té embargaments anteriors aplicats a això.
+        manage_embargoes_html: Gestioneu embargaments per %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tots els embargaments actius
+        deactivated: Desbloquejar embargaments
+        expired: Embargaments actius vençuts
+        manage_embargoes: Gestioneu embargaments
+      list_expired_active_embargoes:
+        change_all: Canvieu tots els fitxers de %{cc} a
+        deactivate: Desactiva l'embargament
+        deactivate_selected: Desactiveu els embargaments per als seleccionats
+        missing: No hi ha embargaments vençuts en vigor en aquest moment.
+      table_headers:
+        release_date: Data de llançament de l'embargament
+        title: Títol
+        type: Tipus de treball
+        viz_after: La visibilitat canviarà a
+        viz_current: Visibilitat actual
+    featured_researchers: Investigadors destacats
+    file_manager:
+      link_text: Gestor d'arxius
+    file_set:
+      browse_view: Visualitza la vista
+      show:
+        download: Baixeu el fitxer
+        downloadable_content:
+          default_link: Descarrega l'arxiu
+          heading: Contingut descarregable
+          image_link: Descarregar imatge
+          office_link: Descarrega l'arxiu
+          pdf_link: Descarregar PDF
+    file_sets:
+      groups_description:
+        description_html: La llista de grups del menú desplegable marcada com a "Selecciona un grup" és una llista de Grups gestionats d'usuaris dels quals sou membre. Podeu seleccionar un grup específic i assignar un nivell d'accés per a un fitxer dins de %{application_name}, de manera similar a l'hora d'afegir els nivells d'accés dels usuaris.
+    help:
+      header: Suport per a l'usuari
+      override_text: Utilitzeu app / views / static / help.html.erb per substituir aquest fitxer.
+    homepage:
+      admin_sets:
+        link: Veure totes les col·leccions
+        tab_label: Explora les col·leccions
+        title: Explora les col·leccions
+      featured_researcher:
+        missing: No s'han presentat investigadors.
+        tab_label: Investigador destacat
+        title: Investigador destacat
+      featured_works:
+        drag: Arrossegueu
+        no_works: No s'ha presentat cap obra
+        tab_label: Obres destacades
+        title: Obres destacades
+      recently_uploaded:
+        depositor: Dipositari
+        details: Detalls
+        no_public: No s'ha contribuït cap treball públic.
+        tab_label: Pujats recentment
+        title: Pujats recentment
+    icons:
+      collection: Fa fa-cubs
+      default: Fa fa-cube
+    leases:
+      edit:
+        header:
+          current: Arrendament actual
+          past: Arrendaments anteriors
+        history_empty: Aquest %{cc} no té contractes d'arrendament anteriors.
+        lease_apply: Sol·liciteu contracte d'arrendament
+        lease_cancel: Cancel·lar i gestionar tots els contractes d'arrendament
+        lease_deactivate: Desactiva l'arrendament
+        lease_false_html: "<strong>Aquest %{cc} no està actualment en règim d'arrendament.</strong> Si voleu aplicar un contracte d'arrendament, proporcioneu la informació aquí."
+        lease_return: Torna a editar aquest %{cc}
+        lease_true_html: "<strong>Aquest %{cc} està sota arrendament.</strong>"
+        lease_update: Actualització de l'arrendament
+        manage_leases_html: Gestionar els arrendaments per a %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Tots els arrendaments actius
+        deactivated: Arrendaments desactivats
+        expired: Arrendaments actius caducats
+        manage_leases: Gestió d'arrendaments
+      list_expired_active_leases:
+        change_all: Canvieu tots els fitxers de %{cc} a
+        deactivate: Desactiva l'arrendament
+        deactivate_selected: Desactiva els contractes d'arrendament per a seleccionats
+        missing: No hi ha arrendaments vençuts en vigor en aquest moment.
+      table_headers:
+        release_date: Data de llançament de l'arrendament
+        title: Títol
+        type: Tipus de treball
+        viz_after: La visibilitat canviarà a
+        viz_current: Visibilitat actual
+    mailbox:
+      date: Data
+      delete: Suprimeix el missatge
+      empty: No s'ha trobat cap notificació
+      message: Missatge
+      notifications_deleted: S'han suprimit les notificacions
+      subject: Assignatura
+    messages:
+      failure:
+        multiple:
+          keyword: No s'ha pogut actualitzar. No teniu privilegis suficients per editar-los.
+          link: Aquests fitxers
+        single: No s'ha pogut actualitzar. No teniu privilegis suficients per editar-lo.
+        subject: S'ha denegat el permís de càrrega per lots
+        title: Ha fallat els fitxers
+      success:
+        multiple:
+          keyword: S'han desat.
+          link: Aquests fitxers
+        single: S'ha desat.
+        subject: S'ha completat la càrrega per lots
+        title: Fitxers carregats amb èxit
+    pages:
+      cancel: Cancel·lar
+      tabs:
+        about_page: Sobre la pàgina
+        agreement_page: Acord de dipòsit
+        help_page: Pàgina d'ajuda
+        terms_page: Condicions d'ús
+      updated: Pàgines actualitzades.
+    passive_consent_to_agreement: En desar aquesta obra, accepto la
+    search:
+      button:
+        html: <span class="glyphicon glyphicon-search"></span> Anar
+        text: Cerca
+      form:
+        option:
+          all:
+            label_long: Tots els %{application_name}
+            label_short: Tots
+          my_collections:
+            label_long: Les meves col·leccions
+            label_short: Les meves col·leccions
+          my_shares:
+            label_long: Les meves accions
+            label_short: Les meves accions
+          my_works:
+            label_long: Les meves obres
+            label_short: Les meves obres
+        q:
+          label: Cerca %{application_name}
+          placeholder: Introduïu els termes de cerca
+    select_type:
+      description: Tipus de treball de propòsit general
+      icon_class: Fa fa-file-text-o
+      name: Treball
+    share_button: Comparteix el teu treball
+    single_use_links:
+      button: Enllaç d'ús individual al fitxer
+      copy:
+        button: Copia
+        tooltip: Copiat
+      delete: Suprimeix
+      download:
+        type: descarregar
+      expiration:
+        lesser_time: En menys d'una hora
+        time: En hores %{value}
+      expiration_message: Enllaç %{link} expira %{time}
+      show:
+        type: Espectacle
+      table:
+        actions: Accions
+        expires: Caduca
+        key: Clau
+        link: Enllaç
+        no_links: No s'han generat enllaços
+      title: Enllaços d'ús individual
+    sort_label: Ordena la llista d'elements
+    toolbar:
+      dashboard:
+        menu: panell
+      language_switch: Canvia l'idioma
+      notifications: No teniu cap notificació no llegida
+      profile:
+        login: iniciar Sessió
+        logout: Tancar sessió
+        sr_action: Veure
+        sr_target: Perfil
+    transfers:
+      new:
+        confirm: Esteu segur que voleu transferir la propietat d'aquest treball a un altre usuari? Feu clic a Accepta per transferir o Cancel·la per tornar a la pantalla de transferència
+    upload:
+      alert:
+        contact_href_text: Formulari de contacte
+        fail_html: Hi ha hagut un problema durant la càrrega, cap dels vostres fitxers carregats correctament. Por favor %{reload_href}. Utilitzeu el %{contact_href} per informar l'error si persisteix.
+        fail_restart_href_text: comença de nou
+        partial_fail_html: Un o més fitxers no s'han carregat correctament. Per continuar utilitzant els fitxers carregats de %{metadata_href}. <br /> Utilitzeu el %{contact_href} per informar l'error si persisteix.
+        partial_fail_metadata_href_text: Editeu les metadades
+      browse_everything:
+        browse_files_button: Navega pels fitxers del núvol
+        files_selected: S'han seleccionat els fitxers
+        sr_tab_label: Arxius d'accés des de
+        tab_label: Proveïdors de núvols
+      change_access_flash_message: Actualització dels nivells d'accés a fitxers. Això pot trigar uns quants minuts. És possible que vulgueu actualitzar el navegador o tornar a aquest registre més tard per veure els nivells d'accés dels fitxers actualitzats.
+      change_access_message_html: "<p> Heu canviat el nivell d'accés al treball <i>%{curation_concern}</i> , fent-lo accessible per a altres usuaris o grups per veure o editar. </p><p> Voleu canviar tots els fitxers del treball per tenir els mateixos usuaris, grups i visibilitat d'accés? </p>"
+      change_access_no_message: No, ho actualitzaré manualment.
+      change_access_yes_message: Si, si us plau.
+      change_permissions_message_html: "<p> Heu canviat els permisos d'aquest %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , fent-lo visible a <b>%{visibility_badge}</b> . </p><p> Voleu canviar tots els fitxers del %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> ? </p>"
+      cloud_timeout_message_html: Tingueu en compte que si carrega una gran quantitat de fitxers en un període curt de temps, és possible que el proveïdor del núvol no pugui acomodar la vostra sol·licitud. Si experimenta algun error en penjar-se del núvol, avísenos a través del %{contact_href}.
+      local_ingest:
+        tab_label: Ubicació del servidor de xarxa
+      my_computer:
+        sr_instructions: Accepteu l'acord de dipòsit i, a continuació, seleccioneu fitxers. Premeu el botó Comença a penjar un cop seleccionats tots els fitxers.
+        sr_tab_label: Arxius d'accés des de
+        tab_label: El meu ordinador
+      permissions_message: S'estan actualitzant els permisos d'arxiu. Això pot trigar uns quants minuts. És possible que vulgueu actualitzar el vostre navegador o tornar a aquest registre més tard per veure els permisos d'arxiu actualitzats.
+      processing: S'està processant el fitxer; Podeu editar quan s'hagi completat el procés
+    user_profile:
+      orcid:
+        alt: Icona ORCID
+        label: Perfil ORCID
+      tab_activity: Activitat
+      tab_highlighted: Destacat
+      tab_profile: Perfil
+      zotero:
+        alt: Icona de Zotero
+        connected: Connectat
+        label: Perfil de Zotero
+        unlinked: Enllaç amb Zotero
+    visibility:
+      authenticated:
+        class: Etiqueta-info
+        note_html: Restringeix l'accés només a usuaris i / o grups de %{institution}
+        text: "%{institution}"
+      embargo:
+        class: Advertiment d'etiqueta
+        text: Embargament
+      lease:
+        class: Advertiment d'etiqueta
+        text: Arrendament
+      open:
+        class: Etiqueta-èxit
+        note_html: Tothom Consulteu <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> per a les polítiques de copyright dels editors específics si voleu patentar i / o publicar el vostre %{type} en un diari.
+        text: Públic
+        warning_html: '<p> <strong>Tingueu en compte que</strong> fer que hi hagi alguna cosa visible per al món (és a dir, marcar-ho com %{label}) es pot veure com a publicació que podria afectar la vostra habilitat per: </p><ul><li> Patenta el teu treball </li><li> Publica el teu treball en una revista </li></ul><p> Consulteu <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> per obtenir més informació sobre les polítiques de copyright de l''editor. </p>'
+      open_title_attr: Canvieu la visibilitat d'aquest recurs
+      restricted:
+        class: Etiquetatge-perill
+        note_html: Només usuaris i / o grups que hagin rebut accés específic a la secció "Compartir amb".
+        text: Privat
+      restricted_title_attr: Canvieu la visibilitat d'aquest recurs
+    workflow:
+      default:
+        deposit: Dipòsit
+      load:
+        state_error: 'El flux de treball: %{workflow_name} no s''ha actualitzat. Esteu eliminant un estat: %{state_name} amb l''entitat %{entity_count}. És possible que un estat no es retiri mentre tingui entitats actives.'
+      unauthorized: El treball no està disponible actualment perquè encara no ha completat el procés d'aprovació
+    works:
+      create:
+        after_create_html: Els fitxers s'estan processant per %{application_name} en segon pla. S'estan aplicant els controls de metadades i accessos especificats. És possible que hàgiu d'actualitzar aquesta pàgina per veure aquestes actualitzacions.
+        breadcrumb: Afegeix un treball nou
+        header: Afegeix nou %{type}
+      edit:
+        breadcrumb: Edita
+      form:
+        additional_fields: Camps addicionals
+        in_collections: Aquest treball en col·leccions
+        in_other_works: Aquest treball en altres treballs
+        in_this_work: Altres treballs d'aquest treball
+        tab:
+          files: Arxius
+          metadata: Descripcions
+          relationships: Relacions
+          share: Compartir
+        visibility_until: Fins a
+      progress:
+        header: Desa el treball
+      show:
+        no_preview: No hi ha vista prèvia disponible
+      update:
+        header: Edita el treball
+  simple_form:
+    hints:
+      admin_set:
+        description: Una breu descripció general que s'aplica a totes les obres recollides en aquest conjunt. Per exemple, "Tesis i fitxers complementaris creats pels estudiants graduats de la Facultat de Ciències de la Terra".
+        title: Un nom per ajudar a identificar el conjunt administratiu i distingir-lo d'altres conjunts administratius del repositori.
+      collection:
+        based_near: Un nom de lloc relacionat amb la col·lecció, com el seu lloc de publicació, o la ciutat, estat o país en què es tracta el contingut de la col·lecció. Demana al <a href='http://www.geonames.org'> servei web de GeoNames </ a>.
+        contributor: Una persona o grup que voleu reconèixer per tenir un paper en la creació de la col·lecció, però no el paper principal.
+        creator: La persona o grup responsable de la col·lecció. En general, aquest és l'autor del contingut. Els noms personals s'han d'introduir primer amb el cognom, p. Ex. & Quot; Smith, John. & Quot ;.
+        date_created: La data en què es va crear la col·lecció.
+        description: Notes de text lliure sobre la col·lecció. Els exemples inclouen resums d'un document o informació de citacions per a un article de revista.
+        identifier: Un identificador únic que identifica la col·lecció. Un exemple seria un DOI per a un article de revista, o un número ISBN o OCLC per a un llibre.
+        keyword: Paraules o frases que seleccioneu per descriure què és la col·lecció. S'utilitzen per buscar contingut.
+        language: L'idioma del contingut de la col·lecció.
+        license: Informació de llicències i distribució que regula l'accés a la col·lecció. Seleccioneu a la llista desplegable proporcionada.
+        publisher: La persona o grup que fa la col·lecció disponible. En general, aquesta és la institució.
+        related_url: Un enllaç a un lloc web o a un altre contingut específic (àudio, vídeo, document PDF) relacionat amb la col·lecció. Un exemple és l'URL d'un projecte de recerca a partir del qual es va obtenir la col·lecció.
+        resource_type: Categories predefinides per descriure el tipus de contingut que s'està carregant, com ara & quot; article & quot; O "Datagrama". & Quot; Es pot seleccionar més d'un tipus.
+        subject: Títols o termes d'índex que descriuen el que tracta la col·lecció; Aquests necessiten conformar-se amb un vocabulari existent.
+        title: Un nom per ajudar a identificar una col·lecció.
+      defaults:
+        based_near: Un topònim relacionat amb l'obra, com ara el lloc de publicació, o la ciutat, l'estat o el país en què es tracta el contingut del treball. Demana al <a href='http://www.geonames.org'> servei web de GeoNames </ a>.
+        contributor: Una persona o grup que voleu reconèixer per tenir un paper en la creació del treball, però no el paper principal.
+        creator: La persona o grup responsable del treball. En general, aquest és l'autor del contingut. Els noms personals s'han d'introduir primer amb el cognom, p. Ex. & Quot; Smith, John. & Quot ;.
+        date_created: La data en què es va crear el treball.
+        description: Notes de text lliure sobre el treball. Els exemples inclouen resums d'un document o informació de citacions per a un article de revista.
+        identifier: Un identificador únic que identifica el treball. Un exemple seria un DOI per a un article de revista, o un número ISBN o OCLC per a un llibre.
+        keyword: Paraules o frases que seleccioneu per descriure què és el treball. Aquests s'utilitzen per buscar contingut.
+        language: El llenguatge del contingut del treball.
+        license: Informació de llicències i distribució que regula l'accés al treball. Seleccioneu a la llista desplegable proporcionada.
+        publisher: La persona o grup que fa el treball disponible. En general, aquesta és la institució.
+        related_url: Un enllaç a un lloc web o a un altre contingut específic (àudio, vídeo, document PDF) relacionat amb el treball. Un exemple és l'URL d'un projecte de recerca des del qual es va derivar el treball.
+        resource_type: Categories predefinides per descriure el tipus de contingut que s'està carregant, com ara & quot; article & quot; O "Datagrama". & Quot; Es pot seleccionar més d'un tipus.
+        subject: Títols o termes d'índex que descriguin el que es tracta del treball; Aquests necessiten conformar-se amb un vocabulari existent.
+        title: Un nom per ajudar a identificar un treball.
+    labels:
+      collection:
+        size: Mida
+        total_items: Total d'obres
+      defaults:
+        admin_set_id: Afegeix com a membre del conjunt administratiu
+        based_near: Ubicació
+        collection_ids: Afegeix com a membre de la col·lecció
+        creator: Creador
+        date_created: Data de creació
+        description: Resum o Resum
+        embargo_release_date: Fins a
+        files: Penja un fitxer
+        keyword: Paraula clau
+        lease_expiration_date: Fins a
+        license: Llicència
+        related_url: URL relacionat
+        title: Títol
+        visibility_after_embargo: A continuació, obriu-lo
+        visibility_after_lease: A continuació, restringir-lo a
+        visibility_during_embargo: Restringit a
+        visibility_during_lease: Està disponible per a
+      proxy_deposit_request:
+        sender_comment: Comentaris
+        transfer_to: Usuari
+    required:
+      html: <span class="label label-info required-tag">Obligatori</span>

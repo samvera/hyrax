@@ -70,6 +70,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def create_i18n
     template('locale.en.yml.erb', File.join('config/locales/', class_path, "#{file_name}.en.yml"))
     template('locale.es.yml.erb', File.join('config/locales/', class_path, "#{file_name}.es.yml"))
@@ -78,7 +79,9 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('locale.fr.yml.erb', File.join('config/locales/', class_path, "#{file_name}.fr.yml"))
     template('locale.it.yml.erb', File.join('config/locales/', class_path, "#{file_name}.it.yml"))
     template('locale.pt-BR.yml.erb', File.join('config/locales/', class_path, "#{file_name}.pt-BR.yml"))
+    template('locale.ca.yml.erb', File.join('config/locales/', class_path, "#{file_name}.ca.yml"))
   end
+  # rubocop:enable Metrics/AbcSize
 
   def create_actor_spec
     return unless rspec_installed?
