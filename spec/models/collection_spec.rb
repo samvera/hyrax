@@ -14,18 +14,15 @@ RSpec.describe Collection do
   end
 
   describe "#to_solr" do
-    let(:user) { create(:user) }
+    let(:user) { build(:user) }
     let(:collection) { build(:collection, user: user, title: ['A good title']) }
 
     let(:solr_document) { collection.to_solr }
 
-    it "has title information" do
+    it "has title information and depositor information" do
       expect(solr_document).to include 'title_tesim' => ['A good title'],
-                                       'title_sim' => ['A good title']
-    end
-
-    it "has depositor information" do
-      expect(solr_document).to include 'depositor_tesim' => [user.user_key],
+                                       'title_sim' => ['A good title'],
+                                       'depositor_tesim' => [user.user_key],
                                        'depositor_ssim' => [user.user_key]
     end
   end
@@ -42,7 +39,7 @@ RSpec.describe Collection do
     end
   end
 
-  describe "#members_objects" do
+  describe "#members_objects", clean_repo: true do
     let(:collection) { create(:collection) }
 
     it "is empty by default" do
@@ -52,43 +49,40 @@ RSpec.describe Collection do
     context "adding members" do
       let(:work1) { create(:work) }
       let(:work2) { create(:work) }
-      let(:work3) { create(:work) }
 
       it "allows multiple files to be added" do
-        collection.add_member_objects [work1.id, work2.id, work3.id]
+        collection.add_member_objects [work1.id, work2.id]
         collection.save!
-        expect(collection.reload.member_objects).to match_array [work1, work2, work3]
+        expect(collection.reload.member_objects).to match_array [work1, work2]
       end
     end
   end
 
-  it "has a title" do
+  it "has a title", clean_repo: true do
     subject.title = ["title"]
     subject.save!
     expect(subject.reload.title).to eq ["title"]
   end
 
-  it "has a description" do
-    subject.title = ["title"]
+  it "has a description", clean_repo: true do
+    subject.title = ["title"] # Because the title is required
     subject.description = ["description"]
     subject.save!
     expect(subject.reload.description).to eq ["description"]
   end
 
-  describe "#destroy" do
+  describe "#destroy", clean_repo: true do
     let(:collection) { build(:collection) }
     let(:work1) { create(:work) }
-    let(:work2) { create(:work) }
 
     before do
-      collection.add_member_objects [work1.id, work2.id]
+      collection.add_member_objects [work1.id]
       collection.save!
       collection.destroy
     end
 
     it "does not delete member files when deleted" do
       expect(GenericWork.exists?(work1.id)).to be true
-      expect(GenericWork.exists?(work2.id)).to be true
     end
   end
 
@@ -111,7 +105,7 @@ RSpec.describe Collection do
     let(:member) { Member.create }
     let(:collection) { OtherCollection.create(title: ['test title']) }
 
-    it "have members that know about the collection" do
+    it "have members that know about the collection", clean_repo: true do
       member.reload
       expect(member.member_of_collections).to eq [collection]
     end
