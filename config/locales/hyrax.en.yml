@@ -557,6 +557,8 @@ en:
       manage_proxies:           "Manage Proxies"
       my:
         action:
+          add_collection_to_collection: "Add selected collection to collection"
+          add_to_collection:        "Add to Collection"
           collection_confirmation: "Deleting a collection from %{application_name} is permanent. Click OK to delete this collection from %{application_name}, or Cancel to cancel this operation"
           delete_collection:       "Delete Collection"
           delete_work:             "Delete Work"
@@ -565,6 +567,7 @@ en:
           highlight:               "Highlight Work on Profile"
           select:                  "Select"
           select_all:              "Select Current Page"
+          select_collection:       "Select a collection"
           select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
           unhighlight:             "Unhighlight Work"
