@@ -62,9 +62,11 @@ module Hyrax
       end
 
       def new
+        collection_type_id = params[:collection_type_id]
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.collections.new.header'), hyrax.new_dashboard_collection_path
+        add_breadcrumb t(:'hyrax.dashboard.collections.new.header'), request.path
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).gid unless collection_type_id.nil?
         @collection.apply_depositor_metadata(current_user.user_key)
         form
       end
@@ -104,10 +106,10 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = ::Collection.new
         authorize! :create, @collection
-
         @collection.attributes = collection_params.except(:members)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
+        @collection.collection_type_gid = params[:collection_type_gid]
         # TODO: There has to be a better way to handle a missing gid than setting to User Collection.
         # TODO: Via UI, there should always be one defined.  It is missing right now because the modal isn't implemented yet
         # TODO: But perhaps this is needed for the case when it gets called outside the context of the UI?

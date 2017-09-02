@@ -97,7 +97,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       it "creates a Collection of specified type" do
         expect do
           post :create, params: {
-            collection: collection_attrs.merge(collection_type_gid: collection_type.gid)
+            collection: collection_attrs, collection_type_gid: collection_type.gid
           }
         end.to change { Collection.count }.by(1)
         expect(assigns[:collection].collection_type_gid).to eq collection_type.gid
