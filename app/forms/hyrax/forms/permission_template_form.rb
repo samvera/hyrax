@@ -61,7 +61,7 @@ module Hyrax
       # to the edit permissions of the AdminSet and to the WorkflowResponsibilities
       # of the active workflow
       def update_management
-        admin_set.update_access_controls!
+        admin_set.update_access_controls! if model.source_type == 'admin_set'
         update_workflow_approving_responsibilities
       end
 

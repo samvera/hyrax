@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:input_params) do
       ActionController::Parameters.new(access_grants_attributes: grant_attributes).permit!
     end
-    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id, source_type: 'admin_set') }
 
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
