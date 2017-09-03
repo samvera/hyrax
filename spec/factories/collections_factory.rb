@@ -45,6 +45,20 @@ FactoryGirl.define do
     end
   end
 
+  factory :user_collection, class: Collection do
+    transient do
+      user { FactoryGirl.create(:user) }
+    end
+
+    sequence(:title) { |n| ["Title #{n}"] }
+
+    after(:build) do |collection, evaluator|
+      collection.apply_depositor_metadata(evaluator.user.user_key)
+      collection_type = FactoryGirl.create(:user_collection_type)
+      collection.collection_type_gid = collection_type.gid
+    end
+  end
+
   factory :typeless_collection, class: Collection do
     # should not have a collection type assigned
     transient do

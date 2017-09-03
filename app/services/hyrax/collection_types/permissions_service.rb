@@ -9,13 +9,13 @@ module Hyrax
       # @param roles [String] type of access, 'manage' and/or 'create'
       # @return [Array<Hyrax::CollectionType>]
       def self.collection_types_for_user(user:, roles:)
-        return Hyrax::CollectionType.all if user.groups.include? 'admin'
+        return Hyrax::CollectionType.all if user.ability.admin?
         ids = Hyrax::CollectionTypeParticipant.where(agent_type: 'user',
                                                      agent_id: user.user_key,
                                                      access: roles)
                                               .or(
                                                 CollectionTypeParticipant.where(agent_type: 'group',
-                                                                                agent_id: user.groups,
+                                                                                agent_id: user.ability.user_groups,
                                                                                 access: roles)
                                               ).pluck('DISTINCT hyrax_collection_type_id')
         Hyrax::CollectionType.where(id: ids)
