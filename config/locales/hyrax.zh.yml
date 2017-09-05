@@ -8,10 +8,9 @@ zh:
       messages:
         conflict: 您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}
   blacklight:
-    application_name: Blacklight # needed until blacklight adds chinese translation
+    application_name: Blacklight
     search:
-      rss_feed: RSS Feed # needed until blacklight adds chinese translation
-      atom_feed: Atom Feed # needed until blacklight adds chinese translation
+      atom_feed: Atom Feed
       facets:
         count: Count
         more_html: 更多 <span class="sr-only">%{field_name}</span> »
@@ -27,6 +26,7 @@ zh:
           keyword: 关键词
       filters:
         title: '过滤:'
+      rss_feed: RSS Feed
       start_over: 清除过滤
   errors:
     messages:
@@ -264,7 +264,7 @@ zh:
       unprocessable_entity:
         default: 您试着要修改的资源按照您的请求是不能被修改。
         empty_file: 您上传的文件无内容。
-    background_attribution_html: 背景图片的CC by-nc-sa 来自 <a href="https://flic.kr/p/eirxaf">f2b1610</a>
+    background_attribution_html: ''
     base:
       citations:
         header: '引文:'
@@ -417,6 +417,18 @@ zh:
       authorize_proxies: 授权代理
       breadcrumbs:
         admin: 管理
+      collections:
+        edit:
+          header: 编辑集合：%{title}
+        form:
+          tabs:
+            description: 描述
+            sharing: 分享
+            visibility: 能见度
+        new:
+          header: 创建新集合
+        show:
+          works_in_collection: 在这个集合的作品
       create_work: 创建作品
       current_proxies: 目前代理
       heading_actions:
@@ -697,10 +709,10 @@ zh:
     transfers:
       new:
         confirm: 您确定要将此作品的所有权转让给其他使用者吗？ 单击确定转移或取消返回到传输屏幕
-        header: "所有权转让"
-        placeholder: "搜索用户"
-        sr_only_description: '选择要传输 “％{work_title}” 的用户，添加可选注释，然后按传输。'
-        title: '转让所有权 "%{work_title}"'
+        header: 所有权转让
+        placeholder: 搜索用户
+        sr_only_description: 选择要传输 “％{work_title}” 的用户，添加可选注释，然后按传输。
+        title: 转让所有权 "%{work_title}"
     upload:
       alert:
         contact_href_text: 联系表格
@@ -744,8 +756,10 @@ zh:
         note_html: 访问仅限于%{institution} 的用户
         text: "%{institution}"
       embargo:
+        note_html: 设定日后发布。
         text: 时滞期限
       lease:
+        note_html: 设置日期以减少访问。
         text: 租约
       open:
         note_html: 各位请注意， 如果您计划申请专利或在期刊上发表您的%{type}，请在<a href='http://www.sherpa.ac.uk/romeo/'>SHERPA/RoMEO</a> 查看相关出版社的版权政策

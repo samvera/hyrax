@@ -334,7 +334,7 @@ en:
       unprocessable_entity:
         default: "The resource you attempted to modify cannot be modified according to your request."
         empty_file: "The file you uploaded has no content."
-    background_attribution_html: "Background image CC by-nc-sa by <a href=\"https://flic.kr/p/eirxaf\" class=\"navbar-link\">f2b1610</a>"
+    background_attribution_html: ''
     base:
       citations:
         header: 'Citations:'

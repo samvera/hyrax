@@ -263,7 +263,7 @@ de:
       unprocessable_entity:
         default: Die Ressource, die Sie zu ändern versucht haben, kann nicht entsprechend Ihrer Anfrage geändert werden.
         empty_file: Die hochgeladene Datei hat keinen Inhalt.
-    background_attribution_html: Hintergrundbild CC by-nc-sa von <a href="https://flic.kr/p/eirxaf" class="navbar-link">f2b1610</a>
+    background_attribution_html: ''
     base:
       citations:
         header: 'Zitate:'
@@ -416,6 +416,18 @@ de:
       authorize_proxies: Proxies autorisieren
       breadcrumbs:
         admin: Verwaltung
+      collections:
+        edit:
+          header: 'Bearbeiten Sammlung: %{title}'
+        form:
+          tabs:
+            description: Beschreibung
+            sharing: Teilen
+            visibility: Sichtweite
+        new:
+          header: Neue Sammlung erstellen
+        show:
+          works_in_collection: Arbeitet in dieser Kollektion
       create_work: Arbeit erstellen
       current_proxies: Aktuelle Proxies
       heading_actions:
@@ -694,10 +706,10 @@ de:
     transfers:
       new:
         confirm: Sind Sie sicher, dass Sie das Eigentum an dieser Arbeit an einen anderen Benutzer übertragen möchten? Klicken Sie auf OK, um zu übertragen oder auf Abbrechen, um zum Übertragungsbildschirm zurückzukehren
-        header: "Eigentum übertragen"
-        placeholder: "Suche nach einem Benutzer"
-        sr_only_description: 'Wählen Sie einen Benutzer aus, um "%{work_title}" zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.'
-        title: 'Übertragung des Eigentums von "%{work_title}"'
+        header: Eigentum übertragen
+        placeholder: Suche nach einem Benutzer
+        sr_only_description: Wählen Sie einen Benutzer aus, um "%{work_title}" zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.
+        title: Übertragung des Eigentums von "%{work_title}"
     upload:
       alert:
         contact_href_text: Kontakt Formular
@@ -741,8 +753,10 @@ de:
         note_html: Beschränkung des Zugriffs auf Benutzer und / oder Gruppen von %{institution}
         text: "%{institution}"
       embargo:
+        note_html: Stellen Sie das Datum für die zukünftige Freigabe ein.
         text: Embargo
       lease:
+        note_html: Termin für zukünftig reduzierten Zugriff festlegen
         text: Mieten
       open:
         note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.

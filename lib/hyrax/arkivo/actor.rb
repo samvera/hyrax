@@ -18,7 +18,6 @@ module Hyrax
 
       def create_work_from_item
         work = Hyrax.primary_work_type.new
-        current_ability = ::Ability.new(user)
         work_actor = Hyrax::CurationConcern.actor
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
         env = Actors::Environment.new(work, current_ability, create_attrs)
@@ -37,7 +36,6 @@ module Hyrax
 
       def update_work_from_item(work)
         work_actor = Hyrax::CurationConcern.actor
-        current_ability = ::Ability.new(user)
         work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
         env = Actors::Environment.new(work, current_ability, work_attributes)
         work_actor.update(env)
@@ -53,6 +51,10 @@ module Hyrax
       end
 
       private
+
+        def current_ability
+          @current_ability ||= ::Ability.new(user)
+        end
 
         # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
         # rubocop:disable Metrics/MethodLength
