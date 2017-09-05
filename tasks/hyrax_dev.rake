@@ -30,7 +30,7 @@ task :i18n_sorter do
   end
 end
 
-if Gem.loaded_specs.key? :engine_cart
+if Gem.loaded_specs.key? 'engine_cart'
   namespace :engine_cart do
     # This generate task should only add its action to an existing engine_cart:generate task
     raise 'engine_cart:generate task should already be defined' unless Rake::Task.task_defined?('engine_cart:generate')
