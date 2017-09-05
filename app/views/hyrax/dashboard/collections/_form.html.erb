@@ -19,9 +19,9 @@
       <% end %>
     <% end %>
   </ul>
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
 
-  <div class="tab-content">
+  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
+    <div class="tab-content">
       <div id="description" class="tab-pane active">
         <div class="panel panel-default labels">
           <div class="panel-body">
@@ -61,7 +61,7 @@
             <% end %>
           </div>
         </div>
-      </div>
+      </div> <!-- end description -->
 
       <% if @form.persisted? %>
         <div id="branding" class="tab-pane">
@@ -97,8 +97,7 @@
         <% end %>
         <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
       </div>
+    </div> <!-- end tab-content -->
+  <% end # simple_form_for %>
 
-  <% end %>
-  <% # end of form %>
-
-</div>
+</div> <!-- end collection-controls -->
