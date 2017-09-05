@@ -49,6 +49,7 @@ RSpec.describe Collection, :clean_repo do
     context "when adding members" do
       let(:work1) { create(:work) }
       let(:work2) { create(:work) }
+      let(:work3) { create(:work) }
 
       it "allows multiple files to be added" do
         collection.add_member_objects [work1.id, work2.id]
