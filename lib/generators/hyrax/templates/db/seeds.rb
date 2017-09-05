@@ -6,12 +6,77 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+# To use this file, run the following command in the .internal_test_app:
+#   rails generate hyrax:sample_data
+
 user = User.create(email: 'foo@example.org', password: 'foobarbaz')
 
+puts "Creating 'Nestable Collection' type"
+options = {
+  description: 'Sample collection type that allows nesting of collections.',
+  nestable: true, discoverable: true, sharable: true, allow_multiple_membership: true,
+  require_membership: false, assigns_workflow: false, assigns_visibility: false,
+  participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                 { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+}
+begin
+  puts "  attempting to create"
+  coltype = Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: "nestable_collection", title: "Nestable Collection", options: options)
+rescue
+  puts "  attempting to use existing"
+  coltype = Hyrax::CollectionType.find_by_machine_id!("nestable_collection")
+end
+nestable_gid = coltype.gid
+
+puts "Creating 'Non-Nestable Collection' type"
+options = {
+  description: 'Sample collection type that DOES NOT allow nesting of collections.',
+  nestable: false, discoverable: true, sharable: true, allow_multiple_membership: true,
+  require_membership: false, assigns_workflow: false, assigns_visibility: false,
+  participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                 { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+}
+begin
+  puts "  attempting to create"
+  coltype = Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: "nonnestable_collection", title: "Non-Nestable Collection", options: options)
+rescue
+  puts "  attempting to use existing"
+  coltype = Hyrax::CollectionType.find_by_machine_id!("nonnestable_collection")
+end
+_nonnestable_gid = coltype.gid
+
+puts "Creating collections for nesting"
+# Public Nested User Collection, no contents
+Collection.create!(title: ["Parent Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |parent|
+  parent.apply_depositor_metadata(user)
+  Collection.create!(title: ["Child Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |child|
+    child.apply_depositor_metadata(user)
+    child.member_of_collections = [parent]
+  end
+end
+
+# Public User Collection
+pnc = Collection.create!(title: ["Public Nestable Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |col|
+  col.apply_depositor_metadata(user)
+end
+
+# Parent Collection
+pc = Collection.create!(title: ["Another Parent Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |parent|
+  parent.apply_depositor_metadata(user)
+end
+
+# Child Collection
+cc = Collection.create!(title: ["Another Child Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |child|
+  child.apply_depositor_metadata(user)
+  child.member_of_collections = [pc]
+end
+
+puts "Creating works"
 # Public
 3.times do |i|
   GenericWork.create(title: ["Public #{i}"], read_groups: ['public']) do |work|
     work.apply_depositor_metadata(user)
+    work.member_of_collections = [pnc]
   end
 end
 
@@ -19,6 +84,7 @@ end
 2.times do |i|
   GenericWork.create(title: ["Authenticated #{i}"], read_groups: ['registered']) do |work|
     work.apply_depositor_metadata(user)
+    work.member_of_collections = [pc]
   end
 end
 
@@ -26,6 +92,7 @@ end
 1.times do |i|
   GenericWork.create(title: ["Private #{i}"]) do |work|
     work.apply_depositor_metadata(user)
+    work.member_of_collections = [cc]
   end
 end
 

@@ -265,4 +265,11 @@ RSpec.describe Collection, type: :model do
       expect { create(:collection) }.not_to change { Hyrax::PermissionTemplate.count }
     end
   end
+
+  describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
+    it 'will be called after save' do
+      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String))
+      collection.save!
+    end
+  end
 end

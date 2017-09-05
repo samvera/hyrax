@@ -18,8 +18,10 @@ RSpec.describe Hyrax::WorkBehavior do
                                                Hydra::WithDepositor,
                                                Hydra::AccessControls::Embargoable,
                                                Solrizer::Common,
-                                               Hyrax::Suppressible)
+                                               Hyrax::Suppressible,
+                                               Hyrax::CollectionNesting)
   end
+
   describe '#to_s' do
     it 'uses the provided titles' do
       subject.title = %w[Hello World]
@@ -49,6 +51,13 @@ RSpec.describe Hyrax::WorkBehavior do
     it 'is settable' do
       EssentialWork.indexer = klass
       expect(EssentialWork.indexer).to eq klass
+    end
+  end
+
+  describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
+    it 'will be called after save' do
+      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String))
+      subject.save!
     end
   end
 end
