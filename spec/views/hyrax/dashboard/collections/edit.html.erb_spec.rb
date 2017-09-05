@@ -21,6 +21,6 @@ RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
 
   it 'displays the page' do
     expect(rendered).to have_content 'Actions'
-    expect(rendered).to have_link 'Add works'
+    expect(rendered).to have_link 'Add existing works'
   end
 end

@@ -7,6 +7,7 @@
       </div>
       <form class="new-work-select">
         <div class="modal-body">
+          <% params[:add_works_to_collection] = params['id'] if params['id'] && params['controller'] == 'hyrax/dashboard/collections' %>
           <% create_work_presenter.each do |row_presenter| %>
             <div class="select-worktype">
               <label>

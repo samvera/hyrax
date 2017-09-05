@@ -286,14 +286,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     it "preselects the collection we are adding works to" do
       visit "/dashboard/collections/#{collection1.id}"
-      click_link 'Add works'
+      click_link 'Add existing works'
       first('input#check_all').click
       click_button "Add to Collection"
       expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
       expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
 
       visit "/dashboard/collections/#{collection2.id}"
-      click_link 'Add works'
+      click_link 'Add existing works'
       first('input#check_all').click
       click_button "Add to Collection"
       expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
