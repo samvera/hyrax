@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::SelectCollectionTypeListPresenter, :clean_repo do
   let(:user) { create(:user) }
   let(:instance) { described_class.new(user) }
-  let(:collection_type) { create(:collection_type) }
+  let(:collection_type) { create(:collection_type, creator_user: user) }
   let(:user_collection_type) { create(:user_collection_type) }
 
   describe "#many?" do
