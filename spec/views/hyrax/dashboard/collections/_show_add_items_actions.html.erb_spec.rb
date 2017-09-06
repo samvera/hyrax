@@ -12,9 +12,13 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
   describe 'when user can edit the document' do
     let(:can_edit) { true }
 
-    it 'renders add_works_to_collection link' do
+    it 'renders add_existing_works_to_collection link' do
       render
       expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
+    end
+    it 'renders add_new_work_to_collection link' do
+      render
+      expect(rendered).to have_css(".actions-controls-collections .btn[title= '#{t('hyrax.collection.actions.add_new_work.desc')}']")
     end
     describe 'when the collection_type is nestable' do
       it 'renders a link to add_collections to this collection' do
@@ -34,11 +38,14 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
   describe 'when user cannot edit the document' do
     let(:can_edit) { false }
 
-    it 'does not render add_works_to_collection link' do
+    it 'does not render add_existing_works_to_collection link' do
       render
       expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
     end
-
+    it 'does not render add_new_work_to_collection link' do
+      render
+      expect(rendered).not_to have_css(".actions-controls-collections .btn[title= '#{t('hyrax.collection.actions.add_new_work.desc')}']")
+    end
     describe 'when the collection_type is not nestable' do
       it 'does not render a link to add_collections to this collection' do
         render

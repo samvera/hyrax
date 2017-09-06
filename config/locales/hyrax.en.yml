@@ -400,9 +400,12 @@ en:
       search_results: "Back to search results"
     collection:
       actions:
-        add_works:
-          desc: "Add works to this Collection"
-          label: "Add works"
+        add_existing_works:
+          desc: "Add existing works to this collection"
+          label: "Add existing works"
+        add_new_work:
+          desc: "Add new work to this collection"
+          label: "Add new work"
         delete:
           confirmation: "Delete this collection?"
           desc: "Delete this collection"
