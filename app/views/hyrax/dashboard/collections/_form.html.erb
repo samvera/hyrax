@@ -4,6 +4,9 @@
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
+      <li>
+        <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
+      </li>
       <% if @collection.discoverable? %>
       <li>
         <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
@@ -61,6 +64,14 @@
       </div>
 
       <% if @form.persisted? %>
+        <div id="branding" class="tab-pane">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_branding', f: f %>
+            </div>
+          </div>
+        </div>
+
         <div id="discovery" class="tab-pane">
           <div class="panel panel-default labels">
             <div class="panel-body">

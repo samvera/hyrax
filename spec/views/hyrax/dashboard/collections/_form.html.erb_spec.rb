@@ -1,6 +1,8 @@
 RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
   let(:collection) { Collection.new }
   let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
+  let(:banner_info) { { file: "banner.gif", alttext: "Banner alt text" } }
+  let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }
 
   before do
     allow(collection).to receive(:open_access?).and_return(true)
@@ -9,6 +11,8 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
     assign(:collection, collection)
+    assign(:banner_info, banner_info)
+    assign(:logo_info, logo_info)
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:collections_path).and_return("/collections")
     allow(controller).to receive(:current_user).and_return(stub_model(User))

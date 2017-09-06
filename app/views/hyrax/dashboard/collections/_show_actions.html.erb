@@ -11,5 +11,6 @@
     <%= link_to t('hyrax.collection.actions.edit.label'),
                 hyrax.edit_dashboard_collection_path(presenter),
                 title: t('hyrax.collection.actions.edit.desc'),
-                class: 'btn btn-default pull-right' %>
+                class: 'btn btn-default pull-right',
+                data: { turbolinks: false } %>
 <% end %>
