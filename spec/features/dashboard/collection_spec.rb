@@ -301,6 +301,45 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
   end
 
+  describe 'remove works from collection' do
+    context 'user that can edit' do
+      let!(:work2) { create(:work, title: ["King Louie"], member_of_collections: [collection1], user: user) }
+      let!(:work1) { create(:work, title: ["King Kong"], member_of_collections: [collection1], user: user) }
+
+      before do
+        sign_in admin_user
+      end
+      # TODO: move this test to a view unit test (and solve the missing warden problem when using Ability in view tests)
+      it 'shows remove action buttons' do
+        visit "/dashboard/collections/#{collection1.id}"
+        expect(page).to have_selector('input.collection-remove', count: 2)
+      end
+      it 'removes the first work from the list of items' do
+        visit "/dashboard/collections/#{collection1.id}"
+        expect(page).to have_selector('input.collection-remove', count: 2)
+        page.all('input.collection-remove')[0].click
+        expect(page).to have_selector('input.collection-remove', count: 1)
+        expect(page).not_to have_content(work1.title.first)
+        expect(page).to have_content(work2.title.first)
+      end
+      xit 'removes a sub-collection from the list of items (dependency on collection nesting)' do
+      end
+    end
+    context 'user that cannot edit' do
+      let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection3], user: user) }
+      let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection3], user: user) }
+
+      before do
+        sign_in user
+      end
+      # TODO: move this test to a view unit test (and solve the missing warden problem when using Ability in view tests)
+      it 'does not show remove action buttons' do
+        visit "/dashboard/collections/#{collection3.id}"
+        expect(page).not_to have_selector 'input.collection-remove'
+      end
+    end
+  end
+
   describe 'edit collection' do
     let(:collection) { create(:named_collection, user: user) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
