@@ -16,10 +16,10 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe '#permission_template' do
-    it 'queries for a Hyrax::PermissionTemplate with a matching admin_set_id' do
+    it 'queries for a Hyrax::PermissionTemplate with a matching source_id' do
       admin_set = build(:admin_set, id: '123')
       permission_template = build(:permission_template)
-      expect(Hyrax::PermissionTemplate).to receive(:find_by!).with(admin_set_id: '123').and_return(permission_template)
+      expect(Hyrax::PermissionTemplate).to receive(:find_by!).with(source_id: '123').and_return(permission_template)
       expect(admin_set.permission_template).to eq(permission_template)
     end
   end

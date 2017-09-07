@@ -85,3 +85,35 @@ form.per_page {
     padding-left: 0;
   }
 }
+
+input.branding-logo-input,
+input.branding-banner-input {
+  width: 250px;
+}
+
+div.branding-logo-input,
+div.branding-banner-input {
+  text-align: right;
+}
+
+div.branding-logo-row,
+div.branding-banner-row {
+  border-top: solid 1px #dddddd;
+  padding-top: 10px;
+}
+
+div.branding-logo-progress,
+div.branding-banner-progress {
+  margin-top: -25px;
+}
+
+button.branding-logo-remove,
+button.branding-logo-remove:hover,
+button.branding-banner-remove,
+button.branding-banner-remove:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: $brand-danger;
+  font-weight: normal;
+  text-decoration: underline;
+}

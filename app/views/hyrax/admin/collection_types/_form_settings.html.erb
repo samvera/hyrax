@@ -1,0 +1,16 @@
+<p><%= t('.instructions') %></p>
+
+<p><strong><%= t('.warning') %></strong></p>
+
+<% disabled = (f.object.collections? || f.object.admin_set? || f.object.user_collection?) %>
+<div class="collection-types-settings">
+  <div class="form-inline">
+    <p><%= f.input :nestable, as: :boolean, disabled: disabled %></p>
+    <p><%= f.input :discoverable, as: :boolean, disabled: disabled %></p>
+    <p><%= f.input :sharable, as: :boolean, disabled: disabled %></p>
+    <p><%= f.input :require_membership, as: :boolean, disabled: true %></p>
+    <p><%= f.input :allow_multiple_membership, as: :boolean, disabled: disabled %></p>
+    <p><%= f.input :assigns_workflow, as: :boolean, disabled: true %></p>
+    <p><%= f.input :assigns_visibility, as: :boolean, disabled: true %></p>
+  </div>
+</div>

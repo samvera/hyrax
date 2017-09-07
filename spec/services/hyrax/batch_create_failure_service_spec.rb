@@ -1,14 +1,18 @@
 RSpec.describe Hyrax::BatchCreateFailureService do
   let(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
+  let(:messages) { ['You did a bad'] }
 
   describe "#call" do
-    subject { described_class.new(depositor) }
+    subject { described_class.new(depositor, messages) }
 
     it "sends failing mail" do
       subject.call
       expect(inbox.count).to eq(1)
-      inbox.each { |msg| expect(msg.last_message.subject).to eq('Failing batch create') }
+      inbox.each do |msg|
+        expect(msg.last_message.subject).to eq('Failing batch create')
+        expect(msg.last_message.body).to include(messages.first)
+      end
     end
   end
 end

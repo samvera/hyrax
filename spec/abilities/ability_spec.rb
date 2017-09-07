@@ -129,7 +129,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
   end
 
   describe "AdminSets and PermissionTemplates" do
-    let(:permission_template) { build(:permission_template, admin_set_id: admin_set.id) }
+    let(:permission_template) { build(:permission_template, source_id: admin_set.id) }
     let(:permission_template_access) { build(:permission_template_access, permission_template: permission_template) }
     let(:user) { create(:user) }
     let(:admin_set) { create(:admin_set) }

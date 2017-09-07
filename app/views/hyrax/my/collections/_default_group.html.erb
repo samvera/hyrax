@@ -4,7 +4,8 @@
     <thead>
     <tr>
       <th><%= t("hyrax.dashboard.my.heading.title") %></th>
-      <th><%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.collection_type") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.date_modified") %></th>
       <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
       <th><%= t("hyrax.dashboard.my.heading.action") %></th>
     </tr>
@@ -12,7 +13,8 @@
   <% end %>
   <tbody>
   <% docs.each_with_index do |document, counter| %>
-    <%= render 'list_collections', document: document, counter: counter %>
+    <% collection_presenter = Hyrax::CollectionPresenter.new(document, nil, nil) %>
+    <%= render 'list_collections', collection_presenter: collection_presenter, counter: counter %>
   <% end %>
   </tbody>
 </table>

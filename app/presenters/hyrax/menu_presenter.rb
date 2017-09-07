@@ -13,7 +13,7 @@ module Hyrax
     # Returns true if the current controller happens to be one of the controllers that deals
     # with settings.  This is used to keep the parent section on the sidebar open.
     def settings_section?
-      %w[appearances content_blocks features pages].include?(controller_name)
+      %w[appearances content_blocks features pages collection_types].include?(controller_name)
     end
 
     # @param options [Hash, String] a hash or string representing the path. Hash is prefered as it
@@ -54,6 +54,7 @@ module Hyrax
     # @return [Boolean] will the configuration section be displayed to the user
     def show_configuration?
       can?(:update, :appearance) ||
+        can?(:manage, :collection_types) ||
         can?(:manage, Sipity::WorkflowResponsibility) ||
         can?(:manage, Hyrax::Feature)
     end

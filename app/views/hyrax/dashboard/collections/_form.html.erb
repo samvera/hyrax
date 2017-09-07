@@ -5,16 +5,23 @@
     </li>
     <% if @form.persisted? %>
       <li>
-        <a href="#visibility" role="tab" data-toggle="tab"><%= t('.tabs.visibility') %></a>
+        <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
       </li>
+      <% if @collection.discoverable? %>
+      <li>
+        <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
+      </li>
+      <% end %>
+      <% if @collection.sharable? %>
       <li>
         <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
       </li>
+      <% end %>
     <% end %>
   </ul>
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
 
-  <div class="tab-content">
+  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
+    <div class="tab-content">
       <div id="description" class="tab-pane active">
         <div class="panel panel-default labels">
           <div class="panel-body">
@@ -46,6 +53,7 @@
               </div>
             <% end %>
             <%= hidden_field_tag :type, params[:type] %>
+            <%= hidden_field_tag :collection_type_gid, @collection.collection_type_gid %>
             <% if params[:batch_document_ids].present? %>
               <% params[:batch_document_ids].each do |batch_item| %>
                 <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
@@ -53,23 +61,33 @@
             <% end %>
           </div>
         </div>
-      </div>
+      </div> <!-- end description -->
 
-      <div id="visibility" class="tab-pane">
-        <div class="panel panel-default labels">
-          <div class="panel-body">
-            <%= render 'form_permission', f: f %>
+      <% if @form.persisted? %>
+        <div id="branding" class="tab-pane">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_branding', f: f %>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="sharing" class="tab-pane">
-        <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
-          <div class="panel-body">
-            <%= render 'form_share', f: f %>
+        <div id="discovery" class="tab-pane">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_discovery', f: f %>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div id="sharing" class="tab-pane">
+          <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
+            <div class="panel-body">
+              <%= render 'form_share', f: f %>
+            </div>
+          </div>
+        </div>
+      <% end %>
 
       <div class="panel-footer">
         <% if params[:action] == "new" %>
@@ -79,8 +97,7 @@
         <% end %>
         <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
       </div>
+    </div> <!-- end tab-content -->
+  <% end # simple_form_for %>
 
-  <% end %>
-  <% # end of form %>
-
-</div>
+</div> <!-- end collection-controls -->
