@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :collection_type, class: Hyrax::CollectionType do
-    sequence(:id) { |n| format("%010d", n) }
     sequence(:title) { |n| "Title #{n}" }
 
     description 'Collection type with all options'

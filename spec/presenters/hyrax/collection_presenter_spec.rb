@@ -40,8 +40,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to delegate_method(:collection_type_is_assigns_visibility?).to(:collection_type).as(:assigns_visibility?) }
   end
 
-  # NOTE: The #collection_type specs will change when we go to integrate PR 1556 (https://github.com/samvera/hyrax/pull/1556)
-  describe '#collection_type', clean_repo: true do
+  describe '#collection_type' do
     let(:collection_type) { create(:collection_type) }
 
     describe 'when solr_document#collection_type_gid exists' do
@@ -50,7 +49,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
       it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do
         expect(solr_doc.key?('collection_type_gid_ssim')).to be_truthy
-        expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim').and_return(collection_type.gid)
+        expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim', []).and_return(collection_type.gid)
         expect(presenter.collection_type).to eq(collection_type)
       end
     end
@@ -58,23 +57,9 @@ RSpec.describe Hyrax::CollectionPresenter do
     describe 'when solr_document#collection_type_gid does not exist' do
       let(:solr_doc) { SolrDocument.new(collection.to_solr.except('collection_type_gid_ssim')) }
 
-      describe 'and underlying Fedora object has a collection_type_gid' do
-        let(:collection) { create(:collection, collection_type_gid: collection_type.gid) }
-
-        it "finds the collection's collection type of the solr document's id if the document does not have a collection_type_gid" do
-          expect(solr_doc).not_to receive(:collection_type_gid)
-          expect(presenter.collection_type).to eq(collection_type)
-        end
-      end
-
-      describe 'and underlying Fedora object does not have a collection_type_gid' do
-        let(:collection) { create(:typeless_collection) }
-
-        it "finds the find_or_create_default_collection_type" do
-          expect(collection.collection_type_gid).to be_nil # Verifying that I don't have a collection_type from my factory
-          expect(solr_doc).not_to receive(:collection_type_gid)
-          expect(presenter.collection_type).to eq(Hyrax::CollectionType.find_or_create_default_collection_type)
-        end
+      it "finds the collection's collection type of the solr document's id if the document does not have a collection_type_gid" do
+        expect(solr_doc).not_to receive(:collection_type_gid)
+        expect { presenter.collection_type }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

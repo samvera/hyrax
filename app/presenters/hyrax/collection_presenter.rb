@@ -20,26 +20,9 @@ module Hyrax
 
     delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
 
-    # @note This is an ugly hack. In working with Lynette, we discovered that the collection_type_gid
-    #       was in the solr_document if the Collection was created via the UI. If the collection
-    #       was created by factory girl then collection_type_gid was not in the solr_document.
-    #       The long-term solution is to ensure that the SOLR document has some key for the collection_type.
-    # @todo Change behavior when https://github.com/samvera/hyrax/pull/1556 is integrated
     def collection_type
-      @collection_type ||= begin
-        collection_type_gid =
-          if solr_document.key?('collection_type_gid_ssim')
-            # Taking a short cut if we know the collection type based on the SOLR document
-            Array.wrap(solr_document.fetch('collection_type_gid_ssim')).first
-          else
-            solr_document.hydra_model.find(solr_document.id).collection_type_gid
-          end
-        if collection_type_gid
-          Hyrax::CollectionType.find_by_gid!(collection_type_gid)
-        else
-          Hyrax::CollectionType.find_or_create_default_collection_type
-        end
-      end
+      gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [])).first
+      @collection_type ||= CollectionType.find_by_gid!(gid)
     end
 
     # Metadata Methods
