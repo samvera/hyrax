@@ -7,16 +7,22 @@ module Hyrax
     validates :access, presence: true
     validates :hyrax_collection_type_id, presence: true
 
+    MANAGE_ACCESS = 'manage'.freeze
+    CREATE_ACCESS = 'create'.freeze
+
+    GROUP_TYPE = 'group'.freeze
+    USER_TYPE = 'user'.freeze
+
     def manager?
-      access == 'manage'
+      access == MANAGE_ACCESS
     end
 
     def creator?
-      access == 'create'
+      access == CREATE_ACCESS
     end
 
     def label
-      return agent_id unless agent_type == 'group'
+      return agent_id unless agent_type == GROUP_TYPE
       case agent_id
       when 'registered'
         I18n.t('hyrax.admin.admin_sets.form_participant_table.registered_users')

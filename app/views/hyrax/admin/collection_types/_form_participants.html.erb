@@ -1,6 +1,6 @@
 <h2><%= t('.add_participants') %></h2>
 <p><%= t('.instructions') %></p>
-<% access_options = options_for_select([['Manager', 'manage'], ['Creator', 'create']]) %>
+<% access_options = options_for_select([['Manager', Hyrax::CollectionTypeParticipant::MANAGE_ACCESS], ['Creator', Hyrax::CollectionTypeParticipant::CREATE_ACCESS]]) %>
 <% unless @collection_type_participant.nil? %>
   <%= simple_form_for @collection_type_participant,
                       url: hyrax.admin_collection_type_participants_path,
@@ -12,7 +12,7 @@
 
           <div class="col-md-10 col-xs-8 form-group">
             <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
-            <%= f.hidden_field :agent_type, value: 'group' %>
+            <%= f.hidden_field :agent_type, value: Hyrax::CollectionTypeParticipant::GROUP_TYPE %>
             <%= f.text_field :agent_id,
                              placeholder: "Search for a group...",
                              class: 'form-control' %>
@@ -37,7 +37,7 @@
 
           <div class="col-md-10 col-xs-8 form-group">
             <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
-            <%= f.hidden_field :agent_type, value: 'user' %>
+            <%= f.hidden_field :agent_type, value: Hyrax::CollectionTypeParticipant::USER_TYPE %>
             <%= f.text_field :agent_id,
                              placeholder: "Search for a user...",
                              class: 'form-control' %>
