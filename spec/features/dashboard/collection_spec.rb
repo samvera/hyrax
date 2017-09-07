@@ -309,6 +309,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         sign_in admin_user
       end
+      # TODO: move this test to a view unit test (and solve the missing warden problem when using Ability in view tests)
       it 'shows remove action buttons' do
         visit "/dashboard/collections/#{collection1.id}"
         expect(page).to have_selector('input.collection-remove', count: 2)
@@ -321,14 +322,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).not_to have_content(work1.title.first)
         expect(page).to have_content(work2.title.first)
       end
-      it 'removes the second work from the list of items' do
-        visit "/dashboard/collections/#{collection1.id}"
-        expect(page).to have_selector('input.collection-remove', count: 2)
-        page.all('input.collection-remove')[1].click
-        expect(page).to have_selector('input.collection-remove', count: 1)
-        expect(page).to have_content(work1.title.first)
-        expect(page).not_to have_content(work2.title.first)
-      end
       xit 'removes a sub-collection from the list of items (dependency on collection nesting)' do
       end
     end
@@ -339,6 +332,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         sign_in user
       end
+      # TODO: move this test to a view unit test (and solve the missing warden problem when using Ability in view tests)
       it 'does not show remove action buttons' do
         visit "/dashboard/collections/#{collection3.id}"
         expect(page).not_to have_selector 'input.collection-remove'
