@@ -266,13 +266,21 @@ module Hyrax
         end
       end
 
+      def update_referer
+        if params[:referer_anchor]
+          edit_polymorphic_path([main_app, curation_concern]) + params[:referer_anchor]
+        else
+          polymorphic_path([main_app, curation_concern])
+        end
+      end
+
       def after_update_response
         if curation_concern.file_sets.present?
           return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
           return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
         end
         respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern] }
+          wants.html { redirect_to update_referer, notice: "Work \"#{curation_concern}\" successfully updated." }
           wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
       end

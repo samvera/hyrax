@@ -376,13 +376,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         within('.panel-footer') do
           click_button('Update Collection')
         end
-        # URL: /dashboard/collections/collection-id
-        header = find('header')
-        expect(header).not_to have_content(collection.title.first)
-        expect(header).not_to have_content(collection.description.first)
-        expect(header).to have_content(new_title)
-        expect(page).to have_content(new_description)
-        expect(page).to have_content(creators.first)
+        # URL: /dashboard/collections/collection-id/edit
+        expect(page).not_to have_field('collection_title', with: collection.title.first)
+        expect(page).not_to have_field('collection_description', with: collection.description.first)
+        expect(page).to have_field('collection_title', with: new_title)
+        expect(page).to have_field('collection_description', with: new_description)
+        expect(page).to have_field('collection_creator', with: creators.first)
       end
     end
 

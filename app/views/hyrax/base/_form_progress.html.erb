@@ -45,8 +45,9 @@
       <% end %>
     <% end %>
     <br>
+    <% cancel_path = f.object.persisted? ? polymorphic_path([main_app, f.object]) : hyrax.my_works_path %>
     <%= link_to t(:'helpers.action.cancel'),
-                hyrax.dashboard_path,
+                cancel_path,
                 class: 'btn btn-default' %>
     <%# TODO: If we start using ActionCable, we could listen for object updates and
               alert the user that the object has changed by someone else %>

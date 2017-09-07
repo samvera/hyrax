@@ -164,5 +164,4 @@ Hyrax = {
         var BatchSelect = require('hyrax/batch_select');
         BatchSelect.initialize_batch_selected();
     }
-
 };

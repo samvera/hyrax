@@ -47,15 +47,13 @@ module Hyrax
     # Renders a JSON response with a list of files in this admin set.
     # This is used by the edit form to populate the thumbnail_id dropdown
     def files
-      result = form.select_files.map do |label, id|
-        { id: id, text: label }
-      end
+      result = form.select_files.map { |label, id| { id: id, text: label } }
       render json: result
     end
 
     def update
       if @admin_set.update(admin_set_params)
-        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :edit
@@ -90,6 +88,10 @@ module Hyrax
     end
 
     private
+
+      def update_referer
+        hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+      end
 
       def ensure_manager!
         # Even though the user can view this admin set, they may not be able to view

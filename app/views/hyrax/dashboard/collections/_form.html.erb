@@ -90,12 +90,13 @@
       <% end %>
 
       <div class="panel-footer">
-        <% if params[:action] == "new" %>
-          <%= f.submit t(:'hyrax.collection.select_form.create'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection" %>
-        <% else %>
+        <% if @collection.persisted? %>
           <%= f.submit t(:'hyrax.collection.select_form.update'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection" %>
+          <%= link_to t(:'helpers.action.cancel'), hyrax.collection_path(@collection), class: 'btn btn-link' %>
+        <% else %>
+          <%= f.submit t(:'hyrax.collection.select_form.create'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection" %>
+          <%= link_to t(:'helpers.action.cancel'), hyrax.my_collections_path, class: 'btn btn-link' %>
         <% end %>
-        <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
       </div>
     </div> <!-- end tab-content -->
   <% end # simple_form_for %>
