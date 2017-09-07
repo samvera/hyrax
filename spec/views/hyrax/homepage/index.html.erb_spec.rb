@@ -25,6 +25,10 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
         it "displays" do
           expect(rendered).to have_content t("hyrax.share_button")
         end
+
+        it 'links to the my works path' do
+          expect(rendered).to have_selector('a[href="/dashboard/my/works"]')
+        end
       end
       context "when the button displays for users with rights" do
         let(:display_share_button) { false }
