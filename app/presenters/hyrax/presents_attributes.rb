@@ -11,6 +11,7 @@ module Hyrax
     #   you can explicitly set the URL's search field name
     # @option options [String] :label The default label for the field if no translation is found
     # @option options [TrueClass, FalseClass] :include_empty should we display a row if there are no values?
+    # @option options [String] :work_type name of work type class (e.g., "GenericWork")
     def attribute_to_html(field, options = {})
       unless respond_to?(field)
         Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")

@@ -72,4 +72,28 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
       it { expect(subject).to be_equivalent_to(expected) }
     end
   end
+
+  describe "#label" do
+    subject { renderer }
+
+    context 'with work type option' do
+      let(:work_type) { "GenericWork".underscore }
+      let(:renderer) { described_class.new(field, ['Bob', 'Jessica'], work_type: work_type) }
+
+      context 'no work type specific label' do
+        it { expect(subject.label).to eq(field.to_s.humanize) }
+      end
+      context 'work type specific label' do
+        let(:work_type_name_label) { "Appellation" }
+
+        before do
+          allow(I18n).to receive(:translate).and_call_original
+          allow(I18n).to receive(:translate).with(:"blacklight.search.fields.#{work_type}.show.#{field}", Hash) do
+            work_type_name_label
+          end
+        end
+        it { expect(subject.label).to eq(work_type_name_label) }
+      end
+    end
+  end
 end
