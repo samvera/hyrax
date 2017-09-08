@@ -406,7 +406,8 @@ module Hyrax
 
         def add_members_to_collection(collection = nil)
           collection ||= @collection
-          collection.add_member_objects batch
+          error_messages = collection.add_member_objects batch
+          flash[:notice] = error_messages.join(" ") if error_messages.any?
         end
 
         def remove_members_from_collection
