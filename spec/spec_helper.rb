@@ -140,7 +140,7 @@ RSpec.configure do |config|
     Hyrax.config.enable_noids = false
   end
 
-  config.before :each do |example|
+  config.before do |example|
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else
