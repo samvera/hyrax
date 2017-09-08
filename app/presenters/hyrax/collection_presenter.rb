@@ -18,10 +18,19 @@ module Hyrax
     delegate :stringify_keys, :human_readable_type, :collection?, :representative_id,
              :to_s, to: :solr_document
 
+    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
+
+    def collection_type
+      gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [])).first
+      @collection_type ||= CollectionType.find_by_gid!(gid)
+    end
+
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language,
              :embargo_release_date, :lease_expiration_date, :license, :date_created,
              :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
+             :title_or_label, :collection_type_gid_ssim, :create_date, :modified_date, :visibility, :edit_groups,
+             :edit_people,
              to: :solr_document
 
     # Terms is the list of fields displayed by
@@ -53,6 +62,10 @@ module Hyrax
 
     def total_items
       ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
+    end
+
+    def collection_type_badge
+      collection_type.title
     end
   end
 end

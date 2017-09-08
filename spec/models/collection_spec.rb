@@ -1,4 +1,4 @@
-RSpec.describe Collection do
+RSpec.describe Collection, type: :model do
   let(:collection) { build(:public_collection) }
 
   it "has open visibility" do
@@ -46,14 +46,35 @@ RSpec.describe Collection do
       expect(collection.member_objects).to match_array []
     end
 
-    context "adding members" do
+    context "when adding members" do
       let(:work1) { create(:work) }
       let(:work2) { create(:work) }
+      let(:work3) { create(:work) }
 
       it "allows multiple files to be added" do
         collection.add_member_objects [work1.id, work2.id]
         collection.save!
         expect(collection.reload.member_objects).to match_array [work1, work2]
+      end
+
+      context 'when multiple membership checker returns a non-nil value' do
+        before do
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work1).and_return(nil_checker)
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work2).and_return(checker)
+          allow(Hyrax::MultipleMembershipChecker).to receive(:new).with(item: work3).and_return(nil_checker)
+          allow(nil_checker).to receive(:check).and_return(nil)
+          allow(checker).to receive(:check).and_return(error_message)
+        end
+
+        let(:checker) { double }
+        let(:nil_checker) { double }
+        let(:error_message) { 'Error: foo bar' }
+
+        it 'fails to add the member' do
+          collection.add_member_objects [work1.id, work2.id, work3.id]
+          collection.save!
+          expect(collection.reload.member_objects).to match_array [work1, work3]
+        end
       end
     end
   end
@@ -109,5 +130,84 @@ RSpec.describe Collection do
       member.reload
       expect(member.member_of_collections).to eq [collection]
     end
+  end
+
+  describe 'after_initialize' do
+    let(:collection_type) { create(:collection_type) }
+
+    it 'sets collection_type_gid to default collection type if not already set' do
+      expect(described_class.new.collection_type_gid).to eq Hyrax::CollectionType.find_or_create_default_collection_type.gid
+    end
+
+    it 'does not set collection_type_gid if passed in to initializer' do
+      expect(described_class.new(collection_type_gid: collection_type.gid).collection_type_gid).to eq collection_type.gid
+    end
+
+    it 'does not override preexisting collection_type_gid' do
+      collection = create(:collection, collection_type_gid: collection_type.gid)
+      expect(described_class.find(collection.id).collection_type_gid).to eq collection_type.gid
+    end
+  end
+
+  describe '#collection_type_gid', :clean_repo do
+    subject(:collection) { described_class.new(collection_type_gid: collection_type.gid) }
+
+    let(:collection_type) { create(:collection_type) }
+
+    it 'has a collection_type_gid' do
+      expect(collection.collection_type_gid).to eq collection_type.gid
+    end
+  end
+
+  describe '#collection_type_gid=' do
+    let(:collection) { build(:collection) }
+    let(:collection_type) { create(:collection_type) }
+
+    it 'sets gid' do
+      collection.collection_type_gid = collection_type.gid
+      expect(collection.collection_type_gid).to eq collection_type.gid
+    end
+
+    it 'throws ActiveRecord::RecordNotFound if cannot find collection type for the gid' do
+      gid = 'gid://internal/hyrax-collectiontype/999'
+      expect { collection.collection_type_gid = gid }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+    end
+
+    it 'throws ActiveRecord::RecordNotFound if set to nil' do
+      expect { collection.collection_type_gid = nil }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
+    end
+
+    it 'updates the collection_type instance variable' do
+      expect { collection.collection_type_gid = collection_type.gid }.to change { collection.collection_type }.from(Hyrax::CollectionType.find_or_create_default_collection_type).to(collection_type)
+    end
+
+    it 'throws ArgumentError if collection has already been persisted with a collection type' do
+      collection.save!
+      expect(collection.collection_type_gid).not_to be_nil
+      expect { collection.collection_type_gid = create(:collection_type).gid }.to raise_error(RuntimeError, "Can't modify collection type of this collection")
+    end
+  end
+
+  describe '#collection_type' do
+    let(:collection) { described_class.new(collection_type: collection_type) }
+    let(:collection_type) { create(:collection_type) }
+
+    it 'returns a collection_type instance from the collection_type_gid' do
+      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
+      expect(collection.collection_type).to eq collection_type
+      expect(collection.collection_type.gid).to eq collection_type.gid
+    end
+  end
+
+  describe 'collection type delegated methods' do
+    subject { build(:collection) }
+
+    it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:sharable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:allow_multiple_membership?).to(:collection_type) }
+    it { is_expected.to delegate_method(:require_membership?).to(:collection_type) }
+    it { is_expected.to delegate_method(:assigns_workflow?).to(:collection_type) }
+    it { is_expected.to delegate_method(:assigns_visibility?).to(:collection_type) }
   end
 end

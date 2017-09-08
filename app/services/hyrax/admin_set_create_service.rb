@@ -85,7 +85,7 @@ module Hyrax
       end
 
       def create_permission_template
-        PermissionTemplate.create!(admin_set_id: admin_set.id, access_grants_attributes: access_grants_attributes)
+        PermissionTemplate.create!(source_id: admin_set.id, source_type: 'admin_set', access_grants_attributes: access_grants_attributes)
       end
 
       def create_workflows_for(permission_template:)

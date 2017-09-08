@@ -19,7 +19,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          :identifier,
                          :based_near,
                          :related_url,
-                         :visibility]
+                         :visibility,
+                         :collection_type_gid]
     end
   end
 
@@ -31,7 +32,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
   describe "#primary_terms" do
     subject { form.primary_terms }
 
-    it { is_expected.to eq([:title]) }
+    it { is_expected.to eq([:title, :description]) }
   end
 
   describe "#secondary_terms" do
@@ -41,7 +42,6 @@ RSpec.describe Hyrax::Forms::CollectionForm do
       is_expected.to eq [
         :creator,
         :contributor,
-        :description,
         :keyword,
         :license,
         :publisher,
@@ -121,6 +121,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          { based_near: [] },
                          { related_url: [] },
                          :visibility,
+                         :collection_type_gid,
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] }]
     end
   end
@@ -142,6 +143,30 @@ RSpec.describe Hyrax::Forms::CollectionForm do
 
       it 'returns a hash of with file title as key and file id as value' do
         expect(subject).to eq(title => file_id)
+      end
+    end
+  end
+
+  describe "#permission_template" do
+    subject { form.permission_template }
+
+    context "when the PermissionTemplate doesn't exist" do
+      let(:model) { create(:collection) }
+
+      it "gets created" do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+
+    context "when the PermissionTemplate exists" do
+      let(:form) { described_class.new(model, ability, repository) }
+      let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: model.id) }
+      let(:model) { create(:collection, with_permission_template: true) }
+
+      it "uses the existing template" do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to eq permission_template
       end
     end
   end

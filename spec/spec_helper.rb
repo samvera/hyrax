@@ -117,6 +117,7 @@ require 'shoulda/matchers'
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
+    with.library :rails
   end
 end
 
@@ -124,6 +125,7 @@ require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
+  config.include Shoulda::Matchers::ActiveModel, type: :form
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

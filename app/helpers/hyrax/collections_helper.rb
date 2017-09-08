@@ -22,8 +22,8 @@ module Hyrax
       params[:cq].present?
     end
 
-    def button_for_remove_from_collection(collection, document, label = 'Remove From Collection')
-      render 'hyrax/dashboard/collections/button_remove_from_collection', collection: collection, label: label, document: document
+    def button_for_remove_from_collection(collection, document, label: 'Remove From Collection', btn_class: 'btn-primary')
+      render 'hyrax/dashboard/collections/button_remove_from_collection', collection: collection, label: label, document: document, btn_class: btn_class
     end
 
     def button_for_remove_selected_from_collection(collection, label = 'Remove From Collection')

@@ -32,7 +32,7 @@ module Hyrax
         end
 
         def ensure_permission_template!(admin_set_id:)
-          Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set_id) || create_permission_template!(admin_set_id: admin_set_id)
+          Hyrax::PermissionTemplate.find_by(source_id: admin_set_id) || create_permission_template!(source_id: admin_set_id)
         end
 
         def default_admin_set_id
@@ -40,8 +40,8 @@ module Hyrax
         end
 
         # Creates a Hyrax::PermissionTemplate for the given AdminSet
-        def create_permission_template!(admin_set_id:)
-          Hyrax::PermissionTemplate.create!(admin_set_id: admin_set_id)
+        def create_permission_template!(source_id:)
+          Hyrax::PermissionTemplate.create!(source_id: source_id, source_type: 'admin_set')
         end
     end
   end

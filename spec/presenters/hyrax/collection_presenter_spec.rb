@@ -28,6 +28,42 @@ RSpec.describe Hyrax::CollectionPresenter do
   # Mock bytes so collection does not have to be saved.
   before { allow(collection).to receive(:bytes).and_return(0) }
 
+  describe "collection type methods" do
+    subject { presenter }
+
+    it { is_expected.to delegate_method(:collection_type_is_nestable?).to(:collection_type).as(:nestable?) }
+    it { is_expected.to delegate_method(:collection_type_is_discoverable?).to(:collection_type).as(:discoverable?) }
+    it { is_expected.to delegate_method(:collection_type_is_sharable?).to(:collection_type).as(:sharable?) }
+    it { is_expected.to delegate_method(:collection_type_is_allow_multiple_membership?).to(:collection_type).as(:allow_multiple_membership?) }
+    it { is_expected.to delegate_method(:collection_type_is_require_membership?).to(:collection_type).as(:require_membership?) }
+    it { is_expected.to delegate_method(:collection_type_is_assigns_workflow?).to(:collection_type).as(:assigns_workflow?) }
+    it { is_expected.to delegate_method(:collection_type_is_assigns_visibility?).to(:collection_type).as(:assigns_visibility?) }
+  end
+
+  describe '#collection_type' do
+    let(:collection_type) { create(:collection_type) }
+
+    describe 'when solr_document#collection_type_gid exists' do
+      let(:collection) { build(:collection, collection_type_gid: collection_type.gid) }
+      let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+
+      it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do
+        expect(solr_doc.key?('collection_type_gid_ssim')).to be_truthy
+        expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim', []).and_return(collection_type.gid)
+        expect(presenter.collection_type).to eq(collection_type)
+      end
+    end
+
+    describe 'when solr_document#collection_type_gid does not exist' do
+      let(:solr_doc) { SolrDocument.new(collection.to_solr.except('collection_type_gid_ssim')) }
+
+      it "finds the collection's collection type of the solr document's id if the document does not have a collection_type_gid" do
+        expect(solr_doc).not_to receive(:collection_type_gid)
+        expect { presenter.collection_type }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
   describe "#resource_type" do
     subject { presenter.resource_type }
 

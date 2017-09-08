@@ -21,7 +21,7 @@ module Hyrax
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
                     :keyword, :license, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
-                    :related_url, :visibility]
+                    :related_url, :visibility, :collection_type_gid]
 
       self.required_fields = [:title]
 
@@ -34,6 +34,13 @@ module Hyrax
         @repository = repository
       end
 
+      def permission_template
+        @permission_template ||= begin
+                                   template_model = PermissionTemplate.find_or_create_by(source_id: model.id)
+                                   PermissionTemplateForm.new(template_model)
+                                 end
+      end
+
       # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
       def select_files
         Hash[all_files_with_access]
@@ -41,14 +48,13 @@ module Hyrax
 
       # Terms that appear above the accordion
       def primary_terms
-        [:title]
+        [:title, :description]
       end
 
       # Terms that appear within the accordion
       def secondary_terms
         [:creator,
          :contributor,
-         :description,
          :keyword,
          :license,
          :publisher,

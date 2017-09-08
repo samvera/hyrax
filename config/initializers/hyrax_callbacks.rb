@@ -29,8 +29,8 @@ Hyrax.config.callback.set(:after_batch_create_success) do |user|
   Hyrax::BatchCreateSuccessService.new(user).call
 end
 
-Hyrax.config.callback.set(:after_batch_create_failure) do |user|
-  Hyrax::BatchCreateFailureService.new(user).call
+Hyrax.config.callback.set(:after_batch_create_failure) do |user, messages|
+  Hyrax::BatchCreateFailureService.new(user, messages).call
 end
 
 Hyrax.config.callback.set(:after_import_url_success) do |file_set, user|

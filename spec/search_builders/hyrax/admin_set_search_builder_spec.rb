@@ -25,7 +25,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
     context "when access is :deposit" do
       let(:access) { :deposit }
       let(:admin_set) { create(:admin_set) }
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+      let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
 
       context "and user has access" do
         before do
@@ -83,9 +83,9 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
     context "when searching for deposit access" do
       let(:access) { :deposit }
-      let(:permission_template1) { create(:permission_template, admin_set_id: 7) }
-      let(:permission_template2) { create(:permission_template, admin_set_id: 8) }
-      let(:permission_template3) { create(:permission_template, admin_set_id: 9) }
+      let(:permission_template1) { create(:permission_template, source_id: 7) }
+      let(:permission_template2) { create(:permission_template, source_id: 8) }
+      let(:permission_template3) { create(:permission_template, source_id: 9) }
 
       before do
         create(:permission_template_access,

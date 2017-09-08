@@ -5,6 +5,9 @@ en:
   activemodel:
     errors:
       messages:
+        is_not_nestable: "is not nestable"
+        cannot_have_child_nested: "cannot have child nested within it"
+        cannot_nest_in_parent: "cannot nest within parent"
         conflict: "Your changes could not be saved because another user (or background job) updated this %{model} after you began editing. Please make sure all file attachments have completed successfully and try again. This form has refreshed with the most recent saved copy of the %{model}."
   blacklight:
     search:
@@ -164,6 +167,79 @@ en:
         update:
           flash:
             success:        "The appearance was successfully updated"
+      collection_types:
+        edit:
+          header:           "Edit Collection Type"
+        form:
+          submit:            "Save"
+          tab:
+            metadata:        "Description"
+            settings:        "Settings"
+            participants:    "Participants"
+        form_settings:
+          instructions:    "These settings determine how collections of this type can be managed and discovered."
+          warning:         "Warning: These settings cannot be changed after a collection of this type has been created."
+        form_participants:
+          header:             "Collection Participants"
+          instructions:       "You can designate both groups and users as creators and managers of collections of this type"
+          add_participants:     "Add Participants"
+          submit:               "Add"
+          update_notice:        "Participants Updated"
+          remove_success:       "Participant Removed"
+          current_participants: "Current Participants"
+        form_participant_table:
+          managers:
+            action:             "Action"
+            agent_name:         "Collection Managers"
+            type:               "Type"
+            title:              "Managers"
+            help:               "Managers of collections of this type can edit collections other users have created, including adding to and removing works from a collection, modifying collection metadata, and deleting collections."
+            empty:              "No managers have been added to this collection type."
+          creators:
+            action:             "Action"
+            agent_name:         "Collection Creators"
+            type:               "Type"
+            title:              "Creators"
+            help:               "Creators of collections of this type can create and manage their own collections."
+            empty:              "No creators have been added to this collection type."
+        index:
+          breadcrumb:       "Collection Types"
+          create_new_button: "Create new collection type"
+          description:      "Collection types enable you to define settings that govern collections that serve different purposes in your repository.  You can define as many collection types as you need."
+          header:           "Collection Types"
+          modal:
+            can_delete_body_html: "<p>Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?</p>"
+            cannot_delete_body_html: "<p>You cannot delete this collection type because one or more collections of this type have already been created.</p>
+            <p>To delete this collection type, first ensure that all collections of this type have been deleted.</p>"
+            header_can_delete:  "Delete Collection Type?"
+            header_cannot_delete:  "Cannot Delete Collection Type"
+            view_collections: "View collections of this type"
+          more_toggle_content_html: "<p>Typical scenarios for collection types include:</p>
+          <ul>
+            <li><strong>User Collections</strong> that any registered user can create to organize items they deposit.</li>
+            <li><strong>Exhibits</strong> that staff create and curate for public display, where items can be included in any number of exhibits.</li>
+            <li><strong>Controlled Collections</strong> created and managed by staff and not intended for public display, such as collections associated with organizational units or departments.</li>
+            <li><strong>Community Collections</strong> that are intended for public display, similar to how DSpace communities and collections are sometimes used.</li>
+          </ul>"
+          more_toggle_header_html: "<span>More</span> about collection types"
+          table:
+            name:           "Name"
+            actions:        "Actions"
+        multiple_membership_checker:
+          error_preamble: 'Error: You have specified more than one of the same single-membership collection types'
+        new:
+          header:           "Create New Collection Type"
+        create:
+          notification:     "The collection type %{name} has been created."
+        update:
+          notification:     "The collection type %{name} has been updated."
+        destroy:
+          notification:     "The collection type %{name} has been deleted."
+        errors:
+          no_settings_change_for_admin_sets: "Collection type settings cannot be altered for the Administrative Set type"
+          no_settings_change_for_user_collections: "Collection type settings cannot be altered for the User Collection type"
+          no_settings_change_if_not_empty: "Collection type settings cannot be altered for a type that has collections"
+          not_empty: "Collection type cannot be altered as it has collections"
       features:
         index:
           header:           Features
@@ -174,7 +250,9 @@ en:
         activity:           "Activity"
         admin_sets:         "Administrative Sets"
         appearance:         "Appearance"
+        collection_types:   "Collection types"
         collections:        "Collections"
+        collection_types:   "Collection Types"
         configuration:      "Configuration"
         content_blocks:     "Content Blocks"
         notifications:      "Notifications"
@@ -333,6 +411,9 @@ en:
           desc: "Edit this collection"
           label: "Edit"
         header: "Actions"
+        nest_collections:
+          desc: "Nest other collections within this Collection"
+          label: "Nest collections"
       browse_view: "Browse View"
       document_list:
         edit: "Edit"
@@ -404,14 +485,80 @@ en:
         edit:
           header: "Edit Collection: %{title}"
         form:
+          permission_update_notices:
+            sharing: "The collection's sharing options have been updated."
+          permission_update_errors:
+            error:   "Invalid update option for permission template."
           tabs:
             description: "Description"
             sharing:     "Sharing"
-            visibility:  "Visibility"
+            discovery:   "Discovery"
+            branding:    "Branding"
+        form_discovery:
+            open:
+              label:         "Open Access"
+              description:   "Visible to all"
+            institution:
+              label:         "Institution"
+              description:   "Restricted visibility to institution"
+            private:
+              label:         "Private"
+              description:   "Keep to myself with an option to share"
+            para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
+            para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
+        form_share_table:
+          allow_all_registered: "Allow all registered"
+          depositors:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No depositors have been added to this collection."
+            help: "Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collecton otherwise would not permit them to view it."
+            remove: "Remove"
+            title: "Depositors"
+            type: "Type"
+          managers:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No managers have been added to this collection."
+            help: "Managers of this collection can add to and remove works from the collection, modify collection metadata, and delete the collection."
+            remove: "Remove"
+            title: "Managers"
+            type: "Type"
+          viewers:
+            action: "Action"
+            agent_name: "User/Group"
+            empty: "No viewers have been added to this collection."
+            help: "Viewers of this collection can view it even if the visibility permissions of the collection otherwise would not permit them to view it."
+            remove: "Remove"
+            title: "Viewers"
+            type: "Type"
+        form_share:
+          add_group: "Add group"
+          add_sharing: "Add Sharing"
+          add_user: "Add user"
+          current_shared: "Currently Shared With"
+          note: "Regardless of the visibility settings of this collection, you can share this collection with specific groups and users."
+        form_branding:
+            branding:
+               label: "Branding"
+               description: "Optionally, you can upload a banner image and/ro logo images to associate with this collection.  If uploaded, these images will be displayed at the top of the collection page to provide unique branding for the collection."
+            banner:
+              label: "Banner"
+              description: "An image to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is at least 120 pixels tall and 1200 pixels wide."
+            logo:
+              label: "Logo"
+              description: "One or more images to be displayed at the top of the collection pate.  For best results, upload an image (JPG, GIF orPNG) taht is 40 pixels in height.  Larger images will be resized to 40 pixels in height."
         new:
           header: Create New Collection
         show:
-          works_in_collection: "Works in this Collection"
+          header: "Collection"
+          item_count: "Items"
+          public_view_label: "Public view of Collection"
+          search_results: "Search Results within this Collection"
+      collection_type_actions:
+        close:                        "Close"
+        create_collection:            "Create collection"
+        select_type_of_collection:    "Select type of collection"
       create_work:              "Create Work"
       current_proxies:          "Current Proxies"
       heading_actions:
@@ -421,6 +568,8 @@ en:
       manage_proxies:           "Manage Proxies"
       my:
         action:
+          add_collection_to_collection: "Add selected collection to collection"
+          add_to_collection:        "Add to Collection"
           collection_confirmation: "Deleting a collection from %{application_name} is permanent. Click OK to delete this collection from %{application_name}, or Cancel to cancel this operation"
           delete_collection:       "Delete Collection"
           delete_work:             "Delete Work"
@@ -429,6 +578,7 @@ en:
           highlight:               "Highlight Work on Profile"
           select:                  "Select"
           select_all:              "Select Current Page"
+          select_collection:       "Select a collection"
           select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
           unhighlight:             "Unhighlight Work"
@@ -446,7 +596,9 @@ en:
           works:       "Filter works:"
         heading:
           action:         "Actions"
+          collection_type: "Collection Type"
           date_uploaded:  "Date Added"
+          date_modified:  "Last Modified"
           highlighted:    "Highlighted"
           title:          "Title"
           visibility:     "Visibility"
@@ -460,6 +612,8 @@ en:
           press_to:         "Press to"
           show_label:       "Display all details of"
         works:        "Your Works"
+      nest_collections_form:
+        create_within:          "%{child_title} has been added to %{parent_title}"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"
@@ -818,6 +972,16 @@ en:
         license: "Licensing and distribution information governing access to the collection. Select from the provided drop-down list."
         subject: "Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary."
         title: "A name to aid in identifying a collection."
+      collection_type:
+        allow_multiple_membership: "Allow works to belong to multiple collections of this type"
+        assigns_workflow:   "Allow collections of this type to assign workflow to a new work"
+        assigns_visibility:   "Allow collections of this type to assign initial visibility settings to a new work"
+        title: ""
+        description: "A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection."
+        discoverable: "Allow collections of this type to be discoverable"
+        nestable: "Allow collections of this type to be nested (a collection can contain other collections)"
+        require_membership: "A work must belong to at least one collection of this type"
+        sharable: "Allow users to assign collection managers, depositors, and viewers for collections they manage"
       defaults:
         based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
@@ -837,6 +1001,16 @@ en:
       collection:
         size:                      "Size"
         total_items:               "Total works"
+      collection_type:
+        allow_multiple_membership: "MULTIPLE MEMBERSHIP"
+        assigns_workflow: "WORKFLOW"
+        assigns_visibility: "VISIBILITY"
+        description: "Type description"
+        discoverable: "DISCOVERY"
+        nestable: "NESTABLE"
+        require_membership: "REQUIRE MEMBERSHIP"
+        sharable: "SHARING"
+        title: "Type name"
       defaults:
         admin_set_id:              "Add as member of administrative set"
         based_near:                "Location"

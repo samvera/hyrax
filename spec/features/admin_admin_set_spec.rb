@@ -8,7 +8,7 @@ RSpec.describe "The admin sets, through the admin dashboard" do
   end
 
   before do
-    Hyrax::PermissionTemplate.create!(admin_set_id: admin_set.id)
+    Hyrax::PermissionTemplate.create!(source_id: admin_set.id)
   end
 
   scenario do

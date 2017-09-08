@@ -9,9 +9,12 @@ Hyrax = {
         this.workEditor();
         this.fileManager();
         this.selectWorkType();
+        this.selectCollectionType();
         this.datatable();
         this.adminSetEditor();
         this.collectionEditor();
+        this.collectionTypes();
+        this.collectionTypeEditor();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.perPage();
@@ -34,12 +37,23 @@ Hyrax = {
       var controls = new AdminSetControls($('#admin-set-controls'));
     },
 
+    // The collectionType edit page
+    collectionTypeEditor: function() {
+      var CollectionTypeControls = require('hyrax/admin/collection_type_controls');
+      var controls = new CollectionTypeControls($('#collection-types-controls'));
+    },
+
     // The Collection edit page
     collectionEditor: function() {
       var CollectionControls = require('hyrax/collections/editor');
       var controls = new CollectionControls($('#collection-controls'));
     },
 
+    // Collection types
+    collectionTypes: function() {
+      var CollectionTypes = require('hyrax/collection_types');
+      var collection_types = new CollectionTypes($('.collection-types-wrapper'))
+    },
 
     // Pretty graphs on the dashboard page
     adminStatisticsGraphs: function() {
@@ -107,6 +121,14 @@ Hyrax = {
         var SelectWorkType = require('hyrax/select_work_type');
         $("[data-behavior=select-work]").each(function () {
             new SelectWorkType($(this));
+        });
+    },
+
+    // Popover menu to select the type when creating a new collection
+    selectCollectionType: function () {
+        var SelectCollectionType = require('hyrax/select_collection_type');
+        $("[data-behavior=select-collection]").each(function () {
+            new SelectCollectionType($(this)); // eslint-disable-line no-new
         });
     },
 

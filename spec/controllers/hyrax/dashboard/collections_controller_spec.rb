@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Dashboard::CollectionsController do
+RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
@@ -79,6 +79,28 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset1.id
+      end
+    end
+
+    context 'when setting collection type' do
+      let(:collection_type) { create(:collection_type) }
+
+      it "creates a Collection of default type when type is nil" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+      end
+
+      it "creates a Collection of specified type" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs, collection_type_gid: collection_type.gid
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type_gid).to eq collection_type.gid
       end
     end
 
@@ -182,7 +204,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     end
 
     context "when update fails" do
-      let(:collection) { Collection.new(id: '12345') }
+      let(:collection) { create(:collection, id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: []) }
 
@@ -201,6 +223,35 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         expect(response).to be_successful
         expect(response).to render_template(:edit)
         expect(assigns[:member_docs]).to be_kind_of Array
+      end
+    end
+
+    context "updating a collections branding metadata" do
+      it "saves banner metadata" do
+        val = double("/public/banner.gif")
+        allow(val).to receive(:file_url).and_return("/public/banner.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
+
+        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, banner_files: [1], banner_alttext: ["Banner alt Text"], collection: { creator: ['Emily'] } }
+        collection.reload
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner", alt_text: "[\"Banner alt Text\"]").where("local_path LIKE '%banner.gif'")).to exist
+      end
+
+      it "saves logo metadata" do
+        val = double(["/public/logo.gif"])
+        allow(val).to receive(:file_url).and_return("/public/logo.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with("1").and_return(val)
+
+        allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["http://abc.com"], collection: { creator: ['Emily'] } }
+        collection.reload
+
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com").where("local_path LIKE '%logo.gif'")).to exist
       end
     end
   end

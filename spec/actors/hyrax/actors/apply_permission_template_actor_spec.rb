@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
           edit_users: ['Kevin'],
           read_users: ['Taraji'])
   end
-  let(:attributes) { { admin_set_id: admin_set.id } }
+  let(:attributes) { { source_id: admin_set.id } }
   let(:admin_set) { create(:admin_set, with_permission_template: true) }
   let(:permission_template) { admin_set.permission_template }
 
@@ -20,16 +20,16 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   end
 
   describe "create" do
-    context "when admin_set_id is blank" do
-      let(:attributes) { { admin_set_id: '' } }
+    context "when source_id is blank" do
+      let(:attributes) { { source_id: '' } }
 
       it "returns true" do
         expect(middleware.create(env)).to be true
       end
     end
 
-    context "when admin_set_id is provided" do
-      let(:attributes) { { admin_set_id: admin_set.id } }
+    context "when source_id is provided" do
+      let(:attributes) { { source_id: admin_set.id } }
 
       before do
         create(:permission_template_access,

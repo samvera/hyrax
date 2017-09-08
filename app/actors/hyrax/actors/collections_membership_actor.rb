@@ -21,6 +21,11 @@ module Hyrax
         # Maps from collection ids to collection objects
         def assign_collections(env, collection_ids)
           return true unless collection_ids
+          multiple_memberships = Hyrax::MultipleMembershipChecker.new(item: env.curation_concern).check(collection_ids: collection_ids)
+          if multiple_memberships
+            env.curation_concern.errors.add(:collections, multiple_memberships)
+            return false
+          end
           # grab/save collections this user has no edit access to
           other_collections = collections_without_edit_access(env)
           env.curation_concern.member_of_collections = ::Collection.find(collection_ids)

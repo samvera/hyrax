@@ -21,5 +21,13 @@
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> <%= t("hyrax.dashboard.my.action.delete_collection") %>
       <% end %>
     </li>
+    <li role="menuitem" tabindex="-1">
+      <%= link_to '#',
+        id: 'add_collection_to_collection',
+        class: 'itemicon',
+        title: t("hyrax.dashboard.my.action.add_collection_to_collection") do %>
+        <%= t("hyrax.dashboard.my.action.add_collection_to_collection") %>
+      <% end %>
+    </li>
   </ul>
 </div>
