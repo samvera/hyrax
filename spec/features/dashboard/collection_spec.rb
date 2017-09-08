@@ -319,8 +319,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_selector('input.collection-remove', count: 2)
         page.all('input.collection-remove')[0].click
         expect(page).to have_selector('input.collection-remove', count: 1)
-        expect(page).not_to have_content(work1.title.first)
-        expect(page).to have_content(work2.title.first)
+        # because works do not have order, you cannot guarentee that the first work added is the work getting deleted
+        has_work1 = page.has_content? work1.title.first
+        has_work2 = page.has_content? work2.title.first
+        expect(has_work1 ^ has_work2).to be true
       end
       xit 'removes a sub-collection from the list of items (dependency on collection nesting)' do
       end
