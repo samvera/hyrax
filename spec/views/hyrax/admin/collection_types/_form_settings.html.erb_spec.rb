@@ -25,6 +25,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
     context "when collection_type.collections? is false" do
       before do
         collection_type_form.collection_type = collection_type
+        allow(collection_type).to receive(:collections?).and_return(false)
         assign(:form, collection_type_form)
         allow(view).to receive(:f).and_return(form)
         render
@@ -36,7 +37,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
       end
 
       INPUT_IDS.each do |id|
-        it "renders the #{id} checkbox to be disabled" do
+        it "renders the #{id} checkbox to be enabled" do
           match = rendered.match(/(<input.*id="#{id}".*>)/)
           expect(match).not_to be_nil
           expect(match[1].index('disabled="disabled"')).to be_nil
