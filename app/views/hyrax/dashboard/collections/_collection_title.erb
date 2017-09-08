@@ -1,0 +1,12 @@
+<% presenter.title.each_with_index do |title, index| %>
+  <% if index == 0 %>
+    <span class="h2"><%= title %></span>
+
+    <%= presenter.permission_badge %>
+    <%= presenter.collection_type_badge %>
+
+    <%= render 'show_actions', presenter: presenter %>
+  <% else %>
+    <span class="h2"><%= title %></span>
+  <% end %>
+<% end %>

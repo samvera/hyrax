@@ -9,7 +9,7 @@ module Hyrax
       delegate :available_workflows, :active_workflow, :admin_set, to: :model
 
       # @return [#to_s] the primary key of the associated admin_set
-      # def admin_set_id (because you might come looking for this method)
+      # def source_id (because you might come looking for this method)
       delegate :id, to: :admin_set, prefix: :admin_set
 
       # Stores which radio button under release "Varies" option is selected
@@ -61,7 +61,7 @@ module Hyrax
       # to the edit permissions of the AdminSet and to the WorkflowResponsibilities
       # of the active workflow
       def update_management
-        admin_set.update_access_controls!
+        admin_set.update_access_controls! if model.source_type == 'admin_set'
         update_workflow_approving_responsibilities
       end
 

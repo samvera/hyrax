@@ -1,23 +1,15 @@
-<h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
-<div class="actions-controls-collections">
-    <% if can? :edit, presenter.solr_document %>
-      <%= link_to t('hyrax.collection.actions.edit.label'),
-                  edit_dashboard_collection_path(presenter),
-                  title: t('hyrax.collection.actions.edit.desc'),
-                  class: 'btn btn-default' %>
-      <%= link_to t('hyrax.collection.actions.add_works.label'),
-                  hyrax.my_works_path(add_works_to_collection: presenter.id),
-                  title: t('hyrax.collection.actions.add_works.desc'),
-                  class: 'btn btn-default',
-                  data: { turbolinks: false } %>
-    <%end %>
-
-    <% if can? :destroy, presenter.solr_document %>
-      <%= link_to t('hyrax.collection.actions.delete.label'),
-                  collection_path(presenter),
-                  title: t('hyrax.collection.actions.delete.desc'),
-                  class: 'btn btn-danger',
-                  data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
-                          method: :delete } %>
-    <% end %>
-</div>
+<span class="sr-only h2"><%= t('hyrax.collection.actions.header') %></span>
+<% if can? :destroy, presenter.solr_document %>
+    <%= link_to t('hyrax.collection.actions.delete.label'),
+                hyrax.dashboard_collection_path(presenter),
+                title: t('hyrax.collection.actions.delete.desc'),
+                class: 'btn btn-danger pull-right',
+                data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
+                        method: :delete } %>
+<% end %>
+<% if can? :edit, presenter.solr_document %>
+    <%= link_to t('hyrax.collection.actions.edit.label'),
+                hyrax.edit_dashboard_collection_path(presenter),
+                title: t('hyrax.collection.actions.edit.desc'),
+                class: 'btn btn-default pull-right' %>
+<% end %>

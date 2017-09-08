@@ -46,7 +46,6 @@ module Hyrax
       # The search builder to find the collections' members
       self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
 
-      # load_and_authorize_resource except: [:index, :show, :create], instance_name: :collection
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
       before_action :ensure_admin!, only: :index # index for All Collections; see also Hyrax::My::CollectionsController #index for My Collections
@@ -63,9 +62,11 @@ module Hyrax
       end
 
       def new
+        collection_type_id = params[:collection_type_id]
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.collections.new.header'), hyrax.new_dashboard_collection_path
+        add_breadcrumb t(:'hyrax.dashboard.collections.new.header'), request.path
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).gid unless collection_type_id.nil?
         @collection.apply_depositor_metadata(current_user.user_key)
         form
       end
@@ -84,6 +85,7 @@ module Hyrax
 
       def after_create
         form
+        PermissionTemplate.create!(source_id: @collection.id, source_type: 'collection')
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
           format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
@@ -105,15 +107,24 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = ::Collection.new
         authorize! :create, @collection
-
         @collection.attributes = collection_params.except(:members)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
+        @collection.collection_type_gid = params[:collection_type_gid]
+        # TODO: There has to be a better way to handle a missing gid than setting to User Collection.
+        # TODO: Via UI, there should always be one defined.  It is missing right now because the modal isn't implemented yet
+        # TODO: But perhaps this is needed for the case when it gets called outside the context of the UI?
+        @collection.collection_type_gid ||= default_collection_type_gid
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
         else
           after_create_error
         end
+      end
+
+      def default_collection_type_gid
+        Hyrax::CollectionType.find_or_create_default_collection_type.gid
       end
 
       def after_update
@@ -137,6 +148,7 @@ module Hyrax
 
       def update
         process_member_changes
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.update(collection_params.except(:members))
           after_update
         else

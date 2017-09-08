@@ -71,7 +71,7 @@ class AdminSet < ActiveFedora::Base
   # @return [Hyrax::PermissionTemplate]
   # @raise [ActiveRecord::RecordNotFound]
   def permission_template
-    Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    Hyrax::PermissionTemplate.find_by!(source_id: id)
   end
 
   # @api public

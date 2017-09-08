@@ -43,7 +43,23 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       expect(collection.reload.member_objects).to eq [curation_concern]
     end
 
-    describe "when work is in user's own collection" do
+    context 'when multiple membership checker returns a non-nil value' do
+      before do
+        allow(Hyrax::MultipleMembershipChecker).to receive(:new).and_return(checker)
+        allow(checker).to receive(:check).and_return(error_message)
+      end
+
+      let(:checker) { double('checker') }
+      let(:error_message) { 'Error: foo bar' }
+
+      it 'adds an error and returns false' do
+        expect(env.curation_concern.errors).to receive(:add).with(:collections, error_message)
+        expect(subject.create(env)).to be false
+        expect(curation_concern.member_of_collections).to be_empty
+      end
+    end
+
+    context "when work is in user's own collection" do
       let(:collection) { create(:collection, user: user, title: ['A good title']) }
       let(:attributes) { { member_of_collection_ids: [] } }
 
@@ -58,7 +74,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       end
     end
 
-    describe "when work is in another user's collection" do
+    context "when work is in another user's collection" do
       let(:other_user) { create(:user) }
       let(:collection) { create(:collection, user: other_user, title: ['A good title']) }
 

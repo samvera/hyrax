@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Dashboard::CollectionsController do
+RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
@@ -79,6 +79,28 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset1.id
+      end
+    end
+
+    context 'when setting collection type' do
+      let(:collection_type) { create(:collection_type) }
+
+      it "creates a Collection of default type when type is nil" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+      end
+
+      it "creates a Collection of specified type" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs, collection_type_gid: collection_type.gid
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type_gid).to eq collection_type.gid
       end
     end
 
@@ -182,7 +204,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     end
 
     context "when update fails" do
-      let(:collection) { Collection.new(id: '12345') }
+      let(:collection) { create(:collection, id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: []) }
 

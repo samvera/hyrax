@@ -66,6 +66,8 @@
 //= require hyrax/admin/admin_set/registered_users
 //= require hyrax/admin/admin_set/participants
 //= require hyrax/admin/admin_set/visibility
+//= require hyrax/admin/collection_type_controls
+//= require hyrax/admin/collection_type/participants
 //= require hyrax/collections/editor
 //= require hyrax/editor
 //= require hyrax/editor/admin_set_widget
@@ -82,6 +84,8 @@
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections
+//= require hyrax/collection_types
+//= require hyrax/select_collection_type
 //= require hydra-editor/hydra-editor
 //= require nestable
 //= require hyrax/file_manager/sorting

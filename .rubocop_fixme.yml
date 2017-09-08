@@ -51,6 +51,10 @@ Style/PredicateName:
   Exclude:
     - 'app/helpers/hyrax/collections_helper.rb'
 
+Style/SpecialGlobalVars:
+  Exclude:
+    - 'tasks/hyrax_dev.rake'
+
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
