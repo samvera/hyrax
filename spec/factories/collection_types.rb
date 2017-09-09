@@ -20,22 +20,34 @@ FactoryGirl.define do
 
     after(:create) do |collection_type, evaluator|
       if evaluator.creator_user
-        attributes = { hyrax_collection_type_id: collection_type.id, access: 'create', agent_id: evaluator.creator_user, agent_type: 'user' }
+        attributes = { hyrax_collection_type_id: collection_type.id,
+                       access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                       agent_id: evaluator.creator_user,
+                       agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
         create(:collection_type_participant, attributes)
       end
 
       if evaluator.creator_group
-        attributes = { hyrax_collection_type_id: collection_type.id, access: 'create', agent_id: evaluator.creator_group, agent_type: 'group' }
+        attributes = { hyrax_collection_type_id: collection_type.id,
+                       access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                       agent_id: evaluator.creator_group,
+                       agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
         create(:collection_type_participant, attributes)
       end
 
       if evaluator.manager_user
-        attributes = { hyrax_collection_type_id: collection_type.id, access: 'manage', agent_id: evaluator.manager_user, agent_type: 'user' }
+        attributes = { hyrax_collection_type_id: collection_type.id,
+                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                       agent_id: evaluator.manager_user,
+                       agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
         create(:collection_type_participant, attributes)
       end
 
       if evaluator.manager_group
-        attributes = { hyrax_collection_type_id: collection_type.id, access: 'manage', agent_id: evaluator.manager_group, agent_type: 'group' }
+        attributes = { hyrax_collection_type_id: collection_type.id,
+                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                       agent_id: evaluator.manager_group,
+                       agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
         create(:collection_type_participant, attributes)
       end
     end
@@ -86,9 +98,15 @@ FactoryGirl.define do
     assigns_visibility false
 
     after(:create) do |collection_type, _evaluator|
-      attributes = { hyrax_collection_type_id: collection_type.id, access: 'create', agent_id: 'registered', agent_type: 'group' }
+      attributes = { hyrax_collection_type_id: collection_type.id,
+                     access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                     agent_id: 'registered',
+                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
-      attributes = { hyrax_collection_type_id: collection_type.id, access: 'manage', agent_id: 'admin', agent_type: 'group' }
+      attributes = { hyrax_collection_type_id: collection_type.id,
+                     access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                     agent_id: 'admin',
+                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
     end
   end
@@ -105,9 +123,15 @@ FactoryGirl.define do
     assigns_visibility true
 
     after(:create) do |collection_type, _evaluator|
-      attributes = { hyrax_collection_type_id: collection_type.id, access: 'create', agent_id: 'admin', agent_type: 'group' }
+      attributes = { hyrax_collection_type_id: collection_type.id,
+                     access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                     agent_id: 'admin',
+                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
-      attributes = { hyrax_collection_type_id: collection_type.id, access: 'manage', agent_id: 'admin', agent_type: 'group' }
+      attributes = { hyrax_collection_type_id: collection_type.id,
+                     access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                     agent_id: 'admin',
+                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
     end
   end

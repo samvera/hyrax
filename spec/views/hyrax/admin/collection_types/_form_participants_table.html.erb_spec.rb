@@ -22,7 +22,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_participant_table.html.erb', 
         stub_model(Hyrax::CollectionTypeParticipant,
                    agent_type: 'user',
                    agent_id: user.user_key,
-                   access: 'manage')
+                   access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS)
       end
 
       it 'lists the managers in the table' do
@@ -52,7 +52,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_participant_table.html.erb', 
         stub_model(Hyrax::CollectionTypeParticipant,
                    agent_type: 'user',
                    agent_id: user.user_key,
-                   access: 'create')
+                   access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS)
       end
 
       it 'lists the creators in the table' do

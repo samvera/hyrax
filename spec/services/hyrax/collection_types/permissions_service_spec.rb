@@ -1,150 +1,204 @@
 RSpec.describe Hyrax::CollectionTypes::PermissionsService do
-  let(:user1) { create(:user, groups: 'create_group') }
-  let(:user2) { create(:user, groups: 'manage_group') }
-  let(:user3) { create(:user) }
-  let(:user4) { create(:user, groups: 'admin') }
-  let(:collection_type_1) { create(:collection_type) }
-  let(:collection_type_2) { create(:collection_type) }
-  let(:collection_type_3) { create(:collection_type) }
+  let(:user_cg) { create(:user, groups: 'create_group') }
+  let(:user_mg) { create(:user, groups: 'manage_group') }
+  let(:user_cu) { create(:user) }
+  let(:user_mu) { create(:user) }
+  let(:user_other) { create(:user) }
+  let(:user_admin) { create(:user, groups: 'admin') }
 
-  let(:user_create_attributes) do
-    {
-      hyrax_collection_type_id: collection_type_1.id,
-      access: 'create',
-      agent_id: user1.user_key,
-      agent_type: 'user'
-    }
-  end
-  let(:group_create_attributes) do
-    {
-      hyrax_collection_type_id: collection_type_2.id,
-      access: 'create',
-      agent_id: 'create_group',
-      agent_type: 'group'
-    }
-  end
-  let(:user_manage_attributes) do
-    {
-      hyrax_collection_type_id: collection_type_1.id,
-      access: 'manage',
-      agent_id: user2.user_key,
-      agent_type: 'user'
-    }
-  end
-  let(:group_manage_attributes) do
-    {
-      hyrax_collection_type_id: collection_type_3.id,
-      access: 'manage',
-      agent_id: 'manage_group',
-      agent_type: 'group'
-    }
-  end
-  let!(:collection_type_participant1) { create(:collection_type_participant, user_create_attributes) }
-  let!(:collection_type_participant2) { create(:collection_type_participant, group_create_attributes) }
-  let!(:collection_type_participant3) { create(:collection_type_participant, user_manage_attributes) }
-  let!(:collection_type_participant4) { create(:collection_type_participant, group_manage_attributes) }
+  let!(:user_collection_type) { create(:user_collection_type) }
+  let!(:admin_set_collection_type) { create(:admin_set_collection_type) }
+  let!(:collection_type) { create(:collection_type, creator_user: user_cu, creator_group: 'create_group', manager_user: user_mu, manager_group: 'manage_group') }
 
-  describe '.collection_type_for_user search results' do
-    subject { described_class.collection_types_for_user(user: user, roles: access) }
+  describe '.collection_types_for_user' do
+    let!(:ability) { ::Ability.new(user) }
 
-    context 'users with create access' do
-      let(:user) { user1 }
-      let(:access) { 'create' }
+    before { allow(ability).to receive(:current_user).and_return(user) }
 
-      it "returns two collection types" do
-        expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_2.id]
+    subject { described_class.collection_types_for_user(user: user, roles: access).map(&:id) }
+
+    context 'when user is a create user' do
+      let(:user) { user_cu }
+
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
+
+        it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+      end
+
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
+
+        it { is_expected.to match_array [] }
       end
     end
 
-    context 'users with manage access' do
-      let(:user) { user2 }
-      let(:access) { 'manage' }
+    context 'when user is in create group' do
+      let(:user) { user_cg }
 
-      it "returns two collection types" do
-        expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_3.id]
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
+
+        it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+      end
+
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
+
+        it { is_expected.to match_array [] }
       end
     end
 
-    context 'users with no access' do
-      let(:user) { user3 }
-      let(:access) { ['manage', 'create'] }
+    context 'when user is a manage user' do
+      let(:user) { user_mu }
 
-      it "returns no collection types" do
-        expect(subject.map(&:id)).to match_array []
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
+
+        it { is_expected.to match_array [user_collection_type.id] }
+      end
+
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
+
+        it { is_expected.to match_array [collection_type.id] }
       end
     end
 
-    context 'admin users' do
-      let(:user) { user4 }
-      let(:access) { ['manage', 'create'] }
+    context 'when user is in manage group' do
+      let(:user) { user_mg }
 
-      it "returns all collection types" do
-        expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_2.id, collection_type_3.id]
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
+
+        it { is_expected.to match_array [user_collection_type.id] }
+      end
+
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
+
+        it { is_expected.to match_array [collection_type.id] }
       end
     end
 
-    describe '.can_create_collection_types results' do
-      subject { described_class.can_create_collection_types(user: user) }
+    context 'when user is an admin' do
+      let(:user) { user_admin }
 
-      context 'user with create access' do
-        let(:user) { user1 }
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
 
-        it "finds two collection types" do
-          expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_2.id]
-        end
+        it { is_expected.to match_array [collection_type.id, user_collection_type.id, admin_set_collection_type.id] }
       end
 
-      context 'admin users' do
-        let(:user) { user4 }
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
 
-        it "returns all collection types" do
-          expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_2.id, collection_type_3.id]
-        end
+        it { is_expected.to match_array [collection_type.id, user_collection_type.id, admin_set_collection_type.id] }
+      end
+    end
+
+    context 'when user with no access' do
+      let(:user) { user_other }
+
+      context 'and create access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::CREATE_ACCESS }
+
+        it { is_expected.to match_array [user_collection_type.id] }
       end
 
-      context 'users with no access' do
-        let(:user) { user3 }
+      context 'and manage access is queried' do
+        let(:access) { Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }
 
-        it "returns no collection types" do
-          expect(subject.map(&:id)).to match_array []
-        end
+        it { is_expected.to match_array [] }
       end
+    end
+  end
 
-      context 'users with manage access' do
-        let(:user) { user2 }
+  describe '.can_create_collection_types' do
+    let!(:ability) { ::Ability.new(user) }
 
-        it "returns two collection types" do
-          expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_3.id]
-        end
-      end
+    before { allow(ability).to receive(:current_user).and_return(user) }
 
-      context 'users with both manage and create access' do
-        let(:user5) { create(:user, groups: 'manage_group') }
-        let(:user) { user5 }
-        let(:collection_type_4) { create(:collection_type) }
-        let(:user5_user_create_attributes) do
-          {
-            hyrax_collection_type_id: collection_type_1.id,
-            access: 'create',
-            agent_id: user5.user_key,
-            agent_type: 'user'
-          }
-        end
-        let(:user5_group_manage_attributes) do
-          {
-            hyrax_collection_type_id: collection_type_3.id,
-            access: 'manage',
-            agent_id: 'manage_group',
-            agent_type: 'group'
-          }
-        end
-        let!(:collection_type_participant5) { create(:collection_type_participant, user5_user_create_attributes) }
-        let!(:collection_type_participant6) { create(:collection_type_participant, user5_group_manage_attributes) }
+    subject { described_class.can_create_collection_types(user: user).map(&:id) }
 
-        it "returns two collection types" do
-          expect(subject.map(&:id)).to match_array [collection_type_1.id, collection_type_3.id]
-        end
-      end
+    context 'when user is a create user' do
+      let(:user) { user_cu }
+
+      it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+    end
+
+    context 'when user is in create group' do
+      let(:user) { user_cg }
+
+      it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+    end
+
+    context 'when user is a manage user' do
+      let(:user) { user_mu }
+
+      it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+    end
+
+    context 'when user is in manage group' do
+      let(:user) { user_mg }
+
+      it { is_expected.to match_array [collection_type.id, user_collection_type.id] }
+    end
+
+    context 'when user is an admin' do
+      let(:user) { user_admin }
+
+      it { is_expected.to match_array [collection_type.id, user_collection_type.id, admin_set_collection_type.id] }
+    end
+
+    context 'when user with no access' do
+      let(:user) { user_other }
+
+      it { is_expected.to match_array [user_collection_type.id] }
+    end
+  end
+
+  describe '.user_edit_grants_for_collection_of_type' do
+    subject { described_class.user_edit_grants_for_collection_of_type(collection_type: coltype) }
+
+    context 'for user collection type' do
+      let(:coltype) { user_collection_type }
+
+      it { is_expected.to match_array [] }
+    end
+
+    context 'for admin set collection type' do
+      let(:coltype) { admin_set_collection_type }
+
+      it { is_expected.to match_array [] }
+    end
+
+    context 'for collection type' do
+      let(:coltype) { collection_type }
+
+      it { is_expected.to match_array [user_mu.user_key] }
+    end
+  end
+
+  describe '.group_edit_grants_for_collection_of_type' do
+    subject { described_class.group_edit_grants_for_collection_of_type(collection_type: coltype) }
+
+    context 'for user collection type' do
+      let(:coltype) { user_collection_type }
+
+      it { is_expected.to match_array ['admin'] }
+    end
+
+    context 'for admin set collection type' do
+      let(:coltype) { admin_set_collection_type }
+
+      it { is_expected.to match_array ['admin'] }
+    end
+
+    context 'for collection type' do
+      let(:coltype) { collection_type }
+
+      it { is_expected.to match_array ['manage_group', 'admin'] }
     end
   end
 end
