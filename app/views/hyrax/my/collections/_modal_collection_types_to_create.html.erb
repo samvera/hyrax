@@ -1,0 +1,39 @@
+<div class="modal collectiontypes fade" id="collectiontypes-to-create" tabindex="-1" role="dialog" aria-labelledby="select-collectiontype-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form class="new-collection-select">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.collection_type_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+          <h2 class="modal-title" id="select-collectiontype-label"><%= t('hyrax.dashboard.collection_type_actions.select_type_of_collection') %></h2>
+        </div>
+
+        <div class="modal-body">
+          <% @collection_type_list_presenter.each do |row_presenter| %>
+          <div class="select-collectiontype">
+            <label>
+              <input type="radio"
+              name="collection_type"
+              <% if row_presenter.admin_set? %>
+              data-path="<%= new_admin_admin_set_path %>"
+              <% else %>
+              data-path="<%= "#{new_dashboard_collection_path}&collection_type_id=#{row_presenter.id}" %>"
+              <% end %>>
+              <div class="select-collectiontype-label">
+                <div class="h3 collection-type-title"><%= row_presenter.title %></div>
+                <p><%= row_presenter.description %></p>
+              </div>
+            </label>
+          </div>
+          <% end %>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.collection_type_actions.close') %>
+          </button>
+          <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.collection_type_actions.create_collection') %>">
+        </div>
+      </form>
+    </div><!-- ./modal-content -->
+  </div>
+</div>

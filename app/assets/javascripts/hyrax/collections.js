@@ -10,8 +10,55 @@ Blacklight.onLoad(function () {
       form.append('<input type="hidden" value="add" name="collection[members]"></input>');
   });
 
-  $('#add_collection_to_collection').on('click', function(e) {
+  // Show add collection to collection modal window
+  $('#documents').find('.add-collection-to-collection').on('click', function(e) {
       e.preventDefault();
-      $('#add-collection-to-collection-modal').modal('show');
+      var isNestable = $(this).data('nestable') === true;
+
+      if (isNestable) {
+        $('#add-collection-to-collection-modal').modal('show');
+      } else {
+        $('#add-collection-to-collection-deny-modal').modal('show');
+      }
+  });
+
+  // Delete collection button click from within a collection row
+  $('#documents').find('.delete-collection-button').on('click', function (e) {
+    e.preventDefault();
+    var collectionId = $(this).parents('tr')[0].id.split('_')[1];
+    $('#collection-to-delete-modal-' + collectionId).modal('show');
+  });
+
+  // Delete selected collections button click
+  $('#delete-collections-button').on('click', function () {
+    var tableRows = $('#documents table.collections-list-table tbody tr');
+    var checkbox = null;
+    var numRowsSelected = false;
+    var deleteWording = {
+      plural: 'Deleting these collections',
+      singular: 'Deleting this collection'
+    };
+    var $deleteWordingTarget = $('#selected-collections-delete-modal .pluralized');
+
+    tableRows.each(function(i, row) {
+      checkbox = $(row).find('td:first input[type=checkbox]');
+      if (checkbox[0].checked) {
+        numRowsSelected++;
+      }
+    });
+
+    if (numRowsSelected > 0) {
+      // Collections are selected
+      // Update singular / plural text in delete modal
+      if (numRowsSelected > 1) {
+        $deleteWordingTarget.text(deleteWording.plural);
+      } else {
+        $deleteWordingTarget.text(deleteWording.singular);
+      }
+      $('#selected-collections-delete-modal').modal('show');
+    } else {
+      // No collections are selected
+      $('#collections-to-delete-deny-modal').modal('show');
+    }
   });
 });

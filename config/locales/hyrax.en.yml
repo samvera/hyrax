@@ -38,6 +38,7 @@ en:
       batch:
         new: "Create batch of works"
       cancel: "Cancel"
+      close: "Close"
       collection:
         new: "New Collection"
       delete: "Delete"
@@ -571,12 +572,13 @@ en:
       manage_proxies:           "Manage Proxies"
       my:
         action:
-          add_collection_to_collection: "Add selected collection to collection"
+          add_collection_to_collection: "Add collection to another collection"
           add_to_collection:        "Add to Collection"
           collection_confirmation: "Deleting a collection from %{application_name} is permanent. Click OK to delete this collection from %{application_name}, or Cancel to cancel this operation"
-          delete_collection:       "Delete Collection"
+          delete_collection:       "Delete collection"
+          delete_collections:      "Delete collections"
           delete_work:             "Delete Work"
-          edit_collection:         "Edit Collection"
+          edit_collection:         "Edit collection"
           edit_work:               "Edit Work"
           highlight:               "Highlight Work on Profile"
           select:                  "Select"
@@ -585,6 +587,7 @@ en:
           select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
           unhighlight:             "Unhighlight Work"
+          view_collection:         "View collection"
           work_confirmation:       "Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation"
         collection_list:
           description:    "Description:"
@@ -603,7 +606,10 @@ en:
           date_uploaded:  "Date Added"
           date_modified:  "Last Modified"
           highlighted:    "Highlighted"
+          items:          "Items"
+          last_modified:  "Last modified"
           title:          "Title"
+          type:           "Type"
           visibility:     "Visibility"
         highlighted:  "My Highlights"
         shared:       "Works Shared with Me"

@@ -117,3 +117,110 @@ button.branding-banner-remove:hover {
   font-weight: normal;
   text-decoration: underline;
 }
+
+.dashboard .collections-wrapper {
+  .panel {
+    .panel-title {
+      font-weight: 300;
+    }
+  }
+}
+
+.collections-wrapper {
+  padding-top: 20px;
+
+  #documents {
+    .collections-list-table {
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+
+  .collections-list-table {
+
+    th,
+    td {
+      text-align: center;
+      vertical-align: top;
+
+      &:nth-child(2) {
+        text-align: left;
+      }
+    }
+  }
+
+  // Datatable overwrites
+  .dataTable {
+
+    thead {
+      .sorting::after,
+      .sorting_asc::after,
+      .sorting_desc::after {
+        right: 0;
+      }
+    }
+  }
+
+  .create-collection-button {
+    margin-bottom: 10px;
+  }
+
+  .delete-collections-button {
+    margin-bottom: 20px;
+  }
+
+  .inline-dropdowns {
+    select {
+      margin-left: 10px;
+    }
+  }
+
+  .thumbnail-title-wrapper {
+    align-items: normal;
+    display: flex;
+
+    .thumbnail-wrapper {
+      width: 50px;
+
+      > img {
+        height: 30px;
+        width: auto;
+      }
+    }
+
+    .glyphicon {
+      margin: 4px 0 0 4px;
+    }
+  }
+
+  .tabs-row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .nav-tabs {
+      margin-top: 0;
+    }
+  }
+
+  .expanded-details {
+    display: none;
+    padding-top: 10px;
+  }
+
+  .modal {
+    .select-collectiontype-label {
+      float: right;
+      margin-left: 15px;
+
+      p {
+        font-weight: normal;
+      }
+    }
+
+    .collection-type-title {
+      margin-top: 0;
+    }
+  }
+}
