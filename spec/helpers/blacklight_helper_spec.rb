@@ -1,3 +1,5 @@
+# coding: utf-8
+
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do
@@ -49,8 +51,8 @@ RSpec.describe BlacklightHelper, type: :helper do
       let(:field_name) { 'rights_tesim' }
 
       it do
-        is_expected.to eq "<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">CC0 1.0 Universal</a>, " \
-                             "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark 1.0</a>, " \
+        is_expected.to eq "<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>, " \
+                             "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Creative Commons Public Domain Mark 1.0</a>, " \
                              "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>"
       end
     end
