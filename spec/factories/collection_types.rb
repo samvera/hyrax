@@ -100,12 +100,12 @@ FactoryGirl.define do
     after(:create) do |collection_type, _evaluator|
       attributes = { hyrax_collection_type_id: collection_type.id,
                      access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                     agent_id: 'registered',
+                     agent_id: ::Ability.registered_group_name,
                      agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
       attributes = { hyrax_collection_type_id: collection_type.id,
                      access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                     agent_id: 'admin',
+                     agent_id: ::Ability.admin_group_name,
                      agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
     end
@@ -125,12 +125,12 @@ FactoryGirl.define do
     after(:create) do |collection_type, _evaluator|
       attributes = { hyrax_collection_type_id: collection_type.id,
                      access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                     agent_id: 'admin',
+                     agent_id: ::Ability.admin_group_name,
                      agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
       attributes = { hyrax_collection_type_id: collection_type.id,
                      access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                     agent_id: 'admin',
+                     agent_id: ::Ability.admin_group_name,
                      agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
       create(:collection_type_participant, attributes)
     end

@@ -83,6 +83,8 @@ module Hyrax
     # * USER_COLLECTION_DEFAULT_TITLE
     # * Hyrax::CollectionTypes::CreateService::DEFAULT_OPTIONS
     #
+    # @see Hyrax::CollectionTypes::CreateService
+    #
     # @return [Hyrax::CollectionType] where machine_id = USER_COLLECTION_MACHINE_ID
     def self.find_or_create_default_collection_type
       find_by(machine_id: USER_COLLECTION_MACHINE_ID) || Hyrax::CollectionTypes::CreateService.create_collection_type
@@ -94,19 +96,19 @@ module Hyrax
     # * ADMIN_SET_DEFAULT_TITLE
     # * Options to override Hyrax::CollectionTypes::CreateService::DEFAULT_OPTIONS
     #
+    # @see Hyrax::CollectionTypes::CreateService
+    #
     # @return [Hyrax::CollectionType] where machine_id = ADMIN_SET_MACHINE_ID
     def self.find_or_create_admin_set_type
       return find_by_machine_id(ADMIN_SET_MACHINE_ID) if exists?(machine_id: ADMIN_SET_MACHINE_ID)
       options = {
         description: 'A collection type that provides Admin Set functionality.',
-        nestable: false,
-        discoverable: true,
-        sharable: true,
-        allow_multiple_membership: false,
-        require_membership: true,
-        assigns_workflow: true,
-        assigns_visibility: true
+        nestable: false, discoverable: true, sharable: true, allow_multiple_membership: false,
+        require_membership: true, assigns_workflow: true, assigns_visibility: true,
+        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }
+
       Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: ADMIN_SET_MACHINE_ID, title: ADMIN_SET_DEFAULT_TITLE, options: options)
     end
 
