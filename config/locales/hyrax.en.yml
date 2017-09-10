@@ -233,8 +233,8 @@ en:
           notification:     "The collection type %{name} has been created."
         update:
           notification:     "The collection type %{name} has been updated."
-        destroy:
-          notification:     "The collection type %{name} has been deleted."
+        delete:
+          notification:      "The collection type %{name} has been deleted."
         errors:
           no_settings_change_for_admin_sets: "Collection type settings cannot be altered for the Administrative Set type"
           no_settings_change_for_user_collections: "Collection type settings cannot be altered for the User Collection type"
