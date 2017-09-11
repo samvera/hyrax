@@ -1,5 +1,5 @@
 module Hyrax
-  class BatchCreateSuccessService < MessageUserService
+  class BatchCreateSuccessService < AbstractMessageService
     attr_reader :user
 
     def initialize(user)

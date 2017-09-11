@@ -48,7 +48,7 @@ module Hyrax
 
       def call
         users_to_notify.uniq.each do |recipient|
-          user.send_message(recipient, message, subject)
+          Hyrax::MessengerService.deliver(user, recipient, message, subject)
         end
       end
 
