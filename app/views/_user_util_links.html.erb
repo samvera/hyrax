@@ -2,7 +2,7 @@
   <%= render 'shared/locale_picker' if available_translations.size > 1 %>
   <% if user_signed_in? %>
     <li>
-      <%= render 'hyrax/users/notify_number' %>
+      <%= render_notifications(user: current_user) %>
     </li>
     <li class="dropdown">
       <%= link_to hyrax.dashboard_profile_path(current_user), role: 'button', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false} do %>

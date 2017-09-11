@@ -261,11 +261,6 @@ module Hyrax
       @max_notifications_for_dashboard ||= 5
     end
 
-    attr_writer :notifications_update_poll_interval
-    def notifications_update_poll_interval
-      @notifications_update_poll_interval ||= 30.seconds
-    end
-
     attr_writer :activity_to_show_default_seconds_since_now
     def activity_to_show_default_seconds_since_now
       @activity_to_show_default_seconds_since_now ||= 24 * 60 * 60

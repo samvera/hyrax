@@ -20,9 +20,6 @@ Hyrax.config do |config|
   # How many notifications should be displayed on the dashboard
   # config.max_notifications_for_dashboard = 5
 
-  # How often clients should poll for notifications
-  # config.notifications_update_poll_interval = 30.seconds
-
   # How frequently should a file be fixity checked
   # config.max_days_between_fixity_checks = 7
 

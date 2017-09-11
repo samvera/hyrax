@@ -8,6 +8,8 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.notifications'), hyrax.notifications_path
       @messages = user_mailbox.inbox
+      # Update the notifications now that there are zero unread
+      StreamNotificationsJob.perform_later(current_user)
     end
 
     def delete_all

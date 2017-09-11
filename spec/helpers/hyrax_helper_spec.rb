@@ -23,6 +23,36 @@ RSpec.describe HyraxHelper, type: :helper do
     end
   end
 
+  describe '#render_notifications' do
+    let(:mailbox) { double('mailbox', unread_count: unread_count, label: 'Foobar') }
+
+    subject { helper.render_notifications(user: nil) }
+
+    before do
+      allow(UserMailbox).to receive(:new).and_return(mailbox)
+    end
+
+    context 'with unread messages' do
+      let(:unread_count) { 10 }
+
+      it 'renders with label-danger and is visible' do
+        expect(subject).to eq '<a aria-label="Foobar" class="notify-number" href="/notifications"><span class="fa fa-bell"></span>' \
+                              "\n" \
+                              '<span class="count label label-danger">10</span></a>'
+      end
+    end
+
+    context 'with no unread messages' do
+      let(:unread_count) { 0 }
+
+      it 'renders with label-default and is invisible' do
+        expect(subject).to eq '<a aria-label="Foobar" class="notify-number" href="/notifications"><span class="fa fa-bell"></span>' \
+                              "\n" \
+                              '<span class="count label invisible label-default">0</span></a>'
+      end
+    end
+  end
+
   describe '#available_translations' do
     subject { helper.available_translations }
 

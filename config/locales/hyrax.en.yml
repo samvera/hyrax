@@ -686,7 +686,10 @@ en:
       dashboard:
         menu: "Dashboard"
       language_switch: "Switch language"
-      notifications: "You have no unread notifications"
+      notifications:
+        zero: "You have no unread notifications"
+        one: "You have one unread notification"
+        many: "You have %{count} unread notifications"
       profile:
         login: "Login"
         logout: "Logout"
