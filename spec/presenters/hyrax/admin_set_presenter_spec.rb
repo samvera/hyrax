@@ -50,4 +50,24 @@ RSpec.describe Hyrax::AdminSetPresenter do
       it { is_expected.to be true }
     end
   end
+
+  describe '#collection_type' do
+    let(:admin_set) do
+      build(:admin_set, id: AdminSet::DEFAULT_ID)
+    end
+
+    subject { presenter.collection_type }
+
+    it { is_expected.to eq(Hyrax::CollectionType.find_or_create_admin_set_type) }
+  end
+
+  describe '#show_path' do
+    let(:admin_set) do
+      build(:admin_set, id: 'sb397824g')
+    end
+
+    subject { presenter.show_path }
+
+    it { is_expected.to eq "/admin/admin_sets/#{admin_set.id}" }
+  end
 end

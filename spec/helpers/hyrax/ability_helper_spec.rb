@@ -21,6 +21,7 @@ RSpec.describe Hyrax::AbilityHelper do
       end
     end
   end
+
   describe "#visibility_options" do
     let(:public_opt) { ['Public', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
     let(:authenticated_opt) { [t('hyrax.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
@@ -45,6 +46,16 @@ RSpec.describe Hyrax::AbilityHelper do
       let(:option) { :loosen }
 
       it { is_expected.to eql(options) }
+    end
+  end
+
+  describe "#render_visibility_link" do
+    subject { helper.render_visibility_link(document) }
+
+    context 'admin set' do
+      let(:document) { double('admin_set?': true) }
+
+      it { is_expected.to be_nil }
     end
   end
 end

@@ -210,4 +210,20 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to eq("1234.endnote") }
   end
+
+  describe "#admin_set?" do
+    let(:attributes) { { 'has_model_ssim' => 'AdminSet' } }
+
+    subject { document }
+
+    it { is_expected.to be_admin_set }
+  end
+
+  describe "#collection?" do
+    let(:attributes) { { 'has_model_ssim' => 'Collection' } }
+
+    subject { document }
+
+    it { is_expected.to be_collection }
+  end
 end

@@ -208,7 +208,7 @@ module Hyrax
       end
 
       def search_builder_class
-        Hyrax::CollectionSearchBuilder
+        Hyrax::Dashboard::AllCollectionsSearchBuilder
       end
 
       private
