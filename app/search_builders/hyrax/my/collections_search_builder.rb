@@ -19,7 +19,7 @@ class Hyrax::My::CollectionsSearchBuilder < ::SearchBuilder
 
   # Include all admin sets the user can manage.
   # @return [Array{String}] values are lucence syntax term queries suitable for :fq
-  def apply_admin_set_management_permissions(permission_types, ability = current_ability)
+  def apply_admin_set_management_permissions(_permission_types, _ability = current_ability)
     admin_set_ids = source_ids_for_management
     return [] if admin_set_ids.empty?
     ["{!terms f=id}#{source_ids_for_management.join(',')}"]

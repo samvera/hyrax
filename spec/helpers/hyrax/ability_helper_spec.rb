@@ -53,7 +53,7 @@ RSpec.describe Hyrax::AbilityHelper do
     subject { helper.render_visibility_link(document) }
 
     context 'admin set' do
-      let(:document) { double('admin_set?': true) }
+      let(:document) { double(admin_set?: true) }
 
       it { is_expected.to be_nil }
     end
