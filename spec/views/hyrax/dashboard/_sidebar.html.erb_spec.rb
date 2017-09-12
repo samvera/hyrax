@@ -46,15 +46,6 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
   end
 
-  context 'with a user who can manage any admin set' do
-    let(:manage_any_admin_set) { true }
-
-    before { render }
-    subject { rendered }
-
-    it { is_expected.to have_link t('hyrax.admin.sidebar.admin_sets') }
-  end
-
   context 'with a user who can review submissions' do
     let(:review_submissions) { true }
 
