@@ -85,6 +85,7 @@ module Hyrax
         access_grants = access_grants_attributes(collection_type: collection_type, creating_user: creating_user)
         PermissionTemplate.create!(source_id: collection.id, source_type: 'collection',
                                    access_grants_attributes: access_grants.uniq)
+        collection.update_access_controls!
       end
 
       # @api private

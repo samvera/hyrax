@@ -6,11 +6,11 @@ module Hyrax
       self.model_class = PermissionTemplate
       self.terms = []
       delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
-      delegate :available_workflows, :active_workflow, :admin_set, to: :model
+      delegate :available_workflows, :active_workflow, :source_model, to: :model
 
-      # @return [#to_s] the primary key of the associated admin_set
+      # @return [#to_s] the primary key of the associated admin_set or collection
       # def source_id (because you might come looking for this method)
-      delegate :id, to: :admin_set, prefix: :admin_set
+      delegate :id, to: :source_model, prefix: :source
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -61,8 +61,9 @@ module Hyrax
       # to the edit permissions of the AdminSet and to the WorkflowResponsibilities
       # of the active workflow
       def update_management
-        admin_set.update_access_controls! if model.source_type == 'admin_set'
-        update_workflow_approving_responsibilities
+        # TODO: elr - not tested
+        source_model.update_access_controls!
+        update_workflow_approving_responsibilities if source_model.is_a?(AdminSet)
       end
 
       private

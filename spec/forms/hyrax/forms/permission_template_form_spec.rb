@@ -3,13 +3,15 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   let(:form) { described_class.new(permission_template) }
   let(:today) { Time.zone.today }
   let(:admin_set) { create(:admin_set) }
+  let(:collection) { create(:collection) }
 
   subject { form }
 
   it { is_expected.to delegate_method(:available_workflows).to(:model) }
   it { is_expected.to delegate_method(:active_workflow).to(:model) }
-  it { is_expected.to delegate_method(:admin_set).to(:model) }
+  it { is_expected.to delegate_method(:source_model).to(:model) }
   it { is_expected.to delegate_method(:visibility).to(:model) }
+  it { is_expected.to delegate_method(:id).to(:source_model).with_prefix(:source) }
 
   it 'is expected to delegate method #active_workflow_id to #active_workflow#id' do
     workflow = double(:workflow, id: 1234, active: true)
@@ -307,6 +309,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
         it 'trigger error from #update' do
           expect(response).to eq(content_tab: "visibility", updated: false, error_code: error_code)
+          # TODO: elr - does this error message need to be generalized?
           expect(I18n.t(response[:error_code], scope: 'hyrax.admin.admin_sets.form.permission_update_errors')).not_to include('translation missing')
         end
       end
