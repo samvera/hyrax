@@ -4,7 +4,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:collection_type) { create(:collection_type, creator_user: user) }
   let(:user_collection_type) { create(:user_collection_type) }
 
-  let(:admin_set1) { create(:admin_set, creator: [user.user_key], with_permission_template: true) }
+  let(:admin_set1) { create(:admin_set, creator: [admin_user.user_key], with_permission_template: true) }
+  let(:admin_set2) { create(:admin_set, creator: [user.user_key], with_permission_template: true) }
   let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid) }
@@ -15,6 +16,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         user
         admin_user
         admin_set1
+        create(:permission_template_access,
+               :manage,
+               permission_template: admin_set2.permission_template,
+               agent_type: 'user',
+               agent_id: user.user_key)
         collection1
         collection2
         collection3
@@ -28,8 +34,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).not_to have_link 'Your Collections'
         expect(page).to have_link(collection1.title.first)
         expect(page).to have_link(collection2.title.first)
-        expect(page).to have_link(admin_set1.title.first)
+        expect(page).to have_link(admin_set2.title.first)
         expect(page).not_to have_link(collection3.title.first)
+        expect(page).not_to have_link(admin_set1.title.first)
       end
     end
 
@@ -37,6 +44,16 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         user
         admin_user
+        create(:permission_template_access,
+               :manage,
+               permission_template: admin_set1.permission_template,
+               agent_type: 'user',
+               agent_id: admin_user.user_key)
+        create(:permission_template_access,
+               :manage,
+               permission_template: admin_set2.permission_template,
+               agent_type: 'group',
+               agent_id: 'admin')
         collection1
         collection2
         collection3
@@ -51,6 +68,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_link(collection1.title.first)
         expect(page).to have_link(collection2.title.first)
         expect(page).to have_link(collection3.title.first)
+        expect(page).to have_link(admin_set1.title.first)
+        expect(page).to have_link(admin_set2.title.first)
       end
     end
   end
