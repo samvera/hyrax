@@ -26,4 +26,20 @@ RSpec.describe 'hyrax/file_sets/mdeia_display/_default.html.erb', type: :view do
       expect(rendered).not_to have_css('a', text: 'Download the file')
     end
   end
+
+  context "external file" do
+    context "when not staged" do
+      it "draws the view with the link disabled"
+      it "draws the stage button"
+    end
+
+    context "when staging" do
+      it "draws the view with the link disabled"
+      it "draws the stage button disabled"
+    end
+
+    context "when staged" do
+      it "draws the view with the link"
+    end
+  end
 end

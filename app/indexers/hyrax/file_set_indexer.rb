@@ -27,6 +27,9 @@ module Hyrax
         solr_doc['duration_tesim']          = object.duration
         solr_doc['sample_rate_tesim']       = object.sample_rate
         solr_doc['original_checksum_tesim'] = object.original_checksum
+        # For external files (assuming only the original file can be external at the moment)
+        solr_doc['external_file_uri_ssi']   = external_file_uri
+        solr_doc['external_file_service_ssi']   = external_file_service
       end
     end
 
@@ -45,6 +48,16 @@ module Hyrax
         elsif object.format_label.present?
           object.format_label
         end
+      end
+
+      def external_file_uri
+        return unless object.original_file.external_file_uri
+        object.original_file.external_file_uri.first.to_s
+      end
+
+      def external_file_service
+        return unless object.original_file.external_file_service
+        object.original_file.external_file_service.first.to_s
       end
   end
 end

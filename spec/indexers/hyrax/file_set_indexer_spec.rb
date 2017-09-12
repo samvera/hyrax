@@ -35,7 +35,9 @@ RSpec.describe Hyrax::FileSetIndexer do
       page_count: ['1'],
       file_title: ['title'],
       duration: ['0:1'],
-      sample_rate: ['sample rate']
+      sample_rate: ['sample rate'],
+      external_file_uri: ['http://s3.amazonaws.com/bucket/file'],
+      external_file_service: ['s3']
     )
   end
 
@@ -53,6 +55,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
       allow(file_set).to receive(:extracted_text).and_return(mock_text)
+byebug
     end
     subject { indexer.generate_solr_document }
 
@@ -92,6 +95,8 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
+      expect(subject['example_file_uri_ssi']).to eq 'http://s3.amazonaws.com/bucket/file'
+      expect(subject['example_file_service_ssi']).to eq 's3'
     end
   end
 
