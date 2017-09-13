@@ -92,7 +92,7 @@ module Hyrax
 
       def after_create
         form
-        PermissionTemplate.create!(source_id: @collection.id, source_type: 'collection')
+        set_default_permissions
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
           format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
@@ -446,6 +446,10 @@ module Hyrax
 
         def form
           @form ||= form_class.new(@collection, current_ability, repository)
+        end
+
+        def set_default_permissions
+          Collections::PermissionsService.create_default(collection: @collection, creating_user: current_user)
         end
     end
   end
