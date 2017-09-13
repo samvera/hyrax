@@ -1,12 +1,12 @@
 <% provide :page_title, t("hyrax.admin.sidebar.collections") %>
 
 <% provide :head do %>
-<%= rss_feed_link_tag route_set: hyrax %>
-<%= atom_feed_link_tag route_set: hyrax %>
+  <%= rss_feed_link_tag route_set: hyrax %>
+  <%= atom_feed_link_tag route_set: hyrax %>
 <% end %>
 
 <%= javascript_tag do %>
-<%= render partial: 'scripts', formats: [:js] %>
+  <%= render partial: 'scripts', formats: [:js] %>
 <% end %>
 
 <% provide :page_header do %>

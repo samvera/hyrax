@@ -185,6 +185,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       within('#document_' + collection.id) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
+        first(".btn-danger").click
       end
       expect(page).not_to have_content(collection.title.first)
     end
