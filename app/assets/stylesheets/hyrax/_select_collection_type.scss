@@ -27,14 +27,19 @@
     width: 30px;
   }
 
-  .select-collectiontype-description {
+  .select-collectiontype-label {
     float: left;
     font-weight: normal;
     position: relative;
     width: 80%;
 
-    .collectiontype-title {
+    .collection-type-title {
       font-size: $font-size-h4;
+      margin-top: 0;
+    }
+
+    .collection-type-description {
+      font-weight: bold;
       margin-top: 0;
     }
   }
