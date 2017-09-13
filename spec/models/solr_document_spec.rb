@@ -212,7 +212,7 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "#external_file_uri" do
-    let(:attributes) { { external_file_uri_ssim: 'http://s3.amazonaws.com/bucket/file' } }
+    let(:attributes) { { external_file_uri_ssi: 'http://s3.amazonaws.com/bucket/file' } }
 
     subject { document.external_file_uri }
 
@@ -220,7 +220,7 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "#external_file_service" do
-    let(:attributes) { { external_file_service_ssim: 's3' } }
+    let(:attributes) { { external_file_service_ssi: 's3' } }
 
     subject { document.external_file_service }
 
