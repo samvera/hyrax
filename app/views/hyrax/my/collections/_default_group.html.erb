@@ -1,12 +1,22 @@
-<table class="table table-striped">
+<button id="delete-collections-button" class="btn btn-danger delete-collections-button"><%= t("hyrax.dashboard.my.action.delete_collections") %></button>
+
+<table class="table table-striped datatable collections-list-table">
   <caption class="sr-only"><%= t("hyrax.dashboard.my.sr.listing") %> <%= application_name %></caption>
   <% unless params[:display_type] == 'list' %>
     <thead>
     <tr>
+      <th class="check-all">
+        <label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label>
+        <%# TODO: Properly implement the check all feature below - I think there is a common
+        pattern being used somewhere in the application, but when I tried to implement, it broke
+        the page load %>
+        <input type="checkbox">
+      </th>
       <th><%= t("hyrax.dashboard.my.heading.title") %></th>
-      <th><%= t("hyrax.dashboard.my.heading.collection_type") %></th>
-      <th><%= t("hyrax.dashboard.my.heading.date_modified") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.type") %></th>
       <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.items") %></th>
+      <th><%= t("hyrax.dashboard.my.heading.last_modified") %></th>
       <th><%= t("hyrax.dashboard.my.heading.action") %></th>
     </tr>
     </thead>

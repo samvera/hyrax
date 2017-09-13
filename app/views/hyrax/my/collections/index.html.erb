@@ -11,87 +11,48 @@
 
 <% provide :page_header do %>
   <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %></h1>
-  <div class="pull-right">
-    <% if can?(:create, Collection) && @collection_type_list_presenter.any? %>
-      <div class="pull-right">
-
-        <% if @collection_type_list_presenter.many? %>
-          <% # modal to select type %>
-          <button type="button"
-                  class="btn btn-primary"
-                  data-toggle="modal"
-                  data-target="#collectiontypes-to-create"
-                  data-behavior="select-collection">
-            <%= t(:'helpers.action.collection.new')%>
-          </button>
-
-          <div class="modal collectiontypes fade" id="collectiontypes-to-create" tabindex="-1" role="dialog" aria-labelledby="select-collectiontype-label">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.collection_type_actions.close') %>"><span aria-hidden="true">&times;</span></button>
-                  <h2 class="modal-title" id="select-collectiontype-label"><%= t('hyrax.dashboard.collection_type_actions.select_type_of_collection') %></h2>
-                    <div class="modal-content">
-                      <form class="new-collection-select">
-                        <div class="modal-body">
-                          <% @collection_type_list_presenter.each do |row_presenter| %>
-                            <div class="select-collectiontype">
-                              <label>
-                                  <input type="radio"
-                                       name="collection_type"
-                                       <% if row_presenter.admin_set? %>
-                                       data-path="<%= new_admin_admin_set_path %>"
-                                       <% else %>
-                                       data-path="<%= "#{new_dashboard_collection_path}&collection_type_id=#{row_presenter.id}" %>"
-                                       <% end %>>
-                                <div class="select-collectiontype-label">
-                                  <div class="h3 collection-type-title"><%= row_presenter.title %></div>
-                                  <p><%= row_presenter.description %></p>
-                                </div>
-                              </label>
-                            </div>
-                          <% end %>
-                        </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.collection_type_actions.close') %>
-                        </button>
-                        <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.collection_type_actions.create_collection') %>">
-                      </div>
-                    </form>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        <% else @collection_type_list_presenter.any? %>
-          <% # link directly to create collection form with type %>
-          <%= link_to(
-                t('helpers.action.collection.new'),
-                "#{new_dashboard_collection_path}&collection_type_id=#{@collection_type_list_presenter.first_collection_type.id}",
-                class: 'btn btn-primary'
-              ) %>
-        <% end %>
-        </div>
-    <% end %>
-
-  </div>
 <% end %>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default<%= ' tabs' if can?(:read, :admin_dashboard) %>">
-      <%= render 'tabs' if can?(:read, :admin_dashboard) %>
-      <div class="panel-body">
-        <%= render 'search_header' %>
-        <h2 class="sr-only">Collections listing</h2>
-        <%= render 'hyrax/my/document_list' %>
+<div class="collections-wrapper">
+  <section class="tabs-row">
+    <!-- Page tabs -->
+    <nav><%= render 'tabs' if can?(:read, :admin_dashboard) %></nav>
 
-        <%= render 'results_pagination' %>
-      </div>
+    <% if can?(:create, Collection) && @collection_type_list_presenter.any? %>
+      <% if @collection_type_list_presenter.many? %>
+        <% # modal to select type %>
+        <button type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#collectiontypes-to-create"
+          data-behavior="select-collection">
+          <%= t(:'helpers.action.collection.new')%>
+        </button>
+      <% else @collection_type_list_presenter.any? %>
+        <% # link directly to create collection form with type %>
+        <%= link_to(t('helpers.action.collection.new'), "#{new_dashboard_collection_path}&collection_type_id=#{@collection_type_list_presenter.first_collection_type.id}", class: 'btn btn-primary') %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%# Collections list %>
+  <div class="panel panel-default collections-panel-wrapper">
+    <div class="panel-heading">
+      <h3 class="panel-title"><strong><%= @response.docs.count %> collections</strong> in the repository</h3>
+    </div>
+    <div class="panel-body">
+      <h2 class="sr-only">Collections listing</h2>
+      <%= render 'search_header' %>
+      <%= render 'hyrax/my/document_list' %>
+      <%= render 'results_pagination' %>
     </div>
   </div>
-</div>
 
-<!-- Render Modals -->
-<%= render 'modal_add_collection_to_collection' %>
+  <!-- Render Modals -->
+  <%= render 'modal_add_collection_to_collection' %>
+  <%= render 'modal_add_collection_to_collection_deny' %>
+  <%= render 'modal_collection_types_to_create' %>
+  <%= render 'modal_delete_deny' %>
+  <%= render 'modal_delete_selected_collections' %>
+
+</div><!-- /collections-wrapper -->

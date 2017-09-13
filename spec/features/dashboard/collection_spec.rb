@@ -185,6 +185,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       within('#document_' + collection.id) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
+        first(".btn-danger").click
       end
       expect(page).not_to have_content(collection.title.first)
     end
@@ -358,7 +359,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_content(collection.title.first)
         within("#document_#{collection.id}") do
           find('button.dropdown-toggle').click
-          click_link('Edit Collection')
+          click_link('Edit collection')
         end
         # URL: /dashboard/collections/collection-id/edit
         expect(page).to have_field('collection_title', with: collection.title.first)
