@@ -1,3 +1,5 @@
+require 'storage_proxy_client/client'
+
 module Hyrax
   class FileSetPresenter
     include ModelProxy
@@ -30,9 +32,6 @@ module Hyrax
              :depositor, :keyword, :title_or_label, :keyword,
              :date_created, :date_modified, :itemtype,
              to: :solr_document
-
-    # External file methods
-    delegate :external_file_uri, :external_file_service, to: :solr_document
 
     def single_use_links
       @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }

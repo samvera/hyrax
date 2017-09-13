@@ -60,7 +60,7 @@ RSpec.describe Hyrax::FileSetPresenter do
        "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
-       "duration", "sample_rate", "external_file_uri", "external_file_service"]
+       "duration", "sample_rate"]
     end
 
     it "delegates to the solr_document" do
@@ -184,13 +184,41 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "#external_file_download_link" do
-    it 'returns false if the original file is not an external_file' do
+    it 'returns nil if the original file is not an external_file' do
+        expect(presenter.external_file_download_link).to be_nil
     end
 
-    it 'returns nil if the original file is not staged' do
-    end
+    context 'with external file' do
+      let(:file) { create(:file_set).tap { |fs| fs.original_file = original_file } }
+      let(:original_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
+          f.external_file_service = 's3'
+        end
+      end
+      let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }
+      let(:staged) { false }
 
-    it 'returns the link if the original file is staged' do
+      before do
+        allow(presenter).to receive(:external_file_status).and_return(storage_proxy_client_response)
+        allow(storage_proxy_client_response).to receive(:staged?).and_return(staged)
+      end
+
+      it 'returns nil if the original file is not staged' do
+        expect(presenter.external_file_download_link).to be_nil
+      end
+
+      context 'when staged' do
+        let(:staged) { true }
+
+        before do
+          allow(storage_proxy_client_response).to receive(:staged_location).and_return('http://s3.amazonaws.com/staging-bucket/file')
+        end
+
+        it 'returns link if the original file is staged' do
+          expect(presenter.external_file_download_link).to eq 'http://s3.amazonaws.com/staging-bucket/file'
+        end
+      end
     end
   end
 
