@@ -55,7 +55,6 @@ RSpec.describe Hyrax::FileSetIndexer do
       allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
       allow(file_set).to receive(:extracted_text).and_return(mock_text)
-byebug
     end
     subject { indexer.generate_solr_document }
 

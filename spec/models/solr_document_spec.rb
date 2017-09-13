@@ -210,4 +210,20 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to eq("1234.endnote") }
   end
+
+  describe "#external_file_uri" do
+    let(:attributes) { { external_file_uri_ssim: 'http://s3.amazonaws.com/bucket/file' } }
+
+    subject { document.external_file_uri }
+
+    it { is_expected.to eq 'http://s3.amazonaws.com/bucket/file' }
+  end
+
+  describe "#external_file_service" do
+    let(:attributes) { { external_file_service_ssim: 's3' } }
+
+    subject { document.external_file_service }
+
+    it { is_expected.to eq 's3' }
+  end
 end

@@ -51,12 +51,12 @@ module Hyrax
       end
 
       def external_file_uri
-        return unless object.original_file.external_file_uri
+        return unless object.original_file
         object.original_file.external_file_uri.first.to_s
       end
 
       def external_file_service
-        return unless object.original_file.external_file_service
+        return unless object.original_file
         object.original_file.external_file_service.first.to_s
       end
   end

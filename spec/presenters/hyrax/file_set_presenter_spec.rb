@@ -60,7 +60,7 @@ RSpec.describe Hyrax::FileSetPresenter do
        "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
-       "duration", "sample_rate"]
+       "duration", "sample_rate", "external_file_uri", "external_file_service"]
     end
 
     it "delegates to the solr_document" do
