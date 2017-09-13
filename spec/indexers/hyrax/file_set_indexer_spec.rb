@@ -94,8 +94,8 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
-      expect(subject['example_file_uri_ssi']).to eq 'http://s3.amazonaws.com/bucket/file'
-      expect(subject['example_file_service_ssi']).to eq 's3'
+      expect(subject['external_file_uri_ssi']).to eq 'http://s3.amazonaws.com/bucket/file'
+      expect(subject['external_file_service_ssi']).to eq 's3'
     end
   end
 

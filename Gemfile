@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
-#gem 'active-fedora', github: 'samvera/active_fedora', branch: 'external_files_hackathon'
-
 group :development, :test do
   gem 'coveralls', require: false
   gem 'pry' unless ENV['CI']
