@@ -25,6 +25,11 @@ module Hyrax
       "Blacklight::Exceptions::RecordNotFound" => :not_found
     )
 
+    config.before_initialize do
+      # ActionCable should use Hyrax's connection class instead of app's
+      config.action_cable.connection_class = -> { 'Hyrax::ApplicationCable::Connection'.safe_constantize }
+    end
+
     config.after_initialize do
       begin
         Hyrax.config.persist_registered_roles!

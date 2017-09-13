@@ -112,7 +112,8 @@ RSpec.describe ProxyDepositRequest, type: :model do
     context 'when the transfer_to user is found' do
       it 'creates a transfer_request' do
         subject.transfer_to = receiver.user_key
-        subject.save!
+        expect { subject.save! }.to change { receiver.mailbox.inbox(unread: true).count }
+          .from(0).to(1)
         proxy_request = receiver.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work_id)
         expect(proxy_request.sending_user).to eq(sender)

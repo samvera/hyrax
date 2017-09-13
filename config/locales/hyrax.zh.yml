@@ -512,7 +512,7 @@ zh:
       user_activity: 用户活动
       user_notifications: 用户通知
       view_files: 阅览文件
-    document_language: en
+    document_language: zh
     edit_profile: 编辑个人资料
     embargoes:
       edit:
@@ -700,7 +700,10 @@ zh:
       dashboard:
         menu: 控件板
       language_switch: 转换语言
-      notifications: 您没有未曾阅读的通知
+      notifications:
+        many: 您有%{count}未读通知
+        one: 您有一个未读通知
+        zero: 您没有未读通知
       profile:
         login: 登录
         logout: 退出登录

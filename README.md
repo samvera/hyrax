@@ -36,6 +36,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
     * [Start background workers](#start-background-workers)
     * [Create default administrative set](#create-default-administrative-set)
     * [Generate a work type](#generate-a-work-type)
+    * [Enable notifications](#enable-notifications)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling features](#toggling-features)
   * [License](#license)
@@ -243,6 +244,16 @@ rails generate hyrax:work My/MovingImage
 ```
 
 You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
+
+## Enable notifications
+
+Hyrax 2 uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
+
+``` yaml
+development:
+  adapter: redis
+  url: redis://localhost:6379
+```
 
 # Managing a Hyrax-based app
 

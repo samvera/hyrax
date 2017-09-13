@@ -54,6 +54,23 @@ module Hyrax
       user_agent.include? 'Chrome'
     end
 
+    # @param [User] user
+    def render_notifications(user:)
+      mailbox = UserMailbox.new(user)
+      unread_notifications = mailbox.unread_count
+      link_to(hyrax.notifications_path,
+              'aria-label' => mailbox.label(params[:locale]),
+              class: 'notify-number') do
+        capture do
+          concat content_tag(:span, '', class: 'fa fa-bell')
+          concat "\n"
+          concat content_tag(:span,
+                             unread_notifications,
+                             class: count_classes_for(unread_notifications))
+        end
+      end
+    end
+
     # @param [ProxyDepositRequest] req
     def show_transfer_request_title(req)
       if req.deleted_work? || req.canceled?
@@ -231,6 +248,16 @@ module Hyrax
 
       def user_agent
         request.user_agent || ''
+      end
+
+      def count_classes_for(unread_count)
+        'count label '.tap do |classes|
+          classes << if unread_count.zero?
+                       'invisible label-default'
+                     else
+                       'label-danger'
+                     end
+        end
       end
 
       # rubocop:disable Metrics/MethodLength

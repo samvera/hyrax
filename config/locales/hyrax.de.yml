@@ -511,7 +511,7 @@ de:
       user_activity: Benutzeraktivität
       user_notifications: Benutzerbenachrichtigungen
       view_files: Dateien ansehen
-    document_language: En
+    document_language: de
     edit_profile: Profil bearbeiten
     embargoes:
       edit:
@@ -697,7 +697,10 @@ de:
       dashboard:
         menu: Instrumententafel
       language_switch: Sprache wechseln
-      notifications: Sie haben keine ungelesenen Benachrichtigungen
+      notifications:
+        many: Sie haben %{count} ungelesene Benachrichtigungen
+        one: Sie haben eine ungelesene Benachrichtigung
+        zero: Sie haben keine ungelesenen Benachrichtigungen
       profile:
         login: Anmeldung
         logout: Ausloggen

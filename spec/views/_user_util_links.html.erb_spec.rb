@@ -1,3 +1,5 @@
+# coding: utf-8
+
 RSpec.describe '/_user_util_links.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   let(:can_create_file) { true }
@@ -6,7 +8,6 @@ RSpec.describe '/_user_util_links.html.erb', type: :view do
     allow(view).to receive(:user_signed_in?).and_return(true)
     allow(view).to receive(:current_user).and_return(stub_model(User, user_key: 'userX'))
     allow(view).to receive(:can?).with(:create, GenericWork).and_return(can_create_file)
-    assign :notify_number, 8
   end
 
   it 'has dropdown list of links' do
@@ -19,7 +20,7 @@ RSpec.describe '/_user_util_links.html.erb', type: :view do
   it 'shows the number of outstanding messages' do
     render
     expect(rendered).to have_selector "a[aria-label='You have no unread notifications'][href='#{hyrax.notifications_path}']"
-    expect(rendered).to have_selector 'a.notify-number span.label-danger.invisible', text: '0'
+    expect(rendered).to have_selector 'a.notify-number span.label-default.invisible', text: '0'
   end
 
   describe 'translations' do

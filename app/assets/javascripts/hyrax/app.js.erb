@@ -40,7 +40,6 @@ Hyrax = {
       var controls = new CollectionControls($('#collection-controls'));
     },
 
-
     // Pretty graphs on the dashboard page
     adminStatisticsGraphs: function() {
         var AdminGraphs = require('hyrax/admin/graphs');
@@ -87,13 +86,18 @@ Hyrax = {
         new PermissionsControl($("#collection_permissions"), 'tmpl-collection-grant');
     },
 
-    // Polling for user notifications. This is displayed in the navbar.
-    notifications: function () {
-        var Notifications = require('hyrax/notifications');
-        $('[data-update-poll-url]').each(function () {
-            var interval = $(this).data('update-poll-interval');
-            var url = $(this).data('update-poll-url');
-            new Notifications(url, interval);
+    // ActionCable for user notifications. This is displayed in the navbar.
+    notifications: function() {
+        var consumer = ActionCable.createConsumer("<%= Hyrax::Engine.routes.url_helpers.notifications_endpoint_path %>");
+        consumer.subscriptions.create("Hyrax::NotificationsChannel", {
+            connected: function(data) {
+                this.perform("update_locale", { locale: $('html').attr('lang') });
+            },
+
+            received: function(data) {
+                var Notification = require('hyrax/notification');
+                new Notification($('.notify-number')).update(data.notifications_count, data.notifications_label);
+            }
         });
     },
 

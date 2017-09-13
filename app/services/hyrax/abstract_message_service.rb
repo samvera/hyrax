@@ -1,5 +1,5 @@
 module Hyrax
-  class MessageUserService
+  class AbstractMessageService
     attr_reader :file_set, :user
 
     def initialize(file_set, user)
@@ -8,15 +8,18 @@ module Hyrax
     end
 
     def call
-      job_user.send_message(user, message, subject)
+      Hyrax::MessengerService.deliver(job_user,
+                                      user,
+                                      message,
+                                      subject)
     end
 
-    # Passed into send_message, override to provide message body for event.
+    # Passed to Hyrax::MessengerService, override to provide message body for event.
     def message
       raise "Override #message in the service class"
     end
 
-    # Passed into send_message, override to provide subject for event.
+    # Passed to Hyrax::MessengerService, override to provide subject for event.
     def subject
       raise "Override #subject in the service class"
     end

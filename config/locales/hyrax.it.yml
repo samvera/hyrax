@@ -697,7 +697,10 @@ it:
       dashboard:
         menu: Cruscotto
       language_switch: Cambiare la lingua
-      notifications: Non hai notifiche non letti
+      notifications:
+        many: Hai notifiche non letti %{count}
+        one: Hai una notifica non letti
+        zero: Non hai notifiche non letti
       profile:
         login: Accesso
         logout: Logout

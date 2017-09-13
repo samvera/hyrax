@@ -694,7 +694,10 @@ es:
       dashboard:
         menu: Panel de Control
       language_switch: Cambiar idioma
-      notifications: No hay notificaciones sin leer.
+      notifications:
+        many: Tienes notificaciones no leídas de %{count}
+        one: Tienes una notificación no leída
+        zero: No tienes notificaciones no leídas.
       profile:
         login: Iniciar sesión
         logout: Cerrar sesión

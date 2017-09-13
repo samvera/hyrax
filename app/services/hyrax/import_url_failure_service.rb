@@ -1,5 +1,5 @@
 module Hyrax
-  class ImportUrlFailureService < MessageUserService
+  class ImportUrlFailureService < AbstractMessageService
     def message
       file_set.errors.full_messages.join(', ')
     end
