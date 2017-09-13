@@ -128,6 +128,72 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe "#external_file?" do
+    it 'returns false if the original file is not an external_file' do
+      expect(presenter.external_file?).to be false
+    end
+
+    context 'with external file' do
+      let(:file) { create(:file_set).tap { |fs| fs.original_file = original_file } }
+      let(:original_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
+          f.external_file_service = 's3'
+        end
+      end
+
+      it 'returns true if the original file is an external_file' do
+        expect(presenter.external_file?).to be true
+      end
+    end
+  end
+
+  describe "#external_file_staged?" do
+    it 'returns false if the original file is not an external_file' do
+      expect(presenter.external_file_staged?).to be false
+    end
+
+    context 'with external file' do
+      let(:file) { create(:file_set).tap { |fs| fs.original_file = original_file } }
+      let(:original_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
+          f.external_file_service = 's3'
+        end
+      end
+      let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }
+      let(:staged) { false }
+
+      before do
+        allow(presenter).to receive(:external_file_status).and_return(storage_proxy_client_response)
+        allow(storage_proxy_client_response).to receive(:staged?).and_return(staged)
+      end
+
+      it 'returns false if the original file is not staged' do
+        expect(presenter.external_file_staged?).to be false
+      end
+
+      context 'when staged' do
+        let(:staged) { true }
+
+        it 'returns true if the original file is staged' do
+          expect(presenter.external_file_staged?).to be true
+        end
+      end
+    end
+  end
+
+  describe "#external_file_download_link" do
+    it 'returns false if the original file is not an external_file' do
+    end
+
+    it 'returns nil if the original file is not staged' do
+    end
+
+    it 'returns the link if the original file is staged' do
+    end
+  end
+
   describe "characterization" do
     let(:user) { double(user_key: 'user') }
 

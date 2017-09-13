@@ -6,3 +6,4 @@ group :development do
 end
 
 gem 'active-fedora', github: 'samvera/active_fedora', branch: 'external_files_hackathon'
+gem 'storage_proxy_client', github: 'samvera-labs/storage_proxy_client'

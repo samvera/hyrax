@@ -40,6 +40,7 @@ RSpec.describe 'hyrax/file_sets/media_display/_default.html.erb', type: :view do
 
     context "when staged" do
       it "draws the view with the link"
+      it "draws the stage button disabled"
     end
   end
 end

@@ -96,10 +96,32 @@ module Hyrax
       @fixity_check_service ||= Hyrax::FileSetFixityCheckService.new(id)
     end
 
+    def external_file?
+      solr_document.external_file_uri.present?
+    end
+
+    def external_file_staged?
+      return false unless external_file?
+      external_file_status.staged?
+    end
+
+    def external_file_download_link
+      return nil unless external_file? && external_file_staged?
+      external_file_status.staged_location
+    end
+
     private
 
       def link_presenter_class
         SingleUseLinkPresenter
+      end
+
+      def external_file_service
+        @external_file_service ||= StorageProxyClient::Client.new(external_uri: solr_document.external_file_uri, service: solr_document.external_file_service)
+      end
+
+      def external_file_status
+        @external_file_status ||= external_file_service.status
       end
   end
 end
