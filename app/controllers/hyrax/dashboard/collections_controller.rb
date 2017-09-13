@@ -372,7 +372,33 @@ module Hyrax
         deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
 
         def collection_params
+          @participants = extract_old_style_permission_attributes(params[:collection])
           form_class.model_attributes(params[:collection])
+        end
+
+        def extract_old_style_permission_attributes(attributes)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          Deprecation.warn(self, "passing in permissions with a new collection is deprecated and will be removed from Hyrax 3.0 ()") # TODO: elr - add alternative in ()
+          permissions = attributes.delete("permissions_attributes")
+          return [] unless permissions
+          participants = []
+          permissions.each do |p|
+            access = access(p)
+            participants << { agent_type: agent_type(p), agent_id: p["name"], access: access } if access
+          end
+          participants
+        end
+
+        def agent_type(permission)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          return 'group' if permission["type"] == 'group'
+          'user'
+        end
+
+        def access(permission)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          return Hyrax::PermissionTemplateAccess::MANAGE if permission["access"] == 'edit'
+          return Hyrax::PermissionTemplateAccess::VIEW if permission["access"] == 'read'
         end
 
         # Queries Solr for members of the collection.
@@ -449,7 +475,7 @@ module Hyrax
         end
 
         def set_default_permissions
-          Collections::PermissionsService.create_default(collection: @collection, creating_user: current_user)
+          Collections::PermissionsService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
         end
     end
   end
