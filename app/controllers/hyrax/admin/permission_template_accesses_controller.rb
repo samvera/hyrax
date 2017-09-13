@@ -6,7 +6,7 @@ module Hyrax
       def destroy
         ActiveRecord::Base.transaction do
           @permission_template_access.destroy
-          update_management if @permission_template_access.manage?
+          update_access(manage_changed: @permission_template_access.manage?)
         end
 
         if @permission_template_access.destroyed?
@@ -23,8 +23,8 @@ module Hyrax
           @source_id ||= @permission_template_access.permission_template.source_id
         end
 
-        def update_management
-          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_management
+        def update_access(manage_changed:)
+          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_access(manage_changed: manage_changed)
         end
 
         def redirect_to_edit_path

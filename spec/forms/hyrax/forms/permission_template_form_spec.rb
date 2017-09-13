@@ -12,6 +12,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   it { is_expected.to delegate_method(:source_model).to(:model) }
   it { is_expected.to delegate_method(:visibility).to(:model) }
   it { is_expected.to delegate_method(:id).to(:source_model).with_prefix(:source) }
+  it { is_expected.to delegate_method(:update_access_controls!).to(:source_model) }
 
   it 'is expected to delegate method #active_workflow_id to #active_workflow#id' do
     workflow = double(:workflow, id: 1234, active: true)
@@ -102,7 +103,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
       it "doesn't adds edit_access to the AdminSet itself" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_users).to be_empty
+        expect(admin_set.reload.edit_users).to match_array [user.user_key] # MANAGE user added in before do
       end
     end
 
