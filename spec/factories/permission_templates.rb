@@ -18,6 +18,19 @@ FactoryGirl.define do
             create(:admin_set)
           end
         permission_template.source_id = admin_set.id
+      elsif evaluator.with_collection
+        source_id = permission_template.source_id
+        collection =
+          if source_id.present?
+            begin
+              Collection.find(source_id)
+            rescue
+              create(:collection, id: source_id)
+            end
+          else
+            create(:collection)
+          end
+        permission_template.source_id = collection.id
       end
     end
 
@@ -34,6 +47,7 @@ FactoryGirl.define do
 
     transient do
       with_admin_set false
+      with_collection false
       with_workflows false
       with_active_workflow false
     end

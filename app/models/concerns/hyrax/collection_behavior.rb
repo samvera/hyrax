@@ -13,6 +13,8 @@ module Hyrax
 
     included do
       validates_with HasOneTitleValidator
+      after_destroy :destroy_permission_template
+
       self.indexer = Hyrax::CollectionIndexer
 
       class_attribute :index_collection_type_gid_as, writer: false
@@ -28,9 +30,7 @@ module Hyrax
 
       # Need to define here in order to override setter defined by ActiveTriples
       def collection_type_gid=(new_collection_type_gid)
-        if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
-          raise "Can't modify collection type of this collection"
-        end
+        raise "Can't modify collection type of this collection" if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
         new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
         super
         @collection_type = new_collection_type
@@ -114,7 +114,30 @@ module Hyrax
       ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
     end
 
+    # @api public
+    # Retrieve the permission template for this collection.
+    # @return [Hyrax::PermissionTemplate]
+    # @raise [ActiveRecord::RecordNotFound]
+    def permission_template
+      Hyrax::PermissionTemplate.find_by!(source_id: id)
+    end
+
+    # Calculate and update who should have edit access based on who
+    # has "manage" access in the PermissionTemplateAccess
+    def update_access_controls!
+      update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
+              edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'),
+              read_users: permission_template.agent_ids_for(access: 'view', agent_type: 'user'),
+              read_groups: (permission_template.agent_ids_for(access: 'view', agent_type: 'group') + visibility_group).uniq)
+    end
+
     private
+
+      def visibility_group
+        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        []
+      end
 
       # act like the default collection type until persisted
       def ensure_collection_type_gid
@@ -140,6 +163,12 @@ module Hyrax
       # Solr field name works use to index member ids
       def member_ids_field
         Solrizer.solr_name('member_ids', :symbol)
+      end
+
+      def destroy_permission_template
+        permission_template.destroy
+      rescue ActiveRecord::RecordNotFound
+        true
       end
   end
 end

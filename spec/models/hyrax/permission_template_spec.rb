@@ -1,5 +1,6 @@
-RSpec.describe Hyrax::PermissionTemplate do
+RSpec.describe Hyrax::PermissionTemplate, :clean_repo do
   let(:admin_set) { create(:admin_set) }
+  let(:collection) { create(:collection) }
   let(:permission_template) { described_class.new(attributes) }
   let(:attributes) { { source_id: admin_set.id } }
 
@@ -18,6 +19,17 @@ RSpec.describe Hyrax::PermissionTemplate do
       it 'will not persist an AdminSet when false (or not given)' do
         permission_template = create(:permission_template, with_admin_set: false)
         expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      end
+    end
+
+    context 'with_collection parameter' do
+      it 'will create an Collection when true' do
+        permission_template = create(:permission_template, with_collection: true)
+        expect(permission_template.collection).to be_persisted
+      end
+      it 'will not persist an Collection when false (or not given)' do
+        permission_template = create(:permission_template, with_collection: false)
+        expect { permission_template.collection }.to raise_error(ActiveFedora::ObjectNotFoundError)
       end
     end
 
@@ -51,10 +63,54 @@ RSpec.describe Hyrax::PermissionTemplate do
     end
   end
 
+  describe "#source_model" do
+    context 'when source is an AdminSet' do
+      let(:as_permission_template) { described_class.new(as_attributes) }
+      let(:as_attributes) { { source_id: admin_set.id } }
+
+      before do
+        allow(AdminSet).to receive(:find).with(as_permission_template.source_id).and_return(admin_set)
+      end
+
+      it 'returns an AdminSet if the source_type is admin_set for the given permission_template' do
+        expect(as_permission_template.source_model).to be_kind_of(AdminSet)
+        expect(as_permission_template.source_model).to eq(admin_set)
+      end
+    end
+
+    context 'when source is a Collection' do
+      let(:col_permission_template) { described_class.new(col_attributes) }
+      let(:col_attributes) { { source_id: collection.id } }
+
+      before do
+        allow(Collection).to receive(:find).with(col_permission_template.source_id).and_return(collection)
+      end
+
+      it 'returns a Collection if the source_type is collection for the given permission_template' do
+        expect(col_permission_template.source_model).to be_kind_of(Collection)
+        expect(col_permission_template.source_model).to eq(collection)
+      end
+    end
+  end
+
   describe "#admin_set" do
     it 'leverages AdminSet.find for the given permission_template' do
       expect(AdminSet).to receive(:find).with(permission_template.source_id).and_return(admin_set)
       expect(permission_template.admin_set).to eq(admin_set)
+    end
+  end
+
+  describe "#collection" do
+    let(:col_permission_template) { described_class.new(col_attributes) }
+    let(:col_attributes) { { source_id: collection.id } }
+
+    before do
+      allow(Collection).to receive(:find).with(col_permission_template.source_id).and_return(collection)
+    end
+
+    it 'leverages Collection.find for the given permission_template' do
+      expect(col_permission_template.collection).to be_kind_of(Collection)
+      expect(col_permission_template.collection).to eq(collection)
     end
   end
 
