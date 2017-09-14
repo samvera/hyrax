@@ -135,7 +135,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   describe '#create_content_from_url' do
     before do
-      expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).and_return(JobIoWrapper.new)
+      expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
     end
 
     it 'calls ingest_file' do
@@ -143,7 +143,12 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context 'when an alternative relationship is specified' do
-      let(:relation) { :remastered }
+      before do
+        # Relationship must be declared before being used. Inject it here.
+        FileSet.class_eval do
+          directly_contains_one :remastered, through: :files, type: ::RDF::URI("http://otherpcdm.example.org/use#Remastered"), class_name: 'Hydra::PCDM::File'
+        end
+      end
 
       it 'calls ingest_file' do
         actor.create_content_from_url(file, :remastered)
