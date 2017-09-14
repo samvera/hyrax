@@ -20,8 +20,6 @@ module Hyrax
 
         def user_id
           session['warden.user.user.key'][0][0]
-        rescue NoMethodError
-          nil
         end
 
         def session
