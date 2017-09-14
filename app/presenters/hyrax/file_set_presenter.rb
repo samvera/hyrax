@@ -104,6 +104,11 @@ module Hyrax
       external_file_status.staged?
     end
 
+    def external_file_staging?
+      return false unless external_file?
+      external_file_status.staging?
+    end
+
     def external_file_download_link
       return nil unless external_file? && external_file_staged?
       external_file_status.staged_location

@@ -1,10 +1,37 @@
 <div class="no-preview">
-  <%= t('hyrax.works.show.no_preview') %>
   <% if Hyrax.config.display_media_download_link? %>
-    <p/><%= link_to t('hyrax.file_set.show.download'),
-      hyrax.download_path(file_set),
-      id: "file_download",
-      data: { label: file_set.id },
-      target: "_new" %>
+    <% if file_set.external_file? %>
+      <%= t('hyrax.works.show.no_preview') %>
+      <% if file_set.external_file_staged? %>
+        <p/><%= t('hyrax.file_set.show.download_staged') %>
+      <% elsif file_set.external_file_staging? %>
+        <p/><%= t('hyrax.file_set.show.download_staging') %>
+      <% else %>
+        <p/><%= t('hyrax.file_set.show.download_requires_staging') %>
+      <% end %>
+      <p/><%= link_to t('hyrax.file_set.show.download'),
+	file_set.external_file_download_link || "#",
+	id: "file_download",
+	data: { label: file_set.id },
+	target: "_new",
+        class: "btn btn-default",
+        disabled: !file_set.external_file_staged? %>
+      <%= link_to t('hyrax.file_set.show.download_stage'),
+	"/path/to/something",
+	id: "file_download_stage",
+	data: { label: file_set.id },
+	target: "_new",
+        class: "btn btn-default",
+        disabled: file_set.external_file_staged? || file_set.external_file_staging? %>
+    <% else %>
+      <%= t('hyrax.works.show.no_preview') %>
+      <p/><%= link_to t('hyrax.file_set.show.download'),
+	hyrax.download_path(file_set),
+	id: "file_download",
+	data: { label: file_set.id },
+	target: "_new" %>
+    <% end %>
+  <% else %>
+    <%= t('hyrax.works.show.no_preview') %>
   <% end %>
 </div>

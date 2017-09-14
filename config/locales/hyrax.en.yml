@@ -536,6 +536,10 @@ en:
       browse_view: "Browse View"
       show:
         download: "Download the file"
+        download_stage: "Stage the download"
+        download_staged: "Download is ready"
+        download_staging: "Download is staging"
+        download_requires_staging: "Download requires staging"
         downloadable_content:
           default_link: 'Download file'
           heading: 'Downloadable Content'

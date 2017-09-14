@@ -183,6 +183,41 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
+  describe "#external_file_staging?" do
+    it 'returns false if the original file is not an external_file' do
+      expect(presenter.external_file_staging?).to be false
+    end
+
+    context 'with external file' do
+      let(:file) { create(:file_set).tap { |fs| fs.original_file = original_file } }
+      let(:original_file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
+          f.external_file_service = 's3'
+        end
+      end
+      let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }
+      let(:staging) { false }
+
+      before do
+        allow(presenter).to receive(:external_file_status).and_return(storage_proxy_client_response)
+        allow(storage_proxy_client_response).to receive(:staging?).and_return(staging)
+      end
+
+      it 'returns false if the original file is not staging' do
+        expect(presenter.external_file_staging?).to be false
+      end
+
+      context 'when staging' do
+        let(:staging) { true }
+
+        it 'returns true if the original file is staging' do
+          expect(presenter.external_file_staging?).to be true
+        end
+      end
+    end
+  end
+
   describe "#external_file_download_link" do
     it 'returns nil if the original file is not an external_file' do
         expect(presenter.external_file_download_link).to be_nil
