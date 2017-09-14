@@ -29,7 +29,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
       # FileSetActor operates synchronously so that this tempfile is available.
       # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
       # NOTE: The return status may be successful even if the content never attaches.
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content_from_url(f)
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, from_url: true)
         operation.success!
       else
         # send message to user on download failure

@@ -133,13 +133,13 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe '#create_content_from_url' do
+  describe '#create_content when from_url is true' do
     before do
       expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
     end
 
     it 'calls ingest_file' do
-      actor.create_content_from_url(file)
+      actor.create_content(file, from_url: true)
     end
 
     context 'when an alternative relationship is specified' do
@@ -151,14 +151,14 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       end
 
       it 'calls ingest_file' do
-        actor.create_content_from_url(file, :remastered)
+        actor.create_content(file, :remastered, from_url: true)
       end
     end
 
     context 'using ::File' do
       let(:file) { local_file }
 
-      before { actor.create_content_from_url(local_file) }
+      before { actor.create_content(local_file, from_url: true) }
 
       it 'sets the label and title' do
         expect(file_set.label).to eq(File.basename(local_file))
@@ -173,13 +173,13 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     context 'when file_set.title is empty and file_set.label is not' do
       let(:long_name) do
         'an absurdly long title that goes on way to long and messes up the display of the page which should not need ' \
-          'to be this big in order to show this impossibly long, long, long, oh so long string'
+        'to be this big in order to show this impossibly long, long, long, oh so long string'
       end
       let(:short_name) { 'Nice Short Name' }
 
       before do
         allow(file_set).to receive(:label).and_return(short_name)
-        actor.create_content_from_url(file)
+        actor.create_content(file, from_url: true)
       end
 
       subject { file_set.title }
@@ -198,7 +198,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       let(:actor) { described_class.new(file_set, user) }
 
       before do
-        actor.create_content_from_url(file)
+        actor.create_content(file, from_url: true)
       end
 
       it "retains the object's original label" do

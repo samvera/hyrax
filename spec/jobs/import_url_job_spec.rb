@@ -12,7 +12,7 @@ RSpec.describe ImportUrlJob do
   end
 
   let(:operation) { create(:operation) }
-  let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content_from_url: true) }
+  let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
 
   before do
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
@@ -29,7 +29,7 @@ RSpec.describe ImportUrlJob do
     end
 
     it 'creates the content and updates the associated operation' do
-      expect(actor).to receive(:create_content_from_url).with(File).and_return(true)
+      expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
     end
