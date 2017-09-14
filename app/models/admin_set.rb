@@ -85,6 +85,7 @@ class AdminSet < ActiveFedora::Base
   # Calculate and update who should have edit access based on who
   # has "manage" access in the PermissionTemplateAccess
   def update_access_controls!
+    # NOTE: This is different from Collections in that it doesn't update read access.  See the notes in services/hyrax/collections/permissions_service.rb
     update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
             edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'))
   end
