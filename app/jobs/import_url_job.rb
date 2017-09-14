@@ -20,6 +20,8 @@ class ImportUrlJob < Hyrax::ApplicationJob
     operation.performing!
     user = User.find_by_user_key(file_set.depositor)
     uri = URI(file_set.import_url)
+    # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
+    #       copying the file here. This will be gnarly.
     copy_remote_file(uri) do |f|
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload

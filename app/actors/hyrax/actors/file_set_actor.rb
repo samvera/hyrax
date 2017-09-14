@@ -12,17 +12,25 @@ module Hyrax
 
       # @!group Asynchronous Operations
 
-      # Spawns asynchronous IngestJob
-      # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob
+      # Spawns asynchronous IngestJob unless ingesting from URL
+      # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob, ImportUrlJob
       # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
-      def create_content(file, relation = :original_file)
+      def create_content(file, relation = :original_file, from_url = false)
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
         return false unless file_set.save # Need to save to get an id
-        IngestJob.perform_later(wrapper!(file: file, relation: relation))
+        if from_url
+          # If ingesting from URL, don't spawn an IngestJob; instead
+          # reach into the FileActor and run the ingest with the file instance in
+          # hand. Do this because we don't have the underlying UploadedFile instance
+          file_actor = build_file_actor(relation)
+          file_actor.ingest_file(wrapper!(file: file, relation: relation), from_url: true)
+        else
+          IngestJob.perform_later(wrapper!(file: file, relation: relation))
+        end
       end
 
       # Spawns asynchronous IngestJob with user notification afterward
@@ -34,28 +42,6 @@ module Hyrax
       end
 
       # @!endgroup
-
-      # Called from ImportUrlJob
-      #
-      # @todo This is highly duplicative of create_content, which is
-      #       used to handle upload of local files. This method on the
-      #       other hand is used for handling upload of files via
-      #       BrowseEverything.  It's not the most DRY implementation
-      #       but I am eager to fix this bug in advance of the next release.
-      #
-      # @param [FileSet] file file uploaded by the user (downloaded locally)
-      # @return [CharacterizeJob, FalseClass] false on failure, job on success
-      def create_content_from_url(file, relation = :original_file)
-        # If the file set doesn't have a title or label assigned, set a default.
-        file_set.label ||= label_for(file)
-        file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save to get an id
-        # In contrast to #create_content, don't spawn an IngestJob; instead
-        # reach into the FileActor and run the ingest with the file instance in
-        # hand
-        file_actor = build_file_actor(relation)
-        file_actor.ingest_file(wrapper!(file: file, relation: relation))
-      end
 
       # Adds the appropriate metadata, visibility and relationships to file_set
       # @note In past versions of Hyrax this method did not perform a save because it is mainly used in conjunction with
