@@ -13,7 +13,7 @@ module Hyrax
       # @!group Asynchronous Operations
 
       # Spawns asynchronous IngestJob
-      # Called from FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
+      # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob
       # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
@@ -33,18 +33,29 @@ module Hyrax
         IngestJob.perform_later(wrapper!(file: file, relation: relation), notification: true)
       end
 
-      # Spawns async ImportUrlJob to attach remote file to fileset
-      # @param [#to_s] url
-      # @return [IngestUrlJob] the queued job
-      # @todo Remove as it appears to be untested and not called
-      def import_url(url)
-        file_set.update(import_url: url.to_s)
-        operation = Hyrax::Operation.create!(user: user, operation_type: "Attach File")
-        ImportUrlJob.perform_later(file_set, operation)
-      end
-      deprecation_deprecate import_url: "appears to be untested and not used, and will be removed unless an issue/PR is submitted verifying otherwise"
-
       # @!endgroup
+
+      # Called from ImportUrlJob
+      #
+      # @todo This is highly duplicative of create_content, which is
+      #       used to handle upload of local files. This method on the
+      #       other hand is used for handling upload of files via
+      #       BrowseEverything.  It's not the most DRY implementation
+      #       but I am eager to fix this bug in advance of the next release.
+      #
+      # @param [FileSet] file file uploaded by the user (downloaded locally)
+      # @return [CharacterizeJob, FalseClass] false on failure, job on success
+      def create_content_from_url(file, relation = :original_file)
+        # If the file set doesn't have a title or label assigned, set a default.
+        file_set.label ||= label_for(file)
+        file_set.title = [file_set.label] if file_set.title.blank?
+        return false unless file_set.save # Need to save to get an id
+        # In contrast to #create_content, don't spawn an IngestJob; instead
+        # reach into the FileActor and run the ingest with the file instance in
+        # hand
+        file_actor = build_file_actor(relation)
+        file_actor.ingest_file(wrapper!(file: file, relation: relation))
+      end
 
       # Adds the appropriate metadata, visibility and relationships to file_set
       # @note In past versions of Hyrax this method did not perform a save because it is mainly used in conjunction with
