@@ -12,17 +12,25 @@ module Hyrax
 
       # @!group Asynchronous Operations
 
-      # Spawns asynchronous IngestJob
-      # Called from FileSetsController, AttachFilesToWorkJob, ImportURLJob, IngestLocalFileJob
+      # Spawns asynchronous IngestJob unless ingesting from URL
+      # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob, ImportUrlJob
       # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
-      def create_content(file, relation = :original_file)
+      def create_content(file, relation = :original_file, from_url: false)
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
         return false unless file_set.save # Need to save to get an id
-        IngestJob.perform_later(wrapper!(file: file, relation: relation))
+        if from_url
+          # If ingesting from URL, don't spawn an IngestJob; instead
+          # reach into the FileActor and run the ingest with the file instance in
+          # hand. Do this because we don't have the underlying UploadedFile instance
+          file_actor = build_file_actor(relation)
+          file_actor.ingest_file(wrapper!(file: file, relation: relation))
+        else
+          IngestJob.perform_later(wrapper!(file: file, relation: relation))
+        end
       end
 
       # Spawns asynchronous IngestJob with user notification afterward
@@ -32,17 +40,6 @@ module Hyrax
       def update_content(file, relation = :original_file)
         IngestJob.perform_later(wrapper!(file: file, relation: relation), notification: true)
       end
-
-      # Spawns async ImportUrlJob to attach remote file to fileset
-      # @param [#to_s] url
-      # @return [IngestUrlJob] the queued job
-      # @todo Remove as it appears to be untested and not called
-      def import_url(url)
-        file_set.update(import_url: url.to_s)
-        operation = Hyrax::Operation.create!(user: user, operation_type: "Attach File")
-        ImportUrlJob.perform_later(file_set, operation)
-      end
-      deprecation_deprecate import_url: "appears to be untested and not used, and will be removed unless an issue/PR is submitted verifying otherwise"
 
       # @!endgroup
 

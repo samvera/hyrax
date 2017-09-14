@@ -133,6 +133,80 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
+  describe '#create_content when from_url is true' do
+    before do
+      expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
+    end
+
+    it 'calls ingest_file' do
+      actor.create_content(file, from_url: true)
+    end
+
+    context 'when an alternative relationship is specified' do
+      before do
+        # Relationship must be declared before being used. Inject it here.
+        FileSet.class_eval do
+          directly_contains_one :remastered, through: :files, type: ::RDF::URI("http://otherpcdm.example.org/use#Remastered"), class_name: 'Hydra::PCDM::File'
+        end
+      end
+
+      it 'calls ingest_file' do
+        actor.create_content(file, :remastered, from_url: true)
+      end
+    end
+
+    context 'using ::File' do
+      let(:file) { local_file }
+
+      before { actor.create_content(local_file, from_url: true) }
+
+      it 'sets the label and title' do
+        expect(file_set.label).to eq(File.basename(local_file))
+        expect(file_set.title).to eq([File.basename(local_file)])
+      end
+
+      it 'gets the mime_type from original_file' do
+        expect(file_set.mime_type).to eq('image/png')
+      end
+    end
+
+    context 'when file_set.title is empty and file_set.label is not' do
+      let(:long_name) do
+        'an absurdly long title that goes on way to long and messes up the display of the page which should not need ' \
+        'to be this big in order to show this impossibly long, long, long, oh so long string'
+      end
+      let(:short_name) { 'Nice Short Name' }
+
+      before do
+        allow(file_set).to receive(:label).and_return(short_name)
+        actor.create_content(file, from_url: true)
+      end
+
+      subject { file_set.title }
+
+      it { is_expected.to match_array [short_name] }
+    end
+
+    context 'when a label is already specified' do
+      let(:label) { 'test_file.png' }
+      let(:file_set) do
+        FileSet.new do |f|
+          f.apply_depositor_metadata(user.user_key)
+          f.label = label
+        end
+      end
+      let(:actor) { described_class.new(file_set, user) }
+
+      before do
+        actor.create_content(file, from_url: true)
+      end
+
+      it "retains the object's original label" do
+        expect(file_set.label).to eql(label)
+      end
+    end
+  end
+
   describe "#update_metadata" do
     it "is successful" do
       expect(actor.update_metadata("title" => ["updated title"])).to be true
