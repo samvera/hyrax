@@ -13,8 +13,24 @@ module Hyrax
       private
 
         def add_edit_users(env)
-          return if env.attributes[:source_id].blank?
-          template = Hyrax::PermissionTemplate.find_by!(source_id: env.attributes[:source_id])
+          add_admin_set_participants(env)
+          add_collection_participants(env)
+        end
+
+        def add_admin_set_participants(env)
+          return if env.attributes[:admin_set_id].blank?
+          template = Hyrax::PermissionTemplate.find_by!(source_id: env.attributes[:admin_set_id], source_type: 'admin_set')
+          set_curation_concern_access(env, template)
+        end
+
+        def add_collection_participants(env)
+          return if env.attributes[:collection_id].blank?
+          collection_id = env.attributes.delete(:collection_id) # delete collection_id from attributes because works do not have a collection_id property
+          template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id, source_type: 'collection')
+          set_curation_concern_access(env, template)
+        end
+
+        def set_curation_concern_access(env, template)
           env.curation_concern.edit_users += template.agent_ids_for(agent_type: 'user', access: 'manage')
           env.curation_concern.edit_groups += template.agent_ids_for(agent_type: 'group', access: 'manage')
           env.curation_concern.read_users += template.agent_ids_for(agent_type: 'user', access: 'view')
