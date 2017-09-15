@@ -3,7 +3,6 @@ import { ChecklistItem } from './checklist_item'
 import { UploadedFiles } from './uploaded_files'
 import { DepositAgreement } from './deposit_agreement'
 import VisibilityComponent from './visibility_component'
-import tabifyForm from 'hyrax/tabbed_form'
 
 /**
  * Polyfill String.prototype.startsWith()
@@ -93,7 +92,6 @@ export default class SaveWorkControl {
     this.preventSubmit()
     this.watchMultivaluedFields()
     this.formChanged()
-    tabifyForm(this.form)
   }
 
   preventSubmit() {
