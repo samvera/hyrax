@@ -21,6 +21,12 @@ RSpec.describe Hyrax::ApplicationCable::Connection, no_clean: true do
     end
 
     context 'when user is not found' do
+      # rubocop:disable RSpec/SubjectStub
+      before do
+        allow(subject).to receive(:session).and_raise(NoMethodError)
+      end
+      # rubocop:enable RSpec/SubjectStub
+
       let(:user_id) { nil }
 
       it 'rejects the unauthorized connection' do
