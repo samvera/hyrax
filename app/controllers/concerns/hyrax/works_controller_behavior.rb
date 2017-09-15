@@ -272,7 +272,7 @@ module Hyrax
           return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
         end
         respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern] }
+          wants.html { redirect_to [main_app, curation_concern], notice: "Work \"#{curation_concern}\" successfully updated." }
           wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
       end

@@ -95,7 +95,7 @@ module Hyrax
         set_default_permissions
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
-          format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
@@ -139,7 +139,7 @@ module Hyrax
           flash[:notice] = 'Collection was successfully updated.'
         end
         respond_to do |format|
-          format.html { redirect_to dashboard_collection_path(@collection) }
+          format.html { redirect_to update_referer }
           format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
         end
       end
@@ -216,6 +216,10 @@ module Hyrax
         def uploaded_files(uploaded_file_ids)
           return [] if uploaded_file_ids.empty?
           UploadedFile.find(uploaded_file_ids)
+        end
+
+        def update_referer
+          edit_dashboard_collection_path(@collection) + (params[:referer_anchor] || '')
         end
 
         def determine_banner_data

@@ -44,7 +44,7 @@ module Hyrax
 
     def update
       if @collection_type.update(collection_type_params)
-        redirect_to hyrax.edit_admin_collection_type_path(@collection_type), notice: t(:'hyrax.admin.collection_types.update.notification', name: @collection_type.title)
+        redirect_to update_referer, notice: t(:'hyrax.admin.collection_types.update.notification', name: @collection_type.title)
       else
         setup_form
         add_common_breadcrumbs
@@ -62,6 +62,10 @@ module Hyrax
     end
 
     private
+
+      def update_referer
+        hyrax.edit_admin_collection_type_path(@collection_type) + (params[:referer_anchor] || '')
+      end
 
       def add_common_breadcrumbs
         add_breadcrumb t(:'hyrax.controls.home'), root_path

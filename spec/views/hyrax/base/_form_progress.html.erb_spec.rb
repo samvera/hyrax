@@ -101,7 +101,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
     it "renders the deposit agreement already checked and the version" do
       expect(page).to have_selector("#agreement[checked]")
       expect(page).to have_selector("input#generic_work_version[value=\"123456\"]", visible: false)
-      expect(page).to have_link("Cancel", href: "/dashboard")
+      expect(page).to have_link("Cancel", href: polymorphic_path([main_app, work]))
     end
   end
 end
