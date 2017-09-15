@@ -50,12 +50,6 @@
                 {% } %}
               </div>
 
-              <div class="col-sm-4 branding-banner-input">
-                <label for="alttext">Alt Text:
-                  <input id="alttext" class="branding-banner-input" type="text" name="banner_alttext" value=""></input>
-                </label>
-              </div>
-
               <div class="col-sm-2">
                 <button class="btn btn-link remove branding-banner-remove" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" onclick=$("#banner").remove(); {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                   <span class="glyphicon glyphicon-remove"></span>

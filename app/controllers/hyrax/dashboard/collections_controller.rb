@@ -228,8 +228,7 @@ module Hyrax
           banner_file = File.split(banner_info.first.local_path).last unless banner_info.empty?
           file_location = banner_info.first.local_path unless banner_info.empty?
           relative_path = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
-          alttext = banner_info.first.alt_text unless banner_info.empty?
-          @banner_info = { file: banner_file, full_path: file_location, relative_path: relative_path, alttext: alttext }
+          @banner_info = { file: banner_file, full_path: file_location, relative_path: relative_path }
         end
 
         def determine_logo_data
@@ -255,10 +254,6 @@ module Hyrax
 
         def update_existing_banner
           banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
-          current_alttext = banner_info.first.alt_text
-          new_alttext = params["banner_alttext"]
-          return if current_alttext == new_alttext
-          banner_info.first.alt_text = new_alttext
           banner_info.first.save(banner_info.first.local_path, false)
         end
 
@@ -268,7 +263,7 @@ module Hyrax
             collection_id: @collection.id,
             filename: File.split(f.file_url).last,
             role: "banner",
-            alt_txt: params["banner_alttext"],
+            alt_txt: "",
             target_url: ""
           )
           banner_info.save f.file_url

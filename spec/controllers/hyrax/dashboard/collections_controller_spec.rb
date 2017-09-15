@@ -235,9 +235,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
         allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
 
-        put :update, params: { id: collection, banner_files: [1], banner_alttext: ["Banner alt Text"], collection: { creator: ['Emily'] } }
+        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] } }
         collection.reload
-        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner", alt_text: "[\"Banner alt Text\"]").where("local_path LIKE '%banner.gif'")).to exist
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).to exist
       end
 
       it "saves logo metadata" do
