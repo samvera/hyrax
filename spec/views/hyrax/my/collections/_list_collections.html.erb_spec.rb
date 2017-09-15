@@ -8,12 +8,14 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       "has_model_ssim" => ["Collection"],
       "title_tesim" => ["Collection Title"],
       "description_tesim" => ["Collection Description"],
+      "collection_type_gid_ssim" => [collection_type.gid],
       "system_modified_dtsi" => modified_date
     }
   end
 
   let(:doc) { SolrDocument.new(attributes) }
   let(:collection) { mock_model(Collection) }
+  let(:collection_type) { create(:collection_type) }
   let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, nil, nil) }
 
   before do
@@ -25,7 +27,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
     render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter
   end
 
-  xit 'the line item displays the work and its actions' do
+  it 'the line item displays the work and its actions' do
     expect(rendered).to have_selector("tr#document_#{id}")
     expect(rendered).to have_link 'Collection Title', href: hyrax.dashboard_collection_path(id)
     expect(rendered).to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
