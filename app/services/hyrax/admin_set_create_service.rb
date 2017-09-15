@@ -54,7 +54,6 @@ module Hyrax
     # @return [TrueClass, FalseClass] true if it was successful
     def create
       admin_set.read_groups = ['public']
-      admin_set.edit_groups = [admin_group_name]
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
         if result
@@ -85,7 +84,9 @@ module Hyrax
       end
 
       def create_permission_template
-        PermissionTemplate.create!(source_id: admin_set.id, source_type: 'admin_set', access_grants_attributes: access_grants_attributes)
+        permission_template = PermissionTemplate.create!(source_id: admin_set.id, source_type: 'admin_set', access_grants_attributes: access_grants_attributes)
+        admin_set.update_access_controls!
+        permission_template
       end
 
       def create_workflows_for(permission_template:)
