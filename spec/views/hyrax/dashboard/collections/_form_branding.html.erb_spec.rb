@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/dashboard/collections/_form_branding.html.erb', type: :view do
   context 'displaying branding information for a collection' do
-    let(:banner_info) { { file: "banner.gif", alttext: "Banner alt text" } }
+    let(:banner_info) { { file: "banner.gif" } }
     let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }
 
     before do
@@ -11,7 +11,6 @@ RSpec.describe 'hyrax/dashboard/collections/_form_branding.html.erb', type: :vie
     it "draws banner and logo information" do
       render
       expect(rendered).to include('banner.gif')
-      expect(rendered).to include('Banner alt text')
       expect(rendered).to include('logo.gif')
       expect(rendered).to include('Logo alt text')
       expect(rendered).to include('http://abc.com')
