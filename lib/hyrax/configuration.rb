@@ -1,5 +1,6 @@
 require 'hyrax/callbacks'
 require 'hyrax/role_registry'
+require 'samvera/nesting_indexer'
 
 module Hyrax
   class Configuration
@@ -9,6 +10,7 @@ module Hyrax
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
       @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
+      @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
     DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
@@ -394,6 +396,12 @@ module Hyrax
                     else
                       default_uploader_config
                     end
+    end
+
+    attr_accessor :nested_relationship_reindexer
+
+    def default_nested_relationship_reindexer
+      ->(id:) { Samvera::NestingIndexer.reindex_relationships(id: id) }
     end
 
     private

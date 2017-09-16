@@ -154,6 +154,14 @@ RSpec.configure do |config|
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
     ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
+
+    Hyrax.config.nested_relationship_reindexer = if example.metadata[:with_nested_reindexing]
+                                                   # Use the default relationship reindexer (and the cascading reindexing of child documents)
+                                                   Hyrax.config.default_nested_relationship_reindexer
+                                                 else
+                                                   # Don't use the nested relationship reindexer. This slows everything down quite a bit.
+                                                   ->(id:) {}
+                                                 end
   end
 
   config.include(ControllerLevelHelpers, type: :view)

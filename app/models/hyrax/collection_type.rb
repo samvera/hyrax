@@ -25,9 +25,6 @@ module Hyrax
                                              :require_membership?, :assigns_workflow?, :assigns_visibility?]
 
     # These are provided as a convenience method based on prior design discussions.
-    # The deprecations are added to allow upstream developers to continue with what
-    # they had already been doing. These can be removed as part of merging
-    # the collections-sprint branch into master (or before hand if coordinated)
     alias_attribute :discovery, :discoverable
     alias_attribute :sharing, :sharable
     alias_attribute :multiple_membership, :allow_multiple_membership

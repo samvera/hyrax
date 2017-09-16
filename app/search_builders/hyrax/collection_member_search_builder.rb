@@ -18,6 +18,11 @@ module Hyrax
       solr_parameters[:fq] << "#{collection_membership_field}:#{collection_id}"
     end
 
+    # TODO: temporary change to keep show views from crashing due to nested collections
+    def only_works?
+      true
+    end
+
     private
 
       def collection_id
