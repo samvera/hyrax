@@ -14,7 +14,7 @@
   </ul>
   <% form_url = @form.id.nil? ? hyrax.admin_collection_types_path : hyrax.admin_collection_type_path(@form.id) %>
   <%= simple_form_for @form, url: form_url, as: :collection_type do |f| %>
-  <div class="tab-content">
+    <div class="tab-content">
       <div id="metadata" class="tab-pane active">
         <div class="panel panel-default labels">
           <div class="panel-body">
@@ -29,15 +29,6 @@
           </div>
         </div>
       </div>
-      <div class="panel-footer">
-        <% if params[:action] == "new" %>
-          <%= f.submit t(:'hyrax.admin.collection_types.form.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection_type" %>
-        <% else %>
-          <%= f.submit t(:'hyrax.admin.collection_types.form.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type" %>
-        <% end %>
-        <%= link_to t(:'helpers.action.cancel'), hyrax.admin_collection_types_path, class: 'btn btn-link' %>
-      </div>
-      <% end %>
       <% # end of form %>
       <% # TODO: The participants partial can't sit inside the other form, moved down here temporarily %>
       <div id="participants" class="tab-pane">
@@ -47,5 +38,14 @@
           </div>
         </div>
       </div>
-  </div>
+      <div class="panel-footer">
+        <% if params[:action] == "new" %>
+          <%= f.submit t(:'hyrax.admin.collection_types.form.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection_type" %>
+        <% else %>
+          <%= f.submit t(:'hyrax.admin.collection_types.form.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type" %>
+        <% end %>
+        <%= link_to t(:'helpers.action.cancel'), hyrax.admin_collection_types_path, class: 'btn btn-link' %>
+      </div>
+    </div>
+  <% end %>
 </div>
