@@ -91,7 +91,7 @@ RSpec.describe Hyrax::Admin::CollectionTypeParticipantsController, type: :contro
     let(:valid_attributes) do
       {
         hyrax_collection_type_id: collection_type.id,
-        access: 'creator',
+        access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
         agent_id: 'example@example.com',
         agent_type: 'user'
       }
