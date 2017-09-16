@@ -48,7 +48,7 @@ en:
     submit:
       admin_set:
         create: 'Save'
-        update: 'Save'
+        update: 'Save changes'
       create: 'Save'
       hyrax_permission_template:
         create: 'Save'
@@ -57,7 +57,7 @@ en:
         create: 'Add'
       proxy_deposit_request:
         create: 'Transfer'
-      update: 'Save'
+      update: 'Save changes'
   hyrax:
     account_label:      "User"
     active_consent_to_agreement:  "I have read and agree to the"
@@ -172,7 +172,7 @@ en:
         edit:
           header:           "Edit Collection Type"
         form:
-          submit:            "Save"
+          submit:            "Save changes"
           tab:
             metadata:        "Description"
             settings:        "Settings"
@@ -430,12 +430,12 @@ en:
       is_part_of: "Is part of"
       select_form:
         close: "Close"
-        create: "Create Collection"
+        create: "Save"
         create_new: "Add to new Collection"
         no_collections: "You do not have access to any existing collections. You may create a new collection."
         select_heading: "Select the collection to add your files to:"
         title: "Add to collection"
-        update: "Update Collection"
+        update: "Save changes"
     collections:
       search_form:
         button_label: Go
