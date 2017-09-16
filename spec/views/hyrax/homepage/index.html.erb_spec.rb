@@ -4,15 +4,48 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
   let(:presenter) { instance_double(Hyrax::HomepagePresenter) }
   let(:type_presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
 
+  before do
+    allow(view).to receive(:create_work_presenter).and_return(type_presenter)
+    allow(view).to receive(:signed_in?).and_return(signed_in)
+    allow(controller).to receive(:current_ability).and_return(ability)
+    assign(:presenter, presenter)
+    stub_template "hyrax/homepage/_marketing.html.erb" => "marketing"
+    stub_template "hyrax/homepage/_home_content.html.erb" => "home content"
+  end
+
+  describe 'meta tag with current user info' do
+    before do
+      allow(view).to receive(:on_the_dashboard?).and_return(false)
+      allow(controller).to receive(:current_user).and_return(current_user)
+      allow(controller).to receive(:current_ability).and_return(ability)
+      allow(presenter).to receive(:display_share_button?).and_return(true)
+      stub_template "_controls.html.erb" => "controls"
+      stub_template "_masthead.html.erb" => "masthead"
+      render template: 'hyrax/homepage/index', layout: 'layouts/homepage'
+    end
+
+    context 'when signed in' do
+      let(:signed_in) { true }
+      let(:current_user) { create(:user) }
+
+      it 'renders' do
+        expect(rendered).to have_selector('meta[name="current-user"]', visible: false)
+      end
+    end
+
+    context 'when not signed in' do
+      let(:signed_in) { false }
+      let(:current_user) { nil }
+
+      it 'does not render' do
+        expect(rendered).not_to have_selector('meta[name="current-user"]', visible: false)
+      end
+    end
+  end
+
   describe "share your work button" do
     before do
-      allow(view).to receive(:create_work_presenter).and_return(type_presenter)
-      allow(view).to receive(:signed_in?).and_return(signed_in)
-      assign(:presenter, presenter)
-      allow(controller).to receive(:current_ability).and_return(ability)
       allow(presenter).to receive(:display_share_button?).and_return(display_share_button)
-      stub_template "hyrax/homepage/_marketing.html.erb" => "marketing"
-      stub_template "hyrax/homepage/_home_content.html.erb" => "home content"
       render
     end
 
