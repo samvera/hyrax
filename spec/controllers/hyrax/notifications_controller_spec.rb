@@ -9,6 +9,7 @@ RSpec.describe Hyrax::NotificationsController, type: :controller do
   describe "#index" do
     it "shows message" do
       expect(mock_box).to receive(:inbox).and_return(["test"])
+      expect(StreamNotificationsJob).to receive(:perform_later).once
       get :index
       expect(response).to be_success
       expect(assigns[:messages]).to eq(["test"])

@@ -1,5 +1,5 @@
 module Hyrax
-  class FixityCheckFailureService < MessageUserService
+  class FixityCheckFailureService < AbstractMessageService
     attr_reader :log_date, :checksum_audit_log, :file_set
 
     def initialize(file_set, checksum_audit_log:)

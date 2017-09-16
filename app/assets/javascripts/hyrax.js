@@ -37,11 +37,16 @@
 //= require webcomponentsjs/0.5.4/CustomElements.min
 //= require time-elements
 
+//= require action_cable
+
 //= require hyrax/monkey_patch_turbolinks
+//= require hyrax/fileupload
+// Provide AMD module support
+//= require almond
+//= require hyrax/notification
 //= require hyrax/app
 //= require hyrax/config
 //= require hyrax/initialize
-//= require hyrax/fileupload
 //= require hyrax/trophy
 //= require hyrax/facets
 //= require hyrax/featured_works
@@ -59,8 +64,6 @@
 //= require hyrax/dashboard_actions
 //= require hyrax/batch
 //= require hyrax/flot_stats
-// Provide AMD module support
-//= require almond
 //= require hyrax/admin/admin_set_controls
 //= require hyrax/admin/admin_set/group_participants
 //= require hyrax/admin/admin_set/registered_users
@@ -75,8 +78,6 @@
 //= require hyrax/admin/graphs
 //= require hyrax/save_work
 //= require hyrax/permissions
-//= require hyrax/notification
-//= require hyrax/notifications
 //= require hyrax/autocomplete
 //= require hyrax/autocomplete/default
 //= require hyrax/autocomplete/work

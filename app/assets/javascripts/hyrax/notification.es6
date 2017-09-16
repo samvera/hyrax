@@ -1,37 +1,25 @@
-// This is the notification widget on the page
-
-export default class {
-  constructor(dom_obj) {
-    this.dom_obj = dom_obj;
-    this.counter = dom_obj.find('.count');
+export default class Notification {
+  /**
+   * Initializes the notification widget on the page and allows
+   * updating of the notification count and notification label
+   *
+   * @param {jQuery} element the notification widget
+   */
+  constructor(element) {
+    this.element = element
+    this.counter = element.find('.count')
   }
 
-  setCount(count) {
-    this.counter.html(count);
-    if (count == 0) {
-      this.noNotifications()
-    } else {
-      this.hasNotifications(count)
-    }
-  }
+  update(count, label) {
+    this.element.attr('aria-label', label)
+    this.counter.html(count)
 
-  // set the styles for no unread notifications
-  noNotifications () {
+    if (count === 0) {
       this.counter.addClass('invisible')
-      this.dom_obj.prop('aria-label', this.notificationsLabel(0))
-  }
-
-  // set the styles for having unread notifications
-  hasNotifications (size) {
-    this.counter.removeClass('invisible')
-    this.dom_obj.prop('aria-label', this.notificationsLabel(size))
-  }
-
-  notificationsLabel(size) {
-    if (size == 0)
-      return "You have no unread notifications"
-    if (size == 1)
-      return "You have one unread notification"
-    return `You have %{size} unread notifications`
+    }
+    else {
+      this.counter.removeClass('invisible')
+      this.counter.addClass('label-danger').removeClass('label-default')
+    }
   }
 }

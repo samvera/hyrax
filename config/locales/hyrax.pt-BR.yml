@@ -511,7 +511,7 @@ pt-BR:
       user_activity: Atividade do usuário
       user_notifications: Notificações do usuário
       view_files: Ver arquivos
-    document_language: En
+    document_language: pt-BR
     edit_profile: Editar Perfil
     embargoes:
       edit:
@@ -697,7 +697,10 @@ pt-BR:
       dashboard:
         menu: painel de controle
       language_switch: Alterar idioma
-      notifications: Você não possui notificações não lidas
+      notifications:
+        many: Você recebeu notificações não lidas do %{count}
+        one: Você tem uma notificação não lida
+        zero: Você não possui notificações não lidas
       profile:
         login: Entrar
         logout: Sair

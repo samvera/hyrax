@@ -1,7 +1,7 @@
 module Hyrax
-  class BatchCreateFailureService < MessageUserService
-    attr_reader :user, :messages
-    def initialize(user, messages)
+  class BatchCreateFailureService < AbstractMessageService
+    attr_reader :user
+    def initialize(user)
       @user = user
       @messages = messages.to_sentence
     end

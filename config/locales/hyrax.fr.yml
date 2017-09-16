@@ -511,7 +511,7 @@ fr:
       user_activity: Activité de l'utilisateur
       user_notifications: Notifications de l'utilisateur
       view_files: Afficher les fichiers
-    document_language: En
+    document_language: fr
     edit_profile: Editer le profil
     embargoes:
       edit:
@@ -697,7 +697,10 @@ fr:
       dashboard:
         menu: Tableau de bord
       language_switch: Changer de langue
-      notifications: Vous n'avez aucune notification non lue
+      notifications:
+        many: Vous avez des notifications non-lues %{count}
+        one: Vous avez une notification non lue
+        zero: Vous n'avez aucune notification non lue
       profile:
         login: S'identifier
         logout: Connectez - Out

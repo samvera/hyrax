@@ -76,4 +76,10 @@ class TestAppGenerator < Rails::Generators::Base
     end
     copy_file 'disable_animations_in_test_environment.rb', 'app/middleware/disable_animations_in_test_environment.rb'
   end
+
+  def configure_action_cable_to_use_redis
+    gsub_file 'config/cable.yml',
+              "development:\n  adapter: async",
+              "development:\n  adapter: redis\n  url: redis://localhost:6379"
+  end
 end
