@@ -3,18 +3,6 @@ module Hyrax
     class PermissionsService
       # @api public
       #
-      # Get a list of users who should be added as user editors for a collection
-      #
-      # @param collection [Hyrax::Collection] the collection for which permissions are being set
-      # @return [Array<String>] array of user identifiers (typically emails) for users who can edit this collection
-      def self.user_edit_grants_for_collection(collection: nil)
-        return [] unless collection
-        # Stubbed to return no grants
-        []
-      end
-
-      # @api public
-      #
       # Determine if the given user has permissions to deposit into the given collection
       #
       # @param user [User] the user that wants to deposit
@@ -22,56 +10,40 @@ module Hyrax
       # @return [Boolean] true if the user has permission to depoisit into the collection
       def self.can_deposit_in_collection(user:, collection:)
         return false unless user && collection
-        # stubbed
+        template = Hyrax::PermissionTemplate.find_by!(source_id: collection.id)
+        return true if access_as_user?(user: user, template: template)
+        return true if access_through_group?(groups: user.user_groups, template: template)
+        false
       end
 
-      # @api public
+      # @api private
       #
-      # Get a list of users who should be added as user viewers for a collection
+      # Does the user have 'manage' or 'deposit' access?
       #
-      # @param collection [Hyrax::Collection] the collection for which permissions are being set
-      # @return [Array<String>] array of user identifiers (typically emails) for users who can view this collection
-      def self.user_view_grants_for_collection(collection: nil)
-        return [] unless collection
-        # Stubbed to return no grants
-        []
+      # @param user [User] the user that wants to deposit in the collection
+      # @param template [PermissionTemplate] the permission template controlling access
+      # @return [True | False] true, if user has access; otherwise, false
+      def self.access_as_user?(user:, template:)
+        return true if template.agent_ids_for(agent_type: 'user', access: 'manage').include? user.user_key
+        return true if template.agent_ids_for(agent_type: 'user', access: 'deposit').include? user.user_key
+        false
       end
+      private_class_method :access_as_user?
 
-      # @api public
+      # @api private
       #
-      # Get a list of groups that should be added as group editors for a collection
+      # Do any of the groups have 'manage' or 'deposit' access?
       #
-      # @param collection [Hyrax::Collection] the collection for which permissions are being set
-      # @return [Array<String>] array of group identifiers (typically groupname) for groups who can edit this collection
-      def self.group_edit_grants_for_collection(collection: nil)
-        return [] unless collection
-        # Stubbed to return no grants
-        []
+      # @param groups [Array<String>] the groups for the user that wants to deposit in the collection
+      # @param template [PermissionTemplate] the permission template controlling access
+      # @return [True | False] true, if any of the groups have access; otherwise, false
+      def self.access_through_group?(groups:, template:)
+        return false if groups.blank?
+        return true if groups & template.agent_ids_for(agent_type: 'group', access: 'manage')
+        return true if groups & template.agent_ids_for(agent_type: 'group', access: 'deposit')
+        false
       end
-
-      # @api public
-      #
-      # Get a list of groups that should be added as group depositors for a collection
-      #
-      # @param collection [Hyrax::Collection] the collection for which permissions are being set
-      # @return [Array<String>] array of group identifiers (typically groupname) for groups who can deposit to this collection
-      def self.group_deposit_grants_for_collection(collection: nil)
-        return [] unless collection
-        # Stubbed to return no grants
-        []
-      end
-
-      # @api public
-      #
-      # Get a list of groups that should be added as group viewers for a collection
-      #
-      # @param collection [Hyrax::Collection] the collection for which permissions are being set
-      # @return [Array<String>] array of group identifiers (typically groupname) for groups who can view this collection
-      def self.group_view_grants_for_collection(collection: nil)
-        return [] unless collection
-        # Stubbed to return no grants
-        []
-      end
+      private_class_method :access_through_group?
 
       # @api public
       #
