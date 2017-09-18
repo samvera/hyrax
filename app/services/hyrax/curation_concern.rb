@@ -17,7 +17,7 @@ module Hyrax
     # is used.  Once it is used, it becomes immutable.
     # @return [ActionDispatch::MiddlewareStack]
     def self.actor_factory
-      @middleware_stack ||= Hyrax::DefaultMiddlewareStack.build_stack
+      @actor_factory ||= Hyrax::DefaultMiddlewareStack.build_stack
     end
 
     # A consumer of this method can inject a different factory
