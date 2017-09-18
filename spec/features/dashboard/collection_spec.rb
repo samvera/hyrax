@@ -102,7 +102,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Abstract or Summary', with: description)
         fill_in('Related URL', with: 'http://example.com/')
 
-        click_button("Create Collection")
+        click_button("Save")
         expect(page).to have_content 'Items'
         expect(page).to have_content title
         expect(page).to have_content description
@@ -129,7 +129,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Abstract or Summary', with: description)
         fill_in('Related URL', with: 'http://example.com/')
 
-        click_button("Create Collection")
+        click_button("Save")
         expect(page).to have_content 'Items'
         expect(page).to have_content title
         expect(page).to have_content description
@@ -374,7 +374,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Abstract or Summary', with: new_description)
         fill_in('Creator', with: creators.first)
         within('.panel-footer') do
-          click_button('Update Collection')
+          click_button('Save changes')
         end
         # URL: /dashboard/collections/collection-id/edit
         expect(page).not_to have_field('collection_title', with: collection.title.first)
