@@ -3,6 +3,7 @@ RSpec.describe "hyrax/pages/show", type: :view do
 
   before do
     assign(:page, content_block)
+    allow(view).to receive(:signed_in?)
     allow(view).to receive(:displayable_content_block)
     allow(view).to receive(:can?).and_return(false)
     stub_template 'catalog/_search_form.html.erb' => ''

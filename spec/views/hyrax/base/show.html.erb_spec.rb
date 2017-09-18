@@ -49,6 +49,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(depositor)
     allow(User).to receive(:find_by_user_key).and_return(depositor.user_key)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
+    allow(view).to receive(:signed_in?)
     allow(view).to receive(:on_the_dashboard?).and_return(false)
     stub_template 'hyrax/base/_metadata.html.erb' => ''
     stub_template 'hyrax/base/_relationships.html.erb' => ''
