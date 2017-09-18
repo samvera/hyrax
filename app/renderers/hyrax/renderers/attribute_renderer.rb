@@ -38,8 +38,10 @@ module Hyrax
       #   name. Can be overridden if more complicated logic is needed.
       def label
         translate(
-          :"blacklight.search.fields.show.#{field}",
-          default: [:"blacklight.search.fields.#{field}", options.fetch(:label, field.to_s.humanize)]
+          :"blacklight.search.fields.#{work_type_label_key}.show.#{field}",
+          default: [:"blacklight.search.fields.show.#{field}",
+                    :"blacklight.search.fields.#{field}",
+                    options.fetch(:label, field.to_s.humanize)]
         )
       end
 
@@ -64,6 +66,10 @@ module Hyrax
 
         def li_value(value)
           auto_link(ERB::Util.h(value))
+        end
+
+        def work_type_label_key
+          options[:work_type] ? options[:work_type].underscore : nil
         end
     end
   end
