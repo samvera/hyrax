@@ -17,8 +17,14 @@ RSpec.describe ImportUrlJob do
   before do
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
 
+    response_headers = { 'Content-Type' => 'image/png', 'Content-Length' => File.size(File.expand_path(file_path, __FILE__)) }
+
+    stub_request(:head, "http://example.org#{file_hash}").to_return(
+      body: "", status: 200, headers: response_headers
+    )
+
     stub_request(:get, "http://example.org#{file_hash}").to_return(
-      body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: { 'Content-Type' => 'image/png' }
+      body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: response_headers
     )
   end
 
