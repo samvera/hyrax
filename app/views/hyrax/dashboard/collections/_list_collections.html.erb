@@ -1,6 +1,6 @@
  <% id = collection_presenter.id %>
 <tr id="document_<%= id %>">
-  <td><input type="checkbox"></td>
+  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox"><% end %></td>
   <td>
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
@@ -52,7 +52,7 @@
   <td class="text-center date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
     <% if collection_presenter.solr_document.admin_set? %>
-      <%= render '/hyrax/my/admin_set_action_menu', presenter: collection_presenter %>
+      <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
     <% else %>
       <%= render '/hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
     <% end %>

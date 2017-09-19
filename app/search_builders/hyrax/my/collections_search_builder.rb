@@ -1,30 +1,25 @@
-# Added to allow for the My controller to show only collections and admin sets
-# that I have edit access to.
+# Added to allow for the My controller to show only things I have edit access to
 class Hyrax::My::CollectionsSearchBuilder < ::SearchBuilder
+  include Hyrax::My::SearchBuilderBehavior
   include Hyrax::FilterByType
 
-  self.solr_access_filters_logic += [:apply_admin_set_management_permissions]
+  self.default_processor_chain += [:show_only_collections_deposited_by_current_user]
+
+  # adds a filter to the solr_parameters that filters the collections and admin sets
+  # the current user has deposited
+  # @param [Hash] solr_parameters
+  def show_only_collections_deposited_by_current_user(solr_parameters)
+    clauses = [
+      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key),
+      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::AdminSet.to_s, creator: current_user_key)
+    ]
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] += ["(#{clauses.join(' OR ')})"]
+  end
 
   # This overrides the models in FilterByType
   # @return [Array<Class>] a list of classes to include
   def models
     [::AdminSet, ::Collection]
   end
-
-  # This combines with the `:add_access_controls_to_solr_params` filter
-  # to only discover itmes in which the user has edit access.
-  def discovery_permissions
-    @discovery_permissions ||= %w[edit]
-  end
-
-  # Include all admin sets the user can manage.
-  # @return [Array{String}] values are lucence syntax term queries suitable for :fq
-  def apply_admin_set_management_permissions(_permission_types, _ability = current_ability)
-    admin_set_ids = source_ids_for_management
-    return [] if admin_set_ids.empty?
-    ["{!terms f=id}#{source_ids_for_management.join(',')}"]
-  end
-
-  delegate :source_ids_for_management, to: :current_ability
-  private :source_ids_for_management
 end

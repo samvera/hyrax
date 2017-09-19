@@ -6,7 +6,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
-  let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], with_permission_template: true) }
+  let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], edit_users: [user.user_key], with_permission_template: true) }
   let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
   let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid) }
@@ -66,11 +66,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_content 'Collections'
         expect(page).to have_link 'All Collections'
         expect(page).to have_link 'Your Collections'
-        expect(page).to have_link(collection1.title.first)
-        expect(page).to have_link(collection2.title.first)
         expect(page).to have_link(collection3.title.first)
         expect(page).to have_link(admin_set_a.title.first)
-        expect(page).to have_link(admin_set_b.title.first)
+        expect(page).not_to have_link(collection1.title.first)
+        expect(page).not_to have_link(collection2.title.first)
+        expect(page).not_to have_link(admin_set_b.title.first)
       end
     end
   end

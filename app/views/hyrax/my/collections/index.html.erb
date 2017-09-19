@@ -16,7 +16,7 @@
 <div class="collections-wrapper">
   <section class="tabs-row">
     <!-- Page tabs -->
-    <nav><%= render 'tabs' if can?(:read, :admin_dashboard) %></nav>
+    <nav><%= render 'tabs' %></nav>
 
     <% if can?(:create, Collection) && @collection_type_list_presenter.any? %>
       <% if @collection_type_list_presenter.many? %>

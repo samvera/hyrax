@@ -8,21 +8,30 @@
     <li role="menuitem" tabindex="-1">
       <%= link_to hyrax.admin_admin_set_path(id),
                   class: 'itemicon itemedit',
-                  title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
-        <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
+                  title: t("hyrax.dashboard.my.action.view_admin_set") do %>
+        <%= t("hyrax.dashboard.my.action.view_admin_set") %>
       <% end %>
     </li>
-    <% unless admin_set_presenter.disable_delete? %>
+    <% if can? :edit, admin_set_presenter.solr_document %>
       <li role="menuitem" tabindex="-1">
         <%= link_to hyrax.admin_admin_set_path(id),
-                    class: 'itemicon itemtrash',
-                    title: t("hyrax.dashboard.my.action.delete_admin_set"),
-                    method: :delete,
-                    data: {
-                      confirm: t("hyrax.dashboard.my.action.admin_set_confirmation", application_name: application_name) } do %>
-          <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
+                    class: 'itemicon itemedit',
+                    title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
+          <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
         <% end %>
       </li>
+      <% unless admin_set_presenter.disable_delete? %>
+        <li role="menuitem" tabindex="-1">
+          <%= link_to hyrax.admin_admin_set_path(id),
+                      class: 'itemicon itemtrash',
+                      title: t("hyrax.dashboard.my.action.delete_admin_set"),
+                      method: :delete,
+                      data: {
+                        confirm: t("hyrax.dashboard.my.action.admin_set_confirmation", application_name: application_name) } do %>
+            <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
+          <% end %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 </div>
