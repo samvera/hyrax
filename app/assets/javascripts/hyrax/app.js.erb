@@ -88,6 +88,9 @@ Hyrax = {
 
     // ActionCable for user notifications. This is displayed in the navbar.
     notifications: function() {
+        // Do not create a consumer if user is not logged in
+        if ($("meta[name='current-user']").length === 0)
+            return;
         var consumer = ActionCable.createConsumer("<%= Hyrax::Engine.routes.url_helpers.notifications_endpoint_path %>");
         consumer.subscriptions.create("Hyrax::NotificationsChannel", {
             connected: function(data) {
