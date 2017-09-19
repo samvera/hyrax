@@ -271,6 +271,12 @@ module Hyrax
       @arkivo_api ||= false
     end
 
+    attr_writer :realtime_notifications
+    def realtime_notifications?
+      return @realtime_notifications unless @realtime_notifications.nil?
+      @realtime_notifications = true
+    end
+
     def geonames_username=(username)
       Qa::Authorities::Geonames.username = username
     end
