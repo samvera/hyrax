@@ -40,8 +40,8 @@ EOF
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
-  spec.add_dependency 'select2-rails', '~> 3.5.9'
-  spec.add_dependency 'json-schema' # for Arkivio
+  spec.add_dependency 'select2-rails', '~> 3.5'
+  spec.add_dependency 'json-schema' # for Arkivo
   spec.add_dependency 'nest', '~> 2.0'
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'carrierwave', '~> 1.0'
@@ -51,18 +51,20 @@ EOF
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
-  spec.add_dependency 'redis-namespace', '~> 1.5.2'
+  spec.add_dependency 'redis-namespace', '~> 1.5'
+  # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'qa', '~> 1.0' # questioning_authority
   spec.add_dependency 'flipflop', '~> 2.3'
-  spec.add_dependency 'jquery-datatables-rails', '~> 3.4.0'
+  spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
+  # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
   spec.add_dependency 'dry-validation', '~> 0.9'
@@ -88,8 +90,18 @@ EOF
   spec.add_development_dependency "factory_girl_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
+  # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps
+  # in these gems cause Rubocop violations, and those violations cause
+  # continuous integration builds to fail, and those failures prevent
+  # us from merging pull requests. As a community, we have decided
+  # that it is not reasonable to manage style violations to be dealt
+  # with in a pull request *unless* said pull request's intent is to
+  # bring the codebase in further alignment with community style
+  # conventions. This allows us to take a managed approach to code
+  # style -- we choose to update style when we wish, not when a
+  # minor-level version bump in a dependency comes out.
   spec.add_development_dependency 'rubocop', '~> 0.49.1'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.15.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.16.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
   spec.add_development_dependency 'webmock'
