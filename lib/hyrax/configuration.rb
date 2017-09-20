@@ -273,6 +273,11 @@ module Hyrax
 
     attr_writer :realtime_notifications
     def realtime_notifications?
+      if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).nil?
+        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. ' \
+                          'Coercing `Hyrax.config.realtime_notifications` to `false`')
+        @realtime_notifications = false
+      end
       return @realtime_notifications unless @realtime_notifications.nil?
       @realtime_notifications = true
     end
