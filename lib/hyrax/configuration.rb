@@ -273,9 +273,11 @@ module Hyrax
 
     attr_writer :realtime_notifications
     def realtime_notifications?
-      if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).nil?
-        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. ' \
-                          'Coercing `Hyrax.config.realtime_notifications` to `false`')
+      # Coerce @realtime_notifications to false if server software
+      # does not support WebSockets, and warn the user that we are
+      # overriding the value in their config if set to true
+      if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).present?
+        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`') if @realtime_notifications
         @realtime_notifications = false
       end
       return @realtime_notifications unless @realtime_notifications.nil?
