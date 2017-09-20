@@ -16,7 +16,7 @@
 <div class="collections-wrapper">
   <section class="tabs-row">
     <!-- Page tabs -->
-    <nav><%= render 'tabs' %></nav>
+    <nav><%= render 'tabs' if current_page?(hyrax.dashboard_collections_path(locale: nil)) || @managed_collection_count > 0 %></nav>
 
     <% if can?(:create, Collection) && @collection_type_list_presenter.any? %>
       <% if @collection_type_list_presenter.many? %>

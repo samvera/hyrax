@@ -10,6 +10,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.collections'), hyrax.my_collections_path
         collection_type_list_presenter
+        managed_collections_count
         super
       end
 
@@ -26,6 +27,10 @@ module Hyrax
 
         def collection_type_list_presenter
           @collection_type_list_presenter ||= Hyrax::SelectCollectionTypeListPresenter.new(current_user)
+        end
+
+        def managed_collections_count
+          @managed_collection_count = Hyrax::Collections::ManagedCollectionsService.managed_collections_count(scope: self)
         end
     end
   end
