@@ -1,3 +1,13 @@
+# @note I'm not sure where best to declare this method, which is only used here
+def die_if_unsupported_configuration!
+  return if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).nil?
+  helpful_error_message = 'ERROR: cannot deploy with realtime notifications atop Passenger + Apache. ' \
+                          'Disable this feature in config/initializers/hyrax.rb by setting config.realtime_notifications to false'
+  # It's easy to miss this error message in the server log, so also put it in the Rails log
+  Rails.logger.error(helpful_error_message)
+  raise helpful_error_message
+end
+
 Hyrax::Engine.routes.draw do
   # Downloads controller route
   resources :homepage, only: 'index'
@@ -93,6 +103,7 @@ Hyrax::Engine.routes.draw do
     end
   end
   if Hyrax.config.realtime_notifications?
+    die_if_unsupported_configuration!
     namespace :notifications do
       # WebSocket for notifications
       mount ActionCable.server => 'endpoint', as: :endpoint
