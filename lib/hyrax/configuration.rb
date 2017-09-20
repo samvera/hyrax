@@ -271,18 +271,21 @@ module Hyrax
       @arkivo_api ||= false
     end
 
+    # rubocop:disable Metrics/LineLength
     attr_writer :realtime_notifications
     def realtime_notifications?
       # Coerce @realtime_notifications to false if server software
       # does not support WebSockets, and warn the user that we are
-      # overriding the value in their config if set to true
+      # overriding the value in their config unless it's already
+      # flipped to false
       if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).present?
-        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`') if @realtime_notifications
+        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`. Set this value to `false` in config/initializers/hyrax.rb to stop seeing this warning.') unless @realtime_notifications == false
         @realtime_notifications = false
       end
       return @realtime_notifications unless @realtime_notifications.nil?
       @realtime_notifications = true
     end
+    # rubocop:enable Metrics/LineLength
 
     def geonames_username=(username)
       Qa::Authorities::Geonames.username = username
