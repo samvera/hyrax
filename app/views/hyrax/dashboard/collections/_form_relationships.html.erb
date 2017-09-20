@@ -1,0 +1,88 @@
+<div class="set-access-controls collections-forms relationships">
+
+  <%# This Collection in Other Collections %>
+  <section>
+    <h3><%= t('.headlines.this_collection_in_other_collections') %></h3>
+    <p><%= t('.this_collection_in_other_collections_description') %></p>
+
+    <article class="form-inline select-wrapper">
+      <div class="form-group">
+        <label for="exampleInputName2"><strong><%= t('hyrax.dashboard.my.action.add_to_collection') %>:</strong></label>
+        <select class="form-control" id="add_to_collection_selection">
+          <option><%= t('.select_a_collection') %></option>
+        </select>
+      </div>
+      <button class="btn btn-primary"><%= t('helpers.action.add') %></button>
+    </article>
+
+    <article class="collection-list-wrapper">
+      <p><strong><%= t('.collection_is_subcollection_description') %></strong></p>
+      <table class="table table-striped table-condensed">
+        <thead>
+          <tr>
+            <th><%= t('.table.collection_title') %></th>
+            <th><%= t('.table.action') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">Butterfiles: Our Favorites!</a></td>
+            <td><button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('.buttons.remove_from_collection') %></button></td>
+          </tr>
+          <tr>
+            <td><a href="#">Recent Published Research Publications and Data On Macrolepidopteran Clade</a></td>
+            <td><button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('.buttons.remove_from_collection') %></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </p>
+
+  </section>
+
+  <%# Other Collections in This Collection %>
+  <section>
+    <h3><%= t('.headlines.other_collections_in_this_collection') %></h3>
+    <p><%= t('.add_other_collections_as_sub_collections_description') %></p>
+
+    <article class="form-inline select-wrapper">
+      <div class="form-group">
+        <label for="exampleInputName2"><strong><%= t('.add_sub_collection') %>:</strong></label>
+        <select class="form-control" id="add_to_collection_selection">
+          <option>Select a collection...</option>
+        </select>
+      </div>
+      <button class="btn btn-primary"><%= t('helpers.action.add') %></button>
+    </article>
+
+    <p>
+      <button class="btn btn-primary"><%= t('.buttons.create_new_collection_as_sub_collection') %></button>
+    </p>
+
+    <article class="collection-list-wrapper">
+      <p><strong><%= t('.sub_collections_of_collection_description') %></strong></p>
+      <table class="table table-striped table-condensed">
+        <thead>
+          <tr>
+            <th><%= t('.table.collection_title') %></th>
+            <th><%= t('.table.action') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">Butterfly images from the Standford Digital Repository</a></td>
+            <td><button class="btn btn-sm btn-danger remove-sub-collection-button"><%= t('.buttons.remove_this_sub_collection') %></button></td>
+          </tr>
+          <tr>
+            <td><a href="#">Laboratory Experiments involving Lepidoptera</a></td>
+            <td><button class="btn btn-sm btn-danger remove-sub-collection-button"><%= t('.buttons.remove_this_sub_collection') %></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+  </section>
+
+  <%# Render modals %>
+  <%= render 'modal_remove_from_collection' %>
+  <%= render 'modal_remove_sub_collection' %>
+</div>

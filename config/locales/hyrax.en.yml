@@ -33,6 +33,7 @@ en:
       extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
   helpers:
     action:
+      add: "Add"
       admin_set:
         new: "Create new administrative set"
       batch:
@@ -43,6 +44,7 @@ en:
         new: "New Collection"
       delete: "Delete"
       edit: "Edit"
+      remove: "Remove"
       work:
         new: "Add new work"
     submit:
@@ -495,10 +497,11 @@ en:
           permission_update_errors:
             error:   "Invalid update option for permission template."
           tabs:
-            description: "Description"
-            sharing:     "Sharing"
-            discovery:   "Discovery"
-            branding:    "Branding"
+            branding:       "Branding"
+            description:    "Description"
+            discovery:      "Discovery"
+            relationships:  "Relationships"
+            sharing:        "Sharing"
         form_discovery:
             open:
               label:         "Open Access"
@@ -553,6 +556,27 @@ en:
             logo:
               label: "Logo"
               description: "One or more images to be displayed at the top of the collection pate.  For best results, upload an image (JPG, GIF orPNG) taht is 40 pixels in height.  Larger images will be resized to 40 pixels in height."
+        form_relationships:
+          add_other_collections_as_sub_collections_description: "You can add other collections as sub-collections of this collection."
+          add_sub_collection: "Add sub-collection"
+          buttons:
+            create_new_collection_as_sub_collection: "Create new collection as sub-collection"
+            remove_from_collection: "Remove from collection"
+            remove_this_sub_collection: "Remove this sub-collection"
+          collection_is_subcollection_description: "This collection is currently a sub-collection of these collections"
+          headlines:
+            other_collections_in_this_collection: "Other Collections in This Collection"
+            this_collection_in_other_collections: "This Collection in Other Collections"
+          modals:
+            remove_from_collection_description: "Removing this collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this collection?"
+            remove_from_sub_collection_description: "Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?"
+          select_a_collection: "Select a collection..."
+          sub_collections_of_collection_description: "These collections are currently sub-collections of this collection"
+          table:
+            action: "Action"
+            collection_title: "Collection Title"
+          this_collection_in_other_collections_description: "You can add this collection to other collections as a sub-collection."
+
         new:
           header: Create New Collection
         show:

@@ -126,6 +126,8 @@ button.branding-banner-remove:hover {
   }
 }
 
+// Styles wrapped in a selector class initially intended
+// for the Collections index list page
 .collections-wrapper {
   padding-top: 20px;
 
@@ -221,6 +223,38 @@ button.branding-banner-remove:hover {
 
     .collection-type-title {
       margin-top: 0;
+    }
+  }
+}
+
+// Selector for Collections forms
+.collections-forms {
+
+  // Relationships tab
+  &.relationships {
+
+    table {
+      border-top: 1px solid #ddd;
+    }
+
+    th,
+    td {
+
+      &:nth-child(1) {
+        width: 70%;
+      }
+
+      &:nth-child(2) {
+        text-align: center;
+      }
+    }
+
+    .collection-list-wrapper {
+      margin: 30px 0;
+    }
+
+    .select-wrapper {
+      margin-bottom: 20px;
     }
   }
 }

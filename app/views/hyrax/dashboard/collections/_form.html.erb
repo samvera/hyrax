@@ -7,6 +7,11 @@
       <li>
         <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
       </li>
+      <% if @collection.nestable? %>
+      <li>
+        <a href="#relationships" role="tab" data-toggle="tab"><%= t('.tabs.relationships') %></a>
+      </li>
+      <% end %>
       <% if @collection.discoverable? %>
       <li>
         <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
@@ -68,6 +73,14 @@
           <div class="panel panel-default labels">
             <div class="panel-body">
               <%= render 'form_branding', f: f %>
+            </div>
+          </div>
+        </div>
+
+        <div id="relationships" class="tab-pane">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_relationships', f: f %>
             </div>
           </div>
         </div>
