@@ -1,6 +1,6 @@
 <% id = collection_presenter.id %>
 <tr id="document_<%= id %>">
-  <td><input type="checkbox"></td>
+  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox"><% end %></td>
   <td>
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
@@ -10,7 +10,7 @@
           <%= image_tag(collection_presenter.thumbnail_path) %>
         <% end %>
       </div>
-      <%= link_to hyrax.dashboard_collection_path(id), id: "src_copy_link#{id}" do %>
+      <%= link_to collection_presenter.show_path, id: "src_copy_link#{id}" do %>
         <span class="sr-only"><%= t("hyrax.dashboard.my.sr.show_label") %></span>
         <%= collection_presenter.title_or_label %>
       <% end %>
@@ -54,8 +54,12 @@
 
   <td class="text-center date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">
-    <%= render 'hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
-    <!-- Render delete modal -->
-    <%= render 'modal_delete_collection', id: id %>
+    <% if collection_presenter.solr_document.admin_set? %>
+      <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
+    <% else %>
+      <%= render 'hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
+      <!-- Render delete modal -->
+      <%= render 'modal_delete_collection', id: id %>
+    <% end %>
    </td>
 </tr>

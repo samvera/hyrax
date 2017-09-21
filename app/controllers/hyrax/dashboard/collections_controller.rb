@@ -48,8 +48,6 @@ module Hyrax
 
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
-      before_action :ensure_admin!, only: :index # index for All Collections; see also Hyrax::My::CollectionsController #index for My Collections
-
       def deny_collection_access(exception)
         if exception.action == :edit
           redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
@@ -208,7 +206,7 @@ module Hyrax
       end
 
       def search_builder_class
-        Hyrax::CollectionSearchBuilder
+        Hyrax::Dashboard::CollectionsSearchBuilder
       end
 
       private

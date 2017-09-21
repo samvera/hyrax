@@ -14,5 +14,13 @@ module Hyrax
       return I18n.t('hyrax.admin.admin_sets.delete.error_default_set') if AdminSet.default_set?(id)
       return I18n.t('hyrax.admin.admin_sets.delete.error_not_empty') if total_items > 0
     end
+
+    def collection_type
+      @collection_type ||= Hyrax::CollectionType.find_or_create_admin_set_type
+    end
+
+    def show_path
+      Hyrax::Engine.routes.url_helpers.admin_admin_set_path(id)
+    end
   end
 end

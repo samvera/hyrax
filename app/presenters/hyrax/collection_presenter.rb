@@ -67,5 +67,9 @@ module Hyrax
     def collection_type_badge
       collection_type.title
     end
+
+    def show_path
+      Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id)
+    end
   end
 end

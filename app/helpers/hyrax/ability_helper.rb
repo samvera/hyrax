@@ -21,6 +21,9 @@ module Hyrax
     end
 
     def render_visibility_link(document)
+      # Admin Sets do not have a visibility property.
+      return if document.respond_to?(:admin_set?) && document.admin_set?
+
       # Anchor must match with a tab in
       # https://github.com/samvera/hyrax/blob/master/app/views/hyrax/base/_guts4form.html.erb#L2
       path = if document.collection?

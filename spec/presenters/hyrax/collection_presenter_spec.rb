@@ -151,6 +151,18 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
   end
 
+  describe "#size", :clean_repo do
+    subject { presenter.size }
+
+    it { is_expected.to eq '0 Bytes' }
+  end
+
+  describe '#show_path' do
+    subject { presenter.show_path }
+
+    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
+  end
+
   subject { presenter }
 
   it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
