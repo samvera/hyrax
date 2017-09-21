@@ -249,7 +249,6 @@ en:
           action:           Action
       sidebar:
         activity:           "Activity"
-        admin_sets:         "Administrative Sets"
         appearance:         "Appearance"
         collection_types:   "Collection types"
         collections:        "Collections"
