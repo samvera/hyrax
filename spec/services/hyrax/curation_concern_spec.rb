@@ -7,4 +7,12 @@ RSpec.describe Hyrax::CurationConcern do
 
     it { is_expected.to be_kind_of Hyrax::Actors::TransactionalRequest }
   end
+
+  describe ".actor_factory" do
+    subject { described_class.actor_factory }
+
+    it "returns same ActionDispatch::MiddlewareStack instance" do
+      is_expected.to eq described_class.actor_factory
+    end
+  end
 end
