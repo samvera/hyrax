@@ -9,6 +9,13 @@
 # To use this file, run the following command in the .internal_test_app:
 #   rails generate hyrax:sample_data
 
+puts "Creating users"
+User.create(email: 'mgr1@example.org', password: 'pppppp') # 6*p
+User.create(email: 'mgr2@example.org', password: 'pppppp')
+User.create(email: 'dep1@example.org', password: 'pppppp')
+User.create(email: 'dep2@example.org', password: 'pppppp')
+User.create(email: 'vw1@example.org', password: 'pppppp')
+User.create(email: 'vw2@example.org', password: 'pppppp')
 user = User.create(email: 'foo@example.org', password: 'foobarbaz')
 
 puts "Creating 'Nestable Collection' type"
@@ -20,10 +27,9 @@ options = {
                  { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
 }
 begin
-  puts "  attempting to create"
   coltype = Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: "nestable_collection", title: "Nestable Collection", options: options)
 rescue
-  puts "  attempting to use existing"
+  puts "  failed to create... looking for existing"
   coltype = Hyrax::CollectionType.find_by_machine_id!("nestable_collection")
 end
 nestable_gid = coltype.gid
@@ -37,10 +43,9 @@ options = {
                  { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
 }
 begin
-  puts "  attempting to create"
   coltype = Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: "nonnestable_collection", title: "Non-Nestable Collection", options: options)
 rescue
-  puts "  attempting to use existing"
+  puts "  failed to create... looking for existing"
   coltype = Hyrax::CollectionType.find_by_machine_id!("nonnestable_collection")
 end
 _nonnestable_gid = coltype.gid

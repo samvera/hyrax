@@ -19,7 +19,7 @@ FactoryGirl.define do
 
     after(:create) do |collection, evaluator|
       if evaluator.with_permission_template
-        attributes = { source_id: collection.id }
+        attributes = { source_id: collection.id, source_type: 'collection' }
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
