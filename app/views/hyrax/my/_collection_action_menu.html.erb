@@ -29,14 +29,15 @@
           <%= t("hyrax.dashboard.my.action.delete_collection") %>
         <% end %>
       </li>
-      <li role="menuitem" tabindex="-1">
-        <%= link_to '#',
-          class: 'itemicon add-collection-to-collection',
-          title: t("hyrax.dashboard.my.action.add_collection_to_collection"),
-          data: { nestable: collection_presenter.collection_type_is_nestable? } do %>
-          <%= t("hyrax.dashboard.my.action.add_collection_to_collection") %>
-        <% end %>
-      </li>
     <% end %>
+    <%# TODO: Only managers and depositors can add collections to collections. %>
+    <li role="menuitem" tabindex="-1">
+      <%= link_to '#',
+        class: 'itemicon add-collection-to-collection',
+        title: t("hyrax.dashboard.my.action.add_collection_to_collection"),
+        data: { nestable: collection_presenter.collection_type_is_nestable? } do %>
+        <%= t("hyrax.dashboard.my.action.add_collection_to_collection") %>
+      <% end %>
+    </li>
   </ul>
 </div>

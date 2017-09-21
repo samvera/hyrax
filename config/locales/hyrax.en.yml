@@ -576,7 +576,7 @@ en:
         action:
           add_collection_to_collection: "Add collection to another collection"
           add_to_collection:        "Add to Collection"
-          admin_set_confirmation:  "Deleting this administrative set from is permanent. Click OK to delete this administrative set, or Cancel to cancel this operation"
+          admin_set_confirmation:  "Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation"
           collections_confirmation_html: "<span class='pluralized'>Deleting this collection</span> will permanently remove the collection from the repository.  Items in the collection will remain in the repository.  Are you sure you want to delete this collection?"
           delete_admin_set:        "Delete administrative set"
           delete_collection:       "Delete collection"
