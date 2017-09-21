@@ -14,7 +14,10 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
   end
 
   describe 'meta tag with current user info' do
+    let(:realtime_notifications) { true }
+
     before do
+      allow(Hyrax.config).to receive(:realtime_notifications?).and_return(realtime_notifications)
       allow(view).to receive(:on_the_dashboard?).and_return(false)
       allow(controller).to receive(:current_user).and_return(current_user)
       allow(controller).to receive(:current_ability).and_return(ability)
@@ -30,6 +33,14 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
 
       it 'renders' do
         expect(rendered).to have_selector('meta[name="current-user"]', visible: false)
+      end
+
+      context 'when realtime notifications are disabled' do
+        let(:realtime_notifications) { false }
+
+        it 'does not render' do
+          expect(rendered).not_to have_selector('meta[name="current-user"]', visible: false)
+        end
       end
     end
 

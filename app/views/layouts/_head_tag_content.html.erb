@@ -1,6 +1,9 @@
 <%= csrf_meta_tag %>
 <meta charset="utf-8" />
-<% if signed_in? %>
+<%# Only display meta tag, which enables creation of the ActionCable
+consumer, when realtime notifications are enabled and the user is
+signed in %>
+<% if Hyrax.config.realtime_notifications? && signed_in? %>
     <%= tag :meta, name: 'current-user', data: { user_key: current_user.user_key } %>
 <% end %>
 <!-- added for use on small devices like phones -->
