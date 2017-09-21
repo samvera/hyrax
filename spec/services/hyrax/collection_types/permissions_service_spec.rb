@@ -202,6 +202,15 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
     end
   end
 
+  describe '.add_default_participants' do
+    let(:coltype) { create(:collection_type) }
+
+    it 'adds the default participants to a collection type' do
+      expect(Hyrax::CollectionTypeParticipant).to receive(:create!).exactly(2).times
+      described_class.add_default_participants(coltype.id)
+    end
+  end
+
   describe ".add_participants" do
     let(:participants) { [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: 'test_group', access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }] }
     let(:coltype) { create(:collection_type) }
