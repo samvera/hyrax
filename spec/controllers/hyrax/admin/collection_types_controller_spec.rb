@@ -152,6 +152,12 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
           post :create, params: { collection_type: valid_attributes }, session: valid_session
           expect(assigns[:collection_type].attributes.symbolize_keys).to include(valid_attributes)
         end
+
+        it "assigns default participants" do
+          expect do
+            post :create, params: { collection_type: valid_attributes }, session: valid_session
+          end.to change(Hyrax::CollectionTypeParticipant, :count).by(2)
+        end
       end
 
       context "with invalid params" do

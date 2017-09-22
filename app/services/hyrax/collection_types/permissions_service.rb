@@ -59,6 +59,18 @@ module Hyrax
       end
 
       # @param collection_type_id [Integer]
+      def self.add_default_participants(collection_type_id)
+        return unless collection_type_id
+        default_participants = [{  agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
+                                   agent_id: ::Ability.admin_group_name,
+                                   access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                                { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
+                                  agent_id: ::Ability.registered_group_name,
+                                  access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+        add_participants(collection_type_id, default_participants)
+      end
+
+      # @param collection_type_id [Integer]
       # @param participants [Array]
       def self.add_participants(collection_type_id, participants)
         return unless collection_type_id && participants.count > 0
