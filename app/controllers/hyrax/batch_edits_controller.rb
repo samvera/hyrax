@@ -25,7 +25,7 @@ module Hyrax
     end
 
     def after_destroy_collection
-      redirect_to_return_controller unless request.xhr?
+      redirect_back fallback_location: hyrax.batch_edits_path
     end
 
     def check_for_empty!

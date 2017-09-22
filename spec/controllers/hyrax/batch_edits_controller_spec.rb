@@ -73,4 +73,64 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(GenericWork.find(two.id).visibility).to eq "authenticated"
     end
   end
+
+  describe "#destroy_collection" do
+    let(:user) { create(:user) }
+
+    let(:collection1) do
+      create(:public_collection, title: ["My First Collection"],
+                                 description: ["My incredibly detailed description of the collection"],
+                                 user: user)
+    end
+
+    let(:collection2) do
+      create(:public_collection, title: ["My Other Collection"],
+                                 description: ["My incredibly detailed description of the other collection"],
+                                 user: user)
+    end
+
+    let!(:work1) { create(:work, title: ["First of the Assets"], member_of_collections: [collection1], user: user) }
+    let(:work2)  { create(:work, title: ["Second of the Assets"], user: user) }
+
+    let(:mycontroller) { "hyrax/my/works" }
+    let(:curation_concern) { create(:work1, user: user) }
+
+    context 'when user has edit access' do
+      it "deletes collections with and without works in it" do
+        controller.batch = [collection1.id, collection2.id]
+        delete :destroy_collection, params: { update_type: "delete_all" }
+        expect { Collection.find(collection1.id) }.to raise_error(Ldp::Gone)
+        expect { Collection.find(collection2.id) }.to raise_error(Ldp::Gone)
+      end
+    end
+
+    context 'when user does not have edit access' do
+      let(:user2) { create(:user) }
+
+      let(:collection3) do
+        create(:public_collection, title: ["User2's Collection"],
+                                   description: ["Collection created by user2"],
+                                   user: user2)
+      end
+
+      before do
+        allow(controller).to receive(:current_user).and_return(user2)
+      end
+
+      it "fails to delete collections when user does not have edit access" do
+        controller.batch = [collection1.id, collection3.id]
+        delete :destroy_collection, params: { update_type: "delete_all" }
+        expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
+        expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
+      end
+
+      it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
+        controller.batch = [collection1.id, collection3.id]
+        delete :destroy_collection, params: { update_type: "delete_all" }
+        expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
+        expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
+        expect { Collection.find(collection3.id) }.to raise_error(Ldp::Gone)
+      end
+    end
+  end
 end

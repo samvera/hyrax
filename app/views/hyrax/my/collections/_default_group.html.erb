@@ -7,10 +7,7 @@
     <tr>
       <th class="check-all">
         <label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label>
-        <%# TODO: Properly implement the check all feature below - I think there is a common
-        pattern being used somewhere in the application, but when I tried to implement, it broke
-        the page load %>
-        <input type="checkbox">
+        <input type="checkbox" name="check_all" id="check_all" value="yes" />
       </th>
       <th><%= t("hyrax.dashboard.my.heading.title") %></th>
       <th><%= t("hyrax.dashboard.my.heading.type") %></th>

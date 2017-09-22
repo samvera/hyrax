@@ -1,6 +1,6 @@
 <% id = collection_presenter.id %>
 <tr id="document_<%= id %>">
-  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox"><% end %></td>
+  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector" /><% end %></td>
   <td>
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
