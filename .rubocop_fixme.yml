@@ -152,3 +152,35 @@ RSpec/AnyInstance:
     - 'spec/services/hyrax/workflow/sipity_actions_generator_spec.rb'
     - 'spec/services/hyrax/workflow/state_machine_generator_spec.rb'
     - 'spec/services/hyrax/workflow/workflow_permissions_generator_spec.rb'
+
+# Offense count: 51
+RSpec/ExpectInHook:
+  Enabled: false
+
+# Offense count: 31
+RSpec/LetBeforeExamples:
+  Exclude:
+    - 'spec/forms/hyrax/forms/collection_form_spec.rb'
+    - 'spec/presenters/hyrax/collection_presenter_spec.rb'
+    - 'spec/presenters/hyrax/trophy_presenter_spec.rb'
+    - 'spec/services/hyrax/query_service_spec.rb'
+    - 'spec/services/hyrax/workflow/action_taken_service_spec.rb'
+    - 'spec/services/hyrax/workflow/notification_service_spec.rb'
+
+# Offense count: 27
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: and_return, block
+RSpec/ReturnFromStub:
+  Exclude:
+    - 'spec/controllers/hyrax/api/items_controller_spec.rb'
+    - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
+    - 'spec/lib/hyrax/arkivo/create_subscription_job_spec.rb'
+    - 'spec/models/file_set_spec.rb'
+    - 'spec/presenters/hyrax/admin_set_options_presenter_spec.rb'
+    - 'spec/routing/api_route_spec.rb'
+    - 'spec/views/_user_util_links.html.erb_spec.rb'
+    - 'spec/views/hyrax/base/_attributes.html.erb_spec.rb'
+    - 'spec/views/hyrax/base/_form.html.erb_spec.rb'
+    - 'spec/views/hyrax/base/file_manager.html.erb_spec.rb'
+    - 'spec/views/hyrax/dashboard/profiles/edit.html.erb_spec.rb'
+    - 'spec/views/hyrax/users/_user_info.html.erb_spec.rb'
