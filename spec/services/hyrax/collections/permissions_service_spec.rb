@@ -126,4 +126,56 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       expect(subject).to be false
     end
   end
+
+  context "access helper method" do
+    let(:user) { create(:user) }
+    let(:col_vu) { create(:collection, with_permission_template: true) }
+    let(:col_vg) { create(:collection, with_permission_template: true) }
+    let(:col_mu) { create(:collection, with_permission_template: true) }
+    let(:col_mg) { create(:collection, with_permission_template: true) }
+    let(:col_du) { create(:collection, with_permission_template: true) }
+    let(:col_dg) { create(:collection, with_permission_template: true) }
+
+    before do
+      collection_access(col_vu.permission_template, 'user', user.user_key, :view)
+      collection_access(col_vg.permission_template, 'group', 'view_group', :view)
+      collection_access(col_mu.permission_template, 'user', user.user_key, :manage)
+      collection_access(col_mg.permission_template, 'group', 'manage_group', :manage)
+      collection_access(col_du.permission_template, 'user', user.user_key, :deposit)
+      collection_access(col_dg.permission_template, 'group', 'deposit_group', :deposit)
+      allow(user).to receive(:groups).and_return(['view_group', 'deposit_group', 'manage_group'])
+    end
+
+    describe '.collection_ids_with_view_access' do
+      it 'returns ids for view user and group' do
+        expect(described_class.collection_ids_with_view_access(user: user)).to match_array [col_vu.id, col_vg.id]
+      end
+    end
+
+    describe '.collection_ids_with_manage_access' do
+      it 'returns ids for manage user and group' do
+        expect(described_class.collection_ids_with_manage_access(user: user)).to match_array [col_mu.id, col_mg.id]
+      end
+    end
+
+    describe '.collection_ids_with_deposit_access' do
+      it 'returns ids for deposit user and group' do
+        expect(described_class.collection_ids_with_deposit_access(user: user)).to match_array [col_du.id, col_dg.id]
+      end
+    end
+
+    describe '.collection_ids_for_deposit' do
+      it 'returns ids for deposit user and group and manage user and group' do
+        expect(described_class.collection_ids_for_deposit(user: user)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
+      end
+    end
+  end
+
+  def collection_access(permission_template, agent_type, agent_id, access)
+    create(:permission_template_access,
+           access,
+           permission_template: permission_template,
+           agent_type: agent_type,
+           agent_id: agent_id)
+  end
 end

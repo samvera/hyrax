@@ -1,13 +1,82 @@
 module Hyrax
   module Collections
     class PermissionsService
+      # @api private
+      #
+      # IDs of collections, including admin sets, a user can access based on participant roles.
+      #
+      # @param user [User] user
+      # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
+      # @return [Array<String>] IDs of collections for which the user has specified roles
+      def self.collection_ids_for_user(user:, access:) # rubocop:disable Metrics/MethodLength
+        if user.ability.admin?
+          PermissionTemplate.all.where(source_type: 'collection').pluck('DISTINCT source_id')
+        else
+          PermissionTemplateAccess.joins(:permission_template)
+                                  .where(agent_type: 'user',
+                                         agent_id: user.user_key,
+                                         access: access)
+                                  .or(
+                                    PermissionTemplateAccess.joins(:permission_template)
+                                                            .where(agent_type: 'group',
+                                                                   agent_id: user.groups,
+                                                                   access: access)
+                                  ).pluck('DISTINCT source_id')
+        end
+      end
+      private_class_method :collection_ids_for_user
+
+      # @api public
+      #
+      # IDs of collections, including admin sets, for which the user is assigned view access
+      #
+      # @param user [User]
+      # @return [Array<String>] a list of collection ids for which the user is assigned view access
+      def self.collection_ids_with_view_access(user:)
+        return [] unless user
+        collection_ids_for_user(user: user, access: [Hyrax::PermissionTemplateAccess::VIEW])
+      end
+
+      # @api public
+      #
+      # IDs of collections, including admin sets, for which the user is assigned manage access
+      #
+      # @param user [User]
+      # @return [Array<String>] a list of collection ids for which the user is assigned manage access
+      def self.collection_ids_with_manage_access(user:)
+        return [] unless user
+        collection_ids_for_user(user: user, access: [Hyrax::PermissionTemplateAccess::MANAGE])
+      end
+
+      # @api public
+      #
+      # IDs of collections, including admin sets, for which the user is assigned deposit access
+      #
+      # @param user [User]
+      # @return [Array<String>] a list of collection ids for which the user is assigned deposit access
+      def self.collection_ids_with_deposit_access(user:)
+        return [] unless user
+        collection_ids_for_user(user: user, access: [Hyrax::PermissionTemplateAccess::DEPOSIT])
+      end
+
+      # @api public
+      #
+      # IDs of collections, including admin sets, into which the user can deposit
+      #
+      # @param user [User] the user that wants to deposit
+      # @return [Array<String>] a list of collection ids for collections in which the user can deposit
+      def self.collection_ids_for_deposit(user:)
+        return [] unless user
+        collection_ids_for_user(user: user, access: [Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT])
+      end
+
       # @api public
       #
       # Determine if the given user has permissions to deposit into the given collection
       #
       # @param user [User] the user that wants to deposit
       # @param collection [Hyrax::Collection] the collection we are checking permissions on
-      # @return [Boolean] true if the user has permission to depoisit into the collection
+      # @return [Boolean] true if the user has permission to deposit into the collection
       def self.can_deposit_in_collection(user:, collection:)
         return false unless user && collection
         template = Hyrax::PermissionTemplate.find_by!(source_id: collection.id)
