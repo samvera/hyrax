@@ -10,6 +10,8 @@ export default class VisibilityComponent {
     this.form = element.closest('form')
     $('.collapse').collapse({ toggle: false })
     element.find("[type='radio']").on('change', () => { this.showForm() })
+    // Ensure any disabled options are re-enabled when form submits
+    this.form.on('submit', () => { this.enableAllOptions() })
     this.showForm()
     this.limitByAdminSet()
   }
