@@ -26,7 +26,7 @@ module Hyrax
       property :subject, predicate: ::RDF::Vocab::DC11.subject
       property :language, predicate: ::RDF::Vocab::DC11.language
       property :identifier, predicate: ::RDF::Vocab::DC.identifier
-      property :based_near, predicate: ::RDF::Vocab::FOAF.based_near, class_name: ControlledVocabularies::Location
+      property :based_near, predicate: ::RDF::Vocab::FOAF.based_near, class_name: Hyrax::ControlledVocabularies::Location
       property :related_url, predicate: ::RDF::RDFS.seeAlso
       property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
       property :source, predicate: ::RDF::Vocab::DC.source
