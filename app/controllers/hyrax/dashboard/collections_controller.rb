@@ -20,6 +20,8 @@ module Hyrax
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)
 
+      configure_facets
+
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_collection_access
 
