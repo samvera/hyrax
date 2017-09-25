@@ -69,6 +69,9 @@
       .member_resource_options {
         @extend .col-xs-12;
         float: none;
+        span.radio:first-of-type {
+          margin-top: 50px;
+        }
         input[type=radio] {
           margin-left: 1px;
         }
