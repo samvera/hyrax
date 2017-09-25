@@ -297,6 +297,11 @@ module Hyrax
       @active_deposit_agreement_acceptance
     end
 
+    attr_writer :admin_set_predicate
+    def admin_set_predicate
+      @admin_set_predicate ||= ::RDF::Vocab::DC.isPartOf
+    end
+
     attr_writer :work_requires_files
     def work_requires_files?
       return true if @work_requires_files.nil?
