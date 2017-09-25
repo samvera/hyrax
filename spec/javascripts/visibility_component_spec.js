@@ -4,13 +4,21 @@ describe("VisibilityComponent", function() {
   var target = null;
   var element = null;
   var admin_set = null;
+  var form = null;
 
   beforeEach(function() {
     var fixture = setFixtures(visibilityForm(''));
     element = fixture.find('.visibility');
+    form = element.closest('form');
     admin_set = new AdminSetWidget(fixture.find('select'));
     target = new VisibilityComponent(element, admin_set);
   });
+
+  it("enables all options before form submit", function() {
+    spyOn(target, 'enableAllOptions');
+    form.trigger('submit');
+    expect(target.enableAllOptions).toHaveBeenCalled();
+  })
 
   //limitByAdminSet() - Also tests restrictToVisibility(selected) which is where much of logic sits
   describe("limitByAdminSet", function() {
