@@ -20,8 +20,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
   it { is_expected.to respond_to(:admin_set_predicate) }
   it { is_expected.to respond_to(:admin_set_predicate=) }
-  it { is_expected.to respond_to(:always_display_share_button?) } # deprecated
-  it { is_expected.to respond_to(:always_display_share_button=) } # deprecated
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
   it { is_expected.to respond_to(:analytics) }
