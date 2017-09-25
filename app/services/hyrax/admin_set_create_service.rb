@@ -53,7 +53,6 @@ module Hyrax
     # Creates an admin set, setting the creator and the default access controls.
     # @return [TrueClass, FalseClass] true if it was successful
     def create
-      admin_set.read_groups = ['public']
       admin_set.edit_groups = [admin_group_name]
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
