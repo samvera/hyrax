@@ -21,7 +21,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       context "a public admin set" do
         # Even though the user can view this admin set, the should not be able to view
         # it on the admin page.
-        let(:admin_set) { create(:admin_set, :public) }
+        let(:admin_set) { create(:admin_set, read_groups: ['public']) }
 
         it 'is unauthorized' do
           get :show, params: { id: admin_set }

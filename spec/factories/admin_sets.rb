@@ -22,8 +22,4 @@ FactoryGirl.define do
       with_permission_template false
     end
   end
-
-  trait :public do
-    read_groups ['public']
-  end
 end
