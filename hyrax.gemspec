@@ -108,4 +108,5 @@ EOF
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+  spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
 end
