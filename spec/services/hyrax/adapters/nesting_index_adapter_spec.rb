@@ -102,9 +102,9 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_pathnames)
 
       existing_queried_solr_document = query_for_works_solr_document.call(id: work.id)
-      expect(existing_queried_solr_document.key?(described_class.solr_field_name_for_storing_ancestors)).to be_falsey
-      expect(existing_queried_solr_document.key?(described_class.solr_field_name_for_storing_parent_ids)).to be_falsey
-      expect(existing_queried_solr_document.key?(described_class.solr_field_name_for_storing_pathnames)).to be_falsey
+      expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_ancestors)
+      expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_parent_ids)
+      expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_pathnames)
 
       kwargs = { id: work.id, parent_ids: ['123'], pathnames: ["123/#{work.id}"], ancestors: ['123'] }
       returned_solr_document = described_class.write_document_attributes_to_index_layer(**kwargs)
