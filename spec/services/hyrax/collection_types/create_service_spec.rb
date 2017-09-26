@@ -13,7 +13,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       described_class.create_collection_type(machine_id: 'custom_type', title: 'Custom Type', options: options)
       ct = Hyrax::CollectionType.find_by_machine_id('custom_type')
       expect(ct.description).to include('with options')
-      expect(ct.discoverable?).to be_falsey
+      expect(ct).not_to be_discoverable
     end
 
     it "creates collection participants defined in options" do

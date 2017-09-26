@@ -48,7 +48,7 @@ RSpec.describe Hyrax::CollectionPresenter do
       let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
       it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do
-        expect(solr_doc.key?('collection_type_gid_ssim')).to be_truthy
+        expect(solr_doc).to be_key('collection_type_gid_ssim')
         expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim', []).and_return(collection_type.gid)
         expect(presenter.collection_type).to eq(collection_type)
       end
