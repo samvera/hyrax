@@ -1,6 +1,7 @@
 require 'linkeddata' # we need all the linked data types, because we don't know what types a service might return.
+
 module Hyrax
-  class DeepIndexingService < BasicMetadataIndexer
+  class DeepIndexingService < ActiveFedora::RDF::IndexingService
     # We're overiding the default indexer in order to index the RDF labels. In order
     # for this to be called, you must specify at least one default indexer on the property.
     # @param [Hash] solr_doc

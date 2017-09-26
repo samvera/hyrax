@@ -1,9 +1,12 @@
 module Hyrax
-  # This module can be mixed in on an indexer in order to index the basic metadata fields
   module IndexesBasicMetadata
-    # We're overriding a method from ActiveFedora::IndexingService
-    def rdf_service
-      BasicMetadataIndexer
+    extend Deprecation
+
+    included do
+      Deprecation.warn(
+        self, "Hyrax::IndexesBasicMetadata is deprecated.  "\
+              "It no longer has any effect and will be removed in a future release."
+      )
     end
   end
 end

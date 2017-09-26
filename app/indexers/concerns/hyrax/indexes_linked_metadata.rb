@@ -1,6 +1,15 @@
 module Hyrax
-  # This module can be mixed in on an indexer in order to index the linked metadata fields
   module IndexesLinkedMetadata
+    extend Deprecation
+
+    included do
+      Deprecation.warn(
+        self, "Hyrax::IndexesLinkedMetadata is deprecated, "\
+              "and will be removed in a future release.  "\
+              "Instead, override \#rdf_service directly."
+      )
+    end
+
     # We're overriding a method from ActiveFedora::IndexingService
     def rdf_service
       DeepIndexingService
