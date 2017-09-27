@@ -34,7 +34,7 @@
              <tr>
                <td><%= collection_type.title %></td>
                <td>
-                 <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm' do %>
+                 <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm', data: { turbolinks: false } do %>
                   <%= t('helpers.action.edit') %>
                  <% end %>
                  <% unless collection_type.admin_set? || collection_type.user_collection? %>

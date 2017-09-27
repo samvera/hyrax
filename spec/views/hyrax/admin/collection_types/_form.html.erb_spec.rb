@@ -1,9 +1,11 @@
 RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
   let(:collection_type) { build(:collection_type) }
+  # let(:collection_type) { build(:collection_type, machine_id: "type_does_not_matter") }
   let(:form) { Hyrax::Forms::Admin::CollectionTypeForm.new(collection_type: collection_type) }
 
   before do
     assign(:form, form)
+    assign(:collection_type, collection_type)
   end
 
   it "has 3 tabs" do

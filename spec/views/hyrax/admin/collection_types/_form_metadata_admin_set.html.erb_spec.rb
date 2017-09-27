@@ -1,5 +1,5 @@
-RSpec.describe 'hyrax/admin/collection_types/_form_metadata.html.erb', type: :view do
-  let(:collection_type) { create(:collection_type) }
+RSpec.describe 'hyrax/admin/collection_types/_form_metadata_admin_set.html.erb', type: :view do
+  let(:collection_type) { create(:admin_set_collection_type) }
   let(:collection_type_form) { Hyrax::Forms::Admin::CollectionTypeForm.new }
 
   let(:form) do
@@ -14,10 +14,10 @@ RSpec.describe 'hyrax/admin/collection_types/_form_metadata.html.erb', type: :vi
     render
   end
 
-  it "renders the name field" do
+  it "renders the name field as readonly" do
     expect(rendered).to have_content(I18n.t("simple_form.labels.collection_type.title"))
     expect(rendered).to have_selector("input#collection_type_title")
-    expect(rendered).not_to have_css("#collection_type_title[disabled]")
+    expect(rendered).to have_css("#collection_type_title[disabled]")
   end
 
   it "renders the description field" do
