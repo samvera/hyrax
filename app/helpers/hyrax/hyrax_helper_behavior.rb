@@ -47,13 +47,6 @@ module Hyrax
       "https://www.zotero.org/users/#{zotero_user_id}"
     end
 
-    # Only Chrome supports this
-    # @return [Boolean]
-    # @todo Replace uses with more granular client-side detection (as jQuery-fileuploader already does)
-    def browser_supports_directory_upload?
-      user_agent.include? 'Chrome'
-    end
-
     # @param [User] user
     def render_notifications(user:)
       mailbox = UserMailbox.new(user)

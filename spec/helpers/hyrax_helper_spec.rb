@@ -283,19 +283,6 @@ RSpec.describe HyraxHelper, type: :helper do
     end
   end
 
-  describe '#browser_supports_directory_upload?' do
-    subject { helper.browser_supports_directory_upload? }
-
-    context 'with Chrome' do
-      before { controller.request.env['HTTP_USER_AGENT'] = 'Chrome' }
-      it { is_expected.to be true }
-    end
-    context 'with a non-chrome browser' do
-      before { controller.request.env['HTTP_USER_AGENT'] = 'Firefox' }
-      it { is_expected.to be false }
-    end
-  end
-
   describe '#zotero_label' do
     subject { helper }
 
