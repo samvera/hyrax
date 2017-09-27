@@ -74,17 +74,8 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     end
 
     describe 'uploading a folder' do
-      context 'with Chrome' do
-        before { allow(view).to receive(:browser_supports_directory_upload?) { true } }
-        it 'renders the add folder button' do
-          expect(page).to have_content('Add folder...')
-        end
-      end
-      context 'with a non-Chrome browser' do
-        before { allow(view).to receive(:browser_supports_directory_upload?) { false } }
-        it 'does not render the add folder button' do
-          expect(page).not_to have_content('Add folder...')
-        end
+      it 'renders the add folder button' do
+        expect(page).to have_content('Add folder...')
       end
     end
   end
