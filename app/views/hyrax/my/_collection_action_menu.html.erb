@@ -1,4 +1,5 @@
 <% id = collection_presenter.id %>
+<% collection = Collection.find collection_presenter.id %>
 <div class="btn-group">
 
   <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true">
@@ -30,14 +31,15 @@
         <% end %>
       </li>
     <% end %>
-    <%# TODO: Only managers and depositors can add collections to collections. %>
-    <li role="menuitem" tabindex="-1">
-      <%= link_to '#',
-        class: 'itemicon add-collection-to-collection',
-        title: t("hyrax.dashboard.my.action.add_collection_to_collection"),
-        data: { nestable: collection_presenter.collection_type_is_nestable? } do %>
-        <%= t("hyrax.dashboard.my.action.add_collection_to_collection") %>
-      <% end %>
-    </li>
+    <% if current_ability.can_deposit_into_collection?(collection) %>
+      <li role="menuitem" tabindex="-1">
+        <%= link_to '#',
+          class: 'itemicon add-collection-to-collection',
+          title: t("hyrax.dashboard.my.action.add_collection_to_collection"),
+          data: { nestable: collection_presenter.collection_type_is_nestable? } do %>
+          <%= t("hyrax.dashboard.my.action.add_collection_to_collection") %>
+        <% end %>
+      </li>
+    <% end %>
   </ul>
 </div>

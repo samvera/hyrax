@@ -49,6 +49,10 @@ module Hyrax
       end && source_ids_for_deposit.any?
     end
 
+    def can_deposit_into_collection?(collection)
+      Hyrax::Collections::PermissionsService.can_deposit_in_collection(user: current_user, collection: collection)
+    end
+
     # Override this method in your ability model if you use a different group
     # or other logic to designate an administrator.
     def admin?

@@ -81,7 +81,7 @@ module Hyrax
         return false unless user && collection
         template = Hyrax::PermissionTemplate.find_by!(source_id: collection.id)
         return true if access_as_user?(user: user, template: template)
-        return true if access_through_group?(groups: user.user_groups, template: template)
+        return true if access_through_group?(groups: user.ability.user_groups, template: template)
         false
       end
 
@@ -108,8 +108,8 @@ module Hyrax
       # @return [True | False] true, if any of the groups have access; otherwise, false
       def self.access_through_group?(groups:, template:)
         return false if groups.blank?
-        return true if groups & template.agent_ids_for(agent_type: 'group', access: 'manage')
-        return true if groups & template.agent_ids_for(agent_type: 'group', access: 'deposit')
+        return true if (groups & template.agent_ids_for(agent_type: 'group', access: 'manage')).present?
+        return true if (groups & template.agent_ids_for(agent_type: 'group', access: 'deposit')).present?
         false
       end
       private_class_method :access_through_group?
