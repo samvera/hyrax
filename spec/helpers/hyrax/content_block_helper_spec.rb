@@ -10,6 +10,12 @@ RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
       expect(helper).to respond_to(:displayable_content_block)
     end
 
+    context 'when a block is nil' do
+      let(:content_block) { nil }
+
+      it { is_expected.to be_nil }
+    end
+
     context 'when a block has a nil value' do
       let(:content_block) { double(value: nil) }
 
