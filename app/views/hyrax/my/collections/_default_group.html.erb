@@ -24,9 +24,9 @@
   <tbody>
   <% docs.each_with_index do |document, counter| %>
     <% collection_presenter = if document.admin_set?
-                                Hyrax::AdminSetPresenter.new(document, nil, nil)
+                                Hyrax::AdminSetPresenter.new(document, current_ability, nil)
                               else
-                                Hyrax::CollectionPresenter.new(document, nil, nil)
+                                Hyrax::CollectionPresenter.new(document, current_ability, nil)
                               end %>
     <%= render 'list_collections', collection_presenter: collection_presenter, counter: counter %>
   <% end %>

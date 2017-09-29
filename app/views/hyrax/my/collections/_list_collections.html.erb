@@ -49,8 +49,7 @@
     <%= render_visibility_link(collection_presenter.solr_document) %>
   </td>
 
-  <%# TODO: Need Item count here %>
-  <td>[34]</td>
+  <td><%=collection_presenter.total_viewable_items%></td>
 
   <td class="text-center date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">

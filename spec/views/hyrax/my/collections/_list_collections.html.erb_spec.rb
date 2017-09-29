@@ -16,7 +16,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:doc) { SolrDocument.new(attributes) }
   let(:collection) { mock_model(Collection) }
   let(:collection_type) { create(:collection_type) }
-  let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, nil, nil) }
+  let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, Ability.new(build(:user)), nil) }
 
   before do
     allow(view).to receive(:current_user).and_return(stub_model(User))
