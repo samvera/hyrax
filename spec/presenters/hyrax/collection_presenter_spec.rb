@@ -134,18 +134,145 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with work" do
-      let(:work) { create(:work, title: ['unimaginitive title']) }
-
-      before do
-        work.member_of_collections << collection
-        work.save!
-      end
+      let!(:work) { create(:work, member_of_collections: [collection]) }
 
       it { is_expected.to eq 1 }
     end
 
     context "null members" do
       let(:presenter) { described_class.new(SolrDocument.new(id: '123'), nil) }
+
+      it { is_expected.to eq 0 }
+    end
+  end
+
+  describe "#total_viewable_items", :clean_repo do
+    subject { presenter.total_viewable_items }
+
+    let(:user) { create(:user) }
+
+    before do
+      allow(ability).to receive(:user_groups).and_return(['public'])
+      allow(ability).to receive(:current_user).and_return(user)
+    end
+
+    context "empty collection" do
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with private work" do
+      let!(:work) { create(:private_work, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with private collection" do
+      let!(:work) { create(:private_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with public work" do
+      let!(:work) { create(:public_work, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "collection with public collection" do
+      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "collection with public work and sub-collection" do
+      let!(:work) { create(:public_work, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 2 }
+    end
+
+    context "null members" do
+      let(:presenter) { described_class.new(SolrDocument.new(id: '123'), ability) }
+
+      it { is_expected.to eq 0 }
+    end
+  end
+
+  describe "#total_viewable_works", :clean_repo do
+    subject { presenter.total_viewable_works }
+
+    let(:user) { create(:user) }
+
+    before do
+      allow(ability).to receive(:user_groups).and_return(['public'])
+      allow(ability).to receive(:current_user).and_return(user)
+    end
+
+    context "empty collection" do
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with private work" do
+      let!(:work) { create(:private_work, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with public work" do
+      let!(:work) { create(:public_work, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "collection with public work and sub-collection" do
+      let!(:work) { create(:public_work, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "null members" do
+      let(:presenter) { described_class.new(SolrDocument.new(id: '123'), ability) }
+
+      it { is_expected.to eq 0 }
+    end
+  end
+
+  describe "#total_viewable_collections", :clean_repo do
+    subject { presenter.total_viewable_collections }
+
+    let(:user) { create(:user) }
+
+    before do
+      allow(ability).to receive(:user_groups).and_return(['public'])
+      allow(ability).to receive(:current_user).and_return(user)
+    end
+
+    context "empty collection" do
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with private collection" do
+      let!(:subcollection) { create(:private_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 0 }
+    end
+
+    context "collection with public collection" do
+      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "collection with public work and sub-collection" do
+      let!(:work) { create(:public_work, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+
+      it { is_expected.to eq 1 }
+    end
+
+    context "null members" do
+      let(:presenter) { described_class.new(SolrDocument.new(id: '123'), ability) }
 
       it { is_expected.to eq 0 }
     end
