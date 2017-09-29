@@ -4,6 +4,10 @@ module Hyrax
       ActiveFedora::SolrService.count("{!field f=isPartOf_ssim}#{id}")
     end
 
+    def total_viewable_items
+      ActiveFedora::Base.where("isPartOf_ssim:#{id}").accessible_by(current_ability).count
+    end
+
     # AdminSet cannot be deleted if default set or non-empty
     def disable_delete?
       AdminSet.default_set?(id) || total_items > 0
