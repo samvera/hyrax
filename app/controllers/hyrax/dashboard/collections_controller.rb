@@ -472,7 +472,7 @@ module Hyrax
         end
 
         def set_default_permissions
-          Collections::PermissionsService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
+          Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
         end
     end
   end
