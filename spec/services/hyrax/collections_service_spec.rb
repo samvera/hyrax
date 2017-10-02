@@ -18,7 +18,7 @@ RSpec.describe Hyrax::CollectionsService do
     let!(:collection3) { create(:collection, :public, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:admin_set, :public) # this should never be returned.
+      create(:admin_set, read_groups: ['public']) # this should never be returned.
     end
 
     context "with read access" do

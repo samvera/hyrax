@@ -1,7 +1,8 @@
 export default class Default {
   constructor(element, url) {
     this.url = url;
-    element.autocomplete(this.options(element));
+    if (this.url !== undefined)
+      element.autocomplete(this.options(element))
   }
 
   options(element) {

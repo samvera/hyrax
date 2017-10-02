@@ -16,7 +16,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       #  * 1 depositing role for the registered group in the default workflow, equals
       #  * 7
       expect(Sipity::WorkflowResponsibility.count).to eq 7
-      expect(admin_set.read_groups).to eq ['public']
+      expect(admin_set.read_groups).not_to include('public')
       expect(admin_set.edit_groups).to eq ['admin']
       # 2 access grants because:
       #  * 1 providing deposit access to registered group
@@ -88,7 +88,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect(admin_set.edit_users).to match_array([user.user_key])
           expect(admin_set.edit_groups).to match_array(['admin'])
           expect(admin_set.read_users).to match_array([])
-          expect(admin_set.read_groups).to match_array(['public'])
+          expect(admin_set.read_groups).not_to include('public')
           expect(admin_set.creator).to eq [user.user_key]
 
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)

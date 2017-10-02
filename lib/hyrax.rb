@@ -23,11 +23,12 @@ module Hyrax
 
   eager_autoload do
     autoload :Arkivo
+    autoload :Collections
     autoload :Configuration
+    autoload :ControlledVocabularies
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero
-    autoload :Collections
   end
 
   # @api public

@@ -11,8 +11,8 @@ RSpec.describe Hyrax::AdminSetService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:as1) { create(:admin_set, :public, title: ['foo']) }
-    let!(:as2) { create(:admin_set, :public, title: ['bar']) }
+    let!(:as1) { create(:admin_set, read_groups: ['public'], title: ['foo']) }
+    let!(:as2) { create(:admin_set, read_groups: ['public'], title: ['bar']) }
     let!(:as3) { create(:admin_set, edit_users: [user.user_key], title: ['baz']) }
 
     before do

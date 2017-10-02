@@ -103,16 +103,5 @@ module Hyrax
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
                       end
     end
-
-    # Find the solr documents for the collections this object belongs to
-    # TODO: can we remove this method now?
-    def collections
-      return @collections if @collections
-      query = 'id:' + collection_ids.map { |id| '"' + id + '"' }.join(' OR ')
-      result = Blacklight.default_index.connection.select(params: { q: query })
-      @collections = result['response']['docs'].map do |hash|
-        ::SolrDocument.new(hash)
-      end
-    end
   end
 end

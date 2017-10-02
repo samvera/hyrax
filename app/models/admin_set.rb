@@ -40,7 +40,7 @@ class AdminSet < ActiveFedora::Base
   end
 
   has_many :members,
-           predicate: ::RDF::Vocab::DC.isPartOf,
+           predicate:  Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
 
   before_destroy :check_if_not_default_set, :check_if_empty

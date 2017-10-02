@@ -155,38 +155,6 @@ RSpec.describe ::SolrDocument, type: :model do
     end
   end
 
-  describe '#collections' do
-    subject { document.collections }
-
-    context 'when the object belongs to a collection' do
-      let(:coll_id) { '456' }
-      let(:attributes) do
-        { id: '123',
-          title_tesim: ['A generic work'],
-          collection_ids_tesim: [coll_id] }
-      end
-
-      let(:coll_attrs) { { id: coll_id, title_tesim: ['A Collection'] } }
-
-      before do
-        ActiveFedora::SolrService.add(coll_attrs)
-        ActiveFedora::SolrService.commit
-      end
-
-      it 'returns the solr docs for the collections' do
-        expect(subject.count).to eq 1
-        solr_doc = subject.first
-        expect(solr_doc).to be_kind_of described_class
-        expect(solr_doc['id']).to eq coll_id
-        expect(solr_doc['title_tesim']).to eq coll_attrs[:title_tesim]
-      end
-    end
-
-    context 'when the object does not belong to any collections' do
-      it { is_expected.to eq [] }
-    end
-  end
-
   describe "#height" do
     let(:attributes) { { height_is: '444' } }
 
