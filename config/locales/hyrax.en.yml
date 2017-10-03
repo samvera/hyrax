@@ -485,6 +485,7 @@ en:
         works:                  "All Works"
       managed:
         collections:            "Managed Collections"
+        works:                  "Managed Works"
       authorize_proxies:        "Authorize Proxies"
       breadcrumbs:
         admin:                  "Administration"

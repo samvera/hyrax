@@ -11,6 +11,7 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
     stub_template 'hyrax/my/works/_document_list.html.erb' => 'list'
     stub_template 'hyrax/my/works/_results_pagination.html.erb' => 'pagination'
     stub_template 'hyrax/my/works/_scripts.js.erb' => 'batch edit stuff'
+    assign(:managed_works_count, 1)
     render
   end
 

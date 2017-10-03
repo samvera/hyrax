@@ -11,7 +11,9 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
 
     before do
       allow(Hyrax::CollectionsService).to receive(:new).and_return(collection_service)
+      allow(Hyrax::Works::ManagedWorksService).to receive(:managed_works_count).and_return(1)
     end
+
     it "shows search results and breadcrumbs" do
       expect(controller).to receive(:search_results).with(ActionController::Parameters).and_return([response, doc_list])
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
@@ -21,6 +23,7 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
       get :index, params: { per_page: 2 }
       expect(assigns[:document_list].length).to eq 2
       expect(assigns[:user_collections]).to contain_exactly(my_collection)
+      expect(assigns[:managed_works_count]).to eq 1
     end
   end
 
