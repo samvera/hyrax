@@ -104,10 +104,10 @@ module Hyrax
         CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
-      # Select collection(s) based on passed-in params
+      # Select collection(s) based on passed-in params and existing memberships.
       # @return [Array] a list of collection identifiers
       def member_of_collections(collection_ids)
-        Array.wrap(collection_ids)
+        (member_of_collection_ids + Array.wrap(collection_ids)).uniq
       end
 
       # Sanitize the parameters coming from the form. This ensures that the client

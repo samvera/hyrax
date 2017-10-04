@@ -42,6 +42,15 @@ RSpec.describe Hyrax::Forms::WorkForm do
 
       it { is_expected.to match_array([args]) }
     end
+    context 'when member of other collections' do
+      let(:args) { 'bar' }
+
+      before do
+        allow(work).to receive(:member_of_collection_ids).and_return(['foo'])
+      end
+
+      it { is_expected.to match_array(['foo', args]) }
+    end
   end
 
   describe "#[]" do
