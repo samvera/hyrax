@@ -136,10 +136,14 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   describe '#create_content when from_url is true' do
     before do
       expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
+      allow(VisibilityCopyJob).to receive(:perform_later).with(file_set.parent).and_return(true)
+      allow(InheritPermissionsJob).to receive(:perform_later).with(file_set.parent).and_return(true)
     end
 
-    it 'calls ingest_file' do
+    it 'calls ingest_file and kicks off jobs' do
       actor.create_content(file, from_url: true)
+      expect(VisibilityCopyJob).to have_received(:perform_later)
+      expect(InheritPermissionsJob).to have_received(:perform_later)
     end
 
     context 'when an alternative relationship is specified' do
