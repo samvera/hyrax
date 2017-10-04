@@ -26,7 +26,9 @@
     <h3 class="panel-title "><%= t("hyrax.dashboard.manage_proxies") %></h3>
   </div>
   <div class="panel-body">
-    <%= render 'hyrax/dashboard/_index_partials/proxy_rights', user: current_user %>
+    <% if Flipflop.proxy_deposit? %>
+      <%= render 'hyrax/dashboard/_index_partials/proxy_rights', user: current_user %>
+    <% end %>
   </div>
 </div>
 
