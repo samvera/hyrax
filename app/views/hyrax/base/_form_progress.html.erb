@@ -21,7 +21,7 @@
     <div class="set-access-controls list-group-item">
       <%= render 'form_visibility_component', f: f %>
     </div>
-    <% unless current_user.can_make_deposits_for.empty? %>
+    <% if Flipflop.proxy_deposit? && current_user.can_make_deposits_for.any? %>
         <div class="list-group-item">
           <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for.map(&:user_key), prompt: "Yourself" %>
         </div>

@@ -13,6 +13,30 @@ RSpec.describe 'hyrax/dashboard/profiles/edit.html.erb', type: :view do
     expect(rendered).to match(/ORCID Profile/)
   end
 
+  describe 'proxy deposit' do
+    context 'when enabled' do
+      before do
+        allow(Flipflop).to receive(:proxy_deposit?).and_return(true)
+      end
+
+      it 'renders proxy partial' do
+        render
+        expect(rendered).to match(/Authorize Proxies/)
+      end
+    end
+
+    context 'when disabled' do
+      before do
+        allow(Flipflop).to receive(:proxy_deposit?).and_return(false)
+      end
+
+      it 'does not render proxy partial' do
+        render
+        expect(rendered).not_to match(/Authorize Proxies/)
+      end
+    end
+  end
+
   context "with trophy" do
     let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork', title_tesim: ['Title']) }
     let(:page) { Capybara::Node::Simple.new(rendered) }
