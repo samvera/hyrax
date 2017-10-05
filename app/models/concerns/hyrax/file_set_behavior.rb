@@ -3,13 +3,14 @@ module Hyrax
     extend ActiveSupport::Concern
     include Hyrax::WithEvents
     # include Hydra::Works::FileSetBehavior
+    include Hydra::Works::MimeTypes
     # include Hydra::Works::VirusCheck
     include Hyrax::FileSet::Characterization
     include Hydra::WithDepositor
     include Serializers
     include Hyrax::Noid
     include Hyrax::FileSet::Derivatives
-    # include Permissions
+    include Permissions
     # include Hyrax::FileSet::Indexing
     # include Hyrax::FileSet::BelongsToWorks
     # include Hyrax::FileSet::Querying

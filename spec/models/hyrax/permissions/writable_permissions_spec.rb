@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Permissions::Writable do
-  class SampleModel < ActiveFedora::Base
+  class SampleModel < Valkyrie::Resource
     include Hyrax::Permissions::Writable
   end
   let(:subject) { SampleModel.new }
