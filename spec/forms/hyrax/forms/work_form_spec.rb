@@ -236,12 +236,44 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it { is_expected.to eq work.embargo_release_date }
   end
 
+  describe "#visibility_during_embargo" do
+    let(:work) { create(:work, visibility_during_embargo: 'authenticated') }
+
+    subject { form.visibility_during_embargo }
+
+    it { is_expected.to eq work.visibility_during_embargo }
+  end
+
+  describe "#visibility_after_embargo" do
+    let(:work) { create(:work, visibility_after_embargo: 'public') }
+
+    subject { form.visibility_after_embargo }
+
+    it { is_expected.to eq work.visibility_after_embargo }
+  end
+
   describe "#lease_expiration_date" do
     let(:work) { create(:work, lease_expiration_date: 2.days.from_now) }
 
     subject { form.lease_expiration_date }
 
     it { is_expected.to eq work.lease_expiration_date }
+  end
+
+  describe "#visibility_during_lease" do
+    let(:work) { create(:work, visibility_during_lease: 'authenticated') }
+
+    subject { form.visibility_during_lease }
+
+    it { is_expected.to eq work.visibility_during_lease }
+  end
+
+  describe "#visibility_after_lease" do
+    let(:work) { create(:work, visibility_after_lease: 'private') }
+
+    subject { form.visibility_after_lease }
+
+    it { is_expected.to eq work.visibility_after_lease }
   end
 
   describe ".workflow_for" do
