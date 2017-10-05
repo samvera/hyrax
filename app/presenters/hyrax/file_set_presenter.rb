@@ -121,7 +121,7 @@ module Hyrax
       end
 
       def external_file_service
-        @external_file_service ||= StorageProxyClient::Client.new(external_uri: solr_document.external_file_uri, service: solr_document.external_file_service)
+        @external_file_service ||= StorageProxyClient::Client.new(external_uri: solr_document.external_file_uri)
       end
 
       def external_file_status

@@ -138,7 +138,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:original_file) do
         Hydra::PCDM::File.new.tap do |f|
           f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
-          f.external_file_service = 's3'
         end
       end
 
@@ -158,7 +157,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:original_file) do
         Hydra::PCDM::File.new.tap do |f|
           f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
-          f.external_file_service = 's3'
         end
       end
       let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }
@@ -193,7 +191,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:original_file) do
         Hydra::PCDM::File.new.tap do |f|
           f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
-          f.external_file_service = 's3'
         end
       end
       let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }
@@ -228,7 +225,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:original_file) do
         Hydra::PCDM::File.new.tap do |f|
           f.external_file_uri = 'http://s3.amazonaws.com/bucket/file'
-          f.external_file_service = 's3'
         end
       end
       let(:storage_proxy_client_response) { instance_double(StorageProxyClient::Response) }

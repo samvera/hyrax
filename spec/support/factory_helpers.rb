@@ -19,8 +19,7 @@ module Hyrax
                  digest:            opts.fetch(:digest, []),
                  duration:          opts.fetch(:duration, []),
                  sample_rate:       opts.fetch(:sample_rate, []),
-                 external_file_uri:       opts.fetch(:external_file_uri, []),
-                 external_file_service:   opts.fetch(:external_file_service, []))
+                 external_file_uri:       opts.fetch(:external_file_uri, []))
     end
   end
 end

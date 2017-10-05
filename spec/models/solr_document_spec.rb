@@ -218,12 +218,4 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to eq 'http://s3.amazonaws.com/bucket/file' }
   end
-
-  describe "#external_file_service" do
-    let(:attributes) { { external_file_service_ssi: 's3' } }
-
-    subject { document.external_file_service }
-
-    it { is_expected.to eq 's3' }
-  end
 end

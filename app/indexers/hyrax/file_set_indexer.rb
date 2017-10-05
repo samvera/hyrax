@@ -29,7 +29,6 @@ module Hyrax
         solr_doc['original_checksum_tesim'] = object.original_checksum
         # For external files (assuming only the original file can be external at the moment)
         solr_doc['external_file_uri_ssi']   = external_file_uri
-        solr_doc['external_file_service_ssi']   = external_file_service
       end
     end
 
@@ -53,11 +52,6 @@ module Hyrax
       def external_file_uri
         return unless object.original_file
         object.original_file.external_file_uri.first.to_s
-      end
-
-      def external_file_service
-        return unless object.original_file
-        object.original_file.external_file_service.first.to_s
       end
   end
 end
