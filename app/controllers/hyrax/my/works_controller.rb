@@ -11,7 +11,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.works'), hyrax.my_works_path
-
+        managed_works_count
         super
       end
 
@@ -24,6 +24,10 @@ module Hyrax
         # The url of the "more" link for additional facet values
         def search_facet_path(args = {})
           hyrax.my_dashboard_works_facet_path(args[:id])
+        end
+
+        def managed_works_count
+          @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
         end
     end
   end

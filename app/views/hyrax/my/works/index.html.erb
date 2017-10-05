@@ -48,8 +48,8 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default<%= ' tabs' if can?(:read, :admin_dashboard) %>">
-      <%= render 'tabs' if can?(:read, :admin_dashboard) %>
+    <div class="panel panel-default <%= 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>">
+      <%= render 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>
       <div class="panel-body">
         <%= render 'search_header' %>
         <h2 class="sr-only">Works listing</h2>
