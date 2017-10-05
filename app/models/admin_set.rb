@@ -30,6 +30,9 @@ class AdminSet < Valkyrie::Resource
   #self.indexer = Hyrax::AdminSetIndexer
   attribute :id, Valkyrie::Types::ID.optional
   attribute :title, Valkyrie::Types::Set
+  attribute :description, Valkyrie::Types::Set
+  attribute :creator, Valkyrie::Types::Set
+
   # property :title, predicate: ::RDF::Vocab::DC.title do |index|
   #   index.as :stored_searchable, :facetable
   # end
