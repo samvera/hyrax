@@ -12,7 +12,7 @@ module Hyrax
     # include WithFileSets
     include Naming
     include CoreMetadata
-    # include InAdminSet
+    include InAdminSet
     # include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
     include NestedWorks
