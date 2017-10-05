@@ -14,7 +14,7 @@
 
     <% if can? :destroy, presenter.solr_document %>
       <%= link_to t('hyrax.collection.actions.delete.label'),
-                  collection_path(presenter),
+                  hyrax.dashboard_collection_path(presenter),
                   title: t('hyrax.collection.actions.delete.desc'),
                   class: 'btn btn-danger',
                   data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
