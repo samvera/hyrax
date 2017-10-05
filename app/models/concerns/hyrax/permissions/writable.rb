@@ -8,6 +8,8 @@ module Hyrax
       include Hydra::AccessControls::Visibility
 
       included do
+        include Valkyrie::Resource::AccessControls
+
         # validate :paranoid_permissions
 
         # class_attribute :paranoid_edit_permissions
