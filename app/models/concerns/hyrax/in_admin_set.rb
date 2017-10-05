@@ -3,7 +3,8 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      belongs_to :admin_set, predicate: Hyrax.config.admin_set_predicate
+      attribute :admin_set_id, Valkyrie::Types::Set
+      #belongs_to :admin_set, predicate: Hyrax.config.admin_set_predicate
     end
 
     def active_workflow
