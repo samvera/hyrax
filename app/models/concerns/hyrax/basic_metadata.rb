@@ -7,29 +7,31 @@ module Hyrax
 
     included do
 
-      attribute :label, Valkyrie::Types::Set
+      attribute :label, Valkyrie::Types::SingleValuedString
       # property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
+      attribute :relative_path, Valkyrie::Types::SingleValuedString
       # property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false
 
       # property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'), multiple: false
-      # property :resource_type, predicate: ::RDF::Vocab::DC.type
-      # property :creator, predicate: ::RDF::Vocab::DC11.creator
-      # property :contributor, predicate: ::RDF::Vocab::DC11.contributor
-      # property :description, predicate: ::RDF::Vocab::DC11.description
+      attribute :resource_type, Valkyrie::Types::Set
+      attribute :creator, Valkyrie::Types::Set
+      attribute :contributor, Valkyrie::Types::Set
+      attribute :description, Valkyrie::Types::Set
+
       # property :keyword, predicate: ::RDF::Vocab::DC11.relation
       # Used for a license
-      # property :license, predicate: ::RDF::Vocab::DC.rights
+      attribute :license, Valkyrie::Types::Set
 
       # This is for the rights statement
       # property :rights_statement, predicate: ::RDF::Vocab::EDM.rights
-      # property :publisher, predicate: ::RDF::Vocab::DC11.publisher
-      # property :date_created, predicate: ::RDF::Vocab::DC.created
-      # property :subject, predicate: ::RDF::Vocab::DC11.subject
-      # property :language, predicate: ::RDF::Vocab::DC11.language
-      # property :identifier, predicate: ::RDF::Vocab::DC.identifier
+      attribute :publisher, Valkyrie::Types::Set
+      attribute :date_created, Valkyrie::Types::Set
+      attribute :subject, Valkyrie::Types::Set
+      attribute :language, Valkyrie::Types::Set
+      attribute :identifier, Valkyrie::Types::Set
       # property :based_near, predicate: ::RDF::Vocab::FOAF.based_near, class_name: Hyrax::ControlledVocabularies::Location
-      # property :related_url, predicate: ::RDF::RDFS.seeAlso
+      attribute :related_url, Valkyrie::Types::Set
       # property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
       # property :source, predicate: ::RDF::Vocab::DC.source
 
