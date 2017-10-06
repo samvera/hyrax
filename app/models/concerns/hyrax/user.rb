@@ -96,9 +96,9 @@ module Hyrax::User
     #   1. validation has already flagged the ORCID as invalid
     #   2. the orcid field is blank
     #   3. the orcid is already in its normalized form
-    return if errors[:orcid].first.present? || orcid.blank? || orcid.starts_with?('http://orcid.org/')
-    bare_orcid = Hyrax::OrcidValidator.match(orcid).string
-    self.orcid = "http://orcid.org/#{bare_orcid}"
+    return if errors[:orcid].first.present? || orcid.blank? || orcid.starts_with?('https://orcid.org/')
+    bare_orcid = Hyrax::OrcidValidator.match(orcid)
+    self.orcid = "https://orcid.org/#{bare_orcid}"
   end
 
   # Format the json for select2 which requires just an id and a field called text.

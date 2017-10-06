@@ -127,7 +127,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
       expect(u.facebook_handle).to eq 'face'
       expect(u.googleplus_handle).to eq 'goo'
       expect(u.linkedin_handle).to eq 'link'
-      expect(u.orcid).to eq 'http://orcid.org/0000-0000-1111-2222'
+      expect(u.orcid).to eq 'https://orcid.org/0000-0000-1111-2222'
     end
 
     it 'displays a flash when invalid ORCID is entered' do
