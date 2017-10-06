@@ -1,8 +1,9 @@
 RSpec.describe ChecksumAuditLog do
   let(:f) do
-    file = FileSet.create do |gf|
+    file = FileSet.new do |gf|
       gf.apply_depositor_metadata('mjg36')
     end
+    Hyrax::Persister.save(resource: file)
     # TODO: Mock addition of file to fileset to avoid calls to .save.
     # This will speed up tests and avoid uneccesary integration testing for fedora funcationality.
     Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
