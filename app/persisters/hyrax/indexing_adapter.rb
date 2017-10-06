@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # This was copied out of the Valkyrie app and I don't know why it isn't part of
 # the valkyrie gem. -- Justin
 ##
@@ -61,9 +62,7 @@ module Hyrax
         composite_persister.delete(resource: resource)
       end
 
-      def wipe!
-        composite_persister.wipe!
-      end
+      delegate :wipe!, to: :composite_persister
 
       # Yields the primary persister. At the end of the block, this will use changes tracked
       # by an in-memory persister to replicate new and deleted objects into the

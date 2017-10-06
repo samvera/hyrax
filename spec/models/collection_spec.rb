@@ -1,5 +1,6 @@
 RSpec.describe Collection do
   let(:collection) { build(:public_collection) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']
@@ -75,11 +76,11 @@ RSpec.describe Collection do
 
   describe "Collection by another name" do
     before do
-      class OtherCollection < ActiveFedora::Base
+      class OtherCollection < Valkyrie::Resource
         include Hyrax::CollectionBehavior
       end
 
-      class Member < ActiveFedora::Base
+      class Member < Valkyrie::Resource
         include Hydra::Works::WorkBehavior
       end
       collection.add_member_objects member.id
