@@ -26,7 +26,7 @@ module Hyrax
     def create
       @collection_type = Hyrax::CollectionType.new(collection_type_params)
       if @collection_type.save
-        Hyrax::CollectionTypes::PermissionsService.add_default_participants(@collection_type.id)
+        Hyrax::CollectionTypes::CreateService.add_default_participants(@collection_type.id)
         redirect_to hyrax.edit_admin_collection_type_path(@collection_type), notice: t(:'hyrax.admin.collection_types.create.notification', name: @collection_type.title)
       else
         setup_form

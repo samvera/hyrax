@@ -3,7 +3,7 @@ module Hyrax
     class CollectionsSearchBuilder < Hyrax::CollectionSearchBuilder
       include Hyrax::Dashboard::ManagedSearchFilters
 
-      self.solr_access_filters_logic += [:apply_admin_set_deposit_permissions]
+      self.solr_access_filters_logic += [:apply_collection_deposit_permissions]
       self.default_processor_chain += [:show_only_managed_collections_for_non_admins]
 
       # This overrides the models in FilterByType
@@ -26,14 +26,17 @@ module Hyrax
 
       # Include all admin sets the user has deposit permission for.
       # @return [Array{String}] values are lucence syntax term queries suitable for :fq
-      def apply_admin_set_deposit_permissions(_permission_types, _ability = current_ability)
-        collection_ids = source_ids_for_deposit
+      def apply_collection_deposit_permissions(_permission_types, _ability = current_ability)
+        collection_ids = collection_ids_for_deposit
         return [] if collection_ids.empty?
         ["{!terms f=id}#{collection_ids.join(',')}"]
       end
 
-      delegate :source_ids_for_deposit, to: :current_ability
-      private :source_ids_for_deposit
+      private
+
+        def collection_ids_for_deposit
+          Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
+        end
     end
   end
 end

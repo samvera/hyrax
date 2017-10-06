@@ -10,7 +10,7 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
   let!(:admin_set_collection_type) { create(:admin_set_collection_type) }
   let!(:collection_type) { create(:collection_type, creator_user: user_cu, creator_group: 'create_group', manager_user: user_mu, manager_group: 'manage_group') }
 
-  describe '.collection_types_for_user' do
+  describe '.collection_types_for_user' do # Also tests .collection_type_ids_for_user which is called by .collection_types_for_user
     let!(:ability) { ::Ability.new(user) }
 
     before { allow(ability).to receive(:current_user).and_return(user) }
@@ -114,6 +114,99 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
     end
   end
 
+  describe '.can_create_any_collection_type?' do
+    let!(:ability) { ::Ability.new(user) }
+
+    before do
+      allow(ability).to receive(:current_user).and_return(user)
+    end
+
+    subject { described_class.can_create_any_collection_type?(user: user) }
+
+    context 'when user is a create user' do
+      let(:user) { user_cu }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user is in create group' do
+      let(:user) { user_cg }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user is a manage user' do
+      let(:user) { user_mu }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user is in manage group' do
+      let(:user) { user_mg }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user is an admin' do
+      let(:user) { user_admin }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user with no access' do
+      let(:user) { user_other }
+
+      # TODO: Fails for now becauser User Collection type is always created and it allows every logged in user to create one.
+      # Would require additional work to remove or change the User Collection participants so there are 0 collection types the
+      # user can create.
+      xit { is_expected.to be false }
+    end
+  end
+
+  describe '.can_create_admin_set?' do
+    let!(:ability) { ::Ability.new(user) }
+
+    before { allow(ability).to receive(:current_user).and_return(user) }
+
+    subject { described_class.can_create_admin_set_collection_type?(user: user) }
+
+    context 'when user is a create user' do
+      let(:user) { user_cu }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when user is in create group' do
+      let(:user) { user_cg }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when user is a manage user' do
+      let(:user) { user_mu }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when user is in manage group' do
+      let(:user) { user_mg }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when user is an admin' do
+      let(:user) { user_admin }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when user with no access' do
+      let(:user) { user_other }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '.can_create_collection_types' do
     let!(:ability) { ::Ability.new(user) }
 
@@ -199,25 +292,6 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
       let(:coltype) { collection_type }
 
       it { is_expected.to match_array ['manage_group', 'admin'] }
-    end
-  end
-
-  describe '.add_default_participants' do
-    let(:coltype) { create(:collection_type) }
-
-    it 'adds the default participants to a collection type' do
-      expect(Hyrax::CollectionTypeParticipant).to receive(:create!).exactly(2).times
-      described_class.add_default_participants(coltype.id)
-    end
-  end
-
-  describe ".add_participants" do
-    let(:participants) { [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: 'test_group', access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS }] }
-    let(:coltype) { create(:collection_type) }
-
-    it 'adds the participants to a collection type' do
-      expect(Hyrax::CollectionTypeParticipant).to receive(:create!)
-      described_class.add_participants(coltype.id, participants)
     end
   end
 end
