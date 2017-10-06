@@ -151,7 +151,11 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
-    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
+    if example.metadata[:clean_repo]
+      $stderr.puts "Repository cleaning was requested but is disable presently"
+      #ActiveFedora::Cleaner.clean!
+    end
+
   end
 
   config.include(ControllerLevelHelpers, type: :view)
