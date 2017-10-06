@@ -1,12 +1,17 @@
+include ActionDispatch::TestProcess
+
 RSpec.describe ChecksumAuditLog do
+  let(:files) { [fixture_file_upload('world.png', 'image/png')] }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
+  let(:storage_adapter) { Valkyrie.config.storage_adapter }
+
+  let(:file_node) {}
   let(:f) do
-    file = FileSet.new do |gf|
-      gf.apply_depositor_metadata('mjg36')
+    file = FileSet.new do |fs|
+      fs.apply_depositor_metadata('mjg36')
+      fs.member_ids = [file_node.id]
     end
-    Hyrax::Persister.save(resource: file)
-    # TODO: Mock addition of file to fileset to avoid calls to .save.
-    # This will speed up tests and avoid uneccesary integration testing for fedora funcationality.
-    Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    persister.save(resource: file)
     file
   end
 

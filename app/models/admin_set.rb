@@ -16,18 +16,18 @@
 # @see Hyrax::DefaultAdminSetActor
 # @see Hyrax::ApplyPermissionTemplateActor
 class AdminSet < Valkyrie::Resource
-  #include Hydra::AccessControls::WithAccessRight
+  # include Hydra::AccessControls::WithAccessRight
   include Hyrax::Noid
   include Hyrax::HumanReadableType
-  #include Hyrax::HasRepresentative
+  # include Hyrax::HasRepresentative
 
   DEFAULT_ID = 'admin_set/default'.freeze
   DEFAULT_TITLE = ['Default Admin Set'].freeze
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
-  #validates_with Hyrax::HasOneTitleValidator
+  # validates_with Hyrax::HasOneTitleValidator
   class_attribute :human_readable_short_description
-  #self.indexer = Hyrax::AdminSetIndexer
+  # self.indexer = Hyrax::AdminSetIndexer
   attribute :id, Valkyrie::Types::ID.optional
   attribute :title, Valkyrie::Types::Set
   attribute :description, Valkyrie::Types::Set
@@ -48,8 +48,8 @@ class AdminSet < Valkyrie::Resource
   #          predicate: Hyrax.config.admin_set_predicate,
   #          class_name: 'ActiveFedora::Base'
 
-  #before_destroy :check_if_not_default_set, :check_if_empty
-  #after_destroy :destroy_permission_template
+  # before_destroy :check_if_not_default_set, :check_if_empty
+  # after_destroy :destroy_permission_template
 
   def self.default_set?(id)
     id == DEFAULT_ID
@@ -102,15 +102,15 @@ class AdminSet < Valkyrie::Resource
       true
     end
 
-    # def check_if_empty
-    #   return true if members.empty?
-    #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
-    #   throw :abort
-    # end
-    #
-    # def check_if_not_default_set
-    #   return true unless default_set?
-    #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
-    #   throw :abort
-    # end
+  # def check_if_empty
+  #   return true if members.empty?
+  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
+  #   throw :abort
+  # end
+  #
+  # def check_if_not_default_set
+  #   return true unless default_set?
+  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
+  #   throw :abort
+  # end
 end
