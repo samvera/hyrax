@@ -50,7 +50,7 @@ module Hyrax
         def roles_for_user
           Sipity::Workflow.all.flat_map do |wf|
             workflow_roles_for_user_and_workflow(wf).map do |wf_role|
-              "#{wf.name}-#{wf_role.role.name}"
+              "#{wf.permission_template.admin_set_id}-#{wf.name}-#{wf_role.role.name}"
             end
           end
         end

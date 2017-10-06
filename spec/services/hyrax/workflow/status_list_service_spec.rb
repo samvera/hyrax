@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     let(:document) do
       { id: '33333',
         has_model_ssim: ['GenericWork'],
-        actionable_workflow_roles_ssim: ["generic_work-approving", "generic_work-rejecting"],
+        actionable_workflow_roles_ssim: ["foobar-generic_work-approving", "foobar-generic_work-rejecting"],
         workflow_state_name_ssim: ["initial"],
         title_tesim: ['Hey dood!'] }
     end
@@ -25,9 +25,14 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     end
 
     context "when user has roles" do
+      let(:template) { double('template', admin_set_id: 'foobar') }
+      let(:workflow) do
+        instance_double(Sipity::Workflow, name: 'generic_work', permission_template: template)
+      end
+
       before do
         allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_processing_workflow_roles_for_user_and_workflow).and_return(workflow_roles)
-        allow(Sipity::Workflow).to receive(:all).and_return([instance_double(Sipity::Workflow, name: 'generic_work')])
+        allow(Sipity::Workflow).to receive(:all).and_return([workflow])
       end
 
       it "returns status rows" do
