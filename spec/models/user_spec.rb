@@ -96,18 +96,33 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
       expect(user.save).to be true
     end
-    it 'saves when a valid ORCID URI is supplied' do
-      user.orcid = 'http://orcid.org/0000-0000-1111-2222'
+    it 'saves when a valid ORCID HTTP URI w/ trailing slash is supplied' do
+      user.orcid = 'http://orcid.org/0000-0000-1111-2222/'
       expect(user).to be_valid
       expect(user.save).to be true
     end
-    it 'normalizes bare ORCIDs to URIs' do
+    it 'saves when a valid ORCID HTTPS URI is supplied' do
+      user.orcid = 'https://orcid.org/0000-0000-1111-2222'
+      expect(user).to be_valid
+      expect(user.save).to be true
+    end
+    it 'normalizes bare ORCIDs to HTTPS URIs' do
       user.orcid = '0000-0000-1111-2222'
       user.save
-      expect(user.orcid).to eq 'http://orcid.org/0000-0000-1111-2222'
+      expect(user.orcid).to eq 'https://orcid.org/0000-0000-1111-2222'
     end
-    it 'marks bad ORCIDs as invalid' do
+    it 'normalizes HTTP ORCIDs to HTTPS URIs' do
+      user.orcid = 'http://orcid.org/0000-0000-1111-2222'
+      user.save
+      expect(user.orcid).to eq 'https://orcid.org/0000-0000-1111-2222'
+    end
+    it 'marks short ORCIDs as invalid' do
       user.orcid = '000-000-111-222'
+      expect(user).not_to be_valid
+      expect(user.save).to be false
+    end
+    it 'marks long ORCIDs as invalid' do
+      user.orcid = '0000-0000-1111-222222'
       expect(user).not_to be_valid
       expect(user.save).to be false
     end
