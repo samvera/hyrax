@@ -9,11 +9,11 @@ module Hyrax
     include Hyrax::Noid
     include Hyrax::HumanReadableType
     # include Hyrax::HasRepresentative
-    # include Hyrax::Permissions
+    include Hyrax::Permissions
 
     included do
-    #  validates_with HasOneTitleValidator
-    #  self.indexer = Hyrax::CollectionIndexer
+      #  validates_with HasOneTitleValidator
+      #  self.indexer = Hyrax::CollectionIndexer
     end
 
     # Add members using the members association.
