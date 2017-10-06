@@ -5,12 +5,14 @@ RSpec.describe FileSet do
   include Hyrax::FactoryHelpers
 
   let(:user) { create(:user) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
-  describe 'rdf type' do
-    subject { described_class.new.type }
-
-    it { is_expected.to include(Hydra::PCDM::Vocab::PCDMTerms.Object, Hydra::Works::Vocab::WorksTerms.FileSet) }
-  end
+  # TODO: Move to a PCDM persister test
+  # describe 'rdf type' do
+  #   subject { described_class.new.type }
+  #
+  #   it { is_expected.to include(Hydra::PCDM::Vocab::PCDMTerms.Object, Hydra::Works::Vocab::WorksTerms.FileSet) }
+  # end
 
   it 'is a Hydra::Works::FileSet' do
     expect(subject).to be_file_set
@@ -121,8 +123,8 @@ RSpec.describe FileSet do
         subject.related_url = ['http://example.org/']
         subject.creator = ['John Doe']
         subject.title = ['New work']
-        subject.save
-        f = subject.reload
+        saved = persister.save(resource: subject)
+        f = Hyrax::Queries.find_by(id: saved.id)
         expect(f.related_url).to eq ['http://example.org/']
         expect(f.creator).to eq ['John Doe']
         expect(f.title).to eq ['New work']
@@ -131,14 +133,14 @@ RSpec.describe FileSet do
       it 'is able to be added to w/o unexpected graph behavior' do
         subject.creator = ['John Doe']
         subject.title = ['New work']
-        subject.save!
-        f = subject.reload
+        saved = persister.save(resource: subject)
+        f = Hyrax::Queries.find_by(id: saved.id)
         expect(f.creator).to eq ['John Doe']
         expect(f.title).to eq ['New work']
         f.creator = ['Jane Doe']
         f.title += ['Newer work']
-        f.save
-        f = subject.reload
+        saved = persister.save(resource: f)
+        f = Hyrax::Queries.find_by(id: saved.id)
         expect(f.creator).to eq ['Jane Doe']
         # TODO: Is order important?
         expect(f.title).to include('New work')
@@ -246,14 +248,14 @@ RSpec.describe FileSet do
       end
 
       context "after saving" do
-        before { subject.save! }
+        let(:saved) { persister.save(resource: subject) }
 
         it 'returns the expected identifier' do
-          expect(subject.id).to eq noid
+          expect(saved.id).to eq noid
         end
 
         it "has a treeified URL" do
-          expect(subject.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
+          expect(saved.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
         end
       end
 
@@ -479,23 +481,22 @@ RSpec.describe FileSet do
   end
 
   describe 'to_solr record' do
-    subject do
-      described_class.new.tap do |f|
-        f.apply_depositor_metadata(depositor)
-        f.save
-      end
+    subject(:file_set) do
+      file_set = described_class.new
+      file_set.apply_depositor_metadata(depositor)
+      persister.save(resource: file_set)
     end
 
     let(:depositor) { 'jcoyne' }
     let(:depositor_key) { Solrizer.solr_name('depositor') }
     let(:title_key) { Solrizer.solr_name('title', :stored_searchable, type: :string) }
     let(:title) { ['abc123'] }
-    let(:no_terms) { described_class.find(subject.id).to_solr }
+    let(:no_terms) { Hyrax::Queries.find_by(id: file_set.id).to_solr }
     let(:terms) do
-      file = described_class.find(subject.id)
-      file.title = title
-      file.save
-      file.to_solr
+      file_set_anew = Hyrax::Queries.find_by(id: file_set.id)
+      file_set_anew.title = title
+      persister.save(resource: file_set_anew)
+      file_set_anew.to_solr
     end
 
     context 'without terms' do
