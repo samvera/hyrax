@@ -89,7 +89,10 @@ RSpec.describe GenericWorkIndexer do
         .and_return(['approve', 'reject'])
     end
     it "indexed the roles and state" do
-      expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq ["#{sipity_entity.workflow.name}-approve", "#{sipity_entity.workflow.name}-reject"]
+      expect(solr_document.fetch('actionable_workflow_roles_ssim')).to eq [
+        "#{sipity_entity.workflow.permission_template.admin_set_id}-#{sipity_entity.workflow.name}-approve",
+        "#{sipity_entity.workflow.permission_template.admin_set_id}-#{sipity_entity.workflow.name}-reject"
+      ]
       expect(solr_document.fetch('workflow_state_name_ssim')).to eq "initial"
     end
   end

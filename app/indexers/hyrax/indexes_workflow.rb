@@ -26,7 +26,7 @@ module Hyrax
       return unless object.persisted?
       entity = PowerConverter.convert_to_sipity_entity(object)
       return if entity.nil?
-      solr_document[workflow_role_field] = workflow_roles(entity).map { |role| "#{entity.workflow.name}-#{role}" }
+      solr_document[workflow_role_field] = workflow_roles(entity).map { |role| "#{entity.workflow.permission_template.admin_set_id}-#{entity.workflow.name}-#{role}" }
       solr_document[workflow_state_name_field] = entity.workflow_state.name if entity.workflow_state
     end
 
