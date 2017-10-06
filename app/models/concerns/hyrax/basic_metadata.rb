@@ -6,7 +6,6 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-
       attribute :label, Valkyrie::Types::SingleValuedString
       # property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
