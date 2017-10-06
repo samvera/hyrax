@@ -243,13 +243,27 @@ RSpec.describe Collection, type: :model do
     end
   end
 
-  describe 'factories' do
-    it 'will create a permission_template when one is requested' do
-      expect { create(:collection, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+  context 'collection factory' do
+    describe 'when creating permission templates' do
+      it 'will create a permission_template when one is requested' do
+        expect { create(:collection, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+      end
+
+      it 'will not create a permission_template by default' do
+        expect { create(:collection) }.not_to change { Hyrax::PermissionTemplate.count }
+      end
     end
 
-    it 'will not create a permission_template by default' do
-      expect { create(:collection) }.not_to change { Hyrax::PermissionTemplate.count }
+    describe 'when including nesting indexing', with_nested_indexing: true do
+      # Nested indexing requires that the user's permissions be saved
+      # on the Fedora object... if simply in local memory, they are
+      # lost when the adapter pulls the object from Fedora to reindex.
+      let(:user) { create(:user) }
+      let(:collection) { create(:collection, user: user) }
+
+      it 'will authorize the creating user' do
+        expect(user.can?(:edit, collection)).to be true
+      end
     end
   end
 
