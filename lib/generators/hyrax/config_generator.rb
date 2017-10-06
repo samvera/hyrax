@@ -28,6 +28,10 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/initializers/simple_form_bootstrap.rb'
   end
 
+  def configure_valkyrie
+    copy_file 'config/valkyrie.yml'
+  end
+
   def configure_endnote
     append_file 'config/initializers/mime_types.rb',
                 "\nMime::Type.register 'application/x-endnote-refer', :endnote", verbose: false
