@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
 require 'valkyrie'
 
-# TODO move to the host app?
+# TODO: move to the host app?
+# rubocop:disable Metrics/BlockLength
 Rails.application.config.to_prepare do
   Valkyrie::MetadataAdapter.register(
     Valkyrie::Persistence::Postgres::MetadataAdapter.new,
@@ -59,3 +61,4 @@ Rails.application.config.to_prepare do
 
   # Valkyrie::FileCharacterizationService.services << TikaFileCharacterizationService
 end
+# rubocop:enable Metrics/BlockLength

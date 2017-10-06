@@ -153,9 +153,8 @@ RSpec.configure do |config|
     ensure_deposit_available_for(user) if example.metadata[:workflow]
     if example.metadata[:clean_repo]
       $stderr.puts "Repository cleaning was requested but is disable presently"
-      #ActiveFedora::Cleaner.clean!
+      # ActiveFedora::Cleaner.clean!
     end
-
   end
 
   config.include(ControllerLevelHelpers, type: :view)
