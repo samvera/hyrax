@@ -58,19 +58,6 @@ RSpec.describe Collection do
     end
   end
 
-  it "has a title", clean_repo: true do
-    subject.title = ["title"]
-    subject.save!
-    expect(subject.reload.title).to eq ["title"]
-  end
-
-  it "has a description", clean_repo: true do
-    subject.title = ["title"] # Because the title is required
-    subject.description = ["description"]
-    subject.save!
-    expect(subject.reload.description).to eq ["description"]
-  end
-
   describe "#destroy", clean_repo: true do
     let(:collection) { build(:collection) }
     let(:work1) { create(:work) }
