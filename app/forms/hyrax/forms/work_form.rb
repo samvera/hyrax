@@ -13,9 +13,10 @@ module Hyrax
       delegate :work_members_attributes=, to: :model
       delegate :human_readable_type, :open_access?, :authenticated_only_access?,
                :open_access_with_embargo_release_date?, :private_access?,
-               :embargo_release_date, :lease_expiration_date, :member_ids,
+               :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
+               :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                :visibility, :in_works_ids, :depositor, :on_behalf_of, :permissions,
-               :member_of_collection_ids, to: :model
+               :member_ids, :member_of_collection_ids, to: :model
 
       attr_reader :agreement_accepted
 
@@ -104,10 +105,10 @@ module Hyrax
         CollectionOptionsPresenter.new(service).select_options(:edit)
       end
 
-      # Select collection(s) based on passed-in params
+      # Select collection(s) based on passed-in params and existing memberships.
       # @return [Array] a list of collection identifiers
       def member_of_collections(collection_ids)
-        Array.wrap(collection_ids)
+        (member_of_collection_ids + Array.wrap(collection_ids)).uniq
       end
 
       # Sanitize the parameters coming from the form. This ensures that the client

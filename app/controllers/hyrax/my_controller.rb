@@ -22,7 +22,7 @@ module Hyrax
     configure_facets
 
     before_action :authenticate_user!
-    before_action :enforce_show_permissions, only: :show
+    load_and_authorize_resource only: :show, instance_name: :collection
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper

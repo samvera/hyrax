@@ -26,12 +26,26 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
       let(:proxies) { [stub_model(User, email: 'bob@example.com')] }
 
       before do
+        allow(Flipflop).to receive(:proxy_deposit?).and_return(true)
         allow(user).to receive(:can_make_deposits_for).and_return(proxies)
       end
+
       it "shows options for proxy" do
         expect(page).to have_content 'On behalf of'
         expect(page).to have_selector("select#generic_work_on_behalf_of option[value=\"\"]", text: 'Yourself')
         expect(page).to have_selector("select#generic_work_on_behalf_of option[value=\"bob@example.com\"]")
+      end
+
+      context 'when feature disabled' do
+        before do
+          allow(Flipflop).to receive(:proxy_deposit?).and_return(false)
+        end
+
+        it "does not show options for proxy" do
+          expect(page).not_to have_content 'On behalf of'
+          expect(page).not_to have_selector("select#generic_work_on_behalf_of option[value=\"\"]", text: 'Yourself')
+          expect(page).not_to have_selector("select#generic_work_on_behalf_of option[value=\"bob@example.com\"]")
+        end
       end
     end
 

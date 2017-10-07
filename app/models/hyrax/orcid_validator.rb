@@ -6,7 +6,12 @@ module Hyrax
     end
 
     def self.match(string)
-      /\d{4}-\d{4}-\d{4}-\d{3}[\dX]/.match(string)
+      Regexp.new(orcid_regex).match(string) { |m| m[:orcid] }
     end
+
+    def self.orcid_regex
+      '^(?<prefix>https?://orcid.org/)?(?<orcid>\d{4}-\d{4}-\d{4}-\d{3}[\dX])/?$'
+    end
+    private_class_method :orcid_regex
   end
 end

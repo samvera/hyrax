@@ -1,4 +1,4 @@
-<span class="sr-only h2"><%= t('hyrax.collection.actions.header') %></span>
+<h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
 <% if can? :destroy, presenter.solr_document %>
     <%= link_to t('hyrax.collection.actions.delete.label'),
                 hyrax.dashboard_collection_path(presenter),

@@ -296,23 +296,6 @@ RSpec.describe FileSet do
       subject.read_groups = ['group-2', 'group-3']
       expect(subject.read_groups).to eq ['group-2', 'group-3']
     end
-
-    it 'has read groups string writer' do
-      subject.read_groups_string = 'umg/up.dlt.staff, group-3'
-      expect(subject.read_groups).to eq ['umg/up.dlt.staff', 'group-3']
-      expect(subject.edit_groups).to eq ['group-8']
-      expect(subject.read_users).to eq %w[person1 person2]
-      expect(subject.edit_users).to eq ['jcoyne']
-    end
-
-    it 'revokes only eligible groups' do
-      subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
-      # 'group-7' is not eligible to be revoked
-      expect(subject.read_groups).to match_array ['group-2', 'group-3', 'group-7']
-      expect(subject.edit_groups).to eq ['group-8']
-      expect(subject.read_users).to match_array %w[person1 person2]
-      expect(subject.edit_users).to eq ['jcoyne']
-    end
   end
 
   describe 'permissions validation' do

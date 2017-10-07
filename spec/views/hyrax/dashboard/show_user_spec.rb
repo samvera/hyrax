@@ -31,4 +31,28 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
     expect(rendered).to have_content "sent transfers"
     expect(rendered).to have_content "received transfers"
   end
+
+  describe 'proxy deposit' do
+    context 'when enabled' do
+      before do
+        allow(Flipflop).to receive(:proxy_deposit?).and_return(true)
+      end
+
+      it 'renders proxy partial' do
+        render
+        expect(rendered).to match(/Authorize Proxies/)
+      end
+    end
+
+    context 'when disabled' do
+      before do
+        allow(Flipflop).to receive(:proxy_deposit?).and_return(false)
+      end
+
+      it 'does not render proxy partial' do
+        render
+        expect(rendered).not_to match(/Authorize Proxies/)
+      end
+    end
+  end
 end
