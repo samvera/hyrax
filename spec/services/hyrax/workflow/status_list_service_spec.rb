@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     end
 
     context "when user has roles" do
-      let(:template) { double('template', admin_set_id: 'foobar') }
+      let(:template) { double('template', source_id: 'foobar') }
       let(:workflow) do
         instance_double(Sipity::Workflow, name: 'generic_work', permission_template: template)
       end
