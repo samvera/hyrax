@@ -24,8 +24,9 @@ pt-BR:
           identifier_tesim: Identificador
           keyword_tesim: Palavra-chave
           language_tesim: Língua
+          license_tesim: Licença
           publisher_tesim: Editor
-          rights_tesim: Direitos
+          rights_statement_tesim: Direitos
           subject_tesim: Sujeito
         show:
           based_near_tesim: Localização
@@ -39,8 +40,9 @@ pt-BR:
           identifier_tesim: Identificador
           keyword_tesim: Palavra-chave
           language_tesim: Língua
+          license_tesim: Licença
           publisher_tesim: Editor
-          rights_tesim: Direitos
+          rights_statement_tesim: Direitos
           subject_tesim: Sujeito
           title_tesim: Título
   hyrax:

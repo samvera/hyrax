@@ -1,5 +1,3 @@
-# coding: utf-8
-
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do
@@ -8,9 +6,10 @@ RSpec.describe BlacklightHelper, type: :helper do
       'proxy_depositor_ssim'   => ['atz@stanford.edu'],
       'description_tesim'      => ['This links to http://example.com/ What about that?'],
       'date_uploaded_dtsi'     => '2013-03-14T00:00:00Z',
-      'rights_tesim'           => ["http://creativecommons.org/publicdomain/zero/1.0/",
-                                   "http://creativecommons.org/publicdomain/mark/1.0/",
-                                   "http://www.europeana.eu/portal/rights/rr-r.html"],
+      'license_tesim' => ["http://creativecommons.org/publicdomain/zero/1.0/",
+                          "http://creativecommons.org/publicdomain/mark/1.0/",
+                          "http://www.europeana.eu/portal/rights/rr-r.html"],
+      'rights_statement_tesim' => ['http://rightsstatements.org/vocab/InC/1.0/'],
       'identifier_tesim'       => ['65434567654345654'],
       'keyword_tesim'          => ['taco', 'mustache'],
       'subject_tesim'          => ['Awesome'],
@@ -47,13 +46,21 @@ RSpec.describe BlacklightHelper, type: :helper do
       end
     end
 
-    context "rights_tesim" do
-      let(:field_name) { 'rights_tesim' }
+    context "license_tesim" do
+      let(:field_name) { 'license_tesim' }
 
       it do
         is_expected.to eq "<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>, " \
                              "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Creative Commons Public Domain Mark 1.0</a>, " \
                              "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>"
+      end
+    end
+
+    context "rights_statement_tesim" do
+      let(:field_name) { 'rights_statement_tesim' }
+
+      it do
+        is_expected.to eq "<a href=\"http://rightsstatements.org/vocab/InC/1.0/\">In Copyright</a>"
       end
     end
 

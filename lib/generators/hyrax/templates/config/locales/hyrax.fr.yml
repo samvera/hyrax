@@ -24,6 +24,7 @@ fr:
           identifier_tesim: Identificateur
           keyword_tesim: Mot-clé
           language_tesim: La langue
+          license_statement_tesim: Licence
           publisher_tesim: Éditeur
           rights_tesim: Droits
           subject_tesim: Assujettir
@@ -39,6 +40,7 @@ fr:
           identifier_tesim: Identificateur
           keyword_tesim: Mot-clé
           language_tesim: La langue
+          license_statement_tesim: Licence
           publisher_tesim: Éditeur
           rights_tesim: Droits
           subject_tesim: Assujettir

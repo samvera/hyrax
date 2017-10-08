@@ -24,8 +24,9 @@ zh:
           identifier_tesim: 识别码
           keyword_tesim: 关键词
           language_tesim: 语言
+          license_tesim: 执照
           publisher_tesim: 出版者
-          rights_tesim: 权
+          rights_statement_tesim: 权
           subject_tesim: 学科
         show:
           based_near_tesim: 位置
@@ -39,8 +40,9 @@ zh:
           identifier_tesim: 识别码
           keyword_tesim: 关键词
           language_tesim: 语言
+          license_tesim: 执照
           publisher_tesim: 出版者
-          rights_tesim: 权
+          rights_statement_tesim: 权
           subject_tesim: 学科
           title_tesim: 标题
   hyrax:
