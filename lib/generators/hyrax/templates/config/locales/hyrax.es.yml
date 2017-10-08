@@ -22,10 +22,11 @@ es:
           description_tesim: Descripción
           file_format_tesim: Formato de Archivo
           identifier_tesim: Identificador
+          license_tesim: Licencia
           keyword_tesim: Palabra clave
           language_tesim: Idioma
           publisher_tesim: Editor
-          rights_tesim: Derechos
+          rights_statement_tesim: Derechos
           subject_tesim: Tema
         show:
           based_near_tesim: Ubicación
@@ -39,8 +40,9 @@ es:
           identifier_tesim: Identificador
           keyword_tesim: Palabra clave
           language_tesim: Idioma
+          license_tesim: Licencia
           publisher_tesim: Editor
-          rights_tesim: Derechos
+          rights_statement_tesim: Derechos
           subject_tesim: Tema
           title_tesim: Título
   hyrax:

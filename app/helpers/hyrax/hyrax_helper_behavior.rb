@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior
@@ -198,10 +196,18 @@ module Hyrax
     end
 
     # A Blacklight index field helper_method
-    # @param [Hash] options from blacklight helper_method invocation. Maps rights URIs to links with labels.
-    # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
+    # @param [Hash] options from blacklight helper_method invocation. Maps license URIs to links with labels.
+    # @return [ActiveSupport::SafeBuffer] license links, html_safe
     def license_links(options)
       service = Hyrax::LicenseService.new
+      options[:value].map { |right| link_to service.label(right), right }.to_sentence.html_safe
+    end
+
+    # A Blacklight index field helper_method
+    # @param [Hash] options from blacklight helper_method invocation. Maps rights statement URIs to links with labels.
+    # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
+    def rights_statement_links(options)
+      service = Hyrax::RightsStatementService.new
       options[:value].map { |right| link_to service.label(right), right }.to_sentence.html_safe
     end
 

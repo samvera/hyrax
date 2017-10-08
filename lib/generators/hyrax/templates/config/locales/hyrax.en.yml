@@ -23,8 +23,9 @@ en:
           identifier_tesim: Identifier
           keyword_tesim: Keyword
           language_tesim: Language
+          license_tesim: License
           publisher_tesim: Publisher
-          rights_tesim: Rights
+          rights_statement_tesim: Rights Statement
           subject_tesim: Subject
         show:
           based_near_tesim: Location
@@ -38,8 +39,9 @@ en:
           identifier_tesim: Identifier
           keyword_tesim: Keyword
           language_tesim: Language
+          license_tesim: License
           publisher_tesim: Publisher
-          rights_tesim: Rights
+          rights_statement_tesim: Rights Statement
           subject_tesim: Subject
           title_tesim: Title
   hyrax:
