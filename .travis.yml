@@ -18,6 +18,7 @@ rvm:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - ENGINE_CART_RAILS_OPTIONS='--skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test'
   # Travis should check every minor version in a range of supported versions, because
   # rails does not follow sem-ver conventions, see http://guides.rubyonrails.org/maintenance_policy.html
   # It should be sufficient to test only the latest of the patch versions for a minor version, they

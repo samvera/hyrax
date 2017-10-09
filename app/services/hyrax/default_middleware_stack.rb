@@ -13,6 +13,7 @@ module Hyrax
         middleware.use Hyrax::Actors::AttachMembersActor
         middleware.use Hyrax::Actors::ApplyOrderActor
         middleware.use Hyrax::Actors::InterpretVisibilityActor
+        middleware.use Hyrax::Actors::TransferRequestActor
         middleware.use Hyrax::Actors::DefaultAdminSetActor
         middleware.use Hyrax::Actors::ApplyPermissionTemplateActor
         middleware.use Hyrax::Actors::CleanupFileSetsActor
