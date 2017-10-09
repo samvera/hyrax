@@ -2,7 +2,7 @@ RSpec.describe FixityCheckJob do
   let(:user) { create(:user) }
 
   let(:file_set) do
-    create(:file_set, user: user).tap do |file|
+    create_for_repository(:file_set, user: user).tap do |file|
       Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
     end
   end

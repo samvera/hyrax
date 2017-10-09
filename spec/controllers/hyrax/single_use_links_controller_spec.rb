@@ -2,7 +2,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   routes { Hyrax::Engine.routes }
 
   let(:user) { create(:user) }
-  let(:file) { create(:file_set, user: user) }
+  let(:file) { create_for_repository(:file_set, user: user) }
 
   describe "::show_presenter" do
     subject { described_class }
@@ -58,7 +58,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
 
   describe "logged in user without edit permission" do
     let(:other_user) { create(:user) }
-    let(:file) { create(:file_set, user: user, read_users: [other_user]) }
+    let(:file) { create_for_repository(:file_set, user: user, read_users: [other_user]) }
 
     before { sign_in other_user }
     subject { response }
