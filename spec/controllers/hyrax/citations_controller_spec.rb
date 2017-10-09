@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::CitationsController do
   describe "#work" do
     let(:user) { create(:user) }
-    let(:work) { create(:work, user: user) }
+    let(:work) { create_for_repository(:work, user: user) }
 
     context "with an authenticated_user" do
       before do

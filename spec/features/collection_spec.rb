@@ -8,8 +8,8 @@ RSpec.describe 'collection', type: :feature do
     let(:collection) do
       create(:public_collection, user: user, description: ['collection description'])
     end
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
     before do
       sign_in user

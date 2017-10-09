@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id } }) }
 
   subject(:middleware) do
@@ -19,7 +19,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     before do
       work.ordered_members << existing_child_work
     end
-    let(:existing_child_work) { create(:work) }
+    let(:existing_child_work) { create_for_repository(:work) }
     let(:id) { existing_child_work.id }
 
     context "without useful attributes" do
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     end
 
     context "when the id does not exist in the members" do
-      let(:another_work) { create(:work) }
+      let(:another_work) { create_for_repository(:work) }
       let(:id) { another_work.id }
 
       context "and I can edit that object" do

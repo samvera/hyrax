@@ -215,7 +215,7 @@ RSpec.describe FileSet do
     end
 
     context 'when there are related files' do
-      let(:parent_work)   { FactoryGirl.create(:work_with_files) }
+      let(:parent_work)   { FactoryGirl.create_for_repository(:work_with_files) }
       let(:f1)            { parent_work.file_sets.first }
       let(:f2)            { parent_work.file_sets.last }
 
@@ -450,7 +450,7 @@ RSpec.describe FileSet do
   end
 
   describe 'work associations' do
-    let(:work) { create(:work_with_one_file) }
+    let(:work) { create_for_repository(:work_with_one_file) }
 
     subject { work.file_sets.first.reload }
 
@@ -516,11 +516,11 @@ RSpec.describe FileSet do
   end
 
   describe 'with a parent work' do
-    let(:parent) { create(:work_with_one_file) }
+    let(:parent) { create_for_repository(:work_with_one_file) }
     let(:parent_id) { parent.id }
 
     describe '#related_files' do
-      let(:parent) { create(:work_with_files) }
+      let(:parent) { create_for_repository(:work_with_files) }
       let(:sibling) { parent.file_sets.last }
 
       subject { parent.file_sets.first.reload }

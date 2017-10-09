@@ -8,8 +8,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "#edit" do
-    let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
-    let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+    let(:one) { create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
+    let(:two) { create_for_repository(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
 
     before do
       controller.batch = [one.id, two.id]

@@ -48,8 +48,8 @@ RSpec.describe Collection do
     end
 
     context "adding members" do
-      let(:work1) { create(:work) }
-      let(:work2) { create(:work) }
+      let(:work1) { create_for_repository(:work) }
+      let(:work2) { create_for_repository(:work) }
 
       it "allows multiple files to be added" do
         collection.add_member_objects [work1.id, work2.id]
@@ -61,7 +61,7 @@ RSpec.describe Collection do
 
   describe "#destroy", clean_repo: true do
     let(:collection) { build(:collection) }
-    let(:work1) { create(:work) }
+    let(:work1) { create_for_repository(:work) }
 
     before do
       collection.add_member_objects [work1.id]
