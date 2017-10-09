@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::WorkUsage, type: :model do
-  let!(:work) { create(:work, id: 'abc12345xy') }
+  let!(:work) { create_for_repository(:work, id: 'abc12345xy') }
 
   let(:dates) do
     ldates = []
@@ -49,7 +49,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
   end
 
   describe "#to_s" do
-    let(:work) { create(:work, title: ['Butter sculpture']) }
+    let(:work) { create_for_repository(:work, title: ['Butter sculpture']) }
 
     subject { usage.to_s }
 
@@ -131,7 +131,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
   describe "on a migrated work" do
     let(:date_uploaded) { "2014-12-31" }
-    let(:work_migrated) { create(:work, id: '678901234', date_uploaded: date_uploaded) }
+    let(:work_migrated) { create_for_repository(:work, id: '678901234', date_uploaded: date_uploaded) }
 
     let(:usage) do
       described_class.new(work_migrated.id)

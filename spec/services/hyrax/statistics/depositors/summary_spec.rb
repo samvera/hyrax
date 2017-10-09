@@ -1,13 +1,13 @@
 RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let!(:old_work) { create(:work, user: user1) }
+  let!(:old_work) { create_for_repository(:work, user: user1) }
   let(:two_days_ago_date) { Time.zone.now - 2.days }
 
   let(:start_date) { nil }
   let(:end_date) { nil }
-  let!(:work1) { create(:work, user: user1) }
-  let!(:work2) { create(:work, user: user2) }
+  let!(:work1) { create_for_repository(:work, user: user1) }
+  let!(:work2) { create_for_repository(:work, user: user2) }
   let!(:collection1) { create(:public_collection, user: user1) }
   let(:service) { described_class.new(start_date, end_date) }
 

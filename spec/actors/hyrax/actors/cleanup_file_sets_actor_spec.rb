@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Actors::CleanupFileSetsActor do
   describe "#destroy" do
     subject { middleware.destroy(env) }
 
-    let!(:work) { create(:work_with_one_file) }
+    let!(:work) { create_for_repository(:work_with_one_file) }
 
     it 'removes all  file sets' do
       expect { middleware.destroy(env) }.to change { FileSet.count }.by(-1)

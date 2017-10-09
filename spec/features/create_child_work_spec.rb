@@ -11,7 +11,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
     allow(Redlock::Client).to receive(:new).and_return(client)
     client
   end
-  let!(:parent) { create(:generic_work, user: user, title: ["Parent First"]) }
+  let!(:parent) { create_for_repository(:work, user: user, title: ["Parent First"]) }
 
   before do
     sign_in user
@@ -32,8 +32,8 @@ RSpec.feature 'Creating a new child Work', :workflow do
   end
 
   context "when it's being updated" do
-    let(:curation_concern) { create(:generic_work, user: user) }
-    let(:new_parent) { create(:generic_work, user: user) }
+    let(:curation_concern) { create_for_repository(:work, user: user) }
+    let(:new_parent) { create_for_repository(:work, user: user) }
     let!(:cc_sipity_entity) do
       create(:sipity_entity, proxy_for_global_id: curation_concern.to_global_id.to_s)
     end
@@ -66,7 +66,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
 
     context "with a parent that doesn't belong to this user" do
       let(:new_user) { create(:user) }
-      let(:new_parent) { create(:generic_work, user: new_user) }
+      let(:new_parent) { create_for_repository(:work, user: new_user) }
 
       it "fails to update" do
         visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
