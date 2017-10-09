@@ -3,8 +3,9 @@
 <% elsif f.object.lease_expiration_date %>
   <%= render 'form_permission_under_lease', f: f %>
 <% else %>
-    <fieldset>
+    <fieldset<%= ' class="has-error"'.html_safe if f.object.errors.include?(:visibility)%>>
       <legend class="legend-save-work">Visibility</legend>
+      <%= f.error :visibility %>
       <ul class="visibility">
         <li class="radio">
           <label>
