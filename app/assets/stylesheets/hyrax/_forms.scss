@@ -49,11 +49,7 @@ form {
 }
 
 .set-access-controls {
-  label {
-    color: #333;
-    font-weight: normal;
-  }
-
+  label { font-weight: normal; }
   & .form-group {
     padding: 0 1.75em;
 
