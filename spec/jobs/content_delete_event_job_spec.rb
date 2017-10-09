@@ -13,7 +13,7 @@ RSpec.describe ContentDeleteEventJob do
   end
 
   context 'with a FileSet' do
-    let(:curation_concern) { create(:file_set, title: ['Hamlet'], user: user) }
+    let(:curation_concern) { create_for_repository(:file_set, title: ['Hamlet'], user: user) }
 
     it "logs the event to the depositor's profile" do
       expect do
