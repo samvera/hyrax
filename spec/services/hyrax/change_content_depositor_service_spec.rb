@@ -2,10 +2,10 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }
   let!(:file) do
-    create(:file_set, user: depositor)
+    create_for_repository(:file_set, user: depositor)
   end
   let!(:work) do
-    create(:work, title: ['Test work'], user: depositor)
+    create_for_repository(:work, title: ['Test work'], user: depositor)
   end
 
   before do

@@ -30,7 +30,7 @@ RSpec.describe Hyrax::CitationsController do
   end
   describe "#file" do
     let(:user) { create(:user) }
-    let(:file_set) { create(:file_set, user: user) }
+    let(:file_set) { create_for_repository(:file_set, user: user) }
 
     context "with an authenticated_user" do
       before do
