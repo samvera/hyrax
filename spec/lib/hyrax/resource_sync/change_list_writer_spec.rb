@@ -23,7 +23,7 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
     before do
       # These private items should not show up.
       create(:private_collection)
-      create(:work)
+      create_for_repository(:work)
 
       # Sleep in between to ensure modified dates are different
       public_collection

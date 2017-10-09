@@ -3,10 +3,10 @@ RSpec.describe Hyrax::Statistics::Works::ByResourceType do
 
   describe "#query", :clean_repo do
     before do
-      create(:generic_work, resource_type: ['Conference Proceeding'])
-      create(:generic_work, resource_type: ['Conference Proceeding'])
-      create(:generic_work, resource_type: ['Image'])
-      create(:generic_work, resource_type: ['Journal'])
+      create_for_repository(:work, resource_type: ['Conference Proceeding'])
+      create_for_repository(:work, resource_type: ['Conference Proceeding'])
+      create_for_repository(:work, resource_type: ['Image'])
+      create_for_repository(:work, resource_type: ['Journal'])
     end
 
     subject { service.query }

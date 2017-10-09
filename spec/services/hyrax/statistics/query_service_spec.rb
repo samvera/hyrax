@@ -39,7 +39,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   describe "where_registered" do
     subject { service.where_registered }
 
-    let!(:work) { create(:generic_work, read_groups: read_groups) }
+    let!(:work) { create_for_repository(:work, read_groups: read_groups) }
 
     context "when file is private" do
       let(:read_groups) { ["private"] }
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   describe "where_public" do
     subject { service.where_public }
 
-    let!(:work) { create(:generic_work, read_groups: read_groups) }
+    let!(:work) { create_for_repository(:work, read_groups: read_groups) }
 
     context "when file is private" do
       let(:read_groups) { ["private"] }

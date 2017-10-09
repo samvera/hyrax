@@ -101,7 +101,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         let(:admin_set) { create(:admin_set, edit_users: [user]) }
 
         before do
-          create(:work, :public, admin_set: admin_set)
+          create_for_repository(:work, :public, admin_set: admin_set)
         end
 
         it 'defines a presenter' do
@@ -157,7 +157,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       end
 
       context "with a non-empty admin set" do
-        let(:work) { create(:generic_work, user: user) }
+        let(:work) { create_for_repository(:work, user: user) }
 
         before do
           admin_set.members << work
