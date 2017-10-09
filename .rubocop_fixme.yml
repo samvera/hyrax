@@ -159,7 +159,6 @@ RSpec/LetBeforeExamples:
     - 'spec/forms/hyrax/forms/collection_form_spec.rb'
     - 'spec/presenters/hyrax/collection_presenter_spec.rb'
     - 'spec/presenters/hyrax/trophy_presenter_spec.rb'
-    - 'spec/services/hyrax/query_service_spec.rb'
     - 'spec/services/hyrax/workflow/action_taken_service_spec.rb'
     - 'spec/services/hyrax/workflow/notification_service_spec.rb'
 

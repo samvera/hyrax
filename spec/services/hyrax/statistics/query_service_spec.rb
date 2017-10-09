@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::QueryService, :clean_repo do
+RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   let(:service) { described_class.new }
 
   describe "#count" do
@@ -54,8 +54,9 @@ RSpec.describe Hyrax::QueryService, :clean_repo do
     end
 
     context "when file is registered" do
-      it { is_expected.to eq [work] }
       let(:read_groups) { ["registered"] }
+
+      it { is_expected.to eq [work] }
     end
   end
 
@@ -77,8 +78,9 @@ RSpec.describe Hyrax::QueryService, :clean_repo do
     end
 
     context "when file is registered" do
-      it { is_expected.to eq [] }
       let(:read_groups) { ["registered"] }
+
+      it { is_expected.to eq [] }
     end
   end
 
