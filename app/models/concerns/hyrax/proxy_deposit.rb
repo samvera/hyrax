@@ -11,14 +11,6 @@ module Hyrax
       property :on_behalf_of, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf'), multiple: false do |index|
         index.as :symbol
       end
-
-      after_create :create_transfer_request
-    end
-
-    def create_transfer_request
-      return if on_behalf_of.blank?
-      ContentDepositorChangeEventJob.perform_later(self,
-                                                   ::User.find_by_user_key(on_behalf_of))
     end
 
     def request_transfer_to(target)
