@@ -42,8 +42,10 @@ Blacklight.onLoad(function () {
 
     tableRows.each(function(i, row) {
       checkbox = $(row).find('td:first input[type=checkbox]');
-      if (checkbox[0].checked) {
-        numRowsSelected++;
+      if (typeof checkbox[0] !== "undefined") {
+        if (checkbox[0].checked) {
+          numRowsSelected++;
+        }
       }
     });
 
