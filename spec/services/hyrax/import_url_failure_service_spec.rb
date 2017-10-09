@@ -3,7 +3,7 @@ RSpec.describe Hyrax::ImportUrlFailureService do
   let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
-    create(:file_set, user: depositor)
+    create_for_repository(:file_set, user: depositor)
   end
 
   before do

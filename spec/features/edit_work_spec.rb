@@ -4,7 +4,7 @@ RSpec.feature 'Editing a work', type: :feature do
 
   before do
     sign_in user
-    work.ordered_members << create(:file_set, user: user, title: ['ABC123xyz'])
+    work.ordered_members << create_for_repository(:file_set, user: user, title: ['ABC123xyz'])
     work.read_groups = []
     work.save!
   end
