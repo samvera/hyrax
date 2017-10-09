@@ -13,6 +13,11 @@ module Hyrax
       def private?
         !(public? || registered?)
       end
+
+      def set_read_groups(groups, eligible_groups)
+        self.read_groups -= eligible_groups
+        self.read_groups += groups
+      end
     end
   end
 end
