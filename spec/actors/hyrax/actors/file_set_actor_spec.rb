@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:file_path)     { File.join(fixture_path, 'world.png') }
   let(:file)          { fixture_file_upload(file_path, 'image/png') } # we will override for the different types of File objects
   let(:local_file)    { File.open(file_path) }
-  let(:file_set)      { create(:file_set, content: local_file) }
+  let(:file_set)      { create_for_repository(:file_set, content: local_file) }
   let(:actor)         { described_class.new(file_set, user) }
   let(:relation)      { :original_file }
   let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
@@ -331,7 +331,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe '#revert_content' do
-    let(:file_set) { create(:file_set, user: user) }
+    let(:file_set) { create_for_repository(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
     let(:version1) { "version1" }
     let(:restored_content) { file_set.reload.original_file }

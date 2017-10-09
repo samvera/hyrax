@@ -2,7 +2,7 @@ RSpec.feature "Editing a file:", type: :feature do
   let(:user) { create(:user) }
   let(:file_title) { 'Some kind of title' }
   let(:work) { build(:work, user: user) }
-  let(:file_set) { create(:file_set, user: user, title: [file_title]) }
+  let(:file_set) { create_for_repository(:file_set, user: user, title: [file_title]) }
   let(:file) { File.open(fixture_path + '/world.png') }
 
   before do

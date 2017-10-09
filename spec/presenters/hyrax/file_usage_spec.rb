@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::FileUsage, type: :model do
   let(:user) { build(:user) }
   let(:file) do
-    create(:file_set, user: user)
+    create_for_repository(:file_set, user: user)
   end
 
   let(:dates) do
@@ -148,7 +148,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
   describe "on a migrated file" do
     let(:date_uploaded) { "2014-12-31" }
     let(:file_migrated) do
-      create(:file_set, date_uploaded: date_uploaded, user: user)
+      create_for_repository(:file_set, date_uploaded: date_uploaded, user: user)
     end
 
     let(:usage) do
