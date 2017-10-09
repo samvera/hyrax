@@ -77,6 +77,10 @@ module Hyrax
       end
     end
 
+    initializer 'valkyrie_global_id' do
+      GlobalID::Locator.use(GlobalID.app, Hyrax::ValkyrieLocator.new)
+    end
+
     initializer 'hyrax.assets.precompile' do |app|
       app.config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
       app.config.assets.paths << config.root.join('app', 'assets', 'images')
