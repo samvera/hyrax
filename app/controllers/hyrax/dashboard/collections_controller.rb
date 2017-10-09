@@ -7,7 +7,7 @@ module Hyrax
       include BreadcrumbsForCollections
       layout 'dashboard'
 
-      before_action :filter_docs_with_read_access!, except: :show
+      before_action :filter_docs_with_read_access!, except: [:show, :edit]
       before_action :remove_select_something_first_flash, except: :show
 
       include Hyrax::Collections::AcceptsBatches
@@ -93,7 +93,7 @@ module Hyrax
         set_default_permissions
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
-          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: "Collection was successfully created." }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
@@ -133,11 +133,8 @@ module Hyrax
       end
 
       def after_update
-        if flash[:notice].nil?
-          flash[:notice] = 'Collection was successfully updated.'
-        end
         respond_to do |format|
-          format.html { redirect_to update_referer }
+          format.html { redirect_to update_referer, notice: 'Collection was successfully updated.' }
           format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
         end
       end

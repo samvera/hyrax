@@ -15,6 +15,7 @@ RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
     stub_template '_document_list.html.erb' => 'document list'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
     stub_template '_form.html.erb' => 'form'
+    stub_template 'hyrax/dashboard/collections/_flash_msg.html.erb' => 'flash_msg'
 
     render
   end

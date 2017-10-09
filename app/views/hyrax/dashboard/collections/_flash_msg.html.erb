@@ -1,0 +1,9 @@
+<% { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }.each do |type, flash_dom_class| %>
+  <% if flash[type].present? %>
+    <div class="alert <%= flash_dom_class %> alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <%= safe_join(Array.wrap(flash[type]).map(&:html_safe), '<br/>'.html_safe) %>
+    </div>
+    <% flash.delete(type) %>
+  <% end %>
+<% end %>
