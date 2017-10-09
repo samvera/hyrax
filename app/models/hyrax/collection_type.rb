@@ -62,16 +62,24 @@ module Hyrax
       ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
     end
 
+    # @return [True | False] True if there is at least one collection of this type
     def collections?
       collections.count > 0
     end
 
+    # @return [True | False] True if this is the Admin Set type
     def admin_set?
       machine_id == ADMIN_SET_MACHINE_ID
     end
 
+    # @return [True | False] True if this is the User Collection type
     def user_collection?
       machine_id == USER_COLLECTION_MACHINE_ID
+    end
+
+    # @return [True | False] True if there is at least one collection type that has nestable? true
+    def self.any_nestable?
+      where(nestable: true).any?
     end
 
     # Find or create the default collection type as defined by:

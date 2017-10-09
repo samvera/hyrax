@@ -11,14 +11,18 @@ Blacklight.onLoad(function () {
   });
 
   // Show add collection to collection modal window
-  $('#documents').find('.add-collection-to-collection').on('click', function(e) {
+  $('#documents').find('.add-to-collection').on('click', function(e) {
       e.preventDefault();
-      var isNestable = $(this).data('nestable') === true;
+      var notNestable = $(this).data('nestable') === false;
+      var hasAccess = $(this).data('hasaccess') === true;
+      var collectionId = $(this).parents('tr')[0].id.split('_')[1];
 
-      if (isNestable) {
-        $('#add-collection-to-collection-modal').modal('show');
+      if (notNestable) {
+        $('#add-to-collection-deny-modal').modal('show');
+      } else if (hasAccess) {
+        $('#add-to-collection-modal-' + collectionId).modal('show');
       } else {
-        $('#add-collection-to-collection-deny-modal').modal('show');
+        $('#add-to-collection-permission-deny-modal').modal('show');
       }
   });
 

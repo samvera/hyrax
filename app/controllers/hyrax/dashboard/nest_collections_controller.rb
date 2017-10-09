@@ -4,6 +4,7 @@ module Hyrax
       include Blacklight::Base
       class_attribute :form_class
       self.form_class = Hyrax::Forms::Dashboard::NestCollectionForm
+
       def new_within
         @form = build_within_form
       end
@@ -15,6 +16,25 @@ module Hyrax
           redirect_to dashboard_collection_path(@form.child), notice: notice
         else
           render 'new_within'
+        end
+      end
+
+      def process_nesting
+        notice = "No mapping took place"
+        unless params[:parent_id] == "none"
+          parent_coll = Collection.find params[:parent_id]
+          child_coll = Collection.find params[:child_id]
+
+          child_coll.member_of_collections << parent_coll
+          child_coll.save!
+
+          notice = "Collections were mapped!"
+        end
+
+        if params[:source] == "my"
+          redirect_to my_collections_path, notice: notice
+        else
+          redirect_to dashboard_collections_path, notice: notice
         end
       end
 

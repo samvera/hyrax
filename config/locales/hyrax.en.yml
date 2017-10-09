@@ -590,8 +590,7 @@ en:
       manage_proxies:           "Manage Proxies"
       my:
         action:
-          add_collection_to_collection: "Add collection to another collection"
-          add_to_collection:        "Add to Collection"
+          add_to_collection:        "Add to collection"
           admin_set_confirmation:  "Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation"
           collections_confirmation_html: "<span class='pluralized'>Deleting this collection</span> will permanently remove the collection from the repository.  Items in the collection will remain in the repository.  Are you sure you want to delete this collection?"
           delete_admin_set:        "Delete administrative set"
@@ -603,7 +602,8 @@ en:
           edit_collection:         "Edit collection"
           edit_work:               "Edit Work"
           highlight:               "Highlight Work on Profile"
-          nesting_not_allowed:     "This type of collection does not support nesting so the collection cannot be added to another collection."
+          nesting_not_allowed:     "Collections of this type do not support nesting."
+          nesting_permission_denied: "You do not have sufficient privileges to add this collection to another collection."
           select:                  "Select"
           select_all:              "Select Current Page"
           select_collection:       "Select a collection"

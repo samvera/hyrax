@@ -54,6 +54,7 @@
       <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
     <% else %>
       <%= render '/hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
+      <%= render 'modal_add_to_collection', id: id, source: "all" %>
     <% end %>
    </td>
 </tr>
