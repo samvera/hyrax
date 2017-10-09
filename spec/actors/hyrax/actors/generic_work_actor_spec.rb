@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   subject { Hyrax::CurationConcern.actor }
 
   describe '#create' do
-    let(:curation_concern) { create(:generic_work, user: user) }
+    let(:curation_concern) { create_for_repository(:work, user: user) }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
     let(:attributes) { {} }
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
@@ -99,7 +99,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
 
       context 'with in_work_ids' do
-        let(:parent) { create(:generic_work, user: user) }
+        let(:parent) { create_for_repository(:work, user: user) }
         let(:attributes) do
           attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
             in_works_ids: [parent.id]
@@ -202,7 +202,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   end
 
   describe '#update' do
-    let(:curation_concern) { create(:generic_work, user: user, admin_set_id: admin_set.id) }
+    let(:curation_concern) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
 
     context 'failure' do
       let(:attributes) { {} }
@@ -224,8 +224,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'with in_works_ids' do
-      let(:parent) { create(:generic_work, user: user) }
-      let(:old_parent) { create(:generic_work, user: user) }
+      let(:parent) { create_for_repository(:work, user: user) }
+      let(:old_parent) { create_for_repository(:work, user: user) }
       let(:attributes) do
         attributes_for(:generic_work).merge(
           in_works_ids: [parent.id]
@@ -316,7 +316,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     context 'with multiple file sets' do
       let(:file_set1) { create(:file_set) }
       let(:file_set2) { create(:file_set) }
-      let(:curation_concern) { create(:generic_work, user: user, ordered_members: [file_set1, file_set2], admin_set_id: admin_set.id) }
+      let(:curation_concern) { create_for_repository(:work, user: user, ordered_members: [file_set1, file_set2], admin_set_id: admin_set.id) }
       let(:attributes) do
         attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
       end

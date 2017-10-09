@@ -12,9 +12,9 @@ RSpec.describe "The admin dashboard", :clean_repo do
   end
 
   before do
-    create(:work_with_two_children, title: ["Work A"], admin_set_id: admin_set_1.id, edit_users: [user])
-    create(:work_with_one_child, title: ["Work B"], admin_set_id: admin_set_2.id, edit_users: [user])
-    create(:work_with_two_children, title: ["Work C"], admin_set_id: admin_set_2.id, edit_users: [user])
+    create_for_repository(:work_with_two_children, title: ["Work A"], admin_set_id: admin_set_1.id, edit_users: [user])
+    create_for_repository(:work_with_one_child, title: ["Work B"], admin_set_id: admin_set_2.id, edit_users: [user])
+    create_for_repository(:work_with_two_children, title: ["Work C"], admin_set_id: admin_set_2.id, edit_users: [user])
   end
 
   scenario do

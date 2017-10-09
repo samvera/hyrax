@@ -14,7 +14,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe '#create' do
       let(:parent) do
-        create(:generic_work, :public, edit_users: [user.user_key])
+        create_for_repository(:work, :public, edit_users: [user.user_key])
       end
       let(:file) { fixture_file_upload('image.png', 'image/png') }
       let(:file_path) { fixture_path + '/small_file.txt' }
@@ -336,9 +336,9 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "with a referer" do
         let(:work) do
-          create(:generic_work, :public,
-                 title: ['test title'],
-                 user: user)
+          create_for_repository(:work, :public,
+                                title: ['test title'],
+                                user: user)
         end
 
         before do
@@ -408,7 +408,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe '#new' do
       let(:parent) do
-        create(:generic_work, :public)
+        create_for_repository(:work, :public)
       end
 
       it 'does not let the user submit' do
@@ -420,7 +420,7 @@ RSpec.describe Hyrax::FileSetsController do
 
   context 'finds parents' do
     let(:parent) do
-      create(:generic_work, :public, edit_users: [user.user_key])
+      create_for_repository(:work, :public, edit_users: [user.user_key])
     end
 
     let(:file_set) do

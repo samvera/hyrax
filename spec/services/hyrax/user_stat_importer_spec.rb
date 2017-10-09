@@ -54,15 +54,15 @@ RSpec.describe Hyrax::UserStatImporter do
 
   # work
   let!(:bilbo_work_1) do
-    create(:work, id: 'xyzbilbowork1', user: bilbo)
+    create_for_repository(:work, id: 'xyzbilbowork1', user: bilbo)
   end
 
   let!(:bilbo_work_2) do
-    create(:work, id: 'xyzbilbowork2', user: bilbo)
+    create_for_repository(:work, id: 'xyzbilbowork2', user: bilbo)
   end
 
   let!(:frodo_work_1) do
-    create(:work, id: 'xyzfrodowork1', user: frodo)
+    create_for_repository(:work, id: 'xyzfrodowork1', user: frodo)
   end
 
   let(:dates) do

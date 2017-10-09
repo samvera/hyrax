@@ -20,8 +20,8 @@ RSpec.describe GenericWorkIndexer do
   end
 
   context "with child works" do
-    let!(:work) { create(:work_with_one_file, user: user) }
-    let!(:child_work) { create(:generic_work, user: user) }
+    let!(:work) { create_for_repository(:work_with_one_file, user: user) }
+    let!(:child_work) { create_for_repository(:work, user: user) }
     let(:file) { work.file_sets.first }
 
     before do
@@ -50,7 +50,7 @@ RSpec.describe GenericWorkIndexer do
   end
 
   context "with an AdminSet" do
-    let(:work) { create(:generic_work, admin_set: admin_set) }
+    let(:work) { create_for_repository(:work, admin_set: admin_set) }
     let(:admin_set) { create(:admin_set, title: ['Title One']) }
 
     it "indexes the correct fields" do

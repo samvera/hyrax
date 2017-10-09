@@ -1,5 +1,5 @@
 RSpec.feature "The homepage" do
-  let(:work1) { create(:work, :public, title: ['Work 1']) }
+  let(:work1) { create_for_repository(:work, :public, title: ['Work 1']) }
 
   before do
     create(:featured_work, work_id: work1.id)

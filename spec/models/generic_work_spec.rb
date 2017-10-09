@@ -25,7 +25,7 @@ RSpec.describe GenericWork do
 
   describe "to_sipity_entity" do
     let(:state) { create(:workflow_state) }
-    let(:work) { create(:work) }
+    let(:work) { create_for_repository(:work) }
 
     before do
       Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,

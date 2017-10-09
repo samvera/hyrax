@@ -9,10 +9,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
                                user: user)
   end
 
-  let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
-  let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
-  let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:unowned_asset)  { create(:work, user: other) }
+  let(:asset1)         { create_for_repository(:work, title: ["First of the Assets"], user: user) }
+  let(:asset2)         { create_for_repository(:work, title: ["Second of the Assets"], user: user) }
+  let(:asset3)         { create_for_repository(:work, title: ["Third of the Assets"], user: user) }
+  let(:unowned_asset)  { create_for_repository(:work, user: other) }
 
   let(:collection_attrs) do
     { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
@@ -132,9 +132,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     end
 
     context 'when moving members between collections' do
-      let(:asset1) { create(:generic_work, user: user) }
-      let(:asset2) { create(:generic_work, user: user) }
-      let(:asset3) { create(:generic_work, user: user) }
+      let(:asset1) { create_for_repository(:work, user: user) }
+      let(:asset2) { create_for_repository(:work, user: user) }
+      let(:asset3) { create_for_repository(:work, user: user) }
       let(:collection2) do
         Collection.create(title: ['Some Collection']) do |col|
           col.apply_depositor_metadata(user.user_key)

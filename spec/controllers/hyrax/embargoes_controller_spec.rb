@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::EmbargoesController do
   let(:user) { create(:user) }
-  let(:a_work) { create(:generic_work, user: user) }
+  let(:a_work) { create_for_repository(:work, user: user) }
   let(:not_my_work) { create(:generic_work) }
 
   before { sign_in user }
