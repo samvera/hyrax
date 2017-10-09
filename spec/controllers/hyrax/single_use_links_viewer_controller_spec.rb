@@ -2,7 +2,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
   routes { Hyrax::Engine.routes }
   let(:user) { build(:user) }
   let(:file) do
-    create(:file_set, label: 'world.png', user: user)
+    create_for_repository(:file_set, label: 'world.png', user: user)
   end
 
   describe "retrieval links" do

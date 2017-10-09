@@ -41,15 +41,15 @@ RSpec.describe Hyrax::UserStatImporter do
   let!(:gollum) { create(:user, email: 'gollum@example.com') }
 
   let!(:bilbo_file_1) do
-    create(:file_set, id: 'xyzbilbo1', user: bilbo)
+    create_for_repository(:file_set, id: 'xyzbilbo1', user: bilbo)
   end
 
   let!(:bilbo_file_2) do
-    create(:file_set, id: 'xyzbilbo2', user: bilbo)
+    create_for_repository(:file_set, id: 'xyzbilbo2', user: bilbo)
   end
 
   let!(:frodo_file_1) do
-    create(:file_set, id: 'xyzfrodo1', user: frodo)
+    create_for_repository(:file_set, id: 'xyzfrodo1', user: frodo)
   end
 
   # work

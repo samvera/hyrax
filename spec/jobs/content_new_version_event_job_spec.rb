@@ -1,6 +1,6 @@
 RSpec.describe ContentNewVersionEventJob do
   let(:user) { create(:user) }
-  let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
+  let(:file_set) { create_for_repository(:file_set, title: ['Hamlet'], user: user) }
   let(:generic_work) { create_for_repository(:work, title: ['BethsMac'], user: user) }
   let(:mock_time) { Time.zone.at(1) }
   let(:event) { { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has added a new version of <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' } }

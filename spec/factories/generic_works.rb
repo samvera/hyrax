@@ -41,18 +41,18 @@ FactoryBot.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
+        work.ordered_members << create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
       end
     end
 
     factory :work_with_files do
-      before(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
+      before(:create) { |work, evaluator| 2.times { work.ordered_members << create_for_repository(:file_set, user: evaluator.user) } }
     end
 
     factory :work_with_ordered_files do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:file_set, user: evaluator.user)
-        work.ordered_member_proxies.insert_target_at(0, create(:file_set, user: evaluator.user))
+        work.ordered_members << create_for_repository(:file_set, user: evaluator.user)
+        work.ordered_member_proxies.insert_target_at(0, create_for_repository(:file_set, user: evaluator.user))
       end
     end
 
@@ -71,7 +71,7 @@ FactoryBot.define do
 
     factory :work_with_representative_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
+        work.ordered_members << create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
         work.representative_id = work.members[0].id
       end
     end
@@ -94,7 +94,7 @@ FactoryBot.define do
       end
       factory :embargoed_work_with_files do
         after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.ordered_members << create_for_repository(:file_set, user: evaluator.user) } }
       end
     end
 
@@ -109,7 +109,7 @@ FactoryBot.define do
       end
       factory :leased_work_with_files do
         after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.ordered_members << create_for_repository(:file_set, user: evaluator.user) } }
       end
     end
   end

@@ -78,7 +78,7 @@ RSpec.describe Hyrax::EmbargoesController do
 
   describe '#update' do
     context 'when I have permission to edit the object' do
-      let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
+      let(:file_set) { create_for_repository(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       let(:release_date) { Time.zone.today + 2 }
 
       before do
