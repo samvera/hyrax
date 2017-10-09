@@ -32,6 +32,7 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
 
   def configure_valkyrie
     copy_file 'config/valkyrie.yml'
+    copy_file 'config/initializers/valkyrie.rb'
   end
 
   def configure_endnote
