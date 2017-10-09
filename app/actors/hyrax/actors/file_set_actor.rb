@@ -21,7 +21,12 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save to get an id
+
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        # Need to save to get an id
+        saved_file = persister.save(resource: file_set)
+        return unless saved_file
+
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
           # reach into the FileActor and run the ingest with the file instance in
@@ -30,8 +35,8 @@ module Hyrax
           file_actor.ingest_file(wrapper!(file: file, relation: relation))
           # Copy visibility and permissions from parent (work) to
           # FileSets even if they come in from BrowseEverything
-          VisibilityCopyJob.perform_later(file_set.parent)
-          InheritPermissionsJob.perform_later(file_set.parent)
+          VisibilityCopyJob.perform_later(saved_file.parent)
+          InheritPermissionsJob.perform_later(saved_file.parent)
         else
           IngestJob.perform_later(wrapper!(file: file, relation: relation))
         end

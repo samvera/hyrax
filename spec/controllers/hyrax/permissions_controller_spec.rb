@@ -21,7 +21,7 @@ RSpec.describe Hyrax::PermissionsController do
   end
 
   describe '#copy' do
-    let(:work) { create(:generic_work, user: user) }
+    let(:work) { create_for_repository(:work, user: user) }
 
     it 'adds a worker to the queue' do
       expect(VisibilityCopyJob).to receive(:perform_later).with(work)
@@ -32,7 +32,7 @@ RSpec.describe Hyrax::PermissionsController do
   end
 
   describe '#confirm_access' do
-    let(:work) { create(:work_with_one_file, user: user) }
+    let(:work) { create_for_repository(:work_with_one_file, user: user) }
 
     it 'draws the page' do
       get :confirm_access, params: { id: work }
@@ -41,7 +41,7 @@ RSpec.describe Hyrax::PermissionsController do
   end
 
   describe '#copy_access' do
-    let(:work) { create(:work_with_one_file, user: user) }
+    let(:work) { create_for_repository(:work_with_one_file, user: user) }
 
     it 'adds a worker to the queue' do
       expect(VisibilityCopyJob).to receive(:perform_later).with(work)

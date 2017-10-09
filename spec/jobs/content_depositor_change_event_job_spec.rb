@@ -1,7 +1,7 @@
 RSpec.describe ContentDepositorChangeEventJob do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
-  let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
+  let(:generic_work) { create_for_repository(:work, title: ['BethsMac'], user: user) }
   let(:mock_time) { Time.zone.at(1) }
   let(:event) do
     { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> " \

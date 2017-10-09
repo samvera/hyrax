@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Actors::CleanupTrophiesActor do
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:attributes) { {} }
 
   subject(:middleware) do

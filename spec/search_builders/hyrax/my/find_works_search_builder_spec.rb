@@ -10,7 +10,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
            current_user: user,
            params: params)
   end
-  let!(:work) { create(:generic_work, :public, title: ['foo'], user: user) }
+  let!(:work) { create_for_repository(:work, :public, title: ['foo'], user: user) }
 
   let(:builder) { described_class.new(context) }
   let(:solr_params) { Blacklight::Solr::Request.new }
