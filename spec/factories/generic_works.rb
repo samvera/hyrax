@@ -58,14 +58,14 @@ FactoryBot.define do
 
     factory :work_with_one_child do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:work, user: evaluator.user, title: ['A Contained Work'])
+        work.ordered_members << create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'])
       end
     end
 
     factory :work_with_two_children do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
-        work.ordered_members << create(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+        work.ordered_members << create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
+        work.ordered_members << create_for_repository(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
       end
     end
 
@@ -78,8 +78,8 @@ FactoryBot.define do
 
     factory :work_with_file_and_work do
       before(:create) do |work, evaluator|
-        work.ordered_members << create(:file_set, user: evaluator.user)
-        work.ordered_members << create(:work, user: evaluator.user)
+        work.ordered_members << create_for_repository(:file_set, user: evaluator.user)
+        work.ordered_members << create_for_repository(:work, user: evaluator.user)
       end
     end
 
@@ -116,6 +116,11 @@ FactoryBot.define do
 
   # Doesn't set up any edit_users
   factory :work_without_access, class: GenericWork do
+    to_create do |instance|
+      persister = Valkyrie.config.metadata_adapter.persister
+      persister.save(resource: instance)
+    end
+
     title ['Test title']
     depositor { create(:user).user_key }
   end

@@ -98,7 +98,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with work" do
-      let(:work) { create(:work, title: ['unimaginitive title']) }
+      let(:work) { create_for_repository(:work, title: ['unimaginitive title']) }
 
       before do
         work.member_of_collections << collection

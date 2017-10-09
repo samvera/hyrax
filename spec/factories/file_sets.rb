@@ -34,7 +34,7 @@ FactoryBot.define do
         if evaluator.content
           Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
         end
-        create(:work, user: evaluator.user).members << file
+        create_for_repository(:work, user: evaluator.user).members << file
       end
     end
   end
