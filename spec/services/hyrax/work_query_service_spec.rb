@@ -45,7 +45,7 @@ module Hyrax
       context 'when the work is not deleted' do
         # NOTE: This is testing the full behavior of finding
         let!(:work_query_service) { described_class.new(id: work.id) }
-        let!(:work) { GenericWork.create(title: ["Test work"]) }
+        let!(:work) { create(:generic_work, title: ["Test work"]) }
 
         it 'will retrieve the SOLR document and use the #to_s method of that' do
           expect(subject).to eq(work.title.first)

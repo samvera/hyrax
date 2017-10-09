@@ -53,9 +53,9 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     context "when the user has trophies" do
-      let(:work1) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
-      let(:work2) { GenericWork.create(title: ["w2"]) { |w| w.apply_depositor_metadata(user) } }
-      let(:work3) { GenericWork.create(title: ["w3"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work1) { create(:work, title: ["w1"], user: user) }
+      let(:work2) { create(:work, title: ["w2"], user: user) }
+      let(:work3) { create(:work, title: ["w3"], user: user) }
       let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
       let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
       let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
@@ -138,7 +138,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     context "when removing a trophy" do
-      let(:work) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
+      let(:work) { create(:generic_work, title: ["w1"], user: user) }
 
       before do
         user.trophies.create!(work_id: work.id)

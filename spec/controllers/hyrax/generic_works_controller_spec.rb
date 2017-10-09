@@ -289,9 +289,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
         context "when a work id is passed" do
           let(:work) do
-            GenericWork.create!(title: ['test title']) do |w|
-              w.apply_depositor_metadata(user)
-            end
+            create(:work, user: user, title: ['test title'])
           end
 
           it "records the work" do
