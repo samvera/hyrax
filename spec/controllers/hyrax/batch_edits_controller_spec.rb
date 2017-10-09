@@ -27,16 +27,13 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "update" do
+    let(:user) { build(:user) }
     let!(:one) do
-      GenericWork.create(creator: ["Fred"], title: ["abc"], language: ['en']) do |gw|
-        gw.apply_depositor_metadata('mjg36')
-      end
+      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:two) do
-      GenericWork.create(creator: ["Fred"], title: ["abc"], language: ['en']) do |gw|
-        gw.apply_depositor_metadata('mjg36')
-      end
+      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
     let(:mycontroller) { "hyrax/my/works" }
 

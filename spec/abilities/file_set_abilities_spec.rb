@@ -10,7 +10,7 @@ RSpec.describe 'User' do
     let(:user) { create(:user) }
     let(:current_user) { user }
     let(:generic_work) { create_for_repository(:work, visibility: visibility, user: creating_user) }
-    let(:file_set) { create(:file_set, visibility: visibility, user: creating_user) }
+    let(:file_set) { create_for_repository(:file_set, visibility: visibility, user: creating_user) }
 
     describe 'without embargo' do
       describe 'creator of object' do

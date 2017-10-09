@@ -1,11 +1,8 @@
-
 RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: :view do
   let(:user) { create(:user, groups: 'admin') }
 
   let(:work) do
-    GenericWork.create(creator: ["ggm"], title: ['One Hundred Years of Solitude']) do |gw|
-      gw.apply_depositor_metadata(user)
-    end
+    create_for_repository(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
   end
 
   before do
