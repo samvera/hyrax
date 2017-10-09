@@ -83,12 +83,12 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       end
 
       it "returns true if user has any valid group" do
-        allow(user).to receive(:user_groups).and_return(['managers'])
+        allow(user).to receive_messages(groups: ['public', 'registered', 'managers'])
         expect(subject).to be true
       end
 
       it "returns true if user has multiple valid groups" do
-        allow(user).to receive(:user_groups).and_return(['more managers', 'managers', 'other_group'])
+        allow(user).to receive_messages(groups: ['more managers', 'managers', 'other_group'])
         expect(subject).to be true
       end
     end
@@ -107,12 +107,12 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       end
 
       it "returns true if user has any valid group" do
-        allow(user).to receive(:user_groups).and_return(['depositors'])
+        allow(user).to receive_messages(groups: ['depositors'])
         expect(subject).to be true
       end
 
       it "returns true if user has multiple valid groups" do
-        allow(user).to receive(:user_groups).and_return(['more depositors', 'depositors', 'other_group'])
+        allow(user).to receive_messages(groups: ['more depositors', 'depositors', 'other_group'])
         expect(subject).to be true
       end
     end
