@@ -1,6 +1,6 @@
 RSpec.describe InheritPermissionsJob do
   let(:user) { create(:user) }
-  let(:work) { create(:work_with_one_file, user: user) }
+  let(:work) { create_for_repository(:work_with_one_file, user: user) }
 
   before do
     work.permissions.build(name: name, type: type, access: access)

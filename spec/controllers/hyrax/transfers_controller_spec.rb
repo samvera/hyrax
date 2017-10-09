@@ -27,7 +27,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     describe "#new" do
-      let(:work) { create(:work, user: user) }
+      let(:work) { create_for_repository(:work, user: user) }
 
       context 'when user is the depositor' do
         it "is successful" do
@@ -43,7 +43,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     describe "#create" do
-      let(:work) { create(:work, user: user) }
+      let(:work) { create_for_repository(:work, user: user) }
 
       it "is successful" do
         expect do

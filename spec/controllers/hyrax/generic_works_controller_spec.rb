@@ -10,7 +10,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
   describe 'integration test for suppressed documents' do
     let(:work) do
-      create(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
+      create_for_repository(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
     end
 
     before do
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       context "with a parent work" do
-        let(:parent) { create(:generic_work, title: ['Parent Work'], user: user, ordered_members: [work]) }
+        let(:parent) { create_for_repository(:work, title: ['Parent Work'], user: user, ordered_members: [work]) }
 
         before do
           create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
@@ -230,7 +230,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context "with files" do
       let(:actor) { double('An actor') }
-      let(:work) { create(:work) }
+      let(:work) { create_for_repository(:work) }
 
       before do
         allow(controller).to receive(:actor).and_return(actor)

@@ -16,7 +16,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
     end
 
     context "with no additional editors" do
-      let(:work) { create(:work_without_access, depositor: depositor.user_key, edit_users: [depositor.user_key]) }
+      let(:work) { create_for_repository(:work_without_access, depositor: depositor.user_key, edit_users: [depositor.user_key]) }
 
       it "removes edit access" do
         expect { subject }.to change { work.edit_users }.from([depositor.user_key]).to([])
@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
 
     context "with an additional editor" do
       let(:editor) { create(:user) }
-      let(:work) { create(:work_without_access, depositor: depositor.user_key, edit_users: [depositor.user_key, editor.user_key]) }
+      let(:work) { create_for_repository(:work_without_access, depositor: depositor.user_key, edit_users: [depositor.user_key, editor.user_key]) }
 
       it "removes edit access" do
         expect { subject }.to change { work.edit_users }.from([depositor.user_key, editor.user_key]).to([editor.user_key])
@@ -35,7 +35,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
     end
 
     context "with attached FileSets" do
-      let(:work) { create(:work_with_one_file, user: depositor) }
+      let(:work) { create_for_repository(:work_with_one_file, user: depositor) }
       let(:file_set) { work.members.first }
 
       it "removes edit access" do

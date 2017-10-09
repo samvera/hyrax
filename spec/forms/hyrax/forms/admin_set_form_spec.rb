@@ -73,7 +73,7 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
     end
 
     context 'with a work/file attached' do
-      let(:work) { create(:work_with_one_file) }
+      let(:work) { create_for_repository(:work_with_one_file) }
       let(:title) { work.file_sets.first.title.first }
       let(:file_id) { work.file_sets.first.id }
       let(:model) do

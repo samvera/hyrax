@@ -8,7 +8,7 @@ RSpec.describe Hyrax::TransfersPresenter do
 
     let(:another_user) { create(:user) }
     let!(:incoming_work) do
-      create(:work, user: another_user).tap do |w|
+      create_for_repository(:work, user: another_user).tap do |w|
         w.request_transfer_to(user)
       end
     end
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::TransfersPresenter do
 
     let(:another_user) { create(:user) }
     let!(:outgoing_work) do
-      create(:work, user: user).tap do |w|
+      create_for_repository(:work, user: user).tap do |w|
         w.request_transfer_to(another_user)
       end
     end

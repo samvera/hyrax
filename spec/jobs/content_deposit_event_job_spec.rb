@@ -1,7 +1,7 @@
 RSpec.describe ContentDepositEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
-  let(:curation_concern) { create(:work, title: ['MacBeth'], user: user) }
+  let(:curation_concern) { create_for_repository(:work, title: ['MacBeth'], user: user) }
   let(:event) do
     {
       action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has deposited <a href=\"/concern/generic_works/#{curation_concern.id}\">MacBeth</a>",
