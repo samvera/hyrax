@@ -244,9 +244,9 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "with a referer" do
         let(:work) do
-          create(:generic_work, :public,
-                 title: ['test title'],
-                 user: user)
+          create_for_repository(:work, :public,
+                                title: ['test title'],
+                                user: user)
         end
 
         before do
