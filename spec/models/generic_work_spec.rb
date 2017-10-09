@@ -74,17 +74,6 @@ RSpec.describe GenericWork do
     end
   end
 
-  describe "created for someone (proxy)" do
-    let(:work) { described_class.new(title: ['demoname']) { |gw| gw.apply_depositor_metadata("user") } }
-    let(:transfer_to) { create(:user) }
-
-    it "transfers the request" do
-      work.on_behalf_of = transfer_to.user_key
-      expect(ContentDepositorChangeEventJob).to receive(:perform_later).once
-      work.save!
-    end
-  end
-
   describe "delegations" do
     let(:work) { described_class.new { |gw| gw.apply_depositor_metadata("user") } }
     let(:proxy_depositor) { create(:user) }

@@ -17,6 +17,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
         Hyrax::Actors::AttachMembersActor,
         Hyrax::Actors::ApplyOrderActor,
         Hyrax::Actors::InterpretVisibilityActor,
+        Hyrax::Actors::TransferRequestActor,
         Hyrax::Actors::DefaultAdminSetActor,
         Hyrax::Actors::ApplyPermissionTemplateActor,
         Hyrax::Actors::CleanupFileSetsActor,
