@@ -6,11 +6,11 @@ RSpec.describe Qa::Authorities::FindWorks do
   let(:q) { "foo" }
   let(:params) { ActionController::Parameters.new(q: q, id: work1.id, user: user1.email, controller: "qa/terms", action: "search", vocab: "find_works") }
   let(:service) { described_class.new }
-  let!(:work1) { create(:generic_work, :public, title: ['foo'], user: user1) }
-  let!(:work2) { create(:generic_work, :public, title: ['foo foo'], user: user1) }
-  let!(:work3) { create(:generic_work, :public, title: ['bar'], user: user1) }
-  let!(:work4) { create(:generic_work, :public, title: ['another foo'], user: user1) }
-  let!(:work5) { create(:generic_work, :public, title: ['foo foo foo'], user: user2) }
+  let!(:work1) { create_for_repository(:work, :public, title: ['foo'], user: user1) }
+  let!(:work2) { create_for_repository(:work, :public, title: ['foo foo'], user: user1) }
+  let!(:work3) { create_for_repository(:work, :public, title: ['bar'], user: user1) }
+  let!(:work4) { create_for_repository(:work, :public, title: ['another foo'], user: user1) }
+  let!(:work5) { create_for_repository(:work, :public, title: ['foo foo foo'], user: user2) }
 
   before do
     allow(controller).to receive(:params).and_return(params)

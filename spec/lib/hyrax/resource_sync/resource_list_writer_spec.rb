@@ -3,7 +3,7 @@ RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :clean_repo do
   let!(:private_collection) { create(:private_collection) }
   let!(:public_collection) { create(:public_collection) }
   let!(:public_work) { create(:public_generic_work) }
-  let!(:private_work) { create(:work) }
+  let!(:private_work) { create_for_repository(:work) }
   let!(:file_set) { create(:file_set, :public) }
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
   let(:xml) { Nokogiri::XML.parse(subject) }

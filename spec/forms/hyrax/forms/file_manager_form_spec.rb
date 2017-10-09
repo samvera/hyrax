@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Forms::FileManagerForm do
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:ability) { instance_double Ability }
   let(:form) { described_class.new(work, ability) }
 

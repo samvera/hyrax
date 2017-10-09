@@ -51,7 +51,7 @@ RSpec.describe Hyrax::StatsController do
   end
 
   describe 'work' do
-    let(:work) { create(:generic_work, user: user) }
+    let(:work) { create_for_repository(:work, user: user) }
 
     before do
       sign_in user

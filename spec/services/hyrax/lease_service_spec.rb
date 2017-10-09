@@ -16,7 +16,7 @@ RSpec.describe Hyrax::LeaseService do
     end
   end
 
-  let!(:work_with_lease_in_effect) { create(:generic_work, lease_expiration_date: future_date.to_s) }
+  let!(:work_with_lease_in_effect) { create_for_repository(:work, lease_expiration_date: future_date.to_s) }
   let!(:work_without_lease) { create(:generic_work) }
 
   describe '#assets_with_expired_leases' do
