@@ -33,10 +33,13 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     end
 
     context "when user can deposit into an admin set" do
+      let(:permission_template) { create(:permission_template, source_type: 'admin_set') }
+
       before do
         # Grant the user access to deposit into an admin set.
         create(:permission_template_access,
                :deposit,
+               permission_template: permission_template,
                agent_type: 'user',
                agent_id: user.user_key)
       end

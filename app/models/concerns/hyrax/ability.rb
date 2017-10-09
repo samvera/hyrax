@@ -3,6 +3,11 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
+      include Hyrax::Ability::AdminSetAbility
+      include Hyrax::Ability::CollectionAbility
+      include Hyrax::Ability::CollectionTypeAbility
+      include Hyrax::Ability::PermissionTemplateAbility
+
       class_attribute :admin_group_name, :registered_group_name
       self.admin_group_name = 'admin'
       self.registered_group_name = 'registered'
@@ -19,6 +24,9 @@ module Hyrax
                              :uploaded_file_abilities,
                              :feature_abilities,
                              :admin_set_abilities,
+                             :collection_abilities,
+                             :collection_type_abilities,
+                             :permission_template_abilities,
                              :trophy_abilities]
     end
 
@@ -46,42 +54,13 @@ module Hyrax
     def can_create_any_work?
       Hyrax.config.curation_concerns.any? do |curation_concern_type|
         can?(:create, curation_concern_type)
-      end && source_ids_for_deposit.any?
+      end && Hyrax::Collections::PermissionsService.admin_set_ids_for_user(user: current_user, access: ['deposit', 'manage'], ability: self).any?
     end
 
     # Override this method in your ability model if you use a different group
     # or other logic to designate an administrator.
     def admin?
       user_groups.include? admin_group_name
-    end
-
-    # @return [Array<String>] a list of admin set ids for admin sets the user
-    #   has deposit or manage permissions to.
-    def source_ids_for_deposit
-      source_ids_for_roles(['deposit', 'manage'])
-    end
-
-    # @return [Array<String>] a list of admin set ids for admin sets the user
-    #   has manage permissions to.
-    def source_ids_for_management
-      source_ids_for_roles(['manage'])
-    end
-
-    # @param [Array<String>] roles the roles to be used when searching for admin
-    #   sets for the user
-    # @return [Array<String>] a list of admin set ids for admin sets the user
-    #   that match the roles
-    def source_ids_for_roles(roles)
-      PermissionTemplateAccess.joins(:permission_template)
-                              .where(agent_type: 'user',
-                                     agent_id: current_user.user_key,
-                                     access: roles)
-                              .or(
-                                PermissionTemplateAccess.joins(:permission_template)
-                                                        .where(agent_type: 'group',
-                                                               agent_id: user_groups,
-                                                               access: roles)
-                              ).pluck('DISTINCT source_id')
     end
 
     private
@@ -162,23 +141,6 @@ module Hyrax
         can :manage, Hyrax::Feature if admin?
       end
 
-      def admin_set_abilities
-        can :manage, [AdminSet, Hyrax::PermissionTemplate, Hyrax::PermissionTemplateAccess] if admin?
-        can :manage_any, AdminSet if admin? || source_ids_for_management.present?
-
-        can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplate do |template|
-          test_edit(template.source_id)
-        end
-
-        can [:create, :edit, :update, :destroy], Hyrax::PermissionTemplateAccess do |access|
-          test_edit(access.permission_template.source_id)
-        end
-
-        can :review, :submissions do
-          can_review_submissions?
-        end
-      end
-
       def operation_abilities
         can :read, Hyrax::Operation, user_id: current_user.id
       end
@@ -217,6 +179,7 @@ module Hyrax
         can :manage, :collection_types
       end
 
+      # TODO: elr - How is this used?  How does it fit with collection participants?
       def add_to_collection
         return unless registered_user?
         alias_action :files, to: :read # members will be filtered separately

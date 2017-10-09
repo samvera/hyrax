@@ -30,10 +30,13 @@ module Hyrax
     # @return [Array<String>] a list of filters to apply to the solr query
     def gated_discovery_filters
       return super if @access != :deposit
-      ["{!terms f=id}#{source_ids_for_deposit.join(',')}"]
+      ["{!terms f=id}#{admin_set_ids_for_deposit.join(',')}"]
     end
 
-    delegate :source_ids_for_deposit, to: :current_ability
-    private :source_ids_for_deposit
+    private
+
+      def admin_set_ids_for_deposit
+        Hyrax::Collections::PermissionsService.admin_set_ids_for_deposit(ability: current_ability)
+      end
   end
 end

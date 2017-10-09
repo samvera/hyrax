@@ -51,8 +51,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   describe "#gated_discovery_filters" do
     subject { builder.gated_discovery_filters }
 
-    let(:admin_set) { create(:admin_set) }
-    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
+    let(:collection) { create(:collection) }
+    let(:permission_template) { create(:permission_template, source_id: collection.id, source_type: 'collection') }
 
     context "user has deposit access" do
       before do
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
                access: 'deposit')
       end
 
-      it { is_expected.to include ["{!terms f=id}#{admin_set.id}"] }
+      it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "group has deposit access" do
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
                access: 'deposit')
       end
 
-      it { is_expected.to include ["{!terms f=id}#{admin_set.id}"] }
+      it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "does not include public group for read access" do
