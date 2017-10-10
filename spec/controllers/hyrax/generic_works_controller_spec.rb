@@ -63,7 +63,7 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       context "with a parent work" do
-        let(:parent) { create_for_repository(:work, title: ['Parent Work'], user: user, ordered_members: [work]) }
+        let(:parent) { create_for_repository(:work, title: ['Parent Work'], user: user, member_ids: [work]) }
 
         before do
           create(:sipity_entity, proxy_for_global_id: parent.to_global_id.to_s)
