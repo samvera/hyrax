@@ -27,7 +27,11 @@ module Hyrax
       # TODO: do we need this line?
       # self.indexer = WorkIndexer
 
+      # The collections that contain this object (no order)
       attribute :member_of_collection_ids, Valkyrie::Types::Set
+
+      # The FileSets and child works this work contains (in order)
+      attribute :member_ids, Valkyrie::Types::Array
     end
 
     # TODO: Move this into ActiveFedora

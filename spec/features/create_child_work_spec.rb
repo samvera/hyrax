@@ -32,6 +32,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
   end
 
   context "when it's being updated" do
+    let(:persister) { Valkyrie.config.metadata_adapter.persister }
     let(:curation_concern) { create_for_repository(:work, user: user) }
     let(:new_parent) { create_for_repository(:work, user: user) }
     let!(:cc_sipity_entity) do
@@ -42,26 +43,33 @@ RSpec.feature 'Creating a new child Work', :workflow do
     end
 
     before do
-      parent.ordered_members << curation_concern
-      parent.save!
+      parent.member_ids << curation_concern.id
+      persister.save(resource: parent)
     end
+
     it 'can be updated' do
       visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
       click_on "Save"
+      reloaded = Hyrax::Queries.find_by(id: parent.id)
 
-      expect(parent.reload.ordered_members.to_a.length).to eq 1
+      expect(reloaded.member_ids.length).to eq 1
     end
+
     it "doesn't lose other memberships" do
-      new_parent.ordered_members << curation_concern
-      new_parent.save!
+      new_parent.member_ids << curation_concern.id
+      persister.save(resource: new_parent)
 
       visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
       click_on "Save"
 
-      expect(parent.reload.ordered_members.to_a.length).to eq 1
-      expect(new_parent.reload.ordered_members.to_a.length).to eq 1
+      reloaded = Hyrax::Queries.find_by(id: parent.id)
+      expect(reloaded.member_ids.length).to eq 1
 
-      expect(curation_concern.reload.in_works_ids.length).to eq 2
+      new_parent_reloaded = Hyrax::Queries.find_by(id: new_parent.id)
+      expect(new_parent_reloaded.member_ids.length).to eq 1
+
+      cc_reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+      expect(cc_reloaded.in_works_ids.length).to eq 2
     end
 
     context "with a parent that doesn't belong to this user" do
@@ -74,7 +82,8 @@ RSpec.feature 'Creating a new child Work', :workflow do
         first("input#parent_id", visible: false).set new_parent.id
         click_on "Save"
 
-        expect(new_parent.reload.ordered_members.to_a.length).to eq 0
+        new_parent_reloaded = Hyrax::Queries.find_by(id: new_parent.id)
+        expect(new_parent_reloaded.member_ids.length).to eq 0
         expect(page).to have_content "Works can only be related to each other if user has ability to edit both."
       end
     end
