@@ -24,10 +24,8 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
   end
 
   def simple_form_initializers
-    copy_file 'config/initializers/simple_form.rb',
-              'config/initializers/simple_form.rb'
-    copy_file 'config/initializers/simple_form_bootstrap.rb',
-              'config/initializers/simple_form_bootstrap.rb'
+    copy_file 'config/initializers/simple_form.rb'
+    copy_file 'config/initializers/simple_form_bootstrap.rb'
   end
 
   def configure_endnote
@@ -36,30 +34,30 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
   end
 
   def configure_redis
-    copy_file 'config/redis.yml', 'config/redis.yml'
-    copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
+    copy_file 'config/redis.yml'
+    copy_file 'config/initializers/redis_config.rb'
   end
 
   def create_initializer_config_file
-    copy_file 'config/hyrax.rb', 'config/initializers/hyrax.rb'
+    copy_file 'config/initializers/hyrax.rb'
   end
 
   # Add mini-magick configuration
   def minimagick_config
-    copy_file 'config/mini_magick.rb', 'config/initializers/mini_magick.rb'
+    copy_file 'config/initializers/mini_magick.rb'
   end
 
   def tinymce_config
-    copy_file "config/tinymce.yml", "config/tinymce.yml"
+    copy_file 'config/tinymce.yml'
   end
 
   def inject_i18n
-    copy_file "config/locales/hyrax.en.yml", "config/locales/hyrax.en.yml"
-    copy_file "config/locales/hyrax.es.yml", "config/locales/hyrax.es.yml"
-    copy_file "config/locales/hyrax.zh.yml", "config/locales/hyrax.zh.yml"
-    copy_file "config/locales/hyrax.de.yml", "config/locales/hyrax.de.yml"
-    copy_file "config/locales/hyrax.fr.yml", "config/locales/hyrax.fr.yml"
-    copy_file "config/locales/hyrax.it.yml", "config/locales/hyrax.it.yml"
-    copy_file "config/locales/hyrax.pt-BR.yml", "config/locales/hyrax.pt-BR.yml"
+    copy_file 'config/locales/hyrax.en.yml'
+    copy_file 'config/locales/hyrax.es.yml'
+    copy_file 'config/locales/hyrax.zh.yml'
+    copy_file 'config/locales/hyrax.de.yml'
+    copy_file 'config/locales/hyrax.fr.yml'
+    copy_file 'config/locales/hyrax.it.yml'
+    copy_file 'config/locales/hyrax.pt-BR.yml'
   end
 end
