@@ -174,10 +174,11 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     context "when some of the members are not file sets" do
       let(:another_work) { create_for_repository(:work) }
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
       before do
-        obj.ordered_members << another_work
-        obj.save!
+        obj.member_ids << another_work.id
+        persister.save(resource: obj)
       end
 
       it "filters out members that are not file sets" do

@@ -43,16 +43,13 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          member = find_resource(id)
-          return unless env.current_ability.can?(:edit, member)
-          env.curation_concern.ordered_members << member
+          return unless env.current_ability.can?(:edit, id)
+          env.curation_concern.member_ids << id
         end
 
         # Remove the object from the members set and the ordered members list
         def remove(curation_concern, id)
-          member = find_resource(id)
-          curation_concern.ordered_members.delete(member)
-          curation_concern.members.delete(member)
+          curation_concern.member_ids.delete(id)
         end
 
         # Determines if a hash contains a truthy _destroy key.
@@ -61,10 +58,6 @@ module Hyrax
           ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
         end
         # rubocop:enable Style/PredicateName
-
-        def find_resource(id)
-          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
-        end
 
         def query_service
           Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
