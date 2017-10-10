@@ -29,8 +29,7 @@ module Hyrax
       end
 
       def models_to_solr_clause
-        # to_class_uri is deprecated in AF 11
-        [ActiveFedora::Base.respond_to?(:to_rdf_representation) ? models.map(&:to_rdf_representation) : models.map(&:to_class_uri)].join(',')
+        models.map { |m| m.new.internal_resource }.join(',')
       end
 
       def generic_type_field
