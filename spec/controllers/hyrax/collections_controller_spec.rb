@@ -4,9 +4,10 @@ RSpec.describe Hyrax::CollectionsController do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create(:public_collection, title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
-                               user: user)
+    create_for_repository(:public_collection,
+                          title: ["My collection"],
+                          description: ["My incredibly detailed description of the collection"],
+                          user: user)
   end
 
   let(:asset1)         { create_for_repository(:work, title: ["First of the Assets"], user: user) }
@@ -20,11 +21,13 @@ RSpec.describe Hyrax::CollectionsController do
 
   describe "#show" do # public landing page
     context "when signed in" do
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
+
       before do
         sign_in user
         [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collections = [collection]
-          asset.save
+          asset.member_of_collection_ids = [collection.id]
+          persister.save(resource: asset)
         end
       end
 

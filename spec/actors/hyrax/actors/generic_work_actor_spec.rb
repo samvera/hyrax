@@ -286,30 +286,32 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'adding to collections' do
-      let!(:collection1) { create(:collection, user: user) }
-      let!(:collection2) { create(:collection, user: user) }
+      let!(:collection1) { create_for_repository(:collection, user: user) }
+      let!(:collection2) { create_for_repository(:collection, user: user) }
       let(:attributes) do
         attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
       end
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
-        curation_concern.member_of_collections = [collection1]
-        curation_concern.save!
+        curation_concern.member_of_collection_ids = [collection1.id]
+        persister.save(resource: curation_concern)
       end
 
       it 'remove from the old collection and adds to the new collection' do
-        curation_concern.reload
-        expect(curation_concern.member_of_collection_ids).to eq [collection1.id]
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+        expect(reloaded.member_of_collection_ids).to eq [collection1.id]
         # before running actor.update, the work is in collection1
 
         expect(subject.update(env)).to be true
 
-        curation_concern.reload
-        expect(curation_concern.identifier).to be_blank
-        expect(curation_concern).to be_persisted
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+
+        expect(reloaded.identifier).to be_blank
+        expect(reloaded).to be_persisted
         # after running actor.update, the work is in collection2 and no longer in collection1
-        expect(curation_concern.member_of_collections).to eq [collection2]
+        expect(reloaded.member_of_collection_ids).to eq [collection2]
       end
     end
 

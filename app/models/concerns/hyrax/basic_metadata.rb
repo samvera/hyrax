@@ -18,7 +18,7 @@ module Hyrax
       attribute :contributor, Valkyrie::Types::Set
       attribute :description, Valkyrie::Types::Set
 
-      # property :keyword, predicate: ::RDF::Vocab::DC11.relation
+      attribute :keyword, Valkyrie::Types::Set
       # Used for a license
       attribute :license, Valkyrie::Types::Set
 
