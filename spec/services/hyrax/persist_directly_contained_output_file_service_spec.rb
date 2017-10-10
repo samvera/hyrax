@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService do
   # PersistDirectlyContainedOutputFileService is used by FullTextExtract.output_file_service
-  let(:file_set) { FileSet.create! { |fs| fs.apply_depositor_metadata('justin') } }
+  let(:file_set) { create_for_repository(:file_set, user: user) }
+  let(:user) { build(:user) }
   let(:content) { "fake file content" }
   let(:resource) { file_set.reload.extracted_text }
 

@@ -1,10 +1,8 @@
 RSpec.describe Hyrax::SingleUseLinksViewerController do
   routes { Hyrax::Engine.routes }
+  let(:user) { build(:user) }
   let(:file) do
-    FileSet.create! do |lfile|
-      lfile.label = 'world.png'
-      lfile.apply_depositor_metadata('mjg')
-    end
+    create_for_repository(:file_set, label: 'world.png', user: user)
   end
 
   describe "retrieval links" do

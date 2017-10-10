@@ -2,10 +2,10 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Hyrax::Arkivo::Actor }
   let!(:user) { create(:user) }
   let!(:default_work) do
-    GenericWork.create(title: ['Foo Bar']) do |gf|
-      gf.apply_depositor_metadata(user)
-      gf.arkivo_checksum = '6872d21557992f6ad1d07375f19fbfaf'
-    end
+    create_for_repository(:work,
+                          title: ['Foo Bar'],
+                          user: user,
+                          arkivo_checksum: '6872d21557992f6ad1d07375f19fbfaf')
   end
 
   before do
