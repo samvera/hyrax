@@ -2,6 +2,7 @@ RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
   let(:actor) { controller.send(:actor) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   context "when signed in" do
     before do
@@ -24,8 +25,8 @@ RSpec.describe Hyrax::FileSetsController do
         let(:delete_message) { double('delete message') }
 
         before do
-          work.ordered_members << file_set
-          work.save!
+          work.member_ids << file_set.id
+          persister.save(resource: work)
         end
 
         it "deletes the file" do
@@ -39,18 +40,11 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     describe "#edit" do
-      let(:parent) do
-        create(:work, :public, user: user)
+      let!(:parent) do
+        create_for_repository(:work, :public, user: user, member_ids: [file_set.id])
       end
       let(:file_set) do
-<<<<<<< HEAD
-        create(:file_set, user: user).tap do |file_set|
-          parent.ordered_members << file_set
-          parent.save!
-        end
-=======
         create_for_repository(:file_set, user: user)
->>>>>>> Use FactoryGirl everywhere
       end
 
       before do
@@ -175,7 +169,8 @@ RSpec.describe Hyrax::FileSetsController do
 
       it "updates existing groups and users" do
         file_set.edit_groups = ['group3']
-        file_set.save
+        persister.save(resource: file_set)
+
         post :update, params: {
           id: file_set,
           file_set: { keyword: [''],
@@ -255,9 +250,9 @@ RSpec.describe Hyrax::FileSetsController do
 
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
-          work.ordered_members << file_set
-          work.save!
-          file_set.save!
+          work.member_ids << file_set.id
+          persister.save(resource: work)
+          persister.save(resource: file_set) # Is this necessary?
         end
 
         it "shows me the breadcrumbs" do
@@ -295,7 +290,7 @@ RSpec.describe Hyrax::FileSetsController do
   end
 
   context 'when not signed in' do
-    let(:private_file_set) { create(:file_set) }
+    let(:private_file_set) { create_for_repository(:file_set) }
     let(:public_file_set) { create_for_repository(:file_set, read_groups: ['public']) }
 
     describe '#edit' do

@@ -19,7 +19,7 @@ module Hyrax
 
     # @param [Array<String>] ids a list of ids to build presenters for
     # @param [Class] presenter_class the type of presenter to build
-    # @return [Array<presenter_class>] presenters for the ordered_members (not filtered by class)
+    # @return [Array<presenter_class>] presenters for the members (not filtered by class)
     def member_presenters(ids = ordered_ids, presenter_class = composite_presenter_class)
       PresenterFactory.build_for(ids: ids,
                                  presenter_class: presenter_class,
@@ -31,7 +31,7 @@ module Hyrax
       @file_set_presenters ||= member_presenters(ordered_ids & file_set_ids)
     end
 
-    # @return [Array<WorkShowPresenter>] presenters for the ordered_members that are not FileSets
+    # @return [Array<WorkShowPresenter>] presenters for the members that are not FileSets
     def work_presenters
       @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)
     end
