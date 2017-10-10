@@ -1,19 +1,19 @@
-![Logo](https://raw.githubusercontent.com/projecthydra-labs/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
+![Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
 
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
-[![Build Status](https://travis-ci.org/projecthydra-labs/hyrax.png?branch=master)](https://travis-ci.org/projecthydra-labs/hyrax)
-[![Coverage Status](https://coveralls.io/repos/github/projecthydra-labs/hyrax/badge.svg?branch=master)](https://coveralls.io/github/projecthydra-labs/hyrax?branch=master)
-[![Code Climate](https://codeclimate.com/github/projecthydra-labs/hyrax/badges/gpa.svg)](https://codeclimate.com/github/projecthydra-labs/hyrax)
-[![Dependency Update Status](https://gemnasium.com/projecthydra-labs/hyrax.png)](https://gemnasium.com/projecthydra-labs/hyrax)
-[![Dependency Maintenance Status](https://dependencyci.com/github/projecthydra-labs/hyrax/badge)](https://dependencyci.com/github/projecthydra-labs/hyrax)
+[![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/samvera/hyrax)
+[![Coverage Status](https://coveralls.io/repos/github/samvera/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera/hyrax?branch=master)
+[![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
+[![Dependency Update Status](https://gemnasium.com/samvera/hyrax.png)](https://gemnasium.com/samvera/hyrax)
+[![Dependency Maintenance Status](https://dependencyci.com/github/samvera/hyrax/badge)](https://dependencyci.com/github/samvera/hyrax)
 
-Docs: [![Documentation Status](https://inch-ci.org/github/projecthydra-labs/hyrax.svg?branch=master)](https://inch-ci.org/github/projecthydra-labs/hyrax)
+Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera/hyrax)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hyrax)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
-Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack.projecthydra.org/)
-[![Ready Tickets](https://badge.waffle.io/projecthydra-labs/hyrax.png?label=ready&milestone=1.0.0&title=Ready)](https://waffle.io/projecthydra-labs/hyrax?milestone=1.0.0)
+Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
+[![Ready Tickets](https://badge.waffle.io/samvera/hyrax.png?label=ready&milestone=1.x%20series&title=Ready)](https://waffle.io/samvera/hyrax?milestone=1.x%20series)
 
 # Table of Contents
 
@@ -44,22 +44,22 @@ Jump in: [![Slack Status](http://slack.projecthydra.org/badge.svg)](http://slack
 
 # What is Hyrax?
 
-Hyrax is a front-end based on the robust [Hydra](http://projecthydra.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
+Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
 ## Feature list
 
-Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/projecthydra/sufia/wiki/Feature-matrix). See the [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) to learn more.
+Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera/sufia/wiki/Feature-matrix). See the [Sufia Management Guide](https://github.com/samvera/sufia/wiki/Sufia-Management-Guide) to learn more.
 
 For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
 
 # Help
 
-If you have questions or need help, please email [the Hydra community tech list](mailto:hydra-tech@googlegroups.com) or stop by the #dev channel in [the Hydra community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
+If you have questions or need help, please email [the Samvera community tech list](mailto:samvera-tech@googlegroups.com) or stop by the #dev channel in [the Samvera community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187#Getintouch!-Slack).
 
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v1.0.4__. If you are looking for instructions on installing a different
+v1.0.5__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -80,7 +80,7 @@ Hyrax requires the following software to work:
 1. [FITS](#characterization) version 0.8.x (0.8.5 is known to be good)
 1. [LibreOffice](#derivatives)
 
-**NOTE: The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
+**NOTE: The [Sufia Development Guide](https://github.com/samvera/sufia/wiki/Sufia-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
 
@@ -121,7 +121,7 @@ Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.1
+gem install rails -v 5.0.3
 ```
 
 ### JavaScript runtime
@@ -133,7 +133,7 @@ Rails requires that you have a JavaScript runtime -- for example, nodejs -- inst
 Generate a new Rails application using the template.
 
 ```
-rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.0.4/template.rb
+rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.0.5/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -166,7 +166,7 @@ Namespaces can be included in the work My::MovingImage by adding the path.
 rails generate hyrax:work My/MovingImage
 ```
 
-You may wish to [customize your work type](https://github.com/projecthydra/sufia/wiki/Customizing-your-work-types) now that it's been generated.
+You may wish to [customize your work type](https://github.com/samvera/sufia/wiki/Customizing-your-work-types) now that it's been generated.
 
 ## Start servers
 
@@ -200,7 +200,7 @@ class Application < Rails::Application
 end
 ```
 
-**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/projecthydra/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
+**For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/) or [Resque](https://github.com/resque/resque). The Sufia Development Guide has a detailed walkthrough of [installing and configuring Resque](https://github.com/samvera/sufia/wiki/Background-Workers-(Resque-in-Sufia-7). Initial Sidekiq instructions for ActiveJob are available on the [Sidekiq wiki](https://github.com/mperham/sidekiq/wiki/Active-Job).
 
 ## Load workflows
 Load workflows from the json files in `config/workflows` by running the following rake task:
@@ -221,7 +221,7 @@ rake hyrax:default_admin_set:create
 
 # Managing a Hyrax-based app
 
-The [Sufia Management Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
+The [Sufia Management Guide](https://github.com/samvera/sufia/wiki/Sufia-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
 * Production implementations
 * Configuration of background workers
@@ -254,23 +254,23 @@ Hyrax is available under [the Apache 2.0 license](LICENSE.md).
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/projecthydra-labs/hyrax). There are other ways to help, too.
+If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera/hyrax). There are other ways to help, too.
 
-* [Contribute a user story](https://github.com/projecthydra-labs/hyrax/issues/new).
-* Help us improve [Hyrax's test coverage](https://coveralls.io/r/projecthydra-labs/hyrax) or [documentation coverage](https://inch-ci.org/github/projecthydra-labs/hyrax).
-* Refactor away [code smells](https://codeclimate.com/github/projecthydra-labs/hyrax).
+* [Contribute a user story](https://github.com/samvera/hyrax/issues/new).
+* Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
+* Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
 
 # Development
 
-The [Sufia Development Guide](https://github.com/projecthydra/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+The [Sufia Development Guide](https://github.com/samvera/sufia/wiki/Sufia-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
 
 # Release process
 
-See the [release management process](https://github.com/projecthydra/sufia/wiki/Release-management-process).
+See the [release management process](https://github.com/samvera/sufia/wiki/Release-management-process).
 
 # Acknowledgments
 
-This software has been developed by and is brought to you by the Hydra community.  Learn more at the
-[Project Hydra website](http://projecthydra.org/).
+This software has been developed by and is brought to you by the Samvera community.  Learn more at the
+[Samvera website](http://samvera.org/).
 
-![Project Hydra Logo](http://hyr.ax/assets/images/hydra_logo.png)
+![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
