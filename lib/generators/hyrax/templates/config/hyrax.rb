@@ -186,6 +186,22 @@ Hyrax.config do |config|
   rescue Errno::ENOENT
     config.browse_everything = nil
   end
+
+  ## Whitelist all directories which can be used to ingest from the local file
+  # system.
+  #
+  # Any file, and only those, that is anywhere under one of the specified
+  # directories can be used by CreateWithRemoteFilesActor to add local files
+  # to works. Files uploaded by the user are handled separately and the
+  # temporary directory for those need not be included here.
+  #
+  # Default value includes BrowseEverything.config['file_system'][:home] if it
+  # is set, otherwise default is an empty list. You should only need to change
+  # this if you have custom ingestions using CreateWithRemoteFilesActor to
+  # ingest files from the file system that are not part of the BrowseEverything
+  # mount point.
+  #
+  # config.whitelisted_ingest_dirs = []
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
