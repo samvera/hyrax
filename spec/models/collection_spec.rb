@@ -81,7 +81,7 @@ RSpec.describe Collection do
       end
 
       class Member < Valkyrie::Resource
-        include Hydra::Works::WorkBehavior
+        include Hyrax::WorkBehavior
       end
       collection.add_member_objects member.id
     end
@@ -90,12 +90,15 @@ RSpec.describe Collection do
       Object.send(:remove_const, :Member)
     end
 
-    let(:member) { Member.create }
-    let(:collection) { OtherCollection.create(title: ['test title']) }
+    let(:member) { persister.save(resource: Member.new) }
+    let(:collection) do
+      col = OtherCollection.new(title: ['test title'])
+      persister.save(resource: col)
+    end
 
     it "have members that know about the collection", clean_repo: true do
       member.reload
-      expect(member.member_of_collections).to eq [collection]
+      expect(member.member_of_collection_ids).to eq [collection.id]
     end
   end
 end

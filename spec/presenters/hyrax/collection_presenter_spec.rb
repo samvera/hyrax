@@ -99,10 +99,11 @@ RSpec.describe Hyrax::CollectionPresenter do
 
     context "collection with work" do
       let(:work) { create_for_repository(:work, title: ['unimaginitive title']) }
+      let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
       before do
-        work.member_of_collections << collection
-        work.save!
+        work.member_of_collection_ids << collection.id
+        persister.save(resource: work)
       end
 
       it { is_expected.to eq 1 }

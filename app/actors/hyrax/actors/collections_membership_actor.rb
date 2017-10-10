@@ -23,12 +23,12 @@ module Hyrax
           return true unless collection_ids
           # grab/save collections this user has no edit access to
           other_collections = collections_without_edit_access(env)
-          env.curation_concern.member_of_collections = ::Collection.find(collection_ids)
-          env.curation_concern.member_of_collections.concat other_collections
+          env.curation_concern.member_of_collection_ids = collection_ids
+          env.curation_concern.member_of_collection_ids.concat other_collections
         end
 
         def collections_without_edit_access(env)
-          env.curation_concern.member_of_collections.select { |coll| env.current_ability.cannot?(:edit, coll) }
+          env.curation_concern.member_of_collection_ids.select { |id| env.current_ability.cannot?(:edit, id) }
         end
     end
   end
