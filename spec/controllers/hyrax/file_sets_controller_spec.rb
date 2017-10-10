@@ -114,14 +114,10 @@ RSpec.describe Hyrax::FileSetsController do
     describe "#destroy" do
       context "file_set with a parent" do
         let(:file_set) do
-          FileSet.create do |fs|
-            fs.apply_depositor_metadata(user)
-          end
+          create(:file_set, user: user)
         end
         let(:work) do
-          GenericWork.create!(title: ['test title']) do |w|
-            w.apply_depositor_metadata(user)
-          end
+          create(:work, title: ['test title'], user: user)
         end
 
         let(:delete_message) { double('delete message') }
@@ -143,9 +139,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#edit" do
       let(:file_set) do
-        FileSet.create do |fs|
-          fs.apply_depositor_metadata(user)
-        end
+        create(:file_set, user: user)
       end
 
       before do
@@ -169,7 +163,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#update" do
       let(:file_set) do
-        FileSet.create! { |fs| fs.apply_depositor_metadata(user) }
+        create(:file_set, user: user)
       end
 
       context "when updating metadata" do
@@ -283,9 +277,7 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "when there's an error saving" do
         let(:file_set) do
-          FileSet.create do |fs|
-            fs.apply_depositor_metadata(user)
-          end
+          create(:file_set, user: user)
         end
 
         before do
@@ -303,9 +295,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#edit" do
       let(:file_set) do
-        FileSet.create(read_groups: ['public']) do |f|
-          f.apply_depositor_metadata('archivist1@example.com')
-        end
+        create(:file_set, read_groups: ['public'])
       end
 
       let(:file) do
@@ -434,9 +424,7 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     let(:file_set) do
-      file_set = FileSet.create! do |gf|
-        gf.apply_depositor_metadata(user)
-      end
+      file_set = create(:file_set, user: user)
       parent.ordered_members << file_set
       parent.save
       file_set
