@@ -63,7 +63,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v2.0.0.beta4__. If you are looking for instructions on installing a different
+v2.0.0.beta5__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -160,7 +160,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.0.0.beta4/template.rb
+rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.0.0.beta5/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
