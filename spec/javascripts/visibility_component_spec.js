@@ -169,6 +169,25 @@ describe("VisibilityComponent", function() {
         expect(target.requireEmbargo).toHaveBeenCalledWith("authenticated", futureDate);
       });
     });
+    describe("with required past release date, dont restrict visibility", function() {
+      beforeEach(function() {
+        spyOn(target, 'disableEmbargoAndLease');
+      });
+      it("require visibility", function() {
+        target.applyRestrictions(undefined, undefined, "2017-01-01", false);
+        expect(target.disableEmbargoAndLease).toHaveBeenCalled();
+      });
+    });
+    describe("with required past release date, and required visibility", function() {
+      beforeEach(function() {
+        spyOn(target, 'selectVisibility');
+      });
+      it("require visibility", function() {
+        var visibility = "authenticated";
+        target.applyRestrictions(visibility, undefined, "2017-01-01", false);
+        expect(target.selectVisibility).toHaveBeenCalledWith(visibility);
+      });
+    });
   });
 
   //selectVisibility(visibility)
