@@ -270,9 +270,13 @@ module Hyrax
         def remove_members_from_collection
           batch.each do |pid|
             work = ActiveFedora::Base.find(pid)
-            work.member_of_collections.delete @collection
-            work.save!
+            work.member_of_collection_ids.delete @collection.id
+            persister.save(resource: work)
           end
+        end
+
+        def persister
+          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         end
 
         def move_members_between_collections

@@ -23,8 +23,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     before do
-      allow(Collection).to receive(:find).with('123')
-      allow(curation_concern).to receive(:member_of_collections=)
+      allow(Collection).to receive(:find).with(['123'])
+      allow(curation_concern).to receive(:member_of_collection_ids=)
     end
 
     it 'does not receive the member_of_collection_ids' do
@@ -50,7 +50,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     describe "when work is in user's own collection and destroy is passed" do
-      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
       let(:attributes) do
         { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
       end
@@ -62,18 +62,18 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
       it "removes the work from that collection" do
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to eq []
+        expect(curation_concern.member_of_collection_ids).to eq []
       end
     end
 
     describe "when work is in another user's collection" do
-      let(:other_collection) { create(:collection, title: ['A good title']) }
+      let(:other_collection) { create_for_repository(:collection, title: ['A good title']) }
       let!(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [other_collection.id]) }
 
       it "doesn't remove the work from the other user's collection" do
         subject.create(env)
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to match_array [collection, other_collection]
+        expect(curation_concern.member_of_collection_ids).to match_array [collection.id, other_collection.id]
       end
     end
   end
