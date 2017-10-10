@@ -294,9 +294,8 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     describe "#edit" do
-      let(:user) { build(:user, email: 'archivist1@example.com') }
       let(:file_set) do
-        create_for_repository(:file_set, user: user, read_groups: ['public'])
+        create_for_repository(:file_set, read_groups: ['public'])
       end
 
       let(:file) do
