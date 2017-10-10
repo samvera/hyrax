@@ -26,6 +26,8 @@ module Hyrax
       class_attribute :human_readable_short_description
       # TODO: do we need this line?
       # self.indexer = WorkIndexer
+
+      attribute :member_of_collection_ids, Valkyrie::Types::Set
     end
 
     # TODO: This can be removed when we upgrade to ActiveFedora 12.0
