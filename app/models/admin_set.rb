@@ -17,6 +17,7 @@
 # @see Hyrax::ApplyPermissionTemplateActor
 class AdminSet < Valkyrie::Resource
   # include Hydra::AccessControls::WithAccessRight
+  include Valkyrie::Resource::AccessControls
   include Hyrax::Noid
   include Hyrax::HumanReadableType
   # include Hyrax::HasRepresentative
