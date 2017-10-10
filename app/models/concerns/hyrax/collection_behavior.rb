@@ -26,8 +26,8 @@ module Hyrax
     def add_member_objects(new_member_ids)
       Array(new_member_ids).each do |member_id|
         member = ActiveFedora::Base.find(member_id)
-        member.member_of_collections << self
-        member.save!
+        member.member_of_collection_ids << id
+        persister.save(resource: member)
       end
     end
 
@@ -72,6 +72,10 @@ module Hyrax
     end
 
     private
+
+      def persister
+        Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      end
 
       # Calculate the size of all the files in the work
       # @param work_id [String] identifer for a work
