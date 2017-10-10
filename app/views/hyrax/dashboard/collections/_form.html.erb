@@ -58,6 +58,7 @@
               </div>
             <% end %>
             <%= hidden_field_tag :type, params[:type] %>
+            <%= hidden_field_tag :stay_on_edit, true %>
             <%= hidden_field_tag :collection_type_gid, @collection.collection_type_gid %>
             <% if params[:batch_document_ids].present? %>
               <% params[:batch_document_ids].each do |batch_item| %>
