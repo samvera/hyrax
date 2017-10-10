@@ -226,6 +226,18 @@ module Hyrax
     end
     # rubocop:enable Metrics/MethodLength
 
+    # @!attribute [w] whitelisted_ingest_dirs
+    #   List of directories which can be used for local file system ingestion.
+    attr_writer :whitelisted_ingest_dirs
+    def whitelisted_ingest_dirs
+      @whitelisted_ingest_dirs ||= \
+        if defined? BrowseEverything
+          Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+        else
+          []
+        end
+    end
+
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,

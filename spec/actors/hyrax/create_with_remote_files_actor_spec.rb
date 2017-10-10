@@ -51,9 +51,25 @@ describe Hyrax::CreateWithRemoteFilesActor do
          file_name: "here.txt" }]
     end
 
+    before do
+      allow(Hyrax.config).to receive(:whitelisted_ingest_dirs).and_return(["/local/file/"])
+    end
+
     it "attaches files" do
       expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/here.txt", user)
       expect(actor.create(attributes)).to be true
+    end
+
+    context "with files from non-whitelisted directories" do
+      let(:file) { "file:///local/otherdir/test.txt" }
+
+      # rubocop:disable RSpec/AnyInstance
+      it "doesn't attach files" do
+        expect_any_instance_of(described_class).to receive(:validate_remote_url).and_call_original
+        expect(IngestLocalFileJob).not_to receive(:perform_later)
+        expect(actor.create(attributes)).to be false
+      end
+      # rubocop:enable RSpec/AnyInstance
     end
 
     context "with spaces" do
@@ -62,6 +78,28 @@ describe Hyrax::CreateWithRemoteFilesActor do
         expect(IngestLocalFileJob).to receive(:perform_later).with(FileSet, "/local/file/ pigs .txt", user)
         expect(actor.create(attributes)).to be true
       end
+    end
+  end
+
+  describe "#validate_remote_url" do
+    before do
+      allow(Hyrax.config).to receive(:whitelisted_ingest_dirs).and_return(['/test/', '/local/file/'])
+    end
+
+    it "accepts file: urls in whitelisted directories" do
+      expect(actor.actor.send(:validate_remote_url, "file:///local/file/test.txt")).to be true
+      expect(actor.actor.send(:validate_remote_url, "file:///local/file/subdirectory/test.txt")).to be true
+      expect(actor.actor.send(:validate_remote_url, "file:///test/test.txt")).to be true
+    end
+
+    it "rejects file: urls outside whitelisted directories" do
+      expect(actor.actor.send(:validate_remote_url, "file:///tmp/test.txt")).to be false
+      expect(actor.actor.send(:validate_remote_url, "file:///test/../tmp/test.txt")).to be false
+      expect(actor.actor.send(:validate_remote_url, "file:///test/")).to be false
+    end
+
+    it "accepts other types of urls" do
+      expect(actor.actor.send(:validate_remote_url, "https://example.com/test.txt")).to be true
     end
   end
 end
