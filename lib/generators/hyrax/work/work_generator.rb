@@ -34,8 +34,8 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('indexer.rb.erb', File.join('app/indexers', class_path, "#{file_name}_indexer.rb"))
   end
 
-  def create_form
-    template('form.rb.erb', File.join('app/forms/hyrax', class_path, "#{file_name}_form.rb"))
+  def create_change_set
+    template('change_set.rb.erb', File.join('app/change_sets/hyrax', class_path, "#{file_name}_change_set.rb"))
   end
 
   def create_presenter
@@ -93,9 +93,9 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('feature_spec.rb.erb', File.join('spec/features/', class_path, "create_#{file_name}_spec.rb"))
   end
 
-  def create_form_spec
+  def create_change_set_spec
     return unless rspec_installed?
-    template('form_spec.rb.erb', File.join('spec/forms/hyrax/', class_path, "#{file_name}_form_spec.rb"))
+    template('change_set_spec.rb.erb', File.join('spec/change_sets/hyrax', class_path, "#{file_name}_change_set_spec.rb"))
   end
 
   def presenter_spec
