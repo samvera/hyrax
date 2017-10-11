@@ -1,7 +1,7 @@
 RSpec.describe 'hyrax/base/_member.html.erb' do
   let(:solr_document) do
     SolrDocument.new(id: '999',
-                     has_model_ssim: ['FileSet'],
+                     internal_resource_ssim: ['FileSet'],
                      active_fedora_model_ssi: 'FileSet',
                      thumbnail_path_ss: '/downloads/999?file=thumbnail',
                      representative_tesim: ["999"],

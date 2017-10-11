@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:ability) { double }
   let(:doc) do
     {
-      "has_model_ssim" => ["FileSet"],
+      "internal_resource_ssim" => ["FileSet"],
       :id => "123",
       "title_tesim" => ["My Title"]
     }

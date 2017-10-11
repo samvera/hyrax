@@ -25,7 +25,7 @@ RSpec.describe Hyrax::My::SharesSearchBuilder do
 
   it "filters things we have access to in which we are not the depositor" do
     expect(subject).to eq ["access_filter1 OR access_filter2",
-                           "{!terms f=has_model_ssim}GenericWork,Collection",
+                           "{!terms f=internal_resource_ssim}GenericWork,Collection",
                            "-suppressed_bsi:true",
                            "-depositor"]
   end
