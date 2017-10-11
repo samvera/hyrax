@@ -31,7 +31,7 @@ RSpec.describe Hyrax::GenericWorksController do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
     end
     context 'my own private work' do
-      let(:work) { create(:private_generic_work, user: user, title: ['test title']) }
+      let(:work) { create_for_repository(:work, :private, user: user, title: ['test title']) }
 
       it 'shows me the page' do
         get :show, params: { id: work }
@@ -93,7 +93,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'someone elses private work' do
-      let(:work) { create(:private_generic_work) }
+      let(:work) { create_for_repository(:work, :private) }
 
       it 'shows unauthorized message' do
         get :show, params: { id: work }
@@ -103,7 +103,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:work) { create(:public_generic_work) }
+      let(:work) { create_for_repository(:work, :public) }
 
       context "html" do
         it 'shows me the page' do
@@ -132,7 +132,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
-      let(:work) { create(:private_generic_work) }
+      let(:work) { create_for_repository(:work, :private) }
 
       it 'someone elses private work should show me the page' do
         get :show, params: { id: work }
@@ -318,7 +318,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
   describe '#edit' do
     context 'my own private work' do
-      let(:work) { create(:private_generic_work, user: user) }
+      let(:work) { create_for_repository(:work, :private, user: user) }
 
       it 'shows me the page and sets breadcrumbs' do
         expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
@@ -336,7 +336,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context 'someone elses private work' do
       routes { Rails.application.class.routes }
-      let(:work) { create(:private_generic_work) }
+      let(:work) { create_for_repository(:work, :private) }
 
       it 'shows the unauthorized message' do
         get :edit, params: { id: work }
@@ -346,7 +346,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:work) { create(:public_generic_work) }
+      let(:work) { create_for_repository(:work, :public) }
 
       it 'shows the unauthorized message' do
         get :edit, params: { id: work }
@@ -357,7 +357,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context 'when I am a repository manager' do
       before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
-      let(:work) { create(:private_generic_work) }
+      let(:work) { create_for_repository(:work, :private) }
 
       it 'someone elses private work should show me the page' do
         get :edit, params: { id: work }
@@ -441,7 +441,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:work) { create(:public_generic_work) }
+      let(:work) { create_for_repository(:work, :public) }
 
       it 'shows the unauthorized message' do
         get :update, params: { id: work }
@@ -453,7 +453,7 @@ RSpec.describe Hyrax::GenericWorksController do
     context 'when I am a repository manager' do
       before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
 
-      let(:work) { create(:private_generic_work) }
+      let(:work) { create_for_repository(:work, :private) }
 
       it 'someone elses private work should update the work' do
         patch :update, params: { id: work, generic_work: {} }
@@ -463,7 +463,7 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#destroy' do
-    let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
+    let(:work_to_be_deleted) { create_for_repository(:work, :private, user: user) }
     let(:parent_collection) { create_for_repository(:collection) }
 
     it 'deletes the work' do
@@ -492,7 +492,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'someone elses public work' do
-      let(:work_to_be_deleted) { create(:private_generic_work) }
+      let(:work_to_be_deleted) { create_for_repository(:work, :private) }
 
       it 'shows unauthorized message' do
         delete :destroy, params: { id: work_to_be_deleted }
@@ -502,7 +502,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      let(:work_to_be_deleted) { create(:private_generic_work) }
+      let(:work_to_be_deleted) { create_for_repository(:work, :private) }
 
       before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
       it 'someone elses private work should delete the work' do
@@ -513,7 +513,7 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#file_manager' do
-    let(:work) { create(:private_generic_work, user: user) }
+    let(:work) { create_for_repository(:work, :private, user: user) }
 
     before do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
