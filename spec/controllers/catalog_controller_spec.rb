@@ -93,25 +93,25 @@ RSpec.describe CatalogController, type: :controller do
       end
 
       let(:work1) do
-        { has_model_ssim: ["GenericWork"], id: "ff365c76z", title_tesim: ["me too"],
+        { internal_resource_ssim: ["GenericWork"], id: "ff365c76z", title_tesim: ["me too"],
           file_set_ids_ssim: ["ff365c78h", "ff365c79s"],
           read_access_group_ssim: ["public"], edit_access_person_ssim: ["user1@example.com"] }
       end
 
       let(:work2) do
-        { has_model_ssim: ["GenericWork"], id: "ff365c777", title_tesim: ["find me"],
+        { internal_resource_ssim: ["GenericWork"], id: "ff365c777", title_tesim: ["find me"],
           file_set_ids_ssim: [],
           read_access_group_ssim: ["public"], edit_access_person_ssim: ["user2@example.com"] }
       end
 
       let(:file1) do
-        { has_model_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
+        { internal_resource_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
           file_set_ids_ssim: [],
           edit_access_person_ssim: [user.user_key] }
       end
 
       let(:file2) do
-        { has_model_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
+        { internal_resource_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
           file_set_ids_ssim: [],
           edit_access_person_ssim: [user.user_key] }
       end
