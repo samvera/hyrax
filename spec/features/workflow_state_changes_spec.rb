@@ -2,7 +2,7 @@ RSpec.feature "Workflow state changes", type: :feature do
   let(:workflow_name) { 'with_comment' }
   let(:approving_user) { create(:admin) }
   let(:depositing_user) { create(:admin) }
-  let(:admin_set) { create(:admin_set, edit_users: [depositing_user.user_key]) }
+  let(:admin_set) { create_for_repository(:admin_set, edit_users: [depositing_user.user_key]) }
   let(:one_step_workflow) do
     {
       workflows: [
