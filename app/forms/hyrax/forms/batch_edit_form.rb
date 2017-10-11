@@ -64,7 +64,7 @@ module Hyrax
         def initialize_combined_fields
           # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
           batch_document_ids.each_with_object({}) do |doc_id, combined_attributes|
-            work = ActiveFedora::Base.find(doc_id)
+            work = find_resource(doc_id)
             terms.each do |field|
               combined_attributes[field] ||= []
               combined_attributes[field] = (combined_attributes[field] + work[field].to_a).uniq
@@ -77,6 +77,14 @@ module Hyrax
           # if value is empty, we create an one element array to loop over for output
           return model[key] = combined_attributes[key] if combined_attributes[key].present?
           super
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end
