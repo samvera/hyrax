@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection, edit_users: [user.user_key]) }
+    let(:collection) { create_for_repository(:collection, edit_users: [user.user_key]) }
     let(:attributes) do
       {
         member_of_collections_attributes: { '0' => { id: collection.id } },
