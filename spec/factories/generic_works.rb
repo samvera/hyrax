@@ -1,7 +1,8 @@
 FactoryGirl.define do
   factory :work, aliases: [:generic_work], class: GenericWork do
     to_create do |instance|
-      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      persister.save(resource: instance)
     end
 
     transient do
