@@ -1,14 +1,14 @@
 RSpec.describe "The admin dashboard", :clean_repo do
   let(:user) { create :admin }
   let(:admin_set_1) do
-    create(:admin_set, title: ["First Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
+    create_for_repository(:admin_set, title: ["First Admin Set"],
+                                      description: ["A description"],
+                                      edit_users: [user.user_key])
   end
   let(:admin_set_2) do
-    create(:admin_set, title: ["Second Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
+    create_for_repository(:admin_set, title: ["Second Admin Set"],
+                                      description: ["A description"],
+                                      edit_users: [user.user_key])
   end
 
   before do
