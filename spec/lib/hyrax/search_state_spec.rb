@@ -7,7 +7,7 @@ RSpec.describe Hyrax::SearchState do
     subject { state.url_for_document(document) }
 
     context "with a collection" do
-      let(:document) { SolrDocument.new(id: '9999', has_model_ssim: ['Collection']) }
+      let(:document) { SolrDocument.new(id: '9999', internal_resource_ssim: ['Collection']) }
 
       it "returns an array with the route set and doc" do
         expect(subject.first).to be_kind_of ActionDispatch::Routing::RoutesProxy
@@ -15,7 +15,7 @@ RSpec.describe Hyrax::SearchState do
       end
     end
     context "with a work" do
-      let(:document) { SolrDocument.new(id: '9999', has_model_ssim: ['GenericWork']) }
+      let(:document) { SolrDocument.new(id: '9999', internal_resource_ssim: ['GenericWork']) }
 
       it "returns an array with the route set and doc" do
         expect(subject.first).to be_kind_of ActionDispatch::Routing::RoutesProxy

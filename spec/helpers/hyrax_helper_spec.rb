@@ -174,7 +174,7 @@ RSpec.describe HyraxHelper, type: :helper do
   end
 
   describe "#collection_thumbnail" do
-    let(:document) { SolrDocument.new(has_model_ssim: ['Collection']) }
+    let(:document) { SolrDocument.new(internal_resource_ssim: ['Collection']) }
 
     subject { helper.collection_thumbnail(document) }
 
@@ -290,7 +290,7 @@ RSpec.describe HyraxHelper, type: :helper do
   describe "#iconify_auto_link" do
     let(:text)              { 'Foo < http://www.example.com. & More text' }
     let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text' }
-    let(:document)          { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
+    let(:document)          { SolrDocument.new(internal_resource_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
     let(:blacklight_config) { CatalogController.blacklight_config }
 
     before do

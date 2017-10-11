@@ -7,7 +7,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
     SolrDocument.new(
       id: '999',
       object_profile_ssm: object_profile,
-      has_model_ssim: ['FileSet'],
+      internal_resource_ssim: ['FileSet'],
       human_readable_type_tesim: ['File'],
       contributor_tesim: contributor,
       creator_tesim: creator,
