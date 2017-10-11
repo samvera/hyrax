@@ -128,7 +128,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
   describe '#select_files' do
     subject { form.select_files }
 
-    let(:collection) { create(:collection) }
+    let(:collection) { create_for_repository(:collection) }
     let(:repository) { Hyrax::CollectionsController.new.repository }
 
     context 'without any works/files attached' do
