@@ -16,7 +16,7 @@ module Hyrax
     private
 
       def curation_concern
-        @curation_concern ||= ActiveFedora::Base.find(params[:id])
+        @curation_concern ||= find_resource(params[:id])
       end
 
       def workflow_action_form
@@ -36,6 +36,14 @@ module Hyrax
           wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
           wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
   end
 end

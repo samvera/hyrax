@@ -296,7 +296,8 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       let(:work_v1) { create(:generic_work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
-        work_v2 = ActiveFedora::Base.find(work_v1.id)
+        query_service = Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+        work_v2 = query_service.find_by(id: Valkyrie::ID.new(work_v1.id.to_s))
         work_v2.ordered_members << create(:file_set)
         work_v2.save!
       end
