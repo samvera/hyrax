@@ -9,7 +9,7 @@ RSpec.describe 'User' do
     let(:creating_user) { create(:user) }
     let(:user) { create(:user) }
     let(:current_user) { user }
-    let(:collection) { create(:collection, visibility: visibility, user: creating_user) }
+    let(:collection) { create_for_repository(:collection, visibility: visibility, user: creating_user) }
 
     before do
       collection.visibility = visibility

@@ -464,7 +464,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
   describe '#destroy' do
     let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
-    let(:parent_collection) { create(:collection) }
+    let(:parent_collection) { create_for_repository(:collection) }
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
