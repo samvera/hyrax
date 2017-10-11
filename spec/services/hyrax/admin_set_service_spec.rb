@@ -16,7 +16,7 @@ RSpec.describe Hyrax::AdminSetService do
     let!(:as3) { create_for_repository(:admin_set, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:collection, :public) # this should never be returned.
+      create_for_repository(:collection, :public) # this should never be returned.
     end
 
     context "with read access" do
