@@ -57,7 +57,7 @@ class JobIoWrapper < ApplicationRecord
   end
 
   def file_set
-    FileSet.find(file_set_id)
+    Hyrax::Queries.find_by(id: file_set_id)
   end
 
   def file_actor
