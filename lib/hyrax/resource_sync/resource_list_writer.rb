@@ -60,7 +60,7 @@ module Hyrax
         # @param routes [Module] has the routes for the object
         def build_resource(xml, doc, routes)
           xml.url do
-            key = doc.fetch('has_model_ssim', []).first.constantize.model_name.singular_route_key
+            key = doc.fetch('internal_resource_ssim', []).first.constantize.model_name.singular_route_key
             xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
             xml.lastmod doc['system_modified_dtsi']
           end
