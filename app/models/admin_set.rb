@@ -72,6 +72,10 @@ class AdminSet < Valkyrie::Resource
     title.present? ? title : 'No Title'
   end
 
+  def members
+    query_service.find_inverse_references_by(resource: self, property: :admin_set_id)
+  end
+
   # @api public
   # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
   # @return [Hyrax::PermissionTemplate]
@@ -101,6 +105,10 @@ class AdminSet < Valkyrie::Resource
       permission_template.destroy
     rescue ActiveRecord::RecordNotFound
       true
+    end
+
+    def query_service
+      Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
     end
 
   # def check_if_empty
