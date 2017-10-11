@@ -86,6 +86,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     before do
       # Add an error to the work
       work.errors.add :base, 'broken'
+      work.errors.add :visibility, 'visibility_error'
       allow(form).to receive(:select_files).and_return([])
     end
 
@@ -97,6 +98,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
 
       # It diplays form errors
       expect(page).to have_content("broken")
+      expect(page).to have_content("visibility_error")
     end
   end
 end

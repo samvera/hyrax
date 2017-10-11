@@ -24,8 +24,9 @@ de:
           identifier_tesim: Identifikator
           keyword_tesim: Stichwort
           language_tesim: Sprache
+          license_tesim: Lizenz
           publisher_tesim: Herausgeber
-          rights_tesim: Rechte
+          rights_statement_tesim: Rechte
           subject_tesim: Fach
         show:
           based_near_tesim: Ort
@@ -39,8 +40,9 @@ de:
           identifier_tesim: Identifikator
           keyword_tesim: Stichwort
           language_tesim: Sprache
+          license_tesim: Lizenz
           publisher_tesim: Herausgeber
-          rights_tesim: Rechte
+          rights_statement_tesim: Rechte
           subject_tesim: Fach
           title_tesim: Titel
   hyrax:

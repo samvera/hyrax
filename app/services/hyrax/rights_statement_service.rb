@@ -1,6 +1,6 @@
 module Hyrax
   # Provide select options for the copyright status (edm:rights) field
-  class RightsStatements < QaSelectService
+  class RightsStatementService < QaSelectService
     def initialize
       super('rights_statements')
     end

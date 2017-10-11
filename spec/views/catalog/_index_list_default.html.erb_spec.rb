@@ -6,7 +6,7 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
       'description_tesim'    => [''],
       'date_uploaded_dtsi'   => 'a date',
       'date_modified_dtsi'   => 'a date',
-      'rights_tesim'         => [''],
+      'rights_statement_tesim' => [''],
       'embargo_release_date_dtsi' => 'a date',
       'lease_expiration_date_dtsi' => 'a date' }
   end
@@ -33,8 +33,8 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     expect(rendered).to include 'Test proxy_depositor_ssim'
     expect(rendered).to include '<span class="attribute-label h4">Owner:</span>'
     expect(rendered).to include 'Test depositor_tesim'
-    expect(rendered).to include '<span class="attribute-label h4">Rights:</span>'
-    expect(rendered).to include 'Test rights_tesim'
+    expect(rendered).to include '<span class="attribute-label h4">Rights Statement:</span>'
+    expect(rendered).to include 'Test rights_statement_tesim'
     expect(rendered).to include '<span class="attribute-label h4">Embargo release date:</span>'
     expect(rendered).to include 'Test embargo_release_date_dtsi'
     expect(rendered).to include '<span class="attribute-label h4">Lease expiration date:</span>'

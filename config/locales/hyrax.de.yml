@@ -140,6 +140,7 @@ de:
                 2yrs: 2 Jahre nach der Deponierung
                 3yrs: 3 Jahre nach der Deponierung
                 6mos: 6 Monate nach der Deponierung
+                select: Wählen Sie die Sperrfrist aus.
           visibility:
             description: 'Nach dem Release-Datum können die Arbeiten in diesem Admin-Set eingesehen und heruntergeladen werden durch:'
             everyone: Jeder - alle Arbeiten in diesem Admin-Set werden öffentlich sein
@@ -166,8 +167,8 @@ de:
             success: Das Design wurde erfolgreich aktualisiert
       features:
         index:
-          feature: Features
-          header: Features
+          action: Aktion
+          description: Beschreibung
           feature: Charakteristisch
           header: Charakteristik
       sidebar:
@@ -186,8 +187,8 @@ de:
         tasks: Aufgaben
         technical: Charakteristik
         transfers: Transfers
-        user_activity: Ihre Tätigkeit
         user_activity: Ihre Aktivitäten
+        users: Benutzer verwalten
         workflow_review: Review-Rückmeldung
         workflow_roles: Workflow-Rollen
         works: Arbeiten
@@ -204,13 +205,13 @@ de:
             unpublished: Unveröffentlicht
         user_deposits:
           end_label: Ende [Voreinstellung]
-          start_label: Beginn
+          heading: Von Benutzern hinterlegte Dateien anzeigen
           start_label: Beginnend
         works:
           headers:
             main: Statistik Arbeiten
             total: 'Arbeiten gesamt:'
-            visibility: Summen nach Freigabe- und Sichtbarkeitsbeschränkungen 
+            visibility: Summen nach Freigabe- und Sichtbarkeitsbeschränkungen
       users:
         index:
           access_label: Letzter Zugriff
@@ -285,7 +286,7 @@ de:
         requirements: Bedarf
       items:
         actions: Aktionen
-        date_uploaded: Datum Upload 
+        date_uploaded: Datum Upload
         empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf "Bearbeiten", um weitere Dateien hinzuzufügen.
         header: Artikel
         thumbnail: Miniaturansicht
@@ -354,7 +355,7 @@ de:
         create: Sammlung erstellen
         create_new: Zu neuer Sammlung hinzufügen
         no_collections: Sie haben keinen Zugang zu vorhandenen Sammlungen. Sie können eine neue Sammlung erstellen.
-        update: Sammlung updaten
+        select_heading: 'Wählen Sie die Sammlung aus, um Ihre Dateien hinzuzufügen:'
         title: Zur Sammlung hinzufügen
         update: Update-Sammlung
     collections:
@@ -857,7 +858,7 @@ de:
         related_url: Zugehörige URL
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu
-        visibility_after_lease: Zugriffsbeschränkung nach diesem Zeitraum 
+        visibility_after_lease: Zugriffsbeschränkung nach diesem Zeitraum
         visibility_during_embargo: Beschränkt auf
         visibility_during_lease: Ist vorhanden für
       proxy_deposit_request:

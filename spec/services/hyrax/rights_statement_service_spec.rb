@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::RightsStatements do
+RSpec.describe Hyrax::RightsStatementService do
   let(:service) { described_class.new }
 
   describe "#select_active_options" do

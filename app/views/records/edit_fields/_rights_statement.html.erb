@@ -1,4 +1,4 @@
-<% rights_statements = Hyrax::RightsStatements.new %>
+<% rights_statements = Hyrax::RightsStatementService.new %>
 <%= f.input :rights_statement,
     collection: rights_statements.select_active_options,
     include_blank: true,
