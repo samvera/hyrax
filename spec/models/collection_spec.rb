@@ -41,7 +41,7 @@ RSpec.describe Collection do
   end
 
   describe "#members_objects", clean_repo: true do
-    let(:collection) { create(:collection) }
+    let(:collection) { create_for_repository(:collection) }
 
     it "is empty by default" do
       expect(collection.member_objects).to match_array []
