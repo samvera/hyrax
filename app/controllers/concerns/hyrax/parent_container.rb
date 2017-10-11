@@ -12,7 +12,7 @@ module Hyrax
     end
 
     def find_parent_by_id
-      ActiveFedora::Base.find(parent_id)
+      find_resource(parent_id)
     end
 
     def lookup_parent_from_child
@@ -30,6 +30,14 @@ module Hyrax
 
       def new_or_create?
         %w[create new].include? action_name
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
   end
 end

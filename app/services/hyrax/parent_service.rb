@@ -1,10 +1,10 @@
 module Hyrax
   class ParentService
     # @param [String] id - the id of a child FileSet
-    # @return [ActiveFedora::Base] the parent object
+    # @return [Valkyrie::Resource] the parent object
     def self.parent_for(id)
       ids = ordered_by_ids(id)
-      ActiveFedora::Base.find(ordered_by_ids(id).first) if ids.present?
+      find_resource(ordered_by_ids(id).first) if ids.present?
     end
 
     def self.ordered_by_ids(id)
@@ -15,5 +15,15 @@ module Hyrax
         []
       end
     end
+
+    private
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+      end
   end
 end

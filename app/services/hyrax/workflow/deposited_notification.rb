@@ -12,8 +12,16 @@ module Hyrax
         end
 
         def users_to_notify
-          user_key = ActiveFedora::Base.find(work_id).depositor
+          user_key = find_resource(work_id).depositor
           super << ::User.find_by(email: user_key)
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end
