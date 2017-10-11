@@ -133,6 +133,7 @@ pt-BR:
             no_delay: Sem atraso - liberte todos os trabalhos assim que eles são depositados
             title: Lançamento
             varies:
+              any: Permitir que o depositante decida
               between: Entre "agora" e
               description: 'Varia - os depositantes podem definir a data de lançamento para um trabalho individual:'
               embargo:

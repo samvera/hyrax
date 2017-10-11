@@ -139,6 +139,7 @@ zh:
             no_delay: 没有延迟 -- 所有作品一旦存储即可发布
             title: 发布
             varies:
+              any: 允许存款人决定
               between: 在'现在'之间
               description: '可变的 -- 存储者可以设置一件作品的发布日期:'
               embargo:
