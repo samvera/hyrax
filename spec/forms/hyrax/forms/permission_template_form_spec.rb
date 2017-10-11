@@ -317,6 +317,13 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
         it_behaves_like 'valid attributes'
       end
 
+      describe 'varies, with depositor choice' do
+        let(:release_period) { '' }
+        let(:release_varies) { '' }
+
+        it_behaves_like 'valid attributes'
+      end
+
       describe 'varies, with date selected' do
         let(:release_date) { Time.zone.today + 2.months }
         let(:release_varies) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE }
