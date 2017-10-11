@@ -2,7 +2,7 @@ RSpec.describe Hyrax::WorkflowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do
     { "id" => '888888',
-      "has_model_ssim" => ["GenericWork"] }
+      "internal_resource_ssim" => ["GenericWork"] }
   end
 
   let(:user) { create(:user) }

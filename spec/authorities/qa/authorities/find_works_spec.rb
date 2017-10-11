@@ -1,31 +1,31 @@
 RSpec.describe Qa::Authorities::FindWorks do
-  let(:controller) { Qa::TermsController.new }
-  let(:user1) { create(:user) }
-  let(:user2) { create(:user) }
-  let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user1) }
-  let(:q) { "foo" }
-  let(:params) { ActionController::Parameters.new(q: q, id: work1.id, user: user1.email, controller: "qa/terms", action: "search", vocab: "find_works") }
-  let(:service) { described_class.new }
-  let!(:work1) { create_for_repository(:work, :public, title: ['foo'], user: user1) }
-  let!(:work2) { create_for_repository(:work, :public, title: ['foo foo'], user: user1) }
-  let!(:work3) { create_for_repository(:work, :public, title: ['bar'], user: user1) }
-  let!(:work4) { create_for_repository(:work, :public, title: ['another foo'], user: user1) }
-  let!(:work5) { create_for_repository(:work, :public, title: ['foo foo foo'], user: user2) }
-
   before do
+    persister.wipe!
     allow(controller).to receive(:params).and_return(params)
     allow(controller).to receive(:current_user).and_return(user1)
     allow(controller).to receive(:current_ability).and_return(ability)
   end
 
+  let!(:work1) { create_for_repository(:work, :public, title: ['foo'], user: user1) }
+  let!(:work2) { create_for_repository(:work, :public, title: ['foo foo'], user: user1) }
+  let!(:work3) { create_for_repository(:work, :public, title: ['bar'], user: user1) }
+  let!(:work4) { create_for_repository(:work, :public, title: ['another foo'], user: user1) }
+  let!(:work5) { create_for_repository(:work, :public, title: ['foo foo foo'], user: user2) }
+  let(:controller) { Qa::TermsController.new }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
+  let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user1) }
+  let(:q) { "foo" }
+  let(:params) { ActionController::Parameters.new(q: q, id: work1.id.to_s, user: user1.email, controller: "qa/terms", action: "search", vocab: "find_works") }
+  let(:service) { described_class.new }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
+
   subject { service.search(q, controller) }
 
   describe '#search' do
-    let(:persister) { Valkyrie.config.metadata_adapter.persister }
-
     context "works by all users" do
       it 'displays a list of other works deposited by current user' do
-        expect(subject.map { |result| result[:id] }).to match_array [work2.id, work4.id]
+        expect(subject.map { |result| result[:id] }).to match_array [work2.id.to_s, work4.id.to_s]
       end
     end
 
