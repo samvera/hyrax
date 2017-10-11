@@ -28,7 +28,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
     log = run_check(file_set_id, file_id, uri)
 
     if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
-      file_set = ::FileSet.find(file_set_id)
+      file_set = Queries.find_by(id: file_set_id)
       Hyrax.config.callback.run(:after_fixity_check_failure,
                                 file_set,
                                 checksum_audit_log: log)
