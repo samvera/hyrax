@@ -19,14 +19,14 @@ module Hyrax
       def self.find_preservation_parent_ids_for(id:)
         # Not everything is guaranteed to have library_collection_ids
         # If it doesn't have it, what do we do?
-        ActiveFedora::Base.uncached do
+        fedora_object = ActiveFedora::Base.uncached do
           fedora_object = ActiveFedora::Base.find(id)
+        end
 
-          if fedora_object.respond_to?(:member_of_collection_ids)
-            fedora_object.member_of_collection_ids
-          else
-            []
-          end
+        if fedora_object.respond_to?(:member_of_collection_ids)
+          fedora_object.member_of_collection_ids
+        else
+          []
         end
       end
 
@@ -68,16 +68,16 @@ module Hyrax
       # @param pathnames [Array<String>]
       # @return Hash - the attributes written to the indexing layer
       def self.write_document_attributes_to_index_layer(id:, parent_ids:, ancestors:, pathnames:)
-        ActiveFedora::Base.uncached do
-          solr_doc = ActiveFedora::Base.find(id).to_solr # What is the current state of the solr document
-
-          # Now add the details from the nesting indexor to the document
-          solr_doc[solr_field_name_for_storing_ancestors] = ancestors
-          solr_doc[solr_field_name_for_storing_parent_ids] = parent_ids
-          solr_doc[solr_field_name_for_storing_pathnames] = pathnames
-          ActiveFedora::SolrService.add(solr_doc, commit: true)
-          solr_doc
+        solr_doc = ActiveFedora::Base.uncached do
+          ActiveFedora::Base.find(id).to_solr # What is the current state of the solr document
         end
+
+        # Now add the details from the nesting indexor to the document
+        solr_doc[solr_field_name_for_storing_ancestors] = ancestors
+        solr_doc[solr_field_name_for_storing_parent_ids] = parent_ids
+        solr_doc[solr_field_name_for_storing_pathnames] = pathnames
+        ActiveFedora::SolrService.add(solr_doc, commit: true)
+        solr_doc
       end
 
       # @api public
