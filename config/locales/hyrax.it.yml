@@ -133,6 +133,7 @@ it:
             no_delay: Nessun ritardo - rilasciare tutti i lavori non appena vengono depositati
             title: Liberare
             varies:
+              any: Consentire al depositante di decidere
               between: Tra "ora" e "
               description: 'Varia - i depositanti possono impostare la data di rilascio per un lavoro individuale:'
               embargo:

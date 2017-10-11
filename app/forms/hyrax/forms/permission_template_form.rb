@@ -186,6 +186,8 @@ module Hyrax
         # Removes release_varies and release_embargo from the returned attributes
         # These form fields are only used to update release_period
         # @return [Hash] attributes used to update the model
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/PerceivedComplexity
         def permission_template_update_params(raw_attributes)
           attributes = raw_attributes.except(:release_varies, :release_embargo)
           # If 'varies' before date option selected, then set release_period='before' and save release_date as-is
@@ -199,28 +201,27 @@ module Hyrax
             attributes[:release_date] = nil
           end
 
-          if attributes[:release_period] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY
-            # If release is "no delay", a release_date should never be allowed/specified
+          if attributes[:release_period] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY || (attributes[:release_period].blank? && raw_attributes[:release_varies].blank?)
+            # If release is "no delay" or is "varies" and "allow depositor to decide",
+            # then a release_date should never be allowed/specified
             attributes[:release_date] = nil
           end
 
           attributes
         end
+        # rubocop:enable Metrics/CyclomaticComplexity
+        # rubocop:enable Metrics/PerceivedComplexity
 
         # validate the hash of attributes used to update the visibility tab of the model
         # @param [Hash] attributes
         # @return [String, Nil] the error code if invalid, nil if valid
         # rubocop:disable Metrics/CyclomaticComplexity
-        # rubocop:disable Metrics/AbcSize
         # rubocop:disable Metrics/PerceivedComplexity
         def validate_visibility_combinations(attributes)
           return unless attributes.key?(:visibility) # only the visibility tab has validations
 
           # if "save" without any selections - none of the attributes are present
           return "nothing" if !attributes[:release_varies] && !attributes[:release_period] && !attributes[:release_date] && !attributes[:release_embargo]
-
-          # if "varies" without sub-options (in this case, release_varies will be missing)
-          return "varies" if attributes[:release_period].blank? && attributes[:release_varies].blank?
 
           # if "varies before" but date not selected
           return "no_date" if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE && attributes[:release_date].blank?
@@ -233,7 +234,6 @@ module Hyrax
         end
       # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/PerceivedComplexity
-      # rubocop:enable Metrics/AbcSize
     end
   end
 end

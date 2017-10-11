@@ -184,6 +184,18 @@ module Hyrax
       @bagit_dir ||= "tmp/descriptions"
     end
 
+    # @!attribute [w] whitelisted_ingest_dirs
+    #   List of directories which can be used for local file system ingestion.
+    attr_writer :whitelisted_ingest_dirs
+    def whitelisted_ingest_dirs
+      @whitelisted_ingest_dirs ||= \
+        if defined? BrowseEverything
+          Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+        else
+          []
+        end
+    end
+
     callback.enable :after_create_concern, :after_create_fileset,
                     :after_update_content, :after_revert_content,
                     :after_update_metadata, :after_import_local_file_success,
@@ -222,6 +234,17 @@ module Hyrax
     attr_writer :license_service_class
     def license_service_class
       @license_service_class ||= Hyrax::LicenseService
+    end
+
+    # A configuration point for changing the behavior of the rights statement service.
+    #
+    # @!attribute [w] license_service_class
+    #   A configuration point for changing the behavior of the license service.
+    #
+    #   @see Hyrax::RightsStatementService for implementation details
+    attr_writer :rights_statement_service_class
+    def rights_statement_service_class
+      @rights_statement_service_class ||= Hyrax::RightsStatementService
     end
 
     attr_writer :banner_image

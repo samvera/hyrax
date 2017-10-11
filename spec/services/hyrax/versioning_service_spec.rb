@@ -1,10 +1,7 @@
 RSpec.describe Hyrax::VersioningService do
   describe '#latest_version_of' do
-    let(:file) do
-      FileSet.create do |f|
-        f.apply_depositor_metadata('mjg36')
-      end
-    end
+    let(:user) { build(:user) }
+    let(:file) { create(:file_set) }
 
     before do
       # Add the original_file (this service  creates a version after saving when you call it with versioning: true)

@@ -76,7 +76,7 @@ EOF
   spec.add_dependency 'samvera-nesting_indexer', '~> 0.6'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
 
-  spec.add_development_dependency 'engine_cart', '~> 1.0'
+  spec.add_development_dependency 'engine_cart', '~> 1.2'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'solr_wrapper', '~> 1.1'

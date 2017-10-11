@@ -86,7 +86,6 @@ en:
             visibility:         "The administrative set's release & visibility settings have been updated."
             workflow:           "The administrative set's workflow has been updated."
           permission_update_errors:
-            varies:             "Release option 'Varies' requires a date or embargo period."
             no_date:            "A date is required for the selected release option."
             no_embargo:         "An embargo period is required for the selected option."
             nothing:            "Select release options before pressing save."
@@ -138,6 +137,7 @@ en:
             no_delay:           "No delay -- release all works as soon as they are deposited"
             title:              "Release"
             varies:
+              any:              "Allow depositor to decide"
               between:          "Between \"now\" and"
               description:      "Varies -- depositors can set the release date for an individual work:"
               embargo:

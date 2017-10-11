@@ -55,7 +55,11 @@ module Hyrax
           end
 
           def date_query
-            Hyrax::QueryService.new.build_date_query(start_dt, end_dt) if start_dt.present?
+            query_service.build_date_query(start_dt, end_dt) if start_dt.present?
+          end
+
+          def query_service
+            Hyrax::Statistics::QueryService.new
           end
       end
     end

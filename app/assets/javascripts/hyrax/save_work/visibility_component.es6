@@ -76,14 +76,9 @@ export default class VisibilityComponent {
   // Apply visibility/release restrictions based on selected AdminSet
   applyRestrictions(visibility, release_no_delay, release_date, release_before)
   {
-     // If immediate release required and visibility specified
-     if(release_no_delay && visibility) {
-       // Select required visibility
-       this.selectVisibility(visibility)
-     }
-     else if(release_no_delay) {
-       // No visibility required, but must be released today. Disable embargo & lease.
-       this.disableEmbargoAndLease();
+     // If immediate release required or the release date is in the past.
+     if(release_no_delay || (release_date && (new Date() > Date.parse(release_date)))) {
+       this.requireReleaseNow(visibility)
      }
      // Otherwise if future date and release_before==true, must be released between today and release_date
      else if(release_date && release_before) {
@@ -137,6 +132,18 @@ export default class VisibilityComponent {
     this.selectVisibilityAfterEmbargo(visibility)
   }
 
+  // Require release now
+  requireReleaseNow(visibility) {
+    if(visibility) {
+      // Select required visibility
+      this.selectVisibility(visibility)
+    }
+    else {
+      // No visibility required, but must be released today. Disable embargo & lease.
+      this.disableEmbargoAndLease()
+    }
+  }
+
   // Disable Embargo and Lease options. Work must be released immediately
   disableEmbargoAndLease() {
     this.disableVisibilityOptions(["embargo","lease"])
@@ -153,6 +160,8 @@ export default class VisibilityComponent {
       this.element.find(matchEnabled).prop("disabled", false)
     }
     this.element.find(matchDisabled).prop("disabled", true)
+
+    this.checkEnabledVisibilityOption()
   }
 
   // Disable one or more visibility option (based on array of passed in options),
@@ -166,6 +175,8 @@ export default class VisibilityComponent {
       this.element.find(matchDisabled).prop("disabled", true)
     }
     this.element.find(matchEnabled).prop("disabled", false)
+
+    this.checkEnabledVisibilityOption()
   }
 
   // Create a jQuery matcher which will match for all the specified options
@@ -253,6 +264,16 @@ export default class VisibilityComponent {
   // Get input field corresponding to visibility after embargo expires
   getVisibilityAfterEmbargoInput() {
     return this.element.find("select[id$='_visibility_after_embargo']")
+  }
+
+  // If the selected visibility option is disabled change selection to the
+  // least public option that is enabled.
+  checkEnabledVisibilityOption() {
+    if (this.element.find("[type='radio']:disabled:checked").length > 0) {
+      this.element.find("[type='radio']:enabled").last().prop('checked', true)
+      // Ensure required option is opened in form
+      this.showForm()
+    }
   }
 
   // Get today's date in YYYY-MM-DD format

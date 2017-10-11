@@ -35,7 +35,11 @@ module Hyrax
         end
 
         def query(min, max)
-          QueryService.new.build_date_query(min, max)
+          query_service.build_date_query(min, max)
+        end
+
+        def query_service
+          Hyrax::Statistics::QueryService.new
         end
 
         # How many points are in this data set

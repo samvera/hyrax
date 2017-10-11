@@ -169,6 +169,25 @@ describe("VisibilityComponent", function() {
         expect(target.requireEmbargo).toHaveBeenCalledWith("authenticated", futureDate);
       });
     });
+    describe("with required past release date, dont restrict visibility", function() {
+      beforeEach(function() {
+        spyOn(target, 'disableEmbargoAndLease');
+      });
+      it("disable embargo and lease", function() {
+        target.applyRestrictions(undefined, undefined, "2017-01-01", false);
+        expect(target.disableEmbargoAndLease).toHaveBeenCalled();
+      });
+    });
+    describe("with required past release date, and required visibility", function() {
+      beforeEach(function() {
+        spyOn(target, 'selectVisibility');
+      });
+      it("require visibility", function() {
+        var visibility = "authenticated";
+        target.applyRestrictions(visibility, undefined, "2017-01-01", false);
+        expect(target.selectVisibility).toHaveBeenCalledWith(visibility);
+      });
+    });
   });
 
   //selectVisibility(visibility)
@@ -414,6 +433,31 @@ describe("VisibilityComponent", function() {
   describe("getVisibilityAfterEmbargoInput", function() {
     it("returns visibility after embargo selectbox", function() {
       expect(target.getVisibilityAfterEmbargoInput()).toHaveProp("name", "generic_work[visibility_after_embargo]");
+    });
+  });
+
+  //checkEnabledVisibilityOption()
+  describe("checkEnabledVisibilityOption", function() {
+    describe("with disabled option selected", function() {
+      beforeEach(function() {
+        target.enableAllOptions();
+        element.find("[type='radio'][value='restricted']").prop("checked", true).prop("disabled", true);
+      });
+      it("selects last enabled radio option", function() {
+        target.checkEnabledVisibilityOption();
+        expect(element.find("[type='radio'][value='restricted']")).not.toBeChecked();
+        expect(element.find("[type='radio'][value='lease']")).toBeChecked();
+      });
+    });
+    describe("with enabled option selected", function() {
+      beforeEach(function() {
+        target.enableAllOptions();
+        element.find("[type='radio'][value='open']").prop("checked", true);
+      });
+      it("does not change selection", function() {
+        target.checkEnabledVisibilityOption();
+        expect(element.find("[type='radio'][value='open']")).toBeChecked();
+      });
     });
   });
 });

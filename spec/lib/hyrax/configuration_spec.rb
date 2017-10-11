@@ -43,6 +43,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:libreoffice_path) }
+  it { is_expected.to respond_to(:license_service_class) }
+  it { is_expected.to respond_to(:license_service_class=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
@@ -52,6 +54,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
+  it { is_expected.to respond_to(:rights_statement_service_class) }
+  it { is_expected.to respond_to(:rights_statement_service_class=) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:subject_prefix) }
   it { is_expected.to respond_to(:translate_id_to_uri) }
@@ -61,4 +65,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:extract_full_text?) }
   it { is_expected.to respond_to(:nested_relationship_reindexer) }
   it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
+  it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
+  it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
 end

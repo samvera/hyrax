@@ -133,6 +133,7 @@ fr:
             no_delay: Pas de retard - libère tous les travaux dès qu'ils sont déposés
             title: Libération
             varies:
+              any: Permettre au déposant de décider
               between: Entre «maintenant» et
               description: 'Variable - les déposants peuvent définir la date de sortie pour un travail individuel:'
               embargo:

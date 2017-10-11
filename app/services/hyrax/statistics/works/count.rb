@@ -43,7 +43,7 @@ module Hyrax
         private
 
           def query_service
-            @query_service ||= Hyrax::QueryService.new
+            @query_service ||= Hyrax::Statistics::QueryService.new
           end
 
           def by_date_and_permission
