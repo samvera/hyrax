@@ -9,7 +9,8 @@ module Hyrax
     # Add queries that excludes everything except for works and collections
     def filter_models(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << "{!terms f=has_model_ssim}#{models_to_solr_clause}"
+      # TODO: This becomes Valkyrie::Persistence::Solr::Queries::MODEL
+      solr_parameters[:fq] << "{!terms f=internal_resource_ssim}#{models_to_solr_clause}"
     end
 
     private
