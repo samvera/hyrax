@@ -17,7 +17,7 @@ FactoryBot.define do
         attributes = {}
         attributes[:id] = work.admin_set_id if work.admin_set_id.present?
         attributes = evaluator.with_admin_set.merge(attributes) if evaluator.with_admin_set.respond_to?(:merge)
-        admin_set = create(:admin_set, attributes)
+        admin_set = create_for_repository(:admin_set, attributes)
         work.admin_set_id = admin_set.id
       end
     end

@@ -2,9 +2,9 @@ RSpec.describe "The admin sets, through the admin dashboard" do
   let(:user) { create :admin }
   let(:title) { "Unique name: #{SecureRandom.hex}" }
   let(:admin_set) do
-    create(:admin_set, title: [title],
-                       description: ["A substantial description"],
-                       edit_users: [user.user_key])
+    create_for_repository(:admin_set, title: [title],
+                                      description: ["A substantial description"],
+                                      edit_users: [user.user_key])
   end
 
   before do
