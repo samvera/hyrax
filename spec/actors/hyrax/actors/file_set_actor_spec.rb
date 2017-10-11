@@ -294,7 +294,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'with multiple versions' do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
-      let(:query_service) {  Valkyrie::MetadataAdapter.find(:indexing_persister).query_service }
+      let(:query_service) { Valkyrie::MetadataAdapter.find(:indexing_persister).query_service }
       let(:work_v1) { create_for_repository(:generic_work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
