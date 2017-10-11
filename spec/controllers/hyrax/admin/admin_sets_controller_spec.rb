@@ -21,7 +21,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       context "a public admin set" do
         # Even though the user can view this admin set, the should not be able to view
         # it on the admin page.
-        let(:admin_set) { create(:admin_set, read_groups: ['public']) }
+        let(:admin_set) { create_for_repository(:admin_set, read_groups: ['public']) }
 
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#files" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       it 'is unauthorized' do
         get :files, params: { id: admin_set }, format: :json
@@ -98,7 +98,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#show" do
       context "when it's successful" do
-        let(:admin_set) { create(:admin_set, edit_users: [user]) }
+        let(:admin_set) { create_for_repository(:admin_set, edit_users: [user]) }
 
         before do
           create_for_repository(:work, :public, admin_set: admin_set)
@@ -114,7 +114,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#edit" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user]) }
 
       it 'defines a form' do
         get :edit, params: { id: admin_set }
@@ -124,7 +124,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#files" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user]) }
 
       it 'shows a list of member files' do
         get :files, params: { id: admin_set }, format: :json
@@ -133,7 +133,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#update" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user]) }
 
       it 'updates a record' do
         patch :update, params: { id: admin_set,
@@ -144,7 +144,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#destroy" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user]) }
 
       context "with empty admin set" do
         it "deletes the admin set" do
@@ -174,7 +174,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       end
 
       context "with the default admin set" do
-        let(:admin_set) { create(:admin_set, edit_users: [user], id: AdminSet::DEFAULT_ID) }
+        let(:admin_set) { create_for_repository(:admin_set, edit_users: [user], id: AdminSet::DEFAULT_ID) }
 
         it "doesn't delete the admin set" do
           delete :destroy, params: { id: admin_set }

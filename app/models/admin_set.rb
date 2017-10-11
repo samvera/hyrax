@@ -49,9 +49,6 @@ class AdminSet < Valkyrie::Resource
   #          predicate: Hyrax.config.admin_set_predicate,
   #          class_name: 'ActiveFedora::Base'
 
-  # before_destroy :check_if_not_default_set, :check_if_empty
-  # after_destroy :destroy_permission_template
-
   def self.default_set?(id)
     id == DEFAULT_ID
   end
@@ -94,24 +91,4 @@ class AdminSet < Valkyrie::Resource
     update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
             edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'))
   end
-
-  private
-
-    def destroy_permission_template
-      permission_template.destroy
-    rescue ActiveRecord::RecordNotFound
-      true
-    end
-
-  # def check_if_empty
-  #   return true if members.empty?
-  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
-  #   throw :abort
-  # end
-  #
-  # def check_if_not_default_set
-  #   return true unless default_set?
-  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
-  #   throw :abort
-  # end
 end

@@ -24,7 +24,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
     context "when access is :deposit" do
       let(:access) { :deposit }
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
       let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
       context "and user has access" do

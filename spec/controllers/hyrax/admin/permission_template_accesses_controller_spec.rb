@@ -27,7 +27,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
                agent_id: agent_id)
       end
       let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-      let(:admin_set) { create(:admin_set, edit_users: ['Liz']) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: ['Liz']) }
 
       context 'when deleting the admin users group' do
         let(:agent_type) { 'group' }

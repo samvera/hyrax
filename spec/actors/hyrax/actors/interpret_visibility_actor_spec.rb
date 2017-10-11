@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { admin_set_id: admin_set.id } }
-  let(:admin_set) { create(:admin_set) }
+  let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:one_year_from_today) { Time.zone.today + 1.year }
