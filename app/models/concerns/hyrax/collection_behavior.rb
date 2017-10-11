@@ -126,10 +126,18 @@ module Hyrax
     # Calculate and update who should have edit access based on who
     # has "manage" access in the PermissionTemplateAccess
     def update_access_controls!
-      update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
-              edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'),
-              read_users: permission_template.agent_ids_for(access: 'view', agent_type: 'user'),
-              read_groups: (permission_template.agent_ids_for(access: 'view', agent_type: 'group') + visibility_group).uniq)
+      edit_users = permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+      edit_groups = permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+      read_users = permission_template.agent_ids_for(access: 'view', agent_type: 'user')
+      read_groups = (permission_template.agent_ids_for(access: 'view', agent_type: 'group') + visibility_group).uniq
+      update!(edit_users: edit_users,
+              edit_groups: edit_groups,
+              read_users: read_users,
+              read_groups: read_groups)
+      # added because the collection indexing happens before Hydra::AccessControls::Permission is
+      # saved, and the after_update_index callback in the nested_relationship_reindexer removes the
+      # permissions from the Solr document.
+      update_index
     end
 
     private
