@@ -58,7 +58,7 @@ RSpec.describe ImportUrlJob do
       # run the import job
       described_class.perform_now(file_set, operation)
       # import job should not override the title set another process
-      file = FileSet.find(file_set_id)
+      file = Hyrax::Queries.find_by(id: file_set_id)
       expect(file.title).to eq(['File One'])
     end
   end
