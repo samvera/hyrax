@@ -4,9 +4,9 @@ RSpec.describe Hyrax::Statistics::Works::Count do
     let(:yesterday) { 1.day.ago }
 
     before do
-      build(:public_generic_work, user: user1, id: "pdf1223").update_index
-      build(:public_generic_work, user: user1, id: "wav1223").update_index
-      build(:public_generic_work, user: user1, id: "mp31223", create_date: [2.days.ago]).update_index
+      build(:work, :public, user: user1, id: "pdf1223").update_index
+      build(:work, :public, user: user1, id: "wav1223").update_index
+      build(:work, :public, user: user1, id: "mp31223", create_date: [2.days.ago]).update_index
       build(:registered_generic_work, user: user1, id: "reg1223").update_index
       build(:generic_work, user: user1, id: "private1223").update_index
       Collection.new(id: "ccc123") do |c|

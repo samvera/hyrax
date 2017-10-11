@@ -8,7 +8,7 @@ RSpec.describe Hyrax::GenericWorksController do
   before { sign_in user }
 
   context "JSON" do
-    let(:resource) { create(:private_generic_work, user: user) }
+    let(:resource) { create_for_repository(:work, :private, user: user) }
     let(:resource_request) { get :show, params: { id: resource, format: :json } }
 
     subject { response }
