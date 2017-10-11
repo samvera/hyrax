@@ -133,6 +133,7 @@ es:
             no_delay: Sin demora -- liberar todas los trabajos tan pronto como se depositen
             title: Lanzamiento
             varies:
+              any: Permitir que el depositante decida
               between: Entre "ahora" y
               description: 'Varía -- los depositantes pueden fijar la fecha de lanzamiento para un trabajo individual:'
               embargo:

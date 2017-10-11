@@ -133,6 +133,7 @@ de:
             no_delay: Keine Verzögerung - Freigabe aller Arbeiten, sobald sie hinterlegt sind
             title: Freigabe
             varies:
+              any: Dem Einzahler erlauben, sich zu entscheiden
               between: Zwischen "jetzt" und
               description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
