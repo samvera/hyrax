@@ -5,7 +5,7 @@ RSpec.describe AdminSet, type: :model do
 
   let(:user) { create(:user) }
 
-  subject { described_class.new(title: ['Some title']) }
+  subject(:admin_set) { described_class.new(title: ['Some title']) }
 
   describe '#active_workflow' do
     it 'leverages Sipity::Workflow.find_active_workflow_for' do
@@ -75,24 +75,14 @@ RSpec.describe AdminSet, type: :model do
 
     context "adding members" do
       context "using assignment" do
-        subject { described_class.create!(title: ['Some title'], members: [gf1, gf2]) }
+        subject { reloaded.members.map(&:id) }
 
-        it "has many files" do
-          expect(subject.reload.members).to match_array [gf1, gf2]
-        end
-      end
+        let(:admin_set) { create_for_repository(:admin_set, title: ['Some title']) }
+        let!(:gf1) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
+        let!(:gf2) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
+        let(:reloaded) { Hyrax::Queries.find_by(id: admin_set.id) }
 
-      context "using append" do
-        before do
-          subject.members = [gf1]
-          subject.save
-        end
-        it "allows new files to be added" do
-          subject.reload
-          subject.members << gf2
-          subject.save
-          expect(subject.reload.members).to match_array [gf1, gf2]
-        end
+        it { is_expected.to match_array [gf1.id, gf2.id] }
       end
     end
   end
@@ -145,16 +135,19 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe "#destroy" do
+    let(:admin_set) { create_for_repository(:admin_set, title: ['Some title']) }
+
     context "with member works" do
+      let!(:gf1) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
+      let!(:gf2) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
+
       before do
-        subject.members = [gf1, gf2]
-        subject.save!
-        subject.destroy
+        admin_set.destroy
       end
 
       it "does not delete adminset or member works" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is not empty"]
-        expect(AdminSet.exists?(subject.id)).to be true
+        expect(AdminSet.exists?(admin_set.id)).to be true
         expect(GenericWork.exists?(gf1.id)).to be true
         expect(GenericWork.exists?(gf2.id)).to be true
       end
@@ -162,26 +155,23 @@ RSpec.describe AdminSet, type: :model do
 
     context "with no member works" do
       before do
-        subject.members = []
-        subject.save!
-        subject.destroy
+        admin_set.destroy
       end
 
       it "deletes the adminset" do
-        expect(AdminSet.exists?(subject.id)).to be false
+        expect(AdminSet.exists?(admin_set.id)).to be false
       end
     end
 
     context "is default adminset" do
+      let(:admin_set) { create_for_repository(:admin_set, id: described_class::DEFAULT_ID, title: ['Some title']) }
+
       before do
-        subject.members = []
-        subject.id = described_class::DEFAULT_ID
-        subject.save!
-        subject.destroy
+        admin_set.destroy
       end
 
       it "does not delete the adminset" do
-        expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
+        expect(admin_set.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
         expect(AdminSet.exists?(described_class::DEFAULT_ID)).to be true
       end
     end
