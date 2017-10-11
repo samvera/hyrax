@@ -6,11 +6,11 @@ RSpec.feature 'Transferring work ownership:', type: :feature do
   let(:original_owner) { create(:user) }
   let(:new_owner) { create(:user) }
   let!(:work) do
-    create(:public_work,
-           title: ['little_generic_work'],
-           creator: ['little_generic_work.creator'],
-           resource_type: ["stuff"],
-           user: original_owner)
+    create_for_repository(:work, :public,
+                          title: ['little_generic_work'],
+                          creator: ['little_generic_work.creator'],
+                          resource_type: ["stuff"],
+                          user: original_owner)
   end
 
   describe 'When I request a work transfer:', :js do
