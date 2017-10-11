@@ -11,7 +11,7 @@ module Hyrax
 
         def assign_representative(env)
           unless env.curation_concern.representative_id
-            # TODO: Possible optimization here. Does this cause a fetch of ordered_members if they're already loaded?
+            # TODO: Possible optimization here. Does this cause a fetch of members if they're already loaded?
             representative = nil # curation_concern.ordered_members.association.reader.first.target
             env.curation_concern.representative = representative if representative
           end

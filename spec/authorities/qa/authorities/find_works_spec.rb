@@ -21,6 +21,8 @@ RSpec.describe Qa::Authorities::FindWorks do
   subject { service.search(q, controller) }
 
   describe '#search' do
+    let(:persister) { Valkyrie.config.metadata_adapter.persister }
+
     context "works by all users" do
       it 'displays a list of other works deposited by current user' do
         expect(subject.map { |result| result[:id] }).to match_array [work2.id, work4.id]
@@ -29,8 +31,8 @@ RSpec.describe Qa::Authorities::FindWorks do
 
     context "when work has child works" do
       before do
-        work4.ordered_members << work1
-        work4.save!
+        work4.member_ids << work1.id
+        persister.save(resource: work4)
       end
 
       it 'displays a list of other works deposited by current user, exluding the child work' do
@@ -40,8 +42,8 @@ RSpec.describe Qa::Authorities::FindWorks do
 
     context "when work has parent works" do
       before do
-        work1.ordered_members << work4
-        work1.save!
+        work1.member_ids << work4.id
+        persister.save(resource: work1)
       end
 
       it 'displays a list of other works deposited by current user, excluding the parent work' do

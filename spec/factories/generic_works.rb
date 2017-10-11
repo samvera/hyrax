@@ -41,45 +41,45 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf').id
       end
     end
 
     factory :work_with_files do
-      before(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user) } }
+      before(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
     end
 
     factory :work_with_ordered_files do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user)
-        work.ordered_member_proxies.insert_target_at(0, FactoryGirl.create_for_repository(:file_set, user: evaluator.user))
+        $stderr.warn "work_with_ordered_files is deprecated. Use work_with_one_file instead"
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id
       end
     end
 
     factory :work_with_one_child do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'])
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work']).id
       end
     end
 
     factory :work_with_two_children do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
-        work.ordered_members << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1").id
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2").id
       end
     end
 
     factory :work_with_representative_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
-        work.representative_id = work.members[0].id
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet']).id
+        work.representative_id = work.member_ids[0]
       end
     end
 
     factory :work_with_file_and_work do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user)
-        work.ordered_members << FactoryGirl.create_for_repository(:work, user: evaluator.user)
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user).id
       end
     end
 
@@ -94,7 +94,7 @@ FactoryGirl.define do
       end
       factory :embargoed_work_with_files do
         after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
       end
     end
 
@@ -109,7 +109,7 @@ FactoryGirl.define do
       end
       factory :leased_work_with_files do
         after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create_for_repository(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
       end
     end
   end
