@@ -6,7 +6,7 @@ module Hyrax
     # @param [String] file_set_id - the identifier of the object to grant access to
     # @param [String] user_key - the user to add
     def perform(file_set_id, user_key)
-      file_set = ::FileSet.find(file_set_id)
+      file_set = Queries.find_by(id: file_set_id)
       file_set.edit_users += [user_key]
       file_set.save!
     end
