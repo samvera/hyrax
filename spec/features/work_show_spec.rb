@@ -35,7 +35,7 @@ RSpec.feature "display a work as its owner" do
   end
 
   context "as a user who is not logged in" do
-    let(:work) { create(:public_generic_work, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
+    let(:work) { create_for_repository(:work, :public, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
 
     before do
       visit work_path

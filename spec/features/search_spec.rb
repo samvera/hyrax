@@ -2,10 +2,10 @@ RSpec.feature 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }
   let!(:work) do
-    create(:public_work,
-           title: ["Toothbrush"],
-           keyword: [subject_value, 'taco'],
-           user: user)
+    create_for_repository(:work, :public,
+                          title: ["Toothbrush"],
+                          keyword: [subject_value, 'taco'],
+                          user: user)
   end
 
   let!(:collection) do
