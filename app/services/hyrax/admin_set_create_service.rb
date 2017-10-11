@@ -55,18 +55,19 @@ module Hyrax
     def create
       admin_set.edit_groups = [admin_group_name]
       admin_set.creator = [creating_user.user_key] if creating_user
-      admin_set.save.tap do |result|
-        if result
-          ActiveRecord::Base.transaction do
-            permission_template = create_permission_template
-            workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if admin_set.default_set?
-          end
-        end
+      result = persister.save(resource: admin_set)
+      ActiveRecord::Base.transaction do
+        permission_template = create_permission_template
+        workflow = create_workflows_for(permission_template: permission_template)
+        create_default_access_for(permission_template: permission_template, workflow: workflow) if result.default_set?
       end
     end
 
     private
+
+      def persister
+        Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      end
 
       def access_grants_attributes
         [
