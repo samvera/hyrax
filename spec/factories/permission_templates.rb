@@ -11,11 +11,11 @@ FactoryBot.define do
           if admin_set_id.present?
             begin
               AdminSet.find(admin_set_id)
-            rescue ActiveFedora::ObjectNotFoundError
-              create(:admin_set, id: admin_set_id)
+            rescue Valkyrie::Persistence::ObjectNotFoundError
+              create_for_repository(:admin_set, id: admin_set_id)
             end
           else
-            create(:admin_set)
+            create_for_repository(:admin_set)
           end
         permission_template.admin_set_id = admin_set.id
       end

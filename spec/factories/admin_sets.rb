@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence(:title) { |n| ["Title #{n}"] }
 
     to_create do |instance|
-      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      Valkyrie::MetadataAdapter.find(:indexing_persister).persister.save(resource: instance)
     end
 
     # Given the relationship between permission template and admin set, when
