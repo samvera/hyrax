@@ -3,7 +3,7 @@
 module Hyrax
   class FileUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = ::FileSet.find(id)
+      self.model = Queries.find_by(id: id)
     end
 
     alias file model
