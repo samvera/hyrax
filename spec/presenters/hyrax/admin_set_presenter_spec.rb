@@ -21,7 +21,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
     end
 
     context "admin set with work" do
-      let(:admin_set) { create(:admin_set, members: [work]) }
+      let(:admin_set) { create_for_repository(:admin_set, members: [work]) }
 
       it { is_expected.to eq 1 }
     end
@@ -31,13 +31,13 @@ RSpec.describe Hyrax::AdminSetPresenter do
     subject { presenter.disable_delete? }
 
     context "empty admin set" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       it { is_expected.to be false }
     end
 
     context "non-empty admin set" do
-      let(:admin_set) { create(:admin_set, members: [work]) }
+      let(:admin_set) { create_for_repository(:admin_set, members: [work]) }
 
       it { is_expected.to be true }
     end

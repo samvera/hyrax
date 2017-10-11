@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::PermissionTemplateAccess do
-  let(:admin_set) { create(:admin_set, with_permission_template: true) }
+  let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true) }
   let(:permission_template_access) do
     create(:permission_template_access,
            :manage,
