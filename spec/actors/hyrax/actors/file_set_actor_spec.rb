@@ -262,7 +262,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#attach_to_work" do
-    let(:work) { build(:public_generic_work) }
+    let(:work) { build(:work, :public) }
 
     before do
       allow(actor).to receive(:acquire_lock_for).and_yield
