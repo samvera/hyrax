@@ -14,7 +14,7 @@ RSpec.describe Hyrax::SingleAdminSetSearchBuilder do
 
     it do
       is_expected.to match_array ["",
-                                  "{!terms f=has_model_ssim}AdminSet"]
+                                  "{!terms f=internal_resource_ssim}AdminSet"]
     end
   end
 end

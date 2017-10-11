@@ -61,7 +61,7 @@ module Hyrax
 
         def build_resources(xml, doc_set)
           doc_set.each do |doc|
-            model = doc.fetch('has_model_ssim', []).first.constantize
+            model = doc.fetch('internal_resource_ssim', []).first.constantize
             if model == Collection
               build_resource(xml, doc, model, hyrax_routes)
             else

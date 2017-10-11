@@ -17,7 +17,7 @@ RSpec.describe Hyrax::TrophyPresenter do
   end
 
   let(:presenter) { described_class.new(solr_document) }
-  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
+  let(:solr_document) { SolrDocument.new(id: '123456', internal_resource_ssim: 'GenericWork', title_tesim: ['A Title']) }
 
   describe "id" do
     subject { presenter.id }
