@@ -19,13 +19,13 @@ module Hyrax
     # Add members using the members association.
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << ActiveFedora::Base.find(new_member_ids)
+      members << new_member_ids
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     def add_member_objects(new_member_ids)
       Array(new_member_ids).each do |member_id|
-        member = ActiveFedora::Base.find(member_id)
+        member = find_resource(member_id)
         member.member_of_collection_ids << id
         persister.save(resource: member)
       end
@@ -96,6 +96,14 @@ module Hyrax
       # Solr field name works use to index member ids
       def member_ids_field
         Solrizer.solr_name('member_ids', :symbol)
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
   end
 end
