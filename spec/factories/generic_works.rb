@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
+  factory :work, aliases: [:generic_work], class: GenericWork do
     to_create do |instance|
       Valkyrie.config.metadata_adapter.persister.save(resource: instance)
     end
@@ -29,7 +29,9 @@ FactoryBot.define do
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
 
-    factory :public_generic_work, aliases: [:public_work], traits: [:public]
+    trait :private do
+      # the work is private by default. This is just an optional annotation.
+    end
 
     trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
