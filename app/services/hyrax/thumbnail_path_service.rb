@@ -22,8 +22,8 @@ module Hyrax
 
         def fetch_thumbnail(object)
           return object if object.thumbnail_id == object.id
-          ::ActiveFedora::Base.find(object.thumbnail_id)
-        rescue ActiveFedora::ObjectNotFoundError
+          find_resource(object.thumbnail_id)
+        rescue Valkyrie::Persistence::ObjectNotFoundError
           Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
           nil
         end
@@ -52,6 +52,14 @@ module Hyrax
         # @param [FileSet] thumb - the object that is the thumbnail
         def thumbnail_filepath(thumb)
           Hyrax::DerivativePath.derivative_path_for_reference(thumb, 'thumbnail')
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end
