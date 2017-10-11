@@ -27,7 +27,7 @@ module Hyrax
         # @see Hyrax::Actors::AddToWorkActor for duplication
         def cleanup_ids_to_remove_from_curation_concern(curation_concern, ordered_member_ids)
           (curation_concern.ordered_member_ids - ordered_member_ids).each do |old_id|
-            work = ::ActiveFedora::Base.find(old_id)
+            work = find_resource(old_id)
             curation_concern.ordered_members.delete(work)
             curation_concern.members.delete(work)
           end
@@ -35,7 +35,7 @@ module Hyrax
 
         def add_new_work_ids_not_already_in_curation_concern(env, ordered_member_ids)
           (ordered_member_ids - env.curation_concern.ordered_member_ids).each do |work_id|
-            work = ::ActiveFedora::Base.find(work_id)
+            work = find_resource(work_id)
             if can_edit_both_works?(env, work)
               env.curation_concern.ordered_members << work
               env.curation_concern.save!
@@ -57,6 +57,14 @@ module Hyrax
           end
           curation_concern.list_source.order_will_change!
           true
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end
