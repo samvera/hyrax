@@ -15,13 +15,23 @@
   <% form_url = @form.id.nil? ? hyrax.admin_collection_types_path : hyrax.admin_collection_type_path(@form.id) %>
   <%= simple_form_for @form, url: form_url, as: :collection_type do |f| %>
     <div class="tab-content">
-      <div id="metadata" class="tab-pane active">
-        <div class="panel panel-default labels">
-          <div class="panel-body">
-            <%= render 'form_metadata', f: f %>
+      <% if @collection_type.admin_set? %>
+        <div id="metadata" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_metadata_admin_set', f: f %>
+            </div>
           </div>
         </div>
-      </div>
+      <% else %>
+        <div id="metadata" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_metadata', f: f %>
+            </div>
+          </div>
+        </div>
+      <% end %>
       <div id="settings" class="tab-pane">
         <div class="panel panel-default labels">
           <div class="panel-body">
