@@ -120,7 +120,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
     end
 
     context "when a user is granted edit access" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       context "and a admin_set that allows grants has been selected" do
         let(:attributes) { { admin_set_id: admin_set.id, permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
@@ -280,14 +280,14 @@ RSpec.describe Hyrax::Forms::WorkForm do
     subject { described_class.send(:workflow_for, admin_set_id: admin_set.id) }
 
     context "when a active workflow is not found" do
-      let(:admin_set) { create(:admin_set, with_permission_template: true) }
+      let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true) }
 
       it "raises a custom error" do
         expect { subject }.to raise_error Hyrax::MissingWorkflowError
       end
     end
     context "when a permission_template is not found" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       it "raises an error" do
         expect { subject }.to raise_error(/Missing permission template for AdminSet\(id:/)

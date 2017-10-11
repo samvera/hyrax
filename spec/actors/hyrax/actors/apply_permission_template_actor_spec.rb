@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
           read_users: ['Taraji'])
   end
   let(:attributes) { { admin_set_id: admin_set.id } }
-  let(:admin_set) { create(:admin_set, with_permission_template: true) }
+  let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true) }
   let(:permission_template) { admin_set.permission_template }
 
   subject(:middleware) do
