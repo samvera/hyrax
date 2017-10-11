@@ -23,13 +23,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     before do
-<<<<<<< HEAD
-      allow(Collection).to receive(:find).with('123')
-      allow(curation_concern).to receive(:member_of_collections=)
-=======
       allow(Collection).to receive(:find).with(['123'])
       allow(curation_concern).to receive(:member_of_collection_ids=)
->>>>>>> Use member_of_collection_ids= rather than member_of_collections
     end
 
     it 'does not receive the member_of_collection_ids' do
@@ -41,7 +36,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection, edit_users: [user.user_key]) }
+    let(:collection) { create_for_repository(:collection, edit_users: [user.user_key]) }
     let(:attributes) do
       {
         member_of_collections_attributes: { '0' => { id: collection.id } },
