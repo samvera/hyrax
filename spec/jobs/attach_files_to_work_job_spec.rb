@@ -4,7 +4,7 @@ RSpec.describe AttachFilesToWorkJob do
     let(:file2) { File.open(fixture_path + '/image.jp2') }
     let(:uploaded_file1) { build(:uploaded_file, file: file1) }
     let(:uploaded_file2) { build(:uploaded_file, file: file2) }
-    let(:generic_work) { create(:public_generic_work) }
+    let(:generic_work) { create_for_repository(:work, :public) }
 
     shared_examples 'a file attacher' do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
