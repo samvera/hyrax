@@ -7,7 +7,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       SolrDocument.new(
         id: '999',
         object_profile_ssm: object_profile,
-        has_model_ssim: ['GenericWork'],
+        internal_resource_ssim: ['GenericWork'],
         human_readable_type_tesim: ['Generic Work'],
         contributor_tesim: contributor,
         creator_tesim: creator,
@@ -95,7 +95,7 @@ RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
       SolrDocument.new(
         id: '999',
         object_profile_ssm: object_profile,
-        has_model_ssim: ['GenericWork'],
+        internal_resource_ssim: ['GenericWork'],
         human_readable_type_tesim: ['Generic Work'],
         creator_tesim: creator,
         license_tesim: ['http://creativecommons.org/licenses/by/3.0/us/'],

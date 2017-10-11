@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_descriptions.html.erb', type: 
     let(:collection) do
       {
         id: '999',
-        "has_model_ssim" => ["Collection"],
+        "internal_resource_ssim" => ["Collection"],
         "title_tesim" => ["Title 1"],
         'date_created_tesim' => '2000-01-01'
       }
