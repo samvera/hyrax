@@ -228,6 +228,17 @@ module Hyrax
       @license_service_class ||= Hyrax::LicenseService
     end
 
+    # A configuration point for changing the behavior of the rights statement service.
+    #
+    # @!attribute [w] license_service_class
+    #   A configuration point for changing the behavior of the license service.
+    #
+    #   @see Hyrax::RightsStatementService for implementation details
+    attr_writer :rights_statement_service_class
+    def rights_statement_service_class
+      @rights_statement_service_class ||= Hyrax::RightsStatementService
+    end
+
     attr_writer :banner_image
     def banner_image
       # This image can be used for free and without attribution. See here for source and license: https://github.com/samvera/hyrax/issues/1551#issuecomment-326624909
