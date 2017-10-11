@@ -116,7 +116,7 @@ module Hyrax
 
       # Loads the FileSet from Fedora if needed
       def file_set
-        @file_set ||= ::FileSet.find(id)
+        @file_set ||= Queries.find_by(id: id)
       end
   end
 end
