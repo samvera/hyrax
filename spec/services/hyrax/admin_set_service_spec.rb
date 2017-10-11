@@ -11,9 +11,9 @@ RSpec.describe Hyrax::AdminSetService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:as1) { create(:admin_set, read_groups: ['public'], title: ['foo']) }
-    let!(:as2) { create(:admin_set, read_groups: ['public'], title: ['bar']) }
-    let!(:as3) { create(:admin_set, edit_users: [user.user_key], title: ['baz']) }
+    let!(:as1) { create_for_repository(:admin_set, read_groups: ['public'], title: ['foo']) }
+    let!(:as2) { create_for_repository(:admin_set, read_groups: ['public'], title: ['bar']) }
+    let!(:as3) { create_for_repository(:admin_set, edit_users: [user.user_key], title: ['baz']) }
 
     before do
       create(:collection, :public) # this should never be returned.

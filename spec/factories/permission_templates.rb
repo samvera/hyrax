@@ -12,10 +12,10 @@ FactoryBot.define do
             begin
               AdminSet.find(admin_set_id)
             rescue
-              create(:admin_set, id: admin_set_id)
+              create_for_repository(:admin_set, id: admin_set_id)
             end
           else
-            create(:admin_set)
+            create_for_repository(:admin_set)
           end
         permission_template.admin_set_id = admin_set.id
       end
