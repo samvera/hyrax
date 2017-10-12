@@ -10,13 +10,13 @@
 #   rails generate hyrax:sample_data
 
 puts "Creating users"
-User.create(email: 'mgr1@example.org', password: 'pppppp') # 6*p
-User.create(email: 'mgr2@example.org', password: 'pppppp')
-User.create(email: 'dep1@example.org', password: 'pppppp')
-User.create(email: 'dep2@example.org', password: 'pppppp')
-User.create(email: 'vw1@example.org', password: 'pppppp')
-User.create(email: 'vw2@example.org', password: 'pppppp')
-user = User.create(email: 'foo@example.org', password: 'foobarbaz')
+User.create(email: 'mgr1@example.com', password: 'pppppp') # 6*p
+User.create(email: 'mgr2@example.com', password: 'pppppp')
+User.create(email: 'dep1@example.com', password: 'pppppp')
+User.create(email: 'dep2@example.com', password: 'pppppp')
+User.create(email: 'vw1@example.com', password: 'pppppp')
+User.create(email: 'vw2@example.com', password: 'pppppp')
+user = User.create(email: 'foo@example.com', password: 'foobarbaz')
 
 puts "Creating 'Nestable Collection' type"
 options = {
@@ -51,27 +51,18 @@ end
 _nonnestable_gid = coltype.gid
 
 puts "Creating collections for nesting"
-# Public Nested User Collection, no contents
-Collection.create!(title: ["Parent Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |parent|
-  parent.apply_depositor_metadata(user)
-  Collection.create!(title: ["Child Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |child|
-    child.apply_depositor_metadata(user)
-    child.member_of_collections = [parent]
-  end
-end
-
 # Public User Collection
 pnc = Collection.create!(title: ["Public Nestable Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |col|
   col.apply_depositor_metadata(user)
 end
 
 # Parent Collection
-pc = Collection.create!(title: ["Another Parent Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |parent|
+pc = Collection.create!(title: ["A Parent Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |parent|
   parent.apply_depositor_metadata(user)
 end
 
 # Child Collection
-cc = Collection.create!(title: ["Another Child Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |child|
+cc = Collection.create!(title: ["A Child Collection"], read_groups: ['public'], collection_type_gid: nestable_gid) do |child|
   child.apply_depositor_metadata(user)
   child.member_of_collections = [pc]
 end

@@ -27,6 +27,10 @@ Lint/ImplicitStringConcatenation:
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'app/search_builders/hyrax/admin_admin_set_member_search_builder.rb'
+
 Metrics/LineLength:
   Max: 200
 

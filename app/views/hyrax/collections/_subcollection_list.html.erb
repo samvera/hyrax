@@ -1,0 +1,16 @@
+<% if @subcollection_docs.nil? || @subcollection_docs.empty? %>
+  <div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_subcollections') %></div>
+<% else %>
+  <div class="media-body">
+    <h4 class="media-heading">
+      <% @subcollection_docs.each do |document| %>
+        <ul>
+         <li>
+            <% id = document.id %>
+            <%= link_to document.title_or_label, [hyrax, document], id: "src_copy_link_#{id}" %> <%# TODO: Get count for sub-collection %>
+          </li>
+        </ul>
+      <% end %>
+    </h4>
+  </div>
+<% end %>

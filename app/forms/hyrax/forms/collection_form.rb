@@ -13,6 +13,7 @@ module Hyrax
 
       self.model_class = ::Collection
       class_attribute :member_search_builder_class
+
       self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
 
       delegate :human_readable_type, :member_ids, to: :model
@@ -91,7 +92,7 @@ module Hyrax
         end
 
         def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self)
+          @member_search_builder ||= member_search_builder_class.new(self, search_includes_models: :both)
         end
 
         def member_presenters(member_ids)

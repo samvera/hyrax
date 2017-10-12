@@ -77,6 +77,7 @@ module Hyrax
 
         presenter
         query_collection_members
+        query_member_subcollections if @collection.collection_type.nestable?
       end
 
       def edit
@@ -366,7 +367,7 @@ module Hyrax
         # Instantiates the search builder that builds a query for items that are
         # members of the current collection. This is used in the show view.
         def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self)
+          @member_search_builder ||= member_search_builder_class.new(self, search_includes_models: :works)
         end
 
         alias collection_member_search_builder member_search_builder
@@ -408,6 +409,7 @@ module Hyrax
           params[:q] = params[:cq]
           @response = repository.search(query_for_collection_members)
           @member_docs = @response.documents
+          @members_count = @response.total
         end
 
         # @return <Hash> a representation of the solr query that find the collection members
@@ -477,6 +479,36 @@ module Hyrax
 
         def set_default_permissions
           Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
+        end
+
+        # Queries Solr for members of the collection.
+        # Populates @search_results and @subcollection_docs similar to Blacklight Catalog#index populating @response and @documents
+        def query_member_subcollections
+          params[:q] = params[:cq]
+          @search_results = repository.search(query_for_subcollections)
+          @subcollection_docs = @search_results.documents
+          @subcollection_count = @search_results.total
+        end
+
+        def nested_collections
+          @nested_collections ||= member_search_builder_class.new(self, search_includes_models: :collections)
+        end
+
+        # @return <Hash> a representation of the solr query that find the subcollections
+        def query_for_subcollections
+          nested_collections.with(params_for_subcollections).query
+        end
+
+        # You can override this method if you need to provide additional inputs to the search
+        # builder. For example:
+        #   search_field: 'all_fields'
+        # TODO: paging is linked between both searches due to blacklight constraints,
+        # so I've deactivated paging here, and selected a large result number to hopefully
+        # get everything. Blacklight pagination still needs to be overridden and set
+        # up for the subcollections.
+        # @return <Hash> the inputs required for the collection member search builder
+        def params_for_subcollections
+          params.merge(q: params[:cq], rows: 50).except(:page)
         end
     end
   end

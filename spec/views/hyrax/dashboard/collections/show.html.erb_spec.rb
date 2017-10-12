@@ -16,6 +16,8 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)
+
+    allow(collection_type).to receive(:nestable?).and_return(true)
     allow(collection_type).to receive(:title).and_return("User Collection")
 
     assign(:presenter, presenter)
@@ -25,7 +27,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     allow(view).to receive(:dashboard_collection_path).and_return("/dashboard/collection/123")
     allow(view).to receive(:collection_path).and_return("/collection/123")
 
-    stub_template 'hyrax/collections/_search_form.html.erb' => 'search form'
+    stub_template '_search_form.html.erb' => 'search form'
     stub_template 'hyrax/dashboard/collections/_sort_and_per_page.html.erb' => 'sort and per page'
     stub_template '_document_list.html.erb' => 'document list'
     # This is tested ./spec/views/hyrax/dashboard/collections/_show_actions.html.erb_spec.rb

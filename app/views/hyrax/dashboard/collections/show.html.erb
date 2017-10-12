@@ -18,7 +18,6 @@
   <div>
       <%= render 'hyrax/collections/collection_description', presenter: @presenter %>
   </div>
-
   <div class="col-md-12">
     <% unless has_collection_search_parameters? %>
       <%= render 'show_descriptions' %>
@@ -29,16 +28,31 @@
 <div class="row">
   <div class="col-md-12 h2">
     <% if has_collection_search_parameters? %>
-        <%= t('hyrax.collections.search_results') %>
-    <% else %>
-        <%= t('.item_count') %> (<%= @presenter.total_items %>)
+        <%= t('.search_results') %>
     <% end %>
-    <%= render 'show_add_items_actions', presenter: @presenter %>
+  </div>
+  <div class="col-xs-6 col-md-5 col-lg-6 pull-right">
+    <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
+    <%= render 'hyrax/collections/search_form', presenter: @presenter %>
   </div>
 </div>
 
-<div class="col-xs-6 col-md-5 col-lg-6 pull-right">
-  <%= render 'hyrax/collections/search_form', presenter: @presenter %>
+<% if @presenter.collection_type_is_nestable? %>
+
+  <div class="row">
+    <div class="col-md-12 h2">
+      <%= t('.subcollection_count') %> (<%= @subcollection_count %>)
+      <%= render 'show_subcollection_actions', presenter: @presenter %>
+    </div>
+  </div>
+  <%= render 'subcollection_list', collection: @subcollection_docs %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12 h2">
+    <%= t('.item_count') %> (<%= @members_count %>)
+    <%= render 'show_add_items_actions', presenter: @presenter %>
+  </div>
 </div>
 
 <div class="col-md-12">

@@ -11,11 +11,5 @@
                 title: t('hyrax.collection.actions.add_new_work.desc'),
                 data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single', add_works_to_collection: presenter.id },
                 class: 'btn btn-default  pull-right'  %>
-    <% if presenter.collection_type_is_nestable? %>
-      <%= link_to t('hyrax.collection.actions.nest_collections.label'),
-                  hyrax.dashboard_new_nest_collection_within_path(child_id: presenter.id),
-                  title: t('hyrax.collection.actions.nest_collections.desc'),
-                  class: 'btn btn-default' %>
-    <% end %>
   <% end %>
 </div>
