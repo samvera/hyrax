@@ -152,7 +152,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_sets_path)
           expect(flash[:notice]).to eq "Administrative set successfully deleted"
-          expect(AdminSet.exists?(admin_set.id)).to be false
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be false
         end
       end
 
@@ -168,8 +168,8 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_set_path(admin_set))
           expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is not empty"
-          expect(AdminSet.exists?(admin_set.id)).to be true
-          expect(GenericWork.exists?(work.id)).to be true
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be true
+          expect(Hyrax::Queries.exists?(work.id)).to be true
         end
       end
 
@@ -181,7 +181,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_set_path(admin_set))
           expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is the default set"
-          expect(AdminSet.exists?(admin_set.id)).to be true
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be true
         end
       end
     end

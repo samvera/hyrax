@@ -147,9 +147,9 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete adminset or member works" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is not empty"]
-        expect(AdminSet.exists?(admin_set.id)).to be true
-        expect(GenericWork.exists?(gf1.id)).to be true
-        expect(GenericWork.exists?(gf2.id)).to be true
+        expect(Hyrax::Queries.exists?(admin_set.id)).to be true
+        expect(Hyrax::Queries.exists?(gf1.id)).to be true
+        expect(Hyrax::Queries.exists?(gf2.id)).to be true
       end
     end
 
@@ -159,7 +159,7 @@ RSpec.describe AdminSet, type: :model do
       end
 
       it "deletes the adminset" do
-        expect(AdminSet.exists?(admin_set.id)).to be false
+        expect(Hyrax::Queries.exists?(admin_set.id)).to be false
       end
     end
 
@@ -172,7 +172,7 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete the adminset" do
         expect(admin_set.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
-        expect(AdminSet.exists?(described_class::DEFAULT_ID)).to be true
+        expect(Hyrax::Queries.exists?(described_class::DEFAULT_ID)).to be true
       end
     end
   end
