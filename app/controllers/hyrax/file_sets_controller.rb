@@ -15,9 +15,9 @@ module Hyrax
     include Hyrax::ParentContainer
     copy_blacklight_config_from(::CatalogController)
 
-    class_attribute :show_presenter, :form_class
+    class_attribute :show_presenter, :change_set_class
     self.show_presenter = Hyrax::FileSetPresenter
-    self.form_class = Hyrax::Forms::FileSetEditForm
+    self.change_set_class = Hyrax::Forms::FileSetEditForm
 
     # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
     # method. However the interface for various CurationConcern modules leverages the #curation_concern method
@@ -127,7 +127,7 @@ module Hyrax
 
       # this is provided so that implementing application can override this behavior and map params to different attributes
       def update_metadata
-        file_attributes = form_class.model_attributes(attributes)
+        file_attributes = change_set_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
       end
 

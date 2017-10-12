@@ -27,7 +27,7 @@ module Hyrax
       before_action :authenticate_user!, except: [:index]
 
       class_attribute :presenter_class,
-                      :form_class,
+                      :change_set_class,
                       :single_item_search_builder_class,
                       :member_search_builder_class
 
@@ -39,7 +39,7 @@ module Hyrax
 
       self.presenter_class = Hyrax::CollectionPresenter
 
-      self.form_class = Hyrax::Forms::CollectionForm
+      self.change_set_class = Hyrax::Forms::CollectionForm
 
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
@@ -230,7 +230,7 @@ module Hyrax
         deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
 
         def collection_params
-          form_class.model_attributes(params[:collection])
+          change_set_class.model_attributes(params[:collection])
         end
 
         # Queries Solr for members of the collection.
@@ -307,7 +307,7 @@ module Hyrax
         end
 
         def form
-          @form ||= form_class.new(@collection, current_ability, repository)
+          @form ||= change_set_class.new(@collection, current_ability, repository)
         end
 
         def find_resource(id)
