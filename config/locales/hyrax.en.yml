@@ -173,8 +173,8 @@ en:
       collection_types:
         edit:
           header:           "Edit Collection Type"
+          submit:           "Save changes"
         form:
-          submit:            "Save changes"
           tab:
             metadata:        "Description"
             settings:        "Settings"
@@ -232,6 +232,7 @@ en:
           error_preamble: 'Error: You have specified more than one of the same single-membership collection types'
         new:
           header:           "Create New Collection Type"
+          submit:           "Save"
         create:
           notification:     "The collection type %{name} has been created."
         update:
