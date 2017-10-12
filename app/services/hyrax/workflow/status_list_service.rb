@@ -44,6 +44,7 @@ module Hyrax
           work_query = WorksSearchBuilder.new([:filter_models], self).query
           work_query["fq"] += query(actionable_roles)
           work_query["rows"] = 1000
+          # TODO: can we make this use a POST?
           repository.search(work_query).response["docs"]
         end
 
