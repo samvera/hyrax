@@ -5,19 +5,19 @@ RSpec.describe Hyrax::LeaseService do
   let(:past_date) { 2.days.ago }
 
   let!(:work_with_expired_lease1) do
-    build(:generic_work, lease_expiration_date: past_date.to_s).tap do |work|
+    build(:work, lease_expiration_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
   let!(:work_with_expired_lease2) do
-    build(:generic_work, lease_expiration_date: past_date.to_s).tap do |work|
+    build(:work, lease_expiration_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
   let!(:work_with_lease_in_effect) { create_for_repository(:work, lease_expiration_date: future_date.to_s) }
-  let!(:work_without_lease) { create(:generic_work) }
+  let!(:work_without_lease) { create_for_repository(:work) }
 
   describe '#assets_with_expired_leases' do
     it 'returns an array of assets with expired lease' do
