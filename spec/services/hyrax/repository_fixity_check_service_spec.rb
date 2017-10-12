@@ -1,9 +1,5 @@
 RSpec.describe Hyrax::RepositoryFixityCheckService do
-  let!(:file) do
-    create(:file_set).tap do |file|
-      file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-    end
-  end
+  let!(:file) { create_for_repository(:file_set) }
 
   # The clean is here so that there is only one object that gets fixity checked
   describe "#fixity_check_everything", :clean_repo do
