@@ -16,7 +16,7 @@ RSpec.describe Hyrax::EmbargoService do
     end
   end
 
-  let!(:work_with_embargo_in_effect) { FactoryGirl.create(:generic_work, embargo_release_date: future_date.to_s) }
+  let!(:work_with_embargo_in_effect) { FactoryGirl.create_for_repository(:work, embargo_release_date: future_date.to_s) }
   let!(:work_without_embargo) { FactoryGirl.create(:generic_work) }
 
   describe '#assets_with_expired_embargoes' do

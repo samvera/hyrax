@@ -28,7 +28,17 @@ module Hyrax
     end
 
     def curation_concern
-      @curation_concern ||= ActiveFedora::Base.find(params[:id])
+      @curation_concern ||= find_resource(params[:id])
     end
+
+    private
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+      end
   end
 end

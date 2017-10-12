@@ -4,15 +4,16 @@ RSpec.describe Hyrax::CollectionsController do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create(:public_collection, title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
-                               user: user)
+    create_for_repository(:public_collection,
+                          title: ["My collection"],
+                          description: ["My incredibly detailed description of the collection"],
+                          user: user)
   end
 
-  let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
-  let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
-  let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:unowned_asset)  { create(:work, user: other) }
+  let(:asset1)         { create_for_repository(:work, title: ["First of the Assets"], user: user) }
+  let(:asset2)         { create_for_repository(:work, title: ["Second of the Assets"], user: user) }
+  let(:asset3)         { create_for_repository(:work, title: ["Third of the Assets"], user: user) }
+  let(:unowned_asset)  { create_for_repository(:work, user: other) }
 
   let(:collection_attrs) do
     { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
@@ -20,11 +21,13 @@ RSpec.describe Hyrax::CollectionsController do
 
   describe "#show" do # public landing page
     context "when signed in" do
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
+
       before do
         sign_in user
         [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collections = [collection]
-          asset.save
+          asset.member_of_collection_ids = [collection.id]
+          persister.save(resource: asset)
         end
       end
 

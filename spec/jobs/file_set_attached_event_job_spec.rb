@@ -9,7 +9,7 @@ RSpec.describe FileSetAttachedEventJob do
 
   context 'with a FileSet' do
     let(:file_set) { curation_concern.file_sets.first }
-    let(:curation_concern) { create(:work_with_one_file, title: ['MacBeth'], user: user) }
+    let(:curation_concern) { create_for_repository(:work_with_one_file, title: ['MacBeth'], user: user) }
     let(:event) do
       {
         action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> " \

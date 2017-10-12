@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module Hyrax
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
@@ -21,7 +22,12 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save to get an id
+
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        # Need to save to get an id
+        saved_file = persister.save(resource: file_set)
+        return unless saved_file
+
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
           # reach into the FileActor and run the ingest with the file instance in
@@ -30,8 +36,8 @@ module Hyrax
           file_actor.ingest_file(wrapper!(file: file, relation: relation))
           # Copy visibility and permissions from parent (work) to
           # FileSets even if they come in from BrowseEverything
-          VisibilityCopyJob.perform_later(file_set.parent)
-          InheritPermissionsJob.perform_later(file_set.parent)
+          VisibilityCopyJob.perform_later(saved_file.parent)
+          InheritPermissionsJob.perform_later(saved_file.parent)
         else
           IngestJob.perform_later(wrapper!(file: file, relation: relation))
         end
@@ -73,12 +79,12 @@ module Hyrax
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
           work.reload unless work.new_record?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-          work.ordered_members << file_set
+          work.member_ids << file_set.id
           work.representative = file_set if work.representative_id.blank?
           work.thumbnail = file_set if work.thumbnail_id.blank?
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
-          work.save
+          persister.save(resource: work)
           Hyrax.config.callback.run(:after_create_fileset, file_set, user)
         end
       end
@@ -109,6 +115,10 @@ module Hyrax
       self.file_actor_class = Hyrax::Actors::FileActor
 
       private
+
+        def persister
+          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        end
 
         def ability
           @ability ||= ::Ability.new(user)
@@ -158,3 +168,4 @@ module Hyrax
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

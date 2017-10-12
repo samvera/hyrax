@@ -12,6 +12,10 @@ module Hyrax
 
       attr_reader :curation_concern, :current_ability, :attributes
 
+      def change_set_persister
+        Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter)
+      end
+
       # @return [User] the user from the current_ability
       def user
         current_ability.current_user

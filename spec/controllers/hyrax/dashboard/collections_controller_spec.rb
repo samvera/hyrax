@@ -4,19 +4,21 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create(:public_collection, title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
-                               user: user)
+    create_for_repository(:public_collection,
+                          title: ["My collection"],
+                          description: ["My incredibly detailed description of the collection"],
+                          user: user)
   end
 
-  let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
-  let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
-  let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:unowned_asset)  { create(:work, user: other) }
+  let(:asset1)         { create_for_repository(:work, title: ["First of the Assets"], user: user) }
+  let(:asset2)         { create_for_repository(:work, title: ["Second of the Assets"], user: user) }
+  let(:asset3)         { create_for_repository(:work, title: ["Third of the Assets"], user: user) }
+  let(:unowned_asset)  { create_for_repository(:work, user: other) }
 
   let(:collection_attrs) do
     { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
   end
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   describe '#new' do
     before { sign_in user }
@@ -105,8 +107,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     context 'collection members' do
       before do
         [asset1, asset2].each do |asset|
-          asset.member_of_collections << collection
-          asset.save!
+          asset.member_of_collection_ids << collection.id
+          persister.save(resource: asset)
         end
       end
 
@@ -126,15 +128,15 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           put :update, params: { id: collection,
                                  collection: { members: 'remove' },
                                  batch_document_ids: [asset2] }
-        end.to change { asset2.reload.member_of_collections.size }.by(-1)
+        end.to change { asset2.reload.member_of_collection_ids.size }.by(-1)
         expect(assigns[:collection].member_objects).to match_array [asset1]
       end
     end
 
     context 'when moving members between collections' do
-      let(:asset1) { create(:generic_work, user: user) }
-      let(:asset2) { create(:generic_work, user: user) }
-      let(:asset3) { create(:generic_work, user: user) }
+      let(:asset1) { create_for_repository(:work, user: user) }
+      let(:asset2) { create_for_repository(:work, user: user) }
+      let(:asset3) { create_for_repository(:work, user: user) }
       let(:collection2) do
         Collection.create(title: ['Some Collection']) do |col|
           col.apply_depositor_metadata(user.user_key)
@@ -143,8 +145,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
 
       before do
         [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collections << collection
-          asset.save
+          asset.member_of_collection_ids << collection.id
+          persister.save(resource: asset)
         end
       end
 
@@ -210,8 +212,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       before do
         sign_in user
         [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collections = [collection]
-          asset.save
+          asset.member_of_collection_ids = [collection.id]
+          persister.save(resource: asset)
         end
       end
 
@@ -267,10 +269,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
 
     context 'with admin user and private collection' do
       let(:collection) do
-        create(:private_collection,
-               title: ["My collection"],
-               description: ["My incredibly detailed description of the collection"],
-               user: user)
+        create_for_repository(:private_collection,
+                              title: ["My collection"],
+                              description: ["My incredibly detailed description of the collection"],
+                              user: user)
       end
       let(:admin) { create(:admin) }
 

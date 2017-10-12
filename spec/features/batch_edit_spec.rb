@@ -2,8 +2,8 @@
 
 RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   let(:current_user) { create(:user) }
-  let!(:work1)       { create(:public_work, user: current_user) }
-  let!(:work2)       { create(:public_work, user: current_user) }
+  let!(:work1)       { create_for_repository(:work, :public, user: current_user) }
+  let!(:work2)       { create_for_repository(:work, :public, user: current_user) }
 
   before do
     sign_in current_user

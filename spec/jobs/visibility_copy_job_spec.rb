@@ -1,6 +1,6 @@
 RSpec.describe VisibilityCopyJob do
   describe 'an open access work' do
-    let(:work) { create(:work_with_files) }
+    let(:work) { create_for_repository(:work_with_files) }
 
     it 'copies visibility to its contained files' do
       # files are private at the outset

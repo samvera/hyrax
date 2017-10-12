@@ -269,10 +269,14 @@ module Hyrax
 
         def remove_members_from_collection
           batch.each do |pid|
-            work = ActiveFedora::Base.find(pid)
-            work.member_of_collections.delete @collection
-            work.save!
+            work = find_resource(pid)
+            work.member_of_collection_ids.delete @collection.id
+            persister.save(resource: work)
           end
+        end
+
+        def persister
+          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         end
 
         def move_members_between_collections
@@ -304,6 +308,14 @@ module Hyrax
 
         def form
           @form ||= form_class.new(@collection, current_ability, repository)
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end

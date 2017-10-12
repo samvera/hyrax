@@ -1,8 +1,8 @@
 RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let(:public_collection) { create(:public_collection) }
-  let(:public_work) { create(:public_generic_work) }
-  let(:file_set) { create(:file_set, :public) }
+  let(:public_work) { create_for_repository(:work, :public) }
+  let(:file_set) { create_for_repository(:file_set, :public) }
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
   let(:xml) { Nokogiri::XML.parse(subject) }
   let(:url_list) { xml.xpath('//x:url', 'x' => sitemap) }
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
     before do
       # These private items should not show up.
       create(:private_collection)
-      create(:work)
+      create_for_repository(:work)
 
       # Sleep in between to ensure modified dates are different
       public_collection

@@ -32,7 +32,7 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
     subject { form.permission_template }
 
     context "when the PermissionTemplate doesn't exist" do
-      let(:model) { create(:admin_set) }
+      let(:model) { create_for_repository(:admin_set) }
 
       it "gets created" do
         expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
@@ -42,7 +42,7 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
 
     context "when the PermissionTemplate exists" do
       let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: model.id) }
-      let(:model) { create(:admin_set, with_permission_template: true) }
+      let(:model) { create_for_repository(:admin_set, with_permission_template: true) }
 
       it "uses the existing template" do
         expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
@@ -67,17 +67,17 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
     let(:repository) { Hyrax::CollectionsController.new.repository }
 
     context 'without any works/files attached' do
-      let(:model) { create(:admin_set) }
+      let(:model) { create_for_repository(:admin_set) }
 
       it { is_expected.to be_empty }
     end
 
     context 'with a work/file attached' do
-      let(:work) { create(:work_with_one_file) }
+      let(:work) { create_for_repository(:work_with_one_file) }
       let(:title) { work.file_sets.first.title.first }
       let(:file_id) { work.file_sets.first.id }
       let(:model) do
-        create(:admin_set, members: [work])
+        create_for_repository(:admin_set, members: [work])
       end
 
       it 'returns a hash of with file title as key and file id as value' do

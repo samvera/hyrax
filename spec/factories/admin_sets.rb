@@ -2,6 +2,10 @@ FactoryGirl.define do
   factory :admin_set do
     sequence(:title) { |n| ["Title #{n}"] }
 
+    to_create do |instance|
+      Valkyrie::MetadataAdapter.find(:indexing_persister).persister.save(resource: instance)
+    end
+
     # Given the relationship between permission template and admin set, when
     # an admin set is created via a factory, I believe it is appropriate to go ahead and
     # create the corresponding permission template

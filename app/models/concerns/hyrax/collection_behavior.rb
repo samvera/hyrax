@@ -1,33 +1,33 @@
 module Hyrax
   module CollectionBehavior
     extend ActiveSupport::Concern
-    include Hydra::AccessControls::WithAccessRight
+    # include Hydra::AccessControls::WithAccessRight
     include Hydra::WithDepositor # for access to apply_depositor_metadata
-    include Hydra::AccessControls::Permissions
+    # include Hydra::AccessControls::Permissions
     include Hyrax::CoreMetadata
-    include Hydra::Works::CollectionBehavior
+    # include Hydra::Works::CollectionBehavior
     include Hyrax::Noid
     include Hyrax::HumanReadableType
-    include Hyrax::HasRepresentative
+    # include Hyrax::HasRepresentative
     include Hyrax::Permissions
 
     included do
-      validates_with HasOneTitleValidator
-      self.indexer = Hyrax::CollectionIndexer
+      #  validates_with HasOneTitleValidator
+      #  self.indexer = Hyrax::CollectionIndexer
     end
 
     # Add members using the members association.
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << ActiveFedora::Base.find(new_member_ids)
+      members << new_member_ids
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     def add_member_objects(new_member_ids)
       Array(new_member_ids).each do |member_id|
-        member = ActiveFedora::Base.find(member_id)
-        member.member_of_collections << self
-        member.save!
+        member = find_resource(member_id)
+        member.member_of_collection_ids << id
+        persister.save(resource: member)
       end
     end
 
@@ -73,6 +73,10 @@ module Hyrax
 
     private
 
+      def persister
+        Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      end
+
       # Calculate the size of all the files in the work
       # @param work_id [String] identifer for a work
       # @return [Integer] the size in bytes
@@ -92,6 +96,14 @@ module Hyrax
       # Solr field name works use to index member ids
       def member_ids_field
         Solrizer.solr_name('member_ids', :symbol)
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
   end
 end

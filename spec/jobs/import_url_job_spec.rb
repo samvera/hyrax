@@ -44,9 +44,10 @@ RSpec.describe ImportUrlJob do
   context "when a batch update job is running too" do
     let(:title) { { file_set.id => ['File One'] } }
     let(:file_set_id) { file_set.id }
+    let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
     before do
-      file_set.save!
+      persister.save(resource: file_set)
       allow(ActiveFedora::Base).to receive(:find).and_call_original
       allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
       # run the batch job to set the title
@@ -57,7 +58,7 @@ RSpec.describe ImportUrlJob do
       # run the import job
       described_class.perform_now(file_set, operation)
       # import job should not override the title set another process
-      file = FileSet.find(file_set_id)
+      file = Hyrax::Queries.find_by(id: file_set_id)
       expect(file.title).to eq(['File One'])
     end
   end

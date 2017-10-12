@@ -1,5 +1,9 @@
 FactoryGirl.define do
-  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
+  factory :work, aliases: [:generic_work], class: GenericWork do
+    to_create do |instance|
+      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+    end
+
     transient do
       user { FactoryGirl.create(:user) }
       # Set to true (or a hash) if you want to create an admin set
@@ -13,7 +17,7 @@ FactoryGirl.define do
         attributes = {}
         attributes[:id] = work.admin_set_id if work.admin_set_id.present?
         attributes = evaluator.with_admin_set.merge(attributes) if evaluator.with_admin_set.respond_to?(:merge)
-        admin_set = create(:admin_set, attributes)
+        admin_set = create_for_repository(:admin_set, attributes)
         work.admin_set_id = admin_set.id
       end
     end
@@ -25,7 +29,9 @@ FactoryGirl.define do
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
 
-    factory :public_generic_work, aliases: [:public_work], traits: [:public]
+    trait :private do
+      # the work is private by default. This is just an optional annotation.
+    end
 
     trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -37,45 +43,45 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf').id
       end
     end
 
     factory :work_with_files do
-      before(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user) } }
+      before(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
     end
 
     factory :work_with_ordered_files do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)
-        work.ordered_member_proxies.insert_target_at(0, FactoryGirl.create(:file_set, user: evaluator.user))
+        $stderr.warn "work_with_ordered_files is deprecated. Use work_with_one_file instead"
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id
       end
     end
 
     factory :work_with_one_child do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'])
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work']).id
       end
     end
 
     factory :work_with_two_children do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1").id
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2").id
       end
     end
 
     factory :work_with_representative_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
-        work.representative_id = work.members[0].id
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user, title: ['A Contained FileSet']).id
+        work.representative_id = work.member_ids[0]
       end
     end
 
     factory :work_with_file_and_work do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user)
-        work.ordered_members << FactoryGirl.create(:generic_work, user: evaluator.user)
+        work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id
+        work.member_ids << FactoryGirl.create_for_repository(:work, user: evaluator.user).id
       end
     end
 
@@ -90,7 +96,7 @@ FactoryGirl.define do
       end
       factory :embargoed_work_with_files do
         after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
       end
     end
 
@@ -105,13 +111,18 @@ FactoryGirl.define do
       end
       factory :leased_work_with_files do
         after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryGirl.create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.member_ids << FactoryGirl.create_for_repository(:file_set, user: evaluator.user).id } }
       end
     end
   end
 
   # Doesn't set up any edit_users
   factory :work_without_access, class: GenericWork do
+    to_create do |instance|
+      persister = Valkyrie.config.metadata_adapter.persister
+      persister.save(resource: instance)
+    end
+
     title ['Test title']
     depositor { FactoryGirl.create(:user).user_key }
   end

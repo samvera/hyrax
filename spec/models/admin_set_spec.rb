@@ -1,7 +1,7 @@
 RSpec.describe AdminSet, type: :model do
-  let(:gf1) { create(:generic_work, user: user) }
-  let(:gf2) { create(:generic_work, user: user) }
-  let(:gf3) { create(:generic_work, user: user) }
+  let(:gf1) { create_for_repository(:work, user: user) }
+  let(:gf2) { create_for_repository(:work, user: user) }
+  let(:gf3) { create_for_repository(:work, user: user) }
 
   let(:user) { create(:user) }
 
@@ -26,20 +26,20 @@ RSpec.describe AdminSet, type: :model do
 
   describe 'factories' do
     it 'will create a permission_template when one is requested' do
-      expect { create(:admin_set, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+      expect { create_for_repository(:admin_set, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
     end
 
     it 'will not create a permission_template by default' do
-      expect { create(:admin_set) }.not_to change { Hyrax::PermissionTemplate.count }
+      expect { create_for_repository(:admin_set) }.not_to change { Hyrax::PermissionTemplate.count }
     end
 
     it 'will create a permission_template with attributes' do
-      permission_template = create(:admin_set,
-                                   with_permission_template: {
-                                     visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-                                     release_date: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
-                                     release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS
-                                   }).permission_template
+      permission_template = create_for_repository(:admin_set,
+                                                  with_permission_template: {
+                                                    visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+                                                    release_date: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
+                                                    release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS
+                                                  }).permission_template
       expect(permission_template.visibility).to eq(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
       expect(permission_template.release_period).to eq(Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS)
       expect(permission_template.release_date).to eq(6.months.from_now.to_date)
@@ -48,7 +48,7 @@ RSpec.describe AdminSet, type: :model do
 
   describe '.after_destroy' do
     it 'will destroy the associated permission template' do
-      admin_set = create(:admin_set, with_permission_template: true)
+      admin_set = create_for_repository(:admin_set, with_permission_template: true)
       expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1)
     end
   end
@@ -154,9 +154,9 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete adminset or member works" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is not empty"]
-        expect(AdminSet.exists?(subject.id)).to be true
-        expect(GenericWork.exists?(gf1.id)).to be true
-        expect(GenericWork.exists?(gf2.id)).to be true
+        expect(Hyrax::Queries.exists?(subject.id)).to be true
+        expect(Hyrax::Queries.exists?(gf1.id)).to be true
+        expect(Hyrax::Queries.exists?(gf2.id)).to be true
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe AdminSet, type: :model do
       end
 
       it "deletes the adminset" do
-        expect(AdminSet.exists?(subject.id)).to be false
+        expect(Hyrax::Queries.exists?(subject.id)).to be false
       end
     end
 
@@ -182,7 +182,7 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete the adminset" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
-        expect(AdminSet.exists?(described_class::DEFAULT_ID)).to be true
+        expect(Hyrax::Queries.exists?(described_class::DEFAULT_ID)).to be true
       end
     end
   end

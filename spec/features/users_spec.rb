@@ -6,7 +6,7 @@ RSpec.feature "User Profile", type: :feature do
   let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user, locale: 'en') }
 
   context 'when visiting user profile with highlighted works' do
-    let(:work) { create(:work, user: user) }
+    let(:work) { create_for_repository(:work, user: user) }
 
     before do
       user.trophies.create!(work_id: work.id)

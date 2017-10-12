@@ -59,7 +59,15 @@ module Hyrax
       end
 
       def asset
-        @asset ||= ActiveFedora::Base.find(single_use_link.itemId)
+        @asset ||= find_resource(single_use_link.itemId)
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
 
       def current_ability

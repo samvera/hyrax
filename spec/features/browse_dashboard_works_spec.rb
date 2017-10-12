@@ -1,10 +1,10 @@
 RSpec.describe "Browse Dashboard", type: :feature do
   let(:user) { create(:user) }
   let!(:dissertation) do
-    create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w[lorem ipsum dolor sit amet])
+    create_for_repository(:work, :public, user: user, title: ["Fake PDF Title"], subject: %w[lorem ipsum dolor sit amet])
   end
   let!(:mp3_work) do
-    create(:public_work, user: user, title: ["Test Document MP3"], subject: %w[consectetur adipisicing elit])
+    create_for_repository(:work, :public, user: user, title: ["Test Document MP3"], subject: %w[consectetur adipisicing elit])
   end
 
   before do
@@ -16,7 +16,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
            agent_id: user.user_key)
 
     sign_in user
-    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w[sed do eiusmod tempor incididunt ut labore])
+    create_for_repository(:work, :public, user: user, title: ["Fake Wav Files"], subject: %w[sed do eiusmod tempor incididunt ut labore])
     visit "/dashboard/my/works"
   end
 

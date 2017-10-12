@@ -1,5 +1,6 @@
 RSpec.describe Collection do
   let(:collection) { build(:public_collection) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']
@@ -40,15 +41,15 @@ RSpec.describe Collection do
   end
 
   describe "#members_objects", clean_repo: true do
-    let(:collection) { create(:collection) }
+    let(:collection) { create_for_repository(:collection) }
 
     it "is empty by default" do
       expect(collection.member_objects).to match_array []
     end
 
     context "adding members" do
-      let(:work1) { create(:work) }
-      let(:work2) { create(:work) }
+      let(:work1) { create_for_repository(:work) }
+      let(:work2) { create_for_repository(:work) }
 
       it "allows multiple files to be added" do
         collection.add_member_objects [work1.id, work2.id]
@@ -60,7 +61,7 @@ RSpec.describe Collection do
 
   describe "#destroy", clean_repo: true do
     let(:collection) { build(:collection) }
-    let(:work1) { create(:work) }
+    let(:work1) { create_for_repository(:work) }
 
     before do
       collection.add_member_objects [work1.id]
@@ -69,18 +70,18 @@ RSpec.describe Collection do
     end
 
     it "does not delete member files when deleted" do
-      expect(GenericWork.exists?(work1.id)).to be true
+      expect(Hyrax::Queries.exists?(work1.id)).to be true
     end
   end
 
   describe "Collection by another name" do
     before do
-      class OtherCollection < ActiveFedora::Base
+      class OtherCollection < Valkyrie::Resource
         include Hyrax::CollectionBehavior
       end
 
-      class Member < ActiveFedora::Base
-        include Hydra::Works::WorkBehavior
+      class Member < Valkyrie::Resource
+        include Hyrax::WorkBehavior
       end
       collection.add_member_objects member.id
     end
@@ -89,12 +90,15 @@ RSpec.describe Collection do
       Object.send(:remove_const, :Member)
     end
 
-    let(:member) { Member.create }
-    let(:collection) { OtherCollection.create(title: ['test title']) }
+    let(:member) { persister.save(resource: Member.new) }
+    let(:collection) do
+      col = OtherCollection.new(title: ['test title'])
+      persister.save(resource: col)
+    end
 
     it "have members that know about the collection", clean_repo: true do
       member.reload
-      expect(member.member_of_collections).to eq [collection]
+      expect(member.member_of_collection_ids).to eq [collection.id]
     end
   end
 end

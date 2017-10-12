@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#select_files" do
-    let(:work) { create(:work_with_one_file) }
+    let(:work) { create_for_repository(:work_with_one_file) }
     let(:title) { work.file_sets.first.title.first }
     let(:file_id) { work.file_sets.first.id }
 
@@ -120,7 +120,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
     end
 
     context "when a user is granted edit access" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       context "and a admin_set that allows grants has been selected" do
         let(:attributes) { { admin_set_id: admin_set.id, permissions_attributes: [{ type: 'person', name: 'justin', access: 'edit' }] } }
@@ -229,7 +229,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#embargo_release_date" do
-    let(:work) { create(:work, embargo_release_date: 5.days.from_now) }
+    let(:work) { create_for_repository(:work, embargo_release_date: 5.days.from_now) }
 
     subject { form.embargo_release_date }
 
@@ -237,7 +237,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#visibility_during_embargo" do
-    let(:work) { create(:work, visibility_during_embargo: 'authenticated') }
+    let(:work) { create_for_repository(:work, visibility_during_embargo: 'authenticated') }
 
     subject { form.visibility_during_embargo }
 
@@ -245,7 +245,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#visibility_after_embargo" do
-    let(:work) { create(:work, visibility_after_embargo: 'public') }
+    let(:work) { create_for_repository(:work, visibility_after_embargo: 'public') }
 
     subject { form.visibility_after_embargo }
 
@@ -253,7 +253,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#lease_expiration_date" do
-    let(:work) { create(:work, lease_expiration_date: 2.days.from_now) }
+    let(:work) { create_for_repository(:work, lease_expiration_date: 2.days.from_now) }
 
     subject { form.lease_expiration_date }
 
@@ -261,7 +261,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#visibility_during_lease" do
-    let(:work) { create(:work, visibility_during_lease: 'authenticated') }
+    let(:work) { create_for_repository(:work, visibility_during_lease: 'authenticated') }
 
     subject { form.visibility_during_lease }
 
@@ -269,7 +269,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#visibility_after_lease" do
-    let(:work) { create(:work, visibility_after_lease: 'private') }
+    let(:work) { create_for_repository(:work, visibility_after_lease: 'private') }
 
     subject { form.visibility_after_lease }
 
@@ -280,14 +280,14 @@ RSpec.describe Hyrax::Forms::WorkForm do
     subject { described_class.send(:workflow_for, admin_set_id: admin_set.id) }
 
     context "when a active workflow is not found" do
-      let(:admin_set) { create(:admin_set, with_permission_template: true) }
+      let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true) }
 
       it "raises a custom error" do
         expect { subject }.to raise_error Hyrax::MissingWorkflowError
       end
     end
     context "when a permission_template is not found" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       it "raises an error" do
         expect { subject }.to raise_error(/Missing permission template for AdminSet\(id:/)

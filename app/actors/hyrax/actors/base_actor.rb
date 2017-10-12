@@ -16,17 +16,29 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        apply_creation_data_to_curation_concern(env)
-        apply_save_data_to_curation_concern(env)
-        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+        begin
+          change_set = Hyrax::DynamicChangeSet.new(env.curation_concern)
+        rescue
+          raise NotImplementedError, "Change Set for #{@model} not implemented."
+        end
+
+        yield change_set if block_given?
+        return unless change_set.validate(env.attributes)
+        env.change_set_persister.save(change_set: change_set) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
+        begin
+          change_set = Hyrax::DynamicChangeSet.new(env.curation_concern)
+        rescue
+          raise NotImplementedError, "Change Set for #{@model} not implemented."
+        end
+
         apply_update_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-        next_actor.update(env) && save(env) && run_callbacks(:after_update_metadata, env)
+        next_actor.update(env) && env.change_set_persister.save(change_set: change_set) && run_callbacks(:after_update_metadata, env)
       end
 
       # @param [Hyrax::Actors::Environment] env

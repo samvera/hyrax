@@ -2,6 +2,7 @@ RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
   let(:actor) { controller.send(:actor) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   context "when signed in" do
     before do
@@ -14,7 +15,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe '#create' do
       let(:parent) do
-        create(:generic_work, :public, edit_users: [user.user_key])
+        create_for_repository(:work, :public, edit_users: [user.user_key])
       end
       let(:file) { fixture_file_upload('image.png', 'image/png') }
       let(:file_path) { fixture_path + '/small_file.txt' }
@@ -114,17 +115,17 @@ RSpec.describe Hyrax::FileSetsController do
     describe "#destroy" do
       context "file_set with a parent" do
         let(:file_set) do
-          create(:file_set, user: user)
+          create_for_repository(:file_set, user: user)
         end
         let(:work) do
-          create(:work, title: ['test title'], user: user)
+          create_for_repository(:work, title: ['test title'], user: user)
         end
 
         let(:delete_message) { double('delete message') }
 
         before do
-          work.ordered_members << file_set
-          work.save!
+          work.member_ids << file_set.id
+          persister.save(resource: work)
         end
 
         it "deletes the file" do
@@ -139,7 +140,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#edit" do
       let(:file_set) do
-        create(:file_set, user: user)
+        create_for_repository(:file_set, user: user)
       end
 
       before do
@@ -163,7 +164,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#update" do
       let(:file_set) do
-        create(:file_set, user: user)
+        create_for_repository(:file_set, user: user)
       end
 
       context "when updating metadata" do
@@ -263,7 +264,8 @@ RSpec.describe Hyrax::FileSetsController do
 
       it "updates existing groups and users" do
         file_set.edit_groups = ['group3']
-        file_set.save
+        persister.save(resource: file_set)
+
         post :update, params: {
           id: file_set,
           file_set: { keyword: [''],
@@ -277,7 +279,7 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "when there's an error saving" do
         let(:file_set) do
-          create(:file_set, user: user)
+          create_for_repository(:file_set, user: user)
         end
 
         before do
@@ -295,7 +297,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#edit" do
       let(:file_set) do
-        create(:file_set, read_groups: ['public'])
+        create_for_repository(:file_set, read_groups: ['public'])
       end
 
       let(:file) do
@@ -318,7 +320,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#show" do
       let(:file_set) do
-        create(:file_set, title: ['test file'], user: user)
+        create_for_repository(:file_set, title: ['test file'], user: user)
       end
 
       context "without a referer" do
@@ -336,16 +338,16 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "with a referer" do
         let(:work) do
-          create(:generic_work, :public,
-                 title: ['test title'],
-                 user: user)
+          create_for_repository(:work, :public,
+                                title: ['test title'],
+                                user: user)
         end
 
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
-          work.ordered_members << file_set
-          work.save!
-          file_set.save!
+          work.member_ids << file_set.id
+          persister.save(resource: work)
+          persister.save(resource: file_set) # Is this necessary?
         end
 
         it "shows me the breadcrumbs" do
@@ -361,7 +363,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     context 'someone elses (public) files' do
       let(:creator) { create(:user, email: 'archivist1@example.com') }
-      let(:public_file_set) { create(:file_set, user: creator, read_groups: ['public']) }
+      let(:public_file_set) { create_for_repository(:file_set, user: creator, read_groups: ['public']) }
 
       before { sign_in user }
 
@@ -383,8 +385,8 @@ RSpec.describe Hyrax::FileSetsController do
   end
 
   context 'when not signed in' do
-    let(:private_file_set) { create(:file_set) }
-    let(:public_file_set) { create(:file_set, read_groups: ['public']) }
+    let(:private_file_set) { create_for_repository(:file_set) }
+    let(:public_file_set) { create_for_repository(:file_set, read_groups: ['public']) }
 
     describe '#edit' do
       it 'requires login' do
@@ -408,7 +410,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe '#new' do
       let(:parent) do
-        create(:generic_work, :public)
+        create_for_repository(:work, :public)
       end
 
       it 'does not let the user submit' do
@@ -420,13 +422,13 @@ RSpec.describe Hyrax::FileSetsController do
 
   context 'finds parents' do
     let(:parent) do
-      create(:generic_work, :public, edit_users: [user.user_key])
+      create_for_repository(:work, :public, edit_users: [user.user_key])
     end
 
     let(:file_set) do
-      file_set = create(:file_set, user: user)
-      parent.ordered_members << file_set
-      parent.save
+      file_set = create_for_repository(:file_set, user: user)
+      parent.member_ids << file_set.id
+      persister.save(resource: parent)
       file_set
     end
 

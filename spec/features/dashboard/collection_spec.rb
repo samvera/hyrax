@@ -34,8 +34,8 @@ RSpec.describe 'collection', type: :feature do
 
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
     let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], user: user) }
 
     before do
       sign_in user
@@ -75,10 +75,10 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'])
+      create_for_repository(:public_collection, user: user, description: ['collection description'])
     end
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user
@@ -187,9 +187,9 @@ RSpec.describe 'collection', type: :feature do
   end
 
   describe 'edit collection' do
-    let(:collection) { create(:named_collection, user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection], user: user) }
 
     before do
       sign_in user
@@ -229,9 +229,9 @@ RSpec.describe 'collection', type: :feature do
   end
 
   describe "Removing works from a collection" do
-    let(:collection) { create(:named_collection, user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user

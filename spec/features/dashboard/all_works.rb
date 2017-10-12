@@ -1,6 +1,6 @@
 RSpec.describe "As an admin user I should be able to see all works" do
-  let!(:work1) { create(:work, title: ['Testing #1']) }
-  let!(:work2) { create(:work, title: ['Testing #2']) }
+  let!(:work1) { create_for_repository(:work, title: ['Testing #1']) }
+  let!(:work2) { create_for_repository(:work, title: ['Testing #2']) }
 
   before do
     sign_in create(:admin)

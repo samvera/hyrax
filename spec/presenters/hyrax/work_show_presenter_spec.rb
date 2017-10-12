@@ -134,7 +134,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#work_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
+    let(:obj) { create_for_repository(:work_with_file_and_work) }
     let(:attributes) { obj.to_solr }
 
     it "filters out members that are file sets" do
@@ -144,7 +144,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
+    let(:obj) { create_for_repository(:work_with_file_and_work) }
     let(:attributes) { obj.to_solr }
 
     it "returns appropriate classes for each" do
@@ -155,7 +155,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#file_set_presenters" do
-    let(:obj) { create(:work_with_ordered_files) }
+    let(:obj) { create_for_repository(:work_with_ordered_files) }
     let(:attributes) { obj.to_solr }
 
     it "displays them in order" do
@@ -173,11 +173,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context "when some of the members are not file sets" do
-      let(:another_work) { create(:work) }
+      let(:another_work) { create_for_repository(:work) }
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
       before do
-        obj.ordered_members << another_work
-        obj.save!
+        obj.member_ids << another_work.id
+        persister.save(resource: obj)
       end
 
       it "filters out members that are not file sets" do
@@ -187,7 +188,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#representative_presenter" do
-    let(:obj) { create(:work_with_representative_file) }
+    let(:obj) { create_for_repository(:work_with_representative_file) }
     let(:attributes) { obj.to_solr }
 
     it "has a representative" do
@@ -206,13 +207,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:solr_document) { SolrDocument.new(work.to_solr) }
 
     context "with a representative" do
-      let(:work) { create(:work_with_representative_file) }
+      let(:work) { create_for_repository(:work_with_representative_file) }
 
       it { is_expected.to eq "http://#{request.host}/downloads/#{work.representative_id}" }
     end
 
     context "without a representative" do
-      let(:work) { create(:work) }
+      let(:work) { create_for_repository(:work) }
 
       it { is_expected.to eq '' }
     end

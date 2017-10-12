@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Actors::FeaturedWorkActor do
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:attributes) { {} }
   let!(:feature) { FeaturedWork.create(work_id: work.id) }
 
@@ -22,7 +22,7 @@ RSpec.describe Hyrax::Actors::FeaturedWorkActor do
 
   describe "#update" do
     context "of a public work" do
-      let(:work) { create(:public_work) }
+      let(:work) { create_for_repository(:work, :public) }
 
       it "does not modify the features" do
         expect { middleware.update(env) }.not_to change { FeaturedWork.where(work_id: work.id).count }

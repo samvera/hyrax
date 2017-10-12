@@ -53,6 +53,8 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with a document not created this second" do
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
+
       before do
         gw3 = GenericWork.new(title: ['Test 3 Document'], read_groups: ['public'])
         gw3.apply_depositor_metadata('mjg36')
@@ -63,7 +65,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
             Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
           )
         end
-        gw3.save
+        persister.save(resource: gw3)
       end
 
       it "sets recent documents in the right order" do
@@ -98,7 +100,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with featured works" do
-      let!(:my_work) { FactoryGirl.create(:work, user: user) }
+      let!(:my_work) { FactoryGirl.create_for_repository(:work, user: user) }
 
       before do
         FeaturedWork.create!(work_id: my_work.id)

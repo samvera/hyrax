@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::LeasesController do
   let(:user) { create(:user) }
-  let(:a_work) { create(:generic_work, user: user) }
+  let(:a_work) { create_for_repository(:work, user: user) }
   let(:not_my_work) { create(:generic_work) }
 
   before { sign_in user }
@@ -78,7 +78,7 @@ RSpec.describe Hyrax::LeasesController do
 
   describe '#update' do
     context 'when I have permission to edit the object' do
-      let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+      let(:file_set) { create_for_repository(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
       let(:expiration_date) { Time.zone.today + 2 }
 
       before do
