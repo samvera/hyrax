@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::WorkRelation, :clean_repo do
-  let!(:work) { create(:generic_work) }
+  let!(:work) { create_for_repository(:work) }
   let!(:file_set) { create(:file_set) }
   let!(:collection) { create_for_repository(:collection) }
 

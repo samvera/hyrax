@@ -138,7 +138,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     context "when removing a trophy" do
-      let(:work) { create(:generic_work, title: ["w1"], user: user) }
+      let(:work) { create_for_repository(:work, title: ["w1"], user: user) }
 
       before do
         user.trophies.create!(work_id: work.id)

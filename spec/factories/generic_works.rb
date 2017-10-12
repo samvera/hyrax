@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :work, aliases: [:generic_work], class: GenericWork do
+  factory :work, class: GenericWork do
     to_create do |instance|
       persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
       persister.save(resource: instance)

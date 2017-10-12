@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
 
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:generic_work) }
+  let(:work) { create_for_repository(:work) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|

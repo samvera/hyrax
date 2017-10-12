@@ -24,7 +24,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
   end
   let(:resource) { FactoryGirl.build(:file_set) }
 
-  let(:parent) { build(:generic_work) }
+  let(:parent) { build(:work) }
 
   let(:form) do
     Hyrax::Forms::FileManagerForm.new(parent, nil)

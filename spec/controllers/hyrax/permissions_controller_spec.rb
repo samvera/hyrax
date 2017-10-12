@@ -7,7 +7,7 @@ RSpec.describe Hyrax::PermissionsController do
   end
 
   describe '#confirm' do
-    let(:work) { build(:generic_work, user: user, id: 'abc') }
+    let(:work) { build(:work, user: user, id: 'abc') }
 
     before do
       # https://github.com/samvera/active_fedora/issues/1251
