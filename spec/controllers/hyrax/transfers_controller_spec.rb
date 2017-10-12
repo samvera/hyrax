@@ -58,7 +58,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
         expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.work_id).to eq(work.id)
+        expect(proxy_request.work_id).to eq(work.id.to_s)
         expect(proxy_request.sending_user).to eq(user)
         expect(proxy_request.sender_comment).to eq 'Hi mom!'
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
