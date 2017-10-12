@@ -12,8 +12,7 @@ module Hyrax
     include Hyrax::FileSet::Derivatives
     include Permissions
     # include Hyrax::FileSet::Indexing
-    # include Hyrax::FileSet::BelongsToWorks
-    # include Hyrax::FileSet::Querying
+    include Hyrax::FileSet::BelongsToWorks
     include HumanReadableType
     include CoreMetadata
     include Hyrax::BasicMetadata
