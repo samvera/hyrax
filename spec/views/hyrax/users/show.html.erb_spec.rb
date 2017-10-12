@@ -31,7 +31,7 @@ RSpec.describe 'hyrax/users/show.html.erb', type: :view do
     let(:trophy_presenter) { Hyrax::TrophyPresenter.new(solr_document) }
     let(:solr_document) do
       SolrDocument.new(id: 'abc123',
-                       internal_resource_ssim: 'GenericWork',
+                       Valkyrie::Persistence::Solr::Queries::MODEL => 'GenericWork',
                        thumbnail_path_ss: '/foo/bar.png')
     end
 

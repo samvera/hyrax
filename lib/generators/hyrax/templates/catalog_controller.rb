@@ -29,7 +29,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for document/show views
     config.index.title_field = solr_name("title", :stored_searchable)
-    config.index.display_type_field = solr_name("has_model", :symbol)
+    config.index.display_type_field = Valkyrie::Persistence::Solr::Queries::MODEL
     config.index.thumbnail_field = 'thumbnail_path_ss'
 
     # solr fields that will be treated as facets by the blacklight application

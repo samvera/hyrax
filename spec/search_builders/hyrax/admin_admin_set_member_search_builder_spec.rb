@@ -23,7 +23,7 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
     let(:solr_params) { { fq: [] } }
 
     it 'searches for valid work types' do
-      expect(solr_params[:fq].first).to include('{!terms f=internal_resource_ssim}GenericWork,Collection')
+      expect(solr_params[:fq].first).to include("{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork,Collection")
     end
     it 'does not limit to active only' do
       expect(solr_params[:fq].first).not_to include('-suppressed_bsi:true')
