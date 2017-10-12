@@ -36,11 +36,11 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
 
     context "with attached FileSets" do
       let(:work) { create_for_repository(:work_with_one_file, user: depositor) }
-      let(:file_set) { work.members.first }
+      let(:file_set_id) { work.member_ids.first }
 
       it "grants read access" do
         # We need to reload, because this work happens in a background job
-        expect { subject }.to change { file_set.reload.read_users }.from([]).to([depositor.user_key])
+        expect { subject }.to change { Hyrax::Queries.find_by(id: file_set_id).read_users }.from([]).to([depositor.user_key])
         expect(work).to be_valid
       end
     end
