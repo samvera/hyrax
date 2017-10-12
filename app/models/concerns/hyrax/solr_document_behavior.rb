@@ -69,7 +69,7 @@ module Hyrax
 
     # Method to return the ActiveFedora model
     def hydra_model
-      first(Solrizer.solr_name('has_model', :symbol)).constantize
+      first(Valkyrie::Persistence::Solr::Queries::MODEL).constantize
     end
 
     def depositor(default = '')

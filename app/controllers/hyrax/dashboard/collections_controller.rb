@@ -101,7 +101,7 @@ module Hyrax
       def create
         # Manual load and authorize necessary because Cancan will pass in all
         # form attributes. When `permissions_attributes` are present the
-        # collection is saved without a value for `has_model.`
+        # collection is saved without a value for `internal_resource.`
         @collection = ::Collection.new
         authorize! :create, @collection
 

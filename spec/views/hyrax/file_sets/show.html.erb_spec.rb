@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:ability) { double }
   let(:doc) do
     {
-      "internal_resource_ssim" => ["FileSet"],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["FileSet"],
       :id => "123",
       "title_tesim" => ["My Title"]
     }

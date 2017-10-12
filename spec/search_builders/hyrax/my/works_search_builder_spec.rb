@@ -23,7 +23,7 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
     subject { builder.to_hash['fq'] }
 
     it "filters works that we are the depositor of" do
-      expect(subject).to eq ["{!terms f=internal_resource_ssim}GenericWork",
+      expect(subject).to eq ["{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork",
                              "-suppressed_bsi:true",
                              "depositor"]
     end

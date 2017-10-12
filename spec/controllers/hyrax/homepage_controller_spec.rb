@@ -48,7 +48,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     it "includes only GenericWork objects in recent documents" do
       get :index
       assigns(:recent_documents).each do |doc|
-        expect(doc[Solrizer.solr_name("has_model", :symbol)]).to eql ["GenericWork"]
+        expect(doc[Valkyrie::Persistence::Solr::Queries::MODEL]).to eql ["GenericWork"]
       end
     end
 

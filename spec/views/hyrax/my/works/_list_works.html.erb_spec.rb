@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/my/works/_list_works.html.erb', type: :view do
   let(:work_data) do
     {
       id: id,
-      "internal_resource_ssim" => ["GenericWork"],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"],
       "title_tesim" => ["Work Title"]
     }
   end
