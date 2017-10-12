@@ -280,7 +280,7 @@ module Hyrax
         end
 
         def move_members_between_collections
-          destination_collection = ::Collection.find(params[:destination_collection_id])
+          destination_collection = find_resource(params[:destination_collection_id])
           remove_members_from_collection
           add_members_to_collection(destination_collection)
           if destination_collection.save
