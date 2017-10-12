@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::LeasesController do
   let(:user) { create(:user) }
   let(:a_work) { create_for_repository(:work, user: user) }
-  let(:not_my_work) { create(:generic_work) }
+  let(:not_my_work) { create_for_repository(:work) }
 
   before { sign_in user }
 

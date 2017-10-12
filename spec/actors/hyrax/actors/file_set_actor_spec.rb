@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe 'creating metadata, content and attaching to a work' do
-    let(:work) { create(:generic_work) }
+    let(:work) { create_for_repository(:work) }
     let(:date_today) { DateTime.current }
 
     subject { file_set.reload }
@@ -240,7 +240,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     context "representative and thumbnail of a work" do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
       let!(:work) do
-        work = create_for_repository(:generic_work, member_ids: file_set.id)
+        work = create_for_repository(:work, member_ids: file_set.id)
         # this is not part of a block on the create, since the work must be saved
         # before the representative can be assigned
         work.representative = file_set
@@ -295,7 +295,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     context 'with multiple versions' do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
       let(:query_service) { Valkyrie::MetadataAdapter.find(:indexing_persister).query_service }
-      let(:work_v1) { create_for_repository(:generic_work) } # this version of the work has no members
+      let(:work_v1) { create_for_repository(:work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
         query_service = Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
