@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) do
-    build(:generic_work,
+    build(:work,
           edit_users: ['Kevin'],
           read_users: ['Taraji'])
   end

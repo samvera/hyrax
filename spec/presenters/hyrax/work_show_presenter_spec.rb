@@ -40,7 +40,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
-    let(:work) { build(:generic_work, id: '123abc') }
+    let(:work) { build(:work, id: '123abc') }
     let(:attributes) { work.to_solr }
 
     before do
@@ -52,7 +52,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe '#itemtype' do
-    let(:work) { build(:generic_work, resource_type: type) }
+    let(:work) { build(:work, resource_type: type) }
     let(:attributes) { work.to_solr }
     let(:ability) { double "Ability" }
 
