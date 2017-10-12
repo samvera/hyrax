@@ -2,7 +2,7 @@ namespace :hyrax do
   namespace :migrate do
     task move_all_works_to_admin_set: :environment do
       require 'hyrax/move_all_works_to_admin_set'
-      MoveAllWorksToAdminSet.run(AdminSet.find(AdminSet::DEFAULT_ID))
+      MoveAllWorksToAdminSet.run(Hyrax::Queries.find_by(id: AdminSet::DEFAULT_ID))
     end
 
     task add_admin_group_to_admin_sets: :environment do

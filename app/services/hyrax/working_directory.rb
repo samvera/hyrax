@@ -10,7 +10,7 @@ module Hyrax
       # @return [String] path of the working file
       def find_or_retrieve(repository_file_id, id, filepath = nil)
         return filepath if filepath && File.exist?(filepath)
-        repository_file = Hydra::PCDM::File.find(repository_file_id)
+        repository_file = Hyrax::Queries.find_by(id: repository_file_id)
         working_path = full_filename(id, repository_file.original_name)
         if File.exist?(working_path)
           Rails.logger.debug "#{repository_file.original_name} already exists in the working directory at #{working_path}"
