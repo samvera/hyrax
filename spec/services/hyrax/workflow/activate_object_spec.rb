@@ -1,7 +1,7 @@
 require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Workflow::ActivateObject do
-  let(:work) { create(:generic_work) }
+  let(:work) { create_for_repository(:work) }
   let(:user) { create(:user) }
 
   let(:workflow_method) { described_class }

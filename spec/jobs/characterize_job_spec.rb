@@ -51,7 +51,7 @@ RSpec.describe CharacterizeJob do
   end
 
   context "when the file set's work is in a collection" do
-    let(:work)       { build(:generic_work) }
+    let(:work)       { build(:work) }
     let(:collection) { build(:collection) }
 
     before do
