@@ -1,9 +1,9 @@
 RSpec.describe Hyrax::AdminSetPresenter do
   let(:admin_set) do
-    mock_model(AdminSet,
-               id: '123',
-               description: ['An example admin set.'],
-               title: ['Example Admin Set Title'])
+    build(:admin_set,
+          id: '123',
+          description: ['An example admin set.'],
+          title: ['Example Admin Set Title'])
   end
 
   let(:work) { build(:work, title: ['Example Work Title']) }
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
     end
 
     context "admin set with work" do
-      let(:admin_set) { create_for_repository(:admin_set, members: [work]) }
+      let!(:work) { create_for_repository(:work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
 
       it { is_expected.to eq 1 }
     end
@@ -31,13 +31,11 @@ RSpec.describe Hyrax::AdminSetPresenter do
     subject { presenter.disable_delete? }
 
     context "empty admin set" do
-      let(:admin_set) { create_for_repository(:admin_set) }
-
       it { is_expected.to be false }
     end
 
     context "non-empty admin set" do
-      let(:admin_set) { create_for_repository(:admin_set, members: [work]) }
+      let!(:work) { create_for_repository(:work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
 
       it { is_expected.to be true }
     end
