@@ -5,7 +5,7 @@
            Thumbnail
         </legend>
         <p>Select the file to be used as the thumbnail for this <%= f.object.human_readable_type %>.</p>
-        <%= f.select :thumbnail_id, @form.select_files, {}, { class: 'form-control' } %>
+        <%= f.select :thumbnail_id, @change_set.select_files, {}, { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>

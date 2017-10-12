@@ -5,7 +5,7 @@
           Representative Media
         </legend>
         <p>Select the file with media that represents this <%= f.object.human_readable_type %>.</p>
-        <%= f.select :representative_id, @form.select_files, {}, { class: 'form-control' } %>
+        <%= f.select :representative_id, @change_set.select_files, {}, { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>

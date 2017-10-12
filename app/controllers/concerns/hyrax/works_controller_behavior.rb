@@ -51,7 +51,7 @@ module Hyrax
       # Set the first admin_set they have access to.
       admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
       curation_concern.admin_set_id = admin_set && admin_set.id
-      build_form
+      build_change_set
     end
 
     def create
@@ -60,7 +60,7 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            build_form
+            build_change_set
             render 'new', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
@@ -93,7 +93,7 @@ module Hyrax
     end
 
     def edit
-      build_form
+      build_change_set
     end
 
     def update
@@ -102,7 +102,7 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            build_form
+            build_change_set
             render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
@@ -119,7 +119,7 @@ module Hyrax
     end
 
     def file_manager
-      @form = Forms::FileManagerForm.new(curation_concern, current_ability)
+      @change_set = Forms::FileManagerForm.new(curation_concern, current_ability)
     end
 
     def inspect_work
@@ -131,8 +131,8 @@ module Hyrax
 
     private
 
-      def build_form
-        @form = work_form_service.build(curation_concern, current_ability, self)
+      def build_change_set
+        @change_set = work_form_service.build(curation_concern, current_ability, self)
       end
 
       def actor
