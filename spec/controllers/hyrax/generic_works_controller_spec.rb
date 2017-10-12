@@ -281,7 +281,7 @@ RSpec.describe Hyrax::GenericWorksController do
             expect do
               post :create, params: { selected_files: browse_everything_params, file_set: {} }
             end.to change(FileSet, :count).by(2)
-            created_files = FileSet.all
+            created_files = Hyrax::Queries.find_all_of_model(model: FileSet)
             expect(created_files.map(&:import_url)).to include(url1, url2)
             expect(created_files.map(&:label)).to include("filepicker-demo.txt.txt", "Getting+Started.pdf")
           end
