@@ -47,8 +47,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "is successful" do
       put :update, params: { update_type: "delete_all" }
       expect(response).to redirect_to(dashboard_path(locale: 'en'))
-      expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
-      expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
+      expect { Hyrax::Queries.find_by(id: one.id) }.to raise_error(Ldp::Gone)
+      expect { Hyrax::Queries.find_by(id: two.id) }.to raise_error(Ldp::Gone)
     end
 
     it "redirects to the return controller" do
@@ -59,15 +59,15 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "updates the records" do
       put :update, params: { update_type: "update", generic_work: { subject: ["zzz"] } }
       expect(response).to be_redirect
-      expect(GenericWork.find(one.id).subject).to eq ["zzz"]
-      expect(GenericWork.find(two.id).subject).to eq ["zzz"]
+      expect(Hyrax::Queries.find_by(id: one.id).subject).to eq ["zzz"]
+      expect(Hyrax::Queries.find_by(id: two.id).subject).to eq ["zzz"]
     end
 
     it "updates permissions" do
       put :update, params: { update_type: "update", visibility: "authenticated" }
       expect(response).to be_redirect
-      expect(GenericWork.find(one.id).visibility).to eq "authenticated"
-      expect(GenericWork.find(two.id).visibility).to eq "authenticated"
+      expect(Hyrax::Queries.find_by(id: one.id).visibility).to eq "authenticated"
+      expect(Hyrax::Queries.find_by(id: two.id).visibility).to eq "authenticated"
     end
   end
 end

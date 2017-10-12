@@ -250,7 +250,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       end
 
       it "removes representative, thumbnail, and the proxy association" do
-        gw = GenericWork.find(work.id)
+        gw = Hyrax::Queries.find_by(id: work.id)
         expect(gw.representative_id).to eq(file_set.id)
         expect(gw.thumbnail_id).to eq(file_set.id)
         expect { actor.destroy }.to change { ActiveFedora::Aggregation::Proxy.count }.by(-1)
@@ -294,12 +294,10 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'with multiple versions' do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
-      let(:query_service) { Valkyrie::MetadataAdapter.find(:indexing_persister).query_service }
       let(:work_v1) { create_for_repository(:work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
-        query_service = Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
-        work_v2 = query_service.find_by(id: Valkyrie::ID.new(work_v1.id.to_s))
+        work_v2 = Hyrax::Queries.find_by(id: work_v1.id)
         work_v2.member_ids << create_for_repository(:file_set).id
         persister.save(resource: work_v2)
       end
