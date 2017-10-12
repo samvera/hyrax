@@ -2,7 +2,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { create(:user) }
 
   describe '.create_default_admin_set', :clean_repo do
-    let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
+    let(:admin_set) { Hyrax::Queries.find_by(id: AdminSet::DEFAULT_ID) }
 
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
     it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
