@@ -5,11 +5,12 @@ RSpec.feature 'searching' do
     create_for_repository(:work, :public,
                           title: ["Toothbrush"],
                           keyword: [subject_value, 'taco'],
-                          user: user)
+                          user: user,
+                          member_of_collection_ids: [collection.id])
   end
 
   let!(:collection) do
-    create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user)
   end
 
   context "as a public user", :clean_repo do
