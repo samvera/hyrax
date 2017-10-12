@@ -29,11 +29,11 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "update" do
     let(:user) { build(:user) }
     let!(:one) do
-      create_for_repository(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:two) do
-      create_for_repository(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
     let(:mycontroller) { "hyrax/my/works" }
 

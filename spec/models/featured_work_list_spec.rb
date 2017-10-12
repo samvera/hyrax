@@ -1,6 +1,6 @@
 RSpec.describe FeaturedWorkList, type: :model do
-  let(:work1) { create(:generic_work) }
-  let(:work2) { create(:generic_work) }
+  let(:work1) { create_for_repository(:work) }
+  let(:work2) { create_for_repository(:work) }
 
   describe 'featured_works' do
     before do
