@@ -6,13 +6,13 @@ module Hyrax
 
     included do
       layout :decide_layout
-
       copy_blacklight_config_from(::CatalogController)
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
+      self.theme = 'hyrax/1_column'
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
