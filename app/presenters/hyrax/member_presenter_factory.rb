@@ -38,27 +38,13 @@ module Hyrax
 
     private
 
-      # TODO: Extract this to ActiveFedora::Aggregations::ListSource
       def ordered_ids
-        @ordered_ids ||= begin
-                           ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
-                                                           rows: 10_000,
-                                                           fl: "ordered_targets_ssim")
-                                                    .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
-                         end
+        @work.member_ids
       end
 
-      # These are the file sets that belong to this work, but not necessarily
-      # in order.
-      # Arbitrarily maxed at 10 thousand; had to specify rows due to solr's default of 10
+      # These are the file sets that belong to this work in order.
       def file_set_ids
-        @file_set_ids ||= begin
-                            ActiveFedora::SolrService.query("{!field f=internal_resource_ssim}FileSet",
-                                                            rows: 10_000,
-                                                            fl: ActiveFedora.id_field,
-                                                            fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
-                                                     .flat_map { |x| x.fetch(ActiveFedora.id_field, []) }
-                          end
+        file_sets.map(&:id)
       end
 
       def presenter_factory_arguments
@@ -67,6 +53,10 @@ module Hyrax
 
       def composite_presenter_class
         CompositePresenterFactory.new(file_presenter_class, work_presenter_class, ordered_ids & file_set_ids)
+      end
+
+      def file_sets
+        @file_sets ||= Hyrax::Queries.find_members(resource: @work, model: FileSet)
       end
   end
 end
