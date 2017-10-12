@@ -139,7 +139,7 @@ RSpec.describe 'collection', type: :feature do
   describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
-        { "internal_resource_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
+        { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
           "member_of_collection_ids_ssim" => [collection.id],

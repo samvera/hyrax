@@ -41,7 +41,7 @@ RSpec.describe Hyrax::WorkBehavior do
 
   it 'inherits (and extends) to_solr behaviors from superclass' do
     expect(subject.to_solr.keys).to include(:id)
-    expect(subject.to_solr.keys).to include('internal_resource_ssim')
+    expect(subject.to_solr.keys).to include(Valkyrie::Persistence::Solr::Queries::MODEL)
   end
 
   describe '#visibility=' do
