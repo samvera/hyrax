@@ -1,7 +1,7 @@
                 <div id="workflow" class="tab-pane">
                   <div class="panel panel-default labels">
-                    <%= simple_form_for @form.permission_template,
-                      url: [hyrax, :admin, @form, :permission_template],
+                    <%= simple_form_for @change_set.permission_template,
+                      url: [hyrax, :admin, @change_set, :permission_template],
                       html: { id: 'form_workflows' } do |f| %>
                       <% if f.object.available_workflows.any? %>
                         <div class="panel-body">

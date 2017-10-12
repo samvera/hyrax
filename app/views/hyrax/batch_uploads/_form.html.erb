@@ -1,7 +1,7 @@
-<%= simple_form_for [hyrax, @form],
+<%= simple_form_for [hyrax, @change_set],
                     html: {
                       data: { behavior: 'work-form',
-                              'param-key' => @form.model_name.param_key },
+                              'param-key' => @change_set.model_name.param_key },
                       multipart: true
                     } do |f| %>
   <% provide :files_tab do %>
@@ -11,7 +11,7 @@
     </p>
   <% end %>
   <%= render 'hyrax/base/guts4form', f: f, tabs: %w[files metadata relationships] %>
-  <%= f.hidden_field :payload_concern, value: @form.payload_concern %>
+  <%= f.hidden_field :payload_concern, value: @change_set.payload_concern %>
 <% end %>
 
 <script type="text/javascript">

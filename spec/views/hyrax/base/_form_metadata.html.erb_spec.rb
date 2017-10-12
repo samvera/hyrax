@@ -1,11 +1,10 @@
 RSpec.describe 'hyrax/base/_form_metadata.html.erb', type: :view do
   before do
-    allow(form).to receive(:display_additional_fields?).and_return(additional_fields)
+    allow(change_set).to receive(:display_additional_fields?).and_return(additional_fields)
   end
-  let(:ability) { double }
   let(:work) { GenericWork.new }
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+  let(:change_set) do
+    Hyrax::GenericWorkChangeSet.new(work)
   end
 
   let(:form_template) do
@@ -17,7 +16,7 @@ RSpec.describe 'hyrax/base/_form_metadata.html.erb', type: :view do
   end
 
   let(:page) do
-    assign(:form, form)
+    assign(:change_set, change_set)
     render inline: form_template
     Capybara::Node::Simple.new(rendered)
   end
