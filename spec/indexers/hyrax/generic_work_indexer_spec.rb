@@ -4,7 +4,7 @@ RSpec.describe GenericWorkIndexer do
   # TODO: file_set_ids returns an empty set unless you persist the work
   let(:user) { create(:user) }
   let(:service) { described_class.new(work) }
-  let(:work) { create(:generic_work) }
+  let(:work) { create_for_repository(:work) }
 
   context 'without explicit visibility set' do
     it 'indexes visibility' do

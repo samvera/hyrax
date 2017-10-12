@@ -2,7 +2,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   let(:service) { described_class.new }
 
   describe "#count" do
-    let!(:work) { create(:generic_work) }
+    let!(:work) { create_for_repository(:work) }
 
     subject { service.count }
 
@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   end
 
   describe "find_by_date_created" do
-    let!(:work) { create(:generic_work) }
+    let!(:work) { create_for_repository(:work) }
 
     subject { service.find_by_date_created(start_date, end_date) }
 

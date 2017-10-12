@@ -6,7 +6,7 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) do
-    build(:generic_work, on_behalf_of: proxied_to)
+    build(:work, on_behalf_of: proxied_to)
   end
   let(:attributes) { {} }
 
