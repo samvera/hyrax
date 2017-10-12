@@ -7,7 +7,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     { "id" => '888888',
       "title_tesim" => ['foo', 'bar'],
       "human_readable_type_tesim" => ["Generic Work"],
-      "internal_resource_ssim" => ["GenericWork"],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"],
       "date_created_tesim" => ['an unformatted date'],
       "depositor_tesim" => user_key }
   end

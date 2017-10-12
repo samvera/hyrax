@@ -1,6 +1,6 @@
 module Hyrax
   # This stands in for ActiveFedora::CleanConnection. It behaves the same way,
-  # but it doesn't clear the has_model assertion
+  # but it doesn't clear the internal_resource assertion
   class CleanConnection < SimpleDelegator
     def get(*args)
       result = __getobj__.get(*args) do |req|

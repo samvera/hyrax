@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_descriptions.html.erb', type: 
     let(:collection) do
       {
         id: '999',
-        "internal_resource_ssim" => ["Collection"],
+        Valkyrie::Persistence::Solr::Queries::MODEL => ["Collection"],
         "title_tesim" => ["Title 1"],
         'date_created_tesim' => '2000-01-01'
       }
