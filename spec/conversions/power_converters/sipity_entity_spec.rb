@@ -20,7 +20,7 @@ RSpec.describe 'PowerConverter' do
     context "with a SolrDocument" do
       subject { PowerConverter.convert(object, to: :sipity_entity) }
 
-      let(:object) { SolrDocument.new(id: '9999', internal_resource_ssim: ["GenericWork"]) }
+      let(:object) { SolrDocument.new(id: '9999', Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"]) }
       let(:workflow_state) { create(:workflow_state) }
       let!(:entity) do
         Sipity::Entity.create(proxy_for_global_id: 'gid://internal/GenericWork/9999',
