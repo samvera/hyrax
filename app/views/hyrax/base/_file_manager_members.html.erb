@@ -2,12 +2,12 @@
                 id: "sortable",
                 class: "list-unstyled grid clearfix",
                 data: {
-                  id: @form.id,
-                  "class-name" => @form.model_name.plural,
-                  "singular-class-name" => @form.model_name.singular,
-                  version: @form.version
+                  id: @change_set.id,
+                  "class-name" => @change_set.model_name.plural,
+                  "singular-class-name" => @change_set.model_name.singular,
+                  version: @change_set.version
                 } do %>
-  <% @form.member_presenters.each do |member| %>
+  <% @change_set.member_presenters.each do |member| %>
     <%= render "file_manager_member", node: member %>
   <% end %>
 <% end %>

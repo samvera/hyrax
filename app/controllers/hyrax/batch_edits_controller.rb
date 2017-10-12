@@ -12,9 +12,9 @@ module Hyrax
     helper PermissionsHelper
 
     def edit
-      work = form_class.model_class.new
+      work = change_set_class.model_class.new
       work.depositor = current_user.user_key
-      @form = form_class.new(work, current_user, batch)
+      @change_set = change_set_class.new(work, current_user, batch)
     end
 
     def after_update
@@ -79,17 +79,17 @@ module Hyrax
         after_update
       end
 
-      def form_class
+      def change_set_class
         Forms::BatchEditForm
       end
 
       def terms
-        form_class.terms
+        change_set_class.terms
       end
 
       def work_params
-        work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
-        form_class.model_attributes(work_params)
+        work_params = params[change_set_class.model_name.param_key] || ActionController::Parameters.new
+        change_set_class.model_attributes(work_params)
       end
 
       def redirect_to_return_controller
