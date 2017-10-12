@@ -35,7 +35,7 @@ RSpec.describe 'PowerConverter' do
       # This is poking knowledge over into the inner workings of Models::Work
       # but is a reasonable place to understand this.
       it 'will raise an exception if one has not been assigned' do
-        object = build(:generic_work)
+        object = build(:work)
         expect { PowerConverter.convert_to_sipity_entity(object) }.to raise_error RuntimeError, "Can't create an entity until the model has been persisted"
       end
     end

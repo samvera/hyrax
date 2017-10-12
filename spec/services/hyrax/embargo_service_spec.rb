@@ -17,7 +17,7 @@ RSpec.describe Hyrax::EmbargoService do
   end
 
   let!(:work_with_embargo_in_effect) { create_for_repository(:work, embargo_release_date: future_date.to_s) }
-  let!(:work_without_embargo) { create_for_repository(:generic_work) }
+  let!(:work_without_embargo) { create_for_repository(:work) }
 
   describe '#assets_with_expired_embargoes' do
     it 'returns an array of assets with expired embargoes' do
