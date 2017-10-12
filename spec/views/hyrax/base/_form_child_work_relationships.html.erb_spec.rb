@@ -3,15 +3,13 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     stub_model(GenericWork, id: '456', title: ["MyWork"])
   end
 
-  let(:ability) { double }
-
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+  let(:change_set) do
+    Hyrax::GenericWorkChangeSet.new(work)
   end
 
   let(:f) do
-    view.simple_form_for(form, url: '/update') do |work_form|
-      return work_form
+    view.simple_form_for(change_set, url: '/update') do |cs|
+      return cs
     end
   end
 
@@ -27,16 +25,16 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     allow(view).to receive(:params).and_return(id: work.id)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(view).to receive(:f).and_return(f)
-    allow(f).to receive(:object).and_return(form)
+    allow(f).to receive(:object).and_return(change_set)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     stub_template '_find_work_widget.html.erb' => "<input class='finder'/>"
-    assign(:form, form)
+    assign(:change_set, change_set)
   end
 
   context "When editing a work" do
     context "and no children works are present" do
       before do
-        allow(form).to receive(:work_members).and_return([])
+        allow(change_set).to receive(:work_members).and_return([])
       end
 
       it "draws the page" do
@@ -55,7 +53,7 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
       end
 
       before do
-        allow(form).to receive(:work_members).and_return([work_2])
+        allow(change_set).to receive(:work_members).and_return([work_2])
       end
 
       it "draws the page" do

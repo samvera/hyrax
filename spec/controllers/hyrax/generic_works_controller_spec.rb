@@ -180,7 +180,7 @@ RSpec.describe Hyrax::GenericWorksController do
       it 'shows me the page' do
         get :new
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
         expect(assigns[:curation_concern].depositor).to eq user.user_key
@@ -213,7 +213,7 @@ RSpec.describe Hyrax::GenericWorksController do
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
         expect(response.status).to eq 422
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
         expect(response).to render_template 'new'
       end
     end
@@ -329,7 +329,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
         get :edit, params: { id: work }
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
         expect(response).to render_template("layouts/dashboard")
       end
     end
@@ -434,7 +434,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
         it 'renders the form' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+          expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
           expect(response).to render_template('edit')
         end
       end

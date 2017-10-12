@@ -1,16 +1,16 @@
 RSpec.describe 'records/edit_fields/_based_near.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:form) { Hyrax::GenericWorkForm.new(work, nil, controller) }
+  let(:change_set) { Hyrax::GenericWorkChangeSet.new(work) }
   let(:form_template) do
     %(
-      <%= simple_form_for [main_app, @form] do |f| %>
+      <%= simple_form_for [main_app, @change_set] do |f| %>
         <%= render "records/edit_fields/based_near", f: f, key: 'based_near' %>
       <% end %>
     )
   end
 
   before do
-    assign(:form, form)
+    assign(:change_set, change_set)
     render inline: form_template
   end
 

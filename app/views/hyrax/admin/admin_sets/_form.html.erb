@@ -3,7 +3,7 @@
         <li class="active">
           <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
         </li>
-        <% if @form.persisted? %>
+        <% if @change_set.persisted? %>
           <li>
             <a href="#participants" role="tab" data-toggle="tab"><%= t('.tabs.participants') %></a>
           </li>
@@ -18,7 +18,7 @@
       <div class="tab-content">
         <div id="description" class="tab-pane active">
           <div class="panel panel-default labels">
-            <%= simple_form_for @form, url: [hyrax, :admin, @form] do |f| %>
+            <%= simple_form_for @change_set, url: [hyrax, :admin, @change_set] do |f| %>
               <div class="panel-body">
                 <%= render 'form_metadata', f: f %>
 
@@ -37,7 +37,7 @@
             <% end %>
           </div>
         </div>
-        <% if @form.persisted? %>
+        <% if @change_set.persisted? %>
           <%= render 'form_participants' %>
           <%= render 'form_visibility' %>
           <%= render 'form_workflow' %>
