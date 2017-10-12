@@ -70,7 +70,7 @@ RSpec.describe Collection do
     end
 
     it "does not delete member files when deleted" do
-      expect(GenericWork.exists?(work1.id)).to be true
+      expect(Hyrax::Queries.exists?(work1.id)).to be true
     end
   end
 
