@@ -45,7 +45,7 @@ module Hyrax
       # @return [Boolean] true if destroy was successful
       def destroy(env)
         env.curation_concern.in_collection_ids.each do |id|
-          destination_collection = ::Collection.find(id)
+          destination_collection = Hyrax::Queries.find_by(id: id)
           destination_collection.members.delete(env.curation_concern)
           destination_collection.update_index
         end
