@@ -75,7 +75,7 @@ module Hyrax
         wants.html { presenter && parent_presenter }
         wants.json do
           # load and authorize @curation_concern manually because it's skipped for html
-          @curation_concern = _curation_concern_type.find(params[:id]) unless curation_concern
+          @curation_concern = Hyrax::Queries.find_by(id: Valkyrie::ID.new(params[:id])) unless curation_concern
           authorize! :show, @curation_concern
           render :show, status: :ok
         end
