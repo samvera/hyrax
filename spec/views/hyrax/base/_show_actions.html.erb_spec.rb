@@ -1,11 +1,11 @@
 RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:attributes) { { "internal_resource_ssim" => ["GenericWork"], :id => "0r967372b" } }
+  let(:attributes) { { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "0r967372b" } }
   let(:ability) { double }
   let(:member) { Hyrax::WorkShowPresenter.new(member_document, ability) }
   let(:member_document) { SolrDocument.new(member_attributes) }
-  let(:member_attributes) { { "internal_resource_ssim" => ["GenericWork"], :id => "8336h190k" } }
+  let(:member_attributes) { { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "8336h190k" } }
 
   before do
     allow(ability).to receive(:can?).with(:create, FeaturedWork).and_return(false)
