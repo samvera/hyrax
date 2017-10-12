@@ -5,6 +5,8 @@ module Hyrax
     layout :decide_layout
     load_and_authorize_resource except: [:index, :show, :create], instance_name: :collection
 
+    self.theme = 'hyrax/1_column'
+
     # Renders a JSON response with a list of files in this collection
     # This is used by the edit form to populate the thumbnail_id dropdown
     def files

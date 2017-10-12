@@ -58,7 +58,7 @@ RSpec.describe Hyrax::GenericWorksController do
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
-          expect(response).to render_template("layouts/hyrax")
+          expect(response).to render_template("layouts/hyrax/1_column")
         end
       end
 
