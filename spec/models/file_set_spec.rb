@@ -7,24 +7,8 @@ RSpec.describe FileSet do
   let(:user) { create(:user) }
   let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
-  # TODO: Move to a PCDM persister test
-  # describe 'rdf type' do
-  #   subject { described_class.new.type }
-  #
-  #   it { is_expected.to include(Hydra::PCDM::Vocab::PCDMTerms.Object, Hydra::Works::Vocab::WorksTerms.FileSet) }
-  # end
-
-  it 'is a Hydra::Works::FileSet' do
-    expect(subject).to be_file_set
-  end
-
   it 'has depositor' do
     subject.depositor = 'tess@example.com'
-  end
-
-  it 'updates attributes' do
-    subject.attributes = { title: ['My new Title'] }
-    expect(subject.title).to eq(['My new Title'])
   end
 
   context 'when it is initialized' do
@@ -54,25 +38,6 @@ RSpec.describe FileSet do
     it 'grants edit access and record the depositor' do
       expect(subject.edit_users).to eq ['jcoyne']
       expect(subject.depositor).to eq 'jcoyne'
-    end
-  end
-
-  describe 'attributes' do
-    it 'has a set of permissions' do
-      subject.read_groups = %w[group1 group2]
-      subject.edit_users = ['user1']
-      subject.read_users = %w[user2 user3]
-      expect(subject.permissions.map(&:to_hash)).to match_array [
-        { type: 'group', access: 'read', name: 'group1' },
-        { type: 'group', access: 'read', name: 'group2' },
-        { type: 'person', access: 'read', name: 'user2' },
-        { type: 'person', access: 'read', name: 'user3' },
-        { type: 'person', access: 'edit', name: 'user1' }
-      ]
-    end
-
-    it "has attached content" do
-      expect(subject.association(:original_file)).to be_kind_of ActiveFedora::Associations::DirectlyContainsOneAssociation
     end
   end
 
@@ -149,52 +114,19 @@ RSpec.describe FileSet do
     end
   end
 
-  describe '#indexer' do
-    subject { described_class.indexer }
-
-    it { is_expected.to eq Hyrax::FileSetIndexer }
-
-    describe "setting" do
-      before do
-        class AltFile < ActiveFedora::Base
-          include Hyrax::FileSetBehavior
-        end
-      end
-      after do
-        Object.send(:remove_const, :AltFile)
-      end
-      let(:klass) { Class.new }
-
-      subject { AltFile.new }
-
-      it 'is settable' do
-        AltFile.indexer = klass
-        expect(AltFile.indexer).to eq klass
-      end
-    end
-  end
-
-  it 'supports multi-valued fields in solr' do
-    subject.keyword = %w[keyword1 keyword2]
-    expect { subject.save }.not_to raise_error
-    subject.delete
-  end
-
   it 'supports setting and getting the relative_path value' do
     subject.relative_path = 'documents/research/NSF/2010'
     expect(subject.relative_path).to eq 'documents/research/NSF/2010'
   end
+
   describe 'create_thumbnail' do
     let(:file_set) do
-      described_class.new do |f|
-        f.apply_depositor_metadata('mjg36')
-      end
+      create_for_repository(:file_set)
     end
 
     describe 'with a video', if: Hyrax.config.enable_ffmpeg do
       before do
         allow(file_set).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
-        file_set.save
         Hydra::Works::AddFileToFileSet.call(subject, File.open("#{fixture_path}/countdown.avi", 'rb'), :original_file)
       end
       it 'makes a png thumbnail' do
@@ -205,216 +137,14 @@ RSpec.describe FileSet do
     end
   end
 
-  describe '#related_files' do
-    let!(:f1) { described_class.new }
-
-    context 'when there are no related files' do
-      it 'returns an empty array' do
-        expect(f1.related_files).to eq []
-      end
-    end
-
-    context 'when there are related files' do
-      let(:parent_work)   { FactoryGirl.create_for_repository(:work_with_files) }
-      let(:f1)            { parent_work.file_sets.first }
-      let(:f2)            { parent_work.file_sets.last }
-
-      subject { f1.reload.related_files }
-
-      it 'returns all files contained in parent work(s) but excludes itself' do
-        expect(subject).to include(f2)
-        expect(subject).not_to include(f1)
-      end
-    end
-  end
-
-  describe 'noid integration', :clean_repo do
-    let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
-    let(:noid) { 'wd3763094' }
-    let!(:default) { Hyrax.config.enable_noids? }
-
-    before do
-      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
-    end
-
-    after { Hyrax.config.enable_noids = default }
-
-    context 'with noids enabled' do
-      before { Hyrax.config.enable_noids = true }
-
-      it 'uses the noid service' do
-        expect(service).to receive(:mint).once
-        subject.assign_id
-      end
-
-      context "after saving" do
-        let(:saved) { persister.save(resource: subject) }
-
-        it 'returns the expected identifier' do
-          expect(saved.id).to eq noid
-        end
-
-        it "has a treeified URL" do
-          expect(saved.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
-        end
-      end
-
-      context 'when a url is provided' do
-        let(:url) { "#{ActiveFedora.fedora.host}/test/wd/37/63/09/wd3763094" }
-
-        it 'transforms the url into an id' do
-          expect(described_class.uri_to_id(url)).to eq 'wd3763094'
-        end
-      end
-    end
-
-    context 'with noids disabled' do
-      before { Hyrax.config.enable_noids = false }
-
-      it 'does not use the noid service' do
-        expect(service).not_to receive(:mint)
-        subject.assign_id
-      end
-    end
-  end
-
   context 'with access control metadata' do
     subject do
-      described_class.new do |m|
-        m.apply_depositor_metadata('jcoyne')
-        m.permissions_attributes = [{ type: 'person', access: 'read', name: 'person1' },
-                                    { type: 'person', access: 'read', name: 'person2' },
-                                    { type: 'group', access: 'read', name: 'group-6' },
-                                    { type: 'group', access: 'read', name: 'group-7' },
-                                    { type: 'group', access: 'edit', name: 'group-8' }]
-      end
-    end
-
-    it 'has read groups accessor' do
-      expect(subject.read_groups).to eq ['group-6', 'group-7']
+      described_class.new
     end
 
     it 'has read groups writer' do
       subject.read_groups = ['group-2', 'group-3']
       expect(subject.read_groups).to eq ['group-2', 'group-3']
-    end
-  end
-
-  describe 'permissions validation' do
-    before { subject.apply_depositor_metadata('mjg36') }
-
-    describe 'overriding' do
-      let(:asset) { SampleKlass.new }
-
-      before do
-        class SampleKlass < FileSet
-          def paranoid_edit_permissions
-            []
-          end
-        end
-        asset.apply_depositor_metadata('mjg36')
-      end
-      after do
-        Object.send(:remove_const, :SampleKlass)
-      end
-      context 'when the public has edit access' do
-        before { subject.edit_groups = ['public'] }
-
-        it 'is invalid' do
-          expect(subject).not_to be_valid
-          expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
-        end
-      end
-    end
-
-    describe '#paranoid_edit_permissions=' do
-      before do
-        subject.paranoid_edit_permissions =
-          [
-            { key: :edit_users, message: 'Depositor must have edit access', condition: ->(obj) { !obj.edit_users.include?(obj.depositor) } }
-          ]
-        subject.permissions = [Hydra::AccessControls::Permission.new(type: 'person', name: 'mjg36', access: 'read')]
-      end
-      it 'uses the user supplied configuration for validation' do
-        expect(subject).not_to be_valid
-        expect(subject.errors[:edit_users]).to include('Depositor must have edit access')
-      end
-    end
-
-    context 'when the public has edit access' do
-      before { subject.edit_groups = ['public'] }
-
-      it 'is invalid' do
-        expect(subject).not_to be_valid
-        expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
-      end
-    end
-
-    context 'when registered has edit access' do
-      before { subject.edit_groups = ['registered'] }
-
-      it 'is invalid' do
-        expect(subject).not_to be_valid
-        expect(subject.errors[:edit_groups]).to include('Registered cannot have edit access')
-      end
-    end
-
-    context 'everything is copacetic' do
-      it 'is valid' do
-        expect(subject).to be_valid
-      end
-    end
-  end
-
-  describe 'file content validation' do
-    subject { create(:file_set) }
-
-    let(:file_path) { fixture_path + '/small_file.txt' }
-
-    context 'when file contains a virus' do
-      before do
-        allow(subject).to receive(:warn) # suppress virus warnings
-        allow(Hydra::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
-        # TODO: Test that this works with Hydra::Works::UploadFileToFileSet. see https://github.com/samvera/hydra-works/pull/139
-        # Hydra::Works::UploadFileToFileSet.call(subject, file_path, original_name: 'small_file.txt')
-        of = subject.build_original_file
-        of.content = File.open(file_path)
-      end
-
-      it 'populates the errors hash during validation' do
-        expect(subject).not_to be_valid
-        expect(subject.errors.messages[:base].first).to eq "Failed to verify uploaded file is not a virus"
-      end
-
-      it 'does not save the file or create a new version' do
-        original_version_count = subject.versions.count
-        subject.save
-        expect(subject.versions.count).to eq original_version_count
-        expect(subject.reload.original_file).to be_nil
-      end
-    end
-  end
-
-  describe '#where_digest_is', :clean_repo do
-    let(:file) { create(:file_set) }
-    let(:file_path) { fixture_path + '/small_file.txt' }
-    let(:digest_string) { '88fb4e88c15682c18e8b19b8a7b6eaf8770d33cf' }
-
-    before do
-      allow(file).to receive(:warn) # suppress virus warnings
-      of = file.build_original_file
-      of.content = File.open(file_path)
-      file.save
-      file.update_index
-    end
-    subject { described_class.where_digest_is(digest_string).first }
-
-    it { is_expected.to eq(file) }
-  end
-
-  context 'with versions' do
-    it 'has versions' do
-      expect(subject.versions.count).to eq 0
     end
   end
 
@@ -431,13 +161,13 @@ RSpec.describe FileSet do
     end
   end
 
-  describe 'work associations' do
+  describe '#parents' do
     let(:work) { create_for_repository(:work_with_one_file) }
 
-    subject { work.file_sets.first.reload }
+    subject { Hyrax::Queries.find_members(resource: work).first }
 
     it 'belongs to works' do
-      expect(subject.parents).to eq [work]
+      expect(subject.parents.map(&:id)).to eq [work.id]
     end
   end
 
@@ -459,53 +189,6 @@ RSpec.describe FileSet do
       subject.title = []
       subject.label = nil
       expect(subject.to_s).to eq('No Title')
-    end
-  end
-
-  describe 'with a parent work' do
-    let(:parent) { create_for_repository(:work_with_one_file) }
-    let(:parent_id) { parent.id }
-
-    describe '#related_files' do
-      let(:parent) { create_for_repository(:work_with_files) }
-      let(:sibling) { parent.file_sets.last }
-
-      subject { parent.file_sets.first.reload }
-
-      it 'returns related files, but not itself' do
-        expect(subject.related_files).to eq([sibling])
-        expect(sibling.reload.related_files).to eq([subject])
-      end
-    end
-
-    describe '#remove_representative_relationship' do
-      subject { parent.file_sets.first.reload }
-
-      context 'it is not the representative' do
-        let(:some_other_id) { create(:file_set).id }
-
-        before do
-          parent.representative_id = some_other_id
-          parent.save!
-        end
-
-        it "doesn't update parent work when file is deleted" do
-          subject.destroy
-          expect(parent.representative_id).to eq some_other_id
-        end
-      end
-
-      context 'it is the representative' do
-        before do
-          parent.representative_id = subject.id
-          parent.save!
-        end
-
-        it 'updates the parent work when the file is deleted' do
-          subject.destroy
-          expect(parent.reload.representative_id).to be_nil
-        end
-      end
     end
   end
 
