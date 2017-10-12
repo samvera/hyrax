@@ -10,7 +10,7 @@ FactoryBot.define do
         admin_set =
           if admin_set_id.present?
             begin
-              AdminSet.find(admin_set_id)
+              Hyrax::Queries.find_by(id: admin_set_id)
             rescue
               create_for_repository(:admin_set, id: admin_set_id)
             end
