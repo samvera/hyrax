@@ -17,7 +17,7 @@ RSpec.describe "hyrax/homepage/_featured_works.html.erb", type: :view do
     let(:doc) do
       SolrDocument.new(id: '12345678',
                        title_tesim: ['Doc title'],
-                       internal_resource_ssim: ['GenericWork'])
+                       Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'])
     end
     let(:presenter) { Hyrax::WorkShowPresenter.new(doc, nil) }
     let(:featured_work) { FeaturedWork.new }

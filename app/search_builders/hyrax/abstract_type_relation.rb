@@ -14,7 +14,7 @@ module Hyrax
 
     def search_model_clause
       clauses = allowable_types.map do |k|
-        ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: k.to_s)
+        ActiveFedora::SolrQueryBuilder.construct_query_for_rel('internal_resource' => k.to_s)
       end
       clauses.size == 1 ? clauses.first : "(#{clauses.join(' OR ')})"
     end
