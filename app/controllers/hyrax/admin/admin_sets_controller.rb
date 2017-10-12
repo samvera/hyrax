@@ -9,7 +9,7 @@ module Hyrax
 
     with_themed_layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
-    self.form_class = Hyrax::Forms::AdminSetForm
+    self.change_set_class = Hyrax::Forms::AdminSetForm
 
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
@@ -106,12 +106,12 @@ module Hyrax
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
-        form
+        change_set
       end
 
       # initialize the form object
-      def form
-        @form ||= form_class.new(@admin_set, current_ability, repository)
+      def change_set
+        @change_set ||= change_set_class.new(@admin_set, current_ability, repository)
       end
 
       # Overrides the parent implementation so that the returned search builder
@@ -132,7 +132,7 @@ module Hyrax
       end
 
       def admin_set_params
-        form_class.model_attributes(params[:admin_set])
+        change_set_class.model_attributes(params[:admin_set])
       end
 
       def repository_class
