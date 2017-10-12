@@ -4,13 +4,13 @@ RSpec.describe Hyrax::Statistics::Works::ByDepositor do
     let(:user2) { create(:user) }
 
     before do
-      gf = build(:generic_work, user: user1, id: '1234567')
+      gf = build(:work, user: user1, id: '1234567')
       gf.update_index
-      gf = build(:generic_work, user: user2, id: '2345678')
+      gf = build(:work, user: user2, id: '2345678')
       gf.update_index
-      gf = build(:generic_work, user: user1, id: '3456789')
+      gf = build(:work, user: user1, id: '3456789')
       gf.update_index
-      gf = build(:generic_work, user: user1, id: '4567890')
+      gf = build(:work, user: user1, id: '4567890')
       gf.update_index
     end
 

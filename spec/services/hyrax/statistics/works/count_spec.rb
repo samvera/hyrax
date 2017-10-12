@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Statistics::Works::Count do
       build(:work, :public, user: user1, id: "wav1223").update_index
       build(:work, :public, user: user1, id: "mp31223", create_date: [2.days.ago]).update_index
       build(:registered_generic_work, user: user1, id: "reg1223").update_index
-      build(:generic_work, user: user1, id: "private1223").update_index
+      build(:work, user: user1, id: "private1223").update_index
       Collection.new(id: "ccc123") do |c|
         c.apply_depositor_metadata(user1)
         c.update_index

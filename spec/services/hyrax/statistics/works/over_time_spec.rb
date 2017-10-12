@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Statistics::Works::OverTime do
 
   describe "#points", :clean_repo do
     before do
-      create(:generic_work)
+      create_for_repository(:work)
     end
 
     subject { service.points }
