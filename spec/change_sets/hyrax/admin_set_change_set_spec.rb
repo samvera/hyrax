@@ -1,4 +1,6 @@
-RSpec.describe Hyrax::Forms::AdminSetForm do
+# frozen_string_literal: true
+
+RSpec.describe Hyrax::AdminSetChangeSet do
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }
   let(:form) { described_class.new(model, ability, repository) }
