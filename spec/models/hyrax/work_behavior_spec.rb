@@ -11,12 +11,10 @@ RSpec.describe Hyrax::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together all the goodness' do
-    expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
-                                               ::Hyrax::HumanReadableType,
+    expect(subject.class.ancestors).to include(::Hyrax::HumanReadableType,
                                                Hyrax::Noid,
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,
-                                               Hydra::AccessControls::Embargoable,
                                                Solrizer::Common,
                                                Hyrax::Suppressible)
   end
@@ -62,15 +60,6 @@ RSpec.describe Hyrax::WorkBehavior do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         expect(subject.read_groups).to contain_exactly Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC, 'ValkyriePeople'
       end
-    end
-  end
-
-  describe 'indexer' do
-    let(:klass) { Class.new }
-
-    it 'is settable' do
-      EssentialWork.indexer = klass
-      expect(EssentialWork.indexer).to eq klass
     end
   end
 end
