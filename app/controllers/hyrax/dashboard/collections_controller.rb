@@ -5,6 +5,8 @@ module Hyrax
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
       include BreadcrumbsForCollections
+      include Hyrax::ResourceController
+
       with_themed_layout 'dashboard'
 
       before_action :filter_docs_with_read_access!, except: :show
@@ -27,9 +29,15 @@ module Hyrax
       before_action :authenticate_user!, except: [:index]
 
       class_attribute :presenter_class,
-                      :change_set_class,
                       :single_item_search_builder_class,
                       :member_search_builder_class
+
+      self.change_set_class = DynamicChangeSet
+      self.resource_class = Collection
+      self.change_set_persister = Hyrax::ChangeSetPersister.new(
+        metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+        storage_adapter: Valkyrie.config.storage_adapter
+      )
 
       alias collection_search_builder_class single_item_search_builder_class
       deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
@@ -39,14 +47,10 @@ module Hyrax
 
       self.presenter_class = Hyrax::CollectionPresenter
 
-      self.change_set_class = Hyrax::Forms::CollectionForm
-
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
       self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
-
-      load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
       before_action :ensure_admin!, only: :index # index for All Collections; see also Hyrax::My::CollectionsController #index for My Collections
 
@@ -62,11 +66,10 @@ module Hyrax
       end
 
       def new
+        super
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.collections.new.header'), hyrax.new_dashboard_collection_path
-        @collection.apply_depositor_metadata(current_user.user_key)
-        form
       end
 
       def show
@@ -75,79 +78,51 @@ module Hyrax
       end
 
       def edit
+        super
         query_collection_members
         # this is used to populate the "add to a collection" action for the members
         @user_collections = find_collections_for_form
-        form
       end
 
-      def after_create
-        form
+      def after_create_success(obj, _change_set)
         respond_to do |format|
-          ActiveFedora::SolrService.instance.conn.commit
-          format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
-          format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
+          format.html { redirect_to dashboard_collection_path(obj), notice: 'Collection was successfully created.' }
+          format.json { render json: obj, status: :created, location: dashboard_collection_path(obj) }
         end
       end
 
-      def after_create_error
-        form
+      def after_create_error(obj, _change_set)
         respond_to do |format|
           format.html { render action: 'new' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
+          format.json { render json: obj.errors, status: :unprocessable_entity }
         end
       end
 
-      def create
-        # Manual load and authorize necessary because Cancan will pass in all
-        # form attributes. When `permissions_attributes` are present the
-        # collection is saved without a value for `internal_resource.`
-        @collection = ::Collection.new
-        authorize! :create, @collection
-
-        @collection.attributes = collection_params.except(:members)
-        @collection.apply_depositor_metadata(current_user.user_key)
-        add_members_to_collection unless batch.empty?
-        if @collection.save
-          after_create
-        else
-          after_create_error
-        end
-      end
-
-      def after_update
+      def after_update_success(obj, _change_set)
         if flash[:notice].nil?
           flash[:notice] = 'Collection was successfully updated.'
         end
         respond_to do |format|
-          format.html { redirect_to dashboard_collection_path(@collection) }
-          format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
+          format.html { redirect_to dashboard_collection_path(obj) }
+          format.json { render json: obj, status: :updated, location: dashboard_collection_path(obj) }
         end
       end
 
-      def after_update_error
-        form
-        query_collection_members
+      def after_update_error(obj, _change_set)
         respond_to do |format|
-          format.html { render action: 'edit' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
+          format.html do
+            query_collection_members
+            render action: 'edit'
+          end
+          format.json { render json: obj.errors, status: :unprocessable_entity }
         end
       end
 
-      def update
-        process_member_changes
-        if @collection.update(collection_params.except(:members))
-          after_update
-        else
-          after_update_error
-        end
-      end
-
-      def after_destroy(id)
+      def after_destroy_success(change_set)
         respond_to do |format|
           format.html do
             redirect_to my_collections_path,
-                        notice: "Collection #{id} was successfully deleted"
+                        notice: "Collection #{change_set.id} was successfully deleted"
           end
           format.json { head :no_content, location: my_collections_path }
         end
@@ -163,22 +138,14 @@ module Hyrax
         end
       end
 
-      def destroy
-        if @collection.destroy
-          after_destroy(params[:id])
-        else
-          after_destroy_error(params[:id])
-        end
-      end
-
       def collection
         action_name == 'show' ? @presenter : @collection
       end
 
       # Renders a JSON response with a list of files in this collection
-      # This is used by the edit form to populate the thumbnail_id dropdown
+      # This is used by the change set to populate the thumbnail_id dropdown
       def files
-        result = form.select_files.map do |label, id|
+        result = @change_set.select_files.map do |label, id|
           { id: id, text: label }
         end
         render json: result
@@ -304,10 +271,6 @@ module Hyrax
 
         def search_action_url(*args)
           hyrax.dashboard_collections_url(*args)
-        end
-
-        def form
-          @form ||= change_set_class.new(@collection, current_ability, repository)
         end
 
         def find_resource(id)
