@@ -88,6 +88,16 @@ RSpec.describe GenericWork do
     end
   end
 
+  it "can persist the object to fedora with a schema" do
+    adapter = Valkyrie::MetadataAdapter.find(:fedora)
+    subject.depositor = "test"
+    output = adapter.persister.save(resource: subject)
+    expect(output.depositor).to eq ["test"]
+    expect(output.id).not_to be_blank
+    graph = adapter.resource_factory.from_resource(resource: output)
+    expect(graph.graph.query([nil, RDF::URI("http://id.loc.gov/vocabulary/relators/dpt"), nil]).first.object).to eq "test"
+  end
+
   describe "metadata" do
     it "has descriptive metadata" do
       expect(subject).to respond_to(:relative_path)
