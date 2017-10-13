@@ -25,9 +25,6 @@ module Hyrax
         # Add/remove children (works or file_sets)
         middleware.use Hyrax::Actors::AttachMembersActor
 
-        # Set the order of the children (works or file_sets)
-        middleware.use Hyrax::Actors::ApplyOrderActor
-
         # Decode the private/public/institution on the form into permisisons on
         # the model
         middleware.use Hyrax::Actors::InterpretVisibilityActor
@@ -49,9 +46,6 @@ module Hyrax
 
         # Destroys the feature tag in the database when the work is destroyed
         middleware.use Hyrax::Actors::FeaturedWorkActor
-
-        # Persist the metadata changes on the resource
-        middleware.use Hyrax::Actors::ModelActor
 
         # Start the workflow for this work
         middleware.use Hyrax::Actors::InitializeWorkflowActor
