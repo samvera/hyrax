@@ -39,11 +39,6 @@ RSpec.describe Hyrax::WorkBehavior do
     end
   end
 
-  it 'inherits (and extends) to_solr behaviors from superclass' do
-    expect(subject.to_solr.keys).to include(:id)
-    expect(subject.to_solr.keys).to include(Valkyrie::Persistence::Solr::Queries::MODEL)
-  end
-
   describe '#visibility=' do
     context "when set to public" do
       it "sets read_groups to public" do
