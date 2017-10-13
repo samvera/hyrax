@@ -18,7 +18,7 @@ module Hyrax
       # Filter the member ids and return only the FileSet ids (filter out child works)
       # @return [Array<String>] the file set ids
       def file_set_ids(work)
-        ::FileSet.search_with_conditions(id: work.member_ids).map(&:id)
+        Hyrax::Queries.find_members(resource: work, model: FileSet).map(&:id)
       end
   end
 end
