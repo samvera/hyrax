@@ -14,20 +14,6 @@ RSpec.describe Collection do
     end
   end
 
-  describe "#to_solr" do
-    let(:user) { build(:user) }
-    let(:collection) { build(:collection, user: user, title: ['A good title']) }
-
-    let(:solr_document) { collection.to_solr }
-
-    it "has title information and depositor information" do
-      expect(solr_document).to include 'title_tesim' => ['A good title'],
-                                       'title_sim' => ['A good title'],
-                                       'depositor_tesim' => [user.user_key],
-                                       'depositor_ssim' => [user.user_key]
-    end
-  end
-
   describe "#depositor" do
     let(:user) { build(:user) }
 
