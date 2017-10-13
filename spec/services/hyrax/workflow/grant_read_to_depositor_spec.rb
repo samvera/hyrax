@@ -20,7 +20,6 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
 
       it "adds read access" do
         expect { subject }.to change { work.read_users }.from([]).to([depositor.user_key])
-        expect(work).to be_valid
       end
     end
 
@@ -30,7 +29,6 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
 
       it "adds read access" do
         expect { subject }.to change { work.read_users }.from([viewer.user_key]).to([viewer.user_key, depositor.user_key])
-        expect(work).to be_valid
       end
     end
 
@@ -41,7 +39,6 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
       it "grants read access" do
         # We need to reload, because this work happens in a background job
         expect { subject }.to change { Hyrax::Queries.find_by(id: file_set_id).read_users }.from([]).to([depositor.user_key])
-        expect(work).to be_valid
       end
     end
   end
