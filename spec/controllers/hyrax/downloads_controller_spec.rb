@@ -2,9 +2,10 @@ RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { create(:user) }
+    let(:file) { fixture_file_upload('image.png', 'image/png') }
     let(:file_set) do
-      FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      create_for_repository(:file_set, user: user, content: file)
     end
     let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
 
@@ -15,7 +16,7 @@ RSpec.describe Hyrax::DownloadsController do
     end
 
     context "when user doesn't have access" do
-      let(:another_user) { FactoryGirl.create(:user) }
+      let(:another_user) { create(:user) }
 
       before { sign_in another_user }
 
@@ -32,7 +33,7 @@ RSpec.describe Hyrax::DownloadsController do
       end
 
       it 'authorizes the resource using only the id' do
-        expect(controller).to receive(:authorize!).with(:download, file_set.id)
+        expect(controller).to receive(:authorize!).with(:download, file_set.id.to_s)
         get :show, params: { id: file_set.to_param }
       end
     end
@@ -47,8 +48,8 @@ RSpec.describe Hyrax::DownloadsController do
 
       context "with an alternative file" do
         context "that is persisted" do
-          let(:file) { File.open(fixture_path + '/world.png', 'rb') }
-          let(:content) { file.read }
+          let(:file) { fixture_file_upload('world.png', 'image/png') }
+          let(:content) { File.open(fixture_path + '/world.png', 'rb').read }
 
           before do
             allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_path + '/world.png')
