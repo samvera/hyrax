@@ -505,15 +505,6 @@ en:
             relationships:  "Relationships"
             sharing:        "Sharing"
         form_discovery:
-            open:
-              label:         "Open Access"
-              description:   "Visible to all"
-            institution:
-              label:         "Institution"
-              description:   "Restricted visibility to institution"
-            private:
-              label:         "Private"
-              description:   "Keep to myself with an option to share"
             para1: "These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection."
             para2: "If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab."
         form_share_table:
