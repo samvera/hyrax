@@ -408,6 +408,13 @@ module Hyrax
                     end
     end
 
+    attr_writer :fedora_schema
+    def fedora_schema
+      @fedora_schema ||= {
+        depositor: RDF::URI("http://id.loc.gov/vocabulary/relators/dpt")
+      }
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
