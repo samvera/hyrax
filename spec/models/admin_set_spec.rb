@@ -53,20 +53,6 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
-  describe "#to_solr" do
-    let(:admin_set) do
-      build(:admin_set, title: ['A good title'],
-                        creator: ['jcoyne@justincoyne.com'])
-    end
-    let(:solr_document) { admin_set.to_solr }
-
-    it "has title and creator information" do
-      expect(solr_document).to include 'title_tesim' => ['A good title'],
-                                       'title_sim' => ['A good title'],
-                                       'creator_ssim' => ['jcoyne@justincoyne.com']
-    end
-  end
-
   describe "#members" do
     it "is empty by default" do
       skip 'This test is plagued by this bug https://github.com/samvera/active_fedora/issues/1238'
