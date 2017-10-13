@@ -1,7 +1,5 @@
 # Generated via
 #  `rails generate hyrax:work <%= class_name %>`
-module Hyrax
-  class <%= class_name %>ChangeSet < Valkyrie::ChangeSet
-    self.fields += [:resource_type]
-  end
+class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
+  self.autocreate_fields!
 end
