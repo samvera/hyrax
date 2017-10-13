@@ -1,6 +1,13 @@
-RSpec.describe Hyrax::Forms::CollectionForm do
+# frozen_string_literal: true
+
+RSpec.describe Hyrax::CollectionChangeSet do
   describe "#terms" do
     subject { described_class.terms }
+
+    let(:collection) { build(:collection) }
+    let(:ability) { Ability.new(create(:user)) }
+    let(:repository) { double }
+    let(:form) { described_class.new(collection, ability, repository) }
 
     it do
       is_expected.to eq [:resource_type,
@@ -22,11 +29,6 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          :visibility]
     end
   end
-
-  let(:collection) { build(:collection) }
-  let(:ability) { Ability.new(create(:user)) }
-  let(:repository) { double }
-  let(:form) { described_class.new(collection, ability, repository) }
 
   describe "#primary_terms" do
     subject { form.primary_terms }

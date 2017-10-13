@@ -22,7 +22,6 @@ module Hyrax
     configure_facets
 
     before_action :authenticate_user!
-    load_and_authorize_resource only: :show, instance_name: :collection
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper
