@@ -9,7 +9,7 @@ module Hyrax
 
     layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
-    self.change_set_class = Hyrax::Forms::AdminSetForm
+    self.change_set_class = Hyrax::AdminSetChangeSet
 
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder

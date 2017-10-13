@@ -69,7 +69,7 @@ RSpec/ExampleLength:
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
     - 'spec/controllers/hyrax/my/highlights_controller_spec.rb'
     - 'spec/controllers/hyrax/transfers_controller_spec.rb'
-    - 'spec/forms/hyrax/forms/collection_form_spec.rb'
+    - 'spec/change_sets/hyrax/collection_change_set_spec.rb'
     - 'spec/forms/hyrax/forms/batch_edit_form_spec.rb'
     - 'spec/forms/hyrax/forms/batch_upload_form_spec.rb'
     - 'spec/forms/hyrax/forms/file_set_edit_form_spec.rb'
@@ -156,7 +156,6 @@ RSpec/ExpectInHook:
 # Offense count: 31
 RSpec/LetBeforeExamples:
   Exclude:
-    - 'spec/forms/hyrax/forms/collection_form_spec.rb'
     - 'spec/presenters/hyrax/collection_presenter_spec.rb'
     - 'spec/presenters/hyrax/trophy_presenter_spec.rb'
     - 'spec/services/hyrax/workflow/action_taken_service_spec.rb'
