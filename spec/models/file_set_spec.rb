@@ -412,24 +412,6 @@ RSpec.describe FileSet do
     it { is_expected.to eq(file) }
   end
 
-  describe 'to_solr' do
-    let(:indexer) { double(generate_solr_document: {}) }
-
-    before do
-      allow(Hyrax::FileSetIndexer).to receive(:new)
-        .with(subject).and_return(indexer)
-    end
-
-    it 'calls the indexer' do
-      expect(indexer).to receive(:generate_solr_document)
-      subject.to_solr
-    end
-
-    it 'has human readable type' do
-      expect(subject.to_solr.fetch('human_readable_type_tesim')).to eq 'File'
-    end
-  end
-
   context 'with versions' do
     it 'has versions' do
       expect(subject.versions.count).to eq 0
@@ -477,41 +459,6 @@ RSpec.describe FileSet do
       subject.title = []
       subject.label = nil
       expect(subject.to_s).to eq('No Title')
-    end
-  end
-
-  describe 'to_solr record' do
-    subject(:file_set) do
-      file_set = described_class.new
-      file_set.apply_depositor_metadata(depositor)
-      persister.save(resource: file_set)
-    end
-
-    let(:depositor) { 'jcoyne' }
-    let(:depositor_key) { Solrizer.solr_name('depositor') }
-    let(:title_key) { Solrizer.solr_name('title', :stored_searchable, type: :string) }
-    let(:title) { ['abc123'] }
-    let(:no_terms) { Hyrax::Queries.find_by(id: file_set.id).to_solr }
-    let(:terms) do
-      file_set_anew = Hyrax::Queries.find_by(id: file_set.id)
-      file_set_anew.title = title
-      persister.save(resource: file_set_anew)
-      file_set_anew.to_solr
-    end
-
-    context 'without terms' do
-      specify 'title is nil' do
-        expect(no_terms[title_key]).to be_nil
-      end
-    end
-
-    context 'with terms' do
-      specify 'depositor is set' do
-        expect(terms[depositor_key].first).to eql(depositor)
-      end
-      specify 'title is set' do
-        expect(terms[title_key]).to eql(title)
-      end
     end
   end
 

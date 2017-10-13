@@ -53,19 +53,10 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with a document not created this second" do
-      let(:persister) { Valkyrie.config.metadata_adapter.persister }
-
       before do
-        gw3 = GenericWork.new(title: ['Test 3 Document'], read_groups: ['public'])
-        gw3.apply_depositor_metadata('mjg36')
-        # stubbing to_solr so we know we have something that didn't create in the current second
-        old_to_solr = gw3.method(:to_solr)
-        allow(gw3).to receive(:to_solr) do
-          old_to_solr.call.merge(
-            Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
-          )
-        end
-        persister.save(resource: gw3)
+        # TODO: we need to stub this in the solr doc:
+        # Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
+        create_for_repository(:work, title: ['Test 3 Document'], read_groups: ['public'])
       end
 
       it "sets recent documents in the right order" do
@@ -73,6 +64,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
         expect(response).to be_success
         expect(assigns(:recent_documents).length).to be <= 4
         create_times = assigns(:recent_documents).map { |d| d['system_create_dtsi'] }
+        expect(create_times).to be_any
         expect(create_times).to eq create_times.sort.reverse
       end
     end
