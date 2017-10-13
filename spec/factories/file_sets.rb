@@ -5,7 +5,7 @@ FactoryGirl.define do
       content nil
     end
     after(:build) do |fs, evaluator|
-      fs.apply_depositor_metadata evaluator.user.user_key
+      fs.apply_depositor_metadata evaluator.user.user_key if evaluator.user
     end
 
     after(:create) do |file, evaluator|
