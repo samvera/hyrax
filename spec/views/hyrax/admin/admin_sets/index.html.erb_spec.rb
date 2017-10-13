@@ -13,8 +13,9 @@ RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do
   end
 
   context "when an admin set exists" do
-    let(:admin_set) { build(:admin_set, id: '123', title: ['Example Admin Set'], creator: ['jdoe@example.com']) }
-    let(:solr_doc) { SolrDocument.new(admin_set.to_solr) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: admin_set) }
+    let(:solr_doc) { SolrDocument.new(document) }
+    let(:admin_set) { create_for_repository(:admin_set, id: '123', title: ['Example Admin Set'], creator: ['jdoe@example.com']) }
     let(:admin_sets) { [solr_doc] }
     let(:presenter_class) { Hyrax::AdminSetPresenter }
     let(:presenter) { instance_double(presenter_class, total_items: 99) }
