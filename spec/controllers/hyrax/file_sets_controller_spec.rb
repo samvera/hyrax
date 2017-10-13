@@ -300,15 +300,6 @@ RSpec.describe Hyrax::FileSetsController do
         create_for_repository(:file_set, read_groups: ['public'])
       end
 
-      let(:file) do
-        Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
-                                            'image/png', 'world.png')
-      end
-
-      before do
-        Hydra::Works::UploadFileToFileSet.call(file_set, file)
-      end
-
       context "someone else's files" do
         it "sets flash error" do
           get :edit, params: { id: file_set }
