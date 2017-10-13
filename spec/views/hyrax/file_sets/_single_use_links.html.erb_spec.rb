@@ -1,7 +1,8 @@
 RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
   let(:user)          { create(:user) }
-  let(:file_set)      { build(:file_set, user: user, id: "1234") }
-  let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+  let(:file_set)      { create_for_repository(:file_set) }
+  let(:document)      { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
+  let(:solr_document) { SolrDocument.new(document) }
   let(:ability)       { Ability.new(user) }
   let(:presenter)     { Hyrax::FileSetPresenter.new(solr_document, ability) }
 

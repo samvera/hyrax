@@ -1,8 +1,9 @@
 RSpec.describe Hyrax::PresenterRenderer, type: :view do
-  let(:work) { GenericWork.new }
+  let(:work) { create_for_repository(:work) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
   let(:ability) { double }
-  let(:document) { SolrDocument.new(work.to_solr) }
-  let(:presenter) { Hyrax::WorkShowPresenter.new(document, ability) }
+  let(:solr_document) { SolrDocument.new(document) }
+  let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
   let(:renderer) { described_class.new(presenter, view) }
 
   describe "#label" do

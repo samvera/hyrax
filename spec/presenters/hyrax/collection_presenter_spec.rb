@@ -11,19 +11,20 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   let(:collection) do
-    build(:collection,
-          id: 'adc12v',
-          description: ['a nice collection'],
-          based_near: ['Over there'],
-          title: ['A clever title'],
-          keyword: ['neologism'],
-          resource_type: ['Collection'],
-          related_url: ['http://example.com/'],
-          date_created: ['some date'])
+    create_for_repository(:collection,
+                          id: 'adc12v',
+                          description: ['a nice collection'],
+                          based_near: ['Over there'],
+                          title: ['A clever title'],
+                          keyword: ['neologism'],
+                          resource_type: ['Collection'],
+                          related_url: ['http://example.com/'],
+                          date_created: ['some date'])
   end
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
-  let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: collection) }
+  let(:solr_doc) { SolrDocument.new(document) }
 
   # Mock bytes so collection does not have to be saved.
   before { allow(collection).to receive(:bytes).and_return(0) }
