@@ -1,15 +1,15 @@
 RSpec.describe Hyrax::FileSetPresenter do
-  let(:solr_document) { SolrDocument.new(attributes) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
+  let(:solr_document) { SolrDocument.new(document) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
-  let(:attributes) { file.to_solr }
-  let(:file) do
-    build(:file_set,
-          id: '123abc',
-          user: user,
-          title: ["File title"],
-          depositor: user.user_key,
-          label: "filename.tif")
+  let(:file_set) do
+    create_for_repository(:file_set,
+                          id: '123abc',
+                          user: user,
+                          title: ["File title"],
+                          depositor: user.user_key,
+                          label: "filename.tif")
   end
   let(:user) { double(user_key: 'sarah') }
 

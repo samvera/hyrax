@@ -1,20 +1,15 @@
 RSpec.describe Hyrax::AdminSetPresenter do
   let(:admin_set) do
-    build(:admin_set,
-          id: '123',
-          description: ['An example admin set.'],
-          title: ['Example Admin Set Title'])
+    create_for_repository(:admin_set)
   end
-
   let(:work) { build(:work, title: ['Example Work Title']) }
-  let(:solr_document) { SolrDocument.new(admin_set.to_solr) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: admin_set) }
+  let(:solr_document) { SolrDocument.new(document) }
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_document, ability) }
 
   describe "total_items" do
     subject { presenter.total_items }
-
-    let(:admin_set) { build(:admin_set) }
 
     context "empty admin set" do
       it { is_expected.to eq 0 }
