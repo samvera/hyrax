@@ -98,26 +98,6 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
       end
 
-      context 'with in_work_ids' do
-        let(:parent) { create_for_repository(:work, user: user) }
-        let(:attributes) do
-          attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
-            in_works_ids: [parent.id]
-          )
-        end
-
-        it "attaches the parent" do
-          allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(true)
-          expect(middleware.create(env)).to be true
-          expect(curation_concern.reload.in_works).to eq [parent]
-        end
-        it "does not attach the parent" do
-          allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(false)
-          expect(middleware.create(env)).to be false
-          expect(curation_concern.reload.in_works).to eq []
-        end
-      end
-
       context 'with a file' do
         let(:attributes) do
           attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
