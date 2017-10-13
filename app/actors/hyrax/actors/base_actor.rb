@@ -16,29 +16,17 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        begin
-          change_set = Hyrax::DynamicChangeSet.new(env.curation_concern)
-        rescue
-          raise NotImplementedError, "Change Set for #{@model} not implemented."
-        end
-
-        yield change_set if block_given?
-        return unless change_set.validate(env.attributes)
-        env.change_set_persister.save(change_set: change_set) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+        yield env.change_set if block_given?
+        return unless env.change_set.validate(env.attributes)
+        env.change_set_persister.save(change_set: env.change_set) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
-        begin
-          change_set = Hyrax::DynamicChangeSet.new(env.curation_concern)
-        rescue
-          raise NotImplementedError, "Change Set for #{@model} not implemented."
-        end
-
         apply_update_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-        next_actor.update(env) && env.change_set_persister.save(change_set: change_set) && run_callbacks(:after_update_metadata, env)
+        next_actor.update(env) && env.change_set_persister.save(change_set: env.change_set) && run_callbacks(:after_update_metadata, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -81,7 +69,9 @@ module Hyrax
         end
 
         def apply_save_data_to_curation_concern(env)
-          env.curation_concern.attributes = clean_attributes(env.attributes)
+          clean_attributes(env.attributes).each_pair do |attribute, value|
+            env.curation_concern.send("#{attribute}=".to_sym, value)
+          end
           env.curation_concern.date_modified = TimeService.time_in_utc
         end
 

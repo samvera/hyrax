@@ -8,9 +8,15 @@ module Hyrax
         @curation_concern = curation_concern
         @current_ability = current_ability
         @attributes = attributes.to_h.with_indifferent_access
+
+        begin
+          @change_set = Hyrax::DynamicChangeSet.new(curation_concern).prepopulate!
+        rescue
+          raise NotImplementedError, "Change Set for #{curation_concern.class} not implemented."
+        end
       end
 
-      attr_reader :curation_concern, :current_ability, :attributes
+      attr_reader :curation_concern, :current_ability, :attributes, :change_set
 
       def change_set_persister
         Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter)
