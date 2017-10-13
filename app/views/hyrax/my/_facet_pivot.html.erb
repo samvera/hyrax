@@ -1,0 +1,22 @@
+<% if !subfacet ||= false %>
+  <ul class="dropdown-menu pivot-facet list-unstyled">
+<%end %>
+
+  <% display_facet.items.each do |item| -%>
+    <li>
+      <span class="facet-values">
+        <%= render_facet_item(item.field, item) %>
+      </span>
+
+      <% unless item.items.blank? %>
+        <%= render partial: 'facet_pivot', locals: { subfacet: true,
+                                                     display_facet: item,
+                                                     field_name: field_name,
+                                                     solr_field: field_name } %>
+      <% end %>
+    </li>
+  <% end %>
+
+<% if !subfacet %>
+  </ul>
+<% end %>
