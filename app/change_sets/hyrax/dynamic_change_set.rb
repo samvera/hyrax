@@ -3,7 +3,7 @@
 module Hyrax
   class DynamicChangeSet
     def self.new(obj, *args)
-      "Hyrax::#{obj.class}ChangeSet".constantize.new(obj, *args)
+      "#{obj.class}ChangeSet".constantize.new(obj, *args)
     end
   end
 end

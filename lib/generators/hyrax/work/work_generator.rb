@@ -35,7 +35,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
   end
 
   def create_change_set
-    template('change_set.rb.erb', File.join('app/change_sets/hyrax', class_path, "#{file_name}_change_set.rb"))
+    template('change_set.rb.erb', File.join('app/change_sets', class_path, "#{file_name}_change_set.rb"))
   end
 
   def create_presenter
