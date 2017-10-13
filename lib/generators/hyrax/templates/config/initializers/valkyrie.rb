@@ -21,13 +21,24 @@ Rails.application.config.to_prepare do
   )
 
   Valkyrie::MetadataAdapter.register(
+    Valkyrie::Persistence::Fedora::MetadataAdapter.new(
+      connection: ActiveFedora.fedora.connection,
+      base_path: ActiveFedora.fedora.base_path.gsub(/^\//, ''),
+      schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(Hyrax.config.fedora_schema)
+    ),
+    :fedora
+  )
+
+  Valkyrie::MetadataAdapter.register(
     Valkyrie::Persistence::Solr::MetadataAdapter.new(connection: Blacklight.default_index.connection,
                                                      resource_indexer: Valkyrie::Indexers::AccessControlsIndexer),
     :index_solr
   )
 
   Valkyrie::StorageAdapter.register(
-    Valkyrie::Storage::Fedora.new(connection: ActiveFedora.fedora.connection),
+    Valkyrie::Storage::Fedora.new(
+      connection: ActiveFedora.fedora.connection
+    ),
     :fedora
   )
 
