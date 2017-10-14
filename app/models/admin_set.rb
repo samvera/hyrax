@@ -50,7 +50,7 @@ class AdminSet < Valkyrie::Resource
   #          class_name: 'ActiveFedora::Base'
 
   def self.default_set?(id)
-    id == DEFAULT_ID
+    id.to_s == DEFAULT_ID
   end
 
   def default_set?
@@ -78,7 +78,7 @@ class AdminSet < Valkyrie::Resource
   # @return [Hyrax::PermissionTemplate]
   # @raise [ActiveRecord::RecordNotFound]
   def permission_template
-    Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    Hyrax::PermissionTemplate.find_by!(admin_set_id: id.to_s)
   end
 
   # @api public
