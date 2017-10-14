@@ -53,7 +53,7 @@ class AdminSet < Valkyrie::Resource
   # after_destroy :destroy_permission_template
 
   def self.default_set?(id)
-    id == DEFAULT_ID
+    id.to_s == DEFAULT_ID
   end
 
   def default_set?
@@ -81,7 +81,7 @@ class AdminSet < Valkyrie::Resource
   # @return [Hyrax::PermissionTemplate]
   # @raise [ActiveRecord::RecordNotFound]
   def permission_template
-    Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    Hyrax::PermissionTemplate.find_by!(admin_set_id: id.to_s)
   end
 
   # @api public
@@ -101,25 +101,7 @@ class AdminSet < Valkyrie::Resource
 
   private
 
-    def destroy_permission_template
-      permission_template.destroy
-    rescue ActiveRecord::RecordNotFound
-      true
-    end
-
     def query_service
       Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
     end
-
-  # def check_if_empty
-  #   return true if members.empty?
-  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
-  #   throw :abort
-  # end
-  #
-  # def check_if_not_default_set
-  #   return true unless default_set?
-  #   errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
-  #   throw :abort
-  # end
 end
