@@ -5,7 +5,7 @@ module Hyrax
     class_attribute :metadata_adapter
     self.metadata_adapter = Valkyrie.config.metadata_adapter
     class << self
-      delegate :exists?, :find_all, :find_all_of_model, :find_by, :find_members, :find_inverse_references_by, to: :default_adapter
+      delegate :exists?, :find_all, :find_by, :find_all_of_model, :find_members, :find_references_by, :find_inverse_references_by, :find_parents, :custom_queries, to: :default_adapter
 
       def default_adapter
         new(metadata_adapter: metadata_adapter)
@@ -13,7 +13,7 @@ module Hyrax
     end
 
     attr_reader :metadata_adapter
-    delegate :find_all, :find_all_of_model, :find_by, :find_members, :find_inverse_references_by, to: :metadata_adapter_query_service
+    delegate :find_all, :custom_queries, to: :metadata_adapter_query_service
     def initialize(metadata_adapter:)
       @metadata_adapter = metadata_adapter
     end
@@ -26,5 +26,30 @@ module Hyrax
     end
 
     delegate :query_service, to: :metadata_adapter, prefix: true
+
+    # The methods below are wrapped instead of delegated so Valkyrie's shared specs will pass
+    def find_by(id:)
+      metadata_adapter_query_service.find_by(id: id)
+    end
+
+    def find_all_of_model(model:)
+      metadata_adapter_query_service.find_all_of_model(model: model)
+    end
+
+    def find_members(resource:, model: nil)
+      metadata_adapter_query_service.find_members(resource: resource, model: model)
+    end
+
+    def find_parents(resource:)
+      metadata_adapter_query_service.find_parents(resource: resource)
+    end
+
+    def find_references_by(resource:, property:)
+      metadata_adapter_query_service.find_references_by(resource: resource, property: property)
+    end
+
+    def find_inverse_references_by(resource:, property:)
+      metadata_adapter_query_service.find_inverse_references_by(resource: resource, property: property)
+    end
   end
 end
