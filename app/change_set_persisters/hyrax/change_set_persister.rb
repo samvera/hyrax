@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
+require 'hooks'
+
 module Hyrax
   class ChangeSetPersister
-    def self.new(metadata_adapter:, storage_adapter:)
-      Basic.new(metadata_adapter: metadata_adapter,
-                storage_adapter: storage_adapter)
-    end
-  end
+    include Hooks
+    define_hooks :before_delete, :after_delete
 
-  class Basic
     attr_reader :metadata_adapter, :storage_adapter
     delegate :persister, :query_service, to: :metadata_adapter
     def initialize(metadata_adapter:, storage_adapter:)
@@ -21,7 +19,11 @@ module Hyrax
     end
 
     def delete(change_set:)
-      persister.delete(resource: change_set.resource)
+      catch(:abort) do
+        run_hook(:before_delete, change_set: change_set)
+        persister.delete(resource: change_set.resource)
+        run_hook(:after_delete, change_set: change_set)
+      end
     end
 
     def save_all(change_sets:)
