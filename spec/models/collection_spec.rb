@@ -6,14 +6,6 @@ RSpec.describe Collection do
     expect(collection.read_groups).to eq ['public']
   end
 
-  describe "#validates_with" do
-    before { collection.title = nil }
-    it "ensures the collection has a title" do
-      expect(collection).not_to be_valid
-      expect(collection.errors.messages[:title]).to eq(["You must provide a title"])
-    end
-  end
-
   describe "#depositor" do
     let(:user) { build(:user) }
 
@@ -37,26 +29,15 @@ RSpec.describe Collection do
       let(:work1) { create_for_repository(:work) }
       let(:work2) { create_for_repository(:work) }
 
-      it "allows multiple files to be added" do
+      before do
         collection.add_member_objects [work1.id, work2.id]
-        collection.save!
-        expect(collection.reload.member_objects).to match_array [work1, work2]
+        persister.save(resource: collection)
       end
-    end
-  end
 
-  describe "#destroy", clean_repo: true do
-    let(:collection) { build(:collection) }
-    let(:work1) { create_for_repository(:work) }
-
-    before do
-      collection.add_member_objects [work1.id]
-      collection.save!
-      collection.destroy
-    end
-
-    it "does not delete member files when deleted" do
-      expect(Hyrax::Queries.exists?(work1.id)).to be true
+      it "allows multiple files to be added" do
+        reloaded = Hyrax::Queries.find_by(id: collection.id)
+        expect(reloaded.member_objects.map(&:id)).to match_array [work1, work2].map(&:id)
+      end
     end
   end
 
@@ -83,8 +64,8 @@ RSpec.describe Collection do
     end
 
     it "have members that know about the collection", clean_repo: true do
-      member.reload
-      expect(member.member_of_collection_ids).to eq [collection.id]
+      reloaded = Hyrax::Queries.find_by(id: member.id)
+      expect(reloaded.member_of_collection_ids).to eq [collection.id]
     end
   end
 end
