@@ -1,5 +1,5 @@
 module Hyrax
-  class AdminSetChangeSet < Hyrax::CollectionChangeSet
+  class AdminSetChangeSet < Valkyrie::ChangeSet
     # self.terms = [:title, :description, :thumbnail_id]
 
     # Cast any array values on the model to scalars.
