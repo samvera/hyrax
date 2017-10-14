@@ -1,6 +1,8 @@
 module Hyrax
+  # rubocop:disable Metrics/ClassLength
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
+    include Hyrax::ResourceController
 
     # added skip to allow flash notices. see https://github.com/samvera/hyrax/issues/202
     skip_before_action :filter_docs_with_read_access!
@@ -10,6 +12,10 @@ module Hyrax
     layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
     self.change_set_class = Hyrax::AdminSetChangeSet
+    self.change_set_persister = Hyrax::AdminSetChangeSetPersister.new(
+      metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+      storage_adapter: Valkyrie.config.storage_adapter
+    )
 
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
@@ -138,5 +144,6 @@ module Hyrax
       def repository_class
         blacklight_config.repository_class
       end
+    # rubocop:enable Metrics/ClassLength
   end
 end
