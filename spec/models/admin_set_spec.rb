@@ -46,17 +46,6 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
-  describe '.after_destroy' do
-    let(:permission_template_access) { create(:permission_template_access) }
-
-    it 'will destroy the associated permission template and permission template access' do
-      admin_set = create_for_repository(:admin_set, with_permission_template: true)
-      permission_template_access.permission_template_id = admin_set.permission_template.id
-      permission_template_access.save
-      expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1).and change { Hyrax::PermissionTemplateAccess.count }.by(-1)
-    end
-  end
-
   describe "#members" do
     it "is empty by default" do
       skip 'This test is plagued by this bug https://github.com/samvera/active_fedora/issues/1238'
@@ -120,49 +109,6 @@ RSpec.describe AdminSet, type: :model do
       it 'returns the DEFAULT_ID and creates the admin set' do
         expect(Hyrax::AdminSetCreateService).to receive(:create_default_admin_set).with(admin_set_id: described_class::DEFAULT_ID, title: described_class::DEFAULT_TITLE)
         expect(subject).to eq(described_class::DEFAULT_ID)
-      end
-    end
-  end
-
-  describe "#destroy" do
-    let(:admin_set) { create_for_repository(:admin_set, title: ['Some title']) }
-
-    context "with member works" do
-      let!(:gf1) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
-      let!(:gf2) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
-
-      before do
-        admin_set.destroy
-      end
-
-      it "does not delete adminset or member works" do
-        expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is not empty"]
-        expect(Hyrax::Queries.exists?(admin_set.id)).to be true
-        expect(Hyrax::Queries.exists?(gf1.id)).to be true
-        expect(Hyrax::Queries.exists?(gf2.id)).to be true
-      end
-    end
-
-    context "with no member works" do
-      before do
-        admin_set.destroy
-      end
-
-      it "deletes the adminset" do
-        expect(Hyrax::Queries.exists?(admin_set.id)).to be false
-      end
-    end
-
-    context "is default adminset" do
-      let(:admin_set) { create_for_repository(:admin_set, id: described_class::DEFAULT_ID, title: ['Some title']) }
-
-      before do
-        admin_set.destroy
-      end
-
-      it "does not delete the adminset" do
-        expect(admin_set.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
-        expect(Hyrax::Queries.exists?(described_class::DEFAULT_ID)).to be true
       end
     end
   end
