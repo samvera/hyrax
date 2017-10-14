@@ -45,6 +45,7 @@ SUMMARY
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
+  spec.add_dependency 'hooks', '>= 0.4.1'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '~> 3.3'
   spec.add_dependency 'hydra-head', '>= 10.5.0'
