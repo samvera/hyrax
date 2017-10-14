@@ -21,6 +21,7 @@ module Hyrax
       return if new_member_ids.blank?
       members << new_member_ids
     end
+    deprecation_deprecate :add_members
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     def add_member_objects(new_member_ids)
@@ -30,10 +31,12 @@ module Hyrax
         persister.save(resource: member)
       end
     end
+    deprecation_deprecate :add_member_objects
 
     def member_objects
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
+      Hyrax::Queries.find_inverse_references_by(resource: self, property: :member_of_collection_ids)
     end
+    deprecation_deprecate :member_objects
 
     def to_s
       title.present? ? title.join(' | ') : 'No Title'
@@ -68,11 +71,12 @@ module Hyrax
     # association has been flipped)
     def member_object_ids
       return [] unless id
-      ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
+      Hyrax::Queries.find_inverse_references_by(resource: self, property: :member_of_collection_ids).map(&:id)
     end
 
     private
 
+      # This can be removed when add_member_objects is removed
       def persister
         Valkyrie::MetadataAdapter.find(:indexing_persister).persister
       end
@@ -98,10 +102,12 @@ module Hyrax
         Solrizer.solr_name('member_ids', :symbol)
       end
 
+      # This can be removed when add_member_objects is removed
       def find_resource(id)
         query_service.find_by(id: Valkyrie::ID.new(id.to_s))
       end
 
+      # This can be removed when add_member_objects is removed
       def query_service
         Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
