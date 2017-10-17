@@ -1,7 +1,7 @@
 <% provide :page_title, construct_page_title( t('.header', title: @form.title.first) ) %>
 
-<%= provide :page_header do %>
-  <h1><span class="fa fa-edit"></span><%= t('.header', title: @form.title.first) %></h1>
+<% provide :page_header do %>
+  <h1><span class="fa fa-edit"></span>EDIT <%= collection_type_title(@collection) %>: <%= @form.title.first %></h1>
 <% end %>
 
 <% unless has_collection_search_parameters? %>

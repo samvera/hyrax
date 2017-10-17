@@ -14,6 +14,13 @@ module Hyrax::TitleHelper
       construct_page_title("New #{curation_concern.human_readable_type}")
     end
   end
+  
+  def collection_type_title(coll)
+    this_coll_index = coll.collection_type.id - 1
+    coll_types_array = Hyrax::CollectionType.all.to_a
+    this_coll_type = coll_types_array[this_coll_index][:title]
+    "#{this_coll_type}"
+  end
 
   def default_page_title
     text = controller_name.singularize.titleize
