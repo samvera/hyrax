@@ -10,7 +10,8 @@ RSpec.describe 'CollectionAbility' do
 
   context 'when admin user' do
     let(:user) { FactoryGirl.create(:admin) }
-    let!(:collection) { create(:collection, id: 'as_au', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { create(:collection, id: 'col_au', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     it 'allows all abilities' do # rubocop:disable RSpec/ExampleLength
       is_expected.to be_able_to(:manage, Collection)
@@ -18,16 +19,23 @@ RSpec.describe 'CollectionAbility' do
       is_expected.to be_able_to(:create_any, Collection)
       is_expected.to be_able_to(:view_admin_show_any, Collection)
       is_expected.to be_able_to(:edit, collection)
+      is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:update, collection)
+      is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:destroy, collection)
+      is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:deposit, collection)
+      is_expected.to be_able_to(:deposit, solr_document)
       is_expected.to be_able_to(:view_admin_show, collection)
+      is_expected.to be_able_to(:view_admin_show, solr_document)
       is_expected.to be_able_to(:read, collection)
+      is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
     end
   end
 
   context 'when collection manager' do
-    let!(:collection) { create(:collection, id: 'as_mu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { create(:collection, id: 'col_mu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
       create(:permission_template_access,
@@ -38,15 +46,21 @@ RSpec.describe 'CollectionAbility' do
       collection.update_access_controls!
     end
 
-    it 'allows most abilities' do
+    it 'allows most abilities' do # rubocop:disable RSpec/ExampleLength
       is_expected.to be_able_to(:manage_any, Collection)
       is_expected.to be_able_to(:view_admin_show_any, Collection)
       is_expected.to be_able_to(:edit, collection)
+      is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:update, collection)
+      is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:destroy, collection)
+      is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       is_expected.to be_able_to(:deposit, collection)
+      is_expected.to be_able_to(:deposit, solr_document)
       is_expected.to be_able_to(:view_admin_show, collection)
+      is_expected.to be_able_to(:view_admin_show, solr_document)
       is_expected.to be_able_to(:read, collection) # edit access grants read and write
+      is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
     end
 
     it 'denies manage ability' do
@@ -55,7 +69,8 @@ RSpec.describe 'CollectionAbility' do
   end
 
   context 'when collection depositor' do
-    let!(:collection) { create(:collection, id: 'as_du', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { create(:collection, id: 'col_du', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
       create(:permission_template_access,
@@ -69,21 +84,28 @@ RSpec.describe 'CollectionAbility' do
     it 'allows deposit related abilities' do
       is_expected.to be_able_to(:view_admin_show_any, Collection)
       is_expected.to be_able_to(:deposit, collection)
+      is_expected.to be_able_to(:deposit, solr_document)
       is_expected.to be_able_to(:view_admin_show, collection)
+      is_expected.to be_able_to(:view_admin_show, solr_document)
     end
 
-    it 'denies non-deposit related abilities' do
+    it 'denies non-deposit related abilities' do # rubocop:disable RSpec/ExampleLength
       is_expected.not_to be_able_to(:manage, Collection)
       is_expected.not_to be_able_to(:manage_any, Collection)
       is_expected.not_to be_able_to(:edit, collection)
+      is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:update, collection)
+      is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:destroy, collection)
+      is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:read, collection)
+      is_expected.not_to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
     end
   end
 
   context 'when collection viewer' do
-    let!(:collection) { create(:collection, id: 'as_vu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { create(:collection, id: 'col_vu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
       create(:permission_template_access,
@@ -97,32 +119,45 @@ RSpec.describe 'CollectionAbility' do
     it 'allows viewing only ability' do
       is_expected.to be_able_to(:view_admin_show_any, Collection)
       is_expected.to be_able_to(:view_admin_show, collection)
+      is_expected.to be_able_to(:view_admin_show, solr_document)
       is_expected.to be_able_to(:read, collection)
+      is_expected.to be_able_to(:read, solr_document)
     end
 
-    it 'denies most abilities' do
+    it 'denies most abilities' do # rubocop:disable RSpec/ExampleLength
       is_expected.not_to be_able_to(:manage, Collection)
       is_expected.not_to be_able_to(:manage_any, Collection)
       is_expected.not_to be_able_to(:edit, collection)
+      is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:update, collection)
+      is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:destroy, collection)
+      is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:deposit, collection)
+      is_expected.not_to be_able_to(:deposit, solr_document)
     end
   end
 
   context 'when user has no special access' do
     let!(:collection) { create(:collection, id: 'as', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
-    it 'denies all abilities' do
+    it 'denies all abilities' do # rubocop:disable RSpec/ExampleLength
       is_expected.not_to be_able_to(:manage, Collection)
       is_expected.not_to be_able_to(:manage_any, Collection)
       is_expected.not_to be_able_to(:view_admin_show_any, Collection)
       is_expected.not_to be_able_to(:edit, collection)
+      is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:update, collection)
+      is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:destroy, collection)
+      is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:deposit, collection)
+      is_expected.not_to be_able_to(:deposit, solr_document)
       is_expected.not_to be_able_to(:view_admin_show, collection)
+      is_expected.not_to be_able_to(:view_admin_show, solr_document)
       is_expected.not_to be_able_to(:read, collection)
+      is_expected.not_to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
     end
   end
 

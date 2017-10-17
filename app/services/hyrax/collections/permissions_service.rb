@@ -238,45 +238,45 @@ module Hyrax
       #
       # Determine if the given user has permissions to deposit into the given collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has permission to deposit into the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.can_deposit_in_collection?(collection:, user: nil, ability: nil)
-        deposit_access_to_collection?(user: user, collection: collection, ability: ability) ||
-          manage_access_to_collection?(user: user, collection: collection, ability: ability)
+      def self.can_deposit_in_collection?(collection_id:, user: nil, ability: nil)
+        deposit_access_to_collection?(user: user, collection_id: collection_id, ability: ability) ||
+          manage_access_to_collection?(user: user, collection_id: collection_id, ability: ability)
       end
 
       # @api public
       #
       # Determine if the given user has permissions to view the admin show page for the collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has permission to view the admin show page for the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.can_view_admin_show_for_collection?(collection:, user: nil, ability: nil)
-        deposit_access_to_collection?(user: user, collection: collection, ability: ability) ||
-          manage_access_to_collection?(user: user, collection: collection, ability: ability) ||
-          view_access_to_collection?(user: user, collection: collection, ability: ability)
+      def self.can_view_admin_show_for_collection?(collection_id:, user: nil, ability: nil)
+        deposit_access_to_collection?(user: user, collection_id: collection_id, ability: ability) ||
+          manage_access_to_collection?(user: user, collection_id: collection_id, ability: ability) ||
+          view_access_to_collection?(user: user, collection_id: collection_id, ability: ability)
       end
 
       # @api private
       #
       # Determine if the given user has :deposit access for the given collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has :deposit access to the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.deposit_access_to_collection?(collection:, user: nil, ability: nil)
-        access_to_collection?(user: user, collection: collection, access: 'deposit', ability: ability)
+      def self.deposit_access_to_collection?(collection_id:, user: nil, ability: nil)
+        access_to_collection?(user: user, collection_id: collection_id, access: 'deposit', ability: ability)
       end
       private_class_method :deposit_access_to_collection?
 
@@ -284,14 +284,14 @@ module Hyrax
       #
       # Determine if the given user has :manage access for the given collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has :manage access to the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.manage_access_to_collection?(collection:, user: nil, ability: nil)
-        access_to_collection?(user: user, collection: collection, access: 'manage', ability: ability)
+      def self.manage_access_to_collection?(collection_id:, user: nil, ability: nil)
+        access_to_collection?(user: user, collection_id: collection_id, access: 'manage', ability: ability)
       end
       private_class_method :manage_access_to_collection?
 
@@ -299,14 +299,14 @@ module Hyrax
       #
       # Determine if the given user has :view access for the given collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has permission to view the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.view_access_to_collection?(collection:, user: nil, ability: nil)
-        access_to_collection?(user: user, collection: collection, access: 'view', ability: ability)
+      def self.view_access_to_collection?(collection_id:, user: nil, ability: nil)
+        access_to_collection?(user: user, collection_id: collection_id, access: 'view', ability: ability)
       end
       private_class_method :view_access_to_collection?
 
@@ -314,17 +314,17 @@ module Hyrax
       #
       # Determine if the given user has specified access for the given collection
       #
-      # @param collection [Hyrax::Collection] the collection we are checking permissions on
+      # @param collection_id [String] id of the collection we are checking permissions on
       # @param access [Symbol] the access level to check
       # @param user [User] user (required if ability is nil)
       # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
       # @return [Boolean] true if the user has permission to view the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.access_to_collection?(collection:, access:, user: nil, ability: nil)
+      def self.access_to_collection?(collection_id:, access:, user: nil, ability: nil)
         return false unless user.present? || ability.present?
-        return false unless collection
-        template = Hyrax::PermissionTemplate.find_by!(source_id: collection.id)
+        return false unless collection_id
+        template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
         return true if ([user_id(user, ability)] & template.agent_ids_for(agent_type: 'user', access: access)).present?
         return true if (user_groups(user, ability) & template.agent_ids_for(agent_type: 'group', access: access)).present?
         false

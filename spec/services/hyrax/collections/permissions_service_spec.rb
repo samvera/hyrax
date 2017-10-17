@@ -30,10 +30,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection: collection, user: user)).to be true
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be true
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection: collection, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
       end
     end
 
@@ -50,10 +50,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection: collection, user: user)).to be true
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be true
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection: collection, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
       end
     end
 
@@ -70,10 +70,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection: collection, user: user)).to be false
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be false
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection: collection, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
       end
     end
 
@@ -81,10 +81,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection: collection, user: user)).to be false
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be false
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection: collection, user: user)).to be false
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be false
       end
     end
   end
