@@ -7,6 +7,7 @@ module Hyrax
       include Hyrax::Ability::CollectionAbility
       include Hyrax::Ability::CollectionTypeAbility
       include Hyrax::Ability::PermissionTemplateAbility
+      include Hyrax::Ability::SolrDocumentAbility
 
       class_attribute :admin_group_name, :registered_group_name
       self.admin_group_name = 'admin'
@@ -27,6 +28,7 @@ module Hyrax
                              :collection_abilities,
                              :collection_type_abilities,
                              :permission_template_abilities,
+                             :solr_document_abilities,
                              :trophy_abilities]
     end
 

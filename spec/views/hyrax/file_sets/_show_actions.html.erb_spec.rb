@@ -23,7 +23,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
   describe 'citations' do
     before do
       Hyrax.config.citations = citations
-      allow(controller).to receive(:can?).with(:edit, presenter).and_return(false)
+      allow(ability).to receive(:can?).with(:edit, solr_document).and_return(false)
       assign(:presenter, presenter)
       view.lookup_context.view_paths.push 'app/views/hyrax/base'
       render
