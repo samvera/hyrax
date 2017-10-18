@@ -133,7 +133,7 @@ de:
             no_delay: Keine Verzögerung - Freigabe aller Arbeiten, sobald sie hinterlegt sind
             title: Freigabe
             varies:
-              any: Dem Einzahler erlauben, sich zu entscheiden
+              any: Dem Deponierer erlauben, sich zu entscheiden
               between: Zwischen "jetzt" und
               description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
@@ -168,8 +168,8 @@ de:
             success: Das Design wurde erfolgreich aktualisiert
       features:
         index:
-          action: Aktion
-          description: Beschreibung
+          feature: Features
+          header: Features
           feature: Charakteristisch
           header: Charakteristik
       sidebar:
