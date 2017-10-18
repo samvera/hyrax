@@ -492,7 +492,7 @@ en:
         admin:                  "Administration"
       collections:
         edit:
-          header: "%{title}"
+          header: "Edit %{type_title}: %{title}"
         form:
           permission_update_notices:
             sharing: "The collection's sharing options have been updated."
@@ -580,7 +580,7 @@ en:
           this_collection_in_other_collections_description: "You can add this collection to other collections as a sub-collection."
 
         new:
-          header: Create New
+          header: "New %{type_title}"
         show:
           header: "Collection"
           item_count: "Items"
