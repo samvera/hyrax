@@ -17,11 +17,11 @@ RSpec.describe 'SolrDocumentAbility' do
   end
 
   context 'with works' do
-    # Need tests for works
+    # TODO: Need tests for works
   end
 
   context 'with files' do
-    # Need tests for files
+    # TODO: Need tests for files
   end
 end
 # rubocop:enable RSpec/EmptyExampleGroup
