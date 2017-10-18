@@ -168,10 +168,10 @@ de:
             success: Das Design wurde erfolgreich aktualisiert
       features:
         index:
+          action: Aktion
+          description: Beschreibung
           feature: Features
           header: Features
-          feature: Charakteristisch
-          header: Charakteristik
       sidebar:
         activity: Aktivität
         admin_sets: Admin-Sets
