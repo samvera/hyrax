@@ -42,7 +42,7 @@ EOF
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'json-schema' # for Arkivo
-  spec.add_dependency 'nest', '~> 2.0'
+  spec.add_dependency 'nest', '>= 2', '< 4'
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'oauth'
