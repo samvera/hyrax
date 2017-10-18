@@ -50,7 +50,7 @@ EOF
   spec.add_dependency 'signet'
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'posix-spawn'
-  spec.add_dependency 'jquery-ui-rails', '~> 5.0'
+  spec.add_dependency 'jquery-ui-rails', '>= 5', '< 7'
   spec.add_dependency 'redis-namespace', '~> 1.5'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
