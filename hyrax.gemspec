@@ -100,7 +100,7 @@ EOF
   # conventions. This allows us to take a managed approach to code
   # style -- we choose to update style when we wish, not when a
   # minor-level version bump in a dependency comes out.
-  spec.add_development_dependency 'rubocop', '~> 0.49.1'
+  spec.add_development_dependency 'rubocop', '~> 0.51.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.16.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 0'
