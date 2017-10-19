@@ -153,10 +153,14 @@ module Hyrax
       def update
         process_banner_input
         process_logo_input
-
         process_member_changes
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        visiblity_updated = (@collection.visibility != collection_params[:visibility])
         if @collection.update(collection_params.except(:members))
+          # added because the collection indexing happens before Hydra::AccessControls::Permission is
+          # saved, and the after_update_index callback in the nested_relationship_reindexer removes the
+          # permissions from the collection's Solr document.
+          @collection.update_index if visiblity_updated
           after_update
         else
           after_update_error
