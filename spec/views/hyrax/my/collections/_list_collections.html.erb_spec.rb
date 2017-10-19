@@ -21,7 +21,11 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   before do
     allow(view).to receive(:current_user).and_return(stub_model(User))
     allow(view).to receive(:can?).with(:edit, doc).and_return(true)
+    allow(view).to receive(:can?).with(:deposit, doc).and_return(true)
     allow(doc).to receive(:to_model).and_return(stub_model(Collection, id: id))
+    allow(Collection).to receive(:find).with(id).and_return(collection)
+    allow(collection).to receive(:id).and_return(id)
+    allow(collection).to receive(:member_of_collection_ids).and_return(["abc", "123"])
     allow(collection_presenter).to receive(:collection_type_badge).and_return("User Collection")
     view.lookup_context.prefixes.push 'hyrax/my'
 

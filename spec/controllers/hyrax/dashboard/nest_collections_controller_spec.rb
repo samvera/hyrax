@@ -33,6 +33,26 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
     end
   end
 
+  describe 'POST #process_nesting' do
+    subject { get 'process_nesting', params: { child_id: child_id, parent_id: parent_id, source: "all" } }
+
+    let(:obj) { [] }
+
+    before do
+      allow(Collection).to receive(:find).with(child_id).and_return(child)
+      allow(Collection).to receive(:find).with(parent_id).and_return(parent)
+
+      allow(child).to receive(:member_of_collections).and_return(obj)
+      allow(child).to receive(:save!).and_return(true)
+    end
+
+    it "make child collection member of parent collection" do
+      subject
+      expect(obj).to contain_exactly(parent)
+      expect(response).to redirect_to(dashboard_collections_path)
+    end
+  end
+
   describe 'POST #create_within' do
     subject { post 'create_within', params: { child_id: child_id, parent_id: parent_id } }
 

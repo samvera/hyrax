@@ -43,6 +43,24 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
   end
 
+  describe ".any_nestable?" do
+    context "when there is a nestable collection type" do
+      let!(:collection_type) { create(:collection_type, nestable: true) }
+
+      it 'returns true' do
+        expect(described_class.any_nestable?).to be true
+      end
+    end
+
+    context "when there are no nestable collection types" do
+      let!(:collection_type) { create(:collection_type, nestable: false) }
+
+      it 'returns false' do
+        expect(described_class.any_nestable?).to be false
+      end
+    end
+  end
+
   describe ".find_or_create_default_collection_type" do
     subject { described_class.find_or_create_default_collection_type }
 

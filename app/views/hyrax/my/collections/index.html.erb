@@ -1,5 +1,4 @@
 <% provide :page_title, t("hyrax.admin.sidebar.collections") %>
-
 <% provide :head do %>
   <%= rss_feed_link_tag route_set: hyrax %>
   <%= atom_feed_link_tag route_set: hyrax %>
@@ -49,8 +48,8 @@
   </div>
 
   <!-- Render Modals -->
-  <%= render 'modal_add_collection_to_collection' %>
-  <%= render 'modal_add_collection_to_collection_deny' %>
+  <%= render 'modal_add_to_collection_deny' %>
+  <%= render 'modal_add_to_collection_permission_deny' %>
   <%= render 'modal_collection_types_to_create' %>
   <%= render 'modal_delete_deny' %>
   <%= render 'modal_delete_selected_collections' %>

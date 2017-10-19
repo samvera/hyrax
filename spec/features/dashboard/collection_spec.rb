@@ -8,9 +8,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
   let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], edit_users: [user.user_key], with_permission_template: true) }
-  let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
-  let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid) }
-  let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid) }
+  let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
+  let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
+  let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid, with_permission_template: true) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -192,7 +192,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
-    let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user) }
+    let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], user: user) }
 
@@ -215,7 +215,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'delete collection' do
-    let!(:collection) { create(:public_collection, user: user) }
+    let!(:collection) { create(:public_collection, user: user, with_permission_template: true) }
 
     before do
       sign_in user
@@ -235,7 +235,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'])
+      create(:public_collection, user: user, description: ['collection description'], with_permission_template: true)
     end
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
@@ -307,7 +307,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/my/collections'
@@ -386,7 +386,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'edit collection' do
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
@@ -439,8 +439,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable]).id }
-        let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable]).id }
+        let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable], with_permission_template: true).id }
+        let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable], with_permission_template: true).id }
 
         it 'to true, it shows Discovery tab' do
           visit "/dashboard/collections/#{discoverable_collection_id}/edit"
@@ -454,8 +454,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with sharable set' do
-        let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable]).id }
-        let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable]).id }
+        let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable], with_permission_template: true).id }
+        let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable], with_permission_template: true).id }
 
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
@@ -471,7 +471,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe "Removing works from a collection" do
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
