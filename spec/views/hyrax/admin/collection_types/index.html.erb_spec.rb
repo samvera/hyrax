@@ -30,4 +30,12 @@ RSpec.describe 'hyrax/admin/collection_types/index.html.erb', type: :view, clean
     # 2 delete buttons for the custom collection types and 1 for the delete modal
     expect(rendered).to have_button('Delete', count: 3)
   end
+
+  it 'has delete buttons with attribute for link to faceted index page' do
+    expect(rendered).to have_selector(:css, 'button[data-collection-type-index]', count: 2)
+  end
+
+  it 'has view collections buttons for collection types with existing collections' do
+    expect(rendered).to have_link('View collections of this type', count: 1)
+  end
 end

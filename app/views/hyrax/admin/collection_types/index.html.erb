@@ -38,7 +38,12 @@
                   <%= t('helpers.action.edit') %>
                  <% end %>
                  <% unless collection_type.admin_set? || collection_type.user_collection? %>
-                  <button class="btn btn-danger btn-sm delete-collection-type" data-collection-type="<%= collection_type.to_json %>" data-has-collections="<%= collection_type.collections? %>"><%= t('helpers.action.delete') %></button>
+                  <button class="btn btn-danger btn-sm delete-collection-type" 
+                          data-collection-type="<%= collection_type.to_json %>"
+                          data-collection-type-index="<%= hyrax.dashboard_collections_path({ 'f[collection_type_gid_ssim][]' => collection_type.gid, 'f[has_model_ssim][]' => 'Collection' }) %>"
+                          data-has-collections="<%= collection_type.collections? %>">
+                    <%= t('helpers.action.delete') %>
+                  </button>
                   <% end %>
                </td>
              </tr>
@@ -74,7 +79,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
-          <button type="button" class="btn btn-primary view-collections-of-this-type"><%= t('.modal.view_collections') %></button>
+	  <%= link_to  t('.modal.view_collections'), hyrax.my_collections_path, class: 'btn btn-primary view-collections-of-this-type', data_dismiss: 'modal' %>
         </div>
       </div>
     </div>

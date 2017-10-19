@@ -34,6 +34,7 @@ export default class CollectionTypes {
       this.collectionType_id = collectionType.id;
 
       if (hasCollections === true) {
+        $('.view-collections-of-this-type').attr('href',dataset.collectionTypeIndex)
         $('#deleteDenyModal').modal()
       } else {
         $('#deleteModal').modal()
@@ -56,8 +57,7 @@ export default class CollectionTypes {
 
     // Confirm delete collection type
     $('.view-collections-of-this-type').on('click', (event) => {
-        // TODO: pass filter parameter based on this.collectionType_id to collections search
-        window.location.href = '/dashboard/collections';
+        $('#deleteDenyModal').modal('hide')
     })
 
   }
