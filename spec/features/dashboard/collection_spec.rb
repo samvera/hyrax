@@ -134,7 +134,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         choose('User Collection')
         click_on('Create collection')
 
-        expect(page).to have_content 'Create New Collection'
+        expect(page).to have_selector('h1', text: 'New User Collection')
         expect(page).to have_selector "input.collection_title.multi_value"
 
         click_link('Additional fields')
@@ -161,7 +161,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       it 'makes a new collection' do
         click_link "New Collection"
-        expect(page).to have_content 'Create New Collection'
+        expect(page).to have_selector('h1', text: 'New User Collection')
         expect(page).to have_selector "input.collection_title.multi_value"
 
         click_link('Additional fields')
@@ -408,6 +408,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_field('collection_description', with: collection.description.first)
         expect(page).to have_content(work1.title.first)
         expect(page).to have_content(work2.title.first)
+        expect(page).to have_selector('h1', text: "Edit User Collection: #{collection.title.first}")
 
         new_title = "Altered Title"
         new_description = "Completely new Description text."
