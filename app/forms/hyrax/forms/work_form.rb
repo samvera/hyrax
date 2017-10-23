@@ -37,7 +37,7 @@ module Hyrax
 
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
-        @agreement_accepted = !model.new_record?
+        @agreement_accepted = model.persisted?
         @controller = controller
         super(model)
       end
