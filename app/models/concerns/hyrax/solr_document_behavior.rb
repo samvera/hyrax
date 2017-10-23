@@ -15,6 +15,11 @@ module Hyrax
       ResourceTypesService.microdata_type(types.first)
     end
 
+    # Cast to a Valkyrie model
+    def resource
+      @resource ||= Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.to_resource(object: to_h)
+    end
+
     def title_or_label
       return label if title.blank?
       title.join(', ')

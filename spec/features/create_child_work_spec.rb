@@ -43,7 +43,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
     end
 
     before do
-      parent.member_ids << curation_concern.id
+      parent.member_ids += [curation_concern.id]
       persister.save(resource: parent)
     end
 
@@ -56,7 +56,7 @@ RSpec.feature 'Creating a new child Work', :workflow do
     end
 
     it "doesn't lose other memberships" do
-      new_parent.member_ids << curation_concern.id
+      new_parent.member_ids += [curation_concern.id]
       persister.save(resource: new_parent)
 
       visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"

@@ -182,7 +182,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
       before do
-        work.member_ids << another_work.id
+        work.member_ids += [another_work.id]
         persister.save(resource: work)
       end
 

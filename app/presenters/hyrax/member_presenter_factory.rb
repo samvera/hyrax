@@ -8,8 +8,11 @@ module Hyrax
     # modify this attribute to use an alternate presenter class for the child works
     self.work_presenter_class = WorkShowPresenter
 
+    # @param work [SolrDocument, Valkyrie::Resource]
+    # @param ability [Ability]
+    # @param request [ActionController::Request]
     def initialize(work, ability, request = nil)
-      @work = work
+      @work = work.is_a?(::SolrDocument) ? work.resource : work
       @current_ability = ability
       @request = request
     end
@@ -56,7 +59,7 @@ module Hyrax
       end
 
       def file_sets
-        @file_sets ||= Hyrax::Queries.find_members(resource: @work, model: FileSet)
+        @file_sets ||= Hyrax::Queries.find_members(resource: @work, model: ::FileSet)
       end
   end
 end

@@ -35,7 +35,7 @@ module Hyrax
           (ordered_member_ids - env.curation_concern.ordered_member_ids).each do |work_id|
             work = find_resource(work_id)
             if can_edit_both_works?(env, work)
-              env.curation_concern.member_ids << work_id
+              env.curation_concern.member_ids += [work_id]
               persister.save(resource: env.curation_concern)
             else
               env.curation_concern.errors[:ordered_member_ids] << "Works can only be related to each other if user has ability to edit both."
