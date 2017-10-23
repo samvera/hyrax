@@ -6,6 +6,7 @@ module Hyrax
       class_attribute :admin_group_name
       self.admin_group_name = 'admin'
       self.ability_logic += [:admin_permissions,
+                             :valkyrie_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,
                              :add_to_collection,
@@ -19,6 +20,13 @@ module Hyrax
                              :feature_abilities,
                              :admin_set_abilities,
                              :trophy_abilities]
+    end
+
+    # Hydra-head provides this for ActiveFedora models, but we must add it for Valkyrie models
+    def valkyrie_permissions
+      can [:edit, :update, :destroy], Valkyrie::Resource do |obj|
+        test_edit(obj.id)
+      end
     end
 
     # Samvera doesn't use download user/groups, so make it an alias to read
