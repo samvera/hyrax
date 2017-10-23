@@ -61,7 +61,7 @@ module Hyrax
     def bytes
       return 0 if member_object_ids.empty?
 
-      raise "Collection must be saved to query for bytes" if new_record?
+      raise "Collection must be saved to query for bytes" if !persisted?
 
       # One query per member_id because Solr is not a relational database
       member_object_ids.collect { |work_id| size_for_work(work_id) }.sum

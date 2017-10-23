@@ -14,9 +14,6 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
   end
 
   before do
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(work).to receive(:new_record?).and_return(false)
-
     allow(view).to receive(:params).and_return(id: work.id)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(view).to receive(:f).and_return(f)

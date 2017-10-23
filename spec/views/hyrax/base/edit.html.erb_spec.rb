@@ -6,8 +6,6 @@ RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
   end
 
   before do
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(work).to receive(:new_record?).and_return(false)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     assign(:change_set, change_set)

@@ -5,8 +5,6 @@ RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
 
   before do
     allow(ActiveFedora::Base).to receive(:find).and_return(generic_work)
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(generic_work).to receive(:new_record?).and_return(false)
     # this prevents AF from hitting Fedora (permissions is a related object)
     allow(generic_work).to receive(:permissions_attributes=)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
