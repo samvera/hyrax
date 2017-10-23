@@ -44,12 +44,12 @@ module Hyrax
         # along side the FileSets on the show page
         def add(env, id)
           return unless env.current_ability.can?(:edit, id)
-          env.curation_concern.member_ids << id
+          env.curation_concern.member_ids += [id]
         end
 
         # Remove the object from the members set and the ordered members list
         def remove(curation_concern, id)
-          curation_concern.member_ids.delete(id)
+          curation_concern.member_ids -= [id]
         end
 
         # Determines if a hash contains a truthy _destroy key.
