@@ -49,7 +49,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
 
       context "and I can edit that object" do
         before do
-          allow(ability).to receive(:can?).with(:edit, GenericWork).and_return(true)
+          allow(ability).to receive(:can?).with(:edit, Valkyrie::ID).and_return(true)
         end
 
         it "is added to the members" do
