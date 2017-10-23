@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     subject { middleware.update(env) }
 
     before do
-      work.member_ids << existing_child_work.id
+      work.member_ids += [existing_child_work.id]
     end
     let(:existing_child_work) { create_for_repository(:work) }
     let(:id) { existing_child_work.id }

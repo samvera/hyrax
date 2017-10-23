@@ -30,6 +30,9 @@ module Hyrax
     alias klass presenter_class
     deprecation_deprecate klass: "use #presenter_class instead"
 
+    # @param ids [Array<Valkyrie::ID>]
+    # @param presenter_class [Class]
+    # @param presenter_args [Array]
     def initialize(ids:, presenter_class:, presenter_args:)
       @ids = ids
       @presenter_class = presenter_class
@@ -41,7 +44,7 @@ module Hyrax
       return [] if ids.blank?
       docs = load_docs
       ids.map do |id|
-        solr_doc = docs.find { |doc| doc.id == id }
+        solr_doc = docs.find { |doc| doc.id == id.to_s }
         presenter_class.new(solr_doc, *presenter_args) if solr_doc
       end.compact
     end

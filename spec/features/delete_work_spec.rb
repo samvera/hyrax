@@ -5,7 +5,7 @@ RSpec.describe 'Deleting a work', type: :feature do
   let(:persister) { Valkyrie.config.metadata_adapter.persister }
   let(:work) do
     w = build(:work, user: user)
-    w.member_ids << file_set.id
+    w.member_ids += [file_set.id]
     w.read_groups = [] # TODO: is this required?
     persister.save(resource: w)
   end
