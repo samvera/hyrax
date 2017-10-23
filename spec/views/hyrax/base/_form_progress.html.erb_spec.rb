@@ -102,8 +102,6 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   context "when the work has been saved before" do
     before do
-      # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-      allow(work).to receive(:new_record?).and_return(false)
       assign(:change_set, change_set)
       allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
         .and_return(true)
