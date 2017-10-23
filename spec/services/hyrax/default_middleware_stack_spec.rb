@@ -13,7 +13,6 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
         Hyrax::Actors::CreateWithFilesActor,
         Hyrax::Actors::CollectionsMembershipActor,
         Hyrax::Actors::AddToWorkActor,
-        Hyrax::Actors::AssignRepresentativeActor,
         Hyrax::Actors::AttachMembersActor,
         Hyrax::Actors::InterpretVisibilityActor,
         Hyrax::Actors::TransferRequestActor,
