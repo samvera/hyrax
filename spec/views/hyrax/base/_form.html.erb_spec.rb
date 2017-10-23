@@ -11,8 +11,6 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   before do
     allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).and_return(options_presenter)
     stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(work).to receive(:new_record?).and_return(true)
     allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
