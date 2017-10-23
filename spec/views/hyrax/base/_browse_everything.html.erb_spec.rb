@@ -3,11 +3,6 @@ RSpec.describe 'hyrax/base/_browse_everything.html.erb', type: :view do
   let(:change_set) { Hyrax::GenericWorkChangeSet.new(model) }
   let(:f) { double(object: change_set) }
 
-  before do
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(model).to receive(:new_record?).and_return(false)
-  end
-
   it 'shows user timing warning' do
     render 'hyrax/base/browse_everything', f: f
     page = Capybara::Node::Simple.new(rendered)
