@@ -8,9 +8,10 @@ FactoryGirl.define do
       fs.apply_depositor_metadata evaluator.user.user_key if evaluator.user
     end
 
-    after(:create) do |file, evaluator|
+    after(:create) do |file_set, evaluator|
       if evaluator.content
-        Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
+        storage_adapter = Valkyrie::StorageAdapter.find(:disk)
+        storage_adapter.upload(file: evaluator.content, resource: file_set)
       end
     end
 
@@ -24,18 +25,6 @@ FactoryGirl.define do
 
     trait :registered do
       read_groups ["registered"]
-    end
-
-    factory :file_with_work do
-      after(:build) do |file, _evaluator|
-        file.title = ['testfile']
-      end
-      after(:create) do |file, evaluator|
-        if evaluator.content
-          Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
-        end
-        FactoryGirl.create_for_repository(:work, user: evaluator.user).members << file
-      end
     end
   end
 end
