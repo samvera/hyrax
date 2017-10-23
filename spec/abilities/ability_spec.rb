@@ -152,7 +152,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     end
 
     describe 'via AdminSet-specific edit_users' do
-      let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true, edit_users: [user.user_key]) }
 
       it '#admin? is false' do
         expect(ability).not_to be_admin
