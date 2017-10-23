@@ -419,7 +419,7 @@ en:
         header: "Actions"
         nest_collections:
           desc: "Nest other collections within this Collection"
-          label: "Nest collections"
+          label: "Add existing collection"
       browse_view: "Browse View"
       document_list:
         edit: "Edit"
@@ -444,7 +444,9 @@ en:
         label: "Search Collection %{title}"
         placeholder: "Search Collection"
       show:
-        works_in_collection: "Works in this Collection"
+        works_in_collection: "Works"
+        subcollection_count: "Subcollections"
+        no_visible_subcollections: "There are no visible subcollections."
     contact_form:
       button_label: "Send"
       email_label: "Your Email"
@@ -569,14 +571,14 @@ en:
             action: "Action"
             collection_title: "Collection Title"
           this_collection_in_other_collections_description: "You can add this collection to other collections as a sub-collection."
-
         new:
           header: "New %{type_title}"
         show:
           header: "Collection"
-          item_count: "Items"
+          item_count: "Works"
           public_view_label: "Public view of Collection"
           search_results: "Search Results within this Collection"
+          subcollection_count: "Subcollections"
       collection_type_actions:
         close:                        "Close"
         create_collection:            "Create collection"

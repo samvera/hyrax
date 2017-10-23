@@ -1,7 +1,6 @@
 RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', type: :view do
-  let(:presenter) { double('Hyrax::CollectionPresenter', collection_type_is_nestable?: is_nestable, solr_document: solr_document, id: '123') }
+  let(:presenter) { double('Hyrax::CollectionPresenter', solr_document: solr_document, id: '123') }
   let(:solr_document) { double('Solr Document') }
-  let(:is_nestable) { true }
   let(:can_edit) { true }
 
   before do
@@ -20,20 +19,6 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
       render
       expect(rendered).to have_link("Add new work")
     end
-    describe 'when the collection_type is nestable' do
-      it 'renders a link to add_collections to this collection' do
-        render
-        expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.dashboard_new_nest_collection_within_path(child_id: presenter.id)}']")
-      end
-    end
-    describe 'when the collection_type is not nestable' do
-      let(:is_nestable) { false }
-
-      it 'does not render a link to add_collections to this collection' do
-        render
-        expect(rendered).not_to have_css(".actions-controls-collections .btn[href='/TODO/NEST_COLLECTION']")
-      end
-    end
   end
   describe 'when user cannot edit the document' do
     let(:can_edit) { false }
@@ -41,19 +26,6 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
     it 'does not render add_works_to_collection link' do
       render
       expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
-    end
-
-    describe 'when the collection_type is not nestable' do
-      it 'does not render a link to add_collections to this collection' do
-        render
-        expect(rendered).not_to have_css(".actions-controls-collections .btn[href='/TODO/NEST_COLLECTION']")
-      end
-    end
-    describe 'when the collection_type is nestable' do
-      it 'does not render a link to add_collections to this collection' do
-        render
-        expect(rendered).not_to have_css(".actions-controls-collections .btn[href='/TODO/NEST_COLLECTION']")
-      end
     end
   end
 end

@@ -1,4 +1,4 @@
-RSpec.describe 'collection', type: :feature do
+RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
   let(:user) { create(:user) }
 
   let(:collection1) { create(:public_collection, user: user) }
@@ -60,6 +60,7 @@ RSpec.describe 'collection', type: :feature do
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
           "member_of_collection_ids_ssim" => [collection.id],
+          "nesting_collection__parent_ids_ssim" => [collection.id],
           "edit_access_person_ssim" => [user.user_key] }
       end
       ActiveFedora::SolrService.add(docs, commit: true)

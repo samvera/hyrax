@@ -11,7 +11,7 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
                     current_user: user)
   end
   let(:user) { create(:user) }
-  let(:builder) { described_class.new(context, access) }
+  let(:builder) { described_class.new(context) }
 
   describe '#filter_models' do
     before do
@@ -19,7 +19,6 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
       allow(builder).to receive(:work_classes).and_return([GenericWork])
       builder.filter_models(solr_params)
     end
-    let(:access) { :read }
     let(:solr_params) { { fq: [] } }
 
     it 'searches for valid work types' do
