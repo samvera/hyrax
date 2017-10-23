@@ -77,7 +77,7 @@ module Hyrax
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work.reload unless work.new_record?
+          work.reload if work.persisted?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
           work.member_ids << file_set.id
           work.representative = file_set if work.representative_id.blank?
