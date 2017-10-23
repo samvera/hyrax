@@ -22,6 +22,6 @@ RSpec.describe Hyrax::Queries do
   end
 
   it 'knows the thing that does not exist does not exist' do
-    expect(described_class.exists?('i_do_not_exist')).to be false
+    expect(described_class.exists?(Valkyrie::ID.new('i_do_not_exist'))).to be false
   end
 end
