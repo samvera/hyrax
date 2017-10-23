@@ -25,7 +25,7 @@ RSpec.describe Hyrax::FileSetsController do
         let(:delete_message) { double('delete message') }
 
         before do
-          work.member_ids << file_set.id
+          work.member_ids += [file_set.id]
           persister.save(resource: work)
         end
 
@@ -241,7 +241,7 @@ RSpec.describe Hyrax::FileSetsController do
 
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
-          work.member_ids << file_set.id
+          work.member_ids += [file_set.id]
           persister.save(resource: work)
           persister.save(resource: file_set) # Is this necessary?
         end

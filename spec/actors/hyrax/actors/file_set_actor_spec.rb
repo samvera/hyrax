@@ -298,7 +298,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
       before do # another version of the same work is saved with a member
         work_v2 = Hyrax::Queries.find_by(id: work_v1.id)
-        work_v2.member_ids << create_for_repository(:file_set).id
+        work_v2.member_ids += [create_for_repository(:file_set).id]
         persister.save(resource: work_v2)
       end
 

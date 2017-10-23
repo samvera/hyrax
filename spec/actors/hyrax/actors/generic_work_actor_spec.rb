@@ -234,7 +234,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
 
       before do
-        old_parent.member_ids << curation_concern.id
+        old_parent.member_ids += [curation_concern.id]
         persister.save(resource: old_parent)
       end
 
@@ -256,7 +256,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         persister.save(resource: curation_concern)
-        old_parent.member_ids << curation_concern.id
+        old_parent.member_ids += [curation_concern.id]
         persister.save(resource: old_parent)
       end
 
@@ -280,7 +280,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         persister.save(resource: curation_concern)
-        parent.member_ids << curation_concern.id
+        parent.member_ids += [curation_concern.id]
         persister.save(resource: parent)
       end
 
