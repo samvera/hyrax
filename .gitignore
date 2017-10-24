@@ -37,6 +37,9 @@ rerun.txt
 coverage.data
 coverage/*
 
+## RUBYMINE
+.idea/
+
 ## TEST APP
 pkg/
 spec/mock_upload_directory

@@ -444,7 +444,7 @@ en:
         label: "Search Collection %{title}"
         placeholder: "Search Collection"
       show:
-        works_in_collection: "Works in this Collection"
+        works_in_collection: "Collection Items"
     contact_form:
       button_label: "Send"
       email_label: "Your Email"

@@ -11,7 +11,7 @@ Blacklight.onLoad(function () {
   });
 
   // background banner image uploaded for branding  
-  $(".banner[data-background]").each(function() {
+  $(".hyc-header header[data-background]").each(function() {
     var $banner = $(this);
     var url = 'url(' + $banner.data('background') + ')';
     $banner.css({ "backgroundImage": url });
