@@ -97,6 +97,11 @@ Hyrax.config do |config|
   # Stream realtime notifications to users in the browser
   # config.realtime_notifications = true
 
+  # Register new linked_data_resource classes; used to define special behavior for retrieving a label from an
+  #   external service for the given attribute.
+  #   @example :based_near is already registerd to use Hyrax::LinkedDataResources::GeonamesResource
+  # config.registered_registered_linked_data_resources[:my_new_attribute] = MyClass
+
   # Location autocomplete uses geonames to search for named regions
   # Username for connecting to geonames
   # config.geonames_username = ''
