@@ -215,21 +215,180 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'delete collection' do
-    let!(:collection) { create(:public_collection, user: user, with_permission_template: true) }
+    let!(:empty_collection) { create(:public_collection, title: ['Empty Collection'], user: user, with_permission_template: true) }
+    let!(:collection) { create(:public_collection, title: ['Collection with Work'], user: user, with_permission_template: true) }
+    let!(:admin_user) { create(:admin) }
+    let!(:empty_adminset) { create(:admin_set, title: ['Empty Admin Set'], creator: [admin_user.user_key], with_permission_template: true) }
+    let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
+    let!(:work) { create(:work, title: ["King Louie"], admin_set: adminset, member_of_collections: [collection], user: user) }
 
-    before do
-      sign_in user
-      visit '/dashboard/my/collections'
+    context 'when user created the collection' do
+      before do
+        user
+        sign_in user
+        visit '/dashboard/my/collections' # Your Collections tab
+      end
+
+      context 'and collection is empty' do
+        it 'and user confirms delete, deletes the collection', :js do
+          expect(page).to have_content(empty_collection.title.first)
+          within('#document_' + empty_collection.id) do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-empty-to-delete-modal-#{empty_collection.id}", visible: true)
+          within("div#collection-empty-to-delete-modal-#{empty_collection.id}") do
+            click_link('Delete')
+          end
+          expect(page).not_to have_content(empty_collection.title.first)
+        end
+
+        it 'and user cancels, does NOT delete the collection', :js do
+          expect(page).to have_content(empty_collection.title.first)
+          within("#document_#{empty_collection.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-empty-to-delete-modal-#{empty_collection.id}", visible: true)
+          within("div#collection-empty-to-delete-modal-#{empty_collection.id}") do
+            click_button('Cancel')
+          end
+          expect(page).to have_content(empty_collection.title.first)
+        end
+      end
+
+      context 'and collection is not empty' do
+        it 'and user confirms delete, deletes the collection', :js do
+          expect(page).to have_content(collection.title.first)
+          within("#document_#{collection.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-to-delete-modal-#{collection.id}", visible: true)
+          within("div#collection-to-delete-modal-#{collection.id}") do
+            click_link('Delete')
+          end
+          expect(page).not_to have_content(collection.title.first)
+        end
+
+        it 'and user cancels, does NOT delete the collection', :js do
+          expect(page).to have_content(collection.title.first)
+          within("#document_#{collection.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-to-delete-modal-#{collection.id}", visible: true)
+          within("div#collection-to-delete-modal-#{collection.id}") do
+            click_button('Cancel')
+          end
+          expect(page).to have_content(collection.title.first)
+        end
+      end
     end
 
-    it "deletes a collection" do
-      expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
-        first('button.dropdown-toggle').click
-        first(".itemtrash").click
-        first(".btn-danger").click
+    context 'when user without permissions selects delete' do
+      let(:user2) { create(:user) }
+
+      before do
+        create(:permission_template_access,
+               :deposit,
+               permission_template: collection.permission_template,
+               agent_type: 'user',
+               agent_id: user2.user_key)
+        sign_in user2
+        visit '/dashboard/collections' # Managed Collections tab
       end
-      expect(page).not_to have_content(collection.title.first)
+
+      it 'does not allow delete collection' do
+        expect(page).to have_content(collection.title.first)
+        within("#document_#{collection.id}") do
+          first('button.dropdown-toggle').click
+          first('.itemtrash').click
+        end
+        expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
+        within('div#collection-to-delete-deny-modal') do
+          click_button('Close')
+        end
+        expect(page).to have_content(collection.title.first)
+      end
+    end
+
+    context 'when user created the admin set' do
+      before do
+        sign_in admin_user
+        visit '/dashboard/collections' # All Collections tab
+      end
+
+      context 'and admin set is empty' do
+        it 'and user confirms delete, deletes the admin set', :js do
+          expect(page).to have_content(empty_adminset.title.first)
+          within('#document_' + empty_adminset.id) do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}", visible: true)
+          within("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}") do
+            click_link('Delete')
+          end
+          expect(page).not_to have_content(empty_adminset.title.first)
+        end
+
+        it 'and user cancels, does NOT delete the admin set', :js do
+          expect(page).to have_content(empty_adminset.title.first)
+          within("#document_#{empty_adminset.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}", visible: true)
+          within("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}") do
+            click_button('Cancel')
+          end
+          expect(page).to have_content(empty_adminset.title.first)
+        end
+      end
+
+      context 'and admin set is not empty' do
+        it 'does not allow delete admin set' do
+          expect(page).to have_content(adminset.title.first)
+          within("#document_#{adminset.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+          expect(page).to have_selector("div#collection-admin-set-delete-deny-modal-#{adminset.id}", visible: true)
+          within("div#collection-admin-set-delete-deny-modal-#{adminset.id}") do
+            click_button('Close')
+          end
+          expect(page).to have_content(adminset.title.first)
+        end
+      end
+    end
+
+    context 'when user without permissions selects delete' do
+      let(:user2) { create(:user) }
+
+      before do
+        create(:permission_template_access,
+               :view,
+               permission_template: adminset.permission_template,
+               agent_type: 'user',
+               agent_id: user2.user_key)
+        sign_in user2
+        visit '/dashboard/collections' # Managed Collections tab
+      end
+
+      xit 'does not allow delete admin set' do
+        # TODO: Depositors & viewers cannot see admin sets in Managed Collections list.  Should they?
+        expect(page).to have_content(adminset.title.first)
+        within("#document_#{adminset.id}") do
+          first('button.dropdown-toggle').click
+          first('.itemtrash').click
+        end
+        expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
+        within('div#collection-to-delete-deny-modal') do
+          click_button('Close')
+        end
+        expect(page).to have_content(adminset.title.first)
+      end
     end
   end
 
@@ -390,6 +549,30 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+
+    context 'from dashboard -> collections action menu' do
+      before do
+        create(:permission_template_access,
+               :deposit,
+               permission_template: collection1.permission_template,
+               agent_type: 'user',
+               agent_id: user.user_key)
+
+        collection1
+        sign_in user
+        visit '/dashboard/my/collections'
+      end
+
+      it "edit denied because user does not have permissions" do
+        # URL: /dashboard/my/collections
+        expect(page).to have_content(collection1.title.first)
+        within("#document_#{collection1.id}") do
+          find('button.dropdown-toggle').click
+          click_link('Edit collection')
+        end
+        expect(page).to have_content(collection1.title.first)
+      end
+    end
 
     context 'from dashboard -> collections action menu' do
       before do

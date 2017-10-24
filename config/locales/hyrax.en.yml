@@ -595,14 +595,18 @@ en:
         action:
           add_to_collection:        "Add to collection"
           admin_set_confirmation:  "Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation"
-          collections_confirmation_html: "<span class='pluralized'>Deleting this collection</span> will permanently remove the collection from the repository.  Items in the collection will remain in the repository.  Are you sure you want to delete this collection?"
-          delete_admin_set:        "Delete administrative set"
+          delete_admin_set_deny:   "This collection is defined as an %{type_name} and is not empty. To delete an %{type_name}, you must first remove (delete or move to another %{type_name} collection) all items from the %{type_name}."
+          collections_confirmation_html: "Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?"
+          collections_confirmation_no_items_html: "Are you sure you want to delete this collection? This action cannot be undone."
+          delete_admin_set:        "Delete collection" # use same term for admin sets and collections
           delete_collection:       "Delete collection"
           delete_collections:      "Delete collections"
+          delete_collection_deny:  "You do not have sufficient privileges to delete this document."
           delete_collections_deny: "You must select one or more collections to delete."
           delete_work:             "Delete Work"
-          edit_admin_set:          "Edit administrative set"
+          edit_admin_set:          "Edit collection" # use same term for admin sets and collections
           edit_collection:         "Edit collection"
+          edit_collection_deny:    "You do not have sufficient privileges to edit this collection."
           edit_work:               "Edit Work"
           highlight:               "Highlight Work on Profile"
           nesting_not_allowed:     "Collections of this type do not support nesting."
@@ -614,7 +618,7 @@ en:
           transfer:                "Transfer Ownership of Work"
           unhighlight:             "Unhighlight Work"
           view_collection:         "View collection"
-          view_admin_set:          "View administrative set"
+          view_admin_set:          "View collection" # use same term for admin sets and collections
           work_confirmation:       "Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation"
         collection_list:
           description:    "Description:"

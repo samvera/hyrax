@@ -26,7 +26,7 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
     it "shows view, edit, and delete" do
       expect(rendered).to have_link 'View collection', href: hyrax.dashboard_collection_path(id)
       expect(rendered).to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
-      expect(rendered).to have_link 'Delete collection', href: hyrax.dashboard_collection_path(id)
+      expect(rendered).to have_link 'Delete collection'
     end
   end
 
@@ -36,10 +36,10 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
       render 'hyrax/my/collection_action_menu', collection: collection_doc
     end
 
-    it "shows view, but hides edit and delete" do
+    it "shows view, delete and hide edit" do
       expect(rendered).to have_link 'View collection', href: hyrax.dashboard_collection_path(id)
       expect(rendered).not_to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
-      expect(rendered).not_to have_link 'Delete collection', href: hyrax.dashboard_collection_path(id)
+      expect(rendered).to have_link 'Delete collection'
     end
   end
 

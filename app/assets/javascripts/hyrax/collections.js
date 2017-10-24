@@ -26,11 +26,40 @@ Blacklight.onLoad(function () {
       }
   });
 
+  // Display access deny for edit request.
+  $('#documents').find('.edit-collection-deny-button').on('click', function (e) {
+    e.preventDefault();
+    $('#collections-to-edit-deny-modal').modal('show');
+  });
+
   // Delete collection button click from within a collection row
   $('#documents').find('.delete-collection-button').on('click', function (e) {
     e.preventDefault();
+
+    var totalitems = $(this).data('totalitems');
+    // membership set to true indicates admin_set
+    var membership = $(this).data('membership') === true;
+    var hasaccess = $(this).data('hasaccess') === true;    
+
     var collectionId = $(this).parents('tr')[0].id.split('_')[1];
-    $('#collection-to-delete-modal-' + collectionId).modal('show');
+    
+    if (hasaccess === false) {
+      $('#collection-to-delete-deny-modal').modal('show');
+    } else if (totalitems > 0) {
+      if (membership) {
+         $('#collection-admin-set-delete-deny-modal-' + collectionId).modal('show');
+      }
+      else{
+         $('#collection-to-delete-modal-' + collectionId).modal('show')
+      }
+    } else {
+      if (membership) {
+        $('#collection-admin-set-empty-to-delete-modal-' + collectionId).modal('show');
+      }
+      else {
+        $('#collection-empty-to-delete-modal-' + collectionId).modal('show');
+      }
+    }
   });
 
   // Delete selected collections button click
@@ -39,8 +68,8 @@ Blacklight.onLoad(function () {
     var checkbox = null;
     var numRowsSelected = false;
     var deleteWording = {
-      plural: 'Deleting these collections',
-      singular: 'Deleting this collection'
+      plural: 'these collections',
+      singular: 'this collection'
     };
     var $deleteWordingTarget = $('#selected-collections-delete-modal .pluralized');
 
