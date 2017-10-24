@@ -40,7 +40,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
   describe "#initialize" do
     it "sets the model" do
-      expect(usage.model).to eq work
+      expect(usage.model.id).to eq work.id
     end
 
     it "sets the created date" do
