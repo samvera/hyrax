@@ -102,7 +102,8 @@ module Hyrax
     end
 
     def resource_params
-      params[resource_class.to_s.underscore.to_sym].to_unsafe_h
+      raw_params = params[resource_class.model_name.param_key]
+      raw_params ? raw_params.to_unsafe_h : {}
     end
 
     def find_resource(id)

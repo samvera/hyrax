@@ -180,40 +180,34 @@ RSpec.describe Hyrax::GenericWorksController do
       it 'shows me the page' do
         get :new
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
-        expect(assigns[:form].depositor).to eq user.user_key
-        expect(assigns[:curation_concern]).to be_kind_of GenericWork
-        expect(assigns[:curation_concern].depositor).to eq user.user_key
+        expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
+        expect(assigns[:change_set].depositor).to eq user.user_key
+        expect(assigns[:change_set].resource).to be_kind_of GenericWork
         expect(response).to render_template("layouts/dashboard")
       end
     end
   end
 
   describe '#create' do
-    let(:actor) { double(create: create_status) }
-    let(:create_status) { true }
-
-    before do
-      allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
-    end
-
     context 'when create is successful' do
       let(:work) { stub_model(GenericWork) }
 
       it 'creates a work' do
-        allow(controller).to receive(:curation_concern).and_return(work)
+        allow(GenericWork).to receive(:new).and_return(work)
         post :create, params: { generic_work: { title: ['a title'] } }
         expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       end
     end
 
     context 'when create fails' do
-      let(:create_status) { false }
+      before do
+        allow_any_instance_of(GenericWorkChangeSet).to receive(:validate).and_return(false)
+      end
 
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
         expect(response.status).to eq 422
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
+        expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
         expect(response).to render_template 'new'
       end
     end
@@ -229,21 +223,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context "with files" do
-      let(:actor) { double('An actor') }
-      let(:work) { create_for_repository(:work) }
-
-      before do
-        allow(controller).to receive(:actor).and_return(actor)
-        # Stub out the creation of the work so we can redirect somewhere
-        allow(controller).to receive(:curation_concern).and_return(work)
-      end
-
       it "attaches files" do
-        expect(actor).to receive(:create)
-          .with(Hyrax::Actors::Environment) do |env|
-            expect(env.attributes.keys).to include('uploaded_files')
-          end
-                     .and_return(true)
         post :create, params: {
           generic_work: {
             title: ["First title"],
@@ -251,11 +231,14 @@ RSpec.describe Hyrax::GenericWorksController do
           },
           uploaded_files: ['777', '888']
         }
-        expect(flash[:notice]).to be_html_safe
         expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                      "The metadata and access controls you specified are being applied. " \
                                      "You may need to refresh this page to see these updates."
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(response).to be_redirect
+        id = response.location.gsub("http://test.host/concern/generic_works/", "").gsub(/\?.*$/, '')
+        work = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+        members = Hyrax::Queries.find_members(resource: work)
+        expect(members.size).to eq 2
       end
 
       context "from browse everything" do
@@ -289,17 +272,10 @@ RSpec.describe Hyrax::GenericWorksController do
 
         context "when a work id is passed" do
           let(:work) do
-            create(:work, user: user, title: ['test title'])
+            create_for_repository(:work, user: user, title: ['test title'])
           end
 
           it "records the work" do
-            # TODO: ensure the actor stack, called with these params
-            # makes one work, two file sets and calls ImportUrlJob twice.
-            expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
-              expect(env.attributes['uploaded_files']).to eq []
-              expect(env.attributes['remote_files']).to eq browse_everything_params.values
-            end
-
             post :create, params: {
               selected_files: browse_everything_params,
               uploaded_files: uploaded_files,
@@ -309,7 +285,11 @@ RSpec.describe Hyrax::GenericWorksController do
             expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                          "The metadata and access controls you specified are being applied. " \
                                          "You may need to refresh this page to see these updates."
-            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+            expect(response).to be_redirect
+            id = response.location.gsub("http://test.host/concern/generic_works/", "").gsub(/\?.*$/, '')
+            parent = Hyrax::Queries.find_by(id: work.id)
+            members = Hyrax::Queries.find_members(resource: parent)
+            expect(members.map(&:id)).to eq Valkyrie::ID.new(id)
           end
         end
       end
@@ -329,7 +309,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
         get :edit, params: { id: work }
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
+        expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
         expect(response).to render_template("layouts/dashboard")
       end
     end
@@ -367,19 +347,11 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#update' do
-    let(:work) { stub_model(GenericWork) }
-    let(:visibility_changed) { false }
-    let(:actor) { double(update: true) }
-
-    before do
-      allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
-      allow(GenericWork).to receive(:find).and_return(work)
-      allow(work).to receive(:visibility_changed?).and_return(visibility_changed)
-    end
+    let(:work) { create_for_repository(:work) }
 
     context "when the user has write access to the file" do
       before do
-        allow(controller).to receive(:authorize!).with(:update, work).and_return(true)
+        allow(controller).to receive(:authorize!).with(:update, GenericWork).and_return(true)
       end
       context "when the work has no file sets" do
         it 'updates the work' do
@@ -398,26 +370,28 @@ RSpec.describe Hyrax::GenericWorksController do
         end
       end
 
-      it "can update file membership" do
-        patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
-        expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
-          expect(env.attributes).to eq("ordered_member_ids" => ['foo_123'],
-                                       "remote_files" => [],
-                                       "uploaded_files" => [])
+      context 'when members are set' do
+        let(:file_set) { create_for_repository(:file_set) }
+
+        it 'can update file membership' do
+          patch :update, params: { id: work, generic_work: { member_ids: [file_set.id.to_s] } }
+          expect(work.member_ids).to eq [file_set.id]
         end
       end
 
       describe 'changing rights' do
-        let(:visibility_changed) { true }
-        let(:actor) { double(update: true) }
+        before do
+          allow_any_instance_of(GenericWorkChangeSet).to receive(:visibility_changed?).and_return(true)
+          allow_any_instance_of(GenericWorkChangeSet).to receive(:permissions_changed?).and_return(false)
+        end
 
         context 'when the work has file sets attached' do
           before do
-            allow(work).to receive(:file_sets).and_return(double(present?: true))
+            allow(Hyrax::Queries).to receive(:find_members).and_return(double(present?: true))
           end
           it 'prompts to change the files access' do
             patch :update, params: { id: work, generic_work: {} }
-            expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
+            expect(response).to redirect_to main_app.confirm_hyrax_permission_path(work, locale: 'en')
           end
         end
 
@@ -429,12 +403,14 @@ RSpec.describe Hyrax::GenericWorksController do
         end
       end
 
-      describe 'update failed' do
-        let(:actor) { double(update: false) }
+      describe 'validation failed' do
+        before do
+          allow_any_instance_of(GenericWorkChangeSet).to receive(:validate).and_return(false)
+        end
 
         it 'renders the form' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkChangeSet
+          expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
           expect(response).to render_template('edit')
         end
       end
@@ -469,20 +445,7 @@ RSpec.describe Hyrax::GenericWorksController do
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
       expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
-      expect(GenericWork).not_to exist(work_to_be_deleted.id)
-    end
-
-    context "when work is a member of a collection" do
-      before do
-        parent_collection.members = [work_to_be_deleted]
-        parent_collection.save!
-      end
-      it 'deletes the work and updates the parent collection' do
-        delete :destroy, params: { id: work_to_be_deleted }
-        expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
-        expect(parent_collection.reload.members).to eq []
-      end
+      expect(Hyrax::Queries).not_to exist(work_to_be_deleted.id)
     end
 
     it "invokes the after_destroy callback" do
@@ -503,11 +466,11 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context 'when I am a repository manager' do
       let(:work_to_be_deleted) { create_for_repository(:work, :private) }
+      let(:user) { create(:admin) }
 
-      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
       it 'someone elses private work should delete the work' do
         delete :destroy, params: { id: work_to_be_deleted }
-        expect(GenericWork).not_to exist(work_to_be_deleted.id)
+        expect(Hyrax::Queries).not_to exist(work_to_be_deleted.id)
       end
     end
   end
@@ -521,7 +484,7 @@ RSpec.describe Hyrax::GenericWorksController do
     it "is successful" do
       get :file_manager, params: { id: work.id }
       expect(response).to be_success
-      expect(assigns(:form)).not_to be_blank
+      expect(assigns(:change_set)).not_to be_blank
     end
   end
 end
