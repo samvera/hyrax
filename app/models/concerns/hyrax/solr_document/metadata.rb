@@ -59,6 +59,7 @@ module Hyrax
         attribute :description, Solr::Array, solr_name('description')
         attribute :title, Solr::Array, solr_name('title')
         attribute :contributor, Solr::Array, solr_name('contributor')
+        attribute :creator, Solr::Array, solr_name('creator')
         attribute :subject, Solr::Array, solr_name('subject')
         attribute :publisher, Solr::Array, solr_name('publisher')
         attribute :language, Solr::Array, solr_name('language')
