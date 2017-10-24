@@ -40,6 +40,21 @@ module Hyrax
       ldp_source.head.etag
     end
 
+    # @return [Boolean] whether this instance is a Hydra::Works Collection.
+    def collection?
+      false
+    end
+
+    # @return [Boolean] whether this instance is a Hydra::Works Generic Work.
+    def work?
+      true
+    end
+
+    # @return [Boolean] whether this instance is a Hydra::Works::FileSet.
+    def file_set?
+      false
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
