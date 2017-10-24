@@ -66,7 +66,7 @@ module Hyrax
 
     # @param [ProxyDepositRequest] req
     def show_transfer_request_title(req)
-      if req.deleted_work? || req.canceled?
+      if !req.work_exists? || req.canceled?
         req.to_s
       else
         link_to(req.to_s, [main_app, req.work])

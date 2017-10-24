@@ -12,7 +12,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   # @note We are iterating through the found objects and querying SOLR each time. Assuming we are rendering this result in a view,
   #       this is reasonable. In the view we will render the #to_s of the associated work. So we may as well preload the SOLR document.
   def self.incoming_for(user:)
-    where(receiving_user: user).select { |pdr| Hyrax::Queries.exists?(Valkyrie::ID.new(pdr.work_id)) }
+    where(receiving_user: user).select(&:work_exists?)
   end
 
   # @param [User] user - the person who requested that a work be transfer to someone else
@@ -120,6 +120,10 @@ class ProxyDepositRequest < ActiveRecord::Base
     find_work(work_id).to_s
   rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
     'work not found'
+  end
+
+  def work_exists?
+    Hyrax::Queries.exists?(Valkyrie::ID.new(work_id))
   end
 
   private
