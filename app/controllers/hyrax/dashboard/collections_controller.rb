@@ -12,8 +12,6 @@ module Hyrax
       before_action :filter_docs_with_read_access!, except: :show
       before_action :remove_select_something_first_flash, except: :show
 
-      include Hyrax::Collections::AcceptsBatches
-
       # include the render_check_all view helper method
       helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
@@ -34,7 +32,7 @@ module Hyrax
 
       self.change_set_class = DynamicChangeSet
       self.resource_class = Collection
-      self.change_set_persister = Hyrax::ChangeSetPersister.new(
+      self.change_set_persister = Hyrax::CollectionChangeSetPersister.new(
         metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
         storage_adapter: Valkyrie.config.storage_adapter
       )
@@ -138,8 +136,10 @@ module Hyrax
         end
       end
 
+      # This is used by CollectionMemberSearchBuilder.  It would be better if
+      # this was passed into the search builder though.
       def collection
-        action_name == 'show' ? @presenter : @collection
+        action_name == 'show' ? @presenter : @change_set
       end
 
       # Renders a JSON response with a list of files in this collection
@@ -156,6 +156,11 @@ module Hyrax
       end
 
       private
+
+        # this is the parameters passed into the ChangeSet
+        def resource_params
+          super.merge(batch: batch, destination_collection_id: params[:destination_collection_id])
+        end
 
         # run a solr query to get the collections the user has access to edit
         # @return [Array] a list of the user's collections
@@ -221,42 +226,6 @@ module Hyrax
           params.merge(q: params[:cq])
         end
 
-        def process_member_changes
-          case params[:collection][:members]
-          when 'add' then add_members_to_collection
-          when 'remove' then remove_members_from_collection
-          when 'move' then move_members_between_collections
-          end
-        end
-
-        def add_members_to_collection(collection = nil)
-          collection ||= @collection
-          collection.add_member_objects batch
-        end
-
-        def remove_members_from_collection
-          batch.each do |pid|
-            work = find_resource(pid)
-            work.member_of_collection_ids.delete @collection.id
-            persister.save(resource: work)
-          end
-        end
-
-        def persister
-          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-        end
-
-        def move_members_between_collections
-          destination_collection = find_resource(params[:destination_collection_id])
-          remove_members_from_collection
-          add_members_to_collection(destination_collection)
-          if destination_collection.save
-            flash[:notice] = "Successfully moved #{batch.count} files to #{destination_collection.title} Collection."
-          else
-            flash[:error] = "An error occured. Files were not moved to #{destination_collection.title} Collection."
-          end
-        end
-
         # Include 'catalog' and 'hyrax/base' in the search path for views, while prefering
         # our local paths. Thus we are unable to just override `self.local_prefixes`
         def _prefixes
@@ -271,14 +240,6 @@ module Hyrax
 
         def search_action_url(*args)
           hyrax.dashboard_collections_url(*args)
-        end
-
-        def find_resource(id)
-          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
-        end
-
-        def query_service
-          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end
