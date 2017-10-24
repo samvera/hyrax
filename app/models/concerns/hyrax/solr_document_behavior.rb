@@ -82,10 +82,6 @@ module Hyrax
       val.present? ? val : default
     end
 
-    def creator
-      fetch(Solrizer.solr_name('creator', :symbol), [])
-    end
-
     def visibility
       @visibility ||= if embargo_release_date.present?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
