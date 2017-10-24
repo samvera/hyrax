@@ -49,14 +49,14 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "create_date" do
-    let(:attributes) { { 'system_create_dtsi' => '2013-03-14T00:00:00Z' } }
+    let(:attributes) { { 'created_at_dtsi' => '2013-03-14T00:00:00Z' } }
 
     subject { document.create_date }
 
     it { is_expected.to eq Date.parse('2013-03-14') }
 
     context "when an invalid type is provided" do
-      let(:attributes) { { 'system_create_dtsi' => 'Test' } }
+      let(:attributes) { { 'created_at_dtsi' => 'Test' } }
 
       it "logs parse errors" do
         expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
