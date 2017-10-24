@@ -24,6 +24,13 @@ module Hyrax
     property :related_url, multiple: true, required: false
     property :visibility, multiple: true, required: false
 
+    # A list of IDs to perform a batch operation on
+    property :batch, virtual: true, multiple: true, required: false
+    # What batch operation to perform. Either 'add', 'remove', or 'move'
+    property :members, virtual: true, multiple: false, required: false
+    # When the batch operation is 'move', what collection to move to:
+    property :destination_collection_id, virtual: true, multiple: false, required: false
+
     validates :title, presence: true
 
     # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
