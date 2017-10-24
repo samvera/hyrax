@@ -71,7 +71,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(relation).to receive(:find).with(default_work.id.to_s).and_raise(ActiveFedora::ObjectNotFoundError)
         get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
@@ -113,7 +113,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'post with a valid item and matching token' do
       let(:deposited_file) { FileSet.where(label: item_hash['file']['filename']).take }
-      let(:a_work) { build :generic_work, id: '123' }
+      let(:a_work) { build :work, id: '123' }
       let!(:token) { user.arkivo_token }
       let(:item) { FactoryBot.json(:post_item, token: token) }
       let(:item_hash) { JSON.parse(item) }
@@ -172,13 +172,13 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
   context 'with an HTTP PUT' do
     let(:put_item) { FactoryBot.json(:put_item, token: token) }
     let(:token) { user.arkivo_token }
-    let(:gw) { build :generic_work, id: '123' }
+    let(:gw) { build :work, id: '123' }
     let(:relation) { double }
 
     before do
       # Mock ActiveFedora
       allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-      allow(relation).to receive(:find).with(gw.id).and_return(gw)
+      allow(relation).to receive(:find).with(gw.id.to_s).and_return(gw)
       # Mock Arkivo Actor
       allow(arkivo_actor).to receive(:update_work_from_item)
     end
@@ -204,7 +204,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     end
 
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
-      let(:non_arkivo_gw) { create :generic_work, id: 'abc123xyz', arkivo_checksum: nil }
+      let(:non_arkivo_gw) { create_for_repository :work, id: 'abc123xyz', arkivo_checksum: nil }
       let(:relation) { double }
 
       before do
@@ -213,7 +213,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        allow(relation).to receive(:find).with(non_arkivo_gw.id.to_s).and_return(non_arkivo_gw)
 
         # Post an update to a work with a nil arkivo_checksum
         request.env['RAW_POST_DATA'] = put_item
@@ -232,7 +232,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(gw.id) do
+        allow(relation).to receive(:find).with(gw.id.to_s) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
         request.env['RAW_POST_DATA'] = put_item
@@ -298,13 +298,13 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     let(:token) { user.arkivo_token }
     let(:item) { FactoryBot.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
-    let(:gw) { build :generic_work, id: '123' }
+    let(:gw) { build :work, id: '123' }
     let(:relation) { double }
 
     before do
       # Mock ActiveFedora
       allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-      allow(relation).to receive(:find).with(gw.id).and_return(gw)
+      allow(relation).to receive(:find).with(gw.id.to_s).and_return(gw)
       # Mock ArkivoActor destroy work
       allow(arkivo_actor).to receive(:destroy_work)
     end
@@ -349,7 +349,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     end
 
     context 'with a resource not deposited via Arkivo' do
-      let(:non_arkivo_gw) { create :generic_work, id: 'xyz789abc', arkivo_checksum: nil }
+      let(:non_arkivo_gw) { create_for_repository :work, id: 'xyz789abc', arkivo_checksum: nil }
 
       before do
         # Mock user authorization
@@ -357,7 +357,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         allow(user).to receive(:can?).and_return(true)
         # Mock ActiveFedora for non_arkivo_work
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
+        allow(relation).to receive(:find).with(non_arkivo_gw.id.to_s).and_return(non_arkivo_gw)
         # Make call to destroy
         delete :destroy, params: { format: :json, id: non_arkivo_gw.id, token: token }
       end
