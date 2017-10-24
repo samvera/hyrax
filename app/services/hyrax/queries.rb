@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Hyrax
+  class ObjectNotFoundError < StandardError
+  end
+
   class Queries
     class_attribute :metadata_adapter
     self.metadata_adapter = Valkyrie.config.metadata_adapter
