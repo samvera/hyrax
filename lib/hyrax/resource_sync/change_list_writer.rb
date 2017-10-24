@@ -74,8 +74,8 @@ module Hyrax
         # @param doc [Hash]
         # @param routes [Module] has the routes for the object
         def build_resource(xml, doc, model, routes)
-          modified_date = doc.fetch("system_modified_dtsi")
-          created_date = doc.fetch("system_create_dtsi")
+          modified_date = doc.fetch("timestamp")
+          created_date = doc.fetch("created_at_dtsi")
           xml.url do
             key = model.model_name.singular_route_key
             xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
