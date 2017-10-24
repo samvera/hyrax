@@ -48,7 +48,7 @@ module Hyrax
 
       def process_files(stats, user, start_date)
         file_ids_for_user(user).each do |file_id|
-          file = Queries.find_by(id: file_id)
+          file = find_file_set(file_id)
           view_stats = extract_stats_for(object: file, from: FileViewStat, start_date: start_date, user: user)
           stats = tally_results(view_stats, :views, stats) if view_stats.present?
           delay
@@ -60,11 +60,23 @@ module Hyrax
 
       def process_works(stats, user, start_date)
         work_ids_for_user(user).each do |work_id|
-          work = Hyrax::WorkRelation.new.find(work_id)
+          work = find_work(work_id)
           work_stats = extract_stats_for(object: work, from: WorkViewStat, start_date: start_date, user: user)
           stats = tally_results(work_stats, :work_views, stats) if work_stats.present?
           delay
         end
+      end
+
+      def find_work(id)
+        resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+        raise Hyrax::ObjectNotFoundError("Couldn't find work with 'id'=#{params[:id]}") unless resource.work?
+        resource
+      end
+
+      def find_file_set(id)
+        resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+        raise Hyrax::ObjectNotFoundError("Couldn't find file set with 'id'=#{params[:id]}") unless resource.file_set?
+        resource
       end
 
       def extract_stats_for(object:, from:, start_date:, user:)
