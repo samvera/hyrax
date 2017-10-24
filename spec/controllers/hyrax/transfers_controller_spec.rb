@@ -35,9 +35,9 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           sign_in user
           get :new, params: { id: work.id }
           expect(response).to be_success
-          expect(assigns[:work]).to eq(work)
+          expect(assigns[:work].id).to eq(work.id)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].work_id).to eq(work.id)
+          expect(assigns[:proxy_deposit_request].work_id).to eq(work.id.to_s)
         end
       end
     end
