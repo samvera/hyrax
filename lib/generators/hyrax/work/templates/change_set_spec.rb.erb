@@ -2,7 +2,7 @@
 #  `rails generate hyrax:work <%= class_name %>`
 require 'rails_helper'
 
-RSpec.describe Hyrax::<%= class_name %>ChangeSet do
+RSpec.describe <%= class_name %>ChangeSet do
   subject(:change_set) { described_class.new(form_resource) }
 
   let(:work) { <%= class_name %>.new }

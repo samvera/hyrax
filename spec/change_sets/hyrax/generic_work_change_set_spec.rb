@@ -1,6 +1,6 @@
 # TODO: this should be expanded to offer better coverage including primary_terms
 # and secondary_terms once these features are supported
-RSpec.describe Hyrax::GenericWorkChangeSet do
+RSpec.describe GenericWorkChangeSet do
   subject(:change_set) { described_class.new(work) }
 
   let(:work) { GenericWork.new }
