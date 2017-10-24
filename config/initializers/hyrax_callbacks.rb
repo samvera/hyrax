@@ -18,7 +18,7 @@ Hyrax.config.callback.set(:after_update_metadata) do |curation_concern, user|
 end
 
 Hyrax.config.callback.set(:after_destroy) do |id, user|
-  ContentDeleteEventJob.perform_later(id, user)
+  ContentDeleteEventJob.perform_later(id.to_s, user)
 end
 
 Hyrax.config.callback.set(:after_fixity_check_failure) do |file_set, checksum_audit_log:|

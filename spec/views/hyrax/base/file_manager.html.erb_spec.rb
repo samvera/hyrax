@@ -23,8 +23,8 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
 
   let(:parent) { build(:work) }
 
-  let(:form) do
-    Hyrax::Forms::FileManagerForm.new(parent, nil)
+  let(:change_set) do
+    GenericWorkChangeSet.new(parent)
   end
 
   before do
@@ -35,8 +35,8 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     allow(work).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
     allow(file_set).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
 
-    allow(form).to receive(:member_presenters).and_return([file_set_presenter, member])
-    assign(:form, form)
+    allow(change_set).to receive(:member_presenters).and_return([file_set_presenter, member])
+    assign(:change_set, change_set)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
     allow(view).to receive(:search_session).and_return({})
