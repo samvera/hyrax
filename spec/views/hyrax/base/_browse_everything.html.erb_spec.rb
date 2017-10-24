@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/base/_browse_everything.html.erb', type: :view do
   let(:model) { stub_model(GenericWork) }
-  let(:change_set) { Hyrax::GenericWorkChangeSet.new(model) }
+  let(:change_set) { GenericWorkChangeSet.new(model) }
   let(:f) { double(object: change_set) }
 
   it 'shows user timing warning' do
