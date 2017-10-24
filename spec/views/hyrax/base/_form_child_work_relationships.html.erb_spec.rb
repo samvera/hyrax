@@ -4,7 +4,7 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
   end
 
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
 
   let(:f) do

@@ -2,7 +2,7 @@ RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
   let(:work) { stub_model(GenericWork, id: '456', title: ["A nice work"]) }
 
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
 
   before do
