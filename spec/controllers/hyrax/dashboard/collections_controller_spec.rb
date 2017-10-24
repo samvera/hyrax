@@ -43,7 +43,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
                                        access: 'edit' }]
           )
         }
-      end.to change { Collection.count }.by(1)
+      end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
       expect(assigns[:collection].visibility).to eq 'open'
       expect(assigns[:collection].edit_users).to contain_exactly "archivist1", user.email
     end
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         post :create, params: {
           collection: collection_attrs.merge(creator: [''])
         }
-      end.to change { Collection.count }.by(1)
+      end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
       expect(assigns[:collection].title).to eq ["My First Collection"]
       expect(assigns[:collection].creator).to eq []
     end
@@ -65,7 +65,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
             collection: collection_attrs,
             batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
           }
-        end.to change { Collection.count }.by(1)
+        end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
         collection = assigns(:collection)
         expect(collection.member_objects).to match_array [asset1, asset2]
       end
@@ -107,7 +107,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     context 'collection members' do
       before do
         [asset1, asset2].each do |asset|
-          asset.member_of_collection_ids << collection.id
+          asset.member_of_collection_ids += [collection.id]
           persister.save(resource: asset)
         end
       end
@@ -137,15 +137,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       let(:asset1) { create_for_repository(:work, user: user) }
       let(:asset2) { create_for_repository(:work, user: user) }
       let(:asset3) { create_for_repository(:work, user: user) }
-      let(:collection2) do
-        Collection.create(title: ['Some Collection']) do |col|
-          col.apply_depositor_metadata(user.user_key)
-        end
-      end
+      let(:collection2) { create_for_repository(title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collection_ids << collection.id
+          asset.member_of_collection_ids += [collection.id]
           persister.save(resource: asset)
         end
       end
