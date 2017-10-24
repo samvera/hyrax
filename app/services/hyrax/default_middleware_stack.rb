@@ -38,9 +38,6 @@ module Hyrax
         # Copies default permissions from the PermissionTemplate to the work
         middleware.use Hyrax::Actors::ApplyPermissionTemplateActor
 
-        # Remove attached FileSets when destroying a work
-        middleware.use Hyrax::Actors::CleanupFileSetsActor
-
         # Destroys the trophies in the database when the work is destroyed
         middleware.use Hyrax::Actors::CleanupTrophiesActor
 
