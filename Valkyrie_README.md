@@ -12,6 +12,8 @@
   * use create_for_repository instead of create
 * Nested attributes (e.g. FileSet#permissions_attributes=) are out
 * Switch from create_date_dtsi to created_at_dtsi and system_modified_dtsi to timestamp
+* Instead of `GenericWorksController.curation_concern_type = GenericWork` use
+  `GenericWorksController.resource_class = GenericWork`
 
 ## TODO:
 
