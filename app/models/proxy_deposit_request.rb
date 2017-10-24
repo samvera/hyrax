@@ -1,22 +1,8 @@
 # Responsible for persisting the ownership transfer requests and the state of each request.
 # @see ProxyDepositRequest.enum(:status)
-# @see ProxyDepositRequest.work_query_service_class for configuration (defaults to Hyrax::WorkQueryService)
-# @see Hyrax::WorkQueryService
+
 class ProxyDepositRequest < ActiveRecord::Base
   include ActionView::Helpers::UrlHelper
-
-  class_attribute :work_query_service_class
-  self.work_query_service_class = Hyrax::WorkQueryService
-
-  delegate :deleted_work?, :work, :to_s, to: :work_query_service
-
-  private
-
-    def work_query_service
-      @work_query_service ||= work_query_service_class.new(id: work_id)
-    end
-
-  public
 
   belongs_to :receiving_user, class_name: 'User'
   belongs_to :sending_user, class_name: 'User'
@@ -26,7 +12,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   # @note We are iterating through the found objects and querying SOLR each time. Assuming we are rendering this result in a view,
   #       this is reasonable. In the view we will render the #to_s of the associated work. So we may as well preload the SOLR document.
   def self.incoming_for(user:)
-    where(receiving_user: user).reject(&:deleted_work?)
+    where(receiving_user: user).select { |pdr| Hyrax::Queries.exists?(Valkyrie::ID.new(pdr.work_id)) }
   end
 
   # @param [User] user - the person who requested that a work be transfer to someone else
@@ -117,7 +103,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
-    ContentDepositorChangeEventJob.perform_later(work, receiving_user, reset)
+    ContentDepositorChangeEventJob.perform_later(find_work(work_id), receiving_user, reset)
     fulfill!(status: ACCEPTED)
   end
 
@@ -130,7 +116,19 @@ class ProxyDepositRequest < ActiveRecord::Base
     fulfill!(status: CANCELED)
   end
 
+  def to_s
+    find_work(work_id).to_s
+  rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
+    'work not found'
+  end
+
   private
+
+    def find_work(id)
+      resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+      raise Hyrax::ObjectNotFoundError("Couldn't find work with 'id'=#{params[:id]}") unless resource.work?
+      resource
+    end
 
     def fulfill!(status:, comment: nil)
       self.receiver_comment = comment if comment
