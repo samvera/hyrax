@@ -3,47 +3,25 @@ RSpec.describe ProxyDepositRequest, type: :model do
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
   let(:work_id) { '123abc' }
-  let(:stubbed_work_query_service_class) { double(new: work_query_service) }
-  let(:work_query_service) { double(work: work) }
-  let(:work) { double('Work') }
+  let(:work) { build(:work) }
 
   subject do
     described_class.new(work_id: work_id, sending_user: sender,
                         receiving_user: receiver, sender_comment: "please take this")
   end
 
-  # Injecting a different work_query_service_class to avoid hitting SOLR and Fedora; I need an
-  # instance variable as mocks are not allowed in the around blocks
-  # rubocop:disable RSpec/InstanceVariable
-  before do
-    @original_work_query_service_class = described_class.work_query_service_class
-    described_class.work_query_service_class = stubbed_work_query_service_class
-  end
-
-  after do
-    described_class.work_query_service_class = @original_work_query_service_class
-  end
-  # rubocop:enable RSpec/InstanceVariable
-
   its(:status) { is_expected.to eq described_class::PENDING }
   it { is_expected.to be_pending }
   its(:fulfillment_date) { is_expected.to be_nil }
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
-  it { is_expected.to delegate_method(:to_s).to(:work_query_service) }
-  it { is_expected.to delegate_method(:work).to(:work_query_service) }
-  it { is_expected.to delegate_method(:deleted_work?).to(:work_query_service) }
-
   context '.incoming_for' do
     it 'returns non-deleted requests for the receiving_user' do
-      deleted_work_service = double(deleted_work?: true)
-      found_work_service = double(deleted_work?: false)
-
       found = create(:proxy_deposit_request, work_id: 'abc', sending_user: sender, receiving_user: receiver)
-      allow(stubbed_work_query_service_class).to receive(:new).with(id: 'abc').and_return(found_work_service)
+      allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new('abc')).and_return(true)
 
       _deleted = create(:proxy_deposit_request, work_id: 'efg', sending_user: sender, receiving_user: receiver)
-      allow(stubbed_work_query_service_class).to receive(:new).with(id: 'efg').and_return(deleted_work_service)
+      allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new('efg')).and_return(false)
 
       _not_to_find = create(:proxy_deposit_request, work_id: 'hij', sending_user: receiver, receiving_user: sender)
       expect(described_class.incoming_for(user: receiver)).to eq([found])
@@ -74,6 +52,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
   describe '#transfer!' do
     it 'will change the status, fulfillment_date, and perform later the ContentDepositorChangeEventJob' do
       allow(ContentDepositorChangeEventJob).to receive(:perform_later)
+      allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(work_id)).and_return(work)
       subject.transfer!
       expect(subject.status).to eq(described_class::ACCEPTED)
       expect(subject.fulfillment_date).to be_a(Time)
