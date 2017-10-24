@@ -60,7 +60,7 @@ module Hyrax
 
       def process_works(stats, user, start_date)
         work_ids_for_user(user).each do |work_id|
-          work = Hyrax::WorkRelation.new.find(work_id)
+          work = Hyrax::Queries.find_by(id: work_id)
           work_stats = extract_stats_for(object: work, from: WorkViewStat, start_date: start_date, user: user)
           stats = tally_results(work_stats, :work_views, stats) if work_stats.present?
           delay

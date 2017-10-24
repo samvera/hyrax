@@ -22,7 +22,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.transfers.new.header'), hyrax.new_work_transfer_path
-      @work = Hyrax::WorkRelation.new.find(params[:id])
+      @work = Hyrax::Queries.find_by(id: params[:id])
     end
 
     def create
@@ -30,7 +30,7 @@ module Hyrax
       if @proxy_deposit_request.save
         redirect_to hyrax.transfers_path, notice: "Transfer request created"
       else
-        @work = Hyrax::WorkRelation.new.find(params[:id])
+        @work = Hyrax::Queries.find_by(id: params[:id])
         render :new
       end
     end
