@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
   let(:options_presenter) { double(select_options: []) }
 

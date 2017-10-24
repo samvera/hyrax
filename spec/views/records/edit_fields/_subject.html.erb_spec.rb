@@ -1,6 +1,6 @@
 RSpec.describe 'records/edit_fields/_subject.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:change_set) { Hyrax::GenericWorkChangeSet.new(work) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @change_set] do |f| %>
