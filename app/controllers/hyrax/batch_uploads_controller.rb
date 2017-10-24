@@ -11,8 +11,8 @@ module Hyrax
     end
 
     self.work_form_service = BatchUploadFormService
-    self.curation_concern_type = work_form_service.change_set_class.model_class # includes CanCan side-effects
-    # We use BatchUploadItem as a null stand-in curation_concern_type.
+    self.resource_class = work_form_service.change_set_class.model_class # includes CanCan side-effects
+    # We use BatchUploadItem as a null stand-in resoure_type.
     # The actual permission is checked dynamically during #create.
 
     layout 'dashboard'
