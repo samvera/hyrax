@@ -3,13 +3,10 @@ module Hyrax
     extend ActiveSupport::Concern
     include Hyrax::Breadcrumbs
 
-    class_methods do
+    included do
       # We don't want the breadcrumb action to occur until after the concern has
       # been loaded and authorized
-      def curation_concern_type=(curation_concern_type)
-        super
-        before_action :build_breadcrumbs, only: [:edit, :show, :new]
-      end
+      after_action :build_breadcrumbs, only: [:edit, :show, :new]
     end
 
     private
@@ -30,7 +27,7 @@ module Hyrax
       def add_breadcrumb_for_action
         case action_name
         when 'edit'.freeze
-          add_breadcrumb curation_concern.to_s, main_app.polymorphic_path(curation_concern)
+          add_breadcrumb @change_set.resource.to_s, main_app.polymorphic_path(@change_set.resource)
           add_breadcrumb t(:'hyrax.works.edit.breadcrumb'), request.path
         when 'new'.freeze
           add_breadcrumb t(:'hyrax.works.create.breadcrumb'), request.path
