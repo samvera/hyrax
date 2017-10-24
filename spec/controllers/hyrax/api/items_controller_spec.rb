@@ -43,13 +43,13 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with an unauthorized resource' do
       before do
-        allow_any_instance_of(User).to receive(:can?).with(:edit, default_work) { false }
+        allow_any_instance_of(User).to receive(:can?).and_return(false)
         get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
       it 'is unauthorized' do
         expect(subject).to have_http_status(401)
-        expect(assigns[:work]).to eq default_work
+        expect(assigns[:work].id).to eq default_work.id
         expect(subject.body).to include("#{user} lacks access to #{default_work}")
       end
     end
@@ -67,17 +67,15 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     end
 
     context 'with a resource not found in the repository' do
-      let(:relation) { double }
+      let(:not_found_id) { 'not_found_id' }
 
       before do
-        allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(default_work.id.to_s).and_raise(ActiveFedora::ObjectNotFoundError)
-        get :show, params: { format: :json, id: default_work.id, token: token }
+        get :show, params: { format: :json, id: not_found_id, token: token }
       end
 
       it "is not found" do
         expect(subject).to have_http_status(404)
-        expect(subject.body).to include("id '#{default_work.id}' not found")
+        expect(subject.body).to include("id '#{not_found_id}' not found")
       end
     end
 
@@ -172,13 +170,9 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
   context 'with an HTTP PUT' do
     let(:put_item) { FactoryBot.json(:put_item, token: token) }
     let(:token) { user.arkivo_token }
-    let(:gw) { build :work, id: '123' }
-    let(:relation) { double }
+    let(:gw) { create_for_repository :work, id: '123' }
 
     before do
-      # Mock ActiveFedora
-      allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-      allow(relation).to receive(:find).with(gw.id.to_s).and_return(gw)
       # Mock Arkivo Actor
       allow(arkivo_actor).to receive(:update_work_from_item)
     end
@@ -189,31 +183,29 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:validator) { double Hyrax::Arkivo::SchemaValidator }
 
       before do
+        # Mock user authorization
+        allow(controller).to receive(:user).and_return(user)
+        allow(user).to receive(:can?).and_return(true)
+
         # Mock Arkivo Validator and Actor
         allow(Hyrax::Arkivo::SchemaValidator).to receive(:new).and_return(validator)
         allow(validator).to receive(:call).and_return(true)
-        # Mock loading and authorizing
-        allow(controller).to receive(:my_load_and_authorize_resource).and_return(gw)
       end
 
       it 'calls the arkivo actor to update the work' do
         expect(arkivo_actor).to receive(:update_work_from_item)
         request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: default_work.id, format: :json }
       end
     end
 
     context 'with a valid item, matching token, authorized resource, but not Arkivo-deposited' do
       let(:non_arkivo_gw) { create_for_repository :work, id: 'abc123xyz', arkivo_checksum: nil }
-      let(:relation) { double }
 
       before do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
-        # Mock ActiveFedora for non_arkivo_work
-        allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(non_arkivo_gw.id.to_s).and_return(non_arkivo_gw)
 
         # Post an update to a work with a nil arkivo_checksum
         request.env['RAW_POST_DATA'] = put_item
@@ -228,20 +220,16 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     end
 
     context 'with a valid item, matching token, missing resource' do
-      let(:relation) { double }
+      let(:not_found_id) { 'not_found_id' }
 
       before do
-        allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(gw.id.to_s) do
-          raise(ActiveFedora::ObjectNotFoundError)
-        end
         request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: not_found_id, format: :json }
       end
 
       it "is not found" do
         expect(subject).to have_http_status(404)
-        expect(subject.body).to include("id '#{gw.id}' not found")
+        expect(subject.body).to include("id '#{not_found_id}' not found")
       end
     end
 
@@ -257,7 +245,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
       it "is unauthorized" do
         expect(subject).not_to be_success
-        expect(assigns[:work]).to eq gw
+        expect(assigns[:work].id).to eq gw.id
         expect(subject.status).to eq 401
         expect(subject.body).to include("#{user} lacks access to #{gw}")
       end
@@ -298,13 +286,9 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
     let(:token) { user.arkivo_token }
     let(:item) { FactoryBot.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
-    let(:gw) { build :work, id: '123' }
-    let(:relation) { double }
+    let(:gw) { create_for_repository :work, id: '123' }
 
     before do
-      # Mock ActiveFedora
-      allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-      allow(relation).to receive(:find).with(gw.id.to_s).and_return(gw)
       # Mock ArkivoActor destroy work
       allow(arkivo_actor).to receive(:destroy_work)
     end
@@ -337,13 +321,13 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before do
         # Mock user being unauthorized
         allow(controller).to receive(:user).and_return(user)
-        allow(user).to receive(:can?).with(:edit, gw) { false }
+        allow(user).to receive(:can?).and_return(false)
         delete :destroy, params: { format: :json, id: gw.id, token: token }
       end
 
       it 'is unauthorized' do
         expect(subject).to have_http_status(401)
-        expect(assigns[:work]).to eq gw
+        expect(assigns[:work].id).to eq gw.id
         expect(subject.body).to include("#{user} lacks access to #{gw}")
       end
     end
@@ -355,9 +339,6 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
-        # Mock ActiveFedora for non_arkivo_work
-        allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(non_arkivo_gw.id.to_s).and_return(non_arkivo_gw)
         # Make call to destroy
         delete :destroy, params: { format: :json, id: non_arkivo_gw.id, token: token }
       end
@@ -372,9 +353,6 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:not_found_id) { '409' }
 
       before do
-        # Mock ActiveFedora
-        allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
         delete :destroy, params: { format: :json, id: not_found_id, token: token }
       end
 
@@ -389,13 +367,11 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         # Mock user authorization
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(true)
-        # Mock loading and authorizing
-        allow(controller).to receive(:my_load_and_authorize_resource).and_return(gw)
       end
 
       it "calls the actor to destroy the work" do
         expect(arkivo_actor).to receive(:destroy_work)
-        delete :destroy, params: { format: :json, id: gw.id, token: token }
+        delete :destroy, params: { format: :json, id: default_work.id, token: token }
         expect(subject).to have_http_status(204)
         expect(subject.body).to be_blank
       end
