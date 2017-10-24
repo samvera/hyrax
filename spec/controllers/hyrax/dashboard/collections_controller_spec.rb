@@ -23,9 +23,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
   describe '#new' do
     before { sign_in user }
 
-    it 'assigns @collection' do
+    it 'assigns @change_set' do
       get :new
-      expect(assigns(:collection)).to be_kind_of(Collection)
+      expect(assigns(:change_set)).to be_kind_of(Hyrax::CollectionChangeSet)
     end
   end
 
@@ -44,8 +44,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           )
         }
       end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-      expect(assigns[:collection].visibility).to eq 'open'
-      expect(assigns[:collection].edit_users).to contain_exactly "archivist1", user.email
+      expect(assigns[:change_set].resource.visibility).to eq 'open'
+      expect(assigns[:change_set].resource.edit_users).to contain_exactly "archivist1", user.email
     end
 
     it "removes blank strings from params before creating Collection" do
@@ -54,8 +54,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           collection: collection_attrs.merge(creator: [''])
         }
       end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-      expect(assigns[:collection].title).to eq ["My First Collection"]
-      expect(assigns[:collection].creator).to eq []
+      expect(assigns[:change_set].resource.title).to eq ["My First Collection"]
+      expect(assigns[:change_set].resource.creator).to eq []
     end
 
     context "with files I can access" do
@@ -66,8 +66,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
             batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
           }
         end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-        collection = assigns(:collection)
-        expect(collection.member_objects).to match_array [asset1, asset2]
+        expect(assigns[:change_set].resource.member_objects).to match_array [asset1, asset2]
       end
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
@@ -76,11 +75,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           collection: collection_attrs
         }
 
-        expect(assigns[:collection].member_objects).to eq [asset1]
-        asset_results = ActiveFedora::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', Solrizer.solr_name(:collection)] }
-        expect(asset_results["response"]["numFound"]).to eq 1
-        doc = asset_results["response"]["docs"].first
-        expect(doc["id"]).to eq asset1.id
+        expect(assigns[:resource].member_object_ids).to eq [asset1.id]
       end
     end
 
@@ -90,7 +85,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       before do
         allow(controller).to receive(:authorize!)
         allow(Collection).to receive(:new).and_return(collection)
-        allow(collection).to receive(:save).and_return(false)
+        allow_any_instance_of(Hyrax::CollectionChangeSet).to receive(:validate).and_return(false)
       end
 
       it "renders the form again" do
@@ -113,23 +108,18 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       end
 
       it "adds members to the collection" do
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'add' },
-                                 batch_document_ids: [asset3.id] }
-        end.to change { collection.reload.member_objects.size }.by(1)
+        put :update, params: { id: collection,
+                               collection: { members: 'add' },
+                               batch_document_ids: [asset3.id] }
         expect(response).to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
-        expect(assigns[:collection].member_objects).to match_array [asset1, asset2, asset3]
+        expect(assigns[:resource].member_object_ids).to match_array [asset1, asset2, asset3].map(&:id)
       end
 
       it "removes members from the collection" do
-        # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'remove' },
-                                 batch_document_ids: [asset2] }
-        end.to change { asset2.reload.member_of_collection_ids.size }.by(-1)
-        expect(assigns[:collection].member_objects).to match_array [asset1]
+        put :update, params: { id: collection,
+                               collection: { members: 'remove' },
+                               batch_document_ids: [asset2] }
+        expect(assigns[:resource].member_object_ids).to match_array [asset1.id]
       end
     end
 
@@ -137,7 +127,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       let(:asset1) { create_for_repository(:work, user: user) }
       let(:asset2) { create_for_repository(:work, user: user) }
       let(:asset3) { create_for_repository(:work, user: user) }
-      let(:collection2) { create_for_repository(title: ['Some Collection'], user: user) }
+      let(:collection2) { create_for_repository(:collection, title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|
@@ -154,16 +144,15 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
               destination_collection_id: collection2,
               batch_document_ids: [asset2, asset3]
             }
-        expect(collection.reload.member_objects).to eq [asset1]
-        expect(collection2.reload.member_objects).to match_array [asset2, asset3]
+        expect(assigns[:resource].member_object_ids).to eq [asset1.id]
+        expect(collection2.member_object_ids).to match_array [asset2.id, asset3.id]
       end
     end
 
     context "updating a collections metadata" do
       it "saves the metadata" do
         put :update, params: { id: collection, collection: { creator: ['Emily'] } }
-        collection.reload
-        expect(collection.creator).to eq ['Emily']
+        expect(assigns[:resource].creator).to eq ['Emily']
       end
 
       it "removes blank strings from params before updating Collection metadata" do
@@ -174,8 +163,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
             creator: [""]
           }
         }
-        expect(assigns[:collection].title).to eq ["My Next Collection "]
-        expect(assigns[:collection].creator).to eq []
+        expect(assigns[:change_set].resource.title).to eq ["My Next Collection "]
+        expect(assigns[:change_set].resource.creator).to eq []
       end
     end
 
@@ -314,7 +303,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     it "is successful" do
       get :edit, params: { id: collection }
       expect(response).to be_success
-      expect(assigns[:form]).to be_instance_of Hyrax::Forms::CollectionForm
+      expect(assigns[:change_set]).to be_instance_of Hyrax::CollectionChangeSet
       expect(flash[:notice]).to be_nil
     end
 
