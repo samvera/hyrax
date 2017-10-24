@@ -10,7 +10,8 @@ FactoryGirl.define do
     end
 
     to_create do |instance|
-      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      persister.save(resource: instance)
     end
 
     factory :public_collection, traits: [:public]
