@@ -30,8 +30,13 @@ Rails.application.config.to_prepare do
   )
 
   Valkyrie::MetadataAdapter.register(
-    Valkyrie::Persistence::Solr::MetadataAdapter.new(connection: Blacklight.default_index.connection,
-                                                     resource_indexer: Valkyrie::Indexers::AccessControlsIndexer),
+    Valkyrie::Persistence::Solr::MetadataAdapter.new(
+      connection: Blacklight.default_index.connection,
+      resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(
+        Valkyrie::Indexers::AccessControlsIndexer,
+        Hyrax::LinkedDataAttributesIndexer
+      )
+    ),
     :index_solr
   )
 
