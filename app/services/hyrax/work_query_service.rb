@@ -9,28 +9,18 @@ module Hyrax
   # @note This was extracted from the ProxyDepositRequest, which was coordinating lots of effort. It was also an ActiveRecord object that required lots of Fedora/Solr interactions.
   class WorkQueryService
     # @param [String] id - The id of the work
-    # @param [#exists?, #find] work_relation - How we will query some of the related information
-    def initialize(id:, work_relation: default_work_relation)
+    def initialize(id:)
       @id = id
-      @work_relation = work_relation
     end
-    attr_reader :id, :work_relation
-
-    private
-
-      def default_work_relation
-        Hyrax::WorkRelation.new
-      end
-
-    public
+    attr_reader :id
 
     # @return [Boolean] if the work has been deleted
     def deleted_work?
-      !work_relation.exists?(id)
+      !Hyrax::Queries.exists?(id)
     end
 
     def work
-      @work ||= work_relation.find(id)
+      @work ||= Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
     end
 
     def to_s

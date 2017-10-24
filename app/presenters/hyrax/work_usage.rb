@@ -4,7 +4,7 @@
 module Hyrax
   class WorkUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = Hyrax::WorkRelation.new.find(id)
+      self.model = Hyrax::Queries.find_by(id: id)
     end
 
     alias work model
