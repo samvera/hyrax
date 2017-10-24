@@ -37,7 +37,7 @@ RSpec.describe Hyrax::StatsController do
     end
 
     context 'when user lacks access to file' do
-      let(:file_set) { create(:file_set) }
+      let(:file_set) { create_for_repository(:file_set) }
 
       before do
         sign_in user
