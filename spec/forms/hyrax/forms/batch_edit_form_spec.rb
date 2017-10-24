@@ -1,38 +1,37 @@
 RSpec.describe Hyrax::Forms::BatchEditForm do
   let(:model) { GenericWork.new }
   let(:work1) do
-    create :generic_work,
-           title: ["title 1"],
-           keyword: ["abc"],
-           creator: ["Wilma"],
-           language: ['en'],
-           contributor: ['contributor1'],
-           description: ['description1'],
-           license: ['license1'],
-           subject: ['subject1'],
-           identifier: ['id1'],
-           based_near: ['based_near1'],
-           related_url: ['related_url1']
+    create_for_repository :work,
+                          title: ["title 1"],
+                          keyword: ["abc"],
+                          creator: ["Wilma"],
+                          language: ['en'],
+                          contributor: ['contributor1'],
+                          description: ['description1'],
+                          license: ['license1'],
+                          subject: ['subject1'],
+                          identifier: ['id1'],
+                          based_near: ['based_near1'],
+                          related_url: ['related_url1']
   end
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   # Using a different work type in order to show that the form supports
   # batches containing multiple types of works
   let(:work2) do
-    NamespacedWorks::NestedWork.create!(
-      title: ["title 2"],
-      keyword: ["123"],
-      creator: ["Fred"],
-      publisher: ['Rand McNally'],
-      language: ['en'],
-      resource_type: ['bar'],
-      contributor: ['contributor2'],
-      description: ['description2'],
-      license: ['license2'],
-      subject: ['subject2'],
-      identifier: ['id2'],
-      based_near: ['based_near2'],
-      related_url: ['related_url2']
-    )
+    persister.save(resource: NamespacedWorks::NestedWork.new(title: ["title 2"],
+                                                             keyword: ["123"],
+                                                             creator: ["Fred"],
+                                                             publisher: ['Rand McNally'],
+                                                             language: ['en'],
+                                                             resource_type: ['bar'],
+                                                             contributor: ['contributor2'],
+                                                             description: ['description2'],
+                                                             license: ['license2'],
+                                                             subject: ['subject2'],
+                                                             identifier: ['id2'],
+                                                             based_near: ['based_near2'],
+                                                             related_url: ['related_url2']))
   end
 
   let(:batch) { [work1.id, work2.id] }
