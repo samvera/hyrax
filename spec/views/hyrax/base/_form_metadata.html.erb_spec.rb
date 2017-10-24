@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/base/_form_metadata.html.erb', type: :view do
   end
   let(:work) { GenericWork.new }
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
 
   let(:form_template) do

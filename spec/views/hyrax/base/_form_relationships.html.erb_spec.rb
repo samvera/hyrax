@@ -1,7 +1,7 @@
 RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:work) { GenericWork.new }
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
   let(:service) { instance_double Hyrax::AdminSetService }
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
