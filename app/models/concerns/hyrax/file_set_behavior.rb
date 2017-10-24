@@ -37,5 +37,20 @@ module Hyrax
     def to_presenter
       CatalogController.new.fetch(id).last
     end
+
+    # @return [Boolean] whether this instance is a Hydra::Works Collection.
+    def collection?
+      false
+    end
+
+    # @return [Boolean] whether this instance is a Hydra::Works Generic Work.
+    def work?
+      false
+    end
+
+    # @return [Boolean] whether this instance is a Hydra::Works::FileSet.
+    def file_set?
+      true
+    end
   end
 end
