@@ -100,7 +100,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a file' do
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          attributes_for(:work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:uploaded_files] = [uploaded_file.id]
           end
         end
@@ -138,7 +138,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         let(:file_actor) { double }
         let(:uploaded_file2) { Hyrax::UploadedFile.create(file: file, user: user) }
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          attributes_for(:work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:uploaded_files] = [uploaded_file.id, uploaded_file2.id]
           end
         end
@@ -169,7 +169,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a present and a blank title' do
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, title: ['this is present', ''])
+          attributes_for(:work, admin_set_id: admin_set.id, title: ['this is present', ''])
         end
 
         it 'stamps each link with the access rights' do
@@ -208,7 +208,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:parent) { create_for_repository(:work, user: user) }
       let(:old_parent) { create_for_repository(:work, user: user) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
+        attributes_for(:work).merge(
           in_works_ids: [parent.id]
         )
       end
@@ -228,7 +228,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     context 'without in_works_ids' do
       let(:old_parent) { create_for_repository(:work) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
+        attributes_for(:work).merge(
           in_works_ids: []
         )
       end
@@ -252,7 +252,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     context 'with nil in_works_ids' do
       let(:parent) { create_for_repository(:work) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
+        attributes_for(:work).merge(
           in_works_ids: nil
         )
       end
@@ -275,7 +275,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:file_set2) { create_for_repository(:file_set) }
       let(:curation_concern) { create_for_repository(:work, user: user, member_ids: [file_set1.id, file_set2.id], admin_set_id: admin_set.id) }
       let(:attributes) do
-        attributes_for(:generic_work, member_ids: [file_set2.id, file_set1.id])
+        attributes_for(:work, member_ids: [file_set2.id, file_set1.id])
       end
 
       it 'updates the order of file sets' do
