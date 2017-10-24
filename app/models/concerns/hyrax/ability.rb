@@ -27,6 +27,15 @@ module Hyrax
       can [:edit, :update, :destroy], Valkyrie::Resource do |obj|
         test_edit(obj.id)
       end
+      can :read, Valkyrie::Resource do |obj|
+        test_read(obj.id)
+      end
+      can :discover, Valkyrie::Resource do |obj|
+        test_discover(obj.id)
+      end
+      can :download, Valkyrie::Resource do |obj|
+        test_download(obj.id)
+      end
     end
 
     # Samvera doesn't use download user/groups, so make it an alias to read
