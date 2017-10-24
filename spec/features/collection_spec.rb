@@ -6,10 +6,12 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'])
+      create(:public_collection, user: user, description: ['collection description'], collection_type_settings: :nestable)
     end
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:col1) { create(:public_collection, title: ["Sub-collection 1"], member_of_collections: [collection], user: user) }
+    let!(:col2) { create(:public_collection, title: ["Sub-collection 2"], member_of_collections: [collection], user: user) }
 
     before do
       sign_in user
@@ -19,14 +21,15 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
       expect(page).to have_content(collection.description.first)
+      expect(page).to have_content("Collection Details")
       # Should not show title and description a second time
       expect(page).not_to have_css('.metadata-collections', text: collection.title.first)
       expect(page).not_to have_css('.metadata-collections', text: collection.description.first)
-      # Should not have Collection Descriptive metadata table
-      expect(page).to have_content("Descriptions")
       # Should have search results / contents listing
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
+      expect(page).to have_content(col1.title.first)
+      expect(page).to have_content(col2.title.first)
       expect(page).not_to have_css(".pager")
 
       click_link "Gallery"

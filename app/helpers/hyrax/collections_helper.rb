@@ -43,29 +43,6 @@ module Hyrax
       collection_type_gid
     end
 
-    def banner_file(collection_id)
-      # Find Banner filename
-      ci = CollectionBrandingInfo.where(collection_id: collection_id.to_s).where(role: "banner")
-      # @banner_file = File.split(ci[0].local_path).last unless ci.empty?
-      # @banner_file_location = ci[0].local_path unless ci.empty?
-      @banner_file_for_display = "/" + ci[0].local_path.split("/")[-4..-1].join("/") unless ci.empty?
-    end
-
-    def logo_record(collection_id)
-      logo_info = []
-      # Find Logo filename, alttext, linktext
-      cis = CollectionBrandingInfo.where(collection_id: collection_id.to_s).where(role: "logo")
-      return if cis.empty?
-      cis.each do |coll_info|
-        logo_file = File.split(coll_info.local_path).last
-        file_location = "/" + coll_info.local_path.split("/")[-4..-1].join("/") unless logo_file.empty?
-        alttext = coll_info.alt_text
-        linkurl = coll_info.target_url
-        logo_info << { file: logo_file, file_location: file_location, alttext: alttext, linkurl: linkurl }
-      end
-      logo_info
-    end
-
     private
 
       # add hidden fields to a form for performing an action on a single document on a collection
