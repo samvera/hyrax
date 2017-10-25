@@ -12,7 +12,7 @@ module Hyrax
     end
 
     def new
-      @change_set = change_set_class.new(new_resource, append_id: params[:parent_id]).prepopulate!
+      @change_set = build_change_set(new_resource).prepopulate!
       authorize! :create, resource_class
     end
 
@@ -21,7 +21,7 @@ module Hyrax
     end
 
     def create
-      @change_set = change_set_class.new(resource_class.new)
+      @change_set = build_change_set(resource_class.new)
       authorize! :create, @change_set.resource
       if @change_set.validate(resource_params)
         @change_set.sync
@@ -43,7 +43,7 @@ module Hyrax
     end
 
     def destroy
-      @change_set = change_set_class.new(find_resource(params[:id]))
+      @change_set = build_change_set(find_resource(params[:id]))
       authorize! :destroy, @change_set.resource
       change_set_persister.buffer_into_index do |persist|
         persist.delete(change_set: @change_set)
@@ -57,12 +57,12 @@ module Hyrax
     end
 
     def edit
-      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      @change_set = build_change_set(find_resource(params[:id])).prepopulate!
       authorize! :update, @change_set.resource
     end
 
     def update
-      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      @change_set = build_change_set(find_resource(params[:id])).prepopulate!
       authorize! :update, @change_set.resource
       if @change_set.validate(resource_params)
         @change_set.sync
@@ -81,6 +81,18 @@ module Hyrax
 
     def after_update_error(_obj, _change_set)
       render :edit
+    end
+
+    def build_change_set(resource)
+      change_set_class.new(resource,
+                           append_id: params[:parent_id],
+                           search_context: search_context)
+    end
+
+    def search_context
+      SearchContext.new(ability: current_ability,
+                        repository: repository,
+                        blacklight_config: blacklight_config)
     end
 
     def file_manager
@@ -106,6 +118,18 @@ module Hyrax
 
     def find_resource(id)
       query_service.find_by(id: Valkyrie::ID.new(id))
+    end
+
+    # A property object for blacklight searches
+    class SearchContext
+      def initialize(ability:, repository:, blacklight_config:)
+        @ability = ability
+        @repository = repository
+        @blacklight_config = blacklight_config
+      end
+
+      attr_reader :ability, :repository, :blacklight_config
+      alias current_ability ability
     end
   end
 end
