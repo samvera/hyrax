@@ -20,7 +20,6 @@ class AdminSet < Valkyrie::Resource
   include Valkyrie::Resource::AccessControls
   include Hyrax::Noid
   include Hyrax::HumanReadableType
-  # include Hyrax::HasRepresentative
 
   DEFAULT_ID = 'admin_set/default'.freeze
   DEFAULT_TITLE = ['Default Admin Set'].freeze
@@ -33,6 +32,7 @@ class AdminSet < Valkyrie::Resource
   attribute :title, Valkyrie::Types::Set
   attribute :description, Valkyrie::Types::Set
   attribute :creator, Valkyrie::Types::Set
+  attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
 
   # property :title, predicate: ::RDF::Vocab::DC.title do |index|
   #   index.as :stored_searchable, :facetable
