@@ -80,7 +80,7 @@ module Hyrax
       end
 
       def change_set_class
-        Forms::BatchEditForm
+        BatchEditChangeSet
       end
 
       def terms
