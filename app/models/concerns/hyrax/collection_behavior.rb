@@ -8,12 +8,16 @@ module Hyrax
     # include Hydra::Works::CollectionBehavior
     include Hyrax::Noid
     include Hyrax::HumanReadableType
-    # include Hyrax::HasRepresentative
     include Hyrax::Permissions
 
     included do
       #  validates_with HasOneTitleValidator
       #  self.indexer = Hyrax::CollectionIndexer
+
+      # Points at an image file that displays this work.
+      attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
+      # Points at a file that displays something about this work. Could be an image or a video.
+      attribute :representative_id, Valkyrie::Types::SingleValuedString
     end
 
     # Add members using the members association.
