@@ -127,16 +127,10 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def work
-    find_work(work_id)
+    Hyrax::Queries.find_work(Valkyrie::ID.new(work_id))
   end
 
   private
-
-    def find_work(id)
-      resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-      raise Hyrax::ObjectNotFoundError("Couldn't find work with 'id'=#{params[:id]}") unless resource.work?
-      resource
-    end
 
     def fulfill!(status:, comment: nil)
       self.receiver_comment = comment if comment
