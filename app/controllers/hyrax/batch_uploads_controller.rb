@@ -3,17 +3,8 @@ module Hyrax
     include Hydra::Controller::ControllerBehavior
     include Hyrax::WorksControllerBehavior
 
-    # Gives the class of the form.
-    class BatchUploadFormService < Hyrax::WorkFormService
-      def self.change_set_class(_ = nil)
-        ::Hyrax::Forms::BatchUploadForm
-      end
-    end
-
-    self.work_form_service = BatchUploadFormService
-    self.resource_class = work_form_service.change_set_class.model_class # includes CanCan side-effects
-    # We use BatchUploadItem as a null stand-in resoure_type.
-    # The actual permission is checked dynamically during #create.
+    # We use BatchUploadItem as a null stand-in resource_type.
+    self.resource_class = BatchUploadItem
 
     with_themed_layout 'dashboard'
 
@@ -87,7 +78,7 @@ module Hyrax
       def attributes_for_actor
         raw_params = params[hash_key_for_curation_concern]
         return {} unless raw_params
-        work_form_service.change_set_class(curation_concern).model_attributes(raw_params)
+        ::Hyrax::BatchUploadChangeSet.model_attributes(raw_params)
       end
   end
 end
