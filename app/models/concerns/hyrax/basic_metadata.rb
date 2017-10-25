@@ -23,16 +23,15 @@ module Hyrax
       attribute :license, Valkyrie::Types::Set
 
       # This is for the rights statement
-      # property :rights_statement, predicate: ::RDF::Vocab::EDM.rights
+      attribute :rights_statement, Valkyrie::Types::Set
       attribute :publisher, Valkyrie::Types::Set
       attribute :date_created, Valkyrie::Types::Set
       attribute :subject, Valkyrie::Types::Set
       attribute :language, Valkyrie::Types::Set
       attribute :identifier, Valkyrie::Types::Set
-      # property :based_near, predicate: ::RDF::Vocab::FOAF.based_near, class_name: Hyrax::ControlledVocabularies::Location
       attribute :related_url, Valkyrie::Types::Set
       # property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
-      # property :source, predicate: ::RDF::Vocab::DC.source
+      attribute :source, Valkyrie::Types::Set
 
       # id_blank = proc { |attributes| attributes[:id].blank? }
       #
