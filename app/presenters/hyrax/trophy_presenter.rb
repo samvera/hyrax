@@ -18,9 +18,8 @@ module Hyrax
     end
 
     def self.find_work(id)
-      resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-      resource.work? ? resource : nil
-    rescue Valkyrie::Persistence::ObjectNotFoundError
+      Hyrax::Queries.find_work(id: Valkyrie::ID.new(id))
+    rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
       nil
     end
     private_class_method :find_work
