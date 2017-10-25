@@ -40,7 +40,7 @@ RSpec.describe Hyrax::BatchUploadChangeSet do
     subject { change_set.fields }
 
     it do
-      is_expected.to eq("internal_resource" => "GenericWork",
+      is_expected.to eq("resource_type" => [],
                         "created_at" => [],
                         "creator" => [],
                         "description" => [],
@@ -50,6 +50,7 @@ RSpec.describe Hyrax::BatchUploadChangeSet do
                         "contributor" => [],
                         "date_created" => [],
                         "keyword" => [],
+                        'rights_statement' => [],
                         "subject" => [],
                         "language" => [],
                         "license" => [],
