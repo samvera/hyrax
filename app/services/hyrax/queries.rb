@@ -8,7 +8,10 @@ module Hyrax
     class_attribute :metadata_adapter
     self.metadata_adapter = Valkyrie.config.metadata_adapter
     class << self
-      delegate :exists?, :find_all, :find_by, :find_all_of_model, :find_members, :find_references_by, :find_inverse_references_by, :find_parents, :custom_queries, to: :default_adapter
+      delegate :exists?, :find_work, :find_file_set, :find_collection,
+               :find_all, :find_by, :find_all_of_model, :find_members,
+               :find_references_by, :find_inverse_references_by, :find_parents,
+               :custom_queries, to: :default_adapter
 
       def default_adapter
         new(metadata_adapter: metadata_adapter)
@@ -53,6 +56,24 @@ module Hyrax
 
     def find_inverse_references_by(resource:, property:)
       metadata_adapter_query_service.find_inverse_references_by(resource: resource, property: property)
+    end
+
+    def find_work(id: id)
+      resource = find_by(id: id)
+      raise Hyrax::ObjectNotFoundError, "Couldn't find work with 'id'=#{id}" unless resource.work?
+      resource
+    end
+
+    def find_file_set(id: id)
+      resource = find_by(id: id)
+      raise Hyrax::ObjectNotFoundError, "Couldn't find file set with 'id'=#{id}" unless resource.file_set?
+      resource
+    end
+
+    def find_collection(id: id)
+      resource = find_by(id: id)
+      raise Hyrax::ObjectNotFoundError, "Couldn't find collection with 'id'=#{id}" unless resource.collection?
+      resource
     end
   end
 end
