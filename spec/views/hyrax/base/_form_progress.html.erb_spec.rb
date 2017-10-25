@@ -1,7 +1,7 @@
 RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:user) { stub_model(User) }
   let(:change_set) do
-    Hyrax::GenericWorkChangeSet.new(work)
+    GenericWorkChangeSet.new(work)
   end
   let(:page) do
     view.simple_form_for change_set do |f|
