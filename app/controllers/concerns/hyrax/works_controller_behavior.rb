@@ -9,9 +9,8 @@ module Hyrax
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 
-      class_attribute :show_presenter, :work_form_service, :search_builder_class
+      class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
-      self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
       self.change_set_persister = Hyrax::ChangeSetPersister.new(
         metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
