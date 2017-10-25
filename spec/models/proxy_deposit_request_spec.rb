@@ -128,4 +128,51 @@ RSpec.describe ProxyDepositRequest, type: :model do
       end
     end
   end
+
+  describe '#work_exists?' do
+    let(:request) { described_class.new(work_id: work_id) }
+
+    subject { request.work_exists? }
+
+    context 'when it does not exist' do
+      before { allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new(request.work_id)).and_return(false) }
+      it { is_expected.to be false }
+    end
+    context 'when it does exist' do
+      before { allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new(request.work_id)).and_return(true) }
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#work' do
+    let(:request) { described_class.new(work_id: work.id) }
+    let(:work) { build(:work, id: Valkyrie::ID.new(work_id)) }
+
+    subject { request.work.id }
+
+    context 'when it exists' do
+      before { allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(request.work_id)).and_return(work) }
+      it { is_expected.to eq work.id }
+    end
+  end
+
+  describe '#to_s' do
+    let(:request) { described_class.new(work_id: work.id) }
+    let(:work) { build(:work, id: Valkyrie::ID.new(work_id), title: ["Test work"]) }
+
+    subject { request.to_s }
+
+    context 'when the work is deleted' do
+      before { allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new(request.work_id)).and_return(false) }
+      it { is_expected.to eq('work not found') }
+    end
+
+    context 'when the work is not deleted' do
+      before { allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(request.work_id)).and_return(work) }
+
+      it 'will retrieve the SOLR document and use the #to_s method of that' do
+        expect(subject).to eq(work.title.first)
+      end
+    end
+  end
 end
