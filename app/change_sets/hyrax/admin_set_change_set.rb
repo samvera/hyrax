@@ -1,6 +1,9 @@
 module Hyrax
   class AdminSetChangeSet < Valkyrie::ChangeSet
     # self.terms = [:title, :description, :thumbnail_id]
+    property :title, multiple: false, required: true
+    property :description, multiple: true, required: false
+    delegate :member_ids, :thumbnail_id, to: :model
 
     # Cast any array values on the model to scalars.
     def [](key)
