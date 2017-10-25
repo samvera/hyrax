@@ -22,7 +22,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.transfers.new.header'), hyrax.new_work_transfer_path
-      @work = find_work(params[:id])
+      @work = Hyrax::Queries.find_work(id: Valkyrie::ID.new(params[:id]))
     end
 
     def create
@@ -30,7 +30,7 @@ module Hyrax
       if @proxy_deposit_request.save
         redirect_to hyrax.transfers_path, notice: "Transfer request created"
       else
-        @work = find_work(params[:id])
+        @work = Hyrax::Queries.find_work(id: Valkyrie::ID.new(params[:id]))
         render :new
       end
     end
@@ -63,12 +63,6 @@ module Hyrax
     end
 
     private
-
-      def find_work(id)
-        resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-        raise Hyrax::ObjectNotFoundError("Couldn't find work with 'id'=#{params[:id]}") unless resource.work?
-        resource
-      end
 
       def authorize_depositor_by_id
         @id = params[:id]
