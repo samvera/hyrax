@@ -80,6 +80,13 @@ module Hyrax
 
     private
 
+      # Overridden to provide add_works_to_collection
+      def build_change_set(resource)
+        change_set_class.new(resource,
+                             append_id: params[:parent_id],
+                             add_works_to_collection: params[:add_works_to_collection])
+      end
+
       def after_update_error(_obj, change_set)
         respond_to do |wants|
           wants.html do
