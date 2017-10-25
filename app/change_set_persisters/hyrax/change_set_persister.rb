@@ -5,7 +5,7 @@ require 'hooks'
 module Hyrax
   class ChangeSetPersister
     include Hooks
-    define_hooks :before_delete, :after_delete
+    define_hooks :before_save, :after_save, :before_delete, :after_delete
 
     attr_reader :metadata_adapter, :storage_adapter
     delegate :persister, :query_service, to: :metadata_adapter
@@ -15,15 +15,23 @@ module Hyrax
     end
 
     def save(change_set:)
-      persister.save(resource: change_set.resource)
+      result = nil
+      catch(:abort) do
+        run_hook(:before_save, change_set: change_set)
+        result = persister.save(resource: change_set.resource)
+        run_hook(:after_save, change_set: change_set, resource: result)
+      end
+      result
     end
 
     def delete(change_set:)
+      result = nil
       catch(:abort) do
         run_hook(:before_delete, change_set: change_set)
-        persister.delete(resource: change_set.resource)
+        result = persister.delete(resource: change_set.resource)
         run_hook(:after_delete, change_set: change_set)
       end
+      result
     end
 
     def save_all(change_sets:)

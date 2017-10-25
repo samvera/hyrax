@@ -25,13 +25,12 @@ module Hyrax
       authorize! :create, @change_set.resource
       if @change_set.validate(resource_params)
         @change_set.sync
-        obj = nil
         change_set_persister.buffer_into_index do |buffered_changeset_persister|
-          obj = buffered_changeset_persister.save(change_set: @change_set)
+          @resource = buffered_changeset_persister.save(change_set: @change_set)
         end
-        after_create_success(obj, @change_set)
+        after_create_success(@resource, @change_set)
       else
-        after_create_error(obj, @change_set)
+        after_create_error(@resource, @change_set)
       end
     end
 
@@ -67,13 +66,12 @@ module Hyrax
       authorize! :update, @change_set.resource
       if @change_set.validate(resource_params)
         @change_set.sync
-        obj = nil
         change_set_persister.buffer_into_index do |persist|
-          obj = persist.save(change_set: @change_set)
+          @resource = persist.save(change_set: @change_set)
         end
-        after_update_success(obj, @change_set)
+        after_update_success(@resource, @change_set)
       else
-        after_update_error(obj, @change_set)
+        after_update_error(@resource, @change_set)
       end
     end
 
