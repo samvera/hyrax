@@ -119,7 +119,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       it 'defines a form' do
         get :edit, params: { id: admin_set }
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
+        expect(assigns[:change_set]).to be_kind_of Hyrax::AdminSetChangeSet
       end
     end
 
