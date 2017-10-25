@@ -11,9 +11,9 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participant_table.html.erb', type: 
   end
 
   before do
-    @form = instance_double(Hyrax::Forms::AdminSetForm,
-                            to_model: stub_model(AdminSet),
-                            permission_template: pt_form)
+    @change_set = instance_double(Hyrax::AdminSetChangeSet,
+                                  to_model: stub_model(AdminSet),
+                                  permission_template: pt_form)
     # Ignore the delete button link
     allow(view).to receive(:admin_permission_template_access_path).and_return("/admin/permission_template_accesses/123")
   end
