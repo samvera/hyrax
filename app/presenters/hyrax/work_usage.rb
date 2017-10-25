@@ -4,7 +4,7 @@
 module Hyrax
   class WorkUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = find_work(id)
+      self.model = Hyrax::Queries.find_work(id: id)
     end
 
     alias work model
@@ -22,12 +22,6 @@ module Hyrax
     end
 
     private
-
-      def find_work(id)
-        resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-        raise Hyrax::ObjectNotFoundError("Couldn't find work with 'id'=#{params[:id]}") unless resource.work?
-        resource
-      end
 
       def pageviews
         to_flots WorkViewStat.statistics(model.id, created, user_id)
