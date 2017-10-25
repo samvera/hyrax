@@ -31,13 +31,10 @@ module Hyrax
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
-                      :member_search_builder_class
+                      :membership_service_class
 
       alias collection_search_builder_class single_item_search_builder_class
       deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
-
-      alias collection_member_search_builder_class member_search_builder_class
-      deprecation_deprecate collection_member_search_builder_class: "use member_search_builder_class instead"
 
       self.presenter_class = Hyrax::CollectionPresenter
 
@@ -46,7 +43,7 @@ module Hyrax
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
-      self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
+      self.membership_service_class = Collections::CollectionMemberService
 
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
@@ -77,7 +74,6 @@ module Hyrax
 
         presenter
         query_collection_members
-        query_member_subcollections if @collection.collection_type.nestable?
       end
 
       def edit
@@ -85,7 +81,7 @@ module Hyrax
         determine_banner_data
         determine_logo_data
 
-        query_collection_members
+        member_works
         # this is used to populate the "add to a collection" action for the members
         @user_collections = find_collections_for_form
         form
@@ -364,15 +360,6 @@ module Hyrax
         alias collection_search_builder single_item_search_builder
         deprecation_deprecate collection_search_builder: "use single_item_search_builder instead"
 
-        # Instantiates the search builder that builds a query for items that are
-        # members of the current collection. This is used in the show view.
-        def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self, search_includes_models: :works)
-        end
-
-        alias collection_member_search_builder member_search_builder
-        deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
-
         def collection_params
           @participants = extract_old_style_permission_attributes(params[:collection])
           form_class.model_attributes(params[:collection])
@@ -401,28 +388,6 @@ module Hyrax
           # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
           return Hyrax::PermissionTemplateAccess::MANAGE if permission["access"] == 'edit'
           return Hyrax::PermissionTemplateAccess::VIEW if permission["access"] == 'read'
-        end
-
-        # Queries Solr for members of the collection.
-        # Populates @response and @member_docs similar to Blacklight Catalog#index populating @response and @documents
-        def query_collection_members
-          params[:q] = params[:cq]
-          @response = repository.search(query_for_collection_members)
-          @member_docs = @response.documents
-          @members_count = @response.total
-        end
-
-        # @return <Hash> a representation of the solr query that find the collection members
-        def query_for_collection_members
-          member_search_builder.with(params_for_members_query).query
-        end
-
-        # You can override this method if you need to provide additional inputs to the search
-        # builder. For example:
-        #   search_field: 'all_fields'
-        # @return <Hash> the inputs required for the collection member search builder
-        def params_for_members_query
-          params.merge(q: params[:cq])
         end
 
         def process_member_changes
@@ -481,34 +446,34 @@ module Hyrax
           Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
         end
 
-        # Queries Solr for members of the collection.
-        # Populates @search_results and @subcollection_docs similar to Blacklight Catalog#index populating @response and @documents
-        def query_member_subcollections
-          params[:q] = params[:cq]
-          @search_results = repository.search(query_for_subcollections)
-          @subcollection_docs = @search_results.documents
-          @subcollection_count = @search_results.total
+        def query_collection_members
+          member_works
+          member_subcollections if collection.collection_type.nestable?
         end
 
-        def nested_collections
-          @nested_collections ||= member_search_builder_class.new(self, search_includes_models: :collections)
+        # Instantiate the membership query service
+        def collection_member_service
+          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: params_for_query)
         end
 
-        # @return <Hash> a representation of the solr query that find the subcollections
-        def query_for_subcollections
-          nested_collections.with(params_for_subcollections).query
+        def member_works
+          @response = collection_member_service.available_member_works
+          @member_docs = @response.documents
+          @members_count = @response.total
         end
 
-        # You can override this method if you need to provide additional inputs to the search
-        # builder. For example:
+        def member_subcollections
+          results = collection_member_service.available_member_subcollections
+          @subcollection_docs = results.documents
+          @subcollection_count = results.total
+        end
+
+        # You can override this method if you need to provide additional
+        # inputs to the search builder. For example:
         #   search_field: 'all_fields'
-        # TODO: paging is linked between both searches due to blacklight constraints,
-        # so I've deactivated paging here, and selected a large result number to hopefully
-        # get everything. Blacklight pagination still needs to be overridden and set
-        # up for the subcollections.
         # @return <Hash> the inputs required for the collection member search builder
-        def params_for_subcollections
-          params.merge(q: params[:cq], rows: 50).except(:page)
+        def params_for_query
+          params.merge(q: params[:cq])
         end
     end
   end

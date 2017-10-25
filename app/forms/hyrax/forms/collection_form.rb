@@ -7,14 +7,14 @@ module Hyrax
       attr_accessor :current_ability, :repository
 
       delegate :id, :depositor, :permissions, to: :model
+      class_attribute :membership_service_class
 
       # Required for search builder (FIXME)
       alias collection model
 
       self.model_class = ::Collection
-      class_attribute :member_search_builder_class
 
-      self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
+      self.membership_service_class = Collections::CollectionMemberService
 
       delegate :human_readable_type, :member_ids, to: :model
       delegate :blacklight_config, to: Hyrax::CollectionsController
@@ -87,12 +87,12 @@ module Hyrax
 
         # Override this method if you have a different way of getting the member's ids
         def member_work_ids
-          response = repository.search(member_search_builder.merge(fl: 'id').query).response
+          response = collection_member_service.available_member_work_ids.response
           response.fetch('docs').map { |doc| doc['id'] }
         end
 
-        def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self, search_includes_models: :both)
+        def collection_member_service
+          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: nil)
         end
 
         def member_presenters(member_ids)
