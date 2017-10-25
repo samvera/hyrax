@@ -103,7 +103,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
-    ContentDepositorChangeEventJob.perform_later(find_work(work_id), receiving_user, reset)
+    ContentDepositorChangeEventJob.perform_later(work, receiving_user, reset)
     fulfill!(status: ACCEPTED)
   end
 
@@ -117,13 +117,17 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def to_s
-    find_work(work_id).to_s
+    work.to_s
   rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
     'work not found'
   end
 
   def work_exists?
     Hyrax::Queries.exists?(Valkyrie::ID.new(work_id))
+  end
+
+  def work
+    find_work(work_id)
   end
 
   private
