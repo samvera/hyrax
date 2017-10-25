@@ -1,5 +1,3 @@
-# TODO: this should be expanded to offer better coverage including primary_terms
-# and secondary_terms once these features are supported
 RSpec.describe GenericWorkChangeSet do
   subject(:change_set) { described_class.new(work) }
 
@@ -14,6 +12,37 @@ RSpec.describe GenericWorkChangeSet do
   describe "#fields" do
     subject { change_set.fields.keys }
 
-    it { is_expected.to eq ['resource_type'] }
+    # rubocop:disable RSpec/ExampleLength
+    it do
+      is_expected.to eq ["created_at", "updated_at", "depositor", "title",
+                         "date_uploaded", "date_modified", "admin_set_id",
+                         "state", "proxy_depositor", "on_behalf_of",
+                         "arkivo_checksum", "member_of_collection_ids",
+                         "member_ids", "thumbnail_id", "representative_id",
+                         "label", "relative_path", "resource_type", "creator",
+                         "contributor", "description", "keyword", "license",
+                         "rights_statement",
+                         "publisher", "date_created", "subject", "language",
+                         "identifier", "related_url", "source", "based_near"]
+    end
+    # rubocop:enable RSpec/ExampleLength
+  end
+
+  describe "#primary_terms" do
+    subject { change_set.primary_terms }
+
+    it { is_expected.to eq [:title, :creator, :keyword, :rights_statement] }
+  end
+
+  describe "#secondary_terms" do
+    subject { change_set.secondary_terms }
+
+    it do
+      is_expected.not_to include(:title, :creator, :keyword,
+                                 :visibilty, :visibility_during_embargo,
+                                 :embargo_release_date, :visibility_after_embargo,
+                                 :visibility_during_lease, :lease_expiration_date,
+                                 :visibility_after_lease, :collection_ids)
+    end
   end
 end
