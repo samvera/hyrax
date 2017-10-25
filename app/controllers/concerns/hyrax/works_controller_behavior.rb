@@ -87,12 +87,15 @@ module Hyrax
 
     private
 
-      def build_change_set
-        @change_set = work_form_service.build(curation_concern, current_ability, self)
-      end
-
       def manifest_builder
         ::IIIFManifest::ManifestFactory.new(presenter)
+      end
+
+      # Overridden to provide add_works_to_collection
+      def build_change_set(resource)
+        change_set_class.new(resource,
+                             append_id: params[:parent_id],
+                             add_works_to_collection: params[:add_works_to_collection])
       end
 
       def after_update_error(_obj, change_set)
