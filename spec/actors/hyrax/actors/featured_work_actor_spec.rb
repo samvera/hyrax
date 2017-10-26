@@ -16,7 +16,7 @@ RSpec.describe Hyrax::Actors::FeaturedWorkActor do
 
   describe "#destroy" do
     it 'removes all the features' do
-      expect { middleware.destroy(env) }.to change { FeaturedWork.where(work_id: work.id).count }.from(1).to(0)
+      expect { middleware.destroy(env) }.to change { FeaturedWork.where(work_id: work.id.to_s).count }.from(1).to(0)
     end
   end
 
@@ -25,13 +25,13 @@ RSpec.describe Hyrax::Actors::FeaturedWorkActor do
       let(:work) { create_for_repository(:work, :public) }
 
       it "does not modify the features" do
-        expect { middleware.update(env) }.not_to change { FeaturedWork.where(work_id: work.id).count }
+        expect { middleware.update(env) }.not_to change { FeaturedWork.where(work_id: work.id.to_s).count }
       end
     end
 
     context "of a private work" do
       it "removes the features" do
-        expect { middleware.update(env) }.to change { FeaturedWork.where(work_id: work.id).count }.from(1).to(0)
+        expect { middleware.update(env) }.to change { FeaturedWork.where(work_id: work.id.to_s).count }.from(1).to(0)
       end
     end
   end
