@@ -14,8 +14,8 @@ module Hyrax
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
 
-    # Used to get the members for the show action
-    self.member_search_builder_class = Hyrax::AdminAdminSetMemberSearchBuilder
+    # The search builder to find the admin set's members
+    self.membership_service_class = Hyrax::AdminSetMemberService
 
     # Used to create the admin set
     class_attribute :admin_set_create_service

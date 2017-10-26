@@ -2,7 +2,8 @@ RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   let(:context) { double("context", blacklight_config: CatalogController.blacklight_config) }
   let(:solr_params) { { fq: [] } }
   let(:include_models) { :both }
-  let(:builder) { described_class.new(context, search_includes_models: include_models) }
+  let(:collection) { build(:collection, id: '12345') }
+  let(:builder) { described_class.new(scope: context, collection: collection, search_includes_models: include_models) }
 
   describe ".default_processor_chain" do
     subject { builder.default_processor_chain }
@@ -11,11 +12,9 @@ RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   end
 
   describe '#member_of_collection' do
-    let(:collection) { build(:collection, id: '12345') }
     let(:subject) { builder.member_of_collection(solr_params) }
 
     it 'updates solr_parameters[:fq]' do
-      allow(context).to receive(:collection).and_return(collection)
       subject
       expect(solr_params[:fq]).to include("#{builder.collection_membership_field}:#{collection.id}")
     end

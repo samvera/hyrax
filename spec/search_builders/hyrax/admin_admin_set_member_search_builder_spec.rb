@@ -11,7 +11,8 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
                     current_user: user)
   end
   let(:user) { create(:user) }
-  let(:builder) { described_class.new(context) }
+  let(:admin_set) { double(id: '123') }
+  let(:builder) { described_class.new(scope: context, collection: admin_set) }
 
   describe '#filter_models' do
     before do
