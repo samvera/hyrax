@@ -8,7 +8,7 @@
   * Models do not validate themselves (See ChangeSets)
   * Models do not index themselves.
   * FileSet#original_file is now ???
-* In FactoryGirl factories:
+* In FactoryBot factories:
   * use create_for_repository instead of create
 * Nested attributes (e.g. FileSet#permissions_attributes=) are out
 * Switch from create_date_dtsi to created_at_dtsi and system_modified_dtsi to timestamp
