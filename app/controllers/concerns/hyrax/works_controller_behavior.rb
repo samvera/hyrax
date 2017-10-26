@@ -3,12 +3,11 @@ module Hyrax
     extend ActiveSupport::Concern
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
-    include ResourceController
 
     included do
       layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
-
+      class_attribute :change_set_class, :resource_class
       class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.search_builder_class = WorkSearchBuilder
@@ -42,13 +41,37 @@ module Hyrax
                                          admin_set_id: admin_set && admin_set.id).prepopulate!
     end
 
-    def after_create_error(_obj, _change_set)
-      respond_to do |wants|
-        wants.html do
-          render 'new', status: :unprocessable_entity
-        end
-        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+    def edit
+      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      authorize! :update, @change_set.resource
+    end
+
+    def create
+      @change_set = change_set_class.new(resource_class.new)
+      authorize! :create, @change_set.resource
+      if actor.create(actor_environment)
+        after_create_success(@resource, @change_set)
+      else
+        after_create_error(@resource, @change_set)
       end
+    end
+
+    def update
+      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      authorize! :update, @change_set.resource
+      if actor.update(actor_environment)
+        after_update_success(@resource, @change_set)
+      else
+        after_update_error(@resource, @change_set)
+      end
+    end
+
+    def destroy
+      @change_set = change_set_class.new(find_resource(params[:id]))
+      authorize! :destroy, @change_set.resource
+      env = Actors::Environment.new(@change_set.resource, current_ability, {})
+      return unless actor.destroy(env)
+      after_delete_success(@change_set)
     end
 
     # Finds a solr document matching the id and sets @presenter
@@ -81,6 +104,37 @@ module Hyrax
     end
 
     private
+
+      def actor
+        @actor ||= Hyrax::CurationConcern.actor
+      end
+
+      def actor_environment
+        # TODO: just pass a change_set?
+        Actors::Environment.new(@change_set.resource, current_ability, resource_params)
+      end
+
+      def resource_params
+        raw_params = params[resource_class.model_name.param_key]
+        raw_params ? raw_params.to_unsafe_h : {}
+      end
+
+      def find_resource(id)
+        Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+      end
+
+      def new_resource
+        resource_class.new
+      end
+
+      def after_create_error(_obj, _change_set)
+        respond_to do |wants|
+          wants.html do
+            render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+        end
+      end
 
       def after_update_error(_obj, change_set)
         respond_to do |wants|

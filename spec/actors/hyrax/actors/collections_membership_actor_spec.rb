@@ -4,7 +4,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -48,7 +49,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       let(:attributes) { { member_of_collection_ids: [] } }
 
       before do
-        subject.create(Hyrax::Actors::Environment.new(curation_concern, ability,
+        subject.create(Hyrax::Actors::Environment.new(change_set, ability,
                                                       member_of_collection_ids: [collection.id], title: ['test']))
       end
 
