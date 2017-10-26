@@ -11,7 +11,6 @@ module Hyrax
     include Hyrax::Noid
     include Hyrax::FileSet::Derivatives
     include Permissions
-    # include Hyrax::FileSet::Indexing
     include Hyrax::FileSet::BelongsToWorks
     include HumanReadableType
     include CoreMetadata
