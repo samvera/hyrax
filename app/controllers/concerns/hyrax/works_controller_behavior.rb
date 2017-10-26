@@ -7,10 +7,9 @@ module Hyrax
     included do
       layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
-
-      class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
+      class_attribute :change_set_class, :resource_class
+      class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
-      self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
       self.theme = 'hyrax/1_column'
       attr_accessor :curation_concern
@@ -20,52 +19,54 @@ module Hyrax
     end
 
     class_methods do
-      def curation_concern_type=(curation_concern_type)
-        load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work]
-
-        # Load the fedora resource to get the etag.
-        # No need to authorize for the file manager, because it does authorization via the presenter.
-        load_resource class: curation_concern_type, instance_name: :curation_concern, only: :file_manager
-
-        self._curation_concern_type = curation_concern_type
-        # We don't want the breadcrumb action to occur until after the concern has
-        # been loaded and authorized
-        before_action :save_permissions, only: :update
-      end
-
-      def curation_concern_type
-        _curation_concern_type
-      end
-
       def cancan_resource_class
         Hyrax::ControllerResource
       end
     end
 
     def new
-      # TODO: move these lines to the work form builder in Hyrax
-      curation_concern.depositor = current_user.user_key
+      authorize! :create, resource_class
 
       # admin_set_id is required on the client, otherwise simple_form renders a blank option.
       # however it isn't a required field for someone to submit via json.
       # Set the first admin_set they have access to.
       admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
-      curation_concern.admin_set_id = admin_set && admin_set.id
-      build_form
+      @change_set = change_set_class.new(new_resource,
+                                         depositor: current_user.user_key,
+                                         admin_set_id: admin_set && admin_set.id).prepopulate!
+    end
+
+    def edit
+      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      authorize! :update, @change_set.resource
     end
 
     def create
+      @change_set = change_set_class.new(resource_class.new)
+      authorize! :create, @change_set.resource
       if actor.create(actor_environment)
-        after_create_response
+        after_create_success(@resource, @change_set)
       else
-        respond_to do |wants|
-          wants.html do
-            build_form
-            render 'new', status: :unprocessable_entity
-          end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-        end
+        after_create_error(@resource, @change_set)
       end
+    end
+
+    def update
+      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      authorize! :update, @change_set.resource
+      if actor.update(actor_environment)
+        after_update_success(@resource, @change_set)
+      else
+        after_update_error(@resource, @change_set)
+      end
+    end
+
+    def destroy
+      @change_set = change_set_class.new(find_resource(params[:id]))
+      authorize! :destroy, @change_set.resource
+      env = Actors::Environment.new(@change_set.resource, current_ability, {})
+      return unless actor.destroy(env)
+      after_delete_success(@change_set)
     end
 
     # Finds a solr document matching the id and sets @presenter
@@ -75,7 +76,7 @@ module Hyrax
         wants.html { presenter && parent_presenter }
         wants.json do
           # load and authorize @curation_concern manually because it's skipped for html
-          @curation_concern = _curation_concern_type.find(params[:id]) unless curation_concern
+          @curation_concern = Hyrax::Queries.find_by(id: Valkyrie::ID.new(params[:id])) unless curation_concern
           authorize! :show, @curation_concern
           render :show, status: :ok
         end
@@ -92,51 +93,51 @@ module Hyrax
       end
     end
 
-    def edit
-      build_form
-    end
-
-    def update
-      if actor.update(actor_environment)
-        after_update_response
-      else
-        respond_to do |wants|
-          wants.html do
-            build_form
-            render 'edit', status: :unprocessable_entity
-          end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-        end
-      end
-    end
-
-    def destroy
-      title = curation_concern.to_s
-      env = Actors::Environment.new(curation_concern, current_ability, {})
-      return unless actor.destroy(env)
-      Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user)
-      after_destroy_response(title)
-    end
-
-    def file_manager
-      @form = Forms::FileManagerForm.new(curation_concern, current_ability)
-    end
-
     def inspect_work
       raise Hydra::AccessDenied unless current_ability.admin?
       presenter
     end
 
-    #    attr_writer :actor
-
     private
-
-      def build_form
-        @form = work_form_service.build(curation_concern, current_ability, self)
-      end
 
       def actor
         @actor ||= Hyrax::CurationConcern.actor
+      end
+
+      def actor_environment
+        # TODO: just pass a change_set?
+        Actors::Environment.new(@change_set.resource, current_ability, resource_params)
+      end
+
+      def resource_params
+        raw_params = params[resource_class.model_name.param_key]
+        raw_params ? raw_params.to_unsafe_h : {}
+      end
+
+      def find_resource(id)
+        Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
+      end
+
+      def new_resource
+        resource_class.new
+      end
+
+      def after_create_error(_obj, _change_set)
+        respond_to do |wants|
+          wants.html do
+            render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+        end
+      end
+
+      def after_update_error(_obj, change_set)
+        respond_to do |wants|
+          wants.html do
+            render 'edit', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: change_set.errors }) }
+        end
       end
 
       def presenter
@@ -156,14 +157,6 @@ module Hyrax
       # our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
         @_prefixes ||= super + ['hyrax/base']
-      end
-
-      def actor_environment
-        Actors::Environment.new(curation_concern, current_ability, attributes_for_actor)
-      end
-
-      def hash_key_for_curation_concern
-        _curation_concern_type.model_name.param_key
       end
 
       def contextual_path(presenter, parent_presenter)
@@ -224,58 +217,32 @@ module Hyrax
         end
       end
 
-      # Add uploaded_files to the parameters received by the actor.
-      def attributes_for_actor
-        raw_params = params[hash_key_for_curation_concern]
-        attributes = if raw_params
-                       work_form_service.form_class(curation_concern).model_attributes(raw_params)
-                     else
-                       {}
-                     end
-
-        # If they selected a BrowseEverything file, but then clicked the
-        # remove button, it will still show up in `selected_files`, but
-        # it will no longer be in uploaded_files. By checking the
-        # intersection, we get the files they added via BrowseEverything
-        # that they have not removed from the upload widget.
-        uploaded_files = params.fetch(:uploaded_files, [])
-        selected_files = params.fetch(:selected_files, {}).values
-        browse_everything_urls = uploaded_files &
-                                 selected_files.map { |f| f[:url] }
-
-        # we need the hash of files with url and file_name
-        browse_everything_files = selected_files
-                                  .select { |v| uploaded_files.include?(v[:url]) }
-        attributes[:remote_files] = browse_everything_files
-        # Strip out any BrowseEverthing files from the regular uploads.
-        attributes[:uploaded_files] = uploaded_files -
-                                      browse_everything_urls
-        attributes
-      end
-
-      def after_create_response
+      def after_create_success(obj, _change_set)
         respond_to do |wants|
           wants.html do
             # Calling `#t` in a controller context does not mark _html keys as html_safe
             flash[:notice] = view_context.t('hyrax.works.create.after_create_html', application_name: view_context.application_name)
-            redirect_to [main_app, curation_concern]
+            redirect_to [main_app, obj]
           end
-          wants.json { render :show, status: :created, location: polymorphic_path([main_app, curation_concern]) }
+          wants.json { render :show, status: :created, location: polymorphic_path([main_app, obj]) }
         end
       end
 
-      def after_update_response
-        if curation_concern.file_sets.present?
-          return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
-          return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
+      def after_update_success(obj, change_set)
+        # TODO: we could optimize by making a new query that just returns true if any exist.
+        if Hyrax::Queries.find_members(resource: obj, model: ::FileSet).present?
+          return redirect_to hyrax.confirm_access_permission_path(obj) if change_set.permissions_changed?
+          return redirect_to main_app.confirm_hyrax_permission_path(obj) if change_set.visibility_changed?
         end
         respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern] }
-          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+          wants.html { redirect_to [main_app, obj] }
+          wants.json { render :show, status: :ok, location: polymorphic_path([main_app, obj]) }
         end
       end
 
-      def after_destroy_response(title)
+      def after_delete_success(change_set)
+        Hyrax.config.callback.run(:after_destroy, change_set.id, current_user)
+        title = change_set.resource.to_s
         respond_to do |wants|
           wants.html { redirect_to my_works_path, notice: "Deleted #{title}" }
           wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
@@ -288,14 +255,6 @@ module Hyrax
                     type: "application/x-endnote-refer",
                     filename: presenter.solr_document.endnote_filename)
         end
-      end
-
-      def save_permissions
-        @saved_permissions = curation_concern.permissions.map(&:to_hash)
-      end
-
-      def permissions_changed?
-        @saved_permissions != curation_concern.permissions.map(&:to_hash)
       end
   end
 end

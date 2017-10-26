@@ -1,15 +1,16 @@
 RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:ability) { ::Ability.new(depositor) }
-  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) do
-    build(:generic_work,
+    build(:work,
           edit_users: ['Kevin'],
           read_users: ['Taraji'])
   end
   let(:attributes) { { admin_set_id: admin_set.id } }
-  let(:admin_set) { create(:admin_set, with_permission_template: true) }
+  let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true) }
   let(:permission_template) { admin_set.permission_template }
 
   subject(:middleware) do

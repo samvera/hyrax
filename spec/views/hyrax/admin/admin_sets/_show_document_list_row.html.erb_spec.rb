@@ -2,7 +2,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: 
   let(:user) { create(:user, groups: 'admin') }
 
   let(:work) do
-    create(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
+    create_for_repository(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
   end
 
   before do

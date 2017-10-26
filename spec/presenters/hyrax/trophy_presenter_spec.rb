@@ -1,9 +1,9 @@
 RSpec.describe Hyrax::TrophyPresenter do
   describe "find_by_user" do
     let(:user) { create(:user) }
-    let(:work1) { create(:work, user: user) }
-    let(:work2) { create(:work, user: user) }
-    let(:work3) { create(:work, user: user) }
+    let(:work1) { create_for_repository(:work, user: user) }
+    let(:work2) { create_for_repository(:work, user: user) }
+    let(:work3) { create_for_repository(:work, user: user) }
     let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
     let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
     let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
@@ -17,7 +17,7 @@ RSpec.describe Hyrax::TrophyPresenter do
   end
 
   let(:presenter) { described_class.new(solr_document) }
-  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
+  let(:solr_document) { SolrDocument.new(id: '123456', Valkyrie::Persistence::Solr::Queries::MODEL => 'GenericWork', title_tesim: ['A Title']) }
 
   describe "id" do
     subject { presenter.id }

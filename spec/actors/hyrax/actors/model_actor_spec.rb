@@ -14,7 +14,8 @@ RSpec.describe Hyrax::Actors::ModelActor do
   let(:work) { MusicalWork::Cover.new }
   let(:depositor) { create(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }
-  let(:env) { Hyrax::Actors::Environment.new(work, depositor_ability, {}) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, depositor_ability, {}) }
 
   describe '#model_actor' do
     subject { described_class.new('¯\_(ツ)_/¯').send(:model_actor, env) }

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe ImportExportJob do
-  let(:work)    { create(:work) }
+  let(:work)    { create_for_repository(:work) }
   let(:job)     { described_class.new }
 
   describe "when exporting" do

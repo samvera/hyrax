@@ -37,7 +37,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork,Collection",
                                       "{!raw f=id}123abc"]
         end
       end
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork,Collection",
                                       "-suppressed_bsi:true",
                                       "{!raw f=id}123abc"]
         end
@@ -60,7 +60,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       end
       it "filters for id, access, suppressed and type" do
         expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                    "{!terms f=has_model_ssim}GenericWork,Collection",
+                                    "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork,Collection",
                                     "-suppressed_bsi:true",
                                     "{!raw f=id}123abc"]
       end

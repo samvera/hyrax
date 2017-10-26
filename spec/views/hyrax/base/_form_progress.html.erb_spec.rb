@@ -1,11 +1,10 @@
 RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
-  let(:ability) { double }
   let(:user) { stub_model(User) }
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+  let(:change_set) do
+    GenericWorkChangeSet.new(work)
   end
   let(:page) do
-    view.simple_form_for form do |f|
+    view.simple_form_for change_set do |f|
       render 'hyrax/base/form_progress', f: f
     end
     Capybara::Node::Simple.new(rendered)
@@ -18,7 +17,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   end
 
   context "for a new object" do
-    before { assign(:form, form) }
+    before { assign(:change_set, change_set) }
 
     let(:work) { GenericWork.new }
 
@@ -103,9 +102,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   context "when the work has been saved before" do
     before do
-      # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-      allow(work).to receive(:new_record?).and_return(false)
-      assign(:form, form)
+      assign(:change_set, change_set)
       allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
         .and_return(true)
     end

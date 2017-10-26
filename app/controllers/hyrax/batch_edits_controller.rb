@@ -12,9 +12,9 @@ module Hyrax
     helper PermissionsHelper
 
     def edit
-      work = form_class.model_class.new
+      work = change_set_class.model_class.new
       work.depositor = current_user.user_key
-      @form = form_class.new(work, current_user, batch)
+      @change_set = change_set_class.new(work, current_user, batch)
     end
 
     def after_update
@@ -36,8 +36,7 @@ module Hyrax
 
     def destroy_collection
       batch.each do |doc_id|
-        obj = ActiveFedora::Base.find(doc_id, cast: true)
-        obj.destroy
+        find_resource(doc_id).destroy
       end
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
@@ -54,7 +53,7 @@ module Hyrax
       case params["update_type"]
       when "update"
         batch.each do |doc_id|
-          update_document(ActiveFedora::Base.find(doc_id))
+          update_document(find_resource(doc_id))
         end
         flash[:notice] = "Batch update complete"
         after_update
@@ -76,21 +75,21 @@ module Hyrax
       end
 
       def destroy_batch
-        batch.each { |id| ActiveFedora::Base.find(id).destroy }
+        batch.each { |id| find_resource(id).destroy }
         after_update
       end
 
-      def form_class
-        Forms::BatchEditForm
+      def change_set_class
+        BatchEditChangeSet
       end
 
       def terms
-        form_class.terms
+        change_set_class.terms
       end
 
       def work_params
-        work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
-        form_class.model_attributes(work_params)
+        work_params = params[change_set_class.model_name.param_key] || ActionController::Parameters.new
+        change_set_class.model_attributes(work_params)
       end
 
       def redirect_to_return_controller
@@ -99,6 +98,14 @@ module Hyrax
         else
           redirect_to hyrax.dashboard_path
         end
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
   end
 end

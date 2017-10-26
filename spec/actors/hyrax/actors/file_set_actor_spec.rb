@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:file_path)     { File.join(fixture_path, 'world.png') }
   let(:file)          { fixture_file_upload(file_path, 'image/png') } # we will override for the different types of File objects
   let(:local_file)    { File.open(file_path) }
-  let(:file_set)      { create(:file_set, content: local_file) }
+  let(:file_set)      { create_for_repository(:file_set, content: fixture_file_upload(file_path, 'image/png')) }
   let(:actor)         { described_class.new(file_set, user) }
   let(:relation)      { :original_file }
   let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe 'creating metadata, content and attaching to a work' do
-    let(:work) { create(:generic_work) }
+    let(:work) { create_for_repository(:work) }
     let(:date_today) { DateTime.current }
 
     subject { file_set.reload }
@@ -238,19 +238,19 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context "representative and thumbnail of a work" do
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
       let!(:work) do
-        work = create(:generic_work)
+        work = create_for_repository(:work, member_ids: file_set.id)
         # this is not part of a block on the create, since the work must be saved
         # before the representative can be assigned
-        work.ordered_members << file_set
         work.representative = file_set
         work.thumbnail = file_set
-        work.save
+        persister.save(resource: work)
         work
       end
 
       it "removes representative, thumbnail, and the proxy association" do
-        gw = GenericWork.find(work.id)
+        gw = Hyrax::Queries.find_by(id: work.id)
         expect(gw.representative_id).to eq(file_set.id)
         expect(gw.thumbnail_id).to eq(file_set.id)
         expect { actor.destroy }.to change { ActiveFedora::Aggregation::Proxy.count }.by(-1)
@@ -262,7 +262,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#attach_to_work" do
-    let(:work) { build(:public_generic_work) }
+    let(:work) { build(:work, :public) }
 
     before do
       allow(actor).to receive(:acquire_lock_for).and_yield
@@ -293,17 +293,18 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context 'with multiple versions' do
-      let(:work_v1) { create(:generic_work) } # this version of the work has no members
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
+      let(:work_v1) { create_for_repository(:work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
-        work_v2 = ActiveFedora::Base.find(work_v1.id)
-        work_v2.ordered_members << create(:file_set)
-        work_v2.save!
+        work_v2 = Hyrax::Queries.find_by(id: work_v1.id)
+        work_v2.member_ids += [create_for_repository(:file_set).id]
+        persister.save(resource: work_v2)
       end
 
       it "writes to the most up to date version" do
         actor.attach_to_work(work_v1)
-        expect(work_v1.members.size).to eq 2
+        expect(work_v1.member_ids.size).to eq 2
       end
     end
   end
@@ -331,7 +332,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe '#revert_content' do
-    let(:file_set) { create(:file_set, user: user) }
+    let(:file_set) { create_for_repository(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
     let(:version1) { "version1" }
     let(:restored_content) { file_set.reload.original_file }

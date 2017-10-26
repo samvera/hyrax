@@ -6,6 +6,7 @@ module Hyrax
       class_attribute :admin_group_name
       self.admin_group_name = 'admin'
       self.ability_logic += [:admin_permissions,
+                             :valkyrie_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,
                              :add_to_collection,
@@ -19,6 +20,22 @@ module Hyrax
                              :feature_abilities,
                              :admin_set_abilities,
                              :trophy_abilities]
+    end
+
+    # Hydra-head provides this for ActiveFedora models, but we must add it for Valkyrie models
+    def valkyrie_permissions
+      can [:edit, :update, :destroy], Valkyrie::Resource do |obj|
+        test_edit(obj.id)
+      end
+      can :read, Valkyrie::Resource do |obj|
+        test_read(obj.id)
+      end
+      can :discover, Valkyrie::Resource do |obj|
+        test_discover(obj.id)
+      end
+      can :download, Valkyrie::Resource do |obj|
+        test_download(obj.id)
+      end
     end
 
     # Samvera doesn't use download user/groups, so make it an alias to read
@@ -229,10 +246,7 @@ module Hyrax
       # Returns true if the current user is the depositor of the specified work
       # @param document_id [String] the id of the document.
       def user_is_depositor?(document_id)
-        Hyrax::WorkRelation.new.search_with_conditions(
-          id: document_id,
-          DepositSearchBuilder.depositor_field => current_user.user_key
-        ).any?
+        Hyrax::Queries.find_by(id: Valkyrie::ID.new(document_id)).depositor == current_user.user_key
       end
 
       def curation_concerns_models

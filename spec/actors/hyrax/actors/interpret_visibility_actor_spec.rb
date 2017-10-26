@@ -3,13 +3,14 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { admin_set_id: admin_set.id } }
-  let(:admin_set) { create(:admin_set) }
+  let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:one_year_from_today) { Time.zone.today + 1.year }
   let(:two_years_from_today) { Time.zone.today + 2.years }
   let(:date) { Time.zone.today + 2 }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|

@@ -48,29 +48,23 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     it "includes only GenericWork objects in recent documents" do
       get :index
       assigns(:recent_documents).each do |doc|
-        expect(doc[Solrizer.solr_name("has_model", :symbol)]).to eql ["GenericWork"]
+        expect(doc[Valkyrie::Persistence::Solr::Queries::MODEL]).to eql ["GenericWork"]
       end
     end
 
     context "with a document not created this second" do
       before do
-        gw3 = GenericWork.new(title: ['Test 3 Document'], read_groups: ['public'])
-        gw3.apply_depositor_metadata('mjg36')
-        # stubbing to_solr so we know we have something that didn't create in the current second
-        old_to_solr = gw3.method(:to_solr)
-        allow(gw3).to receive(:to_solr) do
-          old_to_solr.call.merge(
-            Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
-          )
-        end
-        gw3.save
+        # TODO: we need to stub this in the solr doc:
+        # Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
+        create_for_repository(:work, title: ['Test 3 Document'], read_groups: ['public'])
       end
 
       it "sets recent documents in the right order" do
         get :index
         expect(response).to be_success
         expect(assigns(:recent_documents).length).to be <= 4
-        create_times = assigns(:recent_documents).map { |d| d['system_create_dtsi'] }
+        create_times = assigns(:recent_documents).map { |d| d['created_at_dtsi'] }
+        expect(create_times).to be_any
         expect(create_times).to eq create_times.sort.reverse
       end
     end
@@ -98,7 +92,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with featured works" do
-      let!(:my_work) { FactoryGirl.create(:work, user: user) }
+      let!(:my_work) { FactoryGirl.create_for_repository(:work, user: user) }
 
       before do
         FeaturedWork.create!(work_id: my_work.id)

@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+include ActionDispatch::TestProcess
+
 RSpec.describe Hyrax::FileSetFixityCheckService do
-  let(:f)                 { create(:file_set, content: File.open(fixture_path + '/world.png')) }
+  let(:f)                 { create_for_repository(:file_set, content: fixture_file_upload('world.png', 'image/png')) }
   let(:service_by_object) { described_class.new(f) }
   let(:service_by_id)     { described_class.new(f.id) }
 

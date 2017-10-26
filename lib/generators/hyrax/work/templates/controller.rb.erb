@@ -6,7 +6,8 @@ module Hyrax
     # Adds Hyrax behaviors to the controller.
     include Hyrax::WorksControllerBehavior
     include Hyrax::BreadcrumbsForWorks
-    self.curation_concern_type = ::<%= class_name %>
+    self.resource_class = ::<%= class_name %>
+    self.change_set_class = ::<%= class_name %>ChangeSet
 
     # Use this line if you want to use a custom presenter
     self.show_presenter = Hyrax::<%= class_name %>Presenter

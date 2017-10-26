@@ -1,33 +1,30 @@
 RSpec.describe "hyrax/base/file_manager.html.erb" do
   let(:members) { [file_set, member] }
-  let(:file_set) { Hyrax::FileSetPresenter.new(solr_doc, nil) }
+  let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_doc, nil) }
   let(:member) { Hyrax::WorkShowPresenter.new(solr_doc_work, nil) }
-  let(:solr_doc) do
-    SolrDocument.new(
-      resource.to_solr.merge(
-        id: "test",
-        title_tesim: ["Test"],
-        thumbnail_path_ss: "/test/image/path.jpg",
-        label_tesim: ["file_name.tif"]
-      )
-    )
-  end
-  let(:solr_doc_work) do
-    SolrDocument.new(
-      resource.to_solr.merge(
-        id: "work",
-        title_tesim: ["Work"],
-        thumbnail_path_ss: "/test/image/path.jpg",
-        label_tesim: ["work"]
-      )
-    )
-  end
-  let(:resource) { FactoryGirl.build(:file_set) }
 
-  let(:parent) { build(:generic_work) }
+  let(:file_set_document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
+  let(:solr_doc) { SolrDocument.new(file_set_document) }
+  let(:file_set) do
+    create_for_repository(:file_set,
+                          id: "test",
+                          title: ["Test"],
+                          label: ["file_name.tif"])
+  end
 
-  let(:form) do
-    Hyrax::Forms::FileManagerForm.new(parent, nil)
+  let(:work_document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+  let(:solr_doc_work) { SolrDocument.new(work_document) }
+  let(:work) do
+    create_for_repository(:work,
+                          id: "123abc",
+                          title: ["Work"],
+                          label: ["work"])
+  end
+
+  let(:parent) { build(:work) }
+
+  let(:change_set) do
+    GenericWorkChangeSet.new(parent)
   end
 
   before do
@@ -35,8 +32,11 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     allow(parent).to receive(:persisted?).and_return(true)
     allow(parent).to receive(:id).and_return('resource')
 
-    allow(form).to receive(:member_presenters).and_return([file_set, member])
-    assign(:form, form)
+    allow(work).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
+    allow(file_set).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
+
+    allow(change_set).to receive(:member_presenters).and_return([file_set_presenter, member])
+    assign(:change_set, change_set)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
     allow(view).to receive(:search_session).and_return({})
@@ -53,7 +53,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     expect(rendered).to include "<h1>#{I18n.t('hyrax.file_manager.link_text')}</h1>"
 
     # displays each file set's label
-    expect(rendered).to have_selector "input[name='file_set[title][]'][type='text'][value='#{file_set}']"
+    expect(rendered).to have_selector "input[name='file_set[title][]'][type='text'][value='#{file_set_presenter}']"
 
     # displays each file set's file name
     expect(rendered).to have_content "file_name.tif"

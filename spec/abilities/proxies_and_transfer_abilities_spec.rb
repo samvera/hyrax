@@ -39,7 +39,7 @@ RSpec.describe 'Proxy and Transfer Abilities' do
   end
 
   describe "#user_is_depositor?" do
-    let(:work) { create(:work) }
+    let(:work) { create_for_repository(:work) }
 
     subject { ability.send(:user_is_depositor?, work.id) }
 
@@ -48,7 +48,7 @@ RSpec.describe 'Proxy and Transfer Abilities' do
 
   describe "ProxyDepositRequests" do
     let(:sender) { create(:user) }
-    let(:work) { create(:work, user: sender) }
+    let(:work) { create_for_repository(:work, user: sender) }
 
     context "creating a ProxyDepositRequest" do
       before do

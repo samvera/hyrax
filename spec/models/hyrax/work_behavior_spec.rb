@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::WorkBehavior do
   before do
-    class EssentialWork < ActiveFedora::Base
+    class EssentialWork < Valkyrie::Resource
       include Hyrax::WorkBehavior
     end
   end
@@ -11,12 +11,10 @@ RSpec.describe Hyrax::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together all the goodness' do
-    expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
-                                               ::Hyrax::HumanReadableType,
+    expect(subject.class.ancestors).to include(::Hyrax::HumanReadableType,
                                                Hyrax::Noid,
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,
-                                               Hydra::AccessControls::Embargoable,
                                                Solrizer::Common,
                                                Hyrax::Suppressible)
   end
@@ -38,17 +36,29 @@ RSpec.describe Hyrax::WorkBehavior do
     end
   end
 
-  it 'inherits (and extends) to_solr behaviors from superclass' do
-    expect(subject.to_solr.keys).to include(:id)
-    expect(subject.to_solr.keys).to include('has_model_ssim')
-  end
+  describe '#visibility=' do
+    context "when set to public" do
+      it "sets read_groups to public" do
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        expect(subject.read_groups).to eq [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC]
+      end
+      it 'sets read_groups to blank if private' do
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        expect(subject.read_groups).to eq []
 
-  describe 'indexer' do
-    let(:klass) { Class.new }
-
-    it 'is settable' do
-      EssentialWork.indexer = klass
-      expect(EssentialWork.indexer).to eq klass
+        subject.read_groups = ['Valkyrax']
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        expect(subject.read_groups).to eq ['Valkyrax']
+      end
+      it 'sets read_groups to authenticated if appropriate' do
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        expect(subject.read_groups).to eq [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED]
+      end
+      it "doesn't override read_groups" do
+        subject.read_groups += ['ValkyriePeople']
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        expect(subject.read_groups).to contain_exactly Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC, 'ValkyriePeople'
+      end
     end
   end
 end

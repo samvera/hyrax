@@ -15,39 +15,45 @@
 # @see Hyrax::Forms::PermissionTemplateForm for validations and creation process
 # @see Hyrax::DefaultAdminSetActor
 # @see Hyrax::ApplyPermissionTemplateActor
-class AdminSet < ActiveFedora::Base
-  include Hydra::AccessControls::WithAccessRight
+class AdminSet < Valkyrie::Resource
+  # include Hydra::AccessControls::WithAccessRight
+  include Valkyrie::Resource::AccessControls
   include Hyrax::Noid
   include Hyrax::HumanReadableType
-  include Hyrax::HasRepresentative
 
   DEFAULT_ID = 'admin_set/default'.freeze
   DEFAULT_TITLE = ['Default Admin Set'].freeze
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
-  validates_with Hyrax::HasOneTitleValidator
+  # validates_with Hyrax::HasOneTitleValidator
   class_attribute :human_readable_short_description
-  self.indexer = Hyrax::AdminSetIndexer
-  property :title, predicate: ::RDF::Vocab::DC.title do |index|
-    index.as :stored_searchable, :facetable
-  end
-  property :description, predicate: ::RDF::Vocab::DC.description do |index|
-    index.as :stored_searchable
-  end
+  # self.indexer = Hyrax::AdminSetIndexer
+  attribute :id, Valkyrie::Types::ID.optional
+  attribute :title, Valkyrie::Types::Set
+  attribute :description, Valkyrie::Types::Set
+  attribute :creator, Valkyrie::Types::Set
+  attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
 
-  property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
-    index.as :symbol
-  end
+  # property :title, predicate: ::RDF::Vocab::DC.title do |index|
+  #   index.as :stored_searchable, :facetable
+  # end
+  # property :description, predicate: ::RDF::Vocab::DC.description do |index|
+  #   index.as :stored_searchable
+  # end
+  #
+  # property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
+  #   index.as :symbol
+  # end
 
-  has_many :members,
-           predicate:  Hyrax.config.admin_set_predicate,
-           class_name: 'ActiveFedora::Base'
+  # has_many :members,
+  #          predicate: Hyrax.config.admin_set_predicate,
+  #          class_name: 'ActiveFedora::Base'
 
-  before_destroy :check_if_not_default_set, :check_if_empty
-  after_destroy :destroy_permission_template
+  # before_destroy :check_if_not_default_set, :check_if_empty
+  # after_destroy :destroy_permission_template
 
   def self.default_set?(id)
-    id == DEFAULT_ID
+    id.to_s == DEFAULT_ID
   end
 
   def default_set?
@@ -56,7 +62,7 @@ class AdminSet < ActiveFedora::Base
 
   # Creates the default AdminSet and an associated PermissionTemplate with workflow
   def self.find_or_create_default_admin_set_id
-    unless exists?(DEFAULT_ID)
+    unless Hyrax::Queries.exists?(Valkyrie::ID.new(DEFAULT_ID))
       Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
     end
     DEFAULT_ID
@@ -66,12 +72,16 @@ class AdminSet < ActiveFedora::Base
     title.present? ? title : 'No Title'
   end
 
+  def members
+    query_service.find_inverse_references_by(resource: self, property: :admin_set_id)
+  end
+
   # @api public
   # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
   # @return [Hyrax::PermissionTemplate]
   # @raise [ActiveRecord::RecordNotFound]
   def permission_template
-    Hyrax::PermissionTemplate.find_by!(admin_set_id: id)
+    Hyrax::PermissionTemplate.find_by!(admin_set_id: id.to_s)
   end
 
   # @api public
@@ -91,21 +101,7 @@ class AdminSet < ActiveFedora::Base
 
   private
 
-    def destroy_permission_template
-      permission_template.destroy
-    rescue ActiveRecord::RecordNotFound
-      true
-    end
-
-    def check_if_empty
-      return true if members.empty?
-      errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
-      throw :abort
-    end
-
-    def check_if_not_default_set
-      return true unless default_set?
-      errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
-      throw :abort
+    def query_service
+      Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
     end
 end

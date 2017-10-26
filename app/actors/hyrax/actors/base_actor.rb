@@ -16,9 +16,9 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        apply_creation_data_to_curation_concern(env)
-        apply_save_data_to_curation_concern(env)
-        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+        yield env.change_set if block_given?
+        return unless env.change_set.validate(env.attributes)
+        env.change_set_persister.save(change_set: env.change_set) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -26,14 +26,14 @@ module Hyrax
       def update(env)
         apply_update_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-        next_actor.update(env) && save(env) && run_callbacks(:after_update_metadata, env)
+        next_actor.update(env) && env.change_set_persister.save(change_set: env.change_set) && run_callbacks(:after_update_metadata, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if destroy was successful
       def destroy(env)
         env.curation_concern.in_collection_ids.each do |id|
-          destination_collection = ::Collection.find(id)
+          destination_collection = Hyrax::Queries.find_by(id: id)
           destination_collection.members.delete(env.curation_concern)
           destination_collection.update_index
         end
@@ -69,7 +69,9 @@ module Hyrax
         end
 
         def apply_save_data_to_curation_concern(env)
-          env.curation_concern.attributes = clean_attributes(env.attributes)
+          clean_attributes(env.attributes).each_pair do |attribute, value|
+            env.curation_concern.send("#{attribute}=".to_sym, value)
+          end
           env.curation_concern.date_modified = TimeService.time_in_utc
         end
 

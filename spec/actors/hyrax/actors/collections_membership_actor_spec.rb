@@ -4,7 +4,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -21,7 +22,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     before do
       allow(Collection).to receive(:find).with(['123'])
-      allow(curation_concern).to receive(:member_of_collections=)
+      allow(curation_concern).to receive(:member_of_collection_ids=)
     end
 
     it 'does not receive the member_of_collection_ids' do
@@ -33,7 +34,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection) }
+    let(:collection) { create_for_repository(:collection) }
     let(:attributes) do
       { member_of_collection_ids: [collection.id], title: ['test'] }
     end
@@ -44,28 +45,28 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     describe "when work is in user's own collection" do
-      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
       let(:attributes) { { member_of_collection_ids: [] } }
 
       before do
-        subject.create(Hyrax::Actors::Environment.new(curation_concern, ability,
+        subject.create(Hyrax::Actors::Environment.new(change_set, ability,
                                                       member_of_collection_ids: [collection.id], title: ['test']))
       end
 
       it "removes the work from that collection" do
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to eq []
+        expect(curation_concern.member_of_collection_ids).to eq []
       end
     end
 
     describe "when work is in another user's collection" do
       let(:other_user) { create(:user) }
-      let(:collection) { create(:collection, user: other_user, title: ['A good title']) }
+      let(:collection) { create_for_repository(:collection, user: other_user, title: ['A good title']) }
 
       it "doesn't remove the work from that collection" do
         subject.create(env)
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to eq [collection]
+        expect(curation_concern.member_of_collection_ids).to eq [collection.id]
       end
     end
   end

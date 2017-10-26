@@ -9,6 +9,11 @@ FactoryGirl.define do
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
 
+    to_create do |instance|
+      persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      persister.save(resource: instance)
+    end
+
     factory :public_collection, traits: [:public]
 
     trait :public do

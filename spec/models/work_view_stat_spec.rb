@@ -3,7 +3,7 @@ RSpec.describe WorkViewStat, type: :model do
   let(:user_id) { 123 }
   let(:date) { DateTime.new.in_time_zone }
   let(:work_stat) { described_class.create(work_views: "25", date: date, work_id: work_id, user_id: user_id) }
-  let(:work) { mock_model(GenericWork, id: 199) }
+  let(:work) { instance_double(GenericWork, id: 199) }
 
   it "has attributes" do
     expect(work_stat).to respond_to(:work_views)

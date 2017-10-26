@@ -84,7 +84,7 @@ module Hyrax
       def create(env)
         intention = Intention.new(env.attributes)
         attributes = intention.sanitize_params
-        new_env = Environment.new(env.curation_concern, env.current_ability, attributes)
+        new_env = Environment.new(env.change_set, env.current_ability, attributes)
         validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
           next_actor.create(new_env)
       end
@@ -94,7 +94,7 @@ module Hyrax
       def update(env)
         intention = Intention.new(env.attributes)
         attributes = intention.sanitize_params
-        new_env = Environment.new(env.curation_concern, env.current_ability, attributes)
+        new_env = Environment.new(env.change_set, env.current_ability, attributes)
         validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
           next_actor.update(new_env)
       end
@@ -104,7 +104,7 @@ module Hyrax
         # Validate against selected AdminSet's PermissionTemplate (if any)
         def validate(env, intention, attributes)
           # If AdminSet was selected, look for its PermissionTemplate
-          template = PermissionTemplate.find_by!(admin_set_id: attributes[:admin_set_id]) if attributes[:admin_set_id].present?
+          template = PermissionTemplate.find_by!(admin_set_id: attributes[:admin_set_id].to_s) if attributes[:admin_set_id].present?
 
           validate_lease(env, intention, template) &&
             validate_release_type(env, intention, template) &&

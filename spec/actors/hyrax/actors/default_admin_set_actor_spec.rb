@@ -1,10 +1,11 @@
 RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:depositor) { create(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }
-  let(:work) { build(:generic_work) }
-  let(:admin_set) { create(:admin_set) }
+  let(:work) { build(:work) }
+  let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-  let(:env) { Hyrax::Actors::Environment.new(work, depositor_ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, depositor_ability, attributes) }
 
   describe "create" do
     let(:terminator) { Hyrax::Actors::Terminator.new }

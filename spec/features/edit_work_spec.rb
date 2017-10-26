@@ -1,12 +1,16 @@
 RSpec.feature 'Editing a work', type: :feature do
   let(:user) { create(:user) }
-  let(:work) { build(:work, user: user) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
+  let(:file_set) { create_for_repository(:file_set, user: user, title: ['ABC123xyz']) }
+  let(:work) do
+    w = build(:work, user: user)
+    w.member_ids += [file_set.id]
+    w.read_groups = [] # TODO: is this required?
+    persister.save(resource: w)
+  end
 
   before do
     sign_in user
-    work.ordered_members << create(:file_set, user: user, title: ['ABC123xyz'])
-    work.read_groups = []
-    work.save!
   end
 
   context 'when the user changes permissions' do

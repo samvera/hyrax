@@ -20,7 +20,7 @@ RSpec.describe 'PowerConverter' do
     context "with a SolrDocument" do
       subject { PowerConverter.convert(object, to: :sipity_entity) }
 
-      let(:object) { SolrDocument.new(id: '9999', has_model_ssim: ["GenericWork"]) }
+      let(:object) { SolrDocument.new(id: '9999', Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"]) }
       let(:workflow_state) { create(:workflow_state) }
       let!(:entity) do
         Sipity::Entity.create(proxy_for_global_id: 'gid://internal/GenericWork/9999',
@@ -35,7 +35,7 @@ RSpec.describe 'PowerConverter' do
       # This is poking knowledge over into the inner workings of Models::Work
       # but is a reasonable place to understand this.
       it 'will raise an exception if one has not been assigned' do
-        object = build(:generic_work)
+        object = build(:work)
         expect { PowerConverter.convert_to_sipity_entity(object) }.to raise_error RuntimeError, "Can't create an entity until the model has been persisted"
       end
     end

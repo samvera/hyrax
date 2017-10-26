@@ -13,12 +13,12 @@ RSpec.describe Hyrax::CollectionsService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:collection1) { create(:collection, :public, title: ['foo']) }
-    let!(:collection2) { create(:collection, :public, title: ['bar']) }
-    let!(:collection3) { create(:collection, :public, edit_users: [user.user_key], title: ['baz']) }
+    let!(:collection1) { create_for_repository(:collection, :public, title: ['foo']) }
+    let!(:collection2) { create_for_repository(:collection, :public, title: ['bar']) }
+    let!(:collection3) { create_for_repository(:collection, :public, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:admin_set, read_groups: ['public']) # this should never be returned.
+      create_for_repository(:admin_set, read_groups: ['public']) # this should never be returned.
     end
 
     context "with read access" do

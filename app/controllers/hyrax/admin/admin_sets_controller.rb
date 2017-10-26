@@ -1,6 +1,8 @@
 module Hyrax
+  # rubocop:disable Metrics/ClassLength
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
+    include Hyrax::ResourceController
 
     # added skip to allow flash notices. see https://github.com/samvera/hyrax/issues/202
     skip_before_action :filter_docs_with_read_access!
@@ -9,7 +11,11 @@ module Hyrax
 
     layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
-    self.form_class = Hyrax::Forms::AdminSetForm
+    self.change_set_class = Hyrax::AdminSetChangeSet
+    self.change_set_persister = Hyrax::AdminSetChangeSetPersister.new(
+      metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+      storage_adapter: Valkyrie.config.storage_adapter
+    )
 
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
@@ -106,12 +112,12 @@ module Hyrax
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
         add_breadcrumb action_breadcrumb, request.path
-        form
+        change_set
       end
 
       # initialize the form object
-      def form
-        @form ||= form_class.new(@admin_set, current_ability, repository)
+      def change_set
+        @change_set ||= change_set_class.new(@admin_set, current_ability, repository)
       end
 
       # Overrides the parent implementation so that the returned search builder
@@ -132,11 +138,12 @@ module Hyrax
       end
 
       def admin_set_params
-        form_class.model_attributes(params[:admin_set])
+        change_set_class.model_attributes(params[:admin_set])
       end
 
       def repository_class
         blacklight_config.repository_class
       end
+    # rubocop:enable Metrics/ClassLength
   end
 end
