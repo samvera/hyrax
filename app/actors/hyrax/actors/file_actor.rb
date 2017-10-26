@@ -22,11 +22,13 @@ module Hyrax
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-        Hydra::Works::AddFileToFileSet.call(file_set,
-                                            io,
-                                            relation,
-                                            versioning: false)
-        return false unless file_set.save
+        storage_adapter = Valkyrie::StorageAdapter.find(:disk)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        appender = Hyrax::FileAppender.new(storage_adapter: storage_adapter,
+                                           persister: persister,
+                                           files: [io])
+        appender.append_to(file_set)
+
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
         pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem

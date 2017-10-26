@@ -139,13 +139,12 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     describe "#edit" do
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
       let(:file_set) do
-        create_for_repository(:file_set, user: user)
+        create_for_repository(:file_set, user: user, content: file)
       end
 
       before do
-        binary = StringIO.new("hey")
-        Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
