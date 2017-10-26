@@ -7,16 +7,9 @@ module Hyrax
   # @note the default_processor_chain defined by Blacklight::Solr::SearchBuilderBehavior provides many possible points of override
   #
   class CollectionSearchBuilder < ::SearchBuilder
-    include FilterByType
-
     # @return [String] Solr field name indicating default sort order
     def sort_field
       Solrizer.solr_name('title', :sortable)
-    end
-
-    # This overrides the models in FilterByType
-    def models
-      collection_classes
     end
 
     # Sort results by title if no query was supplied.
@@ -25,5 +18,16 @@ module Hyrax
       return if solr_parameters[:q]
       solr_parameters[:sort] ||= "#{sort_field} asc"
     end
+
+    def by_depositor(solr_parameters)
+      solr_parameters[:fq] ||= []
+      solr_parameters[:fq] << "{!field f=#{DepositSearchBuilder.depositor_field} v=#{blacklight_params[:depositor]}}" if blacklight_params[:depositor].present?
+    end
+
+    private
+
+      def only_collections?
+        true
+      end
   end
 end

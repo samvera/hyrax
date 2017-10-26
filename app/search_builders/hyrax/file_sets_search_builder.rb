@@ -1,7 +1,7 @@
 module Hyrax
-  # Returns all works, either active or suppressed.
+  # Returns all file sets, either active or suppressed.
   # This should only be used by an admin user
-  class WorksSearchBuilder < ::SearchBuilder
+  class FileSetsSearchBuilder < ::SearchBuilder
     self.default_processor_chain -= [:only_active_works]
 
     def by_depositor(solr_parameters)
@@ -11,8 +11,9 @@ module Hyrax
 
     private
 
-      def only_works?
-        true
+      # This overrides the models in FilterByType
+      def models
+        [::FileSet]
       end
   end
 end
