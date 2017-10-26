@@ -1,19 +1,17 @@
 module Hyrax
   module CollectionBehavior
+    STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
+
     extend ActiveSupport::Concern
     # include Hydra::AccessControls::WithAccessRight
     include Hydra::WithDepositor # for access to apply_depositor_metadata
     # include Hydra::AccessControls::Permissions
     include Hyrax::CoreMetadata
-    # include Hydra::Works::CollectionBehavior
     include Hyrax::Noid
     include Hyrax::HumanReadableType
     include Hyrax::Permissions
 
     included do
-      #  validates_with HasOneTitleValidator
-      #  self.indexer = Hyrax::CollectionIndexer
-
       # Points at an image file that displays this work.
       attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
       # Points at a file that displays something about this work. Could be an image or a video.
@@ -113,7 +111,7 @@ module Hyrax
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
       def file_size_field
-        Solrizer.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
+        Solrizer.solr_name(:file_size, STORED_LONG)
       end
 
       # Solr field name works use to index member ids

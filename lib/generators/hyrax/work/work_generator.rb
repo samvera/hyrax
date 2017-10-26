@@ -30,10 +30,6 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
     template('controller.rb.erb', File.join('app/controllers/hyrax', class_path, "#{plural_file_name}_controller.rb"))
   end
 
-  def create_indexer
-    template('indexer.rb.erb', File.join('app/indexers', class_path, "#{file_name}_indexer.rb"))
-  end
-
   def create_change_set
     template('change_set.rb.erb', File.join('app/change_sets', class_path, "#{file_name}_change_set.rb"))
   end
@@ -95,7 +91,7 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
 
   def create_change_set_spec
     return unless rspec_installed?
-    template('change_set_spec.rb.erb', File.join('spec/change_sets/hyrax', class_path, "#{file_name}_change_set_spec.rb"))
+    template('change_set_spec.rb.erb', File.join('spec/change_sets/', class_path, "#{file_name}_change_set_spec.rb"))
   end
 
   def presenter_spec
