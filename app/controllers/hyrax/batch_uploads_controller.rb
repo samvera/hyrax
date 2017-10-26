@@ -67,7 +67,7 @@ module Hyrax
                                      params[:title].permit!.to_h,
                                      params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
-                                     attributes_for_actor.to_h.merge!(model: klass),
+                                     resource_params.to_h.merge!(model: klass),
                                      operation)
       end
 
@@ -75,8 +75,8 @@ module Hyrax
         params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
       end
 
-      def attributes_for_actor
-        raw_params = params[hash_key_for_curation_concern]
+      def resource_params
+        raw_params = params[resource_class.model_name.param_key]
         return {} unless raw_params
         ::Hyrax::BatchUploadChangeSet.model_attributes(raw_params)
       end
