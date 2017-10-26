@@ -22,7 +22,8 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
        file_name: "Getting+Started.pdf" }]
   end
   let(:attributes) { { remote_files: remote_files } }
-  let(:environment) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:environment) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   before do
     allow(terminator).to receive(:create).and_return(true)
