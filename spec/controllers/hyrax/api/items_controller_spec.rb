@@ -19,7 +19,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
   context 'with an HTTP GET or HEAD' do
     let(:token) { user.arkivo_token }
-    let(:item) { FactoryGirl.json(:post_item, token: token) }
+    let(:item) { FactoryBot.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
 
     context 'with a missing token' do
@@ -115,7 +115,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:deposited_file) { FileSet.where(label: item_hash['file']['filename']).take }
       let(:a_work) { build :generic_work, id: '123' }
       let!(:token) { user.arkivo_token }
-      let(:item) { FactoryGirl.json(:post_item, token: token) }
+      let(:item) { FactoryBot.json(:post_item, token: token) }
       let(:item_hash) { JSON.parse(item) }
 
       before do
@@ -159,7 +159,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before { post :create, body: item, params: { format: :json } }
 
       let(:token) { 'unfamiliar_token' }
-      let(:item) { FactoryGirl.json(:post_item, token: token) }
+      let(:item) { FactoryBot.json(:post_item, token: token) }
 
       it "is unathorized" do
         expect(response).not_to be_success
@@ -170,7 +170,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
   end
 
   context 'with an HTTP PUT' do
-    let(:put_item) { FactoryGirl.json(:put_item, token: token) }
+    let(:put_item) { FactoryBot.json(:put_item, token: token) }
     let(:token) { user.arkivo_token }
     let(:gw) { build :generic_work, id: '123' }
     let(:relation) { double }
@@ -265,7 +265,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
     context 'with a valid item and unfamiliar token' do
       let(:bad_token) { 'unfamiliar_token' }
-      let(:bad_token_item) { FactoryGirl.json(:put_item, token: bad_token) }
+      let(:bad_token_item) { FactoryBot.json(:put_item, token: bad_token) }
 
       before do
         request.env['RAW_POST_DATA'] = bad_token_item
@@ -296,7 +296,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
   context 'with an HTTP DELETE' do
     let(:token) { user.arkivo_token }
-    let(:item) { FactoryGirl.json(:post_item, token: token) }
+    let(:item) { FactoryBot.json(:post_item, token: token) }
     let(:item_hash) { JSON.parse(item) }
     let(:gw) { build :generic_work, id: '123' }
     let(:relation) { double }
