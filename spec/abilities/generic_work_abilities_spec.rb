@@ -5,7 +5,7 @@ RSpec.describe 'User' do
     subject { Ability.new(current_user) }
 
     let(:generic_work) { create_for_repository(:work, :private, user: creating_user) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { create(:user) }
 
     describe 'without embargo' do
       describe 'creator of object' do

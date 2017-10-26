@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Arkivo::Actor do
   subject { described_class.new(user, item) }
 
   let(:user) { create(:user) }
-  let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
+  let(:item) { JSON.parse(FactoryBot.json(:post_item)) }
   let(:storage_adapter) { Valkyrie::StorageAdapter.find(:disk) }
 
   describe 'Tempfile monkey-patches' do
