@@ -127,7 +127,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def work
-    Hyrax::Queries.find_work(Valkyrie::ID.new(work_id))
+    Hyrax::Queries.find_work(id: Valkyrie::ID.new(work_id))
   end
 
   private
