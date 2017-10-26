@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Arkivo::SchemaValidator do
-  let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
+  let(:item) { JSON.parse(FactoryBot.json(:post_item)) }
 
   it 'ensures a token is included' do
     expect do

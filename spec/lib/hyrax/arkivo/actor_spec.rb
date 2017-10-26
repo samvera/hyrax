@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Arkivo::Actor do
   subject { described_class.new(user, item) }
 
   let(:user) { create(:user) }
-  let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
+  let(:item) { JSON.parse(FactoryBot.json(:post_item)) }
   let(:work_actor) { instance_double(Hyrax::Actors::TransactionalRequest) }
   let(:file_actor) { double }
 
@@ -41,7 +41,7 @@ RSpec.describe Hyrax::Arkivo::Actor do
   end
 
   describe '#update_work_from_item' do
-    let(:item) { JSON.parse(FactoryGirl.json(:put_item)) }
+    let(:item) { JSON.parse(FactoryBot.json(:put_item)) }
     let(:title) { ['ZZZZZ'] }
     let(:description) { ['This is rather lengthy.'] }
     let(:checksum) { 'abc123' }

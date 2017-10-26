@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Dashboard::ProfilesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   before do
     sign_in user
@@ -71,7 +71,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
 
   describe "#update" do
     context "the profile of another user" do
-      let(:another_user) { FactoryGirl.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
 
       it "does not allow other users to update" do
         post :update, params: { id: another_user.user_key, user: { avatar: nil } }

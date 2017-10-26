@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Admin::UsersPresenter do
   let(:instance) { described_class.new }
-  let!(:user) { FactoryGirl.create(:user) }
-  let!(:admin_user) { FactoryGirl.create(:user, groups: 'admin') }
+  let!(:user) { FactoryBot.create(:user) }
+  let!(:admin_user) { FactoryBot.create(:user, groups: 'admin') }
   let!(:audit_user) { User.audit_user }
   let!(:batch_user) { User.batch_user }
 
