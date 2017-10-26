@@ -97,6 +97,12 @@ Hyrax.config do |config|
   # Stream realtime notifications to users in the browser
   # config.realtime_notifications = true
 
+  # Configure the fedora_schema
+  # Add new or change existing predicates with
+  #   config.fedora_schema[:new_predicate] = RDF::URI.new('http://www.example.com/new_predicate')
+  # Replace the whole thing with
+  #   config.fedora_schema = { }
+
   # Register new linked_data_resource classes; used to define special behavior for retrieving a label from an
   #   external service for the given attribute.
   #   @example :based_near is already registerd to use Hyrax::LinkedDataResources::GeonamesResource
