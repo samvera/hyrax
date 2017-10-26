@@ -10,40 +10,60 @@ module Hyrax
   module Arkivo
     class Actor
       attr_reader :user, :item
-
+      class_attribute :change_set_persister
+      self.change_set_persister = Hyrax::ChangeSetPersister.new(
+        metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+        storage_adapter: Valkyrie.config.storage_adapter
+      )
       def initialize(user, item)
         @user = user
         @item = item
       end
 
       def create_work_from_item
-        work = Hyrax.primary_work_type.new
-        work_actor = Hyrax::CurationConcern.actor
+        change_set = build_change_set(Hyrax.primary_work_type.new)
         create_attrs = attributes.merge(arkivo_checksum: item['file']['md5'])
-        env = Actors::Environment.new(work, current_ability, create_attrs)
-        raise "Unable to create work. #{work.errors.messages}" unless work_actor.create(env)
+        raise "Unable to create work. #{work.errors.messages}" unless change_set.validate(create_attrs)
+        file_set = create_file_set
+        raise "Unable to create work. #{work.errors.messages}" unless change_set.validate(create_attrs.merge(member_ids: [file_set.id]))
+        change_set.sync
+        work = nil
+        change_set_persister.buffer_into_index do |buffered_changeset_persister|
+          work = buffered_changeset_persister.save(change_set: change_set)
+        end
+        work
+      end
 
+      def create_file_set
         file_set = ::FileSet.new
 
         file_actor = ::Hyrax::Actors::FileSetActor.new(file_set, user)
         file_actor.create_metadata
         file_set.label = item['file']['filename']
         file_actor.create_content(file) # item['file']['contentType']
-        file_actor.attach_to_work(work)
+        file_set
+      end
 
-        work
+      def build_change_set(work)
+        DynamicChangeSet.new(work, ability: current_ability)
       end
 
       def update_work_from_item(work)
-        work_actor = Hyrax::CurationConcern.actor
-        work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
-        env = Actors::Environment.new(work, current_ability, work_attributes)
-        work_actor.update(env)
+        change_set = build_change_set(work)
 
-        file_set = work.file_sets.first
+        work_attributes = default_attributes.merge(attributes).merge(arkivo_checksum: item['file']['md5'])
+
+        change_set.validate(work_attributes)
+        change_set.sync
+        updated = nil
+        change_set_persister.buffer_into_index do |persist|
+          updated = persist.save(change_set: change_set)
+        end
+
+        file_set = Hyrax::Queries.find_members(resource: work, model: FileSet).first
         file_actor = ::Hyrax::Actors::FileSetActor.new(file_set, user)
         file_actor.update_content(file)
-        work
+        updated
       end
 
       def destroy_work(work)
