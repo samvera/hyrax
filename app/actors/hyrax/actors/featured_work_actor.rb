@@ -20,7 +20,7 @@ module Hyrax
       private
 
         def cleanup_featured_works(curation_concern)
-          FeaturedWork.where(work_id: curation_concern.id).destroy_all
+          FeaturedWork.where(work_id: curation_concern.id.to_s).destroy_all
         end
 
         def check_featureability(curation_concern)
