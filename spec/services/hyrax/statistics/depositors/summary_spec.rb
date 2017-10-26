@@ -1,20 +1,21 @@
 RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let!(:old_work) { create_for_repository(:work, user: user1) }
+  let!(:old_work) do
+    work = create_for_repository(:work, user: user1)
+    work.created_at = two_days_ago_date.to_datetime
+    persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+    persister.save(resource: work)
+    work
+  end
   let(:two_days_ago_date) { Time.zone.now - 2.days }
 
   let(:start_date) { nil }
   let(:end_date) { nil }
   let!(:work1) { create_for_repository(:work, user: user1) }
   let!(:work2) { create_for_repository(:work, user: user2) }
-  let!(:collection1) { create(:public_collection, user: user1) }
+  let!(:collection1) { create_for_repository(:public_collection, user: user1) }
   let(:service) { described_class.new(start_date, end_date) }
-
-  before do
-    allow(old_work).to receive(:create_date).and_return(two_days_ago_date.to_datetime)
-    old_work.update_index
-  end
 
   describe '.depositors' do
     it 'is a convenience method' do
