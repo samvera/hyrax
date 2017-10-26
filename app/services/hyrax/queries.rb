@@ -58,19 +58,19 @@ module Hyrax
       metadata_adapter_query_service.find_inverse_references_by(resource: resource, property: property)
     end
 
-    def find_work(id: id)
+    def find_work(id:)
       resource = find_by(id: id)
       raise Hyrax::ObjectNotFoundError, "Couldn't find work with 'id'=#{id}" unless resource.work?
       resource
     end
 
-    def find_file_set(id: id)
+    def find_file_set(id:)
       resource = find_by(id: id)
       raise Hyrax::ObjectNotFoundError, "Couldn't find file set with 'id'=#{id}" unless resource.file_set?
       resource
     end
 
-    def find_collection(id: id)
+    def find_collection(id:)
       resource = find_by(id: id)
       raise Hyrax::ObjectNotFoundError, "Couldn't find collection with 'id'=#{id}" unless resource.collection?
       resource
