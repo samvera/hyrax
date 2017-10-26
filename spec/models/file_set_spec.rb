@@ -121,14 +121,11 @@ RSpec.describe FileSet do
 
   describe 'create_thumbnail' do
     let(:file_set) do
-      create_for_repository(:file_set)
+      create_for_repository(:file_set, content: file)
     end
+    let(:file) { fixture_file_upload('/countdown.avi', 'video/quicktime') }
 
     describe 'with a video', if: Hyrax.config.enable_ffmpeg do
-      before do
-        allow(file_set).to receive(mime_type: 'video/quicktime') # Would get set by the characterization job
-        Hydra::Works::AddFileToFileSet.call(subject, File.open("#{fixture_path}/countdown.avi", 'rb'), :original_file)
-      end
       it 'makes a png thumbnail' do
         file_set.create_thumbnail
         expect(file_set.thumbnail.content.size).to eq 4768 # this is a bad test. I just want to show that it did something.
