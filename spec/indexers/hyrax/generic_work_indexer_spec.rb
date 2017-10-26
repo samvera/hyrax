@@ -50,7 +50,7 @@ RSpec.describe GenericWorkIndexer do
   end
 
   context "with an AdminSet" do
-    let(:work) { create_for_repository(:work, admin_set: admin_set) }
+    let(:work) { create_for_repository(:work, admin_set_id: admin_set.id) }
     let(:admin_set) { create_for_repository(:admin_set, title: ['Title One']) }
 
     it "indexes the correct fields" do
