@@ -9,21 +9,15 @@ module Hyrax
     end
 
     def number_of_works(user = current_user)
-      Hyrax::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
-    rescue RSolr::Error::ConnectionRefused
-      'n/a'
+      Hyrax::Statistics::Depositors::Depositor.works(depositor: user)
     end
 
     def number_of_files(user = current_user)
-      ::FileSet.where(DepositSearchBuilder.depositor_field => user.user_key).count
-    rescue RSolr::Error::ConnectionRefused
-      'n/a'
+      Hyrax::Statistics::Depositors::Depositor.file_sets(depositor: user)
     end
 
     def number_of_collections(user = current_user)
-      ::Collection.where(DepositSearchBuilder.depositor_field => user.user_key).count
-    rescue RSolr::Error::ConnectionRefused
-      'n/a'
+      Hyrax::Statistics::Depositors::Depositor.collections(depositor: user)
     end
   end
 end

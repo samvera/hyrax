@@ -29,57 +29,49 @@ RSpec.describe DashboardHelper, type: :helper do
   end
 
   describe "#number_of_works" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 
     before do
-      create_models("GenericWork", user1, user2)
+      create_models(:work, user1, user2)
     end
 
     it "finds 3 works" do
-      expect(helper.number_of_works(user1)).to eq(3)
+      expect(helper.number_of_works(user1)).to eq(1)
     end
   end
 
   describe "#number_of_files" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 
     before do
-      create_models("FileSet", user1, user2)
+      create_models(:file_set, user1, user2)
     end
 
     it "finds only 3 files" do
-      expect(helper.number_of_files(user1)).to eq(3)
+      expect(helper.number_of_files(user1)).to eq(1)
     end
   end
 
   describe "#number_of_collections" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 
     before do
-      create_models("Collection", user1, user2)
+      create_models(:collection, user1, user2)
     end
 
     it "finds only 3 files" do
-      expect(helper.number_of_collections(user1)).to eq(3)
+      expect(helper.number_of_collections(user1)).to eq(1)
     end
   end
 
   def create_models(model, user1, user2)
     # deposited by the first user
-    3.times do |t|
-      conn.add id: "199#{t}", Solrizer.solr_name('depositor', :stored_searchable) => user1.user_key, Valkyrie::Persistence::Solr::Queries::MODEL => [model],
-               Solrizer.solr_name('depositor', :symbol) => user1.user_key
-    end
+    create_for_repository(model, user: user1)
 
     # deposited by the second user, but editable by the first
-    conn.add id: "1994", Solrizer.solr_name('depositor', :stored_searchable) => user2.user_key, Valkyrie::Persistence::Solr::Queries::MODEL => [model],
-             Solrizer.solr_name('depositor', :symbol) => user2.user_key, "edit_access_person_ssim" => user1.user_key
-    conn.commit
+    create_for_repository(model, user: user2, edit_users: [user1.user_key])
   end
 end
