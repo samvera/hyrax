@@ -1,11 +1,12 @@
 RSpec.describe FixityCheckJob do
+  include ActionDispatch::TestProcess
   let(:user) { create(:user) }
-
   let(:file_set) do
-    create_for_repository(:file_set, user: user).tap do |file|
-      Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
-    end
+    create_for_repository(:file_set,
+                          user: user,
+                          content: file)
   end
+  let(:file) { fixture_file_upload('/world.png', 'image/png') }
   let(:file_id) { file_set.original_file.id }
 
   describe "called with perform_now" do

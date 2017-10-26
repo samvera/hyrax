@@ -1,18 +1,19 @@
 RSpec.describe 'Deleting a work', type: :feature do
+  include ActionDispatch::TestProcess
   let(:user) { create(:user) }
-  let(:file_set) { create_for_repository(:file_set, user: user, title: ['ABC123xyz']) }
-  let(:file) { File.open(fixture_path + '/world.png') }
-  let(:persister) { Valkyrie.config.metadata_adapter.persister }
+  let(:file_set) do
+    create_for_repository(:file_set,
+                          user: user,
+                          title: ['ABC123xyz'],
+                          content: file)
+  end
+  let(:file) { fixture_file_upload('/world.png', 'image/png') }
   let(:work) do
-    w = build(:work, user: user)
-    w.member_ids += [file_set.id]
-    w.read_groups = [] # TODO: is this required?
-    persister.save(resource: w)
+    create_for_repository(:work, user: user, member_ids: [file_set.id])
   end
 
   before do
     sign_in user
-    Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
   end
 
   context 'After deleting a work from the work show page' do
