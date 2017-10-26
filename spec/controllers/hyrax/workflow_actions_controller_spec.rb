@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
   let(:generic_work) { create_for_repository(:work) }
   let(:form) { instance_double(Hyrax::Forms::WorkflowActionForm) }
 

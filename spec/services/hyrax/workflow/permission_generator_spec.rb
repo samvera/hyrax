@@ -1,7 +1,7 @@
 module Hyrax
   module Workflow
     RSpec.describe PermissionGenerator do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
       let(:role) { Sipity::Role.create!(name: 'creating_user') }
       let(:workflow) { create(:workflow, name: 'workflow') }
       let(:workflow_state) { workflow.initial_workflow_state }

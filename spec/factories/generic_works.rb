@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :work, class: GenericWork do
     to_create do |instance|
       persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
 
     transient do
-      user { FactoryGirl.create(:user) }
+      user { FactoryBot.create(:user) }
       # Set to true (or a hash) if you want to create an admin set
       with_admin_set false
     end
@@ -131,6 +131,6 @@ FactoryGirl.define do
     end
 
     title ['Test title']
-    depositor { FactoryGirl.create(:user).user_key }
+    depositor { FactoryBot.create(:user).user_key }
   end
 end

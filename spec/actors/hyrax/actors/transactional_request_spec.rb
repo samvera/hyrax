@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
   let(:good_actor) do
     Class.new(Hyrax::Actors::AbstractActor) do
       def create(_attributes)
-        FactoryGirl.create(:user)
+        FactoryBot.create(:user)
       end
     end
   end

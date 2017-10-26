@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :operation, class: Hyrax::Operation do
     operation_type "Test operation"
 
