@@ -4,7 +4,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:curation_concern) { build(:work) }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -55,10 +56,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
         { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
       end
 
-      before do
-        curation_concern.member_of_collections = [collection]
-        curation_concern.save!
-      end
+      let(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [collection.id]) }
 
       it "removes the work from that collection" do
         expect(subject.create(env)).to be true

@@ -2,7 +2,8 @@ require 'redlock'
 
 RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:admin_set) { build(:admin_set, with_permission_template: { with_active_workflow: true }) }
