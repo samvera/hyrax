@@ -46,7 +46,7 @@ module Hyrax
           end
 
           def search_builder
-            DepositSearchBuilder.new([:include_depositor_facet], self)
+            DepositSearchBuilder.new([:include_depositor_facet, :filter_models], self)
           end
 
           # TODO: This can probably be pushed into the DepositSearchBuilder
