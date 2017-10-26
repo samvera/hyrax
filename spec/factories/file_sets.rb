@@ -1,4 +1,4 @@
-FactoryGirl.define do
+fFactoryGirl.define do
   factory :file_set do
     transient do
       user { FactoryGirl.create(:user) }
