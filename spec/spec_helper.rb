@@ -133,7 +133,6 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
@@ -148,6 +147,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    Valkyrie::MetadataAdapter.find(:indexing_persister).persister.wipe!
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
     Hyrax.config.enable_noids = false
@@ -165,8 +165,7 @@ RSpec.configure do |config|
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
     if example.metadata[:clean_repo]
-      $stderr.puts "Repository cleaning was requested but is disable presently"
-      # ActiveFedora::Cleaner.clean!
+      Valkyrie::MetadataAdapter.find(:indexing_persister).persister.wipe!
     end
   end
 
