@@ -11,20 +11,15 @@ RSpec.describe Hyrax::Stats::WorkStatusSearchBuilder do
   describe "#query" do
     subject { instance.query }
 
-    let(:stub_relation) do
-      instance_double(Hyrax::WorkRelation,
-                      search_model_clause: "(model clauses)")
-    end
-
     before do
-      # Prevent the stub relation from returning different filters depending on
+      # Prevent the search builder from returning different filters depending on
       # how many models have been generated
-      allow(instance).to receive(:work_relation).and_return(stub_relation)
+      allow_any_instance_of(Hyrax::FilterByType).to receive(:models_to_solr_clause).and_return("(model clauses)")
     end
 
     it "sets required parameters" do
       expect(subject['facet.field']).to eq ["suppressed_bsi"]
-      expect(subject['fq']).to eq "(model clauses)"
+      expect(subject['fq']).to eq ["{!terms f=internal_resource_ssim}(model clauses)"]
       expect(subject['facet.missing']).to eq true
       expect(subject['rows']).to eq 0
     end

@@ -12,9 +12,6 @@ module Hyrax
       # the number of users in the database
       solr_parameters[:"facet.limit"] = ::User.count
 
-      # only get work information
-      solr_parameters[:fq] = Hyrax::WorkRelation.new.search_model_clause
-
       # we only want the facte counts not the actual data
       solr_parameters[:rows] = 0
     end
@@ -22,5 +19,11 @@ module Hyrax
     def self.depositor_field
       @depositor_field ||= Solrizer.solr_name('depositor', :symbol).freeze
     end
+
+    private
+
+      def only_works?
+        true
+      end
   end
 end
