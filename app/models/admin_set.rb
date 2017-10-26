@@ -62,7 +62,7 @@ class AdminSet < Valkyrie::Resource
 
   # Creates the default AdminSet and an associated PermissionTemplate with workflow
   def self.find_or_create_default_admin_set_id
-    unless exists?(DEFAULT_ID)
+    unless Hyrax::Queries.exists?(Valkyrie::ID.new(DEFAULT_ID))
       Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
     end
     DEFAULT_ID
