@@ -6,5 +6,11 @@ module Hyrax
   class WorkSearchBuilder < ::SearchBuilder
     include SingleResult
     include FilterSuppressedWithRoles
+
+    private
+
+      def only_works?
+        true
+      end
   end
 end
