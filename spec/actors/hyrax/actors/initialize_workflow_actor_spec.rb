@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Actors::InitializeWorkflowActor do
   end
 
   describe 'create' do
-    let(:curation_concern) { build(:work, admin_set: admin_set) }
+    let(:curation_concern) { build(:work, admin_set_id: admin_set.id) }
     let!(:admin_set) { create_for_repository(:admin_set, with_permission_template: { with_workflows: true }) }
 
     it 'creates an entity' do
