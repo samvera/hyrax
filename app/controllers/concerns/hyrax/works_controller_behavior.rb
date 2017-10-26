@@ -24,16 +24,10 @@ module Hyrax
       end
     end
 
-    def new
-      authorize! :create, resource_class
-
-      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
-      # however it isn't a required field for someone to submit via json.
-      # Set the first admin_set they have access to.
-      admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
-      @change_set = change_set_class.new(new_resource,
-                                         depositor: current_user.user_key,
-                                         admin_set_id: admin_set && admin_set.id).prepopulate!
+    def build_change_set(resource)
+      change_set_class.new(resource,
+                           depositor: current_user.user_key,
+                           search_context: search_context)
     end
 
     def edit
