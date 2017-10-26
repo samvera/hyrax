@@ -41,7 +41,8 @@ module Hyrax
         @work_id = entity.proxy_for_global_id.sub(/.*\//, '')
         @title = entity.proxy_for.title.first
         @comment = comment.respond_to?(:comment) ? comment.comment.to_s : ''
-        @recipients = recipients
+        # Convert to hash with indifferent access to allow both string and symbol keys
+        @recipients = recipients.with_indifferent_access
         @user = user
         @entity = entity
       end
@@ -73,7 +74,7 @@ module Hyrax
         end
 
         def users_to_notify
-          recipients.fetch('to', []) + recipients.fetch('cc', [])
+          recipients.fetch(:to, []) + recipients.fetch(:cc, [])
         end
     end
   end
