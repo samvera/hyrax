@@ -14,7 +14,7 @@ module Hyrax
         elsif thumbnail?(thumb)
           thumbnail_path(thumb)
         else
-          default_image
+          default_image(object)
         end
       end
 
@@ -35,7 +35,8 @@ module Hyrax
                                                          file: 'thumbnail')
         end
 
-        def default_image
+        def default_image(object)
+          return ActionController::Base.helpers.image_path 'collection.png' if object.is_a? Collection
           ActionController::Base.helpers.image_path 'default.png'
         end
 
