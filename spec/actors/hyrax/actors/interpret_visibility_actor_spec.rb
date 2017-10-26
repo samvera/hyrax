@@ -9,7 +9,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:one_year_from_today) { Time.zone.today + 1.year }
   let(:two_years_from_today) { Time.zone.today + 2.years }
   let(:date) { Time.zone.today + 2 }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
