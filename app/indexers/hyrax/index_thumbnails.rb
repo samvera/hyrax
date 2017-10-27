@@ -12,6 +12,7 @@ module Hyrax
     # Write the thumbnail paths into the solr_document
     # @return [Hash] solr_document the solr document with the thumbnail field
     def to_solr
+      return {} if resource.is_a? Hyrax::FileNode
       { thumbnail_field => thumbnail_path }
     end
 
