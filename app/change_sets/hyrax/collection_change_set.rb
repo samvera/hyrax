@@ -4,8 +4,6 @@ module Hyrax
     attr_accessor :current_ability, :repository
 
     delegate :id, :depositor, :permissions, to: :model
-    class_attribute :member_search_builder_class
-    self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
 
     delegate :human_readable_type, :member_ids, :representative_id, :thumbnail_id, to: :model
     property :resource_type, multiple: false, required: false
@@ -79,12 +77,7 @@ module Hyrax
 
       # Override this method if you have a different way of getting the member's ids
       def member_work_ids
-        response = repository.search(member_search_builder.merge(fl: 'id').query).response
-        response.fetch('docs').map { |doc| doc['id'] }
-      end
-
-      def member_search_builder
-        @member_search_builder ||= member_search_builder_class.new(self)
+        Hyrax::Queries.find_inverse_references_by(resource: self, property: :member_of_collection_ids).map(&:id).map(&:to_s)
       end
 
       def member_presenters(member_ids)
