@@ -260,8 +260,10 @@ button.branding-banner-remove:hover {
   width: 100%;
   min-height: 270px;
   border-radius: 1em;
+
   .hyc-title {
     padding: 1em;
+
     h1 {
       font-size: 2.5em;
       color: #fff;
@@ -270,27 +272,35 @@ button.branding-banner-remove:hover {
       text-shadow: 1px 2px 3px rgba(0,0,0,0.5);
       display: inline-block;
     }
+
     .label {
       margin-left:0.5em;
       box-shadow: 1px 2px 3px rgba(0,0,0,0.25);
       border: 1px solid rgba(255,255,255,0.5);
       vertical-align: 100%;
     }
+
   }
+
   .hyc-logos {
     padding: 0 1em;
+
     a {
       display: inline-block;
       text-decoration: none;
     }
+
     img {
       display: inline-block;
       padding: 0 1em 1em 0;
       width: auto;
       height: 50px;
     }
+
   }
+
   .hyc-bugs {
+
     div {
       padding: 1em;
       position: absolute;
@@ -298,6 +308,7 @@ button.branding-banner-remove:hover {
       color: #fff;
       text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
     }
+
     .hyc-item-count {
       top: 0;
       right: 0;
@@ -309,63 +320,75 @@ button.branding-banner-remove:hover {
       text-shadow: none;
       padding: 0.5em 1em;
     }
+
     .hyc-created-by {
       bottom: 0;
       left: 0;
     }
+
     .hyc-last-updated {
       bottom: 0;
       right: 0;
     }
+
   }
+
 }
 
 .hyc-generic {
+
   .hyc-title {
+
     h1 {
       font-size: 2.5em;
       margin: 0;
       padding: 0;
       display: inline-block;
     }
+
     .label {
       margin-left: 0.5em;
       vertical-align: 100%;
     }
+
   }
+
   .hyc-logos {
     padding: 0;
+
     a {
       display: inline-block;
       text-decoration: none;
     }
+
     img {
       display: inline-block;
       padding: 1em 1em 1em 0;
       width: auto;
       height: 60px;
     }
+
   }
+
   .hyc-bugs {
     display: flex;
+
     div {
       padding: 0;
       margin: 0;
       font-size: 0.9em;
     }
-    .hyc-item-count {
-    }
+
     .hyc-item-count::after {
       content: "\00a0\00a0•\00a0\00a0";
     }
-    .hyc-created-by {
-    }
+
     .hyc-created-by::after {
       content: "\00a0\00a0•\00a0\00a0";
     }
-    .hyc-last-updated {
-    }
+
   }
+
 }
 
 .hyc-description {
@@ -376,28 +399,33 @@ button.branding-banner-remove:hover {
 
 .hyc-metadata {
   padding: 0 2em 0 1em;
+
   h2 {
-    margin: 0 0 0.5em 0;
     font-size: 1.25em;
+    margin: 0 0 0.5em;
   }
+
   dl {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
     border-top: 1px solid #ddd;
+    width: 100%;
   }
+
   div {
+    border-bottom: 1px solid #ddd;
     display: flex;
     padding: 3px;
-    border-bottom: 1px solid #ddd;
-    dt{
-      font-weight: bold;
+
+    dt {
       flex-basis: 115px;
+      font-weight: bold;
     }
+
     dd {
       flex-basis: auto;
     }
+
   }
+
 }
 
 .hyc-blacklight {
@@ -405,53 +433,69 @@ button.branding-banner-remove:hover {
 }
 
 .hyc-bl-title {
+
   h2 {
-    margin: 0 0 0.5em;
     font-size: 1.5em;
+    margin: 0 0 0.5em;
   }
+
 }
 
 .hyc-bl-sort {
   margin-bottom: 1em;
   margin-top: 1em;
+
   form {
+
     fieldset {
       margin: 0;
     }
+
   }
+
   .view-type {
     margin-left: 1em;
   }
+
   label {
     font-weight: normal;
   }
+
 }
 
 .hyc-bl-results {
+
   .alert {
     margin: 0;
   }
+
   th {
     white-space: nowrap;
   }
+
 }
 
 .hyc-bl-pager {
   margin-bottom: 2em;
+
   .pager {
     margin: 0;
     padding: 0;
   }
+
   .pagination {
     display: block;
     margin: 0;
     padding: 0;
+
     li a,
     .active span {
       border-radius: 3px;
       margin-right: 3px;
     }
+
   }
+
 }
 
 .tiny-nudge {
