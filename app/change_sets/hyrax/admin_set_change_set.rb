@@ -3,7 +3,7 @@ module Hyrax
     # self.terms = [:title, :description, :thumbnail_id]
     property :title, multiple: false, required: true
     property :description, multiple: true, required: false
-    delegate :member_ids, :thumbnail_id, to: :model
+    delegate :member_ids, :thumbnail_id, to: :resource
 
     # Cast any array values on the model to scalars.
     def [](key)
@@ -13,14 +13,14 @@ module Hyrax
 
     def permission_template
       @permission_template ||= begin
-                                 template_model = PermissionTemplate.find_or_create_by(admin_set_id: model.id)
-                                 PermissionTemplateForm.new(template_model)
+                                 template_model = PermissionTemplate.find_or_create_by(admin_set_id: model.id.to_s)
+                                 Forms::PermissionTemplateForm.new(template_model)
                                end
     end
 
     def thumbnail_title
-      return unless model.thumbnail
-      model.thumbnail.title.first
+      return unless thumbnail_id
+      Hyrax::Queries.find_by(id: thumbnail_id).title.first
     end
 
     class << self
@@ -39,10 +39,26 @@ module Hyrax
       end
     end
 
+    # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
+    def select_files
+      Hash[all_files_with_access]
+    end
+
     private
 
+      def all_files_with_access
+        member_presenters(member_work_ids).flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
+      end
+
+      # Override this method if you have a different way of getting the member's ids
       def member_work_ids
-        model.member_ids
+        Hyrax::Queries.find_inverse_references_by(resource: resource, property: :admin_set_id).map(&:id).map(&:to_s)
+      end
+
+      def member_presenters(member_ids)
+        PresenterFactory.build_for(ids: member_ids,
+                                   presenter_class: WorkShowPresenter,
+                                   presenter_args: [nil])
       end
   end
 end
