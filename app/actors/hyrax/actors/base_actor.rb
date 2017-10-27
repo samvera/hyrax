@@ -36,7 +36,7 @@ module Hyrax
         env.curation_concern.in_collection_ids.each do |id|
           destination_collection = Hyrax::Queries.find_by(id: id)
           destination_collection.members.delete(env.curation_concern)
-          destination_collection.update_index
+          solr_persister.save(resource: destination_collection)
         end
 
         env.change_set_persister.buffer_into_index do |persist|
@@ -45,6 +45,10 @@ module Hyrax
       end
 
       private
+
+        def solr_persister
+          @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
+        end
 
         def run_callbacks(hook, env)
           Hyrax.config.callback.run(hook, env.curation_concern, env.user)
