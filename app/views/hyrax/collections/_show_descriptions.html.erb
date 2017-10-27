@@ -1,8 +1,8 @@
-<table>
+<dl>
 	<% present_terms(@presenter, @presenter.terms_with_values) do |r, term| %>
-		<tr>
-			<td><%= r.label(term) %></td>
-			<td><%= r.value(term) %></td>
-		</tr>
+		<div>
+			<dt><%= r.label(term) %></dt>
+			<dd><%= r.value(term) %></dd>
+		</div>
 	<% end %>
-</table>
+</dl>

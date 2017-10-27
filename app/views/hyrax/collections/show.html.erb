@@ -1,24 +1,17 @@
-<%
-   provide :page_title, construct_page_title(@presenter.title)
-
-   if banner_file(@presenter.id).blank?
-     header_class = 'hyc-generic'
-     header_data_attr = ''
-	 else
-	   header_class = 'hyc-banner'
-	   header_data_attr = "data-background=\"#{banner_file(@presenter.id)}\""
-	 end
-%>
-
+<% provide :page_title, construct_page_title(@presenter.title) %>
 <div class="hyc-container" itemscope itemtype="http://schema.org/CollectionPage">
 	<div class="row hyc-header">
 		<div class="col-md-12">
 
-		  <header class="<%=header_class%>" <%=header_data_attr%>>
+		  <% unless banner_file(@presenter.id).blank? %>
+		    <header class="hyc-banner" style="background-image:url(<%= banner_file(@presenter.id) %>)">
+		  <% else %>
+		    <header class="hyc-generic">
+		  <% end %>
 
 				<div class="hyc-title">
 					<h1><%=@presenter.title.first%></h1>
-				  <span class="label label-success">Collection</span> <%# Ask Lynette where you can grab "User Collection" from  %>
+				  <span class="label label-success">Collection</span>
 				  <%= @presenter.permission_badge %>
 				</div>
 
@@ -45,7 +38,7 @@
 				      <%= 'Item'.pluralize(@presenter.total_viewable_items) %></div>
 
 			      <% unless @presenter.creator.blank? %>
-			        <div class="hyc-created-by">Created by: <%= @presenter.creator.first %></div> <%# Ask Lynette why lname, fname... this is hard to style in inline lists  %>
+			        <div class="hyc-created-by">Created by: <%= @presenter.creator.first %></div>
 			      <% end %>
 
 			      <% unless @presenter.modified_date.blank? %>
@@ -71,7 +64,6 @@
     </div>
   </div>
 
-  <!-- BL1 -->
 	<div class="row hyc-blacklight hyc-bl-title">
 	  <div class="col-md-12">
 			<h2>
@@ -84,28 +76,24 @@
 		</div>
 	</div>
 
-  <!-- BL2 -->
   <div class="row hyc-blacklight hyc-bl-search">
     <div class="col-md-6 col-md-offset-6">
       <%= render 'search_form', presenter: @presenter %>
     </div>
   </div>
 
-	<!-- BL3 -->
 	<div class="row hyc-blacklight hyc-bl-sort">
 		<div class="col-md-12">
 			<%= render 'sort_and_per_page', collection: @presenter %>
 		</div>
 	</div>
 
-	<!-- BL4 -->
 	<div class="row hyc-blacklight hyc-bl-results">
 		<div class="col-md-12">
 			<%= render_document_index @member_docs %>
 		</div>
 	</div>
 
-  <!-- BL5 -->
 	<div class="row hyc-blacklight hyc-bl-pager">
 		<div class="col-md-12">
 			<%= render 'paginate' %>
@@ -113,7 +101,3 @@
 	</div>
 
 </div>
-
-
-<%#= render 'collection_title', presenter: @presenter %>
-<%#= render 'media_display', presenter: @presenter %>

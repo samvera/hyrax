@@ -18,7 +18,6 @@ header {
 }
 
 
-
 .collection-icon,
 .collection-icon-search {
   display: block;
@@ -243,21 +242,6 @@ button.branding-banner-remove:hover {
   }
 }
 
-// From coll-landing branch -- TODO: Confirm these are still needed.
-.parent{
-  width:200px;
-  height:200px;
-  position:absolute;
-  z-index:0;
-}
-
-.inner{
-  position:absolute;
-  z-index:1;
-  bottom:0;
-  right:0;
-}
-
 // Issue 1428 Styles (DT)
 
 .hyc-header {
@@ -396,20 +380,23 @@ button.branding-banner-remove:hover {
     margin: 0 0 0.5em 0;
     font-size: 1.25em;
   }
-  table {
+  dl {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border-top: 1px solid #ddd;
   }
-  td:first-child {
-    font-weight: bold;
-    width: 1%;
-    white-space: nowrap;
-  }
-  td {
-    padding: 5px;
+  div {
+    display: flex;
+    padding: 3px;
     border-bottom: 1px solid #ddd;
+    dt{
+      font-weight: bold;
+      flex-basis: 115px;
+    }
+    dd {
+      flex-basis: auto;
+    }
   }
 }
 
@@ -419,25 +406,24 @@ button.branding-banner-remove:hover {
 
 .hyc-bl-title {
   h2 {
-    margin: 0 0 0.5em 0;
+    margin: 0 0 0.5em;
     font-size: 1.5em;
   }
 }
 
-.hyc-bl-search {
-}
-
 .hyc-bl-sort {
-  margin-top: 1em;
   margin-bottom: 1em;
-  fieldset {
-   margin:0 !important;
+  margin-top: 1em;
+  form {
+    fieldset {
+      margin: 0;
+    }
   }
   .view-type {
     margin-left: 1em;
   }
   label {
-   font-weight: normal;
+    font-weight: normal;
   }
 }
 
@@ -457,12 +443,13 @@ button.branding-banner-remove:hover {
     padding: 0;
   }
   .pagination {
+    display: block;
     margin: 0;
     padding: 0;
-    display: block;
-    li a, .active span {
-      border-radius: 3px !important;
-      margin-right: 3px !important;
+    li a,
+    .active span {
+      border-radius: 3px;
+      margin-right: 3px;
     }
   }
 }
