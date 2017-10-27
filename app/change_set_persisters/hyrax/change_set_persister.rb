@@ -74,6 +74,10 @@ module Hyrax
       end
     end
 
+    def with(metadata_adapter:)
+      yield self.class.new(metadata_adapter: metadata_adapter, storage_adapter: storage_adapter)
+    end
+
     before_delete do |params|
       parents = query_service.find_inverse_references_by(resource: params[:change_set].resource, property: :member_ids)
       parents.each do |parent|
