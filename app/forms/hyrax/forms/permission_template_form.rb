@@ -68,7 +68,7 @@ module Hyrax
       # the WorkflowResponsibilities of the active workflow if this is an Admin Set
       def update_access(remove_agent: false)
         update_access_controls!
-        update_workflow_approving_responsibilities(remove_agent) if source_model.is_a?(AdminSet)
+        update_workflow_responsibilities(remove_agent: remove_agent) if source_model.is_a?(AdminSet)
       end
 
       def remove_access!(permission_template_access)

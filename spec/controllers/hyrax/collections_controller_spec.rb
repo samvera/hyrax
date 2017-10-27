@@ -30,7 +30,7 @@ RSpec.describe Hyrax::CollectionsController do
         end
       end
 
-      it "returns the collection and its members", :with_nested_reindexing do
+      it "returns the collection and its members", :with_nested_reindexing do # rubocop:disable RSpec/ExampleLength
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
