@@ -6,18 +6,29 @@
           <span class="modal-title" id="col_add_title"><%= t("hyrax.collection.select_form.title") %></span>
         </div>
         <div class="modal-body">
-          <% if user_collections.blank? %>
+<% byebug %>
+<% ids = Hyrax::Collections::PermissionsService.collection_ids_for_deposit(user: current_user) %>
+<% collections = [] %>
+<% ids.each do |id| %>
+<%  c = Collection.find id %>
+<% collections << c unless c.nil? %>
+<% end  %>
+
+
+          <% if collections.blank? %>
             <em> <%= t("hyrax.collection.select_form.no_collections") %></em><br><br><br><br>
           <% else %>
             <div class="collection-list">
               <fieldset>
                 <legend><%= t("hyrax.collection.select_form.select_heading") %></legend>
               <ul>
-                <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index|  %>
+
+<% byebug %>
+                <% collections.each_with_index do |collection,index|  %>
                   <li>
                     <% selected = (collection.id == @add_works_to_collection) || (@add_works_to_collection.blank? && index == 0) %>
                     <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
-                    <%= label_tag(:collection, collection.title_or_label, for: "id_#{collection.id}") %>
+                    <%= label_tag(:collection, collection.title.first, for: "id_#{collection.id}") %>
                   </li>
                 <% end %>
               </ul>
