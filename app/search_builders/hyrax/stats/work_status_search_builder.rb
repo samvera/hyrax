@@ -1,7 +1,8 @@
 module Hyrax
   module Stats
     class WorkStatusSearchBuilder < ::SearchBuilder
-      self.default_processor_chain = [:include_suppressed_facet]
+      self.default_processor_chain = [:include_suppressed_facet, :filter_models]
+
       # includes the suppressed facet to get information on deposits.
       # use caution when combining this with other searches as it sets the rows to
       # zero to just get the facet information
@@ -9,8 +10,6 @@ module Hyrax
       def include_suppressed_facet(solr_parameters)
         solr_parameters[:"facet.field"].concat([IndexesWorkflow.suppressed_field])
         solr_parameters[:'facet.missing'] = true
-        # only get work information
-        solr_parameters[:fq] = work_relation.search_model_clause
 
         # we only want the facet counts not the actual data
         solr_parameters[:rows] = 0
@@ -18,8 +17,8 @@ module Hyrax
 
       private
 
-        def work_relation
-          Hyrax::WorkRelation.new
+        def only_works?
+          true
         end
     end
   end

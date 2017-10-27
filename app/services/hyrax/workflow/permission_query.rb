@@ -231,8 +231,8 @@ module Hyrax
       #
       # An ActiveRecord::Relation scope that meets the following criteria:
       #
-      # * Users that are directly associated with the given entity through on or
-      #   more of the given roles
+      # * Users that are directly associated with the given entity through one or
+      #   more of the given roles within the entity's workflow
       # * Users that are indirectly associated with the given entity by group
       #   and role.
       #
@@ -248,7 +248,7 @@ module Hyrax
         agent_table = Sipity::Agent.arel_table
 
         workflow_role_id_subquery = workflow_roles.project(workflow_roles[:id]).where(
-          workflow_roles[:role_id].in(role_ids)
+          workflow_roles[:workflow_id].eq(entity.workflow_id).and(workflow_roles[:role_id].in(role_ids))
         )
 
         workflow_agent_id_subquery = workflow_responsibilities.project(workflow_responsibilities[:agent_id]).where(

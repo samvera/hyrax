@@ -14,7 +14,7 @@ RSpec.describe Hyrax::CitationsController do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :work, params: { id: work }
         expect(response).to be_successful
-        expect(response).to render_template('layouts/hyrax')
+        expect(response).to render_template('layouts/hyrax/1_column')
         expect(assigns(:presenter)).to be_kind_of Hyrax::WorkShowPresenter
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe Hyrax::CitationsController do
         expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :file, params: { id: file_set }
         expect(response).to be_successful
-        expect(response).to render_template('layouts/hyrax')
+        expect(response).to render_template('layouts/hyrax/1_column')
         expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
       end
     end
