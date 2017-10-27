@@ -24,10 +24,11 @@ module Hyrax
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-        appender = Hyrax::FileAppender.new(storage_adapter: storage_adapter,
-                                           persister: persister,
-                                           files: [io])
-        appender.append_to(file_set)
+        node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
+                                                  persister: persister)
+        file_node = node_builder.create(file: io)
+        file_set.member_ids += [file_node.id]
+        persister.save(resource: file_set)
 
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
