@@ -2,13 +2,12 @@ RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let!(:old_work) do
-    work = create_for_repository(:work, user: user1)
-    work.created_at = two_days_ago_date.to_datetime
-    persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-    persister.save(resource: work)
-    work
+    create_for_repository(:work, user: user1).tap do |work|
+      work.created_at = 2.days.ago
+      persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      persister.save(resource: work)
+    end
   end
-  let(:two_days_ago_date) { Time.zone.now - 2.days }
 
   let(:start_date) { nil }
   let(:end_date) { nil }
