@@ -31,9 +31,9 @@ module Hyrax
       attribute :member_ids, Valkyrie::Types::Array
 
       # Points at an image file that displays this work.
-      attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
+      attribute :thumbnail_id, Valkyrie::Types::SingleValuedString.optional
       # Points at a file that displays something about this work. Could be an image or a video.
-      attribute :representative_id, Valkyrie::Types::SingleValuedString
+      attribute :representative_id, Valkyrie::Types::SingleValuedString.optional
     end
 
     # TODO: Move this into ActiveFedora
