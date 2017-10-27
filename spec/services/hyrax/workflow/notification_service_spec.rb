@@ -23,44 +23,11 @@ RSpec.describe Hyrax::Workflow::NotificationService do
   let(:action) { Sipity::WorkflowAction.new(notifiable_contexts: [notifiable_context]) }
   let(:entity) { Sipity::Entity.new }
   let(:user) { User.new }
-
-  let(:workflow) { Sipity::Workflow.new }
-  let(:workflow_state) { Sipity::WorkflowState.new }
-  let(:permission_template) { Hyrax::PermissionTemplate.new }
-
   let(:instance) do
     described_class.new(entity: entity,
                         action: action,
                         comment: "A pleasant read",
                         user: user)
-  end
-
-  describe '#recipients' do
-    context 'when an entity requires review' do
-      let(:creator) { [instance_double(User)] }
-      let(:managers) { [instance_double(User), instance_double(User)] }
-      let(:notification) { Sipity::Notification.new(name: 'pending review notification') }
-
-      before do
-        allow(instance).to receive(:send_notification) # mock it so it does nothing
-        allow(entity).to receive(:workflow_state).and_return(workflow_state)
-        allow(workflow_state).to receive(:name).and_return('pending_review')
-        allow(entity).to receive(:workflow).and_return(workflow)
-        # Mock the permission_template queries
-        allow(workflow).to receive(:permission_template).and_return(permission_template)
-        allow(permission_template).to receive(:agent_ids_for)
-          .with(access: 'manage', agent_type: 'user')
-          .and_return(managers)
-        allow(permission_template).to receive(:agent_ids_for)
-          .with(access: 'deposit', agent_type: 'user')
-          .and_return(creator)
-      end
-
-      it 'identifies the managers and depositor for notifications' do
-        recipients = instance.recipients(notification)
-        expect(recipients).to eq(to: managers, cc: creator)
-      end
-    end
   end
 
   describe "#call" do
@@ -81,8 +48,6 @@ RSpec.describe Hyrax::Workflow::NotificationService do
       let(:creator_rel) { double(ActiveRecord::Relation, to_ary: creator) }
 
       before do
-        allow(entity).to receive(:workflow_state).and_return(workflow_state)
-        allow(workflow_state).to receive(:name).and_return('not_pending_review')
         allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_users_for_entity_and_roles)
           .with(entity: entity,
                 roles: advising)

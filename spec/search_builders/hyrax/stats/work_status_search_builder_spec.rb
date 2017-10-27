@@ -11,22 +11,22 @@ RSpec.describe Hyrax::Stats::WorkStatusSearchBuilder do
   describe "#query" do
     subject { instance.query }
 
-    let(:stub_relation) do
-      instance_double(Hyrax::WorkRelation,
-                      search_model_clause: "(model clauses)")
-    end
-
-    before do
-      # Prevent the stub relation from returning different filters depending on
-      # how many models have been generated
-      allow(instance).to receive(:work_relation).and_return(stub_relation)
-    end
-
     it "sets required parameters" do
       expect(subject['facet.field']).to eq ["suppressed_bsi"]
-      expect(subject['fq']).to eq "(model clauses)"
       expect(subject['facet.missing']).to eq true
       expect(subject['rows']).to eq 0
     end
+  end
+
+  describe "#only_works?" do
+    subject { instance.send(:only_works?) }
+
+    it { is_expected.to be true }
+  end
+
+  describe "::default_processor_chain" do
+    subject { described_class.default_processor_chain }
+
+    it { is_expected.to include(:filter_models) }
   end
 end
