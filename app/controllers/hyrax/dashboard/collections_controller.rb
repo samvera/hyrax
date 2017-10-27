@@ -30,7 +30,7 @@ module Hyrax
                       :single_item_search_builder_class,
                       :member_search_builder_class
 
-      self.change_set_class = DynamicChangeSet
+      self.change_set_class = CollectionChangeSet
       self.resource_class = Collection
       self.change_set_persister = Hyrax::CollectionChangeSetPersister.new(
         metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
