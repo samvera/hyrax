@@ -3,10 +3,10 @@ RSpec.describe Hyrax::UserStatImporter do
     allow(Hyrax.config).to receive(:analytic_start_date) { dates[0] }
 
     allow(FileViewStat).to receive(:ga_statistics) do |_date, file|
-      case file
-      when bilbo_file_1
+      case file.id
+      when bilbo_file_1.id
         bilbo_file_1_pageview_stats
-      when bilbo_file_2
+      when bilbo_file_2.id
         bilbo_file_2_pageview_stats
       else
         frodo_file_1_pageview_stats
@@ -14,10 +14,10 @@ RSpec.describe Hyrax::UserStatImporter do
     end
 
     allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file|
-      case file
-      when bilbo_file_1
+      case file.id
+      when bilbo_file_1.id
         bilbo_file_1_download_stats
-      when bilbo_file_2
+      when bilbo_file_2.id
         bilbo_file_2_download_stats
       else
         frodo_file_1_download_stats
@@ -25,10 +25,10 @@ RSpec.describe Hyrax::UserStatImporter do
     end
 
     allow(WorkViewStat).to receive(:ga_statistics) do |_date, work|
-      case work
-      when bilbo_work_1
+      case work.id
+      when bilbo_work_1.id
         bilbo_work_1_pageview_stats
-      when bilbo_work_2
+      when bilbo_work_2.id
         bilbo_work_2_pageview_stats
       else
         frodo_work_1_pageview_stats
