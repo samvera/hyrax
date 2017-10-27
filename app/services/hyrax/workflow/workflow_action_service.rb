@@ -19,10 +19,14 @@ module Hyrax
         comment = create_sipity_comment
         handle_sipity_notifications(comment: comment)
         handle_additional_sipity_workflow_action_processing(comment: comment)
-        subject.work.update_index # So that the new actions and state are written into solr.
+        solr_persister.save(resource: subject.work) # So that the new actions and state are written into solr.
       end
 
       private
+
+        def solr_persister
+          @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
+        end
 
         def update_sipity_workflow_state
           return true if action.resulting_workflow_state_id.blank?
