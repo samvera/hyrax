@@ -3,6 +3,6 @@ class WorkViewStat < Hyrax::Statistic
   self.event_type = :pageviews
 
   def self.filter(work)
-    { work_id: work.id }
+    { work_id: work.id.to_s }
   end
 end
