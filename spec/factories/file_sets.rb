@@ -12,10 +12,11 @@ FactoryBot.define do
       if evaluator.content
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-        appender = Hyrax::FileAppender.new(storage_adapter: storage_adapter,
-                                           persister: persister,
-                                           files: [evaluator.content])
-        appender.append_to(file_set)
+        node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
+                                                  persister: persister)
+
+        file_node = node_builder.create(file: evaluator.content)
+        file_set.member_ids += [file_node.id]
       end
     end
 
