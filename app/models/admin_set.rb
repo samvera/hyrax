@@ -27,30 +27,12 @@ class AdminSet < Valkyrie::Resource
 
   # validates_with Hyrax::HasOneTitleValidator
   class_attribute :human_readable_short_description
-  # self.indexer = Hyrax::AdminSetIndexer
+
   attribute :id, Valkyrie::Types::ID.optional
   attribute :title, Valkyrie::Types::Set
   attribute :description, Valkyrie::Types::Set
   attribute :creator, Valkyrie::Types::Set
-  attribute :thumbnail_id, Valkyrie::Types::SingleValuedString.optional
-
-  # property :title, predicate: ::RDF::Vocab::DC.title do |index|
-  #   index.as :stored_searchable, :facetable
-  # end
-  # property :description, predicate: ::RDF::Vocab::DC.description do |index|
-  #   index.as :stored_searchable
-  # end
-  #
-  # property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
-  #   index.as :symbol
-  # end
-
-  # has_many :members,
-  #          predicate: Hyrax.config.admin_set_predicate,
-  #          class_name: 'ActiveFedora::Base'
-
-  # before_destroy :check_if_not_default_set, :check_if_empty
-  # after_destroy :destroy_permission_template
+  attribute :thumbnail_id, Valkyrie::Types::ID.optional
 
   def self.default_set?(id)
     id.to_s == DEFAULT_ID
