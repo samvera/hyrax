@@ -8,10 +8,14 @@ FactoryGirl.define do
       fs.apply_depositor_metadata evaluator.user.user_key if evaluator.user
     end
 
-    after(:create) do |file_set, evaluator|
+    before(:create) do |file_set, evaluator|
       if evaluator.content
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
-        storage_adapter.upload(file: evaluator.content, resource: file_set)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        appender = Hyrax::FileAppender.new(storage_adapter: storage_adapter,
+                                           persister: persister,
+                                           files: [evaluator.content])
+        appender.append_to(file_set)
       end
     end
 
