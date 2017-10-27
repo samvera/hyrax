@@ -22,6 +22,9 @@ module Hyrax
     included do
       attr_accessor :file
       self.human_readable_type = 'File'
+
+      attribute :file_identifiers, Valkyrie::Types::Set
+      attribute :member_ids, Valkyrie::Types::Array
     end
 
     def representative_id
