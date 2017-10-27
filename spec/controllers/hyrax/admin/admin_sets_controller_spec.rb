@@ -101,7 +101,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
         before do
-          create_for_repository(:work, :public, admin_set: admin_set)
+          create_for_repository(:work, :public, admin_set_id: admin_set.id)
         end
 
         it 'defines a presenter' do
