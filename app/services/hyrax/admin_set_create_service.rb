@@ -51,15 +51,16 @@ module Hyrax
     attr_reader :creating_user, :admin_set, :workflow_importer
 
     # Creates an admin set, setting the creator and the default access controls.
-    # @return [TrueClass, FalseClass] true if it was successful
+    # @return [AdminSet, FalseClass] AdminSet if it was successful
     def create
       admin_set.edit_groups = [admin_group_name]
       admin_set.creator = [creating_user.user_key] if creating_user
-      result = persister.save(resource: admin_set)
       ActiveRecord::Base.transaction do
+        result = persister.save(resource: admin_set)
         permission_template = create_permission_template
         workflow = create_workflows_for(permission_template: permission_template)
         create_default_access_for(permission_template: permission_template, workflow: workflow) if result.default_set?
+        result
       end
     end
 
