@@ -32,7 +32,7 @@ class AdminSet < Valkyrie::Resource
   attribute :title, Valkyrie::Types::Set
   attribute :description, Valkyrie::Types::Set
   attribute :creator, Valkyrie::Types::Set
-  attribute :thumbnail_id, Valkyrie::Types::SingleValuedString
+  attribute :thumbnail_id, Valkyrie::Types::SingleValuedString.optional
 
   # property :title, predicate: ::RDF::Vocab::DC.title do |index|
   #   index.as :stored_searchable, :facetable
