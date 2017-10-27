@@ -16,9 +16,6 @@ RSpec.describe CreateWorkJob do
         title: ['File One'],
         resource_type: ['Article'] }
     end
-    let(:errors) { double(full_messages: ["It's broke!"]) }
-    let(:work) { double(errors: errors) }
-    let(:actor) { double(curation_concern: work) }
 
     subject do
       described_class.perform_later(user,
@@ -27,30 +24,22 @@ RSpec.describe CreateWorkJob do
                                     log)
     end
 
-    before do
-      allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
-      allow(GenericWork).to receive(:new).and_return(work)
-    end
-
-    context "when the update is successful" do
-      it "logs the success" do
-        expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
-          expect(env.attributes).to eq("keyword" => [],
-                                       "title" => ['File One'],
-                                       "resource_type" => ["Article"],
-                                       "permissions_attributes" =>
-                                                 [{ "type" => "group", "name" => "public", "access" => "read" }],
-                                       "visibility" => "open",
-                                       "uploaded_files" => [upload1.id])
-        end.and_return(true)
-        subject
+    context 'when the update is successful' do
+      it 'logs the success' do
+        expect { subject }.to change { Hyrax::Queries.find_all_of_model(model: GenericWork).size }.by(1)
         expect(log.reload.status).to eq 'success'
       end
     end
 
-    context "when the actor does not create the work" do
-      it "logs the failure" do
-        expect(actor).to receive(:create).and_return(false)
+    context 'when the actor does not create the work' do
+      let(:change_set) { instance_double(GenericWorkChangeSet, validate: false, errors: errors) }
+      let(:errors) { double(full_messages: ["It's broke!"]) }
+
+      before do
+        allow(GenericWorkChangeSet).to receive(:new).and_return(change_set)
+      end
+
+      it 'logs the failure' do
         subject
         expect(log.reload.status).to eq 'failure'
         expect(log.message).to eq "It's broke!"
