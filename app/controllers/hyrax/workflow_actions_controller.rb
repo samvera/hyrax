@@ -8,21 +8,21 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: 'unable to update workflow' }) }
         end
       end
     end
 
     private
 
-      def curation_concern
-        @curation_concern ||= find_resource(params[:id])
+      def resource
+        @resource ||= find_resource(params[:id])
       end
 
       def workflow_action_form
         @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
           current_ability: current_ability,
-          work: curation_concern,
+          work: resource,
           attributes: workflow_action_params
         )
       end
@@ -33,17 +33,13 @@ module Hyrax
 
       def after_update_response
         respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
-          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+          wants.html { redirect_to [main_app, resource], notice: "The #{resource.human_readable_type} has been updated." }
+          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, resource]) }
         end
       end
 
       def find_resource(id)
-        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
-      end
-
-      def query_service
-        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+        Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
       end
   end
 end
