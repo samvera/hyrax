@@ -65,16 +65,13 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
     end
 
     describe '#save' do
-      before do
-        allow(work).to receive(:update_index)
-      end
       subject { form.save }
 
       it { is_expected.to be true }
 
       context 'and the action has a resulting_workflow_state_id' do
         it 'will update the state of the given work and index it' do
-          expect(work).to receive(:update_index)
+          expect_any_instance_of(Valkyrie::MetadataAdapter.find(:index_solr).persister.class).to receive(:save).with(resource: form.work)
           expect { subject }.to change { sipity_entity.reload.workflow_state_id }.from(2).to(an_action.resulting_workflow_state_id)
         end
       end
