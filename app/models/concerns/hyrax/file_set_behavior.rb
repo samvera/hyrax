@@ -24,6 +24,12 @@ module Hyrax
       self.human_readable_type = 'File'
     end
 
+    def original_file
+      return if member_ids.empty?
+      # TODO: we should be checking the use predicate here
+      Hyrax::Queries.find_by(id: member_ids.first)
+    end
+
     def representative_id
       to_param
     end
