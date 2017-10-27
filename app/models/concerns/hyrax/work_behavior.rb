@@ -23,9 +23,7 @@ module Hyrax
     included do
       # property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
       class_attribute :human_readable_short_description
-      # TODO: do we need this line?
-      # self.indexer = WorkIndexer
-
+      
       # The collections that contain this object (no order)
       attribute :member_of_collection_ids, Valkyrie::Types::Set
 
