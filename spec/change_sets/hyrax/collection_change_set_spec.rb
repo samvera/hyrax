@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::CollectionChangeSet do
+
+  let(:collection) { build(:collection) }
+  let(:form) { described_class.new(collection) }
+
   describe "#terms" do
     subject { described_class.terms }
-
-    let(:collection) { build(:collection) }
-    let(:ability) { Ability.new(create(:user)) }
-    let(:repository) { double }
-    let(:form) { described_class.new(collection, ability, repository) }
 
     it do
       is_expected.to eq [:resource_type,
@@ -102,31 +101,6 @@ RSpec.describe Hyrax::CollectionChangeSet do
     it { is_expected.to eq ['9999'] }
   end
 
-  describe ".build_permitted_params" do
-    subject { described_class.build_permitted_params }
-
-    it do
-      is_expected.to eq [{ resource_type: [] },
-                         { title: [] },
-                         { creator: [] },
-                         { contributor: [] },
-                         { description: [] },
-                         { keyword: [] },
-                         { license: [] },
-                         { publisher: [] },
-                         { date_created: [] },
-                         { subject: [] },
-                         { language: [] },
-                         :representative_id,
-                         :thumbnail_id,
-                         { identifier: [] },
-                         { based_near: [] },
-                         { related_url: [] },
-                         :visibility,
-                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] }]
-    end
-  end
-
   describe '#select_files' do
     subject { form.select_files }
 
@@ -138,7 +112,7 @@ RSpec.describe Hyrax::CollectionChangeSet do
     end
 
     context 'with a work/file attached' do
-      let!(:work) { create_for_repository(:work_with_one_file, :public, member_of_collections: [collection]) }
+      let!(:work) { create_for_repository(:work_with_one_file, :public, member_of_collection_ids: [collection.id]) }
       let(:title) { work.file_sets.first.title.first }
       let(:file_id) { work.file_sets.first.id }
 
