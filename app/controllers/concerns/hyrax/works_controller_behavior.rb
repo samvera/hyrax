@@ -3,11 +3,11 @@ module Hyrax
     extend ActiveSupport::Concern
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
+    include ResourceController
 
     included do
       layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
-      class_attribute :change_set_class, :resource_class
       class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.search_builder_class = WorkSearchBuilder
@@ -21,23 +21,6 @@ module Hyrax
       helper_method :curation_concern, :contextual_path
 
       rescue_from WorkflowAuthorizationException, with: :render_unavailable
-    end
-
-    class_methods do
-      def cancan_resource_class
-        Hyrax::ControllerResource
-      end
-    end
-
-    def build_change_set(resource)
-      change_set_class.new(resource,
-                           depositor: current_user.user_key,
-                           search_context: search_context)
-    end
-
-    def edit
-      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
-      authorize! :update, @change_set.resource
     end
 
     def create
@@ -99,6 +82,14 @@ module Hyrax
 
     private
 
+      # Overridden to provide depositor (used on app/views/hyrax/base/_form_share.html.erb)
+      def build_change_set(resource)
+        change_set_class.new(resource,
+                             depositor: current_user.user_key,
+                             append_id: params[:parent_id],
+                             search_context: search_context)
+      end
+
       def actor
         @actor ||= Hyrax::CurationConcern.actor
       end
@@ -106,19 +97,6 @@ module Hyrax
       def actor_environment
         # TODO: just pass a change_set?
         Actors::Environment.new(@change_set.resource, current_ability, resource_params)
-      end
-
-      def resource_params
-        raw_params = params[resource_class.model_name.param_key]
-        raw_params ? raw_params.to_unsafe_h : {}
-      end
-
-      def find_resource(id)
-        Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-      end
-
-      def new_resource
-        resource_class.new
       end
 
       def after_create_error(_obj, _change_set)
