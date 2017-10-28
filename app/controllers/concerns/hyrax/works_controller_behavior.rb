@@ -10,7 +10,6 @@ module Hyrax
     included do
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
-
       class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.search_builder_class = WorkSearchBuilder
@@ -24,24 +23,23 @@ module Hyrax
       rescue_from WorkflowAuthorizationException, with: :render_unavailable
     end
 
-    class_methods do
-      def cancan_resource_class
-        Hyrax::ControllerResource
+    def create
+      @change_set = change_set_class.new(resource_class.new)
+      authorize! :create, @change_set.resource
+      if actor.create(actor_environment)
+        after_create_success(@resource, @change_set)
+      else
+        after_create_error(@resource, @change_set)
       end
     end
 
-    def build_change_set(resource)
-      change_set_class.new(resource,
-                           depositor: current_user.user_key,
-                           search_context: search_context)
-    end
-
-    def after_create_error(_obj, _change_set)
-      respond_to do |wants|
-        wants.html do
-          render 'new', status: :unprocessable_entity
-        end
-        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+    def update
+      @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
+      authorize! :update, @change_set.resource
+      if actor.update(actor_environment)
+        after_update_success(@resource, @change_set)
+      else
+        after_update_error(@resource, @change_set)
       end
     end
 
@@ -85,11 +83,32 @@ module Hyrax
         ::IIIFManifest::ManifestFactory.new(presenter)
       end
 
-      # Overridden to provide add_works_to_collection
+      # Overridden to provide add_works_to_collection (create new work in a collection)
+      # and to provide depositor (used on app/views/hyrax/base/_form_share.html.erb)
       def build_change_set(resource)
         change_set_class.new(resource,
+                             depositor: current_user.user_key,
                              append_id: params[:parent_id],
-                             add_works_to_collection: params[:add_works_to_collection])
+                             add_works_to_collection: params[:add_works_to_collection],
+                             search_context: search_context)
+      end
+
+      def actor
+        @actor ||= Hyrax::CurationConcern.actor
+      end
+
+      def actor_environment
+        # TODO: just pass a change_set?
+        Actors::Environment.new(@change_set.resource, current_ability, resource_params)
+      end
+
+      def after_create_error(_obj, _change_set)
+        respond_to do |wants|
+          wants.html do
+            render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+        end
       end
 
       def after_update_error(_obj, change_set)
