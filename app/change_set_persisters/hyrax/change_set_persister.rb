@@ -34,7 +34,7 @@ module Hyrax
     def save(change_set:)
       run_hook(:before_save, change_set: change_set)
       resource = persister.save(resource: change_set.resource)
-      run_hook(:after_save, change_set: change_set)
+      run_hook(:after_save, change_set: change_set, resource: resource)
       query_service.find_by(id: resource.id)
     end
 
