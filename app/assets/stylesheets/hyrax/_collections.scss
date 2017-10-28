@@ -245,44 +245,51 @@ button.branding-banner-remove:hover {
 // Issue 1428 Styles (DT)
 
 .hyc-header {
+
   margin-bottom: 2em;
+
 }
 
 .hyc-body {
+
   margin-bottom: 2em;
+
 }
 
 .hyc-banner {
-  background-repeat: no-repeat;
+
   background-position: center center;
+  background-repeat: no-repeat;
   background-size: cover;
+  border-radius: 1em;
+  min-height: 270px;
   position: relative;
   width: 100%;
-  min-height: 270px;
-  border-radius: 1em;
 
   .hyc-title {
+
     padding: 1em;
 
     h1 {
-      font-size: 2.5em;
       color: #fff;
+      display: inline-block;
+      font-size: 2.5em;
       margin: 0;
       padding: 0;
-      text-shadow: 1px 2px 3px rgba(0,0,0,0.5);
-      display: inline-block;
+      text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
     }
 
     .label {
-      margin-left:0.5em;
-      box-shadow: 1px 2px 3px rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.5);
+      margin-left: 0.5em;
+      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       vertical-align: 100%;
     }
 
   }
 
   .hyc-logos {
+
     padding: 0 1em;
 
     a {
@@ -292,9 +299,9 @@ button.branding-banner-remove:hover {
 
     img {
       display: inline-block;
+      height: 50px;
       padding: 0 1em 1em 0;
       width: auto;
-      height: 50px;
     }
 
   }
@@ -302,23 +309,23 @@ button.branding-banner-remove:hover {
   .hyc-bugs {
 
     div {
+      color: #fff;
+      font-size: 1em;
       padding: 1em;
       position: absolute;
-      font-size: 1em;
-      color: #fff;
       text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
     }
 
     .hyc-item-count {
-      top: 0;
-      right: 0;
-      background: rgba(255,255,255,0.75);
-      text-align: center;
-      margin: 1em;
+      background: rgba(255, 255, 255, 0.75);
       border-radius: 0.5em;
       color: #333;
-      text-shadow: none;
+      margin: 1em;
       padding: 0.5em 1em;
+      right: 0;
+      text-align: center;
+      text-shadow: none;
+      top: 0;
     }
 
     .hyc-created-by {
@@ -340,10 +347,10 @@ button.branding-banner-remove:hover {
   .hyc-title {
 
     h1 {
+      display: inline-block;
       font-size: 2.5em;
       margin: 0;
       padding: 0;
-      display: inline-block;
     }
 
     .label {
@@ -354,6 +361,7 @@ button.branding-banner-remove:hover {
   }
 
   .hyc-logos {
+
     padding: 0;
 
     a {
@@ -363,9 +371,9 @@ button.branding-banner-remove:hover {
 
     img {
       display: inline-block;
+      height: 60px;
       padding: 1em 1em 1em 0;
       width: auto;
-      height: 60px;
     }
 
   }
@@ -374,9 +382,9 @@ button.branding-banner-remove:hover {
     display: flex;
 
     div {
+      font-size: 0.9em;
       padding: 0;
       margin: 0;
-      font-size: 0.9em;
     }
 
     .hyc-item-count::after {
@@ -398,6 +406,7 @@ button.branding-banner-remove:hover {
 }
 
 .hyc-metadata {
+
   padding: 0 2em 0 1em;
 
   h2 {
@@ -429,7 +438,9 @@ button.branding-banner-remove:hover {
 }
 
 .hyc-blacklight {
+
   padding: 0 1em;
+
 }
 
 .hyc-bl-title {
@@ -442,6 +453,7 @@ button.branding-banner-remove:hover {
 }
 
 .hyc-bl-sort {
+
   margin-bottom: 1em;
   margin-top: 1em;
 
@@ -476,6 +488,7 @@ button.branding-banner-remove:hover {
 }
 
 .hyc-bl-pager {
+
   margin-bottom: 2em;
 
   .pager {
@@ -484,6 +497,7 @@ button.branding-banner-remove:hover {
   }
 
   .pagination {
+
     display: block;
     margin: 0;
     padding: 0;
@@ -499,5 +513,7 @@ button.branding-banner-remove:hover {
 }
 
 .tiny-nudge {
+
   margin-left: 0.5em;
+
 }
