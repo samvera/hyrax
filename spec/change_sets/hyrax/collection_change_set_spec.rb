@@ -8,23 +8,23 @@ RSpec.describe Hyrax::CollectionChangeSet do
     subject { described_class.terms }
 
     it do
-      is_expected.to eq [:resource_type,
-                         :title,
-                         :creator,
-                         :contributor,
-                         :description,
-                         :keyword,
-                         :license,
-                         :publisher,
-                         :date_created,
-                         :subject,
-                         :language,
-                         :representative_id,
-                         :thumbnail_id,
-                         :identifier,
-                         :based_near,
-                         :related_url,
-                         :visibility]
+      is_expected.to contain_exactly(:resource_type,
+                                     :title,
+                                     :creator,
+                                     :contributor,
+                                     :description,
+                                     :keyword,
+                                     :license,
+                                     :publisher,
+                                     :date_created,
+                                     :subject,
+                                     :language,
+                                     :representative_id,
+                                     :thumbnail_id,
+                                     :identifier,
+                                     :based_near,
+                                     :related_url,
+                                     :visibility)
     end
   end
 
@@ -51,7 +51,10 @@ RSpec.describe Hyrax::CollectionChangeSet do
         :identifier,
         :based_near,
         :related_url,
-        :resource_type
+        :resource_type,
+        :thumbnail_id,
+        :representative_id,
+        :visibility
       ]
     end
   end
@@ -112,8 +115,9 @@ RSpec.describe Hyrax::CollectionChangeSet do
 
     context 'with a work/file attached' do
       let!(:work) { create_for_repository(:work_with_one_file, :public, member_of_collection_ids: [collection.id]) }
-      let(:title) { work.file_sets.first.title.first }
-      let(:file_id) { work.file_sets.first.id }
+      let(:file_set) { Hyrax::Queries.find_members(resource: work, model: ::FileSet).first }
+      let(:title) { file_set.title.first }
+      let(:file_id) { file_set.id.to_s }
 
       it 'returns a hash of with file title as key and file id as value' do
         expect(subject).to eq(title => file_id)
