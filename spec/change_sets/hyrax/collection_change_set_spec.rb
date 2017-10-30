@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::CollectionChangeSet do
-
   let(:collection) { build(:collection) }
   let(:form) { described_class.new(collection) }
 
