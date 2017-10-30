@@ -68,13 +68,15 @@ RSpec.describe Hyrax::CollectionsHelper do
 
     describe "for a collection of another name" do
       before do
-        class OtherCollection < ActiveFedora::Base
+        class OtherCollection < Valkyrie::Resource
           include Hyrax::CollectionBehavior
-          include Hydra::Works::WorkBehavior
         end
       end
 
-      let!(:collection) { OtherCollection.create!(title: ['foo']) }
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
+      let(:collection) do
+        persister.save(resource: OtherCollection.new(title: ['foo']))
+      end
 
       after do
         Object.send(:remove_const, :OtherCollection)
