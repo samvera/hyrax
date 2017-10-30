@@ -23,7 +23,7 @@ RSpec.describe Hyrax::AdminSetService do
       let(:access) { :read }
 
       it "returns three admin sets" do
-        expect(subject.map(&:id)).to match_array [as1.id, as2.id, as3.id]
+        expect(subject.map(&:id)).to match_array [as1.id.to_s, as2.id.to_s, as3.id.to_s]
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::AdminSetService do
       let(:access) { :edit }
 
       it "returns one admin set" do
-        expect(subject.map(&:id)).to match_array [as3.id]
+        expect(subject.map(&:id)).to match_array [as3.id.to_s]
       end
     end
   end

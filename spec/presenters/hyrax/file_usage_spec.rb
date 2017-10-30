@@ -58,7 +58,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
 
   describe "#initialize" do
     it "sets the model" do
-      expect(usage.model).to eq file
+      expect(usage.model.to_s).to eq file.to_s
     end
   end
 

@@ -75,7 +75,7 @@ module Hyrax
       # Should be all _latest_ ChecksumAuditLog about different files/versions
       # currently existing in specified FileSet.
       def relevant_log_records
-        @relevant_log_records = ChecksumAuditLog.latest_for_file_set_id(file_set_id)
+        @relevant_log_records = ChecksumAuditLog.latest_for_file_set_id(file_set_id.to_s)
       end
 
       def num_checked_files
