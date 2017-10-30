@@ -4,7 +4,9 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:curation_concern) { build(:work) }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -50,7 +52,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     describe "when work is in user's own collection and destroy is passed" do
-      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
       let(:attributes) do
         { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
       end
