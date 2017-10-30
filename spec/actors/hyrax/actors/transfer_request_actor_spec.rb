@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Hyrax::Actors::TransferRequestActor do
   let(:ability) { ::Ability.new(depositor) }
   let(:change_set) { GenericWorkChangeSet.new(work) }
-  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) do

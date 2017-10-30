@@ -3,7 +3,8 @@ RSpec.describe Hyrax::Actors::CreateWithFilesActor do
   let(:ability) { ::Ability.new(user) }
   let(:work) { create_for_repository(:work, user: user) }
   let(:change_set) { GenericWorkChangeSet.new(work) }
-  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:uploaded_file1) { create(:uploaded_file, user: user) }
   let(:uploaded_file2) { create(:uploaded_file, user: user) }

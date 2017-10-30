@@ -84,7 +84,7 @@ module Hyrax
       def create(env)
         intention = Intention.new(env.attributes)
         attributes = intention.sanitize_params
-        new_env = Environment.new(env.change_set, env.current_ability, attributes)
+        new_env = duplicate_env(env, attributes)
         validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
           next_actor.create(new_env)
       end
@@ -94,12 +94,16 @@ module Hyrax
       def update(env)
         intention = Intention.new(env.attributes)
         attributes = intention.sanitize_params
-        new_env = Environment.new(env.change_set, env.current_ability, attributes)
+        new_env = duplicate_env(env, attributes)
         validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
           next_actor.update(new_env)
       end
 
       private
+
+        def duplicate_env(env, attributes)
+          Environment.new(env.change_set, env.change_set_persister, env.current_ability, attributes)
+        end
 
         # Validate against selected AdminSet's PermissionTemplate (if any)
         def validate(env, intention, attributes)
