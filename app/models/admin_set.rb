@@ -71,7 +71,7 @@ class AdminSet < Valkyrie::Resource
   # @return [Sipity::Workflow]
   # @raise [ActiveRecord::RecordNotFound]
   def active_workflow
-    Sipity::Workflow.find_active_workflow_for(admin_set_id: id)
+    Sipity::Workflow.find_active_workflow_for(admin_set_id: id.to_s)
   end
 
   # Calculate and update who should have edit access based on who
