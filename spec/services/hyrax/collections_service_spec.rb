@@ -25,7 +25,7 @@ RSpec.describe Hyrax::CollectionsService do
       let(:access) { :read }
 
       it "returns three collections" do
-        expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id]
+        expect(subject.map(&:id)).to match_array [collection1.id.to_s, collection2.id.to_s, collection3.id.to_s]
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe Hyrax::CollectionsService do
       let(:access) { :edit }
 
       it "returns one collections" do
-        expect(subject.map(&:id)).to match_array [collection3.id]
+        expect(subject.map(&:id)).to match_array [collection3.id.to_s]
       end
     end
   end
