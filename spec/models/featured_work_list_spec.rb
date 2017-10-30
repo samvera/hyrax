@@ -12,7 +12,7 @@ RSpec.describe FeaturedWorkList, type: :model do
       expect(subject.featured_works.size).to eq 2
       presenter = subject.featured_works.first.presenter
       expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
-      expect(presenter.id).to eq work1.id
+      expect(presenter.id).to eq work1.id.to_s
     end
 
     context 'when one of the files is deleted' do
