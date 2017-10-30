@@ -3,7 +3,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
   let(:user) { create(:user) }
   let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user) }
   let(:q) { "foo" }
-  let(:params) { ActionController::Parameters.new(q: q, id: work.id, user: user.email, controller: "qa/terms", action: "search", vocab: "find_works") }
+  let(:params) { ActionController::Parameters.new(q: q, id: work.id.to_s, user: user.email, controller: "qa/terms", action: "search", vocab: "find_works") }
 
   let(:context) do
     double(current_ability: ability,
@@ -48,7 +48,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
     it "is successful" do
       subject
-      expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: work.id)]
+      expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: work.id.to_s)]
     end
   end
 
