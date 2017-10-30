@@ -25,4 +25,4 @@
 * Versioning
 * paranoid_edit_permissions moves to ChangeSet
 * Noid integration
-* Embargo and Lease
+* Embargo and Lease - Where should these be persisted
