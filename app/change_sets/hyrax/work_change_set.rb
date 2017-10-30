@@ -15,6 +15,21 @@ module Hyrax
     # Used for searching
     property :search_context, virtual: true, multiple: false, required: false
 
+    # TODO: Figure out where to persist these fields
+    property :embargo_release_date, virtual: true
+    property :lease_expiration_date, virtual: true
+    property :visibility, virtual: true
+    property :visibility_during_embargo, virtual: true
+    property :visibility_after_embargo, virtual: true
+    property :visibility_during_lease, virtual: true
+    property :visibility_after_lease, virtual: true
+
+    # TODO: this should be validated
+    property :agreement_accepted, virtual: true
+
+    # TODO: how do we get an etag?
+    property :version, virtual: true
+
     collection :permissions, virtual: true
 
     class << self
