@@ -6,7 +6,8 @@ RSpec.describe Hyrax::Actors::InitializeWorkflowActor do
 
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
-  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
+  let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|

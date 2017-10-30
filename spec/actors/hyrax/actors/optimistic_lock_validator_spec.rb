@@ -1,6 +1,7 @@
 RSpec.describe Hyrax::Actors::OptimisticLockValidator do
   let(:change_set) { GenericWorkChangeSet.new(work) }
-  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:ability) { ::Ability.new(depositor) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }

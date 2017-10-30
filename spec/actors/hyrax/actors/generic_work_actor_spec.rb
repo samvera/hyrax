@@ -3,7 +3,8 @@ require 'redlock'
 RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
   let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
-  let(:env) { Hyrax::Actors::Environment.new(change_set, ability, attributes) }
+  let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:admin_set) { build(:admin_set, with_permission_template: { with_active_workflow: true }) }
