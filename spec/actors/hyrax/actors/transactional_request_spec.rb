@@ -16,7 +16,9 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
   end
 
   let(:ability) { ::Ability.new(depositor) }
-  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
   let(:work) { double(:work) }

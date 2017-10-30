@@ -4,7 +4,9 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:work) { build(:work) }
   let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-  let(:env) { Hyrax::Actors::Environment.new(work, depositor_ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
 
   describe "create" do
     let(:terminator) { Hyrax::Actors::Terminator.new }
