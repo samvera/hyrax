@@ -43,6 +43,14 @@ module Hyrax
       end
     end
 
+    def destroy
+      @change_set = change_set_class.new(find_resource(params[:id]))
+      authorize! :destroy, @change_set.resource
+      env = Actors::Environment.new(@change_set, change_set_persister, current_ability, {})
+      return unless actor.destroy(env)
+      after_delete_success(@change_set)
+    end
+
     # Finds a solr document matching the id and sets @presenter
     # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
     def show
@@ -98,8 +106,7 @@ module Hyrax
       end
 
       def actor_environment
-        # TODO: just pass a change_set?
-        Actors::Environment.new(@change_set.resource, current_ability, resource_params)
+        Actors::Environment.new(@change_set, change_set_persister, current_ability, resource_params)
       end
 
       def after_create_error(_obj, _change_set)
