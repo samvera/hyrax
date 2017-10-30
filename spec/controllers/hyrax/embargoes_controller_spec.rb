@@ -62,10 +62,7 @@ RSpec.describe Hyrax::EmbargoesController do
       end
 
       context 'that has files' do
-        before do
-          a_work.members << create(:file_set)
-          a_work.save!
-        end
+        let(:a_work) { create_for_repository(:work_with_one_file, user: user) }
 
         it 'deactivates embargo and checks to see if we want to copy the visibility to files' do
           expect(actor).to receive(:destroy)
@@ -82,7 +79,7 @@ RSpec.describe Hyrax::EmbargoesController do
       let(:release_date) { Time.zone.today + 2 }
 
       before do
-        a_work.members << file_set
+        a_work.member_ids += [file_set.id]
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
