@@ -462,10 +462,12 @@ en:
         works:        "Your Works"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
+      delete_notification:      "Delete Notification"
       no_transfer_requests:     "You haven't received any work transfer requests"
       no_transfers:             "You haven't transferred any work"
       proxy_activity:           "Proxy Activity"
       proxy_user:               "Proxy User"
+      proxy_delete:              "Delete Proxy"
       show_admin:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"

@@ -13,6 +13,7 @@
       <% user.can_receive_deposits_from.each do |depositor| %>
           <tr><td class="depositor-name"><%= depositor.name %></td>
             <td><%= link_to(hyrax.user_depositor_path(user, depositor), method: :delete, class: "remove-proxy-button") do %>
+                  <span class="sr-only"><%= I18n.t('hyrax.dashboard.proxy_delete') %></span>
                   <i class="glyphicon glyphicon-remove"></i><% end %>
             </td></tr>
       <% end %>

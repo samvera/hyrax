@@ -24,6 +24,7 @@
                       class: "itemicon itemtrash",
                       title: t('hyrax.mailbox.delete'),
                       method: :delete do %>
+                  <span class="sr-only"><%= I18n.t('hyrax.dashboard.delete_notification') %></span>
                 <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                 <% end %>
             </td>
