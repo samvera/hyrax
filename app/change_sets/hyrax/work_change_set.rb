@@ -15,6 +15,8 @@ module Hyrax
     # Used for searching
     property :search_context, virtual: true, multiple: false, required: false
 
+    collection :permissions, virtual: true
+
     class << self
       def work_klass
         name.sub(/ChangeSet$/, '').constantize
@@ -31,9 +33,22 @@ module Hyrax
     end
 
     def prepopulate!
+      prepopulate_permissions
       super.tap do
         @_changes = Disposable::Twin::Changed::Changes.new
       end
+    end
+
+    # We just need to respond to this method so that the rails nested form builder will work.
+    def permissions_attributes=
+      # nop
+    end
+
+    def prepopulate_permissions
+      self.permissions = resource.edit_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'person') } +
+                         resource.read_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'person') } +
+                         resource.edit_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'group') } +
+                         resource.read_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'group') }
     end
 
     def page_title
