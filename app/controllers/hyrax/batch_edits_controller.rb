@@ -11,10 +11,18 @@ module Hyrax
     # provides the help_text view method
     helper PermissionsHelper
 
+    class_attribute :resource_class, :change_set_class, :change_set_persister
+    self.resource_class = Hyrax.primary_work_type
+    self.change_set_class = BatchEditChangeSet
+    self.change_set_persister = Hyrax::ChangeSetPersister.new(
+      metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+      storage_adapter: Valkyrie.config.storage_adapter
+    )
+
     def edit
-      work = change_set_class.model_class.new
+      work = resource_class.new
       work.depositor = current_user.user_key
-      @change_set = change_set_class.new(work, current_user, batch)
+      @change_set = change_set_class.new(work, batch_document_ids: batch).prepopulate!
     end
 
     def after_update
@@ -35,18 +43,21 @@ module Hyrax
     end
 
     def destroy_collection
-      batch.each do |doc_id|
-        find_resource(doc_id).destroy
-      end
+      destroy_batch
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
     end
 
     def update_document(obj)
-      obj.attributes = work_params
-      obj.date_modified = Time.current.ctime
-      obj.visibility = params[:visibility]
-      obj.save
+      change_set = change_set_class.new(obj)
+      if change_set.validate(resource_params.merge(visibility: params[:visibility]))
+        change_set.sync
+        change_set_persister.buffer_into_index do |persist|
+          persist.save(change_set: change_set)
+        end
+      else
+        logger.error("Unable to update #{obj.id} in a batch update #{change_set.errors.full_messages}")
+      end
     end
 
     def update
@@ -59,6 +70,7 @@ module Hyrax
         after_update
       when "delete_all"
         destroy_batch
+        after_update
       end
     end
 
@@ -75,21 +87,16 @@ module Hyrax
       end
 
       def destroy_batch
-        batch.each { |id| find_resource(id).destroy }
-        after_update
-      end
-
-      def change_set_class
-        BatchEditChangeSet
+        batch.each { |id| persister.delete(resource: find_resource(id)) }
       end
 
       def terms
         change_set_class.terms
       end
 
-      def work_params
-        work_params = params[change_set_class.model_name.param_key] || ActionController::Parameters.new
-        change_set_class.model_attributes(work_params)
+      def resource_params
+        raw_params = params[resource_class.model_name.param_key]
+        raw_params ? raw_params.to_unsafe_h : {}
       end
 
       def redirect_to_return_controller
@@ -104,8 +111,9 @@ module Hyrax
         query_service.find_by(id: Valkyrie::ID.new(id.to_s))
       end
 
-      def query_service
-        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+      def adapter
+        Valkyrie::MetadataAdapter.find(:indexing_persister)
       end
+      delegate :query_service, :persister, to: :adapter
   end
 end
