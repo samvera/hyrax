@@ -32,7 +32,7 @@ module Hyrax
     # @return [AdminSet]
     # @raise [ActiveFedora::ObjectNotFoundError] when the we cannot find the AdminSet
     def admin_set
-      Hyrax::Queries.find_by(id: admin_set_id)
+      Hyrax::Queries.find_by(id: Valkyrie::ID.new(admin_set_id))
     end
 
     # Valid Release Period values
