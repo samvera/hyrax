@@ -45,4 +45,23 @@ RSpec.describe GenericWorkChangeSet do
                                  :visibility_after_lease, :collection_ids)
     end
   end
+
+  describe "#permissions" do
+    let(:work) do
+      GenericWork.new(edit_users: ['bob'],
+                      read_users: ['lynda'],
+                      edit_groups: ['librarians'],
+                      read_groups: ['patrons'])
+    end
+
+    before do
+      change_set.prepopulate!
+    end
+
+    it "has them" do
+      expect(change_set.permissions[0].agent_name).to eq 'bob'
+      expect(change_set.permissions[0].type).to eq 'person'
+      expect(change_set.permissions[0].access).to eq 'edit'
+    end
+  end
 end
