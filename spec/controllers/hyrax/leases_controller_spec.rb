@@ -63,10 +63,7 @@ RSpec.describe Hyrax::LeasesController do
       end
 
       context 'with files' do
-        before do
-          a_work.member_ids << create(:file_set).id
-          persister.save(resource: a_work)
-        end
+        let(:a_work) { create_for_repository(:work_with_one_file, user: user) }
 
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy)
@@ -83,7 +80,7 @@ RSpec.describe Hyrax::LeasesController do
       let(:expiration_date) { Time.zone.today + 2 }
 
       before do
-        a_work.member_ids << file_set.id
+        a_work.member_ids += [file_set.id]
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
