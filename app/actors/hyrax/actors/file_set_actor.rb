@@ -66,7 +66,7 @@ module Hyrax
         file_set.date_modified = now
         file_set.creator = [user.user_key]
         if assign_visibility?(file_set_params)
-          env = Actors::Environment.new(file_set, ability, file_set_params)
+          env = Actors::Environment.new(file_set, nil, ability, file_set_params)
           CurationConcern.file_set_create_actor.create(env)
         end
         yield(file_set) if block_given?
@@ -101,7 +101,7 @@ module Hyrax
       end
 
       def update_metadata(attributes)
-        env = Actors::Environment.new(file_set, ability, attributes)
+        env = Actors::Environment.new(file_set, nil, ability, attributes)
         CurationConcern.file_set_update_actor.update(env)
       end
 
