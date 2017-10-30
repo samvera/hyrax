@@ -12,7 +12,7 @@ RSpec.describe Hyrax::TrophiesController do
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json['user_id']).to eq user.id
-        expect(json['work_id']).to eq work.id
+        expect(json['work_id']).to eq work.id.to_s
       end
       context 'where the trophy already exists' do
         before do
@@ -25,7 +25,7 @@ RSpec.describe Hyrax::TrophiesController do
           expect(response).to be_success
           json = JSON.parse(response.body)
           expect(json['user_id']).to eq user.id
-          expect(json['work_id']).to eq work.id
+          expect(json['work_id']).to eq work.id.to_s
         end
       end
     end
