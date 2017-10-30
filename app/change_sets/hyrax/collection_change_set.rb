@@ -4,7 +4,7 @@ module Hyrax
     attr_accessor :current_ability, :repository
 
     delegate :id, :depositor, :permissions, to: :model
-
+    delegate :primary_terms, :secondary_terms, to: :class
     delegate :human_readable_type, :member_ids, :representative_id, :thumbnail_id, to: :model
     property :resource_type, multiple: false, required: false
     property :title, multiple: false, required: true
@@ -36,26 +36,38 @@ module Hyrax
       Hash[all_files_with_access]
     end
 
-    # Terms that appear above the accordion
-    def primary_terms
-      [:title]
-    end
+    class << self
+      # Combined primary and secondary terms
+      def terms
+        primary_terms + secondary_terms
+      end
 
-    # Terms that appear within the accordion
-    def secondary_terms
-      [:creator,
-       :contributor,
-       :description,
-       :keyword,
-       :license,
-       :publisher,
-       :date_created,
-       :subject,
-       :language,
-       :identifier,
-       :based_near,
-       :related_url,
-       :resource_type]
+      # Terms that appear above the accordion
+      def primary_terms
+        [:title]
+      end
+
+      # Terms that appear within the accordion
+      # rubocop:disable Metrics/MethodLength
+      def secondary_terms
+        [:creator,
+         :contributor,
+         :description,
+         :keyword,
+         :license,
+         :publisher,
+         :date_created,
+         :subject,
+         :language,
+         :identifier,
+         :based_near,
+         :related_url,
+         :resource_type,
+         :thumbnail_id,
+         :representative_id,
+         :visibility]
+      end
+      # rubocop:enable Metrics/MethodLength
     end
 
     # Do not display additional fields if there are no secondary terms
