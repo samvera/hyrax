@@ -3,22 +3,22 @@
 RSpec.describe Hyrax::AdminSetChangeSet do
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }
-  let(:form) { described_class.new(model, ability, repository) }
+  let(:change_set) { described_class.new(model) }
 
   describe "[] accessors" do
     let(:model) { build(:admin_set, description: ['one']) }
 
     it "cast to scalars" do
-      expect(form[:description]).to eq 'one'
+      expect(change_set[:description]).to eq 'one'
     end
   end
 
   describe "#thumbnail_title" do
-    subject { form.thumbnail_title }
+    subject { change_set.thumbnail_title }
 
     context "when the admin_set has a thumbnail" do
-      let(:thumbnail) { stub_model(FileSet, title: ['Ulysses']) }
-      let(:model) { AdminSet.new(thumbnail: thumbnail) }
+      let(:thumbnail) { create_for_repository(:file_set, title: ['Ulysses']) }
+      let(:model) { create_for_repository(:admin_set, thumbnail_id: thumbnail.id.to_s) }
 
       it { is_expected.to eq "Ulysses" }
     end
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::AdminSetChangeSet do
   end
 
   describe "#permission_template" do
-    subject { form.permission_template }
+    subject { change_set.permission_template }
 
     context "when the PermissionTemplate doesn't exist" do
       let(:model) { create_for_repository(:admin_set) }
@@ -43,7 +43,7 @@ RSpec.describe Hyrax::AdminSetChangeSet do
     end
 
     context "when the PermissionTemplate exists" do
-      let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: model.id) }
+      let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: model.id.to_s) }
       let(:model) { create_for_repository(:admin_set, with_permission_template: true) }
 
       it "uses the existing template" do
@@ -53,18 +53,8 @@ RSpec.describe Hyrax::AdminSetChangeSet do
     end
   end
 
-  describe "model_attributes" do
-    let(:raw_attrs) { ActionController::Parameters.new(title: 'test title') }
-
-    subject { described_class.model_attributes(raw_attrs) }
-
-    it "casts to enums" do
-      expect(subject[:title]).to eq ['test title']
-    end
-  end
-
   describe '#select_files' do
-    subject { form.select_files }
+    subject { change_set.select_files }
 
     let(:repository) { Hyrax::CollectionsController.new.repository }
     let(:model) { create_for_repository(:admin_set) }
@@ -74,12 +64,12 @@ RSpec.describe Hyrax::AdminSetChangeSet do
     end
 
     context 'with a work/file attached' do
-      let!(:work) { create_for_repository(:work_with_one_file, admin_set_id: model.id) }
-      let(:title) { work.file_sets.first.title.first }
-      let(:file_id) { work.file_sets.first.id }
+      let(:file_set) { create_for_repository(:file_set, title: [title]) }
+      let!(:work) { create_for_repository(:work, member_ids: [file_set.id], admin_set_id: model.id) }
+      let(:title) { 'test title' }
 
       it 'returns a hash of with file title as key and file id as value' do
-        expect(subject).to eq(title => file_id)
+        expect(subject).to eq(title => file_set.id.to_s)
       end
     end
   end

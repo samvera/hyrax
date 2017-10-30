@@ -62,31 +62,22 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#create" do
-      before do
-        controller.admin_set_create_service = service
-      end
-
       context "when it's successful" do
-        let(:service) do
-          lambda do |admin_set:, **_kargs|
-            admin_set.id = 123
-            # https://github.com/samvera/active_fedora/issues/1251
-            allow(admin_set).to receive(:persisted?).and_return(true)
-            true
-          end
-        end
-
         it 'creates file sets' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description',
                                                workflow_name: 'default' } }
-          admin_set = assigns(:admin_set)
+          admin_set = assigns(:resource)
           expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
         end
       end
 
       context "when it fails" do
         let(:service) { ->(**_kargs) { false } }
+
+        before do
+          controller.admin_set_create_service = service
+        end
 
         it 'shows the new form' do
           post :create, params: { admin_set: { title: 'Test title',
@@ -108,7 +99,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           get :show, params: { id: admin_set }
           expect(response).to be_success
           expect(assigns[:presenter]).to be_kind_of Hyrax::AdminSetPresenter
-          expect(assigns[:presenter].id).to eq admin_set.id
+          expect(assigns[:presenter].id).to eq admin_set.id.to_s
         end
       end
     end
@@ -139,7 +130,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
         patch :update, params: { id: admin_set,
                                  admin_set: { title: "Improved title" } }
         expect(response).to redirect_to(edit_admin_admin_set_path)
-        expect(assigns[:admin_set].title).to eq ['Improved title']
+        expect(assigns[:resource].title).to eq ['Improved title']
       end
     end
 
@@ -157,12 +148,8 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       end
 
       context "with a non-empty admin set" do
-        let(:work) { create_for_repository(:work, user: user) }
+        let!(:work) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
 
-        before do
-          admin_set.members << work
-          admin_set.reload
-        end
         it "doesn't delete the admin set (or work)" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)
