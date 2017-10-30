@@ -22,7 +22,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
       get :edit
       expect(response).to be_successful
-      expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
+      expect(assigns[:change_set].creator).to match_array ["Fred", "Wilma"]
     end
   end
 
@@ -47,8 +47,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "is successful" do
       put :update, params: { update_type: "delete_all" }
       expect(response).to redirect_to(dashboard_path(locale: 'en'))
-      expect { Hyrax::Queries.find_by(id: one.id) }.to raise_error(Ldp::Gone)
-      expect { Hyrax::Queries.find_by(id: two.id) }.to raise_error(Ldp::Gone)
+      expect { Hyrax::Queries.find_by(id: one.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+      expect { Hyrax::Queries.find_by(id: two.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
     end
 
     it "redirects to the return controller" do

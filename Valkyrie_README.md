@@ -14,6 +14,8 @@
 * Switch from create_date_dtsi to created_at_dtsi and system_modified_dtsi to timestamp
 * Instead of `GenericWorksController.curation_concern_type = GenericWork` use
   `GenericWorksController.resource_class = GenericWork`
+* You must switch to postgres (if you want to use the database adapter)
+* `rake valkyrie_engine:install:migrations; rake db:migrate`
 
 ## TODO:
 

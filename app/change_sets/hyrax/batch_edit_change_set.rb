@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 module Hyrax
-  class BatchEditChangeSet < WorkChangeSet
-    property :creator, virtual: true, multiple: true, required: false
-    property :contributor, virtual: true, multiple: true, required: false
-    property :description, virtual: true, multiple: true, required: false
-    property :keyword, virtual: true, multiple: true, required: false
-    property :resource_type, virtual: true, multiple: true, required: false
-    property :license, virtual: true, multiple: true, required: false
-    property :publisher, virtual: true, multiple: true, required: false
-    property :date_created, virtual: true, multiple: true, required: false
-    property :subject, virtual: true, multiple: true, required: false
-    property :language, virtual: true, multiple: true, required: false
-    property :identifier, virtual: true, multiple: true, required: false
-    property :based_near, virtual: true, multiple: true, required: false
-    property :related_url, virtual: true, multiple: true, required: false
+  class BatchEditChangeSet < Valkyrie::ChangeSet
+    property :creator, multiple: true, required: false
+    property :contributor, multiple: true, required: false
+    property :description, multiple: true, required: false
+    property :keyword, multiple: true, required: false
+    property :resource_type, multiple: true, required: false
+    property :license, multiple: true, required: false
+    property :publisher, multiple: true, required: false
+    property :date_created, multiple: true, required: false
+    property :subject, multiple: true, required: false
+    property :language, multiple: true, required: false
+    property :identifier, multiple: true, required: false
+    property :based_near, multiple: true, required: false
+    property :related_url, multiple: true, required: false
 
     # A list of IDs to perform a batch operation on
     property :batch_document_ids, virtual: true, multiple: true, required: false
@@ -22,11 +22,11 @@ module Hyrax
     # Contains a list of titles of all the works in the batch
     attr_accessor :names
 
-    # @param [ActiveFedora::Base] model the model backing the form
-    def initialize(*)
-      super
-      @names = []
-      @combined_attributes = initialize_combined_fields
+    def prepopulate!
+      super.tap do
+        @names = []
+        @combined_attributes = initialize_combined_fields
+      end
     end
 
     private
