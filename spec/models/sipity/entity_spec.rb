@@ -20,7 +20,7 @@ module Sipity
       let(:entity) { Sipity::Entity.new(proxy_for_global_id: work.to_global_id) }
 
       it 'will retrieve based on a GlobalID of the object' do
-        expect(entity.proxy_for).to eq(work)
+        expect(entity.proxy_for.id).to eq(work.id)
       end
     end
   end

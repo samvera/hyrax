@@ -29,9 +29,9 @@ RSpec.describe CatalogController, type: :controller do
         expect(response).to render_template('catalog/index')
 
         ids = assigns(:document_list).map(&:id)
-        expect(ids).to include rocks.id
-        expect(ids).to include clouds.id
-        expect(ids).not_to include file.id
+        expect(ids).to include rocks.id.to_s
+        expect(ids).to include clouds.id.to_s
+        expect(ids).not_to include file.id.to_s
       end
     end
 

@@ -91,7 +91,7 @@ RSpec.describe 'collection', type: :feature do
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
+      within('#document_' + collection.id.to_s) do
         click_link("Display all details of #{collection.title.first}")
       end
       expect(page).to have_content(collection.title.first)
