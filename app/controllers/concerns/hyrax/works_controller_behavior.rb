@@ -35,9 +35,9 @@ module Hyrax
       @change_set = change_set_class.new(find_resource(params[:id])).prepopulate!
       authorize! :update, @change_set.resource
       if actor.update(actor_environment)
-        after_update_success(@resource, @change_set)
+        after_update_success(@change_set.resource, @change_set)
       else
-        after_update_error(@resource, @change_set)
+        after_update_error(@change_set.resource, @change_set)
       end
     end
 
