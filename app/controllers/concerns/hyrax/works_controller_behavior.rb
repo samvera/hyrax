@@ -12,6 +12,11 @@ module Hyrax
       class_attribute :show_presenter, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.search_builder_class = WorkSearchBuilder
+      self.change_set_persister = Hyrax::ChangeSetPersister.new(
+        metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+        storage_adapter: Valkyrie.config.storage_adapter
+      )
+
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
