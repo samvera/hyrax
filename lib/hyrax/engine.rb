@@ -44,7 +44,6 @@ module Hyrax
 
     initializer 'requires' do
       require 'hydra/derivatives'
-      require 'hyrax/controller_resource'
       require 'hyrax/search_state'
       require 'hyrax/errors'
       require 'power_converters'
