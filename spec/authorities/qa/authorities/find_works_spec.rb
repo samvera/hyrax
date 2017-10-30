@@ -36,7 +36,7 @@ RSpec.describe Qa::Authorities::FindWorks do
       end
 
       it 'displays a list of other works deposited by current user, exluding the child work' do
-        expect(subject.map { |result| result[:id] }).to match_array [work2.id]
+        expect(subject.map { |result| result[:id] }).to match_array [work2.id.to_s, work4.id.to_s]
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Qa::Authorities::FindWorks do
       end
 
       it 'displays a list of other works deposited by current user, excluding the parent work' do
-        expect(subject.map { |result| result[:id] }).to match_array [work2.id]
+        expect(subject.map { |result| result[:id] }).to match_array [work2.id.to_s, work4.id.to_s]
       end
     end
   end
