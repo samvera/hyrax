@@ -153,7 +153,7 @@ RSpec.describe JobIoWrapper, type: :model do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
 
     it 'produces an appropriate FileActor' do
-      allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
+      allow(Hyrax::Queries).to receive(:find_by).and_return(file_set)
       expect(subject.file_actor).to eq(file_actor)
     end
   end
