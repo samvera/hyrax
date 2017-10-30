@@ -15,11 +15,14 @@ RSpec.describe Hyrax::TransfersPresenter do
 
     it 'returns a list of ProxyDepositRequests' do
       expect(incoming_proxy_deposits.first).to be_kind_of ProxyDepositRequest
-      expect(incoming_proxy_deposits.first.work_id).to eq(incoming_work.id)
+      expect(incoming_proxy_deposits.first.work_id).to eq(incoming_work.id.to_s)
     end
 
     context "When the incoming request is for a deleted work" do
-      before { incoming_work.destroy }
+      before do
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        persister.delete(resource: incoming_work)
+      end
       it "does not show that work" do
         expect(incoming_proxy_deposits).to be_empty
       end
@@ -38,7 +41,7 @@ RSpec.describe Hyrax::TransfersPresenter do
 
     it 'returns a list of ProxyDepositRequests' do
       expect(subject.first).to be_kind_of ProxyDepositRequest
-      expect(subject.first.work_id).to eq(outgoing_work.id)
+      expect(subject.first.work_id).to eq(outgoing_work.id.to_s)
     end
   end
 end
