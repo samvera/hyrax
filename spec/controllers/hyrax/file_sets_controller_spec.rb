@@ -320,7 +320,7 @@ RSpec.describe Hyrax::FileSetsController do
           expect(response).to be_successful
           expect(flash).to be_empty
           expect(assigns[:presenter]).to be_kind_of Hyrax::FileSetPresenter
-          expect(assigns[:presenter].id).to eq file_set.id
+          expect(assigns[:presenter].id).to eq file_set.id.to_s
           expect(assigns[:presenter].events).to be_kind_of Array
           expect(assigns[:presenter].fixity_check_status).to eq 'Fixity checks have not yet been run on this object'
         end
