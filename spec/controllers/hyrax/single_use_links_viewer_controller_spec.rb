@@ -40,7 +40,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
     it "renders the file set's show page and deletes the link from the database" do
       get 'show', params: { id: show_link_hash }
       expect(response).to be_success
-      expect(assigns[:presenter].id).to eq file.id
+      expect(assigns[:presenter].id).to eq file.id.to_s
       expect { SingleUseLink.find_by_downloadKey!(show_link_hash) }.to raise_error ActiveRecord::RecordNotFound
     end
 
