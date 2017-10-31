@@ -11,10 +11,6 @@ RSpec.describe 'User' do
     let(:current_user) { user }
     let(:collection) { create_for_repository(:collection, visibility: visibility, user: creating_user) }
 
-    before do
-      collection.visibility = visibility
-      collection.save
-    end
     describe 'the collection creator' do
       let(:current_user) { creating_user }
 
