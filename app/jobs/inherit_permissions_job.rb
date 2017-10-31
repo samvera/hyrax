@@ -5,7 +5,8 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   #
   # @param work containing access level and filesets
   def perform(work)
-    work.file_sets.each do |file|
+    file_sets = Hyrax::Queries.find_members(resource: work, model: ::FileSet)
+    file_sets.each do |file|
       attribute_map = work.permissions.map(&:to_hash)
 
       # copy and removed access to the new access with the delete flag
@@ -18,7 +19,7 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
 
       # apply the new and deleted attributes
       file.permissions_attributes = attribute_map
-      file.save!
+      persister.save(resource: file)
     end
   end
 end

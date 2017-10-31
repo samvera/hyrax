@@ -14,8 +14,14 @@ module Hyrax
         work.lease_visibility! # If the lease has lapsed, update the current visibility.
         work.deactivate_lease!
         work.lease.save!
-        work.save!
+        persister.save(resource: work)
       end
+
+      private
+
+        def persister
+          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        end
     end
   end
 end
