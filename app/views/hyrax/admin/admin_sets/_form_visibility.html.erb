@@ -34,7 +34,7 @@
                       <li class="radio form-inline">
                         <label>
                           <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO  %>
-                          <%= t('.release.varies.between') %>
+                          <%= t('.release.varies.period') %>
                           <%= f.collection_select :release_embargo, f.object.embargo_options, :first, :last, prompt: t('.release.varies.embargo.select') %>
                         </label>
                       </li>
