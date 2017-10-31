@@ -71,6 +71,7 @@ en:
           header:         "Edit Administrative Set"
         form:
           cancel:               "Cancel"
+          note:                 "Users granted a new role will only see works that are deposited after that role has been granted."
           permission_destroy_errors:
             admin_group:        "The repository administrators group cannot be removed"
           permission_update_notices:
