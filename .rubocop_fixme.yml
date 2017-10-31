@@ -4,6 +4,7 @@ Security/MarshalLoad:
 
 Metrics/ClassLength:
   Exclude:
+    - 'app/change_sets/hyrax/work_change_set.rb'
     - 'app/controllers/hyrax/dashboard/collections_controller.rb'
     - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
