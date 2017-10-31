@@ -40,9 +40,10 @@ module Hyrax
       # @param [String] revision_id
       # @return [CharacterizeJob, FalseClass] spawned job on success, false on failure
       def revert_to(revision_id)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         repository_file = related_file
         repository_file.restore_version(revision_id)
-        return false unless file_set.save
+        return false unless persister.save(resource: file_set)
         Hyrax::VersioningService.create(repository_file, user)
         CharacterizeJob.perform_later(file_set, repository_file.id)
       end
