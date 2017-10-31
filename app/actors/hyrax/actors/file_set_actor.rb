@@ -163,7 +163,7 @@ module Hyrax
           # Although ActiveFedora clears the children nodes it leaves those fields in Solr populated.
           work.thumbnail = nil if work.thumbnail_id == file_set.id
           work.representative = nil if work.representative_id == file_set.id
-          work.save!
+          persister.save(resource: work)
         end
     end
   end

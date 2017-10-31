@@ -58,7 +58,7 @@ module Hyrax
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
             actor.attach_to_work(env.curation_concern)
-            fs.save!
+            Valkyrie::MetadataAdapter.find(:indexing_persister).persister(resource: fs)
             uri = URI.parse(URI.encode(url))
             if uri.scheme == 'file'
               IngestLocalFileJob.perform_later(fs, URI.decode(uri.path), env.user)
