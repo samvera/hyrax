@@ -11,7 +11,7 @@ class VisibilityCopyJob < Hyrax::ApplicationJob
       file.visibility = work.visibility # visibility must come first, because it can clear an embargo/lease
       copy_visibility_modifier(work: work, file: file, modifier: :lease)
       copy_visibility_modifier(work: work, file: file, modifier: :embargo)
-      file.save!
+      persister.save(resource: file)
     end
   end
 
