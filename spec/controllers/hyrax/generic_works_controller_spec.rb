@@ -466,7 +466,8 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context 'when I am a repository manager' do
       let(:work_to_be_deleted) { create_for_repository(:work, :private) }
-      let(:user) { create(:admin) }
+
+      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
 
       it 'someone elses private work should delete the work' do
         delete :destroy, params: { id: work_to_be_deleted }
