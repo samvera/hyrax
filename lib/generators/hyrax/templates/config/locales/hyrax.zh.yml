@@ -4,7 +4,7 @@ zh:
     search:
       fields:
         facet:
-          based_near_sim: 位置
+          based_near_label_sim: 位置
           creator_sim: 创造者
           file_format_sim: 文件格式
           generic_type_sim: 类型
