@@ -14,13 +14,13 @@ module Hyrax
       deprecation_deprecate parents: 'use query_service#parents() instead.'
 
       # Returns the first parent object
-      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see Hyrax::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
+      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see Hyrax::ParentContainer in app/controllers/concerns/hyrax/parent_container.rb)
       def parent
         parents.first
       end
 
       # Returns the id of first parent object
-      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see Hyrax::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
+      # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see Hyrax::ParentContainer in app/controllers/concerns/hyrax/parent_container.rb)
       delegate :id, to: :parent, prefix: true
 
       # If any parent objects are pointing at this object as their
