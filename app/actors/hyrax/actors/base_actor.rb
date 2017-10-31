@@ -19,7 +19,9 @@ module Hyrax
         assign_modified_date(env)
         yield env.change_set if block_given?
         return unless env.change_set.validate(env.attributes)
-        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+        saved_record = save(env)
+        saved_record && next_actor.create(env) &&
+          run_callbacks(:after_create_concern, saved_record, env.user)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -27,7 +29,8 @@ module Hyrax
       def update(env)
         assign_modified_date(env)
         return unless env.change_set.validate(env.attributes)
-        next_actor.update(env) && save(env) && run_callbacks(:after_update_metadata, env)
+        next_actor.update(env) && save(env) &&
+          run_callbacks(:after_update_metadata, env.resource, env.user)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -50,16 +53,19 @@ module Hyrax
           @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
         end
 
-        def run_callbacks(hook, env)
-          Hyrax.config.callback.run(hook, env.curation_concern, env.user)
+        def run_callbacks(hook, resource, user)
+          Hyrax.config.callback.run(hook, resource, user)
           true
         end
 
+        # @return [Valkyrie::Resource] the saved resource if it is successful
         def save(env)
           env.change_set.sync
+          resource = nil
           env.change_set_persister.buffer_into_index do |persist|
-            persist.save(change_set: env.change_set)
+            resource = persist.save(change_set: env.change_set)
           end
+          resource
         end
 
         def assign_modified_date(env)
