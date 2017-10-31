@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:depositor) { create(:user) }
-  let(:depositor_ability) { ::Ability.new(depositor) }
+  let(:ability) { ::Ability.new(depositor) }
   let(:work) { build(:work) }
   let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }

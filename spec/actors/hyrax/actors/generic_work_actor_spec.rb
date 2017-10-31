@@ -41,13 +41,16 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'failure' do
+      let(:persister) { double }
+
       before do
         allow(middleware).to receive(:attach_files).and_return(true)
+        allow(change_set_persister).to receive(:buffer_into_index).and_yield(persister)
       end
 
       # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
       it 'returns false', :clean_repo do
-        expect(curation_concern).to receive(:save).and_return(false)
+        expect(persister).to receive(:save).and_return(false)
         expect(middleware.create(env)).to be false
       end
     end
@@ -189,9 +192,14 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
     context 'failure' do
       let(:attributes) { {} }
+      let(:persister) { double }
+
+      before do
+        allow(change_set_persister).to receive(:buffer_into_index).and_yield(persister)
+      end
 
       it 'returns false' do
-        expect(curation_concern).to receive(:save).and_return(false)
+        expect(persister).to receive(:save).and_return(false)
         expect(subject.update(env)).to be false
       end
     end
