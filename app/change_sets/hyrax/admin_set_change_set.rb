@@ -3,7 +3,7 @@ module Hyrax
     # self.terms = [:title, :description, :thumbnail_id]
     property :title, multiple: false, required: true
     property :description, multiple: true, required: false
-    delegate :member_ids, :thumbnail_id, to: :resource
+    delegate :thumbnail_id, to: :resource
 
     # Cast any array values on the model to scalars.
     def [](key)
@@ -44,18 +44,18 @@ module Hyrax
       Hash[all_files_with_access]
     end
 
+    # Override this method if you have a different way of getting the member's ids
+    def member_ids
+      Hyrax::Queries.find_inverse_references_by(resource: resource, property: :admin_set_id).map(&:id).map(&:to_s)
+    end
+
     private
 
       def all_files_with_access
-        member_presenters(member_work_ids).flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
+        member_presenters.flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
       end
 
-      # Override this method if you have a different way of getting the member's ids
-      def member_work_ids
-        Hyrax::Queries.find_inverse_references_by(resource: resource, property: :admin_set_id).map(&:id).map(&:to_s)
-      end
-
-      def member_presenters(member_ids)
+      def member_presenters
         PresenterFactory.build_for(ids: member_ids,
                                    presenter_class: WorkShowPresenter,
                                    presenter_args: [nil])
