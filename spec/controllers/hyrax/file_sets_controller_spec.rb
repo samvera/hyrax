@@ -132,7 +132,7 @@ RSpec.describe Hyrax::FileSetsController do
           expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user)
           expect do
             delete :destroy, params: { id: file_set }
-          end.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
+          end.to change { Hyrax::Queries.exists?(file_set.id) }.from(true).to(false)
           expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
         end
       end
