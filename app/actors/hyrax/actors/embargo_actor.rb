@@ -14,8 +14,14 @@ module Hyrax
         work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
         work.deactivate_embargo!
         work.embargo.save!
-        work.save!
+        persister.save(resource: work)
       end
+
+      private
+
+        def persister
+          Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        end
     end
   end
 end
