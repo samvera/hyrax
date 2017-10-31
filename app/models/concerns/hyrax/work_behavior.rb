@@ -8,7 +8,7 @@ module Hyrax
     include Serializers
     include Hydra::WithDepositor
     include Solrizer::Common
-    # include WithFileSets
+    include WithFileSets
     include Naming
     include CoreMetadata
     include InAdminSet

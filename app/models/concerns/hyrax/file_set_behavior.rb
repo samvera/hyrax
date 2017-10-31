@@ -59,5 +59,9 @@ module Hyrax
     def file_set?
       true
     end
+
+    def in_works
+      Hyrax::Queries.find_inverse_references_by(resource: self, property: :member_ids)
+    end
   end
 end
