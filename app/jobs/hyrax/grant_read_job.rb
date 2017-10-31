@@ -10,11 +10,5 @@ module Hyrax
       file_set.read_users += [user_key]
       persister.save(resource: file_set)
     end
-
-    private
-
-      def persister
-        Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-      end
   end
 end

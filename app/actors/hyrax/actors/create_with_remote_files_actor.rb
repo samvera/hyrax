@@ -67,7 +67,7 @@ module Hyrax
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
             actor.attach_to_work(env.curation_concern)
-            fs.save!
+            Valkyrie::MetadataAdapter.find(:indexing_persister).persister(resource: fs)
             if uri.scheme == 'file'
               # Turn any %20 into spaces.
               file_path = CGI.unescape(uri.path)
