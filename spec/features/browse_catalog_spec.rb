@@ -1,26 +1,18 @@
 # coding: utf-8
 
 RSpec.describe "Browse catalog:", type: :feature do
+  let(:jill) { create(:user) }
+  let(:jills_keywords) { (1..25).collect { |i| "keyword#{format('%02d', i)}" } }
   let!(:jills_work) do
-    GenericWork.new do |work|
-      work.title = ["Jill's Research"]
-      (1..25).each do |i|
-        work.keyword << ["keyword#{format('%02d', i)}"]
-      end
-      work.apply_depositor_metadata('jilluser')
-      work.read_groups = ['public']
-      work.save!
-    end
+    create_for_repository(:work, title: "Jill's Research", keyword: jills_keywords,
+                                 user: jill, read_groups: ['public'])
   end
 
+  let(:jack) { create(:user) }
+  let(:jacks_keywords) { ['jacks_keyword'] }
   let!(:jacks_work) do
-    GenericWork.new do |work|
-      work.title = ["Jack's Research"]
-      work.keyword = ['jacks_keyword']
-      work.apply_depositor_metadata('jackuser')
-      work.read_groups = ['public']
-      work.save!
-    end
+    create_for_repository(:work, title: "Jack's Research", keyword: jacks_keywords,
+                                 user: jack, read_groups: ['public'])
   end
 
   before do
