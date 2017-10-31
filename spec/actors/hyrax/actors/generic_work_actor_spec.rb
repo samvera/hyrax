@@ -219,7 +219,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:old_parent) { create_for_repository(:work, user: user) }
       let(:attributes) do
         attributes_for(:work).merge(
-          in_works_ids: [parent.id]
+          member_of_collection_ids: [parent.id]
         )
       end
 
@@ -230,7 +230,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it "attaches the parent" do
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq [parent]
+        expect(curation_concern.in_works_ids).to eq [parent.id]
         expect(old_parent.reload.members).to eq []
       end
     end
@@ -239,7 +239,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:old_parent) { create_for_repository(:work) }
       let(:attributes) do
         attributes_for(:work).merge(
-          in_works_ids: []
+          member_of_collection_ids: []
         )
       end
 
@@ -253,7 +253,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       it "removes the old parent" do
         allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq []
+        expect(curation_concern.in_works_ids).to eq []
         reloaded = Hyrax::Queries.find_by(id: old_parent.id)
         expect(reloaded.member_ids).to eq []
       end
@@ -263,7 +263,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:parent) { FactoryGirl.create_for_repository(:work) }
       let(:attributes) do
         attributes_for(:work).merge(
-          in_works_ids: nil
+          member_of_collection_ids: nil
         )
       end
 
@@ -276,7 +276,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it "does nothing" do
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq [parent]
+        expect(curation_concern.in_works_ids).to eq [parent.id]
       end
     end
 
