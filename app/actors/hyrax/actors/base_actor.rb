@@ -36,7 +36,7 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if destroy was successful
       def destroy(env)
-        env.curation_concern.in_collection_ids.each do |id|
+        env.resource.member_of_collection_ids.each do |id|
           destination_collection = Hyrax::Queries.find_by(id: id)
           destination_collection.members.delete(env.curation_concern)
           solr_persister.save(resource: destination_collection)
