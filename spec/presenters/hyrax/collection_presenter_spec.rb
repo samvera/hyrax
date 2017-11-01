@@ -11,15 +11,15 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   let(:collection) do
-    create_for_repository(:collection,
-                          id: 'adc12v',
-                          description: ['a nice collection'],
-                          based_near: ['Over there'],
-                          title: ['A clever title'],
-                          keyword: ['neologism'],
-                          resource_type: ['Collection'],
-                          related_url: ['http://example.com/'],
-                          date_created: ['some date'])
+    build(:collection,
+          id: 'adc12v',
+          description: ['a nice collection'],
+          based_near: ['Over there'],
+          title: ['A clever title'],
+          keyword: ['neologism'],
+          resource_type: ['Collection'],
+          related_url: ['http://example.com/'],
+          date_created: ['some date'])
   end
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
