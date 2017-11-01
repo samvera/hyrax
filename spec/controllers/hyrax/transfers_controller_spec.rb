@@ -91,14 +91,16 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_work.reload.edit_users).to match_array [another_user.user_key, user.user_key]
+          reloaded = Hyrax::Queries.find_by(id: incoming_work.id)
+          expect(reloaded.edit_users).to match_array [another_user.user_key, user.user_key]
         end
         it "is successful when resetting access rights" do
           put :accept, params: { id: user.proxy_deposit_requests.first, reset: true }
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_work.reload.edit_users).to eq([user.user_key])
+          reloaded = Hyrax::Queries.find_by(id: incoming_work.id)
+          expect(reloaded.edit_users).to eq([user.user_key])
         end
         it "handles sticky requests" do
           put :accept, params: { id: user.proxy_deposit_requests.first, sticky: true }
