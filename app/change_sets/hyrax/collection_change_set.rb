@@ -3,11 +3,12 @@ module Hyrax
     # Used by the search builder
     attr_accessor :current_ability, :repository
 
-    delegate :id, :depositor, :permissions, to: :model
+    delegate :id, :depositor, to: :model
     delegate :primary_terms, :secondary_terms, to: :class
-    delegate :human_readable_type, :member_ids, :representative_id, :thumbnail_id, to: :model
+    delegate :human_readable_type, :member_ids, to: :model
+
     property :resource_type, multiple: false, required: false
-    property :title, multiple: false, required: true
+    property :title, multiple: true, required: true
     property :creator, multiple: true, required: false
     property :contributor, multiple: true, required: false
     property :description, multiple: true, required: false
@@ -20,7 +21,9 @@ module Hyrax
     property :identifier, multiple: true, required: false
     property :based_near, multiple: true, required: false
     property :related_url, multiple: true, required: false
-    property :visibility, multiple: true, required: false
+    property :thumbnail_id, multiple: false, required: false
+    property :representative_id, multiple: false, required: false
+    property :visibility, multiple: false, required: false
 
     # A list of IDs to perform a batch operation on
     property :batch, virtual: true, multiple: true, required: false
@@ -28,6 +31,8 @@ module Hyrax
     property :members, virtual: true, multiple: false, required: false
     # When the batch operation is 'move', what collection to move to:
     property :destination_collection_id, virtual: true, multiple: false, required: false
+
+    collection :permissions, virtual: true
 
     validates :title, presence: true
 
@@ -79,6 +84,11 @@ module Hyrax
     def thumbnail_title
       return unless model.thumbnail
       model.thumbnail.title.first
+    end
+
+    # We just need to respond to this method so that the rails nested form builder will work.
+    def permissions_attributes=
+      # nop
     end
 
     private
