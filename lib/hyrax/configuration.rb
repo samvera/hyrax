@@ -350,10 +350,12 @@ module Hyrax
     end
     alias google_analytics_id? google_analytics_id
 
-    attr_writer :registered_linked_data_resources
-    def registered_linked_data_resources
-      @registered_linked_data_resources ||= {
-        based_near: Hyrax::LinkedDataResources::GeonamesResource
+    # All linked_data_properties should be listed, class is optional
+    #   eg. subject: { }
+    attr_writer :registered_linked_data_attributes
+    def registered_linked_data_attributes
+      @registered_linked_data_attributes ||= {
+        based_near: { class: Hyrax::LinkedDataResources::GeonamesResource }
       }
     end
 

@@ -118,5 +118,9 @@ RSpec.describe GenericWork do
       expect(subject).to respond_to(:resource_type)
       expect(subject).to respond_to(:identifier)
     end
+    it "casts based_near to a RDF::URI" do
+      subject.based_near = ['http://sws.geonames.org/3413829']
+      expect(subject.based_near).to eq([RDF::URI('http://sws.geonames.org/3413829')])
+    end
   end
 end

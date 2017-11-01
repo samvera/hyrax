@@ -355,6 +355,17 @@ RSpec.describe GenericWorkChangeSet do
         end
       end
     end
+
+    context "validates linked_data_attributes" do
+      it "validates with a valid uri " do
+        work.based_near = ['http://sws.geonames.org/3413829']
+        expect(change_set).to be_valid
+      end
+      it "does not validate with an invalid uri" do
+        work.based_near = [RDF::URI('3413829')]
+        expect(change_set).not_to be_valid
+      end
+    end
   end
 
   describe "#fields" do
@@ -362,16 +373,16 @@ RSpec.describe GenericWorkChangeSet do
 
     # rubocop:disable RSpec/ExampleLength
     it do
-      is_expected.to eq ["created_at", "updated_at", "depositor", "title",
-                         "date_uploaded", "date_modified", "admin_set_id",
-                         "state", "proxy_depositor", "on_behalf_of",
-                         "arkivo_checksum", "member_of_collection_ids",
-                         "member_ids", "thumbnail_id", "representative_id",
-                         "label", "relative_path", "resource_type", "creator",
-                         "contributor", "description", "keyword", "license",
-                         "rights_statement",
-                         "publisher", "date_created", "subject", "language",
-                         "identifier", "related_url", "source", "based_near"]
+      is_expected.to include("created_at", "updated_at", "depositor", "title",
+                             "date_uploaded", "date_modified", "admin_set_id",
+                             "state", "proxy_depositor", "on_behalf_of",
+                             "arkivo_checksum", "member_of_collection_ids",
+                             "member_ids", "thumbnail_id", "representative_id",
+                             "label", "relative_path", "resource_type", "creator",
+                             "contributor", "description", "keyword", "license",
+                             "rights_statement",
+                             "publisher", "date_created", "subject", "language",
+                             "identifier", "related_url", "source", "based_near")
     end
     # rubocop:enable RSpec/ExampleLength
   end
