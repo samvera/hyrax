@@ -5,9 +5,10 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
   let(:user)          { create(:user) }
   let(:file_path)     { File.join(fixture_path, 'world.png') }
-  let(:file)          { fixture_file_upload(file_path, 'image/png') } # we will override for the different types of File objects
+  let(:file)          { fixture_file_upload('world.png', 'image/png') } # we will override for the different types of File objects
   let(:local_file)    { File.open(file_path) }
-  let(:file_set)      { create_for_repository(:file_set, content: fixture_file_upload(file_path, 'image/png')) }
+  # TODO: add let(:file_set) { create_for_repository(:file_set) } ?
+  let(:file_set)      { create_for_repository(:file_set, content: file) }
   let(:actor)         { described_class.new(file_set, user) }
   let(:relation)      { :original_file }
   let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
@@ -81,6 +82,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context 'using ::File' do
+      let(:file_set) { create_for_repository(:file_set) }
       let(:file) { local_file }
 
       before { actor.create_content(local_file) }
@@ -88,10 +90,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       it 'sets the label and title' do
         expect(file_set.label).to eq(File.basename(local_file))
         expect(file_set.title).to eq([File.basename(local_file)])
-      end
-
-      it 'gets the mime_type from original_file' do
-        expect(file_set.mime_type).to eq('image/png')
       end
     end
 
@@ -115,10 +113,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     context 'when a label is already specified' do
       let(:label) { 'test_file.png' }
       let(:file_set) do
-        FileSet.new do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.label = label
-        end
+        build(:file_set, user: user, label: label)
       end
       let(:actor) { described_class.new(file_set, user) }
 
@@ -134,6 +129,8 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe '#create_content when from_url is true' do
+    let(:file_set) { create_for_repository(:file_set) }
+
     before do
       expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
       allow(VisibilityCopyJob).to receive(:perform_later).with(file_set.parent).and_return(true)
@@ -150,7 +147,11 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       before do
         # Relationship must be declared before being used. Inject it here.
         FileSet.class_eval do
-          directly_contains_one :remastered, through: :files, type: ::RDF::URI("http://otherpcdm.example.org/use#Remastered"), class_name: 'Hydra::PCDM::File'
+          def remastered
+            return if member_ids.empty?
+            # TODO: we should be checking the use predicate here
+            Hyrax::Queries.find_by(id: member_ids.first)
+          end
         end
       end
 
@@ -160,9 +161,15 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
 
     context 'using ::File' do
+      let(:file_set) { create_for_repository(:file_set) }
       let(:file) { local_file }
+      let(:local_file) { File.open('tmp/world.png') }
 
-      before { actor.create_content(local_file, from_url: true) }
+      before do
+        # Ingesting removes the original, so make a tempoary copy to use.
+        FileUtils.cp(file_path, 'tmp/world.png')
+        actor.create_content(local_file, from_url: true)
+      end
 
       it 'sets the label and title' do
         expect(file_set.label).to eq(File.basename(local_file))
@@ -194,10 +201,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     context 'when a label is already specified' do
       let(:label) { 'test_file.png' }
       let(:file_set) do
-        FileSet.new do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.label = label
-        end
+        create_for_repository(:file_set, label: label, user: user)
       end
       let(:actor) { described_class.new(file_set, user) }
 
@@ -223,46 +227,51 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       expect(IngestJob).to receive(:perform_later).with(any_args).and_return(IngestJob.new)
       expect(actor.update_content(local_file)).to be_a(IngestJob)
     end
-    it 'runs callbacks' do
-      # Do not bother ingesting the file -- test only the result of callback
-      allow(file_actor).to receive(:ingest_file).with(any_args).and_return(double)
-      expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-      actor.update_content(local_file)
+
+    context "when the IngestJob is run" do
+      let(:local_file) { File.open('tmp/world.png') }
+
+      before do
+        # Ingesting removes the original, so make a tempoary copy to use.
+        FileUtils.cp(file_path, 'tmp/world.png')
+      end
+
+      it 'runs callbacks' do
+        # Do not bother ingesting the file -- test only the result of callback
+        allow(file_actor).to receive(:ingest_file).with(any_args).and_return(double)
+        expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
+        actor.update_content(local_file)
+      end
     end
   end
 
   describe "#destroy" do
     it "destroys the object" do
       actor.destroy
-      expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
+      expect { Hyrax::Queries.find_by(id: file_set.id) }.to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     context "representative and thumbnail of a work" do
       let(:persister) { Valkyrie.config.metadata_adapter.persister }
       let!(:work) do
-        work = create_for_repository(:work, member_ids: file_set.id)
-        # this is not part of a block on the create, since the work must be saved
-        # before the representative can be assigned
-        work.representative = file_set
-        work.thumbnail = file_set
-        persister.save(resource: work)
-        work
+        create_for_repository(:work,
+                              member_ids: file_set.id,
+                              representative_id: file_set.id,
+                              thumbnail_id: file_set.id)
       end
 
-      it "removes representative, thumbnail, and the proxy association" do
+      it "removes representative and thumbnail" do
+        actor.destroy
         gw = Hyrax::Queries.find_by(id: work.id)
-        expect(gw.representative_id).to eq(file_set.id)
-        expect(gw.thumbnail_id).to eq(file_set.id)
-        expect { actor.destroy }.to change { ActiveFedora::Aggregation::Proxy.count }.by(-1)
-        gw.reload
         expect(gw.representative_id).to be_nil
         expect(gw.thumbnail_id).to be_nil
+        expect(gw.member_ids).to eq []
       end
     end
   end
 
   describe "#attach_to_work" do
-    let(:work) { build(:work, :public) }
+    let(:work) { create_for_repository(:work, :public) }
 
     before do
       allow(actor).to receive(:acquire_lock_for).and_yield
@@ -270,25 +279,27 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     it 'copies file_set visibility from the parent' do
       actor.attach_to_work(work)
-      expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
+      expect(reloaded.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
     context 'without representative and thumbnail' do
       it 'assigns them (with persistence)' do
         actor.attach_to_work(work)
-        expect(work.representative).to eq(file_set)
-        expect(work.thumbnail).to eq(file_set)
-        expect { work.reload }.not_to change { [work.representative, work.thumbnail] }
+        reloaded = Hyrax::Queries.find_by(id: work.id)
+        expect(reloaded.representative_id).to eq(file_set.id)
+        expect(reloaded.thumbnail_id).to eq(file_set.id)
       end
     end
 
     context 'with representative and thumbnail' do
+      let(:work) { create_for_repository(:work, :public, thumbnail_id: 'ab123c78h', representative_id: 'zz365c78h') }
+
       it 'does not (re)assign them' do
-        allow(work).to receive(:thumbnail_id).and_return('ab123c78h')
-        allow(work).to receive(:representative_id).and_return('zz365c78h')
-        expect(work).not_to receive(:representative=)
-        expect(work).not_to receive(:thumbnail=)
         actor.attach_to_work(work)
+        reloaded = Hyrax::Queries.find_by(id: work.id)
+        expect(reloaded.representative_id).to eq(Valkyrie::ID.new('zz365c78h'))
+        expect(reloaded.thumbnail_id).to eq(Valkyrie::ID.new('ab123c78h'))
       end
     end
 
@@ -304,7 +315,9 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
       it "writes to the most up to date version" do
         actor.attach_to_work(work_v1)
-        expect(work_v1.member_ids.size).to eq 2
+        reloaded = Hyrax::Queries.find_by(id: work_v1.id)
+
+        expect(reloaded.member_ids.size).to eq 2
       end
     end
   end

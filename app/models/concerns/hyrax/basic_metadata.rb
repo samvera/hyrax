@@ -6,13 +6,9 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      attribute :label, Valkyrie::Types::SingleValuedString
-      # property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
-
-      attribute :relative_path, Valkyrie::Types::SingleValuedString
-      # property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false
-
-      # property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'), multiple: false
+      attribute :label, Valkyrie::Types::SingleValuedString.optional
+      attribute :relative_path, Valkyrie::Types::SingleValuedString.optional
+      attribute :import_url, Valkyrie::Types::SingleValuedString.optional
       attribute :resource_type, Valkyrie::Types::Set
       attribute :creator, Valkyrie::Types::Set
       attribute :contributor, Valkyrie::Types::Set
@@ -32,12 +28,6 @@ module Hyrax
       attribute :related_url, Valkyrie::Types::Set
       # property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
       attribute :source, Valkyrie::Types::Set
-
-      # id_blank = proc { |attributes| attributes[:id].blank? }
-      #
-      # class_attribute :controlled_properties
-      # self.controlled_properties = [:based_near]
-      # accepts_nested_attributes_for :based_near, reject_if: id_blank, allow_destroy: true
       attribute :based_near, Valkyrie::Types::Set
     end
   end
