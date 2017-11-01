@@ -3,6 +3,8 @@ module Hyrax
     class_attribute :workflow_class, :exclude_fields, :primary_terms, :secondary_terms
     delegate :human_readable_type, to: :resource
 
+    validate :validate_linked_data_attributes
+
     # Which fields show above the fold.
     self.primary_terms = [:title, :creator, :keyword, :rights_statement]
     self.secondary_terms = [:contributor, :description, :license, :publisher,
@@ -209,6 +211,13 @@ module Hyrax
         return if visibility.blank? || wants_embargo? || wants_lease? || validate_template_visibility(visibility)
 
         errors.add(:visibility, 'Visibility specified does not match permission template visibility requirement for selected AdminSet.')
+      end
+
+      # Validate that the contents of each RDF::URI is a valid URI
+      def validate_linked_data_attributes
+        Hyrax.config.registered_linked_data_attributes.each_key do |key|
+          errors.add(:key, "contains an invalid url") if key && send(key).is_a?(Array) && send(key).map(&:valid?).include?(false)
+        end
       end
   end
 end

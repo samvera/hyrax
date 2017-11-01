@@ -103,9 +103,12 @@ Hyrax.config do |config|
   # Replace the whole thing with
   #   config.fedora_schema = { }
 
-  # Register new linked_data_resource classes; used to define special behavior for retrieving a label from an
-  #   external service for the given attribute.
-  #   @example :based_near is already registerd to use Hyrax::LinkedDataResources::GeonamesResource
+  # Register new linked_data_attributes, and their resource fetching classes;
+  #   :class is optional. If not specificed Hyrax::LinkedDataResources::BaseResource is used
+  #   @example
+  #     {
+  #     based_near: { class: Hyrax::LinkedDataResources::GeonamesResource }
+  #     }
   # config.registered_registered_linked_data_resources[:my_new_attribute] = MyClass
 
   # Location autocomplete uses geonames to search for named regions

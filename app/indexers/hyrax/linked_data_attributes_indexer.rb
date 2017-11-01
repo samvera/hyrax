@@ -13,9 +13,7 @@ module Hyrax
     attr_reader :solr_hash
 
     class_attribute :linked_data_attributes
-    self.linked_data_attributes = %i[
-      based_near
-    ]
+    self.linked_data_attributes = Hyrax.config.registered_linked_data_attributes.keys
 
     def initialize(resource)
       @resource = resource.fetch(:resource)
