@@ -18,6 +18,10 @@ module Hyrax
       new(label: file.original_filename, original_filename: file.original_filename, mime_type: file.content_type, use: file.try(:use) || [Valkyrie::Vocab::PCDMUse.OriginalFile])
     end
 
+    def work?
+      false
+    end
+
     def title
       label
     end
