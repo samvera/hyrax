@@ -1,19 +1,19 @@
 RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
   let(:collection) { Collection.new }
-  let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
+  let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
 
   before do
-    allow(collection).to receive(:open_access?).and_return(true)
-    allow(collection).to receive(:authenticated_only_access?).and_return(false)
-    allow(collection).to receive(:private_access?).and_return(false)
+    # allow(collection).to receive(:open_access?).and_return(true)
+    # allow(collection).to receive(:authenticated_only_access?).and_return(false)
+    # allow(collection).to receive(:private_access?).and_return(false)
     controller.request.path_parameters[:id] = 'j12345'
-    assign(:form, collection_form)
+    assign(:change_set, change_set)
     assign(:collection, collection)
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:collections_path).and_return("/collections")
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(collection_form).to receive(:display_additional_fields?).and_return(additional_fields)
-    allow(collection_form).to receive(:permissions).and_return([])
+    allow(change_set).to receive(:display_additional_fields?).and_return(additional_fields)
+    allow(change_set).to receive(:permissions).and_return([])
   end
 
   context 'with secondary terms' do
@@ -39,7 +39,6 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
       expect(rendered).to have_selector("input#collection_related_url")
       expect(rendered).to have_selector("select#collection_license")
       expect(rendered).to have_selector("select#collection_resource_type")
-      expect(rendered).not_to have_selector("input#collection_visibility")
       expect(rendered).to have_content('Additional fields')
     end
   end
