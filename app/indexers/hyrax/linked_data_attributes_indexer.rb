@@ -17,8 +17,8 @@ module Hyrax
       based_near
     ]
 
-    def initialize(resource)
-      @resource = resource.fetch(:resource)
+    def initialize(resource:)
+      @resource = resource
       @solr_hash = {}
     end
 
