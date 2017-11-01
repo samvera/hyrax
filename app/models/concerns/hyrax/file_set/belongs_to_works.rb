@@ -9,9 +9,9 @@ module Hyrax
 
       # Objects that call this FileSet a member
       def parents
-        query_service.parents(resource: self)
+        Hyrax::Queries.find_parents(resource: self)
       end
-      deprecation_deprecate parents: 'use query_service#parents() instead.'
+      deprecation_deprecate parents: 'use Hyrax::Queries#find_parents() instead.'
 
       # Returns the first parent object
       # This is a hack to handle things like FileSets inheriting access controls from their parent.  (see Hyrax::ParentContainer in app/controllers/concerns/hyrax/parent_container.rb)
