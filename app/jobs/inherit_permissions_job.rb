@@ -7,19 +7,22 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   def perform(work)
     file_sets = Hyrax::Queries.find_members(resource: work, model: ::FileSet)
     file_sets.each do |file|
-      attribute_map = work.permissions.map(&:to_hash)
-
-      # copy and removed access to the new access with the delete flag
-      file.permissions.map(&:to_hash).each do |perm|
-        unless attribute_map.include?(perm)
-          perm[:_destroy] = true
-          attribute_map << perm
-        end
-      end
-
-      # apply the new and deleted attributes
-      file.permissions_attributes = attribute_map
-      persister.save(resource: file)
+      file_change_set = Hyrax::FileSetChangeSet.new(file)
+      file_change_set.read_users = work.read_users
+      file_change_set.read_groups = work.read_groups
+      file_change_set.edit_users = work.edit_users
+      file_change_set.edit_groups = work.edit_groups
+      file_change_set.sync
+      change_set_persister.save(change_set: file_change_set)
     end
   end
+
+  private
+
+    def change_set_persister
+      Hyrax::ChangeSetPersister.new(
+        metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+        storage_adapter: Valkyrie.config.storage_adapter
+      )
+    end
 end
