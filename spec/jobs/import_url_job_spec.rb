@@ -5,14 +5,15 @@ RSpec.describe ImportUrlJob do
   let(:file_hash) { '/673467823498723948237462429793840923582' }
 
   let(:file_set) do
-    FileSet.new(import_url: "http://example.org#{file_hash}",
-                label: file_path) do |f|
-      f.apply_depositor_metadata(user.user_key)
-    end
+    create_for_repository(:file_set,
+                          import_url: "http://example.org#{file_hash}",
+                          label: file_path,
+                          user: user)
   end
 
   let(:operation) { create(:operation) }
   let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   before do
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
@@ -31,7 +32,7 @@ RSpec.describe ImportUrlJob do
   context 'after running the job' do
     before do
       file_set.id = 'abc123'
-      allow(file_set).to receive(:reload)
+      persister.save(resource: file_set)
     end
 
     it 'creates the content and updates the associated operation' do
@@ -44,14 +45,11 @@ RSpec.describe ImportUrlJob do
   context "when a batch update job is running too" do
     let(:title) { { file_set.id => ['File One'] } }
     let(:file_set_id) { file_set.id }
-    let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
     before do
-      persister.save(resource: file_set)
-      allow(ActiveFedora::Base).to receive(:find).and_call_original
-      allow(ActiveFedora::Base).to receive(:find).with(file_set_id).and_return(file_set)
       # run the batch job to set the title
-      file_set.update(title: ['File One'])
+      file_set.title = ['File One']
+      persister.save(resource: file_set)
     end
 
     it "does not kill all the metadata set by other processes" do
