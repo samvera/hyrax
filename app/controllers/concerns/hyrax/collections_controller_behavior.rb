@@ -81,24 +81,18 @@ module Hyrax
       end
 
       # Queries Solr for members of the collection.
-      # Populates @response and @member_docs similar to Blacklight Catalog#index populating @response and @documents
+      # Populates @member_docs similar to Blacklight Catalog#index populating @response and @documents
       def query_collection_members
-        params[:q] = params[:cq]
-        @response = repository.search(query_for_collection_members)
-        @member_docs = @response.documents
+        @member_docs = query_for_collection_members
       end
 
-      # @return <Hash> a representation of the solr query that find the collection members
+      # @return <Array> an array of the solr documents found by the query
       def query_for_collection_members
-        member_search_builder.with(params_for_members_query).query
-      end
-
-      # You can override this method if you need to provide additional inputs to the search
-      # builder. For example:
-      #   search_field: 'all_fields'
-      # @return <Hash> the inputs required for the collection member search builder
-      def params_for_members_query
-        params.merge(q: params[:cq])
+        members = Hyrax::Queries.find_by(id: params[:id]).member_object_ids
+        members.collect do |member_id|
+          argz = { fq: "id:#{member_id}", q: params[:cq] }
+          repository.search(argz).documents.first
+        end.compact
       end
 
       # Include 'catalog' and 'hyrax/base' in the search path for views, while prefering
