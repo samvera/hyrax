@@ -35,8 +35,8 @@ Rails.application.config.to_prepare do
       resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(
         Valkyrie::Indexers::AccessControlsIndexer,
         Hyrax::LinkedDataAttributesIndexer,
+        Hyrax::GenericTypeIndexer,
         # TODO: we may want Hyrax::IndexVisibility,
-        # TODO: we may want Hyrax::GenericType,
         # TODO: we may want Hyrax::IndexAdminSetLabel,
         # TODO: we may want file_size, height, width, mime-type for FileSets
         # TODO: we may want extracted_text for FileSets
