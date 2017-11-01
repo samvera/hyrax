@@ -22,14 +22,25 @@
           <%= t("hyrax.dashboard.my.action.edit_collection") %>
         <% end %>
       </li>
+    <% else %>
       <li role="menuitem" tabindex="-1">
-        <%= link_to hyrax.dashboard_collection_path(id),
-              class: 'itemicon itemtrash delete-collection-button',
-              title: t("hyrax.dashboard.my.action.delete_collection") do %>
-          <%= t("hyrax.dashboard.my.action.delete_collection") %>
-        <% end %>
+      <%= link_to "#",
+            class: 'itemicon itemedit edit-collection-deny-button',
+             title: t("hyrax.dashboard.my.action.edit_collection") do %>
+         <%= t("hyrax.dashboard.my.action.edit_collection") %>
+       <% end %>
       </li>
     <% end %>
+    <li role="menuitem" tabindex="-1">
+      <%= link_to "#",
+            class: 'itemicon itemtrash delete-collection-button',
+             title: t("hyrax.dashboard.my.action.delete_collection"),
+             data: { totalitems: collection_presenter.total_items , 
+                     membership: collection_presenter.collection_type_is_require_membership? ,
+                     hasaccess: (can? :edit, collection_presenter.solr_document) } do %>
+         <%= t("hyrax.dashboard.my.action.delete_collection") %>
+       <% end %>
+    </li>    
     <% if Hyrax::CollectionType.any_nestable? %>
       <li role="menuitem" tabindex="-1">
         <%= link_to "#",

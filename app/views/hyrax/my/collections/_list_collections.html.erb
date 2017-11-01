@@ -40,7 +40,6 @@
         </p>
       </div>
     </div>
-
   </td>
 
   <td class="collection_type"><%= collection_presenter.collection_type_badge %></td>
@@ -55,11 +54,14 @@
   <td class="text-center">
     <% if collection_presenter.solr_document.admin_set? %>
       <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
+      <%= render 'modal_delete_empty_admin_set', id: id %>
+      <%= render 'modal_delete_admin_set_deny', id: id, type_name: collection_presenter.collection_type.title %>
     <% else %>
       <%= render 'hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
       <!-- Render delete modal -->
-      <%= render 'modal_delete_collection', id: id %>
       <%= render 'modal_add_to_collection', id: id, source: "my" %>
+      <%= render 'modal_delete_collection', id: id %>      
+      <%= render 'modal_delete_empty_collection', id: id %>
     <% end %>
    </td>
 </tr>
