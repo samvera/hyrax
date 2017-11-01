@@ -34,6 +34,7 @@ module Hyrax
     property :version, virtual: true
 
     collection :permissions, virtual: true
+    collection :work_members, virtual: true
 
     validate :validate_lease
     validate :validate_embargo
@@ -53,6 +54,7 @@ module Hyrax
     def prepopulate!
       prepopulate_permissions
       prepopulate_admin_set_id
+      prepopulate_work_members
       super.tap do
         @_changes = Disposable::Twin::Changed::Changes.new
       end
@@ -60,6 +62,11 @@ module Hyrax
 
     # We just need to respond to this method so that the rails nested form builder will work.
     def permissions_attributes=
+      # nop
+    end
+
+    # We just need to respond to this method so that the rails nested form builder will work.
+    def work_members_attributes=
       # nop
     end
 
@@ -109,6 +116,10 @@ module Hyrax
       def prepopulate_admin_set_id
         admin_set = Hyrax::AdminSetService.new(search_context).search_results(:deposit).first
         self.admin_set_id = admin_set && admin_set.id
+      end
+
+      def prepopulate_work_members
+        self.work_members = Hyrax::Queries.find_members(resource: resource).select(&:work?)
       end
 
       def prepopulate_permissions
