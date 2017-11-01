@@ -53,7 +53,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   context "for a persisted object" do
-    let(:work) { stub_model(GenericWork, id: '456') }
+    let(:work) { stub_model(GenericWork, id: Valkyrie::ID.new('456')) }
 
     before do
       # Add an error to the work
