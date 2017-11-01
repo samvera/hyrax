@@ -23,6 +23,7 @@ module Hyrax
     end
 
     def to_solr
+      return {} unless @resource.work?
       linked_data_attributes.each do |ld_attribute_name|
         next unless resource.try(ld_attribute_name)
         stored_searchable_and_facetable(
@@ -49,7 +50,17 @@ module Hyrax
       # @param ld_attribute_name [Symbol] the attribute name
       # @return [Array<String>] an array of labels
       def fetch_labels(ld_attribute_name)
-        resource.send(ld_attribute_name).map { |ld_uri| fetch_label(ld_attribute_name, ld_uri) }
+        resource.send(ld_attribute_name).map do |value|
+          if uri?(value)
+            fetch_label(ld_attribute_name, value)
+          else
+            value # Don't try to fetch. The value is a literal.
+          end
+        end
+      end
+
+      def uri?(value)
+        %w[http https].include? Addressable::URI.parse(value).scheme
       end
 
       # Fetch the label from the external source via Hyrax::LinkedDataResourceFactory
