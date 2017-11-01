@@ -3,9 +3,7 @@ module Hyrax
     STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
 
     extend ActiveSupport::Concern
-    # include Hydra::AccessControls::WithAccessRight
     include Hydra::WithDepositor # for access to apply_depositor_metadata
-    # include Hydra::AccessControls::Permissions
     include Hyrax::CoreMetadata
     include Hyrax::Noid
     include Hyrax::HumanReadableType
