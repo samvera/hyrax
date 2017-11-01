@@ -82,8 +82,8 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
 
     before do
       # Add an error to the work
-      work.errors.add :base, 'broken'
-      work.errors.add :visibility, 'visibility_error'
+      change_set.errors.add :base, 'broken'
+      change_set.errors.add :visibility, 'visibility_error'
       allow(change_set).to receive(:select_files).and_return([])
     end
 
