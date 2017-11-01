@@ -26,7 +26,8 @@ module Hyrax
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
                                                   persister: persister)
-        file_node = node_builder.create(file: io)
+
+        file_node = node_builder.create(file: io.file, node: io.to_file_node)
         file_set.member_ids += [file_node.id]
         persister.save(resource: file_set)
 

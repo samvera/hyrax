@@ -15,7 +15,8 @@ FactoryBot.define do
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
                                                   persister: persister)
 
-        file_node = node_builder.create(file: evaluator.content)
+        node = Hyrax::FileNode.for(file: evaluator.content)
+        file_node = node_builder.create(file: evaluator.content, node: node)
         file_set.member_ids += [file_node.id]
       end
     end
