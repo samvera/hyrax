@@ -53,20 +53,9 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     describe "when work is in user's own collection and destroy is passed" do
       let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
-<<<<<<< HEAD
       let(:attributes) do
         { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
-=======
-      let(:attributes) { { member_of_collection_ids: [] } }
-      let(:env_initial) do
-        Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, member_of_collection_ids: [collection.id], title: ['test'])
       end
-
-      before do
-        subject.create(env_initial)
->>>>>>> Works controller requires a change_set_persister
-      end
-
       let(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [collection.id]) }
 
       it "removes the work from that collection" do
