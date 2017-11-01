@@ -2,16 +2,17 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
   let(:collection) do
     stub_model(Collection, id: '123', depositor: 'bob')
   end
+  let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
 
   let(:form) do
-    view.simple_form_for(collection, url: '/update') do |fs_form|
+    view.simple_form_for(change_set, url: '/update') do |fs_form|
       return fs_form
     end
   end
 
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(collection).to receive(:permissions).and_return(permissions)
+    allow(change_set).to receive(:permissions).and_return(permissions)
     allow(view).to receive(:f).and_return(form)
     view.lookup_context.prefixes.push 'hyrax/base'
     view.extend Hyrax::PermissionsHelper
