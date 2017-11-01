@@ -17,10 +17,10 @@ RSpec.describe GenericWork do
     it { is_expected.to eq 'hyrax_generic_work' }
   end
 
-  describe ".properties" do
-    subject { described_class.properties.keys }
+  describe ".attributes" do
+    subject { described_class.attribute_names }
 
-    it { is_expected.to include("internal_resource", "create_date", "modified_date") }
+    it { is_expected.to include(:internal_resource, :created_at, :updated_at) }
   end
 
   describe "to_sipity_entity" do
@@ -41,7 +41,7 @@ RSpec.describe GenericWork do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
 
-    subject { work.state.rdf_subject }
+    subject { work.state }
 
     it { is_expected.to eq inactive }
   end
