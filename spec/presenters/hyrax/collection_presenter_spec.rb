@@ -290,6 +290,43 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
   end
 
+  describe "banner_file" do
+    let(:banner_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "banner.gif",
+        role: "banner",
+        target_url: ""
+      )
+    end
+
+    let(:logo_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "logo.gif",
+        role: "logo",
+        alt_txt: "This is the logo",
+        target_url: "http://logo.com"
+      )
+    end
+
+    before do
+      allow(presenter).to receive(:id).and_return('123')
+      allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'banner').and_return([banner_info])
+      allow(banner_info).to receive(:local_path).and_return("/temp/public/branding/123/banner/banner.gif")
+      allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'logo').and_return([logo_info])
+      allow(logo_info).to receive(:local_path).and_return("/temp/public/branding/123/logo/logo.gif")
+    end
+
+    it "banner check" do
+      expect(presenter.banner_file).to eq("/branding/123/banner/banner.gif")
+    end
+
+    it "logo check" do
+      expect(presenter.logo_record).to eq([{ file: "logo.gif", file_location: "/branding/123/logo/logo.gif", alttext: "This is the logo", linkurl: "http://logo.com" }])
+    end
+  end
+
   subject { presenter }
 
   it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
