@@ -19,9 +19,7 @@ module Hyrax
     end
     # rubocop:enable Style/PredicateName
 
-    def user
-      search_context.current_ability.current_user
-    end
+    delegate :user, to: :search_context
 
     def sync
       self.label ||= label_for(file)
