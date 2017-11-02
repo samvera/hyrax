@@ -81,7 +81,7 @@ module Hyrax
     end
 
     def parent
-      ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
+      ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}id-#{id}",
                                             fl: ActiveFedora.id_field)
                                      .map { |x| x.fetch(ActiveFedora.id_field) }
       @parent_presenter ||= Hyrax::PresenterFactory.build_for(ids: ids,

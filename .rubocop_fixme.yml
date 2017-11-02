@@ -64,6 +64,7 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
+    - 'spec/change_set_persisters/hyrax/file_set_change_set_persister_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
     - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
@@ -130,6 +131,7 @@ RSpec/AnyInstance:
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
+    - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
     - 'spec/controllers/hyrax/dashboard/collections_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
