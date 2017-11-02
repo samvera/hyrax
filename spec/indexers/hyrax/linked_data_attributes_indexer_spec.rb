@@ -1,8 +1,9 @@
 RSpec.describe Hyrax::LinkedDataAttributesIndexer do
+  subject(:solr_document) { service.to_solr }
+
   let(:user) { create(:user) }
+  let(:service) { described_class.new(resource: work) }
   let(:work) { create_for_repository(:work) }
-  let(:index_solr) { Valkyrie::MetadataAdapter.find(:index_solr) }
-  let(:persister) { index_solr.persister }
   let(:mpls) { File.open(fixture_path + '/geonames_json_mpls') }
 
   before do
@@ -11,8 +12,6 @@ RSpec.describe Hyrax::LinkedDataAttributesIndexer do
 
     stub_request(:get, /5037649/)
       .to_return(status: 200, body: mpls)
-
-    persister.save(resource: work)
   end
 
   context "with one remote resource (based near)" do
@@ -21,7 +20,7 @@ RSpec.describe Hyrax::LinkedDataAttributesIndexer do
     end
 
     it "indexes id and label" do
-      expect(index_solr.resource_factory.from_resource(resource: work).to_h.fetch(:based_near_label_tesim)).to eq ["Minneapolis, Minnesota, United States"]
+      expect(subject.fetch(:based_near_label_tesim)).to eq ["Minneapolis, Minnesota, United States"]
     end
   end
 
@@ -31,7 +30,7 @@ RSpec.describe Hyrax::LinkedDataAttributesIndexer do
     end
 
     it "indexes id and label" do
-      expect(index_solr.resource_factory.from_resource(resource: work).to_h.fetch(:based_near_label_tesim)).to eq ["Minneapolis, Minnesota, United States", "http://sws.geonames.org/2638077/"]
+      expect(subject.fetch(:based_near_label_tesim)).to eq ["Minneapolis, Minnesota, United States", "http://sws.geonames.org/2638077/"]
     end
   end
 end
