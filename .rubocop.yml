@@ -70,7 +70,7 @@ Style/MethodMissing:
 
 Style/NumericPredicate:
   Exclude:
-    - 'app/controllers/hyrax/file_sets_controller.rb'
+    - 'app/change_sets/hyrax/file_upload_change_set.rb'
 
 Style/SymbolArray:
   Enabled: false
@@ -95,7 +95,7 @@ Style/SingleLineBlockParams:
 
 Style/ZeroLengthPredicate:
   Exclude:
-    - 'app/controllers/hyrax/file_sets_controller.rb'
+    - 'app/change_sets/hyrax/file_upload_change_set.rb'
 
 Rails:
   Enabled: true
