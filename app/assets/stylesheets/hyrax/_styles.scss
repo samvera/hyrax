@@ -72,12 +72,15 @@ label.disabled {
   background-color:#0088CC;
 }
 
-/* Label and Button overrides for better contrast ratio */
+// Label and Button overrides for better contrast ratio
 html > body .label-success,
-html > body .btn-success { background-color: #387f38; }
+html > body .btn-success { background-color: $brand-success; }
+
 html > body .label-danger,
-html > body .btn-danger { background-color: #d33a35; }
+html > body .btn-danger { background-color: $brand-danger; }
+
 html > body .label-info,
-html > body .btn-info { background-color: #2c76c7; }
+html > body .btn-info { background-color: $brand-info; }
+
 html > body .label-warning,
-html > body .btn-warning { background-color: #565653; }
+html > body .btn-warning { background-color: $brand-warning; }
