@@ -12,9 +12,7 @@ module Hyrax
 
     collection :permissions_attributes, virtual: true
 
-    def user
-      search_context.current_ability.current_user
-    end
+    delegate :user, to: :search_context
 
     def sync
       if permissions_attributes
