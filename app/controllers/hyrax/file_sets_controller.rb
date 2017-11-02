@@ -3,11 +3,10 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
+    include Hyrax::ResourceController
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
-    load_and_authorize_resource class: ::FileSet, except: :show
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
-
     # provides the help_text view method
     helper PermissionsHelper
 
@@ -16,7 +15,11 @@ module Hyrax
 
     class_attribute :show_presenter, :change_set_class
     self.show_presenter = Hyrax::FileSetPresenter
-    self.change_set_class = Hyrax::Forms::FileSetEditForm
+    self.resource_class = ::FileSet
+    self.change_set_persister = Hyrax::FileSetChangeSetPersister.new(
+      metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+      storage_adapter: Valkyrie.config.storage_adapter
+    )
 
     # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
     # method. However the interface for various CurationConcern modules leverages the #curation_concern method
@@ -28,12 +31,7 @@ module Hyrax
     private :curation_concern=
     helper_method :file_set
 
-    # GET /concern/file_sets/:id
-    def edit
-      initialize_edit_form
-    end
-
-    # GET /concern/parent/:parent_id/file_sets/:id
+    # routed to /files/:id
     def show
       respond_to do |wants|
         wants.html { presenter }
@@ -42,55 +40,83 @@ module Hyrax
       end
     end
 
-    # DELETE /concern/file_sets/:id
-    def destroy
-      parent = curation_concern.parent
-      actor.destroy
+    def after_delete_success(_change_set, parent)
       redirect_to [main_app, parent], notice: 'The file has been deleted.'
     end
 
-    # PATCH /concern/file_sets/:id
-    def update
-      if attempt_update
-        after_update_response
-      else
-        after_update_failure_response
+    def destroy
+      @change_set = build_change_set(find_resource(params[:id]))
+      parent = Hyrax::Queries.find_parents(resource: @change_set.resource).first
+      authorize! :destroy, @change_set.resource
+      change_set_persister.buffer_into_index do |persist|
+        persist.delete(change_set: @change_set)
       end
-    rescue RSolr::Error::Http => error
-      flash[:error] = error.message
-      logger.error "FileSetsController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
-      render action: 'edit'
+      after_delete_success(@change_set, parent)
     end
 
     # GET /files/:id/stats
     def stats
+      authorize! :stats, find_resource(params[:id])
       @stats = FileUsage.new(params[:id])
     end
 
-    # GET /files/:id/citation
-    def citation; end
+    # routed to /files/:id/citation
+    def citation
+      authorize! :citation, find_resource(params[:id])
+    end
 
     private
 
-      # this is provided so that implementing application can override this behavior and map params to different attributes
-      def update_metadata
-        file_attributes = change_set_class.model_attributes(attributes)
-        actor.update_metadata(file_attributes)
+      # Returns a FileUploadChangeSet if they have created or updated a file
+      def change_set_class
+        #   curation_concern.relative_path = params[:relative_path] if params[:relative_path]
+        if action_name == 'create' || (action_name == 'update' && params[:file_set] && params[:file_set].key?(:files))
+          FileUploadChangeSet
+        elsif wants_to_revert?
+          RevertFileChangeSet
+        else
+          Hyrax::FileSetChangeSet
+        end
       end
 
-      def attempt_update
-        if wants_to_revert?
-          actor.revert_content(params[:revision])
-        elsif params.key?(:file_set)
-          if params[:file_set].key?(:files)
-            actor.update_content(params[:file_set][:files].first)
-          else
-            update_metadata
+      def change_set_persister
+        if change_set_class == RevertFileChangeSet
+          return Hyrax::RevertFileChangeSetPersister.new(
+            metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+            storage_adapter: Valkyrie.config.storage_adapter
+          )
+        end
+        self.class.change_set_persister
+      end
+
+      def after_create_error(_obj, change_set)
+        if change_set.has_file?
+          render_json_response(response_type: :unprocessable_entity,
+                               options: { errors: change_set.errors.to_h,
+                                          description: t('hyrax.api.unprocessable_entity.empty_file') })
+        else
+          render_json_response(response_type: :bad_request,
+                               options: { message: change_set.errors[:files].first,
+                                          description: 'missing file' })
+        end
+      end
+
+      def after_create_success(resource, _change_set)
+        respond_to do |format|
+          format.html do
+            if request.xhr?
+              render 'jq_upload', formats: 'json', content_type: 'text/html'
+            else
+              redirect_to [main_app, resource.parent]
+            end
+          end
+          format.json do
+            render 'jq_upload', status: :created, location: polymorphic_path([main_app, resource])
           end
         end
       end
 
-      def after_update_response
+      def after_update_success(curation_concern, _change_set)
         respond_to do |wants|
           wants.html do
             redirect_to [main_app, curation_concern], notice: "The file #{view_context.link_to(curation_concern, [main_app, curation_concern])} has been updated."
@@ -102,10 +128,9 @@ module Hyrax
         end
       end
 
-      def after_update_failure_response
+      def after_update_error(curation_concern, _change_set)
         respond_to do |wants|
           wants.html do
-            initialize_edit_form
             flash[:error] = "There was a problem processing your request."
             render 'edit', status: :unprocessable_entity
           end
@@ -132,21 +157,6 @@ module Hyrax
         Hyrax::FileSetSearchBuilder
       end
 
-      def initialize_edit_form
-        @parent = @file_set.in_objects.first
-        original = @file_set.original_file
-        @version_list = Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
-        @groups = current_user.groups
-      end
-
-      def actor
-        @actor ||= Hyrax::Actors::FileSetActor.new(@file_set, current_user)
-      end
-
-      def attributes
-        params.fetch(:file_set, {}).except(:files).permit!.dup # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
-      end
-
       def presenter
         @presenter ||= begin
           _, document_list = search_results(params)
@@ -162,6 +172,12 @@ module Hyrax
 
       # Override this method to add additional response formats to your local app
       def additional_response_formats(_); end
+
+      def file_set_params
+        params.require(:file_set).permit(
+          :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo, :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :visibility, title: []
+        )
+      end
 
       # This allows us to use the unauthorized and form_permission template in hyrax/base,
       # while prefering our local paths. Thus we are unable to just override `self.local_prefixes`
