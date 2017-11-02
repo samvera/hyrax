@@ -50,6 +50,6 @@ RSpec.describe "Browse Dashboard", type: :feature do
     first('input#check_all').click
     expect do
       accept_confirm { click_button('Delete Selected') }
-    end.to change { GenericWork.count }.by(-3)
+    end.to change { Hyrax::Queries.find_all_of_model(model: GenericWork).count }.by(-3)
   end
 end
