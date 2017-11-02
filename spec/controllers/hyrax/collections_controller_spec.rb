@@ -37,7 +37,7 @@ RSpec.describe Hyrax::CollectionsController do
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
-        expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
+        expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map { |asset| asset.id.to_s }
       end
 
       context "and searching" do
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::CollectionsController do
           # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Third" }
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
-          expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
+          expect(assigns[:member_docs].map(&:id)).to match_array [asset3.id.to_s]
         end
       end
 
