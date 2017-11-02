@@ -1,6 +1,5 @@
 <% if presenter.representative_id.present? && presenter.representative_presenter.present? %>
   <%= media_display presenter.representative_presenter %>
 <% else %>
-  <%= image_tag 'default.png', class: "canonical-image" %>
+  <%= image_tag 'default.png', class: "canonical-image", width: 250 %>
 <% end %>
-

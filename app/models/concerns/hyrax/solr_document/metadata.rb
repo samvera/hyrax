@@ -70,6 +70,7 @@ module Hyrax
         attribute :mime_type, Solr::String, solr_name('mime_type', :stored_sortable)
         attribute :workflow_state, Solr::String, solr_name('workflow_state_name', :symbol)
         attribute :human_readable_type, Solr::String, solr_name('human_readable_type', :stored_searchable)
+        attribute :work_type_icon, Solr::String, solr_name('work_type_icon')
         attribute :representative_id, Solr::String, solr_name('hasRelatedMediaFragment', :symbol)
         attribute :thumbnail_id, Solr::String, solr_name('hasRelatedImage', :symbol)
         attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
