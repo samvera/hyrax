@@ -14,6 +14,8 @@ module Hyrax
     include Hooks
     define_hooks :before_save, :after_save, :before_delete, :after_delete
 
+    after_save :append_to_parent
+
     attr_reader :metadata_adapter, :storage_adapter
     delegate :persister, :query_service, to: :metadata_adapter
 
@@ -85,5 +87,15 @@ module Hyrax
         persister.save(resource: parent)
       end
     end
+
+    private
+
+      def append_to_parent(change_set:, resource:)
+        return unless change_set.append_id
+
+        parent_obj = query_service.find_by(id: change_set.append_id)
+        parent_obj.member_ids = parent_obj.member_ids + [resource.id]
+        persister.save(resource: parent_obj)
+      end
   end
 end
