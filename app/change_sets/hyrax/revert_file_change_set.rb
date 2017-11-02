@@ -3,8 +3,6 @@ module Hyrax
     property :revision, multiple: false, required: true, virtual: true
     property :search_context, virtual: true
 
-    def user
-      search_context.current_ability.current_user
-    end
+    delegate :user, to: :search_context
   end
 end
