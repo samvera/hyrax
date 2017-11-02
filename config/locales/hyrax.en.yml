@@ -460,6 +460,7 @@ en:
           detail_label:     "Display summary details of"
           listing:          "Listing of items you have deposited in"
           press_to:         "Press to"
+          results_per_page: "Number of results to display per page"
           show_label:       "Display all details of"
         works:        "Your Works"
       no_activity:              "User has no recent activity"
