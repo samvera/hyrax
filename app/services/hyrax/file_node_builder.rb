@@ -18,7 +18,7 @@ module Hyrax
                                            original_filename: node.original_filename.first,
                                            resource: saved_node)
       saved_node.file_identifiers = saved_node.file_identifiers + [stored_file.id]
-      saved_node = Valkyrie::FileCharacterizationService.for(file_node: node, persister: persister).characterize(save: false)
+      saved_node = Valkyrie::FileCharacterizationService.for(file_node: saved_node, persister: persister).characterize(save: false)
       persister.save(resource: saved_node)
     end
   end
