@@ -217,6 +217,11 @@ Hyrax.config do |config|
   # mount point.
   #
   # config.whitelisted_ingest_dirs = []
+
+  ## WorkTypeIcon configuration option to display on the Work Show page
+  #
+  # Enable/Disable display of the work type icon. Default is true
+  # config.display_work_icon = true
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"

@@ -40,3 +40,29 @@ ul.tabular {
   padding: $panel-body-padding;
   // text-align: center;
 }
+
+.table-borderless {
+  th,
+  td {
+    border: 0;
+    padding: 8px;
+    vertical-align: top;
+  }
+
+  th {
+    text-align: right;
+  }
+}
+
+.work-type-tag {
+  color: #808080;
+}
+
+.work-type {
+  margin-bottom: 18px;
+  margin-top: -8px;
+}
+
+h4 {
+  line-height: 1.3;
+}
