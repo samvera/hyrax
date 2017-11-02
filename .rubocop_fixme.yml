@@ -12,6 +12,7 @@ Metrics/ClassLength:
     - 'app/services/hyrax/user_stat_importer.rb'
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
+    - 'lib/hyrax/arkivo/actor.rb'
     - 'lib/hyrax/configuration.rb'
 
 Metrics/ParameterLists:

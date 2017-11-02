@@ -1,17 +1,11 @@
-RSpec.describe Hyrax::Arkivo::Actor do
-  before do
-    # Don't test characterization on these items; it breaks TravisCI and it's slow
-    allow(CharacterizeJob).to receive(:perform_later)
-    allow(Hyrax::CurationConcern).to receive(:actor).and_return(work_actor)
-    allow(Hyrax::Actors::FileSetActor).to receive(:new).and_return(file_actor)
-  end
+# frozen_string_literal: true
 
+RSpec.describe Hyrax::Arkivo::Actor do
   subject { described_class.new(user, item) }
 
   let(:user) { create(:user) }
   let(:item) { JSON.parse(FactoryGirl.json(:post_item)) }
-  let(:work_actor) { instance_double(Hyrax::Actors::TransactionalRequest) }
-  let(:file_actor) { double }
+  let(:storage_adapter) { Valkyrie::StorageAdapter.find(:disk) }
 
   describe 'Tempfile monkey-patches' do
     subject { Tempfile.new('foo') }
@@ -24,19 +18,16 @@ RSpec.describe Hyrax::Arkivo::Actor do
 
   describe '#create_work_from_item' do
     it 'creates a work and a file and returns a GenericWork' do
-      expect(work_actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
-        expect(env.attributes).to include(arkivo_checksum: item['file']['md5'],
-                                          "title" => [item['metadata']['title']])
-      end.and_return(true)
+      saved = subject.create_work_from_item
+      expect(saved).to be_instance_of(GenericWork)
+      expect(saved.description).to eq ["This was funded by the NSF in 2013"]
+      expect(saved.title).to eq [item['metadata']['title']]
+      expect(saved.arkivo_checksum).to eq item['file']['md5']
 
-      expect(file_actor).to receive(:create_metadata)
-      expect(file_actor).to receive(:create_content) do |tmpfile|
-        expect(tmpfile).to be_instance_of Tempfile
-        expect(tmpfile.read).to eq "arkivo\n"
-      end
-      expect(file_actor).to receive(:attach_to_work)
-
-      expect(subject.create_work_from_item).to be_instance_of(GenericWork)
+      file_set = Hyrax::Queries.find_members(resource: saved, model: ::FileSet).first
+      node = Hyrax::Queries.find_members(resource: file_set, model: Hyrax::FileNode).find { |fn| fn.use.include? Valkyrie::Vocab::PCDMUse.OriginalFile }
+      binary = storage_adapter.find_by(id: node.file_identifiers.first)
+      expect(binary.read).to eq "arkivo\n"
     end
   end
 
@@ -46,33 +37,33 @@ RSpec.describe Hyrax::Arkivo::Actor do
     let(:description) { ['This is rather lengthy.'] }
     let(:checksum) { 'abc123' }
     let(:work) do
-      GenericWork.new(title: title, description: description) do |f|
-        f.apply_depositor_metadata(user.user_key)
-        f.arkivo_checksum = checksum
-      end
+      create_for_repository(:work_with_one_file,
+                            user: user,
+                            arkivo_checksum: checksum,
+                            title: title,
+                            description: description)
     end
 
     it 'changes the title and clears other metadata' do
-      expect(work_actor).to receive(:update).with(Hyrax::Actors::Environment) do |env|
-        expect(env.attributes).to include(arkivo_checksum: item['file']['md5'],
-                                          "description" => [],
-                                          "title" => [item['metadata']['title']])
-      end.and_return(true)
+      saved = subject.update_work_from_item(work)
+      expect(saved).to be_instance_of(GenericWork)
+      expect(saved.description).to eq []
+      expect(saved.title).to eq [item['metadata']['title']]
+      expect(saved.arkivo_checksum).to eq item['file']['md5']
 
-      expect(file_actor).to receive(:update_content) do |tmpfile|
-        expect(tmpfile).to be_instance_of Tempfile
-        expect(tmpfile.read).to eq "# HEADER\n\nThis is a paragraph!\n"
-      end
-      expect(subject.update_work_from_item(work)).to be_instance_of(GenericWork)
+      file_set = Hyrax::Queries.find_members(resource: work, model: ::FileSet).first
+      node = Hyrax::Queries.find_members(resource: file_set, model: Hyrax::FileNode).find { |fn| fn.use.include? Valkyrie::Vocab::PCDMUse.OriginalFile }
+      binary = storage_adapter.find_by(id: node.file_identifiers.first)
+      expect(binary.read).to eq "# HEADER\n\nThis is a paragraph!\n"
     end
   end
 
   describe '#destroy_work' do
-    let(:work) { mock_model(GenericWork) }
+    let(:work) { create_for_repository(:work) }
 
     it 'deletes the file' do
-      expect(work).to receive(:destroy)
       subject.destroy_work(work)
+      expect { Hyrax::Queries.find_by(id: work.id) }.to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
   end
 end
