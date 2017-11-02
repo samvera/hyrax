@@ -35,6 +35,7 @@ Rails.application.config.to_prepare do
       resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(
         Valkyrie::Indexers::AccessControlsIndexer,
         Hyrax::LinkedDataAttributesIndexer,
+        Hyrax::HumanReadableTypeIndexer,
         Hyrax::GenericTypeIndexer,
         # TODO: we may want Hyrax::IndexVisibility,
         # TODO: we may want Hyrax::IndexAdminSetLabel,
