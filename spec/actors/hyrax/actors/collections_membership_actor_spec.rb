@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:curation_concern) { GenericWork.new }
+  let(:curation_concern) { create_for_repository(:work) }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
@@ -42,7 +42,8 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     it 'adds it to the collection' do
       expect(subject.create(env)).to be true
-      expect(collection.reload.member_objects).to eq [curation_concern]
+      reloaded = Hyrax::Queries.find_by(id: collection.id)
+      expect(reloaded.member_object_ids).to eq [curation_concern.id]
     end
 
     describe "when work is in user's own collection" do
