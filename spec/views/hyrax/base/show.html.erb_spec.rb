@@ -64,10 +64,6 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     render template: 'hyrax/base/show.html.erb', layout: 'layouts/hyrax/1_column'
   end
 
-  it 'shows last saved' do
-    expect(page).to have_content 'Last modified: 04/01/2011'
-  end
-
   it 'shows workflow badge' do
     expect(page).to have_content 'Foobar'
   end
