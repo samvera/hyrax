@@ -128,6 +128,10 @@ module Hyrax
         @blacklight_config = blacklight_config
       end
 
+      def user
+        ability.current_user
+      end
+
       attr_reader :ability, :repository, :blacklight_config
       alias current_ability ability
     end
